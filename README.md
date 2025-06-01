@@ -4,22 +4,24 @@
 https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clone-?node-id=0-1&p=f&t=FTB5xRME6whYuBSN-0
 
 ## Tech Stack
-### Front
- - Next v15 App Router + Server Actions
+### Client
+ - Next v15 App Router + Server Actions + middleware
  - TS
  - TailwindCSS + Module.css, clsx
  - Zod + React-hook-form
  - i18n
  - @tanstack/react-query + Socket.io
- - React-native
  - Feature-sliced-design
  - Storybook
  - shadcn
 
+### Mobile App
+ - React-native
+
 ### Back
  - Nest
  - TS
- - MongoDB/PostgreSQL
+ - MongoDB/PostgreSQL + Mongoose/Prisma(TypeORM)
  - RestAPI, SSE, Socket.io, Long-pooling, RabbitMQ
  - JWT, OAuth, CORS, CSP
  - Redis
