@@ -53,7 +53,7 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
  - Pnpm, TurboRepo
  - github CI/CD, self-hosted Sentry
- - Docker
+ - Docker + Nginx
  - .env per app
  
 ### Future migrations for learning:
