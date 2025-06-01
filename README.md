@@ -48,6 +48,7 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - ConfigModule
  - @nestjs/schedule for CRON
  - Prometheus + Grafana
+ - CDN for files
 
 ### Infra
  - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
@@ -63,6 +64,3 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - MicroServices
  - MicroFront-end
  - Web Components
- - CDN + S3
- - Logs
- - Metrics
