@@ -25,6 +25,7 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - RestAPI, SSE, Socket.io, Long-pooling, RabbitMQ
  - JWT, OAuth, CORS, CSP
  - Redis
+ - MailGun
 
 ### Infra
  - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
