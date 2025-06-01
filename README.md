@@ -18,3 +18,5 @@ this project will be created with:
  - i18n
  - @tanstack/react-query
  - clsx
+ - github CI/CD
+ - Sentry
