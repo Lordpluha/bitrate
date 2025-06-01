@@ -12,6 +12,8 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - i18n
  - @tanstack/react-query + Socket.io
  - React-native
+ - Feature-sliced-design
+ - Storybook
 
 ### Back
  - Nest
@@ -22,7 +24,7 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - Redis
 
 ### Infra
- - Prettier, ESLint, Lint-staged, husky.js, Gitflow, commit-lint
+ - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
  - Pnpm, TurboRepo
  - github CI/CD, Sentry
  - Docker
