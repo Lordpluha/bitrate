@@ -52,9 +52,9 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
 ### Infra
  - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
  - Pnpm, TurboRepo
- - github CI/CD, self-hosted Sentry
+ - github CI/CD, self-hosted Sentry(@sentry/react-native, @sentry/nextjs)
  - Docker + Nginx
- - .env per app
+ - .env per app + .env.schema(Zod)
  
 ### Future migrations for learning:
  - GraphQL
