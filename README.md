@@ -8,7 +8,7 @@ this project will be created with:
  - Nest
  - TS
  - TailwindCSS + Module.css
- - Prettier, ESLint
+ - Prettier, ESLint, Lint-staged, husky.js
  - Pnpm
  - MongoDB
  - RestAPI
@@ -20,4 +20,6 @@ this project will be created with:
  - clsx
  - github CI/CD
  - Sentry
- - JWT, OAuth
+ - JWT, OAuth, CORS, CSP
+ - SSE - notifications
+ - 
