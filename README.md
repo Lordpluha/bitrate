@@ -19,7 +19,8 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - Unit, Screenshot testing, Intergration, E2E (Vitest)
 
 ### Mobile App
- - React-native
+ - React-natives
+ - Facker
 
 ### Admin-panel
 - NestJS Admin/other.
