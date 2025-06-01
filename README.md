@@ -6,15 +6,17 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
 ## Tech Stack
 ### Client
  - Next v15 App Router + Server Actions + middleware
+ - TurboBuild + ESBuild
  - TS
- - TailwindCSS + Module.css, clsx
+ - TailwindCSS, Module.css, clsx
  - Zod + React-hook-form
  - i18n
- - @tanstack/react-query + Socket.io
+ - MSW
+ - @tanstack/react-query(Code-generation by openApiTS) + Socket.io
  - Feature-sliced-design
  - Storybook
  - shadcn
- - Unit, Screenshot testing, Intergration, E2E
+ - Unit, Screenshot testing, Intergration, E2E (Vitest)
 
 ### Mobile App
  - React-native
@@ -30,6 +32,10 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - JWT, OAuth, CORS, CSP
  - Redis
  - MailGun
+ - Swagger
+ - Zod
+ - Contracts
+ - @nestjs/throttler
 
 ### Infra
  - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
