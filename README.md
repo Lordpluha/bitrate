@@ -17,10 +17,14 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - Storybook
  - shadcn
  - Unit, Screenshot testing, Intergration, E2E (Vitest)
+ - Zustand
 
 ### Mobile App
  - React-natives
  - Facker
+ - Zustand
+ - React Navigation
+ - NativeBase
 
 ### Admin-panel
 - NestJS Admin/other.
@@ -33,12 +37,11 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - JWT, OAuth, CORS, CSP, 2FA
  - Redis
  - MailGun
- - Swagger
- - Zod
+ - Swagger + Zod (Code generation sync)
  - Contracts
  - @nestjs/throttler
  - Fingerprint
- - 
+ - Testing(Jest)
 
 ### Infra
  - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
