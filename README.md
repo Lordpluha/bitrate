@@ -48,15 +48,15 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - ConfigModule
  - @nestjs/schedule for CRON
  - Prometheus + Grafana
- - CDN for files
 
 ### Infra
  - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
  - Pnpm, TurboRepo
- - github CI/CD, self-hosted Sentry(@sentry/react-native, @sentry/nextjs)
- - Docker + Nginx
- - .env per app + .env.schema(Zod)
- 
+ - Github Actions, self-hosted Sentry
+ - Docker
+ - .env per app
+ - mongodump + `redis-cli --rdb`
+
 ### Future migrations for learning:
  - GraphQL
  - Tauri
@@ -64,3 +64,6 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - MicroServices
  - MicroFront-end
  - Web Components
+ - CDN + S3
+ - Logs
+ - Metrics
