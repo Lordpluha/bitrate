@@ -25,9 +25,11 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - Zustand
  - React Navigation
  - NativeBase
+ - i18n
+ - @tanstack/react-query(Code-generation by openApiTS) (+persistor and AsyncStorage for offline) + Socket.io
 
 ### Admin-panel
-- NestJS Admin/other.
+- NestJS Admin
 
 ### Back
  - Nest
@@ -36,18 +38,23 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - RestAPI, SSE, Socket.io, Long-pooling, RabbitMQ
  - JWT, OAuth, CORS, CSP, 2FA
  - Redis
- - MailGun
+ - Postfix + NodeMailer
  - Swagger + Zod (Code generation sync)
  - Contracts
  - @nestjs/throttler
  - Fingerprint
- - Testing(Jest)
+ - Testing
+ - Multer
+ - ConfigModule
+ - @nestjs/schedule for CRON
+ - Prometheus + Grafana
 
 ### Infra
  - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
  - Pnpm, TurboRepo
- - github CI/CD, Sentry
+ - github CI/CD, self-hosted Sentry
  - Docker
+ - .env per app
  
 ### Future migrations for learning:
  - GraphQL
@@ -56,3 +63,6 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - MicroServices
  - MicroFront-end
  - Web Components
+ - CDN + S3
+ - Logs
+ - Metrics
