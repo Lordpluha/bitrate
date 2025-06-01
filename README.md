@@ -20,3 +20,4 @@ this project will be created with:
  - clsx
  - github CI/CD
  - Sentry
+ - JWT, OAuth
