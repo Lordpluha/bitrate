@@ -14,6 +14,7 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - React-native
  - Feature-sliced-design
  - Storybook
+ - shadcn
 
 ### Back
  - Nest
