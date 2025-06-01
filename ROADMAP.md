@@ -1,12 +1,12 @@
 # 🛣 Roadmap
 
 ## ✅ Phase 1: Project Setup
-- [x] TurboRepo monorepo structure
-- [x] Setup shared config, ESLint, Prettier, Stylelint
-- [x] .env schema with validation
-- [x] Docker & NGINX setup
-- [x] GitHub Actions CI
-- [x] Self-hosted Sentry
+- [ ] TurboRepo monorepo structure
+- [ ] Setup shared config, ESLint, Prettier, Stylelint
+- [ ] .env schema with validation
+- [ ] Docker & NGINX setup
+- [ ] GitHub Actions CI
+- [ ] Self-hosted Sentry
 
 ## 🚧 Phase 2: Core Features
 - [ ] Auth flow (JWT, OAuth, 2FA)
