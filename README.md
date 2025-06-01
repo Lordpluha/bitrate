@@ -29,13 +29,15 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - TS
  - MongoDB/PostgreSQL + Mongoose/Prisma(TypeORM)
  - RestAPI, SSE, Socket.io, Long-pooling, RabbitMQ
- - JWT, OAuth, CORS, CSP
+ - JWT, OAuth, CORS, CSP, 2FA
  - Redis
  - MailGun
  - Swagger
  - Zod
  - Contracts
  - @nestjs/throttler
+ - Fingerprint
+ - 
 
 ### Infra
  - Prettier, ESLint, Stylelint, Lint-staged, husky.js, Gitflow, commit-lint
