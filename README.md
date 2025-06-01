@@ -18,6 +18,9 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
 ### Mobile App
  - React-native
 
+### Admin-panel
+- NestJS Admin/oth.
+
 ### Back
  - Nest
  - TS
@@ -36,3 +39,4 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
 ### Future migrations for learning:
  - GraphQL
  - Tauri
+ - AdminJS
