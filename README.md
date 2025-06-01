@@ -14,12 +14,13 @@ https://www.figma.com/design/HU2gmO1n4uBGYagctQKw6Z/Music-Platform--spotify-clon
  - Feature-sliced-design
  - Storybook
  - shadcn
+ - Unit, Screenshot testing, Intergration, E2E
 
 ### Mobile App
  - React-native
 
 ### Admin-panel
-- NestJS Admin/oth.
+- NestJS Admin/other.
 
 ### Back
  - Nest
