@@ -6,7 +6,8 @@
   "exports": {
     "./base": "./base.js",
     "./next-js": "./next.js",
-    "./react-internal": "./react-internal.js"
+    "./react-internal": "./react-internal.js",
+    "./architecture": "./architecture.js"
   },
   "scripts": {
     "format": "prettier \"./*.js\" --write --cache"
@@ -18,6 +19,7 @@
     "@spotify/prettier": "workspace:*",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-boundaries": "^5.0.1",
     "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
