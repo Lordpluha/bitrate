@@ -1,3 +1,3 @@
-import { postcssConfig } from "@repo/tailwind/postcss";
+import { postcssConfig } from "@spotify/tailwind/postcss";
 
 export default postcssConfig;
