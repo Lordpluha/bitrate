@@ -13,10 +13,10 @@
   },
   "license": "MIT",
   "scripts": {
-    "build:styles": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
+    "build:styles": "tailwindcss -i ./src/styles/global.css -o ./dist/index.css",
     "build:components": "tsc",
     "check-types": "tsc --noEmit",
-    "dev:styles": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
+    "dev:styles": "tailwindcss -i ./src/styles/global.css -o ./dist/index.css --watch",
     "dev:components": "tsc --watch",
     "lint": "eslint src --max-warnings 0"
   },
@@ -31,5 +31,13 @@
     "eslint": "^9.28.0",
     "tailwindcss": "^4.1.8",
     "typescript": "5.8.3"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.513.0",
+    "tailwind-merge": "^3.3.0",
+    "tw-animate-css": "^1.3.4"
   }
 }

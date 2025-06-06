@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { Card } from "@spotify/ui/card";
-import { Gradient } from "@spotify/ui/gradient";
-import { TurborepoLogo } from "@spotify/ui/turborepo-logo";
+import { Card } from "@spotify/ui/components/card";
+import { Gradient } from "@spotify/ui/components/gradient";
+import { TurborepoLogo } from "@spotify/ui/components/turborepo-logo";
 
 const LINKS = [
   {
