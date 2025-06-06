@@ -136,9 +136,6 @@ importers:
       '@spotify/tailwind':
         specifier: workspace:*
         version: link:../../packages/tailwind
-      '@spotify/typescript':
-        specifier: workspace:*
-        version: link:../../packages/typescript
       '@tailwindcss/postcss':
         specifier: ^4.1.8
         version: 4.1.8
@@ -224,8 +221,6 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8
 
-  packages/typescript: {}
-
   packages/ui:
     dependencies:
       react:
@@ -238,9 +233,6 @@ importers:
       '@spotify/tailwind':
         specifier: workspace:*
         version: link:../tailwind
-      '@spotify/typescript':
-        specifier: workspace:*
-        version: link:../typescript
       '@tailwindcss/cli':
         specifier: ^4.1.8
         version: 4.1.8
