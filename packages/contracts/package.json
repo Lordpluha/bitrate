@@ -1,0 +1,23 @@
+{
+  "name": "@spotify/contracts",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "gen:api": "tsx src/scripts/fetch-openapi.ts"
+  },
+	"exports": {
+		".": "./src/index.ts"
+	},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30"
+  }
+}
