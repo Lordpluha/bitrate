@@ -11,12 +11,11 @@ This project uses [Turborepo](https://turbo.build/repo) to manage multiple appli
 │   ├── api/            # NestJS Backend
 │   ├── admin/          # Admin Panel (NestJS Admin)
 │   └── mobile/         # React Native App
-├── packages/
-│   ├── ui/             # Shared UI components
-│   ├── config/         # Shared configuration (env/schema)
-│   ├── contracts/      # Shared API contracts (Zod + OpenAPI)
-│   └── types/          # Shared TypeScript types
-├── docs/               # Project documentation
+└── packages/
+    ├── ui/             # Shared UI components
+    ├── config/         # Shared configuration (env/schema)
+    ├── contracts/      # Shared API contracts (Zod + OpenAPI)
+    └── types/          # Shared TypeScript types
 ```
 
 ## Design Philosophy
