@@ -18,17 +18,23 @@
     "check-types": "tsc --noEmit",
     "dev:styles": "tailwindcss -i ./src/styles/global.css -o ./dist/index.css --watch",
     "dev:components": "tsc --watch",
-    "lint": "eslint src --max-warnings 0"
+    "lint": "eslint src --max-warnings 0",
+    "prettier": "prettier \"./src/**/*.{ts,tsx,json,js,scss,css}\" --write --list-different --cache",
+    "stylelint": "stylelint \"./src/**/*.{scss,css}\" --config @spotify/stylelint --fix --cache --cache-location node_modules/.cache/stylelint",
+    "format": "npm run prettier && npm run stylelint"
   },
   "peerDependencies": {
     "react": "^19"
   },
   "devDependencies": {
     "@spotify/eslint": "workspace:*",
+    "@spotify/prettier": "workspace:*",
+    "@spotify/stylelint": "workspace:*",
     "@spotify/tailwind": "workspace:*",
     "@tailwindcss/cli": "^4.1.8",
     "@types/react": "^19.1.6",
     "eslint": "^9.28.0",
+    "stylelint": "^16.6.1",
     "tailwindcss": "^4.1.8",
     "typescript": "5.8.3"
   },

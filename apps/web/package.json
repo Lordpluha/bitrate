@@ -8,8 +8,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "prettier": "prettier \"./src/**/*.{ts,tsx,json,scss,css}\" --write --list-different --cache",
+    "stylelint": "stylelint \"./src/**/*.{scss,css}\" --config @spotify/stylelint --fix --cache --cache-location node_modules/.cache/stylelint",
+    "format": "npm run prettier && npm run stylelint"
   },
+  "prettier": "@spotify/prettier",
   "dependencies": {
     "@spotify/ui": "workspace:*",
     "next": "^15.3.3",
@@ -19,6 +23,8 @@
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.3.3",
     "@spotify/eslint": "workspace:*",
+    "@spotify/prettier": "workspace:*",
+    "@spotify/stylelint": "workspace:*",
     "@spotify/tailwind": "workspace:*",
     "@tailwindcss/postcss": "^4.1.8",
     "@tanstack/react-query": "^5.80.6",
@@ -29,7 +35,9 @@
     "clsx": "^2.1.1",
     "eslint": "^9.28.0",
     "postcss": "^8.5.4",
+    "prettier": "^3.5.3",
     "react-hook-form": "^7.57.0",
+    "stylelint": "^16.6.1",
     "tailwindcss": "^4.1.8",
     "typescript": "5.8.3",
     "zod": "^3.25.55"

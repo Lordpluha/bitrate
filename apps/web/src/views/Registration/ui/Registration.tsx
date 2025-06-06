@@ -1,7 +1,5 @@
 import React from 'react'
 
 export const Registration = () => {
-	return (
-		<div>Registration Page</div>
-	)
+  return <div>Registration Page</div>
 }

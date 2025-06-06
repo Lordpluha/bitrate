@@ -1,0 +1,19 @@
+{
+  "name": "@spotify/stylelint",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "format": "prettier \"./*.json\" --write --cache"
+  },
+  "prettier": "@spotify/prettier",
+  "exports": {
+    ".": "./.stylelintrc.json"
+  },
+  "devDependencies": {
+    "@spotify/prettier": "workspace:*",
+    "prettier": "^3.5.3",
+    "stylelint": "^16.6.1",
+    "stylelint-config-standard": "^38.0.0",
+    "stylelint-config-standard-scss": "^15.0.1"
+  }
+}
