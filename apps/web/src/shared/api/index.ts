@@ -1,15 +1,37 @@
-import createFetchClient from "openapi-fetch";
-import createClient from "openapi-react-query";
-import type { paths } from "@spotify/contracts";
+'use client'
+
+import createFetchClient from 'openapi-fetch'
+import createClient from 'openapi-react-query'
+import type { ApiPaths } from '@spotify/contracts'
+import { QueryClient } from '@tanstack/react-query'
 
 /**
  * Fetch client for the API.
  */
-export const fetchClient = createFetchClient<paths>({
-  baseUrl: "http://localhost/api",
-});
+export const fetchClient = createFetchClient<ApiPaths>({
+  baseUrl: process.env.NEXT_PUBLIC_API_URL
+})
 
 /**
- * React Query client for the API.
+ * Query TS client for the API.
  */
-export const queryClient = createClient(fetchClient);
+const rqClient = createClient(fetchClient)
+const {
+  useQuery,
+  useMutation,
+  useInfiniteQuery,
+  queryOptions,
+  useSuspenseQuery
+} = rqClient
+export {
+  useQuery,
+  useMutation,
+  useInfiniteQuery,
+  queryOptions,
+  useSuspenseQuery
+}
+
+/**
+ * Query Client for React Query.
+ */
+export const queryClient = new QueryClient()

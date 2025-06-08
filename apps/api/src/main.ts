@@ -16,6 +16,10 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json'
   })
+  app.enableCors({
+    origin: process.env.WEB_HOST ?? '*',
+    allowedHeaders: ['Content-Type', 'Authorization']
+  })
   await app.listen(process.env.PORT ?? 3000)
 }
 
