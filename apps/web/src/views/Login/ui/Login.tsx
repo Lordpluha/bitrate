@@ -1,7 +1,7 @@
 'use client'
 
 import { useMutation } from '@shared/api'
-import { Button } from '@spotify/ui/components/ui/button'
+import { Button } from '@spotify/ui'
 
 export const Login = () => {
   const { mutate } = useMutation('post', '/auth/login')
@@ -9,7 +9,7 @@ export const Login = () => {
     <>
       <div>Login Page</div>
       <Button
-        variant={'outline'}
+        variant='destructive'
         className='rounded'
         onClick={() =>
           mutate({
