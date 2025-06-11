@@ -1,3 +1,3 @@
-# `@turbo/eslint`
+# `@spotify/eslint`
 
 Collection of internal eslint configurations.

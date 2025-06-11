@@ -9,7 +9,7 @@ async function main() {
   console.log('✅ Saved swagger/spotify.json')
 
   await exec('pnpm dlx openapi-typescript swagger/spotify.json -o src/api/v1.ts')
-  console.log('✅ Generated src/api/spotify-api.ts')
+  console.log('✅ Generated src/api/v1.ts')
 }
 
 main().catch(console.error)
