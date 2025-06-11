@@ -10,7 +10,8 @@ This project uses [Turborepo](https://turbo.build/repo) to manage multiple appli
 │   ├── client/         # Next.js Frontend
 │   ├── api/            # NestJS Backend
 │   ├── admin/          # Admin Panel (NestJS Admin)
-│   └── mobile/         # React Native App
+│   ├── mobile/         # React Native App
+|   └── desktop/        # Tauri App
 └── packages/
     ├── ui/             # Shared UI components
     ├── config/         # Shared configuration (env/schema)
