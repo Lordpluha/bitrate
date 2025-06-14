@@ -11,7 +11,7 @@ import { envSchema, envType } from '../env.schema'
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.local', '.env.development', '.env.production'],
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+
       validate: (env: Record<string, unknown>): envType => envSchema.parse(env)
     }),
     AuthModule,

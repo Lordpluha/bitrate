@@ -1,10 +1,17 @@
-import './globals.css'
+import '@spotify/ui/globals.css'
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import localFont from 'next/font/local'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from '@shared/api'
 
-const geist = Geist({ subsets: ['latin'] })
+const geistSans = localFont({
+  src: '../../public/fonts/GeistVF.woff',
+  variable: '--font-geist-sans'
+})
+const geistMono = localFont({
+  src: '../../public/fonts/GeistMonoVF.woff',
+  variable: '--font-geist-mono'
+})
 
 export const metadata: Metadata = {
   title: 'Create Turborepo',
@@ -13,12 +20,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
     <html lang='en'>
-      <body className={geist.className}>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>

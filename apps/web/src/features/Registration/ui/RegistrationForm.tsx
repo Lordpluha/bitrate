@@ -9,7 +9,7 @@ export const RegistrationForm = () => {
         variant='destructive'
         className='rounded'
       >
-        Login
+        Register
       </Button>
     </div>
   )

@@ -3,48 +3,30 @@
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
-    "incremental": false,
+    "incremental": true,
     "isolatedModules": true,
-    "lib": [
-      "es2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["es2022", "DOM", "DOM.Iterable"],
     "moduleDetection": "force",
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowJs": false,
+    "jsx": "preserve",
+    "noEmit": true,
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "jsx": "preserve",
-    "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "../../packages/ui/src/*"
-      ],
-      "@*": [
-        "./src/*"
-      ]
-    },
-    "allowJs": false
+      "@*": ["./src/*"]
+    }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "next-env.d.ts",
-    "next.config.ts",
-    ".next/types/**/*.ts",
-		"env.schema.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

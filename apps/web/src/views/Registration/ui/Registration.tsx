@@ -1,5 +1,5 @@
-import { RegistrationForm } from '@features/Registration'
 import React from 'react'
+import { RegistrationForm } from '@features/Registration'
 
 export const Registration = () => {
   return (
