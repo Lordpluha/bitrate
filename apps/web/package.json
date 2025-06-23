@@ -1,7 +1,6 @@
 {
   "name": "@spotify/web",
   "version": "0.0.1",
-  "type": "module",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -14,7 +13,6 @@
     "stylelint": "stylelint \"./src/**/*.{scss,css}\" --config @spotify/stylelint --fix --cache --cache-location node_modules/.cache/stylelint",
     "format": "npm run prettier && npm run stylelint"
   },
-  "prettier": "@spotify/prettier",
   "dependencies": {
     "@spotify/ui": "workspace:*",
     "@tanstack/react-query": "^5.80.7",
@@ -27,9 +25,6 @@
     "zod": "^3.25.56"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.28.0",
-    "@next/eslint-plugin-next": "^15.3.3",
     "@spotify/contracts": "workspace:*",
     "@spotify/eslint": "workspace:*",
     "@spotify/prettier": "workspace:*",
@@ -38,18 +33,13 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.20",
-    "eslint": "^9.28.0",
-    "eslint-import-resolver-alias": "^1.1.2",
-    "eslint-plugin-boundaries": "^5.0.1",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-react": "^7.37.5",
-    "globals": "^16.2.0",
     "openapi-typescript": "^7.8.0",
     "postcss": "^8.4.40",
     "prettier": "^3.5.3",
     "stylelint": "^16.6.1",
     "tailwindcss": "^3.4.7",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.1"
+    "eslint": "^8",
+    "eslint-config-next": "15.0.0-rc.0"
   }
 }

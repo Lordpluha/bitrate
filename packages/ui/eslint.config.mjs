@@ -1,7 +1,7 @@
-import { config as ReactConfig } from "@spotify/eslint/react-internal";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { config as ReactConfig } from "@spotify/eslint/react-internal.js";
 import tsParser from "@typescript-eslint/parser";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
 /** ESM __dirname polyfill */
 const __filename = fileURLToPath(import.meta.url);

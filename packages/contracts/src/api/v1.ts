@@ -88,10 +88,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: {
-					username: string,
-					password: string
-				};
+        requestBody?: never;
         responses: {
             200: {
                 headers: {
