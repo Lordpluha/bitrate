@@ -1,5 +1,16 @@
+import '../../../app/global.css';
 import { Button } from '@spotify/ui'
+import Header from './header/Header';
+import Hero from './hero/Hero'
+
 
 export const Landing = () => {
-  return <Button variant={'destructive'}>Read more</Button>
+
+  return <div className="wrap">
+    <Header/>
+    <main>
+
+    </main>
+
+  </div>
 }
