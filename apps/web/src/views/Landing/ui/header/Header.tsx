@@ -1,6 +1,6 @@
 import React from 'react'
-import Image from 'node_modules/next/image'
-import Logo from "../../../../../public/images/logo.png"
+import Image from 'next/image'
+
 
 const Header = () => {
   return (
@@ -9,7 +9,7 @@ const Header = () => {
         <div className="header__wrap">
             <a href="#">
             <Image
-            src={Logo}
+            src={"/images/logo.png"}
             width={111}
             height={36}
             alt="spotify logo"
