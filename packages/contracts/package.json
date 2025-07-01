@@ -1,23 +1,25 @@
 {
   "name": "@spotify/contracts",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
-  "type": "module",
   "private": true,
+	"type": "module",
   "scripts": {
     "gen:api": "tsx src/scripts/fetch-openapi.ts"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./*": "./src/*"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Lordpluha",
+  "license": "MIT",
   "dependencies": {
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@nestjs/swagger": "^11.2.0",
     "@types/node": "^24.0.1"
   }
 }

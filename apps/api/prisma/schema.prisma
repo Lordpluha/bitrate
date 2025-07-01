@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String
+  email     String    @unique
+  password  String
+  tracks    Track[]
+  createdAt DateTime  @default(now())
+  Session   Session[]
+}
+
+model Track {
+  id        String   @id @default(uuid())
+  title     String
+  artist    String
+  audioUrl  String
+  cover     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id            String @id @default(uuid())
+  userId        String
+  user          User   @relation(fields: [userId], references: [id])
+  access_token  String
+  refresh_token String
+}

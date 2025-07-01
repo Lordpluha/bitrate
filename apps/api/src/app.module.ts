@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
 import { ConfigModule } from '@nestjs/config'
 import { envSchema, envType } from '../env.schema'
+import { PrismaModule } from './prisma/prisma.module'
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { envSchema, envType } from '../env.schema'
 
       validate: (env: Record<string, unknown>): envType => envSchema.parse(env)
     }),
+    PrismaModule,
     AuthModule,
     UsersModule
   ],
