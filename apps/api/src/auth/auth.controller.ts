@@ -35,7 +35,6 @@ export class AuthController {
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production'
     })
-    return res
   }
 
   @AuthRegistrationSwagger()
