@@ -16,6 +16,6 @@ export function AuthLogoutSwagger() {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
       description: 'Server error'
     }),
-    ApiCookieAuth('access_token')
+    ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
   )
 }

@@ -29,6 +29,6 @@ export function AuthRefreshSwagger() {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
       description: 'Server error'
     }),
-    ApiCookieAuth('refresh_token')
+    ApiCookieAuth(process.env.REFRESH_TOKEN_NAME)
   )
 }

@@ -25,12 +25,12 @@ export class AuthController {
       loginDto.email,
       loginDto.password
     )
-    res.cookie('access_token', access_token, {
+    res.cookie(process.env.ACCESS_TOKEN_NAME!, access_token, {
       httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production'
     })
-    res.cookie('refresh_token', refresh_token, {
+    res.cookie(process.env.REFRESH_TOKEN_NAME!, refresh_token, {
       httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production'
@@ -48,8 +48,8 @@ export class AuthController {
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
     await this.authService.logout()
-    res.clearCookie('access_token')
-    res.clearCookie('refresh_token')
+    res.clearCookie(process.env.ACCESS_TOKEN_NAME!)
+    res.clearCookie(process.env.REFRESH_TOKEN_NAME!)
     return res
   }
 
@@ -67,12 +67,12 @@ export class AuthController {
     }
     const { access_token } = await this.authService.refresh(refresh_token)
 
-    res.cookie('access_token', access_token, {
+    res.cookie(process.env.ACCESS_TOKEN_NAME!, access_token, {
       httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production'
     })
-    res.cookie('refresh_token', refresh_token, {
+    res.cookie(process.env.REFRESH_TOKEN_NAME!, refresh_token, {
       httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production'
