@@ -13,13 +13,8 @@ export class AuthService {
 
   async registration(registrationDto: Pick<UserEntity, 'email' | 'password'>) {
     let userExists = false;
-    try {
-      userExists = await this.usersService.findUserByEmail(registrationDto.email);
-    } catch (error) {
-      if (error.name !== 'NotFoundError') {
-        throw error; // Re-throw unexpected errors
-      }
-    }
+    const user = await this.usersService.findUserByEmail(registrationDto.email);
+    userExists = user !== null;
     if (userExists) {
       throw new ConflictException('User with this email already exists');
     }
