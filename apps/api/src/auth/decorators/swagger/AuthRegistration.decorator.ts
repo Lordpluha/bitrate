@@ -1,8 +1,8 @@
 import { applyDecorators, HttpStatus } from "@nestjs/common";
 import { ApiOperation, ApiConsumes, ApiBody, ApiResponse } from "@nestjs/swagger";
-import { RegistrationDto } from "../registration.dto";
+import { RegistrationDto } from "../../dtos";
 
-export function ApiAuthRegistration() {
+export function AuthRegistrationSwagger() {
 	return applyDecorators(
 		ApiOperation({ summary: 'User registration' }),
 		ApiConsumes('application/json'),

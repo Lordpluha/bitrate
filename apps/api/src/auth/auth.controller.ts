@@ -2,13 +2,12 @@ import { Request, Response } from 'express'
 import { AuthService } from './auth.service'
 import { Controller, Post, Body, Res, Req, BadRequestException } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { LoginDto } from './login.dto'
-import { RegistrationDto } from './registration.dto'
+import { LoginDto, RegistrationDto } from './dtos'
 import {
-  ApiAuthLogin,
-  ApiAuthLogout,
-  ApiAuthRefresh,
-  ApiAuthRegistration
+  AuthLoginSwagger,
+  AuthLogoutSwagger,
+  AuthRefreshSwagger,
+  AuthRegistrationSwagger
 } from './decorators'
 
 @ApiTags('Auth')
@@ -16,7 +15,7 @@ import {
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @ApiAuthLogin()
+  @AuthLoginSwagger()
   @Post('login')
   async login(
     @Body() loginDto: LoginDto,
@@ -39,13 +38,13 @@ export class AuthController {
     return res
   }
 
-  @ApiAuthRegistration()
+  @AuthRegistrationSwagger()
   @Post('registration')
   async registration(@Body() registrationDto: RegistrationDto) {
     await this.authService.registration(registrationDto)
   }
 
-  @ApiAuthLogout()
+  @AuthLogoutSwagger()
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
     await this.authService.logout()
@@ -54,7 +53,7 @@ export class AuthController {
     return res
   }
 
-  @ApiAuthRefresh()
+  @AuthRefreshSwagger()
   @Post('refresh')
   async refresh(
     @Req() req: Request,

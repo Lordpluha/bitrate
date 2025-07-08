@@ -1,4 +1,1 @@
-export * from './AuthLogin.decorator'
-export * from './AuthRegistration.decorator'
-export * from './AuthLogout.decorator'
-export * from './AuthRefresh.decorator'
+export * from './swagger'
