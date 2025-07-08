@@ -64,7 +64,7 @@ export class AuthController {
       process.env.REFRESH_TOKEN_NAME!
     ] as string
     if (!refresh_token) {
-      throw new Error('refresh token is not provided, please login again')
+      throw new BadRequestException('Refresh token not provided, please login again')
     }
     const { access_token } = await this.authService.refresh(refresh_token)
 
