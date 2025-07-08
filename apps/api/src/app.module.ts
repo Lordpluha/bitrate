@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module'
 import { ConfigModule } from '@nestjs/config'
 import { envSchema, envType } from '../env.schema'
 import { PrismaModule } from './prisma/prisma.module'
+import { TracksModule } from './tracks/tracks.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { PrismaModule } from './prisma/prisma.module'
     }),
     PrismaModule,
     AuthModule,
-    UsersModule
+    UsersModule,
+    TracksModule
   ],
   controllers: [AppController],
   providers: [AppService]
