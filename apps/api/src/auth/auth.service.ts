@@ -12,8 +12,16 @@ export class AuthService {
   ) {}
 
   async registration(registrationDto: Pick<UserEntity, 'email' | 'password'>) {
-    if (await this.usersService.findUserByEmail(registrationDto.email)) {
-      throw new ConflictException('User with this email already exists')
+    let userExists = false;
+    try {
+      userExists = await this.usersService.findUserByEmail(registrationDto.email);
+    } catch (error) {
+      if (error.name !== 'NotFoundError') {
+        throw error; // Re-throw unexpected errors
+      }
+    }
+    if (userExists) {
+      throw new ConflictException('User with this email already exists');
     }
 
     return this.usersService.createUser({
