@@ -77,6 +77,6 @@ export class AuthService {
   }
 
   async logout() {
-    return new Promise(() => {})
+    return Promise.resolve({ message: 'Logout successful' });
   }
 }
