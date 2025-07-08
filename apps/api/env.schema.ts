@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const envSchema = z.object({
   NODE_ENV: z.enum(['local', 'development', 'production']).default('local'),
@@ -23,7 +23,7 @@ export const envSchema = z.object({
   // EMAIL_FROM: z.string().email(),
 
   // Database
-  DATABASE_URL: z.string().url()
+  DATABASE_URL: z.string().url(),
 
   // Redis
   // REDIS_URL: z.string().url(),
@@ -38,6 +38,6 @@ export const envSchema = z.object({
   // POSTFIX_DOMAIN: z.string(),
   // POSTFIX_USER: z.string(),
   // POSTFIX_PASS: z.string(),
-})
+});
 
-export type envType = z.infer<typeof envSchema>
+export type envType = z.infer<typeof envSchema>;

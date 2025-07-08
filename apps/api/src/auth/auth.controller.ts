@@ -16,9 +16,28 @@ import {
   ApiResponse,
   ApiConsumes,
   ApiBody,
-  ApiCookieAuth
+  ApiCookieAuth,
+  ApiProperty
 } from '@nestjs/swagger'
-import { LoginDto, RegistrationDto } from '@spotify/contracts'
+
+export class LoginDto {
+  @ApiProperty({ description: 'User email', example: 'user@example.com' })
+  email: string
+
+  @ApiProperty({ description: 'User password', example: 'password123' })
+  password: string
+}
+
+export class RegistrationDto {
+  @ApiProperty({
+    description: 'New user email',
+    example: 'newuser@example.com'
+  })
+  email: string
+
+  @ApiProperty({ description: 'New user password', example: 'password123' })
+  password: string
+}
 
 @ApiTags('auth')
 @Controller('auth')
