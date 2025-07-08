@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { AuthService } from './auth.service'
 import { Controller, Post, Body, Res, Req, BadRequestException } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { LoginDto, RegistrationDto } from './dtos'
 import {
   AuthLoginSwagger,
@@ -9,7 +9,9 @@ import {
   AuthRefreshSwagger,
   AuthRegistrationSwagger
 } from './decorators'
+import { SessionEntity } from './entities'
 
+@ApiExtraModels(SessionEntity)
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
