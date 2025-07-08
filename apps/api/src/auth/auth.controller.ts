@@ -46,12 +46,19 @@ export class AuthController {
 
   @ApiOperation({ summary: 'User login' })
   @ApiConsumes('application/json')
-  @ApiBody({ type: [LoginDto] })
+  @ApiBody({ type: LoginDto })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Successfully logged in',
-    content: {
-      'application/json': { example: { status: 'ok' } }
+    headers: {
+      'Set-Cookie': {
+        description: 'HttpOnly cookies: access_token и refresh_token',
+        schema: {
+          type: 'string',
+          example:
+            'access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;\nrefresh_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;'
+        }
+      }
     }
   })
   @ApiResponse({
@@ -60,21 +67,19 @@ export class AuthController {
     content: {
       'application/json': {
         example: {
-          statusCode: 400,
-          message: ['email must be an email'],
-          error: 'Bad Request'
+          errors: [
+            {
+              field: 'email',
+              message: 'email must be an email'
+            }
+          ]
         }
       }
     }
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Invalid credentials',
-    content: {
-      'application/json': {
-        example: { statusCode: 401, message: 'Invalid credentials' }
-      }
-    }
+    description: 'Invalid credentials'
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -105,13 +110,10 @@ export class AuthController {
 
   @ApiOperation({ summary: 'User registration' })
   @ApiConsumes('application/json')
-  @ApiBody({ type: [RegistrationDto] })
+  @ApiBody({ type: RegistrationDto })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Successfully registered',
-    content: {
-      'application/json': { example: { status: 200 } }
-    }
+    description: 'Successfully registered'
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -119,9 +121,7 @@ export class AuthController {
     content: {
       'application/json': {
         example: {
-          statusCode: 400,
-          message: ['email must be an email'],
-          error: 'Bad Request'
+          errors: [{ field: 'email', message: 'email must be an email' }]
         }
       }
     }
@@ -131,7 +131,7 @@ export class AuthController {
     description: 'User already exists',
     content: {
       'application/json': {
-        example: { statusCode: 409, message: 'User already exists' }
+        example: 'User already exists'
       }
     }
   })
@@ -149,10 +149,7 @@ export class AuthController {
   @ApiOperation({ summary: 'User logout' })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Successfully logged out',
-    content: {
-      'application/json': { example: { status: 'logged out' } }
-    }
+    description: 'Successfully logged out'
   })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   @ApiResponse({
@@ -167,40 +164,31 @@ export class AuthController {
     await this.authService.logout()
     res.clearCookie('access_token')
     res.clearCookie('refresh_token')
-    return { status: 'logged out' }
+    return res
   }
 
   @ApiOperation({ summary: 'Refresh access token' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Token refreshed',
-    content: {
-      'application/json': { example: { status: 'token refreshed' } }
+		headers: {
+      'Set-Cookie': {
+        description: 'HttpOnly cookies: access_token',
+        schema: {
+          type: 'string',
+          example:
+            'access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;'
+        }
+      }
     }
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'Refresh token not provided',
-    content: {
-      'application/json': {
-        example: {
-          statusCode: 400,
-          message: 'refresh token is not provided, please login again'
-        }
-      }
-    }
+    description: 'Refresh token not provided'
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Invalid or expired refresh token',
-    content: {
-      'application/json': {
-        example: {
-          statusCode: 401,
-          message: 'Invalid or expired refresh token'
-        }
-      }
-    }
+    description: 'Invalid or expired refresh token'
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
