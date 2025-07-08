@@ -16,28 +16,10 @@ import {
   ApiResponse,
   ApiConsumes,
   ApiBody,
-  ApiCookieAuth,
-  ApiProperty
+  ApiCookieAuth
 } from '@nestjs/swagger'
-
-export class LoginDto {
-  @ApiProperty({ description: 'User email', example: 'user@example.com' })
-  email: string
-
-  @ApiProperty({ description: 'User password', example: 'password123' })
-  password: string
-}
-
-export class RegistrationDto {
-  @ApiProperty({
-    description: 'New user email',
-    example: 'newuser@example.com'
-  })
-  email: string
-
-  @ApiProperty({ description: 'New user password', example: 'password123' })
-  password: string
-}
+import { LoginDto } from './login.dto'
+import { RegistrationDto } from './registration.dto'
 
 @ApiTags('auth')
 @Controller('auth')
@@ -105,7 +87,6 @@ export class AuthController {
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production'
     })
-    return { status: 'ok' }
   }
 
   @ApiOperation({ summary: 'User registration' })
@@ -128,12 +109,7 @@ export class AuthController {
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
-    description: 'User already exists',
-    content: {
-      'application/json': {
-        example: 'User already exists'
-      }
-    }
+    description: 'User already exists'
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -143,7 +119,6 @@ export class AuthController {
   @Post('registration')
   async registration(@Body() registrationDto: Omit<User, 'id' | 'createdAt'>) {
     await this.authService.registration(registrationDto)
-    return { status: HttpStatus.OK }
   }
 
   @ApiOperation({ summary: 'User logout' })
@@ -171,13 +146,12 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Token refreshed',
-		headers: {
+    headers: {
       'Set-Cookie': {
         description: 'HttpOnly cookies: access_token',
         schema: {
           type: 'string',
-          example:
-            'access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;'
+          example: 'access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;'
         }
       }
     }
@@ -217,6 +191,5 @@ export class AuthController {
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production'
     })
-    return { status: 'token refreshed' }
   }
 }

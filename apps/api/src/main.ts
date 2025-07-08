@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('@spotify/api swagger')
     .setDescription('@spotify/api swagger description')
     .setVersion('1.0')
+    .addServer(`http://localhost:${process.env.PORT ?? 3000}`, 'Local server')
     .build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, config)
