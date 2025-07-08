@@ -13,7 +13,7 @@ export class AuthService {
 
   async registration(registrationDto: Pick<User, 'email' | 'password'>) {
     if (await this.usersService.findUserByEmail(registrationDto.email)) {
-      throw new UnauthorizedException('User with this email already exists')
+      throw new ConflictException('User with this email already exists')
     }
 
     return this.usersService.createUser({
