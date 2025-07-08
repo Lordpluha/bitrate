@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { User } from '@prisma/client'
 
 export class LoginDto {
   @ApiProperty({ description: 'User email', example: 'user@example.com' })
-  email: string
+  email: User['email']
 
   @ApiProperty({ description: 'User password', example: 'password123' })
-  password: string
+  password: User['password']
 }

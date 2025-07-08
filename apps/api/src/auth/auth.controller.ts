@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { AuthService } from './auth.service'
-import { User } from '@prisma/client'
 import {
   Controller,
   HttpCode,
@@ -21,7 +20,7 @@ import {
 import { LoginDto } from './login.dto'
 import { RegistrationDto } from './registration.dto'
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -70,7 +69,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(
-    @Body() loginDto: Pick<User, 'email' | 'password'>,
+    @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
   ) {
     const { access_token, refresh_token } = await this.authService.login(
@@ -117,7 +116,7 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   @Post('registration')
-  async registration(@Body() registrationDto: Omit<User, 'id' | 'createdAt'>) {
+  async registration(@Body() registrationDto: RegistrationDto) {
     await this.authService.registration(registrationDto)
   }
 
@@ -132,7 +131,6 @@ export class AuthController {
     description: 'Server error'
   })
   @ApiCookieAuth('access_token')
-  @ApiCookieAuth('refresh_token')
   @HttpCode(HttpStatus.OK)
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
@@ -175,7 +173,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response
   ) {
-    const refresh_token = req.cookies[process.env.REFRESH_TOKEN_NAME!] as string
+    const refresh_token = req.cookies?.[process.env.REFRESH_TOKEN_NAME!] as string
     if (!refresh_token) {
       throw new Error('refresh token is not provided, please login again')
     }

@@ -21,7 +21,8 @@
     "db:start": "prisma dev",
     "db:migration-reset": "prisma migrate reset",
     "db:migration-start": "prisma migrate dev --name init",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "db:generate-production": "prisma generate --no-engine"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
