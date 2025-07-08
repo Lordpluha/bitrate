@@ -31,21 +31,20 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/LoginDto"
-                }
+                "$ref": "#/components/schemas/LoginDto"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Successfully logged in",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "ok"
+            "headers": {
+              "Set-Cookie": {
+                "description": "HttpOnly cookies: access_token и refresh_token",
+                "schema": {
+                  "type": "string",
+                  "example": "access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;\nrefresh_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;"
                 }
               }
             }
@@ -55,25 +54,18 @@
             "content": {
               "application/json": {
                 "example": {
-                  "statusCode": 400,
-                  "message": [
-                    "email must be an email"
-                  ],
-                  "error": "Bad Request"
+                  "errors": [
+                    {
+                      "field": "email",
+                      "message": "email must be an email"
+                    }
+                  ]
                 }
               }
             }
           },
           "401": {
-            "description": "Invalid credentials",
-            "content": {
-              "application/json": {
-                "example": {
-                  "statusCode": 401,
-                  "message": "Invalid credentials"
-                }
-              }
-            }
+            "description": "Invalid credentials"
           },
           "500": {
             "description": "Server error"
@@ -84,7 +76,7 @@
         },
         "summary": "User login",
         "tags": [
-          "auth"
+          "Auth"
         ]
       }
     },
@@ -97,49 +89,32 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/RegistrationDto"
-                }
+                "$ref": "#/components/schemas/RegistrationDto"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Successfully registered",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": 200
-                }
-              }
-            }
+          "201": {
+            "description": "Successfully registered"
           },
           "400": {
             "description": "Validation error",
             "content": {
               "application/json": {
                 "example": {
-                  "statusCode": 400,
-                  "message": [
-                    "email must be an email"
-                  ],
-                  "error": "Bad Request"
+                  "errors": [
+                    {
+                      "field": "email",
+                      "message": "email must be an email"
+                    }
+                  ]
                 }
               }
             }
           },
           "409": {
-            "description": "User already exists",
-            "content": {
-              "application/json": {
-                "example": {
-                  "statusCode": 409,
-                  "message": "User already exists"
-                }
-              }
-            }
+            "description": "User already exists"
           },
           "500": {
             "description": "Server error"
@@ -150,7 +125,7 @@
         },
         "summary": "User registration",
         "tags": [
-          "auth"
+          "Auth"
         ]
       }
     },
@@ -159,15 +134,8 @@
         "operationId": "AuthController_logout",
         "parameters": [],
         "responses": {
-          "200": {
-            "description": "Successfully logged out",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "logged out"
-                }
-              }
-            }
+          "201": {
+            "description": "Successfully logged out"
           },
           "401": {
             "description": "Unauthorized"
@@ -181,15 +149,12 @@
         },
         "security": [
           {
-            "refresh_token": []
-          },
-          {
             "access_token": []
           }
         ],
         "summary": "User logout",
         "tags": [
-          "auth"
+          "Auth"
         ]
       }
     },
@@ -198,37 +163,23 @@
         "operationId": "AuthController_refresh",
         "parameters": [],
         "responses": {
-          "200": {
+          "201": {
             "description": "Token refreshed",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "token refreshed"
+            "headers": {
+              "Set-Cookie": {
+                "description": "HttpOnly cookies: access_token",
+                "schema": {
+                  "type": "string",
+                  "example": "access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;"
                 }
               }
             }
           },
           "400": {
-            "description": "Refresh token not provided",
-            "content": {
-              "application/json": {
-                "example": {
-                  "statusCode": 400,
-                  "message": "refresh token is not provided, please login again"
-                }
-              }
-            }
+            "description": "Refresh token not provided"
           },
           "401": {
-            "description": "Invalid or expired refresh token",
-            "content": {
-              "application/json": {
-                "example": {
-                  "statusCode": 401,
-                  "message": "Invalid or expired refresh token"
-                }
-              }
-            }
+            "description": "Invalid or expired refresh token"
           },
           "500": {
             "description": "Server error"
@@ -244,11 +195,11 @@
         ],
         "summary": "Refresh access token",
         "tags": [
-          "auth"
+          "Auth"
         ]
       }
     },
-    "/users/{id}": {
+    "/users/by-id/{id}": {
       "get": {
         "operationId": "UsersController_getById",
         "parameters": [
@@ -271,7 +222,7 @@
         ]
       }
     },
-    "/users/{username}": {
+    "/users/by-username/{username}": {
       "get": {
         "operationId": "UsersController_getByUsername",
         "parameters": [
@@ -296,13 +247,18 @@
     }
   },
   "info": {
-    "title": "@spotify/api swagger",
-    "description": "@spotify/api swagger description",
-    "version": "1.0",
+    "title": "@spotify/api",
+    "description": "@spotify/api Swagger documentation",
+    "version": "0.0.1",
     "contact": {}
   },
   "tags": [],
-  "servers": [],
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
   "components": {
     "schemas": {
       "LoginDto": {

@@ -88,7 +88,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/users/{id}": {
+    "/users/by-id/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -104,7 +104,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/users/{username}": {
+    "/users/by-username/{username}": {
         parameters: {
             query?: never;
             header?: never;
@@ -185,21 +185,18 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["LoginDto"][];
+                "application/json": components["schemas"]["LoginDto"];
             };
         };
         responses: {
             /** @description Successfully logged in */
-            200: {
+            201: {
                 headers: {
+                    /** @description HttpOnly cookies: access_token и refresh_token */
+                    "Set-Cookie"?: string;
                     [name: string]: unknown;
                 };
-                content: {
-                    /** @example {
-                     *       "status": "ok"
-                     *     } */
-                    "application/json": unknown;
-                };
+                content?: never;
             };
             /** @description Validation error */
             400: {
@@ -208,11 +205,12 @@ export interface operations {
                 };
                 content: {
                     /** @example {
-                     *       "statusCode": 400,
-                     *       "message": [
-                     *         "email must be an email"
-                     *       ],
-                     *       "error": "Bad Request"
+                     *       "errors": [
+                     *         {
+                     *           "field": "email",
+                     *           "message": "email must be an email"
+                     *         }
+                     *       ]
                      *     } */
                     "application/json": unknown;
                 };
@@ -222,13 +220,7 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    /** @example {
-                     *       "statusCode": 401,
-                     *       "message": "Invalid credentials"
-                     *     } */
-                    "application/json": unknown;
-                };
+                content?: never;
             };
             /** @description Server error */
             500: {
@@ -254,21 +246,16 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["RegistrationDto"][];
+                "application/json": components["schemas"]["RegistrationDto"];
             };
         };
         responses: {
             /** @description Successfully registered */
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    /** @example {
-                     *       "status": 200
-                     *     } */
-                    "application/json": unknown;
-                };
+                content?: never;
             };
             /** @description Validation error */
             400: {
@@ -277,11 +264,12 @@ export interface operations {
                 };
                 content: {
                     /** @example {
-                     *       "statusCode": 400,
-                     *       "message": [
-                     *         "email must be an email"
-                     *       ],
-                     *       "error": "Bad Request"
+                     *       "errors": [
+                     *         {
+                     *           "field": "email",
+                     *           "message": "email must be an email"
+                     *         }
+                     *       ]
                      *     } */
                     "application/json": unknown;
                 };
@@ -291,13 +279,7 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    /** @example {
-                     *       "statusCode": 409,
-                     *       "message": "User already exists"
-                     *     } */
-                    "application/json": unknown;
-                };
+                content?: never;
             };
             /** @description Server error */
             500: {
@@ -324,16 +306,11 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description Successfully logged out */
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    /** @example {
-                     *       "status": "logged out"
-                     *     } */
-                    "application/json": unknown;
-                };
+                content?: never;
             };
             /** @description Unauthorized */
             401: {
@@ -367,42 +344,27 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description Token refreshed */
-            200: {
+            201: {
                 headers: {
+                    /** @description HttpOnly cookies: access_token */
+                    "Set-Cookie"?: string;
                     [name: string]: unknown;
                 };
-                content: {
-                    /** @example {
-                     *       "status": "token refreshed"
-                     *     } */
-                    "application/json": unknown;
-                };
+                content?: never;
             };
             /** @description Refresh token not provided */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    /** @example {
-                     *       "statusCode": 400,
-                     *       "message": "refresh token is not provided, please login again"
-                     *     } */
-                    "application/json": unknown;
-                };
+                content?: never;
             };
             /** @description Invalid or expired refresh token */
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    /** @example {
-                     *       "statusCode": 401,
-                     *       "message": "Invalid or expired refresh token"
-                     *     } */
-                    "application/json": unknown;
-                };
+                content?: never;
             };
             /** @description Server error */
             500: {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { AuthService } from './auth.service'
-import { Controller, Post, Body, Res, Req } from '@nestjs/common'
+import { Controller, Post, Body, Res, Req, BadRequestException } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { LoginDto } from './login.dto'
 import { RegistrationDto } from './registration.dto'
