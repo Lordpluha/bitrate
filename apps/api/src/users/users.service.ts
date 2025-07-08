@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
-import { User } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { UserEntity } from './entities'
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findUserById(id: User['id']) {
+  async findUserById(id: UserEntity['id']) {
     return await this.prisma.user.findFirstOrThrow({
       where: {
         id
@@ -14,7 +14,7 @@ export class UsersService {
     })
   }
 
-  async findUserByEmail(email: User['email']) {
+  async findUserByEmail(email: UserEntity['email']) {
     return await this.prisma.user.findFirstOrThrow({
       where: {
         email
@@ -22,7 +22,7 @@ export class UsersService {
     })
   }
 
-  async findUserByUsername(username: User['username']) {
+  async findUserByUsername(username: UserEntity['username']) {
     return this.prisma.user.findFirstOrThrow({
       where: {
         username
@@ -30,7 +30,7 @@ export class UsersService {
     })
   }
 
-  async createUser(data: Omit<User, 'id' | 'createdAt'>) {
+  async createUser(data: Omit<UserEntity, 'id' | 'createdAt'>) {
     return this.prisma.user.create({
       data
     })

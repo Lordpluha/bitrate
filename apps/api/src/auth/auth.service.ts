@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
 import { UsersService } from '../users/users.service'
 import { JwtService } from '@nestjs/jwt'
-import { User } from '@prisma/client'
+import { UserEntity } from '../users/entities'
 import { JWTPayload } from './types'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async registration(registrationDto: Pick<User, 'email' | 'password'>) {
+  async registration(registrationDto: Pick<UserEntity, 'email' | 'password'>) {
     if (await this.usersService.findUserByEmail(registrationDto.email)) {
       throw new ConflictException('User with this email already exists')
     }
@@ -23,7 +23,7 @@ export class AuthService {
     })
   }
 
-  async login(email: User['email'], password: User['password']) {
+  async login(email: UserEntity['email'], password: UserEntity['password']) {
     const user = await this.usersService.findUserByEmail(email)
     if (user?.password !== password) {
       throw new UnauthorizedException()

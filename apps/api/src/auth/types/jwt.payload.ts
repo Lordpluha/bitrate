@@ -1,6 +1,6 @@
-import { User } from '@prisma/client'
+import { UserEntity } from "src/users/entities"
 
 export type JWTPayload = {
   sub: string
-  username: User['username']
+  username: UserEntity['username']
 }

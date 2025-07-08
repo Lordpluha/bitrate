@@ -1,6 +1,9 @@
 import { Controller, Get, Param } from '@nestjs/common'
 import { UsersService } from './users.service'
+import { ApiExtraModels } from '@nestjs/swagger'
+import { UserEntity } from './entities'
 
+@ApiExtraModels(UserEntity)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
