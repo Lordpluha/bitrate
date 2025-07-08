@@ -7,7 +7,7 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findUserById(id: UserEntity['id']) {
-    return await this.prisma.user.findFirstOrThrow({
+    return await this.prisma.user.findUniqueOrThrow({
       where: {
         id
       }
