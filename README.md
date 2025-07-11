@@ -82,11 +82,23 @@ A full-featured music platform inspired by Spotify, built with a modern monorepo
 - Vitest (unit, integration, E2E), Screenshot testing
 - Feature-Sliced Design
 
-### Mobile App
+### Android
 - React Native, NativeBase, Zustand, Faker
 - React Navigation
 - i18n
 - @tanstack/react-query + AsyncStorage + Persistor + Socket.io
+
+### iOS
+- Flutter
+
+### MacOS
+- Flutter
+
+### Windows
+- Tauri
+
+### Linux
+- Tauri
 
 ### Admin Panel
 - NestJS Admin
