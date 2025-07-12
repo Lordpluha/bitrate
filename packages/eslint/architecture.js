@@ -1,6 +1,6 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  plugins: [ 'eslint-plugin-boundaries' ],
+  plugins: ['eslint-plugin-boundaries'],
   settings: {
     'boundaries/elements': [
       {

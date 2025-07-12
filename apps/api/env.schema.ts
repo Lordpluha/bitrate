@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const envSchema = z.object({
   NODE_ENV: z.enum(['local', 'development', 'production']).default('local'),
@@ -9,6 +9,9 @@ export const envSchema = z.object({
   JWT_SECRET: z.string().min(10),
   JWT_ACCESS_EXPIRES_IN: z.string().default('5m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
+
+  ACCESS_TOKEN_NAME: z.string().default('access_token'),
+  REFRESH_TOKEN_NAME: z.string().default('refresh_token'),
   // OAUTH_GOOGLE_CLIENT_ID: z.string(),
   // OAUTH_GOOGLE_CLIENT_SECRET: z.string(),
 
@@ -20,7 +23,7 @@ export const envSchema = z.object({
   // EMAIL_FROM: z.string().email(),
 
   // Database
-  DATABASE_URL: z.string().url()
+  DATABASE_URL: z.string().url(),
 
   // Redis
   // REDIS_URL: z.string().url(),
@@ -35,6 +38,6 @@ export const envSchema = z.object({
   // POSTFIX_DOMAIN: z.string(),
   // POSTFIX_USER: z.string(),
   // POSTFIX_PASS: z.string(),
-})
+});
 
-export type envType = z.infer<typeof envSchema>
+export type envType = z.infer<typeof envSchema>;

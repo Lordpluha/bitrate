@@ -3,6 +3,17 @@
 # Postman
 https://app.getpostman.com/join-team?invite_code=1fd6000a0cd8139ff2657eb1b9ce483c6ae18ac6b3b3877e612ee8bfc60166ea&target_code=47584a9ad7cb0c5ee8c584d35aa1a88e
 
+# How to start db
+
+start postgresql db on port 5432 (with autorestarting)
+```
+sudo docker compose up -d
+```
+
+```
+turbo dev
+```
+
 # Turborepo Tailwind CSS starter
 
 This Turborepo starter is maintained by the Turborepo core team.
