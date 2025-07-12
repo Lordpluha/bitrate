@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { LoginSchema } from './login.dto'
 import { UserEntity } from 'src/users/entities'
+
+export const RegistrationSchema = LoginSchema
 
 export class RegistrationDto {
   @ApiProperty({

@@ -22,7 +22,8 @@
     "db:migration-reset": "prisma migrate reset",
     "db:migration-start": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
-    "db:generate-production": "prisma generate --no-engine"
+    "db:generate-production": "prisma generate --no-engine",
+		"db:ui": "prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -35,20 +36,21 @@
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "i": "^0.3.7",
+    "nestjs-zod": "^4.3.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "zod": "^3.25.75"
   },
   "devDependencies": {
-    "@spotify/prettier": "workspace:*",
-    "@spotify/contracts": "workspace:*",
-    "@spotify/eslint": "workspace:*",
-    "@spotify/utils": "workspace:*",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@spotify/contracts": "workspace:*",
+    "@spotify/eslint": "workspace:*",
+    "@spotify/prettier": "workspace:*",
+    "@spotify/utils": "workspace:*",
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.10.7",
     "@types/bcrypt": "^5.0.2",

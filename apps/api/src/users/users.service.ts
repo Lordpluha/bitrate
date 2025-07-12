@@ -15,7 +15,7 @@ export class UsersService {
   }
 
   async findUserByEmail(email: UserEntity['email']) {
-    return await this.prisma.user.findFirstOrThrow({
+    return await this.prisma.user.findFirst({
       where: {
         email
       }
@@ -23,7 +23,7 @@ export class UsersService {
   }
 
   async findUserByUsername(username: UserEntity['username']) {
-    return this.prisma.user.findFirstOrThrow({
+    return this.prisma.user.findFirst({
       where: {
         username
       }
