@@ -88,7 +88,7 @@ export class AuthController {
   @Get('me')
   async getMe(@Req() req: Request) {
     const user = req['user'] as JWTPayload
-    const me = await this.userService.findUserById(user.sub)
-    return me
+    const { password, ...safeUser } = await this.userService.findUserById(user.sub)
+    return safeUser
   }
 }
