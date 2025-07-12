@@ -19,11 +19,11 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:start": "prisma dev",
-    "db:migration-reset": "prisma migrate reset",
-    "db:migration-start": "prisma migrate dev --name init",
+    "db:migration:reset": "prisma migrate reset",
+    "db:migration:start": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
-    "db:generate-production": "prisma generate --no-engine",
-		"db:ui": "prisma studio"
+    "db:generate:prod": "prisma generate --no-engine",
+    "db:ui": "prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

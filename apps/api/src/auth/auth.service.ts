@@ -28,7 +28,9 @@ export class AuthService {
     await this.usersService.createUser({
       username: registrationDto.email,
       email: registrationDto.email,
-      password: registrationDto.password
+      password: registrationDto.password,
+      avatar: null,
+      description: null
     })
   }
 

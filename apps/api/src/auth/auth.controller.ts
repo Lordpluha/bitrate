@@ -20,7 +20,8 @@ import {
   AuthLoginSwagger,
   AuthLogoutSwagger,
   AuthRefreshSwagger,
-  AuthRegistrationSwagger
+  AuthRegistrationSwagger,
+	AuthMeSwagger
 } from './decorators'
 import { SessionEntity } from './entities'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -28,7 +29,6 @@ import { AuthGuard } from './auth.guard'
 import { JWTPayload } from './types'
 import { RefreshGuard } from './refresh.guard'
 import { UsersService } from 'src/users/users.service'
-import { AuthMeSwagger } from './decorators/swagger/AuthMe.decorator'
 import { clearAuthCookies, setAuthCookies } from './jwt.utils'
 
 @ApiExtraModels(SessionEntity)

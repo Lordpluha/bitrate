@@ -13,4 +13,7 @@ export class SessionEntity implements Session {
 
   @ApiProperty()
   refresh_token: string
+
+  @ApiProperty()
+  createdAt: Date
 }

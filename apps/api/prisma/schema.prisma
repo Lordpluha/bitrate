@@ -8,30 +8,84 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  username  String
-  email     String    @unique
-  password  String
-  createdAt DateTime  @default(now())
-  Session   Session[]
-  tracks    Track[]
-}
+  id          String    @id @default(uuid())
+  username    String    @unique
+  email       String    @unique
+  password    String
 
-model Track {
-  id        String   @id @default(uuid())
-  title     String
-  artist    String
-  audioUrl  String
-  cover     String
-  userId    String
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  avatar      String?
+  description String?
+  createdAt   DateTime  @default(now())
+
+  sessions    Session[]
+  playlists   Playlist[]
 }
 
 model Session {
-  id            String @id @default(uuid())
+  id            String   @id @default(uuid())
   userId        String
-  access_token  String
-  refresh_token String
-  user          User   @relation(fields: [userId], references: [id])
+  access_token  String   @unique
+  refresh_token String   @unique
+
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model Track {
+  id        String     @id @default(uuid())
+  title     String
+  audioUrl  String
+  cover     String
+  artistId  String
+
+  createdAt DateTime   @default(now())
+
+  albums    Album[]
+  playlists Playlist[]
+
+  artist    Artist     @relation(fields: [artistId], references: [id])
+}
+
+
+model Artist {
+  id              String   @id @default(uuid())
+  username        String   @unique
+  password	      String
+
+  bio             String?
+  avatar          String?
+  backgroundImage String?
+
+  createdAt       DateTime @default(now())
+
+  tracks          Track[]
+  albums          Album[]
+}
+
+model Album {
+  id           String   @id @default(uuid())
+  title        String
+  cover        String
+  artistId     String
+  description  String?
+  createdAt    DateTime @default(now())
+
+  tracks       Track[]
+
+  artist       Artist   @relation(fields: [artistId], references: [id])
+}
+
+model Playlist {
+  id           String   @id @default(uuid())
+  title        String
+  cover        String
+  artistId     String
+  description  String?
+  createdAt    DateTime @default(now())
+  userId       String
+
+  tracks       Track[]
+
+  user         User     @relation(fields: [userId], references: [id])
 }

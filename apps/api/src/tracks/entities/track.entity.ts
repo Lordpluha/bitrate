@@ -22,4 +22,7 @@ export class TrackEntity implements Track {
 
   @ApiProperty()
   createdAt: Date
+
+  @ApiProperty()
+  artistId: string
 }
