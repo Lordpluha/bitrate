@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger'
 import { z } from 'zod'
 
 export const LoginSchema = z.object({
-  email: z.string().email({ message: 'Неверный формат email' }),
+  email: z.string().email({ message: 'Invalid email format' }),
   password: z
     .string()
-    .min(6, { message: 'Пароль должен быть не короче 6 символов' })
-    .max(32, { message: 'Пароль не должен быть длиннее 32 символов' })
+    .min(6, { message: 'Password must be at least 6 characters long' })
+    .max(32, { message: 'Password must not exceed 32 characters' })
 })
 
 export class LoginDto {
