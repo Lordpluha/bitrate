@@ -7,6 +7,10 @@ import { ConfigModule } from '@nestjs/config'
 import { envSchema, envType } from '../env.schema'
 import { PrismaModule } from './prisma/prisma.module'
 import { TracksModule } from './tracks/tracks.module';
+import { PlaylistsModule } from './playlists/playlists.module';
+import { AlbumsService } from './albums/albums.service';
+import { AlbumsController } from './albums/albums.controller';
+import { AlbumsModule } from './albums/albums.module';
 
 @Module({
   imports: [
@@ -19,9 +23,11 @@ import { TracksModule } from './tracks/tracks.module';
     PrismaModule,
     AuthModule,
     UsersModule,
-    TracksModule
+    TracksModule,
+    PlaylistsModule,
+    AlbumsModule
   ],
-  controllers: [AppController],
-  providers: [AppService]
+  controllers: [AppController, AlbumsController],
+  providers: [AppService, AlbumsService]
 })
 export class AppModule {}

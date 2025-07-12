@@ -19,6 +19,7 @@ model User {
 
   sessions    Session[]
   playlists   Playlist[]
+  likedTracks  Track[]    @relation("UserLikedTracks")
 }
 
 model Session {
@@ -42,7 +43,8 @@ model Track {
   createdAt DateTime   @default(now())
 
   albums    Album[]
-  playlists Playlist[]
+  playlists  Playlist[]
+  likedBy    User[]      @relation("UserLikedTracks")
 
   artist    Artist     @relation(fields: [artistId], references: [id])
 }
