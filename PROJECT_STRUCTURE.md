@@ -11,10 +11,11 @@ Contains the individual applications:
 ## packages/
 
 Shared libraries and logic:
-- **ui/**: Reusable UI components (shadcn-based)
-- **types/**: Shared TypeScript types
+- **ui/**: Reusable UI components (shadcn-based) with storybook
 - **contracts/**: Zod/OpenAPI contracts
-- **config/**: Environment schemas, shared configs
+- **eslint/**: Eslint shared configs
+- **prettier/**: Prettier shared config
+- **stylelint/**: Stylelint shared config
 
 ## docs/
 

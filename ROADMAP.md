@@ -72,8 +72,8 @@
 - [ ] Auth middleware
 
 ### 💾 Database
-- [ ] MongoDB (initial)
-- [ ] Mongoose or Prisma schema for users/tracks
+- [ ] Postgres (initial)
+- [ ] Postgres and Prisma schema for users/tracks
 
 ### ☁️ Storage
 - [ ] Local disk or MinIO-compatible S3
@@ -94,10 +94,10 @@
 
 ## 🌐 Phase 6: Infra & Deploy MVP
 
-- [ ] Docker Compose: api, client, mongo, nginx
+- [ ] Docker Compose: api, client, postgres, nginx
 - [ ] Github Actions build + deploy
 - [ ] Local nginx + https (optional)
-- [ ] Self-hosted Sentry + Mongo backups
+- [ ] Self-hosted Sentry + Postgres backups
 - [ ] `.env.schema.ts` and validation
 
 ---
