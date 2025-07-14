@@ -46,7 +46,7 @@ turbo dev
 - Tauri
 
 ### Admin Panel
-- NestJS Admin
+- AdminJS based on Prisma schema
 
 ### Backend
 - NestJS, TypeScript
@@ -69,7 +69,7 @@ turbo dev
 - Docs: Mintlify
 
 ### Future features
-- GraphQL, AdminJS
+- GraphQL
 - Microservices, Micro-Frontends, Web Components
 - CDN + S3, Logs, Metrics
 
