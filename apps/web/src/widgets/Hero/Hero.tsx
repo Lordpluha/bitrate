@@ -8,13 +8,13 @@ import {
   Heading6,
 } from "@spotify/ui";
 import clsx from "clsx";
-import { HeadingBlock1 } from "./ui/HeadingBlock";
+import { HeadingBlock } from "./ui/HeadingBlock";
 import { MobileBLock } from "./ui/MobileBlock";
 
 export const Hero = () => {
   return (
-    <div className="hero flex gap-2 items-stretch container-2">
-      <HeadingBlock1 />
+    <div className="hero flex gap-2 items-stretch container-2 !max-w-[1580px] box-border max-lg:grid max-lg:grid-rows-2">
+      <HeadingBlock />
       <MobileBLock/>
     </div>
   );
