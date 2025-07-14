@@ -5,13 +5,19 @@ https://app.getpostman.com/join-team?invite_code=1fd6000a0cd8139ff2657eb1b9ce483
 
 # How to start db
 
-start postgresql db on port 5432 (with autorestarting)
-```
-sudo docker compose up -d
+Start postgresql db on port 5432 (with autorestarting)
+```bash
+$ sudo docker compose up -d
 ```
 
+Install deps
+```bash
+$ pnpm i
 ```
-turbo dev
+
+Start monorepo projects
+```bash
+$ turbo dev
 ```
 
 ## 📦 Tech Stack
