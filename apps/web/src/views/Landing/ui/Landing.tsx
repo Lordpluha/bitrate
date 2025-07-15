@@ -19,7 +19,7 @@ import { QRcode } from "@widgets/QRcode";
 export const Landing = () => {
   return (
     <div className="wrap">
-      {/* <Header /> */}
+      <Header />
       <main>
         <Hero />
         <QRcode />

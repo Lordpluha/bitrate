@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
+// import { variantGroup } from "tailwindcss-variant-group";
 
 const config = {
   darkMode: ["class"],
@@ -58,7 +59,7 @@ const config = {
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate, /* variantGroup(),*/ ],
 } satisfies Config;
 
 export default config;
