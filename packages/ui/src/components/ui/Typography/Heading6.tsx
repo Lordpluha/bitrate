@@ -15,7 +15,7 @@ export const Heading6: FC<Heading6Props> = ({
   ...etcProps
 }) => {
   return (
-    <h5
+    <h6
       className={clsx(
         'text-[1.125rem]',
         'max-lg:text-base',
