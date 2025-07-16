@@ -36,8 +36,7 @@ const start = async () => {
     },
   );
 
-  // @ts-expect-error quick fix for types
-  app.use(admin.options.rootPath, router);
+  app.use(admin.options.rootPath, router as express.Router);
 
   app.listen(port, () => {
     console.log(`AdminJS available at http://localhost:${port}${admin.options.rootPath}`);
