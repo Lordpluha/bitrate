@@ -23,7 +23,7 @@ $ turbo dev
 ## 📦 Tech Stack
 
 ### Client
-- Next.js 15 App Router + Server Actions + middleware, TypeScript
+- Next.js 15 App Router + Server Actions + middleware, TypeScript, PWA
 - TurboBuild
 - TailwindCSS, Module.css, clsx
 - Zustand, React Hook Form + Zod
