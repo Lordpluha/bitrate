@@ -77,7 +77,7 @@ $ turbo dev
 - @nestjs/throttler, Fingerprint auth
 - ConfigModule, @nestjs/schedule (CRON)
 - Prometheus + Grafana, nestjs-pino
-### Testing
+#### Testing
 - Jest
 
 ### Infrastructure
