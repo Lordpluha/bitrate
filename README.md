@@ -31,20 +31,32 @@ $ turbo dev
 - i18n, MSW
 - @tanstack/react-query (Codegen via openApiTS) + Socket.io
 - Storybook, Shadcn UI
-- Vitest (unit, integration, E2E), Screenshot testing
 - Feature-Sliced Design
+#### Testing
+- Vitest (Unit)
+- RTL (Intergration)
+- msw + openapi-msw (mocks)
+- Playwright (E2E)
 
 ### Android
 - React Native, NativeBase, Zustand, Faker
 - React Navigation
 - i18n
 - @tanstack/react-query + AsyncStorage + Persistor + Socket.io
+#### Testing
+- Jest (Unit)
+- RTL/Native (Integration)
+- detox (E2E)
 
 ### iOS
 - Flutter
+#### Testing
+- Flutter testing utils
 
 ### MacOS
 - Flutter
+#### Testing
+- Flutter testing utils
 
 ### Windows
 - Tauri
@@ -65,6 +77,8 @@ $ turbo dev
 - @nestjs/throttler, Fingerprint auth
 - ConfigModule, @nestjs/schedule (CRON)
 - Prometheus + Grafana, nestjs-pino
+### Testing
+- Jest
 
 ### Infrastructure
 - Monorepo: TurboRepo + Pnpm
