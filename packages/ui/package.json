@@ -22,8 +22,7 @@
     "stylelint": "stylelint \"./src/**/*.{scss,css}\" --config @spotify/stylelint --fix --cache --cache-location node_modules/.cache/stylelint",
     "format": "npm run prettier && npm run stylelint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "chromatic": "npx chromatic --project-token=chpt_e578aec4511e970"
+    "build-storybook": "storybook build"
   },
   "prettier": "@spotify/prettier",
   "peerDependencies": {
@@ -48,14 +47,17 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-label": "^2.1.7",
-    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.514.0",
+    "react-hook-form": "^7.60.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.7",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^4.0.5"
   }
 }
