@@ -15,10 +15,9 @@ jobs:
         with:
           node-version: 22.17.0
       - name: Setup pnpm
-        run: npm install --global corepack@latest
-          | corepack enable
-          | corepack prepare pnpm@latest-10 --activate
-          | pnpm config set store-dir ~/.pnpm-store
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
       - name: Install dependencies
         run: pnpm install
       - name: Run Chromatic
