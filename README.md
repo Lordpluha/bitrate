@@ -95,7 +95,7 @@ $ turbo dev
 - Docs: Mintlify
 
 ### Future features
-- Microservices, Micro-Frontends, Web Components
+- Microservices, Micro-Frontends
 - CDN + S3, Logs, Metrics
 
 ## 📄 License
