@@ -1,7 +1,8 @@
 # Music Platform (Spotify Clone)
 
-# Postman
-https://app.getpostman.com/join-team?invite_code=1fd6000a0cd8139ff2657eb1b9ce483c6ae18ac6b3b3877e612ee8bfc60166ea&target_code=47584a9ad7cb0c5ee8c584d35aa1a88e
+## Usefull links
+- Chromatic - https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
+- Storybook - 
 
 # Your first start
 
