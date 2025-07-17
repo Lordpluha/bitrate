@@ -90,7 +90,6 @@ $ turbo dev
 - Docs: Mintlify
 
 ### Future features
-- GraphQL
 - Microservices, Micro-Frontends, Web Components
 - CDN + S3, Logs, Metrics
 
