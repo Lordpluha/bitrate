@@ -32,6 +32,7 @@ $ turbo dev
 - @tanstack/react-query (Codegen via openApiTS) + Socket.io
 - Storybook, Shadcn UI
 - Feature-Sliced Design
+- Sentry
 #### Testing
 - Vitest (Unit)
 - RTL (Intergration)
@@ -43,6 +44,7 @@ $ turbo dev
 - React Navigation
 - i18n
 - @tanstack/react-query + AsyncStorage + Persistor + Socket.io
+- Sentry
 #### Testing
 - Jest (Unit)
 - RTL/Native (Integration)
@@ -50,11 +52,13 @@ $ turbo dev
 
 ### iOS
 - Flutter
+- Sentry
 #### Testing
 - Flutter testing utils
 
 ### MacOS
 - Flutter
+- Sentry
 #### Testing
 - Flutter testing utils
 
@@ -77,6 +81,7 @@ $ turbo dev
 - @nestjs/throttler, Fingerprint auth
 - ConfigModule, @nestjs/schedule (CRON)
 - Prometheus + Grafana, nestjs-pino
+- Sentry
 #### Testing
 - Jest
 
