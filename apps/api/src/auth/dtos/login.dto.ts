@@ -11,8 +11,8 @@ export const LoginSchema = z.object({
 
 export class LoginDto {
   @ApiProperty({ description: 'User email', example: 'user@example.com' })
-  email: string;
+  email: string
 
   @ApiProperty({ description: 'User password', example: 'password123' })
-  password: string;
+  password: string
 }

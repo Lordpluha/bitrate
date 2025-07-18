@@ -1,80 +1,86 @@
 // Replace nextjs-vite with the name of your framework
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { Button } from "./button";
-import { Label } from "./label";
-import { Textarea } from "./textarea";
+import { Button } from './button'
+import { Label } from './label'
+import { Textarea } from './textarea'
 
 /**
  * Displays a form textarea or a component that looks like a textarea.
  */
 const meta = {
-  title: "ui/Textarea",
+  title: 'ui/Textarea',
   component: Textarea,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {},
   args: {
-    placeholder: "Type your message here.",
-    disabled: false,
-  },
-} satisfies Meta<typeof Textarea>;
+    placeholder: 'Type your message here.',
+    disabled: false
+  }
+} satisfies Meta<typeof Textarea>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default form of the textarea.
  */
-export const Default: Story = {};
+export const Default: Story = {}
 
 /**
  * Use the `disabled` prop to disable the textarea.
  */
 export const Disabled: Story = {
   args: {
-    disabled: true,
-  },
-};
+    disabled: true
+  }
+}
 
 /**
  * Use the `Label` component to includes a clear, descriptive label above or
  * alongside the text area to guide users.
  */
 export const WithLabel: Story = {
-  render: (args) => (
-    <div className="grid w-full gap-1.5">
-      <Label htmlFor="message">Your message</Label>
-      <Textarea {...args} id="message" />
+  render: args => (
+    <div className='grid w-full gap-1.5'>
+      <Label htmlFor='message'>Your message</Label>
+      <Textarea
+        {...args}
+        id='message'
+      />
     </div>
-  ),
-};
+  )
+}
 
 /**
  * Use a text element below the text area to provide additional instructions
  * or information to users.
  */
 export const WithText: Story = {
-  render: (args) => (
-    <div className="grid w-full gap-1.5">
-      <Label htmlFor="message-2">Your Message</Label>
-      <Textarea {...args} id="message-2" />
-      <p className="text-sm text-slate-500">
+  render: args => (
+    <div className='grid w-full gap-1.5'>
+      <Label htmlFor='message-2'>Your Message</Label>
+      <Textarea
+        {...args}
+        id='message-2'
+      />
+      <p className='text-sm text-slate-500'>
         Your message will be copied to the support team.
       </p>
     </div>
-  ),
-};
+  )
+}
 
 /**
  * Use the `Button` component to indicate that the text area can be submitted
  * or used to trigger an action.
  */
 export const WithButton: Story = {
-  render: (args) => (
-    <div className="grid w-full gap-2">
+  render: args => (
+    <div className='grid w-full gap-2'>
       <Textarea {...args} />
-      <Button type="submit">Send Message</Button>
+      <Button type='submit'>Send Message</Button>
     </div>
-  ),
-};
+  )
+}

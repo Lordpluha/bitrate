@@ -1,1 +1,1 @@
-export * from './ui/Landing'
+export * from "./ui/Landing";

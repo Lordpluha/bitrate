@@ -1,5 +1,5 @@
-import React from 'react'
-import { RegistrationForm } from '@features/Registration'
+import React from "react";
+import { RegistrationForm } from "@features/Registration";
 
 export const Registration = () => {
   return (
@@ -7,5 +7,5 @@ export const Registration = () => {
       <h1>Registration Page</h1>
       <RegistrationForm />
     </div>
-  )
-}
+  );
+};

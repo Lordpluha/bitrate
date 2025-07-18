@@ -1,4 +1,4 @@
-import { LoginForm } from '@features/Login'
+import { LoginForm } from "@features/Login";
 
 export const Login = () => {
   return (
@@ -6,5 +6,5 @@ export const Login = () => {
       <h1>Login Page</h1>
       <LoginForm />
     </div>
-  )
-}
+  );
+};
