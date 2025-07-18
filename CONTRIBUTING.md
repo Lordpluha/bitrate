@@ -35,5 +35,6 @@ pnpm prepare
 - `pnpm docs` — build documentation
 - `pnpm test` — run all tests
 - `pnpm lint` — run linters
+- `pnpm commit` — make a conventional commit from the monorepo root
 
 Happy coding! 🎧
