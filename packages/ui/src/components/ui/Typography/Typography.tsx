@@ -1,7 +1,14 @@
-import { Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Paragraph } from '@spotify/ui'
+import { Heading1 } from "./Heading1"
+import { Heading2 } from "./Heading2"
+import { Heading3 } from "./Heading3"
+import { Heading4 } from "./Heading4"
+import { Heading5 } from "./Heading5"
+import { Heading6 } from "./Heading6"
+import { Paragraph } from "./Paragraph"
+
 
 const Typography = () => {
-  return <p></p>
+  throw new Error("Can't use typography without inner elements")
 }
 
 Typography.Heading1 = Heading1

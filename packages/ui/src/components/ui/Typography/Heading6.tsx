@@ -25,7 +25,7 @@ export const Heading6: FC<Heading6Props> = ({
       {...etcProps}
     >
       {children}
-    </h5>
+    </h6>
   )
 }
 
