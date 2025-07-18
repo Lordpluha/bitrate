@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 const options: AdminJSOptions = {
   componentLoader,
-  rootPath: '/admin',
+  rootPath: '/',
   resources: [
     {
       resource: { model: getModelByName('User'), client: prisma },
