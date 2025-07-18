@@ -1,4 +1,4 @@
-import { UserEntity } from "src/users/entities"
+import { UserEntity } from 'src/users/entities'
 
 export type JWTPayload = {
   sub: string

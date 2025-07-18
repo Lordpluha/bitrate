@@ -13,6 +13,7 @@
     "stylelint": "stylelint \"./src/**/*.{scss,css}\" --config @spotify/stylelint --fix --cache --cache-location node_modules/.cache/stylelint",
     "format": "npm run prettier && npm run stylelint"
   },
+  "prettier": "@spotify/prettier",
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
     "@spotify/ui": "workspace:*",

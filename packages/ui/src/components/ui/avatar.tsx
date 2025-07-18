@@ -1,7 +1,7 @@
-import * as React from "react"
-import * as AvatarPrimitive from "@radix-ui/react-avatar"
+import * as React from 'react'
+import * as AvatarPrimitive from '@radix-ui/react-avatar'
 
-import { cn } from "@spotify/ui/lib/utils"
+import { cn } from '@spotify/ui/lib/utils'
 
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
@@ -10,7 +10,7 @@ const Avatar = React.forwardRef<
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      "ui-relative ui-flex ui-h-10 ui-w-10 ui-shrink-0 ui-overflow-hidden ui-rounded-full",
+      'ui-relative ui-flex ui-h-10 ui-w-10 ui-shrink-0 ui-overflow-hidden ui-rounded-full',
       className
     )}
     {...props}
@@ -24,7 +24,7 @@ const AvatarImage = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
-    className={cn("ui-aspect-square ui-h-full ui-w-full", className)}
+    className={cn('ui-aspect-square ui-h-full ui-w-full', className)}
     {...props}
   />
 ))
@@ -37,7 +37,7 @@ const AvatarFallback = React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "ui-flex ui-h-full ui-w-full ui-items-center ui-justify-center ui-rounded-full ui-bg-slate-100 dark:ui-bg-slate-800",
+      'ui-flex ui-h-full ui-w-full ui-items-center ui-justify-center ui-rounded-full ui-bg-slate-100 dark:ui-bg-slate-800',
       className
     )}
     {...props}

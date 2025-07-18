@@ -20,7 +20,12 @@ Shared libraries and logic:
 ## docs/
 
 Project documentation used with Mintlify:
-- `architecture.md`
-- `deployment.md`
-- `style-guide.md`
-- `env.md`
+- ARCHITECTURE.md
+- STYLE_GUIDE.md
+- ROADMAP.md
+- FAQ.md
+- CONTRIBUTING.md
+- CODE_OF_CONDUCT.md
+- BACKLOG.md
+- README.md
+- LICENSE

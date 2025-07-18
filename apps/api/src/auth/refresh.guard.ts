@@ -25,7 +25,7 @@ export class RefreshGuard implements CanActivate {
         secret: process.env.JWT_SECRET
       })
       request[process.env.REFRESH_TOKEN_NAME!] = token
-			request['user'] = payload
+      request['user'] = payload
     } catch {
       throw new UnauthorizedException('Invalid or expired token')
     }

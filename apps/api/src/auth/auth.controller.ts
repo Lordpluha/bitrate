@@ -21,7 +21,7 @@ import {
   AuthLogoutSwagger,
   AuthRefreshSwagger,
   AuthRegistrationSwagger,
-	AuthMeSwagger
+  AuthMeSwagger
 } from './decorators'
 import { SessionEntity } from './entities'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -67,7 +67,10 @@ export class AuthController {
   @Post('logout')
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const user = req['user'] as JWTPayload
-    await this.authService.logout(user.sub, req[process.env.REFRESH_TOKEN_NAME!] as string)
+    await this.authService.logout(
+      user.sub,
+      req[process.env.REFRESH_TOKEN_NAME!] as string
+    )
     clearAuthCookies(res)
   }
 
@@ -88,7 +91,9 @@ export class AuthController {
   @Get('me')
   async getMe(@Req() req: Request) {
     const user = req['user'] as JWTPayload
-    const { password, ...safeUser } = await this.userService.findUserById(user.sub)
+    const { password, ...safeUser } = await this.userService.findUserById(
+      user.sub
+    )
     return safeUser
   }
 }

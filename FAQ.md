@@ -25,3 +25,11 @@ pnpm dev
 ## How do I contribute?
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md)
+
+## What should I do if I have an error with entities from @prisma/client?
+
+Try running your Prisma migrations:
+
+```bash
+cd apps/api && pnpm prisma migrate dev
+```
