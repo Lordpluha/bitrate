@@ -14,8 +14,8 @@ module.exports = {
     indent: ['error', 2],
     'max-len': ['error', 120],
     'linebreak-style': ['error', 'unix'],
-    quotes: 'off',
-		'semi': 'off',
+    quotes: ['error', 'single'],
+    semi: ['error', 'always'],
     'no-underscore-dangle': 'off',
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
@@ -24,7 +24,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'import/extensions': 'off',
     'import/order': [
-      'off',
+      'error',
       {
         groups: ['builtin', 'external', 'parent', 'sibling', 'index'],
         'newlines-between': 'always',

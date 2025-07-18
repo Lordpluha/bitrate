@@ -37,10 +37,10 @@ importers:
         version: 6.1.1(adminjs@7.8.16(@types/babel__core@7.20.5)(@types/react@19.1.8))(express-formidable@1.2.0)(express-session@1.18.1)(express@4.21.2)(tslib@2.8.1)
       '@adminjs/prisma':
         specifier: ^5.0.1
-        version: 5.0.4(@prisma/client@6.11.1(prisma@5.22.0)(typescript@5.8.3))(adminjs@7.8.16(@types/babel__core@7.20.5)(@types/react@19.1.8))
+        version: 5.0.4(@prisma/client@5.22.0(prisma@5.22.0))(adminjs@7.8.16(@types/babel__core@7.20.5)(@types/react@19.1.8))
       '@prisma/client':
-        specifier: ^6.11.1
-        version: 6.11.1(prisma@5.22.0)(typescript@5.8.3)
+        specifier: ^5.6.0
+        version: 5.22.0(prisma@5.22.0)
       adminjs:
         specifier: ^7.7.2
         version: 7.8.16(@types/babel__core@7.20.5)(@types/react@19.1.8)
@@ -2703,16 +2703,13 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  '@prisma/client@6.11.1':
-    resolution: {integrity: sha512-5CLFh8QP6KxRm83pJ84jaVCeSVPQr8k0L2SEtOJHwdkS57/VQDcI/wQpGmdyOZi+D9gdNabdo8tj1Uk+w+upsQ==}
-    engines: {node: '>=18.18'}
+  '@prisma/client@5.22.0':
+    resolution: {integrity: sha512-M0SVXfyHnQREBKxCgyo7sffrKttwE6R8PMq330MIUF0pTwjUhLbW84pFDlf06B27XyCR++VtjugEnIHdr07SVA==}
+    engines: {node: '>=16.13'}
     peerDependencies:
       prisma: '*'
-      typescript: '>=5.1.0'
     peerDependenciesMeta:
       prisma:
-        optional: true
-      typescript:
         optional: true
 
   '@prisma/client@6.12.0':
@@ -10529,9 +10526,9 @@ snapshots:
       express-session: 1.18.1
       tslib: 2.8.1
 
-  '@adminjs/prisma@5.0.4(@prisma/client@6.11.1(prisma@5.22.0)(typescript@5.8.3))(adminjs@7.8.16(@types/babel__core@7.20.5)(@types/react@19.1.8))':
+  '@adminjs/prisma@5.0.4(@prisma/client@5.22.0(prisma@5.22.0))(adminjs@7.8.16(@types/babel__core@7.20.5)(@types/react@19.1.8))':
     dependencies:
-      '@prisma/client': 6.11.1(prisma@5.22.0)(typescript@5.8.3)
+      '@prisma/client': 5.22.0(prisma@5.22.0)
       adminjs: 7.8.16(@types/babel__core@7.20.5)(@types/react@19.1.8)
 
   '@adobe/css-tools@4.4.3': {}
@@ -13164,10 +13161,9 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@prisma/client@6.11.1(prisma@5.22.0)(typescript@5.8.3)':
+  '@prisma/client@5.22.0(prisma@5.22.0)':
     optionalDependencies:
       prisma: 5.22.0
-      typescript: 5.8.3
 
   '@prisma/client@6.12.0(prisma@6.12.0(typescript@5.8.3))(typescript@5.8.3)':
     optionalDependencies:
