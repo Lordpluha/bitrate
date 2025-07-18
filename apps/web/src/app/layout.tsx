@@ -1,16 +1,14 @@
-import '@spotify/ui/globals.css'
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
+import { Source_Sans_3 } from 'next/font/google'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from '@shared/api'
+import { PropsWithChildren } from 'react'
 
-const geistSans = localFont({
-  src: '../../public/fonts/GeistVF.woff',
-  variable: '--font-geist-sans'
-})
-const geistMono = localFont({
-  src: '../../public/fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono'
+import '@spotify/ui/globals.css'
+import "./global.css";
+
+const sourceSans = Source_Sans_3({
+  variable: '--font-source-sans'
 })
 
 export const metadata: Metadata = {
@@ -20,12 +18,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: PropsWithChildren) {
+  const lang = 'en'
+
   return (
-    <html lang='en'>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang={lang}>
+      <body className={`${sourceSans.variable}`}>
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>

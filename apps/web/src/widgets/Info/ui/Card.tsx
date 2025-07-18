@@ -1,6 +1,6 @@
 
 import Image from "next/image"
-import { Heading5  } from '@spotify/ui'
+import { Typography  } from '@spotify/ui'
 import { FC, ReactNode } from "react"
 
 type CardProps = {
@@ -17,8 +17,8 @@ export const Card:FC<CardProps> = (props) => {
       <Image className="w-auto h-auto" src={props.icon} alt="" width={60} height={60}/>
       </div>
 
-      <Heading5>{props.title}</Heading5>
-      <p>{props.description}</p>
+      <Typography.Heading5>{props.title}</Typography.Heading5>
+      <Typography.Paragraph>{props.description}</Typography.Paragraph>
     </div>
   )
 }

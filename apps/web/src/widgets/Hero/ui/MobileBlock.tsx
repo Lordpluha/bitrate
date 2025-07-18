@@ -6,5 +6,5 @@ export const MobileBLock = () => {
       <img className="w-[364px] h-[54px] absolute bottom-[132px] left-0 right-0 z-[3] object-cover" src="/images/spotify-music-1.png" alt="" />
       <img className="w-[364px] h-[84px] absolute bottom-10 left-10 right-0 z-[3] object-cover" src="/images/spotify-music-2.png" alt="" />
     </div>
-    )
+  )
 }

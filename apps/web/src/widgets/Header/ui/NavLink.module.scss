@@ -2,37 +2,3 @@
     @apply text-xl hover:opacity-70 transition-[0.3s] relative transition-all;
   }
 
-
-.nav__link:before, .nav__link:after {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 100px;
-	height: 100px;
-	border: 2px solid rgba(255, 255, 255, 0.1);
-	border-radius: 50%;
-	content: '';
-	opacity: 0;
-	-webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
-	-moz-transition: -moz-transform 0.3s, opacity 0.3s;
-	transition: transform 0.3s, opacity 0.3s;
-	-webkit-transform: translateX(-50%) translateY(-50%) scale(0.2);
-	-moz-transform: translateX(-50%) translateY(-50%) scale(0.2);
-	transform: translateX(-50%) translateY(-50%) scale(0.2);
-}
-
-.nav__link:after {
-	width: 90px;
-	height: 90px;
-	border-width: 6px;
-	-webkit-transform: translateX(-50%) translateY(-50%) scale(0.8);
-	-moz-transform: translateX(-50%) translateY(-50%) scale(0.8);
-	transform: translateX(-50%) translateY(-50%) scale(0.8);
-}
-
-.nav__link:hover:before, .nav__link:hover:after, .nav__link:focus:before, .nav__link:focus:after {
-	opacity: 1;
-	-webkit-transform: translateX(-50%) translateY(-50%) scale(1);
-	-moz-transform: translateX(-50%) translateY(-50%) scale(1);
-	transform: translateX(-50%) translateY(-50%) scale(1);
-}

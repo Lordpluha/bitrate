@@ -1,6 +1,5 @@
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
-// import { variantGroup } from "tailwindcss-variant-group";
 
 const config = {
   darkMode: ["class"],
@@ -9,26 +8,39 @@ const config = {
   ],
   theme: {
     container: {
-      center: true,
-    },
+    center: true,
+    padding: '1.25rem', // = 20px = px-5
     screens: {
-        xs: '480px',
-        sm: '650px',
-        md: '768px',
-        lg: '1023px',
-        xl: '1280px',
-        '2xl': '1536px',
-        'max-2xl': { max: '1535px' },
-        'max-xl': { max: '1279px' },
-        'max-lg': { max: '1024.0001px' },
-        'max-md': { max: '768px' },
-        'max-sm': { max: '650px' },
-        'max-xs': { max: '479px' },
-      },
-      fontFamily: {
-        nunito: ["Nunito", "sans-serif"],
-        sourceSans3: ["Source Sans 3", "sans-serif"],
-      },
+      DEFAULT: '100%',
+      sm: '650px',
+      md: '768px',
+      lg: '1023px',
+      xl: '1280px',
+      '2xl': '1440px',
+      '3xl': '1540px',
+    },
+  },
+    screens: {
+      xs: '480px',
+      sm: '650px',
+      md: '768px',
+      lg: '1023px',
+      xl: '1280px',
+      '2xl': '1536px',
+      'max-2xl': { max: '1535px' },
+      'max-xl': { max: '1279px' },
+      'max-lg': { max: '1024.0001px' },
+      'max-md': { max: '768px' },
+      'max-sm': { max: '650px' },
+      'max-xs': { max: '479px' },
+    },
+    backgroundImage: {
+      'hero-gradient': 'linear-gradient(150deg, #0D2616 0%, #121212 99.04%)'
+    },
+    fontFamily: {
+      nunito: ["Nunito", "sans-serif"],
+      sourceSans3: ["Source Sans 3", "sans-serif"],
+    },
     extend: {
       colors: {
         "black-100": "#2B2C35",
@@ -59,7 +71,7 @@ const config = {
       },
     },
   },
-  plugins: [tailwindcssAnimate, /* variantGroup(),*/ ],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;
 
 export default config;
