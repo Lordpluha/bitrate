@@ -1,13 +1,16 @@
-import { Button } from "@spotify/ui";
-import React from "react";
+import { Button } from '@spotify/ui'
+import React from 'react'
 
 export const RegistrationForm = () => {
   return (
     <div>
       RegistrationForm
-      <Button variant="destructive" className="rounded">
+      <Button
+        variant='destructive'
+        className='rounded'
+      >
         Register
       </Button>
     </div>
-  );
-};
+  )
+}

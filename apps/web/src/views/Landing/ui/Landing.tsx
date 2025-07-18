@@ -1,5 +1,5 @@
-import { Button } from "@spotify/ui";
+import { Button } from '@spotify/ui'
 
 export const Landing = () => {
-  return <Button variant={"destructive"}>Read more</Button>;
-};
+  return <Button variant={'destructive'}>Read more</Button>
+}
