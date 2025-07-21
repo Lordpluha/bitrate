@@ -7,7 +7,7 @@
 }
 
 .inner {
-  @apply px-4 py-8 flex justify-between items-center relative;
+  @apply px-8 py-8 flex justify-between items-center relative;
 }
 
 .nav {
@@ -17,6 +17,16 @@
 .navList {
   @apply flex items-center gap-16 transition-all duration-300;
 }
+
+.burger {
+  @apply text-white hidden absolute z-20 right-8 top-8;
+}
+
+@media (max-width: 1024px) {
+  .burger {
+    @apply block;
+  }
+
 
 .mobileLayout {
   @apply fixed top-0 right-0 bottom-0 left-[-100%] bg-black h-screen w-full z-10;
@@ -30,12 +40,5 @@
   @apply flex-col justify-center;
 }
 
-.burger {
-  @apply text-white hidden absolute z-20 right-0 top-12;
-}
 
-@media (max-width: 1024px) {
-  .burger {
-    @apply block;
-  }
 }

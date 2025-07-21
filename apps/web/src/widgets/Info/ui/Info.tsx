@@ -1,7 +1,7 @@
 import { Typography } from "@spotify/ui";
-import { Card } from "./ui/Card";
+import { InfoCard } from "./InfoCard";
 import { Wrap } from "@widgets/Wrap";
-import cardData from "./config/cardData.json";
+import cardData from "../config/cardData.json";
 
 export const Info = () => {
   return (
@@ -19,7 +19,7 @@ export const Info = () => {
       </div>
       <div className="grid grid-cols-4 gap-2 items-center max-md:grid-cols-2 max-xs:grid-cols-1">
         {cardData.map((card, i) => (
-          <Card key={i} {...card} />
+          <InfoCard key={i} {...card} />
         ))}
       </div>
     </Wrap>

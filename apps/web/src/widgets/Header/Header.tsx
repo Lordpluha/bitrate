@@ -5,7 +5,7 @@ import { AuthButtons } from "./ui/AuthButtons";
 import { Logo } from "./ui/Logo";
 import { NavLinks } from "./ui/NavLinks";
 import { useEffect, useState } from "react";
-import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { AlignJustify, X  } from "lucide-react";
 import clsx from "clsx";
 import styles from "./Header.module.css";
 
@@ -40,7 +40,7 @@ export const Header = () => {
             onClick={() => setIsNavActive(!isNav)}
             className={styles.burger}
           >
-            {isNav ? <AiOutlineClose size={40} /> : <AiOutlineMenu size={40} />}
+            {isNav ? <X size={40} /> : <AlignJustify size={40} />}
           </div>
         </nav>
       </div>

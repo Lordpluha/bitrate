@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import plans from "./config/plans.json";
 import paymentIcons from "./config/paymentIcons.json";
+import { PlanList } from "./ui/PlanList";
 
 export const Plans = () => {
   return (
@@ -56,19 +57,7 @@ export const Plans = () => {
               </Typography.Paragraph>
               <Typography.Paragraph>{plan.accounts}</Typography.Paragraph>
             </div>
-            <ul className="text-left flex flex-col items-start gap-2 mb-6">
-              {plan.features.map((feature, i) => (
-                <li key={i} className="flex items-center gap-3">
-                  <Image
-                    src="/icons/green-check.svg"
-                    alt="Check"
-                    height={22}
-                    width={14}
-                  />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+            <PlanList features={plan.features}></PlanList>
             <div className="mt-auto mb-0 w-full flex items-start flex-col">
               <Link
                 href="#"
