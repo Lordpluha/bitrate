@@ -7,7 +7,7 @@ type ThemeSwitcherProps = {
   setIsTheme: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ThemeSwitcher = ({ themes, isTheme, setIsTheme }: ThemeSwitcherProps) => {
+export const ThemeSwitcher = ({ themes, isTheme, setIsTheme }: ThemeSwitcherProps) => {
   const icons: Record<string, JSX.Element> = {
     white: <Sun size={16} />,
     dark: <Moon size={16} />,
@@ -32,4 +32,3 @@ const ThemeSwitcher = ({ themes, isTheme, setIsTheme }: ThemeSwitcherProps) => {
   );
 };
 
-export default ThemeSwitcher;

@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import { AlignJustify, X } from "lucide-react";
 import clsx from "clsx";
 import styles from "./Header.module.css";
-import ThemeSwitcher from "./ui/ThemeSwitcher";
+import { ThemeSwitcher } from "@features/SwitchTheme";
+
 
 type HeaderProps = {
   themes: string[];

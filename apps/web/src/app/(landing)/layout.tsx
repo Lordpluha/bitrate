@@ -1,5 +1,6 @@
 "use client";
 
+import { themes } from "@shared/constants/theme";
 import { Footer } from "@widgets/Footer";
 import { Header } from "@widgets/Header";
 import clsx from "clsx";
@@ -7,10 +8,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { PropsWithChildren, useEffect, useState } from "react";
 
-export default function LandingLayout({ children }: PropsWithChildren) {
-  const themes = ["dark", "white", "contrast"];
 
-  const [isTheme, setIsTheme] = useState<string>(themes[0] ?? "");
+export default function LandingLayout({ children }: PropsWithChildren) {
+  const [isTheme, setIsTheme] = useState<string>(themes[0]);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
@@ -24,7 +24,7 @@ export default function LandingLayout({ children }: PropsWithChildren) {
     const className = `theme-${isTheme}`;
     const root = document.documentElement;
 
-    root.classList.remove("theme-white", "theme-contrast", "theme-dark");
+    root.classList.remove("theme-dark", "theme-contrast", "theme-white");
     root.classList.add(className);
 
     localStorage.setItem("theme", isTheme);
