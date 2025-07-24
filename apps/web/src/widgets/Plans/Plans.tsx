@@ -37,7 +37,7 @@ export const Plans = () => {
           <div
             key={index}
             className={clsx(
-              "bg-secondary h-full shadow-[0_6px_20px_1px_rgba(30,215,96,0.3)] p-8 rounded-xl flex flex-col items-start justify-start",
+              "bg-bgSecondary h-full shadow-[0_6px_20px_1px_rgba(30,215,96,0.3)] p-8 rounded-xl flex flex-col items-start justify-start text-tBase",
               {
                 "border-greenSecondary border-solid border-4": plan.highlight,
               },
@@ -48,7 +48,7 @@ export const Plans = () => {
                 One-time plan available
               </span>
             </div>
-            <div className="pb-6 mb-6 border-b-2 border-white border-solid flex w-full flex-col items-start">
+            <div className="pb-6 mb-6 border-b-2 border-tBase border-solid flex w-full flex-col items-start">
               <Typography.Heading5 className="mb-3">
                 {plan.name}
               </Typography.Heading5>
@@ -62,9 +62,9 @@ export const Plans = () => {
               <Link
                 href="#"
                 className={clsx(
-                  "text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-white font-medium border-solid border-2 w-full block mb-4",
+                  "text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-tBase font-medium border-solid border-2 border-tBase w-full block mb-4",
                   {
-                    "border-green bg-green": plan.highlight,
+                    "!border-green bg-green": plan.highlight,
                   },
                 )}
               >

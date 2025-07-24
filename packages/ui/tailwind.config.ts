@@ -32,9 +32,6 @@ const config = {
       'max-sm': { max: '650px' },
       'max-xs': { max: '479px' }
     },
-    backgroundImage: {
-      'hero-gradient': 'linear-gradient(150deg, #0D2616 0%, #121212 99.04%)'
-    },
     fontFamily: {
       nunito: ['Nunito', 'sans-serif'],
       sourceSans3: ['Source Sans 3', 'sans-serif']
@@ -49,7 +46,8 @@ const config = {
         grey: "var(--color-grey)",
         green: "var(--color-green)",
         greenSecondary: "var(--color-green-secondary)",
-        blue: "var(--color-blue)"
+        blue: "var(--color-blue)",
+        bgSecondaryRgb: "var(--color-bg-secondary-rgb)",
       },
       keyframes: {
         'accordion-down': {

@@ -17,7 +17,7 @@ export const Enjoy = () => {
 
         <Link
           href="#"
-          className="text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-white font-medium border-solid border-2 block mb-4 min-w-[254px]"
+          className="text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-tBase font-medium border-solid border-2 border-tBase block mb-4 min-w-[254px]"
         >
           Learn more
         </Link>

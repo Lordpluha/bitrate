@@ -13,11 +13,21 @@ export default function LandingLayout({ children }: PropsWithChildren) {
   const [isTheme, setIsTheme] = useState<string>(themes[0] ?? "");
 
   useEffect(() => {
+    const storedTheme = localStorage.getItem("theme");
+    const initialTheme = themes.includes(storedTheme || "") ? storedTheme! : themes[0];
+    setIsTheme(initialTheme ?? "");
+  }, []);
+
+  useEffect(() => {
+    if (!isTheme) return;
+
     const className = `theme-${isTheme}`;
     const root = document.documentElement;
 
     root.classList.remove("theme-white", "theme-contrast", "theme-dark");
     root.classList.add(className);
+
+    localStorage.setItem("theme", isTheme);
   }, [isTheme]);
 
   return (

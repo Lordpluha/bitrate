@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+
+  *{
+    /* @apply transition-colors duration-500; */
+  }
+
   :root.theme-dark {
     --color-primary: #0a0a0a;
     --color-secondary: #121212;
@@ -11,29 +16,34 @@
     --color-bg-secondary: #121212;
     --color-grey: #a7a7a7;
     --color-green: #1ed760;
-    --color-green-secondary: #0E672E;
+    --color-green-secondary: #0e672e;
     --color-blue: #003480;
+    --color-bgSecondary-rgb: 10 10 10;
   }
 
-  :root.theme-white  {
-    --color-primary: #fff ;
+  :root.theme-white {
+    --color-primary: #fff;
     --color-secondary: #f7f7f7;
     --color-text-base: #0a0a0a;
     --color-bg-primary: #fff;
     --color-bg-secondary: #f7f7f7;
     --color-grey: #a7a7a7;
     --color-green: #1ed760;
+    --color-green-secondary: #0e672e;
     --color-blue: #003480;
+    --color-bgSecondary-rgb: 247 247 247;
   }
 
-  :root.theme-contras {
+  :root.theme-contrast {
     --color-primary: #000000;
-    --color-secondary: #ffffff;
+    --color-secondary: #222222;
     --color-text-base: #ffffff;
-    --color-bg-primary: #121212;
-    --color-bg-secondary: #1e1e1e;
+    --color-bg-primary: #000000;
+    --color-bg-secondary: #222222;
     --color-grey: #999999;
     --color-green: #1ed760;
+    --color-green-secondary: #0e672e;
     --color-blue: #003480;
+    --color-bgSecondary-rgb: 34 34 34;
   }
 }

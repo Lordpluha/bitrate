@@ -26,7 +26,7 @@ export const UserAvatars = () => {
           </div>
         ))}
       </div>
-      <span className="text-sm text-white font-medium">
+      <span className="text-sm text-tBase font-medium">
         517.69 million+ <br /> Spotify users worldwide
       </span>
     </div>
