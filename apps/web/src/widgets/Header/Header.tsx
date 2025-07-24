@@ -20,6 +20,8 @@ export const Header = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const onNavToggle = () => setIsNavActive((prev) => !prev);
+
   return (
     <header className={clsx(styles.header, isScrolled && styles.headerScrolled)}>
       <div className={clsx(styles.inner, "container")}>
@@ -36,10 +38,7 @@ export const Header = () => {
             <NavLinks />
             <AuthButtons />
           </ul>
-          <div
-            onClick={() => setIsNavActive(!isNav)}
-            className={styles.burger}
-          >
+          <div onClick={onNavToggle} className={styles.burger}>
             {isNav ? <X size={40} /> : <AlignJustify size={40} />}
           </div>
         </nav>
