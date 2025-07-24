@@ -37,14 +37,14 @@ export const Plans = () => {
           <div
             key={index}
             className={clsx(
-              "bg-[#121212] h-full shadow-[0_6px_20px_1px_rgba(30,215,96,0.3)] p-8 rounded-xl flex flex-col items-start justify-start",
+              "bg-secondary h-full shadow-[0_6px_20px_1px_rgba(30,215,96,0.3)] p-8 rounded-xl flex flex-col items-start justify-start",
               {
-                "border-[#0E672E] border-solid border-4": plan.highlight,
+                "border-greenSecondary border-solid border-4": plan.highlight,
               },
             )}
           >
-            <div className="border-[#003480] border-solid border-[1px] py-2 px-4 rounded-lg mb-4">
-              <span className="text-[#003480] font-semibold text-xl leading-[1]">
+            <div className="border-blue border-solid border-[1px] py-2 px-4 rounded-lg mb-4">
+              <span className="text-blue font-semibold text-xl leading-[1]">
                 One-time plan available
               </span>
             </div>
@@ -64,14 +64,14 @@ export const Plans = () => {
                 className={clsx(
                   "text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-white font-medium border-solid border-2 w-full block mb-4",
                   {
-                    "border-[#1ED760] bg-[#1ED760]": plan.highlight,
+                    "border-green bg-green": plan.highlight,
                   },
                 )}
               >
                 View Plans
               </Link>
               <Link
-                className="hover:opacity-70 transition-[1s] text-left text-[#CCCCCC] border-b-[1px] border-solid border-[#CCCCCC]"
+                className="hover:opacity-70 transition-[1s] text-left text-grey border-b-[1px] border-solid border-grey"
                 href="#"
               >
                 Terms and conditions apply

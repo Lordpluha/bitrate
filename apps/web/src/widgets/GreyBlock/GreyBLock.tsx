@@ -10,7 +10,7 @@ export const GreyBlock: FC<GreyBlockProps> = ({
 }) => {
   return (
     <div
-      className={clsx("container rounded-3xl bg-[#121212] py-20", className)}
+      className={clsx("container rounded-3xl bg-bgSecondary py-20", className)}
       {...etcProps}
     >
       {children}

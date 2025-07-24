@@ -2,3 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root.theme-dark {
+    --color-primary: #0a0a0a;
+    --color-secondary: #121212;
+    --color-text-base: #ffffff;
+    --color-bg-primary: #0a0a0a;
+    --color-bg-secondary: #121212;
+    --color-grey: #a7a7a7;
+    --color-green: #1ed760;
+    --color-green-secondary: #0E672E;
+    --color-blue: #003480;
+  }
+
+  :root.theme-white  {
+    --color-primary: #fff ;
+    --color-secondary: #f7f7f7;
+    --color-text-base: #0a0a0a;
+    --color-bg-primary: #fff;
+    --color-bg-secondary: #f7f7f7;
+    --color-grey: #a7a7a7;
+    --color-green: #1ed760;
+    --color-blue: #003480;
+  }
+
+  :root.theme-contras {
+    --color-primary: #000000;
+    --color-secondary: #ffffff;
+    --color-text-base: #ffffff;
+    --color-bg-primary: #121212;
+    --color-bg-secondary: #1e1e1e;
+    --color-grey: #999999;
+    --color-green: #1ed760;
+    --color-blue: #003480;
+  }
+}

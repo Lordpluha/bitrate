@@ -5,11 +5,18 @@ import { AuthButtons } from "./ui/AuthButtons";
 import { Logo } from "./ui/Logo";
 import { NavLinks } from "./ui/NavLinks";
 import { useEffect, useState } from "react";
-import { AlignJustify, X  } from "lucide-react";
+import { AlignJustify, X } from "lucide-react";
 import clsx from "clsx";
 import styles from "./Header.module.css";
+import ThemeSwitcher from "./ui/ThemeSwitcher";
 
-export const Header = () => {
+type HeaderProps = {
+  themes: string[];
+  isTheme: string;
+  setIsTheme: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export const Header = ({ themes, isTheme, setIsTheme }: HeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isNav, setIsNavActive] = useState(false);
 
@@ -23,7 +30,9 @@ export const Header = () => {
   const onNavToggle = () => setIsNavActive((prev) => !prev);
 
   return (
-    <header className={clsx(styles.header, isScrolled && styles.headerScrolled)}>
+    <header
+      className={clsx(styles.header, isScrolled && styles.headerScrolled)}
+    >
       <div className={clsx(styles.inner, "container")}>
         <Logo />
         <nav className={styles.nav}>
@@ -32,10 +41,11 @@ export const Header = () => {
               styles.navList,
               styles.mobileLayout,
               styles.mobileFlex,
-              isNav && styles.mobileActive
+              isNav && styles.mobileActive,
             )}
           >
             <NavLinks />
+             <ThemeSwitcher themes={themes} isTheme={isTheme} setIsTheme={setIsTheme} />
             <AuthButtons />
           </ul>
           <div onClick={onNavToggle} className={styles.burger}>
