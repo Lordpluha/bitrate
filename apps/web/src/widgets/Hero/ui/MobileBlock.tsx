@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import styles from "./MobileBlock.module.css";
 
-export const MobileBLock = () => {
+export const MobileBlock = () => {
   return (
     <div className={clsx("relative flex-1 p-20 pt-[160px] rounded-3xl mt-2 flex flex-col items-center border-green border-solid border-2 overflow-hidden", styles.bgHeroGradient)}>
       <img className="w-full h-full absolute top-0 bottom-0 left-0 right-0 z-[1] object-contain" src="/images/spotify-curves.svg" alt="" />
