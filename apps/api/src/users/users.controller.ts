@@ -1,20 +1,31 @@
-import { Controller, Get, Param } from '@nestjs/common'
+import { Controller, Get, Query } from '@nestjs/common'
 import { UsersService } from './users.service'
-import { ApiExtraModels } from '@nestjs/swagger'
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { UserEntity } from './entities'
 
 @ApiExtraModels(UserEntity)
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get('by-id/:id')
-  getById(@Param('id') id: string) {
-    return this.usersService.findUserById(id)
-  }
-
-  @Get('by-username/:username')
-  getByUsername(@Param('username') username: string) {
-    return this.usersService.findUserByUsername(username)
+  @Get('users')
+  getById(
+    @Query('id') id?: UserEntity['id'],
+    @Query('username') username?: UserEntity['username']
+  ) {
+    if (!id && !username) {
+      return Promise.reject(new Error('User not found'))
+    }
+    if (id && username) {
+      return Promise.reject(
+        new Error('Please provide either id or username, not both')
+      )
+    }
+    if (id) {
+      return this.usersService.findUserById(id)
+    } else if (username) {
+      return this.usersService.findUserByUsername(username)
+    }
   }
 }

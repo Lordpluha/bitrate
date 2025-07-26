@@ -11,6 +11,7 @@ import { PlaylistsModule } from './playlists/playlists.module'
 import { AlbumsService } from './albums/albums.service'
 import { AlbumsController } from './albums/albums.controller'
 import { AlbumsModule } from './albums/albums.module'
+import { ArtistsModule } from './artists/artists.module'
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { AlbumsModule } from './albums/albums.module'
     UsersModule,
     TracksModule,
     PlaylistsModule,
-    AlbumsModule
+    AlbumsModule,
+    ArtistsModule
   ],
   controllers: [AppController, AlbumsController],
   providers: [AppService, AlbumsService]
