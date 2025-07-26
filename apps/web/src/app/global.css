@@ -3,15 +3,14 @@
 @tailwind utilities;
 
 @layer base {
-
-  *{
+  * {
     /* @apply transition-colors duration-500; */
   }
 
-  :root.theme-dark {
+  :root.dark {
     --color-primary: #0a0a0a;
     --color-secondary: #121212;
-    --color-text-base: #ffffff;
+    --color-text-base: #fff;
     --color-bg-primary: #0a0a0a;
     --color-bg-secondary: #121212;
     --color-grey: #a7a7a7;
@@ -21,7 +20,7 @@
     --color-bgSecondary-rgb: 10 10 10;
   }
 
-  :root.theme-white {
+  :root.light {
     --color-primary: #fff;
     --color-secondary: #f7f7f7;
     --color-text-base: #0a0a0a;
@@ -32,18 +31,5 @@
     --color-green-secondary: #0e672e;
     --color-blue: #003480;
     --color-bgSecondary-rgb: 247 247 247;
-  }
-
-  :root.theme-contrast {
-    --color-primary: #000000;
-    --color-secondary: #222222;
-    --color-text-base: #ffffff;
-    --color-bg-primary: #000000;
-    --color-bg-secondary: #222222;
-    --color-grey: #999999;
-    --color-green: #1ed760;
-    --color-green-secondary: #0e672e;
-    --color-blue: #003480;
-    --color-bgSecondary-rgb: 34 34 34;
   }
 }

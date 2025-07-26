@@ -1,34 +1,32 @@
-import React, { JSX } from "react";
-import { Sun, Moon, Circle } from "lucide-react";
+'use client'
 
-type ThemeSwitcherProps = {
-  themes: string[];
-  isTheme: string;
-  setIsTheme: React.Dispatch<React.SetStateAction<string>>;
-};
+import React, { useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { themes } from '@shared/constants'
+import { useTheme } from '@shared/contexts'
+import { THEME_ICONS } from '../config/theme-icons'
 
-export const ThemeSwitcher = ({ themes, isTheme, setIsTheme }: ThemeSwitcherProps) => {
-  const icons: Record<string, JSX.Element> = {
-    white: <Sun size={16} />,
-    dark: <Moon size={16} />,
-    contrast: <Circle size={16} />,
-  };
+export const ThemeSwitcher = () => {
+  const themeContext = useTheme()
+
+	const [mounted, setMounted] = useState(false)
+	useEffect(() => setMounted(true), [])
+	if (!mounted) return null
 
   return (
-    <div className="flex items-center gap-2 p-2 rounded-full bg-muted shadow-inner shadow-tBase">
-      {themes.map((theme) => (
+    <div className='flex items-center gap-2 p-2 rounded-full bg-muted shadow-inner shadow-tBase'>
+      {themes.map(th => (
         <button
-          key={theme}
-          onClick={() => setIsTheme(theme)}
-          className={`
-                      w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300
-                      ${isTheme === theme ? "bg-green" : "bg-bgPrimary"}
-                    `}
+          key={th}
+          onClick={() => themeContext?.setTheme(th)}
+          className={clsx(
+            'w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300',
+            themeContext?.theme === th ? 'bg-green' : 'bg-bgPrimary'
+          )}
         >
-          {icons[theme] || theme.charAt(0).toUpperCase()}
+          {THEME_ICONS[th]}
         </button>
       ))}
     </div>
-  );
-};
-
+  )
+}

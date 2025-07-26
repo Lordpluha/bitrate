@@ -2,12 +2,8 @@ import type { Config } from 'tailwindcss'
 import tailwindcssAnimate from 'tailwindcss-animate'
 
 const config = {
-  darkMode: ["class"],
-  content: [
-    "./src/**/*.{ts,tsx}",
-    "../../packages/ui/src/**/*.{ts,tsx}",
-  ],
-  prefix: "ui-",
+  darkMode: ['class'],
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
     container: {
       center: true,
@@ -37,21 +33,20 @@ const config = {
       'max-xs': { max: '479px' }
     },
     fontFamily: {
-      nunito: ['Nunito', 'sans-serif'],
       sourceSans3: ['Source Sans 3', 'sans-serif']
     },
     extend: {
       colors: {
-        primary: "var(--color-primary)",
-        secondary: "var(--color-secondary)",
-        tBase: "var(--color-text-base)",
-        bgPrimary: "var(--color-bg-primary)",
-        bgSecondary: "var(--color-bg-secondary)",
-        grey: "var(--color-grey)",
-        green: "var(--color-green)",
-        greenSecondary: "var(--color-green-secondary)",
-        blue: "var(--color-blue)",
-        bgSecondaryRgb: "var(--color-bg-secondary-rgb)",
+        primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
+        tBase: 'var(--color-text-base)',
+        bgPrimary: 'var(--color-bg-primary)',
+        bgSecondary: 'var(--color-bg-secondary)',
+        grey: 'var(--color-grey)',
+        green: 'var(--color-green)',
+        greenSecondary: 'var(--color-green-secondary)',
+        blue: 'var(--color-blue)',
+        bgSecondaryRgb: 'var(--color-bg-secondary-rgb)'
       },
       keyframes: {
         'accordion-down': {

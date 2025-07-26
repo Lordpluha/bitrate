@@ -1,19 +1,17 @@
-import { Enjoy } from "@widgets/Enjoy";
-import { Footer } from "@widgets/Footer";
-import { Header } from "@widgets/Header";
-import { Hero } from "@widgets/Hero";
-import { Info } from "@widgets/Info";
+import { PremiumFeatures } from "@widgets/PremiumFeatures";
 import { Plans } from "@widgets/Plans";
-import { QRcode } from "@widgets/QRcode";
+import { ForStudents } from "./ForStudents/ForStudents";
+import { QRcode } from "./QRcode/QRcode";
+import { Welcome } from "./Welcome/Welcome";
 
 export const Landing = () => {
   return (
     <>
-      <Hero />
+      <Welcome />
       <QRcode />
-      <Info />
+      <PremiumFeatures />
       <Plans />
-      <Enjoy />
+      <ForStudents />
     </>
   );
 };

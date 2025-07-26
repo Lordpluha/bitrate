@@ -19,7 +19,7 @@ export const Heading6: FC<Heading6Props> = ({
       className={clsx(
         'text-[1.125rem]',
         'max-lg:text-base',
-        ' max-md:text-sm',
+        'max-md:text-sm',
         className
       )}
       {...etcProps}
