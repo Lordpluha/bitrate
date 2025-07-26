@@ -1,1 +1,1 @@
-export * from "./GreyBLock"
+export * from "./GreyBlock"
