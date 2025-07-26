@@ -8,7 +8,8 @@ import '@spotify/ui/globals.css'
 import './global.css'
 
 const sourceSans = Source_Sans_3({
-  variable: '--font-source-sans'
+  variable: '--font-source-sans',
+	subsets: ['latin', 'latin-ext']
 })
 
 export const metadata: Metadata = {
