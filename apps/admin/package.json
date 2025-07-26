@@ -1,0 +1,43 @@
+{
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+	"name": "@spotify/admin",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint \"src\"",
+    "start": "dotenv -c '.env' -- node dist/app",
+    "db:pull": "prisma db pull"
+  },
+  "dependencies": {
+    "adminjs": "^7.7.2",
+    "@adminjs/express": "^6.1.0",
+    "express": "^4.18.2",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.3",
+    "@adminjs/prisma": "^5.0.1",
+    "@prisma/client": "^5.6.0",
+    "pg": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "dotenv-cli": "^7.2.1",
+    "eslint": "^8.38.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.0.4",
+    "@types/express": "^4.17.17",
+    "tslib": "^2.5.0",
+    "prisma": "^5.6.0"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  }
+}

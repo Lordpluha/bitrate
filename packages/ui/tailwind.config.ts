@@ -2,8 +2,12 @@ import type { Config } from 'tailwindcss'
 import tailwindcssAnimate from 'tailwindcss-animate'
 
 const config = {
-  darkMode: ['class'],
-  content: ['./src/**/*.{ts,tsx}'],
+  darkMode: ["class"],
+  content: [
+    "./src/**/*.{ts,tsx}",
+    "../../packages/ui/src/**/*.{ts,tsx}",
+  ],
+  prefix: "ui-",
   theme: {
     container: {
       center: true,

@@ -6,8 +6,15 @@
         "operationId": "AppController_getHello",
         "parameters": [],
         "responses": {
-          "200": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -17,42 +24,409 @@
     },
     "/auth/login": {
       "post": {
-        "operationId": "AuthController_signIn",
+        "operationId": "AuthController_login",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
         "responses": {
-          "200": {
+          "201": {
+            "description": "Successfully logged in",
+            "headers": {
+              "Set-Cookie": {
+                "description": "HttpOnly cookies: access_token и refresh_token",
+                "schema": {
+                  "type": "string",
+                  "example": "access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;\nrefresh_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "errors": [
+                    {
+                      "field": "email",
+                      "message": "email must be an email"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "500": {
+            "description": "Server error"
+          },
+          "default": {
             "description": ""
           }
         },
+        "summary": "User login",
         "tags": [
           "Auth"
         ]
       }
     },
-    "/auth/profile": {
+    "/auth/registration": {
+      "post": {
+        "operationId": "AuthController_registration",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully registered"
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "errors": [
+                    {
+                      "field": "email",
+                      "message": "email must be an email"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User already exists"
+          },
+          "500": {
+            "description": "Server error"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "User registration",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Successfully logged out"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "User logout",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Token refreshed",
+            "headers": {
+              "Set-Cookie": {
+                "description": "HttpOnly cookies: access_token",
+                "schema": {
+                  "type": "string",
+                  "example": "access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Refresh token not provided"
+          },
+          "401": {
+            "description": "Invalid or expired refresh token"
+          },
+          "500": {
+            "description": "Server error"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "refresh_token": []
+          }
+        ],
+        "summary": "Refresh access token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/me": {
       "get": {
-        "operationId": "AuthController_getProfile",
+        "operationId": "AuthController_getMe",
         "parameters": [],
         "responses": {
           "200": {
+            "description": "Successfully logged out",
+            "content": {
+              "application/json": {
+                "example": {
+                  "createdAt": "2023-10-01T12:00:00.000Z",
+                  "email": "user@example.com",
+                  "id": "1234567890abcdef",
+                  "updatedAt": "2023-10-01T12:00:00.000Z",
+                  "username": "user123",
+                  "password": "hashed_password"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Get current authenticated user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/users/by-id/{id}": {
+      "get": {
+        "operationId": "UsersController_getById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
             "description": ""
           }
         },
         "tags": [
-          "Auth"
+          "Users"
+        ]
+      }
+    },
+    "/users/by-username/{username}": {
+      "get": {
+        "operationId": "UsersController_getByUsername",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
         ]
       }
     }
   },
   "info": {
-    "title": "@spotify/api swagger",
-    "description": "@spotify/api swagger description",
-    "version": "1.0",
+    "title": "@spotify/api",
+    "description": "@spotify/api Swagger documentation",
+    "version": "0.0.1",
     "contact": {}
   },
   "tags": [],
-  "servers": [],
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
   "components": {
-    "schemas": {}
+    "schemas": {
+      "SessionEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "access_token",
+          "refresh_token"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "password123"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "RegistrationDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "New user email",
+            "example": "newuser@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "New user password",
+            "example": "password123"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "UserEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "password",
+          "createdAt"
+        ]
+      },
+      "TrackEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "artist": {
+            "type": "string"
+          },
+          "audioUrl": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "artist",
+          "audioUrl",
+          "cover",
+          "userId",
+          "createdAt"
+        ]
+      }
+    }
   }
 }

@@ -13,7 +13,9 @@
     "stylelint": "stylelint \"./src/**/*.{scss,css}\" --config @spotify/stylelint --fix --cache --cache-location node_modules/.cache/stylelint",
     "format": "npm run prettier && npm run stylelint"
   },
+  "prettier": "@spotify/prettier",
   "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
     "@spotify/ui": "workspace:*",
     "@tanstack/react-query": "^5.80.7",
     "clsx": "^2.1.1",
@@ -24,6 +26,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sass": "^1.89.2",
+    "react-hook-form": "^7.60.0",
     "zod": "^3.25.56"
   },
   "devDependencies": {

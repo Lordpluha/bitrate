@@ -4,7 +4,6 @@ export const envSchema = z.object({
   NODE_ENV: z.enum(["local", "development", "production"]).default("local"),
 
   // Public URLs
-  NEXT_PUBLIC_APP_URL: z.string().url(),
   NEXT_PUBLIC_API_URL: z.string().url(),
 
 	API_URL: z.string().url(),

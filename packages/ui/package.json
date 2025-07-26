@@ -15,12 +15,14 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
+    "lint": "eslint src --max-warnings 0",
     "generate:component": "turbo gen react-component",
     "check-types": "tsc --noEmit",
     "prettier": "prettier \"./src/**/*.{ts,tsx,json,js,scss,css}\" --write --list-different --cache",
     "stylelint": "stylelint \"./src/**/*.{scss,css}\" --config @spotify/stylelint --fix --cache --cache-location node_modules/.cache/stylelint",
-    "format": "npm run prettier && npm run stylelint"
+    "format": "npm run prettier && npm run stylelint",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "prettier": "@spotify/prettier",
   "peerDependencies": {
@@ -30,23 +32,32 @@
     "@spotify/eslint": "workspace:*",
     "@spotify/prettier": "workspace:*",
     "@spotify/stylelint": "workspace:*",
-    "@turbo/gen": "^2.5.4",
+    "@storybook/addon-docs": "^9.0.16",
+    "@storybook/react-vite": "^9.0.16",
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.0.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/parser": "^7.18.0",
+    "chromatic": "^13.1.2",
     "eslint": "^9.28.0",
+    "eslint-plugin-storybook": "^9.0.16",
+    "storybook": "^9.0.16",
     "stylelint": "^16.6.1",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.1.0",
+    "@hookform/resolvers": "^5.1.1",
+    "@radix-ui/react-avatar": "^1.1.10",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.514.0",
+    "react-hook-form": "^7.60.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.7",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^4.0.5"
   }
 }

@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   pageExtensions: ["ts", "tsx", "mdx"],
-};
+} satisfies NextConfig;
 
 export default nextConfig;

@@ -18,7 +18,7 @@ export const LoginForm = () => {
         onClick={() =>
           mutate({
             body: {
-              username: 'admin',
+              email: 'admin',
               password: 'admin'
             }
           })

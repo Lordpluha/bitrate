@@ -1,0 +1,31 @@
+// .cz-config.js
+module.exports = {
+  types: [
+    { value: 'feat', name: 'feat:      Новая фича' },
+    { value: 'fix', name: 'fix:       Исправление бага' },
+    { value: 'docs', name: 'docs:      Только документация' },
+    { value: 'style', name: 'style:     Правки в формате (не код)' },
+    { value: 'refactor', name: 'refactor: Рефакторинг (без багфиксов)' },
+    { value: 'perf', name: 'perf:      Оптимизация производительности' },
+    { value: 'test', name: 'test:      Тесты' },
+    { value: 'build', name: 'build:     Сборка и зависимости' },
+    { value: 'ci', name: 'ci:        Конфигурация CI/CD' },
+    { value: 'chore', name: 'chore:     Мелкие задачи, не влияющие на код' },
+    { value: 'revert', name: 'revert:    Откат изменений' },
+  ],
+  scopes: [
+    { name: 'web' },
+    { name: 'mobile' },
+    { name: 'api' },
+    { name: 'contracts' },
+    { name: 'ui' },
+    { name: 'eslint' },
+    { name: 'stylelint' },
+    { name: 'prettier' },
+    { name: 'infra' },
+    { name: 'docs' },
+  ],
+  allowCustomScopes: true,
+  allowBreakingChanges: ['feat', 'fix'],
+  subjectLimit: 100,
+};
