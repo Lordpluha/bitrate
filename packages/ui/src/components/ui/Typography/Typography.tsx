@@ -1,10 +1,10 @@
-import { Heading1 } from "./Heading1"
-import { Heading2 } from "./Heading2"
-import { Heading3 } from "./Heading3"
-import { Heading4 } from "./Heading4"
-import { Heading5 } from "./Heading5"
-import { Heading6 } from "./Heading6"
-import { Paragraph } from "./Paragraph"
+import { Heading1 } from './Heading1'
+import { Heading2 } from './Heading2'
+import { Heading3 } from './Heading3'
+import { Heading4 } from './Heading4'
+import { Heading5 } from './Heading5'
+import { Heading6 } from './Heading6'
+import { Paragraph } from './Paragraph'
 
 const Typography = () => {
   throw new Error("Can't use typography without inner elements")

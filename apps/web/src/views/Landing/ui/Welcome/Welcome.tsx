@@ -2,7 +2,9 @@ import { Typography } from '@spotify/ui'
 import { DownloadButton } from './DownloadButton'
 import { Statistics } from './Statistics'
 import clsx from 'clsx'
-import styles from "./MobileBlock.module.css";
+import { SpotifyCurvesIcon } from '@shared/ui'
+
+import styles from './MobileBlock.module.css'
 
 export const Welcome = () => {
   return (
@@ -26,9 +28,9 @@ export const Welcome = () => {
           styles.bgHeroGradient
         )}
       >
-        <img
+        <SpotifyCurvesIcon
           className='w-full h-full absolute top-0 bottom-0 left-0 right-0 z-[1] object-contain'
-          src='/images/spotify-curves.svg'
+          color='#107032'
         />
         <img
           className='w-full h-full absolute top-[120px] bottom-0 left-0 right-0 z-[2] object-contain'

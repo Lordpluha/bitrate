@@ -29,4 +29,3 @@ export {
   queryOptions,
   useSuspenseQuery
 }
-

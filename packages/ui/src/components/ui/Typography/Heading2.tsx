@@ -5,7 +5,6 @@ import React, {
 } from 'react'
 import clsx from 'clsx'
 
-
 export type Heading2Props = PropsWithChildren<
   HTMLAttributes<HTMLHeadingElement>
 >
@@ -29,5 +28,3 @@ export const Heading2: FC<Heading2Props> = ({
     </h2>
   )
 }
-
-

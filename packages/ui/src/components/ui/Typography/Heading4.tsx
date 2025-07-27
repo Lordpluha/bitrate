@@ -28,4 +28,3 @@ export const Heading4: FC<Heading4Props> = ({
     </h4>
   )
 }
-

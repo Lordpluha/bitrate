@@ -1,23 +1,25 @@
-import Image from "next/image";
+import { GreenCheckIcon } from '@shared/ui'
 
 type PlanListProps = {
-  features: string[];
-};
+  features: string[]
+}
 
 export const PlansList = ({ features }: PlanListProps) => {
   return (
-    <ul className="text-left flex flex-col items-start gap-2 mb-6">
+    <ul className='text-left flex flex-col items-start gap-2 mb-6'>
       {features.map((feature, i) => (
-        <li key={i} className="flex items-center gap-3">
-          <Image
-            src="/icons/green-check.svg"
-            alt="Check"
+        <li
+          key={i}
+          className='flex items-center gap-3'
+        >
+          <GreenCheckIcon
             height={22}
             width={14}
+            color='#1ED760'
           />
           <span>{feature}</span>
         </li>
       ))}
     </ul>
-  );
-};
+  )
+}

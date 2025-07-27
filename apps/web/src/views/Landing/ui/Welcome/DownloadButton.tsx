@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import Link from 'next/link'
+import { DownloadIcon } from '@shared/ui'
 
 export const DownloadButton = () => (
   <Link
@@ -7,11 +7,6 @@ export const DownloadButton = () => (
     href='#'
   >
     <span>Download The App</span>
-    <Image
-      width={36}
-      height={36}
-      src={'/images/download-icon.svg'}
-      alt='download'
-    />
+    <DownloadIcon className='w-[36px] h-[36px] [--fg-color:white] dark:[--fg-color:black] text-black dark:text-white' />
   </Link>
 )

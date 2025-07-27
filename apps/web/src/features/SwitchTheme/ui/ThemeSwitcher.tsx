@@ -9,9 +9,9 @@ import { THEME_ICONS } from '../config/theme-icons'
 export const ThemeSwitcher = () => {
   const themeContext = useTheme()
 
-	const [mounted, setMounted] = useState(false)
-	useEffect(() => setMounted(true), [])
-	if (!mounted) return null
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  if (!mounted) return null
 
   return (
     <div className='flex items-center gap-2 p-2 rounded-full bg-muted shadow-inner shadow-tBase'>

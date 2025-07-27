@@ -9,12 +9,13 @@ import './global.css'
 
 const sourceSans = Source_Sans_3({
   variable: '--font-source-sans',
-	subsets: ['latin', 'latin-ext']
+  subsets: ['latin', 'latin-ext']
 })
 
 export const metadata: Metadata = {
   title: 'Spotify clone',
   description: 'Spotify clone',
+  metadataBase: new URL(`${process.env.APP_URL}`),
   openGraph: {
     type: 'website',
     url: `/`,
