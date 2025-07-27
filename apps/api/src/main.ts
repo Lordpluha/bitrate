@@ -11,6 +11,19 @@ async function bootstrap() {
     .setDescription('@spotify/api Swagger documentation')
     .setVersion(process.env.npm_package_version ?? '1.0')
     .addServer(`http://localhost:${process.env.PORT ?? 3000}`, 'Local server')
+    .addServer(
+      'https://spotify-clone-api-jp5z.onrender.com/',
+      'Remote dev server'
+    )
+    .addOAuth2({
+      type: 'openIdConnect'
+    })
+    .setContact(
+      'Lordpluha',
+      'https://github.com/Lordpluha',
+      'vladislavteslyukofficial@gmail.com'
+    )
+    .setExternalDoc('Mintlify', 'https://lordpluha.mintlify.app/')
     .build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, config)
