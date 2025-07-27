@@ -53,6 +53,7 @@ model Track {
 model Artist {
   id              String   @id @default(uuid())
   username        String   @unique
+  email           String   @unique
   password	      String
 
   bio             String?
