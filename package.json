@@ -1,13 +1,34 @@
 {
   "name": "spotify-clone",
   "private": true,
+  "license": "MIT",
+  "homepage": "https://github.com/Lordpluha/spotify-clone",
+  "author": {
+    "email": "vladislavteslyukofficial@gmail.com",
+    "name": "Vladyslav Tesliuk",
+    "url": "https://github.com/Lordpluha"
+  },
+  "contributors": [
+    {
+      "email": "",
+      "name": "Andrey Kalashnikov",
+      "url": "https://github.com/andreo-kalashnello"
+    }
+  ],
+  "os": [
+    "linux"
+  ],
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Lordpluha/spotify-clone.git"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
     "format": "turbo run format",
-    "prepare": "husky",
+    "prepare": "husky && cd apps/admin && rm -rf node_modules && npm install && cd ../..",
     "commit": "cz"
   },
   "devDependencies": {
@@ -21,7 +42,8 @@
   },
   "packageManager": "pnpm@10.12.2",
   "engines": {
-    "node": ">=18"
+    "node": ">=18",
+    "vscode": "^1.100.0"
   },
   "config": {
     "commitizen": {
