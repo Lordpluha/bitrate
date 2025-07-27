@@ -17,7 +17,7 @@ export const PlanCard: FC<PlanCardProps> = ({
   return (
     <div
       className={clsx(
-        'bg-bgSecondary h-full shadow-[0_6px_20px_1px_rgba(30,215,96,0.3)] p-8 rounded-xl flex flex-col items-start justify-start text-tBase',
+        'bg-bgSecondary h-full shadow-[0_6px_20px_1px_#1ed7604d] p-8 rounded-xl flex flex-col items-start justify-start text-tBase',
         !!highlight && 'border-greenSecondary border-solid border-4'
       )}
     >
