@@ -15,7 +15,6 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   title: 'Spotify clone',
   description: 'Spotify clone',
-  metadataBase: new URL(`${process.env.APP_URL}`),
   openGraph: {
     type: 'website',
     url: `/`,
