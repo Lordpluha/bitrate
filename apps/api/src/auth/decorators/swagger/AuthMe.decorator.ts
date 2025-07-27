@@ -16,10 +16,9 @@ export function AuthMeSwagger() {
             id: '1234567890abcdef',
             updatedAt: '2023-10-01T12:00:00.000Z',
             username: 'user123',
-            password: 'hashed_password',
             avatar: null,
             description: 'Some description about the user'
-          } as UserEntity
+          } as Omit<UserEntity, 'password'>
         }
       }
     }),
