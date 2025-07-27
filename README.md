@@ -75,7 +75,7 @@ $ turbo dev
 - NestJS, TypeScript
 - PostgreSQL via Prisma
 - REST API, SSE, Socket.io, Long-polling, RabbitMQ
-- JWT, OAuth, CORS, CSP, 2FA, Redis
+- JWT, OAuth(google, facebook, discord), CORS, CSP, 2FA, Redis
 - Swagger + Zod (codegen sync)
 - Postfix + NodeMailer, Multer
 - @nestjs/throttler, Fingerprint auth
