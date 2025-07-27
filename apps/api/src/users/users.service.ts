@@ -35,4 +35,14 @@ export class UsersService {
       data
     })
   }
+
+  async updateUserById(
+    id: UserEntity['id'],
+    userData: Partial<Omit<UserEntity, 'id' | ''>>
+  ) {
+    return this.prisma.user.update({
+      where: { id },
+      data: userData
+    })
+  }
 }

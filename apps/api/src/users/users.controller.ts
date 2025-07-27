@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common'
+import { Body, Controller, Get, Param, Query } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { UserEntity } from './entities'
@@ -9,23 +9,23 @@ import { UserEntity } from './entities'
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get('users')
-  getById(
-    @Query('id') id?: UserEntity['id'],
-    @Query('username') username?: UserEntity['username']
-  ) {
-    if (!id && !username) {
+  @Get('')
+  getAll(@Query('username') username?: UserEntity['username']) {
+    if (!username) {
       return Promise.reject(new Error('User not found'))
     }
-    if (id && username) {
-      return Promise.reject(
-        new Error('Please provide either id or username, not both')
-      )
-    }
-    if (id) {
-      return this.usersService.findUserById(id)
-    } else if (username) {
-      return this.usersService.findUserByUsername(username)
-    }
+    return this.usersService.findUserByUsername(username)
+  }
+
+  @Get(':id')
+  getById(@Param('id') id: UserEntity['id']) {
+    return this.usersService.findUserById(id)
+  }
+
+  putById(
+    @Param('id') id: UserEntity['id'],
+    @Body() userData: Partial<UserEntity>
+  ) {
+    return this.usersService.updateUserById(id, userData)
   }
 }
