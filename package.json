@@ -28,7 +28,7 @@
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
     "format": "turbo run format",
-    "prepare": "husky && cd apps/admin && rm -rf node_modules && npm install && cd ../..",
+    "prepare": "husky",
     "commit": "cz"
   },
   "devDependencies": {
