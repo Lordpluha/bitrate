@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FC, HTMLAttributes } from 'react'
 import footerLinks from '../config/footer-links.json'
+import { FacebookIcon, InstIcon, TwitIcon } from '@shared/ui'
 
 export type FooterProps = HTMLAttributes<HTMLDivElement>
 
@@ -14,6 +15,12 @@ type SocialLink = {
   icon: string
   alt: string
   href: string
+}
+
+const iconMap = {
+  InstIcon,
+  TwitIcon,
+  FacebookIcon
 }
 
 export const Footer: FC<FooterProps> = props => {
@@ -56,20 +63,19 @@ export const Footer: FC<FooterProps> = props => {
             </div>
 
             <div className='flex items-center justify-end gap-12 max-sm:justify-start'>
-              {socials.map((social, i) => (
-                <Link
-                  className='transition-[0.3s] hover:opacity-70'
-                  href={social.href}
-                  key={i}
-                >
-                  <Image
-                    src={social.icon}
-                    alt={social.alt}
-                    height={32}
-                    width={32}
-                  />
-                </Link>
-              ))}
+              {socials.map((social, i) => {
+                const IconComponent =
+                  iconMap[social.icon as keyof typeof iconMap]
+                return (
+                  <Link
+                    className='transition-[0.3s] hover:opacity-70'
+                    href={social.href}
+                    key={i}
+                  >
+                    <IconComponent className='text-text fill-text' />
+                  </Link>
+                )
+              })}
             </div>
           </div>
         </div>

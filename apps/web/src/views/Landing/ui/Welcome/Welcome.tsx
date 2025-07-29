@@ -8,7 +8,7 @@ import styles from './MobileBlock.module.css'
 
 export const Welcome = () => {
   return (
-    <div className='hero flex gap-2 items-stretch container p-0 box-border max-lg:grid max-lg:grid-rows-2'>
+    <div className='hero flex gap-2 items-stretch container p-0 box-border max-lg:grid max-lg:grid-rows-2 -mt-[112px] max-lg:-mt-[100px]'>
       <div className=' flex-1 p-20 pt-[160px] rounded-3xl bg-bgSecondary mt-2 flex flex-col items-start gap-8 max-lg:p-10 max-lg:pt-[140px]'>
         <Typography.Heading1 className={'leading-[1.2]'}>
           Discover a World of Music with Spotify
@@ -24,7 +24,7 @@ export const Welcome = () => {
       </div>
       <div
         className={clsx(
-          'relative flex-1 p-20 pt-[160px] rounded-3xl mt-2 flex flex-col items-center border-green border-solid border-2 overflow-hidden',
+          'relative flex-1 p-20 pt-[160px] rounded-3xl mt-2 flex flex-col items-center border-greenMain border-solid border-2 overflow-hidden',
           styles.bgHeroGradient
         )}
       >

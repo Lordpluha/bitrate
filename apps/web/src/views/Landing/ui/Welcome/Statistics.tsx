@@ -26,7 +26,7 @@ export const Statistics = () => {
           </div>
         ))}
       </div>
-      <span className='text-sm text-tBase font-medium'>
+      <span className='text-sm text-text font-medium'>
         517.69 million+ <br /> Spotify users worldwide
       </span>
     </div>

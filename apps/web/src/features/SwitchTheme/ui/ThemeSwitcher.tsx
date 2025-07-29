@@ -14,14 +14,14 @@ export const ThemeSwitcher = () => {
   if (!mounted) return null
 
   return (
-    <div className='flex items-center gap-2 p-2 rounded-full bg-muted shadow-inner shadow-tBase'>
+    <div className='flex items-center gap-2 p-2 rounded-full bg-muted shadow-inner shadow-text'>
       {themes.map(th => (
         <button
           key={th}
           onClick={() => themeContext?.setTheme(th)}
           className={clsx(
             'w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300',
-            themeContext?.theme === th ? 'bg-green' : 'bg-bgPrimary'
+            themeContext?.theme === th ? 'bg-greenMain' : 'bg-bg'
           )}
         >
           {THEME_ICONS[th]}

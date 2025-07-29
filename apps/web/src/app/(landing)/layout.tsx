@@ -4,7 +4,7 @@ import { PropsWithChildren } from 'react'
 
 export default function LandingLayout({ children }: PropsWithChildren) {
   return (
-    <div className={'flex flex-col min-h-[100vh] bg-bgPrimary text-tBase'}>
+    <div className={'flex flex-col min-h-[100vh] bg-bg text-text'}>
       <Header />
       <main>{children}</main>
       <Footer className='mt-auto' />

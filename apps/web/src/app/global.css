@@ -4,33 +4,29 @@
 
 @layer base {
   * {
-    /* @apply transition-colors duration-500; */
 		@apply scroll-smooth;
   }
 
+  :root {
+  --color-green-main: #1ed760;
+  --color-green-dark: #0e672e;
+  --color-blue-main: #003480;
+  --color-grey-light: #a7a7a7;
+  --color-white: #fff;
+  --color-black: #000;
+}
+
   :root.dark {
-    --color-primary: #0a0a0a;
-    --color-secondary: #121212;
-    --color-text-base: #fff;
-    --color-bg-primary: #0a0a0a;
-    --color-bg-secondary: #121212;
-    --color-grey: #a7a7a7;
-    --color-green: #1ed760;
-    --color-green-secondary: #0e672e;
-    --color-blue: #003480;
-    --color-bgSecondary-rgb: 10 10 10;
-  }
+  --color-bg: #0a0a0a;
+  --color-bg-secondary: #121212;
+  --color-text: #fff;
+  --color-bg-secondary-rgb: 10 10 10;
+}
 
   :root.light {
-    --color-primary: #fff;
-    --color-secondary: #f7f7f7;
-    --color-text-base: #0a0a0a;
-    --color-bg-primary: #fff;
-    --color-bg-secondary: #f7f7f7;
-    --color-grey: #a7a7a7;
-    --color-green: #1ed760;
-    --color-green-secondary: #0e672e;
-    --color-blue: #003480;
-    --color-bgSecondary-rgb: 247 247 247;
-  }
+  --color-bg: #fff;
+  --color-bg-secondary: #f7f7f7;
+  --color-text: #0a0a0a;
+  --color-bg-secondary-rgb: 247 247 247;
+}
 }

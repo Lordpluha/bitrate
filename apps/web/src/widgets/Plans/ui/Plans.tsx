@@ -31,7 +31,7 @@ export const Plans = () => {
         </div>
       </div>
 
-      <div className='container grid grid-cols-4 gap-6 items-center max-lg:grid-cols-2 max-sm:grid-cols-1'>
+      <div className='container grid grid-cols-4 gap-6 items-center max-xl:grid-cols-2 max-sm:grid-cols-1'>
         {plans.map((plan, idx) => (
           <PlanCard
             key={idx}

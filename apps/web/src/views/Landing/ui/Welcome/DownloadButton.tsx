@@ -3,7 +3,7 @@ import { DownloadIcon } from '@shared/ui'
 
 export const DownloadButton = () => (
   <Link
-    className='text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-tBase font-medium border-solid border-2 flex items-center gap-2'
+    className='text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-text font-medium border-solid border-2 flex items-center gap-2'
     href='#'
   >
     <span>Download The App</span>

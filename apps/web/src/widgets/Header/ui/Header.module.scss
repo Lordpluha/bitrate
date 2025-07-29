@@ -1,11 +1,11 @@
 .header {
-  @apply fixed top-0 left-0 right-0 z-50 transition-colors duration-300;
+  @apply sticky top-0 left-0 right-0 z-50 transition-colors duration-300;
 }
 
 .header--scrolled {
   background-color: rgb(var(--color-bgSecondary-rgb), 1) !important;
 
-  @apply backdrop-blur border-b border-white/10;
+  @apply backdrop-blur border-b border-text border-opacity-10;
 }
 
 .inner {
@@ -21,7 +21,7 @@
 }
 
 .burger {
-  @apply text-tBase hidden absolute z-20 right-8 top-8;
+  @apply text-text hidden absolute z-20 right-8 top-8;
 }
 
 @media (width <= 1024px) {
@@ -30,7 +30,7 @@
   }
 
   .mobile-layout {
-    @apply fixed top-0 right-0 bottom-0 left-[-100%] bg-bgPrimary h-screen w-full z-10;
+    @apply fixed top-0 right-0 bottom-0 left-[-100%] bg-bg h-screen w-full z-10;
   }
 
   .mobile--active {

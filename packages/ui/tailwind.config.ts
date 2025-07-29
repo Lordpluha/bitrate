@@ -10,11 +10,11 @@ const config = {
       padding: '1.25rem',
       screens: {
         DEFAULT: '100%',
-        sm: '650px',
-        md: '768px',
-        lg: '1023px',
-        xl: '1280px',
-        '2xl': '1440px',
+        sm: '1540px',
+        md: '1540px',
+        lg: '1540px',
+        xl: '1540px',
+        '2xl': '1540px',
         '3xl': '1540px'
       }
     },
@@ -22,12 +22,12 @@ const config = {
       xs: '480px',
       sm: '650px',
       md: '768px',
-      lg: '1023px',
+      lg: '1025px',
       xl: '1280px',
       '2xl': '1536px',
       'max-2xl': { max: '1535px' },
       'max-xl': { max: '1279px' },
-      'max-lg': { max: '1023px' },
+      'max-lg': { max: '1025px' },
       'max-md': { max: '768px' },
       'max-sm': { max: '650px' },
       'max-xs': { max: '479px' }
@@ -37,15 +37,15 @@ const config = {
     },
     extend: {
       colors: {
-        primary: 'var(--color-primary)',
-        secondary: 'var(--color-secondary)',
-        tBase: 'var(--color-text-base)',
-        bgPrimary: 'var(--color-bg-primary)',
+        greenMain: 'var(--color-green-main)',
+        greenDark: 'var(--color-green-dark)',
+        blueMain: 'var(--color-blue-main)',
+        greyLight: 'var(--color-grey-light)',
+        white: 'var(--color-white)',
+        black: 'var(--color-black)',
+        bg: 'var(--color-bg)',
         bgSecondary: 'var(--color-bg-secondary)',
-        grey: 'var(--color-grey)',
-        green: 'var(--color-green)',
-        greenSecondary: 'var(--color-green-secondary)',
-        blue: 'var(--color-blue)',
+        text: 'var(--color-text)',
         bgSecondaryRgb: 'var(--color-bg-secondary-rgb)'
       },
       keyframes: {
