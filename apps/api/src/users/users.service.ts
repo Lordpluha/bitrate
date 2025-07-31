@@ -6,15 +6,18 @@ import { UserEntity } from './entities'
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findUserById(id: UserEntity['id']) {
+  async findById(id: UserEntity['id']) {
     return await this.prisma.user.findUniqueOrThrow({
       where: {
         id
+      },
+      omit: {
+        password: true
       }
     })
   }
 
-  async findUserByEmail(email: UserEntity['email']) {
+  async findByEmail(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
       where: {
         email
@@ -22,7 +25,7 @@ export class UsersService {
     })
   }
 
-  async findUserByUsername(username: UserEntity['username']) {
+  async findByUsername(username: UserEntity['username']) {
     return this.prisma.user.findFirst({
       where: {
         username
@@ -30,13 +33,13 @@ export class UsersService {
     })
   }
 
-  async createUser(data: Omit<UserEntity, 'id' | 'createdAt'>) {
+  async create(data: Omit<UserEntity, 'id' | 'createdAt'>) {
     return this.prisma.user.create({
       data
     })
   }
 
-  async updateUserById(
+  async updateById(
     id: UserEntity['id'],
     userData: Partial<Omit<UserEntity, 'id' | ''>>
   ) {

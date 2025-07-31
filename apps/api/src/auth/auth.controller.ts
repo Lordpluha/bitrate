@@ -46,7 +46,7 @@ export class AuthController {
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
   ) {
-    const { access_token, refresh_token } = await this.authService.login(
+    const { access_token, refresh_token } = await this.authService.loginUser(
       loginDto.email,
       loginDto.password
     )
@@ -59,7 +59,7 @@ export class AuthController {
     @Body(new ZodValidationPipe(RegistrationSchema))
     registrationDto: RegistrationDto
   ) {
-    await this.authService.registration(registrationDto)
+    await this.authService.registerUser(registrationDto)
   }
 
   @AuthLogoutSwagger()
@@ -90,10 +90,8 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('me')
   async getMe(@Req() req: Request) {
-    const user = req['user'] as JWTPayload
-    const { password, ...safeUser } = await this.userService.findUserById(
-      user.sub
-    )
-    return safeUser
+    const jwtUser = req['user'] as JWTPayload
+    const user = await this.userService.findById(jwtUser.sub)
+    return user
   }
 }

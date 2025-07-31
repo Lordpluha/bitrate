@@ -1,0 +1,61 @@
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import {
+  ApiOperation,
+  ApiConsumes,
+  ApiResponse,
+  ApiQuery
+} from '@nestjs/swagger'
+import { TrackEntity } from 'src/tracks/entities'
+
+export function TracksGetAllSwagger() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Get all tracks with pagination' }),
+    ApiQuery({
+      name: 'title',
+      required: false,
+      type: String,
+      description: 'Search by track title'
+    }),
+    ApiQuery({
+      name: 'page',
+      required: false,
+      type: Number,
+      example: 1,
+      description: 'Page number'
+    }),
+    ApiQuery({
+      name: 'limit',
+      required: false,
+      type: Number,
+      example: 10,
+      description: 'Items per page'
+    }),
+    ApiConsumes('application/json'),
+    ApiResponse({
+      status: HttpStatus.OK,
+      content: {
+        'application/json': {
+          example: [
+            {
+              artist: '123',
+              title: 'Track Title',
+              id: '1',
+              likedBy: [],
+              album: 'Album Name',
+              albumId: 'album123',
+              artistId: 'artist123',
+              cover: 'https://example.com/cover.jpg',
+              audioUrl: '',
+              userId: '',
+              createdAt: new Date()
+            } as TrackEntity
+          ]
+        }
+      }
+    }),
+    ApiResponse({
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      description: 'Server error'
+    })
+  )
+}

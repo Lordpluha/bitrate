@@ -37,7 +37,7 @@ model Track {
   id        String     @id @default(uuid())
   title     String
   audioUrl  String
-  cover     String
+  cover     String?
   artistId  String
 
   createdAt DateTime   @default(now())
@@ -82,7 +82,7 @@ model Album {
 model Playlist {
   id           String   @id @default(uuid())
   title        String
-  cover        String
+  cover        String?
   artistId     String
   description  String?
   createdAt    DateTime @default(now())

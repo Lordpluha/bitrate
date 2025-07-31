@@ -18,14 +18,14 @@ export class AuthService {
     private prismaService: PrismaService
   ) {}
 
-  async registration(registrationDto: Pick<UserEntity, 'email' | 'password'>) {
-    const user = await this.usersService.findUserByEmail(registrationDto.email)
+  async registerUser(registrationDto: Pick<UserEntity, 'email' | 'password'>) {
+    const user = await this.usersService.findByEmail(registrationDto.email)
 
     if (user) {
       throw new ConflictException('User with this email already exists')
     }
 
-    await this.usersService.createUser({
+    await this.usersService.create({
       username: registrationDto.email,
       email: registrationDto.email,
       password: registrationDto.password,
@@ -34,10 +34,15 @@ export class AuthService {
     })
   }
 
-  async login(email: UserEntity['email'], password: UserEntity['password']) {
-    const user = await this.usersService.findUserByEmail(email)
-    if (user?.password !== password) {
-      throw new UnauthorizedException()
+  async loginUser(
+    email: UserEntity['email'],
+    password: UserEntity['password']
+  ) {
+    const user = await this.usersService.findByEmail(email)
+    if (!user || user?.password !== password) {
+      throw new UnauthorizedException({
+        message: 'Invalid credentials'
+      })
     }
 
     const access_token = await this.jwtService.signAsync(
@@ -81,9 +86,9 @@ export class AuthService {
           secret: process.env.REFRESH_TOKEN_SECRET
         }
       )
-      const user = await this.usersService.findUserByUsername(payload.username)
+      const user = await this.usersService.findByUsername(payload.username)
       if (!user) {
-        throw new UnauthorizedException('User not found')
+        throw new UnauthorizedException('Invalid refresh token')
       }
       return {
         access_token: await this.jwtService.signAsync(
@@ -104,9 +109,13 @@ export class AuthService {
     userId: SessionEntity['userId'],
     refresh_token: SessionEntity['refresh_token']
   ) {
+    const user = await this.usersService.findById(userId)
+    if (!user) {
+      throw new UnauthorizedException('Invalid access token')
+    }
     const session = await this.prismaService.session.findFirst({
       where: {
-        userId,
+        userId: user.id,
         refresh_token
       }
     })
