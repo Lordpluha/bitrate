@@ -1,3 +1,32 @@
-* {
-  box-sizing: border-box;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+		@apply scroll-smooth;
+  }
+
+  :root {
+  --color-green-main: #1ed760;
+  --color-green-dark: #0e672e;
+  --color-blue-main: #003480;
+  --color-grey-light: #a7a7a7;
+  --color-white: #fff;
+  --color-black: #000;
+}
+
+  :root.dark {
+  --color-bg: #0a0a0a;
+  --color-bg-secondary: #121212;
+  --color-text: #fff;
+  --color-bg-secondary-rgb: 10 10 10;
+}
+
+  :root.light {
+  --color-bg: #fff;
+  --color-bg-secondary: #f7f7f7;
+  --color-text: #0a0a0a;
+  --color-bg-secondary-rgb: 247 247 247;
+}
 }
