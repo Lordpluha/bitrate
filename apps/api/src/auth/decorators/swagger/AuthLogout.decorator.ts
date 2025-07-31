@@ -4,6 +4,7 @@ import { ApiOperation, ApiResponse, ApiCookieAuth } from '@nestjs/swagger'
 export function AuthLogoutSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'User logout' }),
+    ApiCookieAuth(process.env.ACCESS_TOKEN_NAME),
     ApiResponse({
       status: HttpStatus.CREATED,
       description: 'Successfully logged out'
@@ -11,11 +12,6 @@ export function AuthLogoutSwagger() {
     ApiResponse({
       status: HttpStatus.UNAUTHORIZED,
       description: 'Unauthorized'
-    }),
-    ApiResponse({
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      description: 'Server error'
-    }),
-    ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
+    })
   )
 }

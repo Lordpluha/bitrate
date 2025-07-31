@@ -25,10 +25,6 @@ export function AuthRefreshSwagger() {
       status: HttpStatus.UNAUTHORIZED,
       description: 'Invalid or expired refresh token'
     }),
-    ApiResponse({
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      description: 'Server error'
-    }),
     ApiCookieAuth(process.env.REFRESH_TOKEN_NAME)
   )
 }

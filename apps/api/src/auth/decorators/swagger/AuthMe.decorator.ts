@@ -26,10 +26,6 @@ export function AuthMeSwagger() {
       status: HttpStatus.UNAUTHORIZED,
       description: 'Unauthorized'
     }),
-    ApiResponse({
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      description: 'Server error'
-    }),
     ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
   )
 }

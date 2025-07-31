@@ -12,7 +12,7 @@ import {
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { TrackEntity } from './entities'
 import { TracksService } from './tracks.service'
-import { TracksGetAllSwagger } from './decorators'
+import { PostTrackSwagger, TracksGetAllSwagger } from './decorators'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -43,6 +43,7 @@ export class TracksController {
     return this.tracksService.findTrackById(id)
   }
 
+  @PostTrackSwagger()
   @UseGuards(AuthGuard)
   @Post('')
   postTrack(

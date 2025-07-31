@@ -12,6 +12,14 @@ import { AlbumsService } from './albums/albums.service'
 import { AlbumsController } from './albums/albums.controller'
 import { AlbumsModule } from './albums/albums.module'
 import { ArtistsModule } from './artists/artists.module'
+import { ArtistsController } from './artists/artists.controller'
+import { TracksController } from './tracks/tracks.controller'
+import { PlaylistsController } from './playlists/playlists.controller'
+import { AuthController } from './auth/auth.controller'
+import { PlaylistsService } from './playlists/playlists.service'
+import { TracksService } from './tracks/tracks.service'
+import { ArtistsService } from './artists/artists.service'
+import { AuthService } from './auth/auth.service'
 
 @Module({
   imports: [
@@ -23,13 +31,27 @@ import { ArtistsModule } from './artists/artists.module'
     }),
     PrismaModule,
     AuthModule,
+    ArtistsModule,
     UsersModule,
     TracksModule,
     PlaylistsModule,
-    AlbumsModule,
-    ArtistsModule
+    AlbumsModule
   ],
-  controllers: [AppController, AlbumsController],
-  providers: [AppService, AlbumsService]
+  controllers: [
+    AppController,
+    AlbumsController,
+    ArtistsController,
+    TracksController,
+    PlaylistsController,
+    AuthController
+  ],
+  providers: [
+    AppService,
+    AlbumsService,
+    ArtistsService,
+    TracksService,
+    PlaylistsService,
+    AuthService
+  ]
 })
 export class AppModule {}

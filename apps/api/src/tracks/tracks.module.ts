@@ -18,6 +18,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         signOptions: { expiresIn: '60s' }
       })
     })
-  ]
+  ],
+  exports: [TracksService]
 })
 export class TracksModule {}

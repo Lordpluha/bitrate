@@ -17,7 +17,7 @@ export class UsersService {
     })
   }
 
-  async findByEmail(email: UserEntity['email']) {
+  async getByEmail(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
       where: {
         email
@@ -25,10 +25,34 @@ export class UsersService {
     })
   }
 
-  async findByUsername(username: UserEntity['username']) {
-    return this.prisma.user.findFirst({
+  async getByUsername(username: UserEntity['username']) {
+    return await this.prisma.user.findFirst({
       where: {
         username
+      },
+      omit: {
+        password: true
+      }
+    })
+  }
+
+  async findByUsername({
+    username,
+    limit = 10,
+    page = 1
+  }: {
+    username: UserEntity['username']
+    limit?: number
+    page?: number
+  }) {
+    return this.prisma.user.findMany({
+      where: {
+        username
+      },
+      skip: page ? (page - 1) * limit : undefined,
+      take: limit,
+      omit: {
+        password: true
       }
     })
   }

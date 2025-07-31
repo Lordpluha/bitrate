@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import * as cookieParser from 'cookie-parser'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { HttpStatus } from '@nestjs/common'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -23,6 +24,53 @@ async function bootstrap() {
       'https://github.com/Lordpluha',
       'vladislavteslyukofficial@gmail.com'
     )
+    // Global server errors
+    .addGlobalResponse({
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      description: 'Internal server error'
+    })
+    .addGlobalResponse({
+      status: HttpStatus.NOT_IMPLEMENTED,
+      description: 'Not implemented'
+    })
+    .addGlobalResponse({
+      status: HttpStatus.BAD_GATEWAY,
+      description: 'Bad gateway'
+    })
+    .addGlobalResponse({
+      status: HttpStatus.SERVICE_UNAVAILABLE,
+      description: 'Service unavailable'
+    })
+    .addGlobalResponse({
+      status: HttpStatus.GATEWAY_TIMEOUT,
+      description: 'Gateway timeout'
+    })
+    .addGlobalResponse({
+      status: HttpStatus.HTTP_VERSION_NOT_SUPPORTED,
+      description: 'HTTP version not supported'
+    })
+    .addGlobalResponse({
+      status: HttpStatus.INSUFFICIENT_STORAGE,
+      description: 'Insufficient storage'
+    })
+    .addGlobalResponse({
+      status: HttpStatus.LOOP_DETECTED,
+      description: 'Loop detected'
+    })
+
+    // Global method errors
+    .addGlobalResponse({
+      status: HttpStatus.METHOD_NOT_ALLOWED,
+      description: 'Method not allowed'
+    })
+    .addGlobalResponse({
+      status: HttpStatus.REQUEST_TIMEOUT,
+      description: 'Request timeout'
+    })
+    .addGlobalResponse({
+      status: HttpStatus.TOO_MANY_REQUESTS,
+      description: 'Too many requests'
+    })
     .setExternalDoc('Mintlify', 'https://lordpluha.mintlify.app/')
     .build()
 

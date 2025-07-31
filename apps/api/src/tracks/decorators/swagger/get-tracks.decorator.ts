@@ -52,10 +52,6 @@ export function TracksGetAllSwagger() {
           ]
         }
       }
-    }),
-    ApiResponse({
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      description: 'Server error'
     })
   )
 }
