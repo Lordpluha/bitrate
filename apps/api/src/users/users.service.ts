@@ -74,7 +74,7 @@ export class UsersService {
   }
 
   async uploadAvatar(userId: string, filename: string) {
-    const avatarPath = `/uploads/avatars/${filename}`
+    const avatarPath = `/uploads/users/avatars/${filename}`
     return this.prisma.user.update({
       where: { id: userId },
       data: { avatar: avatarPath },

@@ -75,7 +75,7 @@ export class UsersController {
   @UseInterceptors(
     FileInterceptor('avatar', {
       storage: diskStorage({
-        destination: './uploads/avatars',
+        destination: './uploads/users/avatars',
         filename: (req, file, cb) => {
           const uniqueName = `${Date.now()}${extname(file.originalname)}`
           cb(null, uniqueName)
