@@ -29,7 +29,7 @@ import { AuthGuard } from './auth.guard'
 import { JWTPayload } from './types'
 import { RefreshGuard } from './refresh.guard'
 import { UsersService } from 'src/users/users.service'
-import { clearAuthCookies, setAuthCookies } from './jwt.utils'
+import { TokenService } from './token.service'
 
 @ApiExtraModels(SessionEntity)
 @ApiTags('Auth')
@@ -37,7 +37,8 @@ import { clearAuthCookies, setAuthCookies } from './jwt.utils'
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private userService: UsersService
+    private userService: UsersService,
+    private tokenService: TokenService
   ) {}
 
   @AuthLoginSwagger()
@@ -50,7 +51,8 @@ export class AuthController {
       loginDto.email,
       loginDto.password
     )
-    setAuthCookies(res, access_token, refresh_token)
+
+    this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
   @AuthRegistrationSwagger()
@@ -71,7 +73,7 @@ export class AuthController {
       user.sub,
       req[process.env.REFRESH_TOKEN_NAME!] as string
     )
-    clearAuthCookies(res)
+    this.tokenService.clearAuthCookies(res)
   }
 
   @AuthRefreshSwagger()
@@ -83,7 +85,7 @@ export class AuthController {
   ) {
     const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
     const { access_token } = await this.authService.refresh(refresh_token)
-    setAuthCookies(res, access_token, refresh_token)
+    this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
   @AuthMeSwagger()

@@ -9,13 +9,15 @@ import { UserEntity } from '../users/entities'
 import { JWTPayload } from './types'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { SessionEntity } from './entities'
+import { TokenService } from './token.service'
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-    private prisma: PrismaService
+    private prisma: PrismaService,
+    private tokenService: TokenService
   ) {}
 
   async registerUser(registrationDto: Pick<UserEntity, 'email' | 'password'>) {
@@ -45,23 +47,13 @@ export class AuthService {
       })
     }
 
-    const access_token = await this.jwtService.signAsync(
-      {
-        username: user.username
-      },
-      {
-        subject: user.id,
-        expiresIn: process.env.JWT_ACCESS_EXPIRES_IN
-      }
+    const access_token = await this.tokenService.generateAccessToken(
+      user.id,
+      user.username
     )
-    const refresh_token = await this.jwtService.signAsync(
-      {
-        username: user.username
-      },
-      {
-        subject: user.id,
-        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN
-      }
+    const refresh_token = await this.tokenService.generateRefreshToken(
+      user.id,
+      user.username
     )
 
     const session = await this.prisma.session.create({
@@ -91,13 +83,9 @@ export class AuthService {
         throw new UnauthorizedException('Invalid refresh token')
       }
       return {
-        access_token: await this.jwtService.signAsync(
-          {
-            username: user.username
-          },
-          {
-            subject: user.id
-          }
+        access_token: await this.tokenService.generateAccessToken(
+          user.id,
+          user.username
         )
       }
     } catch {
