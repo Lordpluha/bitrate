@@ -40,7 +40,7 @@ export class AuthService {
     email: UserEntity['email'],
     password: UserEntity['password']
   ) {
-    const user = await this.usersService.getByEmail(email)
+    const user = await this.usersService.getByEmail_UNSECURE(email)
     if (!user || user?.password !== password) {
       throw new UnauthorizedException({
         message: 'Invalid credentials'

@@ -14,7 +14,7 @@ import { ArtistsService } from './artists.service'
 import { ArtistEntity } from './entities'
 import { CreateArtistDto, CreateArtistSchema } from './dtos'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { ArtistsGetAllSwagger } from './decorators'
+import { GetArtistsSwagger } from './decorators'
 import { AuthGuard } from 'src/auth/auth.guard'
 
 @ApiTags('Artists')
@@ -22,7 +22,7 @@ import { AuthGuard } from 'src/auth/auth.guard'
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
-  @ArtistsGetAllSwagger()
+  @GetArtistsSwagger()
   @Get('')
   getAll(
     @Query('username') username?: ArtistEntity['username'],

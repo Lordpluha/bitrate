@@ -1,1 +1,1 @@
-export * from './ArtistsGetAll.decorator'
+export * from './get-artists.decorator'

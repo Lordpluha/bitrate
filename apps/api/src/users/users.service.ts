@@ -6,6 +6,14 @@ import { UserEntity } from './entities'
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findById_UNSECURE(id: UserEntity['id']) {
+    return await this.prisma.user.findUniqueOrThrow({
+      where: {
+        id
+      }
+    })
+  }
+
   async findById(id: UserEntity['id']) {
     return await this.prisma.user.findUniqueOrThrow({
       where: {
@@ -18,6 +26,17 @@ export class UsersService {
   }
 
   async getByEmail(email: UserEntity['email']) {
+    return await this.prisma.user.findFirst({
+      where: {
+        email
+      },
+      omit: {
+        password: true
+      }
+    })
+  }
+
+  async getByEmail_UNSECURE(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
       where: {
         email
@@ -59,7 +78,10 @@ export class UsersService {
 
   async create(data: Omit<UserEntity, 'id' | 'createdAt'>) {
     return this.prisma.user.create({
-      data
+      data,
+      omit: {
+        password: true
+      }
     })
   }
 
@@ -69,7 +91,10 @@ export class UsersService {
   ) {
     return this.prisma.user.update({
       where: { id },
-      data: userData
+      data: userData,
+      omit: {
+        password: true
+      }
     })
   }
 

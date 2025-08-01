@@ -13,6 +13,9 @@ export class ArtistsService {
         password,
         username,
         email
+      },
+      omit: {
+        password: true
       }
     })
   }
@@ -51,13 +54,19 @@ export class ArtistsService {
   async update(id: ArtistEntity['id'], artist: Partial<ArtistEntity>) {
     return await this.prisma.artist.update({
       where: { id },
-      data: artist
+      data: artist,
+      omit: {
+        password: true
+      }
     })
   }
 
   async delete(id: ArtistEntity['id']) {
     return await this.prisma.artist.delete({
-      where: { id }
+      where: { id },
+      omit: {
+        password: true
+      }
     })
   }
 
@@ -67,9 +76,19 @@ export class ArtistsService {
     })
   }
 
-  async findById(id: ArtistEntity['id']) {
+  async findById_UNSECURE(id: ArtistEntity['id']) {
     return await this.prisma.artist.findUnique({
       where: { id }
+    })
+  }
+
+  async findById(id: ArtistEntity['id']) {
+    return await this.prisma.artist.findUnique({
+      where: { id },
+      omit: {
+        password: true,
+        email: true
+      }
     })
   }
 }

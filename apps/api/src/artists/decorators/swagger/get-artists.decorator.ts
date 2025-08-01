@@ -7,7 +7,7 @@ import {
 } from '@nestjs/swagger'
 import { ArtistEntity } from 'src/artists/entities'
 
-export function ArtistsGetAllSwagger() {
+export function GetArtistsSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get all artists with pagination' }),
     ApiQuery({
