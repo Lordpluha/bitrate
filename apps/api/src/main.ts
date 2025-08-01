@@ -7,6 +7,7 @@ import { HttpStatus } from '@nestjs/common'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.use(cookieParser())
+
   const config = new DocumentBuilder()
     .setTitle('@spotify/api')
     .setDescription('@spotify/api Swagger documentation')

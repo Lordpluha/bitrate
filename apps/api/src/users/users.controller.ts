@@ -2,17 +2,33 @@ import {
   Body,
   Controller,
   Get,
+  HttpStatus,
   Param,
+  Post,
   Put,
   Query,
   Req,
-  UseGuards
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+  BadRequestException
 } from '@nestjs/common'
 import { UsersService } from './users.service'
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
+import {
+  ApiConsumes,
+  ApiCookieAuth,
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags
+} from '@nestjs/swagger'
 import { UserEntity } from './entities'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { JWTPayload } from 'src/auth/types'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { diskStorage } from 'multer'
+import { extname } from 'path'
+import { UploadAvatarSwagger } from './decorators/swagger/upload-avatar.decorator'
 
 @ApiExtraModels(UserEntity)
 @ApiTags('Users')
@@ -51,5 +67,31 @@ export class UsersController {
   putById(@Req() req: Request, @Body() userData: Partial<UserEntity>) {
     const jwtUser = req['user'] as JWTPayload
     return this.usersService.updateById(jwtUser.sub, userData)
+  }
+
+  @UploadAvatarSwagger()
+  @UseGuards(AuthGuard)
+  @Post('avatar')
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: './uploads/avatars',
+        filename: (req, file, cb) => {
+          const uniqueName = `${Date.now()}${extname(file.originalname)}`
+          cb(null, uniqueName)
+        }
+      }),
+      fileFilter: (req, file, cb) => {
+        const allowed = ['image/png', 'image/jpeg', 'image/webp']
+        if (!allowed.includes(file.mimetype)) {
+          return cb(new BadRequestException('Invalid file type'), false)
+        }
+        cb(null, true)
+      }
+    })
+  )
+  uploadAvatar(@Req() req: Request, @UploadedFile() file: Express.Multer.File) {
+    const jwtUser = req['user'] as JWTPayload
+    return this.usersService.uploadAvatar(jwtUser.sub, file.filename)
   }
 }

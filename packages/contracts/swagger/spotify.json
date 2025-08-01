@@ -53,1063 +53,6 @@
         "tags": ["Welcome"]
       }
     },
-    "/albums": {
-      "get": {
-        "operationId": "AlbumsController_getAllAlbums",
-        "parameters": [
-          {
-            "name": "page",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Albums"]
-      },
-      "post": {
-        "operationId": "AlbumsController_createAlbum",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAlbumDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Albums"]
-      }
-    },
-    "/albums/{id}": {
-      "get": {
-        "operationId": "AlbumsController_getById",
-        "parameters": [],
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Albums"]
-      },
-      "put": {
-        "operationId": "AlbumsController_updateAlbum",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAlbumDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Albums"]
-      }
-    },
-    "/artists": {
-      "get": {
-        "operationId": "ArtistsController_getAll",
-        "parameters": [
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page number",
-            "schema": {
-              "example": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Items per page",
-            "schema": {
-              "example": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "username",
-            "required": false,
-            "in": "query",
-            "description": "Search by artist username",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "example": [
-                  {
-                    "avatar": "https://example.com/avatar.jpg",
-                    "id": "1",
-                    "username": "artist1",
-                    "backgroundImage": "",
-                    "bio": ""
-                  }
-                ]
-              }
-            },
-            "description": ""
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "summary": "Get all artists with pagination",
-        "tags": ["Artists"]
-      },
-      "post": {
-        "operationId": "ArtistsController_create",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateArtistDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Artists"]
-      }
-    },
-    "/artists/{id}": {
-      "get": {
-        "operationId": "ArtistsController_getById",
-        "parameters": [],
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Artists"]
-      },
-      "put": {
-        "operationId": "ArtistsController_updateProfile",
-        "parameters": [],
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Artists"]
-      },
-      "delete": {
-        "operationId": "ArtistsController_deleteProfile",
-        "parameters": [],
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Artists"]
-      }
-    },
-    "/artists/username/{username}": {
-      "get": {
-        "operationId": "ArtistsController_getByUsername",
-        "parameters": [],
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Artists"]
-      }
-    },
-    "/tracks": {
-      "get": {
-        "operationId": "TracksController_getAll",
-        "parameters": [
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page number",
-            "schema": {
-              "example": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Items per page",
-            "schema": {
-              "example": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "title",
-            "required": false,
-            "in": "query",
-            "description": "Search by track title",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "example": [
-                  {
-                    "artist": "123",
-                    "title": "Track Title",
-                    "id": "1",
-                    "likedBy": [],
-                    "album": "Album Name",
-                    "albumId": "album123",
-                    "artistId": "artist123",
-                    "cover": "https://example.com/cover.jpg",
-                    "audioUrl": "",
-                    "userId": "",
-                    "createdAt": "2025-07-31T20:26:35.768Z"
-                  }
-                ]
-              }
-            },
-            "description": ""
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "summary": "Get all tracks with pagination",
-        "tags": ["Tracks"]
-      },
-      "post": {
-        "operationId": "TracksController_postTrack",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTrackDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "id": "1",
-                  "title": "Track Title",
-                  "cover": "https://example.com/cover.jpg",
-                  "audioUrl": "",
-                  "createdAt": "2025-07-31T20:26:35.768Z"
-                }
-              }
-            },
-            "description": ""
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "access_token": []
-          }
-        ],
-        "summary": "Create track",
-        "tags": ["Tracks"]
-      }
-    },
-    "/tracks/{id}": {
-      "get": {
-        "operationId": "TracksController_getById",
-        "parameters": [],
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Tracks"]
-      },
-      "put": {
-        "operationId": "TracksController_putTrack",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTrackDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Tracks"]
-      }
-    },
-    "/playlists": {
-      "get": {
-        "operationId": "PlaylistsController_getAll",
-        "parameters": [
-          {
-            "name": "page",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Playlists"]
-      },
-      "post": {
-        "operationId": "PlaylistsController_post",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePlaylistDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Playlists"]
-      }
-    },
-    "/playlists/{id}": {
-      "get": {
-        "operationId": "PlaylistsController_getById",
-        "parameters": [],
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Playlists"]
-      },
-      "put": {
-        "operationId": "PlaylistsController_update",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePlaylistDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": ["Playlists"]
-      }
-    },
     "/auth/login": {
       "post": {
         "operationId": "AuthController_login",
@@ -1670,6 +613,1127 @@
         },
         "tags": ["Users"]
       }
+    },
+    "/users/avatar": {
+      "post": {
+        "operationId": "UsersController_uploadAvatar",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Avatar uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "422": {
+            "description": "Invalid file type or size"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Upload avatar for user",
+        "tags": ["Users"]
+      }
+    },
+    "/artists": {
+      "get": {
+        "operationId": "ArtistsController_getAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "Search by artist username",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "avatar": "https://example.com/avatar.jpg",
+                    "id": "1",
+                    "username": "artist1",
+                    "backgroundImage": "",
+                    "bio": ""
+                  }
+                ]
+              }
+            },
+            "description": ""
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "Get all artists with pagination",
+        "tags": ["Artists"]
+      },
+      "post": {
+        "operationId": "ArtistsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateArtistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Artists"]
+      }
+    },
+    "/artists/{id}": {
+      "get": {
+        "operationId": "ArtistsController_getById",
+        "parameters": [],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Artists"]
+      },
+      "put": {
+        "operationId": "ArtistsController_updateProfile",
+        "parameters": [],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Artists"]
+      },
+      "delete": {
+        "operationId": "ArtistsController_deleteProfile",
+        "parameters": [],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Artists"]
+      }
+    },
+    "/artists/username/{username}": {
+      "get": {
+        "operationId": "ArtistsController_getByUsername",
+        "parameters": [],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Artists"]
+      }
+    },
+    "/tracks": {
+      "get": {
+        "operationId": "TracksController_getAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "description": "Search by track title",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "artist": "123",
+                    "title": "Track Title",
+                    "id": "1",
+                    "likedBy": [],
+                    "album": "Album Name",
+                    "albumId": "album123",
+                    "artistId": "artist123",
+                    "cover": "https://example.com/cover.jpg",
+                    "audioUrl": "",
+                    "userId": "",
+                    "createdAt": "2025-08-01T06:53:17.928Z"
+                  }
+                ]
+              }
+            },
+            "description": ""
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "Get all tracks with pagination",
+        "tags": ["Tracks"]
+      },
+      "post": {
+        "operationId": "TracksController_postTrack",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrackDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "1",
+                  "title": "Track Title",
+                  "cover": "https://example.com/cover.jpg",
+                  "audioUrl": "",
+                  "createdAt": "2025-08-01T06:53:17.929Z"
+                }
+              }
+            },
+            "description": ""
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Create track",
+        "tags": ["Tracks"]
+      }
+    },
+    "/tracks/{id}": {
+      "get": {
+        "operationId": "TracksController_getById",
+        "parameters": [],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Tracks"]
+      },
+      "put": {
+        "operationId": "TracksController_putTrack",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrackDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Tracks"]
+      }
+    },
+    "/playlists": {
+      "get": {
+        "operationId": "PlaylistsController_getAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Playlists"]
+      },
+      "post": {
+        "operationId": "PlaylistsController_post",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlaylistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Playlists"]
+      }
+    },
+    "/playlists/{id}": {
+      "get": {
+        "operationId": "PlaylistsController_getById",
+        "parameters": [],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Playlists"]
+      },
+      "put": {
+        "operationId": "PlaylistsController_update",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePlaylistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Playlists"]
+      }
+    },
+    "/albums": {
+      "get": {
+        "operationId": "AlbumsController_getAllAlbums",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Albums"]
+      },
+      "post": {
+        "operationId": "AlbumsController_createAlbum",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAlbumDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Albums"]
+      }
+    },
+    "/albums/{id}": {
+      "get": {
+        "operationId": "AlbumsController_getById",
+        "parameters": [],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Albums"]
+      },
+      "put": {
+        "operationId": "AlbumsController_updateAlbum",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAlbumDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Albums"]
+      }
     }
   },
   "info": {
@@ -1701,35 +1765,103 @@
       }
     },
     "schemas": {
-      "UpdateAlbumDto": {
+      "SessionEntity": {
         "type": "object",
         "properties": {
-          "title": {
-            "type": "string",
-            "description": "Playlist title"
+          "id": {
+            "type": "string"
           },
-          "description": {
-            "type": "string",
-            "description": "",
-            "example": "user123"
+          "userId": {
+            "type": "string"
+          },
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
           }
         },
-        "required": ["title"]
+        "required": [
+          "id",
+          "userId",
+          "access_token",
+          "refresh_token",
+          "createdAt"
+        ]
       },
-      "CreateAlbumDto": {
+      "LoginDto": {
         "type": "object",
         "properties": {
-          "title": {
+          "email": {
             "type": "string",
-            "description": "Playlist title"
+            "description": "User email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "password123"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "RegistrationDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "New user email",
+            "example": "newuser@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "New user password",
+            "example": "password123"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "UserEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
           },
           "description": {
             "type": "string",
-            "description": "",
-            "example": "user123"
+            "nullable": true
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
           }
         },
-        "required": ["title"]
+        "required": [
+          "id",
+          "username",
+          "email",
+          "password",
+          "createdAt",
+          "description",
+          "avatar"
+        ]
       },
       "CreateArtistDto": {
         "type": "object",
@@ -1869,103 +2001,35 @@
         },
         "required": ["title"]
       },
-      "SessionEntity": {
+      "UpdateAlbumDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "access_token": {
-            "type": "string"
-          },
-          "refresh_token": {
-            "type": "string"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "userId",
-          "access_token",
-          "refresh_token",
-          "createdAt"
-        ]
-      },
-      "LoginDto": {
-        "type": "object",
-        "properties": {
-          "email": {
+          "title": {
             "type": "string",
-            "description": "User email",
-            "example": "user@example.com"
-          },
-          "password": {
-            "type": "string",
-            "description": "User password",
-            "example": "password123"
-          }
-        },
-        "required": ["email", "password"]
-      },
-      "RegistrationDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "New user email",
-            "example": "newuser@example.com"
-          },
-          "password": {
-            "type": "string",
-            "description": "New user password",
-            "example": "password123"
-          }
-        },
-        "required": ["email", "password"]
-      },
-      "UserEntity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "username": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
+            "description": "Playlist title"
           },
           "description": {
             "type": "string",
-            "nullable": true
-          },
-          "avatar": {
-            "type": "string",
-            "nullable": true
+            "description": "",
+            "example": "user123"
           }
         },
-        "required": [
-          "id",
-          "username",
-          "email",
-          "password",
-          "createdAt",
-          "description",
-          "avatar"
-        ]
+        "required": ["title"]
+      },
+      "CreateAlbumDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Playlist title"
+          },
+          "description": {
+            "type": "string",
+            "description": "",
+            "example": "user123"
+          }
+        },
+        "required": ["title"]
       }
     }
   },
