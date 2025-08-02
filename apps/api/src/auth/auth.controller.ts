@@ -29,7 +29,7 @@ import { AuthGuard } from './auth.guard'
 import { JWTPayload } from './types'
 import { RefreshGuard } from './refresh.guard'
 import { UsersService } from 'src/users/users.service'
-import { clearAuthCookies, setAuthCookies } from './jwt.utils'
+import { TokenService } from './token.service'
 
 @ApiExtraModels(SessionEntity)
 @ApiTags('Auth')
@@ -37,7 +37,8 @@ import { clearAuthCookies, setAuthCookies } from './jwt.utils'
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private userService: UsersService
+    private userService: UsersService,
+    private tokenService: TokenService
   ) {}
 
   @AuthLoginSwagger()
@@ -46,11 +47,12 @@ export class AuthController {
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
   ) {
-    const { access_token, refresh_token } = await this.authService.login(
+    const { access_token, refresh_token } = await this.authService.loginUser(
       loginDto.email,
       loginDto.password
     )
-    setAuthCookies(res, access_token, refresh_token)
+
+    this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
   @AuthRegistrationSwagger()
@@ -59,7 +61,7 @@ export class AuthController {
     @Body(new ZodValidationPipe(RegistrationSchema))
     registrationDto: RegistrationDto
   ) {
-    await this.authService.registration(registrationDto)
+    await this.authService.registerUser(registrationDto)
   }
 
   @AuthLogoutSwagger()
@@ -71,7 +73,7 @@ export class AuthController {
       user.sub,
       req[process.env.REFRESH_TOKEN_NAME!] as string
     )
-    clearAuthCookies(res)
+    this.tokenService.clearAuthCookies(res)
   }
 
   @AuthRefreshSwagger()
@@ -83,17 +85,15 @@ export class AuthController {
   ) {
     const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
     const { access_token } = await this.authService.refresh(refresh_token)
-    setAuthCookies(res, access_token, refresh_token)
+    this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
   @AuthMeSwagger()
   @UseGuards(AuthGuard)
   @Get('me')
   async getMe(@Req() req: Request) {
-    const user = req['user'] as JWTPayload
-    const { password, ...safeUser } = await this.userService.findUserById(
-      user.sub
-    )
-    return safeUser
+    const jwtUser = req['user'] as JWTPayload
+    const user = await this.userService.findById(jwtUser.sub)
+    return user
   }
 }

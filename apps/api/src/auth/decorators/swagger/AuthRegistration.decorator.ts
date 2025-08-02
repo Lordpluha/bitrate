@@ -30,10 +30,6 @@ export function AuthRegistrationSwagger() {
     ApiResponse({
       status: HttpStatus.CONFLICT,
       description: 'User already exists'
-    }),
-    ApiResponse({
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      description: 'Server error'
     })
   )
 }

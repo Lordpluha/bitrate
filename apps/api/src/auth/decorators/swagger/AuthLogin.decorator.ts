@@ -45,10 +45,6 @@ export function AuthLoginSwagger() {
     ApiResponse({
       status: HttpStatus.UNAUTHORIZED,
       description: 'Invalid credentials'
-    }),
-    ApiResponse({
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      description: 'Server error'
     })
   )
 }

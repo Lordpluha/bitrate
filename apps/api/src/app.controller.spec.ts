@@ -16,7 +16,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Welcome to @spotify/api!"', () => {
-      expect(appController.getHello()).toBe('Welcome to @spotify/api!')
+      expect(appController.getWelcome()).toBe('Welcome to @spotify/api!')
     })
   })
 })

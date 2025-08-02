@@ -9,16 +9,10 @@ export class TrackEntity implements Track {
   title: string
 
   @ApiProperty()
-  artist: string
-
-  @ApiProperty()
   audioUrl: string
 
   @ApiProperty()
   cover: string
-
-  @ApiProperty()
-  userId: string
 
   @ApiProperty()
   createdAt: Date
