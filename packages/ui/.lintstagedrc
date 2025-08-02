@@ -1,4 +1,4 @@
 {
   "./src/*.{ts,tsx}": ["eslint --fix", "prettier --write"],
-  "./src/**/*.{scss,css}": ["stylelint --fix"]
+  "./src/**/*.{scss,css}": ["stylelint --config @spotify/stylelint --fix"]
 }
