@@ -50,12 +50,13 @@ export class UsersService {
         username
       },
       omit: {
-        password: true
+        password: true,
+        email: true
       }
     })
   }
 
-  async findByUsername({
+  async findAll({
     username,
     limit = 10,
     page = 1
@@ -71,7 +72,8 @@ export class UsersService {
       skip: page ? (page - 1) * limit : undefined,
       take: limit,
       omit: {
-        password: true
+        password: true,
+        email: true
       }
     })
   }

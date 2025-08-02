@@ -418,22 +418,58 @@
         "parameters": [
           {
             "name": "limit",
-            "required": true,
-            "in": "query",
+            "required": false,
+            "in": "path",
+            "description": "Number of users to return per page",
             "schema": {
               "type": "number"
             }
           },
           {
             "name": "page",
-            "required": true,
-            "in": "query",
+            "required": false,
+            "in": "path",
+            "description": "Page number for pagination",
             "schema": {
               "type": "number"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "path",
+            "description": "Filter users by username",
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
+          "200": {
+            "description": "List of users retrieved successfully",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": "1",
+                    "username": "user1",
+                    "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                    "backgroundImage": "",
+                    "bio": "Some bio",
+                    "createdAt": "2025-08-02T11:43:17.703Z"
+                  },
+                  {
+                    "id": "2",
+                    "username": "user2",
+                    "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                    "backgroundImage": "",
+                    "bio": "Some bio 2",
+                    "createdAt": "2025-08-02T11:43:17.703Z"
+                  }
+                ]
+              }
+            }
+          },
           "405": {
             "description": "Method not allowed"
           },
@@ -471,12 +507,39 @@
             "description": ""
           }
         },
+        "summary": "Get all users with filters and pagination",
         "tags": ["Users"]
       },
       "put": {
         "operationId": "UsersController_putById",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "User data to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "User profile updated successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "1",
+                  "username": "user1",
+                  "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                  "backgroundImage": "",
+                  "bio": "Some bio",
+                  "createdAt": "2025-08-02T11:43:17.704Z"
+                }
+              }
+            }
+          },
           "405": {
             "description": "Method not allowed"
           },
@@ -514,14 +577,48 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Update user by id",
         "tags": ["Users"]
       }
     },
     "/users/username/{username}": {
       "get": {
         "operationId": "UsersController_getByUsername",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "description": "Username of the user to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
+          "200": {
+            "description": "User retrieved successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "1",
+                  "username": "user1",
+                  "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                  "backgroundImage": "",
+                  "bio": "Some bio",
+                  "createdAt": "2025-08-02T11:43:17.704Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
           "405": {
             "description": "Method not allowed"
           },
@@ -566,6 +663,7 @@
             }
           }
         },
+        "summary": "Get user by username",
         "tags": ["Users"]
       }
     },
@@ -574,6 +672,21 @@
         "operationId": "UsersController_getById",
         "parameters": [],
         "responses": {
+          "200": {
+            "description": "User retrieved successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "1",
+                  "username": "user1",
+                  "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                  "backgroundImage": "",
+                  "bio": "Some bio",
+                  "createdAt": "2025-08-02T11:43:17.704Z"
+                }
+              }
+            }
+          },
           "405": {
             "description": "Method not allowed"
           },
@@ -611,6 +724,7 @@
             "description": ""
           }
         },
+        "summary": "Get user by id",
         "tags": ["Users"]
       }
     },
@@ -618,13 +732,30 @@
       "post": {
         "operationId": "UsersController_uploadAvatar",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Avatar file to upload",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadAvatarDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Avatar uploaded successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntity"
+                "example": {
+                  "id": "1",
+                  "username": "user1",
+                  "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                  "backgroundImage": "",
+                  "bio": "Some bio",
+                  "createdAt": "2025-08-02T11:43:17.713Z",
+                  "email": "example@gmail.com"
                 }
               }
             }
@@ -820,6 +951,7 @@
             "description": ""
           }
         },
+        "summary": "Create a new artist",
         "tags": ["Artists"]
       }
     },
@@ -872,6 +1004,7 @@
             }
           }
         },
+        "summary": "Get artist by id",
         "tags": ["Artists"]
       },
       "put": {
@@ -915,6 +1048,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Update artist profile",
         "tags": ["Artists"]
       },
       "delete": {
@@ -958,6 +1097,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Delete artist profile",
         "tags": ["Artists"]
       }
     },
@@ -1010,6 +1155,7 @@
             }
           }
         },
+        "summary": "Get artist by username",
         "tags": ["Artists"]
       }
     },
@@ -1063,7 +1209,7 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2025-08-01T06:53:17.928Z"
+                    "createdAt": "2025-08-02T11:43:17.731Z"
                   }
                 ]
               }
@@ -1132,7 +1278,7 @@
                   "title": "Track Title",
                   "cover": "https://example.com/cover.jpg",
                   "audioUrl": "",
-                  "createdAt": "2025-08-01T06:53:17.929Z"
+                  "createdAt": "2025-08-02T11:43:17.731Z"
                 }
               }
             },
@@ -1176,6 +1322,9 @@
           }
         },
         "security": [
+          {
+            "access_token": []
+          },
           {
             "access_token": []
           }
@@ -1233,6 +1382,7 @@
             }
           }
         },
+        "summary": "Get track by id",
         "tags": ["Tracks"]
       },
       "put": {
@@ -1286,6 +1436,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Update track by id",
         "tags": ["Tracks"]
       }
     },
@@ -1295,16 +1451,18 @@
         "parameters": [
           {
             "name": "page",
-            "required": true,
+            "required": false,
             "in": "path",
+            "description": "Page number for pagination",
             "schema": {
               "type": "number"
             }
           },
           {
             "name": "limit",
-            "required": true,
+            "required": false,
             "in": "path",
+            "description": "Number of items per page",
             "schema": {
               "type": "number"
             }
@@ -1358,6 +1516,7 @@
             }
           }
         },
+        "summary": "Get all playlists with pagination and filters",
         "tags": ["Playlists"]
       },
       "post": {
@@ -1411,6 +1570,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Create a new playlist",
         "tags": ["Playlists"]
       }
     },
@@ -1456,6 +1621,7 @@
             "description": ""
           }
         },
+        "summary": "Get playlist by id",
         "tags": ["Playlists"]
       },
       "put": {
@@ -1509,6 +1675,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Update playlist by id",
         "tags": ["Playlists"]
       }
     },
@@ -1581,6 +1753,7 @@
             }
           }
         },
+        "summary": "Get all albums with pagination and filters",
         "tags": ["Albums"]
       },
       "post": {
@@ -1634,6 +1807,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Create a new album",
         "tags": ["Albums"]
       }
     },
@@ -1679,6 +1858,7 @@
             "description": ""
           }
         },
+        "summary": "Get album by id",
         "tags": ["Albums"]
       },
       "put": {
@@ -1732,6 +1912,12 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Create a new album",
         "tags": ["Albums"]
       }
     }
@@ -1862,6 +2048,38 @@
           "description",
           "avatar"
         ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Username of the user",
+            "example": "john_doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user",
+            "example": "example@gmail.com"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the user",
+            "example": "This is a sample description"
+          }
+        },
+        "required": ["username", "email"]
+      },
+      "UploadAvatarDto": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "description": "User avatar",
+            "format": "binary"
+          }
+        },
+        "required": ["avatar"]
       },
       "CreateArtistDto": {
         "type": "object",

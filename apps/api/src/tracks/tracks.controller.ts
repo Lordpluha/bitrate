@@ -9,7 +9,12 @@ import {
   Req,
   UseGuards
 } from '@nestjs/common'
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
+import {
+  ApiCookieAuth,
+  ApiExtraModels,
+  ApiOperation,
+  ApiTags
+} from '@nestjs/swagger'
 import { TrackEntity } from './entities'
 import { TracksService } from './tracks.service'
 import { PostTrackSwagger, TracksGetAllSwagger } from './decorators'
@@ -38,12 +43,14 @@ export class TracksController {
     })
   }
 
+  @ApiOperation({ summary: 'Get track by id' })
   @Get(':id')
   getById(@Param('id') id: TrackEntity['id']) {
     return this.tracksService.findTrackById(id)
   }
 
   @PostTrackSwagger()
+  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
   @UseGuards(AuthGuard)
   @Post('')
   postTrack(
@@ -55,6 +62,8 @@ export class TracksController {
     return this.tracksService.create(jwtUser.sub, createTrackDto)
   }
 
+  @ApiOperation({ summary: 'Update track by id' })
+  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
   @UseGuards(AuthGuard)
   @Put(':id')
   putTrack(

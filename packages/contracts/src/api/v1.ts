@@ -112,7 +112,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get all users with filters and pagination */
         get: operations["UsersController_getAll"];
+        /** Update user by id */
         put: operations["UsersController_putById"];
         post?: never;
         delete?: never;
@@ -128,6 +130,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get user by username */
         get: operations["UsersController_getByUsername"];
         put?: never;
         post?: never;
@@ -144,6 +147,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get user by id */
         get: operations["UsersController_getById"];
         put?: never;
         post?: never;
@@ -180,6 +184,7 @@ export interface paths {
         /** Get all artists with pagination */
         get: operations["ArtistsController_getAll"];
         put?: never;
+        /** Create a new artist */
         post: operations["ArtistsController_create"];
         delete?: never;
         options?: never;
@@ -194,9 +199,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get artist by id */
         get: operations["ArtistsController_getById"];
+        /** Update artist profile */
         put: operations["ArtistsController_updateProfile"];
         post?: never;
+        /** Delete artist profile */
         delete: operations["ArtistsController_deleteProfile"];
         options?: never;
         head?: never;
@@ -210,6 +218,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get artist by username */
         get: operations["ArtistsController_getByUsername"];
         put?: never;
         post?: never;
@@ -244,7 +253,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get track by id */
         get: operations["TracksController_getById"];
+        /** Update track by id */
         put: operations["TracksController_putTrack"];
         post?: never;
         delete?: never;
@@ -260,8 +271,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get all playlists with pagination and filters */
         get: operations["PlaylistsController_getAll"];
         put?: never;
+        /** Create a new playlist */
         post: operations["PlaylistsController_post"];
         delete?: never;
         options?: never;
@@ -276,7 +289,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get playlist by id */
         get: operations["PlaylistsController_getById"];
+        /** Update playlist by id */
         put: operations["PlaylistsController_update"];
         post?: never;
         delete?: never;
@@ -292,8 +307,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get all albums with pagination and filters */
         get: operations["AlbumsController_getAllAlbums"];
         put?: never;
+        /** Create a new album */
         post: operations["AlbumsController_createAlbum"];
         delete?: never;
         options?: never;
@@ -308,7 +325,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get album by id */
         get: operations["AlbumsController_getById"];
+        /** Create a new album */
         put: operations["AlbumsController_updateAlbum"];
         post?: never;
         delete?: never;
@@ -362,6 +381,30 @@ export interface components {
             createdAt: string;
             description: string | null;
             avatar: string | null;
+        };
+        UpdateUserDto: {
+            /**
+             * @description Username of the user
+             * @example john_doe
+             */
+            username: string;
+            /**
+             * @description Email of the user
+             * @example example@gmail.com
+             */
+            email: string;
+            /**
+             * @description Description of the user
+             * @example This is a sample description
+             */
+            description?: string;
+        };
+        UploadAvatarDto: {
+            /**
+             * Format: binary
+             * @description User avatar
+             */
+            avatar: string;
         };
         CreateArtistDto: {
             /**
@@ -1142,16 +1185,47 @@ export interface operations {
     };
     UsersController_getAll: {
         parameters: {
-            query: {
-                limit: number;
-                page: number;
-            };
+            query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description Number of users to return per page */
+                limit: number;
+                /** @description Page number for pagination */
+                page: number;
+                /** @description Filter users by username */
+                username: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
+            /** @description List of users retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [
+                     *       {
+                     *         "id": "1",
+                     *         "username": "user1",
+                     *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                     *         "backgroundImage": "",
+                     *         "bio": "Some bio",
+                     *         "createdAt": "2025-08-02T11:43:17.703Z"
+                     *       },
+                     *       {
+                     *         "id": "2",
+                     *         "username": "user2",
+                     *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                     *         "backgroundImage": "",
+                     *         "bio": "Some bio 2",
+                     *         "createdAt": "2025-08-02T11:43:17.703Z"
+                     *       }
+                     *     ] */
+                    "application/json": unknown;
+                };
+            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -1244,8 +1318,30 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        /** @description User data to update */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserDto"];
+            };
+        };
         responses: {
+            /** @description User profile updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "id": "1",
+                     *       "username": "user1",
+                     *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                     *       "backgroundImage": "",
+                     *       "bio": "Some bio",
+                     *       "createdAt": "2025-08-02T11:43:17.704Z"
+                     *     } */
+                    "application/json": unknown;
+                };
+            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -1335,11 +1431,38 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description Username of the user to retrieve */
+                username: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
+            /** @description User retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "id": "1",
+                     *       "username": "user1",
+                     *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                     *       "backgroundImage": "",
+                     *       "bio": "Some bio",
+                     *       "createdAt": "2025-08-02T11:43:17.704Z"
+                     *     } */
+                    "application/json": unknown;
+                };
+            };
+            /** @description User not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -1436,6 +1559,23 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description User retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "id": "1",
+                     *       "username": "user1",
+                     *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                     *       "backgroundImage": "",
+                     *       "bio": "Some bio",
+                     *       "createdAt": "2025-08-02T11:43:17.704Z"
+                     *     } */
+                    "application/json": unknown;
+                };
+            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -1528,7 +1668,12 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        /** @description Avatar file to upload */
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UploadAvatarDto"];
+            };
+        };
         responses: {
             /** @description Avatar uploaded successfully */
             200: {
@@ -1536,7 +1681,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UserEntity"];
+                    /** @example {
+                     *       "id": "1",
+                     *       "username": "user1",
+                     *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
+                     *       "backgroundImage": "",
+                     *       "bio": "Some bio",
+                     *       "createdAt": "2025-08-02T11:43:17.713Z",
+                     *       "email": "example@gmail.com"
+                     *     } */
+                    "application/json": unknown;
                 };
             };
             /** @description Method not allowed */
@@ -2260,7 +2414,7 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2025-08-01T06:53:17.928Z"
+                     *         "createdAt": "2025-08-02T11:43:17.731Z"
                      *       }
                      *     ] */
                     "application/json": unknown;
@@ -2374,7 +2528,7 @@ export interface operations {
                      *       "title": "Track Title",
                      *       "cover": "https://example.com/cover.jpg",
                      *       "audioUrl": "",
-                     *       "createdAt": "2025-08-01T06:53:17.929Z"
+                     *       "createdAt": "2025-08-02T11:43:17.731Z"
                      *     } */
                     "application/json": unknown;
                 };
@@ -2663,7 +2817,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @description Page number for pagination */
                 page: number;
+                /** @description Number of items per page */
                 limit: number;
             };
             cookie?: never;

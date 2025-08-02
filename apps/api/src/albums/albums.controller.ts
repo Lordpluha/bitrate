@@ -8,7 +8,7 @@ import {
   Req,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags, ApiCookieAuth } from '@nestjs/swagger'
 import { AlbumsService } from './albums.service'
 import { AlbumEntity } from './entities'
 import { UpdateAlbumDto, UpdateAlbumSchema } from './dtos/update-album.dto'
@@ -22,6 +22,7 @@ import { JWTPayload } from 'src/auth/types'
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
 
+  @ApiOperation({ summary: 'Get all albums with pagination and filters' })
   @Get('')
   getAllAlbums(
     @Query('page') page?: string,
@@ -35,11 +36,14 @@ export class AlbumsController {
     })
   }
 
+  @ApiOperation({ summary: 'Get album by id' })
   @Get(':id')
   getById(@Query('id') id: AlbumEntity['id']) {
     return this.albumsService.getById(id)
   }
 
+  @ApiOperation({ summary: 'Create a new album' })
+  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
   @UseGuards(AuthGuard)
   @Put(':id')
   updateAlbum(
@@ -51,6 +55,8 @@ export class AlbumsController {
     return this.albumsService.update(jwtArtist.sub, id, updateDto)
   }
 
+  @ApiOperation({ summary: 'Create a new album' })
+  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
   @UseGuards(AuthGuard)
   @Post('')
   createAlbum(

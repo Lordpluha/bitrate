@@ -9,7 +9,7 @@ import {
   Query,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiTags, ApiOperation, ApiCookieAuth } from '@nestjs/swagger'
 import { ArtistsService } from './artists.service'
 import { ArtistEntity } from './entities'
 import { CreateArtistDto, CreateArtistSchema } from './dtos'
@@ -36,16 +36,19 @@ export class ArtistsController {
     })
   }
 
+  @ApiOperation({ summary: 'Get artist by id' })
   @Get(':id')
   getById(@Param('id') id: ArtistEntity['id']) {
     return this.artistsService.findById(id)
   }
 
+  @ApiOperation({ summary: 'Get artist by username' })
   @Get('username/:username')
   getByUsername(@Param('username') username: ArtistEntity['username']) {
     return this.artistsService.findByUsername(username)
   }
 
+  @ApiOperation({ summary: 'Create a new artist' })
   @Post('')
   create(
     @Body(new ZodValidationPipe(CreateArtistSchema))
@@ -54,6 +57,8 @@ export class ArtistsController {
     return this.artistsService.create(createArtistDto)
   }
 
+  @ApiOperation({ summary: 'Update artist profile' })
+  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
   @UseGuards(AuthGuard)
   @Put(':id')
   updateProfile(
@@ -63,6 +68,8 @@ export class ArtistsController {
     return this.artistsService.update(id, artist)
   }
 
+  @ApiOperation({ summary: 'Delete artist profile' })
+  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
   @UseGuards(AuthGuard)
   @Delete(':id')
   deleteProfile(@Param('id') id: ArtistEntity['id']) {

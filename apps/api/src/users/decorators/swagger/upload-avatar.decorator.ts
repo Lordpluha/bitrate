@@ -3,33 +3,37 @@ import {
   ApiOperation,
   ApiConsumes,
   ApiResponse,
-  ApiCookieAuth
+  ApiCookieAuth,
+  ApiBody
 } from '@nestjs/swagger'
-import { ArtistEntity } from 'src/artists/entities'
+import { UploadAvatarDto } from 'src/users/dtos/upload-avatar.dto'
 
 export function UploadAvatarSwagger() {
   return applyDecorators(
+    ApiOperation({ summary: 'Upload avatar for user' }),
+    ApiConsumes('multipart/form-data'),
+    ApiBody({
+      description: 'Avatar file to upload',
+      type: UploadAvatarDto,
+      required: true
+    }),
     ApiResponse({
       status: HttpStatus.OK,
       description: 'Avatar uploaded successfully',
       example: {
-        'application/json': {
-          id: '1',
-          username: 'user1',
-          avatar: 'https://example.com/uploads/avatars/avatar.jpg',
-          backgroundImage: '',
-          bio: 'Some bio',
-          createdAt: new Date(),
-          email: 'example@gmail.com'
-        } as Omit<ArtistEntity, 'password'>
+        id: '1',
+        username: 'user1',
+        avatar: 'https://example.com/uploads/avatars/avatar.jpg',
+        backgroundImage: '',
+        bio: 'Some bio',
+        createdAt: new Date(),
+        email: 'example@gmail.com'
       }
     }),
     ApiResponse({
       status: HttpStatus.UNPROCESSABLE_ENTITY,
       description: 'Invalid file type or size'
     }),
-    ApiConsumes('multipart/form-data'),
-    ApiOperation({ summary: 'Upload avatar for user' }),
     ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
   )
 }
