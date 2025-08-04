@@ -6,22 +6,16 @@ import {
   Post,
   Put,
   Query,
-  Req,
-  UseGuards
+  Req
 } from '@nestjs/common'
-import {
-  ApiCookieAuth,
-  ApiExtraModels,
-  ApiOperation,
-  ApiTags
-} from '@nestjs/swagger'
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { TrackEntity } from './entities'
 import { TracksService } from './tracks.service'
 import { PostTrackSwagger, TracksGetAllSwagger } from './decorators'
-import { AuthGuard } from 'src/auth/auth.guard'
+import { Auth } from 'src/auth/auth.guard'
 import { CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { JWTPayload } from 'src/auth/types'
+import { UserEntity } from 'src/users/entities'
 
 @ApiExtraModels(TrackEntity)
 @ApiTags('Tracks')
@@ -50,21 +44,19 @@ export class TracksController {
   }
 
   @PostTrackSwagger()
-  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
-  @UseGuards(AuthGuard)
+  @Auth()
   @Post('')
   postTrack(
     @Req() req: Request,
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto
   ) {
-    const jwtUser = req['user'] as JWTPayload
-    return this.tracksService.create(jwtUser.sub, createTrackDto)
+    const user = req['user'] as UserEntity
+    return this.tracksService.create(user.id, createTrackDto)
   }
 
   @ApiOperation({ summary: 'Update track by id' })
-  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
-  @UseGuards(AuthGuard)
+  @Auth()
   @Put(':id')
   putTrack(
     @Param('id') id: TrackEntity['id'],

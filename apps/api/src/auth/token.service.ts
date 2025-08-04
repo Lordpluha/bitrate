@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Response } from 'express'
+import { JWTPayload } from './types'
 
 @Injectable()
 export class TokenService {
@@ -14,7 +15,7 @@ export class TokenService {
   }
 
   async generateAccessToken(userId: string, username: string): Promise<string> {
-    return this.jwtService.signAsync(
+    return await this.jwtService.signAsync(
       { username },
       {
         subject: userId,
@@ -28,7 +29,7 @@ export class TokenService {
     userId: string,
     username: string
   ): Promise<string> {
-    return this.jwtService.signAsync(
+    return await this.jwtService.signAsync(
       { username },
       {
         subject: userId,
@@ -36,6 +37,12 @@ export class TokenService {
         secret: process.env.REFRESH_TOKEN_SECRET
       }
     )
+  }
+
+  async verifyToken(token: string): Promise<JWTPayload> {
+    return await this.jwtService.verifyAsync<JWTPayload>(token, {
+      secret: process.env.JWT_SECRET
+    })
   }
 
   setAuthCookies(res: Response, accessToken: string, refreshToken: string) {

@@ -10,6 +10,7 @@ import { JWTPayload } from './types'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { SessionEntity } from './entities'
 import { TokenService } from './token.service'
+import { RegistrationDto } from './dtos'
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
     private tokenService: TokenService
   ) {}
 
-  async registerUser(registrationDto: Pick<UserEntity, 'email' | 'password'>) {
+  async registerUser(registrationDto: RegistrationDto) {
     const user = await this.usersService.getByEmail(registrationDto.email)
 
     if (user) {
@@ -28,7 +29,7 @@ export class AuthService {
     }
 
     await this.usersService.create({
-      username: registrationDto.email,
+      username: registrationDto.username,
       email: registrationDto.email,
       password: registrationDto.password,
       avatar: null,

@@ -6,16 +6,15 @@ import {
   Param,
   Post,
   Put,
-  Query,
-  UseGuards
+  Query
 } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiCookieAuth } from '@nestjs/swagger'
+import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { ArtistsService } from './artists.service'
 import { ArtistEntity } from './entities'
 import { CreateArtistDto, CreateArtistSchema } from './dtos'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { GetArtistsSwagger } from './decorators'
-import { AuthGuard } from 'src/auth/auth.guard'
+import { Auth } from 'src/auth/auth.guard'
 
 @ApiTags('Artists')
 @Controller('artists')
@@ -24,12 +23,12 @@ export class ArtistsController {
 
   @GetArtistsSwagger()
   @Get('')
-  getAll(
+  async getAll(
     @Query('username') username?: ArtistEntity['username'],
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10'
   ) {
-    return this.artistsService.findAll({
+    return await this.artistsService.findAll({
       limit: Number(limit),
       page: Number(page),
       username
@@ -38,8 +37,8 @@ export class ArtistsController {
 
   @ApiOperation({ summary: 'Get artist by id' })
   @Get(':id')
-  getById(@Param('id') id: ArtistEntity['id']) {
-    return this.artistsService.findById(id)
+  async getById(@Param('id') id: ArtistEntity['id']) {
+    return await this.artistsService.findById(id)
   }
 
   @ApiOperation({ summary: 'Get artist by username' })
@@ -58,8 +57,7 @@ export class ArtistsController {
   }
 
   @ApiOperation({ summary: 'Update artist profile' })
-  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
-  @UseGuards(AuthGuard)
+  @Auth()
   @Put(':id')
   updateProfile(
     @Param('id') id: ArtistEntity['id'],
@@ -69,8 +67,7 @@ export class ArtistsController {
   }
 
   @ApiOperation({ summary: 'Delete artist profile' })
-  @ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
-  @UseGuards(AuthGuard)
+  @Auth()
   @Delete(':id')
   deleteProfile(@Param('id') id: ArtistEntity['id']) {
     return this.artistsService.delete(id)

@@ -1,5 +1,5 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiCookieAuth } from '@nestjs/swagger'
+import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 export function AuthRefreshSwagger() {
   return applyDecorators(
@@ -16,15 +16,6 @@ export function AuthRefreshSwagger() {
           }
         }
       }
-    }),
-    ApiResponse({
-      status: HttpStatus.BAD_REQUEST,
-      description: 'Refresh token not provided'
-    }),
-    ApiResponse({
-      status: HttpStatus.UNAUTHORIZED,
-      description: 'Invalid or expired refresh token'
-    }),
-    ApiCookieAuth(process.env.REFRESH_TOKEN_NAME)
+    })
   )
 }

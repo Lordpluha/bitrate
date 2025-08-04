@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { AlbumEntity } from './entities'
 import { CreateAlbumDto } from './dtos/create-album.dto'
@@ -9,12 +9,12 @@ import { UpdateAlbumDto } from './dtos/update-album.dto'
 export class AlbumsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll({
+  async findAll({
     page = 1,
     limit = 10,
     title
   }: { page?: number; limit?: number } & Partial<AlbumEntity>) {
-    return this.prisma.album.findMany({
+    return await this.prisma.album.findMany({
       skip: (page - 1) * limit,
       take: limit,
       where: title
@@ -26,8 +26,8 @@ export class AlbumsService {
     })
   }
 
-  getById(id: AlbumEntity['id']) {
-    return this.prisma.album.findFirst({
+  async getById(id: AlbumEntity['id']) {
+    return await this.prisma.album.findFirst({
       where: { id },
       include: {
         tracks: true
@@ -35,23 +35,56 @@ export class AlbumsService {
     })
   }
 
-  create(artistId: ArtistEntity['id'], createDto: CreateAlbumDto) {
-    return this.prisma.album.create({
+  async create(artistId: ArtistEntity['id'], createDto: CreateAlbumDto) {
+    const artist = await this.prisma.artist.findUnique({
+      where: { id: artistId }
+    })
+
+    if (!artist) {
+      throw new NotFoundException('Artist not found')
+    }
+
+    return await this.prisma.album.create({
       data: {
-        artistId: artistId,
+        artistId: artist.id,
         ...createDto
       }
     })
   }
 
-  update(
+  async update(
     artistId: ArtistEntity['id'],
     id: AlbumEntity['id'],
     updateDto: UpdateAlbumDto
   ) {
-    return this.prisma.album.update({
+    const album = await this.prisma.album.findFirst({
+      where: { id, artistId }
+    })
+
+    if (!album) {
+      throw new Error('Album not found or does not belong to the artist')
+    }
+
+    return await this.prisma.album.update({
       where: { id },
       data: updateDto
+    })
+  }
+
+  async delete(artistId: ArtistEntity['id'], id: AlbumEntity['id']) {
+    const album = await this.prisma.album.findFirst({
+      where: { id, artistId }
+    })
+
+    if (!album) {
+      throw new Error('Album not found or does not belong to the artist')
+    }
+
+    return await this.prisma.album.delete({
+      where: { id },
+      omit: {
+        artistId: true
+      }
     })
   }
 }

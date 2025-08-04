@@ -17,8 +17,15 @@ async function bootstrap() {
       'https://spotify-clone-api-jp5z.onrender.com/',
       'Remote dev server'
     )
+    // In progress
     .addOAuth2({
       type: 'openIdConnect'
+    })
+    .addCookieAuth(process.env.ACCESS_TOKEN_NAME, {
+      type: 'apiKey',
+      in: 'cookie',
+      name: process.env.ACCESS_TOKEN_NAME,
+      description: `HttpOnly cookies: ${process.env.ACCESS_TOKEN_NAME} and ${process.env.REFRESH_TOKEN_NAME}`
     })
     .setContact(
       'Lordpluha',

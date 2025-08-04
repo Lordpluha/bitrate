@@ -1,14 +1,6 @@
 import { Request, Response } from 'express'
 import { AuthService } from './auth.service'
-import {
-  Controller,
-  Post,
-  Body,
-  Res,
-  Req,
-  UseGuards,
-  Get
-} from '@nestjs/common'
+import { Controller, Post, Body, Res, Req, Get } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import {
   LoginDto,
@@ -25,11 +17,10 @@ import {
 } from './decorators'
 import { SessionEntity } from './entities'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { AuthGuard } from './auth.guard'
-import { JWTPayload } from './types'
-import { RefreshGuard } from './refresh.guard'
+import { Auth } from './auth.guard'
 import { UsersService } from 'src/users/users.service'
 import { TokenService } from './token.service'
+import { UserEntity } from 'src/users/entities'
 
 @ApiExtraModels(SessionEntity)
 @ApiTags('Auth')
@@ -65,19 +56,17 @@ export class AuthController {
   }
 
   @AuthLogoutSwagger()
-  @UseGuards(AuthGuard)
+  @Auth()
   @Post('logout')
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const user = req['user'] as JWTPayload
-    await this.authService.logout(
-      user.sub,
-      req[process.env.REFRESH_TOKEN_NAME!] as string
-    )
+    const user = req['user'] as UserEntity
+    const access_token = req[process.env.ACCESS_TOKEN_NAME!] as string
+    await this.authService.logout(user.id, access_token)
     this.tokenService.clearAuthCookies(res)
   }
 
   @AuthRefreshSwagger()
-  @UseGuards(RefreshGuard)
+  @Auth('refresh')
   @Post('refresh')
   async refresh(
     @Req() req: Request,
@@ -89,11 +78,10 @@ export class AuthController {
   }
 
   @AuthMeSwagger()
-  @UseGuards(AuthGuard)
+  @Auth()
   @Get('me')
   async getMe(@Req() req: Request) {
-    const jwtUser = req['user'] as JWTPayload
-    const user = await this.userService.findById(jwtUser.sub)
-    return user
+    const user = req['user'] as UserEntity
+    return await this.userService.findById(user.id)
   }
 }

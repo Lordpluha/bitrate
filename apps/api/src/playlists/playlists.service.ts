@@ -9,8 +9,8 @@ import { UpdatePlaylistDto } from './dtos/update-playlist.dto'
 export class PlaylistsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(userId: UserEntity['id'], playlistDto: CreatePlaylistDto) {
-    return this.prisma.playlist.create({
+  async create(userId: UserEntity['id'], playlistDto: CreatePlaylistDto) {
+    return await this.prisma.playlist.create({
       data: {
         userId,
         // Url to cover in storage
@@ -20,8 +20,8 @@ export class PlaylistsService {
     })
   }
 
-  getAll({ page = 1, limit = 10 }: { page?: number; limit?: number }) {
-    return this.prisma.playlist.findMany({
+  async getAll({ page = 1, limit = 10 }: { page?: number; limit?: number }) {
+    return await this.prisma.playlist.findMany({
       skip: (page - 1) * limit,
       take: limit,
       include: {
@@ -35,25 +35,34 @@ export class PlaylistsService {
     })
   }
 
-  getById(id: PlaylistEntity['id']) {
-    return this.prisma.playlist.findUniqueOrThrow({
+  async getById(id: PlaylistEntity['id']) {
+    return await this.prisma.playlist.findUniqueOrThrow({
       where: {
         id
       }
     })
   }
 
-  update(
+  async update(
     userId: UserEntity['id'],
     id: PlaylistEntity['id'],
     updateDto: UpdatePlaylistDto
   ) {
-    return this.prisma.playlist.update({
+    return await this.prisma.playlist.update({
       where: {
         id
       },
       data: {
         ...updateDto,
+        userId
+      }
+    })
+  }
+
+  async delete(userId: UserEntity['id'], id: PlaylistEntity['id']) {
+    return await this.prisma.playlist.delete({
+      where: {
+        id,
         userId
       }
     })

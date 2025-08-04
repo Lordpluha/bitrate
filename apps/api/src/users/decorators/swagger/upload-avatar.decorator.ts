@@ -3,7 +3,6 @@ import {
   ApiOperation,
   ApiConsumes,
   ApiResponse,
-  ApiCookieAuth,
   ApiBody
 } from '@nestjs/swagger'
 import { UploadAvatarDto } from 'src/users/dtos/upload-avatar.dto'
@@ -33,7 +32,6 @@ export function UploadAvatarSwagger() {
     ApiResponse({
       status: HttpStatus.UNPROCESSABLE_ENTITY,
       description: 'Invalid file type or size'
-    }),
-    ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
+    })
   )
 }

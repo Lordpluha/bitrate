@@ -3,15 +3,13 @@ import {
   ApiOperation,
   ApiConsumes,
   ApiResponse,
-  ApiBody,
-  ApiCookieAuth
+  ApiBody
 } from '@nestjs/swagger'
 import { ArtistEntity } from 'src/artists/entities'
 import { UpdateUserDto } from 'src/users/dtos'
 
 export function PutUserSwagger() {
   return applyDecorators(
-    ApiCookieAuth(process.env.ACCESS_TOKEN_NAME),
     ApiOperation({ summary: 'Update user by id' }),
     ApiConsumes('application/json'),
     ApiResponse({

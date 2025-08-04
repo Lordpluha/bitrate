@@ -1,5 +1,5 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiCookieAuth } from '@nestjs/swagger'
+import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { UserEntity } from 'src/users/entities'
 
 export function AuthMeSwagger() {
@@ -21,11 +21,6 @@ export function AuthMeSwagger() {
           } as Omit<UserEntity, 'password'>
         }
       }
-    }),
-    ApiResponse({
-      status: HttpStatus.UNAUTHORIZED,
-      description: 'Unauthorized'
-    }),
-    ApiCookieAuth(process.env.ACCESS_TOKEN_NAME)
+    })
   )
 }

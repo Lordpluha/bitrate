@@ -8,14 +8,13 @@ import {
   Query,
   Req,
   UploadedFile,
-  UseGuards,
   UseInterceptors,
   BadRequestException
 } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { UserEntity } from './entities'
-import { AuthGuard } from 'src/auth/auth.guard'
+import { Auth, AuthGuard } from 'src/auth/auth.guard'
 import { JWTPayload } from 'src/auth/types'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
@@ -73,18 +72,18 @@ export class UsersController {
   }
 
   @PutUserSwagger()
-  @UseGuards(AuthGuard)
+  @Auth()
   @Put('')
   async putById(
     @Req() req: Request,
     @Body(new ZodValidationPipe(UpdateUserSchema)) userData: UpdateUserDto
   ) {
-    const jwtUser = req['user'] as JWTPayload
-    return await this.usersService.updateById(jwtUser.sub, userData)
+    const user = req['user'] as UserEntity
+    return await this.usersService.updateById(user.id, userData)
   }
 
   @UploadAvatarSwagger()
-  @UseGuards(AuthGuard)
+  @Auth()
   @Post('avatar')
   @UseInterceptors(
     FileInterceptor('avatar', {
@@ -108,7 +107,7 @@ export class UsersController {
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File
   ) {
-    const jwtUser = req['user'] as JWTPayload
-    return await this.usersService.uploadAvatar(jwtUser.sub, file.filename)
+    const user = req['user'] as UserEntity
+    return await this.usersService.uploadAvatar(user.id, file.filename)
   }
 }

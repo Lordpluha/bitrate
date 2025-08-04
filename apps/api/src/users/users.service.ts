@@ -20,7 +20,8 @@ export class UsersService {
         id
       },
       omit: {
-        password: true
+        password: true,
+        email: true
       }
     })
   }
