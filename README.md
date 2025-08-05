@@ -69,7 +69,7 @@ $ turbo dev
 - Tauri
 
 ### Admin Panel
-- AdminJS based on Prisma schema
+- Kottster app based on postgresql schema
 
 ### Backend
 - NestJS, TypeScript
