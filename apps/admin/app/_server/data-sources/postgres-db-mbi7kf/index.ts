@@ -7,11 +7,11 @@ import knex from 'knex';
 const client = knex({
   client: 'pg',
   connection: {
-    host: 'localhost',
-    port: 5432,
-    user: 'admin',
-    password: 'admin',
-    database: 'spotify',
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT) || 5432,
+    user: process.env.DB_USER || 'admin',
+    password: process.env.DB_PASSWORD || 'admin',
+    database: process.env.DB_NAME || 'spotify',
   },
   searchPath: ['public'],
 });

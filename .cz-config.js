@@ -17,6 +17,7 @@ module.exports = {
     { name: 'web' },
     { name: 'mobile' },
     { name: 'api' },
+    { name: 'admin' },
     { name: 'contracts' },
     { name: 'ui' },
     { name: 'eslint' },
