@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(uuid())
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   username    String    @unique
   email       String    @unique
   password    String
@@ -23,8 +23,8 @@ model User {
 }
 
 model Session {
-  id            String   @id @default(uuid())
-  userId        String
+  id            String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String   @db.Uuid
   access_token  String   @unique
   refresh_token String   @unique
 
@@ -34,11 +34,11 @@ model Session {
 }
 
 model Track {
-  id        String     @id @default(uuid())
+  id        String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   title     String
   audioUrl  String
   cover     String?
-  artistId  String
+  artistId  String     @db.Uuid
 
   createdAt DateTime   @default(now())
 
@@ -51,7 +51,7 @@ model Track {
 
 
 model Artist {
-  id              String   @id @default(uuid())
+  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   username        String   @unique
   email           String   @unique
   password	      String
@@ -67,10 +67,10 @@ model Artist {
 }
 
 model Album {
-  id           String   @id @default(uuid())
+  id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   title        String
   cover        String?
-  artistId     String
+  artistId     String   @db.Uuid
   description  String?
   createdAt    DateTime @default(now())
 
@@ -80,12 +80,12 @@ model Album {
 }
 
 model Playlist {
-  id           String   @id @default(uuid())
+  id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   title        String
   cover        String?
   description  String?
   createdAt    DateTime @default(now())
-  userId       String
+  userId       String   @db.Uuid
 
   tracks       Track[]
 

@@ -1,6 +1,9 @@
+-- Enable uuid-ossp extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- CreateTable
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
@@ -13,8 +16,8 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Session" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "userId" UUID NOT NULL,
     "access_token" TEXT NOT NULL,
     "refresh_token" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -24,11 +27,11 @@ CREATE TABLE "Session" (
 
 -- CreateTable
 CREATE TABLE "Track" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "title" TEXT NOT NULL,
     "audioUrl" TEXT NOT NULL,
-    "cover" TEXT NOT NULL,
-    "artistId" TEXT NOT NULL,
+    "cover" TEXT,
+    "artistId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Track_pkey" PRIMARY KEY ("id")
@@ -36,8 +39,9 @@ CREATE TABLE "Track" (
 
 -- CreateTable
 CREATE TABLE "Artist" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "bio" TEXT,
     "avatar" TEXT,
@@ -49,10 +53,10 @@ CREATE TABLE "Artist" (
 
 -- CreateTable
 CREATE TABLE "Album" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "title" TEXT NOT NULL,
-    "cover" TEXT NOT NULL,
-    "artistId" TEXT NOT NULL,
+    "cover" TEXT,
+    "artistId" UUID NOT NULL,
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -61,37 +65,36 @@ CREATE TABLE "Album" (
 
 -- CreateTable
 CREATE TABLE "Playlist" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "title" TEXT NOT NULL,
-    "cover" TEXT NOT NULL,
-    "artistId" TEXT NOT NULL,
+    "cover" TEXT,
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "Playlist_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "_UserLikedTracks" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL,
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL,
 
     CONSTRAINT "_UserLikedTracks_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateTable
 CREATE TABLE "_AlbumToTrack" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL,
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL,
 
     CONSTRAINT "_AlbumToTrack_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateTable
 CREATE TABLE "_PlaylistToTrack" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL,
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL,
 
     CONSTRAINT "_PlaylistToTrack_AB_pkey" PRIMARY KEY ("A","B")
 );
@@ -110,6 +113,9 @@ CREATE UNIQUE INDEX "Session_refresh_token_key" ON "Session"("refresh_token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Artist_username_key" ON "Artist"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Artist_email_key" ON "Artist"("email");
 
 -- CreateIndex
 CREATE INDEX "_UserLikedTracks_B_index" ON "_UserLikedTracks"("B");

@@ -6,6 +6,18 @@
   "config": {
     "dataSource": "postgres-db-mbi7kf",
     "fetchStrategy": "databaseTable",
-    "table": "User"
+    "table": "User",
+    "columns": [
+      {
+        "fieldRequirement": "none",
+        "hiddenInForm": true,
+        "column": "id"
+      },
+      {
+        "hiddenInForm": true,
+        "fieldRequirement": "none",
+        "column": "createdAt"
+      }
+    ]
   }
 }

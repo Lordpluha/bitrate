@@ -6,6 +6,16 @@
   "config": {
     "dataSource": "postgres-db-mbi7kf",
     "fetchStrategy": "databaseTable",
-    "table": "Artist"
+    "table": "Artist",
+    "columns": [
+      {
+        "hiddenInForm": true,
+        "column": "id"
+      },
+      {
+        "hiddenInForm": true,
+        "column": "createdAt"
+      }
+    ]
   }
 }
