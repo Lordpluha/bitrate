@@ -23,7 +23,19 @@
     "db:migration:start": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
     "db:generate:prod": "prisma generate --no-engine",
-    "db:ui": "prisma studio"
+    "db:ui": "prisma studio",
+    "seed": "ts-node src/seeds/seed.ts",
+    "seed:dev": "NODE_ENV=development npm run seed",
+    "seed:advanced": "ts-node src/seeds/seed-with-relations.ts",
+    "seed:artists": "ts-node -e \"import('./src/seeds/artists.seed').then(({seedArtists}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedArtists(prisma, 20).then(() => prisma.$disconnect());})\"",
+    "seed:albums": "ts-node -e \"import('./src/seeds/albums.seed').then(({seedAlbums}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedAlbums(prisma, 30).then(() => prisma.$disconnect());})\"",
+    "seed:albums-with-tracks": "ts-node -e \"import('./src/seeds/albums.seed').then(({seedAlbumsWithTracks}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedAlbumsWithTracks(prisma, 20).then(() => prisma.$disconnect());})\"",
+    "seed:tracks": "ts-node -e \"import('./src/seeds/tracks.seed').then(({seedTracks}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedTracks(prisma, 50).then(() => prisma.$disconnect());})\"",
+    "seed:users": "ts-node -e \"import('./src/seeds/users.seed').then(({seedUsers}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedUsers(prisma, 30).then(() => prisma.$disconnect());})\"",
+    "seed:playlists": "ts-node -e \"import('./src/seeds/playlists.seed').then(({seedPlaylists}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedPlaylists(prisma, 50).then(() => prisma.$disconnect());})\"",
+    "seed:playlists-with-tracks": "ts-node -e \"import('./src/seeds/playlists.seed').then(({seedPlaylistsWithTracks}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedPlaylistsWithTracks(prisma, 30).then(() => prisma.$disconnect());})\"",
+    "seed:relations": "ts-node -e \"import('./src/seeds/tracks.seed').then(({seedTrackAlbumRelations}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedTrackAlbumRelations(prisma).then(() => prisma.$disconnect());})\"",
+    "seed:likes": "ts-node -e \"import('./src/seeds/users.seed').then(({seedUserLikedTracks}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedUserLikedTracks(prisma).then(() => prisma.$disconnect());})\""
   },
   "prettier": "@spotify/prettier",
   "dependencies": {

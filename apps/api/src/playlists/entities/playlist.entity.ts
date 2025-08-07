@@ -12,9 +12,6 @@ export class PlaylistEntity implements Playlist {
   cover: string
 
   @ApiProperty()
-  artistId: string
-
-  @ApiProperty()
   description: string | null
 
   @ApiProperty()
