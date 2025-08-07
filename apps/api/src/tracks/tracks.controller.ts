@@ -3,6 +3,8 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -26,8 +28,8 @@ export class TracksController {
   @TracksGetAllSwagger()
   @Get('')
   getAll(
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('title') title?: TrackEntity['title']
   ) {
     return this.tracksService.findAll({
@@ -39,7 +41,7 @@ export class TracksController {
 
   @ApiOperation({ summary: 'Get track by id' })
   @Get(':id')
-  getById(@Param('id') id: TrackEntity['id']) {
+  getById(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
     return this.tracksService.findTrackById(id)
   }
 
@@ -59,7 +61,7 @@ export class TracksController {
   @Auth()
   @Put(':id')
   putTrack(
-    @Param('id') id: TrackEntity['id'],
+    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto
   ) {
