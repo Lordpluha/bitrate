@@ -34,6 +34,22 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 
 /**
+ * The ForContrast for contrast bg
+ */
+export const ForContrast: StoryObj = {
+  render: args => (
+    <div className="bg-contrast p-4">
+      <Input {...args} />
+    </div>
+  ),
+  args: {
+    placeholder: 'Email Address',
+    type: 'email',
+    variant: 'forContrast'
+  }
+}
+
+/**
  * Use the `disabled` prop to make the input non-interactive and appears faded,
  * indicating that input is not currently accepted.
  */

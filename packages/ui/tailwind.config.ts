@@ -46,6 +46,8 @@ const config = {
         bg: 'var(--color-bg)',
         bgSecondary: 'var(--color-bg-secondary)',
         text: 'var(--color-text)',
+        textForContrast: 'var(--color-text-for-contrast)',
+        contrast: 'var(--color-contrast)',
         bgSecondaryRgb: 'var(--color-bg-secondary-rgb)'
       },
       keyframes: {

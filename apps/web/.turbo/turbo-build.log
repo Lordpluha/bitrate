@@ -1,0 +1,54 @@
+
+> @spotify/web@0.0.1 build D:\веб прогромирование\spotify\spotify-clone\apps\web
+> next build
+
+   ▲ Next.js 15.4.4
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 3.0s
+   Linting and checking validity of types ...
+
+./src/features/Login/ui/LoginForm.tsx
+6:30  Warning: Модуль нижележащего слоя (features) не может импортировать модуль вышележащего слоя (views)  boundaries/element-types
+
+./src/shared/constants/themes.ts
+2:14  Warning: 'themes' is already defined.  no-redeclare
+
+./src/shared/contexts/theme.ts
+8:14  Warning: 'theme' is defined but never used.  no-unused-vars
+
+./src/views/Landing/ui/Welcome/Welcome.tsx
+35:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+39:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+43:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/widgets/PremiumFeatures/ui/FeatureCard.tsx
+1:8  Warning: 'Image' is defined but never used.  no-unused-vars
+24:3  Warning: 'alt' is defined but never used.  no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/9) ...
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+   Generating static pages (2/9) 
+   Generating static pages (4/9) 
+   Generating static pages (6/9) 
+ ✓ Generating static pages (9/9)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    4.52 kB         123 kB
+├ ○ /_not-found                            993 B         101 kB
+├ ○ /login                               9.02 kB         126 kB
+├ ○ /opengraph-image.png                     0 B            0 B
+├ ○ /registration                        1.13 kB         112 kB
+└ ○ /twitter-image.png                       0 B            0 B
++ First Load JS shared by all            99.6 kB
+  ├ chunks/888-88ef6c300919f27d.js       43.5 kB
+  ├ chunks/a6c0b741-ae7cfc097a4867b0.js  54.1 kB
+  └ other shared chunks (total)          2.01 kB
+
+
+○  (Static)  prerendered as static content
+
