@@ -76,6 +76,25 @@ export const Destructive: Story = {
 }
 
 /**
+ * Use the `green` button where green button is needed
+ */
+export const Green: Story = {
+  args: {
+    variant: 'green'
+  }
+}
+
+/**
+ * Use the `ForContrast` button where bg is contrast
+ */
+
+export const ForContrast: Story = {
+  args: {
+    variant: 'forContrast'
+  }
+}
+
+/**
  * Use the `link` button to reduce emphasis on tertiary actions, such as
  * hyperlink or navigation, providing a text-only interactive element.
  */

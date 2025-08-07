@@ -1,0 +1,22 @@
+
+
+
+.bgAnimatedGradient {
+  animation: gradient-shift 30s ease infinite;
+  background: linear-gradient(270deg, #1ed760, #9b59b6, #121212, #820c17);
+  background-size: 600% 600%;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
