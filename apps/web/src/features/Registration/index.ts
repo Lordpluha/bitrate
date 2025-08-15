@@ -1,4 +1,4 @@
-export * from './ui/RegistrationFormWrap'
+
 export * from './ui/RegistrationForm'
 export * from './ui/RegistrationFormInfo'
 export * from './ui/SocialLoginDivider'
