@@ -69,7 +69,7 @@ $ turbo dev
 - Tauri
 
 ### Admin Panel
-- AdminJS based on Prisma schema
+- Kottster app based on postgresql schema
 
 ### Backend
 - NestJS, TypeScript
@@ -84,6 +84,18 @@ $ turbo dev
 - Sentry
 #### Testing
 - Jest
+#### Security
+- SHA-3
+- CSP
+- Helmet
+- Rate-limitting + Ip-ban
+- SSL/TLS
+- CSRF
+- Global error filters throught `@Catch`
+- Files security
+- Cloudflare
+- RBAC/ACL
+
 
 ### Infrastructure
 - Monorepo: TurboRepo + Pnpm

@@ -13,4 +13,10 @@ export class RegistrationDto {
 
   @ApiProperty({ description: 'New user password', example: 'password123' })
   password: UserEntity['password']
+
+  @ApiProperty({
+    description: 'New user username',
+    example: 'newuser123'
+  })
+  username: UserEntity['username']
 }

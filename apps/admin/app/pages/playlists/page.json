@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "type": "table",
+  "title": "Playlists",
+  "hideInSidebar": false,
+  "config": {
+    "dataSource": "postgres-db-mbi7kf",
+    "fetchStrategy": "databaseTable",
+    "table": "Playlist",
+    "columns": [
+      {
+        "hiddenInForm": true,
+        "column": "id"
+      },
+      {
+        "hiddenInForm": true,
+        "column": "createdAt"
+      }
+    ]
+  }
+}

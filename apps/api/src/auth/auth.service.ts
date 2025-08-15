@@ -9,24 +9,27 @@ import { UserEntity } from '../users/entities'
 import { JWTPayload } from './types'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { SessionEntity } from './entities'
+import { TokenService } from './token.service'
+import { RegistrationDto } from './dtos'
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-    private prismaService: PrismaService
+    private prisma: PrismaService,
+    private tokenService: TokenService
   ) {}
 
-  async registration(registrationDto: Pick<UserEntity, 'email' | 'password'>) {
-    const user = await this.usersService.findUserByEmail(registrationDto.email)
+  async registerUser(registrationDto: RegistrationDto) {
+    const user = await this.usersService.getByEmail(registrationDto.email)
 
     if (user) {
       throw new ConflictException('User with this email already exists')
     }
 
-    await this.usersService.createUser({
-      username: registrationDto.email,
+    await this.usersService.create({
+      username: registrationDto.username,
       email: registrationDto.email,
       password: registrationDto.password,
       avatar: null,
@@ -34,32 +37,27 @@ export class AuthService {
     })
   }
 
-  async login(email: UserEntity['email'], password: UserEntity['password']) {
-    const user = await this.usersService.findUserByEmail(email)
-    if (user?.password !== password) {
-      throw new UnauthorizedException()
+  async loginUser(
+    email: UserEntity['email'],
+    password: UserEntity['password']
+  ) {
+    const user = await this.usersService.getByEmail_UNSECURE(email)
+    if (!user || user?.password !== password) {
+      throw new UnauthorizedException({
+        message: 'Invalid credentials'
+      })
     }
 
-    const access_token = await this.jwtService.signAsync(
-      {
-        username: user.username
-      },
-      {
-        subject: user.id,
-        expiresIn: process.env.JWT_ACCESS_EXPIRES_IN
-      }
+    const access_token = await this.tokenService.generateAccessToken(
+      user.id,
+      user.username
     )
-    const refresh_token = await this.jwtService.signAsync(
-      {
-        username: user.username
-      },
-      {
-        subject: user.id,
-        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN
-      }
+    const refresh_token = await this.tokenService.generateRefreshToken(
+      user.id,
+      user.username
     )
 
-    const session = await this.prismaService.session.create({
+    const session = await this.prisma.session.create({
       data: {
         access_token,
         userId: user.id,
@@ -81,18 +79,14 @@ export class AuthService {
           secret: process.env.REFRESH_TOKEN_SECRET
         }
       )
-      const user = await this.usersService.findUserByUsername(payload.username)
+      const user = await this.usersService.getByUsername(payload.username)
       if (!user) {
-        throw new UnauthorizedException('User not found')
+        throw new UnauthorizedException('Invalid refresh token')
       }
       return {
-        access_token: await this.jwtService.signAsync(
-          {
-            username: user.username
-          },
-          {
-            subject: user.id
-          }
+        access_token: await this.tokenService.generateAccessToken(
+          user.id,
+          user.username
         )
       }
     } catch {
@@ -104,14 +98,18 @@ export class AuthService {
     userId: SessionEntity['userId'],
     refresh_token: SessionEntity['refresh_token']
   ) {
-    const session = await this.prismaService.session.findFirst({
+    const user = await this.usersService.findById(userId)
+    if (!user) {
+      throw new UnauthorizedException('Invalid access token')
+    }
+    const session = await this.prisma.session.findFirst({
       where: {
-        userId,
+        userId: user.id,
         refresh_token
       }
     })
 
-    await this.prismaService.session.delete({
+    await this.prisma.session.delete({
       where: {
         id: session?.id
       }

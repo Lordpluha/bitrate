@@ -1,14 +1,6 @@
 import { Request, Response } from 'express'
 import { AuthService } from './auth.service'
-import {
-  Controller,
-  Post,
-  Body,
-  Res,
-  Req,
-  UseGuards,
-  Get
-} from '@nestjs/common'
+import { Controller, Post, Body, Res, Req, Get } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import {
   LoginDto,
@@ -25,11 +17,10 @@ import {
 } from './decorators'
 import { SessionEntity } from './entities'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { AuthGuard } from './auth.guard'
-import { JWTPayload } from './types'
-import { RefreshGuard } from './refresh.guard'
+import { Auth } from './auth.guard'
 import { UsersService } from 'src/users/users.service'
-import { clearAuthCookies, setAuthCookies } from './jwt.utils'
+import { TokenService } from './token.service'
+import { UserEntity } from 'src/users/entities'
 
 @ApiExtraModels(SessionEntity)
 @ApiTags('Auth')
@@ -37,7 +28,8 @@ import { clearAuthCookies, setAuthCookies } from './jwt.utils'
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private userService: UsersService
+    private userService: UsersService,
+    private tokenService: TokenService
   ) {}
 
   @AuthLoginSwagger()
@@ -46,11 +38,12 @@ export class AuthController {
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
   ) {
-    const { access_token, refresh_token } = await this.authService.login(
+    const { access_token, refresh_token } = await this.authService.loginUser(
       loginDto.email,
       loginDto.password
     )
-    setAuthCookies(res, access_token, refresh_token)
+
+    this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
   @AuthRegistrationSwagger()
@@ -59,23 +52,21 @@ export class AuthController {
     @Body(new ZodValidationPipe(RegistrationSchema))
     registrationDto: RegistrationDto
   ) {
-    await this.authService.registration(registrationDto)
+    await this.authService.registerUser(registrationDto)
   }
 
   @AuthLogoutSwagger()
-  @UseGuards(AuthGuard)
+  @Auth()
   @Post('logout')
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const user = req['user'] as JWTPayload
-    await this.authService.logout(
-      user.sub,
-      req[process.env.REFRESH_TOKEN_NAME!] as string
-    )
-    clearAuthCookies(res)
+    const user = req['user'] as UserEntity
+    const access_token = req[process.env.ACCESS_TOKEN_NAME!] as string
+    await this.authService.logout(user.id, access_token)
+    this.tokenService.clearAuthCookies(res)
   }
 
   @AuthRefreshSwagger()
-  @UseGuards(RefreshGuard)
+  @Auth('refresh')
   @Post('refresh')
   async refresh(
     @Req() req: Request,
@@ -83,17 +74,14 @@ export class AuthController {
   ) {
     const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
     const { access_token } = await this.authService.refresh(refresh_token)
-    setAuthCookies(res, access_token, refresh_token)
+    this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
   @AuthMeSwagger()
-  @UseGuards(AuthGuard)
+  @Auth()
   @Get('me')
   async getMe(@Req() req: Request) {
-    const user = req['user'] as JWTPayload
-    const { password, ...safeUser } = await this.userService.findUserById(
-      user.sub
-    )
-    return safeUser
+    const user = req['user'] as UserEntity
+    return await this.userService.findById(user.id)
   }
 }

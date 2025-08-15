@@ -1,0 +1,5 @@
+export * from './get-albums.decorator'
+export * from './create-album.decorator'
+export * from './update-album.decorator'
+export * from './get-album-by-id.decorator'
+export * from './delete-album.decorator'

@@ -8,9 +8,8 @@ import { envSchema, envType } from '../env.schema'
 import { PrismaModule } from './prisma/prisma.module'
 import { TracksModule } from './tracks/tracks.module'
 import { PlaylistsModule } from './playlists/playlists.module'
-import { AlbumsService } from './albums/albums.service'
-import { AlbumsController } from './albums/albums.controller'
 import { AlbumsModule } from './albums/albums.module'
+import { ArtistsModule } from './artists/artists.module'
 
 @Module({
   imports: [
@@ -22,12 +21,13 @@ import { AlbumsModule } from './albums/albums.module'
     }),
     PrismaModule,
     AuthModule,
+    ArtistsModule,
     UsersModule,
     TracksModule,
     PlaylistsModule,
     AlbumsModule
   ],
-  controllers: [AppController, AlbumsController],
-  providers: [AppService, AlbumsService]
+  controllers: [AppController],
+  providers: [AppService]
 })
 export class AppModule {}

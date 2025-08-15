@@ -19,6 +19,7 @@ export class UserEntity implements User {
 
   @ApiProperty()
   description: string | null
+
   @ApiProperty()
   avatar: string | null
 }
