@@ -1,20 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { SpotifyLogoPrimary } from '../icons'
 
 export const Logo = () => {
   return (
     <Link
       href='/'
       aria-label='Spotify Home'
-      className='inline-block'
     >
-      <Image
-        src='/logo.webp'
-        onError={e => (e.currentTarget.srcset = '/logo.png')}
-        width={111}
-        height={36}
-        alt='Spotify logo'
-      />
+      <SpotifyLogoPrimary className='text-text fill-text' />
     </Link>
   )
 }

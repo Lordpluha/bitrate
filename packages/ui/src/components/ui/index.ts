@@ -5,3 +5,6 @@ export * from './avatar'
 export * from './label'
 export * from './form'
 export * from './textarea'
+export * from './carousel'
+
+

@@ -76,11 +76,11 @@ export const Destructive: Story = {
 }
 
 /**
- * Use the `green` button where green button is needed
+ * Use the `primary` button where primary button is needed
  */
-export const Green: Story = {
+export const Primary: Story = {
   args: {
-    variant: 'green'
+    variant: 'primary'
   }
 }
 

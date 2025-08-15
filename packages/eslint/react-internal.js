@@ -11,7 +11,7 @@ import tseslint from 'typescript-eslint'
  * A custom ESLint configuration for libraries that use React.
  *
  * @type {import("eslint").Linter.Config} */
-export const config = [
+const config = [
   js.configs.recommended,
   eslintConfigPrettier,
   ...tseslint.configs.recommended,
@@ -53,3 +53,5 @@ export const config = [
     }
   }
 ]
+
+export default { config }
