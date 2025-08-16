@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query
@@ -37,7 +38,7 @@ export class ArtistsController {
 
   @ApiOperation({ summary: 'Get artist by id' })
   @Get(':id')
-  async getById(@Param('id') id: ArtistEntity['id']) {
+  async getById(@Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
     return await this.artistsService.findById(id)
   }
 
@@ -60,7 +61,7 @@ export class ArtistsController {
   @Auth()
   @Put(':id')
   updateProfile(
-    @Param('id') id: ArtistEntity['id'],
+    @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
     @Body() artist: Partial<ArtistEntity>
   ) {
     return this.artistsService.update(id, artist)
@@ -69,7 +70,7 @@ export class ArtistsController {
   @ApiOperation({ summary: 'Delete artist profile' })
   @Auth()
   @Delete(':id')
-  deleteProfile(@Param('id') id: ArtistEntity['id']) {
+  deleteProfile(@Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
     return this.artistsService.delete(id)
   }
 }

@@ -1,2 +1,2 @@
-export type themes = 'dark' | 'light'
-export const themes: themes[] = ['dark', 'light']
+export type theme = 'dark' | 'light'
+export const themes: theme[] = ['dark', 'light']

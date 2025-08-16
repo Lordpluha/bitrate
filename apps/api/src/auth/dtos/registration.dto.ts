@@ -1,10 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { LoginSchema } from './login.dto'
 import { UserEntity } from 'src/users/entities'
+import z from 'zod'
 
-export const RegistrationSchema = LoginSchema
+export const RegistrationSchema = LoginSchema.extend({
+  username: z
+    .string()
+    .min(3, { message: 'Username must be at least 3 characters long' })
+    .max(20, { message: 'Username must not exceed 20 characters' })
+})
 
-export class RegistrationDto {
+export class RegistrationDto implements z.infer<typeof RegistrationSchema> {
   @ApiProperty({
     description: 'New user email',
     example: 'newuser@example.com'

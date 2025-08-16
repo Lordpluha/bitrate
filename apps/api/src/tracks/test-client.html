@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Player Test</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Audio Player Test</h1>
+
+    <div>
+        <label for="token">JWT Token:</label>
+        <input type="text" id="token" placeholder="Enter your JWT token" style="width: 400px;">
+        <button onclick="connectSocket()">Connect</button>
+        <button onclick="disconnectSocket()">Disconnect</button>
+    </div>
+
+    <div>
+        <label for="trackId">Trrack ID:</label>
+        <input type="text" id="trackId" placeholder="Enter track UUID">
+        <button onclick="loadTracks()">Load Tracks</button>
+        <button onclick="testDirectStream()">Test Direct Stream</button>
+        <button onclick="testLocalStream()">Test Local Stream</button>
+        <button onclick="playTrack()">Play</button>
+        <button onclick="pauseTrack()">Pause</button>
+        <button onclick="getCurrentState()">Get State</button>
+        <select id="trackSelect" onchange="document.getElementById('trackId').value = this.value">
+            <option value="">Select a track...</option>
+        </select>
+    </div>
+
+    <div>
+        <audio id="audioPlayer" controls preload="metadata" style="width: 100%; margin: 20px 0;">
+            Ваш браузер не поддерживает аудио элемент.
+        </audio>
+        <div id="audioStatus" style="margin: 10px 0; font-style: italic; color: #666;"></div>
+    </div>
+
+    <div>
+        <h3>Status:</h3>
+        <div id="status">Not connected</div>
+
+        <h3>Events:</h3>
+        <div id="events" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; background: #f9f9f9;"></div>
+    </div>
+
+    <script>
+        let socket = null;
+        let currentTrackId = null;
+        let userId = null;
+        const audioPlayer = document.getElementById('audioPlayer');
+        const statusDiv = document.getElementById('status');
+        const eventsDiv = document.getElementById('events');
+        const audioStatusDiv = document.getElementById('audioStatus');
+
+        // Audio event handlers
+        audioPlayer.addEventListener('loadstart', () => {
+            audioStatusDiv.textContent = 'Начинается загрузка аудио...';
+            logEvent('Audio: Load started');
+        });
+
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            audioStatusDiv.textContent = 'Метаданные загружены';
+            logEvent('Audio: Metadata loaded');
+        });
+
+        audioPlayer.addEventListener('canplay', () => {
+            audioStatusDiv.textContent = 'Аудио готово к воспроизведению';
+            logEvent('Audio: Can play');
+        });
+
+        audioPlayer.addEventListener('playing', () => {
+            audioStatusDiv.textContent = 'Воспроизводится';
+            logEvent('Audio: Playing');
+        });
+
+        audioPlayer.addEventListener('pause', () => {
+            audioStatusDiv.textContent = 'Пауза';
+            logEvent('Audio: Paused');
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            audioStatusDiv.textContent = 'Воспроизведение завершено';
+            logEvent('Audio: Ended');
+        });
+
+        audioPlayer.addEventListener('error', (e) => {
+            const error = audioPlayer.error;
+            let errorMessage = 'Неизвестная ошибка';
+
+            if (error) {
+                switch (error.code) {
+                    case error.MEDIA_ERR_ABORTED:
+                        errorMessage = 'Загрузка прервана пользователем';
+                        break;
+                    case error.MEDIA_ERR_NETWORK:
+                        errorMessage = 'Ошибка сети при загрузке';
+                        break;
+                    case error.MEDIA_ERR_DECODE:
+                        errorMessage = 'Ошибка декодирования аудио';
+                        break;
+                    case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        errorMessage = 'Формат аудио не поддерживается';
+                        break;
+                }
+            }
+
+            audioStatusDiv.textContent = `Ошибка: ${errorMessage}`;
+            logEvent(`Audio Error: ${errorMessage} (code: ${error?.code})`);
+        });
+
+        function logEvent(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            eventsDiv.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            eventsDiv.scrollTop = eventsDiv.scrollHeight;
+        }
+
+        async function loadAndPlayAudio(trackId, currentTime = 0) {
+            try {
+                const streamUrl = `http://localhost:3000/tracks/stream/${trackId}`;
+                logEvent(`Loading audio from: ${streamUrl}`);
+
+                // Добавляем Authorization header для аудио запроса
+                const token = document.getElementById('token').value;
+
+                audioPlayer.src = streamUrl + (token ? `?token=${encodeURIComponent(token)}` : '');
+                audioPlayer.currentTime = currentTime;
+
+                audioStatusDiv.textContent = 'Загрузка аудио...';
+
+                // Ждем загрузки метаданных
+                await new Promise((resolve, reject) => {
+                    const timeout = setTimeout(() => {
+                        reject(new Error('Timeout loading audio'));
+                    }, 10000);
+
+                    audioPlayer.addEventListener('loadedmetadata', () => {
+                        clearTimeout(timeout);
+                        resolve();
+                    }, { once: true });
+
+                    audioPlayer.addEventListener('error', () => {
+                        clearTimeout(timeout);
+                        reject(new Error('Error loading audio'));
+                    }, { once: true });
+                });
+
+                // Попытка воспроизведения
+                const playPromise = audioPlayer.play();
+
+                if (playPromise !== undefined) {
+                    await playPromise;
+                    logEvent('Audio playback started successfully');
+                }
+
+            } catch (error) {
+                logEvent(`Failed to load/play audio: ${error.message}`);
+                audioStatusDiv.textContent = `Ошибка воспроизведения: ${error.message}`;
+            }
+        }
+
+        function connectSocket() {
+            const token = document.getElementById('token').value;
+            if (!token) {
+                alert('Please enter a JWT token');
+                return;
+            }
+
+            socket = io('http://localhost:3000', {
+                auth: { token: token }
+            });
+
+            socket.on('connect', () => {
+                statusDiv.textContent = 'Connected';
+                logEvent('Connected to server');
+
+                // Extract userId from token (simple decode, not secure)
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    userId = payload.sub;
+                    logEvent(`User ID: ${userId}`);
+                } catch (e) {
+                    logEvent('Could not decode user ID from token');
+                }
+            });
+
+            socket.on('disconnect', () => {
+                statusDiv.textContent = 'Disconnected';
+                logEvent('Disconnected from server');
+            });
+
+            socket.on('trackPlaying', async (data) => {
+                logEvent(`Track playing: ${JSON.stringify(data)}`);
+                currentTrackId = data.trackId;
+                try {
+                    await loadAndPlayAudio(data.trackId, data.currentTime || 0);
+                } catch (error) {
+                    logEvent(`Error playing track: ${error.message}`);
+                }
+            });
+
+            socket.on('trackPaused', (data) => {
+                logEvent(`Track paused: ${JSON.stringify(data)}`);
+                audioPlayer.pause();
+            });
+
+            socket.on('trackUpdated', async (data) => {
+                logEvent(`Track updated: ${JSON.stringify(data)}`);
+
+                if (data.trackId !== currentTrackId) {
+                    // New track
+                    currentTrackId = data.trackId;
+                    if (data.isPlaying) {
+                        try {
+                            await loadAndPlayAudio(data.trackId, data.currentTime || 0);
+                        } catch (error) {
+                            logEvent(`Error loading new track: ${error.message}`);
+                        }
+                    }
+                } else {
+                    // Same track, just update time/state
+                    if (Math.abs(audioPlayer.currentTime - data.currentTime) > 2) {
+                        audioPlayer.currentTime = data.currentTime;
+                    }
+
+                    if (data.isPlaying && audioPlayer.paused) {
+                        try {
+                            await audioPlayer.play();
+                        } catch (error) {
+                            logEvent(`Error resuming playback: ${error.message}`);
+                        }
+                    } else if (!data.isPlaying && !audioPlayer.paused) {
+                        audioPlayer.pause();
+                    }
+                }
+            });
+
+            socket.on('trackState', async (data) => {
+                logEvent(`Track state: ${JSON.stringify(data)}`);
+                if (data.isPlaying && data.trackId) {
+                    currentTrackId = data.trackId;
+                    try {
+                        await loadAndPlayAudio(data.trackId, data.currentTime || 0);
+                    } catch (error) {
+                        logEvent(`Error restoring track state: ${error.message}`);
+                    }
+                }
+            });
+
+            socket.on('currentState', (data) => {
+                logEvent(`Current state: ${JSON.stringify(data)}`);
+            });
+
+            // Send time updates
+            audioPlayer.addEventListener('timeupdate', () => {
+                if (currentTrackId && userId && socket) {
+                    socket.emit('updateStreaming', {
+                        trackId: currentTrackId,
+                        userId: userId,
+                        currentTime: audioPlayer.currentTime,
+                        isPlaying: !audioPlayer.paused
+                    });
+                }
+            });
+        }
+
+        function disconnectSocket() {
+            if (socket) {
+                socket.disconnect();
+                socket = null;
+                currentTrackId = null;
+                statusDiv.textContent = 'Not connected';
+                logEvent('Manually disconnected');
+            }
+        }
+
+        function playTrack() {
+            const trackId = document.getElementById('trackId').value;
+            if (!trackId || !userId || !socket) {
+                alert('Please enter track ID and connect first');
+                return;
+            }
+
+            socket.emit('playTrack', {
+                trackId: trackId,
+                userId: userId,
+                currentTime: 0
+            });
+            logEvent(`Sent playTrack: ${trackId}`);
+        }
+
+        function pauseTrack() {
+            if (!currentTrackId || !userId || !socket) {
+                alert('No track playing or not connected');
+                return;
+            }
+
+            socket.emit('pauseTrack', {
+                trackId: currentTrackId,
+                userId: userId,
+                currentTime: audioPlayer.currentTime
+            });
+            logEvent(`Sent pauseTrack: ${currentTrackId}`);
+        }
+
+        function getCurrentState() {
+            if (!socket) {
+                alert('Not connected');
+                return;
+            }
+
+            socket.emit('getCurrentState');
+            logEvent('Sent getCurrentState');
+        }
+
+        async function loadTracks() {
+            try {
+                const tracks = await fetch('http://localhost:3000/tracks?limit=566&page=1	').then(resp => resp.json()).then(data => data.data);
+
+                const trackSelect = document.getElementById('trackSelect');
+                trackSelect.innerHTML = '<option value="">Select a track...</option>';
+
+                if (tracks && tracks.length > 0) {
+                    tracks.forEach(track => {
+                        const option = document.createElement('option');
+                        option.value = track.id;
+                        option.textContent = `${track.title} (${track.id})`;
+                        trackSelect.appendChild(option);
+                    });
+                    logEvent(`Loaded ${tracks.length} tracks`);
+                } else {
+                    logEvent('No tracks found');
+                }
+            } catch (error) {
+                logEvent(`Error loading tracks: ${error.message}`);
+            }
+        }
+
+        // Test direct audio streaming
+        function testDirectStream() {
+            const trackId = document.getElementById('trackId').value;
+            if (!trackId) {
+                alert('Please enter or select a track ID');
+                return;
+            }
+
+            const streamUrl = `http://localhost:3000/tracks/stream/${trackId}`;
+            logEvent(`Testing direct stream: ${streamUrl}`);
+
+            audioPlayer.src = streamUrl;
+            audioPlayer.load();
+        }
+
+        // Test local file streaming
+        function testLocalStream() {
+            const streamUrl = 'http://localhost:3000/tracks/stream/e2fc7c24-4ddd-4aa4-8253-b819efcdf6f5';
+            logEvent(`Testing local stream: ${streamUrl}`);
+
+            audioPlayer.src = streamUrl;
+            audioPlayer.load();
+        }
+    </script>
+</body>
+</html>

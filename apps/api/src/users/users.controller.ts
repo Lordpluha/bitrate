@@ -9,7 +9,8 @@ import {
   Req,
   UploadedFile,
   UseInterceptors,
-  BadRequestException
+  BadRequestException,
+  ParseUUIDPipe
 } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
@@ -65,9 +66,7 @@ export class UsersController {
 
   @GetUserSwagger()
   @Get(':id')
-  async getById(
-    @Param('id', new ZodValidationPipe(z.string())) id: UserEntity['id']
-  ) {
+  async getById(@Param('id', ParseUUIDPipe) id: UserEntity['id']) {
     return await this.usersService.findById(id)
   }
 

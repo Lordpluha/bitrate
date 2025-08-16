@@ -20,7 +20,7 @@ export class TokenService {
       {
         subject: userId,
         expiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
-        secret: process.env.ACCESS_TOKEN_SECRET
+        secret: process.env.JWT_SECRET
       }
     )
   }
@@ -34,7 +34,7 @@ export class TokenService {
       {
         subject: userId,
         expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
-        secret: process.env.REFRESH_TOKEN_SECRET
+        secret: process.env.JWT_SECRET
       }
     )
   }

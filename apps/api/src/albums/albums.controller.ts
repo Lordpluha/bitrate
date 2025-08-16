@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -49,7 +50,7 @@ export class AlbumsController {
 
   @GetAlbumByIdSwagger()
   @Get(':id')
-  async getById(@Query('id') id: AlbumEntity['id']) {
+  async getById(@Query('id', ParseUUIDPipe) id: AlbumEntity['id']) {
     return await this.albumsService.getById(id)
   }
 
@@ -58,7 +59,7 @@ export class AlbumsController {
   @Put(':id')
   async updateAlbum(
     @Req() req: Request,
-    @Query('id') id: AlbumEntity['id'],
+    @Query('id', ParseUUIDPipe) id: AlbumEntity['id'],
     @Body(new ZodValidationPipe(UpdateAlbumSchema)) updateDto: UpdateAlbumDto
   ) {
     const jwtArtist = req['user'] as UserEntity
@@ -79,7 +80,10 @@ export class AlbumsController {
   @DeleteAlbumSwagger()
   @Auth()
   @Delete(':id')
-  async deleteAlbum(@Req() req: Request, @Query('id') id: AlbumEntity['id']) {
+  async deleteAlbum(
+    @Req() req: Request,
+    @Query('id', ParseUUIDPipe) id: AlbumEntity['id']
+  ) {
     const jwtArtist = req['user'] as UserEntity
     return await this.albumsService.delete(jwtArtist.id, id)
   }

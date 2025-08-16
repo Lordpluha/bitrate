@@ -7,7 +7,6 @@ import {
   UnauthorizedException
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
 import { JWTPayload } from './types'
 import { PrismaService } from 'src/prisma/prisma.service'
@@ -56,7 +55,6 @@ export function Auth(tokenRequirement: TokenRequirement = 'access') {
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
     private prisma: PrismaService,
     private reflector: Reflector,
     private tokenService: TokenService
@@ -69,7 +67,13 @@ export class AuthGuard implements CanActivate {
     )
 
     const request = context.switchToHttp().getRequest<Request>()
-    const { access_token, refresh_token } = this.extractTokenFromCookie(request)
+    // Try to extract tokens from both cookies and Authorization header
+    const { access_token: cookieAccessToken, refresh_token } =
+      this.extractTokenFromCookie(request)
+
+    // If not found in cookies, try Authorization header
+    const access_token =
+      cookieAccessToken || this.extractTokenFromHeader(request)
 
     // 1) проверяем наличие нужных токенов
     switch (tokenReq) {
@@ -145,5 +149,13 @@ export class AuthGuard implements CanActivate {
       | string
       | undefined
     return { access_token, refresh_token }
+  }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const authorization = request.headers.authorization
+    if (authorization && authorization.startsWith('Bearer ')) {
+      return authorization.slice(7) // Remove 'Bearer ' prefix
+    }
+    return undefined
   }
 }

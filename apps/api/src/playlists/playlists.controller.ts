@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Put, Req } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Req
+} from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { PlaylistEntity } from './entities'
 import { PlaylistsService } from './playlists.service'
@@ -32,7 +41,7 @@ export class PlaylistsController {
 
   @ApiOperation({ summary: 'Get playlist by id' })
   @Get(':id')
-  async getById(@Param('id') id: PlaylistEntity['id']) {
+  async getById(@Param('id', ParseUUIDPipe) id: PlaylistEntity['id']) {
     return await this.playlistService.getById(id)
   }
 
@@ -53,7 +62,7 @@ export class PlaylistsController {
   @Put(':id')
   async update(
     @Req() req: Request,
-    @Param('id') id: PlaylistEntity['id'],
+    @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
     @Body(new ZodValidationPipe(UpdatePlaylistSchema))
     updateDto: UpdatePlaylistDto
   ) {
