@@ -32,14 +32,17 @@ export const Welcome = () => {
           className='w-full h-full absolute top-0 bottom-0 left-0 right-0 z-[1] object-contain'
           color='#107032'
         />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className='w-full h-full absolute top-[120px] bottom-0 left-0 right-0 z-[2] object-contain'
           src='/images/intro-phone.png'
         />
+				{/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className='w-[364px] h-[54px] absolute bottom-[132px] left-0 right-0 z-[3] object-cover'
           src='/images/spotify-music-1.png'
         />
+				{/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className='w-[364px] h-[84px] absolute bottom-10 left-10 right-0 z-[3] object-cover'
           src='/images/spotify-music-2.png'

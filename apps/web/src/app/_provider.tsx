@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider } from '@shared/contexts'
-import { themes } from '@shared/constants'
+import { theme } from '@shared/constants'
 import { AppStore, makeStore } from '@shared/redux'
 import { Provider as StoreProvider } from 'react-redux'
 import { usePersistedState } from '@shared/hooks'
@@ -12,7 +12,7 @@ import { usePersistedState } from '@shared/hooks'
 export const Provider: FC<PropsWithChildren> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient())
   const storeRef = useRef<AppStore>(null)
-  const [theme, setTheme, , hydrated] = usePersistedState<themes>(
+  const [theme, setTheme, , hydrated] = usePersistedState<theme>(
     'theme',
     'dark'
   )
