@@ -87,8 +87,36 @@ async function bootstrap() {
     jsonDocumentUrl: 'swagger/json'
   })
   app.enableCors({
-    origin: '*',
-    allowedHeaders: ['Content-Type']
+    origin: [
+      process.env.WEB_HOST || 'http://localhost:3001', // Web app
+      'http://localhost:3000', // API docs
+      'http://localhost:5555', // Prisma Studio
+      'http://localhost:8080', // Test client server
+      'http://localhost:8081', // Alternative test client server
+      'http://0.0.0.0:8080',
+      'file://', // For local HTML files
+      /^file:\/\//
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'Accept',
+      'Origin',
+      'Range',
+      'Access-Control-Request-Method',
+      'Access-Control-Request-Headers'
+    ],
+    exposedHeaders: [
+      'Set-Cookie',
+      'Content-Range',
+      'Accept-Ranges',
+      'Content-Length'
+    ],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 200
   })
   await app.listen(process.env.PORT ?? 3000)
 }
