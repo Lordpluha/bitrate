@@ -5,19 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Player Test</title>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 2px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        input, select {
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #events {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+    </style>
 </head>
 <body>
     <h1>Audio Player Test</h1>
 
-    <div>
-        <label for="token">JWT Token:</label>
-        <input type="text" id="token" placeholder="Enter your JWT token" style="width: 400px;">
-        <button onclick="connectSocket()">Connect</button>
-        <button onclick="disconnectSocket()">Disconnect</button>
+    <div style="background: #f0f8ff; padding: 15px; border: 1px solid #bee5eb; border-radius: 5px; margin-bottom: 20px;">
+        <h4>📋 Instructions:</h4>
+        <ol>
+            <li><strong>Register</strong> (if needed): Click "Register Test User" if you haven't created a test user yet</li>
+            <li><strong>Login</strong>: Click "Login & Get Token" to authenticate and set httpOnly cookies</li>
+            <li><strong>Check Auth</strong>: Click "Check Auth Status" to verify authentication</li>
+            <li><strong>Connect</strong>: Click "Connect with Cookies" to establish WebSocket connection</li>
+            <li><strong>Load Tracks</strong>: Click "Load Tracks" to fetch available tracks</li>
+            <li><strong>Select & Test</strong>: Choose a track from dropdown and click "Test Direct Stream" or "Play"</li>
+        </ol>
+        <p><strong>Note:</strong> This app uses httpOnly cookies for security. Tokens are automatically sent with requests and are not accessible via JavaScript.</p>
     </div>
 
-    <div>
-        <label for="trackId">Trrack ID:</label>
+    <div class="section">
+        <h3>🔐 Authentication:</h3>
+        <div style="margin-bottom: 10px;">
+            <label for="email">Email:</label>
+            <input type="email" id="email" value="test@example.com" placeholder="test@example.com" style="width: 200px;">
+            <label for="password">Password:</label>
+            <input type="password" id="password" value="password123" placeholder="password123" style="width: 200px;">
+            <button onclick="loginUser()">Login & Get Token</button>
+            <button onclick="registerUser()">Register Test User</button>
+        </div>
+        <div>
+            <label for="token">JWT Token:</label>
+            <input type="text" id="token" placeholder="Login sets httpOnly cookies automatically" style="width: 400px;" readonly>
+            <button onclick="connectSocketWithCookies()">Connect with Cookies</button>
+            <button onclick="disconnectSocket()">Disconnect</button>
+            <button onclick="checkAuthStatus()">Check Auth Status</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>🎵 Track Control:</h3>
+        <label for="trackId">Track ID:</label>
         <input type="text" id="trackId" placeholder="Enter track UUID">
         <button onclick="loadTracks()">Load Tracks</button>
         <button onclick="testDirectStream()">Test Direct Stream</button>
@@ -25,24 +95,24 @@
         <button onclick="playTrack()">Play</button>
         <button onclick="pauseTrack()">Pause</button>
         <button onclick="getCurrentState()">Get State</button>
+        <br><br>
         <select id="trackSelect" onchange="document.getElementById('trackId').value = this.value">
             <option value="">Select a track...</option>
         </select>
     </div>
 
-    <div>
-        <audio id="audioPlayer" controls preload="metadata" style="width: 100%; margin: 20px 0;">
+    <div class="section">
+        <h3>🔊 Audio Player:</h3>
+        <audio id="audioPlayer" controls preload="none" style="width: 100%; margin: 20px 0;">
             Ваш браузер не поддерживает аудио элемент.
         </audio>
         <div id="audioStatus" style="margin: 10px 0; font-style: italic; color: #666;"></div>
     </div>
 
-    <div>
-        <h3>Status:</h3>
-        <div id="status">Not connected</div>
-
-        <h3>Events:</h3>
-        <div id="events" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; background: #f9f9f9;"></div>
+    <div class="section">
+        <h3>📊 Status & Events:</h3>
+        <div><strong>Connection Status:</strong> <span id="status">Not connected</span></div>
+        <div id="events" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; background: #f9f9f9; margin-top: 10px;"></div>
     </div>
 
     <script>
@@ -116,15 +186,147 @@
             eventsDiv.scrollTop = eventsDiv.scrollHeight;
         }
 
+        async function registerUser() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
+            }
+
+            try {
+                logEvent(`Attempting registration for ${email}...`);
+
+                const response = await fetch('http://localhost:3000/auth/registration', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password,
+                        username: email.split('@')[0] // Use email prefix as username
+                    })
+                });
+
+                if (response.ok) {
+                    logEvent('Registration successful! You can now login.');
+                    alert('Registration successful! You can now login.');
+                } else {
+                    const error = await response.text();
+                    logEvent(`Registration failed: ${error}`);
+                    alert('Registration failed: ' + error);
+                }
+            } catch (error) {
+                logEvent(`Registration error: ${error.message}`);
+                alert('Registration error: ' + error.message);
+            }
+        }
+
+        async function loginUser() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
+            }
+
+            try {
+                logEvent(`Attempting login for ${email}...`);
+
+                const response = await fetch('http://localhost:3000/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include', // Important for httpOnly cookies
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (response.ok) {
+                    logEvent('Login successful! HttpOnly cookies have been set.');
+                    document.getElementById('token').value = 'Cookies set (httpOnly - not accessible via JS)';
+
+                    // Check if we can access protected endpoints
+                    await checkAuthStatus();
+                } else {
+                    const error = await response.text();
+                    logEvent(`Login failed: ${error}`);
+                    alert('Login failed: ' + error);
+                }
+            } catch (error) {
+                logEvent(`Login error: ${error.message}`);
+                alert('Login error: ' + error.message);
+            }
+        }
+
+        async function checkAuthStatus() {
+            try {
+                logEvent('Checking authentication status...');
+
+                const response = await fetch('http://localhost:3000/auth/me', {
+                    credentials: 'include' // Send httpOnly cookies
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+                    logEvent(`Authentication valid! User: ${user.username} (${user.email})`);
+                    return true;
+                } else {
+                    logEvent(`Authentication failed: ${response.status} ${response.statusText}`);
+                    return false;
+                }
+            } catch (error) {
+                logEvent(`Auth check error: ${error.message}`);
+                return false;
+            }
+        }
+
         async function loadAndPlayAudio(trackId, currentTime = 0) {
             try {
+                const token = document.getElementById('token').value;
+                if (!token) {
+                    throw new Error('No authorization token available');
+                }
+
                 const streamUrl = `http://localhost:3000/tracks/stream/${trackId}`;
                 logEvent(`Loading audio from: ${streamUrl}`);
 
-                // Добавляем Authorization header для аудио запроса
-                const token = document.getElementById('token').value;
+                // Create a fetch request with authorization header first to check access
+                const testResponse = await fetch(streamUrl, {
+                    method: 'HEAD', // Just check if we have access
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
 
-                audioPlayer.src = streamUrl + (token ? `?token=${encodeURIComponent(token)}` : '');
+                if (!testResponse.ok) {
+                    throw new Error(`Access denied: ${testResponse.status} ${testResponse.statusText}`);
+                }
+
+                // For audio element, we need to use a different approach since we can't set headers
+                // We'll need to use fetch to get the audio and create a blob URL
+                const audioResponse = await fetch(streamUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!audioResponse.ok) {
+                    throw new Error(`Failed to fetch audio: ${audioResponse.status} ${audioResponse.statusText}`);
+                }
+
+                const audioBlob = await audioResponse.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                // Clean up previous blob URL
+                if (audioPlayer.src && audioPlayer.src.startsWith('blob:')) {
+                    URL.revokeObjectURL(audioPlayer.src);
+                }
+
+                audioPlayer.src = audioUrl;
                 audioPlayer.currentTime = currentTime;
 
                 audioStatusDiv.textContent = 'Загрузка аудио...';
@@ -160,29 +362,16 @@
             }
         }
 
-        function connectSocket() {
-            const token = document.getElementById('token').value;
-            if (!token) {
-                alert('Please enter a JWT token');
-                return;
-            }
-
+        function connectSocketWithCookies() {
+            // With httpOnly cookies, we don't need to manually pass the token
+            // The browser will automatically send cookies with the request
             socket = io('http://localhost:3000', {
-                auth: { token: token }
+                withCredentials: true // This ensures cookies are sent
             });
 
             socket.on('connect', () => {
                 statusDiv.textContent = 'Connected';
-                logEvent('Connected to server');
-
-                // Extract userId from token (simple decode, not secure)
-                try {
-                    const payload = JSON.parse(atob(token.split('.')[1]));
-                    userId = payload.sub;
-                    logEvent(`User ID: ${userId}`);
-                } catch (e) {
-                    logEvent('Could not decode user ID from token');
-                }
+                logEvent('Connected to server with httpOnly cookies');
             });
 
             socket.on('disconnect', () => {
@@ -194,7 +383,7 @@
                 logEvent(`Track playing: ${JSON.stringify(data)}`);
                 currentTrackId = data.trackId;
                 try {
-                    await loadAndPlayAudio(data.trackId, data.currentTime || 0);
+                    await loadAndPlayAudioWithCookies(data.trackId, data.currentTime || 0);
                 } catch (error) {
                     logEvent(`Error playing track: ${error.message}`);
                 }
@@ -213,7 +402,7 @@
                     currentTrackId = data.trackId;
                     if (data.isPlaying) {
                         try {
-                            await loadAndPlayAudio(data.trackId, data.currentTime || 0);
+                            await loadAndPlayAudioWithCookies(data.trackId, data.currentTime || 0);
                         } catch (error) {
                             logEvent(`Error loading new track: ${error.message}`);
                         }
@@ -241,7 +430,7 @@
                 if (data.isPlaying && data.trackId) {
                     currentTrackId = data.trackId;
                     try {
-                        await loadAndPlayAudio(data.trackId, data.currentTime || 0);
+                        await loadAndPlayAudioWithCookies(data.trackId, data.currentTime || 0);
                     } catch (error) {
                         logEvent(`Error restoring track state: ${error.message}`);
                     }
@@ -254,15 +443,188 @@
 
             // Send time updates
             audioPlayer.addEventListener('timeupdate', () => {
-                if (currentTrackId && userId && socket) {
+                if (currentTrackId && socket) {
                     socket.emit('updateStreaming', {
                         trackId: currentTrackId,
-                        userId: userId,
                         currentTime: audioPlayer.currentTime,
                         isPlaying: !audioPlayer.paused
                     });
                 }
             });
+        }
+
+        async function loadAndPlayAudioWithCookies(trackId, currentTime = 0) {
+            try {
+                const streamUrl = `http://localhost:3000/tracks/stream/${trackId}`;
+                logEvent(`Loading audio from: ${streamUrl}`);
+
+                // Test access with cookies
+                const testResponse = await fetch(streamUrl, {
+                    method: 'HEAD',
+                    credentials: 'include'
+                });
+
+                if (!testResponse.ok) {
+                    throw new Error(`Access denied: ${testResponse.status} ${testResponse.statusText}`);
+                }
+
+                logEvent('Access test passed, trying progressive streaming...');
+
+                // Try progressive streaming first
+                const success = await tryProgressiveStreaming(streamUrl, trackId, currentTime);
+
+                if (!success) {
+                    logEvent('Progressive streaming failed, falling back to direct URL...');
+                    await tryDirectUrlStreaming(streamUrl, currentTime);
+                }
+
+            } catch (error) {
+                logEvent(`Failed to load/play audio: ${error.message}`);
+                audioStatusDiv.textContent = `Ошибка воспроизведения: ${error.message}`;
+            }
+        }
+
+        // Try streaming with Range requests to force progressive loading
+        async function tryProgressiveStreaming(streamUrl, trackId, currentTime = 0) {
+            try {
+                logEvent('Attempting progressive streaming with Range requests...');
+
+                // First, get file size
+                const headResponse = await fetch(streamUrl, {
+                    method: 'HEAD',
+                    credentials: 'include'
+                });
+
+                if (!headResponse.ok) {
+                    throw new Error('Could not get file info');
+                }
+
+                const contentLength = headResponse.headers.get('content-length');
+                const fileSize = parseInt(contentLength || '0');
+
+                if (fileSize === 0) {
+                    throw new Error('Could not determine file size');
+                }
+
+                logEvent(`File size: ${fileSize} bytes`);
+
+                // Get first chunk with Range request
+                const chunkSize = Math.min(1024 * 1024, fileSize); // 1MB or file size
+                const rangeResponse = await fetch(streamUrl, {
+                    headers: {
+                        'Range': `bytes=0-${chunkSize - 1}`
+                    },
+                    credentials: 'include'
+                });
+
+                if (rangeResponse.status === 206) {
+                    logEvent(`Successfully got range response: ${rangeResponse.status}`);
+
+                    // Now use direct URL - browser should understand it supports ranges
+                    audioPlayer.src = streamUrl;
+                    audioPlayer.currentTime = currentTime;
+                    audioPlayer.load();
+
+                    audioStatusDiv.textContent = 'Прогрессивная загрузка...';
+
+                    // Wait for enough data
+                    await new Promise((resolve, reject) => {
+                        const timeout = setTimeout(() => {
+                            reject(new Error('Timeout loading progressively'));
+                        }, 10000);
+
+                        const onCanPlay = () => {
+                            clearTimeout(timeout);
+                            cleanup();
+                            resolve();
+                        };
+
+                        const onError = (e) => {
+                            clearTimeout(timeout);
+                            cleanup();
+                            reject(new Error(`Audio load error: ${e.message || 'Unknown error'}`));
+                        };
+
+                        const cleanup = () => {
+                            audioPlayer.removeEventListener('canplay', onCanPlay);
+                            audioPlayer.removeEventListener('error', onError);
+                        };
+
+                        audioPlayer.addEventListener('canplay', onCanPlay, { once: true });
+                        audioPlayer.addEventListener('error', onError, { once: true });
+                    });
+
+                    const playPromise = audioPlayer.play();
+                    if (playPromise !== undefined) {
+                        await playPromise;
+                        logEvent('Progressive streaming successful!');
+                        return true;
+                    }
+                } else {
+                    logEvent(`Range requests not supported: ${rangeResponse.status}`);
+                    return false;
+                }
+
+                return false;
+            } catch (error) {
+                logEvent(`Progressive streaming failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        // Fallback to direct URL streaming
+        async function tryDirectUrlStreaming(streamUrl, currentTime = 0) {
+            try {
+                logEvent('Trying direct URL streaming...');
+
+                // Clean up previous blob URL
+                if (audioPlayer.src && audioPlayer.src.startsWith('blob:')) {
+                    URL.revokeObjectURL(audioPlayer.src);
+                }
+
+                audioPlayer.src = streamUrl;
+                audioPlayer.currentTime = currentTime;
+                audioPlayer.load();
+
+                audioStatusDiv.textContent = 'Загрузка аудио...';
+
+                // Wait for load
+                await new Promise((resolve, reject) => {
+                    const timeout = setTimeout(() => {
+                        reject(new Error('Timeout loading audio'));
+                    }, 15000);
+
+                    const onCanPlay = () => {
+                        clearTimeout(timeout);
+                        cleanup();
+                        resolve();
+                    };
+
+                    const onError = (e) => {
+                        clearTimeout(timeout);
+                        cleanup();
+                        reject(new Error(`Audio error: ${e.message || 'Unknown error'}`));
+                    };
+
+                    const cleanup = () => {
+                        audioPlayer.removeEventListener('canplay', onCanPlay);
+                        audioPlayer.removeEventListener('error', onError);
+                    };
+
+                    audioPlayer.addEventListener('canplay', onCanPlay, { once: true });
+                    audioPlayer.addEventListener('error', onError, { once: true });
+                });
+
+                const playPromise = audioPlayer.play();
+                if (playPromise !== undefined) {
+                    await playPromise;
+                    logEvent('Direct URL streaming successful');
+                }
+
+            } catch (error) {
+                logEvent(`Direct URL streaming failed: ${error.message}`);
+                throw error;
+            }
         }
 
         function disconnectSocket() {
@@ -316,7 +678,18 @@
 
         async function loadTracks() {
             try {
-                const tracks = await fetch('http://localhost:3000/tracks?limit=566&page=1	').then(resp => resp.json()).then(data => data.data);
+                logEvent('Loading tracks with httpOnly cookies...');
+
+                const response = await fetch('http://localhost:3000/tracks?limit=566&page=1', {
+                    credentials: 'include' // Send httpOnly cookies
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const tracks = data.data;
 
                 const trackSelect = document.getElementById('trackSelect');
                 trackSelect.innerHTML = '<option value="">Select a track...</option>';
@@ -337,28 +710,32 @@
             }
         }
 
-        // Test direct audio streaming
-        function testDirectStream() {
+        // Test direct audio streaming with progressive loading
+        async function testDirectStream() {
             const trackId = document.getElementById('trackId').value;
+
             if (!trackId) {
                 alert('Please enter or select a track ID');
                 return;
             }
 
-            const streamUrl = `http://localhost:3000/tracks/stream/${trackId}`;
-            logEvent(`Testing direct stream: ${streamUrl}`);
-
-            audioPlayer.src = streamUrl;
-            audioPlayer.load();
+            try {
+                logEvent('Testing direct stream with progressive loading...');
+                await loadAndPlayAudioWithCookies(trackId, 0);
+            } catch (error) {
+                logEvent(`Error testing direct stream: ${error.message}`);
+            }
         }
 
-        // Test local file streaming
-        function testLocalStream() {
-            const streamUrl = 'http://localhost:3000/tracks/stream/e2fc7c24-4ddd-4aa4-8253-b819efcdf6f5';
-            logEvent(`Testing local stream: ${streamUrl}`);
-
-            audioPlayer.src = streamUrl;
-            audioPlayer.load();
+        // Test local file streaming with progressive loading
+        async function testLocalStream() {
+            try {
+                const trackId = 'e2fc7c24-4ddd-4aa4-8253-b819efcdf6f5'; // Test track ID
+                logEvent(`Testing local stream with progressive loading: ${trackId}`);
+                await loadAndPlayAudioWithCookies(trackId, 0);
+            } catch (error) {
+                logEvent(`Error testing local stream: ${error.message}`);
+            }
         }
     </script>
 </body>

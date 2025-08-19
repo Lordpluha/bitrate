@@ -127,7 +127,11 @@ export class TracksController {
         try {
           const url = new URL(track.audioUrl)
           // Extract the pathname and join with current working directory
-          filePath = path.join(process.cwd(), url.pathname)
+          // Remove leading slash from pathname to properly join with cwd
+          const relativePath = url.pathname.startsWith('/')
+            ? url.pathname.slice(1)
+            : url.pathname
+          filePath = path.join(process.cwd(), relativePath)
         } catch (error) {
           console.error(`Invalid URL in audioUrl: ${track.audioUrl}`, error)
           throw new NotFoundException('Invalid audio URL format')
@@ -151,15 +155,6 @@ export class TracksController {
       const stat = fs.statSync(filePath)
       const fileSize = stat.size
 
-      // Set CORS headers
-      res.set({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
-        'Access-Control-Allow-Headers': 'Range, Authorization',
-        'Access-Control-Expose-Headers':
-          'Content-Range, Accept-Ranges, Content-Length'
-      })
-
       if (range) {
         // Handle range requests for progressive download/streaming
         const parts = range.replace(/bytes=/, '').split('-')
@@ -177,13 +172,18 @@ export class TracksController {
           'Content-Type': 'audio/mpeg'
         })
 
-        return new StreamableFile(file)
+        return new StreamableFile(file, {
+          length: chunksize,
+          type: 'audio/mpeg'
+        })
       } else {
-        // Handle normal requests
+        // Handle normal requests - set proper headers to encourage Range requests
         res.set({
           'Content-Length': fileSize.toString(),
           'Content-Type': 'audio/mpeg',
-          'Accept-Ranges': 'bytes'
+          'Accept-Ranges': `bytes 0-0/${fileSize}`,
+          'Cache-Control': 'no-cache', // Prevent full caching
+          Connection: 'keep-alive'
         })
 
         const file = fs.createReadStream(filePath)
