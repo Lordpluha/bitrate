@@ -22,7 +22,7 @@ export const Header = () => {
   }, [])
 
   const onNavToggle = () => setIsNavActive(prev => !prev)
-  const closeNav = () => setIsNavActive(false)
+  const onCloseNav = () => setIsNavActive(false)
 
   return (
     <header
@@ -38,7 +38,7 @@ export const Header = () => {
               styles['mobile--flex'],
               isNav && styles['mobile--active']
             )}
-            onClick={closeNav}
+            onClick={onCloseNav}
           >
             <NavLinks />
             <ThemeSwitcher />
