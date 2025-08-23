@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import tailwindcssAnimate from 'tailwindcss-animate'
 
 const config = {
   darkMode: ['class'],
@@ -49,24 +48,10 @@ const config = {
         textForContrast: 'var(--color-text-for-contrast)',
         contrast: 'var(--color-contrast)',
         bgSecondaryRgb: 'var(--color-bg-secondary-rgb)'
-      },
-      keyframes: {
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' }
-        },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' }
-        }
-      },
-      animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
       }
     }
   },
-  plugins: [tailwindcssAnimate]
+  plugins: []
 } satisfies Config
 
 export default config

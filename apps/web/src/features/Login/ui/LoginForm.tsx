@@ -1,14 +1,15 @@
 'use client'
 
-import React, { useState } from 'react'
-import { z } from 'zod'
+import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { GoggleIcon, LogoIconSm, PasswordCheckIcon, PasswordNoCheckIcon } from '@shared/ui'
-import { Button, Input, Typography } from '@spotify/ui'
+import { useRouter } from 'next/navigation'
+import { GoggleIcon, LogoIconSm } from '@shared/ui'
+import { Button, Input, PasswordInput, Typography } from '@spotify/ui'
 import Link from 'next/link'
 import { SocialLoginDivider } from './SocialLoginDivider'
 import { useMutation } from '@shared/api'
+import { loginSchema, type LoginFormData } from '@shared/validation'
 import {
   Form,
   FormControl,
@@ -18,19 +19,19 @@ import {
   FormMessage,
 } from "@spotify/ui"
 
-const schema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
-})
-
-type FormData = z.infer<typeof schema>
-
 export const LoginForm = () => {
-  const { mutate } = useMutation("post", "/auth/login")
-  const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter()
+  const { mutate } = useMutation("post", "/auth/login", {
+    onSuccess: () => {
+      router.push('/main')
+    },
+    onError: (error) => {
+      console.error('Login error:', error)
+    }
+  })
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(schema),
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
     mode: 'onChange',
     defaultValues: {
       email: '',
@@ -38,7 +39,7 @@ export const LoginForm = () => {
     },
   })
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: LoginFormData) => {
     console.log(data)
     mutate({
       body: {
@@ -87,25 +88,11 @@ export const LoginForm = () => {
               <FormItem>
                 <FormLabel className="text-xl font-normal">Password</FormLabel>
                 <FormControl>
-                  <div className="relative">
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      variant="forContrast"
-                      {...field}
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-greyLight hover:text-textForContrast"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <PasswordNoCheckIcon />
-                      ) : (
-                        <PasswordCheckIcon />
-                      )}
-                    </button>
-                  </div>
+                  <PasswordInput
+                    placeholder="Password"
+                    variant="forContrast"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

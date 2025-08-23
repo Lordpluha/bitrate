@@ -1,14 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { GoggleIcon, LogoIconSm, PasswordCheckIcon, PasswordNoCheckIcon } from '@shared/ui'
-import { Button, Input, Typography } from '@spotify/ui'
+import { useRouter } from 'next/navigation'
+import { GoggleIcon, LogoIconSm } from '@shared/ui'
+import { Button, Input, PasswordInput, Typography } from '@spotify/ui'
 import Link from 'next/link'
 import { SocialLoginDivider } from './SocialLoginDivider'
 import { useMutation } from '@shared/api'
+import { registrationSchema, type RegistrationFormData } from '@shared/validation'
 import {
   Form,
   FormControl,
@@ -18,45 +19,19 @@ import {
   FormMessage,
 } from "@spotify/ui"
 
-const schema = z
-  .object({
-    fullName: z
-      .string()
-      .min(2, 'Too short')
-      .max(30, 'Max length is 30 characters')
-      .regex(/^[a-zA-Z\s]+$/, 'Only letters and spaces allowed'),
-    email: z.string().email('Invalid email address'),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters')
-      .refine((val) => /[a-z]/.test(val), {
-        message: 'Password must include at least one lowercase letter',
-      })
-      .refine((val) => /[A-Z]/.test(val), {
-        message: 'Password must include at least one uppercase letter',
-      })
-      .refine((val) => /\d/.test(val), {
-        message: 'Password must include at least one number',
-      })
-      .refine((val) => /[@$!%*?&]/.test(val), {
-        message: 'Password must include at least one special character',
-      }),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
-
-type FormData = z.infer<typeof schema>
-
 export const RegistrationForm = () => {
-  const { mutate } = useMutation("post", "/auth/registration")
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const router = useRouter()
+  const { mutate } = useMutation("post", "/auth/registration", {
+    onSuccess: () => {
+      router.push('/login')
+    },
+    onError: (error) => {
+      console.error('Registration error:', error)
+    }
+  })
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(schema),
+  const form = useForm<RegistrationFormData>({
+    resolver: zodResolver(registrationSchema),
     mode: 'onChange',
     defaultValues: {
       fullName: '',
@@ -66,7 +41,7 @@ export const RegistrationForm = () => {
     },
   })
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: RegistrationFormData) => {
     console.log(data)
     mutate({
       body: {
@@ -142,25 +117,11 @@ export const RegistrationForm = () => {
               <FormItem>
                 <FormLabel className="text-xl font-normal">Password</FormLabel>
                 <FormControl>
-                  <div className="relative">
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      variant="forContrast"
-                      {...field}
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-greyLight hover:text-textForContrast"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <PasswordNoCheckIcon />
-                      ) : (
-                        <PasswordCheckIcon />
-                      )}
-                    </button>
-                  </div>
+                  <PasswordInput
+                    placeholder="Password"
+                    variant="forContrast"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -174,25 +135,11 @@ export const RegistrationForm = () => {
               <FormItem>
                 <FormLabel className="text-xl font-normal">Confirm Password</FormLabel>
                 <FormControl>
-                  <div className="relative">
-                    <Input
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirm Password"
-                      variant="forContrast"
-                      {...field}
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-greyLight hover:text-textForContrast"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    >
-                      {showConfirmPassword ? (
-                        <PasswordNoCheckIcon />
-                      ) : (
-                        <PasswordCheckIcon />
-                      )}
-                    </button>
-                  </div>
+                  <PasswordInput
+                    placeholder="Confirm Password"
+                    variant="forContrast"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
