@@ -19,7 +19,9 @@ export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
       <SpotifyLogo
         className={clsx(
           'transition-[0.3s]',
-          color === 'dark' ? 'text-text fill-text' : 'text-textForContrast fill-textForContrast'
+          color === 'dark'
+            ? 'text-text fill-text'
+            : 'text-textForContrast fill-textForContrast'
         )}
       />
     </Link>
