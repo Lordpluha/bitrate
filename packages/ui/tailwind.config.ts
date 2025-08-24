@@ -48,6 +48,35 @@ const config = {
         textForContrast: 'var(--color-text-for-contrast)',
         contrast: 'var(--color-contrast)',
         bgSecondaryRgb: 'var(--color-bg-secondary-rgb)'
+      },
+      backgroundImage: {
+        'auth-spotify':
+          'linear-gradient(30deg, #0c7832, #601e7a, #121212, #820c17, #0c7832, #601e7a, #121212, #820c17)'
+      },
+      backgroundSize: {
+        'gradient-animated': '600% 600%'
+      },
+      animation: {
+        'gradient-shift': 'gradientShift 60s ease infinite'
+      },
+      keyframes: {
+        gradientShift: {
+          '0%': {
+            backgroundPosition: '0% 0%'
+          },
+          '25%': {
+            backgroundPosition: '100% 0%'
+          },
+          '50%': {
+            backgroundPosition: '100% 100%'
+          },
+          '75%': {
+            backgroundPosition: '0% 100%'
+          },
+          '100%': {
+            backgroundPosition: '0% 0%'
+          }
+        }
       }
     }
   },

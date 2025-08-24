@@ -7,5 +7,5 @@ export * from './label'
 export * from './form'
 export * from './textarea'
 export * from './carousel'
-
-
+export * from './sonner'
+export * from './separator'

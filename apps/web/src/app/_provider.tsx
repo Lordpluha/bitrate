@@ -8,6 +8,7 @@ import { theme } from '@shared/constants'
 import { AppStore, makeStore } from '@shared/redux'
 import { Provider as StoreProvider } from 'react-redux'
 import { usePersistedState } from '@shared/hooks'
+import { Toaster } from '@spotify/ui'
 
 export const Provider: FC<PropsWithChildren> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient())
@@ -27,12 +28,15 @@ export const Provider: FC<PropsWithChildren> = ({ children }) => {
     storeRef.current = makeStore()
   }
 
-  if (!hydrated) return null // не рендерим до загрузки localStorage
+  if (!hydrated) return null
 
   return (
     <QueryClientProvider client={queryClient}>
       <StoreProvider store={storeRef.current}>
-        <ThemeProvider value={{ theme, setTheme }}>{children}</ThemeProvider>
+        <ThemeProvider value={{ theme, setTheme }}>
+          <Toaster />
+          {children}
+        </ThemeProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </StoreProvider>
     </QueryClientProvider>

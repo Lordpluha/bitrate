@@ -38,7 +38,7 @@ export const Default: Story = {}
  */
 export const ForContrast: StoryObj = {
   render: args => (
-    <div className="bg-contrast p-4">
+    <div className='bg-contrast p-4'>
       <Input {...args} />
     </div>
   ),

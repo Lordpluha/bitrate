@@ -4,6 +4,7 @@ import plansConfig from '../config/plans.json'
 import Link from 'next/link'
 import { PlansList } from './PlanFeaturesList'
 import { Typography } from '@spotify/ui'
+import { ROUTES } from '@shared/routes'
 
 export type PlanCardProps = (typeof plansConfig)[number]
 
@@ -36,7 +37,7 @@ export const PlanCard: FC<PlanCardProps> = ({
 
       <div className='mt-auto mb-0 w-full flex items-start flex-col'>
         <Link
-          href='#'
+          href={ROUTES.plans}
           className={clsx(
             'text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-text font-medium border-solid border-2 border-text w-full block mb-4',
             !!highlight && '!border-greenMain bg-greenMain'
@@ -46,7 +47,7 @@ export const PlanCard: FC<PlanCardProps> = ({
         </Link>
         <Link
           className='hover:opacity-70 transition-[1s] text-left text-greyLight border-b-[1px] border-solid border-greyLight	'
-          href='#'
+          href={ROUTES.terms}
         >
           Terms and conditions apply
         </Link>

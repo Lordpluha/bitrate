@@ -48,7 +48,7 @@ export const Default: Story = {}
  */
 export const ForContrast: StoryObj = {
   render: args => (
-    <div className="bg-contrast p-4">
+    <div className='bg-contrast p-4'>
       <PasswordInput {...args} />
     </div>
   ),
@@ -94,7 +94,9 @@ export const WithHelperText: Story = {
         {...args}
         id='password-2'
       />
-      <p className='text-foreground/60 text-sm'>Must be at least 8 characters with special symbols.</p>
+      <p className='text-foreground/60 text-sm'>
+        Must be at least 8 characters with special symbols.
+      </p>
     </div>
   )
 }
@@ -172,10 +174,12 @@ export const WithCustomIcons: Story = {
         {...args}
         id='custom-password'
         placeholder='Enter password'
-        showIcon={<span style={{fontSize: '12px'}}>👀</span>}
-        hideIcon={<span style={{fontSize: '12px'}}>🙈</span>}
+        showIcon={<span style={{ fontSize: '12px' }}>👀</span>}
+        hideIcon={<span style={{ fontSize: '12px' }}>🙈</span>}
       />
-      <p className='text-foreground/60 text-sm'>Uses custom emoji icons instead of default eye icons.</p>
+      <p className='text-foreground/60 text-sm'>
+        Uses custom emoji icons instead of default eye icons.
+      </p>
     </div>
   )
 }

@@ -1,14 +1,13 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { FC, HTMLAttributes } from 'react'
 import footerLinks from '../config/footer-links.json'
-import { FacebookIcon, InstIcon, SpotifyLogoSecondary, TwitIcon } from '@shared/ui'
+import { FacebookIcon, InstIcon, Logo, TwitIcon } from '@shared/ui'
 
 export type FooterProps = HTMLAttributes<HTMLDivElement>
 
 type FooterColumn = {
   title: string
-  links: string[]
+  links: { label: string; href: string }[]
 }
 
 type SocialLink = {
@@ -33,24 +32,19 @@ export const Footer: FC<FooterProps> = props => {
         <div className='container'>
           <div className='grid grid-cols-[1fr_3fr_1fr] items-start max-md:grid-cols-1 max-md:gap-8 max-md:py-10'>
             <div className='flex items-center justify-start'>
-              <Link
-                href={'#'}
-                className='transition-[0.3s] hover:opacity-70'
-              >
-                <SpotifyLogoSecondary className='text-text fill-text' />
-            </Link>
+              <Logo />
             </div>
             <div className='grid gap-5 grid-cols-3 max-sm:grid-cols-1'>
               {columns.map((col, i) => (
                 <div key={i}>
                   <ul className='flex flex-col items-start gap-2 text-lg'>
-                    {col.links.map((text, j) => (
+                    {col.links.map(({ label, href }, j) => (
                       <li key={j}>
                         <Link
                           className='transition-[0.3s] hover:opacity-70'
-                          href='#'
+                          href={href}
                         >
-                          {text}
+                          {label}
                         </Link>
                       </li>
                     ))}
