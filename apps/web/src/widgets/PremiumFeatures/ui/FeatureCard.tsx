@@ -2,17 +2,17 @@ import { Typography } from '@spotify/ui'
 import { FC, ReactNode } from 'react'
 import { CalendarIcon, NoWifiIcon, PhoneIcon, MusicIcon } from '@shared/ui'
 
-type FeatureCardProps = {
-  icon: string
-  title: ReactNode
-  description: ReactNode
-}
-
 const iconMap = {
   CalendarIcon,
   NoWifiIcon,
   PhoneIcon,
   MusicIcon
+}
+
+type FeatureCardProps = {
+  icon: string
+  title: ReactNode
+  description: ReactNode
 }
 
 export const FeatureCard: FC<FeatureCardProps> = ({

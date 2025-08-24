@@ -2,31 +2,35 @@
 
 import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
-import { GoggleIcon, LogoIconSm } from '@shared/ui'
-import { Button, Input, PasswordInput, Typography } from '@spotify/ui'
-import Link from 'next/link'
-import { SocialLoginDivider } from './SocialLoginDivider'
-import { useMutation } from '@shared/api'
-import { loginSchema, type LoginFormData } from '@shared/validation'
+import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
 import {
+  Button,
+  Input,
+  PasswordInput,
+  toast,
+  Typography,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-} from "@spotify/ui"
+  FormMessage
+} from '@spotify/ui'
+import Link from 'next/link'
+import { useMutation } from '@shared/api'
+import { LoginFormData, loginSchema } from '../validation'
+import { ROUTES } from '@shared/routes'
 
 export const LoginForm = () => {
   const router = useRouter()
-  const { mutate } = useMutation("post", "/auth/login", {
+  const { mutate } = useMutation('post', '/auth/login', {
     onSuccess: () => {
       router.push('/main')
     },
-    onError: (error) => {
-      console.error('Login error:', error)
+    onError: error => {
+      toast.error(`Login error: ${JSON.stringify(error)}`)
     }
   })
 
@@ -35,44 +39,46 @@ export const LoginForm = () => {
     mode: 'onChange',
     defaultValues: {
       email: '',
-      password: '',
+      password: ''
     },
+    shouldFocusError: true
   })
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log(data)
+  const onSubmit: SubmitHandler<LoginFormData> = body => {
     mutate({
-      body: {
-        email: data.email,
-        password: data.password,
-      }
+      body
     })
   }
 
   return (
-    <div className="flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-textForContrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border">
-      <div className="flex flex-col items-center">
+    <div className='flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-textForContrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border'>
+      <div className='flex flex-col items-center'>
         <LogoIconSm />
-        <Typography.Heading5 className="mt-2 text-center">
+        <Typography.Heading5 className='mt-2 text-center'>
           Login to your account
         </Typography.Heading5>
-        <Typography.Paragraph className="text-center text-greyLight">
+        <Typography.Paragraph className='text-center text-greyLight'>
           Welcome back! Please sign in to continue.
         </Typography.Paragraph>
       </div>
 
-      <Form {...(form)}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='flex flex-col gap-2'
+        >
           <FormField
             control={form.control}
-            name="email"
+            name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xl font-normal">Email Address</FormLabel>
+                <FormLabel className='text-xl font-normal'>
+                  Email Address
+                </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Email Address"
-                    variant="forContrast"
+                    placeholder='Email Address'
+                    variant='forContrast'
                     {...field}
                   />
                 </FormControl>
@@ -83,14 +89,14 @@ export const LoginForm = () => {
 
           <FormField
             control={form.control}
-            name="password"
+            name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xl font-normal">Password</FormLabel>
+                <FormLabel className='text-xl font-normal'>Password</FormLabel>
                 <FormControl>
                   <PasswordInput
-                    placeholder="Password"
-                    variant="forContrast"
+                    placeholder='Password'
+                    variant='forContrast'
                     {...field}
                   />
                 </FormControl>
@@ -99,27 +105,35 @@ export const LoginForm = () => {
             )}
           />
 
-          <div className="text-right">
-            <Link
-              className="text-greenMain hover:opacity-70 text-sm"
-              href="/forgot-password"
-            >
-              Forgot password?
-            </Link>
-          </div>
+          <Link
+            className='text-right text-greenMain hover:opacity-70 text-sm'
+            href={ROUTES.auth.forgotPassword}
+          >
+            Forgot password?
+          </Link>
 
-          <div className="mt-4 flex flex-col items-stretch gap-4">
-            <Button variant="primary" className="rounded" type="submit">
+          <div className='mt-4 flex flex-col items-stretch gap-4'>
+            <Button
+              variant='primary'
+              className='rounded'
+              type='submit'
+            >
               Log In
             </Button>
-            <SocialLoginDivider />
-            <Button variant="forContrast" size="sm">
-              <GoggleIcon className="mr-2" />
+            <SocialsAuthDivider />
+            <Button
+              variant='forContrast'
+              size='sm'
+            >
+              <GoggleIcon className='mr-2' />
               <Typography.Paragraph>Continue with Google</Typography.Paragraph>
             </Button>
-            <p className="text-lg text-center">
+            <p className='text-lg text-center'>
               Don't have an account?{' '}
-              <Link className="font-bold" href={'registration'}>
+              <Link
+                className='font-bold'
+                href={ROUTES.auth.registration}
+              >
                 Sign up.
               </Link>
             </p>

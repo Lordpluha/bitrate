@@ -9,10 +9,12 @@ import clsx from 'clsx'
 import { ThemeSwitcher } from '@features/SwitchTheme'
 
 import styles from './Header.module.scss'
+import { useTheme } from '@shared/contexts'
 
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isNav, setIsNavActive] = useState(false)
+  const { theme } = useTheme()
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 0)
