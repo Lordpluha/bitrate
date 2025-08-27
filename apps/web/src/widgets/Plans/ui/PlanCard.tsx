@@ -19,11 +19,11 @@ export const PlanCard: FC<PlanCardProps> = ({
     <div
       className={clsx(
         'bg-bgSecondary h-full shadow-[0_6px_20px_1px_#1ed7604d] p-8 rounded-xl flex flex-col items-start justify-start text-text',
-        !!highlight && 'border-greenDark border-solid border-4'
+        !!highlight && 'border-green-600 border-solid border-4'
       )}
     >
-      <div className='border-blueMain border-solid border-[1px] py-2 px-4 rounded-lg mb-4'>
-        <span className='text-blueMain font-semibold text-xl leading-[1]'>
+      <div className='border-blue-500 border-solid border-[1px] py-2 px-4 rounded-lg mb-4'>
+        <span className='text-blue-500 font-semibold text-xl leading-[1]'>
           One-time plan available
         </span>
       </div>
@@ -40,13 +40,13 @@ export const PlanCard: FC<PlanCardProps> = ({
           href={ROUTES.plans}
           className={clsx(
             'text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-text font-medium border-solid border-2 border-text w-full block mb-4',
-            !!highlight && '!border-greenMain bg-greenMain'
+            !!highlight && '!border-green-500 bg-green-500'
           )}
         >
           View Plans
         </Link>
         <Link
-          className='hover:opacity-70 transition-[1s] text-left text-greyLight border-b-[1px] border-solid border-greyLight	'
+          className='hover:opacity-70 transition-[1s] text-left text-grey-500 border-b-[1px] border-solid border-grey-500	'
           href={ROUTES.terms}
         >
           Terms and conditions apply

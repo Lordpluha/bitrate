@@ -34,9 +34,9 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 
 /**
- * The ForContrast for contrast bg
+ * The contrast for contrast bg
  */
-export const ForContrast: StoryObj = {
+export const contrast: StoryObj = {
   render: args => (
     <div className='bg-contrast p-4'>
       <Input {...args} />
@@ -45,7 +45,7 @@ export const ForContrast: StoryObj = {
   args: {
     placeholder: 'Email Address',
     type: 'email',
-    variant: 'forContrast'
+    variant: 'contrast'
   }
 }
 

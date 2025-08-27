@@ -9,8 +9,8 @@ const inputVariants = cva(
       variant: {
         default:
           'border-slate-200 bg-white text-slate-900 focus-visible:ring-slate-950 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
-        forContrast:
-          'border-greyLight bg-contrast text-textForContrast focus-visible:ring-slate-950'
+        contrast:
+          'border-grey-500 bg-contrast text-textContrast focus-visible:ring-slate-950'
       }
     },
     defaultVariants: {

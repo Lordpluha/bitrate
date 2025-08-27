@@ -6,7 +6,7 @@ export const SocialsAuthDivider = () => (
       orientation='horizontal'
       className='flex-1'
     />
-    <span className='text-greyLight text-sm'>or</span>
+    <span className='text-grey-500 text-sm'>or</span>
     <Separator
       orientation='horizontal'
       className='flex-1'

@@ -24,7 +24,7 @@ export const Welcome = () => {
       </div>
       <div
         className={clsx(
-          'relative flex-1 p-20 pt-[160px] rounded-3xl mt-2 flex flex-col items-center border-greenMain border-solid border-2 overflow-hidden',
+          'relative flex-1 p-20 pt-[160px] rounded-3xl mt-2 flex flex-col items-center border-green-500 border-solid border-2 overflow-hidden',
           styles.bgHeroGradient
         )}
       >

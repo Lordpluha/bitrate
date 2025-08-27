@@ -1,8 +1,7 @@
 'use client'
 
 import React from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver, SubmitHandler, useForm } from '@spotify/ui'
 import { useRouter } from 'next/navigation'
 import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
 import {
@@ -51,13 +50,13 @@ export const LoginForm = () => {
   }
 
   return (
-    <div className='flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-textForContrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border'>
+    <div className='flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-textContrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border'>
       <div className='flex flex-col items-center'>
         <LogoIconSm />
         <Typography.Heading5 className='mt-2 text-center'>
           Login to your account
         </Typography.Heading5>
-        <Typography.Paragraph className='text-center text-greyLight'>
+        <Typography.Paragraph className='text-center text-grey-500'>
           Welcome back! Please sign in to continue.
         </Typography.Paragraph>
       </div>
@@ -78,7 +77,7 @@ export const LoginForm = () => {
                 <FormControl>
                   <Input
                     placeholder='Email Address'
-                    variant='forContrast'
+                    variant='contrast'
                     {...field}
                   />
                 </FormControl>
@@ -96,7 +95,7 @@ export const LoginForm = () => {
                 <FormControl>
                   <PasswordInput
                     placeholder='Password'
-                    variant='forContrast'
+                    variant='contrast'
                     {...field}
                   />
                 </FormControl>
@@ -106,7 +105,7 @@ export const LoginForm = () => {
           />
 
           <Link
-            className='text-right text-greenMain hover:opacity-70 text-sm'
+            className='text-right text-green-500 hover:opacity-70 text-sm'
             href={ROUTES.auth.forgotPassword}
           >
             Forgot password?
@@ -118,12 +117,11 @@ export const LoginForm = () => {
               className='rounded'
               type='submit'
             >
-              Log In
+              Log in
             </Button>
             <SocialsAuthDivider />
             <Button
-              variant='forContrast'
-              size='sm'
+              variant='contrast'
             >
               <GoggleIcon className='mr-2' />
               <Typography.Paragraph>Continue with Google</Typography.Paragraph>

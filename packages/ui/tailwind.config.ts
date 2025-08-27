@@ -36,18 +36,75 @@ const config = {
     },
     extend: {
       colors: {
-        greenMain: 'var(--color-green-main)',
-        greenDark: 'var(--color-green-dark)',
-        blueMain: 'var(--color-blue-main)',
-        greyLight: 'var(--color-grey-light)',
-        white: 'var(--color-white)',
-        black: 'var(--color-black)',
+        green: {
+          500: 'var(--color-green-500)',
+          600: 'var(--color-green-600)',
+        },
+        blue: {
+          500: 'var(--color-blue-500)',
+        },
+        grey: {
+          500: 'var(--color-grey-500)',
+        },
+        white: {
+          DEFAULT: 'var(--color-white)',
+          100: 'var(--color-white-100)'
+        },
+        black: {
+          DEFAULT: 'var(--color-black)',
+          900: 'var(--color-black-900)',
+          800: 'var(--color-black-800)'
+        },
+
+
         bg: 'var(--color-bg)',
         bgSecondary: 'var(--color-bg-secondary)',
         text: 'var(--color-text)',
-        textForContrast: 'var(--color-text-for-contrast)',
+        textContrast: 'var(--color-text-contrast)',
         contrast: 'var(--color-contrast)',
-        bgSecondaryRgb: 'var(--color-bg-secondary-rgb)'
+        bgSecondaryRgb: 'var(--color-bg-secondary-rgb)',
+
+
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))'
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))'
+        },
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))'
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))'
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))'
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))'
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))'
+        },
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        chart: {
+          '1': 'hsl(var(--chart-1))',
+          '2': 'hsl(var(--chart-2))',
+          '3': 'hsl(var(--chart-3))',
+          '4': 'hsl(var(--chart-4))',
+          '5': 'hsl(var(--chart-5))'
+        }
       },
       backgroundImage: {
         'auth-spotify':

@@ -1,8 +1,7 @@
 'use client'
 
 import React from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { zodResolver, useForm } from '@spotify/ui'
 import { useRouter } from 'next/navigation'
 import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
 import Link from 'next/link'
@@ -57,23 +56,23 @@ export const RegistrationForm = () => {
   }
 
   return (
-    <div className='flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-textForContrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border'>
+    <div className='flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-textContrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border'>
       <div className='flex flex-col items-center'>
         <LogoIconSm />
         <Typography.Heading5 className='mt-2 text-center'>
           Create your account for free and start listening
         </Typography.Heading5>
-        <Typography.Paragraph className='text-center text-greyLight'>
+        <Typography.Paragraph className='text-center text-grey-500'>
           By clicking on sign-up, you agree to the <br />
           <Link
-            className='text-greenMain hover:opacity-70'
+            className='text-green-500 hover:opacity-70'
             href={ROUTES.terms}
           >
             Spotify Terms and Conditions
           </Link>{' '}
           and{' '}
           <Link
-            className='text-greenMain hover:opacity-70'
+            className='text-green-500 hover:opacity-70'
             href={ROUTES.privacy}
           >
             Privacy Policy
@@ -96,7 +95,7 @@ export const RegistrationForm = () => {
                 <FormControl>
                   <Input
                     placeholder='Full name'
-                    variant='forContrast'
+                    variant='contrast'
                     {...field}
                   />
                 </FormControl>
@@ -116,7 +115,7 @@ export const RegistrationForm = () => {
                 <FormControl>
                   <Input
                     placeholder='Email Address'
-                    variant='forContrast'
+                    variant='contrast'
                     {...field}
                   />
                 </FormControl>
@@ -134,7 +133,7 @@ export const RegistrationForm = () => {
                 <FormControl>
                   <PasswordInput
                     placeholder='Password'
-                    variant='forContrast'
+                    variant='contrast'
                     {...field}
                   />
                 </FormControl>
@@ -154,7 +153,7 @@ export const RegistrationForm = () => {
                 <FormControl>
                   <PasswordInput
                     placeholder='Confirm Password'
-                    variant='forContrast'
+                    variant='contrast'
                     {...field}
                   />
                 </FormControl>
@@ -172,10 +171,7 @@ export const RegistrationForm = () => {
               Register
             </Button>
             <SocialsAuthDivider />
-            <Button
-              variant='forContrast'
-              size='sm'
-            >
+            <Button variant='contrast'>
               <GoggleIcon className='mr-2' />
               <Typography.Paragraph>Continue with Google</Typography.Paragraph>
             </Button>

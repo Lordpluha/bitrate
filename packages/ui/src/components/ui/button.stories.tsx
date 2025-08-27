@@ -85,12 +85,12 @@ export const Primary: Story = {
 }
 
 /**
- * Use the `ForContrast` button where bg is contrast
+ * Use the `contrast` button where bg is contrast
  */
 
-export const ForContrast: Story = {
+export const contrast: Story = {
   args: {
-    variant: 'forContrast'
+    variant: 'contrast'
   }
 }
 

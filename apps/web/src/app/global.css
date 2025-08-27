@@ -8,12 +8,15 @@
   }
 
   :root {
-    --color-green-main: #1ed760;
-    --color-green-dark: #0e672e;
-    --color-blue-main: #003480;
-    --color-grey-light: #a7a7a7;
+    --color-green-500: #1ed760;
+    --color-green-600: #0e672e;
+    --color-blue-500: #003480;
+    --color-grey-500: #a7a7a7;
     --color-white: #fff;
     --color-black: #000;
+    --color-black-900: #0a0a0a;
+    --color-black-800: #121212;
+    --color-white-100: #f7f7f7;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -41,38 +44,12 @@
     --radius: 0.5rem;
   }
 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
 
   :root.dark {
     --color-bg: #0a0a0a;
     --color-bg-secondary: #121212;
     --color-text: #fff;
-    --color-text-for-contrast: #000;
+    --color-text-contrast: #000;
     --color-contrast: #fff;
     --color-bg-secondary-rgb: 10 10 10;
   }
@@ -82,7 +59,7 @@
     --color-bg-secondary: #f7f7f7;
     --color-text: #0a0a0a;
     --color-contrast: #000;
-    --color-text-for-contrast: #fff;
+    --color-text-contrast: #fff;
     --color-bg-secondary-rgb: 247 247 247;
   }
 }

@@ -46,7 +46,7 @@ export const Default: Story = {}
 /**
  * Password input for contrast backgrounds (e.g., dark forms).
  */
-export const ForContrast: StoryObj = {
+export const contrast: StoryObj = {
   render: args => (
     <div className='bg-contrast p-4'>
       <PasswordInput {...args} />
@@ -54,7 +54,7 @@ export const ForContrast: StoryObj = {
   ),
   args: {
     placeholder: 'Password',
-    variant: 'forContrast'
+    variant: 'contrast'
   }
 }
 

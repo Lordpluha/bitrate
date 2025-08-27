@@ -5,7 +5,7 @@ export const AuthButtons = () => (
   <div className='flex items-center gap-4'>
     <Link
       href={ROUTES.auth.login}
-      className='login text-xl py-2 px-6 rounded-3xl bg-greenMain hover:opacity-70 transition-[1s] text-primary font-medium'
+      className='login text-xl py-2 px-6 rounded-3xl bg-green-500 hover:opacity-70 transition-[1s] text-primary font-medium'
     >
       Login
     </Link>
