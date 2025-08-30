@@ -1,5 +1,6 @@
-import { Typography } from '@spotify/ui'
 import Image from 'next/image'
+
+import { Typography } from '@spotify/ui'
 
 export const QRcode = () => {
   return (

@@ -1,14 +1,16 @@
-import Image from 'next/image'
-import Link from 'next/link'
 import { FC, HTMLAttributes } from 'react'
+
+import Link from 'next/link'
+
+import { FacebookIcon, InstIcon, Logo, TwitIcon } from '@shared/ui'
+
 import footerLinks from '../config/footer-links.json'
-import { FacebookIcon, InstIcon, TwitIcon } from '@shared/ui'
 
 export type FooterProps = HTMLAttributes<HTMLDivElement>
 
 type FooterColumn = {
   title: string
-  links: string[]
+  links: { label: string; href: string }[]
 }
 
 type SocialLink = {
@@ -29,31 +31,23 @@ export const Footer: FC<FooterProps> = props => {
 
   return (
     <footer {...props}>
-      <div className='container rounded-3xl bg-bgSecondary py-20'>
+      <div className='bg-bgSecondary py-20'>
         <div className='container'>
           <div className='grid grid-cols-[1fr_3fr_1fr] items-start max-md:grid-cols-1 max-md:gap-8 max-md:py-10'>
-            <Link
-              href={'#'}
-              className='transition-[0.3s] hover:opacity-70'
-            >
-              <Image
-                src={'/images/footer-logo.png'}
-                alt=''
-                width={111}
-                height={36}
-              />
-            </Link>
+            <div className='flex items-center justify-start'>
+              <Logo />
+            </div>
             <div className='grid gap-5 grid-cols-3 max-sm:grid-cols-1'>
               {columns.map((col, i) => (
                 <div key={i}>
                   <ul className='flex flex-col items-start gap-2 text-lg'>
-                    {col.links.map((text, j) => (
+                    {col.links.map(({ label, href }, j) => (
                       <li key={j}>
                         <Link
                           className='transition-[0.3s] hover:opacity-70'
-                          href='#'
+                          href={href}
                         >
-                          {text}
+                          {label}
                         </Link>
                       </li>
                     ))}

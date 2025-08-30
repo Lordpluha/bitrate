@@ -1,12 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { ArtistsModule } from './artists.module'
-import { ArtistsController } from './artists.controller'
-import { ArtistsService } from './artists.service'
-import { PrismaService } from '../prisma/prisma.service'
-import { JwtService } from '@nestjs/jwt'
-import { AuthGuard } from '../auth/auth.guard'
 import { Reflector } from '@nestjs/core'
+import { JwtService } from '@nestjs/jwt'
+import { Test, TestingModule } from '@nestjs/testing'
+
+import { AuthGuard } from '../auth/auth.guard'
 import { TokenService } from '../auth/token.service'
+import { PrismaService } from '../prisma/prisma.service'
+
+import { ArtistsController } from './artists.controller'
+import { ArtistsModule } from './artists.module'
+import { ArtistsService } from './artists.service'
 
 describe('ArtistsModule', () => {
   let module: TestingModule

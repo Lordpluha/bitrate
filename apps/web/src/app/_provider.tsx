@@ -1,13 +1,15 @@
 'use client'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThemeProvider } from '@shared/contexts'
-import { theme } from '@shared/constants'
-import { AppStore, makeStore } from '@shared/redux'
 import { Provider as StoreProvider } from 'react-redux'
+
+import { theme } from '@shared/constants'
+import { ThemeProvider } from '@shared/contexts'
 import { usePersistedState } from '@shared/hooks'
+import { AppStore, makeStore } from '@shared/redux'
+import { Toaster } from '@spotify/ui'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 export const Provider: FC<PropsWithChildren> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient())
@@ -27,12 +29,15 @@ export const Provider: FC<PropsWithChildren> = ({ children }) => {
     storeRef.current = makeStore()
   }
 
-  if (!hydrated) return null // не рендерим до загрузки localStorage
+  if (!hydrated) return null
 
   return (
     <QueryClientProvider client={queryClient}>
       <StoreProvider store={storeRef.current}>
-        <ThemeProvider value={{ theme, setTheme }}>{children}</ThemeProvider>
+        <ThemeProvider value={{ theme, setTheme }}>
+          <Toaster />
+          {children}
+        </ThemeProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </StoreProvider>
     </QueryClientProvider>

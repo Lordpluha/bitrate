@@ -1,10 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
+import { Test, TestingModule } from '@nestjs/testing'
+
 import { PrismaService } from '../prisma/prisma.service'
-import { AlbumsModule } from './albums.module'
-import { AlbumsService } from './albums.service'
+
 import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'
+
+import { AlbumsModule } from './albums.module'
+import { AlbumsService } from './albums.service'
 
 describe('Albums Integration Tests', () => {
   let app: INestApplication

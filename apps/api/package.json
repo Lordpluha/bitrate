@@ -37,7 +37,7 @@
     "seed:relations": "ts-node -e \"import('./src/seeds/tracks.seed').then(({seedTrackAlbumRelations}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedTrackAlbumRelations(prisma).then(() => prisma.$disconnect());})\"",
     "seed:likes": "ts-node -e \"import('./src/seeds/users.seed').then(({seedUserLikedTracks}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedUserLikedTracks(prisma).then(() => prisma.$disconnect());})\""
   },
-  "prettier": "@spotify/prettier",
+  "prettier": "@spotify/prettier/without-sort",
   "dependencies": {
     "@nestjs/common": "^11.1.6",
     "@nestjs/config": "^4.0.2",

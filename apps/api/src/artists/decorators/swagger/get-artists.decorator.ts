@@ -1,9 +1,9 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { HttpStatus, applyDecorators } from '@nestjs/common'
 import {
-  ApiOperation,
   ApiConsumes,
-  ApiResponse,
-  ApiQuery
+  ApiOperation,
+  ApiQuery,
+  ApiResponse
 } from '@nestjs/swagger'
 import { ArtistEntity } from 'src/artists/entities'
 

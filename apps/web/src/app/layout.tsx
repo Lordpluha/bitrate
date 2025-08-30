@@ -1,10 +1,12 @@
+import { PropsWithChildren } from 'react'
+
 import type { Metadata } from 'next'
 import { Source_Sans_3 } from 'next/font/google'
-import { PropsWithChildren } from 'react'
-import { Provider } from './_provider'
-import { ThemeScript } from '@shared/ui/ThemeScripts'
 
+import { ThemeScript } from '@shared/utils'
 import '@spotify/ui/globals.css'
+
+import { Provider } from './_provider'
 import './global.css'
 
 const sourceSans = Source_Sans_3({
@@ -46,6 +48,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html
       lang={lang}
       suppressHydrationWarning
+      data-scroll-behavior='smooth'
     >
       <head>
         <ThemeScript />

@@ -1,12 +1,14 @@
 'use client'
 
-import { AuthButtons } from './AuthButtons/AuthButtons'
-import { Logo } from '@shared/ui'
-import { NavLinks } from './NavLink/NavLinks'
 import { useEffect, useState } from 'react'
-import { AlignJustify, X } from 'lucide-react'
-import clsx from 'clsx'
+
 import { ThemeSwitcher } from '@features/SwitchTheme'
+import { Logo } from '@shared/ui'
+import clsx from 'clsx'
+import { AlignJustify, X } from 'lucide-react'
+
+import { AuthButtons } from './AuthButtons/AuthButtons'
+import { NavLinks } from './NavLink/NavLinks'
 
 import styles from './Header.module.scss'
 
@@ -22,6 +24,7 @@ export const Header = () => {
   }, [])
 
   const onNavToggle = () => setIsNavActive(prev => !prev)
+  const onCloseNav = () => setIsNavActive(false)
 
   return (
     <header
@@ -37,6 +40,7 @@ export const Header = () => {
               styles['mobile--flex'],
               isNav && styles['mobile--active']
             )}
+            onClick={onCloseNav}
           >
             <NavLinks />
             <ThemeSwitcher />

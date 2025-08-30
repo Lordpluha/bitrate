@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import tailwindcssAnimate from 'tailwindcss-animate'
 
 const config = {
   darkMode: ['class'],
@@ -37,34 +36,108 @@ const config = {
     },
     extend: {
       colors: {
-        greenMain: 'var(--color-green-main)',
-        greenDark: 'var(--color-green-dark)',
-        blueMain: 'var(--color-blue-main)',
-        greyLight: 'var(--color-grey-light)',
-        white: 'var(--color-white)',
-        black: 'var(--color-black)',
+        green: {
+          500: 'var(--color-green-500)',
+          600: 'var(--color-green-600)',
+        },
+        blue: {
+          500: 'var(--color-blue-500)',
+        },
+        grey: {
+          500: 'var(--color-grey-500)',
+        },
+        white: {
+          DEFAULT: 'var(--color-white)',
+          100: 'var(--color-white-100)'
+        },
+        black: {
+          DEFAULT: 'var(--color-black)',
+          900: 'var(--color-black-900)',
+          800: 'var(--color-black-800)'
+        },
+
+
         bg: 'var(--color-bg)',
         bgSecondary: 'var(--color-bg-secondary)',
         text: 'var(--color-text)',
-        bgSecondaryRgb: 'var(--color-bg-secondary-rgb)'
-      },
-      keyframes: {
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' }
+        textContrast: 'var(--color-text-contrast)',
+        contrast: 'var(--color-contrast)',
+        bgSecondaryRgb: 'var(--color-bg-secondary-rgb)',
+
+
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))'
         },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' }
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))'
+        },
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))'
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))'
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))'
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))'
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))'
+        },
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        chart: {
+          '1': 'hsl(var(--chart-1))',
+          '2': 'hsl(var(--chart-2))',
+          '3': 'hsl(var(--chart-3))',
+          '4': 'hsl(var(--chart-4))',
+          '5': 'hsl(var(--chart-5))'
         }
       },
+      backgroundImage: {
+        'auth-spotify':
+          'linear-gradient(30deg, #0c7832, #601e7a, #121212, #820c17, #0c7832, #601e7a, #121212, #820c17)'
+      },
+      backgroundSize: {
+        'gradient-animated': '600% 600%'
+      },
       animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
+        'gradient-shift': 'gradientShift 60s ease infinite'
+      },
+      keyframes: {
+        gradientShift: {
+          '0%': {
+            backgroundPosition: '0% 0%'
+          },
+          '25%': {
+            backgroundPosition: '100% 0%'
+          },
+          '50%': {
+            backgroundPosition: '100% 100%'
+          },
+          '75%': {
+            backgroundPosition: '0% 100%'
+          },
+          '100%': {
+            backgroundPosition: '0% 0%'
+          }
+        }
       }
     }
   },
-  plugins: [tailwindcssAnimate]
+  plugins: []
 } satisfies Config
 
 export default config

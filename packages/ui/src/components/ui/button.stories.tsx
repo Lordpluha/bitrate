@@ -76,6 +76,25 @@ export const Destructive: Story = {
 }
 
 /**
+ * Use the `primary` button where primary button is needed
+ */
+export const Primary: Story = {
+  args: {
+    variant: 'primary'
+  }
+}
+
+/**
+ * Use the `contrast` button where bg is contrast
+ */
+
+export const contrast: Story = {
+  args: {
+    variant: 'contrast'
+  }
+}
+
+/**
  * Use the `link` button to reduce emphasis on tertiary actions, such as
  * hyperlink or navigation, providing a text-only interactive element.
  */

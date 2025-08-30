@@ -1,5 +1,6 @@
-import { AlbumEntity } from './album.entity'
 import { Album } from '@prisma/client'
+
+import { AlbumEntity } from './album.entity'
 
 describe('AlbumEntity', () => {
   it('should create a valid album entity', () => {

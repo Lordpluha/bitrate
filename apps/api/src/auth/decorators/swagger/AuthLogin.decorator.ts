@@ -1,10 +1,11 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { HttpStatus, applyDecorators } from '@nestjs/common'
 import {
-  ApiOperation,
-  ApiConsumes,
   ApiBody,
+  ApiConsumes,
+  ApiOperation,
   ApiResponse
 } from '@nestjs/swagger'
+
 import { LoginDto } from '../../dtos'
 
 export function AuthLoginSwagger() {

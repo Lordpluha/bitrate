@@ -1,19 +1,18 @@
 'use client'
 
 import * as React from 'react'
-import * as LabelPrimitive from '@radix-ui/react-label'
-import { Slot } from '@radix-ui/react-slot'
 import {
   Controller,
-  FormProvider,
-  useFormContext,
   type ControllerProps,
   type FieldPath,
-  type FieldValues
+  type FieldValues,
+  FormProvider,
+  useFormContext
 } from 'react-hook-form'
 
-import { cn } from '@spotify/ui/lib/utils'
+import * as LabelPrimitive from '@radix-ui/react-label'
 import { Label } from '@spotify/ui/components/ui/label'
+import { cn } from '@spotify/ui/lib/utils'
 
 const Form = FormProvider
 
@@ -91,7 +90,7 @@ const FormItem = React.forwardRef<
 FormItem.displayName = 'FormItem'
 
 const FormLabel = React.forwardRef<
-  React.ComponentRef<typeof LabelPrimitive.Root>,
+  React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
   const { error, formItemId } = useFormField()
@@ -108,24 +107,25 @@ const FormLabel = React.forwardRef<
 FormLabel.displayName = 'FormLabel'
 
 const FormControl = React.forwardRef<
-  React.ComponentRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
->(({ ...props }, ref) => {
+  any,
+  React.HTMLAttributes<any> & { children: React.ReactElement }
+>(({ children, ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
-  return (
-    <Slot
-      ref={ref}
-      id={formItemId}
-      aria-describedby={
-        !error
-          ? `${formDescriptionId}`
-          : `${formDescriptionId} ${formMessageId}`
-      }
-      aria-invalid={!!error}
-      {...props}
-    />
-  )
+  const childProps = {
+    id: formItemId,
+    'aria-describedby': !error
+      ? `${formDescriptionId}`
+      : `${formDescriptionId} ${formMessageId}`,
+    'aria-invalid': !!error,
+    ...props
+  }
+
+  if (ref) {
+    ;(childProps as any).ref = ref
+  }
+
+  return React.cloneElement(children, childProps)
 })
 FormControl.displayName = 'FormControl'
 
@@ -161,10 +161,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn(
-        'text-sm font-medium text-red-500 dark:text-red-900',
-        className
-      )}
+      className={cn('text-sm font-medium text-red-600', className)}
       {...props}
     >
       {body}

@@ -1,6 +1,8 @@
 import Link from 'next/link'
-import styles from './NavLink.module.scss'
+
 import links from '../../config/nav-links.json'
+
+import styles from './NavLink.module.scss'
 
 export const NavLinks = () => (
   <>

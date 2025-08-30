@@ -1,5 +1,5 @@
-import { expect, userEvent } from 'storybook/test'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, userEvent } from 'storybook/test'
 
 import { Button } from './button'
 import { Input } from './input'
@@ -32,6 +32,22 @@ type Story = StoryObj<typeof meta>
  * The default form of the input field.
  */
 export const Default: Story = {}
+
+/**
+ * The contrast for contrast bg
+ */
+export const contrast: StoryObj = {
+  render: args => (
+    <div className='bg-contrast p-4'>
+      <Input {...args} />
+    </div>
+  ),
+  args: {
+    placeholder: 'Email Address',
+    type: 'email',
+    variant: 'contrast'
+  }
+}
 
 /**
  * Use the `disabled` prop to make the input non-interactive and appears faded,

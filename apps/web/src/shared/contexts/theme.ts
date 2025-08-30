@@ -1,7 +1,8 @@
 'use client'
 
-import { theme } from '@shared/constants'
 import { createContext, useContext } from 'react'
+
+import { theme } from '@shared/constants'
 
 export type ThemeContextType = {
   theme: theme

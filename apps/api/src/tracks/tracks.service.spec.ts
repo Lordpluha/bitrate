@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { TracksService } from './tracks.service'
 import { PrismaService } from 'src/prisma/prisma.service'
+
 import { CreateTrackDto } from './dtos/create-track.dto'
+
+import { TracksService } from './tracks.service'
 
 describe('TracksService', () => {
   let service: TracksService

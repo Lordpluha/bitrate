@@ -1,19 +1,31 @@
-import Link from 'next/link'
-import Image from 'next/image'
+import { FC } from 'react'
 
-export const Logo = () => {
+import Link from 'next/link'
+
+import { theme } from '@shared/constants'
+import { ROUTES } from '@shared/routes'
+import clsx from 'clsx'
+
+import { SpotifyLogo } from '../icons'
+
+export type LogoProps = {
+  color?: theme
+}
+
+export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
   return (
     <Link
-      href='/'
+      href={ROUTES.landing}
       aria-label='Spotify Home'
-      className='inline-block'
+      className='transition-[0.3s] hover:opacity-70'
     >
-      <Image
-        src='/logo.webp'
-        onError={e => (e.currentTarget.srcset = '/logo.png')}
-        width={111}
-        height={36}
-        alt='Spotify logo'
+      <SpotifyLogo
+        className={clsx(
+          'transition-[0.3s]',
+          color === 'dark'
+            ? 'text-text fill-text'
+            : 'text-textContrast fill-textContrast'
+        )}
       />
     </Link>
   )

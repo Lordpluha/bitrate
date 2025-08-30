@@ -1,13 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { Readable } from 'stream'
 import { Reflector } from '@nestjs/core'
 import { JwtService } from '@nestjs/jwt'
+import { Test, TestingModule } from '@nestjs/testing'
+import { Readable } from 'stream'
+
+import { TokenService } from '../auth/token.service'
+import { PrismaService } from '../prisma/prisma.service'
+
+import { UpdateUserDto } from './dtos'
+import { UserEntity } from './entities'
 import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
-import { UserEntity } from './entities'
-import { UpdateUserDto } from './dtos'
-import { PrismaService } from '../prisma/prisma.service'
-import { TokenService } from '../auth/token.service'
 
 interface RequestWithUser extends Request {
   user?: UserEntity
