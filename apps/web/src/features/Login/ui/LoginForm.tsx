@@ -29,7 +29,7 @@ export const LoginForm = () => {
   const router = useRouter()
   const { mutate } = useMutation('post', '/auth/login', {
     onSuccess: () => {
-      router.push('/main')
+      router.push(ROUTES.main)
     },
     onError: error => {
       toast.error(`Login error: ${JSON.stringify(error)}`)
