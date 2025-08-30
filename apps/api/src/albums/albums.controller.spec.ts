@@ -1,15 +1,18 @@
+import { Reflector } from '@nestjs/core'
+import { JwtService } from '@nestjs/jwt'
 import { Test, TestingModule } from '@nestjs/testing'
+
+import { AuthGuard } from '../auth/auth.guard'
+import { TokenService } from '../auth/token.service'
+import { PrismaService } from '../prisma/prisma.service'
+import { UserEntity } from '../users/entities'
+
+import { CreateAlbumDto } from './dtos/create-album.dto'
+import { UpdateAlbumDto } from './dtos/update-album.dto'
+
 import { AlbumsController } from './albums.controller'
 import { AlbumsService } from './albums.service'
 import { AlbumEntity } from './entities'
-import { CreateAlbumDto } from './dtos/create-album.dto'
-import { UpdateAlbumDto } from './dtos/update-album.dto'
-import { UserEntity } from '../users/entities'
-import { JwtService } from '@nestjs/jwt'
-import { Reflector } from '@nestjs/core'
-import { AuthGuard } from '../auth/auth.guard'
-import { PrismaService } from '../prisma/prisma.service'
-import { TokenService } from '../auth/token.service'
 
 interface MockRequest extends Partial<Request> {
   user: UserEntity

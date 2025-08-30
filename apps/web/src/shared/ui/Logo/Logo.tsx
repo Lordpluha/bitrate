@@ -1,9 +1,12 @@
-import Link from 'next/link'
-import { SpotifyLogo } from '../icons'
 import { FC } from 'react'
-import clsx from 'clsx'
+
+import Link from 'next/link'
+
 import { theme } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
+import clsx from 'clsx'
+
+import { SpotifyLogo } from '../icons'
 
 export type LogoProps = {
   color?: theme

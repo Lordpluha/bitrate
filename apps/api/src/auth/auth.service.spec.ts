@@ -1,12 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { AuthService } from './auth.service'
-import { UsersService } from '../users/users.service'
-import { JwtService } from '@nestjs/jwt'
-import { PrismaService } from '../prisma/prisma.service'
-import { TokenService } from './token.service'
 import { ConflictException, UnauthorizedException } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { Test, TestingModule } from '@nestjs/testing'
+
+import { PrismaService } from '../prisma/prisma.service'
 import { UserEntity } from '../users/entities'
+import { UsersService } from '../users/users.service'
+
+import { AuthService } from './auth.service'
 import { RegistrationDto } from './dtos'
+import { TokenService } from './token.service'
 
 describe('AuthService', () => {
   let service: AuthService

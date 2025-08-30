@@ -1,6 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
+import { Test, TestingModule } from '@nestjs/testing'
+
 import { PrismaService } from '../prisma/prisma.service'
+
 import { ArtistsModule } from './artists.module'
 import { ArtistsService } from './artists.service'
 import { CreateArtistDto } from './dtos'

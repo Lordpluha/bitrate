@@ -1,5 +1,6 @@
-import { CreateAlbumDto, CreateAlbumSchema } from './create-album.dto'
 import { z } from 'zod'
+
+import { CreateAlbumDto, CreateAlbumSchema } from './create-album.dto'
 
 describe('CreateAlbumDto', () => {
   describe('CreateAlbumSchema validation', () => {

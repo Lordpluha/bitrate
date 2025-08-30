@@ -1,8 +1,8 @@
 'use client'
 
+import type { ApiPaths } from '@spotify/contracts'
 import createFetchClient from 'openapi-fetch'
 import createClient from 'openapi-react-query'
-import type { ApiPaths } from '@spotify/contracts'
 
 /**
  * Fetch client for the API.

@@ -1,7 +1,8 @@
 'use client'
 
-import { Carousel, CarouselContent, CarouselItem } from '@spotify/ui'
 import { useRef } from 'react'
+
+import { Carousel, CarouselContent, CarouselItem } from '@spotify/ui'
 import Autoplay from 'embla-carousel-autoplay'
 
 const slides = [

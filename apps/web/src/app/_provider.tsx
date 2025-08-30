@@ -1,14 +1,15 @@
 'use client'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThemeProvider } from '@shared/contexts'
-import { theme } from '@shared/constants'
-import { AppStore, makeStore } from '@shared/redux'
 import { Provider as StoreProvider } from 'react-redux'
+
+import { theme } from '@shared/constants'
+import { ThemeProvider } from '@shared/contexts'
 import { usePersistedState } from '@shared/hooks'
+import { AppStore, makeStore } from '@shared/redux'
 import { Toaster } from '@spotify/ui'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 export const Provider: FC<PropsWithChildren> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient())

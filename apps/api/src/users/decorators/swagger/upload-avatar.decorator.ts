@@ -1,9 +1,9 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { HttpStatus, applyDecorators } from '@nestjs/common'
 import {
-  ApiOperation,
+  ApiBody,
   ApiConsumes,
-  ApiResponse,
-  ApiBody
+  ApiOperation,
+  ApiResponse
 } from '@nestjs/swagger'
 import { UploadAvatarDto } from 'src/users/dtos/upload-avatar.dto'
 

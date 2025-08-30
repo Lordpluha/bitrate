@@ -1,4 +1,4 @@
-import { fullNameSchema, emailSchema, passwordSchema } from '@shared/validation'
+import { emailSchema, fullNameSchema, passwordSchema } from '@shared/validation'
 import z from 'zod'
 
 export const registrationSchema = z

@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { PlaylistsController } from './playlists.controller'
-import { PlaylistsService } from './playlists.service'
-import { CreatePlaylistDto } from './dtos/create-playlist.dto'
-import { UpdatePlaylistDto } from './dtos/update-playlist.dto'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { UserEntity } from 'src/users/entities'
+
+import { CreatePlaylistDto } from './dtos/create-playlist.dto'
+import { UpdatePlaylistDto } from './dtos/update-playlist.dto'
+
+import { PlaylistsController } from './playlists.controller'
+import { PlaylistsService } from './playlists.service'
 
 interface MockRequest {
   user: UserEntity

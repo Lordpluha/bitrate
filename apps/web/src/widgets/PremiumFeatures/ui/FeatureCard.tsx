@@ -1,6 +1,7 @@
-import { Typography } from '@spotify/ui'
 import { FC, ReactNode } from 'react'
-import { CalendarIcon, NoWifiIcon, PhoneIcon, MusicIcon } from '@shared/ui'
+
+import { CalendarIcon, MusicIcon, NoWifiIcon, PhoneIcon } from '@shared/ui'
+import { Typography } from '@spotify/ui'
 
 const iconMap = {
   CalendarIcon,

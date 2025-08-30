@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, HTMLAttributes } from 'react'
+import React, { FC, HTMLAttributes, PropsWithChildren } from 'react'
 
 type ParagraphProps = PropsWithChildren<HTMLAttributes<HTMLParagraphElement>>
 

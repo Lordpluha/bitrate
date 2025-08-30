@@ -1,5 +1,5 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common'
-import { ApiOperation, ApiConsumes, ApiResponse } from '@nestjs/swagger'
+import { HttpStatus, applyDecorators } from '@nestjs/common'
+import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { TrackEntity } from 'src/tracks/entities'
 
 export function PostTrackSwagger() {

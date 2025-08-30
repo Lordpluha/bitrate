@@ -1,18 +1,18 @@
 'use client'
 
 import * as React from 'react'
-import * as LabelPrimitive from '@radix-ui/react-label'
 import {
   Controller,
-  FormProvider,
-  useFormContext,
   type ControllerProps,
   type FieldPath,
-  type FieldValues
+  type FieldValues,
+  FormProvider,
+  useFormContext
 } from 'react-hook-form'
 
-import { cn } from '@spotify/ui/lib/utils'
+import * as LabelPrimitive from '@radix-ui/react-label'
 import { Label } from '@spotify/ui/components/ui/label'
+import { cn } from '@spotify/ui/lib/utils'
 
 const Form = FormProvider
 

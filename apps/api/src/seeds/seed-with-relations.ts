@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client'
-import { seedArtists } from './artists.seed'
+
 import { seedAlbumsWithTracks } from './albums.seed'
-import { seedTracks, seedTrackAlbumRelations } from './tracks.seed'
-import { seedUsers, seedUserLikedTracks } from './users.seed'
+import { seedArtists } from './artists.seed'
 import { seedPlaylistsWithTracks } from './playlists.seed'
+import { seedTrackAlbumRelations, seedTracks } from './tracks.seed'
+import { seedUserLikedTracks, seedUsers } from './users.seed'
 
 const prisma = new PrismaClient()
 

@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { DownloadIcon } from '@shared/ui'
+
 import { ROUTES } from '@shared/routes'
+import { DownloadIcon } from '@shared/ui'
 
 export const DownloadButton = () => (
   <Link

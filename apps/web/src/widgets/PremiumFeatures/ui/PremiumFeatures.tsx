@@ -1,6 +1,8 @@
 import { Typography } from '@spotify/ui'
-import { FeatureCard } from './FeatureCard'
+
 import premiumFeatures from '../config/premium-features.json'
+
+import { FeatureCard } from './FeatureCard'
 
 export const PremiumFeatures = () => {
   return (

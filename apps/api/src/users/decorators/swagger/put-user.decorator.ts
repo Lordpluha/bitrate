@@ -1,9 +1,9 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { HttpStatus, applyDecorators } from '@nestjs/common'
 import {
-  ApiOperation,
+  ApiBody,
   ApiConsumes,
-  ApiResponse,
-  ApiBody
+  ApiOperation,
+  ApiResponse
 } from '@nestjs/swagger'
 import { ArtistEntity } from 'src/artists/entities'
 import { UpdateUserDto } from 'src/users/dtos'

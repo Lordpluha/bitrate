@@ -1,10 +1,11 @@
-import { expect, userEvent, within } from 'storybook/test'
-import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, userEvent, within } from 'storybook/test'
+
 import { Button } from './button'
-import { PasswordInput } from './password-input'
 import { Label } from './label'
+import { PasswordInput } from './password-input'
 
 /**
  * A password input field with toggle visibility functionality.

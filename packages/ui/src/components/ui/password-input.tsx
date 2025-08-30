@@ -1,9 +1,11 @@
 'use client'
 
-import { cn } from '@spotify/ui/lib/utils'
-import { Input, type InputProps } from './input'
-import { Eye, EyeOff } from 'lucide-react'
 import { FC, ReactNode, Ref, useState } from 'react'
+
+import { cn } from '@spotify/ui/lib/utils'
+import { Eye, EyeOff } from 'lucide-react'
+
+import { Input, type InputProps } from './input'
 
 export interface PasswordInputProps extends Omit<InputProps, 'type'> {
   showPassword?: boolean

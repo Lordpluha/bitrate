@@ -1,10 +1,14 @@
-import clsx from 'clsx'
 import React, { FC } from 'react'
-import plansConfig from '../config/plans.json'
+
 import Link from 'next/link'
-import { PlansList } from './PlanFeaturesList'
-import { Typography } from '@spotify/ui'
+
 import { ROUTES } from '@shared/routes'
+import { Typography } from '@spotify/ui'
+import clsx from 'clsx'
+
+import plansConfig from '../config/plans.json'
+
+import { PlansList } from './PlanFeaturesList'
 
 export type PlanCardProps = (typeof plansConfig)[number]
 
