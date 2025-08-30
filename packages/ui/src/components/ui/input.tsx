@@ -10,8 +10,11 @@ const inputVariants = cva(
         default:
           'border-slate-200 bg-white text-slate-900 focus-visible:ring-slate-950 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
         contrast:
-          'border-grey-500 bg-contrast text-textContrast focus-visible:ring-slate-950'
+          'border-grey-500 bg-contrast text-textContrast focus-visible:ring-slate-950',
+        search:
+          'border-none bg-surface text-black placeholder:text-gray-600 focus-visible:ring-2 focus-visible:ring-white rounded-full px-12 py-4 h-12',
       }
+
     },
     defaultVariants: {
       variant: 'default'

@@ -1,14 +1,12 @@
 import React from 'react'
 import { Typography } from '@spotify/ui'
+import { MainHeader } from '@widgets/MainHeader'
 
 export const MainPage = () => {
   return (
-    <div className='min-h-screen flex items-center justify-center bg-background'>
-      <div className='text-center'>
-        <Typography.Heading1 className='text-primary mb-4'>
-          Main
-        </Typography.Heading1>
-      </div>
+    <div className='h-[200vh] bg-bg text-text'>
+      <MainHeader />
+
     </div>
   )
 }

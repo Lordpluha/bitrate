@@ -44,7 +44,9 @@ const config = {
           500: 'var(--color-blue-500)',
         },
         grey: {
+          400: 'var(--color-grey-400)',
           500: 'var(--color-grey-500)',
+          900: 'var(--color-grey-900)',
         },
         white: {
           DEFAULT: 'var(--color-white)',
@@ -62,7 +64,10 @@ const config = {
         text: 'var(--color-text)',
         textContrast: 'var(--color-text-contrast)',
         contrast: 'var(--color-contrast)',
+        surface: 'var(--color-surface)',
+        surfaceIcon: 'var(--color-surface-icon)',
         bgSecondaryRgb: 'var(--color-bg-secondary-rgb)',
+
 
 
         background: 'hsl(var(--background))',
