@@ -11,8 +11,8 @@ import {
 } from 'react-hook-form'
 
 import * as LabelPrimitive from '@radix-ui/react-label'
-import { Label } from '@spotify/ui/components/ui/label'
-import { cn } from '@spotify/ui/lib/utils'
+import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
 
 const Form = FormProvider
 

@@ -33,7 +33,7 @@ export const AuthBanner = () => {
           containScroll: 'trimSnaps',
           watchDrag: false
         }}
-        plugins={[plugin.current]}
+        plugins={[plugin.current as any]}
         className='h-full'
       >
         <CarouselContent className='h-full w-full -mt-0'>

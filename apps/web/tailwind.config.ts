@@ -1,16 +1,9 @@
 import type { Config } from "tailwindcss";
-import config from "@spotify/ui/tailwind.config";
+import uiPreset from "@spotify/ui/tailwind.preset";
 
-const webConfig = {
-    // darkMode: ["dark"],
-    ...config,
-  presets: [config],
-  content: [
-    "./src/**/*.{ts,tsx}",
-    "../../packages/ui/src/**/*.{ts,tsx}",
-  ],
-
+export default {
+  presets: [uiPreset],
+  content: ["./src/**/*.{ts,tsx}"],
+  theme: { extend: {} },
+  plugins: [],
 } satisfies Config;
-
-export default webConfig;
-

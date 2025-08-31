@@ -2,7 +2,7 @@
 
 import { FC, ReactNode, Ref, useState } from 'react'
 
-import { cn } from '@spotify/ui/lib/utils'
+import { cn } from '@/lib/utils'
 import { Eye, EyeOff } from 'lucide-react'
 
 import { Input, type InputProps } from './input'

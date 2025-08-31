@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 
-import { Button } from '@spotify/ui/components/ui/button'
-import { cn } from '@spotify/ui/lib/utils'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import useEmblaCarousel, {
   type UseEmblaCarouselType
 } from 'embla-carousel-react'
