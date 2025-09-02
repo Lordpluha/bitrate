@@ -14,7 +14,12 @@
     "check-types": "tsc --noEmit",
     "prettier": "prettier \"./src/**/*.{ts,tsx,json,scss,css}\" --write --list-different --cache",
     "stylelint": "stylelint \"./src/**/*.{scss,css}\" --config @spotify/stylelint --fix --cache --cache-location node_modules/.cache/stylelint",
-    "format": "npm run prettier && npm run stylelint"
+    "format": "npm run prettier && npm run stylelint",
+    "test": "vitest",
+    "test:e2e": "pnpm exec playwright test",
+    "test:e2e:ui": "pnpm exec playwright test --ui",
+    "test:e2e:debug": "pnpm exec playwright test --debug",
+    "test:e2e:gen": "pnpm exec playwright codegen"
   },
   "prettier": "@spotify/prettier",
   "dependencies": {
@@ -41,23 +46,31 @@
     "zod": "^4.1.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@spotify/contracts": "workspace:*",
     "@spotify/eslint": "workspace:*",
     "@spotify/prettier": "workspace:*",
     "@spotify/stylelint": "workspace:*",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/node": "^24.0.1",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.2",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.34.0",
     "eslint-config-next": "15.5.2",
+    "jsdom": "^26.1.0",
     "openapi-typescript": "^7.9.1",
     "postcss": "^8.4.40",
     "prettier": "^3.5.3",
     "sass": "^1.91.0",
     "stylelint": "^16.23.1",
     "tailwindcss": "^3.4.7",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4"
   }
 }
