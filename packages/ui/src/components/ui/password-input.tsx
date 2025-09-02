@@ -1,8 +1,9 @@
 'use client'
 
+import { cn } from '@/lib/utils'
+
 import { FC, ReactNode, Ref, useState } from 'react'
 
-import { cn } from '@/lib/utils'
 import { Eye, EyeOff } from 'lucide-react'
 
 import { Input, type InputProps } from './input'
