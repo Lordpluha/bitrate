@@ -5,7 +5,11 @@ import React, { useState } from 'react'
 import { LoginModal, SignUpModal } from '@features/AuthModal'
 import { Ghost } from 'lucide-react'
 
-export const AuthButtons = () => {
+interface AuthButtonsProps {
+  isMobile?: boolean
+}
+
+export const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
   const [loginOpen, setLoginOpen] = useState(false)
   const [signUpOpen, setSignUpOpen] = useState(false)
 
@@ -21,11 +25,13 @@ export const AuthButtons = () => {
 
   return (
     <>
-      <div className='flex items-center gap-8'>
+      <div className={`flex items-start ${isMobile ? 'flex-col space-y-4' : 'gap-8'}`}>
         <Button
           onClick={openSignUp}
           variant="ghost"
-          className='hover:opacity-70 transition-[.3s] text-base font-semibold text-white'
+          className={`hover:opacity-70 transition-[.3s] text-base font-semibold text-white ${
+            isMobile ? 'justify-start py-3' : ''
+          }`}
         >
           Sign up
         </Button>
@@ -33,7 +39,9 @@ export const AuthButtons = () => {
         <Button
           onClick={openLogin}
           variant="default"
-          className='bg-white text-black hover:bg-grey-400 hover:opacity-70 transition-[.3s] px-8 py-3 rounded-full font-bold text-base h-12 min-w-[100px]'
+          className={`bg-white text-black hover:bg-grey-400 hover:opacity-70 transition-[.3s] px-8 py-3 rounded-full font-bold text-base h-12 min-w-[100px] ${
+            isMobile ? 'justify-start ' : ''
+          }`}
         >
           Log in
         </Button>

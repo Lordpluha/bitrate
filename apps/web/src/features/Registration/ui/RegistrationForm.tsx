@@ -26,7 +26,7 @@ export const RegistrationForm = () => {
   const router = useRouter()
   const { mutate } = useMutation('post', '/auth/registration', {
     onSuccess: () => {
-      router.push('/login')
+      router.push('/auth/login')
     },
     onError: error => {
       toast.error(`Registration error:, ${JSON.stringify(error)}`)

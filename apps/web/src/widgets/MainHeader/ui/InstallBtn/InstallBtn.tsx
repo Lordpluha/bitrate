@@ -2,10 +2,16 @@ import { InstallIcon } from '@shared/ui'
 import Link from 'next/link'
 import React from 'react'
 
-export const InstallBtn = () => {
+interface InstallBtnProps {
+  isMobile?: boolean
+}
+
+export const InstallBtn = ({ isMobile = false }: InstallBtnProps) => {
   return (
     <Link
-      className='flex items-center space-x-2 hover:opacity-70 transition-[.3s]'
+      className={`flex items-center space-x-2 hover:opacity-70 transition-[.3s] ${
+        isMobile ? 'text-white py-2' : ''
+      }`}
       href='#'
     >
       <InstallIcon />

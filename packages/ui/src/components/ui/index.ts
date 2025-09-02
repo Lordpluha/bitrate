@@ -1,6 +1,7 @@
 export * from './button'
 export * from './input'
 export * from './password-input'
+export * from './dynamic-label'
 export * from './Typography'
 export * from './avatar'
 export * from './label'

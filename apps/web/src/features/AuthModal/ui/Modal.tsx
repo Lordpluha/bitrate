@@ -42,10 +42,8 @@ export const Modal: React.FC<ModalProps> = ({
       className="fixed inset-0 z-50 flex items-center justify-center"
       onClick={() => onOpenChange(false)}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className="absolute inset-0 w-[100vw] bg-black/60 backdrop-blur-sm" />
 
-      {/* Modal Content */}
       <div
         className={cn(
           'relative z-10 max-h-[90vh] max-w-[90vw] overflow-auto rounded-lg shadow-xl',
