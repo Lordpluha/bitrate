@@ -57,7 +57,7 @@ export default {
       sourcemap: true,
       preserveModules: true,
       preserveModulesRoot: 'src',
-      exports: 'named' // ✅ гасим warning про clsx/lucide default
+      exports: 'named' // Suppress warning about clsx/lucide default exports
     }
   ],
   external: [
