@@ -46,8 +46,8 @@ export const LoginForm = () => {
     shouldFocusError: true
   })
 
-  const onSubmit: SubmitHandler<LoginFormData> = body => {
-    mutate({
+  const onSubmit: SubmitHandler<LoginFormData> = async (body) => {
+    await mutate({
       body
     })
   }

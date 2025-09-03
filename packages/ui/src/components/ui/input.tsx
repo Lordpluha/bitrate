@@ -1,6 +1,7 @@
+import { cn } from '@/lib/utils'
+
 import * as React from 'react'
 
-import { cn } from '@spotify/ui/lib/utils'
 import { type VariantProps, cva } from 'class-variance-authority'
 
 const inputVariants = cva(

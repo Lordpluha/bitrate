@@ -1,1 +1,8 @@
-export { default } from "@spotify/ui/postcss.config";
+import preset from "@spotify/ui/postcss.config";
+
+export default {
+  plugins: {
+    ...preset.plugins,
+    tailwindcss: { config: "./tailwind.config.ts" },
+  },
+};

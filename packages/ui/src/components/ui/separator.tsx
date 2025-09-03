@@ -1,9 +1,12 @@
+import { cn } from '@/lib/utils'
+
 import * as React from 'react'
 
 import * as SeparatorPrimitive from '@radix-ui/react-separator'
-import { cn } from '@spotify/ui/lib/utils'
 
-const Separator = React.forwardRef<
+const Separator: React.ForwardRefExoticComponent<
+  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root> & React.RefAttributes<React.ElementRef<typeof SeparatorPrimitive.Root>>
+> = React.forwardRef<
   React.ElementRef<typeof SeparatorPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
 >(

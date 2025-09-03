@@ -1,6 +1,7 @@
 'use client'
 
 import createClient from 'openapi-react-query'
+
 import { fetchClient } from './fetchClient'
 
 /**
