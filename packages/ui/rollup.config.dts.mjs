@@ -35,7 +35,7 @@ const input = resolveDtsEntry();
 
 export default {
   input,
-  output: { file: "dist/types/index.d.ts", format: "es" }, // ✅ один итоговый файл
+  output: { file: "dist/types/index.d.ts", format: "es" }, // ✅ single output file
   plugins: [
     dts({
       respectExternal: true,
