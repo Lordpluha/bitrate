@@ -1,9 +1,9 @@
-import { emailSchema } from '@shared/validation'
+import { emailSchema, passwordSchema } from '@shared/validation'
 import z from 'zod'
 
 export const loginSchema = z.object({
   email: emailSchema,
-  password: z.string().min(1, 'Password is required')
+  password: passwordSchema
 })
 
 export type LoginFormData = z.infer<typeof loginSchema>

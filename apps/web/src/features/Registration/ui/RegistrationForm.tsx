@@ -48,8 +48,8 @@ export const RegistrationForm = () => {
     shouldFocusError: true
   })
 
-  const onSubmit = (data: RegistrationFormData) => {
-    mutate({
+  const onSubmit = async (data: RegistrationFormData) => {
+    await mutate({
       body: {
         email: data.email,
         password: data.password,
