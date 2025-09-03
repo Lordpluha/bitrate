@@ -9,7 +9,7 @@ function resolveDtsEntry() {
     if (fs.existsSync(p)) return p;
   }
 
-  // Попытка вывести путь из исходного entry src/index.ts → .types/index.d.ts
+  // Attempt to infer path from source entry src/index.ts → .types/index.d.ts
   const srcEntry = "src/index.ts";
   const inferred = path
     .join(".types", path.relative("src", srcEntry))
