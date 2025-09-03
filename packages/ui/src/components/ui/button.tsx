@@ -42,7 +42,7 @@ export const buttonVariants = cva(
 )
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, Omit<VariantProps<typeof buttonVariants>, 'disabled'> {
-  ref: Ref<HTMLButtonElement>
+  ref?: Ref<HTMLButtonElement>
   isLoading?: boolean
 }
 
