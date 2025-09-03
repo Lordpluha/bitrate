@@ -90,12 +90,12 @@ export default {
       }
     }),
     postcss({
-      extract: 'globals.css', // => dist/esm/globals.css и dist/cjs/globals.css не нужны, кладём 1 файл ниже
+      extract: 'globals.css', // => dist/esm/globals.css and dist/cjs/globals.css are not needed, we place one file below
       sourceMap: true,
       minimize: false,
       config: true
-      // чтобы css оказался в корне dist, а не в каждой папке:
-      // плагин не поддерживает прямую смену каталога, поэтому оставим как есть
+      // To ensure CSS is placed in the root of dist, not in every folder:
+      // The plugin does not support direct directory change, so we leave it as is
     }),
     preserveUseClient()
   ]
