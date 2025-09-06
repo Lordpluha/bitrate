@@ -537,7 +537,7 @@
                     "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                     "backgroundImage": "",
                     "bio": "Some bio",
-                    "createdAt": "2025-08-04T08:11:36.142Z"
+                    "createdAt": "2025-09-06T12:19:40.008Z"
                   },
                   {
                     "id": "2",
@@ -545,7 +545,7 @@
                     "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                     "backgroundImage": "",
                     "bio": "Some bio 2",
-                    "createdAt": "2025-08-04T08:11:36.142Z"
+                    "createdAt": "2025-09-06T12:19:40.008Z"
                   }
                 ]
               }
@@ -616,7 +616,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-08-04T08:11:36.142Z"
+                  "createdAt": "2025-09-06T12:19:40.011Z"
                 }
               }
             }
@@ -724,7 +724,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-08-04T08:11:36.142Z"
+                  "createdAt": "2025-09-06T12:19:40.010Z"
                 }
               }
             }
@@ -795,7 +795,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-08-04T08:11:36.142Z"
+                  "createdAt": "2025-09-06T12:19:40.011Z"
                 }
               }
             }
@@ -867,7 +867,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-08-04T08:11:36.150Z",
+                  "createdAt": "2025-09-06T12:19:40.038Z",
                   "email": "example@gmail.com"
                 }
               }
@@ -1418,7 +1418,7 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2025-08-04T08:11:36.165Z"
+                    "createdAt": "2025-09-06T12:19:40.232Z"
                   }
                 ]
               }
@@ -1487,7 +1487,7 @@
                   "title": "Track Title",
                   "cover": "https://example.com/cover.jpg",
                   "audioUrl": "",
-                  "createdAt": "2025-08-04T08:11:36.166Z"
+                  "createdAt": "2025-09-06T12:19:40.232Z"
                 }
               }
             },
@@ -1712,6 +1712,465 @@
           }
         ],
         "summary": "Update track by id",
+        "tags": ["Tracks"]
+      }
+    },
+    "/tracks/stream/{id}": {
+      "get": {
+        "operationId": "TracksController_streamTrack",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "range",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Stream audio track",
+        "tags": ["Tracks"]
+      }
+    },
+    "/tracks/play/{id}": {
+      "post": {
+        "operationId": "TracksController_playTrack",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Start playing track for authenticated user",
+        "tags": ["Tracks"]
+      }
+    },
+    "/tracks/pause/{id}": {
+      "post": {
+        "operationId": "TracksController_pauseTrack",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Pause track for authenticated user",
+        "tags": ["Tracks"]
+      }
+    },
+    "/tracks/update-state/{id}": {
+      "post": {
+        "operationId": "TracksController_updateTrackState",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Update track streaming state for authenticated user",
+        "tags": ["Tracks"]
+      }
+    },
+    "/tracks/current-state": {
+      "get": {
+        "operationId": "TracksController_getCurrentState",
+        "parameters": [],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access_token": []
+          }
+        ],
+        "summary": "Get current track state for authenticated user",
         "tags": ["Tracks"]
       }
     },
@@ -2407,6 +2866,136 @@
         "summary": "Delete an album by ID",
         "tags": ["Albums"]
       }
+    },
+    "/files/users/avatars/{filename}": {
+      "get": {
+        "operationId": "FilesController_getUserAvatar",
+        "parameters": [
+          {
+            "name": "filename",
+            "required": true,
+            "in": "path",
+            "description": "Avatar filename",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avatar file"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "404": {
+            "description": "Avatar not found"
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "Get user avatar",
+        "tags": ["files"]
+      }
+    },
+    "/files/audio/{filename}": {
+      "get": {
+        "operationId": "FilesController_getAudioFile",
+        "parameters": [
+          {
+            "name": "filename",
+            "required": true,
+            "in": "path",
+            "description": "Audio filename",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audio file"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "404": {
+            "description": "Audio file not found"
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "Get audio file",
+        "tags": ["files"]
+      }
     }
   },
   "info": {
@@ -2435,6 +3024,12 @@
       "oauth2": {
         "type": "openIdConnect",
         "flows": {}
+      },
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "access_token",
+        "description": "HttpOnly cookies: access_token and refresh_token"
       }
     },
     "schemas": {
@@ -2656,9 +3251,6 @@
           "cover": {
             "type": "string"
           },
-          "artistId": {
-            "type": "string"
-          },
           "description": {
             "type": "string",
             "nullable": true
@@ -2675,7 +3267,6 @@
           "id",
           "title",
           "cover",
-          "artistId",
           "description",
           "createdAt",
           "userId"

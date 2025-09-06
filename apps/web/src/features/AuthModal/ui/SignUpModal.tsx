@@ -38,15 +38,53 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
   onSwitchToLogin
 }) => {
   const router = useRouter()
-  const { mutate, isPending } = useMutation('post', '/auth/registration', {
-    onSuccess: () => {
-      onOpenChange(false)
-      router.push('/auth/login')
-    },
-    onError: error => {
-      toast.error(`Registration error: ${JSON.stringify(error)}`)
+
+  const { mutate: registerMutate, isPending: isRegistering } = useMutation(
+    'post',
+    '/auth/registration',
+    {
+      onSuccess: async (_, variables) => {
+        try {
+          const loginResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+            {
+              method: 'POST',
+              credentials: 'include',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                email: variables.body.email,
+                password: variables.body.password
+              })
+            }
+          )
+
+          if (loginResponse.ok) {
+            onOpenChange(false)
+
+            setTimeout(() => {
+              router.push('/main')
+
+              window.location.reload()
+            }, 100)
+          } else {
+            toast.success('Registration successful! Please log in.')
+            onOpenChange(false)
+            router.push('/auth/login')
+          }
+        } catch (error) {
+          console.error('Auto-login failed:', error)
+          toast.success('Registration successful! Please log in.')
+          onOpenChange(false)
+          router.push('/auth/login')
+        }
+      },
+      onError: error => {
+        toast.error(`Registration error: ${JSON.stringify(error)}`)
+      }
     }
-  })
+  )
 
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
@@ -61,7 +99,7 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
   })
 
   const onSubmit = (data: RegistrationFormData) => {
-    mutate({
+    registerMutate({
       body: {
         email: data.email,
         password: data.password,
@@ -98,14 +136,17 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className="relative">
-                      <DynamicLabel htmlFor="signup-fullname" variant="contrast">
+                    <div className='relative'>
+                      <DynamicLabel
+                        htmlFor='signup-fullname'
+                        variant='contrast'
+                      >
                         Full Name
                       </DynamicLabel>
                       <Input
-                        id="signup-fullname"
-                        variant="contrast"
-                        placeholder=""
+                        id='signup-fullname'
+                        variant='contrast'
+                        placeholder=''
                         {...field}
                       />
                     </div>
@@ -121,15 +162,18 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className="relative">
-                      <DynamicLabel htmlFor="signup-email" variant="contrast">
+                    <div className='relative'>
+                      <DynamicLabel
+                        htmlFor='signup-email'
+                        variant='contrast'
+                      >
                         Email Address
                       </DynamicLabel>
                       <Input
-                        id="signup-email"
-                        variant="contrast"
-                        type="email"
-                        placeholder=""
+                        id='signup-email'
+                        variant='contrast'
+                        type='email'
+                        placeholder=''
                         {...field}
                       />
                     </div>
@@ -145,14 +189,17 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className="relative">
-                      <DynamicLabel htmlFor="signup-password" variant="contrast">
+                    <div className='relative'>
+                      <DynamicLabel
+                        htmlFor='signup-password'
+                        variant='contrast'
+                      >
                         Password
                       </DynamicLabel>
                       <PasswordInput
-                        id="signup-password"
-                        variant="contrast"
-                        placeholder=""
+                        id='signup-password'
+                        variant='contrast'
+                        placeholder=''
                         {...field}
                       />
                     </div>
@@ -168,14 +215,17 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className="relative">
-                      <DynamicLabel htmlFor="signup-confirm-password" variant="contrast">
+                    <div className='relative'>
+                      <DynamicLabel
+                        htmlFor='signup-confirm-password'
+                        variant='contrast'
+                      >
                         Confirm Password
                       </DynamicLabel>
                       <PasswordInput
-                        id="signup-confirm-password"
-                        variant="contrast"
-                        placeholder=""
+                        id='signup-confirm-password'
+                        variant='contrast'
+                        placeholder=''
                         {...field}
                       />
                     </div>
@@ -190,9 +240,9 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                 variant='primary'
                 className='rounded'
                 type='submit'
-                disabled={isPending}
+                disabled={isRegistering}
               >
-                {isPending ? 'Registering...' : 'Register'}
+                {isRegistering ? 'Registering...' : 'Register'}
               </Button>
 
               <SocialsAuthDivider />

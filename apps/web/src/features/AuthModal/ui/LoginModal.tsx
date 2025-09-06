@@ -34,7 +34,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onOpenChange, onSw
   const { mutate, isPending } = useMutation('post', '/auth/login', {
     onSuccess: () => {
       onOpenChange(false)
-      router.push('/main')
+      // Небольшая задержка для установки cookies, затем редирект
+      setTimeout(() => {
+        router.push('/main')
+        // Принудительное обновление страницы для обновления состояния авторизации
+        window.location.reload()
+      }, 100)
     },
     onError: error => {
       toast.error(`Login error: ${JSON.stringify(error)}`)

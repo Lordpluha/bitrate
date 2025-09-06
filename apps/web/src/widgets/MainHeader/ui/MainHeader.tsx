@@ -1,4 +1,6 @@
-import { Logo } from '@shared/ui'
+'use client'
+
+import { Logo, MembersIcon, NotificationIcon } from '@shared/ui'
 import React from 'react'
 import { HomeBtn } from './HomeBtn'
 import { HeaderSearch } from './HeaderSearch'
@@ -7,8 +9,15 @@ import { AuthButtons } from './AuthButtons'
 import { InstallBtn } from './InstallBtn'
 import { BurgerMenu } from './BurgerMenu'
 import { ROUTES } from '@shared/routes'
+import Link from 'next/link'
+import { ProfileButton } from './ProfileButton'
+import { useAuth } from '@shared/hooks'
 
 export const MainHeader = () => {
+  const { user, isAuthenticated, isLoading } = useAuth()
+
+  if (isLoading) return null
+
   return (
     <header className='sticky top-0 left-0 right-0 z-50 transition-colors duration-300'>
       <div className='w-full px-5 py-2 flex justify-between items-center relative'>
@@ -20,9 +29,28 @@ export const MainHeader = () => {
         </div>
 
         <div className='hidden xl:flex items-center gap-8'>
-          <NavLinks />
           <InstallBtn />
-          <AuthButtons />
+
+          {isLoading ? (
+
+            <div className="w-8 h-8"></div>
+          ) : isAuthenticated && user ? (
+
+            <>
+              <Link className='hover:opacity-70 transition-opacity duration-200' href="#">
+                <NotificationIcon />
+              </Link>
+              <Link className='hover:opacity-70 transition-opacity duration-200' href="#">
+                <MembersIcon />
+              </Link>
+              <ProfileButton username={user.username} />
+            </>
+          ) : (
+            <>
+              <NavLinks />
+              <AuthButtons />
+            </>
+          )}
         </div>
 
         <div className='xl:hidden'>

@@ -8,7 +8,11 @@ import type { ApiPaths } from '@spotify/contracts'
  * Fetch client for the API.
  */
 export const fetchClient = createFetchClient<ApiPaths>({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL
+  baseUrl: process.env.NEXT_PUBLIC_API_URL,
+  credentials: 'include',
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })
 
 /**
