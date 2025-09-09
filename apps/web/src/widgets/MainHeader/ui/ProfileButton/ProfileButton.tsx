@@ -1,6 +1,7 @@
 "use client"
 
 import { useAuth } from '@shared/hooks';
+import { generateColor } from '@shared/utils';
 import { ApiSchemas } from '@spotify/contracts';
 import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@spotify/ui';
 import { FC, HTMLAttributes, useState } from 'react';
@@ -8,15 +9,6 @@ import { FC, HTMLAttributes, useState } from 'react';
 interface ProfileButtonProps extends HTMLAttributes<HTMLDivElement> {
   username: ApiSchemas['UserEntity']['username'];
 }
-
-const generateColor = (str: string) => {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const hue = hash % 360;
-  return `hsl(${hue}, 60%, 70%)`;
-};
 
 export const ProfileButton: FC<ProfileButtonProps> = ({ username, className, ...etcDivProps }) => {
   const [isHovered, setIsHovered] = useState(false);
