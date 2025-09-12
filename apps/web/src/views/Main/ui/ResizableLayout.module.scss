@@ -1,0 +1,34 @@
+.resizeHandle {
+  width: 0px;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  cursor: col-resize;
+  position: relative;
+}
+
+.resizeHandle:hover {
+  width: 6px;
+  background-color: rgba(29, 185, 84, 0.8);
+}
+
+.resizeHandle:active {
+  background-color: rgba(29, 185, 84, 1);
+}
+
+.panel {
+  overflow: hidden;
+}
+
+.leftSidebar {
+  padding: 8px;
+}
+
+.mainContent {
+  background-color: var(--bg);
+}
+
+.rightSidebar {
+  background-color: var(--color-bg-secondary);
+  margin: 16px;
+  border-radius: 8px;
+}

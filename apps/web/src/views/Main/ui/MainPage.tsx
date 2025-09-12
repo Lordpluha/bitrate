@@ -1,12 +1,12 @@
 import React from 'react'
-import { Typography } from '@spotify/ui'
 import { MainHeader } from '@widgets/MainHeader'
+import { ResizableLayout } from './ResizableLayout'
 
 export const MainPage = () => {
   return (
-    <div className='h-[200vh] bg-bg text-text'>
+    <div className='h-screen bg-bg text-text'>
       <MainHeader />
-
+      <ResizableLayout />
     </div>
   )
 }

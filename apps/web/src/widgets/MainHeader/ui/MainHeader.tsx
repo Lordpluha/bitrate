@@ -16,8 +16,6 @@ import { useAuth } from '@shared/hooks'
 export const MainHeader = () => {
   const { user, isAuthenticated, isLoading } = useAuth()
 
-  if (isLoading) return null
-
   return (
     <header className='sticky top-0 left-0 right-0 z-50 transition-colors duration-300'>
       <div className='w-full px-5 py-2 flex justify-between items-center relative'>

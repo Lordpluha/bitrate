@@ -19,6 +19,7 @@ type CarouselProps = {
   plugins?: CarouselPlugin
   orientation?: 'horizontal' | 'vertical'
   showNavigation?: boolean
+  slidesToShow?: number
   setApi?: (api: CarouselApi) => void
 }
 
@@ -30,6 +31,7 @@ type CarouselContextProps = {
   canScrollPrev: boolean
   canScrollNext: boolean
   showNavigation?: boolean
+  slidesToShow?: number
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
@@ -55,6 +57,7 @@ const CarouselComponent = React.forwardRef<
       setApi,
       plugins,
       showNavigation = true,
+      slidesToShow = 1,
       className,
       children,
       ...props
@@ -135,7 +138,8 @@ const CarouselComponent = React.forwardRef<
           scrollNext,
           canScrollPrev,
           canScrollNext,
-          showNavigation
+          showNavigation,
+          slidesToShow
         }}
       >
         <div
@@ -194,19 +198,42 @@ const CarouselItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  const { orientation } = useCarousel()
+  const { orientation, slidesToShow = 1 } = useCarousel()
+
+  // Check if className contains basis-auto to use auto sizing
+  const isAutoSizing = className?.includes('basis-auto')
+
+  if (isAutoSizing) {
+    return (
+      <div
+        ref={ref}
+        role='group'
+        aria-roledescription='slide'
+        className={cn('min-w-0 shrink-0 grow-0 basis-auto', className)}
+        {...props}
+      />
+    )
+  }
+
+  const widthPercentage = `${100 / slidesToShow}%`
+  const heightPercentage = `${100 / slidesToShow}%`
 
   return (
     <div
       ref={ref}
       role='group'
       aria-roledescription='slide'
-      // Ensure each slide takes full viewport size for the current orientation so Embla can snap correctly.
-      className={cn('min-w-0 shrink-0 grow-0 basis-full', className)}
+      className={cn('min-w-0 shrink-0 grow-0', className)}
       style={
         orientation === 'horizontal'
-          ? ({ minWidth: '100%', flex: '0 0 100%' } as React.CSSProperties)
-          : ({ minHeight: '100%', flex: '0 0 100%' } as React.CSSProperties)
+          ? ({
+              minWidth: widthPercentage,
+              flex: `0 0 ${widthPercentage}`
+            } as React.CSSProperties)
+          : ({
+              minHeight: heightPercentage,
+              flex: `0 0 ${heightPercentage}`
+            } as React.CSSProperties)
       }
       {...props}
     />
@@ -216,10 +243,9 @@ CarouselItem.displayName = 'CarouselItem'
 
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<typeof Button>
->(({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
-  const { orientation, scrollPrev, canScrollPrev, showNavigation } =
-    useCarousel()
+  React.ComponentProps<typeof Button> & { icon?: React.ReactNode }
+>(({ className, variant = 'ghost', size = 'icon', icon, ...props }, ref) => {
+  const { scrollPrev, canScrollPrev, showNavigation } = useCarousel()
 
   if (showNavigation === false) return null
 
@@ -228,18 +254,12 @@ const CarouselPrevious = React.forwardRef<
       ref={ref}
       variant={variant}
       size={size}
-      className={cn(
-        'absolute  h-8 w-8 rounded-full',
-        orientation === 'horizontal'
-          ? '-left-12 top-1/2 -translate-y-1/2'
-          : '-top-12 left-1/2 -translate-x-1/2 rotate-90',
-        className
-      )}
+      className={cn(className)}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeft className='h-4 w-4' />
+      {icon || <ArrowLeft className='h-4 w-4' />}
       <span className='sr-only'>Previous slide</span>
     </Button>
   )
@@ -248,10 +268,9 @@ CarouselPrevious.displayName = 'CarouselPrevious'
 
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<typeof Button>
->(({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
-  const { orientation, scrollNext, canScrollNext, showNavigation } =
-    useCarousel()
+  React.ComponentProps<typeof Button> & { icon?: React.ReactNode }
+>(({ className, variant = 'ghost', size = 'icon', icon, ...props }, ref) => {
+  const { scrollNext, canScrollNext, showNavigation } = useCarousel()
 
   if (showNavigation === false) return null
 
@@ -260,18 +279,12 @@ const CarouselNext = React.forwardRef<
       ref={ref}
       variant={variant}
       size={size}
-      className={cn(
-        'absolute h-8 w-8 rounded-full',
-        orientation === 'horizontal'
-          ? '-right-12 top-1/2 -translate-y-1/2'
-          : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
-        className
-      )}
+      className={cn(className)}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRight className='h-4 w-4' />
+      {icon || <ArrowRight className='h-4 w-4' />}
       <span className='sr-only'>Next slide</span>
     </Button>
   )

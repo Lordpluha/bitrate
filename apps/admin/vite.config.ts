@@ -6,7 +6,7 @@ export default defineConfig({
   root: './app',
   server: {
     port: 3002,
-    open: true,
+    open: false,
   },
   build: {
     outDir: '../dist/client',

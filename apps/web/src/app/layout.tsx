@@ -1,10 +1,12 @@
+import { PropsWithChildren } from 'react'
+
 import type { Metadata } from 'next'
 import { Source_Sans_3 } from 'next/font/google'
-import { PropsWithChildren } from 'react'
-import { Provider } from './_provider'
-import { ThemeScript } from '@shared/utils'
 
+import { ThemeScript } from '@shared/utils'
 import '@spotify/ui/globals.css'
+
+import { Provider } from './_provider'
 import './global.css'
 
 const sourceSans = Source_Sans_3({
