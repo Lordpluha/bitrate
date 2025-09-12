@@ -1,4 +1,5 @@
 import React from 'react'
+
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 import banner1 from './images/banner-1.jpg'
@@ -10,8 +11,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
-  CarouselNext
+  CarouselNext,
+  CarouselPrevious
 } from './carousel'
 
 const slides = [

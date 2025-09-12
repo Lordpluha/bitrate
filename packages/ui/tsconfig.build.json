@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    "outDir": ".types",
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": { "@/*": ["src/*"] },
+    "composite": false,
+    "skipLibCheck": true,
+    "rootDir": "src"
+  },
+  "include": ["src", "src/**/*"],
+  "exclude": ["**/*.stories.*", "**/*.test.*", "**/__tests__/**", "**/*.mdx"]
+}

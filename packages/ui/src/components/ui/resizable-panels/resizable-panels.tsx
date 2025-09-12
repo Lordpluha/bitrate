@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
-import { cn } from '@spotify/ui/lib/utils'
+import { cn } from '@/lib/utils'
 
 export interface ResizablePanelProps {
   defaultSize?: number

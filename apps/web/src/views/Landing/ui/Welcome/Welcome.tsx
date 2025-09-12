@@ -1,10 +1,10 @@
-import { Typography } from '@spotify/ui'
-import { DownloadButton } from './DownloadButton'
-import { Statistics } from './Statistics'
-import clsx from 'clsx'
 import { SpotifyCurvesIcon } from '@shared/ui'
+import { Typography } from '@spotify/ui'
+import clsx from 'clsx'
 
+import { DownloadButton } from './DownloadButton'
 import styles from './MobileBlock.module.css'
+import { Statistics } from './Statistics'
 
 export const Welcome = () => {
   return (

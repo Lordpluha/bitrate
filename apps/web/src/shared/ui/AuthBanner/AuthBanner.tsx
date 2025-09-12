@@ -1,7 +1,8 @@
 'use client'
 
-import { Carousel, CarouselContent, CarouselItem } from '@spotify/ui'
 import { useRef } from 'react'
+
+import { Carousel, CarouselContent, CarouselItem } from '@spotify/ui'
 import Autoplay from 'embla-carousel-autoplay'
 
 const slides = [
@@ -32,7 +33,7 @@ export const AuthBanner = () => {
           containScroll: 'trimSnaps',
           watchDrag: false
         }}
-        plugins={[plugin.current]}
+        plugins={[plugin.current as any]}
         className='h-full'
       >
         <CarouselContent className='h-full w-full -mt-0'>

@@ -1,12 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { Reflector } from '@nestjs/core'
 import { JwtService } from '@nestjs/jwt'
+import { Test, TestingModule } from '@nestjs/testing'
+
+import { TokenService } from '../auth/token.service'
+import { PrismaService } from '../prisma/prisma.service'
+
 import { ArtistsController } from './artists.controller'
 import { ArtistsService } from './artists.service'
-import { ArtistEntity } from './entities'
 import { CreateArtistDto } from './dtos'
-import { PrismaService } from '../prisma/prisma.service'
-import { TokenService } from '../auth/token.service'
+import { ArtistEntity } from './entities'
 
 describe('ArtistsController', () => {
   let controller: ArtistsController

@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
+import { Server } from 'socket.io'
+
+import { TokenService } from '../auth/token.service'
+
 import { AudioGateway } from './audio.gateway'
 import { TracksService } from './tracks.service'
-import { TokenService } from '../auth/token.service'
-import { Server } from 'socket.io'
 
 interface MockSocket {
   id: string

@@ -1,8 +1,9 @@
-import { cva, type VariantProps } from 'class-variance-authority'
-import * as React from 'react'
-import { cn } from '@spotify/ui/lib/utils'
+import { cn } from '@/lib/utils'
+import { type VariantProps, cva } from 'class-variance-authority'
+import { ButtonHTMLAttributes, FC, Ref } from 'react'
+import clsx from 'clsx'
 
-const buttonVariants = cva(
+export const buttonVariants = cva(
   'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300',
   {
     variants: {
@@ -27,6 +28,10 @@ const buttonVariants = cva(
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-md px-8',
         icon: 'h-10 w-10'
+      },
+      disabled: {
+        true: 'cursor-not-allowed opacity-50',
+        false: ''
       }
     },
     defaultVariants: {
@@ -36,21 +41,29 @@ const buttonVariants = cva(
   }
 )
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, Omit<VariantProps<typeof buttonVariants>, 'disabled'> {
+  ref?: Ref<HTMLButtonElement>
+  isLoading?: boolean
+}
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
-    return (
-      <button
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
+export const Button: FC<ButtonProps> = ({ className, children, isLoading = false, disabled, variant, size, ref, ...props }) => (
+  <button
+    className={cn(buttonVariants({ variant, size, className, disabled }))}
+    aria-disabled={disabled}
+    disabled={disabled}
+    ref={ref}
+    {...props}
+  >
+    {children}
+    <div className={clsx(isLoading ?
+      `block w-6 h-6 relative
+      before:content-[""] before:absolute before:mt-1 before:left-2
+      before:w-5 before:h-5 before:rounded-full before:border-[2px]
+      before:border-solid before:border-[rgb(25, 25, 25)]
+      before:border-t-transparent before:animate-spin`
+      : 'hidden')}
+    />
+  </button>
 )
-Button.displayName = 'Button'
 
-export { Button, buttonVariants }
+

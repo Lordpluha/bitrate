@@ -1,6 +1,8 @@
-import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@/lib/utils'
+
 import * as React from 'react'
-import { cn } from '@spotify/ui/lib/utils'
+
+import { type VariantProps, cva } from 'class-variance-authority'
 
 const inputVariants = cva(
   'flex w-full rounded-md border px-3 py-2 text-base placeholder:text-slate-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium',

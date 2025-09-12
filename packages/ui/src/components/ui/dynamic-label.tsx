@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '@spotify/ui/lib/utils'
+import { cn } from '@/lib/utils'
 
 const labelVariants = cva(
   'absolute left-3 transition-all duration-200 pointer-events-none z-10 px-1',

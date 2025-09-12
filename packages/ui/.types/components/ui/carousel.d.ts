@@ -9,18 +9,27 @@ type CarouselProps = {
     plugins?: CarouselPlugin;
     orientation?: 'horizontal' | 'vertical';
     showNavigation?: boolean;
+    slidesToShow?: number;
     setApi?: (api: CarouselApi) => void;
 };
 declare const CarouselContent: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
 declare const CarouselItem: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
-declare const CarouselPrevious: React.ForwardRefExoticComponent<Omit<import("../../components/ui/button").ButtonProps, "ref"> & React.RefAttributes<HTMLButtonElement>>;
-declare const CarouselNext: React.ForwardRefExoticComponent<Omit<import("../../components/ui/button").ButtonProps, "ref"> & React.RefAttributes<HTMLButtonElement>>;
+declare const CarouselPrevious: React.ForwardRefExoticComponent<Omit<import("../../components/ui/button").ButtonProps & {
+    icon?: React.ReactNode;
+}, "ref"> & React.RefAttributes<HTMLButtonElement>>;
+declare const CarouselNext: React.ForwardRefExoticComponent<Omit<import("../../components/ui/button").ButtonProps & {
+    icon?: React.ReactNode;
+}, "ref"> & React.RefAttributes<HTMLButtonElement>>;
 export declare const Carousel: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & CarouselProps & React.RefAttributes<HTMLDivElement>> & {
     Root: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & CarouselProps & React.RefAttributes<HTMLDivElement>>;
     Content: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
     Item: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
-    Previous: React.ForwardRefExoticComponent<Omit<import("../../components/ui/button").ButtonProps, "ref"> & React.RefAttributes<HTMLButtonElement>>;
-    Next: React.ForwardRefExoticComponent<Omit<import("../../components/ui/button").ButtonProps, "ref"> & React.RefAttributes<HTMLButtonElement>>;
+    Previous: React.ForwardRefExoticComponent<Omit<import("../../components/ui/button").ButtonProps & {
+        icon?: React.ReactNode;
+    }, "ref"> & React.RefAttributes<HTMLButtonElement>>;
+    Next: React.ForwardRefExoticComponent<Omit<import("../../components/ui/button").ButtonProps & {
+        icon?: React.ReactNode;
+    }, "ref"> & React.RefAttributes<HTMLButtonElement>>;
 };
 export { CarouselContent, CarouselItem, CarouselPrevious, CarouselNext };
 export type { CarouselApi };

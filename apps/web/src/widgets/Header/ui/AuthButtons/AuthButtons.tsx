@@ -1,5 +1,6 @@
-import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
+
+import { ROUTES } from '@shared/routes'
 
 export const AuthButtons = () => (
   <div className='flex items-center gap-4'>

@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { PlaylistsService } from './playlists.service'
 import { PrismaService } from 'src/prisma/prisma.service'
+
 import { CreatePlaylistDto } from './dtos/create-playlist.dto'
 import { UpdatePlaylistDto } from './dtos/update-playlist.dto'
+
+import { PlaylistsService } from './playlists.service'
 
 describe('PlaylistsService', () => {
   let service: PlaylistsService

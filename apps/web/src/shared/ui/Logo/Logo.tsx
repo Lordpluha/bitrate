@@ -1,9 +1,12 @@
+import { FC, SVGProps } from 'react'
+
 import Link, { LinkProps } from 'next/link'
-import { SpotifyLogo } from '../icons'
-import { AnchorHTMLAttributes, FC, HTMLAttributes, SVGProps } from 'react'
-import clsx from 'clsx'
+
 import { theme } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
+import clsx from 'clsx'
+
+import { SpotifyLogo } from '../icons'
 
 export interface LogoProps extends SVGProps<HTMLOrSVGElement> {
   color?: theme

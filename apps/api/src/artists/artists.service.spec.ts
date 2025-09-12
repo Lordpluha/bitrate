@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { ArtistsService } from './artists.service'
+
 import { PrismaService } from '../prisma/prisma.service'
-import { ArtistEntity } from './entities'
+
+import { ArtistsService } from './artists.service'
 import { CreateArtistDto } from './dtos'
+import { ArtistEntity } from './entities'
 
 describe('ArtistsService', () => {
   let service: ArtistsService

@@ -1,32 +1,35 @@
 'use client'
 
 import React from 'react'
-import { zodResolver, SubmitHandler, useForm } from '@spotify/ui'
+
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+
+import { useMutation } from '@shared/api'
+import { ROUTES } from '@shared/routes'
 import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
+import { SubmitHandler, useForm, zodResolver } from '@spotify/ui'
 import {
   Button,
-  Input,
-  PasswordInput,
-  toast,
-  Typography,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
+  Input,
+  PasswordInput,
+  Typography,
+  toast
 } from '@spotify/ui'
-import Link from 'next/link'
-import { useMutation } from '@shared/api'
+
 import { LoginFormData, loginSchema } from '../validation'
-import { ROUTES } from '@shared/routes'
 
 export const LoginForm = () => {
   const router = useRouter()
   const { mutate } = useMutation('post', '/auth/login', {
     onSuccess: () => {
-      router.push('/main')
+      router.push(ROUTES.main)
     },
     onError: error => {
       toast.error(`Login error: ${JSON.stringify(error)}`)
@@ -43,8 +46,8 @@ export const LoginForm = () => {
     shouldFocusError: true
   })
 
-  const onSubmit: SubmitHandler<LoginFormData> = body => {
-    mutate({
+  const onSubmit: SubmitHandler<LoginFormData> = async (body) => {
+    await mutate({
       body
     })
   }
@@ -120,9 +123,7 @@ export const LoginForm = () => {
               Log in
             </Button>
             <SocialsAuthDivider />
-            <Button
-              variant='contrast'
-            >
+            <Button variant='contrast'>
               <GoggleIcon className='mr-2' />
               <Typography.Paragraph>Continue with Google</Typography.Paragraph>
             </Button>

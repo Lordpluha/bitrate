@@ -1,13 +1,15 @@
+import { ConflictException, UnauthorizedException } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import { Test, TestingModule } from '@nestjs/testing'
+import { Request, Response } from 'express'
+
+import { PrismaService } from '../prisma/prisma.service'
+import { UserEntity } from '../users/entities'
+import { UsersService } from '../users/users.service'
+
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
-import { UsersService } from '../users/users.service'
 import { TokenService } from './token.service'
-import { ConflictException, UnauthorizedException } from '@nestjs/common'
-import { Request, Response } from 'express'
-import { UserEntity } from '../users/entities'
-import { PrismaService } from '../prisma/prisma.service'
-import { JwtService } from '@nestjs/jwt'
 
 interface RequestWithUser extends Request {
   user?: UserEntity

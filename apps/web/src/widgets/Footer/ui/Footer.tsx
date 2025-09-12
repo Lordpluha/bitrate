@@ -1,7 +1,10 @@
-import Link from 'next/link'
 import { FC, HTMLAttributes } from 'react'
-import footerLinks from '../config/footer-links.json'
+
+import Link from 'next/link'
+
 import { FacebookIcon, InstIcon, Logo, TwitIcon } from '@shared/ui'
+
+import footerLinks from '../config/footer-links.json'
 
 export type FooterProps = HTMLAttributes<HTMLDivElement>
 

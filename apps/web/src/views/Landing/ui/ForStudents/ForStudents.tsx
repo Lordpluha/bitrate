@@ -1,6 +1,7 @@
+import Link from 'next/link'
+
 import { ROUTES } from '@shared/routes'
 import { Typography } from '@spotify/ui'
-import Link from 'next/link'
 
 export const ForStudents = () => {
   return (

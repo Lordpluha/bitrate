@@ -1,5 +1,6 @@
-import { ArtistEntity } from './artist.entity'
 import { Artist } from '@prisma/client'
+
+import { ArtistEntity } from './artist.entity'
 
 describe('ArtistEntity', () => {
   it('should create a valid artist entity', () => {

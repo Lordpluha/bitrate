@@ -1,18 +1,19 @@
 'use client'
 
+import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
+
 import * as React from 'react'
-import * as LabelPrimitive from '@radix-ui/react-label'
 import {
   Controller,
-  FormProvider,
-  useFormContext,
   type ControllerProps,
   type FieldPath,
-  type FieldValues
+  type FieldValues,
+  FormProvider,
+  useFormContext
 } from 'react-hook-form'
 
-import { cn } from '@spotify/ui/lib/utils'
-import { Label } from '@spotify/ui/components/ui/label'
+import * as LabelPrimitive from '@radix-ui/react-label'
 
 const Form = FormProvider
 
@@ -89,7 +90,10 @@ const FormItem = React.forwardRef<
 })
 FormItem.displayName = 'FormItem'
 
-const FormLabel = React.forwardRef<
+const FormLabel: React.ForwardRefExoticComponent<
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
+  React.RefAttributes<React.ElementRef<typeof LabelPrimitive.Root>>
+> = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
@@ -107,12 +111,12 @@ const FormLabel = React.forwardRef<
 FormLabel.displayName = 'FormLabel'
 
 const FormControl = React.forwardRef<
-  any,
-  React.HTMLAttributes<any> & { children: React.ReactElement }
+  HTMLElement,
+  React.HTMLAttributes<HTMLElement> & { children: React.ReactElement }
 >(({ children, ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
-  const childProps = {
+  const childProps: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> } = {
     id: formItemId,
     'aria-describedby': !error
       ? `${formDescriptionId}`
@@ -122,7 +126,7 @@ const FormControl = React.forwardRef<
   }
 
   if (ref) {
-    ;(childProps as any).ref = ref
+    childProps.ref = ref
   }
 
   return React.cloneElement(children, childProps)

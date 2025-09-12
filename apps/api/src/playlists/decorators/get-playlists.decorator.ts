@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common'
-import { ApiOperation, ApiConsumes, ApiParam } from '@nestjs/swagger'
+import { ApiConsumes, ApiOperation, ApiParam } from '@nestjs/swagger'
 
 export function GetPlaylistsSwagger() {
   return applyDecorators(

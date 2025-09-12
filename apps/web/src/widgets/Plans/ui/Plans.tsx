@@ -1,7 +1,10 @@
-import { Typography } from '@spotify/ui'
 import Image from 'next/image'
-import plans from '../config/plans.json'
+
+import { Typography } from '@spotify/ui'
+
 import paymentMethods from '../config/payment-methods.json'
+import plans from '../config/plans.json'
+
 import { PlanCard } from './PlanCard'
 
 export const Plans = () => {

@@ -1,10 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing'
 import { NotFoundException } from '@nestjs/common'
-import { AlbumsService } from './albums.service'
+import { Test, TestingModule } from '@nestjs/testing'
+
 import { PrismaService } from '../prisma/prisma.service'
-import { AlbumEntity } from './entities'
+
 import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'
+
+import { AlbumsService } from './albums.service'
+import { AlbumEntity } from './entities'
 
 describe('AlbumsService', () => {
   let service: AlbumsService

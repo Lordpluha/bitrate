@@ -1,32 +1,35 @@
 'use client'
 
 import React from 'react'
-import { zodResolver, useForm } from '@spotify/ui'
-import { useRouter } from 'next/navigation'
-import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
+
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
 import { useMutation } from '@shared/api'
+import { ROUTES } from '@shared/routes'
+import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
+import { useForm, zodResolver } from '@spotify/ui'
 import {
   Button,
-  Input,
-  PasswordInput,
-  toast,
-  Typography,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
+  Input,
+  PasswordInput,
+  Typography,
+  toast
 } from '@spotify/ui'
+
 import { RegistrationFormData, registrationSchema } from '../validation'
-import { ROUTES } from '@shared/routes'
 
 export const RegistrationForm = () => {
   const router = useRouter()
   const { mutate } = useMutation('post', '/auth/registration', {
     onSuccess: () => {
-      router.push('/auth/login')
+      router.push(ROUTES.auth.login)
     },
     onError: error => {
       toast.error(`Registration error:, ${JSON.stringify(error)}`)
@@ -45,8 +48,8 @@ export const RegistrationForm = () => {
     shouldFocusError: true
   })
 
-  const onSubmit = (data: RegistrationFormData) => {
-    mutate({
+  const onSubmit = async (data: RegistrationFormData) => {
+    await mutate({
       body: {
         email: data.email,
         password: data.password,

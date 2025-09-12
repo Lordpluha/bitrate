@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "exports": {
-    ".": "./.prettierrc.js"
+    ".": "./.prettierrc.js",
+    "./without-sort": "./.prettierrc-without-sort.js"
+  },
+  "dependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2"
   }
 }

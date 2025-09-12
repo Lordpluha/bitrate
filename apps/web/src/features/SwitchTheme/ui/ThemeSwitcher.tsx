@@ -1,9 +1,11 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import clsx from 'clsx'
+
 import { themes } from '@shared/constants'
 import { useTheme } from '@shared/contexts'
+import clsx from 'clsx'
+
 import { THEME_ICONS } from '../config/theme-icons'
 
 export const ThemeSwitcher = () => {

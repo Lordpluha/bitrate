@@ -1,8 +1,9 @@
 import React, {
-  type PropsWithChildren,
+  type FC,
   type HTMLAttributes,
-  type FC
+  type PropsWithChildren
 } from 'react'
+
 import clsx from 'clsx'
 
 export type Heading4Props = PropsWithChildren<

@@ -1,5 +1,6 @@
-import { PrismaService } from '../../src/prisma/prisma.service'
 import { JwtService } from '@nestjs/jwt'
+
+import { PrismaService } from '../../src/prisma/prisma.service'
 
 export interface TestUser {
   id: string

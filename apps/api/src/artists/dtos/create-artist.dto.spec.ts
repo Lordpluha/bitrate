@@ -1,5 +1,6 @@
-import { CreateArtistDto, CreateArtistSchema } from './create-artist.dto'
 import { z } from 'zod'
+
+import { CreateArtistDto, CreateArtistSchema } from './create-artist.dto'
 
 describe('CreateArtistDto', () => {
   describe('CreateArtistSchema validation', () => {

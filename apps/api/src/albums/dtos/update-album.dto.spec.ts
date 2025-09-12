@@ -1,5 +1,6 @@
-import { UpdateAlbumDto, UpdateAlbumSchema } from './update-album.dto'
 import { z } from 'zod'
+
+import { UpdateAlbumDto, UpdateAlbumSchema } from './update-album.dto'
 
 describe('UpdateAlbumDto', () => {
   describe('UpdateAlbumSchema validation', () => {

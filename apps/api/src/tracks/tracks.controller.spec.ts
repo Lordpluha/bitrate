@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { TracksController } from './tracks.controller'
-import { TracksService } from './tracks.service'
-import { CreateTrackDto } from './dtos/create-track.dto'
 import { AuthGuard } from 'src/auth/auth.guard'
 import { UserEntity } from 'src/users/entities'
+
+import { CreateTrackDto } from './dtos/create-track.dto'
+
+import { TracksController } from './tracks.controller'
+import { TracksService } from './tracks.service'
 
 interface MockRequest {
   user: UserEntity

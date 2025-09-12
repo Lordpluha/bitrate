@@ -1,5 +1,6 @@
-import { PremiumFeatures } from '@widgets/PremiumFeatures'
 import { Plans } from '@widgets/Plans'
+import { PremiumFeatures } from '@widgets/PremiumFeatures'
+
 import { ForStudents } from './ForStudents/ForStudents'
 import { QRcode } from './QRcode/QRcode'
 import { Welcome } from './Welcome/Welcome'
