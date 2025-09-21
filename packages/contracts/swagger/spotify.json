@@ -515,7 +515,7 @@
                     "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                     "backgroundImage": "",
                     "bio": "Some bio",
-                    "createdAt": "2025-09-06T12:18:20.868Z"
+                    "createdAt": "2025-09-21T11:02:41.060Z"
                   },
                   {
                     "id": "2",
@@ -523,7 +523,7 @@
                     "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                     "backgroundImage": "",
                     "bio": "Some bio 2",
-                    "createdAt": "2025-09-06T12:18:20.868Z"
+                    "createdAt": "2025-09-21T11:02:41.060Z"
                   }
                 ]
               }
@@ -591,7 +591,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-09-06T12:18:20.869Z"
+                  "createdAt": "2025-09-21T11:02:41.061Z"
                 }
               }
             }
@@ -696,7 +696,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-09-06T12:18:20.869Z"
+                  "createdAt": "2025-09-21T11:02:41.061Z"
                 }
               }
             }
@@ -757,7 +757,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-09-06T12:18:20.869Z"
+                  "createdAt": "2025-09-21T11:02:41.061Z"
                 }
               }
             }
@@ -826,7 +826,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-09-06T12:18:20.880Z",
+                  "createdAt": "2025-09-21T11:02:41.070Z",
                   "email": "example@gmail.com"
                 }
               }
@@ -1351,7 +1351,7 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2025-09-06T12:18:20.937Z"
+                    "createdAt": "2025-09-21T11:02:41.116Z"
                   }
                 ]
               }
@@ -1417,7 +1417,7 @@
                   "title": "Track Title",
                   "cover": "https://example.com/cover.jpg",
                   "audioUrl": "",
-                  "createdAt": "2025-09-06T12:18:20.937Z"
+                  "createdAt": "2025-09-21T11:02:41.116Z"
                 }
               }
             },
@@ -1495,6 +1495,129 @@
           }
         ],
         "summary": "Create track",
+        "tags": ["Tracks"]
+      }
+    },
+    "/tracks/liked": {
+      "get": {
+        "operationId": "TracksController_getLikedTracks",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "artist": "123",
+                    "title": "Track Title",
+                    "id": "1",
+                    "likedBy": [],
+                    "album": "Album Name",
+                    "albumId": "album123",
+                    "artistId": "artist123",
+                    "cover": "https://example.com/cover.jpg",
+                    "audioUrl": "",
+                    "userId": "",
+                    "createdAt": "2025-09-21T11:02:41.116Z"
+                  }
+                ]
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Get liked user tracks with pagination",
         "tags": ["Tracks"]
       }
     },

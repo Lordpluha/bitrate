@@ -22,36 +22,34 @@ export const AuthBanner = () => {
   )
 
   return (
-    <div className='basis-[50%] overflow-hidden rounded-[0_10px_10px_0] max-lg:hidden absolute h-full top-0 right-5 left-1/2 flex-grow-0'>
-      <Carousel
-        orientation='vertical'
-        opts={{
-          loop: true,
-          align: 'start',
-          skipSnaps: false,
-          dragFree: false,
-          containScroll: 'trimSnaps',
-          watchDrag: false
-        }}
-        plugins={[plugin.current as any]}
-        className='h-full'
-      >
-        <CarouselContent className='h-full w-full -mt-0'>
-          {slides.map(({ src, alt }, i) => (
-            <CarouselItem
-              key={i}
-              className='relative h-full basis-full'
-            >
-              <img
-                src={src}
-                alt={alt}
-                className='w-full h-full object-cover select-none'
-                draggable={false}
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
-    </div>
+    <Carousel
+      orientation='vertical'
+      opts={{
+        loop: true,
+        align: 'start',
+        skipSnaps: false,
+        dragFree: false,
+        containScroll: 'trimSnaps',
+        watchDrag: false
+      }}
+      plugins={[plugin.current as any]}
+      className='overflow-hidden rounded-[0_10px_10px_0] max-xl:hidden shrink-0'
+    >
+      <CarouselContent className='m-0 h-[1008px] w-[720px]'>
+        {slides.map(({ src, alt }, i) => (
+          <CarouselItem
+            key={i}
+            className='p-0'
+          >
+            <img
+              src={src}
+              alt={alt}
+              className='h-full w-full object-cover object-center select-none'
+              draggable={false}
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+    </Carousel>
   )
 }
