@@ -5,7 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext } from '@spotify/
 import { ArrowRightIcon } from '@shared/ui'
 
 
-const tags = ['Playlists', 'Artists', 'Albums', 'Podcasts', 'Downloaded', 'Liked Songs', 'Recently Played', 'Made For You']
+const tags = ['Playlists', 'Artists', 'Albums', 'Podcasts']
 
 export const LibraryTags = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([])

@@ -6,6 +6,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   Req
 } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
@@ -32,10 +33,10 @@ export class PlaylistsController {
 
   @GetPlaylistsSwagger()
   @Get('')
-  async getAll(@Param('page') page?: number, @Param('limit') limit?: number) {
+  async getAll(@Query('page') page?: number, @Query('limit') limit?: number) {
     return await this.playlistService.getAll({
-      limit,
-      page
+      limit: Number(limit || 10),
+      page: Number(page || 1)
     })
   }
 

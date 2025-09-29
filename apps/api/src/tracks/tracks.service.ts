@@ -44,6 +44,23 @@ export class TracksService {
     }
   }
 
+  async findLikedTracks(
+    userId: UserEntity['id'],
+    { page = 1, limit = 10 }: { page?: number; limit?: number }
+  ) {
+    return this.prisma.track.findMany({
+      where: {
+        likedBy: {
+          some: {
+            id: userId
+          }
+        }
+      },
+      skip: (page - 1) * limit,
+      take: limit
+    })
+  }
+
   async findLikedTracksByUserId(userId: UserEntity['id']) {
     return this.prisma.track.findMany({
       where: {

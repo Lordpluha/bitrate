@@ -29,7 +29,7 @@ export const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
         <Button
           onClick={openSignUp}
           variant="ghost"
-          className={`hover:opacity-70 transition-[.3s] text-base font-semibold text-white ${
+          className={`hover:opacity-70 transition-[.3s] text-base font-semibold text-text ${
             isMobile ? 'justify-start py-3' : ''
           }`}
         >
@@ -49,7 +49,7 @@ export const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
 
       <LoginModal
         open={loginOpen}
-        onOpenChange={setLoginOpen}
+        onSuccess={setLoginOpen}
         onSwitchToSignUp={openSignUp}
       />
 

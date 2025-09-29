@@ -7,7 +7,7 @@ import { LibraryMusic } from './LibraryMusic'
 
 export const LeftSidebar = () => {
   return (
-    <div className='bg-bgSecondary rounded-2xl h-full p-4 flex flex-col'>
+    <div className='h-full p-4 flex flex-col'>
       <LibraryHeader />
       <LibraryTags />
       <LibraryControls />

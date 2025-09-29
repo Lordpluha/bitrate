@@ -246,6 +246,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/tracks/liked": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get liked user tracks with pagination */
+        get: operations["TracksController_getLikedTracks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tracks/{id}": {
         parameters: {
             query?: never;
@@ -1361,7 +1378,7 @@ export interface operations {
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio",
-                     *         "createdAt": "2025-09-06T12:19:40.008Z"
+                     *         "createdAt": "2025-09-29T13:38:06.792Z"
                      *       },
                      *       {
                      *         "id": "2",
@@ -1369,7 +1386,7 @@ export interface operations {
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio 2",
-                     *         "createdAt": "2025-09-06T12:19:40.008Z"
+                     *         "createdAt": "2025-09-29T13:38:06.792Z"
                      *       }
                      *     ] */
                     "application/json": unknown;
@@ -1486,7 +1503,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-06T12:19:40.011Z"
+                     *       "createdAt": "2025-09-29T13:38:06.795Z"
                      *     } */
                     "application/json": unknown;
                 };
@@ -1619,7 +1636,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-06T12:19:40.010Z"
+                     *       "createdAt": "2025-09-29T13:38:06.794Z"
                      *     } */
                     "application/json": unknown;
                 };
@@ -1739,7 +1756,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-06T12:19:40.011Z"
+                     *       "createdAt": "2025-09-29T13:38:06.794Z"
                      *     } */
                     "application/json": unknown;
                 };
@@ -1855,7 +1872,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-06T12:19:40.038Z",
+                     *       "createdAt": "2025-09-29T13:38:06.816Z",
                      *       "email": "example@gmail.com"
                      *     } */
                     "application/json": unknown;
@@ -2639,7 +2656,7 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2025-09-06T12:19:40.232Z"
+                     *         "createdAt": "2025-09-29T13:38:07.104Z"
                      *       }
                      *     ] */
                     "application/json": unknown;
@@ -2753,8 +2770,149 @@ export interface operations {
                      *       "title": "Track Title",
                      *       "cover": "https://example.com/cover.jpg",
                      *       "audioUrl": "",
-                     *       "createdAt": "2025-09-06T12:19:40.232Z"
+                     *       "createdAt": "2025-09-29T13:38:07.106Z"
                      *     } */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example 401 */
+                        statusCode?: number;
+                        /**
+                         * @example Invalid or expired token
+                         * @enum {string}
+                         */
+                        message?: "Access token required" | "Refresh token required" | "Invalid token requirement" | "Invalid or expired token" | "User not found" | "Session not found";
+                        /** @example Unauthorized */
+                        error?: string;
+                    };
+                };
+            };
+            /** @description Method not allowed */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request timeout */
+            408: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Gateway timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description HTTP version not supported */
+            505: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient storage */
+            507: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Loop detected */
+            508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TracksController_getLikedTracks: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [
+                     *       {
+                     *         "artist": "123",
+                     *         "title": "Track Title",
+                     *         "id": "1",
+                     *         "likedBy": [],
+                     *         "album": "Album Name",
+                     *         "albumId": "album123",
+                     *         "artistId": "artist123",
+                     *         "cover": "https://example.com/cover.jpg",
+                     *         "audioUrl": "",
+                     *         "userId": "",
+                     *         "createdAt": "2025-09-29T13:38:07.105Z"
+                     *       }
+                     *     ] */
                     "application/json": unknown;
                 };
             };
@@ -3652,18 +3810,36 @@ export interface operations {
     };
     PlaylistsController_getAll: {
         parameters: {
-            query?: never;
-            header?: never;
-            path: {
+            query?: {
                 /** @description Page number for pagination */
-                page: number;
+                page?: number;
                 /** @description Number of items per page */
-                limit: number;
+                limit?: number;
             };
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [
+                     *       {
+                     *         "cover": "https://example.com/cover.jpg",
+                     *         "createdAt": "2025-09-29T13:38:07.129Z",
+                     *         "description": "A cool playlist",
+                     *         "id": "1",
+                     *         "title": "My Playlist",
+                     *         "userId": "user-1"
+                     *       }
+                     *     ] */
+                    "application/json": unknown;
+                };
+            };
             /** @description Method not allowed */
             405: {
                 headers: {

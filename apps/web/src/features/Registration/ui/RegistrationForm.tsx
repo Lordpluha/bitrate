@@ -24,6 +24,15 @@ import {
 } from '@spotify/ui'
 
 import { RegistrationFormData, registrationSchema } from '../validation'
+import { int } from 'zod'
+
+interface RegistrationFormProps {
+  fullName: string
+  email: string
+  password: string
+  confirmPassword: string
+}
+
 
 export const RegistrationForm = () => {
   const router = useRouter()
@@ -48,7 +57,7 @@ export const RegistrationForm = () => {
     shouldFocusError: true
   })
 
-  const onSubmit = async (data: RegistrationFormData) => {
+  const onSubmit = async (data: RegistrationFormProps) => {
     await mutate({
       body: {
         email: data.email,

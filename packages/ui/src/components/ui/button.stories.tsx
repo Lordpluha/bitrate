@@ -76,6 +76,15 @@ export const Destructive: Story = {
 }
 
 /**
+ * Use the `subscribe` button to subscribe to updates or notifications.
+ */
+export const Subscribe: Story = {
+  args: {
+    variant: 'subscribe'
+  }
+}
+
+/**
  * Use the `primary` button where primary button is needed
  */
 export const Primary: Story = {

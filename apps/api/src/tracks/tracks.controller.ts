@@ -22,7 +22,8 @@ import {
   PostTrackSwagger,
   TracksGetAllSwagger,
   GetTrackByIdSwagger,
-  UpdateTrackByIdSwagger
+  UpdateTrackByIdSwagger,
+  TracksGetLikedSwagger
 } from './decorators'
 import { Auth } from 'src/auth/auth.guard'
 import { CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
@@ -53,6 +54,21 @@ export class TracksController {
       limit,
       page,
       title
+    })
+  }
+
+  @Auth()
+  @TracksGetLikedSwagger()
+  @Get('liked')
+  getLikedTracks(
+    @Req() req: Request,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number
+  ) {
+    const user = req['user'] as UserEntity
+    return this.tracksService.findLikedTracks(user.id, {
+      page,
+      limit
     })
   }
 

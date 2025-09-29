@@ -19,6 +19,8 @@ export const buttonVariants = cva(
         primary: 'bg-green-500 text-text hover:opacity-80 transition-[0.3s]',
         contrast:
           'bg-contrast text-textContrast border-2 border-grey-500 border-solid hover:opacity-80 transition-[0.3s]',
+        subscribe:
+            'border border-text rounded-full text-text font-medium hover:bg-contrast hover:text-textContrast transition',
         ghost:
           '',
         link: 'text-slate-900 underline-offset-4 hover:underline dark:text-slate-50'

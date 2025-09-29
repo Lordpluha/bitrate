@@ -25,15 +25,15 @@ import { ROUTES } from '@shared/routes'
 
 interface LoginModalProps {
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onSuccess: (open: boolean) => void
   onSwitchToSignUp?: () => void
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({ open, onOpenChange, onSwitchToSignUp }) => {
+export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitchToSignUp }) => {
   const router = useRouter()
   const { mutate, isPending } = useMutation('post', '/auth/login', {
     onSuccess: () => {
-      onOpenChange(false)
+      onSuccess(false)
       // Небольшая задержка для установки cookies, затем редирект
       setTimeout(() => {
         router.push('/main')
@@ -63,7 +63,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onOpenChange, onSw
   }
 
   return (
-    <Modal open={open} onOpenChange={onOpenChange} className="max-w-[500px] w-full">
+    <Modal open={open} onOpenChange={onSuccess} className="max-w-[500px] w-full">
       <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-textContrast rounded-lg'>
         <div className='flex flex-col items-center'>
           <LogoIconSm />
@@ -165,7 +165,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onOpenChange, onSw
                     if (onSwitchToSignUp) {
                       onSwitchToSignUp()
                     } else {
-                      onOpenChange(false)
+                      onSuccess(false)
                     }
                   }}
                 >

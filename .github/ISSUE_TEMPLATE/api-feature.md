@@ -1,31 +1,63 @@
 ---
-name: Api feature
-about: Description and plan for @spotify/api feature development
-title: "[FEATURE] "
-labels: ["feature", "api"]
+name: 🚀 API Feature
+about: Create a feature request for the Spotify Clone API
+title: "[API] "
+labels: ["feature", "api", "backend"]
 assignees: ["lordpluha"]
 ---
 
-## Brief Description
-<!-- What needs to be done? -->
+## 📋 Brief Description
+<!-- Provide a clear and concise description of the feature -->
 
-## Motivation and Goal
-<!-- Why are we doing this, and what value does it bring to the project? -->
 
-## Requirements
-<!-- List the specific items to be completed -->
-- [ ] Item 1
-- [ ] Item 2
+## 🎯 Motivation and Goal
+<!-- Explain why this feature is needed and what problem it solves -->
 
-## Technical Implementation
-<!-- How do you plan to implement this: libraries, modules, algorithms -->
-1. Step 1
-2. Step 2
 
-## Acceptance Criteria
-<!-- What should be verified to accept the task? -->
-- [ ] Criterion 1
-- [ ] Criterion 2
+## 📌 Requirements
+<!-- List the specific functional and non-functional requirements -->
+- [ ]
+- [ ]
+- [ ]
 
-## Additional Information
-<!-- Links, screenshots, mockups, examples -->
+## 🔧 Technical Implementation
+<!-- Describe the technical approach and implementation details -->
+
+### Database Changes
+- [ ] Schema modifications needed
+- [ ] Migration scripts
+
+### API Endpoints
+- [ ] `GET` /endpoint-name
+- [ ] `POST` /endpoint-name
+- [ ] `PUT` /endpoint-name
+- [ ] `DELETE` /endpoint-name
+
+### Dependencies
+- [ ] New packages/libraries needed
+- [ ] Third-party integrations
+
+## ✅ Acceptance Criteria
+<!-- Define what "done" looks like for this feature -->
+- [ ] API endpoints are implemented and working
+- [ ] Unit tests are written and passing
+- [ ] Integration tests are written and passing
+- [ ] API documentation is updated
+- [ ] Error handling is implemented
+- [ ] Performance requirements are met
+
+## 🧪 Testing Strategy
+<!-- How will this feature be tested? -->
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] E2E tests
+- [ ] Performance tests
+
+## 📖 Documentation
+<!-- What documentation needs to be created/updated? -->
+- [ ] API documentation
+- [ ] Code comments
+- [ ] README updates
+
+## 🔗 Additional Information
+<!-- Any additional context, screenshots, links, or examples -->

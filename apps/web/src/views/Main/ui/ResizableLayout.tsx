@@ -1,8 +1,11 @@
 import React from 'react'
-import { ResizableLayout as ResizableLayoutShadCN, ResizablePanel, ResizableHandle, Typography } from '@spotify/ui'
+import { ResizableLayout as ResizableLayoutShadCN, ResizablePanel, ResizableHandle } from '@spotify/ui'
 
 import styles from './ResizableLayout.module.scss'
-import { LeftSidebar } from '../../../widgets/LeftSidebar'
+
+import { LeftSidebar } from '@/widgets/LeftSidebar'
+import { MainPanel } from '@/widgets/MainPanel'
+import { RightSidebar } from '@/widgets/RightSidebar'
 
 export const ResizableLayout = () => {
   return (
@@ -24,11 +27,7 @@ export const ResizableLayout = () => {
           minSize={40}
           className={`${styles.panel} ${styles.mainContent}`}
         >
-          <div className='p-4'>
-            <Typography.Heading3 className='text-white mb-4'>
-              Main Content
-            </Typography.Heading3>
-          </div>
+          <MainPanel />
         </ResizablePanel>
 
         <ResizableHandle className={styles.resizeHandle} />
@@ -39,11 +38,7 @@ export const ResizableLayout = () => {
           maxSize={30}
           className={`${styles.panel} ${styles.rightSidebar}`}
         >
-          <div className='p-4'>
-            <Typography.Heading3 className='text-white mb-4'>
-              Right Sidebar
-            </Typography.Heading3>
-          </div>
+          <RightSidebar />
         </ResizablePanel>
       </ResizableLayoutShadCN>
     </div>
