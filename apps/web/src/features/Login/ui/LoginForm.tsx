@@ -1,14 +1,13 @@
 'use client'
 
-import React from 'react'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api'
 import { ROUTES } from '@shared/routes'
 import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
-import { SubmitHandler, useForm, zodResolver } from '@spotify/ui'
 import {
   Button,
   Form,
@@ -22,6 +21,8 @@ import {
   Typography,
   toast
 } from '@spotify/ui'
+import type { SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { LoginFormData, loginSchema } from '../validation'
 

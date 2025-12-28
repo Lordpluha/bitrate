@@ -1,10 +1,60 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@source "../../src/**/*.{ts,tsx}";
+
+@theme {
+  /* Breakpoints */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 650px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1025px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  --breakpoint-max-xs: 479px;
+  --breakpoint-max-sm: 650px;
+  --breakpoint-max-md: 768px;
+  --breakpoint-max-lg: 1025px;
+  --breakpoint-max-xl: 1279px;
+  --breakpoint-max-2xl: 1535px;
+
+  /* Font Families */
+  --font-family-source-sans-3: 'Source Sans 3', sans-serif;
+
+  /* Animations */
+  --animate-gradient-shift: gradientShift 60s ease infinite;
+  --animate-spin: spin 1s linear infinite;
+
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 0%;
+    }
+    25% {
+      background-position: 100% 0%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    75% {
+      background-position: 0% 100%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
 
 @layer base {
   * {
-    @apply scroll-smooth;
+    scroll-behavior: smooth;
   }
 
   :root {
@@ -60,5 +110,27 @@
     --color-contrast: #000;
     --color-text-contrast: #fff;
     --color-bg-secondary-rgb: 247 247 247;
+  }
+}
+
+@layer utilities {
+  .container {
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+    max-width: 100%;
+  }
+
+  @media (min-width: 650px) {
+    .container {
+      max-width: 1540px;
+    }
+  }
+
+  .bg-auth-spotify {
+    background-image: linear-gradient(30deg, #0c7832, #601e7a, #121212, #820c17, #0c7832, #601e7a, #121212, #820c17);
+  }
+
+  .bg-gradient-animated {
+    background-size: 600% 600%;
   }
 }

@@ -1,4 +1,3 @@
 {
-  "./src/*.{ts,tsx}": ["eslint --fix", "prettier --write"],
-  "./src/**/*.{scss,css}": ["stylelint --config @spotify/stylelint --fix"]
+  "./src/*.{ts,tsx,scss,css}": ["pnpm exec biome check --write"]
 }

@@ -1,14 +1,13 @@
 'use client'
 
-import React from 'react'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api'
 import { ROUTES } from '@shared/routes'
 import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
-import { useForm, zodResolver } from '@spotify/ui'
 import {
   Button,
   Form,
@@ -22,6 +21,7 @@ import {
   Typography,
   toast
 } from '@spotify/ui'
+import { useForm } from 'react-hook-form'
 
 import { RegistrationFormData, registrationSchema } from '../validation'
 
@@ -53,7 +53,7 @@ export const RegistrationForm = () => {
       body: {
         email: data.email,
         password: data.password,
-        username: data.fullName
+        username: data.fullName,
       }
     })
   }

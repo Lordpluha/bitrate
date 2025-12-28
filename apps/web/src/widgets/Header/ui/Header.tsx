@@ -10,8 +10,6 @@ import { AlignJustify, X } from 'lucide-react'
 import { AuthButtons } from './AuthButtons/AuthButtons'
 import { NavLinks } from './NavLink/NavLinks'
 
-import styles from './Header.module.scss'
-
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isNav, setIsNavActive] = useState(false)
@@ -28,17 +26,21 @@ export const Header = () => {
 
   return (
     <header
-      className={clsx(styles.header, isScrolled && styles['header--scrolled'])}
+      className={clsx(
+        'sticky top-0 left-0 right-0 z-50 transition-colors duration-300',
+        isScrolled && 'backdrop-blur border-b border-[color:var(--color-text)]/10',
+        isScrolled && 'bg-[color:var(--color-bg-secondary)]'
+      )}
     >
-      <div className={clsx(styles.inner, 'container')}>
+      <div className="px-8 py-8 flex justify-between items-center relative container">
         <Logo />
-        <nav className={styles.nav}>
+        <nav className="flex items-center gap-16">
           <ul
             className={clsx(
-              styles.nav__list,
-              styles['mobile-layout'],
-              styles['mobile--flex'],
-              isNav && styles['mobile--active']
+              'flex items-center gap-16 transition-all duration-300',
+              'max-lg:fixed max-lg:top-0 max-lg:right-0 max-lg:bottom-0 max-lg:h-screen max-lg:w-full max-lg:z-10',
+              'max-lg:bg-[color:var(--color-bg)] max-lg:flex-col max-lg:justify-center',
+              isNav ? 'max-lg:left-0' : 'max-lg:left-[-100%]'
             )}
             onClick={onCloseNav}
           >
@@ -48,7 +50,7 @@ export const Header = () => {
           </ul>
           <div
             onClick={onNavToggle}
-            className={styles.burger}
+            className="text-[color:var(--color-text)] hidden max-lg:block absolute z-20 right-8 top-8 cursor-pointer"
           >
             {isNav ? <X size={40} /> : <AlignJustify size={40} />}
           </div>

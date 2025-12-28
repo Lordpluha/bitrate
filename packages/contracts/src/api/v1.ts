@@ -246,6 +246,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/tracks/liked": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get liked user tracks with pagination */
+        get: operations["TracksController_getLikedTracks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tracks/{id}": {
         parameters: {
             query?: never;
@@ -488,17 +505,17 @@ export interface components {
              * @description New user email
              * @example newuser@example.com
              */
-            email: Record<string, never>;
+            email: string;
             /**
              * @description New user password
              * @example password123
              */
-            password: Record<string, never>;
+            password: string;
             /**
              * @description New user username
              * @example newuser123
              */
-            username: Record<string, never>;
+            username: string;
         };
         UserEntity: {
             id: string;
@@ -507,8 +524,8 @@ export interface components {
             password: string;
             /** Format: date-time */
             createdAt: string;
-            description: Record<string, never>;
-            avatar: Record<string, never>;
+            description: string | null;
+            avatar: string | null;
         };
         UpdateUserDto: {
             /**
@@ -572,7 +589,7 @@ export interface components {
             id: string;
             title: string;
             cover: string;
-            description: Record<string, never>;
+            description: string | null;
             /** Format: date-time */
             createdAt: string;
             userId: string;
@@ -581,25 +598,25 @@ export interface components {
             /** @description Playlist title */
             title: string;
             /** @example user123 */
-            description: string;
+            description?: string;
         };
         UpdatePlaylistDto: {
             /** @description Playlist title */
             title: string;
             /** @example user123 */
-            description: string;
+            description?: string;
         };
         UpdateAlbumDto: {
             /** @description Playlist title */
             title: string;
             /** @example user123 */
-            description: string;
+            description?: string;
         };
         CreateAlbumDto: {
             /** @description Playlist title */
             title: string;
             /** @example user123 */
-            description: string;
+            description?: string;
         };
     };
     responses: never;
@@ -619,12 +636,6 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -702,6 +713,14 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
         };
     };
     AuthController_login: {
@@ -732,14 +751,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "errors": [
                      *         {
                      *           "field": "email",
                      *           "message": "email must be an email"
                      *         }
                      *       ]
-                     *     } */
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -820,6 +841,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     AuthController_registration: {
@@ -848,14 +875,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "errors": [
                      *         {
                      *           "field": "email",
                      *           "message": "email must be an email"
                      *         }
                      *       ]
-                     *     } */
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -938,6 +967,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1052,6 +1087,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1173,6 +1214,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     AuthController_getMe: {
@@ -1190,7 +1237,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "createdAt": "2023-10-01T12:00:00.000Z",
                      *       "email": "user@example.com",
                      *       "id": "1234567890abcdef",
@@ -1198,7 +1246,8 @@ export interface operations {
                      *       "username": "user123",
                      *       "avatar": null,
                      *       "description": "Some description about the user"
-                     *     } */
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1293,6 +1342,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1322,14 +1377,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example [
+                    /**
+                     * @example [
                      *       {
                      *         "id": "1",
                      *         "username": "user1",
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio",
-                     *         "createdAt": "2025-09-06T12:18:20.868Z"
+                     *         "createdAt": "2025-12-28T19:52:39.610Z"
                      *       },
                      *       {
                      *         "id": "2",
@@ -1337,9 +1393,10 @@ export interface operations {
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio 2",
-                     *         "createdAt": "2025-09-06T12:18:20.868Z"
+                     *         "createdAt": "2025-12-28T19:52:39.610Z"
                      *       }
-                     *     ] */
+                     *     ]
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1420,6 +1477,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     UsersController_putById: {
@@ -1442,14 +1505,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "username": "user1",
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-06T12:18:20.869Z"
-                     *     } */
+                     *       "createdAt": "2025-12-28T19:52:39.612Z"
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1549,6 +1614,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     UsersController_getByUsername: {
@@ -1569,14 +1640,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "username": "user1",
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-06T12:18:20.869Z"
-                     *     } */
+                     *       "createdAt": "2025-12-28T19:52:39.611Z"
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1664,6 +1737,14 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
         };
     };
     UsersController_getById: {
@@ -1681,14 +1762,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "username": "user1",
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-06T12:18:20.869Z"
-                     *     } */
+                     *       "createdAt": "2025-12-28T19:52:39.612Z"
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1769,6 +1852,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     UsersController_uploadAvatar: {
@@ -1791,15 +1880,17 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "username": "user1",
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-06T12:18:20.880Z",
+                     *       "createdAt": "2025-12-28T19:52:39.613Z",
                      *       "email": "example@gmail.com"
-                     *     } */
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1906,6 +1997,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     ArtistsController_getAll: {
@@ -1929,7 +2026,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example [
+                    /**
+                     * @example [
                      *       {
                      *         "avatar": "https://example.com/avatar.jpg",
                      *         "id": "1",
@@ -1937,7 +2035,8 @@ export interface operations {
                      *         "backgroundImage": "",
                      *         "bio": ""
                      *       }
-                     *     ] */
+                     *     ]
+                     */
                     "application/json": unknown;
                 };
             };
@@ -2018,6 +2117,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     ArtistsController_create: {
@@ -2033,12 +2138,6 @@ export interface operations {
             };
         };
         responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -2111,6 +2210,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2127,12 +2232,6 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -2209,6 +2308,14 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
             };
         };
     };
@@ -2312,6 +2419,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2424,6 +2537,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     ArtistsController_getByUsername: {
@@ -2435,12 +2554,6 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -2518,6 +2631,14 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
         };
     };
     TracksController_getAll: {
@@ -2541,7 +2662,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example [
+                    /**
+                     * @example [
                      *       {
                      *         "artist": "123",
                      *         "title": "Track Title",
@@ -2553,9 +2675,10 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2025-09-06T12:18:20.937Z"
+                     *         "createdAt": "2025-12-28T19:52:39.648Z"
                      *       }
-                     *     ] */
+                     *     ]
+                     */
                     "application/json": unknown;
                 };
             };
@@ -2636,6 +2759,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     TracksController_postTrack: {
@@ -2656,13 +2785,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "title": "Track Title",
                      *       "cover": "https://example.com/cover.jpg",
                      *       "audioUrl": "",
-                     *       "createdAt": "2025-09-06T12:18:20.937Z"
-                     *     } */
+                     *       "createdAt": "2025-12-28T19:52:39.648Z"
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -2762,11 +2893,22 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
-    TracksController_getById: {
+    TracksController_getLikedTracks: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -2777,7 +2919,45 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    /**
+                     * @example [
+                     *       {
+                     *         "artist": "123",
+                     *         "title": "Track Title",
+                     *         "id": "1",
+                     *         "likedBy": [],
+                     *         "album": "Album Name",
+                     *         "albumId": "album123",
+                     *         "artistId": "artist123",
+                     *         "cover": "https://example.com/cover.jpg",
+                     *         "audioUrl": "",
+                     *         "userId": "",
+                     *         "createdAt": "2025-12-28T19:52:39.648Z"
+                     *       }
+                     *     ]
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example 401 */
+                        statusCode?: number;
+                        /**
+                         * @example Invalid or expired token
+                         * @enum {string}
+                         */
+                        message?: "Access token required" | "Refresh token required" | "Invalid token requirement" | "Invalid or expired token" | "User not found" | "Session not found";
+                        /** @example Unauthorized */
+                        error?: string;
+                    };
+                };
             };
             /** @description Method not allowed */
             405: {
@@ -2855,6 +3035,108 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TracksController_getById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Method not allowed */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request timeout */
+            408: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Gateway timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description HTTP version not supported */
+            505: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient storage */
+            507: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Loop detected */
+            508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
             };
         };
     };
@@ -2962,6 +3244,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3078,6 +3366,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     TracksController_playTrack: {
@@ -3182,6 +3476,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3296,6 +3596,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     TracksController_updateTrackState: {
@@ -3400,6 +3706,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3512,6 +3824,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     PlaylistsController_getAll: {
@@ -3528,12 +3846,6 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -3610,6 +3922,14 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>[];
+                };
             };
         };
     };
@@ -3722,6 +4042,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     PlaylistsController_getById: {
@@ -3733,12 +4059,6 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -3811,6 +4131,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3927,6 +4253,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     AlbumsController_getAllAlbums: {
@@ -3941,12 +4273,6 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -4023,6 +4349,14 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>[];
+                };
             };
         };
     };
@@ -4135,6 +4469,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     AlbumsController_getById: {
@@ -4146,12 +4486,6 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -4228,6 +4562,14 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
             };
         };
     };
@@ -4340,6 +4682,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     AlbumsController_deleteAlbum: {
@@ -4442,6 +4790,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4559,6 +4913,12 @@ export interface operations {
                 };
                 content?: never;
             };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     FilesController_getAudioFile: {
@@ -4666,6 +5026,12 @@ export interface operations {
             };
             /** @description Loop detected */
             508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };

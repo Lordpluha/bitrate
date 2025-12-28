@@ -72,16 +72,16 @@ async function main() {
       include: {
         tracks: true,
         user: {
-          select: { username: true }
-        }
+          select: { username: true },
+        },
       },
-      take: 3
+      take: 3,
     })
 
     console.log('🔗 Sample playlist-track relations:')
-    playlistsWithTracks.forEach(playlist => {
+    playlistsWithTracks.forEach((playlist) => {
       console.log(
-        `   🎵 "${playlist.title}" by ${playlist.user.username} (${playlist.tracks.length} tracks)`
+        `   🎵 "${playlist.title}" by ${playlist.user.username} (${playlist.tracks.length} tracks)`,
       )
     })
 
@@ -89,16 +89,16 @@ async function main() {
       include: {
         tracks: true,
         artist: {
-          select: { username: true }
-        }
+          select: { username: true },
+        },
       },
-      take: 3
+      take: 3,
     })
 
     console.log('🔗 Sample album-track relations:')
-    albumsWithTracks.forEach(album => {
+    albumsWithTracks.forEach((album) => {
       console.log(
-        `   📀 "${album.title}" by ${album.artist.username} (${album.tracks.length} tracks)`
+        `   📀 "${album.title}" by ${album.artist.username} (${album.tracks.length} tracks)`,
       )
     })
 
@@ -110,5 +110,4 @@ async function main() {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 main()

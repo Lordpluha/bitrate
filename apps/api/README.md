@@ -45,10 +45,8 @@ $ pnpm run start:prod
 
 ### Linting and formating
 ```bash
-# prettier
 $ pnpm run format
 
-# eslint
 $ pnpm run lint
 ```
 

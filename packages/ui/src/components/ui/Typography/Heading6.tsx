@@ -1,31 +1,26 @@
-import React, {
-  type FC,
-  type HTMLAttributes,
-  type PropsWithChildren
-} from 'react'
-
-import clsx from 'clsx'
+import clsx from "clsx";
+import type { FC, HTMLAttributes, PropsWithChildren } from "react";
 
 export type Heading6Props = PropsWithChildren<
-  HTMLAttributes<HTMLHeadingElement>
->
+	HTMLAttributes<HTMLHeadingElement>
+>;
 
 export const Heading6: FC<Heading6Props> = ({
-  className,
-  children,
-  ...etcProps
+	className,
+	children,
+	...etcProps
 }) => {
-  return (
-    <h6
-      className={clsx(
-        'text-[1.125rem]',
-        'max-lg:text-base',
-        'max-md:text-sm',
-        className
-      )}
-      {...etcProps}
-    >
-      {children}
-    </h6>
-  )
-}
+	return (
+		<h6
+			className={clsx(
+				"text-[1.125rem]",
+				"max-lg:text-base",
+				"max-md:text-sm",
+				className,
+			)}
+			{...etcProps}
+		>
+			{children}
+		</h6>
+	);
+};

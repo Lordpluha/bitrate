@@ -9,104 +9,101 @@ export class UsersService {
   async findById_UNSECURE(id: UserEntity['id']) {
     return await this.prisma.user.findUniqueOrThrow({
       where: {
-        id
-      }
+        id,
+      },
     })
   }
 
   async findById(id: UserEntity['id']) {
     return await this.prisma.user.findUniqueOrThrow({
       where: {
-        id
+        id,
       },
       omit: {
         password: true,
-        email: true
-      }
+        email: true,
+      },
     })
   }
 
   async getByEmail(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
       where: {
-        email
+        email,
       },
       omit: {
-        password: true
-      }
+        password: true,
+      },
     })
   }
 
   async getByEmail_UNSECURE(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
       where: {
-        email
-      }
+        email,
+      },
     })
   }
 
   async getByUsername(username: UserEntity['username']) {
     return await this.prisma.user.findFirst({
       where: {
-        username
+        username,
       },
       omit: {
         password: true,
-        email: true
-      }
+        email: true,
+      },
     })
   }
 
   async findAll({
     username,
     limit = 10,
-    page = 1
+    page = 1,
   }: {
     username: UserEntity['username']
     limit?: number
     page?: number
   }) {
-    return this.prisma.user.findMany({
+    return await this.prisma.user.findMany({
       where: {
-        username
+        username,
       },
       skip: page ? (page - 1) * limit : undefined,
       take: limit,
       omit: {
         password: true,
-        email: true
-      }
+        email: true,
+      },
     })
   }
 
   async create(data: Omit<UserEntity, 'id' | 'createdAt'>) {
-    return this.prisma.user.create({
+    return await this.prisma.user.create({
       data,
       omit: {
-        password: true
-      }
+        password: true,
+      },
     })
   }
 
-  async updateById(
-    id: UserEntity['id'],
-    userData: Partial<Omit<UserEntity, 'id' | ''>>
-  ) {
-    return this.prisma.user.update({
+  async updateById(id: UserEntity['id'], userData: Partial<Omit<UserEntity, 'id' | ''>>) {
+    return await this.prisma.user.update({
       where: { id },
       data: userData,
       omit: {
-        password: true
-      }
+        password: true,
+      },
     })
   }
 
   async uploadAvatar(userId: string, filename: string) {
     const avatarPath = `/uploads/users/avatars/${filename}`
-    return this.prisma.user.update({
+    return await this.prisma.user.update({
       where: { id: userId },
       data: { avatar: avatarPath },
-      omit: { password: true }
+      omit: { password: true },
     })
   }
 }

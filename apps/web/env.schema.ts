@@ -21,7 +21,6 @@ export type envType = z.infer<typeof envSchema>;
 export const env = envSchema.parse(process.env);
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv extends envType {
       __envSchemaBrand?: undefined;

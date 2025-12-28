@@ -99,7 +99,7 @@ $ turbo dev
 
 ### Infrastructure
 - Monorepo: TurboRepo + Pnpm
-- Linting: ESLint, Prettier, Stylelint
+- Linting: Biome
 - Git tools: Husky, Lint-staged, Commit-lint, Gitflow
 - CI/CD: GitHub Actions, Docker, self-hosted Sentry
 - Env: .env per app + .env.schema (Zod-based)

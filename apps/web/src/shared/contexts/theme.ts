@@ -6,7 +6,6 @@ import { theme } from '@shared/constants'
 
 export type ThemeContextType = {
   theme: theme
-  // eslint-disable-next-line no-unused-vars
   setTheme: (theme: theme) => void
 }
 

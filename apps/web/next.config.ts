@@ -1,9 +1,9 @@
 import type { NextConfig } from 'next'
-import withSvgr from 'next-plugin-svgr'
 
 const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
   poweredByHeader: false,
+  transpilePackages: ['@spotify/ui'],
   // For debug
   // swcMinify: false,
   // reactStrictMode: false,
@@ -17,4 +17,4 @@ const nextConfig = {
   // },
 } satisfies NextConfig
 
-export default withSvgr(nextConfig)
+export default nextConfig

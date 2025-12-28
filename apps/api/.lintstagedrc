@@ -1,10 +1,8 @@
 {
 	"*.ts": [
-		"eslint --fix",
-		"prettier --write"
+		"pnpm exec biome check --write"
 	],
 	"./src/**/*.ts": [
-		"eslint --fix",
-		"prettier --write"
+		"pnpm exec biome check --write"
 	]
 }

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { Artist } from '@prisma/client'
+import { ArtistEntity } from 'src/artists/entities'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { UserEntity } from 'src/users/entities'
-import { TrackEntity } from './entities'
 import { CreateTrackDto } from './dtos'
-import { ArtistEntity } from 'src/artists/entities'
+import { TrackEntity } from './entities'
 
 @Injectable()
 export class TracksService {
@@ -13,7 +13,7 @@ export class TracksService {
   async findAll({
     page = 1,
     limit = 10,
-    title
+    title,
   }: { page?: number; limit?: number } & Partial<TrackEntity>) {
     const skip = (page - 1) * limit
 
@@ -24,13 +24,13 @@ export class TracksService {
           ? {
               title: {
                 contains: title,
-                mode: 'insensitive'
-              }
+                mode: 'insensitive',
+              },
             }
           : undefined,
-        take: limit
+        take: limit,
       }),
-      this.prisma.track.count()
+      this.prisma.track.count(),
     ])
 
     return {
@@ -39,81 +39,81 @@ export class TracksService {
         total,
         page,
         limit,
-        lastPage: Math.ceil(total / limit)
-      }
+        lastPage: Math.ceil(total / limit),
+      },
     }
   }
 
   async findLikedTracks(
     userId: UserEntity['id'],
-    { page = 1, limit = 10 }: { page?: number; limit?: number }
+    { page = 1, limit = 10 }: { page?: number; limit?: number },
   ) {
-    return this.prisma.track.findMany({
+    return await this.prisma.track.findMany({
       where: {
         likedBy: {
           some: {
-            id: userId
-          }
-        }
+            id: userId,
+          },
+        },
       },
       skip: (page - 1) * limit,
-      take: limit
+      take: limit,
     })
   }
 
   async findLikedTracksByUserId(userId: UserEntity['id']) {
-    return this.prisma.track.findMany({
+    return await this.prisma.track.findMany({
       where: {
         likedBy: {
           some: {
-            id: userId
-          }
-        }
-      }
+            id: userId,
+          },
+        },
+      },
     })
   }
 
   async findTrackById(id: TrackEntity['id']) {
-    return this.prisma.track.findUnique({
+    return await this.prisma.track.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     })
   }
 
   async findTracksByArtistId(artistId: Artist['id']) {
-    return this.prisma.track.findMany({
+    return await this.prisma.track.findMany({
       where: {
-        artistId
-      }
+        artistId,
+      },
     })
   }
 
   async findTracksByArtistName(artistUsername: Artist['username']) {
-    return this.prisma.track.findMany({
+    return await this.prisma.track.findMany({
       where: {
         artist: {
-          username: artistUsername
-        }
-      }
+          username: artistUsername,
+        },
+      },
     })
   }
 
   async create(artistId: ArtistEntity['id'], createTrackDto: CreateTrackDto) {
-    return this.prisma.track.create({
+    return await this.prisma.track.create({
       data: {
         artistId,
-        ...createTrackDto
-      }
+        ...createTrackDto,
+      },
     })
   }
 
   async update(id: TrackEntity['id'], createTrackDto: CreateTrackDto) {
-    return this.prisma.track.update({
+    return await this.prisma.track.update({
       where: {
-        id
+        id,
       },
-      data: createTrackDto
+      data: createTrackDto,
     })
   }
 }

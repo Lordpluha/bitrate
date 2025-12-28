@@ -73,14 +73,14 @@
             <input type="email" id="email" value="test@example.com" placeholder="test@example.com" style="width: 200px;">
             <label for="password">Password:</label>
             <input type="password" id="password" value="password123" placeholder="password123" style="width: 200px;">
-            <button onclick="loginUser()">Login & Get Token</button>
-            <button onclick="registerUser()">Register Test User</button>
+            <button onclick="_loginUser()">Login & Get Token</button>
+            <button onclick="_registerUser()">Register Test User</button>
         </div>
         <div>
             <label for="token">JWT Token:</label>
             <input type="text" id="token" placeholder="Login sets httpOnly cookies automatically" style="width: 400px;" readonly>
-            <button onclick="connectSocketWithCookies()">Connect with Cookies</button>
-            <button onclick="disconnectSocket()">Disconnect</button>
+            <button onclick="_connectSocketWithCookies()">Connect with Cookies</button>
+            <button onclick="_disconnectSocket()">Disconnect</button>
             <button onclick="checkAuthStatus()">Check Auth Status</button>
         </div>
     </div>
@@ -89,12 +89,12 @@
         <h3>🎵 Track Control:</h3>
         <label for="trackId">Track ID:</label>
         <input type="text" id="trackId" placeholder="Enter track UUID">
-        <button onclick="loadTracks()">Load Tracks</button>
-        <button onclick="testDirectStream()">Test Direct Stream</button>
-        <button onclick="testLocalStream()">Test Local Stream</button>
-        <button onclick="playTrack()">Play</button>
-        <button onclick="pauseTrack()">Pause</button>
-        <button onclick="getCurrentState()">Get State</button>
+        <button onclick="_loadTracks()">Load Tracks</button>
+        <button onclick="_testDirectStream()">Test Direct Stream</button>
+        <button onclick="_testLocalStream()">Test Local Stream</button>
+        <button onclick="_playTrack()">Play</button>
+        <button onclick="_pauseTrack()">Pause</button>
+        <button onclick="_getCurrentState()">Get State</button>
         <br><br>
         <select id="trackSelect" onchange="document.getElementById('trackId').value = this.value">
             <option value="">Select a track...</option>
@@ -186,7 +186,7 @@
             eventsDiv.scrollTop = eventsDiv.scrollHeight;
         }
 
-        async function registerUser() {
+        async function _registerUser() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -224,7 +224,7 @@
             }
         }
 
-        async function loginUser() {
+        async function _loginUser() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -284,7 +284,7 @@
             }
         }
 
-        async function loadAndPlayAudio(trackId, currentTime = 0) {
+        async function _loadAndPlayAudio(trackId, currentTime = 0) {
             try {
                 const token = document.getElementById('token').value;
                 if (!token) {
@@ -362,9 +362,10 @@
             }
         }
 
-        function connectSocketWithCookies() {
+        function _connectSocketWithCookies() {
             // With httpOnly cookies, we don't need to manually pass the token
             // The browser will automatically send cookies with the request
+            // biome-ignore lint/correctness/noUndeclaredVariables: CDN script provides io
             socket = io('http://localhost:3000', {
                 withCredentials: true // This ensures cookies are sent
             });
@@ -627,7 +628,7 @@
             }
         }
 
-        function disconnectSocket() {
+        function _disconnectSocket() {
             if (socket) {
                 socket.disconnect();
                 socket = null;
@@ -637,7 +638,7 @@
             }
         }
 
-        function playTrack() {
+        function _playTrack() {
             const trackId = document.getElementById('trackId').value;
             if (!trackId || !userId || !socket) {
                 alert('Please enter track ID and connect first');
@@ -652,7 +653,7 @@
             logEvent(`Sent playTrack: ${trackId}`);
         }
 
-        function pauseTrack() {
+        function _pauseTrack() {
             if (!currentTrackId || !userId || !socket) {
                 alert('No track playing or not connected');
                 return;
@@ -666,7 +667,7 @@
             logEvent(`Sent pauseTrack: ${currentTrackId}`);
         }
 
-        function getCurrentState() {
+        function _getCurrentState() {
             if (!socket) {
                 alert('Not connected');
                 return;
@@ -676,7 +677,7 @@
             logEvent('Sent getCurrentState');
         }
 
-        async function loadTracks() {
+        async function _loadTracks() {
             try {
                 logEvent('Loading tracks with httpOnly cookies...');
 
@@ -711,7 +712,7 @@
         }
 
         // Test direct audio streaming with progressive loading
-        async function testDirectStream() {
+        async function _testDirectStream() {
             const trackId = document.getElementById('trackId').value;
 
             if (!trackId) {
@@ -728,7 +729,7 @@
         }
 
         // Test local file streaming with progressive loading
-        async function testLocalStream() {
+        async function _testLocalStream() {
             try {
                 const trackId = 'e2fc7c24-4ddd-4aa4-8253-b819efcdf6f5'; // Test track ID
                 logEvent(`Testing local stream with progressive loading: ${trackId}`);

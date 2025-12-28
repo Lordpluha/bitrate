@@ -48,25 +48,21 @@ export default function Example() {
 
 ---
 
-## 🎨 Tailwind Preset
+## 🎨 Tailwind Configuration
 
-UI-кит предоставляет готовый **Tailwind preset**, чтобы гарантировать единообразие стилей во всех приложениях монорепозитория.
+UI-кит использует **Tailwind CSS v4** с конфигурацией на основе CSS (`@theme`).
 
-В `tailwind.config.ts`:
+Все стили и настройки определены в `globals.css`, который нужно импортировать в ваше приложение:
 
 ```ts
-import type { Config } from 'tailwindcss'
-import uiPreset from '@spotify/ui/tailwind.preset'
+// В вашем основном CSS файле (например, app/global.css)
+import '@spotify/ui/globals.css';
+```
 
-const config: Config = {
-  presets: [uiPreset],
-  content: [
-    './src/**/*.{js,ts,jsx,tsx}',
-    '../../packages/ui/**/*.{js,ts,jsx,tsx}', // если монорепо
-  ],
-}
+Или импортируйте напрямую в layout/главный компонент:
 
-export default config
+```tsx
+import '@spotify/ui/globals.css';
 ```
 
 ---
@@ -74,8 +70,7 @@ export default config
 ## 📦 Экспорты
 
 - `@spotify/ui` — основные React-компоненты и хуки.
-- `@spotify/ui/globals.css` — глобальные стили Tailwind (base, components, utilities).
-- `@spotify/ui/tailwind.preset` — Tailwind-пресет для консистентного дизайна.
+- `@spotify/ui/globals.css` — глобальные стили Tailwind CSS v4 с @theme конфигурацией.
 
 ---
 

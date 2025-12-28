@@ -1,9 +1,7 @@
 import { SpotifyCurvesIcon } from '@shared/ui'
 import { Typography } from '@spotify/ui'
-import clsx from 'clsx'
 
 import { DownloadButton } from './DownloadButton'
-import styles from './MobileBlock.module.css'
 import { Statistics } from './Statistics'
 
 export const Welcome = () => {
@@ -23,26 +21,23 @@ export const Welcome = () => {
         <Statistics />
       </div>
       <div
-        className={clsx(
-          'relative flex-1 p-20 pt-[160px] rounded-3xl mt-2 flex flex-col items-center border-green-500 border-solid border-2 overflow-hidden',
-          styles.bgHeroGradient
-        )}
+        className="relative flex-1 p-20 pt-[160px] rounded-3xl mt-2 flex flex-col items-center border-green-500 border-solid border-2 overflow-hidden"
+        style={{
+          background: 'linear-gradient(150deg, #0d2616 0%, var(--color-secondary) 99.04%)'
+        }}
       >
-        <SpotifyCurvesIcon
+        {/* <SpotifyCurvesIcon
           className='w-full h-full absolute top-0 bottom-0 left-0 right-0 z-[1] object-contain'
           color='#107032'
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+        /> */}
         <img
           className='w-full h-full absolute top-[120px] bottom-0 left-0 right-0 z-[2] object-contain'
           src='/images/intro-phone.png'
         />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className='w-[364px] h-[54px] absolute bottom-[132px] left-0 right-0 z-[3] object-cover'
           src='/images/spotify-music-1.png'
         />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className='w-[364px] h-[84px] absolute bottom-10 left-10 right-0 z-[3] object-cover'
           src='/images/spotify-music-2.png'
