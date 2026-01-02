@@ -1,0 +1,84 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true,
+    "default": true
+  },
+  "tags": [
+    "-lintignore"
+  ],
+  "workspaces": {
+    ".": {
+      "entry": [".cz-config.js"],
+      "ignore": [".cz-config.js"],
+      "ignoreBinaries": ["biome"]
+    },
+    "apps/api": {
+      "entry": ["src/main.ts", "prisma.config.ts", "src/**/*.guard.ts", "src/seeds/**/*.ts"],
+      "ignore": [
+        "src/**/index.ts",
+        "src/auth/errors/index.ts",
+        "src/playlists/decorators/index.ts",
+        "src/playlists/dtos/index.ts",
+        "src/playlists/errors/index.ts",
+        "src/auth/ws-auth.guard.ts",
+        "src/tracks/types/audio-events.types.ts"
+      ],
+      "ignoreBinaries": ["tsx"],
+      "ignoreDependencies": [
+        "@nestjs/serve-static",
+        "@nestjs/testing",
+        "@spotify/contracts",
+        "@types/supertest",
+        "globals",
+        "source-map-support",
+        "supertest",
+        "ts-loader"
+      ]
+    },
+    "apps/web": {
+      "entry": [
+        "src/app/**/*.tsx",
+        "src/app/**/*.ts",
+        "!src/app/**/*.test.tsx",
+        "!src/app/**/*.stories.tsx"
+      ],
+      "ignore": [
+        "src/**/index.ts",
+        "src/entities/**/index.ts",
+        "src/shared/redux/createAppSlice.ts",
+        "env.schema.ts",
+        "src/app/global.css"
+      ],
+      "ignoreDependencies": [
+        "class-variance-authority",
+        "motion",
+        "tailwind-merge",
+        "autoprefixer",
+        "openapi-typescript"
+      ]
+    },
+    "packages/contracts": {
+      "ignoreDependencies": ["@nestjs/swagger"]
+    },
+    "packages/ui": {
+      "entry": ["src/index.ts", "scripts/**/*.mjs"],
+      "ignore": ["postcss.config.cjs"],
+      "ignoreDependencies": ["chromatic", "tsc-alias", "postcss-load-config"]
+    }
+  },
+  "ignore": [
+    "**/*.module.css",
+    "**/*.stories.tsx",
+    "**/*.test.tsx",
+    "**/dist/**",
+    "**/.next/**",
+    "**/types/**/*.types.ts",
+    "**/node_modules/**"
+  ],
+  "rules": {
+    "unlisted-binaries": "warn",
+    "unresolved-imports": "warn"
+  }
+}

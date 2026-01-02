@@ -56,7 +56,9 @@ export class WsAuthGuard implements CanActivate {
       const cookies = cookieHeader.split(';').reduce(
         (acc, cookie) => {
           const [name, value] = cookie.trim().split('=')
-          acc[name] = value
+          if (name && value) {
+            acc[name] = value
+          }
           return acc
         },
         {} as Record<string, string>,
