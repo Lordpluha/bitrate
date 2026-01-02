@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source "../../src/**/*.{ts,tsx}";
 
@@ -18,7 +18,7 @@
   --breakpoint-max-2xl: 1535px;
 
   /* Font Families */
-  --font-family-source-sans-3: 'Source Sans 3', sans-serif;
+  --font-family-source-sans-3: "Source Sans 3", sans-serif;
 
   /* Animations */
   --animate-gradient-shift: gradientShift 60s ease infinite;
@@ -115,9 +115,9 @@
 
 @layer utilities {
   .container {
-    margin-inline: auto;
-    padding-inline: 1.25rem;
     max-width: 100%;
+    padding-inline: 1.25rem;
+    margin-inline: auto;
   }
 
   @media (min-width: 650px) {
@@ -127,7 +127,17 @@
   }
 
   .bg-auth-spotify {
-    background-image: linear-gradient(30deg, #0c7832, #601e7a, #121212, #820c17, #0c7832, #601e7a, #121212, #820c17);
+    background-image: linear-gradient(
+      30deg,
+      #0c7832,
+      #601e7a,
+      #121212,
+      #820c17,
+      #0c7832,
+      #601e7a,
+      #121212,
+      #820c17
+    );
   }
 
   .bg-gradient-animated {

@@ -1,61 +1,59 @@
-import React, { FC } from 'react'
+import { ROUTES } from '@shared/routes';
+import { Typography } from '@spotify/ui';
+import clsx from 'clsx';
+import Link from 'next/link';
+import type { FC } from 'react';
 
-import Link from 'next/link'
+import type plansConfig from '../config/plans.json';
 
-import { ROUTES } from '@shared/routes'
-import { Typography } from '@spotify/ui'
-import clsx from 'clsx'
+import { PlansList } from './PlanFeaturesList';
 
-import plansConfig from '../config/plans.json'
-
-import { PlansList } from './PlanFeaturesList'
-
-export type PlanCardProps = (typeof plansConfig)[number]
+export type PlanCardProps = (typeof plansConfig)[number];
 
 export const PlanCard: FC<PlanCardProps> = ({
   accounts,
   features,
   highlight,
   name,
-  price
+  price,
 }) => {
   return (
     <div
       className={clsx(
         'bg-bgSecondary h-full shadow-[0_6px_20px_1px_#1ed7604d] p-8 rounded-xl flex flex-col items-start justify-start text-text',
-        !!highlight && 'border-green-600 border-solid border-4'
+        !!highlight && 'border-green-600 border-solid border-4',
       )}
     >
-      <div className='border-blue-500 border-solid border-[1px] py-2 px-4 rounded-lg mb-4'>
-        <span className='text-blue-500 font-semibold text-xl leading-[1]'>
+      <div className="border-blue-500 border-solid border-[1px] py-2 px-4 rounded-lg mb-4">
+        <span className="text-blue-500 font-semibold text-xl leading-[1]">
           One-time plan available
         </span>
       </div>
-      <div className='pb-6 mb-6 border-b-2 border-text border-solid flex w-full flex-col items-start'>
-        <Typography.Heading5 className='mb-3'>{name}</Typography.Heading5>
-        <Typography.Paragraph className='mb-3'>{price}</Typography.Paragraph>
+      <div className="pb-6 mb-6 border-b-2 border-text border-solid flex w-full flex-col items-start">
+        <Typography.Heading5 className="mb-3">{name}</Typography.Heading5>
+        <Typography.Paragraph className="mb-3">{price}</Typography.Paragraph>
         <Typography.Paragraph>{accounts}</Typography.Paragraph>
       </div>
 
-      <PlansList features={features}></PlansList>
+      <PlansList features={features} />
 
-      <div className='mt-auto mb-0 w-full flex items-start flex-col'>
+      <div className="mt-auto mb-0 w-full flex items-start flex-col">
         <Link
-          href={ROUTES.plans}
           className={clsx(
             'text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-text font-medium border-solid border-2 border-text w-full block mb-4',
-            !!highlight && '!border-green-500 bg-green-500'
+            !!highlight && '!border-green-500 bg-green-500',
           )}
+          href={ROUTES.plans}
         >
           View Plans
         </Link>
         <Link
-          className='hover:opacity-70 transition-[1s] text-left text-grey-500 border-b-[1px] border-solid border-grey-500	'
+          className="hover:opacity-70 transition-[1s] text-left text-grey-500 border-b-[1px] border-solid border-grey-500	"
           href={ROUTES.terms}
         >
           Terms and conditions apply
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};

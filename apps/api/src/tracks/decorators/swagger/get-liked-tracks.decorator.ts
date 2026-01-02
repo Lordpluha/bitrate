@@ -1,10 +1,5 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
-import {
-  ApiConsumes,
-  ApiOperation,
-  ApiQuery,
-  ApiResponse
-} from '@nestjs/swagger'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 import { TrackEntity } from 'src/tracks/entities'
 
 export function TracksGetLikedSwagger() {
@@ -15,14 +10,14 @@ export function TracksGetLikedSwagger() {
       required: false,
       type: Number,
       example: 1,
-      description: 'Page number'
+      description: 'Page number',
     }),
     ApiQuery({
       name: 'limit',
       required: false,
       type: Number,
       example: 10,
-      description: 'Items per page'
+      description: 'Items per page',
     }),
     ApiConsumes('application/json'),
     ApiResponse({
@@ -41,11 +36,11 @@ export function TracksGetLikedSwagger() {
               cover: 'https://example.com/cover.jpg',
               audioUrl: '',
               userId: '',
-              createdAt: new Date()
-            } as TrackEntity
-          ]
-        }
-      }
-    })
+              createdAt: new Date(),
+            } as TrackEntity,
+          ],
+        },
+      },
+    }),
   )
 }

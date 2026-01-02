@@ -3,12 +3,12 @@ export const ROUTES = {
   auth: {
     login: '/auth/login',
     registration: '/auth/registration',
-    forgotPassword: '/auth/forgot-password'
+    forgotPassword: '/auth/forgot-password',
   },
   main: '/main',
   terms: '#',
   privacy: '#',
   download: '#',
   plans: '#',
-  forStudents: '#'
-} as const
+  forStudents: '#',
+} as const;

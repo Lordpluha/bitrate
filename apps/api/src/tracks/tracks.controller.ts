@@ -1,7 +1,10 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  Headers,
+  NotFoundException,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -10,29 +13,26 @@ import {
   Query,
   Req,
   Res,
-  Headers,
-  BadRequestException,
-  NotFoundException,
-  StreamableFile
+  StreamableFile,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { TrackEntity } from './entities'
-import { TracksService } from './tracks.service'
-import {
-  PostTrackSwagger,
-  TracksGetAllSwagger,
-  GetTrackByIdSwagger,
-  UpdateTrackByIdSwagger,
-  TracksGetLikedSwagger
-} from './decorators'
-import { Auth } from 'src/auth/auth.guard'
-import { CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
+import { Request, Response } from 'express'
+import * as fs from 'fs'
 import { ZodValidationPipe } from 'nestjs-zod'
+import * as path from 'path'
+import { Auth } from 'src/auth/auth.guard'
 import { UserEntity } from 'src/users/entities'
 import { AudioGateway } from './audio.gateway'
-import * as path from 'path'
-import * as fs from 'fs'
-import { Response, Request } from 'express'
+import {
+  GetTrackByIdSwagger,
+  PostTrackSwagger,
+  TracksGetAllSwagger,
+  TracksGetLikedSwagger,
+  UpdateTrackByIdSwagger,
+} from './decorators'
+import { CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
+import { TrackEntity } from './entities'
+import { TracksService } from './tracks.service'
 
 @ApiExtraModels(TrackEntity)
 @ApiTags('Tracks')
@@ -40,7 +40,7 @@ import { Response, Request } from 'express'
 export class TracksController {
   constructor(
     private tracksService: TracksService,
-    private audioGateway: AudioGateway
+    private audioGateway: AudioGateway,
   ) {}
 
   @TracksGetAllSwagger()
@@ -48,12 +48,12 @@ export class TracksController {
   getAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-    @Query('title') title?: TrackEntity['title']
+    @Query('title') title?: TrackEntity['title'],
   ) {
     return this.tracksService.findAll({
       limit,
       page,
-      title
+      title,
     })
   }
 
@@ -63,12 +63,12 @@ export class TracksController {
   getLikedTracks(
     @Req() req: Request,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     const user = req['user'] as UserEntity
     return this.tracksService.findLikedTracks(user.id, {
       page,
-      limit
+      limit,
     })
   }
 
@@ -84,7 +84,7 @@ export class TracksController {
   postTrack(
     @Req() req: Request,
     @Body(new ZodValidationPipe(CreateTrackSchema))
-    createTrackDto: CreateTrackDto
+    createTrackDto: CreateTrackDto,
   ) {
     const user = req['user'] as UserEntity
     return this.tracksService.create(user.id, createTrackDto)
@@ -96,7 +96,7 @@ export class TracksController {
   putTrack(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Body(new ZodValidationPipe(CreateTrackSchema))
-    createTrackDto: CreateTrackDto
+    createTrackDto: CreateTrackDto,
   ) {
     return this.tracksService.update(id, createTrackDto)
   }
@@ -108,7 +108,7 @@ export class TracksController {
     @Param('id', ParseUUIDPipe) trackId: string,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-    @Headers('range') range?: string
+    @Headers('range') range?: string,
   ) {
     try {
       console.log(`Attempting to stream track: ${trackId}`)
@@ -119,11 +119,11 @@ export class TracksController {
         throw new NotFoundException('Track not found')
       }
 
-      console.log(`Track found:`, {
+      console.log('Track found:', {
         id: track.id,
         title: track.title,
         audioUrl: track.audioUrl,
-        audioUrlType: typeof track.audioUrl
+        audioUrlType: typeof track.audioUrl,
       })
 
       // Check if audioUrl exists
@@ -135,18 +135,13 @@ export class TracksController {
       // Build file path - handle both URLs and file paths
       let filePath: string
 
-      if (
-        track.audioUrl.startsWith('http://') ||
-        track.audioUrl.startsWith('https://')
-      ) {
+      if (track.audioUrl.startsWith('http://') || track.audioUrl.startsWith('https://')) {
         // It's a URL, extract the file path from it
         try {
           const url = new URL(track.audioUrl)
           // Extract the pathname and join with current working directory
           // Remove leading slash from pathname to properly join with cwd
-          const relativePath = url.pathname.startsWith('/')
-            ? url.pathname.slice(1)
-            : url.pathname
+          const relativePath = url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname
           filePath = path.join(process.cwd(), relativePath)
         } catch (error) {
           console.error(`Invalid URL in audioUrl: ${track.audioUrl}`, error)
@@ -174,8 +169,8 @@ export class TracksController {
       if (range) {
         // Handle range requests for progressive download/streaming
         const parts = range.replace(/bytes=/, '').split('-')
-        const start = parseInt(parts[0], 10)
-        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1
+        const start = Number.parseInt(parts[0], 10)
+        const end = parts[1] ? Number.parseInt(parts[1], 10) : fileSize - 1
         const chunksize = end - start + 1
 
         const file = fs.createReadStream(filePath, { start, end })
@@ -185,12 +180,12 @@ export class TracksController {
           'Content-Range': `bytes ${start}-${end}/${fileSize}`,
           'Accept-Ranges': 'bytes',
           'Content-Length': chunksize.toString(),
-          'Content-Type': 'audio/mpeg'
+          'Content-Type': 'audio/mpeg',
         })
 
         return new StreamableFile(file, {
           length: chunksize,
-          type: 'audio/mpeg'
+          type: 'audio/mpeg',
         })
       } else {
         // Handle normal requests - set proper headers to encourage Range requests
@@ -199,7 +194,7 @@ export class TracksController {
           'Content-Type': 'audio/mpeg',
           'Accept-Ranges': `bytes 0-0/${fileSize}`,
           'Cache-Control': 'no-cache', // Prevent full caching
-          Connection: 'keep-alive'
+          Connection: 'keep-alive',
         })
 
         const file = fs.createReadStream(filePath)
@@ -220,7 +215,7 @@ export class TracksController {
   async playTrack(
     @Param('id', ParseUUIDPipe) trackId: string,
     @Req() req: Request,
-    @Body('currentTime') currentTime: number = 0
+    @Body('currentTime') currentTime: number = 0,
   ) {
     const user = req['user'] as UserEntity
 
@@ -239,15 +234,15 @@ export class TracksController {
         id: track.id,
         title: track.title,
         audioUrl: track.audioUrl,
-        cover: track.cover
-      }
+        cover: track.cover,
+      },
     })
 
     return {
       success: true,
       message: 'Track playback started',
       trackId,
-      currentTime
+      currentTime,
     }
   }
 
@@ -257,7 +252,7 @@ export class TracksController {
   async pauseTrack(
     @Param('id', ParseUUIDPipe) trackId: string,
     @Req() req: Request,
-    @Body('currentTime') currentTime: number = 0
+    @Body('currentTime') currentTime: number = 0,
   ) {
     const user = req['user'] as UserEntity
 
@@ -271,33 +266,30 @@ export class TracksController {
     this.audioGateway.emitToUser(user.id, 'trackPaused', {
       trackId,
       currentTime,
-      userId: user.id
+      userId: user.id,
     })
 
     return {
       success: true,
       message: 'Track playback paused',
       trackId,
-      currentTime
+      currentTime,
     }
   }
 
   @ApiOperation({
-    summary: 'Update track streaming state for authenticated user'
+    summary: 'Update track streaming state for authenticated user',
   })
   @Auth()
   @Post('update-state/:id')
   async updateTrackState(
     @Param('id', ParseUUIDPipe) trackId: string,
     @Req() req: Request,
-    @Body() body: { currentTime: number; isPlaying: boolean }
+    @Body() body: { currentTime: number; isPlaying: boolean },
   ) {
     const user = req['user'] as UserEntity
 
-    if (
-      typeof body.currentTime !== 'number' ||
-      typeof body.isPlaying !== 'boolean'
-    ) {
+    if (typeof body.currentTime !== 'number' || typeof body.isPlaying !== 'boolean') {
       throw new BadRequestException('Invalid body parameters')
     }
 
@@ -312,7 +304,7 @@ export class TracksController {
       trackId,
       currentTime: body.currentTime,
       isPlaying: body.isPlaying,
-      userId: user.id
+      userId: user.id,
     })
 
     return {
@@ -320,7 +312,7 @@ export class TracksController {
       message: 'Track state updated',
       trackId,
       currentTime: body.currentTime,
-      isPlaying: body.isPlaying
+      isPlaying: body.isPlaying,
     }
   }
 
@@ -334,7 +326,7 @@ export class TracksController {
     // But we can provide a REST endpoint as well
     return {
       message: 'Current state available via WebSocket connection',
-      userId: user.id
+      userId: user.id,
     }
   }
 }

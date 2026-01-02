@@ -1,21 +1,18 @@
-import { FC } from 'react'
-
-import Link from 'next/link'
-
-import { theme } from '@shared/constants'
-import { ROUTES } from '@shared/routes'
-
+import type { Theme } from '@shared/constants';
+import { ROUTES } from '@shared/routes';
+import Link from 'next/link';
+import type { FC } from 'react';
 
 export type LogoProps = {
-  color?: theme
-}
+  color?: Theme;
+};
 
 export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
   return (
     <Link
+      aria-label="Spotify Home"
+      className="transition-[0.3s] hover:opacity-70"
       href={ROUTES.landing}
-      aria-label='Spotify Home'
-      className='transition-[0.3s] hover:opacity-70'
     >
       {/* <SpotifyLogo
         className={clsx(
@@ -26,5 +23,5 @@ export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
         )}
       /> */}
     </Link>
-  )
-}
+  );
+};

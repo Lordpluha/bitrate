@@ -1,36 +1,35 @@
-import { FC, ReactNode } from 'react'
-
-import { CalendarIcon, MusicIcon, NoWifiIcon, PhoneIcon } from '@shared/ui'
-import { Typography } from '@spotify/ui'
+import { CalendarIcon, MusicIcon, NoWifiIcon, PhoneIcon } from '@shared/ui';
+import { Typography } from '@spotify/ui';
+import type { FC, ReactNode } from 'react';
 
 const iconMap = {
   CalendarIcon,
   NoWifiIcon,
   PhoneIcon,
-  MusicIcon
-}
+  MusicIcon,
+};
 
 type FeatureCardProps = {
-  icon: string
-  title: ReactNode
-  description: ReactNode
-}
+  icon: string;
+  title: ReactNode;
+  description: ReactNode;
+};
 
 export const FeatureCard: FC<FeatureCardProps> = ({
   icon,
   description,
-  title
+  title,
 }) => {
-  const IconComponent = iconMap[icon as keyof typeof iconMap]
+  const _IconComponent = iconMap[icon as keyof typeof iconMap];
 
   return (
-    <div className='flex flex-col items-center justify-center text-center'>
-      <div className='w-[124px] h-[124px] mb-4 flex flex-col items-center justify-center bg-bgSecondary rounded-full shadow-[0_6px_20px_1px_#1ed7604d]'>
+    <div className="flex flex-col items-center justify-center text-center">
+      <div className="w-[124px] h-[124px] mb-4 flex flex-col items-center justify-center bg-bgSecondary rounded-full shadow-[0_6px_20px_1px_#1ed7604d]">
         {/* <IconComponent className='text-green-500 fill-green-500' /> */}
       </div>
 
       <Typography.Heading5>{title}</Typography.Heading5>
       <Typography.Paragraph>{description}</Typography.Paragraph>
     </div>
-  )
-}
+  );
+};

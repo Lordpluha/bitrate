@@ -1,26 +1,21 @@
-import { Request, Response } from 'express'
-import { AuthService } from './auth.service'
-import { Controller, Post, Body, Res, Req, Get } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import {
-  LoginDto,
-  LoginSchema,
-  RegistrationDto,
-  RegistrationSchema
-} from './dtos'
+import { Request, Response } from 'express'
+import { ZodValidationPipe } from 'nestjs-zod'
+import { UserEntity } from 'src/users/entities'
+import { UsersService } from 'src/users/users.service'
+import { Auth } from './auth.guard'
+import { AuthService } from './auth.service'
 import {
   AuthLoginSwagger,
   AuthLogoutSwagger,
+  AuthMeSwagger,
   AuthRefreshSwagger,
   AuthRegistrationSwagger,
-  AuthMeSwagger
 } from './decorators'
+import { LoginDto, LoginSchema, RegistrationDto, RegistrationSchema } from './dtos'
 import { SessionEntity } from './entities'
-import { ZodValidationPipe } from 'nestjs-zod'
-import { Auth } from './auth.guard'
-import { UsersService } from 'src/users/users.service'
 import { TokenService } from './token.service'
-import { UserEntity } from 'src/users/entities'
 
 @ApiExtraModels(SessionEntity)
 @ApiTags('Auth')
@@ -29,18 +24,18 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UsersService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {}
 
   @AuthLoginSwagger()
   @Post('login')
   async login(
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ) {
     const { access_token, refresh_token } = await this.authService.loginUser(
       loginDto.email,
-      loginDto.password
+      loginDto.password,
     )
 
     this.tokenService.setAuthCookies(res, access_token, refresh_token)
@@ -50,7 +45,7 @@ export class AuthController {
   @Post('registration')
   async registration(
     @Body(new ZodValidationPipe(RegistrationSchema))
-    registrationDto: RegistrationDto
+    registrationDto: RegistrationDto,
   ) {
     await this.authService.registerUser(registrationDto)
   }
@@ -68,10 +63,7 @@ export class AuthController {
   @AuthRefreshSwagger()
   @Auth('refresh')
   @Post('refresh')
-  async refresh(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response
-  ) {
+  async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
     const { access_token } = await this.authService.refresh(refresh_token)
     this.tokenService.setAuthCookies(res, access_token, refresh_token)

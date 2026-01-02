@@ -1,4 +1,4 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ArtistEntity } from 'src/artists/entities'
 
@@ -15,8 +15,8 @@ export function GetUserSwagger() {
         avatar: 'https://example.com/uploads/avatars/avatar.jpg',
         backgroundImage: '',
         bio: 'Some bio',
-        createdAt: new Date()
-      } as Omit<ArtistEntity, 'password'>
-    })
+        createdAt: new Date(),
+      } as Omit<ArtistEntity, 'password'>,
+    }),
   )
 }

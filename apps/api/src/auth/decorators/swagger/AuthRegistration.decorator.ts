@@ -1,10 +1,5 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse
-} from '@nestjs/swagger'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 import { RegistrationDto } from '../../dtos'
 
@@ -15,7 +10,7 @@ export function AuthRegistrationSwagger() {
     ApiBody({ type: RegistrationDto }),
     ApiResponse({
       status: HttpStatus.CREATED,
-      description: 'Successfully registered'
+      description: 'Successfully registered',
     }),
     ApiResponse({
       status: HttpStatus.BAD_REQUEST,
@@ -23,14 +18,14 @@ export function AuthRegistrationSwagger() {
       content: {
         'application/json': {
           example: {
-            errors: [{ field: 'email', message: 'email must be an email' }]
-          }
-        }
-      }
+            errors: [{ field: 'email', message: 'email must be an email' }],
+          },
+        },
+      },
     }),
     ApiResponse({
       status: HttpStatus.CONFLICT,
-      description: 'User already exists'
-    })
+      description: 'User already exists',
+    }),
   )
 }

@@ -32,16 +32,8 @@ export interface TrackStateEvent {
 
 export interface AudioSocketEvents {
   // Client to Server events
-  playTrack: (data: {
-    trackId: string
-    userId: string
-    currentTime: number
-  }) => void
-  pauseTrack: (data: {
-    trackId: string
-    userId: string
-    currentTime: number
-  }) => void
+  playTrack: (data: { trackId: string; userId: string; currentTime: number }) => void
+  pauseTrack: (data: { trackId: string; userId: string; currentTime: number }) => void
   updateStreaming: (data: {
     trackId: string
     userId: string

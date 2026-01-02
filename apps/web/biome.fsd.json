@@ -1,0 +1,136 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
+  "overrides": [
+    {
+      "includes": ["src/shared/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@/app": "shared не может импортировать из app (нарушение FSD архитектуры)",
+                  "@/features": "shared не может импортировать из features (нарушение FSD архитектуры)",
+                  "@/entities": "shared не может импортировать из entities (нарушение FSD архитектуры)",
+                  "@/widgets": "shared не может импортировать из widgets (нарушение FSD архитектуры)",
+                  "@/views": "shared не может импортировать из views (нарушение FSD архитектуры)",
+                  "@/processes": "shared не может импортировать из processes (нарушение FSD архитектуры)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/entities/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@/app": "entities не может импортировать из app (нарушение FSD архитектуры)",
+                  "@/features": "entities не может импортировать из features (нарушение FSD архитектуры)",
+                  "@/widgets": "entities не может импортировать из widgets (нарушение FSD архитектуры)",
+                  "@/views": "entities не может импортировать из views (нарушение FSD архитектуры)",
+                  "@/processes": "entities не может импортировать из processes (нарушение FSD архитектуры)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/features/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@/app": "features не может импортировать из app (нарушение FSD архитектуры)",
+                  "@/widgets": "features не может импортировать из widgets (нарушение FSD архитектуры)",
+                  "@/views": "features не может импортировать из views (нарушение FSD архитектуры)",
+                  "@/processes": "features не может импортировать из processes (нарушение FSD архитектуры)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/widgets/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@/app": "widgets не может импортировать из app (нарушение FSD архитектуры)",
+                  "@/views": "widgets не может импортировать из views (нарушение FSD архитектуры)",
+                  "@/processes": "widgets не может импортировать из processes (нарушение FSD архитектуры)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/views/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@/app": "views не может импортировать из app (нарушение FSD архитектуры)",
+                  "@/processes": "views не может импортировать из processes (нарушение FSD архитектуры)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/processes/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@/app": "processes не может импортировать из app (нарушение FSD архитектуры)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/shared/constants/**",
+        "src/**/config/**",
+        "src/widgets/**/ui/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    }
+  ]
+}

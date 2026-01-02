@@ -1,10 +1,5 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
-import {
-  ApiConsumes,
-  ApiOperation,
-  ApiParam,
-  ApiResponse
-} from '@nestjs/swagger'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 import { ArtistEntity } from 'src/artists/entities'
 
 export function GetUsersSwagger() {
@@ -15,19 +10,19 @@ export function GetUsersSwagger() {
       name: 'limit',
       required: false,
       description: 'Number of users to return per page',
-      type: Number
+      type: Number,
     }),
     ApiParam({
       name: 'page',
       required: false,
       description: 'Page number for pagination',
-      type: Number
+      type: Number,
     }),
     ApiParam({
       name: 'username',
       required: false,
       description: 'Filter users by username',
-      type: String
+      type: String,
     }),
     ApiResponse({
       status: HttpStatus.OK,
@@ -39,7 +34,7 @@ export function GetUsersSwagger() {
           avatar: 'https://example.com/uploads/avatars/avatar.jpg',
           backgroundImage: '',
           bio: 'Some bio',
-          createdAt: new Date()
+          createdAt: new Date(),
         },
         {
           id: '2',
@@ -47,9 +42,9 @@ export function GetUsersSwagger() {
           avatar: 'https://example.com/uploads/avatars/avatar.jpg',
           backgroundImage: '',
           bio: 'Some bio 2',
-          createdAt: new Date()
-        }
-      ] as Omit<ArtistEntity, 'password'>[]
-    })
+          createdAt: new Date(),
+        },
+      ] as Omit<ArtistEntity, 'password'>[],
+    }),
   )
 }

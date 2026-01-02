@@ -1,4 +1,4 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { TrackEntity } from 'src/tracks/entities'
 
@@ -15,10 +15,10 @@ export function PostTrackSwagger() {
             title: 'Track Title',
             cover: 'https://example.com/cover.jpg',
             audioUrl: '',
-            createdAt: new Date()
-          } as Omit<TrackEntity, 'artistId'>
-        }
-      }
-    })
+            createdAt: new Date(),
+          } as Omit<TrackEntity, 'artistId'>,
+        },
+      },
+    }),
   )
 }

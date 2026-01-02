@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 export const CreateAlbumSchema = z.object({
   title: z.string(),
-  description: z.string().optional()
+  description: z.string().optional(),
 })
 
 export class CreateAlbumDto implements z.infer<typeof CreateAlbumSchema> {

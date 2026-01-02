@@ -7,7 +7,7 @@ import { Heading6 } from "./Heading6";
 import { Paragraph } from "./Paragraph";
 
 const Typography = () => {
-	throw new Error("Can't use typography without inner elements");
+  throw new Error("Can't use typography without inner elements");
 };
 
 Typography.Heading1 = Heading1;

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { UserEntity } from 'src/users/entities'
 import { CreatePlaylistDto } from './dtos/create-playlist.dto'
-import { PlaylistEntity } from './entities'
 import { UpdatePlaylistDto } from './dtos/update-playlist.dto'
+import { PlaylistEntity } from './entities'
 
 @Injectable()
 export class PlaylistsService {
@@ -15,8 +15,8 @@ export class PlaylistsService {
         userId,
         // Url to cover in storage
         cover: '',
-        ...playlistDto
-      }
+        ...playlistDto,
+      },
     })
   }
 
@@ -28,34 +28,30 @@ export class PlaylistsService {
         user: {
           select: {
             id: true,
-            username: true
-          }
-        }
-      }
+            username: true,
+          },
+        },
+      },
     })
   }
 
   async getById(id: PlaylistEntity['id']) {
     return await this.prisma.playlist.findUniqueOrThrow({
       where: {
-        id
-      }
+        id,
+      },
     })
   }
 
-  async update(
-    userId: UserEntity['id'],
-    id: PlaylistEntity['id'],
-    updateDto: UpdatePlaylistDto
-  ) {
+  async update(userId: UserEntity['id'], id: PlaylistEntity['id'], updateDto: UpdatePlaylistDto) {
     return await this.prisma.playlist.update({
       where: {
-        id
+        id,
       },
       data: {
         ...updateDto,
-        userId
-      }
+        userId,
+      },
     })
   }
 
@@ -63,8 +59,8 @@ export class PlaylistsService {
     return await this.prisma.playlist.delete({
       where: {
         id,
-        userId
-      }
+        userId,
+      },
     })
   }
 }

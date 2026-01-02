@@ -1,28 +1,13 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  Req
-} from '@nestjs/common'
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ZodValidationPipe } from 'nestjs-zod'
+import { Auth } from 'src/auth/auth.guard'
+import { UserEntity } from 'src/users/entities'
+import { GetPlaylistsSwagger } from './decorators/get-playlists.decorator'
+import { CreatePlaylistDto, CreatePlaylistSchema } from './dtos/create-playlist.dto'
+import { UpdatePlaylistDto, UpdatePlaylistSchema } from './dtos/update-playlist.dto'
 import { PlaylistEntity } from './entities'
 import { PlaylistsService } from './playlists.service'
-import {
-  CreatePlaylistDto,
-  CreatePlaylistSchema
-} from './dtos/create-playlist.dto'
-import { Auth } from 'src/auth/auth.guard'
-import { ZodValidationPipe } from 'nestjs-zod'
-import {
-  UpdatePlaylistDto,
-  UpdatePlaylistSchema
-} from './dtos/update-playlist.dto'
-import { GetPlaylistsSwagger } from './decorators/get-playlists.decorator'
-import { UserEntity } from 'src/users/entities'
 
 @ApiExtraModels(PlaylistEntity)
 @ApiTags('Playlists')
@@ -35,7 +20,7 @@ export class PlaylistsController {
   async getAll(@Param('page') page?: number, @Param('limit') limit?: number) {
     return await this.playlistService.getAll({
       limit,
-      page
+      page,
     })
   }
 
@@ -51,7 +36,7 @@ export class PlaylistsController {
   async post(
     @Req() req: Request,
     @Body(new ZodValidationPipe(CreatePlaylistSchema))
-    playlistDto: CreatePlaylistDto
+    playlistDto: CreatePlaylistDto,
   ) {
     const user = req['user'] as UserEntity
     return await this.playlistService.create(user.id, playlistDto)
@@ -64,7 +49,7 @@ export class PlaylistsController {
     @Req() req: Request,
     @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
     @Body(new ZodValidationPipe(UpdatePlaylistSchema))
-    updateDto: UpdatePlaylistDto
+    updateDto: UpdatePlaylistDto,
   ) {
     const user = req['user'] as UserEntity
     return await this.playlistService.update(user.id, id, updateDto)

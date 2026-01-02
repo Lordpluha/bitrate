@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client'
 export async function seedAlbums(prisma: PrismaClient, count: number = 30) {
   // Сначала получаем всех существующих артистов
   const artists = await prisma.artist.findMany({
-    select: { id: true }
+    select: { id: true },
   })
 
   if (artists.length === 0) {
@@ -43,17 +43,10 @@ export async function seedAlbums(prisma: PrismaClient, count: number = 30) {
     'Legacy',
     'Evolution',
     'Revolution',
-    'Transformation'
+    'Transformation',
   ]
 
-  const albumTypes = [
-    'Album',
-    'EP',
-    'Single',
-    'Compilation',
-    'Live Album',
-    'Remix Album'
-  ]
+  const albumTypes = ['Album', 'EP', 'Single', 'Compilation', 'Live Album', 'Remix Album']
 
   for (let i = 0; i < count; i++) {
     // Случайно выбираем артиста
@@ -86,7 +79,7 @@ export async function seedAlbums(prisma: PrismaClient, count: number = 30) {
       title,
       cover: faker.image.url({ width: 1000, height: 1000 }),
       artistId: randomArtist.id,
-      description: faker.lorem.paragraph(1)
+      description: faker.lorem.paragraph(1),
     }
 
     albums.push(album)
@@ -95,7 +88,7 @@ export async function seedAlbums(prisma: PrismaClient, count: number = 30) {
   try {
     await prisma.album.createMany({
       data: albums,
-      skipDuplicates: true
+      skipDuplicates: true,
     })
     console.log(`✅ Seeded ${count} albums`)
   } catch (error) {
@@ -104,13 +97,10 @@ export async function seedAlbums(prisma: PrismaClient, count: number = 30) {
 }
 
 // Новая функция для создания альбомов с треками
-export async function seedAlbumsWithTracks(
-  prisma: PrismaClient,
-  albumCount: number = 30
-) {
+export async function seedAlbumsWithTracks(prisma: PrismaClient, albumCount: number = 30) {
   // Сначала получаем всех существующих артистов
   const artists = await prisma.artist.findMany({
-    select: { id: true, username: true }
+    select: { id: true, username: true },
   })
 
   if (artists.length === 0) {
@@ -143,7 +133,7 @@ export async function seedAlbumsWithTracks(
     'Beat',
     'Sound',
     'Music',
-    'Voice'
+    'Voice',
   ]
 
   // Примеры слов для альбомов
@@ -170,7 +160,7 @@ export async function seedAlbumsWithTracks(
     'Legacy',
     'Evolution',
     'Revolution',
-    'Transformation'
+    'Transformation',
   ]
 
   function generateAudioUrl(): string {
@@ -178,7 +168,7 @@ export async function seedAlbumsWithTracks(
       'https://audio.example.com',
       'https://music-storage.s3.amazonaws.com',
       'https://cdn.musicplatform.com',
-      'https://tracks.cloudinary.com'
+      'https://tracks.cloudinary.com',
     ]
 
     const domain = faker.helpers.arrayElement(domains)
@@ -212,9 +202,7 @@ export async function seedAlbumsWithTracks(
 
               switch (trackTitleType) {
                 case 1:
-                  trackTitle = faker.helpers
-                    .arrayElements(trackWords, { min: 1, max: 2 })
-                    .join(' ')
+                  trackTitle = faker.helpers.arrayElements(trackWords, { min: 1, max: 2 }).join(' ')
                   break
                 case 2:
                   trackTitle = `${faker.helpers.arrayElement(trackWords)} ${trackIndex + 1}`
@@ -228,19 +216,17 @@ export async function seedAlbumsWithTracks(
                 title: trackTitle,
                 audioUrl: generateAudioUrl(),
                 cover: faker.image.url({ width: 800, height: 800 }),
-                artistId: artist.id
+                artistId: artist.id,
               }
-            })
-          }
+            }),
+          },
         },
         include: {
-          tracks: true
-        }
+          tracks: true,
+        },
       })
 
-      console.log(
-        `📀 Created album "${album.title}" with ${album.tracks.length} tracks`
-      )
+      console.log(`📀 Created album "${album.title}" with ${album.tracks.length} tracks`)
     }
 
     console.log(`✅ Created ${albumCount} albums with tracks`)

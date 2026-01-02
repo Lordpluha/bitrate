@@ -2,268 +2,85 @@
   "$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
-    "ignoreUnknown": false
+    "ignoreUnknown": true,
+    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+  },
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "tailwindDirectives": true
+    }
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "lineWidth": 100,
-    "indentWidth": 2,
+    "attributePosition": "auto",
     "bracketSameLine": false,
-    "useEditorconfig": true,
+    "indentWidth": 2,
     "bracketSpacing": true,
-    "attributePosition": "auto"
+    "lineWidth": 80
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": false,
-      "complexity": {
-        "noAdjacentSpacesInRegex": "error",
-        "noExtraBooleanCast": "error",
-        "noForEach": "warn",
-        "noUselessCatch": "error",
-        "noUselessEmptyExport": "error",
-        "noUselessEscapeInRegex": "error",
-        "noUselessFragments": "error",
-        "noUselessLoneBlockStatements": "error",
-        "noUselessRename": "error",
-        "noUselessSwitchCase": "error",
-        "noUselessTernary": "error",
-        "noVoid": "error",
-        "useFlatMap": "error",
-        "useOptionalChain": "error",
-        "useSimplifiedLogicExpression": "error"
-      },
+      "recommended": true,
       "correctness": {
         "noChildrenProp": "error",
-        "noConstAssign": "error",
-        "noConstantCondition": "error",
-        "noEmptyCharacterClassInRegex": "error",
-        "noEmptyPattern": "error",
-        "noGlobalObjectCalls": "error",
-        "noInvalidBuiltinInstantiation": "error",
-        "noInvalidConstructorSuper": "error",
-        "noNonoctalDecimalEscape": "error",
-        "noPrecisionLoss": "error",
-        "noRenderReturnValue": "error",
-        "noSelfAssign": "error",
-        "noSetterReturn": "error",
-        "noStringCaseMismatch": "error",
-        "noSwitchDeclarations": "error",
-        "noUndeclaredVariables": "error",
-        "noUnreachable": "error",
-        "noUnreachableSuper": "error",
-        "noUnsafeFinally": "error",
-        "noUnsafeOptionalChaining": "error",
-        "noUnusedImports": "error",
-        "noUnusedLabels": "error",
-        "noUnusedPrivateClassMembers": "error",
-        "noUnusedVariables": "error",
-        "noVoidElementsWithChildren": "error",
-        "noVoidTypeReturn": "error",
-        "useExhaustiveDependencies": "warn",
         "useHookAtTopLevel": "error",
-        "useIsNan": "error",
         "useJsxKeyInIterable": "error",
-        "useValidForDirection": "error",
-        "useValidTypeof": "error",
-        "useYield": "error"
+        "noUnusedFunctionParameters": "warn"
       },
-      "a11y": {
-        "noAccessKey": "error",
-        "noAriaHiddenOnFocusable": "error",
-        "noAriaUnsupportedElements": "error",
-        "noAutofocus": "error",
-        "noDistractingElements": "error",
-        "noHeaderScope": "error",
-        "noInteractiveElementToNoninteractiveRole": "error",
-        "noNoninteractiveElementToInteractiveRole": "error",
-        "noNoninteractiveTabindex": "error",
-        "noPositiveTabindex": "error",
-        "noRedundantAlt": "error",
-        "noRedundantRoles": "error",
-        "useAltText": "error",
-        "useAnchorContent": "error",
-        "useAriaActivedescendantWithTabindex": "error",
-        "useAriaPropsForRole": "error",
-        "useButtonType": "error",
-        "useHeadingContent": "error",
-        "useHtmlLang": "error",
-        "useIframeTitle": "error",
-        "useKeyWithClickEvents": "error",
-        "useKeyWithMouseEvents": "error",
-        "useMediaCaption": "error",
-        "useValidAnchor": "error",
-        "useValidAriaProps": "error",
-        "useValidAriaRole": "error",
-        "useValidAriaValues": "error",
-        "useValidLang": "error"
-      },
-      "performance": {
-        "noAccumulatingSpread": "error",
-        "noBarrelFile": "off",
-        "noDelete": "error",
-        "noImgElement": "warn",
-        "noReExportAll": "off",
-        "noUnwantedPolyfillio": "warn",
-        "useGoogleFontPreconnect": "warn"
-      },
-      "style": {
-        "noDefaultExport": "off",
-        "noHeadElement": "warn",
-        "noImplicitBoolean": "error",
-        "noNegationElse": "error",
-        "noParameterAssign": "error",
-        "noRestrictedGlobals": "error",
-        "noShoutyConstants": "off",
-        "noUnusedTemplateLiteral": "error",
-        "useBlockStatements": "off",
-        "useCollapsedElseIf": "error",
-        "useConsistentArrayType": "error",
-        "useDefaultParameterLast": "error",
-        "useEnumInitializers": "error",
-        "useExponentiationOperator": "error",
-        "useFilenamingConvention": {
-          "level": "error",
-          "options": {
-            "strictCase": false,
-            "filenameCases": ["kebab-case", "camelCase", "PascalCase"]
-          }
-        },
-        "useForOf": "error",
-        "useFragmentSyntax": "error",
-        "useImportType": "error",
-        "useNamingConvention": {
-          "level": "error",
-          "options": {
-            "strictCase": false,
-            "conventions": [
-              {
-                "selector": { "kind": "function" },
-                "formats": ["camelCase", "PascalCase"]
-              },
-              {
-                "selector": { "kind": "variable" },
-                "formats": ["camelCase", "PascalCase", "CONSTANT_CASE"]
-              }
-            ]
-          }
-        },
-        "useNumberNamespace": "error",
-        "useSelfClosingElements": "error",
-        "useShorthandAssign": "error",
-        "useShorthandFunctionType": "error",
-        "useSingleVarDeclarator": "error",
-        "useTemplate": "error"
-      },
+      "security": { "noDangerouslySetInnerHtmlWithChildren": "error" },
+      "style": { "useBlockStatements": "off" },
       "suspicious": {
-        "noApproximativeNumericConstant": "error",
-        "noArrayIndexKey": "error",
-        "noAssignInExpressions": "error",
-        "noAsyncPromiseExecutor": "error",
-        "noCatchAssign": "error",
-        "noClassAssign": "error",
         "noCommentText": "error",
-        "noCompareNegZero": "error",
-        "noConfusingLabels": "error",
-        "noConfusingVoidType": "error",
-        "noConstantBinaryExpressions": "error",
-        "noControlCharactersInRegex": "error",
-        "noDebugger": "error",
-        "noDocumentImportInPage": "error",
-        "noDoubleEquals": "error",
-        "noDuplicateCase": "error",
-        "noDuplicateClassMembers": "error",
-        "noDuplicateElseIf": "error",
         "noDuplicateJsxProps": "error",
-        "noDuplicateObjectKeys": "error",
-        "noDuplicateParameters": "error",
-        "noEmptyBlockStatements": "error",
-        "noExplicitAny": "warn",
-        "noExtraNonNullAssertion": "error",
-        "noFallthroughSwitchClause": "error",
-        "noFocusedTests": "error",
-        "noFunctionAssign": "error",
-        "noGlobalAssign": "error",
-        "noHeadImportInDocument": "error",
-        "noImportAssign": "error",
-        "noIrregularWhitespace": "error",
-        "noLabelVar": "error",
-        "noMisleadingCharacterClass": "error",
-        "noMisleadingInstantiator": "error",
-        "noMisrefactoredShorthandAssign": "error",
-        "noPrototypeBuiltins": "error",
-        "noRedeclare": "error",
-        "noReactSpecificProps": "error",
-        "noSelfCompare": "error",
-        "noShadowRestrictedNames": "error",
-        "noSkippedTests": "error",
-        "noSparseArray": "error",
-        "noThenProperty": "error",
-        "noUnsafeDeclarationMerging": "error",
-        "noUnsafeNegation": "error",
-        "noUselessRegexBackrefs": "error",
-        "noWith": "error",
-        "useAwait": "error",
-        "useDefaultSwitchClauseLast": "error",
-        "useGetterReturn": "error",
-        "useGoogleFontDisplay": "warn",
-        "useNamespaceKeyword": "error"
-      },
-      "nursery": {}
+        "noUnknownAtRules": "off"
+      }
     },
-    "includes": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"]
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    },
+    "includes": ["**", "!.next/**", "!out/**", "!build/**", "!next-env.d.ts"]
   },
   "javascript": {
-    "formatter": {
-      "quoteStyle": "double",
-      "jsxQuoteStyle": "double",
-      "trailingCommas": "all",
-      "semicolons": "asNeeded",
-      "arrowParentheses": "always"
-    },
-    "globals": ["React", "JSX"]
+    "formatter": { "quoteStyle": "single" },
+    "globals": [
+      "onnotificationclose",
+      "onbackgroundfetchfail",
+      "onactivate",
+      "onerror",
+      "onpaymentrequest",
+      "onpushsubscriptionchange",
+      "onbackgroundfetchabort",
+      "onabortpayment",
+      "onsync",
+      "onpush",
+      "onfetch",
+      "oninstall",
+      "onbackgroundfetchsuccess",
+      "onmessage",
+      "onperiodicsync",
+      "oncanmakepayment",
+      "oncookiechange",
+      "onrejectionhandled",
+      "onbackgroundfetchclick",
+      "onmessageerror",
+      "onunhandledrejection",
+      "onnotificationclick",
+      "onlanguagechange"
+    ]
   },
-  "overrides": [
-    {
-      "includes": ["**/*.ts", "**/*.tsx"],
-      "linter": {
-        "rules": {
-          "complexity": {
-            "noStaticOnlyClass": "error",
-            "noUselessConstructor": "error",
-            "noUselessThisAlias": "error",
-            "useArrowFunction": "warn"
-          },
-          "correctness": {
-            "noUnusedVariables": "error"
-          },
-          "style": {
-            "noInferrableTypes": "error",
-            "useConst": "error",
-            "useImportType": "error"
-          },
-          "suspicious": {
-            "noExplicitAny": "warn",
-            "noVar": "error"
-          }
-        }
-      }
-    },
-    {
-      "includes": ["app/**", "pages/**"],
-      "linter": {
-        "rules": {
-          "style": {
-            "noDefaultExport": "off"
-          }
-        }
-      }
-    }
-  ],
   "assist": {
     "enabled": true,
-    "actions": { "source": { "organizeImports": "on" } }
-  }
+    "actions": {
+      "source": {
+        "organizeImports": "on",
+        "useSortedAttributes": "on",
+        "useSortedProperties": "on"
+      }
+    }
+  },
+  "extends": ["./biome.fsd.json"]
 }

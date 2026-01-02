@@ -9,13 +9,13 @@ export function GetPlaylistsSwagger() {
       name: 'page',
       required: false,
       description: 'Page number for pagination',
-      type: Number
+      type: Number,
     }),
     ApiParam({
       name: 'limit',
       required: false,
       description: 'Number of items per page',
-      type: Number
-    })
+      type: Number,
+    }),
   )
 }

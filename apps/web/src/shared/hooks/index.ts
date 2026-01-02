@@ -1,1 +1,1 @@
-export * from './usePersistedState'
+export * from './usePersistedState';

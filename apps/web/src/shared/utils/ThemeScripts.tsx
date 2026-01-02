@@ -1,6 +1,4 @@
-'use client'
-
-import React from 'react'
+'use client';
 
 export const ThemeScript = () => {
   const codeToRunOnClient = `
@@ -11,7 +9,7 @@ export const ThemeScript = () => {
       document.documentElement.classList.remove('light', 'dark')
       document.documentElement.classList.add(theme);
     } catch(e) {}
-  `
+  `;
 
-  return <script dangerouslySetInnerHTML={{ __html: codeToRunOnClient }} />
-}
+  return <script dangerouslySetInnerHTML={{ __html: codeToRunOnClient }} />;
+};

@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 export const UpdatePlaylistSchema = z.object({
   title: z.string(),
-  description: z.string().optional()
+  description: z.string().optional(),
 })
 
 export class UpdatePlaylistDto implements z.infer<typeof UpdatePlaylistSchema> {

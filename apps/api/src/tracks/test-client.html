@@ -118,7 +118,7 @@
     <script>
         let socket = null;
         let currentTrackId = null;
-        let userId = null;
+        const userId = null;
         const audioPlayer = document.getElementById('audioPlayer');
         const statusDiv = document.getElementById('status');
         const eventsDiv = document.getElementById('events');
@@ -190,7 +190,7 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            if (!email || !password) {
+            if (!(email && password)) {
                 alert('Please enter email and password');
                 return;
             }
@@ -228,7 +228,7 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            if (!email || !password) {
+            if (!(email && password)) {
                 alert('Please enter email and password');
                 return;
             }
@@ -322,7 +322,7 @@
                 const audioUrl = URL.createObjectURL(audioBlob);
 
                 // Clean up previous blob URL
-                if (audioPlayer.src && audioPlayer.src.startsWith('blob:')) {
+                if (audioPlayer.src?.startsWith('blob:')) {
                     URL.revokeObjectURL(audioPlayer.src);
                 }
 
@@ -420,7 +420,7 @@
                         } catch (error) {
                             logEvent(`Error resuming playback: ${error.message}`);
                         }
-                    } else if (!data.isPlaying && !audioPlayer.paused) {
+                    } else if (!(data.isPlaying || audioPlayer.paused)) {
                         audioPlayer.pause();
                     }
                 }
@@ -501,7 +501,7 @@
                 }
 
                 const contentLength = headResponse.headers.get('content-length');
-                const fileSize = parseInt(contentLength || '0');
+                const fileSize = Number.parseInt(contentLength || '0');
 
                 if (fileSize === 0) {
                     throw new Error('Could not determine file size');
@@ -579,7 +579,7 @@
                 logEvent('Trying direct URL streaming...');
 
                 // Clean up previous blob URL
-                if (audioPlayer.src && audioPlayer.src.startsWith('blob:')) {
+                if (audioPlayer.src?.startsWith('blob:')) {
                     URL.revokeObjectURL(audioPlayer.src);
                 }
 
@@ -640,7 +640,7 @@
 
         function _playTrack() {
             const trackId = document.getElementById('trackId').value;
-            if (!trackId || !userId || !socket) {
+            if (!((trackId && userId ) && socket)) {
                 alert('Please enter track ID and connect first');
                 return;
             }
@@ -654,7 +654,7 @@
         }
 
         function _pauseTrack() {
-            if (!currentTrackId || !userId || !socket) {
+            if (!((currentTrackId && userId ) && socket)) {
                 alert('No track playing or not connected');
                 return;
             }

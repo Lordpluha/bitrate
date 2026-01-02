@@ -1,117 +1,117 @@
 @import "tailwindcss";
 
 @theme {
-	/* Breakpoints */
-	--breakpoint-xs: 480px;
-	--breakpoint-sm: 650px;
-	--breakpoint-md: 768px;
-	--breakpoint-lg: 1025px;
-	--breakpoint-xl: 1280px;
-	--breakpoint-2xl: 1536px;
+  /* Breakpoints */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 650px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1025px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
 
-	/* Font Families */
-	--font-family-source-sans-3: "Source Sans 3", sans-serif;
+  /* Font Families */
+  --font-family-source-sans-3: "Source Sans 3", sans-serif;
 
-	/* Custom Colors */
-	--color-green-500: var(--color-green-500);
-	--color-green-600: var(--color-green-600);
-	--color-blue-500: var(--color-blue-500);
-	--color-grey-500: var(--color-grey-500);
-	--color-white: var(--color-white);
-	--color-white-100: var(--color-white-100);
-	--color-black: var(--color-black);
-	--color-black-900: var(--color-black-900);
-	--color-black-800: var(--color-black-800);
-	--color-bg: var(--color-bg);
-	--color-bg-secondary: var(--color-bg-secondary);
-	--color-text: var(--color-text);
-	--color-text-contrast: var(--color-text-contrast);
-	--color-contrast: var(--color-contrast);
-	--color-bg-secondary-rgb: var(--color-bg-secondary-rgb);
+  /* Custom Colors */
+  --color-green-500: var(--color-green-500);
+  --color-green-600: var(--color-green-600);
+  --color-blue-500: var(--color-blue-500);
+  --color-grey-500: var(--color-grey-500);
+  --color-white: var(--color-white);
+  --color-white-100: var(--color-white-100);
+  --color-black: var(--color-black);
+  --color-black-900: var(--color-black-900);
+  --color-black-800: var(--color-black-800);
+  --color-bg: var(--color-bg);
+  --color-bg-secondary: var(--color-bg-secondary);
+  --color-text: var(--color-text);
+  --color-text-contrast: var(--color-text-contrast);
+  --color-contrast: var(--color-contrast);
+  --color-bg-secondary-rgb: var(--color-bg-secondary-rgb);
 
-	/* Tailwind utilities - make text color available as border-text, bg-text, etc */
-	--color-text: oklch(0.7 0 0);
-	--color-bg: oklch(0.1 0 0);
-	--color-bg-secondary: oklch(0.15 0 0);
+  /* Tailwind utilities - make text color available as border-text, bg-text, etc */
+  --color-text: oklch(0.7 0 0);
+  --color-bg: oklch(0.1 0 0);
+  --color-bg-secondary: oklch(0.15 0 0);
 
-	/* Animations */
-	--animate-gradient-shift: gradientShift 60s ease infinite;
-	--animate-spin: spin 1s linear infinite;
+  /* Animations */
+  --animate-gradient-shift: gradientShift 60s ease infinite;
+  --animate-spin: spin 1s linear infinite;
 
-	/* Keyframes */
-	@keyframes gradientShift {
-		0% {
-			background-position: 0% 0%;
-		}
-		25% {
-			background-position: 100% 0%;
-		}
-		50% {
-			background-position: 100% 100%;
-		}
-		75% {
-			background-position: 0% 100%;
-		}
-		100% {
-			background-position: 0% 0%;
-		}
-	}
+  /* Keyframes */
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 0%;
+    }
+    25% {
+      background-position: 100% 0%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    75% {
+      background-position: 0% 100%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
 
-	@keyframes spin {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(360deg);
-		}
-	}
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 @layer base {
-	*,
-	::after,
-	::before,
-	::backdrop,
-	::file-selector-button {
-		border-color: var(--color-gray-200, currentcolor);
-	}
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 
-	* {
-		font-family: var(--font-family-source-sans-3);
-	}
+  * {
+    font-family: var(--font-family-source-sans-3);
+  }
 }
 
 @layer utilities {
-	/* Container utilities */
-	.container {
-		margin-inline: auto;
-		padding-inline: 1.25rem;
-		max-width: 100%;
-	}
+  /* Container utilities */
+  .container {
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+    max-width: 100%;
+  }
 
-	@media (min-width: 650px) {
-		.container {
-			max-width: 1540px;
-		}
-	}
+  @media (min-width: 650px) {
+    .container {
+      max-width: 1540px;
+    }
+  }
 
-	/* Background images */
-	.bg-auth-spotify {
-		background-image: linear-gradient(
-			30deg,
-			#0c7832,
-			#601e7a,
-			#121212,
-			#820c17,
-			#0c7832,
-			#601e7a,
-			#121212,
-			#820c17
-		);
-	}
+  /* Background images */
+  .bg-auth-spotify {
+    background-image: linear-gradient(
+      30deg,
+      #0c7832,
+      #601e7a,
+      #121212,
+      #820c17,
+      #0c7832,
+      #601e7a,
+      #121212,
+      #820c17
+    );
+  }
 
-	/* Background sizes */
-	.bg-gradient-animated {
-		background-size: 600% 600%;
-	}
+  /* Background sizes */
+  .bg-gradient-animated {
+    background-size: 600% 600%;
+  }
 }

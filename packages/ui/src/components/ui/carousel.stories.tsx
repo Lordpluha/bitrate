@@ -43,16 +43,13 @@ const meta: Meta<StoryArgs> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Basic: StoryObj<typeof meta> = {
+export const Basic: Story = {
   render: (args) => (
     <div className="w-full max-w-(--breakpoint-sm) overflow-hidden">
       <Carousel opts={{ loop: args.loop ?? true }} className="h-full">
         <CarouselContent className="h-full flex">
-          {slides.map(({ src, alt }, i) => (
-            <CarouselItem
-              key={i}
-              className="relative w-full h-full basis-full shrink-0"
-            >
+          {slides.map(({ src, alt }) => (
+            <CarouselItem key={alt} className="relative w-full h-full basis-full shrink-0">
               <img src={src} alt={alt} className="object-cover w-full h-full" />
             </CarouselItem>
           ))}
@@ -62,7 +59,7 @@ export const Basic: StoryObj<typeof meta> = {
   ),
 };
 
-export const WithNavigation: StoryObj<typeof meta> = {
+export const WithNavigation: Story = {
   render: (args) => (
     <div className="w-full max-w-(--breakpoint-sm) relative overflow-hidden">
       <Carousel opts={{ loop: args.loop ?? true }} className="h-full">
@@ -70,11 +67,8 @@ export const WithNavigation: StoryObj<typeof meta> = {
         <CarouselNext className="z-20" />
 
         <CarouselContent className="h-full flex">
-          {slides.map(({ src, alt }, i) => (
-            <CarouselItem
-              key={i}
-              className="relative w-full h-full basis-full shrink-0"
-            >
+          {slides.map(({ src, alt }) => (
+            <CarouselItem key={alt} className="relative w-full h-full basis-full shrink-0">
               <img src={src} alt={alt} className="object-cover w-full h-full" />
             </CarouselItem>
           ))}
@@ -84,23 +78,16 @@ export const WithNavigation: StoryObj<typeof meta> = {
   ),
 };
 
-export const Vertical: StoryObj<typeof meta> = {
+export const Vertical: Story = {
   render: () => (
     <div className="relative overflow-hidden h-[1000px]">
-      <Carousel
-        orientation="vertical"
-        opts={{ loop: true }}
-        className="h-full w-full"
-      >
+      <Carousel orientation="vertical" opts={{ loop: true }} className="h-full w-full">
         <CarouselPrevious className="z-20" />
         <CarouselNext className="z-20" />
 
         <CarouselContent className="h-full flex">
-          {slides.map(({ src, alt }, i) => (
-            <CarouselItem
-              key={i}
-              className="relative w-full h-48 basis-full shrink-0"
-            >
+          {slides.map(({ src, alt }) => (
+            <CarouselItem key={alt} className="relative w-full h-48 basis-full shrink-0">
               <img src={src} alt={alt} className="object-cover w-full h-full" />
             </CarouselItem>
           ))}

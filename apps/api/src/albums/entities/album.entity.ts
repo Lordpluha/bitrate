@@ -1,5 +1,5 @@
-import { Album } from '@prisma/client'
 import { ApiProperty } from '@nestjs/swagger'
+import { Album } from '@prisma/client'
 
 export class AlbumEntity implements Album {
   @ApiProperty()

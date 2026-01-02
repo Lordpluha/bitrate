@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
-import { AuthModule } from './auth/auth.module'
-import { UsersModule } from './users/users.module'
 import { ConfigModule } from '@nestjs/config'
 import { envSchema, envType } from '../env.schema'
+import { AlbumsModule } from './albums/albums.module'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { ArtistsModule } from './artists/artists.module'
+import { AuthModule } from './auth/auth.module'
+import { FilesModule } from './files/files.module'
+import { PlaylistsModule } from './playlists/playlists.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { TracksModule } from './tracks/tracks.module'
-import { PlaylistsModule } from './playlists/playlists.module'
-import { AlbumsModule } from './albums/albums.module'
-import { ArtistsModule } from './artists/artists.module'
-import { FilesModule } from './files/files.module'
+import { UsersModule } from './users/users.module'
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { FilesModule } from './files/files.module'
       isGlobal: true,
       envFilePath: ['.env.local', '.env.development', '.env.production'],
 
-      validate: (env: Record<string, unknown>): envType => envSchema.parse(env)
+      validate: (env: Record<string, unknown>): envType => envSchema.parse(env),
     }),
     PrismaModule,
     AuthModule,
@@ -27,9 +27,9 @@ import { FilesModule } from './files/files.module'
     TracksModule,
     PlaylistsModule,
     AlbumsModule,
-    FilesModule
+    FilesModule,
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService],
 })
 export class AppModule {}

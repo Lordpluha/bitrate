@@ -1,4 +1,4 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { UserEntity } from 'src/users/entities'
 
@@ -17,10 +17,10 @@ export function AuthMeSwagger() {
             updatedAt: '2023-10-01T12:00:00.000Z',
             username: 'user123',
             avatar: null,
-            description: 'Some description about the user'
-          } as Omit<UserEntity, 'password'>
-        }
-      }
-    })
+            description: 'Some description about the user',
+          } as Omit<UserEntity, 'password'>,
+        },
+      },
+    }),
   )
 }

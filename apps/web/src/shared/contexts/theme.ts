@@ -1,27 +1,26 @@
-'use client'
+'use client';
 
-import { createContext, useContext } from 'react'
-
-import { theme } from '@shared/constants'
+import type { Theme } from '@shared/constants';
+import { createContext, useContext } from 'react';
 
 export type ThemeContextType = {
-  theme: theme
-  setTheme: (theme: theme) => void
-}
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+};
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'dark',
   setTheme: () => {
-    throw new Error('setTheme function is not implemented')
-  }
-})
+    throw new Error('setTheme function is not implemented');
+  },
+});
 
 export const useTheme = () => {
-  const context = useContext(ThemeContext)
+  const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeContextProvider')
+    throw new Error('useTheme must be used within a ThemeContextProvider');
   }
-  return context
-}
+  return context;
+};
 
-export const ThemeProvider = ThemeContext.Provider
+export const ThemeProvider = ThemeContext.Provider;

@@ -1,16 +1,20 @@
-import { emailSchema, fullNameSchema, passwordSchema } from '@shared/validation'
-import z from 'zod'
+import {
+  emailSchema,
+  fullNameSchema,
+  passwordSchema,
+} from '@shared/validation';
+import z from 'zod';
 
 export const registrationSchema = z
   .object({
     fullName: fullNameSchema,
     email: emailSchema,
     password: passwordSchema,
-    confirmPassword: passwordSchema
+    confirmPassword: passwordSchema,
   })
-  .refine(data => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
-    path: ['confirmPassword']
-  })
+    path: ['confirmPassword'],
+  });
 
-export type RegistrationFormData = z.infer<typeof registrationSchema>
+export type RegistrationFormData = z.infer<typeof registrationSchema>;

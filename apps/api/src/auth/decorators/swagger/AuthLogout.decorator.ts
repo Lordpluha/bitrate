@@ -1,4 +1,4 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 export function AuthLogoutSwagger() {
@@ -6,7 +6,7 @@ export function AuthLogoutSwagger() {
     ApiOperation({ summary: 'User logout' }),
     ApiResponse({
       status: HttpStatus.CREATED,
-      description: 'Successfully logged out'
-    })
+      description: 'Successfully logged out',
+    }),
   )
 }

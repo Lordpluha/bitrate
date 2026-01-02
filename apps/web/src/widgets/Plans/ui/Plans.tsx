@@ -1,16 +1,15 @@
-import Image from 'next/image'
+import { Typography } from '@spotify/ui';
+import Image from 'next/image';
 
-import { Typography } from '@spotify/ui'
+import paymentMethods from '../config/payment-methods.json';
+import plans from '../config/plans.json';
 
-import paymentMethods from '../config/payment-methods.json'
-import plans from '../config/plans.json'
-
-import { PlanCard } from './PlanCard'
+import { PlanCard } from './PlanCard';
 
 export const Plans = () => {
   return (
-    <div className='py-16 container 3xl:!max-w-[1540px] text-center max-lg:py-12 max-md:py-8'>
-      <div className='container mb-16 max-lg:mb-14 max-md:mb-12'>
+    <div className="py-16 container 3xl:!max-w-[1540px] text-center max-lg:py-12 max-md:py-8">
+      <div className="container mb-16 max-lg:mb-14 max-md:mb-12">
         <Typography.Heading1 className={'leading-[1.2] mb-8'}>
           Pick Your Premium
         </Typography.Heading1>
@@ -20,28 +19,25 @@ export const Plans = () => {
           level. Enjoy uninterrupted music playback, even in offline mode
         </Typography.Paragraph>
 
-        <div className='flex items-center justify-center gap-4'>
-          {paymentMethods.map((icon, index) => (
+        <div className="flex items-center justify-center gap-4">
+          {paymentMethods.map((icon) => (
             <Image
-              key={index}
-              className='w-auto h-auto max-h-16'
-              src={icon.src}
               alt={icon.alt}
-              width={38}
+              className="w-auto h-auto max-h-16"
               height={38}
+              key={icon.src}
+              src={icon.src}
+              width={38}
             />
           ))}
         </div>
       </div>
 
-      <div className='container grid grid-cols-4 gap-6 items-center max-xl:grid-cols-2 max-sm:grid-cols-1'>
-        {plans.map((plan, idx) => (
-          <PlanCard
-            key={idx}
-            {...plan}
-          />
+      <div className="container grid grid-cols-4 gap-6 items-center max-xl:grid-cols-2 max-sm:grid-cols-1">
+        {plans.map((plan) => (
+          <PlanCard key={plan.name} {...plan} />
         ))}
       </div>
     </div>
-  )
-}
+  );
+};

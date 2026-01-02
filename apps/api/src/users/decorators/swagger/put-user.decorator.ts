@@ -1,10 +1,5 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse
-} from '@nestjs/swagger'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ArtistEntity } from 'src/artists/entities'
 import { UpdateUserDto } from 'src/users/dtos'
 
@@ -21,12 +16,12 @@ export function PutUserSwagger() {
         avatar: 'https://example.com/uploads/avatars/avatar.jpg',
         backgroundImage: '',
         bio: 'Some bio',
-        createdAt: new Date()
-      } as Omit<ArtistEntity, 'password'>
+        createdAt: new Date(),
+      } as Omit<ArtistEntity, 'password'>,
     }),
     ApiBody({
       description: 'User data to update',
-      type: UpdateUserDto
-    })
+      type: UpdateUserDto,
+    }),
   )
 }

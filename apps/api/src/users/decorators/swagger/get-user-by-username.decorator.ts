@@ -1,10 +1,5 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
-import {
-  ApiConsumes,
-  ApiOperation,
-  ApiParam,
-  ApiResponse
-} from '@nestjs/swagger'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 import { ArtistEntity } from 'src/artists/entities'
 
 export function GetUserByUsernameSwagger() {
@@ -20,18 +15,18 @@ export function GetUserByUsernameSwagger() {
         avatar: 'https://example.com/uploads/avatars/avatar.jpg',
         backgroundImage: '',
         bio: 'Some bio',
-        createdAt: new Date()
-      } as Omit<ArtistEntity, 'password'>
+        createdAt: new Date(),
+      } as Omit<ArtistEntity, 'password'>,
     }),
     ApiResponse({
       status: HttpStatus.NOT_FOUND,
-      description: 'User not found'
+      description: 'User not found',
     }),
     ApiParam({
       name: 'username',
       required: true,
       description: 'Username of the user to retrieve',
-      type: String
-    })
+      type: String,
+    }),
   )
 }

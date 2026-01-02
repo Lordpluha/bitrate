@@ -1,18 +1,18 @@
+import { Logger } from '@nestjs/common'
 import {
-  WebSocketGateway,
-  SubscribeMessage,
-  MessageBody,
-  WsResponse,
   ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  WebSocketServer
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+  WsResponse,
 } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
-import { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
-import { Logger } from '@nestjs/common'
-import { TracksService } from './tracks.service'
 import { TokenService } from 'src/auth/token.service'
+import { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
+import { TracksService } from './tracks.service'
 
 interface AuthenticatedSocket extends Socket {
   userId?: string
@@ -26,8 +26,8 @@ interface PlayingSession {
 
 @WebSocketGateway({
   cors: {
-    origin: '*'
-  }
+    origin: '*',
+  },
 })
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -39,7 +39,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
     private tracksService: TracksService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {}
 
   async handleConnection(client: AuthenticatedSocket): Promise<void> {
@@ -47,9 +47,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
       // Extract token from client manually for connection-level authentication
       const authToken = client.handshake.auth?.token as string | undefined
       const headerAuth = client.handshake.headers.authorization
-      const headerToken = headerAuth
-        ? headerAuth.replace('Bearer ', '')
-        : undefined
+      const headerToken = headerAuth ? headerAuth.replace('Bearer ', '') : undefined
       const queryToken = client.handshake.query?.token as string | undefined
       const token = authToken || headerToken || queryToken
 
@@ -70,9 +68,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
 
       this.userSessions.set(client.userId, client.id)
-      this.logger.log(
-        `User ${client.userId} connected with socket ${client.id}`
-      )
+      this.logger.log(`User ${client.userId} connected with socket ${client.id}`)
 
       // Join user to their personal room
       void client.join(`user_${client.userId}`)
@@ -83,13 +79,13 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client.emit('trackState', {
           trackId: currentSession.trackId,
           currentTime: this.calculateCurrentTime(currentSession),
-          isPlaying: true
+          isPlaying: true,
         })
       }
     } catch (error) {
       this.logger.error(
         'Authentication failed:',
-        error instanceof Error ? error.message : 'Unknown error'
+        error instanceof Error ? error.message : 'Unknown error',
       )
       client.disconnect()
     }
@@ -105,7 +101,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('playTrack')
   async handlePlayTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() payload: StartTrackDto
+    @MessageBody() payload: StartTrackDto,
   ): Promise<WsResponse> {
     try {
       if (!client.userId) {
@@ -122,14 +118,14 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.playingSessions.set(client.userId, {
         trackId: payload.trackId,
         currentTime: payload.currentTime,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       })
 
       // Emit only to the user's personal room
       this.server.to(`user_${client.userId}`).emit('trackPlaying', {
         trackId: payload.trackId,
         currentTime: payload.currentTime,
-        userId: client.userId
+        userId: client.userId,
       })
 
       return {
@@ -137,20 +133,20 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         data: {
           success: true,
           trackId: payload.trackId,
-          currentTime: payload.currentTime
-        }
+          currentTime: payload.currentTime,
+        },
       }
     } catch (error) {
       this.logger.error(
         'Error playing track:',
-        error instanceof Error ? error.message : 'Unknown error'
+        error instanceof Error ? error.message : 'Unknown error',
       )
       return {
         event: 'playTrack',
         data: {
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        }
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       }
     }
   }
@@ -158,7 +154,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('pauseTrack')
   handlePauseTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() payload: PauseTrackDto
+    @MessageBody() payload: PauseTrackDto,
   ): WsResponse {
     try {
       if (!client.userId) {
@@ -172,7 +168,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.to(`user_${client.userId}`).emit('trackPaused', {
         trackId: payload.trackId,
         currentTime: payload.currentTime,
-        userId: client.userId
+        userId: client.userId,
       })
 
       return {
@@ -180,20 +176,20 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         data: {
           success: true,
           trackId: payload.trackId,
-          currentTime: payload.currentTime
-        }
+          currentTime: payload.currentTime,
+        },
       }
     } catch (error) {
       this.logger.error(
         'Error pausing track:',
-        error instanceof Error ? error.message : 'Unknown error'
+        error instanceof Error ? error.message : 'Unknown error',
       )
       return {
         event: 'pauseTrack',
         data: {
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        }
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       }
     }
   }
@@ -201,7 +197,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('updateStreaming')
   handleUpdateStreaming(
     @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() payload: UpdateStreamingDto
+    @MessageBody() payload: UpdateStreamingDto,
   ): WsResponse {
     try {
       if (!client.userId) {
@@ -212,7 +208,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.playingSessions.set(client.userId, {
           trackId: payload.trackId,
           currentTime: payload.currentTime,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         })
       } else {
         this.playingSessions.delete(client.userId)
@@ -223,7 +219,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         trackId: payload.trackId,
         currentTime: payload.currentTime,
         isPlaying: payload.isPlaying,
-        userId: client.userId
+        userId: client.userId,
       })
 
       return {
@@ -232,28 +228,26 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
           success: true,
           trackId: payload.trackId,
           currentTime: payload.currentTime,
-          isPlaying: payload.isPlaying
-        }
+          isPlaying: payload.isPlaying,
+        },
       }
     } catch (error) {
       this.logger.error(
         'Error updating streaming:',
-        error instanceof Error ? error.message : 'Unknown error'
+        error instanceof Error ? error.message : 'Unknown error',
       )
       return {
         event: 'updateStreaming',
         data: {
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        }
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       }
     }
   }
 
   @SubscribeMessage('getCurrentState')
-  handleGetCurrentState(
-    @ConnectedSocket() client: AuthenticatedSocket
-  ): WsResponse {
+  handleGetCurrentState(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
     if (!client.userId) {
       return { event: 'currentState', data: { error: 'Unauthorized' } }
     }
@@ -265,16 +259,16 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         data: {
           trackId: currentSession.trackId,
           currentTime: this.calculateCurrentTime(currentSession),
-          isPlaying: true
-        }
+          isPlaying: true,
+        },
       }
     }
 
     return {
       event: 'currentState',
       data: {
-        isPlaying: false
-      }
+        isPlaying: false,
+      },
     }
   }
 
@@ -284,11 +278,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   // Method to emit events from controller
-  emitToUser(
-    userId: string,
-    event: string,
-    data: Record<string, unknown>
-  ): void {
+  emitToUser(userId: string, event: string, data: Record<string, unknown>): void {
     this.server.to(`user_${userId}`).emit(event, data)
   }
 }

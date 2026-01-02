@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import createClient from 'openapi-react-query'
+import createClient from 'openapi-react-query';
 
-import { fetchClient } from './fetchClient'
+import { fetchClient } from './fetchClient';
 
 /**
  * Query TS client for the API.
  */
-export const rqClient = createClient(fetchClient)
+export const rqClient = createClient(fetchClient);
 const {
   useQuery,
   useMutation,
   useInfiniteQuery,
   queryOptions,
-  useSuspenseQuery
-} = rqClient
+  useSuspenseQuery,
+} = rqClient;
 export {
   useQuery,
   useMutation,
   useInfiniteQuery,
   queryOptions,
-  useSuspenseQuery
-}
+  useSuspenseQuery,
+};

@@ -1,35 +1,34 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
   Req,
   UploadedFile,
   UseInterceptors,
-  BadRequestException,
-  ParseUUIDPipe
 } from '@nestjs/common'
-import { UsersService } from './users.service'
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import { UserEntity } from './entities'
-import { Auth, AuthGuard } from 'src/auth/auth.guard'
-import { JWTPayload } from 'src/auth/types'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { diskStorage } from 'multer'
+import { ZodValidationPipe } from 'nestjs-zod'
 import { extname } from 'path'
+import { Auth } from 'src/auth/auth.guard'
+import * as z from 'zod'
 import {
-  UploadAvatarSwagger,
-  GetUsersSwagger,
   GetUserByUsernameSwagger,
+  GetUserSwagger,
+  GetUsersSwagger,
   PutUserSwagger,
-  GetUserSwagger
+  UploadAvatarSwagger,
 } from './decorators'
 import { UpdateUserDto, UpdateUserSchema } from './dtos'
-import { ZodValidationPipe } from 'nestjs-zod'
-import * as z from 'zod'
+import { UserEntity } from './entities'
+import { UsersService } from './users.service'
 
 @ApiExtraModels(UserEntity)
 @ApiTags('Users')
@@ -43,7 +42,7 @@ export class UsersController {
     @Query('limit', new ZodValidationPipe(z.number())) limit?: number,
     @Query('page', new ZodValidationPipe(z.number())) page?: number,
     @Query('username', new ZodValidationPipe(z.string()))
-    username?: UserEntity['username']
+    username?: UserEntity['username'],
   ) {
     if (!username) {
       return Promise.reject(new Error('User not found'))
@@ -51,7 +50,7 @@ export class UsersController {
     return await this.usersService.findAll({
       username,
       page,
-      limit
+      limit,
     })
   }
 
@@ -59,7 +58,7 @@ export class UsersController {
   @Get('username/:username')
   async getByUsername(
     @Param('username', new ZodValidationPipe(z.string()))
-    username: UserEntity['username']
+    username: UserEntity['username'],
   ) {
     return await this.usersService.getByUsername(username)
   }
@@ -75,7 +74,7 @@ export class UsersController {
   @Put('')
   async putById(
     @Req() req: Request,
-    @Body(new ZodValidationPipe(UpdateUserSchema)) userData: UpdateUserDto
+    @Body(new ZodValidationPipe(UpdateUserSchema)) userData: UpdateUserDto,
   ) {
     const user = req['user'] as UserEntity
     return await this.usersService.updateById(user.id, userData)
@@ -91,7 +90,7 @@ export class UsersController {
         filename: (req, file, cb) => {
           const uniqueName = `${Date.now()}${extname(file.originalname)}`
           cb(null, uniqueName)
-        }
+        },
       }),
       fileFilter: (req, file, cb) => {
         const allowed = ['image/png', 'image/jpeg', 'image/webp']
@@ -99,13 +98,10 @@ export class UsersController {
           return cb(new BadRequestException('Invalid file type'), false)
         }
         cb(null, true)
-      }
-    })
+      },
+    }),
   )
-  async uploadAvatar(
-    @Req() req: Request,
-    @UploadedFile() file: Express.Multer.File
-  ) {
+  async uploadAvatar(@Req() req: Request, @UploadedFile() file: Express.Multer.File) {
     const user = req['user'] as UserEntity
     return await this.usersService.uploadAvatar(user.id, file.filename)
   }

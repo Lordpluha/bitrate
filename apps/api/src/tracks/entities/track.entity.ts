@@ -1,5 +1,5 @@
-import { Track } from '@prisma/client'
 import { ApiProperty } from '@nestjs/swagger'
+import { Track } from '@prisma/client'
 
 export class TrackEntity implements Track {
   @ApiProperty()

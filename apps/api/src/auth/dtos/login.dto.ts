@@ -6,7 +6,7 @@ export const LoginSchema = z.object({
   password: z
     .string()
     .min(6, { message: 'Password must be at least 6 characters long' })
-    .max(32, { message: 'Password must not exceed 32 characters' })
+    .max(32, { message: 'Password must not exceed 32 characters' }),
 })
 
 export class LoginDto {

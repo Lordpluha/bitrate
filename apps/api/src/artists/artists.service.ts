@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { ArtistEntity } from './entities'
 import { CreateArtistDto } from './dtos'
+import { ArtistEntity } from './entities'
 
 @Injectable()
 export class ArtistsService {
@@ -12,21 +12,19 @@ export class ArtistsService {
       data: {
         password,
         username,
-        email
+        email,
       },
       omit: {
-        password: true
-      }
+        password: true,
+      },
     })
   }
 
   async findAll({
     page = 1,
     limit = 10,
-    username
-  }: { page?: number; limit?: number } & Partial<
-    Pick<ArtistEntity, 'username'>
-  >) {
+    username,
+  }: { page?: number; limit?: number } & Partial<Pick<ArtistEntity, 'username'>>) {
     return await this.prisma.artist.findMany({
       skip: (page - 1) * limit,
       take: limit,
@@ -34,20 +32,20 @@ export class ArtistsService {
         ? {
             username: {
               contains: username,
-              mode: 'insensitive'
-            }
+              mode: 'insensitive',
+            },
           }
         : undefined,
       omit: {
         password: true,
-        email: true
-      }
+        email: true,
+      },
     })
   }
 
   async findByUsername(username: ArtistEntity['username']) {
     return await this.prisma.artist.findUnique({
-      where: { username }
+      where: { username },
     })
   }
 
@@ -56,8 +54,8 @@ export class ArtistsService {
       where: { id },
       data: artist,
       omit: {
-        password: true
-      }
+        password: true,
+      },
     })
   }
 
@@ -65,20 +63,20 @@ export class ArtistsService {
     return await this.prisma.artist.delete({
       where: { id },
       omit: {
-        password: true
-      }
+        password: true,
+      },
     })
   }
 
   async findByEmail(email: ArtistEntity['email']) {
     return await this.prisma.artist.findUnique({
-      where: { email }
+      where: { email },
     })
   }
 
   async findById_UNSECURE(id: ArtistEntity['id']) {
     return await this.prisma.artist.findUnique({
-      where: { id }
+      where: { id },
     })
   }
 
@@ -87,8 +85,8 @@ export class ArtistsService {
       where: { id },
       omit: {
         password: true,
-        email: true
-      }
+        email: true,
+      },
     })
   }
 }

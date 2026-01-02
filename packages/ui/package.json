@@ -1,84 +1,84 @@
 {
-	"name": "@spotify/ui",
-	"version": "0.0.1",
-	"private": true,
-	"license": "MIT",
-	"sideEffects": [
-		"**/*.css"
-	],
-	"main": "./dist/cjs/index.js",
-	"module": "./dist/esm/index.js",
-	"types": "./dist/types/index.d.ts",
-	"exports": {
-		".": {
-			"types": "./dist/types/index.d.ts",
-			"import": "./dist/esm/index.js",
-			"require": "./dist/cjs/index.js"
-		},
-		"./styles.css": {
-			"import": "./dist/esm/globals.css",
-			"require": "./dist/cjs/globals.css",
-			"default": "./dist/esm/globals.css"
-		},
-		"./globals.css": {
-			"import": "./dist/esm/globals.css",
-			"require": "./dist/cjs/globals.css",
-			"default": "./dist/esm/globals.css"
-		},
-		"./postcss.config": "./postcss.config.cjs"
-	},
-	"files": [
-		"dist",
-		"postcss.config.cjs"
-	],
-	"scripts": {
-		"lint": "pnpm exec biome lint --write",
-		"format": "pnpm exec biome format --write",
-		"storybook": "storybook dev -p 6006",
-		"clean": "rimraf dist .types",
-		"build-storybook": "storybook build",
-		"build": "pnpm clean && node scripts/build.mjs",
-		"dev": "node scripts/dev.mjs",
-		"typecheck": "tsc --noEmit"
-	},
-	"peerDependencies": {
-		"@radix-ui/react-avatar": "^1.1.10",
-		"@radix-ui/react-label": "^2.1.7",
-		"@radix-ui/react-separator": "^1.1.7",
-		"embla-carousel": "^8.6.0",
-		"embla-carousel-react": "^8.6.0",
-		"next-themes": "^0.4.6",
-		"react": "^19",
-		"react-dom": "^19",
-		"sonner": "^2.0.7"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.3.10",
-		"@storybook/addon-docs": "^10.1.10",
-		"@storybook/react-vite": "^10.1.10",
-		"@tailwindcss/postcss": "^4.1.18",
-		"@types/node": "^25.0.3",
-		"@types/react": "^19.1.12",
-		"@types/react-dom": "^19.1.9",
-		"chromatic": "^13.1.4",
-		"esbuild": "0.27.2",
-		"glob": "^13.0.0",
-		"postcss": "^8.4.41",
-		"postcss-import": "^16.1.0",
-		"postcss-nested": "^7.0.2",
-		"rimraf": "^6.0.1",
-		"storybook": "^10.1.10",
-		"tailwindcss": "^4.1.18",
-		"tsc-alias": "^1.8.16",
-		"typescript": "^5.9.2"
-	},
-	"dependencies": {
-		"@hookform/resolvers": "^5.2.1",
-		"class-variance-authority": "^0.7.0",
-		"clsx": "^2.1.1",
-		"lucide-react": "^0.562.0",
-		"react-hook-form": "^7.61.1",
-		"tailwind-merge": "^3.4.0",
-		"zod": "^4.1.5"
-	}
+  "name": "@spotify/ui",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./styles.css": {
+      "import": "./dist/esm/globals.css",
+      "require": "./dist/cjs/globals.css",
+      "default": "./dist/esm/globals.css"
+    },
+    "./globals.css": {
+      "import": "./dist/esm/globals.css",
+      "require": "./dist/cjs/globals.css",
+      "default": "./dist/esm/globals.css"
+    },
+    "./postcss.config": "./postcss.config.cjs"
+  },
+  "files": [
+    "dist",
+    "postcss.config.cjs"
+  ],
+  "scripts": {
+    "lint": "pnpm exec biome lint --write",
+    "format": "pnpm exec biome format --write",
+    "storybook": "storybook dev -p 6006",
+    "clean": "rimraf dist .types",
+    "build-storybook": "storybook build",
+    "build": "pnpm clean && node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@radix-ui/react-avatar": "^1.1.10",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-separator": "^1.1.7",
+    "embla-carousel": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "next-themes": "^0.4.6",
+    "react": "^19",
+    "react-dom": "^19",
+    "sonner": "^2.0.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.10",
+    "@storybook/addon-docs": "^10.1.11",
+    "@storybook/react-vite": "^10.1.11",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "chromatic": "^13.3.4",
+    "esbuild": "0.27.2",
+    "glob": "^13.0.0",
+    "postcss": "^8.5.6",
+    "postcss-import": "^16.1.1",
+    "postcss-nested": "^7.0.2",
+    "rimraf": "^6.1.2",
+    "storybook": "^10.1.11",
+    "tailwindcss": "^4.1.18",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.562.0",
+    "react-hook-form": "^7.69.0",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.4"
+  }
 }

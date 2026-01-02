@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  Logger
-} from '@nestjs/common'
+import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common'
 import { WsException } from '@nestjs/websockets'
 import { Socket } from 'socket.io'
 import { TokenService } from './token.service'
@@ -38,7 +33,7 @@ export class WsAuthGuard implements CanActivate {
     } catch (error) {
       this.logger.error(
         'WebSocket authentication failed:',
-        error instanceof Error ? error.message : 'Unknown error'
+        error instanceof Error ? error.message : 'Unknown error',
       )
       throw new WsException('Unauthorized')
     }
@@ -49,9 +44,7 @@ export class WsAuthGuard implements CanActivate {
 
     // Проверяем Authorization header
     const headerAuth = client.handshake.headers.authorization
-    const headerToken = headerAuth
-      ? headerAuth.replace('Bearer ', '')
-      : undefined
+    const headerToken = headerAuth ? headerAuth.replace('Bearer ', '') : undefined
 
     // Проверяем query параметры
     const queryToken = client.handshake.query?.token as string | undefined
@@ -66,7 +59,7 @@ export class WsAuthGuard implements CanActivate {
           acc[name] = value
           return acc
         },
-        {} as Record<string, string>
+        {} as Record<string, string>,
       )
 
       cookieToken = cookies[process.env.ACCESS_TOKEN_NAME || 'access_token']
