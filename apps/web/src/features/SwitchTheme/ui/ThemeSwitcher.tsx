@@ -1,6 +1,6 @@
 'use client';
 
-import { themes } from '@shared/constants';
+import { Themes } from '@shared/constants';
 import { useTheme } from '@shared/contexts';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ export const ThemeSwitcher = () => {
 
   return (
     <div className="flex items-center gap-2 p-2 rounded-full bg-bg shadow-inner shadow-text">
-      {themes.map((th) => (
+      {Themes.map((th) => (
         <button
           className={clsx(
             'w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300',

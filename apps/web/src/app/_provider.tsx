@@ -1,6 +1,6 @@
 'use client';
 
-import type { theme } from '@shared/constants';
+import type { Theme } from '@shared/constants';
 import { ThemeProvider } from '@shared/contexts';
 import { usePersistedState } from '@shared/hooks';
 import { type AppStore, makeStore } from '@shared/redux';
@@ -19,7 +19,7 @@ import { Provider as StoreProvider } from 'react-redux';
 export const Provider: FC<PropsWithChildren> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient());
   const storeRef = useRef<AppStore>(null);
-  const [theme, setTheme, , hydrated] = usePersistedState<theme>(
+  const [theme, setTheme, , hydrated] = usePersistedState<Theme>(
     'theme',
     'dark',
   );

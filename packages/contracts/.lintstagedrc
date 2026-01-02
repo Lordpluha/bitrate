@@ -1,8 +1,8 @@
 {
 	"./src/*.{tsx,ts}": [
-		"pnpm exec biome format --write"
+		"pnpm exec biome check --write"
 	],
 	"./**/*.json": [
-		"pnpm exec biome format --write"
+		"pnpm exec biome check --write"
 	]
 }
