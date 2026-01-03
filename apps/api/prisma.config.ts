@@ -1,4 +1,8 @@
+import { config } from 'dotenv'
 import type { PrismaConfig } from 'prisma'
+
+// Load environment variables
+config()
 
 export default {
   schema: 'prisma/schema.prisma',
