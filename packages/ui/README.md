@@ -39,7 +39,7 @@ import { Typography, PasswordInput } from '@spotify/ui'
 export default function Example() {
   return (
     <div>
-      <Typography.Heading1>Hello from UI Kit 👋</Typography.Heading1>
+      <Typography as='h1' size='heading1'>Hello from UI Kit 👋</Typography>
       <PasswordInput placeholder="Enter your password" />
     </div>
   )
@@ -78,7 +78,7 @@ import '@spotify/ui/globals.css';
 
 | Компонент            | Импорт                                        | Пример использования |
 |----------------------|-----------------------------------------------|----------------------|
-| `Typography`         | `import { Typography } from '@spotify/ui'`   | `<Typography.Heading1>Hello</Typography.Heading1>` |
+| `Typography`         | `import { Typography } from '@spotify/ui'`   | `<Typography as='h1' size='heading1'>Hello</Typography>` |
 | `PasswordInput`      | `import { PasswordInput } from '@spotify/ui'`| `<PasswordInput placeholder="Пароль" />` |
 | `Form`               | `import { Form } from '@spotify/ui'`         | `<Form {...methods}>...</Form>` |
 | `Carousel`           | `import { Carousel } from '@spotify/ui'`     | `<Carousel>...</Carousel>` |

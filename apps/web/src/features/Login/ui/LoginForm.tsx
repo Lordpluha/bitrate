@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@shared/api';
 import { ROUTES } from '@shared/routes';
-import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui';
+import { SocialsAuthDivider } from '@shared/ui';
 import {
   Button,
   Form,
@@ -55,12 +55,12 @@ export const LoginForm = () => {
     <div className="flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-textContrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border">
       <div className="flex flex-col items-center">
         {/* <LogoIconSm /> */}
-        <Typography.Heading5 className="mt-2 text-center">
+        <Typography as='h5' size={'heading5'} className="mt-2 text-center">
           Login to your account
-        </Typography.Heading5>
-        <Typography.Paragraph className="text-center text-grey-500">
+        </Typography>
+        <Typography as='p' size={'body'} className="text-center text-grey-500">
           Welcome back! Please sign in to continue.
-        </Typography.Paragraph>
+        </Typography>
       </div>
 
       <Form {...form}>
@@ -120,7 +120,7 @@ export const LoginForm = () => {
             <SocialsAuthDivider />
             <Button variant="contrast">
               {/* <GoggleIcon className="mr-2" /> */}
-              <Typography.Paragraph>Continue with Google</Typography.Paragraph>
+              <Typography as='p' size={'body'}>Continue with Google</Typography>
             </Button>
             <p className="text-lg text-center">
               Don't have an account?{' '}

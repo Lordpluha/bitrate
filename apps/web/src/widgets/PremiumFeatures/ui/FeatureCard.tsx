@@ -28,8 +28,8 @@ export const FeatureCard: FC<FeatureCardProps> = ({
         {/* <IconComponent className='text-green-500 fill-green-500' /> */}
       </div>
 
-      <Typography.Heading5>{title}</Typography.Heading5>
-      <Typography.Paragraph>{description}</Typography.Paragraph>
+      <Typography as='h5' size={'heading5'}>{title}</Typography>
+      <Typography as='p' size={'body'}>{description}</Typography>
     </div>
   );
 };

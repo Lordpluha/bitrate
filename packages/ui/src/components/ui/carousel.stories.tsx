@@ -1,4 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import banner1 from "../../../assets/images/banner-1.jpg";
+import banner2 from "../../../assets/images/banner-2.jpg";
+import banner3 from "../../../assets/images/banner-3.jpg";
+import banner4 from "../../../assets/images/banner-4.jpg";
 import {
   Carousel,
   CarouselContent,
@@ -6,10 +10,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./carousel";
-import banner1 from "./images/banner-1.jpg";
-import banner2 from "./images/banner-2.jpg";
-import banner3 from "./images/banner-3.jpg";
-import banner4 from "./images/banner-4.jpg";
 
 const slides = [
   { src: banner1, alt: "Banner 1" },

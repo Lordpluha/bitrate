@@ -15,11 +15,6 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
     },
-    "./styles.css": {
-      "import": "./dist/esm/globals.css",
-      "require": "./dist/cjs/globals.css",
-      "default": "./dist/esm/globals.css"
-    },
     "./globals.css": {
       "import": "./dist/esm/globals.css",
       "require": "./dist/cjs/globals.css",
@@ -75,6 +70,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.562.0",

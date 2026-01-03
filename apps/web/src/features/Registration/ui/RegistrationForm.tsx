@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@shared/api';
 import { ROUTES } from '@shared/routes';
-import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui';
+import { SocialsAuthDivider } from '@shared/ui';
 import {
   Button,
   Form,
@@ -60,10 +60,10 @@ export const RegistrationForm = () => {
     <div className="flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-textContrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border">
       <div className="flex flex-col items-center">
         {/* <LogoIconSm /> */}
-        <Typography.Heading5 className="mt-2 text-center">
+        <Typography as='h5' size={'heading5'} className="mt-2 text-center">
           Create your account for free and start listening
-        </Typography.Heading5>
-        <Typography.Paragraph className="text-center text-grey-500">
+        </Typography>
+        <Typography as='p' size={'body'} className="text-center text-grey-500">
           By clicking on sign-up, you agree to the <br />
           <Link className="text-green-500 hover:opacity-70" href={ROUTES.terms}>
             Spotify Terms and Conditions
@@ -76,7 +76,7 @@ export const RegistrationForm = () => {
             Privacy Policy
           </Link>
           .
-        </Typography.Paragraph>
+        </Typography>
       </div>
 
       <Form {...form}>
@@ -167,7 +167,7 @@ export const RegistrationForm = () => {
             <SocialsAuthDivider />
             <Button variant="contrast">
               {/* <GoggleIcon className="mr-2" /> */}
-              <Typography.Paragraph>Continue with Google</Typography.Paragraph>
+              <Typography as='p' size={'body'}>Continue with Google</Typography>
             </Button>
             <p className="text-lg text-center">
               Already have an account?{' '}

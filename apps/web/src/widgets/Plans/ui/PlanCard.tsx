@@ -30,9 +30,9 @@ export const PlanCard: FC<PlanCardProps> = ({
         </span>
       </div>
       <div className="pb-6 mb-6 border-b-2 border-text border-solid flex w-full flex-col items-start">
-        <Typography.Heading5 className="mb-3">{name}</Typography.Heading5>
-        <Typography.Paragraph className="mb-3">{price}</Typography.Paragraph>
-        <Typography.Paragraph>{accounts}</Typography.Paragraph>
+        <Typography as='h5' size={'heading5'} className="mb-3">{name}</Typography>
+        <Typography as='p' size={'body'} className="mb-3">{price}</Typography>
+        <Typography as='p' size={'body'}>{accounts}</Typography>
       </div>
 
       <PlansList features={features} />

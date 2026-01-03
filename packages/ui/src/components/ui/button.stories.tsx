@@ -1,6 +1,5 @@
-// Replace nextjs-vite with the name of your framework
+import { Loader2, Mail } from "@/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Loader2, Mail } from "lucide-react";
 
 import { Button } from "./button";
 

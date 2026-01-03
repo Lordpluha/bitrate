@@ -1,8 +1,8 @@
 "use client";
 
-import { Eye, EyeOff } from "lucide-react";
-import { type FC, type ReactNode, type Ref, useState } from "react";
+import { Eye, EyeOff } from "@/icons";
 import { cn } from "@/lib/utils";
+import { type FC, type ReactNode, type Ref, useState } from "react";
 
 import { Input, type InputProps } from "./input";
 

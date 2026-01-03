@@ -1,10 +1,10 @@
 "use client";
 
-import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "@/icons";
 import { cn } from "@/lib/utils";
+import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react";
+import * as React from "react";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -269,4 +269,5 @@ export const Carousel = Object.assign(CarouselComponent, {
 
 export { CarouselContent, CarouselItem, CarouselNext, CarouselPrevious };
 
-export type { CarouselApi };
+  export type { CarouselApi };
+
