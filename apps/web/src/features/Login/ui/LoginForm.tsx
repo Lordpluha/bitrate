@@ -54,7 +54,7 @@ export const LoginForm = () => {
   return (
     <div className="flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-textContrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border">
       <div className="flex flex-col items-center">
-        <LogoIconSm />
+        {/* <LogoIconSm /> */}
         <Typography.Heading5 className="mt-2 text-center">
           Login to your account
         </Typography.Heading5>
@@ -119,7 +119,7 @@ export const LoginForm = () => {
             </Button>
             <SocialsAuthDivider />
             <Button variant="contrast">
-              <GoggleIcon className="mr-2" />
+              {/* <GoggleIcon className="mr-2" /> */}
               <Typography.Paragraph>Continue with Google</Typography.Paragraph>
             </Button>
             <p className="text-lg text-center">

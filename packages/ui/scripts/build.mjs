@@ -1,10 +1,10 @@
+import { build } from "esbuild";
+import { glob } from "glob";
 import { exec } from "node:child_process";
-import { copyFile } from "node:fs/promises";
+import { copyFile, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
-import { build } from "esbuild";
-import { glob } from "glob";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const execAsync = promisify(exec);
@@ -29,6 +29,51 @@ const sharedConfig = {
   logLevel: "info",
 };
 
+// Function to replace @/ aliases with relative paths
+async function replaceAliasesInDir(dir) {
+  const files = await readdir(dir, { withFileTypes: true, recursive: true });
+
+  for (const file of files) {
+    const filePath = path.join(file.parentPath || file.path, file.name);
+
+    if (file.isDirectory()) {
+      continue;
+    }
+
+    if (file.isFile() && (file.name.endsWith('.js') || file.name.endsWith('.mjs'))) {
+      const content = await readFile(filePath, 'utf8');
+
+      // Replace @/ imports with relative paths (handles both ESM and CommonJS)
+      const replaced = content.replace(
+        /(from\s+["']|require\(["'])@\/(.+?)(["'])/g,
+        (match, prefix, importPath, suffix) => {
+          const fileDir = path.dirname(filePath);
+          // The importPath might not have extension, add .js
+          const targetPath = path.join(dir, importPath + (importPath.endsWith('.js') ? '' : '.js'));
+          let relativePath = path.relative(fileDir, targetPath);
+
+          // Remove .js extension from import since esbuild doesn't add them
+          relativePath = relativePath.replace(/\.js$/, '');
+
+          // Ensure path starts with ./ or ../
+          if (!relativePath.startsWith('.')) {
+            relativePath = './' + relativePath;
+          }
+
+          // Normalize path separators for cross-platform
+          relativePath = relativePath.replace(/\\/g, '/');
+
+          return `${prefix}${relativePath}${suffix}`;
+        }
+      );
+
+      if (replaced !== content) {
+        await writeFile(filePath, replaced, 'utf8');
+      }
+    }
+  }
+}
+
 async function buildPackage() {
   try {
     // Build ESM and CJS in parallel
@@ -47,11 +92,11 @@ async function buildPackage() {
 
     console.log("✓ ESM and CJS builds completed");
 
-    // Резолвим алиасы в скомпилированных файлах
+    // Replace @/ aliases with relative paths
     console.log("Resolving path aliases...");
     await Promise.all([
-      execAsync("tsc-alias -p tsconfig.json --outDir dist/esm"),
-      execAsync("tsc-alias -p tsconfig.json --outDir dist/cjs"),
+      replaceAliasesInDir(path.resolve(__dirname, "..", "dist/esm")),
+      replaceAliasesInDir(path.resolve(__dirname, "..", "dist/cjs")),
     ]);
     console.log("✓ Path aliases resolved");
 
