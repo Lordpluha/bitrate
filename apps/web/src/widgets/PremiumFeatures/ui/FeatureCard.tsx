@@ -1,12 +1,11 @@
-import { CalendarIcon, MusicIcon, NoWifiIcon, PhoneIcon } from '@shared/ui';
 import { Typography } from '@spotify/ui-react';
 import type { FC, ReactNode } from 'react';
 
 const iconMap = {
-  CalendarIcon,
-  NoWifiIcon,
-  PhoneIcon,
-  MusicIcon,
+  // CalendarIcon,
+  // NoWifiIcon,
+  // PhoneIcon,
+  // MusicIcon,
 };
 
 type FeatureCardProps = {

@@ -2,8 +2,7 @@
 
 import { ThemeSwitcher } from '@features/SwitchTheme';
 import { Logo } from '@shared/ui';
-import clsx from 'clsx';
-import { AlignJustify, X } from '@spotify/ui-react';
+import { AlignJustify, cn, X } from '@spotify/ui-react';
 import { useEffect, useState } from 'react';
 
 import { AuthButtons } from './AuthButtons/AuthButtons';
@@ -25,7 +24,7 @@ export const Header = () => {
 
   return (
     <header
-      className={clsx(
+      className={cn(
         'sticky top-0 left-0 right-0 z-50 transition-colors duration-300',
         isScrolled &&
           'backdrop-blur border-b border-[color:var(--color-text)]/10',
@@ -36,7 +35,7 @@ export const Header = () => {
         <Logo />
         <nav className="flex items-center gap-16">
           <ul
-            className={clsx(
+            className={cn(
               'flex items-center gap-16 transition-all duration-300',
               'max-lg:fixed max-lg:top-0 max-lg:right-0 max-lg:bottom-0 max-lg:h-screen max-lg:w-full max-lg:z-10',
               'max-lg:bg-[color:var(--color-bg)] max-lg:flex-col max-lg:justify-center',
@@ -49,17 +48,13 @@ export const Header = () => {
             <ThemeSwitcher />
             <AuthButtons />
           </ul>
-          <div
-            className="text-[color:var(--color-text)] hidden max-lg:block absolute z-20 right-8 top-8 cursor-pointer"
+          <button
+            type="button"
+            className="text-(--color-text) hidden max-lg:block absolute z-20 right-8 top-8 cursor-pointer"
             onClick={onNavToggle}
-            onKeyDown={(e) =>
-              (e.key === 'Enter' || e.key === ' ') && onNavToggle()
-            }
-            role="button"
-            tabIndex={0}
           >
             {isNav ? <X size={40} /> : <AlignJustify size={40} />}
-          </div>
+          </button>
         </nav>
       </div>
     </header>

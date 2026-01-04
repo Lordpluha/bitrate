@@ -8,3 +8,4 @@ export {
   X
 } from 'lucide-react';
 
+// export * from './svgr';

@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@import './themes.css';
+
+@source "../**/*.{ts,tsx}";
+@source "../../../../apps/web/src/**/*.{ts,tsx}";
+
+@custom-variant light (&:is(.light *));

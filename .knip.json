@@ -59,8 +59,7 @@
     },
     "packages/ui": {
       "entry": ["src/index.ts", "scripts/**/*.mjs"],
-      "ignore": ["postcss.config.cjs"],
-      "ignoreDependencies": ["chromatic", "tsc-alias", "postcss-load-config"]
+      "ignoreDependencies": ["chromatic", "tsc-alias"]
     }
   },
   "ignore": [

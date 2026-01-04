@@ -1,6 +1,5 @@
 import { ROUTES } from '@shared/routes';
-import { Typography } from '@spotify/ui-react';
-import clsx from 'clsx';
+import { cn, Typography } from '@spotify/ui-react';
 import Link from 'next/link';
 import type { FC } from 'react';
 
@@ -19,7 +18,7 @@ export const PlanCard: FC<PlanCardProps> = ({
 }) => {
   return (
     <div
-      className={clsx(
+      className={cn(
         'bg-bgSecondary h-full shadow-[0_6px_20px_1px_#1ed7604d] p-8 rounded-xl flex flex-col items-start justify-start text-text',
         !!highlight && 'border-green-600 border-solid border-4',
       )}
@@ -39,7 +38,7 @@ export const PlanCard: FC<PlanCardProps> = ({
 
       <div className="mt-auto mb-0 w-full flex items-start flex-col">
         <Link
-          className={clsx(
+          className={cn(
             'text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-text font-medium border-solid border-2 border-text w-full block mb-4',
             !!highlight && '!border-green-500 bg-green-500',
           )}

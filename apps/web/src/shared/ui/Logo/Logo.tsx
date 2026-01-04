@@ -15,7 +15,7 @@ export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
       href={ROUTES.landing}
     >
       {/* <SpotifyLogo
-        className={clsx(
+        className={cn(
           'transition-[0.3s]',
           color === 'dark'
             ? 'text-text fill-text'

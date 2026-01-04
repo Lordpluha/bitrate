@@ -2,7 +2,7 @@
 
 import { Eye, EyeOff } from "@/icons";
 import { cn } from "@/lib/utils";
-import { type FC, type ReactNode, type Ref, useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import { Input, type InputProps } from "./input";
 
@@ -11,18 +11,16 @@ export interface PasswordInputProps extends Omit<InputProps, "type"> {
   onTogglePassword?: () => void;
   showIcon?: ReactNode;
   hideIcon?: ReactNode;
-  ref?: Ref<HTMLInputElement>;
 }
 
-const PasswordInput: FC<PasswordInputProps> = ({
+export const PasswordInput = ({
   className,
   showPassword,
   onTogglePassword,
   showIcon,
   hideIcon,
-  ref,
   ...props
-}) => {
+}: PasswordInputProps) => {
   const [internalShowPassword, setInternalShowPassword] = useState(false);
 
   const isShowPassword = showPassword || internalShowPassword;
@@ -36,7 +34,6 @@ const PasswordInput: FC<PasswordInputProps> = ({
       <Input
         type={isShowPassword ? "text" : "password"}
         className={cn("pr-10", className)}
-        ref={ref}
         {...props}
       />
       <button
@@ -50,6 +47,3 @@ const PasswordInput: FC<PasswordInputProps> = ({
     </div>
   );
 };
-PasswordInput.displayName = "PasswordInput";
-
-export { PasswordInput };

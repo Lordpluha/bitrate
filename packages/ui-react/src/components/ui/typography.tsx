@@ -2,6 +2,9 @@ import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from "class-variance-authority"
 import type { ElementType, HTMLAttributes, PropsWithChildren } from "react"
 
+/**
+ * Нужно будет сделать нормальные размеры текстов в tailwind
+ */
 export const typographyVariants = cva('', {
   variants: {
     size: {

@@ -1,4 +1,3 @@
-import { FacebookIcon, InstIcon, Logo, TwitIcon } from '@shared/ui';
 
 import Link from 'next/link';
 import type { FC, HTMLAttributes } from 'react';
@@ -19,9 +18,9 @@ type SocialLink = {
 };
 
 const iconMap = {
-  InstIcon,
-  TwitIcon,
-  FacebookIcon,
+  // InstIcon,
+  // TwitIcon,
+  // FacebookIcon,
 };
 
 export const Footer: FC<FooterProps> = (props) => {
@@ -34,7 +33,7 @@ export const Footer: FC<FooterProps> = (props) => {
         <div className="container">
           <div className="grid grid-cols-[1fr_3fr_1fr] items-start max-md:grid-cols-1 max-md:gap-8 max-md:py-10">
             <div className="flex items-center justify-start">
-              <Logo />
+              {/* <Logo /> */}
             </div>
             <div className="grid gap-5 grid-cols-3 max-sm:grid-cols-1">
               {columns.map((col) => (

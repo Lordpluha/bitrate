@@ -1,11 +1,9 @@
 import { ThemeScript } from '@shared/utils';
-
-import '@spotify/ui-react/globals.css';
 import type { Metadata } from 'next';
 import { Source_Sans_3 } from 'next/font/google';
 import type { PropsWithChildren } from 'react';
-
 import { Provider } from './_provider';
+
 import './global.css';
 
 const sourceSans = Source_Sans_3({

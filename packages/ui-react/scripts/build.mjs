@@ -1,10 +1,10 @@
 import { build } from "esbuild";
 import { glob } from "glob";
 import { exec } from "node:child_process";
-import { copyFile, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { aliasResolver } from "./alias-resolver.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const execAsync = promisify(exec);
@@ -29,51 +29,6 @@ const sharedConfig = {
   logLevel: "info",
 };
 
-// Function to replace @/ aliases with relative paths
-async function replaceAliasesInDir(dir) {
-  const files = await readdir(dir, { withFileTypes: true, recursive: true });
-
-  for (const file of files) {
-    const filePath = path.join(file.parentPath || file.path, file.name);
-
-    if (file.isDirectory()) {
-      continue;
-    }
-
-    if (file.isFile() && (file.name.endsWith('.js') || file.name.endsWith('.mjs'))) {
-      const content = await readFile(filePath, 'utf8');
-
-      // Replace @/ imports with relative paths (handles both ESM and CommonJS)
-      const replaced = content.replace(
-        /(from\s+["']|require\(["'])@\/(.+?)(["'])/g,
-        (match, prefix, importPath, suffix) => {
-          const fileDir = path.dirname(filePath);
-          // The importPath might not have extension, add .js
-          const targetPath = path.join(dir, importPath + (importPath.endsWith('.js') ? '' : '.js'));
-          let relativePath = path.relative(fileDir, targetPath);
-
-          // Remove .js extension from import since esbuild doesn't add them
-          relativePath = relativePath.replace(/\.js$/, '');
-
-          // Ensure path starts with ./ or ../
-          if (!relativePath.startsWith('.')) {
-            relativePath = './' + relativePath;
-          }
-
-          // Normalize path separators for cross-platform
-          relativePath = relativePath.replace(/\\/g, '/');
-
-          return `${prefix}${relativePath}${suffix}`;
-        }
-      );
-
-      if (replaced !== content) {
-        await writeFile(filePath, replaced, 'utf8');
-      }
-    }
-  }
-}
-
 async function buildPackage() {
   try {
     // Build ESM and CJS in parallel
@@ -95,19 +50,18 @@ async function buildPackage() {
     // Replace @/ aliases with relative paths
     console.log("Resolving path aliases...");
     await Promise.all([
-      replaceAliasesInDir(path.resolve(__dirname, "..", "dist/esm")),
-      replaceAliasesInDir(path.resolve(__dirname, "..", "dist/cjs")),
+      aliasResolver(path.resolve(__dirname, "..", "dist/esm")),
+      aliasResolver(path.resolve(__dirname, "..", "dist/cjs")),
     ]);
     console.log("✓ Path aliases resolved");
 
-    // Copy CSS files
-    console.log("Copying CSS files...");
+    // Compile CSS files with Tailwind CLI
+    console.log("Compiling CSS files...");
     const srcDir = path.resolve(__dirname, "..");
     await Promise.all([
-      copyFile(path.join(srcDir, "src/globals.css"), path.join(srcDir, "dist/esm/globals.css")),
-      copyFile(path.join(srcDir, "src/globals.css"), path.join(srcDir, "dist/cjs/globals.css")),
+      execAsync(`NODE_ENV=production pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --minify`, { cwd: srcDir }),
     ]);
-    console.log("✓ CSS files copied");
+    console.log("✓ CSS files compiled");
 
     // Generate types
     console.log("Generating type definitions...");
