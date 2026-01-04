@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, fn, userEvent, within } from "storybook/test";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { expect, fn, userEvent, within } from "storybook/test"
 
 import {
   Select,
@@ -10,7 +10,7 @@ import {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
 
 /**
  * Displays a list of options for the user to pick from—triggered by a button.
@@ -62,40 +62,37 @@ const meta: Meta<typeof Select> = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Select>;
+} satisfies Meta<typeof Select>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default form of the select.
  */
-export const Default: Story = {};
+export const Default: Story = {}
 
 export const ShouldSelectOption: Story = {
   name: "when an option is selected, should be checked",
   tags: ["!dev", "!autodocs"],
   play: async ({ canvasElement, step }) => {
-    const canvasBody = within(canvasElement.ownerDocument.body);
-    const select = await canvasBody.findByRole("combobox");
+    const canvasBody = within(canvasElement.ownerDocument.body)
+    const select = await canvasBody.findByRole("combobox")
 
     await step("open and select item", async () => {
-      await userEvent.click(select);
-      await userEvent.click(
-        await canvasBody.findByRole("option", { name: /banana/i }),
-      );
-      expect(select).toHaveTextContent("Banana");
-    });
+      await userEvent.click(select)
+      await userEvent.click(await canvasBody.findByRole("option", { name: /banana/i }))
+      expect(select).toHaveTextContent("Banana")
+    })
 
     await step("verify the selected option", async () => {
-      await userEvent.click(select);
-      expect(
-        await canvasBody.findByRole("option", { name: /banana/i }),
-      ).toHaveAttribute("data-state", "checked");
-      await userEvent.click(
-        await canvasBody.findByRole("option", { name: /banana/i }),
-      );
-    });
+      await userEvent.click(select)
+      expect(await canvasBody.findByRole("option", { name: /banana/i })).toHaveAttribute(
+        "data-state",
+        "checked",
+      )
+      await userEvent.click(await canvasBody.findByRole("option", { name: /banana/i }))
+    })
   },
-};
+}

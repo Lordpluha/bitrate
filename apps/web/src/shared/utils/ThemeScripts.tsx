@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 export const ThemeScript = () => {
   const codeToRunOnClient = `
@@ -9,7 +9,8 @@ export const ThemeScript = () => {
       document.documentElement.classList.remove('light', 'dark')
       document.documentElement.classList.add(theme);
     } catch(e) {}
-  `;
+  `
 
-  return <script dangerouslySetInnerHTML={{ __html: codeToRunOnClient }} />;
-};
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: Required for theme initialization script
+  return <script dangerouslySetInnerHTML={{ __html: codeToRunOnClient }} />
+}

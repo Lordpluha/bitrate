@@ -1,12 +1,7 @@
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Plus } from "lucide-react";
-import { expect, userEvent, waitFor, within } from "storybook/test";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { Plus } from "lucide-react"
+import { expect, userEvent, waitFor, within } from "storybook/test"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 /**
  * A popup that displays information related to an element when the element
@@ -45,16 +40,16 @@ const meta: Meta<typeof TooltipContent> = {
       </Tooltip>
     </TooltipProvider>
   ),
-} satisfies Meta<typeof TooltipContent>;
+} satisfies Meta<typeof TooltipContent>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default form of the tooltip.
  */
-export const Default: Story = {};
+export const Default: Story = {}
 
 /**
  * Use the `bottom` side to display the tooltip below the element.
@@ -63,7 +58,7 @@ export const Bottom: Story = {
   args: {
     side: "bottom",
   },
-};
+}
 
 /**
  * Use the `left` side to display the tooltip to the left of the element.
@@ -72,7 +67,7 @@ export const Left: Story = {
   args: {
     side: "left",
   },
-};
+}
 
 /**
  * Use the `right` side to display the tooltip to the right of the element.
@@ -81,34 +76,32 @@ export const Right: Story = {
   args: {
     side: "right",
   },
-};
+}
 
 export const ShouldShowOnHover: Story = {
   name: "when hovering over trigger, should show hover tooltip content",
   tags: ["!dev", "!autodocs"],
   play: async ({ canvasElement, step }) => {
-    const canvasBody = within(canvasElement.ownerDocument.body);
-    const triggerBtn = await canvasBody.findByRole("button", { name: /add/i });
+    const canvasBody = within(canvasElement.ownerDocument.body)
+    const triggerBtn = await canvasBody.findByRole("button", { name: /add/i })
 
     await step("hover over trigger", async () => {
-      await userEvent.hover(triggerBtn);
+      await userEvent.hover(triggerBtn)
       await waitFor(() =>
         expect(
-          canvasElement.ownerDocument.body.querySelector(
-            "[data-radix-popper-content-wrapper]",
-          ),
+          canvasElement.ownerDocument.body.querySelector("[data-radix-popper-content-wrapper]"),
         ).toBeVisible(),
-      );
-    });
+      )
+    })
 
     await step("unhover trigger", async () => {
-      await userEvent.unhover(triggerBtn);
+      await userEvent.unhover(triggerBtn)
       await waitFor(() => {
         const tooltipElement = canvasElement.ownerDocument.body.querySelector(
           "[data-radix-popper-content-wrapper]",
-        );
-        expect(tooltipElement).toBeNull();
-      });
-    });
+        )
+        expect(tooltipElement).toBeNull()
+      })
+    })
   },
-};
+}

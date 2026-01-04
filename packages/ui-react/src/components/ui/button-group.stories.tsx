@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -8,46 +8,29 @@ import {
   MoreHorizontalIcon,
   PlusIcon,
   SearchIcon,
-} from "lucide-react";
-import * as React from "react";
+} from "lucide-react"
+import * as React from "react"
 
-import { Button } from "@/components/ui/button";
-import {
-  ButtonGroup,
-  ButtonGroupSeparator,
-} from "@/components/ui/button-group";
+import { Button } from "@/components/ui/button"
+import { ButtonGroup, ButtonGroupSeparator } from "@/components/ui/button-group"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/components/ui/input-group";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/input-group"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 /**
  * A container that groups related buttons together with consistent styling.
@@ -68,11 +51,11 @@ const meta: Meta<typeof ButtonGroup> = {
   args: {
     orientation: "horizontal",
   },
-} satisfies Meta<typeof ButtonGroup>;
+} satisfies Meta<typeof ButtonGroup>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default horizontal button group with related action buttons.
@@ -85,7 +68,7 @@ export const Default: Story = {
       <Button variant="outline">Cut</Button>
     </ButtonGroup>
   ),
-};
+}
 
 /**
  * Vertical orientation stacks buttons in a column layout.
@@ -104,7 +87,7 @@ export const Orientation: Story = {
   args: {
     orientation: "vertical",
   },
-};
+}
 
 /**
  * Nest ButtonGroup components to create button groups with spacing.
@@ -139,7 +122,7 @@ export const Nested: Story = {
       </ButtonGroup>
     </ButtonGroup>
   ),
-};
+}
 
 /**
  * Button group with separators to visually divide related button sections.
@@ -156,7 +139,7 @@ export const WithSeparator: Story = {
       </Button>
     </ButtonGroup>
   ),
-};
+}
 
 /**
  * Create a split button group by adding two buttons separated by a separator.
@@ -171,7 +154,7 @@ export const Split: Story = {
       </Button>
     </ButtonGroup>
   ),
-};
+}
 
 /**
  * Wrap an Input component with buttons.
@@ -185,14 +168,14 @@ export const WithInput: Story = {
       </Button>
     </ButtonGroup>
   ),
-};
+}
 
 /**
  * Wrap an InputGroup component to create complex input layouts.
  */
 export const WithInputGroup: Story = {
   render: () => {
-    const [voiceEnabled, setVoiceEnabled] = React.useState(false);
+    const [voiceEnabled, setVoiceEnabled] = React.useState(false)
 
     return (
       <TooltipProvider>
@@ -205,11 +188,7 @@ export const WithInputGroup: Story = {
           <ButtonGroup>
             <InputGroup>
               <InputGroupInput
-                placeholder={
-                  voiceEnabled
-                    ? "Record and send audio..."
-                    : "Send a message..."
-                }
+                placeholder={voiceEnabled ? "Record and send audio..." : "Send a message..."}
                 disabled={voiceEnabled}
               />
               <InputGroupAddon align="inline-end">
@@ -232,9 +211,9 @@ export const WithInputGroup: Story = {
           </ButtonGroup>
         </ButtonGroup>
       </TooltipProvider>
-    );
+    )
   },
-};
+}
 
 /**
  * Create a split button group with a DropdownMenu component.
@@ -263,20 +242,20 @@ export const WithDropdownMenu: Story = {
       </DropdownMenu>
     </ButtonGroup>
   ),
-};
+}
 
 /**
  * Pair with a Select component.
  */
 export const WithSelect: Story = {
   render: () => {
-    const [currency, setCurrency] = React.useState("$");
+    const [currency, setCurrency] = React.useState("$")
 
     const CURRENCIES = [
       { value: "$", label: "US Dollar" },
       { value: "€", label: "Euro" },
       { value: "£", label: "British Pound" },
-    ];
+    ]
 
     return (
       <ButtonGroup>
@@ -286,10 +265,7 @@ export const WithSelect: Story = {
             <SelectContent className="min-w-24">
               {CURRENCIES.map((currency) => (
                 <SelectItem key={currency.value} value={currency.value}>
-                  {currency.value}{" "}
-                  <span className="text-muted-foreground">
-                    {currency.label}
-                  </span>
+                  {currency.value} <span className="text-muted-foreground">{currency.label}</span>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -302,9 +278,9 @@ export const WithSelect: Story = {
           </Button>
         </ButtonGroup>
       </ButtonGroup>
-    );
+    )
   },
-};
+}
 
 /**
  * Use with a Popover component.
@@ -333,12 +309,12 @@ export const WithPopover: Story = {
             />
             <p className="font-medium">Start a new task with Copilot</p>
             <p className="text-muted-foreground">
-              Describe your task in natural language. Copilot will work in the
-              background and open a pull request for your review.
+              Describe your task in natural language. Copilot will work in the background and open a
+              pull request for your review.
             </p>
           </div>
         </PopoverContent>
       </Popover>
     </ButtonGroup>
   ),
-};
+}

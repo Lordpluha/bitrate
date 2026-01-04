@@ -1,13 +1,13 @@
-import { ROUTES } from '@shared/routes';
-import { cn, Typography } from '@spotify/ui-react';
-import Link from 'next/link';
-import type { FC } from 'react';
+import { ROUTES } from '@shared/routes'
+import { cn, Typography } from '@spotify/ui-react'
+import Link from 'next/link'
+import type { FC } from 'react'
 
-import type plansConfig from '../config/plans.json';
+import type plansConfig from '../config/plans.json'
 
-import { PlansList } from './PlanFeaturesList';
+import { PlansList } from './PlanFeaturesList'
 
-export type PlanCardProps = (typeof plansConfig)[number];
+export type PlanCardProps = (typeof plansConfig)[number]
 
 export const PlanCard: FC<PlanCardProps> = ({
   accounts,
@@ -29,9 +29,15 @@ export const PlanCard: FC<PlanCardProps> = ({
         </span>
       </div>
       <div className="pb-6 mb-6 border-b-2 border-text border-solid flex w-full flex-col items-start">
-        <Typography as='h5' size={'heading5'} className="mb-3">{name}</Typography>
-        <Typography as='p' size={'body'} className="mb-3">{price}</Typography>
-        <Typography as='p' size={'body'}>{accounts}</Typography>
+        <Typography as="h5" className="mb-3" size={'heading5'}>
+          {name}
+        </Typography>
+        <Typography as="p" className="mb-3" size={'body'}>
+          {price}
+        </Typography>
+        <Typography as="p" size={'body'}>
+          {accounts}
+        </Typography>
       </div>
 
       <PlansList features={features} />
@@ -54,5 +60,5 @@ export const PlanCard: FC<PlanCardProps> = ({
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}

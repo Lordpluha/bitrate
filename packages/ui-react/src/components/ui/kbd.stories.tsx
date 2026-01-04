@@ -1,20 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SearchIcon } from "lucide-react";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { SearchIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
-import { Kbd, KbdGroup } from "@/components/ui/kbd";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button"
+import { ButtonGroup } from "@/components/ui/button-group"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 /**
  * Used to display textual user input from keyboard.
@@ -26,11 +17,11 @@ const meta: Meta<typeof Kbd> = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Kbd>;
+} satisfies Meta<typeof Kbd>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * Use the KbdGroup component to group keyboard keys together.
@@ -48,7 +39,7 @@ export const Group: Story = {
       </p>
     </div>
   ),
-};
+}
 
 /**
  * Use the Kbd component inside a Button component to display a keyboard key inside a button.
@@ -64,7 +55,7 @@ export const WithButton: Story = {
       </Button>
     </div>
   ),
-};
+}
 
 /**
  * You can use the Kbd component inside a Tooltip component to display a tooltip with a keyboard key.
@@ -106,7 +97,7 @@ export const WithTooltip: Story = {
       </TooltipProvider>
     </div>
   ),
-};
+}
 
 /**
  * You can use the Kbd component inside a InputGroupAddon component to display a keyboard key inside an input group.
@@ -126,4 +117,4 @@ export const WithInputGroup: Story = {
       </InputGroup>
     </div>
   ),
-};
+}

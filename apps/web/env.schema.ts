@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const envSchema = z.object({
   NODE_ENV: z.enum(['local', 'development', 'production']).default('local'),
@@ -14,16 +14,16 @@ export const envSchema = z.object({
 
   // Sentry
   // NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
-});
+})
 
-export type envType = z.infer<typeof envSchema>;
+export type envType = z.infer<typeof envSchema>
 
-export const env = envSchema.parse(process.env);
+export const env = envSchema.parse(process.env)
 
 declare global {
   namespace NodeJS {
     interface ProcessEnv extends envType {
-      __envSchemaBrand?: undefined;
+      __envSchemaBrand?: undefined
     }
   }
 }

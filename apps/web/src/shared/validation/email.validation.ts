@@ -1,3 +1,3 @@
-import z from 'zod';
+import z from 'zod'
 
-export const emailSchema = z.email('Invalid email address');
+export const emailSchema = z.email('Invalid email address')

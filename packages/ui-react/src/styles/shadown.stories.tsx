@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import {
   Table,
   TableBody,
@@ -6,34 +6,31 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table";
+} from "../components/ui/table"
 
 type Shadow = {
-  name: string;
-  value: string;
-};
+  name: string
+  value: string
+}
 
 const ShadowTile = ({ value }: Pick<Shadow, "value">) => {
-  const style = window.getComputedStyle(document.body);
-  const shadow = style.getPropertyValue(value);
+  const style = window.getComputedStyle(document.body)
+  const shadow = style.getPropertyValue(value)
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div
-        className="bg-card size-20 rounded-md"
-        style={{ boxShadow: shadow }}
-      />
+      <div className="bg-card size-20 rounded-md" style={{ boxShadow: shadow }} />
       <p className="text-center text-xs opacity-70">{value}</p>
       <p className="text-center text-xs">{shadow}</p>
     </div>
-  );
-};
+  )
+}
 
 /**
  * Shadow tokens for the design system
  */
 const meta: Meta<{
-  shadow: Shadow[];
+  shadow: Shadow[]
 }> = {
   title: "design/Shadow",
   argTypes: {},
@@ -59,11 +56,11 @@ const meta: Meta<{
       </TableBody>
     </Table>
   ),
-};
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * Box shadow tokens used for UI elements like cards, modals, and overlays.
@@ -80,4 +77,4 @@ export const Core: Story = {
       { name: "2xl", value: "--shadow-2xl" },
     ],
   },
-};
+}

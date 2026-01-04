@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import {
   Check,
   CheckIcon,
@@ -18,16 +18,16 @@ import {
   SearchIcon,
   Star,
   StarIcon,
-} from "lucide-react";
-import * as React from "react";
+} from "lucide-react"
+import * as React from "react"
 
-import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group";
+import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   InputGroup,
   InputGroupAddon,
@@ -35,20 +35,11 @@ import {
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
-} from "@/components/ui/input-group";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Spinner } from "@/components/ui/spinner";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/input-group"
+import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Spinner } from "@/components/ui/spinner"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 /**
  * Display additional information or actions to an input or textarea.
@@ -60,11 +51,11 @@ const meta: Meta<typeof InputGroup> = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof InputGroup>;
+} satisfies Meta<typeof InputGroup>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * Input groups with icon addons for visual enhancement.
@@ -102,7 +93,7 @@ export const WithIcons: Story = {
       </InputGroup>
     </div>
   ),
-};
+}
 
 /**
  * Display additional text information alongside inputs.
@@ -144,21 +135,21 @@ export const WithText: Story = {
       </InputGroup>
     </div>
   ),
-};
+}
 
 /**
  * Add buttons to perform actions within the input group.
  */
 export const WithButtons: Story = {
   render: (args) => {
-    const [isCopied, setIsCopied] = React.useState(false);
-    const [isFavorite, setIsFavorite] = React.useState(false);
+    const [isCopied, setIsCopied] = React.useState(false)
+    const [isFavorite, setIsFavorite] = React.useState(false)
 
     const copyToClipboard = (text: string) => {
-      navigator.clipboard.writeText(text);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
-    };
+      navigator.clipboard.writeText(text)
+      setIsCopied(true)
+      setTimeout(() => setIsCopied(false), 2000)
+    }
 
     return (
       <div className="grid w-full max-w-sm gap-6">
@@ -170,7 +161,7 @@ export const WithButtons: Story = {
               title="Copy"
               size="icon-xs"
               onClick={() => {
-                copyToClipboard("https://x.com/shadcn");
+                copyToClipboard("https://x.com/shadcn")
               }}
             >
               {isCopied ? <Check /> : <Copy />}
@@ -186,25 +177,15 @@ export const WithButtons: Story = {
                 </InputGroupButton>
               </InputGroupAddon>
             </PopoverTrigger>
-            <PopoverContent
-              align="start"
-              className="flex flex-col gap-1 rounded-xl text-sm"
-            >
+            <PopoverContent align="start" className="flex flex-col gap-1 rounded-xl text-sm">
               <p className="font-medium">Your connection is not secure.</p>
-              <p>
-                You should not enter any sensitive information on this site.
-              </p>
+              <p>You should not enter any sensitive information on this site.</p>
             </PopoverContent>
           </Popover>
-          <InputGroupAddon className="text-muted-foreground pl-1.5">
-            https://
-          </InputGroupAddon>
+          <InputGroupAddon className="text-muted-foreground pl-1.5">https://</InputGroupAddon>
           <InputGroupInput id="input-secure-19" />
           <InputGroupAddon align="inline-end">
-            <InputGroupButton
-              onClick={() => setIsFavorite(!isFavorite)}
-              size="icon-xs"
-            >
+            <InputGroupButton onClick={() => setIsFavorite(!isFavorite)} size="icon-xs">
               <Star
                 data-favorite={isFavorite}
                 className="data-[favorite=true]:fill-blue-600 data-[favorite=true]:stroke-blue-600"
@@ -219,9 +200,9 @@ export const WithButtons: Story = {
           </InputGroupAddon>
         </InputGroup>
       </div>
-    );
+    )
   },
-};
+}
 
 /**
  * Add tooltips to provide additional context or help.
@@ -235,11 +216,7 @@ export const WithTooltips: Story = {
           <InputGroupAddon align="inline-end">
             <Tooltip>
               <TooltipTrigger asChild>
-                <InputGroupButton
-                  variant="ghost"
-                  aria-label="Info"
-                  size="icon-xs"
-                >
+                <InputGroupButton variant="ghost" aria-label="Info" size="icon-xs">
                   <InfoIcon />
                 </InputGroupButton>
               </TooltipTrigger>
@@ -254,11 +231,7 @@ export const WithTooltips: Story = {
           <InputGroupAddon align="inline-end">
             <Tooltip>
               <TooltipTrigger asChild>
-                <InputGroupButton
-                  variant="ghost"
-                  aria-label="Help"
-                  size="icon-xs"
-                >
+                <InputGroupButton variant="ghost" aria-label="Help" size="icon-xs">
                   <HelpCircle />
                 </InputGroupButton>
               </TooltipTrigger>
@@ -273,11 +246,7 @@ export const WithTooltips: Story = {
           <Tooltip>
             <TooltipTrigger asChild>
               <InputGroupAddon>
-                <InputGroupButton
-                  variant="ghost"
-                  aria-label="Help"
-                  size="icon-xs"
-                >
+                <InputGroupButton variant="ghost" aria-label="Help" size="icon-xs">
                   <HelpCircle />
                 </InputGroupButton>
               </InputGroupAddon>
@@ -290,7 +259,7 @@ export const WithTooltips: Story = {
       </TooltipProvider>
     </div>
   ),
-};
+}
 
 /**
  * Input groups also work with textarea components.
@@ -325,9 +294,9 @@ export const WithTextarea: Story = {
           </InputGroupAddon>
         </InputGroup>
       </div>
-    );
+    )
   },
-};
+}
 
 /**
  * Show loading indicators while processing input.
@@ -360,14 +329,12 @@ export const WithSpinner: Story = {
           <LoaderIcon className="animate-spin" />
         </InputGroupAddon>
         <InputGroupAddon align="inline-end">
-          <InputGroupText className="text-muted-foreground">
-            Please wait...
-          </InputGroupText>
+          <InputGroupText className="text-muted-foreground">Please wait...</InputGroupText>
         </InputGroupAddon>
       </InputGroup>
     </div>
   ),
-};
+}
 
 /**
  * Add labels within input groups to improve accessibility.
@@ -408,7 +375,7 @@ export const WithLabels: Story = {
       </TooltipProvider>
     </div>
   ),
-};
+}
 
 /**
  * Pair input groups with dropdown menus for complex interactions.
@@ -421,11 +388,7 @@ export const WithDropdowns: Story = {
         <InputGroupAddon align="inline-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <InputGroupButton
-                variant="ghost"
-                aria-label="More"
-                size="icon-xs"
-              >
+              <InputGroupButton variant="ghost" aria-label="More" size="icon-xs">
                 <MoreHorizontal />
               </InputGroupButton>
             </DropdownMenuTrigger>
@@ -456,7 +419,7 @@ export const WithDropdowns: Story = {
       </InputGroup>
     </div>
   ),
-};
+}
 
 /**
  * Wrap input groups with button groups to create prefixes and suffixes.
@@ -478,4 +441,4 @@ export const WithButtonGroup: Story = {
       </ButtonGroup>
     </div>
   ),
-};
+}

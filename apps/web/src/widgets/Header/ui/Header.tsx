@@ -1,26 +1,26 @@
-'use client';
+'use client'
 
-import { ThemeSwitcher } from '@features/SwitchTheme';
-import { Logo } from '@shared/ui';
-import { AlignJustify, cn, X } from '@spotify/ui-react';
-import { useEffect, useState } from 'react';
+import { ThemeSwitcher } from '@features/SwitchTheme'
+import { Logo } from '@shared/ui'
+import { AlignJustify, cn, X } from '@spotify/ui-react'
+import { useEffect, useState } from 'react'
 
-import { AuthButtons } from './AuthButtons/AuthButtons';
-import { NavLinks } from './NavLink/NavLinks';
+import { AuthButtons } from './AuthButtons/AuthButtons'
+import { NavLinks } from './NavLink/NavLinks'
 
 export const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isNav, setIsNavActive] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isNav, setIsNavActive] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 0);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    const onScroll = () => setIsScrolled(window.scrollY > 0)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-  const onNavToggle = () => setIsNavActive((prev) => !prev);
-  const onCloseNav = () => setIsNavActive(false);
+  const onNavToggle = () => setIsNavActive((prev) => !prev)
+  const onCloseNav = () => setIsNavActive(false)
 
   return (
     <header
@@ -49,14 +49,14 @@ export const Header = () => {
             <AuthButtons />
           </ul>
           <button
-            type="button"
             className="text-(--color-text) hidden max-lg:block absolute z-20 right-8 top-8 cursor-pointer"
             onClick={onNavToggle}
+            type="button"
           >
             {isNav ? <X size={40} /> : <AlignJustify size={40} />}
           </button>
         </nav>
       </div>
     </header>
-  );
-};
+  )
+}

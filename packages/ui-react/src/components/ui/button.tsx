@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import type { ComponentProps } from "react";
-import { Spinner } from "./spinner";
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import type { ComponentProps } from "react"
+import { cn } from "@/lib/utils"
+import { Spinner } from "./spinner"
 
 export const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300",
@@ -40,13 +40,13 @@ export const buttonVariants = cva(
       size: "default",
     },
   },
-);
+)
 
 export interface ButtonProps
-  extends ComponentProps<'button'>,
-  Omit<VariantProps<typeof buttonVariants>, "disabled"> {
-  isLoading?: boolean;
-  asChild?: boolean;
+  extends ComponentProps<"button">,
+    Omit<VariantProps<typeof buttonVariants>, "disabled"> {
+  isLoading?: boolean
+  asChild?: boolean
 }
 
 export const Button = ({
@@ -59,15 +59,17 @@ export const Button = ({
   size,
   ...props
 }: ButtonProps) => {
-  const Component = asChild ? Slot : 'button'
+  const Component = asChild ? Slot : "button"
 
-  return <Component
-    className={cn(buttonVariants({ variant, size, className, disabled }))}
-    aria-disabled={disabled}
-    disabled={disabled}
-    {...props}
-  >
-    {children}
-    {(!asChild && isLoading) && <Spinner />}
-  </Component>
+  return (
+    <Component
+      className={cn(buttonVariants({ variant, size, className, disabled }))}
+      aria-disabled={disabled}
+      disabled={disabled}
+      {...props}
+    >
+      {children}
+      {!asChild && isLoading && <Spinner />}
+    </Component>
+  )
 }

@@ -1,25 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ArrowUpIcon } from "lucide-react";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { ArrowUpIcon } from "lucide-react"
 
-import { Badge } from "./badge";
-import { Button } from "./button";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "./empty";
+import { Badge } from "./badge"
+import { Button } from "./button"
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "./empty"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
   InputGroupTextarea,
-} from "./input-group";
-import { Item, ItemContent, ItemMedia, ItemTitle } from "./item";
-import { Spinner } from "./spinner";
+} from "./input-group"
+import { Item, ItemContent, ItemMedia, ItemTitle } from "./item"
+import { Spinner } from "./spinner"
 
 /**
  * An indicator that can be used to show a loading state.
@@ -31,11 +24,11 @@ const meta: Meta<typeof Spinner> = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Spinner>;
+} satisfies Meta<typeof Spinner>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default spinner with payment processing example.
@@ -56,7 +49,7 @@ export const WithItem: Story = {
       </Item>
     </div>
   ),
-};
+}
 
 /**
  * Add a spinner to a button to indicate a loading state.
@@ -68,7 +61,7 @@ export const WithButton: Story = {
       Loading...
     </Button>
   ),
-};
+}
 
 /**
  * You can also use a spinner inside a badge.
@@ -80,7 +73,7 @@ export const WithBadge: Story = {
       Syncing
     </Badge>
   ),
-};
+}
 
 /**
  * Input Group can have spinners inside InputGroupAddon.
@@ -106,7 +99,7 @@ export const WithInputGroup: Story = {
       </InputGroup>
     </div>
   ),
-};
+}
 
 /**
  * Spinner used in Empty component for loading states.
@@ -130,4 +123,4 @@ export const WithEmpty: Story = {
       </EmptyContent>
     </Empty>
   ),
-};
+}

@@ -1,1 +1,1 @@
-export * from './AuthBanner';
+export * from './AuthBanner'

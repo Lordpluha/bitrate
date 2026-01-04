@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Mail, Plus, PlusCircle, Search, UserPlus } from "lucide-react";
-import { expect, userEvent, within } from "storybook/test";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { Mail, Plus, PlusCircle, Search, UserPlus } from "lucide-react"
+import { expect, userEvent, within } from "storybook/test"
 
 import {
   DropdownMenu,
@@ -18,7 +18,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
 /**
  * Displays a menu to the user — such as a set of actions or functions —
@@ -45,16 +45,16 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof DropdownMenu>;
+} satisfies Meta<typeof DropdownMenu>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default form of the dropdown menu.
  */
-export const Default: Story = {};
+export const Default: Story = {}
 
 /**
  * A dropdown menu with shortcuts.
@@ -76,7 +76,7 @@ export const WithShortcuts: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
-};
+}
 
 /**
  * A dropdown menu with submenus.
@@ -120,7 +120,7 @@ export const WithSubmenus: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
-};
+}
 
 /**
  * A dropdown menu with radio items.
@@ -139,7 +139,7 @@ export const WithRadioItems: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
-};
+}
 
 /**
  * A dropdown menu with checkboxes.
@@ -157,23 +157,23 @@ export const WithCheckboxes: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
-};
+}
 
 export const ShouldOpenClose: Story = {
   name: "when clicking an item, should close the dropdown menu",
   tags: ["!dev", "!autodocs"],
   play: async ({ canvasElement, step }) => {
-    const body = within(canvasElement.ownerDocument.body);
+    const body = within(canvasElement.ownerDocument.body)
 
     await step("Open the dropdown menu", async () => {
-      await userEvent.click(await body.findByRole("button", { name: /open/i }));
-      expect(await body.findByRole("menu")).toBeInTheDocument();
-    });
-    const items = await body.findAllByRole("menuitem");
-    expect(items).toHaveLength(4);
+      await userEvent.click(await body.findByRole("button", { name: /open/i }))
+      expect(await body.findByRole("menu")).toBeInTheDocument()
+    })
+    const items = await body.findAllByRole("menuitem")
+    expect(items).toHaveLength(4)
 
     await step("Click the first menu item", async () => {
-      await userEvent.click(items[0]!, { delay: 100 });
-    });
+      await userEvent.click(items[0]!, { delay: 100 })
+    })
   },
-};
+}

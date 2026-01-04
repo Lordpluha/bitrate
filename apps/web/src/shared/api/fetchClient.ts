@@ -1,5 +1,5 @@
-import type { ApiPaths } from '@spotify/contracts';
-import createFetchClient from 'openapi-fetch';
+import type { ApiPaths } from '@spotify/contracts'
+import createFetchClient from 'openapi-fetch'
 
 /**
  * Fetch client for the API.
@@ -10,4 +10,4 @@ export const fetchClient = createFetchClient<ApiPaths>({
     'Content-Type': 'application/json',
   },
   credentials: 'include',
-});
+})

@@ -1,31 +1,30 @@
+import Link from 'next/link'
+import type { FC, HTMLAttributes } from 'react'
 
-import Link from 'next/link';
-import type { FC, HTMLAttributes } from 'react';
+import footerLinks from '../config/footer-links.json'
 
-import footerLinks from '../config/footer-links.json';
-
-export type FooterProps = HTMLAttributes<HTMLDivElement>;
+export type FooterProps = HTMLAttributes<HTMLDivElement>
 
 type FooterColumn = {
-  title: string;
-  links: { label: string; href: string }[];
-};
+  title: string
+  links: { label: string; href: string }[]
+}
 
 type SocialLink = {
-  icon: string;
-  alt: string;
-  href: string;
-};
+  icon: string
+  alt: string
+  href: string
+}
 
 const iconMap = {
   // InstIcon,
   // TwitIcon,
   // FacebookIcon,
-};
+}
 
 export const Footer: FC<FooterProps> = (props) => {
-  const columns: FooterColumn[] = footerLinks.columns;
-  const socials: SocialLink[] = footerLinks.socials;
+  const columns: FooterColumn[] = footerLinks.columns
+  const socials: SocialLink[] = footerLinks.socials
 
   return (
     <footer {...props}>
@@ -57,7 +56,7 @@ export const Footer: FC<FooterProps> = (props) => {
             <div className="flex items-center justify-end gap-12 max-sm:justify-start">
               {socials.map((social, _i) => {
                 const _IconComponent =
-                  iconMap[social.icon as keyof typeof iconMap];
+                  iconMap[social.icon as keyof typeof iconMap]
                 return (
                   <Link
                     className="transition-[0.3s] hover:opacity-70"
@@ -66,12 +65,12 @@ export const Footer: FC<FooterProps> = (props) => {
                   >
                     {/* <IconComponent className='text-text fill-text' /> */}
                   </Link>
-                );
+                )
               })}
             </div>
           </div>
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}

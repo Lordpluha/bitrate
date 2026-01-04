@@ -1,11 +1,11 @@
-import Image from 'next/image';
+import Image from 'next/image'
 
 const avatars = [
   '/images/avatars/avatar1.jpg',
   '/images/avatars/avatar2.jpg',
   '/images/avatars/avatar3.jpg',
   '/images/avatars/avatar4.jpg',
-];
+]
 
 export const Statistics = () => {
   return (
@@ -30,5 +30,5 @@ export const Statistics = () => {
         517.69 million+ <br /> Spotify users worldwide
       </span>
     </div>
-  );
-};
+  )
+}

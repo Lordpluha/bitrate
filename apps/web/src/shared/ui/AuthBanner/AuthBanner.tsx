@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { Carousel, CarouselContent, CarouselItem } from '@spotify/ui-react';
-import Autoplay from 'embla-carousel-autoplay';
-import { useRef } from 'react';
+import { Carousel, CarouselContent, CarouselItem } from '@spotify/ui-react'
+import Autoplay from 'embla-carousel-autoplay'
+import { useRef } from 'react'
 
 const slides = [
   { src: '/images/banner-1.jpg', alt: 'Banner 1' },
   { src: '/images/banner-2.jpg', alt: 'Banner 2' },
   { src: '/images/banner-3.jpg', alt: 'Banner 3' },
   { src: '/images/banner-4.jpg', alt: 'Banner 4' },
-];
+]
 
 export const AuthBanner = () => {
   const plugin = useRef(
@@ -18,7 +18,7 @@ export const AuthBanner = () => {
       stopOnInteraction: false,
       stopOnMouseEnter: false,
     }),
-  );
+  )
 
   return (
     <div className="basis-[50%] overflow-hidden rounded-[0_10px_10px_0] max-lg:hidden absolute h-full top-0 right-5 left-1/2 flex-grow-0">
@@ -49,5 +49,5 @@ export const AuthBanner = () => {
         </CarouselContent>
       </Carousel>
     </div>
-  );
-};
+  )
+}

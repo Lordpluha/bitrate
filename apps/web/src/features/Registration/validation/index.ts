@@ -1,1 +1,1 @@
-export * from './RegistrationForm.validation';
+export * from './RegistrationForm.validation'

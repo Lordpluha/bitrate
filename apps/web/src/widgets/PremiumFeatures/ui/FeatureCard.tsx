@@ -1,25 +1,25 @@
-import { Typography } from '@spotify/ui-react';
-import type { FC, ReactNode } from 'react';
+import { Typography } from '@spotify/ui-react'
+import type { FC, ReactNode } from 'react'
 
 const iconMap = {
   // CalendarIcon,
   // NoWifiIcon,
   // PhoneIcon,
   // MusicIcon,
-};
+}
 
 type FeatureCardProps = {
-  icon: string;
-  title: ReactNode;
-  description: ReactNode;
-};
+  icon: string
+  title: ReactNode
+  description: ReactNode
+}
 
 export const FeatureCard: FC<FeatureCardProps> = ({
   icon,
   description,
   title,
 }) => {
-  const _IconComponent = iconMap[icon as keyof typeof iconMap];
+  const _IconComponent = iconMap[icon as keyof typeof iconMap]
 
   return (
     <div className="flex flex-col items-center justify-center text-center">
@@ -27,8 +27,12 @@ export const FeatureCard: FC<FeatureCardProps> = ({
         {/* <IconComponent className='text-green-500 fill-green-500' /> */}
       </div>
 
-      <Typography as='h5' size={'heading5'}>{title}</Typography>
-      <Typography as='p' size={'body'}>{description}</Typography>
+      <Typography as="h5" size={'heading5'}>
+        {title}
+      </Typography>
+      <Typography as="p" size={'body'}>
+        {description}
+      </Typography>
     </div>
-  );
-};
+  )
+}

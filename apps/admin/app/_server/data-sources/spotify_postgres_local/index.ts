@@ -1,20 +1,20 @@
-import { KnexPgAdapter } from '@kottster/server';
-import knex from 'knex';
+import { KnexPgAdapter } from '@kottster/server'
+import knex from 'knex'
 
 /**
  * Learn more at https://knexjs.org/guide/#configuration-options
  */
 const client = knex({
-  client: 'pg', 
+  client: 'pg',
   connection: {
     host: 'localhost',
     port: 5432,
     user: 'admin',
     password: 'admin',
     database: 'spotify',
-    ssl: false
+    ssl: false,
   },
-  searchPath: ['public']
-});
+  searchPath: ['public'],
+})
 
-export default new KnexPgAdapter(client);
+export default new KnexPgAdapter(client)

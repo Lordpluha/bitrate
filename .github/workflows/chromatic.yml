@@ -24,5 +24,5 @@ jobs:
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDirectory: packages/ui
+          workingDirectory: packages/ui-react
           buildScriptName: build-storybook

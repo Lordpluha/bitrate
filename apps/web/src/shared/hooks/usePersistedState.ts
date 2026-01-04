@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import type { Dispatch, SetStateAction } from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 /**
  * usePersistedState
@@ -15,35 +15,35 @@ export function usePersistedState<T>(
   key: string,
   initialValue: T,
 ): [T, Dispatch<SetStateAction<T>>, () => void, boolean] {
-  const [hydrated, setHydrated] = useState(false);
-  const [state, setState] = useState<T>(initialValue);
+  const [hydrated, setHydrated] = useState(false)
+  const [state, setState] = useState<T>(initialValue)
 
   useEffect(() => {
     try {
-      const storedValue = localStorage.getItem(key);
+      const storedValue = localStorage.getItem(key)
       if (storedValue) {
-        setState(JSON.parse(storedValue) as T);
+        setState(JSON.parse(storedValue) as T)
       }
     } catch (error) {
-      console.warn('Error while reading from localStorage:', error);
+      console.warn('Error while reading from localStorage:', error)
     } finally {
-      setHydrated(true);
+      setHydrated(true)
     }
-  }, [key]);
+  }, [key])
 
   useEffect(() => {
     if (hydrated) {
       try {
-        localStorage.setItem(key, JSON.stringify(state));
+        localStorage.setItem(key, JSON.stringify(state))
       } catch (error) {
-        console.warn('Error while writing into localStorage:', error);
+        console.warn('Error while writing into localStorage:', error)
       }
     }
-  }, [key, state, hydrated]);
+  }, [key, state, hydrated])
 
   const clear = useCallback(() => {
-    localStorage.removeItem(key);
-  }, [key]);
+    localStorage.removeItem(key)
+  }, [key])
 
-  return [state, setState, clear, hydrated] as const;
+  return [state, setState, clear, hydrated] as const
 }

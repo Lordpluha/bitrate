@@ -1,15 +1,15 @@
-import { ThemeScript } from '@shared/utils';
-import type { Metadata } from 'next';
-import { Source_Sans_3 } from 'next/font/google';
-import type { PropsWithChildren } from 'react';
-import { Provider } from './_provider';
+import { ThemeScript } from '@shared/utils'
+import type { Metadata } from 'next'
+import { Source_Sans_3 } from 'next/font/google'
+import type { PropsWithChildren } from 'react'
+import { Provider } from './_provider'
 
-import './global.css';
+import './global.css'
 
 const sourceSans = Source_Sans_3({
   variable: '--font-source-sans',
   subsets: ['latin', 'latin-ext'],
-});
+})
 
 export const metadata: Metadata = {
   title: 'Spotify clone',
@@ -36,10 +36,10 @@ export const metadata: Metadata = {
     description: 'Spotify clone',
     images: ['/twitter-image.png'],
   },
-};
+}
 
 export default function RootLayout({ children }: PropsWithChildren) {
-  const lang = 'en';
+  const lang = 'en'
 
   return (
     <html
@@ -54,5 +54,5 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <Provider>{children}</Provider>
       </body>
     </html>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from 'next'
 
 const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
@@ -15,6 +15,6 @@ const nextConfig = {
   //     }
   //   }
   // },
-} satisfies NextConfig;
+} satisfies NextConfig
 
-export default nextConfig;
+export default nextConfig

@@ -1,6 +1,6 @@
 type PlanListProps = {
-  features: string[];
-};
+  features: string[]
+}
 
 export const PlansList = ({ features }: PlanListProps) => {
   return (
@@ -16,5 +16,5 @@ export const PlansList = ({ features }: PlanListProps) => {
         </li>
       ))}
     </ul>
-  );
-};
+  )
+}

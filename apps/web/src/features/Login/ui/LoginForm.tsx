@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@shared/api';
-import { ROUTES } from '@shared/routes';
-import { SocialsAuthDivider } from '@shared/ui';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@shared/api'
+import { ROUTES } from '@shared/routes'
+import { SocialsAuthDivider } from '@shared/ui'
 import {
   Button,
   Form,
@@ -16,24 +16,24 @@ import {
   PasswordInput,
   Typography,
   toast,
-} from '@spotify/ui-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import type { SubmitHandler } from 'react-hook-form';
-import { useForm } from 'react-hook-form';
+} from '@spotify/ui-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import type { SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
-import { type LoginFormData, loginSchema } from '../validation';
+import { type LoginFormData, loginSchema } from '../validation'
 
 export const LoginForm = () => {
-  const router = useRouter();
+  const router = useRouter()
   const { mutate } = useMutation('post', '/auth/login', {
     onSuccess: () => {
-      router.push(ROUTES.main);
+      router.push(ROUTES.main)
     },
     onError: (error) => {
-      toast.error(`Login error: ${JSON.stringify(error)}`);
+      toast.error(`Login error: ${JSON.stringify(error)}`)
     },
-  });
+  })
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -43,22 +43,22 @@ export const LoginForm = () => {
       password: '',
     },
     shouldFocusError: true,
-  });
+  })
 
   const onSubmit: SubmitHandler<LoginFormData> = async (body) => {
     await mutate({
       body,
-    });
-  };
+    })
+  }
 
   return (
     <div className="flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-text-contrast overflow-hidden rounded-[10px_0_0_10px] max-lg:basis-full max-lg:rounded-[10px] max-lg:p-6 box-border">
       <div className="flex flex-col items-center">
         {/* <LogoIconSm /> */}
-        <Typography as='h5' size={'heading5'} className="mt-2 text-center">
+        <Typography as="h5" className="mt-2 text-center" size={'heading5'}>
           Login to your account
         </Typography>
-        <Typography as='p' size={'body'} className="text-center text-grey-500">
+        <Typography as="p" className="text-center text-grey-500" size={'body'}>
           Welcome back! Please sign in to continue.
         </Typography>
       </div>
@@ -120,7 +120,9 @@ export const LoginForm = () => {
             <SocialsAuthDivider />
             <Button variant="contrast">
               {/* <GoggleIcon className="mr-2" /> */}
-              <Typography as='p' size={'body'}>Continue with Google</Typography>
+              <Typography as="p" size={'body'}>
+                Continue with Google
+              </Typography>
             </Button>
             <p className="text-lg text-center">
               Don't have an account?{' '}
@@ -132,5 +134,5 @@ export const LoginForm = () => {
         </form>
       </Form>
     </div>
-  );
-};
+  )
+}

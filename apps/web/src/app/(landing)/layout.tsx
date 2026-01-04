@@ -1,6 +1,6 @@
-import { Footer } from '@widgets/Footer';
-import { Header } from '@widgets/Header';
-import type { PropsWithChildren } from 'react';
+import { Footer } from '@widgets/Footer'
+import { Header } from '@widgets/Header'
+import type { PropsWithChildren } from 'react'
 
 export default function LandingLayout({ children }: PropsWithChildren) {
   return (
@@ -9,5 +9,5 @@ export default function LandingLayout({ children }: PropsWithChildren) {
       <main className="flex-1">{children}</main>
       <Footer />
     </div>
-  );
+  )
 }

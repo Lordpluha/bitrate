@@ -1,5 +1,5 @@
-import { ROUTES } from '@shared/routes';
-import Link from 'next/link';
+import { ROUTES } from '@shared/routes'
+import Link from 'next/link'
 
 export const DownloadButton = () => (
   <Link
@@ -9,4 +9,4 @@ export const DownloadButton = () => (
     <span>Download The App</span>
     {/* <DownloadIcon className='w-[36px] h-[36px] [--fg-color:white] dark:[--fg-color:black] text-black dark:text-white' /> */}
   </Link>
-);
+)

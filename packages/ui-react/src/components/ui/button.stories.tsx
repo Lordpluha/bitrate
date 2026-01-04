@@ -1,7 +1,7 @@
-import { Loader2, Mail } from "@/icons";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { Loader2, Mail } from "@/icons"
 
-import { Button } from "./button";
+import { Button } from "./button"
 
 /**
  * Displays a button or a component that looks like a button.
@@ -23,16 +23,16 @@ const meta = {
     size: "default",
     children: "Button",
   },
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof Button>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default form of the button, used for primary actions and commands.
  */
-export const Default: Story = {};
+export const Default: Story = {}
 
 /**
  * Use the `outline-solid` button to reduce emphasis on secondary actions, such as
@@ -42,7 +42,7 @@ export const Outline: Story = {
   args: {
     variant: "outline",
   },
-};
+}
 
 /**
  * Use the `ghost` button is minimalistic and subtle, for less intrusive
@@ -52,7 +52,7 @@ export const Ghost: Story = {
   args: {
     variant: "ghost",
   },
-};
+}
 
 /**
  * Use the `secondary` button to call for less emphasized actions, styled to
@@ -62,7 +62,7 @@ export const Secondary: Story = {
   args: {
     variant: "secondary",
   },
-};
+}
 
 /**
  * Use the `destructive` button to indicate errors, alerts, or the need for
@@ -72,7 +72,7 @@ export const Destructive: Story = {
   args: {
     variant: "destructive",
   },
-};
+}
 
 /**
  * Use the `primary` button where primary button is needed
@@ -81,7 +81,7 @@ export const Primary: Story = {
   args: {
     variant: "primary",
   },
-};
+}
 
 /**
  * Use the `contrast` button where bg is contrast
@@ -91,7 +91,7 @@ export const contrast: Story = {
   args: {
     variant: "contrast",
   },
-};
+}
 
 /**
  * Use the `link` button to reduce emphasis on tertiary actions, such as
@@ -101,7 +101,7 @@ export const Link: Story = {
   args: {
     variant: "link",
   },
-};
+}
 
 /**
  * Add the `disabled` prop to a button to prevent interactions and add a
@@ -118,7 +118,7 @@ export const Loading: Story = {
     ...Outline.args,
     disabled: true,
   },
-};
+}
 
 /**
  * Add an icon element to a button to enhance visual communication and
@@ -133,7 +133,7 @@ export const WithIcon: Story = {
   args: {
     ...Secondary.args,
   },
-};
+}
 
 /**
  * Use the `sm` size for a smaller button, suitable for interfaces needing
@@ -143,7 +143,7 @@ export const Small: Story = {
   args: {
     size: "sm",
   },
-};
+}
 
 /**
  * Use the `lg` size for a larger button, offering better visibility and
@@ -153,7 +153,7 @@ export const Large: Story = {
   args: {
     size: "lg",
   },
-};
+}
 
 /**
  * Use the "icon" size for a button with only an icon.
@@ -165,7 +165,7 @@ export const Icon: Story = {
     title: "Mail",
     children: <Mail />,
   },
-};
+}
 
 /**
  * Add the `disabled` prop to prevent interactions with the button.
@@ -174,4 +174,4 @@ export const Disabled: Story = {
   args: {
     disabled: true,
   },
-};
+}

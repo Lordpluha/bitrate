@@ -1,17 +1,17 @@
-import { Typography } from '@spotify/ui-react';
+import { Typography } from '@spotify/ui-react'
 
-import premiumFeatures from '../config/premium-features.json';
+import premiumFeatures from '../config/premium-features.json'
 
-import { FeatureCard } from './FeatureCard';
+import { FeatureCard } from './FeatureCard'
 
 export const PremiumFeatures = () => {
   return (
     <div className="py-16 container 3xl:!max-w-[1540px] text-center max-lg:py-12 max-md:py-8">
       <div className="container mb-16 max-lg:mb-12 max-md:mb-10">
-        <Typography as='h1' size={'heading1'} className={'leading-[1.2] mb-8'}>
+        <Typography as="h1" className={'leading-[1.2] mb-8'} size={'heading1'}>
           Enhance Your Music Journey with Premium
         </Typography>
-        <Typography as='p' size={'body'}>
+        <Typography as="p" size={'body'}>
           Upgrade to Spotify Premium and take your music journey to the next
           level. Enjoy uninterrupted music playback, even in offline mode. Say
           goodbye to those pesky ads, and indulge in high-quality audio for a
@@ -25,5 +25,5 @@ export const PremiumFeatures = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}

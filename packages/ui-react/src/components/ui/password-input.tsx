@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import { Eye, EyeOff } from "@/icons";
-import { cn } from "@/lib/utils";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react"
+import { Eye, EyeOff } from "@/icons"
+import { cn } from "@/lib/utils"
 
-import { Input, type InputProps } from "./input";
+import { Input, type InputProps } from "./input"
 
 export interface PasswordInputProps extends Omit<InputProps, "type"> {
-  showPassword?: boolean;
-  onTogglePassword?: () => void;
-  showIcon?: ReactNode;
-  hideIcon?: ReactNode;
+  showPassword?: boolean
+  onTogglePassword?: () => void
+  showIcon?: ReactNode
+  hideIcon?: ReactNode
 }
 
 export const PasswordInput = ({
@@ -21,13 +21,13 @@ export const PasswordInput = ({
   hideIcon,
   ...props
 }: PasswordInputProps) => {
-  const [internalShowPassword, setInternalShowPassword] = useState(false);
+  const [internalShowPassword, setInternalShowPassword] = useState(false)
 
-  const isShowPassword = showPassword || internalShowPassword;
-  const handleToggle = onTogglePassword || (() => setInternalShowPassword(!internalShowPassword));
+  const isShowPassword = showPassword || internalShowPassword
+  const handleToggle = onTogglePassword || (() => setInternalShowPassword(!internalShowPassword))
 
-  const ShowIcon = showIcon || <Eye className="h-4 w-4" />;
-  const HideIcon = hideIcon || <EyeOff className="h-4 w-4" />;
+  const ShowIcon = showIcon || <Eye className="h-4 w-4" />
+  const HideIcon = hideIcon || <EyeOff className="h-4 w-4" />
 
   return (
     <div className="relative">
@@ -45,5 +45,5 @@ export const PasswordInput = ({
         {isShowPassword ? HideIcon : ShowIcon}
       </button>
     </div>
-  );
-};
+  )
+}

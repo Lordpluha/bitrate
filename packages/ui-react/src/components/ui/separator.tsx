@@ -1,8 +1,13 @@
-import { cn } from "@/lib/utils";
-import { Root } from "@radix-ui/react-separator";
-import type { ComponentProps } from "react";
+import { Root } from "@radix-ui/react-separator"
+import type { ComponentProps } from "react"
+import { cn } from "@/lib/utils"
 
-export const Separator = ({ className, orientation = "horizontal", decorative = true, ...props }: ComponentProps<typeof Root>) => (
+export const Separator = ({
+  className,
+  orientation = "horizontal",
+  decorative = true,
+  ...props
+}: ComponentProps<typeof Root>) => (
   <Root
     decorative={decorative}
     orientation={orientation}
@@ -13,4 +18,4 @@ export const Separator = ({ className, orientation = "horizontal", decorative = 
     )}
     {...props}
   />
-);
+)

@@ -1,11 +1,11 @@
-import type { Theme } from '@shared/constants';
-import { ROUTES } from '@shared/routes';
-import Link from 'next/link';
-import type { FC } from 'react';
+import type { Theme } from '@shared/constants'
+import { ROUTES } from '@shared/routes'
+import Link from 'next/link'
+import type { FC } from 'react'
 
 export type LogoProps = {
-  color?: Theme;
-};
+  color?: Theme
+}
 
 export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
   return (
@@ -23,5 +23,5 @@ export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
         )}
       /> */}
     </Link>
-  );
-};
+  )
+}

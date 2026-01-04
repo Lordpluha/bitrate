@@ -1,3 +1,4 @@
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import {
   Table,
   TableBody,
@@ -5,19 +6,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+} from "@/components/ui/table"
 
 type Spacing = {
-  name: string;
-  value: number;
-};
+  name: string
+  value: number
+}
 
 const SpacingRow = ({ value, name }: Spacing) => {
-  const style = window.getComputedStyle(document.body);
-  const size = style.getPropertyValue("--spacing");
-  const rem = parseFloat(size) * value;
-  const pixels = parseFloat(size) * 16 * value;
+  const style = window.getComputedStyle(document.body)
+  const size = style.getPropertyValue("--spacing")
+  const rem = parseFloat(size) * value
+  const pixels = parseFloat(size) * 16 * value
   return (
     <TableRow>
       <TableCell>{name}</TableCell>
@@ -29,14 +29,14 @@ const SpacingRow = ({ value, name }: Spacing) => {
         </div>
       </TableCell>
     </TableRow>
-  );
-};
+  )
+}
 
 /**
  * Spacing tokens for the design system
  */
 const meta: Meta<{
-  scale: Spacing[];
+  scale: Spacing[]
 }> = {
   title: "design/Spacing",
   argTypes: {},
@@ -59,11 +59,11 @@ const meta: Meta<{
       </TableBody>
     </Table>
   ),
-};
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * Spacing values used for padding, margins, and layout.
@@ -94,4 +94,4 @@ export const Core: Story = {
       { name: "x-80", value: 80 },
     ],
   },
-};
+}

@@ -1,1 +1,1 @@
-export * from './ui/PremiumFeatures';
+export * from './ui/PremiumFeatures'

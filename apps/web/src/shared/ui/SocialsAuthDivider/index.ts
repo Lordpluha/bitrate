@@ -1,1 +1,1 @@
-export * from './SocialsAuthDivider';
+export * from './SocialsAuthDivider'

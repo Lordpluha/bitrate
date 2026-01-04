@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { Separator } from "./separator";
+import { Separator } from "./separator"
 
 /**
  * Visually or semantically separates content.
@@ -10,11 +10,11 @@ const meta = {
   component: Separator,
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof Separator>;
+} satisfies Meta<typeof Separator>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default horizontal separator between vertical items.
@@ -27,7 +27,7 @@ export const Default: Story = {
       <div>Bottom</div>
     </div>
   ),
-};
+}
 
 /**
  * Use `orientation="vertical"` for a vertical separator between horizontal items.
@@ -40,4 +40,4 @@ export const Vertical: Story = {
       <div>Right</div>
     </div>
   ),
-};
+}

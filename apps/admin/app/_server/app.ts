@@ -1,7 +1,7 @@
-import { createApp, createIdentityProvider } from '@kottster/server';
-import schema from '../../kottster-app.json';
+import { createApp, createIdentityProvider } from '@kottster/server'
+import schema from '../../kottster-app.json'
 
-/* 
+/*
  * For security, consider moving the secret data to environment variables.
  * See https://kottster.app/docs/deploying#before-you-deploy
  */
@@ -19,9 +19,9 @@ export const app = createApp({
 
     passwordHashAlgorithm: 'bcrypt',
     jwtSecretSalt: '8GMI_rVRHyGoRO3m',
-    
+
     /* The root admin user credentials */
     rootUsername: 'admin',
     rootPassword: 'admin',
   }),
-});
+})

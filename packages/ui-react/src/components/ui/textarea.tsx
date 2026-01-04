@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
+import { cn } from "@/lib/utils"
 
 export const Textarea = ({ className, ...props }: ComponentProps<"textarea">) => {
   return (
@@ -10,5 +10,5 @@ export const Textarea = ({ className, ...props }: ComponentProps<"textarea">) =>
       )}
       {...props}
     />
-  );
-};
+  )
+}

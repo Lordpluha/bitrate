@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import {
   Table,
   TableBody,
@@ -6,41 +6,38 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table";
+} from "../components/ui/table"
 
 type Swatch = {
-  name: string;
-  colors: Record<string, string>;
-};
+  name: string
+  colors: Record<string, string>
+}
 
 const SwatchList = ({ colors }: { colors: Record<string, string> }) => {
   return (
     <div className="flex overflow-clip rounded-md border shadow">
       {Object.entries(colors).map(([name, value]) => {
-        const styles = getComputedStyle(document.documentElement);
-        const color = styles.getPropertyValue(value);
+        const styles = getComputedStyle(document.documentElement)
+        const color = styles.getPropertyValue(value)
 
         return (
-          <div
-            key={value}
-            className="bg-background flex w-full flex-col gap-1 pb-3"
-          >
+          <div key={value} className="bg-background flex w-full flex-col gap-1 pb-3">
             <div className="h-16 w-full" style={{ backgroundColor: color }} />
             <p className="text-center font-semibold">{name}</p>
             <p className="text-center text-xs opacity-70">{value}</p>
             <p className="text-center text-xs">{color}</p>
           </div>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
 
 /**
  * Color tokens for the design system
  */
 const meta: Meta<{
-  swatch: Swatch[];
+  swatch: Swatch[]
 }> = {
   title: "design/Color",
   argTypes: {},
@@ -66,11 +63,11 @@ const meta: Meta<{
       </TableBody>
     </Table>
   ),
-};
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * Functional color tokens are used to define the core colors of the design system.
@@ -123,7 +120,7 @@ export const Functional: Story = {
       },
     ],
   },
-};
+}
 
 /**
  * Component color tokens are used to define the colors of specific components in the design system.
@@ -184,4 +181,4 @@ export const Component: Story = {
       },
     ],
   },
-};
+}

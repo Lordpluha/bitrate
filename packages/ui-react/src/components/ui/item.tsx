@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import type { ComponentProps } from "react"
+import { cn } from "@/lib/utils"
 import { Separator } from "./separator"
 
 function ItemGroup({ className, ...props }: ComponentProps<"div">) {
@@ -16,10 +16,7 @@ function ItemGroup({ className, ...props }: ComponentProps<"div">) {
   )
 }
 
-function ItemSeparator({
-  className,
-  ...props
-}: ComponentProps<typeof Separator>) {
+function ItemSeparator({ className, ...props }: ComponentProps<typeof Separator>) {
   return (
     <Separator
       data-slot="item-separator"
@@ -48,7 +45,7 @@ const itemVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 )
 
 function Item({
@@ -57,8 +54,7 @@ function Item({
   size = "default",
   asChild = false,
   ...props
-}: ComponentProps<"div"> &
-  VariantProps<typeof itemVariants> & { asChild?: boolean }) {
+}: ComponentProps<"div"> & VariantProps<typeof itemVariants> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : "div"
   return (
     <Comp
@@ -78,14 +74,13 @@ const itemMediaVariants = cva(
       variant: {
         default: "bg-transparent",
         icon: "bg-slate-100 size-8 rounded-sm border border-slate-200 [&_svg:not([class*='size-'])]:size-4 dark:bg-slate-800 dark:border-slate-800",
-        image:
-          "size-10 overflow-hidden rounded-sm [&_img]:size-full [&_img]:object-cover",
+        image: "size-10 overflow-hidden rounded-sm [&_img]:size-full [&_img]:object-cover",
       },
     },
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 )
 
 function ItemMedia({
@@ -107,10 +102,7 @@ function ItemContent({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="item-content"
-      className={cn(
-        "flex flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none",
-        className
-      )}
+      className={cn("flex flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none", className)}
       {...props}
     />
   )
@@ -120,10 +112,7 @@ function ItemTitle({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="item-title"
-      className={cn(
-        "flex w-fit items-center gap-2 text-sm font-medium leading-snug",
-        className
-      )}
+      className={cn("flex w-fit items-center gap-2 text-sm font-medium leading-snug", className)}
       {...props}
     />
   )
@@ -136,7 +125,7 @@ function ItemDescription({ className, ...props }: ComponentProps<"p">) {
       className={cn(
         "text-slate-500 line-clamp-2 text-balance text-sm font-normal leading-normal dark:text-slate-400",
         "[&>a:hover]:text-slate-900 [&>a]:underline [&>a]:underline-offset-4 dark:[&>a:hover]:text-slate-50",
-        className
+        className,
       )}
       {...props}
     />
@@ -145,11 +134,7 @@ function ItemDescription({ className, ...props }: ComponentProps<"p">) {
 
 function ItemActions({ className, ...props }: ComponentProps<"div">) {
   return (
-    <div
-      data-slot="item-actions"
-      className={cn("flex items-center gap-2", className)}
-      {...props}
-    />
+    <div data-slot="item-actions" className={cn("flex items-center gap-2", className)} {...props} />
   )
 }
 
@@ -157,10 +142,7 @@ function ItemHeader({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="item-header"
-      className={cn(
-        "flex basis-full items-center justify-between gap-2",
-        className
-      )}
+      className={cn("flex basis-full items-center justify-between gap-2", className)}
       {...props}
     />
   )
@@ -170,17 +152,21 @@ function ItemFooter({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="item-footer"
-      className={cn(
-        "flex basis-full items-center justify-between gap-2",
-        className
-      )}
+      className={cn("flex basis-full items-center justify-between gap-2", className)}
       {...props}
     />
   )
 }
 
 export {
-  Item, ItemActions, ItemContent, ItemDescription, ItemFooter, ItemGroup, ItemHeader, ItemMedia, ItemSeparator,
-  ItemTitle
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemFooter,
+  ItemGroup,
+  ItemHeader,
+  ItemMedia,
+  ItemSeparator,
+  ItemTitle,
 }
-

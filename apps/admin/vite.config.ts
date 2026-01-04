@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
-import { vitePlugin as kottster } from '@kottster/react';
-import react from '@vitejs/plugin-react';
-import schema from './kottster-app.json';
+import { vitePlugin as kottster } from '@kottster/react'
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+import schema from './kottster-app.json'
 
 export default defineConfig({
   root: './app',
@@ -14,13 +14,10 @@ export default defineConfig({
     emptyOutDir: true,
     chunkSizeWarningLimit: 10000,
   },
-  plugins: [
-    kottster({ schema }),
-    react(),
-  ],
+  plugins: [kottster({ schema }), react()],
   resolve: {
     alias: {
-      '@': '/app'
-    }
+      '@': '/app',
+    },
   },
-});
+})

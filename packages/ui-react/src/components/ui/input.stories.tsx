@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent } from "storybook/test";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { expect, userEvent } from "storybook/test"
 
-import { Button } from "./button";
-import { Input } from "./input";
-import { Label } from "./label";
+import { Button } from "./button"
+import { Input } from "./input"
+import { Label } from "./label"
 
 /**
  * Displays a form input field or a component that looks like an input field.
@@ -22,16 +22,16 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Input>;
+} satisfies Meta<typeof Input>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default form of the input field.
  */
-export const Default: Story = {};
+export const Default: Story = {}
 
 /**
  * The contrast for contrast bg
@@ -47,7 +47,7 @@ export const contrast: StoryObj = {
     type: "email",
     variant: "contrast",
   },
-};
+}
 
 /**
  * Use the `disabled` prop to make the input non-interactive and appears faded,
@@ -55,7 +55,7 @@ export const contrast: StoryObj = {
  */
 export const Disabled: Story = {
   args: { disabled: true },
-};
+}
 
 /**
  * Use the `Label` component to includes a clear, descriptive label above or
@@ -68,7 +68,7 @@ export const WithLabel: Story = {
       <Input {...args} id="email" />
     </div>
   ),
-};
+}
 
 /**
  * Use a text element below the input field to provide additional instructions
@@ -82,7 +82,7 @@ export const WithHelperText: Story = {
       <p className="text-foreground/60 text-sm">Enter your email address.</p>
     </div>
   ),
-};
+}
 
 /**
  * Use the `Button` component to indicate that the input field can be submitted
@@ -95,20 +95,20 @@ export const WithButton: Story = {
       <Button type="submit">Subscribe</Button>
     </div>
   ),
-};
+}
 
 export const ShouldEnterText: Story = {
   name: "when user enters text, should see it in the input field",
   tags: ["!dev", "!autodocs"],
   play: async ({ canvas, step }) => {
-    const input = await canvas.findByPlaceholderText(/email/i);
-    const mockedInput = "mocked@shadcn.com";
+    const input = await canvas.findByPlaceholderText(/email/i)
+    const mockedInput = "mocked@shadcn.com"
 
     await step("focus and type into the input field", async () => {
-      await userEvent.click(input);
-      await userEvent.type(input, mockedInput);
-    });
+      await userEvent.click(input)
+      await userEvent.type(input, mockedInput)
+    })
 
-    expect(input).toHaveValue(mockedInput);
+    expect(input).toHaveValue(mockedInput)
   },
-};
+}

@@ -1,5 +1,5 @@
-import { ROUTES } from '@shared/routes';
-import Link from 'next/link';
+import { ROUTES } from '@shared/routes'
+import Link from 'next/link'
 
 export const AuthButtons = () => (
   <div className="flex items-center gap-4">
@@ -16,4 +16,4 @@ export const AuthButtons = () => (
       Register
     </Link>
   </div>
-);
+)

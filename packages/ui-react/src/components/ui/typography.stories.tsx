@@ -1,18 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { CSSProperties, ReactNode } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./table";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { CSSProperties, ReactNode } from "react"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./table"
 
 type Typography = {
-  name: string;
-  value: string;
-};
+  name: string
+  value: string
+}
 
 const TypographyRow = ({
   value,
@@ -20,13 +13,13 @@ const TypographyRow = ({
   styleKey,
   children,
 }: {
-  value: string;
-  name: string;
-  styleKey: keyof CSSProperties;
-  children?: ReactNode;
+  value: string
+  name: string
+  styleKey: keyof CSSProperties
+  children?: ReactNode
 }) => {
-  const style = window.getComputedStyle(document.body);
-  const styleValue = style.getPropertyValue(value);
+  const style = window.getComputedStyle(document.body)
+  const styleValue = style.getPropertyValue(value)
   return (
     <TableRow>
       <TableCell>{name}</TableCell>
@@ -41,16 +34,16 @@ const TypographyRow = ({
         </div>
       </TableCell>
     </TableRow>
-  );
-};
+  )
+}
 
 /**
  * Typography tokens for the design system.
  */
 const meta: Meta<{
-  children: string;
-  key: keyof CSSProperties;
-  property: Typography[];
+  children: string
+  key: keyof CSSProperties
+  property: Typography[]
 }> = {
   title: "design/Typography",
   argTypes: {},
@@ -70,23 +63,18 @@ const meta: Meta<{
       </TableHeader>
       <TableBody>
         {args.property.map(({ name, value }) => (
-          <TypographyRow
-            key={name}
-            name={name}
-            value={value}
-            styleKey={args.key}
-          >
+          <TypographyRow key={name} name={name} value={value} styleKey={args.key}>
             {args.children}
           </TypographyRow>
         ))}
       </TableBody>
     </Table>
   ),
-};
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * Font family tokens for the design system.
@@ -100,7 +88,7 @@ export const FontFamily: Story = {
       { name: "mono", value: "--font-mono" },
     ],
   },
-};
+}
 
 /**
  * Font size tokens for the design system.
@@ -121,7 +109,7 @@ export const FontSize: Story = {
       { name: "6xl", value: "--text-6xl" },
     ],
   },
-};
+}
 
 /**
  * Font weight tokens for the design system.
@@ -141,7 +129,7 @@ export const FontWeight: Story = {
       { name: "black", value: "--font-weight-black" },
     ],
   },
-};
+}
 
 /**
  * Letter Spacing tokens for the design system.
@@ -158,4 +146,4 @@ export const LetterSpacing: Story = {
       { name: "widest", value: "--tracking-widest" },
     ],
   },
-};
+}

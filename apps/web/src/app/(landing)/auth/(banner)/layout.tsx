@@ -1,5 +1,5 @@
-import { AuthBanner } from '@shared/ui';
-import type { PropsWithChildren } from 'react';
+import { AuthBanner } from '@shared/ui'
+import type { PropsWithChildren } from 'react'
 
 export default function AuthBannerLayout({ children }: PropsWithChildren) {
   return (
@@ -7,5 +7,5 @@ export default function AuthBannerLayout({ children }: PropsWithChildren) {
       {children}
       <AuthBanner />
     </>
-  );
+  )
 }

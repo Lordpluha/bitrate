@@ -1,14 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Bell,
-  Cloud,
-  PlusIcon,
-  RefreshCcwIcon,
-  SearchIcon,
-} from "lucide-react";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { Bell, Cloud, PlusIcon, RefreshCcwIcon, SearchIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   Empty,
   EmptyContent,
@@ -16,13 +10,9 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
-import { Kbd } from "@/components/ui/kbd";
+} from "@/components/ui/empty"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { Kbd } from "@/components/ui/kbd"
 
 /**
  * Use the Empty component to display a empty state.
@@ -34,11 +24,11 @@ const meta: Meta<typeof Empty> = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Empty>;
+} satisfies Meta<typeof Empty>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default empty state with icon media and actions.
@@ -65,7 +55,7 @@ export const Default: Story = {
       </EmptyContent>
     </Empty>
   ),
-};
+}
 
 /**
  * Use the bg-* and bg-gradient-* utilities to add a background to the empty state.
@@ -93,7 +83,7 @@ export const Background: Story = {
       </EmptyContent>
     </Empty>
   ),
-};
+}
 
 /**
  * Use the EmptyMedia component to display an avatar in the empty state.
@@ -104,17 +94,13 @@ export const WithAvatar: Story = {
       <EmptyHeader>
         <EmptyMedia variant="default">
           <Avatar className="size-12">
-            <AvatarImage
-              src="https://github.com/shadcn.png"
-              className="grayscale"
-            />
+            <AvatarImage src="https://github.com/shadcn.png" className="grayscale" />
             <AvatarFallback>LR</AvatarFallback>
           </Avatar>
         </EmptyMedia>
         <EmptyTitle>User Offline</EmptyTitle>
         <EmptyDescription>
-          This user is currently offline. You can leave a message to notify them
-          or try again later.
+          This user is currently offline. You can leave a message to notify them or try again later.
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
@@ -122,7 +108,7 @@ export const WithAvatar: Story = {
       </EmptyContent>
     </Empty>
   ),
-};
+}
 
 /**
  * Use the EmptyMedia component to display an avatar group in the empty state.
@@ -138,25 +124,17 @@ export const AvatarGroup: Story = {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage
-                src="https://github.com/maxleiter.png"
-                alt="@maxleiter"
-              />
+              <AvatarImage src="https://github.com/maxleiter.png" alt="@maxleiter" />
               <AvatarFallback>LR</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage
-                src="https://github.com/evilrabbit.png"
-                alt="@evilrabbit"
-              />
+              <AvatarImage src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
               <AvatarFallback>ER</AvatarFallback>
             </Avatar>
           </div>
         </EmptyMedia>
         <EmptyTitle>No Team Members</EmptyTitle>
-        <EmptyDescription>
-          Invite your team to collaborate on this project.
-        </EmptyDescription>
+        <EmptyDescription>Invite your team to collaborate on this project.</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
         <Button size="sm">
@@ -166,7 +144,7 @@ export const AvatarGroup: Story = {
       </EmptyContent>
     </Empty>
   ),
-};
+}
 
 /**
  * You can add an InputGroup component to the EmptyContent component.
@@ -177,8 +155,8 @@ export const WithInputGroup: Story = {
       <EmptyHeader>
         <EmptyTitle>404 - Not Found</EmptyTitle>
         <EmptyDescription>
-          The page you&apos;re looking for doesn&apos;t exist. Try searching for
-          what you need below.
+          The page you&apos;re looking for doesn&apos;t exist. Try searching for what you need
+          below.
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
@@ -197,4 +175,4 @@ export const WithInputGroup: Story = {
       </EmptyContent>
     </Empty>
   ),
-};
+}

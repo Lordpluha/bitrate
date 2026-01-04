@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import Link from 'next/link'
 
-import links from '../../config/nav-links.json';
+import links from '../../config/nav-links.json'
 
 export const NavLinks = () => (
   <>
@@ -16,4 +16,4 @@ export const NavLinks = () => (
       </Link>
     ))}
   </>
-);
+)

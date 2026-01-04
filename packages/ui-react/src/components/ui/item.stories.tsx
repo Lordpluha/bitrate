@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import {
   BadgeCheckIcon,
   ChevronDownIcon,
@@ -6,18 +6,18 @@ import {
   Plus,
   PlusIcon,
   ShieldAlertIcon,
-} from "lucide-react";
-import Image from "next/image";
-import * as React from "react";
+} from "lucide-react"
+import Image from "next/image"
+import * as React from "react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   Item,
   ItemActions,
@@ -28,7 +28,7 @@ import {
   ItemMedia,
   ItemSeparator,
   ItemTitle,
-} from "@/components/ui/item";
+} from "@/components/ui/item"
 
 /**
  * A versatile component that you can use to display any content.
@@ -54,11 +54,11 @@ const meta: Meta<typeof Item> = {
     variant: "default",
     size: "default",
   },
-} satisfies Meta<typeof Item>;
+} satisfies Meta<typeof Item>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * Basic item with title, description, and actions.
@@ -69,9 +69,7 @@ export const Default: Story = {
       <Item {...args} variant="outline">
         <ItemContent>
           <ItemTitle>Basic Item</ItemTitle>
-          <ItemDescription>
-            A simple item with title and description.
-          </ItemDescription>
+          <ItemDescription>A simple item with title and description.</ItemDescription>
         </ItemContent>
         <ItemActions>
           <Button variant="outline" size="sm">
@@ -94,7 +92,7 @@ export const Default: Story = {
       </Item>
     </div>
   ),
-};
+}
 
 /**
  * Use the `outline` variant to add a visible border to the item.
@@ -111,9 +109,7 @@ export const Outline: Story = {
         </ItemMedia>
         <ItemContent>
           <ItemTitle>Software Update Available</ItemTitle>
-          <ItemDescription>
-            Version 2.0 is now available for download.
-          </ItemDescription>
+          <ItemDescription>Version 2.0 is now available for download.</ItemDescription>
         </ItemContent>
         <ItemActions>
           <Button size="sm" variant="outline">
@@ -123,7 +119,7 @@ export const Outline: Story = {
       </Item>
     </div>
   ),
-};
+}
 
 /**
  * Use the `muted` variant to add a subtle background to the item.
@@ -137,9 +133,7 @@ export const Muted: Story = {
         </ItemMedia>
         <ItemContent>
           <ItemTitle>Account Verified</ItemTitle>
-          <ItemDescription>
-            Your account has been successfully verified.
-          </ItemDescription>
+          <ItemDescription>Your account has been successfully verified.</ItemDescription>
         </ItemContent>
         <ItemActions>
           <Button size="sm" variant="ghost">
@@ -149,7 +143,7 @@ export const Muted: Story = {
       </Item>
     </div>
   ),
-};
+}
 
 /**
  * Use the `sm` size for a more compact item layout.
@@ -186,7 +180,7 @@ export const Small: Story = {
       </ItemGroup>
     </div>
   ),
-};
+}
 
 /**
  * Item with icon media element.
@@ -200,9 +194,7 @@ export const WithIcon: Story = {
         </ItemMedia>
         <ItemContent>
           <ItemTitle>Security Alert</ItemTitle>
-          <ItemDescription>
-            New login detected from unknown device.
-          </ItemDescription>
+          <ItemDescription>New login detected from unknown device.</ItemDescription>
         </ItemContent>
         <ItemActions>
           <Button size="sm" variant="outline">
@@ -212,7 +204,7 @@ export const WithIcon: Story = {
       </Item>
     </div>
   ),
-};
+}
 
 /**
  * Items with avatar media elements.
@@ -232,12 +224,7 @@ export const WithAvatar: Story = {
           <ItemDescription>Last seen 5 months ago</ItemDescription>
         </ItemContent>
         <ItemActions>
-          <Button
-            size="icon"
-            variant="outline"
-            className="rounded-full"
-            aria-label="Invite"
-          >
+          <Button size="icon" variant="outline" className="rounded-full" aria-label="Invite">
             <Plus />
           </Button>
         </ItemActions>
@@ -250,26 +237,18 @@ export const WithAvatar: Story = {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <Avatar className="hidden sm:flex">
-              <AvatarImage
-                src="https://github.com/maxleiter.png"
-                alt="@maxleiter"
-              />
+              <AvatarImage src="https://github.com/maxleiter.png" alt="@maxleiter" />
               <AvatarFallback>LR</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage
-                src="https://github.com/evilrabbit.png"
-                alt="@evilrabbit"
-              />
+              <AvatarImage src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
               <AvatarFallback>ER</AvatarFallback>
             </Avatar>
           </div>
         </ItemMedia>
         <ItemContent>
           <ItemTitle>No Team Members</ItemTitle>
-          <ItemDescription>
-            Invite your team to collaborate on this project.
-          </ItemDescription>
+          <ItemDescription>Invite your team to collaborate on this project.</ItemDescription>
         </ItemContent>
         <ItemActions>
           <Button size="sm" variant="outline">
@@ -279,7 +258,7 @@ export const WithAvatar: Story = {
       </Item>
     </div>
   ),
-};
+}
 
 /**
  * Items with image media elements for music playlist.
@@ -305,19 +284,13 @@ export const WithImage: Story = {
         album: "Binary Beats",
         duration: "3:30",
       },
-    ];
+    ]
 
     return (
       <div className="flex w-full max-w-md flex-col gap-6">
         <ItemGroup className="gap-4">
           {music.map((song) => (
-            <Item
-              key={song.title}
-              {...args}
-              variant="outline"
-              asChild
-              role="listitem"
-            >
+            <Item key={song.title} {...args} variant="outline" asChild role="listitem">
               <a href="#item">
                 <ItemMedia variant="image">
                   <Image
@@ -330,8 +303,7 @@ export const WithImage: Story = {
                 </ItemMedia>
                 <ItemContent>
                   <ItemTitle className="line-clamp-1">
-                    {song.title} -{" "}
-                    <span className="text-muted-foreground">{song.album}</span>
+                    {song.title} - <span className="text-muted-foreground">{song.album}</span>
                   </ItemTitle>
                   <ItemDescription>{song.artist}</ItemDescription>
                 </ItemContent>
@@ -343,9 +315,9 @@ export const WithImage: Story = {
           ))}
         </ItemGroup>
       </div>
-    );
+    )
   },
-};
+}
 
 /**
  * Grouped items with separators.
@@ -368,7 +340,7 @@ export const WithGroup: Story = {
         avatar: "https://github.com/evilrabbit.png",
         email: "evilrabbit@vercel.com",
       },
-    ];
+    ]
 
     return (
       <div className="flex w-full max-w-md flex-col gap-6">
@@ -397,9 +369,9 @@ export const WithGroup: Story = {
           ))}
         </ItemGroup>
       </div>
-    );
+    )
   },
-};
+}
 
 /**
  * Items with header sections for model cards.
@@ -428,7 +400,7 @@ export const WithHeader: Story = {
           "https://images.unsplash.com/photo-1602146057681-08560aee8cde?q=80&w=640&auto=format&fit=crop",
         credit: "Cherry Laithang on Unsplash",
       },
-    ];
+    ]
 
     return (
       <div className="flex w-full max-w-xl flex-col gap-6">
@@ -452,9 +424,9 @@ export const WithHeader: Story = {
           ))}
         </ItemGroup>
       </div>
-    );
+    )
   },
-};
+}
 
 /**
  * Items in a dropdown menu.
@@ -477,7 +449,7 @@ export const WithDropdown: Story = {
         avatar: "https://github.com/evilrabbit.png",
         email: "evilrabbit@vercel.com",
       },
-    ];
+    ]
 
     return (
       <div className="flex min-h-64 w-full max-w-md flex-col items-center gap-6">
@@ -494,9 +466,7 @@ export const WithDropdown: Story = {
                   <ItemMedia>
                     <Avatar className="size-8">
                       <AvatarImage src={person.avatar} className="grayscale" />
-                      <AvatarFallback>
-                        {person.username.charAt(0)}
-                      </AvatarFallback>
+                      <AvatarFallback>{person.username.charAt(0)}</AvatarFallback>
                     </Avatar>
                   </ItemMedia>
                   <ItemContent className="gap-0.5">
@@ -509,6 +479,6 @@ export const WithDropdown: Story = {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    );
+    )
   },
-};
+}

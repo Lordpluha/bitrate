@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge"
 
 /**
  * Displays a badge or a component that looks like a badge.
@@ -26,16 +26,16 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Badge>;
+} satisfies Meta<typeof Badge>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 /**
  * The default form of the badge.
  */
-export const Default: Story = {};
+export const Default: Story = {}
 
 /**
  * Use the `secondary` badge to call for less urgent information, blending
@@ -45,7 +45,7 @@ export const Secondary: Story = {
   args: {
     variant: "secondary",
   },
-};
+}
 
 /**
  * Use the `destructive` badge to  indicate errors, alerts, or the need for
@@ -55,7 +55,7 @@ export const Destructive: Story = {
   args: {
     variant: "destructive",
   },
-};
+}
 
 /**
  * Use the `outline` badge for overlaying without obscuring interface details,
@@ -65,4 +65,4 @@ export const Outline: Story = {
   args: {
     variant: "outline",
   },
-};
+}

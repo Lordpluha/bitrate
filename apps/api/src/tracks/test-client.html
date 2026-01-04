@@ -216,11 +216,11 @@
                 } else {
                     const error = await response.text();
                     logEvent(`Registration failed: ${error}`);
-                    alert('Registration failed: ' + error);
+                    alert(`Registration failed: ${error}`);
                 }
             } catch (error) {
                 logEvent(`Registration error: ${error.message}`);
-                alert('Registration error: ' + error.message);
+                alert(`Registration error: ${error.message}`);
             }
         }
 
@@ -254,11 +254,11 @@
                 } else {
                     const error = await response.text();
                     logEvent(`Login failed: ${error}`);
-                    alert('Login failed: ' + error);
+                    alert(`Login failed: ${error}`);
                 }
             } catch (error) {
                 logEvent(`Login error: ${error.message}`);
-                alert('Login error: ' + error.message);
+                alert(`Login error: ${error.message}`);
             }
         }
 

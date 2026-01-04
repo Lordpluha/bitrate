@@ -1,20 +1,20 @@
-import { Typography } from '@spotify/ui-react';
-import Image from 'next/image';
+import { Typography } from '@spotify/ui-react'
+import Image from 'next/image'
 
-import paymentMethods from '../config/payment-methods.json';
-import plans from '../config/plans.json';
+import paymentMethods from '../config/payment-methods.json'
+import plans from '../config/plans.json'
 
-import { PlanCard } from './PlanCard';
+import { PlanCard } from './PlanCard'
 
 export const Plans = () => {
   return (
     <div className="py-16 container 3xl:!max-w-[1540px] text-center max-lg:py-12 max-md:py-8">
       <div className="container mb-16 max-lg:mb-14 max-md:mb-12">
-        <Typography as='h1' size={'heading1'} className={'leading-[1.2] mb-8'}>
+        <Typography as="h1" className={'leading-[1.2] mb-8'} size={'heading1'}>
           Pick Your Premium
         </Typography>
 
-        <Typography as='p' size={'body'} className={'mb-6'}>
+        <Typography as="p" className={'mb-6'} size={'body'}>
           Upgrade to Spotify Premium and take your music journey to the next
           level. Enjoy uninterrupted music playback, even in offline mode
         </Typography>
@@ -39,5 +39,5 @@ export const Plans = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}

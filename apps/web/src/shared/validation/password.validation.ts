@@ -1,4 +1,4 @@
-import z from 'zod';
+import z from 'zod'
 
 export const passwordSchema = z
   .string()
@@ -14,4 +14,4 @@ export const passwordSchema = z
   })
   .refine((val) => /[@$!%*?&]/.test(val), {
     message: 'Password must include at least one special character',
-  });
+  })

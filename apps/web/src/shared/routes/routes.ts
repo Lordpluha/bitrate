@@ -11,4 +11,4 @@ export const ROUTES = {
   download: '#download',
   plans: '#plans',
   forStudents: '#for-students',
-} as const;
+} as const
