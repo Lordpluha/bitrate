@@ -1,6 +1,6 @@
+import type { StorybookConfig } from "@storybook/react-vite";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { StorybookConfig } from "@storybook/react-vite";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,6 +19,13 @@ const config: StorybookConfig = {
         "@": resolve(__dirname, "../src"),
       };
     }
+
+    // Define process global for Next.js compatibility
+    config.define = {
+      ...config.define,
+      "process.env": {},
+    };
+
     return config;
   },
 };
