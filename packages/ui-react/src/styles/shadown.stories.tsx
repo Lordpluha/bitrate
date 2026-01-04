@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./table";
+} from "../components/ui/table";
 
 type Shadow = {
   name: string;
