@@ -1,4 +1,4 @@
-# @spotify/ui
+# @spotify/ui-react
 
 UI-кит для [Spotify Clone](https://github.com/Lordpluha/spotify-clone), построенный на **React 19**, **Next.js 15**, **TailwindCSS** и **shadcn/ui**.
 Содержит переиспользуемые компоненты, стили и Tailwind-пресет для унифицированного оформления фронтенд-приложений.
@@ -8,13 +8,13 @@ UI-кит для [Spotify Clone](https://github.com/Lordpluha/spotify-clone), п
 ## 🚀 Установка
 
 ```bash
-pnpm add @spotify/ui
+pnpm add @spotify/ui-react
 ```
 
 или
 
 ```bash
-npm install @spotify/ui
+npm install @spotify/ui-react
 ```
 
 ---
@@ -26,7 +26,7 @@ npm install @spotify/ui
 В `app/layout.tsx` или `pages/_app.tsx`:
 
 ```tsx
-import '@spotify/ui/globals.css'
+import '@spotify/ui-react/globals.css'
 ```
 
 ### 2. Использование компонентов
@@ -34,7 +34,7 @@ import '@spotify/ui/globals.css'
 ```tsx
 'use client'
 
-import { Typography, PasswordInput } from '@spotify/ui'
+import { Typography, PasswordInput } from '@spotify/ui-react'
 
 export default function Example() {
   return (
@@ -56,21 +56,21 @@ UI-кит использует **Tailwind CSS v4** с конфигурацией
 
 ```ts
 // В вашем основном CSS файле (например, app/global.css)
-import '@spotify/ui/globals.css';
+import '@spotify/ui-react/globals.css';
 ```
 
 Или импортируйте напрямую в layout/главный компонент:
 
 ```tsx
-import '@spotify/ui/globals.css';
+import '@spotify/ui-react/globals.css';
 ```
 
 ---
 
 ## 📦 Экспорты
 
-- `@spotify/ui` — основные React-компоненты и хуки.
-- `@spotify/ui/globals.css` — глобальные стили Tailwind CSS v4 с @theme конфигурацией.
+- `@spotify/ui-react` — основные React-компоненты и хуки.
+- `@spotify/ui-react/globals.css` — глобальные стили Tailwind CSS v4 с @theme конфигурацией.
 
 ---
 
@@ -78,10 +78,10 @@ import '@spotify/ui/globals.css';
 
 | Компонент            | Импорт                                        | Пример использования |
 |----------------------|-----------------------------------------------|----------------------|
-| `Typography`         | `import { Typography } from '@spotify/ui'`   | `<Typography as='h1' size='heading1'>Hello</Typography>` |
-| `PasswordInput`      | `import { PasswordInput } from '@spotify/ui'`| `<PasswordInput placeholder="Пароль" />` |
-| `Form`               | `import { Form } from '@spotify/ui'`         | `<Form {...methods}>...</Form>` |
-| `Carousel`           | `import { Carousel } from '@spotify/ui'`     | `<Carousel>...</Carousel>` |
+| `Typography`         | `import { Typography } from '@spotify/ui-react'`   | `<Typography as='h1' size='heading1'>Hello</Typography>` |
+| `PasswordInput`      | `import { PasswordInput } from '@spotify/ui-react'`| `<PasswordInput placeholder="Пароль" />` |
+| `Form`               | `import { Form } from '@spotify/ui-react'`         | `<Form {...methods}>...</Form>` |
+| `Carousel`           | `import { Carousel } from '@spotify/ui-react'`     | `<Carousel>...</Carousel>` |
 
 ---
 
@@ -90,13 +90,13 @@ import '@spotify/ui/globals.css';
 Локальная сборка:
 
 ```bash
-pnpm -F @spotify/ui build
+pnpm -F @spotify/ui-react build
 ```
 
 Очистка:
 
 ```bash
-pnpm -F @spotify/ui clean
+pnpm -F @spotify/ui-react clean
 ```
 
 ---
