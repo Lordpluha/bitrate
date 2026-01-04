@@ -4,7 +4,7 @@ import type { Theme } from '@shared/constants';
 import { ThemeProvider } from '@shared/contexts';
 import { usePersistedState } from '@shared/hooks';
 import { type AppStore, makeStore } from '@shared/redux';
-import { Toaster } from '@spotify/ui';
+import { Toaster } from '@spotify/ui-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {

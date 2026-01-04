@@ -1,4 +1,4 @@
-import { Typography } from '@spotify/ui';
+import { Typography } from '@spotify/ui-react';
 
 import premiumFeatures from '../config/premium-features.json';
 

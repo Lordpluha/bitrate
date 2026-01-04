@@ -1,5 +1,5 @@
 import { ROUTES } from '@shared/routes';
-import { Typography } from '@spotify/ui';
+import { Typography } from '@spotify/ui-react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import type { FC } from 'react';

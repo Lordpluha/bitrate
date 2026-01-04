@@ -1,6 +1,6 @@
 import { ThemeScript } from '@shared/utils';
 
-import '@spotify/ui/globals.css';
+import '@spotify/ui-react/globals.css';
 import type { Metadata } from 'next';
 import { Source_Sans_3 } from 'next/font/google';
 import type { PropsWithChildren } from 'react';

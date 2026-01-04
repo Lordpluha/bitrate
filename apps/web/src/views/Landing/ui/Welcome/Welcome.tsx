@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/performance/noImgElement: decoration */
-import { Typography } from '@spotify/ui';
+import { Typography } from '@spotify/ui-react';
 
 import { DownloadButton } from './DownloadButton';
 import { Statistics } from './Statistics';

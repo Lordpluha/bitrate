@@ -16,7 +16,7 @@ import {
   PasswordInput,
   Typography,
   toast,
-} from '@spotify/ui';
+} from '@spotify/ui-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { SubmitHandler } from 'react-hook-form';

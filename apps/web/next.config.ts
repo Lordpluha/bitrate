@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
   poweredByHeader: false,
-  transpilePackages: ['@spotify/ui'],
+  transpilePackages: ['@spotify/ui-react'],
   // For debug
   // swcMinify: false,
   // reactStrictMode: false,

@@ -1,4 +1,4 @@
-import { Separator } from '@spotify/ui';
+import { Separator } from '@spotify/ui-react';
 
 export const SocialsAuthDivider = () => (
   <div className="flex items-center gap-2">

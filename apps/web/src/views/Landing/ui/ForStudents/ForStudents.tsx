@@ -1,5 +1,5 @@
 import { ROUTES } from '@shared/routes';
-import { Typography } from '@spotify/ui';
+import { Typography } from '@spotify/ui-react';
 import Link from 'next/link';
 
 export const ForStudents = () => {

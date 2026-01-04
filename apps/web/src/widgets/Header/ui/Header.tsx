@@ -3,7 +3,7 @@
 import { ThemeSwitcher } from '@features/SwitchTheme';
 import { Logo } from '@shared/ui';
 import clsx from 'clsx';
-import { AlignJustify, X } from '@spotify/ui';
+import { AlignJustify, X } from '@spotify/ui-react';
 import { useEffect, useState } from 'react';
 
 import { AuthButtons } from './AuthButtons/AuthButtons';

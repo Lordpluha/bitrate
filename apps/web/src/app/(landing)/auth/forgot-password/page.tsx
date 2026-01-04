@@ -1,4 +1,4 @@
-import { Typography } from '@spotify/ui';
+import { Typography } from '@spotify/ui-react';
 
 export default function ForgotPasswordPage() {
   return (
