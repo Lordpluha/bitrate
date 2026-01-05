@@ -20,6 +20,8 @@ jobs:
           version: 10
       - name: Install dependencies
         run: pnpm install
+      - name: Build @spotify/ui-react
+        run: cd packages/ui-react && pnpm build
       - name: Run Chromatic
         uses: chromaui/action@latest
         with:
