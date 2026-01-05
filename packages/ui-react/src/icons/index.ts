@@ -8,7 +8,7 @@ export {
   Mail,
   Moon,
   Sun,
-  X,
-} from "lucide-react"
+  X
+} from "lucide-react";
 
-// export * from './svgr';
+export * from './svgr';
