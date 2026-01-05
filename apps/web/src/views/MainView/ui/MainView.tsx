@@ -1,6 +1,6 @@
 import { Typography } from '@spotify/ui-react'
 
-export const MainPage = () => {
+export const MainView = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center">

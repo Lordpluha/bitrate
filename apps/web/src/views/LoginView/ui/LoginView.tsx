@@ -1,5 +1,5 @@
 import { LoginForm } from '@features/Login'
 
-export const Login = () => {
+export const LoginView = () => {
   return <LoginForm />
 }

@@ -1,5 +1,5 @@
-import { Registration } from '@views/Registration'
+import { RegistrationView } from '@views/RegistrationView'
 
 export default function RegistrationPage() {
-  return <Registration />
+  return <RegistrationView />
 }

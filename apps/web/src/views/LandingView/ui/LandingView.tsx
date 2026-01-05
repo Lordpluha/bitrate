@@ -5,7 +5,7 @@ import { ForStudents } from './ForStudents/ForStudents'
 import { QRcode } from './QRcode/QRcode'
 import { Welcome } from './Welcome/Welcome'
 
-export const Landing = () => {
+export const LandingView = () => {
   return (
     <>
       <Welcome />
