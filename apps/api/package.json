@@ -22,7 +22,7 @@
     "db:migration:reset": "prisma migrate reset --force",
     "db:migration:start": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
-    "db:generate:prod": "prisma generate --no-engine",
+    "db:generate:prod": "prisma generate",
     "db:ui": "prisma studio",
     "seed": "ts-node src/seeds/seed.ts",
     "seed:dev": "NODE_ENV=development npm run seed",
