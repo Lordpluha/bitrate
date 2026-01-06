@@ -3,7 +3,7 @@ import z from 'zod'
 
 export const loginSchema = z.object({
   email: emailSchema,
-  password: passwordSchema
+  password: passwordSchema,
 })
 
 export type LoginFormData = z.infer<typeof loginSchema>

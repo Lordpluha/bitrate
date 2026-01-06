@@ -1,5 +1,5 @@
-import { Login } from '@views/Login'
+import { LoginView } from '@views/LoginView'
 
 export default function LoginPage() {
-  return <Login />
+  return <LoginView />
 }

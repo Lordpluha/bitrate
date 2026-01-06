@@ -1,0 +1,30 @@
+@import "./pallete.css";
+@import "./typography.css";
+@import "./layout.css";
+@import "./animations.css";
+
+/**
+ * Dark theme variables (Default)
+ */
+@theme {
+  --color-foreground: #fff;
+  --color-bg: #0a0a0a;
+  --color-bg-secondary: #121212;
+  --color-text: #fff;
+  --color-text-contrast: #000;
+  --color-contrast: #fff;
+  --color-bg-secondary-rgb: 10 10 10;
+}
+
+/**
+ * Light theme variables
+ */
+:root.light {
+  --color-foreground: #000;
+  --color-bg: #fff;
+  --color-bg-secondary: #f7f7f7;
+  --color-text: #0a0a0a;
+  --color-contrast: #000;
+  --color-text-contrast: #fff;
+  --color-bg-secondary-rgb: 247 247 247;
+}

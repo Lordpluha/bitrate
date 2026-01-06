@@ -1,7 +1,5 @@
 'use client'
 
-import React from 'react'
-
 export const ThemeScript = () => {
   const codeToRunOnClient = `
     try {
@@ -13,5 +11,6 @@ export const ThemeScript = () => {
     } catch(e) {}
   `
 
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: Required for theme initialization script
   return <script dangerouslySetInnerHTML={{ __html: codeToRunOnClient }} />
 }

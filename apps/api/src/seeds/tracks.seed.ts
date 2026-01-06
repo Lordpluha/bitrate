@@ -8,7 +8,7 @@ function generateAudioUrl(): string {
     'https://audio.example.com',
     'https://music-storage.s3.amazonaws.com',
     'https://cdn.musicplatform.com',
-    'https://tracks.cloudinary.com'
+    'https://tracks.cloudinary.com',
   ]
 
   const domain = faker.helpers.arrayElement(domains)
@@ -20,7 +20,7 @@ function generateAudioUrl(): string {
 export async function seedTracks(prisma: PrismaClient, count: number = 100) {
   // Сначала получаем всех существующих артистов
   const artists = await prisma.artist.findMany({
-    select: { id: true }
+    select: { id: true },
   })
 
   if (artists.length === 0) {
@@ -46,7 +46,7 @@ export async function seedTracks(prisma: PrismaClient, count: number = 100) {
     'Punk',
     'R&B',
     'Soul',
-    'Funk'
+    'Funk',
   ]
 
   // Примеры слов для создания названий треков
@@ -74,7 +74,7 @@ export async function seedTracks(prisma: PrismaClient, count: number = 100) {
     'Beat',
     'Sound',
     'Music',
-    'Voice'
+    'Voice',
   ]
 
   for (let i = 0; i < count; i++) {
@@ -88,9 +88,7 @@ export async function seedTracks(prisma: PrismaClient, count: number = 100) {
     switch (titleType) {
       case 1:
         // Простое название из одного-двух слов
-        title = faker.helpers
-          .arrayElements(trackWords, { min: 1, max: 2 })
-          .join(' ')
+        title = faker.helpers.arrayElements(trackWords, { min: 1, max: 2 }).join(' ')
         break
       case 2:
         // Название с жанром
@@ -106,7 +104,7 @@ export async function seedTracks(prisma: PrismaClient, count: number = 100) {
       title,
       audioUrl: generateAudioUrl(),
       cover: faker.image.url({ width: 800, height: 800 }),
-      artistId: randomArtist.id
+      artistId: randomArtist.id,
     }
 
     tracks.push(track)
@@ -115,7 +113,7 @@ export async function seedTracks(prisma: PrismaClient, count: number = 100) {
   try {
     await prisma.track.createMany({
       data: tracks,
-      skipDuplicates: true
+      skipDuplicates: true,
     })
     console.log(`✅ Seeded ${count} tracks`)
   } catch (error) {
@@ -128,22 +126,20 @@ export async function seedTrackAlbumRelations(prisma: PrismaClient) {
   try {
     // Получаем все треки и альбомы
     const tracks = await prisma.track.findMany({
-      select: { id: true, artistId: true }
+      select: { id: true, artistId: true },
     })
 
     const albums = await prisma.album.findMany({
-      select: { id: true, artistId: true }
+      select: { id: true, artistId: true },
     })
 
     if (tracks.length === 0 || albums.length === 0) {
-      console.log(
-        '⚠️ No tracks or albums found. Please seed tracks and albums first.'
-      )
+      console.log('⚠️ No tracks or albums found. Please seed tracks and albums first.')
       return
     }
 
     console.log(
-      `🔗 Creating relations between ${tracks.length} tracks and ${albums.length} albums...`
+      `🔗 Creating relations between ${tracks.length} tracks and ${albums.length} albums...`,
     )
 
     // Создаем связи между треками и альбомами
@@ -151,9 +147,7 @@ export async function seedTrackAlbumRelations(prisma: PrismaClient) {
 
     for (const track of tracks) {
       // Находим альбомы того же артиста
-      const artistAlbums = albums.filter(
-        album => album.artistId === track.artistId
-      )
+      const artistAlbums = albums.filter((album) => album.artistId === track.artistId)
 
       if (artistAlbums.length > 0) {
         // 80% вероятность, что трек будет принадлежать основному альбому артиста
@@ -161,28 +155,21 @@ export async function seedTrackAlbumRelations(prisma: PrismaClient) {
           const primaryAlbum = faker.helpers.arrayElement(artistAlbums)
           relations.push({
             trackId: track.id,
-            albumId: primaryAlbum.id
+            albumId: primaryAlbum.id,
           })
         }
 
         // 30% вероятность, что трек также будет в сборнике
-        if (
-          faker.datatype.boolean({ probability: 0.3 }) &&
-          artistAlbums.length > 1
-        ) {
+        if (faker.datatype.boolean({ probability: 0.3 }) && artistAlbums.length > 1) {
           const lastRelationAlbumId =
-            relations.length > 0
-              ? relations[relations.length - 1]?.albumId
-              : null
-          const availableAlbums = artistAlbums.filter(
-            album => album.id !== lastRelationAlbumId
-          )
+            relations.length > 0 ? relations[relations.length - 1]?.albumId : null
+          const availableAlbums = artistAlbums.filter((album) => album.id !== lastRelationAlbumId)
 
           if (availableAlbums.length > 0) {
             const compilationAlbum = faker.helpers.arrayElement(availableAlbums)
             relations.push({
               trackId: track.id,
-              albumId: compilationAlbum.id
+              albumId: compilationAlbum.id,
             })
           }
         }
@@ -193,12 +180,12 @@ export async function seedTrackAlbumRelations(prisma: PrismaClient) {
         const randomAlbum = faker.helpers.arrayElement(albums)
         // Проверяем, что эта связь еще не существует
         const existingRelation = relations.find(
-          rel => rel.trackId === track.id && rel.albumId === randomAlbum.id
+          (rel) => rel.trackId === track.id && rel.albumId === randomAlbum.id,
         )
         if (!existingRelation) {
           relations.push({
             trackId: track.id,
-            albumId: randomAlbum.id
+            albumId: randomAlbum.id,
           })
         }
       }
@@ -208,9 +195,7 @@ export async function seedTrackAlbumRelations(prisma: PrismaClient) {
     const uniqueRelations = relations.filter(
       (relation, index, self) =>
         index ===
-        self.findIndex(
-          r => r.trackId === relation.trackId && r.albumId === relation.albumId
-        )
+        self.findIndex((r) => r.trackId === relation.trackId && r.albumId === relation.albumId),
     )
 
     // Создаем связи в базе данных
@@ -219,9 +204,9 @@ export async function seedTrackAlbumRelations(prisma: PrismaClient) {
         where: { id: relation.trackId },
         data: {
           albums: {
-            connect: { id: relation.albumId }
-          }
-        }
+            connect: { id: relation.albumId },
+          },
+        },
       })
     }
 

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 
 import { seedAlbums } from './albums.seed'
 import { seedArtists } from './artists.seed'
-import { seedPlaylistTracks, seedPlaylists } from './playlists.seed'
+import { seedPlaylists, seedPlaylistTracks } from './playlists.seed'
 import { seedTrackAlbumRelations, seedTracks } from './tracks.seed'
 import { seedUserLikedTracks, seedUsers } from './users.seed'
 
@@ -55,5 +55,4 @@ async function main() {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 main()

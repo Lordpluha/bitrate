@@ -1,9 +1,9 @@
-import { Typography } from '@spotify/ui'
+import { Typography } from '@spotify/ui-react'
 
 export default function ForgotPasswordPage() {
   return (
-    <Typography.Heading1 className='text-primary mb-4'>
+    <Typography as="h1" className="text-primary mb-4" size={'heading1'}>
       Forgot password page
-    </Typography.Heading1>
+    </Typography>
   )
 }

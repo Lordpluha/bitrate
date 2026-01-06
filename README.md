@@ -3,6 +3,7 @@
 ## Usefull links
 - Chromatic - https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
 - Storybook - https://spotify-clone-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
+- Web: https://spotify-clone-web-olive.vercel.app/
 
 # Your first start
 
@@ -99,7 +100,7 @@ $ turbo dev
 
 ### Infrastructure
 - Monorepo: TurboRepo + Pnpm
-- Linting: ESLint, Prettier, Stylelint
+- Linting: Biome
 - Git tools: Husky, Lint-staged, Commit-lint, Gitflow
 - CI/CD: GitHub Actions, Docker, self-hosted Sentry
 - Env: .env per app + .env.schema (Zod-based)

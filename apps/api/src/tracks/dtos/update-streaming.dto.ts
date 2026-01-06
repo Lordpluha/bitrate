@@ -5,12 +5,10 @@ export const UpdateStreamingSchema = z.object({
   trackId: z.string().uuid(),
   userId: z.string().uuid(),
   currentTime: z.number().min(0),
-  isPlaying: z.boolean()
+  isPlaying: z.boolean(),
 })
 
-export class UpdateStreamingDto
-  implements z.infer<typeof UpdateStreamingSchema>
-{
+export class UpdateStreamingDto implements z.infer<typeof UpdateStreamingSchema> {
   @ApiProperty({ description: 'Track ID being updated' })
   trackId: string
 

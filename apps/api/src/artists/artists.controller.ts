@@ -7,15 +7,15 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  Query
+  Query,
 } from '@nestjs/common'
-import { ApiTags, ApiOperation } from '@nestjs/swagger'
-import { ArtistsService } from './artists.service'
-import { ArtistEntity } from './entities'
-import { CreateArtistDto, CreateArtistSchema } from './dtos'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { GetArtistsSwagger } from './decorators'
 import { Auth } from 'src/auth/auth.guard'
+import { ArtistsService } from './artists.service'
+import { GetArtistsSwagger } from './decorators'
+import { CreateArtistDto, CreateArtistSchema } from './dtos'
+import { ArtistEntity } from './entities'
 
 @ApiTags('Artists')
 @Controller('artists')
@@ -27,12 +27,12 @@ export class ArtistsController {
   async getAll(
     @Query('username') username?: ArtistEntity['username'],
     @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10'
+    @Query('limit') limit: string = '10',
   ) {
     return await this.artistsService.findAll({
       limit: Number(limit),
       page: Number(page),
-      username
+      username,
     })
   }
 
@@ -52,7 +52,7 @@ export class ArtistsController {
   @Post('')
   create(
     @Body(new ZodValidationPipe(CreateArtistSchema))
-    createArtistDto: CreateArtistDto
+    createArtistDto: CreateArtistDto,
   ) {
     return this.artistsService.create(createArtistDto)
   }
@@ -62,7 +62,7 @@ export class ArtistsController {
   @Put(':id')
   updateProfile(
     @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
-    @Body() artist: Partial<ArtistEntity>
+    @Body() artist: Partial<ArtistEntity>,
   ) {
     return this.artistsService.update(id, artist)
   }

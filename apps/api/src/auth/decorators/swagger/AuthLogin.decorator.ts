@@ -1,10 +1,5 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse
-} from '@nestjs/swagger'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 import { LoginDto } from '../../dtos'
 
@@ -22,10 +17,10 @@ export function AuthLoginSwagger() {
           schema: {
             type: 'string',
             example:
-              'access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;\nrefresh_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;'
-          }
-        }
-      }
+              'access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;\nrefresh_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;',
+          },
+        },
+      },
     }),
     ApiResponse({
       status: HttpStatus.BAD_REQUEST,
@@ -36,12 +31,12 @@ export function AuthLoginSwagger() {
             errors: [
               {
                 field: 'email',
-                message: 'email must be an email'
-              }
-            ]
-          }
-        }
-      }
-    })
+                message: 'email must be an email',
+              },
+            ],
+          },
+        },
+      },
+    }),
   )
 }

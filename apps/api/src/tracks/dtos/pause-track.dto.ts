@@ -4,7 +4,7 @@ import { z } from 'zod'
 export const PauseTrackSchema = z.object({
   trackId: z.string().uuid(),
   userId: z.string().uuid(),
-  currentTime: z.number().min(0)
+  currentTime: z.number().min(0),
 })
 
 export class PauseTrackDto implements z.infer<typeof PauseTrackSchema> {

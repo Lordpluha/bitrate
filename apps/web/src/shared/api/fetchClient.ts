@@ -7,7 +7,7 @@ import createFetchClient from 'openapi-fetch'
 export const fetchClient = createFetchClient<ApiPaths>({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   },
-  credentials: 'include'
+  credentials: 'include',
 })

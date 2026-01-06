@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client'
 export async function seedPlaylists(prisma: PrismaClient, count: number = 100) {
   // Сначала получаем всех существующих пользователей
   const users = await prisma.user.findMany({
-    select: { id: true, username: true }
+    select: { id: true, username: true },
   })
 
   if (users.length === 0) {
@@ -50,7 +50,7 @@ export async function seedPlaylists(prisma: PrismaClient, count: number = 100) {
     'Alternative Edge',
     'Classical Collection',
     'World Music',
-    'Country Roads'
+    'Country Roads',
   ]
 
   // Дополнительные слова для создания уникальных названий
@@ -68,7 +68,7 @@ export async function seedPlaylists(prisma: PrismaClient, count: number = 100) {
     'Seasonal',
     'Personal',
     'Private',
-    'Public'
+    'Public',
   ]
 
   const timeWords = [
@@ -85,7 +85,7 @@ export async function seedPlaylists(prisma: PrismaClient, count: number = 100) {
     'Evening',
     'Night',
     'Midnight',
-    'Dawn'
+    'Dawn',
   ]
 
   // Описания для плейлистов
@@ -101,7 +101,7 @@ export async function seedPlaylists(prisma: PrismaClient, count: number = 100) {
     'The best throwback hits from the past',
     'Smooth tunes for a lazy afternoon',
     'Late night vibes and contemplative tracks',
-    'Energizing music to start the day right'
+    'Energizing music to start the day right',
   ]
 
   for (let i = 0; i < count; i++) {
@@ -140,7 +140,7 @@ export async function seedPlaylists(prisma: PrismaClient, count: number = 100) {
     const description = faker.datatype.boolean({ probability: 0.6 })
       ? faker.helpers.arrayElement([
           ...playlistDescriptions,
-          faker.lorem.sentence({ min: 4, max: 12 })
+          faker.lorem.sentence({ min: 4, max: 12 }),
         ])
       : null
 
@@ -148,7 +148,7 @@ export async function seedPlaylists(prisma: PrismaClient, count: number = 100) {
       title,
       cover,
       description,
-      userId: randomUser.id
+      userId: randomUser.id,
     }
 
     playlists.push(playlist)
@@ -157,7 +157,7 @@ export async function seedPlaylists(prisma: PrismaClient, count: number = 100) {
   try {
     await prisma.playlist.createMany({
       data: playlists,
-      skipDuplicates: true
+      skipDuplicates: true,
     })
     console.log(`✅ Seeded ${count} playlists`)
   } catch (error) {
@@ -170,17 +170,15 @@ export async function seedPlaylistTracks(prisma: PrismaClient) {
   try {
     // Получаем все плейлисты и треки
     const playlists = await prisma.playlist.findMany({
-      select: { id: true, title: true, userId: true }
+      select: { id: true, title: true, userId: true },
     })
 
     const tracks = await prisma.track.findMany({
-      select: { id: true }
+      select: { id: true },
     })
 
     if (playlists.length === 0 || tracks.length === 0) {
-      console.log(
-        '⚠️ No playlists or tracks found. Please seed playlists and tracks first.'
-      )
+      console.log('⚠️ No playlists or tracks found. Please seed playlists and tracks first.')
       return
     }
 
@@ -199,9 +197,9 @@ export async function seedPlaylistTracks(prisma: PrismaClient) {
             where: { id: playlist.id },
             data: {
               tracks: {
-                connect: { id: track.id }
-              }
-            }
+                connect: { id: track.id },
+              },
+            },
           })
           totalTracksAdded++
         } catch {
@@ -217,23 +215,18 @@ export async function seedPlaylistTracks(prisma: PrismaClient) {
 }
 
 // Функция для создания плейлистов сразу с треками (более эффективно)
-export async function seedPlaylistsWithTracks(
-  prisma: PrismaClient,
-  count: number = 50
-) {
+export async function seedPlaylistsWithTracks(prisma: PrismaClient, count: number = 50) {
   // Получаем пользователей и треки
   const users = await prisma.user.findMany({
-    select: { id: true, username: true }
+    select: { id: true, username: true },
   })
 
   const tracks = await prisma.track.findMany({
-    select: { id: true }
+    select: { id: true },
   })
 
   if (users.length === 0 || tracks.length === 0) {
-    console.log(
-      '⚠️ No users or tracks found. Please seed users and tracks first.'
-    )
+    console.log('⚠️ No users or tracks found. Please seed users and tracks first.')
     return
   }
 
@@ -247,7 +240,7 @@ export async function seedPlaylistsWithTracks(
     'Relax & Unwind',
     'Morning Coffee',
     'Late Night',
-    'Feel Good'
+    'Feel Good',
   ]
 
   const playlistDescriptions = [
@@ -255,7 +248,7 @@ export async function seedPlaylistsWithTracks(
     'Perfect songs for relaxing and unwinding',
     'High-energy music to fuel your workout',
     'The perfect soundtrack for long drives',
-    'Songs that always put me in a good mood'
+    'Songs that always put me in a good mood',
   ]
 
   try {
@@ -277,21 +270,19 @@ export async function seedPlaylistsWithTracks(
           description: faker.helpers.arrayElement([
             ...playlistDescriptions,
             faker.lorem.sentence({ min: 4, max: 8 }),
-            null
+            null,
           ]),
           userId: user.id,
           tracks: {
-            connect: selectedTracks.map(track => ({ id: track.id }))
-          }
+            connect: selectedTracks.map((track) => ({ id: track.id })),
+          },
         },
         include: {
-          tracks: true
-        }
+          tracks: true,
+        },
       })
 
-      console.log(
-        `🎵 Created playlist "${playlist.title}" with ${playlist.tracks.length} tracks`
-      )
+      console.log(`🎵 Created playlist "${playlist.title}" with ${playlist.tracks.length} tracks`)
     }
 
     console.log(`✅ Created ${count} playlists with tracks`)

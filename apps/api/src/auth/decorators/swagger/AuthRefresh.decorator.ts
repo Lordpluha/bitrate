@@ -1,4 +1,4 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 export function AuthRefreshSwagger() {
@@ -12,10 +12,10 @@ export function AuthRefreshSwagger() {
           description: 'HttpOnly cookies: access_token',
           schema: {
             type: 'string',
-            example: 'access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;'
-          }
-        }
-      }
-    })
+            example: 'access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;',
+          },
+        },
+      },
+    }),
   )
 }

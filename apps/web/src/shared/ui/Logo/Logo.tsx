@@ -1,38 +1,27 @@
-import { FC, SVGProps } from 'react'
-
-import Link, { LinkProps } from 'next/link'
-
-import { theme } from '@shared/constants'
+import type { Theme } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
-import clsx from 'clsx'
+import Link from 'next/link'
+import type { FC } from 'react'
 
-import { SpotifyLogo } from '../icons'
-
-export interface LogoProps extends SVGProps<HTMLOrSVGElement> {
-  color?: theme
-  linkProps?: LinkProps
+export type LogoProps = {
+  color?: Theme
 }
 
-export const Logo: FC<LogoProps> = ({ color = 'dark', linkProps, ...svgProps }) => {
-  const { className: svgClassName, ...etcSvgProps } = svgProps
-
+export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
   return (
     <Link
+      aria-label="Spotify Home"
+      className="transition-[0.3s] hover:opacity-70"
       href={ROUTES.landing}
-      aria-label='Spotify Home'
-      className={'transition-[0.3s] hover:opacity-70'}
-      {...linkProps}
     >
-      <SpotifyLogo
-        className={clsx(
+      {/* <SpotifyLogo
+        className={cn(
           'transition-[0.3s]',
           color === 'dark'
             ? 'text-text fill-text'
-            : 'text-textContrast fill-textContrast',
-          svgClassName
+            : 'text-textContrast fill-textContrast'
         )}
-        {...etcSvgProps}
-      />
+      /> */}
     </Link>
   )
 }

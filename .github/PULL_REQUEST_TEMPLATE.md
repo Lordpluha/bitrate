@@ -158,8 +158,8 @@
 
 ### Code Quality
 - [ ] Code follows the project style guide
-- [ ] ESLint/TSC passes without errors
-- [ ] Prettier formatting applied
+- [ ] Biome/TSC passes without errors
+- [ ] Biome formatting applied
 - [ ] No console.log statements left in code
 - [ ] No TODO comments without issues
 

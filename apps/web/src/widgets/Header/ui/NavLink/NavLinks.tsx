@@ -2,15 +2,15 @@ import Link from 'next/link'
 
 import links from '../../config/nav-links.json'
 
-import styles from './NavLink.module.scss'
-
 export const NavLinks = () => (
   <>
-    {links.map(link => (
+    {links.map((link) => (
       <Link
-        key={link.title}
-        className={styles.nav__link}
+        className={
+          'text-xl hover:opacity-70 transition-[0.3s] relative transition-all'
+        }
         href={link.href}
+        key={link.title}
       >
         {link.title}
       </Link>

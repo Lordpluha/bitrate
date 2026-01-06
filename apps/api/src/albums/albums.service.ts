@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
-import { AlbumEntity } from './entities'
-import { CreateAlbumDto } from './dtos/create-album.dto'
 import { ArtistEntity } from 'src/artists/entities'
+import { PrismaService } from 'src/prisma/prisma.service'
+import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'
+import { AlbumEntity } from './entities'
 
 @Injectable()
 export class AlbumsService {
@@ -12,17 +12,15 @@ export class AlbumsService {
   async findAll({
     page = 1,
     limit = 10,
-    title
+    title,
   }: { page?: number; limit?: number } & Partial<AlbumEntity>) {
     return await this.prisma.album.findMany({
       skip: (page - 1) * limit,
       take: limit,
-      where: title
-        ? { title: { contains: title, mode: 'insensitive' } }
-        : undefined,
+      where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
       include: {
-        tracks: true
-      }
+        tracks: true,
+      },
     })
   }
 
@@ -30,14 +28,14 @@ export class AlbumsService {
     return await this.prisma.album.findFirst({
       where: { id },
       include: {
-        tracks: true
-      }
+        tracks: true,
+      },
     })
   }
 
   async create(artistId: ArtistEntity['id'], createDto: CreateAlbumDto) {
     const artist = await this.prisma.artist.findUnique({
-      where: { id: artistId }
+      where: { id: artistId },
     })
 
     if (!artist) {
@@ -47,18 +45,14 @@ export class AlbumsService {
     return await this.prisma.album.create({
       data: {
         artistId: artist.id,
-        ...createDto
-      }
+        ...createDto,
+      },
     })
   }
 
-  async update(
-    artistId: ArtistEntity['id'],
-    id: AlbumEntity['id'],
-    updateDto: UpdateAlbumDto
-  ) {
+  async update(artistId: ArtistEntity['id'], id: AlbumEntity['id'], updateDto: UpdateAlbumDto) {
     const album = await this.prisma.album.findFirst({
-      where: { id, artistId }
+      where: { id, artistId },
     })
 
     if (!album) {
@@ -67,13 +61,13 @@ export class AlbumsService {
 
     return await this.prisma.album.update({
       where: { id },
-      data: updateDto
+      data: updateDto,
     })
   }
 
   async delete(artistId: ArtistEntity['id'], id: AlbumEntity['id']) {
     const album = await this.prisma.album.findFirst({
-      where: { id, artistId }
+      where: { id, artistId },
     })
 
     if (!album) {
@@ -83,8 +77,8 @@ export class AlbumsService {
     return await this.prisma.album.delete({
       where: { id },
       omit: {
-        artistId: true
-      }
+        artistId: true,
+      },
     })
   }
 }

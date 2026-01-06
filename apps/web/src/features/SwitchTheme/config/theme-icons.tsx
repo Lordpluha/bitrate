@@ -1,9 +1,8 @@
-import { ReactNode } from 'react'
+import type { Theme } from '@shared/constants'
+import { Moon, Sun } from '@spotify/ui-react'
+import type { ReactNode } from 'react'
 
-import { theme } from '@shared/constants'
-import { Moon, Sun } from 'lucide-react'
-
-export const THEME_ICONS: Record<theme, ReactNode> = {
+export const THEME_ICONS: Record<Theme, ReactNode> = {
   light: <Sun size={16} />,
-  dark: <Moon size={16} />
+  dark: <Moon size={16} />,
 }

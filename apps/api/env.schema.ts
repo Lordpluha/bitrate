@@ -1,9 +1,7 @@
 import { z } from 'zod'
 
 export const envSchema = z.object({
-  NODE_ENV: z
-    .enum(['local', 'development', 'production', 'test'])
-    .default('local'),
+  NODE_ENV: z.enum(['local', 'development', 'production', 'test']).default('local'),
   PORT: z.coerce.number().default(3000),
   WEB_HOST: z.string().url(),
 
@@ -25,7 +23,7 @@ export const envSchema = z.object({
   // EMAIL_FROM: z.string().email(),
 
   // Database
-  DATABASE_URL: z.string().url()
+  DATABASE_URL: z.string().url(),
 
   // Redis
   // REDIS_URL: z.string().url(),

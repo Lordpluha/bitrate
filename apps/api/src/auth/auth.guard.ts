@@ -4,17 +4,17 @@ import {
   ExecutionContext,
   HttpStatus,
   Injectable,
-  UnauthorizedException
+  SetMetadata,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { Request } from 'express'
-import { JWTPayload } from './types'
-import { PrismaService } from 'src/prisma/prisma.service'
-
-import { SetMetadata, UseGuards } from '@nestjs/common'
 import { ApiCookieAuth, ApiResponse } from '@nestjs/swagger'
+import { Request } from 'express'
+import { PrismaService } from 'src/prisma/prisma.service'
 import { UNAUTHORIZED_ERRORS } from './errors/unauthorized.errors'
 import { TokenService } from './token.service'
+import { JWTPayload } from './types'
 
 export type TokenRequirement = 'access' | 'refresh'
 export const TOKEN_REQUIREMENT = 'tokenRequirement'
@@ -30,7 +30,7 @@ export function Auth(tokenRequirement: TokenRequirement = 'access') {
     ApiCookieAuth(
       tokenRequirement === 'access'
         ? process.env.ACCESS_TOKEN_NAME
-        : process.env.REFRESH_TOKEN_NAME
+        : process.env.REFRESH_TOKEN_NAME,
     ),
     ApiResponse({
       status: HttpStatus.UNAUTHORIZED,
@@ -42,13 +42,13 @@ export function Auth(tokenRequirement: TokenRequirement = 'access') {
           message: {
             type: 'string',
             enum: Object.values(UNAUTHORIZED_ERRORS),
-            example: UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN
+            example: UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN,
           },
-          error: { type: 'string', example: 'Unauthorized' }
-        }
-      }
+          error: { type: 'string', example: 'Unauthorized' },
+        },
+      },
     }),
-    UseGuards(AuthGuard)
+    UseGuards(AuthGuard),
   )
 }
 
@@ -57,42 +57,34 @@ export class AuthGuard implements CanActivate {
   constructor(
     private prisma: PrismaService,
     private reflector: Reflector,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const tokenReq = this.reflector.getAllAndOverride<TokenRequirement>(
-      TOKEN_REQUIREMENT,
-      [context.getHandler(), context.getClass()]
-    )
+    const tokenReq = this.reflector.getAllAndOverride<TokenRequirement>(TOKEN_REQUIREMENT, [
+      context.getHandler(),
+      context.getClass(),
+    ])
 
     const request = context.switchToHttp().getRequest<Request>()
     // Try to extract tokens from both cookies and Authorization header
-    const { access_token: cookieAccessToken, refresh_token } =
-      this.extractTokenFromCookie(request)
+    const { access_token: cookieAccessToken, refresh_token } = this.extractTokenFromCookie(request)
 
     // If not found in cookies, try Authorization header
-    const access_token =
-      cookieAccessToken || this.extractTokenFromHeader(request)
+    const access_token = cookieAccessToken || this.extractTokenFromHeader(request)
 
     // 1) проверяем наличие нужных токенов
     switch (tokenReq) {
       case 'access':
         if (!access_token)
-          throw new UnauthorizedException(
-            UNAUTHORIZED_ERRORS.ACCESS_TOKEN_REQUIRED
-          )
+          throw new UnauthorizedException(UNAUTHORIZED_ERRORS.ACCESS_TOKEN_REQUIRED)
         break
       case 'refresh':
         if (!refresh_token)
-          throw new UnauthorizedException(
-            UNAUTHORIZED_ERRORS.REFRESH_TOKEN_REQUIRED
-          )
+          throw new UnauthorizedException(UNAUTHORIZED_ERRORS.REFRESH_TOKEN_REQUIRED)
         break
       default:
-        throw new UnauthorizedException(
-          UNAUTHORIZED_ERRORS.INVALID_TOKEN_REQUIREMENT
-        )
+        throw new UnauthorizedException(UNAUTHORIZED_ERRORS.INVALID_TOKEN_REQUIREMENT)
     }
 
     try {
@@ -110,30 +102,25 @@ export class AuthGuard implements CanActivate {
 
       // 3) получаем юзера
       const user = await this.prisma.user.findUnique({
-        where: { id: payload.sub }
+        where: { id: payload.sub },
       })
-      if (!user)
-        throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
+      if (!user) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 
       // 4) ищем сессию по всем пришедшим токенам
       const session = await this.prisma.session.findFirst({
         where: {
           access_token,
           refresh_token,
-          userId: payload.sub
-        }
+          userId: payload.sub,
+        },
       })
-      if (!session)
-        throw new UnauthorizedException(UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND)
+      if (!session) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND)
 
       request['user'] = user
       if (access_token) request[process.env.ACCESS_TOKEN_NAME!] = access_token
-      if (refresh_token)
-        request[process.env.REFRESH_TOKEN_NAME!] = refresh_token
+      if (refresh_token) request[process.env.REFRESH_TOKEN_NAME!] = refresh_token
     } catch {
-      throw new UnauthorizedException(
-        UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN
-      )
+      throw new UnauthorizedException(UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN)
     }
 
     return true
@@ -142,18 +129,14 @@ export class AuthGuard implements CanActivate {
   private extractTokenFromCookie(request: Request) {
     const access_token_name = process.env.ACCESS_TOKEN_NAME || ''
     const refresh_token_name = process.env.REFRESH_TOKEN_NAME || ''
-    const access_token = request.cookies?.[access_token_name] as
-      | string
-      | undefined
-    const refresh_token = request.cookies?.[refresh_token_name] as
-      | string
-      | undefined
+    const access_token = request.cookies?.[access_token_name] as string | undefined
+    const refresh_token = request.cookies?.[refresh_token_name] as string | undefined
     return { access_token, refresh_token }
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
     const authorization = request.headers.authorization
-    if (authorization && authorization.startsWith('Bearer ')) {
+    if (authorization?.startsWith('Bearer ')) {
       return authorization.slice(7) // Remove 'Bearer ' prefix
     }
     return undefined

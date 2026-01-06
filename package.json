@@ -10,13 +10,10 @@
   },
   "contributors": [
     {
-      "email": "",
+      "email": "crysisnomad321@gmail.com",
       "name": "Andrey Kalashnikov",
       "url": "https://github.com/andreo-kalashnello"
     }
-  ],
-  "os": [
-    "linux"
   ],
   "repository": {
     "type": "github",
@@ -28,26 +25,38 @@
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
     "format": "turbo run format",
+    "analyze": "pnpm knip",
     "prepare": "husky",
-    "commit": "cz"
+    "commit": "cz",
+    "knip": "knip"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/cli": "^20.3.0",
+    "@commitlint/config-conventional": "^20.3.0",
+    "@types/node": "^25.0.3",
     "commitizen": "^4.3.1",
     "cz-customizable": "^7.5.1",
     "husky": "^9.1.7",
-    "lint-staged": "^16.1.6",
-    "turbo": "^2.5.6"
+    "knip": "^5.79.0",
+    "lint-staged": "^16.2.7",
+    "turbo": "^2.7.2",
+    "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@10.15.1",
+  "packageManager": "pnpm@10.27.0",
   "engines": {
-    "node": ">=18",
-    "vscode": "^1.100.0"
+    "node": ">=20"
   },
   "config": {
     "commitizen": {
       "path": "cz-customizable"
+    }
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "19.1.0",
+      "react-dom": "19.1.0",
+      "@types/react": "~19.1.0",
+      "@types/react-dom": "~19.1.0"
     }
   }
 }

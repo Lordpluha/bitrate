@@ -1,10 +1,5 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
-import {
-  ApiConsumes,
-  ApiOperation,
-  ApiQuery,
-  ApiResponse
-} from '@nestjs/swagger'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 import { ArtistEntity } from 'src/artists/entities'
 
 export function GetArtistsSwagger() {
@@ -14,21 +9,21 @@ export function GetArtistsSwagger() {
       name: 'username',
       required: false,
       type: String,
-      description: 'Search by artist username'
+      description: 'Search by artist username',
     }),
     ApiQuery({
       name: 'page',
       required: false,
       type: Number,
       example: 1,
-      description: 'Page number'
+      description: 'Page number',
     }),
     ApiQuery({
       name: 'limit',
       required: false,
       type: Number,
       example: 10,
-      description: 'Items per page'
+      description: 'Items per page',
     }),
     ApiConsumes('application/json'),
     ApiResponse({
@@ -41,11 +36,11 @@ export function GetArtistsSwagger() {
               id: '1',
               username: 'artist1',
               backgroundImage: '',
-              bio: ''
-            } as Omit<ArtistEntity, 'password' | 'email'>
-          ]
-        }
-      }
-    })
+              bio: '',
+            } as Omit<ArtistEntity, 'password' | 'email'>,
+          ],
+        },
+      },
+    }),
   )
 }

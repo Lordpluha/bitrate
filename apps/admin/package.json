@@ -7,29 +7,31 @@
   "scripts": {
     "dev": "kottster dev",
     "dev:add-data-source": "kottster add-data-source",
+    "dev:upgrade-kottster": "kottster upgrade",
     "build": "vite build && kottster build:server",
     "start": "node dist/server/server.cjs"
   },
   "dependencies": {
-    "@kottster/cli": "^3.0.2",
-    "@kottster/common": "^3.0.6",
-    "@kottster/react": "^3.1.2",
-    "@kottster/server": "^3.0.8",
+    "@kottster/cli": "3.4.7",
+    "@kottster/common": "3.4.7",
+    "@kottster/react": "3.4.7",
+    "@kottster/server": "3.4.7",
+    "better-sqlite3": "^12.x",
     "knex": "^3.1.0",
     "pg": "^8.16.3",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.0"
+    "react": "^19.x",
+    "react-dom": "^19.x",
+    "react-router-dom": "^7.x"
   },
   "devDependencies": {
-    "@types/node": "^24.3.1",
-    "@types/react": "^19.1.12",
-    "@types/react-dom": "^19.1.9",
-    "@vitejs/plugin-react": "^5.0.2",
-    "tsx": "^4.20.5",
-    "typescript": "^5.9.2",
-    "vite": "^6.3.6",
-    "vite-tsconfig-paths": "^5.1.4"
+    "@types/node": "^20.x",
+    "@types/react": "^19.x",
+    "@types/react-dom": "^19.x",
+    "@vitejs/plugin-react": "^4.x",
+    "tsx": "^4.x",
+    "typescript": "^5.x",
+    "vite": "^6.x",
+    "vite-tsconfig-paths": "^4.x"
   },
   "engines": {
     "node": ">=20"

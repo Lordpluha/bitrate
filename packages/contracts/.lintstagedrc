@@ -1,8 +1,8 @@
 {
 	"./src/*.{tsx,ts}": [
-		"prettier --write"
+		"pnpm exec biome check --write"
 	],
 	"./**/*.json": [
-		"prettier --write"
+		"pnpm exec biome check --write"
 	]
 }

@@ -13,7 +13,7 @@ import { useCallback, useEffect, useState } from 'react'
  */
 export function usePersistedState<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, Dispatch<SetStateAction<T>>, () => void, boolean] {
   const [hydrated, setHydrated] = useState(false)
   const [state, setState] = useState<T>(initialValue)

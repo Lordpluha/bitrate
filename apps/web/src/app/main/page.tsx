@@ -1,5 +1,5 @@
-import { MainPage } from '@/views/Main'
+import { MainView } from '@views/MainView'
 
-export default function MainPageRoute() {
-  return <MainPage />
+export default function MainPage() {
+  return <MainView />
 }

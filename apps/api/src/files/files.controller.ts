@@ -1,18 +1,18 @@
 import {
   Controller,
+  ForbiddenException,
   Get,
+  NotFoundException,
   Param,
+  Req,
   Res,
   UseGuards,
-  ForbiddenException,
-  NotFoundException,
-  Req
 } from '@nestjs/common'
-import { Response, Request } from 'express'
-import { AuthGuard } from '../auth/auth.guard'
-import { FilesService as FilesService } from './files.service'
-import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { Request, Response } from 'express'
 import { join } from 'path'
+import { AuthGuard } from '../auth/auth.guard'
+import { FilesService } from './files.service'
 
 @ApiTags('files')
 @Controller('files')
@@ -29,7 +29,7 @@ export class FilesController {
   getUserAvatar(
     @Param('filename') filename: string,
     @Res() res: Response,
-    @Req() req: Request & { user?: { id: string } }
+    @Req() req: Request & { user?: { id: string } },
   ) {
     try {
       // const userId = req.user?.id
@@ -38,20 +38,14 @@ export class FilesController {
       // }
 
       // const filePath = await this.filesService.getUserAvatar(filename, userId)
-      const filePath = join(
-        process.cwd(),
-        'public',
-        'users',
-        'avatars',
-        filename
-      )
+      const filePath = join(process.cwd(), 'public', 'users', 'avatars', filename)
 
       // if (!filePath) {
       //   throw new NotFoundException('Avatar not found')
       // }
 
       res.sendFile(filePath)
-    } catch (error) {
+    } catch {
       // if (error instanceof NotFoundException || error instanceof ForbiddenException) {
       //   throw error
       // }
@@ -69,7 +63,7 @@ export class FilesController {
   async getAudioFile(
     @Param('filename') filename: string,
     @Res() res: Response,
-    @Req() req: Request & { user?: { id: string } }
+    @Req() req: Request & { user?: { id: string } },
   ) {
     try {
       const userId = req.user?.id
@@ -85,10 +79,7 @@ export class FilesController {
 
       res.sendFile(filePath)
     } catch (error) {
-      if (
-        error instanceof NotFoundException ||
-        error instanceof ForbiddenException
-      ) {
+      if (error instanceof NotFoundException || error instanceof ForbiddenException) {
         throw error
       }
       throw new NotFoundException('Audio file not found')

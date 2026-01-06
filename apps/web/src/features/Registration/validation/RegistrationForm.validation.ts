@@ -6,11 +6,11 @@ export const registrationSchema = z
     fullName: fullNameSchema,
     email: emailSchema,
     password: passwordSchema,
-    confirmPassword: passwordSchema
+    confirmPassword: passwordSchema,
   })
-  .refine(data => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
-    path: ['confirmPassword']
+    path: ['confirmPassword'],
   })
 
 export type RegistrationFormData = z.infer<typeof registrationSchema>

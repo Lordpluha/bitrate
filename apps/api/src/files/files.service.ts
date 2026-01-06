@@ -1,23 +1,16 @@
-import {
-  Injectable,
-  ForbiddenException,
-  NotFoundException
-} from '@nestjs/common'
-import { join } from 'path'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { existsSync } from 'fs'
+import { join } from 'path'
 import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
 export class FilesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUserAvatar(
-    filename: string,
-    userId: string
-  ): Promise<string | null> {
+  async getUserAvatar(filename: string, userId: string): Promise<string | null> {
     // Проверяем, что файл принадлежит пользователю или доступен публично
     const user = await this.prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     })
 
     if (!user) {
@@ -39,7 +32,7 @@ export class FilesService {
   async getAudioFile(filename: string, userId: string): Promise<string | null> {
     // Проверяем права доступа к аудиофайлу
     const user = await this.prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     })
 
     if (!user) {
@@ -51,12 +44,12 @@ export class FilesService {
     const track = await this.prisma.track.findFirst({
       where: {
         audioUrl: {
-          contains: filename
-        }
+          contains: filename,
+        },
       },
       include: {
-        artist: true
-      }
+        artist: true,
+      },
     })
 
     if (!track) {

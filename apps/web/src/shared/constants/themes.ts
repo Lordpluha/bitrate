@@ -1,9 +1,8 @@
-export const theme = {
+export const Theme = {
   dark: 'dark',
-  light: 'light'
+  light: 'light',
 } as const
 
-// eslint-disable-next-line no-redeclare -- enum for theme
-export type theme = (typeof theme)[keyof typeof theme]
+export type Theme = (typeof Theme)[keyof typeof Theme]
 
-export const themes: theme[] = ['dark', 'light']
+export const Themes = Object.values(Theme)

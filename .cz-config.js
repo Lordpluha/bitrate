@@ -1,4 +1,3 @@
-// .cz-config.js
 module.exports = {
   types: [
     { value: 'feat', name: 'feat:      Новая фича' },
@@ -18,15 +17,13 @@ module.exports = {
     { name: 'mobile' },
     { name: 'api' },
     { name: 'admin' },
+    { name: 'docs' },
     { name: 'contracts' },
     { name: 'ui' },
-    { name: 'eslint' },
-    { name: 'stylelint' },
-    { name: 'prettier' },
+    { name: 'lint' },
     { name: 'infra' },
-    { name: 'docs' },
   ],
   allowCustomScopes: true,
   allowBreakingChanges: ['feat', 'fix'],
   subjectLimit: 100,
-};
+}

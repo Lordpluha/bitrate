@@ -1,5 +1,5 @@
-import { writeFile } from 'fs/promises'
-import { exec } from 'child_process'
+import { exec } from 'node:child_process'
+import { writeFile } from 'node:fs/promises'
 
 async function main() {
   const res = await fetch(`http://localhost:3000/swagger/json`)

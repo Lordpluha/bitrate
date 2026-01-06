@@ -30,7 +30,7 @@ export async function seedUsers(prisma: PrismaClient, count: number = 50) {
     'Quick',
     'Silent',
     'Loud',
-    'Calm'
+    'Calm',
   ]
 
   const nouns = [
@@ -55,7 +55,7 @@ export async function seedUsers(prisma: PrismaClient, count: number = 50) {
     'Dancer',
     'Dreamer',
     'Explorer',
-    'Wanderer'
+    'Wanderer',
   ]
 
   // Примеры описаний для пользователей
@@ -73,7 +73,7 @@ export async function seedUsers(prisma: PrismaClient, count: number = 50) {
     'Melody hunter',
     'Beat seeker',
     'Rhythm maker',
-    'Song collector'
+    'Song collector',
   ]
 
   for (let i = 0; i < count; i++) {
@@ -105,8 +105,8 @@ export async function seedUsers(prisma: PrismaClient, count: number = 50) {
         ...descriptions,
         faker.lorem.sentence({ min: 3, max: 8 }),
         null, // Некоторые пользователи без описания
-        null
-      ])
+        null,
+      ]),
     }
 
     users.push(user)
@@ -115,7 +115,7 @@ export async function seedUsers(prisma: PrismaClient, count: number = 50) {
   try {
     await prisma.user.createMany({
       data: users,
-      skipDuplicates: true
+      skipDuplicates: true,
     })
     console.log(`✅ Seeded ${count} users`)
   } catch (error) {
@@ -128,17 +128,15 @@ export async function seedUserLikedTracks(prisma: PrismaClient) {
   try {
     // Получаем всех пользователей и треки
     const users = await prisma.user.findMany({
-      select: { id: true }
+      select: { id: true },
     })
 
     const tracks = await prisma.track.findMany({
-      select: { id: true }
+      select: { id: true },
     })
 
     if (users.length === 0 || tracks.length === 0) {
-      console.log(
-        '⚠️ No users or tracks found. Please seed users and tracks first.'
-      )
+      console.log('⚠️ No users or tracks found. Please seed users and tracks first.')
       return
     }
 
@@ -157,9 +155,9 @@ export async function seedUserLikedTracks(prisma: PrismaClient) {
             where: { id: user.id },
             data: {
               likedTracks: {
-                connect: { id: track.id }
-              }
-            }
+                connect: { id: track.id },
+              },
+            },
           })
           totalLikes++
         } catch {

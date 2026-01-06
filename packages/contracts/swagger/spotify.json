@@ -50,9 +50,7 @@
             }
           }
         },
-        "tags": [
-          "Welcome"
-        ]
+        "tags": ["Welcome"]
       }
     },
     "/auth/login": {
@@ -135,9 +133,7 @@
           }
         },
         "summary": "User login",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/registration": {
@@ -214,9 +210,7 @@
           }
         },
         "summary": "User registration",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/logout": {
@@ -298,13 +292,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "User logout",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/refresh": {
@@ -395,13 +387,11 @@
         },
         "security": [
           {
-            "refresh_token": []
+            "cookie": []
           }
         ],
         "summary": "Refresh access token",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/auth/me": {
@@ -496,13 +486,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Get current authenticated user",
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/users": {
@@ -549,7 +537,7 @@
                     "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                     "backgroundImage": "",
                     "bio": "Some bio",
-                    "createdAt": "2025-12-26T15:04:19.587Z"
+                    "createdAt": "2025-12-28T19:52:39.610Z"
                   },
                   {
                     "id": "2",
@@ -557,7 +545,7 @@
                     "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                     "backgroundImage": "",
                     "bio": "Some bio 2",
-                    "createdAt": "2025-12-26T15:04:19.587Z"
+                    "createdAt": "2025-12-28T19:52:39.610Z"
                   }
                 ]
               }
@@ -601,9 +589,7 @@
           }
         },
         "summary": "Get all users with filters and pagination",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       },
       "put": {
         "operationId": "UsersController_putById",
@@ -630,7 +616,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-12-26T15:04:19.591Z"
+                  "createdAt": "2025-12-28T19:52:39.612Z"
                 }
               }
             }
@@ -706,13 +692,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Update user by id",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/username/{username}": {
@@ -740,7 +724,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-12-26T15:04:19.589Z"
+                  "createdAt": "2025-12-28T19:52:39.611Z"
                 }
               }
             }
@@ -793,9 +777,7 @@
           }
         },
         "summary": "Get user by username",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/{id}": {
@@ -813,7 +795,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-12-26T15:04:19.590Z"
+                  "createdAt": "2025-12-28T19:52:39.612Z"
                 }
               }
             }
@@ -856,9 +838,7 @@
           }
         },
         "summary": "Get user by id",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/avatar": {
@@ -887,7 +867,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-12-26T15:04:19.617Z",
+                  "createdAt": "2025-12-28T19:52:39.613Z",
                   "email": "example@gmail.com"
                 }
               }
@@ -967,13 +947,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Upload avatar for user",
-        "tags": [
-          "Users"
-        ]
+        "tags": ["Users"]
       }
     },
     "/artists": {
@@ -1065,9 +1043,7 @@
           }
         },
         "summary": "Get all artists with pagination",
-        "tags": [
-          "Artists"
-        ]
+        "tags": ["Artists"]
       },
       "post": {
         "operationId": "ArtistsController_create",
@@ -1121,9 +1097,7 @@
           }
         },
         "summary": "Create a new artist",
-        "tags": [
-          "Artists"
-        ]
+        "tags": ["Artists"]
       }
     },
     "/artists/{id}": {
@@ -1176,9 +1150,7 @@
           }
         },
         "summary": "Get artist by id",
-        "tags": [
-          "Artists"
-        ]
+        "tags": ["Artists"]
       },
       "put": {
         "operationId": "ArtistsController_updateProfile",
@@ -1255,13 +1227,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Update artist profile",
-        "tags": [
-          "Artists"
-        ]
+        "tags": ["Artists"]
       },
       "delete": {
         "operationId": "ArtistsController_deleteProfile",
@@ -1338,13 +1308,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Delete artist profile",
-        "tags": [
-          "Artists"
-        ]
+        "tags": ["Artists"]
       }
     },
     "/artists/username/{username}": {
@@ -1397,9 +1365,7 @@
           }
         },
         "summary": "Get artist by username",
-        "tags": [
-          "Artists"
-        ]
+        "tags": ["Artists"]
       }
     },
     "/tracks": {
@@ -1452,7 +1418,7 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2025-12-26T15:04:19.954Z"
+                    "createdAt": "2025-12-28T19:52:39.648Z"
                   }
                 ]
               }
@@ -1497,9 +1463,7 @@
           }
         },
         "summary": "Get all tracks with pagination",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       },
       "post": {
         "operationId": "TracksController_postTrack",
@@ -1523,7 +1487,7 @@
                   "title": "Track Title",
                   "cover": "https://example.com/cover.jpg",
                   "audioUrl": "",
-                  "createdAt": "2025-12-26T15:04:19.955Z"
+                  "createdAt": "2025-12-28T19:52:39.648Z"
                 }
               }
             },
@@ -1600,13 +1564,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Create track",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       }
     },
     "/tracks/liked": {
@@ -1650,7 +1612,7 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2025-12-26T15:04:19.955Z"
+                    "createdAt": "2025-12-28T19:52:39.648Z"
                   }
                 ]
               }
@@ -1728,13 +1690,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Get liked user tracks with pagination",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       }
     },
     "/tracks/{id}": {
@@ -1787,9 +1747,7 @@
           }
         },
         "summary": "Get track by id",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       },
       "put": {
         "operationId": "TracksController_putTrack",
@@ -1876,13 +1834,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Update track by id",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       }
     },
     "/tracks/stream/{id}": {
@@ -1978,13 +1934,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Stream audio track",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       }
     },
     "/tracks/play/{id}": {
@@ -2072,13 +2026,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Start playing track for authenticated user",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       }
     },
     "/tracks/pause/{id}": {
@@ -2166,13 +2118,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Pause track for authenticated user",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       }
     },
     "/tracks/update-state/{id}": {
@@ -2260,13 +2210,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Update track streaming state for authenticated user",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       }
     },
     "/tracks/current-state": {
@@ -2345,13 +2293,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Get current track state for authenticated user",
-        "tags": [
-          "Tracks"
-        ]
+        "tags": ["Tracks"]
       }
     },
     "/playlists": {
@@ -2361,7 +2307,7 @@
           {
             "name": "page",
             "required": false,
-            "in": "query",
+            "in": "path",
             "description": "Page number for pagination",
             "schema": {
               "type": "number"
@@ -2370,7 +2316,7 @@
           {
             "name": "limit",
             "required": false,
-            "in": "query",
+            "in": "path",
             "description": "Number of items per page",
             "schema": {
               "type": "number"
@@ -2378,23 +2324,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "example": [
-                  {
-                    "cover": "https://example.com/cover.jpg",
-                    "createdAt": "2025-12-26T15:04:19.974Z",
-                    "description": "A cool playlist",
-                    "id": "1",
-                    "title": "My Playlist",
-                    "userId": "user-1"
-                  }
-                ]
-              }
-            },
-            "description": ""
-          },
           "405": {
             "description": "Method not allowed"
           },
@@ -2443,9 +2372,7 @@
           }
         },
         "summary": "Get all playlists with pagination and filters",
-        "tags": [
-          "Playlists"
-        ]
+        "tags": ["Playlists"]
       },
       "post": {
         "operationId": "PlaylistsController_post",
@@ -2532,13 +2459,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Create a new playlist",
-        "tags": [
-          "Playlists"
-        ]
+        "tags": ["Playlists"]
       }
     },
     "/playlists/{id}": {
@@ -2584,9 +2509,7 @@
           }
         },
         "summary": "Get playlist by id",
-        "tags": [
-          "Playlists"
-        ]
+        "tags": ["Playlists"]
       },
       "put": {
         "operationId": "PlaylistsController_update",
@@ -2673,13 +2596,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Update playlist by id",
-        "tags": [
-          "Playlists"
-        ]
+        "tags": ["Playlists"]
       }
     },
     "/albums": {
@@ -2752,9 +2673,7 @@
           }
         },
         "summary": "Get all albums with pagination and filters",
-        "tags": [
-          "Albums"
-        ]
+        "tags": ["Albums"]
       },
       "post": {
         "operationId": "AlbumsController_createAlbum",
@@ -2841,13 +2760,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Create a new album",
-        "tags": [
-          "Albums"
-        ]
+        "tags": ["Albums"]
       }
     },
     "/albums/{id}": {
@@ -2900,9 +2817,7 @@
           }
         },
         "summary": "Get album by id",
-        "tags": [
-          "Albums"
-        ]
+        "tags": ["Albums"]
       },
       "put": {
         "operationId": "AlbumsController_updateAlbum",
@@ -2989,13 +2904,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Update album by id",
-        "tags": [
-          "Albums"
-        ]
+        "tags": ["Albums"]
       },
       "delete": {
         "description": "Deletes an album by its ID. Requires authentication.",
@@ -3073,13 +2986,11 @@
         },
         "security": [
           {
-            "access_token": []
+            "cookie": []
           }
         ],
         "summary": "Delete an album by ID",
-        "tags": [
-          "Albums"
-        ]
+        "tags": ["Albums"]
       }
     },
     "/files/users/avatars/{filename}": {
@@ -3144,9 +3055,7 @@
           }
         },
         "summary": "Get user avatar",
-        "tags": [
-          "files"
-        ]
+        "tags": ["files"]
       }
     },
     "/files/audio/{filename}": {
@@ -3211,9 +3120,7 @@
           }
         },
         "summary": "Get audio file",
-        "tags": [
-          "files"
-        ]
+        "tags": ["files"]
       }
     }
   },
@@ -3272,13 +3179,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "id",
-          "userId",
-          "access_token",
-          "refresh_token",
-          "createdAt"
-        ]
+        "required": ["id", "userId", "access_token", "refresh_token", "createdAt"]
       },
       "LoginDto": {
         "type": "object",
@@ -3294,10 +3195,7 @@
             "example": "password123"
           }
         },
-        "required": [
-          "email",
-          "password"
-        ]
+        "required": ["email", "password"]
       },
       "RegistrationDto": {
         "type": "object",
@@ -3318,11 +3216,7 @@
             "example": "newuser123"
           }
         },
-        "required": [
-          "email",
-          "password",
-          "username"
-        ]
+        "required": ["email", "password", "username"]
       },
       "UserEntity": {
         "type": "object",
@@ -3352,15 +3246,7 @@
             "nullable": true
           }
         },
-        "required": [
-          "id",
-          "username",
-          "email",
-          "password",
-          "createdAt",
-          "description",
-          "avatar"
-        ]
+        "required": ["id", "username", "email", "password", "createdAt", "description", "avatar"]
       },
       "UpdateUserDto": {
         "type": "object",
@@ -3381,10 +3267,7 @@
             "example": "This is a sample description"
           }
         },
-        "required": [
-          "username",
-          "email"
-        ]
+        "required": ["username", "email"]
       },
       "UploadAvatarDto": {
         "type": "object",
@@ -3395,9 +3278,7 @@
             "format": "binary"
           }
         },
-        "required": [
-          "avatar"
-        ]
+        "required": ["avatar"]
       },
       "CreateArtistDto": {
         "type": "object",
@@ -3418,11 +3299,7 @@
             "example": "user123"
           }
         },
-        "required": [
-          "email",
-          "password",
-          "username"
-        ]
+        "required": ["email", "password", "username"]
       },
       "TrackEntity": {
         "type": "object",
@@ -3447,14 +3324,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "id",
-          "title",
-          "audioUrl",
-          "cover",
-          "createdAt",
-          "artistId"
-        ]
+        "required": ["id", "title", "audioUrl", "cover", "createdAt", "artistId"]
       },
       "CreateTrackDto": {
         "type": "object",
@@ -3472,10 +3342,7 @@
             "description": "Url to cover image"
           }
         },
-        "required": [
-          "title",
-          "audioUrl"
-        ]
+        "required": ["title", "audioUrl"]
       },
       "PlaylistEntity": {
         "type": "object",
@@ -3501,14 +3368,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "id",
-          "title",
-          "cover",
-          "description",
-          "createdAt",
-          "userId"
-        ]
+        "required": ["id", "title", "cover", "description", "createdAt", "userId"]
       },
       "CreatePlaylistDto": {
         "type": "object",
@@ -3523,9 +3383,7 @@
             "example": "user123"
           }
         },
-        "required": [
-          "title"
-        ]
+        "required": ["title"]
       },
       "UpdatePlaylistDto": {
         "type": "object",
@@ -3540,9 +3398,7 @@
             "example": "user123"
           }
         },
-        "required": [
-          "title"
-        ]
+        "required": ["title"]
       },
       "UpdateAlbumDto": {
         "type": "object",
@@ -3557,9 +3413,7 @@
             "example": "user123"
           }
         },
-        "required": [
-          "title"
-        ]
+        "required": ["title"]
       },
       "CreateAlbumDto": {
         "type": "object",
@@ -3574,9 +3428,7 @@
             "example": "user123"
           }
         },
-        "required": [
-          "title"
-        ]
+        "required": ["title"]
       }
     }
   },

@@ -1,10 +1,5 @@
-import { HttpStatus, applyDecorators } from '@nestjs/common'
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse
-} from '@nestjs/swagger'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { UploadAvatarDto } from 'src/users/dtos/upload-avatar.dto'
 
 export function UploadAvatarSwagger() {
@@ -14,7 +9,7 @@ export function UploadAvatarSwagger() {
     ApiBody({
       description: 'Avatar file to upload',
       type: UploadAvatarDto,
-      required: true
+      required: true,
     }),
     ApiResponse({
       status: HttpStatus.OK,
@@ -26,12 +21,12 @@ export function UploadAvatarSwagger() {
         backgroundImage: '',
         bio: 'Some bio',
         createdAt: new Date(),
-        email: 'example@gmail.com'
-      }
+        email: 'example@gmail.com',
+      },
     }),
     ApiResponse({
       status: HttpStatus.UNPROCESSABLE_ENTITY,
-      description: 'Invalid file type or size'
-    })
+      description: 'Invalid file type or size',
+    }),
   )
 }

@@ -4,7 +4,7 @@ import { z } from 'zod'
 export const CreateTrackSchema = z.object({
   title: z.string(),
   audioUrl: z.string(),
-  cover: z.string().optional()
+  cover: z.string().optional(),
 })
 
 export class CreateTrackDto implements z.infer<typeof CreateTrackSchema> {

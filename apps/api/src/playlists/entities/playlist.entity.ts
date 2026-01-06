@@ -1,5 +1,5 @@
-import { Playlist } from '@prisma/client'
 import { ApiProperty } from '@nestjs/swagger'
+import { Playlist } from '@prisma/client'
 
 export class PlaylistEntity implements Playlist {
   @ApiProperty()

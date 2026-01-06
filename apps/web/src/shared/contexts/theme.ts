@@ -1,20 +1,18 @@
 'use client'
 
+import type { Theme } from '@shared/constants'
 import { createContext, useContext } from 'react'
 
-import { theme } from '@shared/constants'
-
 export type ThemeContextType = {
-  theme: theme
-  // eslint-disable-next-line no-unused-vars
-  setTheme: (theme: theme) => void
+  theme: Theme
+  setTheme: (theme: Theme) => void
 }
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'dark',
   setTheme: () => {
     throw new Error('setTheme function is not implemented')
-  }
+  },
 })
 
 export const useTheme = () => {

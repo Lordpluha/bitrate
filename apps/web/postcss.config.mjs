@@ -1,8 +1,6 @@
-import preset from "@spotify/ui/postcss.config";
-
+/** @type {import('postcss-load-config').Config} */
 export default {
   plugins: {
-    ...preset.plugins,
-    tailwindcss: { config: "./tailwind.config.ts" },
+    '@tailwindcss/postcss': {},
   },
-};
+}

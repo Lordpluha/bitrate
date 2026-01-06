@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Response } from 'express'
+import type { StringValue } from 'ms'
 import { JWTPayload } from './types'
 
 @Injectable()
@@ -11,47 +12,45 @@ export class TokenService {
   private defaultOptions = {
     httpOnly: true,
     sameSite: 'lax' as const,
-    secure: this.isProd
+    secure: this.isProd,
   }
+
+  private readonly accessTokenExpiry: StringValue = (process.env.JWT_ACCESS_EXPIRES_IN ??
+    '15m') as StringValue
+  private readonly refreshTokenExpiry: StringValue = (process.env.JWT_REFRESH_EXPIRES_IN ??
+    '7d') as StringValue
 
   async generateAccessToken(userId: string, username: string): Promise<string> {
     return await this.jwtService.signAsync(
       { username },
       {
         subject: userId,
-        expiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
-        secret: process.env.JWT_SECRET
-      }
+        expiresIn: this.accessTokenExpiry,
+        secret: process.env.JWT_SECRET,
+      },
     )
   }
 
-  async generateRefreshToken(
-    userId: string,
-    username: string
-  ): Promise<string> {
+  async generateRefreshToken(userId: string, username: string): Promise<string> {
     return await this.jwtService.signAsync(
       { username },
       {
         subject: userId,
-        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
-        secret: process.env.JWT_SECRET
-      }
+        expiresIn: this.refreshTokenExpiry,
+        secret: process.env.JWT_SECRET,
+      },
     )
   }
 
   async verifyToken(token: string): Promise<JWTPayload> {
     return await this.jwtService.verifyAsync<JWTPayload>(token, {
-      secret: process.env.JWT_SECRET
+      secret: process.env.JWT_SECRET,
     })
   }
 
   setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
     res.cookie(process.env.ACCESS_TOKEN_NAME!, accessToken, this.defaultOptions)
-    res.cookie(
-      process.env.REFRESH_TOKEN_NAME!,
-      refreshToken,
-      this.defaultOptions
-    )
+    res.cookie(process.env.REFRESH_TOKEN_NAME!, refreshToken, this.defaultOptions)
   }
 
   clearAuthCookies(res: Response) {
