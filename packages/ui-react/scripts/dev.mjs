@@ -87,7 +87,7 @@ async function watchBuild() {
     // Start CSS watchers in background
     const srcDir = path.resolve(__dirname, "..")
     const cssWatcher = exec(
-      `NODE_ENV=development pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --watch`,
+      `pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --watch`,
       { cwd: srcDir },
     )
 

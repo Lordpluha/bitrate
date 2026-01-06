@@ -1,9 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
-import { zodResolver, SubmitHandler, useForm } from '@spotify/ui'
+
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
+import {SocialsAuthDivider } from '@shared/ui'
 import {
   Button,
   Input,
@@ -16,7 +18,7 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@spotify/ui'
+} from '@spotify/ui-react'
 import { Modal } from './Modal'
 import Link from 'next/link'
 import { useMutation } from '@shared/api'
@@ -66,13 +68,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitc
     <Modal open={open} onOpenChange={onSuccess} className="max-w-[500px] w-full">
       <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-textContrast rounded-lg'>
         <div className='flex flex-col items-center'>
-          <LogoIconSm />
-          <Typography.Heading5 className='mt-2 text-center text-textContrast'>
+          {/* <LogoIconSm /> */}
+          <Typography as="h5" size={'heading5'} className='mt-2 text-center text-textContrast'>
             Sign in
-          </Typography.Heading5>
-          <Typography.Paragraph className='text-center text-grey-500'>
+          </Typography>
+          <Typography as="p" size={'body'} className='text-center text-grey-500'>
             Please login to continue to your account.
-          </Typography.Paragraph>
+          </Typography>
         </div>
 
         <Form {...form}>
@@ -150,10 +152,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitc
                 variant='contrast'
                 type='button'
               >
-                <GoggleIcon className='mr-2' />
-                <Typography.Paragraph className="text-textContrast">
+                {/* <GoggleIcon className='mr-2' /> */}
+                <Typography as="p" size={'body'} className="text-textContrast">
                   Continue with Google
-                </Typography.Paragraph>
+                </Typography>
               </Button>
 
               <p className='text-base text-center text-textContrast'>

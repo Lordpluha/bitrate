@@ -1,4 +1,4 @@
-import { InstallIcon } from '@shared/ui'
+// import { InstallIcon } from '@shared/ui'
 import Link from 'next/link'
 import React from 'react'
 
@@ -14,7 +14,7 @@ export const InstallBtn = ({ isMobile = false }: InstallBtnProps) => {
       }`}
       href='#'
     >
-      <InstallIcon />
+      {/* <InstallIcon /> */}
       <span className='text-sm'>Install App</span>
     </Link>
   )

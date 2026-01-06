@@ -60,7 +60,7 @@ async function buildPackage() {
     const srcDir = path.resolve(__dirname, "..")
     await Promise.all([
       execAsync(
-        `NODE_ENV=production pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --minify`,
+        `pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --minify`,
         { cwd: srcDir },
       ),
     ])
@@ -69,7 +69,7 @@ async function buildPackage() {
     // Generate types
     console.log("Generating type definitions...")
     await execAsync(
-      "tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir dist/types",
+      "pnpm exec tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir dist/types",
     )
     console.log("✓ Type definitions generated")
 

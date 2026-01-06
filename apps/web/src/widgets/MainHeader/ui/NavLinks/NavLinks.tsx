@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import styles from './NavLink.module.scss'
+import styles from './NavLink.module.css'
 import links from '../../config/nav-links.json'
 
 interface NavLinksProps {

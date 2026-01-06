@@ -1,0 +1,3 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+export const SvgSavedSongIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 25 25" aria-hidden="true" focusable="false" {...props}><path fill="#1ED760" d="M1.031 12.985c0-6.073 4.923-10.996 10.996-10.996 6.072 0 10.995 4.923 10.995 10.996 0 6.072-4.923 10.995-10.995 10.995-6.073 0-10.996-4.923-10.996-10.995m16.391-2.38a1 1 0 0 0-1.413-1.412l-6.008 6.008-1.894-1.892a1 1 0 0 0-1.413 1.413L10 18.029z" /></svg>;

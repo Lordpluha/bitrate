@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 
 import { useAuth } from '@shared/hooks'
-import { Typography } from '@spotify/ui'
+import { Typography } from '@spotify/ui-react'
 import { PlaylistPage } from '@/views/Playlist'
 
 import { Tabs } from './Tabs'
@@ -60,9 +60,9 @@ export const MainPanel = () => {
         {isAuthenticated && user && (
           <div className='min-w-[280px] mb-8'>
             <p className='text-gray-400 text-xs'>Made For</p>
-            <Typography.Heading5 className='text-text'>
+            <Typography as='h5' size='heading5' className='text-text'>
               {user.username}
-            </Typography.Heading5>
+            </Typography>
           </div>
         )}
         <PopularPlaylists onPlaylistClick={setSelectedPlaylistId} />

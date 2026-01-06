@@ -26,32 +26,28 @@
 }
 
 .mainContent {
-  // background: linear-gradient(to bottom,
-  //   #1a0f2e 0%,
-  //   #4c2b6b 10%,
-  //   #121212 20%
-  // );
   border-radius: 8px;
   background-color: var(--color-bg-secondary);
   margin: 6px;
   position: relative;
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom,
+
+}
+
+.mainContent::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom,
       #1a0f2e 0%,
       var(--violet-main-panel) 10%,
-      var(--color-bg-secondary) 20%
-    );
-    border-radius: 8px;
-    pointer-events: none;
-    z-index: 0;
-  }
+      var(--color-bg-secondary) 20%);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .rightSidebar {

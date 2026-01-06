@@ -1,15 +1,15 @@
 import React from 'react'
-import { RecentsIcon, SearchIcon } from '@shared/ui'
+// import { RecentsIcon, SearchIcon } from '@shared/ui'
 
 export const LibraryControls = () => {
   return (
     <div className='mt-4 flex gap-2 justify-between items-center'>
       <button className='duration-200 hover:opacity-70'>
-        <SearchIcon />
+        {/* <SearchIcon /> */}
       </button>
       <button className='duration-200 flex items-center gap-2 hover:opacity-70'>
         <span>Recents</span>
-        <RecentsIcon />
+        {/* <RecentsIcon /> */}
       </button>
     </div>
   )

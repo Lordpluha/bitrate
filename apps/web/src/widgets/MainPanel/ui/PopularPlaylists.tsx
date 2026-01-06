@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 
 import { fetchClient } from '@shared/api'
-import { CustomNextIcon, CustomPrevIcon } from '@shared/ui'
+// import { CustomNextIcon, CustomPrevIcon } from '@shared/ui'
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious
-} from '@spotify/ui'
+} from '@spotify/ui-react'
 
 import { MusicCardLg } from './MusicCardLg'
 
@@ -86,11 +86,11 @@ export const PopularPlaylists: React.FC<PopularPlaylistsProps> = ({ onPlaylistCl
           className='w-full'
         >
           <CarouselPrevious
-            icon={<CustomPrevIcon />}
+            // icon={<CustomPrevIcon />}
             className='absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
           />
           <CarouselNext
-            icon={<CustomNextIcon />}
+            // icon={<CustomNextIcon />}
             className='absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
           />
           <CarouselContent className='flex'>

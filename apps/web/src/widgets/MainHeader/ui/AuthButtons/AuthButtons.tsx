@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@spotify/ui'
+import { Button } from '@spotify/ui-react'
 import React, { useState } from 'react'
 import { LoginModal, SignUpModal } from '@features/AuthModal'
 import { Ghost } from 'lucide-react'

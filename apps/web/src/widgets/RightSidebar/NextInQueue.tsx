@@ -1,10 +1,10 @@
-import { Typography } from '@spotify/ui'
+import { Typography } from '@spotify/ui-react'
 import React from 'react'
 
 export const NextInQueue: React.FC = () => (
   <div className='bg-surface rounded-lg p-0 overflow-hidden mt-4'>
     <div className='flex items-center justify-between px-4 pt-3 pb-1'>
-      <Typography.Paragraph className='text-text text-sm font-semibold'>Next in queue</Typography.Paragraph>
+      <Typography as='p' size='body' className='text-text text-sm font-semibold'>Next in queue</Typography>
       <button className='text-grey-500 text-xs font-medium hover:underline'>
         Open queue
       </button>
@@ -16,8 +16,8 @@ export const NextInQueue: React.FC = () => (
         className='w-12 h-12 rounded-md object-cover'
       />
       <div>
-        <Typography.Paragraph className='text-text text-sm'>Empathy</Typography.Paragraph>
-        <Typography.Paragraph className='text-grey-500 text-xs'>Crystal Castles</Typography.Paragraph>
+        <Typography as='p' size='body' className='text-text text-sm'>Empathy</Typography>
+        <Typography as='p' size='body' className='text-grey-500 text-xs'>Crystal Castles</Typography>
       </div>
     </div>
   </div>

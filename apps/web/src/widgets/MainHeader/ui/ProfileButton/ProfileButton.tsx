@@ -3,7 +3,7 @@
 import { useAuth } from '@shared/hooks';
 import { generateColor } from '@shared/utils';
 import { ApiSchemas } from '@spotify/contracts';
-import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@spotify/ui';
+import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@spotify/ui-react';
 import { FC, HTMLAttributes, useState } from 'react';
 
 interface ProfileButtonProps extends HTMLAttributes<HTMLDivElement> {

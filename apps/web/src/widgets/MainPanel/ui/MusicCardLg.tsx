@@ -1,5 +1,4 @@
 "use client"
-import { PlayIcon } from '@shared/ui/icons'
 import React from 'react'
 
 interface MusicCardLgProps {
@@ -38,7 +37,7 @@ export const MusicCardLg: React.FC<MusicCardLgProps> = ({
           className={`w-full aspect-square object-cover ${isArtist ? 'rounded-full' : 'rounded-md'}`}
         />
         <div className='absolute bottom-2 right-2 flex items-center justify-center opacity-0 group-hover/card:opacity-100 translate-y-2 group-hover/card:translate-y-0 transition-all duration-200'>
-          <PlayIcon />
+          {/* <PlayIcon /> */}
         </div>
       </div>
       <h3 className='text-text font-medium text-sm mb-2 line-clamp-1'>

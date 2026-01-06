@@ -1,9 +1,10 @@
 'use client'
 
 import React from 'react'
-import { zodResolver, useForm } from '@spotify/ui'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { GoggleIcon, LogoIconSm, SocialsAuthDivider } from '@shared/ui'
+import { SocialsAuthDivider } from '@shared/ui'
 import Link from 'next/link'
 import { useMutation } from '@shared/api'
 import {
@@ -18,7 +19,7 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from '@spotify/ui'
+} from '@spotify/ui-react'
 import { Modal } from './Modal'
 import {
   RegistrationFormData,
@@ -116,13 +117,13 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
     >
       <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-textContrast rounded-lg'>
         <div className='flex flex-col items-center'>
-          <LogoIconSm />
-          <Typography.Heading5 className='mt-2 text-center text-textContrast'>
+          {/* <LogoIconSm /><PlusIcon /> */}
+          <Typography as='h5' size='heading5' className='mt-2 text-center text-textContrast'>
             Sign Up
-          </Typography.Heading5>
-          <Typography.Paragraph className='text-center text-grey-500'>
+          </Typography>
+          <Typography as='p' size='body' className='text-center text-grey-500'>
             Sign up to enjoy the feature of Revolutie
-          </Typography.Paragraph>
+          </Typography>
         </div>
 
         <Form {...form}>
@@ -251,10 +252,10 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                 variant='contrast'
                 type='button'
               >
-                <GoggleIcon className='mr-2' />
-                <Typography.Paragraph className='text-textContrast'>
+                {/* <GoggleIcon className='mr-2' /> */}
+                <Typography as='p' size='body' className='text-textContrast'>
                   Continue with Google
-                </Typography.Paragraph>
+                </Typography>
               </Button>
 
               <p className='text-base text-center text-textContrast'>

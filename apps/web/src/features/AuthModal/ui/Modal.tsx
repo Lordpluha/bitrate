@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { cn } from '@spotify/ui'
+import { cn } from '@spotify/ui-react'
 
 interface ModalProps {
   open: boolean
