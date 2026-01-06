@@ -31,11 +31,12 @@ export const PopularPlaylists: React.FC<PopularPlaylistsProps> = ({ onPlaylistCl
     try {
       setLoadingPlaylists(true)
       const { data } = await fetchClient.GET('/playlists', {
-        params: { query: { limit: 3 } } // Загружаем только 3 плейлиста
+        params: { path: { page: 1, limit: 3 } } // Загружаем только 3 плейлиста
       })
 
-      if (Array.isArray(data)) {
-        const formattedPlaylists = data.map((playlist: any) => ({
+      const responseData = data as any
+      if (Array.isArray(responseData)) {
+        const formattedPlaylists = responseData.map((playlist: any) => ({
           id: playlist.id,
           name: playlist.title,
           description:
@@ -45,11 +46,11 @@ export const PopularPlaylists: React.FC<PopularPlaylistsProps> = ({ onPlaylistCl
         }))
         setPlaylists(formattedPlaylists)
       } else if (
-        data &&
-        typeof data === 'object' &&
-        Array.isArray((data as any).items)
+        responseData &&
+        typeof responseData === 'object' &&
+        Array.isArray((responseData as any).items)
       ) {
-        const formattedPlaylists = (data as any).items.map((playlist: any) => ({
+        const formattedPlaylists = (responseData as any).items.map((playlist: any) => ({
           id: playlist.id,
           name: playlist.title,
           description:

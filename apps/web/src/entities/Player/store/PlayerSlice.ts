@@ -61,10 +61,10 @@ export const musicPlayerSlice = createAppSlice({
         newIndex = currentIndex === 0 ? state.playlist.length - 1 : currentIndex - 1
       }
       
-      state.currentTrack = state.playlist[newIndex]
+      state.currentTrack = state.playlist[newIndex] ?? null
       state.isPlaying = true
       state.currentTime = 0
-      state.duration = state.playlist[newIndex].duration || 0
+      state.duration = state.playlist[newIndex]?.duration || 0
     },
   },
 })

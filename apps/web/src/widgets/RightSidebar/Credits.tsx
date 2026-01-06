@@ -15,7 +15,7 @@ export const Credits: React.FC = () => (
           <Typography as='p' size='body' className='text-text text-sm'>Crystal Castles</Typography>
           <Typography as='p' size='body' className='text-grey-500  text-xs'>Main Artist</Typography>
         </div>
-        <Button className='h-auto text-xs px-2 py-1' variant='subscribe'>Follow</Button>
+        <Button className='h-auto text-xs px-2 py-1' variant='outline'>Follow</Button>
       </div>
       <div className='mb-2'>
         <Typography as='p' size='body' className='text-text text-sm'>Van She</Typography>

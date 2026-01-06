@@ -2,7 +2,7 @@
 
 import { FC, PropsWithChildren, useEffect, useState } from 'react'
 
-import { theme } from '@shared/constants'
+import { Theme } from '@shared/constants'
 import { ThemeProvider } from '@shared/contexts'
 import { usePersistedState } from '@shared/hooks'
 import { Toaster } from '@spotify/ui-react'
@@ -12,7 +12,7 @@ import ReduxProvider from './providers/ReduxProvider'
 
 export const Provider: FC<PropsWithChildren> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient())
-  const [theme, setTheme, , hydrated] = usePersistedState<theme>(
+  const [theme, setTheme, , hydrated] = usePersistedState<Theme>(
     'theme',
     'dark'
   )

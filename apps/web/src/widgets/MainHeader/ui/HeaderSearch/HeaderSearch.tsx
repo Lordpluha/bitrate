@@ -8,7 +8,6 @@ export const HeaderSearch = () => {
       {/* <SearchIcon className='absolute left-4 top-1/2 transform -translate-y-1/2 text-black z-10' /> */}
       <Input
         type='text'
-        variant="search"
         placeholder='What do you want to play?'
         className='w-full'
       />

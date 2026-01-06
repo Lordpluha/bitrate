@@ -41,9 +41,9 @@ export const LibraryMusic = () => {
     queryKey: ['playlists'],
     queryFn: async () => {
       const { data } = await fetchClient.GET('/playlists', {
-        params: { query: { limit: 20 } }
+        params: { path: { page: 1, limit: 20 } }
       })
-      return data
+      return data as unknown as Playlist[]
     }
   })
 
