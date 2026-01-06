@@ -1,8 +1,8 @@
+import { context } from "esbuild"
+import { glob } from "glob"
 import { exec } from "node:child_process"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { context } from "esbuild"
-import { glob } from "glob"
 import { aliasResolver } from "./alias-resolver.mjs"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -88,7 +88,7 @@ async function watchBuild() {
     // Start CSS watchers in background
     const srcDir = path.resolve(__dirname, "..")
     const cssWatcher = exec(
-      `NODE_ENV=development pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --watch`,
+      `pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --watch`,
       { cwd: srcDir },
     )
 

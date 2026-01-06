@@ -1,9 +1,9 @@
+import { build } from "esbuild"
+import { glob } from "glob"
 import { exec } from "node:child_process"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { promisify } from "node:util"
-import { build } from "esbuild"
-import { glob } from "glob"
 import { aliasResolver } from "./alias-resolver.mjs"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -60,7 +60,7 @@ async function buildPackage() {
     const srcDir = path.resolve(__dirname, "..")
     await Promise.all([
       execAsync(
-        `NODE_ENV=production pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --minify`,
+        `pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --minify`,
         { cwd: srcDir },
       ),
     ])
@@ -69,7 +69,7 @@ async function buildPackage() {
     // Generate types
     console.log("Generating type definitions...")
     await execAsync(
-      "tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir dist/types",
+      "pnpm tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir dist/types",
     )
     console.log("✓ Type definitions generated")
 
