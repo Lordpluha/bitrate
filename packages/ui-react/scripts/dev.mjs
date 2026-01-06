@@ -13,6 +13,7 @@ const entryPoints = await glob("src/**/*.{ts,tsx}", {
   ignore: ["**/*.test.*", "**/*.stories.*", "**/__tests__/**"],
 })
 
+/** @type {import("esbuild").BuildOptions} */
 const sharedConfig = {
   entryPoints,
   outbase: "src",
