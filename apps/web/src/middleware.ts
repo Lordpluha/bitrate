@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server'
 import { ROUTES } from '@shared/routes'
 
 export function middleware(request: NextRequest) {
+  
   const { pathname } = request.nextUrl
 
   const token = request.cookies.get('access_token')?.value

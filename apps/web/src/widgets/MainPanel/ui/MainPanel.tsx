@@ -1,10 +1,11 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 
 
 import { useAuth } from '@shared/hooks'
 import { Typography } from '@spotify/ui'
+import { PlaylistPage } from '@/views/Playlist'
 
 import { Tabs } from './Tabs'
 import { LastPlaylists } from './LastPlaylists'
@@ -15,6 +16,8 @@ import { Footer } from './Footer'
 
 export const MainPanel = () => {
   const { user, isAuthenticated } = useAuth()
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null)
+  
   const tabs = [
     { id: 'all', label: 'All' },
     { id: 'music', label: 'Music' },
@@ -35,10 +38,24 @@ export const MainPanel = () => {
     }
   ]
 
+  if (selectedPlaylistId) {
+    return (
+      <div className='h-full overflow-y-auto custom-scrollbar relative z-10'>
+        <PlaylistPage 
+          playlistId={selectedPlaylistId} 
+          onBack={() => setSelectedPlaylistId(null)}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className='h-full py-4 px-6 overflow-y-auto custom-scrollbar relative z-10'>
       <Tabs tabs={tabs} />
-      <LastPlaylists items={lastPlaylists} />
+      <LastPlaylists 
+        items={lastPlaylists} 
+        onPlaylistClick={setSelectedPlaylistId}
+      />
       <div className='mt-6'>
         {isAuthenticated && user && (
           <div className='min-w-[280px] mb-8'>
@@ -48,7 +65,7 @@ export const MainPanel = () => {
             </Typography.Heading5>
           </div>
         )}
-        <PopularPlaylists />
+        <PopularPlaylists onPlaylistClick={setSelectedPlaylistId} />
         <PopularArtists />
         <Footer />
       </div>

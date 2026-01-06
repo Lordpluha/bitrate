@@ -19,7 +19,11 @@ interface MusicItem {
   imageUrl?: string
 }
 
-export const PopularPlaylists: React.FC = () => {
+interface PopularPlaylistsProps {
+  onPlaylistClick?: (playlistId: string) => void
+}
+
+export const PopularPlaylists: React.FC<PopularPlaylistsProps> = ({ onPlaylistClick }) => {
   const [playlists, setPlaylists] = useState<MusicItem[]>([])
   const [loadingPlaylists, setLoadingPlaylists] = useState(true)
 
@@ -27,7 +31,7 @@ export const PopularPlaylists: React.FC = () => {
     try {
       setLoadingPlaylists(true)
       const { data } = await fetchClient.GET('/playlists', {
-        params: { query: { limit: 20 } }
+        params: { query: { limit: 3 } } // Загружаем только 3 плейлиста
       })
 
       if (Array.isArray(data)) {
@@ -106,6 +110,7 @@ export const PopularPlaylists: React.FC = () => {
                     description={playlist.description}
                     imageUrl={playlist.imageUrl}
                     isArtist={false}
+                    onClick={onPlaylistClick}
                   />
                 </CarouselItem>
               ))

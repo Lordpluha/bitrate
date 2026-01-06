@@ -751,14 +751,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "errors": [
                      *         {
                      *           "field": "email",
                      *           "message": "email must be an email"
                      *         }
                      *       ]
-                     *     } */
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -873,14 +875,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "errors": [
                      *         {
                      *           "field": "email",
                      *           "message": "email must be an email"
                      *         }
                      *       ]
-                     *     } */
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1233,7 +1237,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "createdAt": "2023-10-01T12:00:00.000Z",
                      *       "email": "user@example.com",
                      *       "id": "1234567890abcdef",
@@ -1241,7 +1246,8 @@ export interface operations {
                      *       "username": "user123",
                      *       "avatar": null,
                      *       "description": "Some description about the user"
-                     *     } */
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1371,14 +1377,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example [
+                    /**
+                     * @example [
                      *       {
                      *         "id": "1",
                      *         "username": "user1",
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio",
-                     *         "createdAt": "2025-09-29T13:38:06.792Z"
+                     *         "createdAt": "2025-12-26T15:04:19.587Z"
                      *       },
                      *       {
                      *         "id": "2",
@@ -1386,9 +1393,10 @@ export interface operations {
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio 2",
-                     *         "createdAt": "2025-09-29T13:38:06.792Z"
+                     *         "createdAt": "2025-12-26T15:04:19.587Z"
                      *       }
-                     *     ] */
+                     *     ]
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1497,14 +1505,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "username": "user1",
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-29T13:38:06.795Z"
-                     *     } */
+                     *       "createdAt": "2025-12-26T15:04:19.591Z"
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1630,14 +1640,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "username": "user1",
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-29T13:38:06.794Z"
-                     *     } */
+                     *       "createdAt": "2025-12-26T15:04:19.589Z"
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1750,14 +1762,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "username": "user1",
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-29T13:38:06.794Z"
-                     *     } */
+                     *       "createdAt": "2025-12-26T15:04:19.590Z"
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -1866,15 +1880,17 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "username": "user1",
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2025-09-29T13:38:06.816Z",
+                     *       "createdAt": "2025-12-26T15:04:19.617Z",
                      *       "email": "example@gmail.com"
-                     *     } */
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -2010,7 +2026,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example [
+                    /**
+                     * @example [
                      *       {
                      *         "avatar": "https://example.com/avatar.jpg",
                      *         "id": "1",
@@ -2018,7 +2035,8 @@ export interface operations {
                      *         "backgroundImage": "",
                      *         "bio": ""
                      *       }
-                     *     ] */
+                     *     ]
+                     */
                     "application/json": unknown;
                 };
             };
@@ -2644,7 +2662,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example [
+                    /**
+                     * @example [
                      *       {
                      *         "artist": "123",
                      *         "title": "Track Title",
@@ -2656,9 +2675,10 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2025-09-29T13:38:07.104Z"
+                     *         "createdAt": "2025-12-26T15:04:19.954Z"
                      *       }
-                     *     ] */
+                     *     ]
+                     */
                     "application/json": unknown;
                 };
             };
@@ -2765,13 +2785,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
+                    /**
+                     * @example {
                      *       "id": "1",
                      *       "title": "Track Title",
                      *       "cover": "https://example.com/cover.jpg",
                      *       "audioUrl": "",
-                     *       "createdAt": "2025-09-29T13:38:07.106Z"
-                     *     } */
+                     *       "createdAt": "2025-12-26T15:04:19.955Z"
+                     *     }
+                     */
                     "application/json": unknown;
                 };
             };
@@ -2898,7 +2920,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example [
+                    /**
+                     * @example [
                      *       {
                      *         "artist": "123",
                      *         "title": "Track Title",
@@ -2910,9 +2933,10 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2025-09-29T13:38:07.105Z"
+                     *         "createdAt": "2025-12-26T15:04:19.955Z"
                      *       }
-                     *     ] */
+                     *     ]
+                     */
                     "application/json": unknown;
                 };
             };
@@ -3827,16 +3851,18 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example [
+                    /**
+                     * @example [
                      *       {
                      *         "cover": "https://example.com/cover.jpg",
-                     *         "createdAt": "2025-09-29T13:38:07.129Z",
+                     *         "createdAt": "2025-12-26T15:04:19.974Z",
                      *         "description": "A cool playlist",
                      *         "id": "1",
                      *         "title": "My Playlist",
                      *         "userId": "user-1"
                      *       }
-                     *     ] */
+                     *     ]
+                     */
                     "application/json": unknown;
                 };
             };

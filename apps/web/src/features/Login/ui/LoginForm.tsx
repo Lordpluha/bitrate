@@ -123,7 +123,7 @@ export const LoginForm = () => {
               Log in
             </Button>
             <SocialsAuthDivider />
-            <Button variant='contrast'>
+            <Button variant='contrast' type='button'>
               <GoggleIcon className='mr-2' />
               <Typography.Paragraph>Continue with Google</Typography.Paragraph>
             </Button>

@@ -10,9 +10,10 @@ interface LastPlaylistItem {
 
 interface LastPlaylistsProps {
   items: LastPlaylistItem[]
+  onPlaylistClick?: (id: string) => void
 }
 
-export const LastPlaylists: React.FC<LastPlaylistsProps> = ({ items }) => (
+export const LastPlaylists: React.FC<LastPlaylistsProps> = ({ items, onPlaylistClick }) => (
   <div className='flex flex-wrap gap-4 mt-4'>
     {items.map(item => (
       <MusicCardMd
@@ -21,6 +22,7 @@ export const LastPlaylists: React.FC<LastPlaylistsProps> = ({ items }) => (
         name={item.name}
         description={item.description}
         imageUrl={item.imageUrl}
+        onClick={onPlaylistClick}
       />
     ))}
   </div>

@@ -6,11 +6,12 @@ interface MusicCardMdProps {
   name: string
   description?: string
   imageUrl?: string
+  onClick?: (id: string) => void
 }
 
-export const MusicCardMd: React.FC<MusicCardMdProps> = ({ id, name, description, imageUrl }) => (
+export const MusicCardMd: React.FC<MusicCardMdProps> = ({ id, name, description, imageUrl, onClick }) => (
   <div
-    key={id}
+    onClick={() => onClick?.(id)}
     className='flex bg-gray-800/50 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-700/50 transition-all duration-200 flex-1 min-w-0 max-w-[calc(33.333%-0.667rem)]'
   >
     <img

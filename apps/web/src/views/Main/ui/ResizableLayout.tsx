@@ -9,8 +9,8 @@ import { RightSidebar } from '@/widgets/RightSidebar'
 
 export const ResizableLayout = () => {
   return (
-    <div className='h-[calc(100vh-64px)]'>
-      <ResizableLayoutShadCN className='h-[calc(100vh-64px)]' direction='horizontal'>
+    <div className='h-full'>
+      <ResizableLayoutShadCN className='h-full' direction='horizontal'>
         <ResizablePanel
           defaultSize={20}
           minSize={15}

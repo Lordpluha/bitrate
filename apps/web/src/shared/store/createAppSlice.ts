@@ -1,3 +1,5 @@
+'use client'
+
 import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit'
 
 export const createAppSlice = buildCreateSlice({
