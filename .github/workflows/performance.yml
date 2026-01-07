@@ -56,6 +56,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Clean Prisma cache
+        run: |
+          rm -rf node_modules/.prisma
+          rm -rf node_modules/@prisma/client
+
       - name: Generate Prisma Client
         run: pnpm --filter @spotify/api run db:generate
 
@@ -246,6 +251,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Clean Prisma cache
+        run: |
+          rm -rf node_modules/.prisma
+          rm -rf node_modules/@prisma/client
 
       - name: Generate Prisma Client
         run: pnpm --filter @spotify/api run db:generate
