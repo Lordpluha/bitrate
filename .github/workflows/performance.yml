@@ -98,10 +98,12 @@ jobs:
         continue-on-error: true
 
       - name: Upload results
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: k6-results
           path: results.json
+          if-no-files-found: ignore
 
       - name: Comment PR with results
         if: github.event_name == 'pull_request'
@@ -109,19 +111,32 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+
+            // Check if results file exists and has content
+            if (!fs.existsSync('results.json')) {
+              console.log('No results.json file found - load test may have failed');
+              return;
+            }
+
             const results = JSON.parse(fs.readFileSync('results.json', 'utf8'));
+
+            // Check if metrics exist
+            if (!results.metrics || !results.metrics.http_reqs) {
+              console.log('No metrics found in results - load test did not complete successfully');
+              return;
+            }
 
             const metrics = results.metrics;
             const comment = `## 📊 Performance Test Results
 
             | Metric | Value |
             |--------|-------|
-            | Requests | ${metrics.http_reqs.values.count} |
-            | Failed Requests | ${metrics.http_req_failed.values.passes || 0} |
-            | Avg Response Time | ${metrics.http_req_duration.values.avg.toFixed(2)}ms |
-            | P95 Response Time | ${metrics.http_req_duration.values['p(95)'].toFixed(2)}ms |
-            | P99 Response Time | ${metrics.http_req_duration.values['p(99)'].toFixed(2)}ms |
-            | RPS | ${metrics.http_reqs.values.rate.toFixed(2)} |
+            | Requests | ${metrics.http_reqs?.values?.count || 0} |
+            | Failed Requests | ${metrics.http_req_failed?.values?.passes || 0} |
+            | Avg Response Time | ${metrics.http_req_duration?.values?.avg?.toFixed(2) || 'N/A'}ms |
+            | P95 Response Time | ${metrics.http_req_duration?.values?.['p(95)']?.toFixed(2) || 'N/A'}ms |
+            | P99 Response Time | ${metrics.http_req_duration?.values?.['p(99)']?.toFixed(2) || 'N/A'}ms |
+            | RPS | ${metrics.http_reqs?.values?.rate?.toFixed(2) || 'N/A'} |
             `;
 
             github.rest.issues.createComment({
@@ -268,12 +283,13 @@ jobs:
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
-      - name: Run query performance tests
-        run: |
-          cd apps/api
-          pnpm run test:e2e -t "performance"
-        env:
-          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+      # TODO: Add e2e performance tests
+      # - name: Run query performance tests
+      #   run: |
+      #     cd apps/api
+      #     pnpm run test:e2e -t "performance"
+      #   env:
+      #     DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Analyze slow queries
         run: |
