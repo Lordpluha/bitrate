@@ -57,7 +57,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @spotify/api exec prisma generate --force
+        run: |
+          cd apps/api
+          pnpm prisma generate
 
       - name: Setup database
         run: |
@@ -248,7 +250,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @spotify/api exec prisma generate --force
+        run: |
+          cd apps/api
+          pnpm prisma generate
 
       - name: Setup database
         run: |
