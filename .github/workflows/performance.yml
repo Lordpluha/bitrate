@@ -291,6 +291,12 @@ jobs:
       #   env:
       #     DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
+      - name: Enable pg_stat_statements extension
+        run: |
+          psql -h localhost -U spotify -d spotify_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
+        env:
+          PGPASSWORD: spotify_password
+
       - name: Analyze slow queries
         run: |
           psql -h localhost -U spotify -d spotify_test -c "SELECT query, calls, total_time, mean_time FROM pg_stat_statements ORDER BY mean_time DESC LIMIT 10;"
