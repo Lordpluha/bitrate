@@ -1,103 +1,105 @@
 ---
 name: ⚡ Performance Improvement
-about: Create a feature request for performance optimization and improvements
+about: Suggest performance optimization and improvements
 title: "[PERF] "
-labels: ["feature", "performance", "optimization"]
-assignees: ["lordpluha"]
+labels: ["feature", "performance"]
+assignees: []
 ---
 
-## 📋 Brief Description
-<!-- Provide a clear and concise description of the performance issue/improvement -->
+## 📝 Description
+<!-- Describe the performance issue or optimization opportunity -->
 
 
-## 🎯 Motivation and Goal
-<!-- Explain why this performance improvement is needed and what impact it will have -->
+## 🎯 Motivation
+<!-- Why is this optimization important? What impact will it have? -->
 
 
-## 📊 Current Performance Metrics
-<!-- Document the current performance baseline -->
+## 📊 Current Metrics
+<!-- Baseline performance data -->
 
-### Measurement Data
-- [ ] Load times:
-- [ ] Bundle sizes:
-- [ ] Memory usage:
-- [ ] CPU usage:
-- [ ] Network requests:
+### Measurements
+- **Page Load Time**: [e.g., 3.5s]
+- **API Response Time**: [e.g., 450ms]
+- **Bundle Size**: [e.g., 2.5MB]
+- **Database Query Time**: [e.g., 120ms]
 
-### Performance Issues Identified
+### Performance Issues
 - [ ] Slow page loads
-- [ ] Large bundle sizes
+- [ ] Large bundle size
 - [ ] Memory leaks
-- [ ] Unnecessary re-renders
-- [ ] Inefficient database queries
-- [ ] Network bottlenecks
+- [ ] Slow database queries
+- [ ] API latency
+- [ ] Re-render issues
 
-## 🎯 Target Performance Goals
-<!-- Define the performance targets to achieve -->
+## 🎯 Target Goals
 
 ### Performance Targets
-- [ ] Reduce load time to:
-- [ ] Decrease bundle size by:
-- [ ] Improve Core Web Vitals:
-  - [ ] LCP (Largest Contentful Paint):
-  - [ ] FID (First Input Delay):
-  - [ ] CLS (Cumulative Layout Shift):
+- **Page Load**: < [target]
+- **API Response**: < [target]
+- **Bundle Size**: < [target]
+- **Core Web Vitals**:
+  - LCP (Largest Contentful Paint): < 2.5s
+  - FID (First Input Delay): < 100ms
+  - CLS (Cumulative Layout Shift): < 0.1
 
-### Success Metrics
-- [ ] Page load speed improvement
-- [ ] Bundle size reduction
-- [ ] Memory usage optimization
-- [ ] Database query performance
-- [ ] User experience improvements
-
-## 🔧 Technical Implementation
-<!-- Describe the optimization techniques and implementation details -->
+## 🔧 Proposed Solution
 
 ### Frontend Optimizations
 - [ ] Code splitting
 - [ ] Lazy loading
-- [ ] Image optimization
-- [ ] Bundle analysis and reduction
-- [ ] Caching strategies
-- [ ] Component optimization
+- [ ] Image optimization (Next.js Image)
+- [ ] Bundle analysis & reduction
+- [ ] React.memo / useMemo
 - [ ] Virtual scrolling
-- [ ] Memoization
 
 ### Backend Optimizations
-- [ ] Database query optimization
-- [ ] Caching implementation
-- [ ] API response optimization
 - [ ] Database indexing
+- [ ] Query optimization (Prisma)
+- [ ] Redis caching
 - [ ] Connection pooling
-- [ ] Background job optimization
+- [ ] API response compression
 
-### Infrastructure Optimizations
-- [ ] CDN implementation
-- [ ] Compression (gzip/brotli)
-- [ ] HTTP/2 or HTTP/3
-- [ ] Server-side caching
-- [ ] Load balancing
-- [ ] Resource optimization
+### Infrastructure
+- [ ] CDN usage
+- [ ] Gzip/Brotli compression
+- [ ] HTTP/2
+- [ ] Docker image optimization
 
-### Tools and Technologies
-- [ ] Performance monitoring tools
-- [ ] Profiling tools
-- [ ] Bundle analyzers
-- [ ] Database optimization tools
-- [ ] Caching solutions
+## 📈 Measurement
 
-## 📈 Performance Analysis
-<!-- How will performance be measured and monitored? -->
-
-### Measurement Tools
-- [ ] Lighthouse audits
+### Tools
+- [ ] Lighthouse
 - [ ] WebPageTest
 - [ ] Chrome DevTools
-- [ ] Performance monitoring (DataDog, New Relic)
-- [ ] Custom performance metrics
+- [ ] k6 load testing
+- [ ] Prisma query logging
 
-### Monitoring Strategy
-- [ ] Real User Monitoring (RUM)
+### Monitoring
+```bash
+# Example: Enable Prisma query logging
+DEBUG=prisma:* pnpm dev
+```
+
+## ✅ Acceptance Criteria
+- [ ] Performance targets achieved
+- [ ] No regression in functionality
+- [ ] Metrics show improvement
+- [ ] Load tests pass
+- [ ] Documentation updated
+
+## 🧪 Testing
+- [ ] Lighthouse audit (score > 90)
+- [ ] k6 load test
+- [ ] Bundle size check
+- [ ] Database query profiling
+
+## 📚 Documentation
+- [ ] Update performance docs
+- [ ] Document optimizations
+- [ ] Add comments to code
+
+## 🔗 References
+<!-- Performance reports, benchmarks, related issues -->
 - [ ] Synthetic monitoring
 - [ ] Performance budgets
 - [ ] Automated performance testing

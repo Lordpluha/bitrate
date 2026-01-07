@@ -5,21 +5,250 @@
 - Storybook - https://spotify-clone-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
 - Web: https://spotify-clone-web-olive.vercel.app/
 
-# Your first start
+# 🚀 Quick Start
 
-Start postgresql db on port 5432 (with autorestarting)
+## Prerequisites
+- Node.js >= 20
+- pnpm 10.27.0
+- Docker & Docker Compose (optional)
+
+## Installation
+
 ```bash
-$ sudo docker compose up -d
+# Install dependencies
+pnpm install
 ```
 
-Install deps
+## Development
+
+Вы можете запустить проект тремя способами:
+
+### 📦 Option 1: Native (без Docker)
+
+Для локальной разработки без Docker:
+
 ```bash
-$ pnpm i
+# 1. Запустить только базу данных
+docker-compose -f docker-compose.minimal.yaml up -d
+
+# 2. Запустить все приложения
+pnpm dev
+
+# Доступ к сервисам:
+# - API: http://localhost:3000
+# - Web: http://localhost:3001
+# - Admin: http://localhost:3002
 ```
 
-Start monorepo projects
+### 🐳 Option 2: Full Docker (рекомендуется)
+
+#### Используя Makefile (Linux/macOS/WSL)
+
 ```bash
-$ turbo dev
+# Первый запуск (сборка + миграции + seed)
+make init
+
+# Последующие запуски
+make dev
+
+# Остановка
+make stop
+
+# Просмотр логов
+make logs
+
+# Миграции БД
+make db-migrate
+
+# Заполнить тестовыми данными
+make db-seed
+
+# Полный список команд
+make help
+```
+
+#### Используя pnpm скрипты (кросс-платформенно)
+
+```bash
+# Первый запуск
+pnpm docker:dev:build
+pnpm docker:db:migrate
+pnpm docker:db:seed
+
+# Последующие запуски
+pnpm docker:dev
+
+# Остановка
+pnpm docker:down
+
+# Просмотр логов
+pnpm docker:logs          # все логи
+pnpm docker:logs:api      # только API
+pnpm docker:logs:web      # только Web
+
+# Миграции БД
+pnpm docker:db:migrate
+pnpm docker:db:seed
+
+# Интерактивное управление
+pnpm docker:manage
+```
+
+#### Используя Docker Compose напрямую
+
+```bash
+# Первый запуск
+docker-compose up -d --build
+docker-compose exec api pnpm --filter @spotify/api run db:migration:start
+docker-compose exec api pnpm --filter @spotify/api run seed
+
+# Последующие запуски
+docker-compose up -d
+
+# Остановка
+docker-compose down
+
+# Просмотр логов
+docker-compose logs -f
+
+# Миграции
+docker-compose exec api pnpm --filter @spotify/api run db:migration:start
+```
+
+### 📱 Mobile & Desktop (опционально)
+
+```bash
+# Mobile (Expo)
+make mobile-dev              # или pnpm docker:mobile:dev
+make mobile-qr               # Показать QR для подключения
+
+# Desktop (Tauri UI)
+make desktop-dev             # или pnpm docker:desktop:dev
+
+# Для полноценной разработки рекомендуется нативный запуск:
+cd apps/mobile && pnpm start
+cd apps/desktop && pnpm dev
+```
+
+## 🌐 Доступ к сервисам
+
+| Сервис | URL | Порт |
+|--------|-----|------|
+| Web Frontend | http://localhost:3001 | 3001 |
+| API Backend | http://localhost:3000 | 3000 |
+| API Docs (Swagger) | http://localhost:3000/swagger | - |
+| Admin Panel | http://localhost:3002 | 3002 |
+| PostgreSQL | localhost:5432 | 5432 |
+| Redis | localhost:6379 | 6379 |
+
+## 📚 Документация
+
+- **[.github/CICD.md](.github/CICD.md)** - CI/CD pipelines и workflows
+- **[Makefile](Makefile)** - Все доступные команды
+
+## 🐛 Troubleshooting
+
+### Порты заняты
+```bash
+# Найти процесс использующий порт
+sudo lsof -i :3000
+# или
+sudo netstat -tulpn | grep :3000
+
+# Остановить все Docker сервисы
+docker-compose down
+```
+
+### Проблемы с БД
+```bash
+# Пересоздать БД
+docker-compose down -v
+docker-compose up -d postgres
+docker-compose exec api pnpm --filter @spotify/api run db:migration:start
+
+# Проверка подключения
+docker-compose exec postgres psql -U admin -d spotify
+```
+
+### Очистка Docker
+```bash
+# Удалить неиспользуемые образы
+docker image prune -a
+
+# Освободить место (осторожно!)
+docker system prune -af --volumes
+
+# Пересобрать без кэша
+docker-compose build --no-cache
+```
+
+### Ошибки hot reload
+```bash
+# Перезапустить конкретный сервис
+docker-compose restart api
+
+# Пересобрать и перезапустить
+docker-compose up -d --build api
+```
+
+### Логи и отладка
+```bash
+# Просмотр логов сервиса
+docker-compose logs -f api
+
+# Войти в контейнер
+docker-compose exec api sh
+
+# Проверить статус
+docker-compose ps
+```
+
+## 🛠️ Полезные команды
+
+### Makefile команды
+
+```bash
+make dev              # Запустить development
+make stop             # Остановить все сервисы
+make restart          # Перезапустить
+make logs             # Просмотр логов
+make db-migrate       # Применить миграции
+make db-seed          # Заполнить БД
+make db-studio        # Открыть Prisma Studio
+make clean            # Очистить volumes
+make prod             # Запустить production
+```
+
+### npm/pnpm скрипты
+
+```bash
+pnpm dev                    # Запустить все приложения (native)
+pnpm build                  # Собрать все приложения
+pnpm lint                   # Линтинг
+pnpm format                 # Форматирование
+pnpm docker:dev             # Docker development
+pnpm docker:manage          # Интерактивное управление Docker
+```
+
+### Database команды
+
+```bash
+# Через Makefile
+make db-migrate       # Применить миграции
+make db-seed          # Заполнить тестовыми данными
+make db-studio        # Открыть Prisma Studio
+make db-backup        # Создать бэкап
+
+# Через pnpm
+pnpm docker:db:migrate
+pnpm docker:db:seed
+pnpm docker:db:studio
+
+# Напрямую в API
+cd apps/api
+pnpm run db:migration:start
+pnpm run seed
+pnpm run db:ui
 ```
 
 ## 📦 Tech Stack

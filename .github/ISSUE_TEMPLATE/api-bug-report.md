@@ -1,92 +1,79 @@
 ---
 name: 🔧 API Bug Report
-about: Report a bug in the API or backend services
-title: "[API-BUG] "
-labels: ["bug", "api", "backend", "needs-triage"]
-assignees: ["lordpluha"]
+about: Report a bug in the NestJS API or backend services
+title: "[API] "
+labels: ["bug", "api", "needs-triage"]
+assignees: []
 ---
 
-## 🐛 API Bug Description
-<!-- Provide a clear and concise description of the API bug -->
+## 🐛 Bug Description
+<!-- Clear and concise description of the bug -->
 
 
 ## 🔗 Endpoint Information
-- **Endpoint**: `[HTTP_METHOD] /api/endpoint`
-- **Base URL**: `https://api.spotify-clone.com`
-- **API Version**: `v1`
+- **Endpoint**: `[GET/POST/PUT/DELETE] /api/v1/endpoint`
+- **Module**: [auth | users | tracks | albums | artists | playlists | files]
+- **Environment**: [Development | Staging | Production]
 
 ## 📝 Request Details
-<!-- Information about the failing request -->
 
-### Request Headers
-```http
-Content-Type: application/json
-Authorization: Bearer [token]
-User-Agent: [user-agent]
+### cURL Command
+```bash
+curl -X GET 'http://localhost:3001/api/v1/tracks/123' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json'
 ```
 
-### Request Body
+### Request Body (if applicable)
 ```json
 {
-  "example": "payload"
+  "title": "Song Title",
+  "artistId": "uuid"
 }
 ```
 
-### Request Parameters
-- **Query Parameters**: `?param1=value1&param2=value2`
-- **Path Parameters**: `userId=123, trackId=456`
-
-## 📤 Expected Response
-<!-- What response did you expect? -->
-
-### Expected Status Code
-- **Status**: `200 OK`
-
-### Expected Response Body
+## ✅ Expected Behavior
 ```json
 {
-  "expected": "response"
+  "id": "uuid",
+  "title": "Song Title",
+  "artistId": "uuid"
 }
 ```
+**Status Code**: `200 OK`
 
-## 📥 Actual Response
-<!-- What response did you actually receive? -->
-
-### Actual Status Code
-- **Status**: `500 Internal Server Error`
-
-### Actual Response Body
+## ❌ Actual Behavior
 ```json
 {
-  "error": "actual error response"
+  "statusCode": 500,
+  "message": "Internal server error",
+  "error": "Error details"
 }
 ```
-
-### Response Headers
-```http
-Content-Type: application/json
-X-Request-ID: abc123
-X-Response-Time: 1234ms
-```
+**Status Code**: `500 Internal Server Error`
+**Response Time**: `1234ms`
 
 ## 🔍 Steps to Reproduce
-<!-- Steps to reproduce the API bug -->
-1. Authenticate with the API using `[method]`
-2. Send `[HTTP_METHOD]` request to `/api/endpoint`
-3. Include payload: `[specific payload]`
+1. Start development environment: `pnpm dev`
+2. Authenticate via `/api/v1/auth/login`
+3. Send request to `/api/v1/[endpoint]`
 4. Observe error response
 
-## 🌍 Environment Information
-- **Environment**: [Production/Staging/Development]
-- **Server Region**: [US-East, EU-West, etc.]
-- **Client**: [Web App, Mobile App, Postman, curl]
-- **Timestamp**: [When the error occurred]
+**Reproduction Rate**: [Always | Sometimes | Rarely] - [percentage]%
+
+## 🌍 Environment
+- **Node.js**: `v22.x.x` (run `node -v`)
+- **pnpm**: `10.27.0` (run `pnpm -v`)
+- **PostgreSQL**: `16.x` (run `docker ps`)
+- **Redis**: `7.x`
+- **OS**: [Windows | macOS | Linux]
+- **Docker**: [Yes | No]
 
 ## 🔐 Authentication
-- **Auth Type**: [Bearer Token, API Key, OAuth2]
-- **User Role**: [Admin, User, Guest]
-- **Scopes**: [read:tracks, write:playlists]
-- **Token Valid**: [Yes/No]
+- **Auth Type**: JWT Bearer Token
+- **User Role**: [Admin | User]
+- **Token Expired**: [Yes | No]
+- **Authenticated**: [Yes | No]
 
 ## 📊 Error Analysis
 <!-- Technical details about the error -->
