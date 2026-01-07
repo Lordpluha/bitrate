@@ -6,9 +6,7 @@ import { seedPlaylists, seedPlaylistTracks } from './playlists.seed'
 import { seedTrackAlbumRelations, seedTracks } from './tracks.seed'
 import { seedUserLikedTracks, seedUsers } from './users.seed'
 
-const prisma = new PrismaClient({
-  log: ['query', 'info', 'warn', 'error'],
-})
+const prisma = new PrismaClient()
 
 async function main() {
   try {

@@ -226,7 +226,7 @@ jobs:
 
       - name: Seed database
         run: |
-          docker-compose exec -T api pnpm --filter @spotify/api run seed
+          docker-compose exec -T api sh -c "cd apps/api && pnpm prisma db seed"
 
       - name: API smoke tests
         run: |
