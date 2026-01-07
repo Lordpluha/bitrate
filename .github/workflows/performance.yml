@@ -56,6 +56,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Prisma Client
+        run: pnpm --filter @spotify/api run db:generate
+
       - name: Setup database
         run: |
           cd apps/api
@@ -161,7 +164,7 @@ jobs:
             http://localhost:3000
             http://localhost:3000/browse
             http://localhost:3000/search
-          uploadArtifacts: true
+          uploadArtifacts: false
           temporaryPublicStorage: true
 
   # Bundle analysis
@@ -243,6 +246,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm --filter @spotify/api run db:generate
 
       - name: Setup database
         run: |
