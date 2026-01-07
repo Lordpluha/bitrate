@@ -85,10 +85,20 @@ jobs:
           ls -la dist/ || echo "No dist folder"
           pnpm run start:prod &
           sleep 10
+          # Wait for server to be ready
+          for i in {1..30}; do
+            if curl -f http://localhost:3001/api > /dev/null 2>&1; then
+              echo "API server is ready"
+              break
+            fi
+            echo "Waiting for API server... ($i/30)"
+            sleep 1
+          done
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
           REDIS_URL: redis://localhost:6379
           JWT_SECRET: test_secret
+          PORT: 3001
 
       - name: Setup k6
         run: |
@@ -100,6 +110,8 @@ jobs:
 
       - name: Run load tests
         run: k6 run tests/load/api-load-test.js --summary-export=results.json
+        env:
+          API_URL: http://localhost:3001
         continue-on-error: true
 
       - name: Upload results
