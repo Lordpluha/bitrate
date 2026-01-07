@@ -19,7 +19,6 @@ FROM base AS development
 RUN npm install -g expo-cli @expo/ngrok eas-cli
 
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/mobile/node_modules ./apps/mobile/node_modules
 COPY . .
 
 WORKDIR /app/apps/mobile
@@ -41,7 +40,6 @@ CMD ["pnpm", "run", "start"]
 FROM base AS web-development
 
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/mobile/node_modules ./apps/mobile/node_modules
 COPY . .
 
 WORKDIR /app/apps/mobile
@@ -56,7 +54,6 @@ FROM base AS build
 RUN npm install -g expo-cli eas-cli
 
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/mobile/node_modules ./apps/mobile/node_modules
 COPY . .
 
 WORKDIR /app/apps/mobile
@@ -96,7 +93,6 @@ RUN apk add --no-cache \
 RUN npm install -g expo-cli eas-cli
 
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/mobile/node_modules ./apps/mobile/node_modules
 COPY . .
 
 WORKDIR /app/apps/mobile
