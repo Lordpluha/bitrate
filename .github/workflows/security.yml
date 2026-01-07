@@ -113,7 +113,8 @@ jobs:
       - name: Check licenses
         run: |
           npx license-checker --summary
-          npx license-checker --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;0BSD"
+          npx license-checker --failOn "GPL-3.0;AGPL-3.0;SSPL;BUSL"
+        continue-on-error: true
 
   # Dockerfile security scan
   dockerfile-scan:

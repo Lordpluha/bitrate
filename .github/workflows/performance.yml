@@ -182,6 +182,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build dependencies
+        run: pnpm --filter @spotify/ui-react run build
+
       - name: Build with bundle analyzer
         run: |
           cd apps/web
@@ -194,11 +197,11 @@ jobs:
           path: apps/web/.next/analyze
 
       - name: Compare bundle sizes
-        uses: zakj/performance-test-action@v1
+        uses: preactjs/compressed-size-action@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          comment-on-alert: true
-          alert-threshold: '10%'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: 'apps/web/.next/static/**/*.js'
+          compression: gzip
 
   # Database query performance
   db-performance:

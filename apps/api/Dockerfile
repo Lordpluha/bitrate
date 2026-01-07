@@ -51,6 +51,15 @@ COPY apps/api/package.json ./apps/api/
 # Generate Prisma Client
 RUN pnpm --filter @spotify/api run db:generate:prod
 
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 --ingroup nodejs spotifyapi
+
+# Set ownership
+RUN chown -R spotifyapi:nodejs /app
+
+USER spotifyapi
+
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
