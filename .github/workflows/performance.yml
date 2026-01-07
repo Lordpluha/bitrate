@@ -61,6 +61,11 @@ jobs:
           cd apps/api
           pnpm prisma generate
 
+      - name: Build API
+        run: |
+          cd apps/api
+          pnpm build
+
       - name: Setup database
         run: |
           cd apps/api
