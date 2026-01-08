@@ -1,0 +1,25 @@
+# Docker Compose конфигурация для Desktop с VNC
+
+services:
+  desktop-vnc:
+    build:
+      context: ../..
+      dockerfile: ./apps/desktop/Dockerfile.vnc
+    container_name: spotify-desktop-vnc
+    restart: unless-stopped
+    environment:
+      - DISPLAY=:99
+      - VNC_PORT=5900
+      - NOVNC_PORT=6080
+      - RESOLUTION=1920x1080x24
+    ports:
+      - "5900:5900"  # VNC
+      - "6080:6080"  # noVNC (браузер)
+      - "1421:1420"  # Vite dev server (изменен на 1421 чтобы избежать конфликта)
+    volumes:
+      - ../../apps/desktop:/app/apps/desktop
+      - ../../packages:/app/packages
+      # Не монтируем node_modules для избежания конфликтов
+    shm_size: '2gb'  # Увеличенная shared memory для GUI
+    stdin_open: true
+    tty: true

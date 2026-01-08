@@ -1,5 +1,4 @@
 # Docker Compose для Development окружения
-version: '3.9'
 
 services:
   # PostgreSQL Database
@@ -148,7 +147,7 @@ services:
       - /app/apps/mobile/.expo
     networks:
       - spotify-network
-    command: pnpm --filter @spotify/mobile run start
+    command: pnpm --filter @spotify/mobile run start -- --tunnel
     profiles:
       - mobile
 
@@ -171,7 +170,7 @@ services:
       - /app/apps/desktop/node_modules
     networks:
       - spotify-network
-    command: pnpm --filter @spotify/desktop run dev
+    command: pnpm --filter spotify-desktop run dev
     profiles:
       - desktop
 

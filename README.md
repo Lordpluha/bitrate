@@ -7,19 +7,234 @@
 
 # 🚀 Quick Start
 
-## Prerequisites
-- Node.js >= 20
-- pnpm 10.27.0
-- Docker & Docker Compose (optional)
+## 💻 Системные требования
 
-## Installation
+### Минимальные требования
+
+- **CPU:** 4 ядра (рекомендуется 8+)
+- **RAM:** 8 GB (рекомендуется 16+ GB для Docker)
+- **Диск:** 80+ GB свободного места (для всех Docker образов)
+- **ОС:** Linux, macOS, Windows 10/11 с WSL2
+
+---
+
+## 📦 Зависимости по приложениям
+
+### 🌐 Общие зависимости (для всех приложений)
+
+Необходимы для работы с любой частью проекта:
+
+| Инструмент | Версия | Установка |
+|------------|--------|-----------|
+| **Node.js** | >= 20.x | [Linux](#linux-nodejs) • [Windows](#windows-nodejs) • [macOS](#macos-nodejs) |
+| **pnpm** | 10.27.0 | `npm install -g pnpm@10.27.0` |
+| **Git** | >= 2.x | [git-scm.com](https://git-scm.com/) |
+| **Docker** | >= 24.x | [Linux](#linux-docker) • [Windows](#windows-docker) • [macOS](#macos-docker) |
+| **Docker Compose** | >= 2.x | Включен в Docker |
+
+---
+
+## 📲 Дополнительные зависимости
+
+### 📱 Mobile App (React Native + Expo)
+
+<details>
+<summary><b>Для Android разработки</b></summary>
+
+**Все платформы:**
+
+1. **Android Studio**
+   - Linux: [developer.android.com/studio](https://developer.android.com/studio)
+   - Windows: [developer.android.com/studio](https://developer.android.com/studio)
+   - macOS: `brew install --cask android-studio`
+
+2. **Java Development Kit 17**
+   - Linux: `sudo apt install -y openjdk-17-jdk`
+   - Windows: [adoptium.net](https://adoptium.net/)
+   - macOS: `brew install openjdk@17`
+
+3. **Android SDK** (устанавливается через Android Studio)
+
+4. **Эмулятор Android** (через Android Studio) или физическое устройство
+</details>
+
+<details>
+<summary><b>Для iOS разработки (только macOS)</b></summary>
+
+1. **Xcode** (из App Store)
+   ```bash
+   xcode-select --install
+   ```
+
+2. **iOS Simulator** (включен в Xcode)
+
+3. **CocoaPods**
+   ```bash
+   sudo gem install cocoapods
+   ```
+</details>
+
+**Для тестирования на физическом устройстве:**
+
+- Установите **Expo Go** на телефон:
+  - Android: [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
+  - iOS: [App Store](https://apps.apple.com/app/expo-go/id982107779)
+
+**Способы запуска:**
+
+1. **Docker (только Metro Bundler + tunnel):**
+   ```bash
+   docker compose --profile mobile up -d mobile
+   # Откройте http://localhost:19000 для QR-кода
+   ```
+
+2. **Нативно (рекомендуется):**
+   ```bash
+   cd apps/mobile
+   pnpm install
+   pnpm start
+   ```
+
+**⚠️ Рекомендация:** Для Mobile разработки используйте нативный запуск, Docker только для демонстрации.
+
+---
+
+### 🖥️ Desktop App (Tauri + React)
+
+<details>
+<summary><b>Linux (Ubuntu/Debian)</b></summary>
+
+```bash
+# Системные библиотеки для WebView
+sudo apt install -y \
+  libwebkit2gtk-4.1-dev \
+  build-essential \
+  curl \
+  wget \
+  file \
+  libxdo-dev \
+  libssl-dev \
+  libgtk-3-dev \
+  libayatana-appindicator3-dev \
+  librsvg2-dev \
+  pkg-config
+
+# Rust toolchain
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
+
+# Tauri CLI (устанавливается автоматически при pnpm install)
+```
+</details>
+
+<details>
+<summary><b>Windows</b></summary>
+
+1. **Visual Studio 2022 Build Tools**
+   - Скачайте с [visualstudio.microsoft.com](https://visualstudio.microsoft.com/downloads/)
+   - Выберите "Desktop development with C++"
+
+2. **WebView2 Runtime** (обычно уже установлен в Windows 11)
+   - Скачайте с [microsoft.com](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+
+3. **Rust**
+   ```powershell
+   # Скачайте rustup-init.exe с https://rustup.rs/
+   # Запустите установщик и следуйте инструкциям
+   ```
+
+4. **После установки проверьте:**
+   ```powershell
+   rustc --version
+   cargo --version
+   ```
+</details>
+
+<details>
+<summary><b>macOS</b></summary>
+
+```bash
+# Xcode Command Line Tools
+xcode-select --install
+
+# Rust toolchain
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
+
+# Tauri CLI (устанавливается автоматически при pnpm install)
+```
+</details>
+
+**Способы запуска:**
+
+1. **Нативно (рекомендуется):**
+   ```bash
+   cd apps/desktop
+   pnpm install
+   pnpm dev  # Запустит Tauri приложение с нативным окном
+   ```
+
+2. **Docker UI only (без Tauri backend):**
+   ```bash
+   docker compose --profile desktop up -d desktop
+   # Откройте http://localhost:1420 в браузере
+   ```
+
+3. **Docker с VNC (полное GUI через браузер):**
+   ```bash
+   cd apps/desktop
+   docker compose -f docker-compose.vnc.yml up --build
+   # Откройте http://localhost:6080/vnc.html
+   # Пароль: spotify
+   ```
+
+**⚠️ Рекомендация:** Для Desktop разработки используйте нативный запуск. Docker VNC полезен для CI/CD или демонстрации.
+
+---
+
+## 📥 Installation
+
+После установки всех необходимых системных зависимостей, установите зависимости проекта:
 
 ```bash
 # Install dependencies
 pnpm install
 ```
 
-## Development
+---
+
+## ✅ Проверка установки
+
+После установки необходимых зависимостей для вашего приложения, проверьте версии:
+
+### Общие инструменты (для всех)
+
+```bash
+node --version          # >= v20.x
+pnpm --version          # 10.27.0
+git --version           # >= 2.x
+docker --version        # >= 24.x
+docker compose version  # >= 2.x
+```
+
+### Для Mobile приложения
+
+```bash
+java --version          # 17.x (для Android)
+```
+
+### Для Desktop приложения
+
+```bash
+rustc --version         # любая стабильная версия
+cargo --version         # любая стабильная версия
+```
+
+Если все необходимые команды выполняются успешно, вы готовы к разработке! ✨
+
+---
+
+## 🛠️ Development
 
 Вы можете запустить проект тремя способами:
 
@@ -117,18 +332,53 @@ docker-compose exec api pnpm --filter @spotify/api run db:migration:start
 
 ### 📱 Mobile & Desktop (опционально)
 
+#### 📱 Mobile (React Native + Expo)
+
+**⚠️ Важно:** Для мобильной разработки рекомендуется нативный запуск.
+
+**Быстрый запуск:**
+
 ```bash
-# Mobile (Expo)
-make mobile-dev              # или pnpm docker:mobile:dev
-make mobile-qr               # Показать QR для подключения
+# Docker (Metro Bundler + Tunnel)
+docker compose --profile mobile up -d mobile
+# Откройте http://localhost:19000 для QR-кода
 
-# Desktop (Tauri UI)
-make desktop-dev             # или pnpm docker:desktop:dev
-
-# Для полноценной разработки рекомендуется нативный запуск:
+# Нативно (рекомендуется)
 cd apps/mobile && pnpm start
+```
+
+**Подключение:**
+- Установите [Expo Go](https://expo.dev/client) на телефон
+- Отсканируйте QR-код с http://localhost:19000
+- Или введите tunnel URL из логов
+
+📚 **[Подробная документация →](docs/MOBILE.md)**
+
+---
+
+#### 🖥️ Desktop (Tauri + React)
+
+**3 способа запуска:**
+
+**1. Локально (рекомендуется):**
+```bash
 cd apps/desktop && pnpm dev
 ```
+
+**2. Docker UI only:**
+```bash
+docker compose --profile desktop up -d desktop
+# Откройте http://localhost:1420
+```
+
+**3. Docker VNC (полное GUI):**
+```bash
+cd apps/desktop
+docker compose -f docker-compose.vnc.yml up --build
+# Откройте http://localhost:6080/vnc.html (пароль: spotify)
+```
+
+📚 **[Подробная документация →](docs/DESKTOP.md)** • **[VNC Guide →](apps/desktop/VNC-README.md)**
 
 ## 🌐 Доступ к сервисам
 
@@ -138,8 +388,46 @@ cd apps/desktop && pnpm dev
 | API Backend | http://localhost:3000 | 3000 |
 | API Docs (Swagger) | http://localhost:3000/swagger | - |
 | Admin Panel | http://localhost:3002 | 3002 |
+| Mobile (Metro) | http://localhost:8081 | 8081 |
+| Mobile (DevTools) | http://localhost:19000 | 19000 |
+| Desktop (Vite) | http://localhost:1420 | 1420 |
+| Desktop VNC (noVNC) | http://localhost:6080/vnc.html | 6080 |
+| Desktop VNC | vnc://localhost:5900 | 5900 |
 | PostgreSQL | localhost:5432 | 5432 |
 | Redis | localhost:6379 | 6379 |
+
+## 📦 Размеры Docker образов
+
+Приблизительные размеры образов после сборки:
+
+| Образ | Размер | Описание |
+|-------|--------|----------|
+| `desktop-desktop-vnc` | ~12.5 GB | Desktop с VNC (включает Rust, Tauri, X11, VNC сервер) |
+| `spotify-clone-mobile` | ~10 GB | Mobile (Node.js, Expo, React Native зависимости) |
+| `spotify-clone-api` | ~9.4 GB | Backend API (NestJS, Prisma, зависимости) |
+| `spotify-clone-web` | ~9.5 GB | Web Frontend (Next.js, React, зависимости) |
+| `spotify-clone-admin` | ~9.4 GB | Admin Panel (Kottster, зависимости) |
+| `spotify-clone-desktop` | ~9.4 GB | Desktop UI only (Vite, React) |
+| `postgres:16-alpine` | ~280 MB | База данных PostgreSQL |
+| `redis:7-alpine` | ~41 MB | Redis для кэширования |
+
+**Итого:** ~70 GB для всех образов (при полной сборке всех сервисов)
+
+**Рекомендации для экономии места:**
+
+```bash
+# Используйте минимальную конфигурацию для разработки
+docker compose -f docker-compose.minimal.yaml up -d  # Только postgres + redis (~320 MB)
+
+# Запускайте только нужные сервисы
+docker compose up -d api web  # API + Web (~20 GB)
+
+# Очистка неиспользуемых образов
+docker image prune -a
+
+# Полная очистка (осторожно!)
+docker system prune -af --volumes
+```
 
 ## 📚 Документация
 
