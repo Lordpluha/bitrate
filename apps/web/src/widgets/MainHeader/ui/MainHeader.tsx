@@ -12,6 +12,7 @@ import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { ProfileButton } from './ProfileButton'
 import { useAuth } from '@shared/hooks'
+import { Logo } from '@shared/ui'
 
 export const MainHeader = () => {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -19,7 +20,7 @@ export const MainHeader = () => {
   return (
     <header className='sticky top-0 left-0 right-0 z-50 transition-colors duration-300'>
       <div className='w-full px-5 py-2 flex justify-between items-center relative'>
-        {/* <Logo linkProps={{ href: ROUTES.main }} /> */}
+        <Logo />
 
         <div className='hidden xl:flex items-center space-x-4'>
           <HomeBtn />

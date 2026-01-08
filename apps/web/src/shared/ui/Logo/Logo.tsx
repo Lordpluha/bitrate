@@ -1,5 +1,6 @@
 import type { Theme } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
+import { SpotifyLogo, cn } from '@spotify/ui-react'
 import Link from 'next/link'
 import type { FC } from 'react'
 
@@ -14,14 +15,16 @@ export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
       className="transition-[0.3s] hover:opacity-70"
       href={ROUTES.landing}
     >
-      {/* <SpotifyLogo
+      <SpotifyLogo
+        width={112}
+        height={32}
         className={cn(
           'transition-[0.3s]',
           color === 'dark'
             ? 'text-text fill-text'
             : 'text-textContrast fill-textContrast'
         )}
-      /> */}
+      />
     </Link>
   )
 }

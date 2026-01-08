@@ -1,3 +1,6 @@
-import * as React from "react";
 import type { SVGProps } from "react";
-export const SvgPlusIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 17 17" aria-hidden="true" focusable="false" {...props}><path fill="#B3B3B3" d="M15.268 8.49a.75.75 0 0 1-.75.75H8.772v5.746a.75.75 0 0 1-1.499 0V9.24H1.527a.75.75 0 1 1 0-1.5h5.746V1.996a.75.75 0 0 1 1.5 0V7.74h5.745a.75.75 0 0 1 .75.75" /></svg>;
+interface PlusIconProps extends SVGProps<SVGSVGElement> {
+  primaryColor?: string
+}
+
+export const PlusIcon = ({ primaryColor = "#b3b3b3", ...props }: PlusIconProps) => <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 17 17" aria-hidden="true" focusable="false" {...props}><path fill={primaryColor} d="M15.268 8.49a.75.75 0 0 1-.75.75H8.772v5.746a.75.75 0 0 1-1.499 0V9.24H1.527a.75.75 0 1 1 0-1.5h5.746V1.996a.75.75 0 0 1 1.5 0V7.74h5.745a.75.75 0 0 1 .75.75" /></svg>;
