@@ -3,6 +3,7 @@
 ## 📚 Документация
 
 - **[README.md](README.md)** - основная документация (вы здесь)
+- **[🪟 WINDOWS.md](docs/WINDOWS.md)** - полное руководство для Windows разработчиков
 - **[MOBILE.md](docs/MOBILE.md)** - детальная документация Mobile
 - **[DESKTOP.md](docs/DESKTOP.md)** - детальная документация Desktop
 - **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - решение проблем
@@ -141,6 +142,33 @@ source $HOME/.cargo/env
 <details>
 <summary><b>Windows</b></summary>
 
+**⚠️ Для Windows разработчиков настоятельно рекомендуется использовать WSL2!**
+
+📖 **[Полное руководство для Windows →](docs/WINDOWS.md)**
+
+**Быстрая установка WSL2:**
+
+```powershell
+# PowerShell как Администратор
+wsl --install
+# Перезагрузить компьютер
+```
+
+**В WSL2 (после установки):**
+
+```bash
+# Установить зависимости (как в Linux)
+sudo apt update
+sudo apt install -y build-essential libwebkit2gtk-4.1-dev curl
+
+# Установить Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
+```
+
+<details>
+<summary><i>Альтернатива: Нативная Windows (не рекомендуется)</i></summary>
+
 1. **Visual Studio 2022 Build Tools**
    - Скачайте с [visualstudio.microsoft.com](https://visualstudio.microsoft.com/downloads/)
    - Выберите "Desktop development with C++"
@@ -159,6 +187,8 @@ source $HOME/.cargo/env
    rustc --version
    cargo --version
    ```
+</details>
+
 </details>
 
 <details>
@@ -211,6 +241,20 @@ source $HOME/.cargo/env
 # Install dependencies
 pnpm install
 ```
+
+### 🪟 Windows разработчики
+
+**Рекомендуется использовать WSL2** для лучшей совместимости и производительности:
+
+1. Установите WSL2: `wsl --install` (PowerShell как Администратор)
+2. Клонируйте проект **внутри WSL**: `cd ~ && git clone ...`
+3. Работайте в WSL терминале
+
+📖 **[Полная инструкция для Windows →](docs/WINDOWS.md)**
+
+**Если НЕ используете WSL2:**
+- Для очистки перед git push используйте PowerShell скрипты из [docs/WINDOWS.md](docs/WINDOWS.md)
+- Или запускайте `docker compose run --rm api sh -c "find /app -type d -name 'dist' -exec rm -rf {} +"`
 
 ---
 
