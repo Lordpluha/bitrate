@@ -1,0 +1,26 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/*",
+    "apps/*"
+  ],
+  "out": "apps/docs/typedoc",
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**"
+  ],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "readme": "README.md",
+  "name": "Spotify Clone",
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "sort": ["source-order"]
+}
