@@ -30,6 +30,7 @@
     "commit": "cz",
     "knip": "knip",
     "typedoc:gen": "pnpm typedoc",
+    "clean:dist": "find . -type d -name 'dist' -not -path './node_modules/*' -exec rm -rf {} + 2>/dev/null || true",
     "docker:dev": "docker-compose up -d",
     "docker:dev:build": "docker-compose up -d --build",
     "docker:down": "docker-compose down",

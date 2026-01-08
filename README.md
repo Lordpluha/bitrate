@@ -1,9 +1,20 @@
 # Music Platform (Spotify Clone)
 
-## Usefull links
+## 📚 Документация
+
+- **[README.md](README.md)** - основная документация (вы здесь)
+- **[MOBILE.md](docs/MOBILE.md)** - детальная документация Mobile
+- **[DESKTOP.md](docs/DESKTOP.md)** - детальная документация Desktop
+- **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - решение проблем
+- **[COMMANDS.md](docs/COMMANDS.md)** - быстрая справка по командам
+
+## 🔗 Полезные ссылки
+
 - Chromatic - https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
 - Storybook - https://spotify-clone-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
 - Web: https://spotify-clone-web-olive.vercel.app/
+
+---
 
 # 🚀 Quick Start
 
@@ -627,6 +638,20 @@ pnpm run db:ui
 ### Future features
 - Microservices, Micro-Frontends
 - CDN + S3, Logs, Metrics
+
+---
+
+## 🐛 Troubleshooting
+
+Столкнулись с проблемой? Проверьте:
+
+- **[Troubleshooting Guide](docs/TROUBLESHOOTING.md)** - решения частых проблем
+- **Build errors** при git push → запустите `pnpm clean:dist`
+- **Docker issues** → проверьте `docker compose logs -f <service>`
+- **Mobile connection** → используйте tunnel mode (уже включен)
+- **Desktop VNC** → подождите 30-60 секунд после старта
+
+---
 
 ## 📄 License
 
