@@ -1,1 +1,13 @@
+#!/bin/sh
+
+# Проверяем переменную WEB_ONLY
+# Если установлена - билдим только web приложение
+if [ "$WEB_ONLY" = "true" ]; then
+  echo "🌐 Building web app only..."
+  pnpm --filter @spotify/web build
+  exit 0
+fi
+
+# По умолчанию билдим всю монорепу
+echo "🏗️  Building full monorepo..."
 pnpm build
