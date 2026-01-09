@@ -28,7 +28,7 @@ RUN apk add --no-cache \
     file
 
 # Установка Tauri CLI
-RUN cargo install tauri-cli
+RUN cargo install tauri-cli --version ^2.0.0
 
 WORKDIR /app
 
@@ -98,7 +98,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 
 # Установка Tauri CLI
-RUN cargo install tauri-cli
+RUN cargo install tauri-cli --version ^2.0.0
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
