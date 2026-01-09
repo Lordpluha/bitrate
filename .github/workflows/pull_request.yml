@@ -49,6 +49,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build ui-react package
+        run: pnpm --filter @spotify/ui-react run build
+
       - name: Run Biome (Lint & Format)
         run: pnpm exec biome ci .
 
