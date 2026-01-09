@@ -176,6 +176,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build ui-react package
+        run: pnpm --filter @spotify/ui-react run build
+
       - name: Build web app
         run: pnpm --filter @spotify/web run build
 

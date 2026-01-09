@@ -66,6 +66,9 @@ RUN echo 'server { \
 
 EXPOSE 80
 
+# Run as non-root user for security
+USER nginx
+
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
   CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
 
