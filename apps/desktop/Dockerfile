@@ -79,15 +79,15 @@ FROM rustlang/rust:nightly-slim AS ci-build
 
 # Установка зависимостей для разных платформ
 RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
     libwebkit2gtk-4.1-dev \
     build-essential \
+    curl \
+    wget \
+    file \
+    libxdo-dev \
     libssl-dev \
-    libgtk-3-dev \
     libayatana-appindicator3-dev \
     librsvg2-dev \
-    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Установка Node.js
