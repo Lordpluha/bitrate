@@ -22,10 +22,7 @@ pnpm dev
 pnpm build
 
 # Очистка dist/ директорий (перед git push!)
-pnpm clean:dist                    # Linux/macOS/WSL
-
-# Windows PowerShell
-Get-ChildItem -Path . -Filter "dist" -Recurse -Directory | Where-Object { $_.FullName -notlike "*node_modules*" } | Remove-Item -Recurse -Force
+pnpm clean:dist
 
 # Линтинг
 pnpm lint
@@ -304,17 +301,11 @@ pnpm svgr:build
 ### Проект
 
 ```bash
-# Очистка dist/ (Linux/macOS/WSL)
+# Очистка dist/
 pnpm clean:dist
 
-# Очистка dist/ (Windows PowerShell)
-Get-ChildItem -Path . -Filter "dist" -Recurse -Directory | Where-Object { $_.FullName -notlike "*node_modules*" } | Remove-Item -Recurse -Force
-
-# Очистка node_modules (Linux/macOS/WSL)
+# Очистка node_modules
 find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
-
-# Очистка node_modules (Windows PowerShell)
-Get-ChildItem -Path . -Filter "node_modules" -Recurse -Directory | Remove-Item -Recurse -Force
 
 # Переустановка
 pnpm install
@@ -344,18 +335,10 @@ docker system prune -a --volumes
 
 ```bash
 # Проверить используемые порты
-lsof -i :3000-4000           # Linux/macOS
-netstat -ano | findstr :3000  # Windows CMD
-Get-NetTCPConnection -LocalPort 3000  # Windows PowerShell
+lsof -i :3000-4000
 
-# Убить процесс на порту (Linux/macOS)
+# Убить процесс на порту
 lsof -ti:3000 | xargs kill -9
-
-# Убить процесс на порту (Windows CMD)
-for /f "tokens=5" %a in ('netstat -aon ^| findstr :3000') do taskkill /F /PID %a
-
-# Убить процесс на порту (Windows PowerShell)
-Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process -Force
 ```
 
 ### Процессы
@@ -433,8 +416,6 @@ make help
 
 ## 💡 Полезные алиасы
 
-### Linux/macOS/WSL
-
 Добавьте в `~/.bashrc` или `~/.zshrc`:
 
 ```bash
@@ -474,141 +455,4 @@ sc-dev     # Запуск всех сервисов
 sc-logs    # Просмотр логов
 sc-clean   # Полная очистка
 sc-push    # Безопасный push (с очисткой dist)
-```
-
-### Windows PowerShell
-
-Создайте файл `$PROFILE` (обычно `Documents\PowerShell\Microsoft.PowerShell_profile.ps1`):
-
-```powershell
-# Проверить путь к профилю
-echo $PROFILE
-
-# Создать если не существует
-if (!(Test-Path -Path $PROFILE)) {
-    New-Item -ItemType File -Path $PROFILE -Force
-}
-
-# Открыть в редакторе
-notepad $PROFILE
-```
-
-Добавьте в профиль:
-
-```powershell
-# Docker Compose сокращения
-function dc { docker compose $args }
-function dcu { docker compose up -d $args }
-function dcd { docker compose down $args }
-function dcl { docker compose logs -f $args }
-function dcr { docker compose restart $args }
-
-# Spotify Clone
-function sc-dev { docker compose up -d }
-function sc-stop { docker compose down }
-function sc-clean { 
-    Get-ChildItem -Path . -Filter "dist" -Recurse -Directory | 
-        Where-Object { $_.FullName -notlike "*node_modules*" } | 
-        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-    docker compose down -v 
-}
-function sc-logs { docker compose logs -f $args }
-function sc-build { 
-    Get-ChildItem -Path . -Filter "dist" -Recurse -Directory | 
-        Where-Object { $_.FullName -notlike "*node_modules*" } | 
-        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-    pnpm build 
-}
-function sc-push { 
-    Get-ChildItem -Path . -Filter "dist" -Recurse -Directory | 
-        Where-Object { $_.FullName -notlike "*node_modules*" } | 
-        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-    git push 
-}
-
-# Mobile
-function mobile-dev { docker compose --profile mobile up -d mobile }
-function mobile-logs { docker compose logs -f mobile }
-function mobile-stop { docker compose stop mobile }
-
-# Desktop
-function desktop-dev { Set-Location apps\desktop; pnpm dev }
-```
-
-Примените изменения:
-```powershell
-. $PROFILE
-```
-
-Теперь можно использовать:
-```powershell
-sc-dev     # Запуск всех сервисов
-sc-logs    # Просмотр логов
-sc-clean   # Полная очистка
-sc-push    # Безопасный push (с очисткой dist)
-```
-
----
-
-## 🪟 Windows специфичные советы
-
-### Рекомендуется: Работа в WSL2
-
-```powershell
-# 1. Установить WSL2 (PowerShell как администратор)
-wsl --install
-
-# 2. Установить Ubuntu
-wsl --install -d Ubuntu
-
-# 3. Открыть WSL
-wsl
-
-# 4. В WSL установить зависимости
-sudo apt update
-sudo apt install -y build-essential git curl
-
-# 5. Установить Node.js через nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-source ~/.bashrc
-nvm install 20
-nvm use 20
-
-# 6. Установить pnpm
-npm install -g pnpm@10.27.0
-
-# 7. Клонировать проект ВНУТРИ WSL (важно!)
-cd ~
-git clone https://github.com/Lordpluha/spotify-clone.git
-cd spotify-clone
-pnpm install
-
-# 8. Работать в WSL, использовать Linux команды
-pnpm clean:dist
-docker compose up -d
-```
-
-### Интеграция с VS Code
-
-```powershell
-# Установить расширение "Remote - WSL"
-code --install-extension ms-vscode-remote.remote-wsl
-
-# Открыть проект в WSL
-wsl
-cd ~/spotify-clone
-code .
-```
-
-### Быстрое переключение между Windows и WSL
-
-```powershell
-# Из Windows PowerShell открыть WSL в текущей папке
-wsl
-
-# Из WSL открыть Windows Explorer
-explorer.exe .
-
-# Из WSL запустить Windows приложение
-cmd.exe /c start http://localhost:3000
 ```

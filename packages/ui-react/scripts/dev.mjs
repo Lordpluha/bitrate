@@ -29,6 +29,16 @@ const sharedConfig = {
 
 async function watchBuild() {
   try {
+    // Generate initial type definitions
+    console.log("Generating type definitions...")
+    exec(
+      "pnpm tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir dist/types --watch",
+      (error, stdout, stderr) => {
+        if (stdout) console.log(`[TypeScript] ${stdout.trim()}`)
+        if (stderr) console.error(`[TypeScript] ${stderr.trim()}`)
+      },
+    )
+
     // Create watch contexts for both ESM and CJS
     const esmContext = await context({
       ...sharedConfig,

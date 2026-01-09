@@ -15,7 +15,7 @@ husky - pre-push script failed (code 1)
 **Причина:**  
 Docker контейнеры создают файлы в `dist/` директориях от имени другого пользователя (обычно root или nfsnobody), и ваш пользователь не может их удалить при сборке на хосте.
 
-**Решение (Linux/macOS/WSL):**
+**Решение:**
 
 ```bash
 # 1. Очистить все dist/ директории
@@ -25,55 +25,20 @@ pnpm clean:dist
 git push
 ```
 
-**Решение (Windows PowerShell/CMD):**
-
-```powershell
-# PowerShell
-Get-ChildItem -Path . -Filter "dist" -Recurse -Directory | Where-Object { $_.FullName -notlike "*node_modules*" } | Remove-Item -Recurse -Force
-
-# Или используйте npm script
-npm run clean:dist
-
-# Повторить git push
-git push
-```
-
-**Решение для Windows (если не работает):**
-
-1. **Через Docker контейнер:**
-```powershell
-# Войти в контейнер и удалить изнутри
-docker compose exec api rm -rf /app/apps/api/dist
-docker compose exec web rm -rf /app/apps/web/.next
-```
-
-2. **Остановить контейнеры и очистить:**
-```powershell
-# Остановить все контейнеры
-docker compose down
-
-# Удалить dist директории
-Get-ChildItem -Path . -Filter "dist" -Recurse -Directory | Remove-Item -Recurse -Force
-```
-
-3. **Крайний вариант (пересоздать bind mounts):**
-```powershell
-docker compose down -v
-docker volume prune -f
-docker compose up -d --build
-```
-
-**Альтернативное решение (Linux/macOS с sudo):**
+**Альтернативное решение (если не работает):**
 
 ```bash
-# Остановить контейнеры и удалить вручную
+# Через Docker контейнер
+docker compose exec api rm -rf /app/apps/api/dist
+docker compose exec web rm -rf /app/apps/web/.next
+
+# Или с sudo (если доступно)
 docker compose down
 sudo find . -type d -name 'dist' -not -path './node_modules/*' -exec rm -rf {} +
 ```
 
 **Профилактика:**
 
-**Linux/macOS/WSL:**
 ```bash
 # Перед git push всегда запускайте
 pnpm clean:dist
@@ -82,101 +47,6 @@ pnpm clean:dist
 #!/bin/sh
 pnpm clean:dist
 pnpm build
-```
-
-**Windows (PowerShell):**
-```powershell
-# Создайте скрипт clean-dist.ps1
-Get-ChildItem -Path . -Filter "dist" -Recurse -Directory | 
-  Where-Object { $_.FullName -notlike "*node_modules*" } | 
-  Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-
-# Используйте перед push
-.\clean-dist.ps1
-git push
-```
-
-**WSL2 (рекомендуется для Windows):**
-```bash
-# В WSL2 используйте Linux команды
-pnpm clean:dist
-git push
-```
-
----
-
-### Windows специфичные проблемы
-
-#### Line endings (CRLF vs LF)
-
-**Симптомы:**
-```
-warning: LF will be replaced by CRLF
-```
-
-**Решение:**
-
-```powershell
-# Настроить Git для автоматической конвертации
-git config --global core.autocrlf true
-
-# Для WSL2
-git config --global core.autocrlf input
-```
-
-#### Docker Desktop не запускается
-
-**Проверьте:**
-
-1. **WSL2 установлен:**
-```powershell
-wsl --list --verbose
-wsl --install  # если не установлен
-```
-
-2. **Виртуализация включена в BIOS:**
-   - Перезагрузите ПК → войдите в BIOS
-   - Включите Intel VT-x или AMD-V
-   - Включите Hyper-V в Windows Features
-
-3. **Docker Desktop Settings:**
-   - Settings → Resources → WSL Integration
-   - Включите интеграцию с вашим WSL дистрибутивом
-
-#### Медленная работа в WSL2
-
-**Рекомендация:**
-
-```bash
-# Работайте ВНУТРИ WSL файловой системы, не в /mnt/c
-cd ~
-git clone https://github.com/Lordpluha/spotify-clone.git
-cd spotify-clone
-pnpm install
-```
-
-**Не рекомендуется:**
-```bash
-# Медленно! Не делайте так
-cd /mnt/c/Users/YourName/Projects/spotify-clone
-```
-
-#### Paths с пробелами или кириллицей
-
-**Проблема:**
-```
-Error: ENOENT: no such file or directory
-```
-
-**Решение:**
-
-```bash
-# Используйте пути без пробелов и кириллицы
-# Плохо: C:\Мои документы\spotify clone\
-# Хорошо: C:\projects\spotify-clone\
-
-# Или работайте в WSL
-cd ~/projects/spotify-clone
 ```
 
 ---
