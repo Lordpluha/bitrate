@@ -193,7 +193,7 @@ docker compose -f docker-compose.vnc.yml build --no-cache
 
 ### Изменение разрешения экрана (VNC)
 
-В [apps/desktop/docker-compose.vnc.yml](../apps/desktop/docker-compose.vnc.yml):
+В файле `apps/desktop/docker-compose.vnc.yml`:
 
 ```yaml
 environment:
@@ -333,7 +333,7 @@ docker compose -f docker-compose.vnc.yml restart
 
 - [Tauri Documentation](https://tauri.app/)
 - [Rust Documentation](https://doc.rust-lang.org/)
-- [VNC README](../apps/desktop/VNC-README.md) - подробная документация по VNC
+- VNC README (`apps/desktop/VNC-README.md`) - подробная документация по VNC
 - [Vite Documentation](https://vitejs.dev/)
 
 ---
