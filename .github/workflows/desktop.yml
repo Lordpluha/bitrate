@@ -72,14 +72,26 @@ jobs:
     - name: Build Desktop App
       run: |
         cd apps/desktop
-        pnpm run build
+        pnpm run tauri build
+      env:
+        CARGO_INCREMENTAL: 0
+        CARGO_TERM_COLOR: always
+
+    - name: List build artifacts
+      if: always()
+      run: |
+        echo "Contents of target/release:"
+        dir apps\desktop\src-tauri\target\release\ 2>$null || echo "No release directory"
+        echo "Contents of target/release/bundle:"
+        dir apps\desktop\src-tauri\target\release\bundle\ 2>$null || echo "No bundle directory"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: desktop-windows-x64
-        path: apps/desktop/src-tauri/target/release/*.exe
+        path: apps/desktop/src-tauri/target/release/bundle/**/*.exe
         retention-days: 7
+        if-no-files-found: error
 
   build-macos:
     name: Build for macOS
@@ -108,14 +120,26 @@ jobs:
     - name: Build Desktop App
       run: |
         cd apps/desktop
-        pnpm run build
+        pnpm run tauri build
+      env:
+        CARGO_INCREMENTAL: 0
+        CARGO_TERM_COLOR: always
+
+    - name: List build artifacts
+      if: always()
+      run: |
+        echo "Contents of target/release:"
+        ls -la apps/desktop/src-tauri/target/release/ || echo "No release directory"
+        echo "Contents of target/release/bundle:"
+        ls -la apps/desktop/src-tauri/target/release/bundle/ || echo "No bundle directory"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: desktop-macos-universal
-        path: apps/desktop/src-tauri/target/release/bundle/
+        path: apps/desktop/src-tauri/target/release/bundle/**/*
         retention-days: 7
+        if-no-files-found: error
 
   test:
     name: UI Tests

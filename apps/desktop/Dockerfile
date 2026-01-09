@@ -14,7 +14,7 @@ COPY turbo.json ./
 RUN pnpm install --frozen-lockfile
 
 # Stage 3: Rust Build Environment (для production сборки)
-FROM rust:1.84-alpine AS rust-builder
+FROM rustlang/rust:nightly-alpine AS rust-builder
 RUN apk add --no-cache \
     musl-dev \
     pkgconfig \
@@ -75,7 +75,7 @@ WORKDIR /app/apps/desktop
 CMD ["pnpm", "run", "dev"]
 
 # Stage 6: CI/CD Build (для автоматической сборки)
-FROM rust:1.84-slim AS ci-build
+FROM rustlang/rust:nightly-slim AS ci-build
 
 # Установка зависимостей для разных платформ
 RUN apt-get update && apt-get install -y \
