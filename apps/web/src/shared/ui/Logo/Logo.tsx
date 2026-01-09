@@ -1,13 +1,10 @@
-import type { Theme } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import type { FC } from 'react'
 
-export type LogoProps = {
-  color?: Theme
-}
+export type LogoProps = Record<string, never>
 
-export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
+export const Logo: FC<LogoProps> = () => {
   return (
     <Link
       aria-label="Spotify Home"
