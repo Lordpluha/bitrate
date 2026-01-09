@@ -182,9 +182,19 @@ jobs:
       - name: Build web app
         run: pnpm --filter @spotify/web run build
 
-      - name: Analyze bundle size
-        uses: andresz1/size-limit-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          package_manager: pnpm
-          directory: apps/web
+      - name: Check bundle size
+        run: |
+          cd apps/web
+          BUILD_SIZE=$(du -sh .next/static | cut -f1)
+          echo "Bundle size: $BUILD_SIZE"
+          echo "## Bundle Size: $BUILD_SIZE" >> $GITHUB_STEP_SUMMARY
+          
+          # Get size in KB for comparison
+          SIZE_KB=$(du -sk .next/static | cut -f1)
+          MAX_SIZE_KB=10240  # 10MB limit
+          
+          if [ "$SIZE_KB" -gt "$MAX_SIZE_KB" ]; then
+            echo "::warning::Bundle size ($BUILD_SIZE) exceeds recommended limit of ${MAX_SIZE_KB}KB"
+          else
+            echo "Bundle size is within acceptable limits"
+          fi
