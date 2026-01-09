@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Проверяем переменную WEB_ONLY
-# Если установлена - билдим только web приложение
+# Если установлена - билдим web-стек (api, web, ui-react)
 if [ "$WEB_ONLY" = "true" ]; then
-  echo "🌐 Building web app only..."
-  pnpm --filter @spotify/web build
+  echo "🌐 Building web stack (api, web, ui-react)..."
+  pnpm --filter @spotify/api --filter @spotify/web --filter @spotify/ui-react build
   exit 0
 fi
 
