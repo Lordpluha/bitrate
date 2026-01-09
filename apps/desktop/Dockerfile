@@ -14,7 +14,7 @@ COPY turbo.json ./
 RUN pnpm install --frozen-lockfile
 
 # Stage 3: Rust Build Environment (для production сборки)
-FROM rust:1.83-alpine AS rust-builder
+FROM rust:1.84-alpine AS rust-builder
 RUN apk add --no-cache \
     musl-dev \
     pkgconfig \
@@ -28,7 +28,7 @@ RUN apk add --no-cache \
     file
 
 # Установка Tauri CLI
-RUN cargo install tauri-cli --version ^2.0.0
+RUN cargo install tauri-cli
 
 WORKDIR /app
 
@@ -75,7 +75,7 @@ WORKDIR /app/apps/desktop
 CMD ["pnpm", "run", "dev"]
 
 # Stage 6: CI/CD Build (для автоматической сборки)
-FROM rust:1.83-slim AS ci-build
+FROM rust:1.84-slim AS ci-build
 
 # Установка зависимостей для разных платформ
 RUN apt-get update && apt-get install -y \
@@ -98,7 +98,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 
 # Установка Tauri CLI
-RUN cargo install tauri-cli --version ^2.0.0
+RUN cargo install tauri-cli
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
