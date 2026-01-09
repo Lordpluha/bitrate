@@ -11,9 +11,13 @@ function parseColor(colorString) {
   if (c.startsWith("#")) {
     const hex = c.replace("#", "")
     // Короткий формат (#000 -> #000000)
-    const fullHex = hex.length === 3
-      ? hex.split("").map(h => h + h).join("")
-      : hex
+    const fullHex =
+      hex.length === 3
+        ? hex
+            .split("")
+            .map((h) => h + h)
+            .join("")
+        : hex
     return convert.hex.rgb(fullHex)
   }
 
@@ -42,9 +46,7 @@ function parseColor(colorString) {
  * RGB массив в HEX
  */
 function rgbToHex(rgb) {
-  return "#" + rgb
-    .map(x => x.toString(16).padStart(2, "0"))
-    .join("")
+  return `#${rgb.map((x) => x.toString(16).padStart(2, "0")).join("")}`
 }
 
 /**

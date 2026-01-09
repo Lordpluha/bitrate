@@ -1,8 +1,8 @@
-import { context } from "esbuild"
-import { glob } from "glob"
 import { exec } from "node:child_process"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { context } from "esbuild"
+import { glob } from "glob"
 import { aliasResolver } from "./alias-resolver.mjs"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -33,7 +33,7 @@ async function watchBuild() {
     console.log("Generating type definitions...")
     exec(
       "pnpm tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir dist/types --watch",
-      (error, stdout, stderr) => {
+      (_error, stdout, stderr) => {
         if (stdout) console.log(`[TypeScript] ${stdout.trim()}`)
         if (stderr) console.error(`[TypeScript] ${stderr.trim()}`)
       },

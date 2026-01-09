@@ -1,5 +1,5 @@
-import { glob } from "glob"
 import fs from "node:fs"
+import { glob } from "glob"
 import { convertSvgToComponent, generateIndexFile } from "./converter.mjs"
 
 /**
@@ -8,7 +8,7 @@ import { convertSvgToComponent, generateIndexFile } from "./converter.mjs"
 async function cleanOutputDir(outputDir) {
   try {
     await fs.promises.rm(outputDir, { recursive: true, force: true })
-  } catch (error) {
+  } catch (_error) {
     // Директория может не существовать
   }
 }

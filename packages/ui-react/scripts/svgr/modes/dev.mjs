@@ -1,6 +1,6 @@
-import { glob } from "glob"
 import fs from "node:fs"
 import path from "node:path"
+import { glob } from "glob"
 import { convertSvgToComponent, generateIndexFile } from "../core/converter.mjs"
 import { processSvgFiles } from "../core/processor.mjs"
 import { toPascalCase } from "../utils/naming.mjs"
@@ -87,7 +87,7 @@ export async function dev(inputDir, outputDir, options = {}) {
       } catch (error) {
         console.error("❌ [SVGR] Error processing SVG:", error.message)
       }
-    }
+    },
   )
 
   // Обработка ошибок watcher

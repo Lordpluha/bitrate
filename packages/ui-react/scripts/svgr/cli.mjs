@@ -49,7 +49,9 @@ export async function runCli() {
     console.error("\nExamples:")
     console.error("  node svgr build -i @spotify/tokens/icons -o src/icons/svgr")
     console.error("  node svgr build -i ../tokens/icons -o src/icons/svgr")
-    console.error("  node svgr build -i ../icons -o ./output --variables \"primaryColor,secondaryColor\"")
+    console.error(
+      '  node svgr build -i ../icons -o ./output --variables "primaryColor,secondaryColor"',
+    )
     console.error("  node svgr dev --input @spotify/tokens/icons --output src/icons/svgr")
     process.exit(1)
   }
@@ -64,7 +66,10 @@ export async function runCli() {
 
     // Парсим имена переменных для цветов
     const colorVarNames = args.variables
-      ? args.variables.split(",").map(v => v.trim()).filter(Boolean)
+      ? args.variables
+          .split(",")
+          .map((v) => v.trim())
+          .filter(Boolean)
       : []
 
     console.log(`📂 Input:  ${inputDir}`)
