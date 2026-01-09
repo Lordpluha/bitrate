@@ -5,8 +5,6 @@
 - **[README.md](README.md)** - основная документация (вы здесь)
 - **[MOBILE.md](docs/MOBILE.md)** - детальная документация Mobile
 - **[DESKTOP.md](docs/DESKTOP.md)** - детальная документация Desktop
-- **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - решение проблем
-- **[COMMANDS.md](docs/COMMANDS.md)** - быстрая справка по командам
 
 ## 🔗 Полезные ссылки
 
@@ -478,67 +476,7 @@ docker image prune -a
 docker system prune -af --volumes
 ```
 
-## 📚 Документация
-
-- **[.github/CICD.md](.github/CICD.md)** - CI/CD pipelines и workflows
-- **[Makefile](Makefile)** - Все доступные команды
-
-## 🐛 Troubleshooting
-
-### Порты заняты
-```bash
-# Найти процесс использующий порт
-sudo lsof -i :3000
-# или
-sudo netstat -tulpn | grep :3000
-
-# Остановить все Docker сервисы
-docker-compose down
-```
-
-### Проблемы с БД
-```bash
-# Пересоздать БД
-docker-compose down -v
-docker-compose up -d postgres
-docker-compose exec api pnpm --filter @spotify/api run db:migration:start
-
-# Проверка подключения
-docker-compose exec postgres psql -U admin -d spotify
-```
-
-### Очистка Docker
-```bash
-# Удалить неиспользуемые образы
-docker image prune -a
-
-# Освободить место (осторожно!)
-docker system prune -af --volumes
-
-# Пересобрать без кэша
-docker-compose build --no-cache
-```
-
-### Ошибки hot reload
-```bash
-# Перезапустить конкретный сервис
-docker-compose restart api
-
-# Пересобрать и перезапустить
-docker-compose up -d --build api
-```
-
-### Логи и отладка
-```bash
-# Просмотр логов сервиса
-docker-compose logs -f api
-
-# Войти в контейнер
-docker-compose exec api sh
-
-# Проверить статус
-docker-compose ps
-```
+---
 
 ## 🛠️ Полезные команды
 
@@ -681,13 +619,43 @@ pnpm run db:ui
 
 ## 🐛 Troubleshooting
 
-Столкнулись с проблемой? Проверьте:
+### EACCES: permission denied при git push
 
-- **[Troubleshooting Guide](docs/TROUBLESHOOTING.md)** - решения частых проблем
-- **Build errors** при git push → запустите `pnpm clean:dist`
-- **Docker issues** → проверьте `docker compose logs -f <service>`
-- **Mobile connection** → используйте tunnel mode (уже включен)
-- **Desktop VNC** → подождите 30-60 секунд после старта
+Docker контейнеры создают файлы в `dist/` от имени root/nfsnobody. Перед git push:
+
+```bash
+pnpm clean:dist
+git push
+```
+
+### Порты заняты
+
+```bash
+# Найти процесс использующий порт
+sudo lsof -i :3000
+
+# Остановить все Docker сервисы
+docker compose down
+```
+
+### Проблемы с БД
+
+```bash
+# Пересоздать БД
+docker compose down -v
+docker compose up -d postgres
+docker compose exec api pnpm --filter @spotify/api run db:migration:start
+```
+
+### Очистка Docker
+
+```bash
+# Удалить неиспользуемые образы
+docker image prune -a
+
+# Пересобрать без кэша
+docker compose build --no-cache
+```
 
 ---
 

@@ -174,6 +174,39 @@ services:
     profiles:
       - desktop
 
+  # Documentation (Docusaurus)
+  docs:
+    build:
+      context: .
+      dockerfile: ./apps/docs/Dockerfile
+      target: development
+    container_name: spotify-docs
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+    ports:
+      - "${DOCS_PORT:-3003}:3003"
+    volumes:
+      - ./apps/docs:/app/apps/docs
+      - ./package.json:/app/package.json
+      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
+      - ./pnpm-workspace.yaml:/app/pnpm-workspace.yaml
+      - ./turbo.json:/app/turbo.json
+      - /app/node_modules
+      - /app/apps/docs/node_modules
+      - /app/apps/docs/.docusaurus
+      - /app/apps/docs/build
+    networks:
+      - spotify-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3003"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    profiles:
+      - docs
+
   # Nginx Reverse Proxy (опционально для production-like окружения)
   nginx:
     image: nginx:alpine
