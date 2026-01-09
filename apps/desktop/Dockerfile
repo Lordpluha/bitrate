@@ -109,7 +109,7 @@ COPY . .
 
 # Сборка
 WORKDIR /app/apps/desktop
-RUN pnpm run build
+RUN pnpm run tauri build
 
-# Артефакты будут в src-tauri/target/release/
+# Артефакты будут в src-tauri/target/release/bundle/
 CMD ["sh"]

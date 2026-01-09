@@ -31,19 +31,27 @@ jobs:
           --cache-to type=gha,mode=max \
           -f apps/desktop/Dockerfile .
 
+    - name: List build contents
+      run: |
+        docker run --rm spotify-desktop-builder sh -c "ls -la /app/apps/desktop/src-tauri/target/ || echo 'No target dir'"
+        docker run --rm spotify-desktop-builder sh -c "ls -la /app/apps/desktop/src-tauri/target/release/ || echo 'No release dir'"
+        docker run --rm spotify-desktop-builder sh -c "ls -la /app/apps/desktop/src-tauri/target/release/bundle/ || echo 'No bundle dir'"
+
     - name: Extract Build Artifacts
       run: |
         docker create --name temp-desktop spotify-desktop-builder
-        docker cp temp-desktop:/app/apps/desktop/src-tauri/target/release ./desktop-artifacts || echo "No artifacts found"
+        docker cp temp-desktop:/app/apps/desktop/src-tauri/target/release/bundle ./desktop-artifacts || echo "No artifacts found"
         docker rm temp-desktop
+        ls -la desktop-artifacts/ || echo "Artifacts directory not created"
 
     - name: Upload Artifacts
       if: success()
       uses: actions/upload-artifact@v4
       with:
         name: desktop-linux-x64
-        path: desktop-artifacts/
+        path: desktop-artifacts/**/*
         retention-days: 7
+        if-no-files-found: error
 
   build-windows:
     name: Build for Windows
