@@ -88,6 +88,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libayatana-appindicator3-dev \
     librsvg2-dev \
+    xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Установка Node.js
