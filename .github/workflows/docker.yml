@@ -191,17 +191,17 @@ jobs:
 
       - name: Start services
         run: |
-          docker-compose up -d postgres redis
+          docker compose up -d postgres redis
           sleep 10
 
       - name: Wait for services
         run: |
-          timeout 60 bash -c 'until docker-compose exec -T postgres pg_isready -U admin; do sleep 1; done'
-          docker-compose exec -T redis redis-cli ping
+          timeout 60 bash -c 'until docker compose exec -T postgres pg_isready -U admin; do sleep 1; done'
+          docker compose exec -T redis redis-cli ping
 
       - name: Start application services
         run: |
-          docker-compose up -d api web admin
+          docker compose up -d api web admin
           sleep 20
 
       - name: Run health checks
@@ -221,12 +221,12 @@ jobs:
 
       - name: Run database migrations
         run: |
-          docker-compose exec -T api pnpm --filter @spotify/api run db:generate
-          docker-compose exec -T api pnpm --filter @spotify/api run db:migration:start
+          docker compose exec -T api pnpm --filter @spotify/api run db:generate
+          docker compose exec -T api pnpm --filter @spotify/api run db:migration:start
 
       - name: Seed database
         run: |
-          docker-compose exec -T api sh -c "cd apps/api && pnpm prisma db seed"
+          docker compose exec -T api sh -c "cd apps/api && pnpm prisma db seed"
 
       - name: API smoke tests
         run: |
@@ -238,15 +238,15 @@ jobs:
         if: failure()
         run: |
           echo "=== API Logs ==="
-          docker-compose logs api
+          docker compose logs api
           echo "=== Web Logs ==="
-          docker-compose logs web
+          docker compose logs web
           echo "=== Postgres Logs ==="
-          docker-compose logs postgres
+          docker compose logs postgres
 
       - name: Cleanup
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v
 
   # Performance benchmarks
   performance:
@@ -264,7 +264,7 @@ jobs:
 
       - name: Start services
         run: |
-          docker-compose up -d
+          docker compose up -d
           sleep 30
 
       - name: Run k6 load tests
@@ -275,7 +275,7 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v
 
   # Notify on completion
   notify:

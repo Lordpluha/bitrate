@@ -1,6 +1,6 @@
+import { glob } from "glob"
 import { execSync } from "node:child_process"
 import fs from "node:fs"
-import { glob } from "glob"
 import { convertSvgToComponent, generateIndexFile } from "./converter.mjs"
 
 /**

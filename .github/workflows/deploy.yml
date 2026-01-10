@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate config
-        run: docker-compose -f docker-compose.prod.yaml config
+        run: docker compose -f docker-compose.prod.yaml config
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -74,14 +74,13 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
             cd ${{ secrets.DEPLOY_PATH }}
-            
+
             # Backup database
-            docker-compose exec -T postgres pg_dump > backup.sql
-            
+            docker compose exec -T postgres pg_dump > backup.sql
+
             # Pull and deploy
-            docker-compose -f docker-compose.prod.yaml pull
-            docker-compose -f docker-compose.prod.yaml up -d
-            
+            docker compose -f docker-compose.prod.yaml pull
+            docker compose -f docker-compose.prod.yaml up -d
             # Cleanup
             docker image prune -af
           ENDSSH
