@@ -25,6 +25,7 @@ export function createSvgrConfig(isMonochrome, _colorVariables = null) {
       return tpl`
 ${variables.imports};
 
+
 ${variables.interfaces};
 
 export const ${variables.componentName} = (${variables.props}) => (

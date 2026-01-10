@@ -1,3 +1,4 @@
+import { execSync } from "node:child_process"
 import fs from "node:fs"
 import { glob } from "glob"
 import { convertSvgToComponent, generateIndexFile } from "./converter.mjs"
@@ -56,6 +57,18 @@ export async function processSvgFiles(inputDir, outputDir, options = {}) {
 
   // Генерация index файла
   await generateIndexFile(components, outputDir)
+
+  // Автоматическое форматирование сгенерированных файлов
+  if (verbose) {
+    console.log("🔧 Formatting generated files with Biome...")
+  }
+  try {
+    execSync(`pnpm exec biome check --write "${outputDir}"`, {
+      stdio: verbose ? "inherit" : "pipe",
+    })
+  } catch (_error) {
+    console.warn("⚠️  Biome formatting failed, files may need manual formatting")
+  }
 
   console.log(`✅ Generated ${components.length} components in ${outputDir}`)
 }
