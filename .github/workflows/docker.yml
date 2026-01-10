@@ -231,8 +231,8 @@ jobs:
           for i in {1..30}; do
             echo "=== Health check attempt $i/30 ==="
 
-            # Check API
-            if curl -sf http://localhost:3000/health; then
+            # Check API (use root endpoint since /health doesn't exist)
+            if curl -sf http://localhost:3000; then
               echo "✅ API is healthy"
               API_OK=1
             else
@@ -280,8 +280,8 @@ jobs:
 
       - name: API smoke tests
         run: |
-          # Test API endpoints
-          curl -f http://localhost:3000/health || exit 1
+          # Test API endpoints (use root endpoint)
+          curl -f http://localhost:3000 || exit 1
           curl -f http://localhost:3000/api || exit 1
 
       - name: Show container logs on failure
