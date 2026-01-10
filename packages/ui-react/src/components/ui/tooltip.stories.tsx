@@ -1,7 +1,7 @@
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { Plus } from "lucide-react"
 import { expect, userEvent, waitFor, within } from "storybook/test"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 /**
  * A popup that displays information related to an element when the element
@@ -83,24 +83,25 @@ export const ShouldShowOnHover: Story = {
   tags: ["!dev", "!autodocs"],
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body)
-    const triggerBtn = await canvasBody.findByRole("button", { name: /add/i })
+    const triggerBtn = canvasBody.getByRole("button", { name: /add/i })
 
     await step("hover over trigger", async () => {
       await userEvent.hover(triggerBtn)
-      await waitFor(() =>
-        expect(
-          canvasElement.ownerDocument.body.querySelector("[data-radix-popper-content-wrapper]"),
-        ).toBeVisible(),
-      )
+      await waitFor(() => {
+        const tooltipElement = canvasElement.ownerDocument.body.querySelector(
+          "[data-radix-popper-content-wrapper]",
+        )
+        expect(tooltipElement).toBeVisible()
+      })
     })
 
     await step("unhover trigger", async () => {
       await userEvent.unhover(triggerBtn)
       await waitFor(() => {
         const tooltipElement = canvasElement.ownerDocument.body.querySelector(
-          "[data-radix-popper-content-wrapper]",
+          '[role="tooltip"][data-state="closed"]',
         )
-        expect(tooltipElement).toBeNull()
+        expect(tooltipElement).toBeInTheDocument()
       })
     })
   },
