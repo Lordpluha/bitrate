@@ -185,7 +185,17 @@ jobs:
 
       - name: Free up disk space
         run: |
+          # Remove unnecessary packages
+          sudo apt-get clean
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+
+          # Clean Docker
           docker system prune -af --volumes
+
+          # Show available space
           df -h
 
       - name: Create .env file
