@@ -219,12 +219,47 @@ jobs:
           docker compose up -d api web admin
           sleep 20
 
+      - name: Check container status
+        run: |
+          docker compose ps
+          docker compose logs --tail=50 api
+          docker compose logs --tail=50 web
+          docker compose logs --tail=50 admin
+
       - name: Run health checks
         run: |
           for i in {1..30}; do
-            if curl -sf http://localhost:3000/health && \
-               curl -sf http://localhost:3001 && \
-               curl -sf http://localhost:3002; then
+            echo "=== Health check attempt $i/30 ==="
+
+            # Check API
+            if curl -sf http://localhost:3000/health; then
+              echo "✅ API is healthy"
+              API_OK=1
+            else
+              echo "❌ API health check failed"
+              API_OK=0
+            fi
+
+            # Check Web
+            if curl -sf http://localhost:3001; then
+              echo "✅ Web is healthy"
+              WEB_OK=1
+            else
+              echo "❌ Web health check failed"
+              WEB_OK=0
+            fi
+
+            # Check Admin
+            if curl -sf http://localhost:3002; then
+              echo "✅ Admin is healthy"
+              ADMIN_OK=1
+            else
+              echo "❌ Admin health check failed"
+              ADMIN_OK=0
+            fi
+
+            # All healthy?
+            if [ "$API_OK" = "1" ] && [ "$WEB_OK" = "1" ] && [ "$ADMIN_OK" = "1" ]; then
               echo "✅ All services are healthy"
               exit 0
             fi
