@@ -240,8 +240,8 @@ jobs:
               API_OK=0
             fi
 
-            # Check Web
-            if curl -sf http://localhost:3001; then
+            # Check Web - Next.js may need time to compile on first request
+            if curl -sf -m 10 http://localhost:3001; then
               echo "✅ Web is healthy"
               WEB_OK=1
             else
@@ -249,8 +249,9 @@ jobs:
               WEB_OK=0
             fi
 
-            # Check Admin
-            if curl -sf http://localhost:3002; then
+            # Check Admin - Kottster runs on port 5480 internally, mapped to 3002
+            # But we need to check the internal port since that's what's actually running
+            if docker compose exec -T admin curl -sf http://localhost:5480 2>/dev/null; then
               echo "✅ Admin is healthy"
               ADMIN_OK=1
             else
