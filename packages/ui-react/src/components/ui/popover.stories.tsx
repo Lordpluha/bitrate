@@ -1,6 +1,6 @@
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { expect, userEvent, within } from "storybook/test"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 /**
  * Displays rich content in a portal, triggered by a button.
