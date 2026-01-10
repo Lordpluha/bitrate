@@ -1,7 +1,7 @@
-import { transform } from "@svgr/core"
 import fs from "node:fs"
 import path from "node:path"
 import { promisify } from "node:util"
+import { transform } from "@svgr/core"
 import { createSvgrConfig } from "../config/svgr-config.mjs"
 import { extractColorsWithMapping, isMonochrome } from "../utils/color-detection.mjs"
 import { toPascalCase } from "../utils/naming.mjs"
@@ -43,7 +43,7 @@ export async function convertSvgToComponent(svgPath, outputDir, colorVarNames = 
         ...svgrConfig,
         componentName,
       },
-      { componentName, filePath: svgPath }
+      { componentName, filePath: svgPath },
     )
 
     // Пост-процессинг: заменяем XML атрибуты на JSX-совместимые
@@ -69,12 +69,14 @@ export async function convertSvgToComponent(svgPath, outputDir, colorVarNames = 
     if (colorMapping && colorMapping.size > 0) {
       const varNames = Array.from(colorMapping.values())
       const colors = Array.from(colorMapping.keys())
-      const propsInterface = varNames.map(name => `  ${name}?: string`).join('\n')
+      const propsInterface = varNames.map((name) => `  ${name}?: string`).join("\n")
 
       // Создаем параметры с дефолтными значениями: primaryColor = "#1ed760"
-      const paramsWithDefaults = varNames.map((name, index) => {
-        return `${name} = "${colors[index]}"`
-      }).join(', ')
+      const paramsWithDefaults = varNames
+        .map((name, index) => {
+          return `${name} = "${colors[index]}"`
+        })
+        .join(", ")
       const destructuredParams = `{ ${paramsWithDefaults}, ...props }`
 
       // Заменяем стандартную сигнатуру на кастомную с интерфейсом
@@ -83,7 +85,7 @@ export async function convertSvgToComponent(svgPath, outputDir, colorVarNames = 
         /export const (\w+) = \(props: (?:SVGProps<SVGSVGElement>|React\.SVGProps<SVGSVGElement>)\)/,
         (_match, name) => {
           return `interface ${name}Props extends SVGProps<SVGSVGElement> {\n${propsInterface}\n}\n\nexport const ${name} = (${destructuredParams}: ${name}Props)`
-        }
+        },
       )
 
       // Заменяем цвета на переменные в JSX (без fallback оператора)
@@ -92,43 +94,37 @@ export async function convertSvgToComponent(svgPath, outputDir, colorVarNames = 
         const originalColor = originalColors?.get(hexColor) || hexColor
 
         // Экранируем все спецсимволы regex для HEX
-        const escapedHex = hexColor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        const escapedHex = hexColor.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
         // Экранируем для оригинального значения
-        const escapedOriginal = originalColor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        const escapedOriginal = originalColor.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 
         // Заменяем fill="HEX" и fill="original" на fill={varName}
-        jsCode = jsCode.replace(
-          new RegExp(`fill="${escapedHex}"`, 'gi'),
-          `fill={${varName}}`
-        )
+        jsCode = jsCode.replace(new RegExp(`fill="${escapedHex}"`, "gi"), `fill={${varName}}`)
         if (originalColor !== hexColor) {
           jsCode = jsCode.replace(
-            new RegExp(`fill="${escapedOriginal}"`, 'gi'),
-            `fill={${varName}}`
+            new RegExp(`fill="${escapedOriginal}"`, "gi"),
+            `fill={${varName}}`,
           )
         }
 
         // Заменяем stroke="HEX" и stroke="original" на stroke={varName}
-        jsCode = jsCode.replace(
-          new RegExp(`stroke="${escapedHex}"`, 'gi'),
-          `stroke={${varName}}`
-        )
+        jsCode = jsCode.replace(new RegExp(`stroke="${escapedHex}"`, "gi"), `stroke={${varName}}`)
         if (originalColor !== hexColor) {
           jsCode = jsCode.replace(
-            new RegExp(`stroke="${escapedOriginal}"`, 'gi'),
-            `stroke={${varName}}`
+            new RegExp(`stroke="${escapedOriginal}"`, "gi"),
+            `stroke={${varName}}`,
           )
         }
 
         // Заменяем stopColor="HEX" и stopColor="original" на stopColor={varName}
         jsCode = jsCode.replace(
-          new RegExp(`stopColor="${escapedHex}"`, 'gi'),
-          `stopColor={${varName}}`
+          new RegExp(`stopColor="${escapedHex}"`, "gi"),
+          `stopColor={${varName}}`,
         )
         if (originalColor !== hexColor) {
           jsCode = jsCode.replace(
-            new RegExp(`stopColor="${escapedOriginal}"`, 'gi'),
-            `stopColor={${varName}}`
+            new RegExp(`stopColor="${escapedOriginal}"`, "gi"),
+            `stopColor={${varName}}`,
           )
         }
       }
@@ -159,5 +155,5 @@ export async function generateIndexFile(components, outputDir) {
     .join("\n")
 
   const indexPath = path.join(outputDir, "index.ts")
-  await writeFile(indexPath, exports + "\n", "utf-8")
+  await writeFile(indexPath, `${exports}\n`, "utf-8")
 }

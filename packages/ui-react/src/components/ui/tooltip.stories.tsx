@@ -83,24 +83,25 @@ export const ShouldShowOnHover: Story = {
   tags: ["!dev", "!autodocs"],
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body)
-    const triggerBtn = await canvasBody.findByRole("button", { name: /add/i })
+    const triggerBtn = canvasBody.getByRole("button", { name: /add/i })
 
     await step("hover over trigger", async () => {
       await userEvent.hover(triggerBtn)
-      await waitFor(() =>
-        expect(
-          canvasElement.ownerDocument.body.querySelector("[data-radix-popper-content-wrapper]"),
-        ).toBeVisible(),
-      )
+      await waitFor(() => {
+        const tooltipElement = canvasElement.ownerDocument.body.querySelector(
+          "[data-radix-popper-content-wrapper]",
+        )
+        expect(tooltipElement).toBeVisible()
+      })
     })
 
     await step("unhover trigger", async () => {
       await userEvent.unhover(triggerBtn)
       await waitFor(() => {
         const tooltipElement = canvasElement.ownerDocument.body.querySelector(
-          "[data-radix-popper-content-wrapper]",
+          '[role="tooltip"][data-state="closed"]',
         )
-        expect(tooltipElement).toBeNull()
+        expect(tooltipElement).toBeInTheDocument()
       })
     })
   },

@@ -1,103 +1,86 @@
 ---
 name: ⚙️ Infrastructure Feature
-about: Create a feature request for infrastructure, DevOps, or tooling improvements
+about: Suggest infrastructure, DevOps, or tooling improvements
 title: "[INFRA] "
-labels: ["feature", "infrastructure", "devops"]
-assignees: ["lordpluha"]
+labels: ["feature", "infrastructure"]
+assignees: []
 ---
 
-## 📋 Brief Description
-<!-- Provide a clear and concise description of the infrastructure feature -->
+## 📝 Feature Description
+<!-- Clear description of the infrastructure improvement -->
 
 
-## 🎯 Motivation and Goal
-<!-- Explain why this infrastructure change is needed and what problem it solves -->
+## 🎯 Problem & Motivation
+<!-- What problem does this solve? What will improve? -->
 
 
-## 📌 Requirements
-<!-- List the specific infrastructure and operational requirements -->
-- [ ]
-- [ ]
-- [ ]
+## 💡 Proposed Solution
 
-## 🏗️ Infrastructure Scope
-<!-- What areas of infrastructure will be affected? -->
-
-### Deployment & CI/CD
-- [ ] GitHub Actions workflows
-- [ ] Docker configurations
-- [ ] Kubernetes manifests
-- [ ] Deployment pipelines
-
-### Monitoring & Observability
-- [ ] Logging improvements
-- [ ] Metrics collection
-- [ ] Alert configurations
-- [ ] Performance monitoring
-
-### Security & Compliance
-- [ ] Security scanning
-- [ ] Vulnerability assessments
-- [ ] Compliance checks
-- [ ] Access controls
-
-### Development Tools
-- [ ] Local development setup
-- [ ] Testing infrastructure
-- [ ] Code quality tools
-- [ ] Documentation tools
+### Infrastructure Scope
+- [ ] CI/CD (GitHub Actions workflows)
+- [ ] Docker/Containers
+- [ ] Database (PostgreSQL, Redis)
+- [ ] Monitoring & Logging
+- [ ] Security
+- [ ] Development environment
 
 ## 🔧 Technical Implementation
-<!-- Describe the technical approach and implementation details -->
 
 ### Technologies/Tools
-- [ ] Docker/Containerization
-- [ ] Kubernetes/Orchestration
-- [ ] Cloud services (AWS/GCP/Azure)
-- [ ] Monitoring tools (Prometheus, Grafana)
-- [ ] CI/CD tools (GitHub Actions, Jenkins)
+- [ ] Docker/Docker Compose
+- [ ] GitHub Actions
+- [ ] PostgreSQL 16
+- [ ] Redis 7
+- [ ] Nginx
+- [ ] Monitoring tools (k6, Lighthouse, etc.)
 
-### Configuration Changes
-- [ ] Environment variables
-- [ ] Config files
-- [ ] Secrets management
-- [ ] Network configurations
+### Configuration Files
+```yaml
+# Example: docker-compose.yaml, workflow.yml, etc.
+```
 
-### Dependencies
-- [ ] New tools/services needed
-- [ ] Third-party integrations
-- [ ] Service dependencies
+### Changes Needed
+- [ ] Update `docker-compose.yaml`
+- [ ] Modify `.github/workflows/`
+- [ ] Update Dockerfiles
+- [ ] Change Prisma schema
+- [ ] Update nginx config
+
+## 🚀 Deployment
 
 ### Migration Strategy
 - [ ] Zero-downtime deployment
 - [ ] Rollback plan
-- [ ] Data migration (if applicable)
-- [ ] Gradual rollout strategy
+- [ ] Database migration
+- [ ] Environment variables update
+
+### Testing
+- [ ] Test locally with Docker
+- [ ] Test in CI/CD pipeline
+- [ ] Load testing (k6)
+- [ ] Security scanning (Trivy)
 
 ## ✅ Acceptance Criteria
-<!-- Define what "done" looks like for this infrastructure change -->
-- [ ] Infrastructure is deployed successfully
-- [ ] All services are running correctly
-- [ ] Performance meets requirements
-- [ ] Security requirements are met
-- [ ] Monitoring is properly configured
-- [ ] Documentation is updated
-- [ ] Team is trained on new processes
+- [ ] Infrastructure deployed successfully
+- [ ] All services healthy
+- [ ] Performance targets met
+- [ ] Security requirements met
+- [ ] Documentation updated
+- [ ] Team can use new setup
 
-## 🧪 Testing Strategy
-<!-- How will this infrastructure change be tested? -->
-- [ ] Infrastructure as Code tests
-- [ ] Integration testing
-- [ ] Load testing
-- [ ] Security testing
-- [ ] Disaster recovery testing
+## 📊 Monitoring
+- [ ] Health checks added
+- [ ] Metrics collected
+- [ ] Alerts configured
+- [ ] Logs accessible
 
-## 📊 Monitoring & Alerting
-<!-- What monitoring and alerting will be implemented? -->
-- [ ] Health checks
-- [ ] Performance metrics
-- [ ] Error tracking
-- [ ] Resource utilization
+## 📚 Documentation
+- [ ] Update README.md
+- [ ] Update .github/WORKFLOWS.md
+- [ ] Add inline comments
+
+## 🔗 References
+<!-- Related docs, issues, examples -->
 - [ ] Alert thresholds
 
 ## 🔒 Security Considerations

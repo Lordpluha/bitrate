@@ -1,103 +1,84 @@
 ---
-name: 📱 Mobile Feature
-about: Create a feature request for the Spotify Clone mobile application
+name: 📱 Mobile Feature Request
+about: Suggest a new feature for the Expo mobile app
 title: "[MOBILE] "
-labels: ["feature", "mobile", "react-native"]
-assignees: ["lordpluha"]
+labels: ["feature", "mobile"]
+assignees: []
 ---
 
-## 📋 Brief Description
-<!-- Provide a clear and concise description of the feature -->
+## 📝 Feature Description
+<!-- Clear description of the proposed feature -->
 
 
-## 🎯 Motivation and Goal
-<!-- Explain why this feature is needed and what problem it solves -->
+## 🎯 Problem & Motivation
+<!-- Why is this needed? User story format helpful -->
 
 
-## 📌 Requirements
-<!-- List the specific functional and non-functional requirements -->
-- [ ]
-- [ ]
-- [ ]
+## 💡 Proposed Solution
 
-## 📱 Platform Support
-<!-- Which platforms should this feature support? -->
-- [ ] iOS
-- [ ] Android
-- [ ] Both platforms
+### Screens/Navigation
+- [ ] New screen: `app/[screen].tsx`
+- [ ] Update navigation in `app/_layout.tsx`
 
-## 🎨 UI/UX Design
-<!-- Describe the user interface and user experience -->
+### Components
+```typescript
+// Example component
+interface FeatureProps {
+  // Props
+}
 
-### Screens/Components
-- [ ] New screen/component 1
-- [ ] New screen/component 2
-- [ ] Modified existing screen
-
-### Navigation
-- [ ] New navigation flow
-- [ ] Modified existing navigation
-
-### Platform-Specific Considerations
-- [ ] iOS-specific features (e.g., haptic feedback, iOS gestures)
-- [ ] Android-specific features (e.g., back button behavior)
+export function Feature({ }: FeatureProps) {
+  // Implementation
+}
+```
 
 ## 🔧 Technical Implementation
-<!-- Describe the technical approach and implementation details -->
 
-### React Native Components
-- [ ] Custom components needed
-- [ ] Third-party components
-- [ ] Platform-specific code
+### Expo/React Native
+- [ ] Expo SDK features needed (e.g., expo-camera, expo-av)
+- [ ] Native modules required
+- [ ] Platform-specific code: `Platform.OS === 'ios'`
 
-### State Management
-- [ ] Redux/Context updates
-- [ ] Local state management
-- [ ] Async storage
-
-### Native Modules
-- [ ] Camera access
-- [ ] Audio playback
-- [ ] Push notifications
-- [ ] Device permissions
+### UI
+- [ ] React Native components
+- [ ] Styling (StyleSheet | NativeWind)
+- [ ] Animations (Reanimated)
+- [ ] Gestures (react-native-gesture-handler)
 
 ### API Integration
-- [ ] New API endpoints
+- [ ] Endpoints: `/api/v1/...`
+- [ ] Data fetching (React Query | SWR)
 - [ ] Offline support
-- [ ] Data caching strategy
+
+### Permissions
+- [ ] Camera
+- [ ] Audio
+- [ ] Notifications
+- [ ] Location
 
 ## ✅ Acceptance Criteria
-<!-- Define what "done" looks like for this feature -->
-- [ ] Feature works on both iOS and Android
-- [ ] Performance is smooth (60fps animations)
-- [ ] Follows platform design guidelines
-- [ ] Offline functionality (if applicable)
-- [ ] Error handling is implemented
-- [ ] Loading states are implemented
-- [ ] Accessibility features are implemented
+- [ ] Works on iOS and Android
+- [ ] Smooth animations (60fps)
+- [ ] Loading & error states
+- [ ] Tested on physical devices
+- [ ] Follows platform guidelines
 
-## 🧪 Testing Strategy
-<!-- How will this feature be tested? -->
-- [ ] Unit tests
+## 🧪 Testing
+- [ ] Test on iOS device/simulator
+- [ ] Test on Android device/emulator
+- [ ] Test with `npx expo start`
 - [ ] Component tests
-- [ ] E2E tests (Detox)
-- [ ] Manual testing on devices
-- [ ] Performance testing
-
-## 📱 Device Testing
-<!-- Which devices should be tested? -->
-- [ ] iPhone (latest iOS)
-- [ ] iPhone (iOS -1 version)
-- [ ] Android flagship device
-- [ ] Android mid-range device
-- [ ] Tablet support
 
 ## ♿ Accessibility
-<!-- Ensure the feature is accessible -->
-- [ ] VoiceOver support (iOS)
-- [ ] TalkBack support (Android)
-- [ ] Large text support
-- [ ] High contrast support
+- [ ] VoiceOver (iOS) / TalkBack (Android)
+- [ ] Touch target size (min 44pt)
+
+## 📚 Documentation
+- [ ] Update README
+- [ ] JSDoc comments
+
+## 🔗 References
+<!-- Screenshots, mockups, related issues -->
 
 ## 📖 Documentation
 <!-- What documentation needs to be created/updated? -->

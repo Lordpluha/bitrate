@@ -1,0 +1,180 @@
+name: Desktop Build
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'apps/desktop/**'
+      - '.github/workflows/desktop.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'apps/desktop/**'
+
+jobs:
+  build-linux:
+    name: Build for Linux
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Desktop App (Docker)
+      run: |
+        docker build -t spotify-desktop-builder \
+          --target ci-build \
+          --cache-from type=gha \
+          --cache-to type=gha,mode=max \
+          -f apps/desktop/Dockerfile .
+
+    - name: List build contents
+      run: |
+        docker run --rm spotify-desktop-builder sh -c "ls -la /app/apps/desktop/src-tauri/target/ || echo 'No target dir'"
+        docker run --rm spotify-desktop-builder sh -c "ls -la /app/apps/desktop/src-tauri/target/release/ || echo 'No release dir'"
+        docker run --rm spotify-desktop-builder sh -c "ls -la /app/apps/desktop/src-tauri/target/release/bundle/ || echo 'No bundle dir'"
+
+    - name: Extract Build Artifacts
+      run: |
+        docker create --name temp-desktop spotify-desktop-builder
+        docker cp temp-desktop:/app/apps/desktop/src-tauri/target/release/bundle ./desktop-artifacts || echo "No artifacts found"
+        docker rm temp-desktop
+        ls -la desktop-artifacts/ || echo "Artifacts directory not created"
+
+    - name: Upload Artifacts
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: desktop-linux-x64
+        path: desktop-artifacts/**/*
+        retention-days: 7
+        if-no-files-found: error
+
+  build-windows:
+    name: Build for Windows
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10.27.0
+
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Build Desktop App
+      run: |
+        cd apps/desktop
+        pnpm run tauri build
+      env:
+        CARGO_INCREMENTAL: 0
+        CARGO_TERM_COLOR: always
+
+    - name: List build artifacts
+      if: always()
+      run: |
+        echo "Contents of target/release:"
+        dir apps\desktop\src-tauri\target\release\ 2>$null || echo "No release directory"
+        echo "Contents of target/release/bundle:"
+        dir apps\desktop\src-tauri\target\release\bundle\ 2>$null || echo "No bundle directory"
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: desktop-windows-x64
+        path: apps/desktop/src-tauri/target/release/bundle/**/*.exe
+        retention-days: 7
+        if-no-files-found: error
+
+  build-macos:
+    name: Build for macOS
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10.27.0
+
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Build Desktop App
+      run: |
+        cd apps/desktop
+        pnpm run tauri build
+      env:
+        CARGO_INCREMENTAL: 0
+        CARGO_TERM_COLOR: always
+
+    - name: List build artifacts
+      if: always()
+      run: |
+        echo "Contents of target/release:"
+        ls -la apps/desktop/src-tauri/target/release/ || echo "No release directory"
+        echo "Contents of target/release/bundle:"
+        ls -la apps/desktop/src-tauri/target/release/bundle/ || echo "No bundle directory"
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: desktop-macos-universal
+        path: apps/desktop/src-tauri/target/release/bundle/**/*
+        retention-days: 7
+        if-no-files-found: error
+
+  test:
+    name: UI Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Docker
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build UI Dev Server
+      run: |
+        docker build -t desktop-ui-test \
+          --target development \
+          -f apps/desktop/Dockerfile .
+
+    - name: Run UI Server
+      run: |
+        docker run -d -p 1420:1420 --name ui-test desktop-ui-test
+        sleep 10
+
+    - name: Test UI Endpoint
+      run: |
+        curl -f http://localhost:1420 || exit 1
+
+    - name: Cleanup
+      if: always()
+      run: docker stop ui-test && docker rm ui-test

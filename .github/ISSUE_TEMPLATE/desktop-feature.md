@@ -1,103 +1,79 @@
 ---
-name: 🖥️ Desktop Feature
-about: Create a feature request for the Spotify Clone desktop application
+name: 🖥️ Desktop Feature Request
+about: Suggest a new feature for the Tauri desktop app
 title: "[DESKTOP] "
-labels: ["feature", "desktop", "electron"]
-assignees: ["lordpluha"]
+labels: ["feature", "desktop"]
+assignees: []
 ---
 
-## 📋 Brief Description
-<!-- Provide a clear and concise description of the feature -->
+## 📝 Feature Description
+<!-- Clear description of the proposed feature -->
 
 
-## 🎯 Motivation and Goal
-<!-- Explain why this feature is needed and what problem it solves -->
+## 🎯 Problem & Motivation
+<!-- Why is this needed? -->
 
 
-## 📌 Requirements
-<!-- List the specific functional and non-functional requirements -->
-- [ ]
-- [ ]
-- [ ]
+## 💡 Proposed Solution
 
-## 💻 Platform Support
-<!-- Which desktop platforms should this feature support? -->
+### Platform Support
 - [ ] Windows
 - [ ] macOS
 - [ ] Linux
 
-## 🎨 UI/UX Design
-<!-- Describe the user interface and user experience -->
-
-### Windows/Views
-- [ ] New window/view 1
-- [ ] New window/view 2
-- [ ] Modified existing window
-
-### Desktop Integration
-- [ ] System tray functionality
-- [ ] Menu bar integration
-- [ ] Keyboard shortcuts
-- [ ] File system access
-
-### Native Features
-- [ ] Native notifications
-- [ ] Media keys support
-- [ ] System audio integration
-- [ ] Auto-updater
+### UI/UX
+<!-- Describe the interface -->
 
 ## 🔧 Technical Implementation
-<!-- Describe the technical approach and implementation details -->
 
-### Electron Features
-- [ ] Main process modifications
-- [ ] Renderer process updates
-- [ ] IPC communication
-- [ ] Native modules
+### Frontend (React)
+- [ ] Components needed
+- [ ] State management
+- [ ] Styling
 
-### Desktop-Specific APIs
+### Backend (Rust)
+```rust
+// Example Tauri command
+#[tauri::command]
+fn feature_name(param: String) -> Result<String, String> {
+    // Implementation
+}
+```
+
+### Tauri Features
+- [ ] IPC commands (invoke from frontend to Rust)
 - [ ] File system access
-- [ ] System notifications
+- [ ] System tray
 - [ ] Global shortcuts
+- [ ] Native dialogs
 - [ ] Window management
 
-### Performance Considerations
-- [ ] Memory optimization
-- [ ] CPU usage optimization
-- [ ] Bundle size optimization
-- [ ] Startup time optimization
+### System Integration
+- [ ] Menu bar (macOS)
+- [ ] System tray (Windows/Linux)
+- [ ] Notifications
+- [ ] Media keys
 
 ## ✅ Acceptance Criteria
-<!-- Define what "done" looks like for this feature -->
-- [ ] Feature works on all supported platforms
-- [ ] Performance meets desktop standards
-- [ ] Native desktop integration works
-- [ ] Keyboard shortcuts are functional
-- [ ] System integration features work
-- [ ] Auto-update functionality works
-- [ ] Security requirements are met
+- [ ] Works on all platforms (Windows, macOS, Linux)
+- [ ] Performance optimized
+- [ ] Native OS integration
+- [ ] Tested with `pnpm tauri dev` and production builds
 
-## 🧪 Testing Strategy
-<!-- How will this feature be tested? -->
-- [ ] Unit tests
-- [ ] Integration tests
-- [ ] E2E tests with Spectron/Playwright
-- [ ] Manual testing on all platforms
-- [ ] Performance testing
+## 🧪 Testing
+- [ ] Test on Windows
+- [ ] Test on macOS
+- [ ] Test on Linux
+- [ ] Unit tests (Rust)
+- [ ] E2E tests (WebDriver)
 
-## 🖥️ Platform Testing
-<!-- Which platforms should be tested? -->
-- [ ] Windows 10/11
-- [ ] macOS (latest version)
-- [ ] macOS (previous version)
-- [ ] Ubuntu LTS
-- [ ] Other Linux distributions
+## 📚 Documentation
+- [ ] Update README
+- [ ] Rust doc comments
+- [ ] JSDoc comments
 
-## 🔒 Security Considerations
-<!-- Security aspects to consider -->
-- [ ] Code signing (Windows/macOS)
-- [ ] Sandboxing requirements
-- [ ] Permissions handling
+## 🔗 References
+<!-- Tauri docs, similar apps, related issues -->
 - [ ] Secure auto-updates
 
 ## 📦 Distribution

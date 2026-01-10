@@ -1,13 +1,19 @@
 ---
 name: 🌐 Web Bug Report
-about: Report a bug specific to the web application
-title: "[WEB-BUG] "
+about: Report a bug in the Next.js web application
+title: "[WEB] "
 labels: ["bug", "web", "needs-triage"]
-assignees: ["lordpluha"]
+assignees: []
 ---
 
 ## 🐛 Bug Description
-<!-- Provide a clear and concise description of what the bug is -->
+<!-- Clear and concise description of the bug -->
+
+
+## 📍 Page/Component
+- **Page**: `/[route]` (e.g., `/browse`, `/search`, `/track/[id]`)
+- **Component**: `[ComponentName]` (if known)
+- **URL**: `http://localhost:3000/...`
 
 
 ## 🔍 Steps to Reproduce
@@ -29,75 +35,51 @@ assignees: ["lordpluha"]
 <!-- If applicable, add screenshots or videos to help explain your problem -->
 
 
-## 🌐 Browser Information
-<!-- Please complete the following information -->
+## 🌐 Environment
+- **Browser**: [Chrome 120 | Firefox 121 | Safari 17 | Edge 120]
+- **OS**: [Windows 11 | macOS 14 | Ubuntu 22.04]
+- **Device**: [Desktop | Mobile | Tablet]
+- **Screen Size**: `1920x1080` or viewport from DevTools
+- **Node.js**: `v22.x.x` (for dev environment)
+- **Next.js Mode**: [Development | Production Build]
 
-### Browser Details
-- **Browser**: [e.g. Chrome, Firefox, Safari, Edge]
-- **Version**: [e.g. 118.0.5993.88]
-- **OS**: [e.g. Windows 11, macOS 14, Ubuntu 22.04]
-- **Device Type**: [e.g. Desktop, Laptop, Tablet]
-
-### Browser Settings
-- **JavaScript Enabled**: [Yes/No]
-- **Cookies Enabled**: [Yes/No]
-- **Ad Blocker**: [Yes/No - which one?]
-- **Extensions**: [List relevant browser extensions]
-- **Private/Incognito Mode**: [Yes/No]
-
-## 📱 Responsive Design
-<!-- For responsive/mobile web issues -->
-- **Screen Resolution**: [e.g. 1920x1080, 1366x768]
-- **Viewport Size**: [e.g. 390x844 (mobile), 768x1024 (tablet)]
-- **Zoom Level**: [e.g. 100%, 125%, 150%]
-- **Device Emulation**: [e.g. iPhone 14 Pro, Galaxy S23]
-
-## 🌍 Network Information
-- **Connection**: [e.g. WiFi, Ethernet, Mobile Data]
-- **Speed**: [e.g. Fast 3G, 4G, Broadband]
-- **Proxy/VPN**: [Yes/No]
-- **Offline Mode**: [Was the app used offline?]
-
-## 🔧 Developer Tools Information
-<!-- Information from browser developer tools -->
+## 🔧 Console & Network
+<!-- Open DevTools (F12) and check Console & Network tabs -->
 
 ### Console Errors
 ```javascript
-// Paste any console errors here
+// Paste errors from Console tab
+Error: ...
 ```
 
-### Network Tab
-- **Failed Requests**: [List any failed HTTP requests]
-- **Slow Requests**: [List requests taking >3 seconds]
-- **Status Codes**: [Any non-2xx status codes]
+### Network Issues
+- **Failed API Requests**: List failed calls to `/api/v1/...`
+- **Status Codes**: Any non-2xx responses
+- **CORS Errors**: [Yes | No]
 
-### Performance
-- **Page Load Time**: [e.g. 3.2 seconds]
-- **Largest Contentful Paint (LCP)**: [e.g. 2.1s]
-- **First Input Delay (FID)**: [e.g. 120ms]
-- **Cumulative Layout Shift (CLS)**: [e.g. 0.15]
+### Next.js Specific
+- **Hydration Errors**: [Yes | No]
+- **Build Errors**: Check terminal if in dev mode
+- **Client/Server Mismatch**: [Yes | No]
 
-## 🎨 UI/UX Issues
-<!-- For visual or interaction bugs -->
-- [ ] Layout broken
-- [ ] Elements overlapping
-- [ ] Incorrect colors/fonts
-- [ ] Animation issues
-- [ ] Hover states not working
-- [ ] Focus indicators missing
-- [ ] Responsive breakpoints
+## 🎨 Issue Type
+- [ ] Layout/Visual bug
+- [ ] Functionality broken
+- [ ] Performance issue
+- [ ] Responsive design
+- [ ] Accessibility
+- [ ] Hydration error
+- [ ] Routing issue
+- [ ] API integration
 
-## ♿ Accessibility Issues
-<!-- For accessibility-related bugs -->
-- [ ] Keyboard navigation broken
-- [ ] Screen reader issues
-- [ ] Color contrast problems
-- [ ] Missing ARIA labels
-- [ ] Focus management issues
+## 📊 Severity
+- [ ] 🚨 **Critical** - App unusable, blocks major features
+- [ ] 🔴 **High** - Important feature broken
+- [ ] 🟡 **Medium** - Partial functionality affected
+- [ ] 🟢 **Low** - Minor visual/edge case
 
-## 📊 Severity Level
-- [ ] 🚨 Critical - Site unusable
-- [ ] 🔴 High - Major feature broken
+## 📝 Additional Context
+<!-- Screenshots, videos, related issues, etc. -->
 - [ ] 🟡 Medium - Minor feature affected
 - [ ] 🟢 Low - Visual/cosmetic issue
 

@@ -5,6 +5,15 @@ import { UserEntity } from 'src/users/entities'
 export async function seedUsers(prisma: PrismaClient, count: number = 50) {
   const users: Omit<UserEntity, 'id' | 'createdAt'>[] = []
 
+  // Create a test user for load testing and e2e tests
+  users.push({
+    username: 'testuser',
+    email: 'test@example.com',
+    password: 'password123',
+    avatar: 'https://i.pravatar.cc/150?img=1',
+    description: 'Test user for automated testing',
+  })
+
   // Примеры слов для создания username
   const adjectives = [
     'Cool',

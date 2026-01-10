@@ -1,8 +1,8 @@
-import { context } from "esbuild"
-import { glob } from "glob"
 import { exec } from "node:child_process"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { context } from "esbuild"
+import { glob } from "glob"
 import { aliasResolver } from "./alias-resolver.mjs"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -29,6 +29,16 @@ const sharedConfig = {
 
 async function watchBuild() {
   try {
+    // Generate initial type definitions
+    console.log("Generating type definitions...")
+    exec(
+      "pnpm tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir dist/types --watch",
+      (_error, stdout, stderr) => {
+        if (stdout) console.log(`[TypeScript] ${stdout.trim()}`)
+        if (stderr) console.error(`[TypeScript] ${stderr.trim()}`)
+      },
+    )
+
     // Create watch contexts for both ESM and CJS
     const esmContext = await context({
       ...sharedConfig,

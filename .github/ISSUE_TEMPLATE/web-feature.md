@@ -1,90 +1,99 @@
 ---
-name: 🌐 Web Feature
-about: Create a feature request for the Spotify Clone web application
+name: 🌐 Web Feature Request
+about: Suggest a new feature for the Next.js web app
 title: "[WEB] "
-labels: ["feature", "web", "frontend"]
-assignees: ["lordpluha"]
+labels: ["feature", "web"]
+assignees: []
 ---
 
-## 📋 Brief Description
-<!-- Provide a clear and concise description of the feature -->
+## 📝 Feature Description
+<!-- Clear description of the proposed feature -->
 
 
-## 🎯 Motivation and Goal
-<!-- Explain why this feature is needed and what problem it solves -->
+## 🎯 Problem & Motivation
+<!-- What problem does this solve? User story: "As a [user], I want [feature] so that [benefit]" -->
 
 
-## 📌 Requirements
-<!-- List the specific functional and non-functional requirements -->
-- [ ]
-- [ ]
-- [ ]
-
-## 🎨 UI/UX Design
-<!-- Describe the user interface and user experience -->
-
-### Components Needed
-- [ ] New component 1
-- [ ] New component 2
-- [ ] Modified existing component
+## 💡 Proposed Solution
 
 ### Pages/Routes
-- [ ] New page/route
-- [ ] Modified existing page
+- [ ] New page: `/[route]`
+- [ ] Modify existing: `/[route]`
 
-### Responsive Design
-- [ ] Desktop (1024px+)
-- [ ] Tablet (768px - 1023px)
-- [ ] Mobile (< 768px)
+### Components
+```typescript
+// Example component structure
+interface NewFeatureProps {
+  // Props
+}
+
+function NewFeature({ }: NewFeatureProps) {
+  // Implementation
+}
+```
+
+### UI/UX Design
+<!-- Describe the visual design, attach mockups/wireframes if available -->
+
+**Desktop**:
+**Tablet**:
+**Mobile**:
 
 ## 🔧 Technical Implementation
-<!-- Describe the technical approach and implementation details -->
 
-### Frontend Technologies
-- [ ] React components
-- [ ] State management (Redux/Zustand)
-- [ ] Styling (CSS/Tailwind)
-- [ ] TypeScript interfaces
+### Frontend
+- [ ] Create components in `src/components/`
+- [ ] Add pages in `src/app/`
+- [ ] Update routing
+- [ ] State management (React Context | Zustand)
+- [ ] Form validation (react-hook-form + zod)
 
 ### API Integration
-- [ ] New API calls needed
-- [ ] Data fetching strategy
-- [ ] Error handling
+- [ ] API endpoints needed: `/api/v1/...`
+- [ ] Data fetching: Server Components | Client-side
+- [ ] Caching strategy
+
+### Styling
+- [ ] Tailwind CSS classes
+- [ ] Responsive breakpoints
+- [ ] Dark/Light theme support
+- [ ] Animations (Framer Motion)
 
 ### Dependencies
-- [ ] New packages/libraries needed
-- [ ] Third-party integrations
+<!-- New packages needed -->
+```bash
+pnpm add [package-name]
+```
 
 ## ✅ Acceptance Criteria
-<!-- Define what "done" looks like for this feature -->
-- [ ] Feature works as expected on all supported devices
-- [ ] UI matches the design specifications
-- [ ] All user interactions are functional
-- [ ] Error states are handled gracefully
-- [ ] Loading states are implemented
-- [ ] Accessibility requirements are met (WCAG 2.1)
-- [ ] Performance requirements are met
+- [ ] Feature works on all devices (desktop, tablet, mobile)
+- [ ] Responsive design implemented
+- [ ] Dark/light theme support
+- [ ] Loading & error states handled
+- [ ] Forms validated
+- [ ] Accessibility (keyboard nav, screen readers)
+- [ ] Tests written (unit + e2e)
 
-## 🧪 Testing Strategy
-<!-- How will this feature be tested? -->
-- [ ] Unit tests for components
-- [ ] Integration tests
-- [ ] E2E tests with Playwright
-- [ ] Visual regression tests
-- [ ] Accessibility tests
+## 🧪 Testing
+```typescript
+// Example test
+describe('NewFeature', () => {
+  it('should render correctly', () => {
+    // Test
+  });
+});
+```
 
-## 📱 Accessibility
-<!-- Ensure the feature is accessible -->
+## ♿ Accessibility
 - [ ] Keyboard navigation
-- [ ] Screen reader support
-- [ ] Color contrast compliance
+- [ ] ARIA labels
+- [ ] Color contrast (WCAG AA)
 - [ ] Focus management
 
-## 📖 Documentation
-<!-- What documentation needs to be created/updated? -->
-- [ ] Component documentation
-- [ ] Storybook stories
-- [ ] User guide updates
+## 📚 Documentation
+- [ ] Update README
+- [ ] Storybook story (if UI component)
+- [ ] JSDoc comments
 
-## 🔗 Additional Information
-<!-- Any additional context, screenshots, mockups, or examples -->
+## 🔗 References
+<!-- Mockups, similar features, related issues -->

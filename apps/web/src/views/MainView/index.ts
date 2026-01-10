@@ -1,2 +1,1 @@
-export * from './ui/MainView';
-
+export * from './ui/MainView'

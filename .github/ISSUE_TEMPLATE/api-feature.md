@@ -1,63 +1,104 @@
 ---
-name: 🚀 API Feature
-about: Create a feature request for the Spotify Clone API
+name: 🚀 API Feature Request
+about: Suggest a new feature for the NestJS API
 title: "[API] "
-labels: ["feature", "api", "backend"]
-assignees: ["lordpluha"]
+labels: ["feature", "api"]
+assignees: []
 ---
 
-## 📋 Brief Description
-<!-- Provide a clear and concise description of the feature -->
+## 📋 Feature Description
+<!-- Clear and concise description of the proposed feature -->
 
 
-## 🎯 Motivation and Goal
-<!-- Explain why this feature is needed and what problem it solves -->
+## 🎯 Problem & Motivation
+<!-- What problem does this solve? Why is it needed? -->
 
 
-## 📌 Requirements
-<!-- List the specific functional and non-functional requirements -->
-- [ ]
-- [ ]
-- [ ]
-
-## 🔧 Technical Implementation
-<!-- Describe the technical approach and implementation details -->
-
-### Database Changes
-- [ ] Schema modifications needed
-- [ ] Migration scripts
+## 💡 Proposed Solution
 
 ### API Endpoints
-- [ ] `GET` /endpoint-name
-- [ ] `POST` /endpoint-name
-- [ ] `PUT` /endpoint-name
-- [ ] `DELETE` /endpoint-name
+<!-- Describe the new or modified endpoints -->
+
+#### `POST /api/v1/[resource]`
+**Purpose**: Create a new resource
+**Request**:
+```json
+{
+  "field": "value"
+}
+```
+**Response**:
+```json
+{
+  "id": "uuid",
+  "field": "value",
+  "createdAt": "2026-01-07T00:00:00Z"
+}
+```
+
+### Database Schema Changes
+<!-- Prisma schema modifications needed -->
+```prisma
+model NewModel {
+  id        String   @id @default(uuid())
+  field     String
+  createdAt DateTime @default(now())
+}
+```
+
+### Business Logic
+<!-- Describe the core logic -->
+-
+-
+
+## 🔧 Technical Implementation
+
+### Module Structure
+- [ ] Create `src/[module]/[module].module.ts`
+- [ ] Create `src/[module]/[module].controller.ts`
+- [ ] Create `src/[module]/[module].service.ts`
+- [ ] Create `src/[module]/dto/` folder
+- [ ] Create `src/[module]/entities/` folder
 
 ### Dependencies
-- [ ] New packages/libraries needed
-- [ ] Third-party integrations
+- [ ] Prisma schema update
+- [ ] New npm packages:
+- [ ] Third-party API integration:
+
+### Authentication & Authorization
+- [ ] Public endpoint
+- [ ] Requires authentication (JWT)
+- [ ] Requires specific role: [Admin | User]
+- [ ] Custom guard needed
 
 ## ✅ Acceptance Criteria
-<!-- Define what "done" looks like for this feature -->
-- [ ] API endpoints are implemented and working
-- [ ] Unit tests are written and passing
-- [ ] Integration tests are written and passing
-- [ ] API documentation is updated
-- [ ] Error handling is implemented
-- [ ] Performance requirements are met
+- [ ] API endpoints implemented and documented (Swagger)
+- [ ] Unit tests written (>80% coverage)
+- [ ] Integration tests (e2e) passing
+- [ ] Error handling implemented
+- [ ] Input validation with class-validator
+- [ ] Database migrations created
+- [ ] API documentation updated (Swagger/contracts)
 
 ## 🧪 Testing Strategy
-<!-- How will this feature be tested? -->
-- [ ] Unit tests
-- [ ] Integration tests
-- [ ] E2E tests
-- [ ] Performance tests
+```typescript
+// Example test cases
+describe('NewFeature', () => {
+  it('should create resource', async () => {
+    // Test implementation
+  });
+
+  it('should handle validation errors', async () => {
+    // Test implementation
+  });
+});
+```
 
 ## 📖 Documentation
-<!-- What documentation needs to be created/updated? -->
-- [ ] API documentation
-- [ ] Code comments
-- [ ] README updates
+- [ ] Update `packages/contracts` OpenAPI spec
+- [ ] Update API README
+- [ ] Add JSDoc comments
+- [ ] Update Prisma schema comments
 
-## 🔗 Additional Information
-<!-- Any additional context, screenshots, links, or examples -->
+## 🔗 References
+<!-- Related issues, PRs, documentation, or examples -->
