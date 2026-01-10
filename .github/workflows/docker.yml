@@ -183,6 +183,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Free up disk space
+        run: |
+          docker system prune -af --volumes
+          df -h
+
       - name: Create .env file
         run: |
           cp .env.example .env
