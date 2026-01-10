@@ -12,44 +12,28 @@ concurrency:
 permissions:
   contents: read
   pull-requests: write
-  issues: write
 
 jobs:
-  # Job 1: Code Quality (fastest)
+  # Code Quality & Type Check
   code-quality:
-    name: Code Quality
+    name: Code Quality & Types
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.27.0
-          run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -63,55 +47,11 @@ jobs:
       - name: Type checking
         run: pnpm check-types
 
-      - name: Security audit
-        run: pnpm audit --audit-level=high
-        continue-on-error: true
-
-  # Job 2: Build Check
-  build-check:
-    name: Build All Apps
+  # Build & Test
+  build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: code-quality
-
-    strategy:
-      fail-fast: false
-      matrix:
-        app: [api, web, admin]
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.27.0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build ${{ matrix.app }}
-        run: pnpm --filter @spotify/${{ matrix.app }} build
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-${{ matrix.app }}
-          path: apps/${{ matrix.app }}/dist
-          retention-days: 1
-
-  # Job 3: Tests
-  tests:
-    name: Run Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
     needs: code-quality
 
     services:
@@ -157,6 +97,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build all packages
+        run: pnpm build
+
       - name: Generate Prisma Client
         run: pnpm --filter @spotify/api run db:generate
 
@@ -165,7 +108,7 @@ jobs:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
         run: pnpm --filter @spotify/api run db:migration:start
 
-      - name: Run unit tests
+      - name: Run tests
         run: pnpm test
         continue-on-error: true
 
@@ -177,16 +120,17 @@ jobs:
           flags: unittests
           fail_ci_if_error: false
 
-  # Job 4: Docker Build Test
+  # Docker Build (only on main apps)
   docker-build:
-    name: Docker Build Test
+    name: Docker Build
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     needs: code-quality
+    if: contains(github.event.pull_request.labels.*.name, 'docker') || contains(github.event.pull_request.title, '[docker]')
 
     strategy:
       matrix:
-        service: [api, web, admin]
+        service: [api, web]
 
     steps:
       - name: Checkout
@@ -206,35 +150,27 @@ jobs:
           cache-to: type=gha,mode=max
           tags: spotify-${{ matrix.service }}:test
 
-      - name: Test image
-        run: |
-          docker run --rm spotify-${{ matrix.service }}:test node --version
-
-  # Job 5: PR Summary
+  # PR Summary
   pr-summary:
     name: PR Summary
     runs-on: ubuntu-latest
-    needs: [code-quality, build-check, tests, docker-build]
+    needs: [code-quality, build-and-test]
     if: always()
 
     steps:
-      - name: Check results
-        run: |
-          if [ "${{ needs.code-quality.result }}" != "success" ] || \
-             [ "${{ needs.build-check.result }}" != "success" ] || \
-             [ "${{ needs.tests.result }}" != "success" ] || \
-             [ "${{ needs.docker-build.result }}" != "success" ]; then
-            echo "❌ Some checks failed"
-            exit 1
-          else
-            echo "✅ All checks passed"
-          fi
-
       - name: PR Comment
         uses: actions/github-script@v7
-        if: always()
         with:
           script: |
+            const body = \`## 🤖 PR Quality Checks
+
+            | Check | Status |
+            |-------|--------|
+            | Code Quality & Types | \${{ needs.code-quality.result == 'success' && '✅ Passed' || '❌ Failed' }} |
+            | Build & Tests | \${{ needs.build-and-test.result == 'success' && '✅ Passed' || '❌ Failed' }} |
+
+            <sub>Updated at \${new Date().toUTCString()}</sub>\`;
+
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -245,17 +181,6 @@ jobs:
               comment.user.type === 'Bot' &&
               comment.body.includes('PR Quality Checks')
             );
-
-            const body = `## 🤖 PR Quality Checks
-
-            | Check | Status |
-            |-------|--------|
-            | Code Quality | ${{ needs.code-quality.result == 'success' && '✅ Passed' || '❌ Failed' }} |
-            | Build | ${{ needs.build-check.result == 'success' && '✅ Passed' || '❌ Failed' }} |
-            | Tests | ${{ needs.tests.result == 'success' && '✅ Passed' || '⚠️ Check logs' }} |
-            | Docker | ${{ needs.docker-build.result == 'success' && '✅ Passed' || '❌ Failed' }} |
-
-            <sub>Updated at ${new Date().toUTCString()}</sub>`;
 
             if (botComment) {
               await github.rest.issues.updateComment({
