@@ -32,13 +32,13 @@ export const AuthBanner = () => {
         watchDrag: false
       }}
       plugins={[plugin.current as any]}
-      className='overflow-hidden rounded-[0_10px_10px_0] max-xl:hidden shrink-0'
+      className='w-1/2 overflow-hidden rounded-[0_10px_10px_0] max-xl:hidden'
     >
-      <CarouselContent className='m-0 h-[1008px] w-[720px]'>
+      <CarouselContent className='m-0 h-[1008px] w-full'>
         {slides.map(({ src, alt }, i) => (
           <CarouselItem
             key={i}
-            className='p-0'
+            className='p-0 basis-full'
           >
             <img
               src={src}

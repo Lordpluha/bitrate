@@ -115,10 +115,10 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
       onOpenChange={onOpenChange}
       className='max-w-[500px]  w-full'
     >
-      <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-textContrast rounded-lg'>
+      <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg'>
         <div className='flex flex-col items-center'>
           {/* <LogoIconSm /><PlusIcon /> */}
-          <Typography as='h5' size='heading5' className='mt-2 text-center text-textContrast'>
+          <Typography as='h5' size='heading5' className='mt-2 text-center text-text-contrast'>
             Sign Up
           </Typography>
           <Typography as='p' size='body' className='text-center text-grey-500'>
@@ -253,12 +253,12 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                 type='button'
               >
                 {/* <GoggleIcon className='mr-2' /> */}
-                <Typography as='p' size='body' className='text-textContrast'>
+                <Typography as='p' size='body' className='text-text-contrast'>
                   Continue with Google
                 </Typography>
               </Button>
 
-              <p className='text-base text-center text-textContrast'>
+              <p className='text-base text-center text-text-contrast'>
                 Already have an account?{' '}
                 <button
                   type='button'

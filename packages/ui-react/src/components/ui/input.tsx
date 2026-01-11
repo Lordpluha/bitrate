@@ -3,14 +3,14 @@ import type { ComponentProps } from "react"
 import { cn } from "@/lib/utils"
 
 export const inputVariants = cva(
-  "flex w-full rounded-md border text-base ring-offset-white placeholder:text-slate-500 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300",
+  "px-3 py-2 flex w-full rounded-md border text-base ring-offset-white placeholder:text-slate-500 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300",
   {
     variants: {
       variant: {
         default:
           "border-slate-200 bg-white text-slate-900 focus-visible:ring-slate-950 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50",
         contrast: "border-grey-500 bg-contrast text-textContrast focus-visible:ring-slate-950",
-        search: "bg-grey-900 border-grey-800 text-grey-200 placeholder:text-grey-500 rounded-full h-12 focus-visible:ring-grey-700",
+        search: "bg-grey-900 text-grey-200 placeholder:text-grey-500 rounded-full h-12",
       },
     },
     defaultVariants: {

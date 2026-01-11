@@ -59,7 +59,7 @@ export const RegistrationForm = () => {
   }
 
   return (
-    <div className='flex flex-col items-stretch justify-center gap-4 px-14 py-32 bg-contrast text-text-contrast rounded-[10px_0_0_10px] max-xl:rounded-[10px] max-lg:p-6 box-border max-xl:w-full'>
+    <div className='flex flex-col items-stretch justify-center gap-4 px-14 py-32 bg-contrast text-text-contrast rounded-[10px_0_0_10px] basis-[50%] max-xl:rounded-[10px] max-lg:p-6 box-border max-xl:w-full'>
       <div className='flex flex-col items-center'>
         <LogoIcon width={48} height={48} />
         <Typography as="h5" className='mt-2 text-center' size={'heading5'}>

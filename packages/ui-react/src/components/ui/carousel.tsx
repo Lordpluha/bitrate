@@ -183,13 +183,8 @@ export const CarouselItem = ({ className, ...props }: ComponentProps<"div">) => 
     <div
       role="group"
       aria-roledescription="slide"
-      // Ensure each slide takes full viewport size for the current orientation so Embla can snap correctly.
-      className={cn("min-w-0 shrink-0 grow-0 basis-full", className)}
-      style={
-        orientation === "horizontal"
-          ? ({ minWidth: "100%", flex: "0 0 100%" } as CSSProperties)
-          : ({ minHeight: "100%", flex: "0 0 100%" } as CSSProperties)
-      }
+      // Allow flexible sizing unless explicitly overridden via className
+      className={cn("min-w-0 shrink-0 grow-0", className)}
       {...props}
     />
   )

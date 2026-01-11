@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext } from '@spotify/ui-react'
-// import { ArrowRightIcon } from '@shared/ui'
+import { ArrowrightIcon } from '@spotify/ui-react'
 
 
 const tags = ['Playlists', 'Artists', 'Albums', 'Podcasts']
@@ -34,10 +34,11 @@ export const LibraryTags = () => {
             <CarouselItem key={tag} className='px-1 basis-auto'>
               <button
                 onClick={() => toggleTag(tag)}
+                type='button'
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   selectedTags.includes(tag)
                     ? 'bg-white text-black'
-                    : 'bg-surface text-white hover:bg-opacity-80'
+                    : 'bg-gray-600/30 text-white hover:bg-opacity-80'
                 }`}
               >
                 {tag}
@@ -46,7 +47,7 @@ export const LibraryTags = () => {
           ))}
         </CarouselContent>
         <CarouselNext
-          // icon={<ArrowRightIcon />}
+          icon={<ArrowrightIcon />}
           className='absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 bg-bgSecondary border-none hover:bg-zinc-700 rounded-full'
         />
       </Carousel>
