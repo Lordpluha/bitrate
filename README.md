@@ -2,18 +2,26 @@
 
 ## 📚 Документация
 
+### Основная документация
 - **[README.md](README.md)** - основная документация (вы здесь)
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - руководство для контрибьюторов
 - **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - кодекс поведения
 - **[SECURITY.md](SECURITY.md)** - политика безопасности
-- **[MOBILE.md](docs/MOBILE.md)** - детальная документация Mobile
-- **[DESKTOP.md](docs/DESKTOP.md)** - детальная документация Desktop
+
+### 📋 Планирование и архитектура
+- **[🗺️ Roadmap](apps/docs/docs/ROADMAP.md)** - дорожная карта проекта с milestones
+- **[⚙️ Workflows](.github/WORKFLOWS.md)** - CI/CD документация
+
+### Приложения
+- **[MOBILE.md](apps/docs/docs/MOBILE.md)** - детальная документация Mobile
+- **[DESKTOP.md](apps/docs/docs/DESKTOP.md)** - детальная документация Desktop
 
 ## 🔗 Полезные ссылки
 
-- Chromatic - https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
-- Storybook - https://spotify-clone-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
-- Web: https://spotify-clone-web-olive.vercel.app/
+- **GitHub Project** - https://github.com/users/Lordpluha/projects/6
+- **Chromatic** - https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
+- **Storybook** - https://spotify-clone-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
+- **Web App** - https://spotify-clone-web-olive.vercel.app/
 
 ---
 
