@@ -1,8 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext } from '@spotify/ui-react'
-import { ArrowrightIcon } from '@spotify/ui-react'
+import { useState } from 'react'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, ArrowRight } from '@spotify/ui-react'
 
 
 const tags = ['Playlists', 'Artists', 'Albums', 'Podcasts']
@@ -47,7 +46,7 @@ export const LibraryTags = () => {
           ))}
         </CarouselContent>
         <CarouselNext
-          icon={<ArrowrightIcon />}
+          icon={<ArrowRight />}
           className='absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 bg-bgSecondary border-none hover:bg-zinc-700 rounded-full'
         />
       </Carousel>

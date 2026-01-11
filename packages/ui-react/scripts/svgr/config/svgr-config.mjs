@@ -6,7 +6,7 @@ import svgo from "@svgr/plugin-svgo"
  * @param {boolean} isMonochrome - является ли SVG одноцветным
  * @param {Map<string, string>} colorVariables - mapping цветов к именам переменных
  */
-export function createSvgrConfig(isMonochrome, colorVariables = null) {
+export function createSvgrConfig(isMonochrome, _colorVariables = null) {
   const baseConfig = {
     plugins: [svgo, jsx],
     typescript: true,
@@ -24,6 +24,7 @@ export function createSvgrConfig(isMonochrome, colorVariables = null) {
     template: (variables, { tpl }) => {
       return tpl`
 ${variables.imports};
+
 
 ${variables.interfaces};
 
@@ -47,7 +48,7 @@ export const ${variables.componentName} = (${variables.props}) => (
     {
       name: "prefixIds",
       params: {
-        prefix: (node, info) => {
+        prefix: (_node, info) => {
           if (!info || !info.path) {
             return "svg"
           }
@@ -112,7 +113,7 @@ export const ${variables.componentName} = (${variables.props}) => (
                     },
                   },
                 }
-              : plugin
+              : plugin,
           ),
         ],
       },

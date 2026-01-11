@@ -1,6 +1,6 @@
-import { glob } from "glob"
 import fs from "node:fs"
 import path from "node:path"
+import { glob } from "glob"
 
 /**
  * Разрешает путь к пакету или возвращает обычный путь

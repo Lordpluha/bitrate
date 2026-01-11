@@ -175,8 +175,8 @@ export const ShouldToggleVisibility: Story = {
   tags: ["!dev", "!autodocs"],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const input = await canvas.findByPlaceholderText(/password/i)
-    const toggleButton = canvasElement.querySelector('button[type="button"]')
+    const input = canvas.getByPlaceholderText(/password/i)
+    const toggleButton = canvas.getByRole("button")
     const testPassword = "secretPassword123"
 
     await step("enter password", async () => {
@@ -185,22 +185,18 @@ export const ShouldToggleVisibility: Story = {
     })
 
     await step("password should be hidden initially", async () => {
-      expect(input).toHaveAttribute("type", "password")
-      expect(input).toHaveValue(testPassword)
+      await expect(input).toHaveAttribute("type", "password")
+      await expect(input).toHaveValue(testPassword)
     })
 
     await step("click toggle to show password", async () => {
-      if (toggleButton) {
-        await userEvent.click(toggleButton)
-      }
-      expect(input).toHaveAttribute("type", "text")
+      await userEvent.click(toggleButton)
+      await expect(input).toHaveAttribute("type", "text")
     })
 
     await step("click toggle to hide password again", async () => {
-      if (toggleButton) {
-        await userEvent.click(toggleButton)
-      }
-      expect(input).toHaveAttribute("type", "password")
+      await userEvent.click(toggleButton)
+      await expect(input).toHaveAttribute("type", "password")
     })
   },
 }

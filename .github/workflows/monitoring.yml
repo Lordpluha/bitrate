@@ -1,0 +1,157 @@
+name: Continuous Monitoring
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  # Check production health
+  health-check:
+    name: Production Health Check
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Check API health
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ secrets.SERVER_HOST }}/health)
+          if [ $response -ne 200 ]; then
+            echo "❌ API health check failed with status $response"
+            exit 1
+          fi
+          echo "✅ API is healthy"
+
+      - name: Check Web availability
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ secrets.SERVER_HOST }})
+          if [ $response -ne 200 ]; then
+            echo "❌ Web check failed with status $response"
+            exit 1
+          fi
+          echo "✅ Web is available"
+
+      - name: Check response times
+        run: |
+          time=$(curl -o /dev/null -s -w '%{time_total}' https://${{ secrets.SERVER_HOST }}/api)
+          echo "API response time: ${time}s"
+
+          # Alert if response time > 2 seconds
+          if (( $(echo "$time > 2.0" | bc -l) )); then
+            echo "⚠️  Slow response time: ${time}s"
+          fi
+
+  # Check for dependency updates
+  dependency-updates:
+    name: Check Dependency Updates
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.27.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Check for updates
+        run: |
+          pnpm outdated --long > dependency-updates.txt || true
+          cat dependency-updates.txt
+
+      - name: Create issue for critical updates
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const updates = fs.readFileSync('dependency-updates.txt', 'utf8');
+
+            if (updates.includes('major')) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🔄 Dependency Updates Available',
+                body: `## Available dependency updates\n\n\`\`\`\n${updates}\n\`\`\`\n\nPlease review and update.`,
+                labels: ['dependencies', 'maintenance']
+              });
+            }
+
+  # Monitor Docker image sizes
+  image-size-monitor:
+    name: Monitor Image Sizes
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        service: [api, web, admin]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/${{ matrix.service }}/Dockerfile
+          push: false
+          target: production
+          tags: size-check:latest
+          cache-from: type=gha
+
+      - name: Check image size
+        run: |
+          size=$(docker images size-check:latest --format "{{.Size}}")
+          echo "${{ matrix.service }} image size: $size"
+
+          # Store in artifact
+          echo "${{ matrix.service }}: $size" >> image-sizes.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-sizes-${{ matrix.service }}
+          path: image-sizes.txt
+          retention-days: 30
+
+  # Check SSL certificate expiry
+  ssl-check:
+    name: SSL Certificate Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check certificate
+        run: |
+          expiry=$(echo | openssl s_client -servername ${{ secrets.SERVER_HOST }} -connect ${{ secrets.SERVER_HOST }}:443 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+          echo "SSL certificate expires: $expiry"
+
+          expiry_epoch=$(date -d "$expiry" +%s)
+          now_epoch=$(date +%s)
+          days_left=$(( ($expiry_epoch - $now_epoch) / 86400 ))
+
+          echo "Days until expiry: $days_left"
+
+          if [ $days_left -lt 30 ]; then
+            echo "⚠️  SSL certificate expires in $days_left days!"
+            exit 1
+          fi
+
+  # Database backup verification
+  backup-check:
+    name: Verify Backups
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Check backup recency
+        run: |
+          # This would connect to your backup storage and verify
+          echo "Checking backup recency..."
+          # Add actual backup verification logic

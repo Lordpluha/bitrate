@@ -5,7 +5,10 @@ import '@kottster/react/dist/style.css'
 
 const pageEntries = import.meta.glob('./pages/**/index.{jsx,tsx}', { eager: true })
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Root element not found')
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <KottsterApp pageEntries={pageEntries} />
   </React.StrictMode>,

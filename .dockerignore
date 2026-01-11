@@ -1,0 +1,25 @@
+# Docker related files
+.env
+nginx/logs/
+backups/
+
+# Dependencies
+node_modules/
+**/node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Development
+.env*.local
+.env.development
+*.log
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Keep example file
+!.env.example

@@ -1,4 +1,3 @@
-import React from 'react'
 import { ExpandIcon, PlusIcon, Typography } from '@spotify/ui-react'
 
 export const LibraryHeader = () => {

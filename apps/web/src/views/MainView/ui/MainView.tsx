@@ -1,6 +1,5 @@
 "use client"
 
-import React from 'react'
 import { useSelector } from 'react-redux'
 import { MainHeader } from '@widgets/MainHeader'
 import { Player } from '@widgets/Player'

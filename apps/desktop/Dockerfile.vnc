@@ -1,0 +1,104 @@
+# Dockerfile для Desktop приложения с VNC поддержкой
+# Позволяет запускать GUI Tauri приложение в контейнере с доступом через VNC
+
+FROM ubuntu:22.04
+
+# Избежать интерактивных prompts при установке
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Установка зависимостей
+RUN apt-get update && apt-get install -y \
+    # Node.js и pnpm
+    curl \
+    wget \
+    ca-certificates \
+    gnupg \
+    # Tauri dependencies
+    libwebkit2gtk-4.1-dev \
+    build-essential \
+    libssl-dev \
+    libgtk-3-dev \
+    libayatana-appindicator3-dev \
+    librsvg2-dev \
+    libxdo-dev \
+    file \
+    # Rust
+    pkg-config \
+    # VNC и X11
+    x11vnc \
+    xvfb \
+    fluxbox \
+    xterm \
+    # noVNC для доступа через браузер
+    novnc \
+    websockify \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка Node.js 22
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g pnpm@10.27.0
+
+# Установка Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Установка Tauri CLI
+RUN cargo install tauri-cli
+
+# Настройка VNC
+ENV DISPLAY=:99
+ENV VNC_PORT=5900
+ENV NOVNC_PORT=6080
+ENV RESOLUTION=1920x1080x24
+
+WORKDIR /app
+
+# Копирование package.json для установки зависимостей
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/desktop/package.json ./apps/desktop/
+COPY turbo.json ./
+
+# Установка зависимостей
+RUN pnpm install --frozen-lockfile
+
+# Копирование исходников
+COPY . .
+
+# Скрипт запуска VNC
+RUN echo '#!/bin/bash\n\
+# Запуск Xvfb\n\
+Xvfb :99 -screen 0 ${RESOLUTION} -ac +extension GLX +render -noreset &\n\
+XVFB_PID=$!\n\
+\n\
+# Ожидание запуска Xvfb\n\
+sleep 2\n\
+\n\
+# Запуск window manager\n\
+fluxbox &\n\
+\n\
+# Запуск x11vnc\n\
+x11vnc -display :99 -forever -shared -rfbport ${VNC_PORT} -passwd spotify &\n\
+X11VNC_PID=$!\n\
+\n\
+# Запуск noVNC для доступа через браузер\n\
+websockify --web=/usr/share/novnc ${NOVNC_PORT} localhost:${VNC_PORT} &\n\
+NOVNC_PID=$!\n\
+\n\
+# Ожидание запуска всех сервисов\n\
+sleep 2\n\
+\n\
+echo "===================================="\n\
+echo "VNC Server running:"\n\
+echo "  VNC:    vnc://localhost:5900 (password: spotify)"\n\
+echo "  noVNC:  http://localhost:6080/vnc.html"\n\
+echo "===================================="\n\
+\n\
+# Запуск Tauri приложения\n\
+cd /app/apps/desktop\n\
+pnpm tauri dev\n\
+' > /start-vnc.sh && chmod +x /start-vnc.sh
+
+EXPOSE 5900 6080 1420
+
+CMD ["/start-vnc.sh"]

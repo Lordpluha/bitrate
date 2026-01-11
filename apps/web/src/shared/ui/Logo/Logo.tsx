@@ -1,11 +1,10 @@
-import type { Theme } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
 import { SpotifyLogo, cn } from '@spotify/ui-react'
 import Link from 'next/link'
 import type { FC } from 'react'
 
 export type LogoProps = {
-  color?: Theme
+  color?: 'dark' | 'light'
 }
 
 export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
@@ -22,7 +21,7 @@ export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
           'transition-[0.3s]',
           color === 'dark'
             ? 'text-text fill-text'
-            : 'text-textContrast fill-textContrast'
+            : 'text-text-contrast fill-text-contrast'
         )}
       />
     </Link>

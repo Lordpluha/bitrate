@@ -36,15 +36,20 @@ export const ShouldOpenClose: Story = {
   tags: ["!dev", "!autodocs"],
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body)
+    const canvas = within(canvasElement)
 
     await step("click the trigger to open the popover", async () => {
-      await userEvent.click(await canvasBody.findByRole("button", { name: /open/i }))
-      expect(await canvasBody.findByRole("dialog")).toBeInTheDocument()
+      const trigger = canvas.getByRole("button", { name: /open/i })
+      await userEvent.click(trigger)
+      await expect(canvasBody.findByRole("dialog")).resolves.toBeInTheDocument()
     })
 
     await step("click the trigger to close the popover", async () => {
-      await userEvent.click(await canvasBody.findByRole("button", { name: /open/i }))
-      expect(await canvasBody.findByRole("dialog")).toHaveAttribute("data-state", "closed")
+      const trigger = canvas.getByRole("button", { name: /open/i })
+      await userEvent.click(trigger)
+      const dialogs = canvasBody.queryAllByRole("dialog")
+      const closedDialog = dialogs.find((dialog) => dialog.getAttribute("data-state") === "closed")
+      expect(closedDialog).toBeInTheDocument()
     })
   },
 }
