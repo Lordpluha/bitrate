@@ -1,8 +1,3 @@
 {
-	"*.{ts,mts,cts}": [
-		"pnpm exec biome check --write"
-	],
-	"!(docs)/**/*.{ts,mts,cts}": [
-		"pnpm exec biome check --write"
-	]
+	"!(docs)/**/*.{ts,mts,cts}": "pnpm exec biome check --write"
 }
