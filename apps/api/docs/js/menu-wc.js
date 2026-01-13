@@ -11,7 +11,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
     }
 
     render(isNormalMode) {
-        const tp = lithtml.html(`
+        let tp = lithtml.html(`
         <nav>
             <ul class="list">
                 <li class="title">

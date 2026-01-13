@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (entityLogo) {
                 var url = entityLogo.getAttribute('data-src');
                 // Dark mode + logo
-                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                let isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 if (isDarkMode && url.indexOf('compodoc') !== -1) {
                     url = 'images/compodoc-vectorise-inverted.png';
                 }
@@ -155,13 +155,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     parentLink,
                     elementIconChild;
                 if (parent) {
-                    if (parent.classList.contains('linked')) {
+                    if (!parent.classList.contains('linked')) {
+                        e.preventDefault();
+                    } else {
                         parentLink = parent.parentNode;
                         if (parentLink && element.classList.contains('link-name')) {
                             parentLink.trigger('click');
                         }
-                    } else {
-                        e.preventDefault();
                     }
                     elementIconChild = parent.getElementsByClassName(faAngleUpClass)[0];
                     if (!elementIconChild) {

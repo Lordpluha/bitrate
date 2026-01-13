@@ -1058,7 +1058,7 @@ class TemplatePlayground {
                     let url = `/docs/${this.sessionId}/index.html?t=` + Date.now();
                     if (this.lastVisitedDocUrl) {
                         // Remove /docs/<sessionId>/ prefix if present
-                        const docPath = this.lastVisitedDocUrl.replace(new RegExp(`^/docs/${this.sessionId}/?`), '');
+                        let docPath = this.lastVisitedDocUrl.replace(new RegExp(`^/docs/${this.sessionId}/?`), '');
                         url = `/docs/${this.sessionId}/${docPath}`;
                         url += (url.includes('?') ? '&' : '?') + 't=' + Date.now();
                     }
@@ -1287,7 +1287,7 @@ class TemplatePlayground {
                 'theme', 'language', 'base', 'customFavicon', 'customLogo', 'assetsFolder', 'extTheme', 'includes', 'includesName', 'output', 'port', 'hostname',
                 'exportFormat', 'coverageTestThreshold', 'coverageMinimumPerFile', 'unitTestCoverage', 'gaID', 'gaSite', 'maxSearchResults', 'toggleMenuItems', 'navTabConfig'
             ];
-            const cmd = ['npx compodoc'];
+            let cmd = ['npx compodoc'];
             for (const flag of booleanFlags) {
                 if (config[flag] === true) {
                     cmd.push(`--${flag}`);
@@ -1311,7 +1311,7 @@ class TemplatePlayground {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'compodoc-command.txt';
+            a.download = `compodoc-command.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

@@ -1,8 +1,8 @@
 {
-	"*.ts": [
+	"*.{ts,mts,cts}": [
 		"pnpm exec biome check --write"
 	],
-	"./src/**/*.ts": [
+	"!(docs)/**/*.{ts,mts,cts}": [
 		"pnpm exec biome check --write"
 	]
 }

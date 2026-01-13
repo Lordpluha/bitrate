@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var DeepIterator = deepIterator.default,
         it = DeepIterator(parsedHtml);
-    for (const {
+    for (let {
             value,
             parent,
             parentNode,

@@ -236,7 +236,7 @@
 
     function getParameterByName(name) {
         var url = window.location.href;
-        name = name.replace(/[[\]]/g, '\\$&');
+        name = name.replace(/[\[\]]/g, '\\$&');
         var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)', 'i'),
             results = regex.exec(url);
         if (!results) return null;
@@ -260,12 +260,14 @@
                 if (typeof hash[1] !== 'undefined' && hash[1] !== null) url += '#' + hash[1];
                 return url;
             }
-        } else if (typeof value !== 'undefined' && value !== null) {
+        } else {
+            if (typeof value !== 'undefined' && value !== null) {
                 var separator = url.indexOf('?') !== -1 ? '&' : '?';
                 hash = url.split('#');
                 url = hash[0] + separator + key + '=' + value;
                 if (typeof hash[1] !== 'undefined' && hash[1] !== null) url += '#' + hash[1];
                 return url;
             } else return url;
+        }
     }
 })(compodoc);

@@ -490,7 +490,7 @@ export class TemplatePlaygroundComponent implements OnInit, OnDestroy {
   }
 
   private scheduleAutoSave(content: string): void {
-    if (!(this.selectedFile && this.sessionId)) return;
+    if (!this.selectedFile || !this.sessionId) return;
 
     // Clear existing timeout
     if (this.saveTimeout) {
@@ -514,13 +514,13 @@ export class TemplatePlaygroundComponent implements OnInit, OnDestroy {
   }
 
   private async saveTemplate(content: string): Promise<void> {
-    if (!(this.selectedFile && this.sessionId)) return;
+    if (!this.selectedFile || !this.sessionId) return;
 
     const response = await this.http.post<{success: boolean}>(`/api/session/${this.sessionId}/template/${this.selectedFile.path}`, {
       content
     }).toPromise();
 
-    if (!(response && response.success)) {
+    if (!response || !response.success) {
       throw new Error('Failed to save template');
     }
   }
@@ -574,7 +574,7 @@ export class TemplatePlaygroundComponent implements OnInit, OnDestroy {
         observe: 'response'
       }).toPromise();
 
-      if (!(response && response.body)) {
+      if (!response || !response.body) {
         throw new Error('Failed to create template package');
       }
 

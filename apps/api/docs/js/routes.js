@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function cleanStringChildren(obj) {
         for (var property in obj) {
-            if (Object.hasOwn(obj, property)) {
+            if (obj.hasOwnProperty(property)) {
                 if (property === 'children' && typeof obj[property] === 'object') {
                     for (var i = obj[property].length - 1; i >= 0; i--) {
                         if (typeof obj[property][i] === 'string') {

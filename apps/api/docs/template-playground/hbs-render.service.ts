@@ -51,7 +51,7 @@ export class HbsRenderService {
 
     // Register the 'unless' helper
     this.handlebarsInstance.registerHelper('unless', (conditional: any, options: any) => {
-      return conditional ? options.inverse(this) : options.fn(this);
+      return !conditional ? options.fn(this) : options.inverse(this);
     });
 
     // Register the 'each' helper with index

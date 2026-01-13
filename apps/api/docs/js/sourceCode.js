@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             setTimeout(function() {
                 var $prismHighlightLine = document.querySelector('.line-highlight'),
-                    top = Number.parseInt(getComputedStyle($prismHighlightLine)['top']);
+                    top = parseInt(getComputedStyle($prismHighlightLine)['top']);
                 $content.scrollTop = top;
             }, 500);
         };
