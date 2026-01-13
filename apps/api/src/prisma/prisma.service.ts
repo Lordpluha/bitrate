@@ -5,7 +5,7 @@ import { Pool } from 'pg'
 
 /**
  * If you have error - regenerate PrismaClient
- * Command: `pnpm db:generate`
+ * Command: `pnpm db:gen`
  */
 @Injectable()
 export class PrismaService implements OnModuleInit, OnModuleDestroy {

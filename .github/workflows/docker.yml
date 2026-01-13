@@ -272,7 +272,7 @@ jobs:
 
       - name: Run database migrations
         run: |
-          docker compose exec -T api pnpm --filter @spotify/api run db:generate
+          docker compose exec -T api pnpm --filter @spotify/api run db:gen
           docker compose exec -T api pnpm --filter @spotify/api run db:migration:start
 
       - name: Seed database

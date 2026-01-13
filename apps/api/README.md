@@ -19,7 +19,7 @@ $ pnpm run db:migration:start
 
 > if you have problems try to use:
 > ```bash
-> pnpm run db:generate
+> pnpm run db:gen
 > ```
 
 3. Run your prisma server and app
@@ -62,10 +62,10 @@ $ pnpm run db:migration:start
 $ pnpm run db:migration:reset
 
 # generate in dev
-$ pnpm run db:generate
+$ pnpm run db:gen
 
 # generate in production
-$ pnpm run db:generate:prod
+$ pnpm run db:gen:prod
 ```
 
 ### Tests

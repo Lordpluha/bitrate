@@ -21,10 +21,11 @@
     "db:start": "prisma dev",
     "db:migration:reset": "prisma migrate reset --force",
     "db:migration:start": "prisma migrate dev --name init",
-    "db:generate": "prisma generate",
-    "db:generate:prod": "prisma generate",
+    "db:gen": "prisma generate",
+    "db:gen:prod": "prisma generate",
     "db:ui": "prisma studio",
     "seed": "prisma db seed",
+    "doc:gen": "pnpm dlx @compodoc/compodoc -p tsconfig.json -s -d docs",
     "seed:dev": "NODE_ENV=development prisma db seed",
     "seed:advanced": "ts-node src/seeds/seed-with-relations.ts",
     "seed:artists": "ts-node -e \"import('./src/seeds/artists.seed').then(({seedArtists}) => {const {PrismaClient} = require('@prisma/client'); const prisma = new PrismaClient(); seedArtists(prisma, 20).then(() => prisma.$disconnect());})\"",
@@ -58,7 +59,8 @@
     "zod": "^4.3.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.10",
+    "@biomejs/biome": "2.3.11",
+    "@compodoc/compodoc": "^1.2.0",
     "@faker-js/faker": "^10.1.0",
     "@nestjs/cli": "^11.0.14",
     "@nestjs/schematics": "^11.0.9",
@@ -86,13 +88,19 @@
     "typescript": "^5.9.3"
   },
   "jest": {
-    "moduleFileExtensions": ["js", "json", "ts"],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "collectCoverageFrom": ["**/*.(t|j)s"],
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {

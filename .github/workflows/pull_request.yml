@@ -98,7 +98,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @spotify/api run db:generate
+        run: pnpm --filter @spotify/api run db:gen
 
       - name: Build all packages
         run: pnpm build
