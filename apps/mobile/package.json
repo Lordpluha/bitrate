@@ -9,7 +9,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "export": "expo export --platform web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "build:preview:android": "pnpm eas build -p android --profile preview",
+    "build:preview:ios": "pnpm eas build -p ios --profile preview",
+    "build:preview": "pnpm build:preview:android && pnpm build:preview:ios",
+    "build": "pnpm build:preview"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
