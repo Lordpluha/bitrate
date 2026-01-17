@@ -56,11 +56,11 @@
   "devDependencies": {
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
-    "@types/node": "^25.0.3",
+    "@types/node": "^25.0.9",
     "commitizen": "^4.3.1",
     "cz-customizable": "^7.5.1",
     "husky": "^9.1.7",
-    "knip": "^5.80.2",
+    "knip": "^5.81.0",
     "lint-staged": "^16.2.7",
     "turbo": "^2.7.5",
     "typescript": "^5.9.3"
@@ -82,14 +82,13 @@
       "@types/react-dom": "~19.1.0"
     },
     "onlyBuiltDependencies": [
+      "@compodoc/compodoc",
       "@nestjs/core",
       "@parcel/watcher",
       "@prisma/engines",
       "@scarf/scarf",
       "@swc/core",
       "better-sqlite3",
-      "core-js",
-      "core-js-pure",
       "esbuild",
       "prisma",
       "sharp",
@@ -97,6 +96,6 @@
     ]
   },
   "dependencies": {
-    "typedoc": "^0.28.15"
+    "typedoc": "^0.28.16"
   }
 }
