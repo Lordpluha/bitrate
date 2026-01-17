@@ -18,7 +18,7 @@
     "build:prod:ios": "eas build --platform ios --profile production",
     "build:preview": "eas build --platform all --profile preview",
     "build:prod": "eas build --platform all --profile production",
-    "build": "pnpm build:preview"
+    "build": "pnpm export"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
