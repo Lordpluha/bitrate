@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
+import { useInputContext } from './input-context'
 
 const labelVariants = cva(
   'absolute left-3 transition-all duration-200 pointer-events-none z-10 px-1',
@@ -47,11 +48,10 @@ const labelVariants = cva(
   }
 )
 
-export interface DynamicLabelProps
-  extends React.LabelHTMLAttributes<HTMLLabelElement>,
-    Omit<VariantProps<typeof labelVariants>, 'state' | 'focused'> {
-  children: React.ReactNode
-}
+export type DynamicLabelProps = React.PropsWithChildren<
+  React.LabelHTMLAttributes<HTMLLabelElement> &
+    Omit<VariantProps<typeof labelVariants>, 'state' | 'focused'>
+>
 
 export const DynamicLabel: React.FC<DynamicLabelProps> = ({
   variant = 'default',
@@ -60,38 +60,7 @@ export const DynamicLabel: React.FC<DynamicLabelProps> = ({
   className,
   ...props
 }) => {
-  const [isFocused, setIsFocused] = React.useState(false)
-  const [hasValue, setHasValue] = React.useState(false)
-
-  React.useEffect(() => {
-    if (!htmlFor) return
-
-    const input = document.getElementById(htmlFor) as HTMLInputElement
-    if (!input) return
-
-    const checkValue = () => {
-      setHasValue(!!input.value)
-    }
-
-    const handleFocus = () => setIsFocused(true)
-    const handleBlur = () => {
-      setIsFocused(false)
-      checkValue()
-    }
-    const handleInput = () => checkValue()
-
-    checkValue()
-
-    input.addEventListener('focus', handleFocus)
-    input.addEventListener('blur', handleBlur)
-    input.addEventListener('input', handleInput)
-
-    return () => {
-      input.removeEventListener('focus', handleFocus)
-      input.removeEventListener('blur', handleBlur)
-      input.removeEventListener('input', handleInput)
-    }
-  }, [htmlFor])
+  const { isFocused, hasValue } = useInputContext()
 
   const isFloating = isFocused || hasValue
 

@@ -10,6 +10,7 @@ import { useMutation } from '@shared/api'
 import {
   Button,
   Input,
+  InputProvider,
   PasswordInput,
   DynamicLabel,
   toast,
@@ -18,7 +19,9 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage
+  FormMessage,
+  LogoIcon,
+  PlusIcon
 } from '@spotify/ui-react'
 import { Modal } from './Modal'
 import {
@@ -117,7 +120,7 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
     >
       <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg'>
         <div className='flex flex-col items-center'>
-          {/* <LogoIconSm /><PlusIcon /> */}
+          <LogoIcon width={48} height={48} />
           <Typography as='h5' size='heading5' className='mt-2 text-center text-text-contrast'>
             Sign Up
           </Typography>
@@ -137,20 +140,22 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className='relative'>
-                      <DynamicLabel
-                        htmlFor='signup-fullname'
-                        variant='contrast'
-                      >
-                        Full Name
-                      </DynamicLabel>
-                      <Input
-                        id='signup-fullname'
-                        variant='contrast'
-                        placeholder=''
-                        {...field}
-                      />
-                    </div>
+                    <InputProvider>
+                      <div className='relative'>
+                        <DynamicLabel
+                          htmlFor='signup-fullname'
+                          variant='contrast'
+                        >
+                          Full Name
+                        </DynamicLabel>
+                        <Input
+                          id='signup-fullname'
+                          variant='contrast'
+                          placeholder=''
+                          {...field}
+                        />
+                      </div>
+                    </InputProvider>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -163,21 +168,23 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className='relative'>
-                      <DynamicLabel
-                        htmlFor='signup-email'
-                        variant='contrast'
-                      >
-                        Email Address
-                      </DynamicLabel>
-                      <Input
-                        id='signup-email'
-                        variant='contrast'
-                        type='email'
-                        placeholder=''
-                        {...field}
-                      />
-                    </div>
+                    <InputProvider>
+                      <div className='relative'>
+                        <DynamicLabel
+                          htmlFor='signup-email'
+                          variant='contrast'
+                        >
+                          Email Address
+                        </DynamicLabel>
+                        <Input
+                          id='signup-email'
+                          variant='contrast'
+                          type='email'
+                          placeholder=''
+                          {...field}
+                        />
+                      </div>
+                    </InputProvider>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -190,20 +197,22 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className='relative'>
-                      <DynamicLabel
-                        htmlFor='signup-password'
-                        variant='contrast'
-                      >
-                        Password
-                      </DynamicLabel>
-                      <PasswordInput
-                        id='signup-password'
-                        variant='contrast'
-                        placeholder=''
-                        {...field}
-                      />
-                    </div>
+                    <InputProvider>
+                      <div className='relative'>
+                        <DynamicLabel
+                          htmlFor='signup-password'
+                          variant='contrast'
+                        >
+                          Password
+                        </DynamicLabel>
+                        <PasswordInput
+                          id='signup-password'
+                          variant='contrast'
+                          placeholder=''
+                          {...field}
+                        />
+                      </div>
+                    </InputProvider>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -216,20 +225,22 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className='relative'>
-                      <DynamicLabel
-                        htmlFor='signup-confirm-password'
-                        variant='contrast'
-                      >
-                        Confirm Password
-                      </DynamicLabel>
-                      <PasswordInput
-                        id='signup-confirm-password'
-                        variant='contrast'
-                        placeholder=''
-                        {...field}
-                      />
-                    </div>
+                    <InputProvider>
+                      <div className='relative'>
+                        <DynamicLabel
+                          htmlFor='signup-confirm-password'
+                          variant='contrast'
+                        >
+                          Confirm Password
+                        </DynamicLabel>
+                        <PasswordInput
+                          id='signup-confirm-password'
+                          variant='contrast'
+                          placeholder=''
+                          {...field}
+                        />
+                      </div>
+                    </InputProvider>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -242,8 +253,10 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                 className='rounded'
                 type='submit'
                 disabled={isRegistering}
+                isLoading={isRegistering}
+                aria-busy={isRegistering}
               >
-                {isRegistering ? 'Registering...' : 'Register'}
+                Register
               </Button>
 
               <SocialsAuthDivider />

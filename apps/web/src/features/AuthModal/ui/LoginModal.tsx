@@ -9,6 +9,7 @@ import {SocialsAuthDivider } from '@shared/ui'
 import {
   Button,
   Input,
+  InputProvider,
   PasswordInput,
   DynamicLabel,
   toast,
@@ -17,7 +18,8 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage
+  FormMessage,
+  LogoIcon
 } from '@spotify/ui-react'
 import { Modal } from './Modal'
 import Link from 'next/link'
@@ -68,7 +70,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitc
     <Modal open={open} onOpenChange={onSuccess} className="max-w-[500px] w-full">
       <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg'>
         <div className='flex flex-col items-center'>
-          {/* <LogoIconSm /> */}
+          <LogoIcon width={48} height={48} />
           <Typography as="h5" size={'heading5'} className='mt-2 text-center text-text-contrast'>
             Sign in
           </Typography>
@@ -88,18 +90,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitc
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className="relative">
-                      <DynamicLabel htmlFor="login-email" variant="contrast">
-                        Email Address
-                      </DynamicLabel>
-                      <Input
-                        id="login-email"
-                        variant="contrast"
-                        type="email"
-                        placeholder=""
-                        {...field}
-                      />
-                    </div>
+                    <InputProvider>
+                      <div className="relative">
+                        <DynamicLabel htmlFor="login-email" variant="contrast">
+                          Email Address
+                        </DynamicLabel>
+                        <Input
+                          id="login-email"
+                          variant="contrast"
+                          type="email"
+                          placeholder=""
+                          {...field}
+                        />
+                      </div>
+                    </InputProvider>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,17 +116,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitc
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className="relative">
-                      <DynamicLabel htmlFor="login-password" variant="contrast">
-                        Password
-                      </DynamicLabel>
-                      <PasswordInput
-                        id="login-password"
-                        variant="contrast"
-                        placeholder=""
-                        {...field}
-                      />
-                    </div>
+                    <InputProvider>
+                      <div className="relative">
+                        <DynamicLabel htmlFor="login-password" variant="contrast">
+                          Password
+                        </DynamicLabel>
+                        <PasswordInput
+                          id="login-password"
+                          variant="contrast"
+                          placeholder=""
+                          {...field}
+                        />
+                      </div>
+                    </InputProvider>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

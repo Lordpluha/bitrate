@@ -5,6 +5,8 @@ export * from "./carousel"
 export * from "./empty"
 export * from "./form"
 export * from "./input"
+export * from "./input-context"
+export * from "./input-with-label"
 export * from "./input-group"
 
 export * from "./dynamic-label"
