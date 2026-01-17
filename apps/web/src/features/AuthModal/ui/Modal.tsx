@@ -1,30 +1,28 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { type ComponentProps, useEffect } from 'react'
 import { cn } from '@spotify/ui-react'
 
-interface ModalProps {
-  open: boolean
+interface ModalProps extends ComponentProps<'div'> {
+  isOpen: boolean
   onOpenChange: (open: boolean) => void
-  children: React.ReactNode
-  className?: string
 }
 
 export const Modal: React.FC<ModalProps> = ({
-  open,
-  onOpenChange,
+  isOpen,
+  onOpenChange: toggleIsOpen,
   children,
   className
 }) => {
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && open) {
-        onOpenChange(false)
+      if (event.key === 'Escape' && isOpen) {
+        toggleIsOpen(false)
       }
     }
 
-    if (open) {
+    if (isOpen) {
       document.addEventListener('keydown', handleEscape)
       document.body.style.overflow = 'hidden'
     }
@@ -33,14 +31,14 @@ export const Modal: React.FC<ModalProps> = ({
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = 'unset'
     }
-  }, [open, onOpenChange])
+  }, [isOpen, toggleIsOpen])
 
-  if (!open) return null
+  if (!isOpen) return null
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      onClick={() => onOpenChange(false)}
+      onClick={() => toggleIsOpen(false)}
     >
       <div className="absolute inset-0 w-[100vw] bg-black/60 backdrop-blur-sm" />
 

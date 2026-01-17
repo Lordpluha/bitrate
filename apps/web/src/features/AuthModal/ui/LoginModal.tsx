@@ -19,7 +19,8 @@ import {
   FormField,
   FormItem,
   FormMessage,
-  LogoIcon
+  LogoIcon,
+  GoogleIcon
 } from '@spotify/ui-react'
 import { Modal } from './Modal'
 import Link from 'next/link'
@@ -28,22 +29,17 @@ import { LoginFormData, loginSchema } from '../../Login/validation'
 import { ROUTES } from '@shared/routes'
 
 interface LoginModalProps {
-  open: boolean
-  onSuccess: (open: boolean) => void
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
   onSwitchToSignUp?: () => void
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitchToSignUp }) => {
+export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onOpenChange, onSwitchToSignUp }) => {
   const router = useRouter()
-  const { mutate, isPending } = useMutation('post', '/auth/login', {
+  const { mutate, isPending: isLoading } = useMutation('post', '/auth/login', {
     onSuccess: () => {
-      onSuccess(false)
-      // Небольшая задержка для установки cookies, затем редирект
-      setTimeout(() => {
-        router.push('/main')
-        // Принудительное обновление страницы для обновления состояния авторизации
-        window.location.reload()
-      }, 100)
+      onOpenChange(false)
+      void router.push('/main')
     },
     onError: error => {
       toast.error(`Login error: ${JSON.stringify(error)}`)
@@ -67,7 +63,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitc
   }
 
   return (
-    <Modal open={open} onOpenChange={onSuccess} className="max-w-[500px] w-full">
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-[500px] w-full">
       <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg'>
         <div className='flex flex-col items-center'>
           <LogoIcon width={64} height={64} />
@@ -147,9 +143,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitc
                 variant='primary'
                 className='rounded'
                 type='submit'
-                disabled={isPending}
+                disabled={isLoading}
+                isLoading={isLoading}
               >
-                {isPending ? 'Logging in...' : 'Log in'}
+                {isLoading ? 'Logging in...' : 'Log in'}
               </Button>
 
               <SocialsAuthDivider />
@@ -158,7 +155,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitc
                 variant='contrast'
                 type='button'
               >
-                {/* <GoggleIcon className='mr-2' /> */}
+                <GoogleIcon className='mr-2' />
                 <Typography as="p" size={'body'} className="text-text-contrast">
                   Continue with Google
                 </Typography>
@@ -173,7 +170,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ open, onSuccess, onSwitc
                     if (onSwitchToSignUp) {
                       onSwitchToSignUp()
                     } else {
-                      onSuccess(false)
+                      onOpenChange(false)
                     }
                   }}
                 >

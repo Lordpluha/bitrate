@@ -1,7 +1,7 @@
 'use client'
 
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import React, { type ComponentProps } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { SocialsAuthDivider } from '@shared/ui'
@@ -21,7 +21,8 @@ import {
   FormItem,
   FormMessage,
   LogoIcon,
-  PlusIcon
+  PlusIcon,
+  GoogleIcon
 } from '@spotify/ui-react'
 import { Modal } from './Modal'
 import {
@@ -30,16 +31,13 @@ import {
 } from '../../Registration/validation'
 import { ROUTES } from '@shared/routes'
 
-interface SignUpModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+interface SignUpModalProps extends ComponentProps<typeof Modal> {
   onSwitchToLogin?: () => void
 }
 
 export const SignUpModal: React.FC<SignUpModalProps> = ({
-  open,
-  onOpenChange,
-  onSwitchToLogin
+  onSwitchToLogin,
+  ...modalProps
 }) => {
   const router = useRouter()
 
@@ -47,41 +45,12 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
     'post',
     '/auth/registration',
     {
-      onSuccess: async (_, variables) => {
-        try {
-          const loginResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-            {
-              method: 'POST',
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                email: variables.body.email,
-                password: variables.body.password
-              })
-            }
-          )
-
-          if (loginResponse.ok) {
-            onOpenChange(false)
-
-            setTimeout(() => {
-              router.push('/main')
-
-              window.location.reload()
-            }, 100)
-          } else {
-            toast.success('Registration successful! Please log in.')
-            onOpenChange(false)
-            router.push('/auth/login')
-          }
-        } catch (error) {
-          console.error('Auto-login failed:', error)
-          toast.success('Registration successful! Please log in.')
-          onOpenChange(false)
-          router.push('/auth/login')
+      onSuccess: () => {
+        toast.success('Registration successful! Please log in.')
+        if (onSwitchToLogin) {
+          onSwitchToLogin()
+        } else {
+          router.push(ROUTES.auth.login)
         }
       },
       onError: error => {
@@ -90,19 +59,21 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
     }
   )
 
+  const defaultValues: RegistrationFormData = {
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  }
+
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
     mode: 'onChange',
-    defaultValues: {
-      fullName: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    },
+    defaultValues,
     shouldFocusError: true
   })
 
-  const onSubmit = (data: RegistrationFormData) => {
+  const onSubmit: SubmitHandler<RegistrationFormData> = (data) => {
     registerMutate({
       body: {
         email: data.email,
@@ -114,8 +85,7 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
 
   return (
     <Modal
-      open={open}
-      onOpenChange={onOpenChange}
+      {...modalProps}
       className='max-w-[500px]  w-full'
     >
       <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg'>
@@ -265,7 +235,7 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                 variant='contrast'
                 type='button'
               >
-                {/* <GoggleIcon className='mr-2' /> */}
+                <GoogleIcon className='mr-2' />
                 <Typography as='p' size='body' className='text-text-contrast'>
                   Continue with Google
                 </Typography>
@@ -273,19 +243,22 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
 
               <p className='text-base text-center text-text-contrast'>
                 Already have an account?{' '}
-                <button
-                  type='button'
-                  className='font-bold text-green-500 hover:opacity-70 underline'
-                  onClick={() => {
-                    if (onSwitchToLogin) {
-                      onSwitchToLogin()
-                    } else {
-                      onOpenChange(false)
-                    }
-                  }}
-                >
-                  Log in.
-                </button>
+                {onSwitchToLogin ? (
+                  <button
+                    type='button'
+                    className='font-bold text-green-500 hover:opacity-70 underline'
+                    onClick={onSwitchToLogin}
+                  >
+                    Log in.
+                  </button>
+                ) : (
+                  <Link
+                    href={ROUTES.auth.login}
+                    className='font-bold text-green-500 hover:opacity-70 underline'
+                  >
+                    Log in.
+                  </Link>
+                )}
               </p>
             </div>
           </form>

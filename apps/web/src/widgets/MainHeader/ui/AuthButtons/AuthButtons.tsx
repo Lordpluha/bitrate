@@ -48,13 +48,13 @@ export const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
       </div>
 
       <LoginModal
-        open={loginOpen}
-        onSuccess={setLoginOpen}
+        isOpen={loginOpen}
+        onOpenChange={setLoginOpen}
         onSwitchToSignUp={openSignUp}
       />
 
       <SignUpModal
-        open={signUpOpen}
+        isOpen={signUpOpen}
         onOpenChange={setSignUpOpen}
         onSwitchToLogin={openLogin}
       />

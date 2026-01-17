@@ -11,7 +11,16 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ReduxProvider from './providers/ReduxProvider'
 
 export const Provider: FC<PropsWithChildren> = ({ children }) => {
-  const [queryClient] = useState(() => new QueryClient())
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        retry: 1,
+        staleTime: 5 * 60 * 1000, // 5 минут
+      },
+    },
+  }))
   const [theme, setTheme, , hydrated] = usePersistedState<Theme>(
     'theme',
     'dark'
