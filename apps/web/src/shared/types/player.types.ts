@@ -1,14 +1,11 @@
-export interface ITrack {
-  id: string
-  title: string
-  audioUrl: string
-  artist: string
-  duration: number
-  cover?: string
+import type { ApiSchemas } from '@spotify/contracts'
+
+export type ITrack = ApiSchemas['TrackEntity'] & {
   name: string
   file: string
+  artist: string
+  duration: number
   album?: string
-  createdAt?: string
 }
 
 export interface IMusicPlayerState {
@@ -20,3 +17,6 @@ export interface IMusicPlayerState {
   volume: number
   progress: number
 }
+
+
+// с Владом обговорить это, так как я понял у апи нету типов artist, duration, name, file, album или я тупой(более вероятно)

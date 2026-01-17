@@ -30,28 +30,28 @@ export const MainView: React.FC = () => {
               defaultSize={20}
               minSize={15}
               maxSize={30}
-              className={`${styles.panel} ${styles.leftSidebar}`}
+              className={`${styles['resizable-layout__panel']} ${styles['resizable-layout__sidebar--left']}`}
             >
               <LeftSidebar />
             </ResizablePanel>
 
-            <ResizableHandle className={styles.resizeHandle} />
+            <ResizableHandle className={styles['resizable-layout__handle']} />
 
             <ResizablePanel
               defaultSize={60}
               minSize={40}
-              className={`${styles.panel} ${styles.mainContent}`}
+              className={`${styles['resizable-layout__panel']} ${styles['resizable-layout__content']}`}
             >
               <MainPanel />
             </ResizablePanel>
 
-            <ResizableHandle className={styles.resizeHandle} />
+            <ResizableHandle className={styles['resizable-layout__handle']} />
 
             <ResizablePanel
               defaultSize={20}
               minSize={15}
               maxSize={30}
-              className={`${styles.panel} ${styles.rightSidebar}`}
+              className={`${styles['resizable-layout__panel']} ${styles['resizable-layout__sidebar--right']}`}
             >
               <RightSidebar />
             </ResizablePanel>

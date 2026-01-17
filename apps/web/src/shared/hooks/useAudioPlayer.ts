@@ -2,13 +2,23 @@
 
 import { useRef, useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from './index'
-import { togglePlay, setCurrentTime, setProgress, setDuration, changeTrack, pause } from '@entities/Player'
+import { 
+  togglePlay, 
+  setCurrentTime, 
+  setProgress, 
+  setDuration, 
+  changeTrack, 
+  pause,
+  selectIsPlaying,
+  selectVolume
+} from '@entities/Player'
 
 export const useAudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
   const isSeekingRef = useRef(false)
   const dispatch = useAppDispatch()
-  const { isPlaying, volume } = useAppSelector((state) => state.musicPlayer)
+  const isPlaying = useAppSelector(selectIsPlaying)
+  const volume = useAppSelector(selectVolume)
 
   const togglePlayPause = useCallback(() => {
     if (audioRef.current) {

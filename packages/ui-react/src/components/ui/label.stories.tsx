@@ -11,20 +11,6 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     children: {
-<<<<<<< HEAD:packages/ui/src/components/ui/label.stories.tsx
-      control: { type: 'text' }
-    },
-    variant: {
-      control: { type: 'select' },
-      options: ['default', 'modal', 'large']
-    }
-  },
-  args: {
-    children: 'Your email address',
-    htmlFor: 'email',
-    variant: 'default'
-  }
-=======
       control: { type: "text" },
     },
   },
@@ -32,7 +18,6 @@ const meta = {
     children: "Your email address",
     htmlFor: "email",
   },
->>>>>>> develop:packages/ui-react/src/components/ui/label.stories.tsx
 } satisfies Meta<typeof Label>
 
 export default meta

@@ -81,4 +81,13 @@ export const {
   changeTrack,
 } = musicPlayerSlice.actions
 
+// Selectors
+export const selectCurrentTrack = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.currentTrack
+export const selectPlaylist = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.playlist
+export const selectIsPlaying = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.isPlaying
+export const selectCurrentTime = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.currentTime
+export const selectDuration = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.duration
+export const selectVolume = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.volume
+export const selectProgress = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.progress
+
 export default musicPlayerSlice.reducer

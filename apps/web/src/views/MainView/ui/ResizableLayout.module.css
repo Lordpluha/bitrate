@@ -1,4 +1,4 @@
-.resizeHandle {
+.resizable-layout__handle {
   width: 0px;
   background-color: rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
@@ -6,26 +6,26 @@
   position: relative;
 }
 
-.resizeHandle:hover {
+.resizable-layout__handle:hover {
   width: 6px;
   background-color: rgba(29, 185, 84, 0.8);
 }
 
-.resizeHandle:active {
+.resizable-layout__handle:active {
   background-color: rgba(29, 185, 84, 1);
 }
 
-.panel {
+.resizable-layout__panel {
   overflow: hidden;
 }
 
-.leftSidebar {
+.resizable-layout__sidebar--left {
   border-radius: 8px;
   background-color: var(--color-bg-secondary);
   margin: 6px;
 }
 
-.mainContent {
+.resizable-layout__content {
   border-radius: 8px;
   background-color: var(--color-bg-secondary);
   margin: 6px;
@@ -34,7 +34,7 @@
 
 }
 
-.mainContent::after {
+.resizable-layout__content::after {
   content: '';
   position: absolute;
   top: 0;
@@ -50,7 +50,7 @@
   z-index: 0;
 }
 
-.rightSidebar {
+.resizable-layout__sidebar--right {
   background-color: var(--color-bg-secondary);
   margin: 6px;
   border-radius: 8px;
