@@ -1,9 +1,8 @@
 "use client"
 
-import { useSelector } from 'react-redux'
+import { useAppSelector } from '@shared/hooks'
 import { MainHeader } from '@widgets/MainHeader'
 import { Player } from '@widgets/Player'
-import type { RootState } from '@shared/store'
 import { ResizableLayout as ResizableLayoutShadCN, ResizablePanel, ResizableHandle } from '@spotify/ui-react'
 import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainPanel } from '@widgets/MainPanel'
@@ -12,7 +11,7 @@ import styles from './ResizableLayout.module.css'
 
 
 export const MainView: React.FC = () => {
-  const { currentTrack } = useSelector((state: RootState) => state.musicPlayer)
+  const { currentTrack } = useAppSelector((state) => state.musicPlayer)
   const hasPlayer = !!currentTrack
 
   return (

@@ -27,9 +27,11 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId, onBack }
         id: track.id,
         title: track.title,
         audioUrl: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
+        cover: track.cover,
+        createdAt: track.createdAt,
+        artistId: track.artistId || '',
         artist: track.artist || 'Unknown Artist',
         duration: track.duration || 0,
-        cover: track.cover,
         name: track.title,
         file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`
       }))
