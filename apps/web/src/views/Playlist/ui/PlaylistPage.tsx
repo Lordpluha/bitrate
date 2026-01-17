@@ -66,9 +66,11 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId, onBack }
         id: apiTrack.id,
         title: apiTrack.title,
         audioUrl: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${apiTrack.id}`,
+        cover: apiTrack.cover,
+        createdAt: apiTrack.createdAt || new Date().toISOString(),
+        artistId: apiTrack.artistId || '',
         artist: apiTrack.artist || 'Unknown Artist',
         duration: apiTrack.duration || 0,
-        cover: apiTrack.cover,
         name: apiTrack.title,
         file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${apiTrack.id}`
       }
