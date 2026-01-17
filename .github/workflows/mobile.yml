@@ -2,12 +2,12 @@ name: Mobile Build
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master, develop ]
     paths:
       - 'apps/mobile/**'
       - '.github/workflows/mobile.yml'
   pull_request:
-    branches: [ main, develop ]
+    branches: [ master, develop ]
     paths:
       - 'apps/mobile/**'
 
@@ -99,7 +99,7 @@ jobs:
   build-android-eas:
     name: Build Android with EAS
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
 
     steps:
     - name: Checkout repository
@@ -128,8 +128,9 @@ jobs:
     - name: Build Android APK
       working-directory: apps/mobile
       run: |
+        PROFILE=${{ github.ref == 'refs/heads/master' && 'production' || 'preview' }}
         eas build --platform android \
-          --profile preview \
+          --profile $PROFILE \
           --non-interactive
 
     - name: Download APK
@@ -149,7 +150,7 @@ jobs:
   build-ios-eas:
     name: Build iOS with EAS
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
 
     steps:
     - name: Checkout repository
@@ -178,6 +179,7 @@ jobs:
     - name: Build iOS IPA
       working-directory: apps/mobile
       run: |
+        PROFILE=${{ github.ref == 'refs/heads/master' && 'production' || 'preview' }}
         eas build --platform ios \
-          --profile preview \
+          --profile $PROFILE \
           --non-interactive

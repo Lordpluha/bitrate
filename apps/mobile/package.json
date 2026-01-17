@@ -10,9 +10,14 @@
     "web": "expo start --web",
     "export": "expo export --platform web",
     "lint": "expo lint",
-    "build:preview:android": "pnpm eas build -p android --profile preview",
-    "build:preview:ios": "pnpm eas build -p ios --profile preview",
-    "build:preview": "pnpm build:preview:android && pnpm build:preview:ios",
+    "build:dev:android": "eas build --platform android --profile development",
+    "build:dev:ios": "eas build --platform ios --profile development",
+    "build:preview:android": "eas build --platform android --profile preview",
+    "build:preview:ios": "eas build --platform ios --profile preview",
+    "build:prod:android": "eas build --platform android --profile production",
+    "build:prod:ios": "eas build --platform ios --profile production",
+    "build:preview": "eas build --platform all --profile preview",
+    "build:prod": "eas build --platform all --profile production",
     "build": "pnpm build:preview"
   },
   "dependencies": {
