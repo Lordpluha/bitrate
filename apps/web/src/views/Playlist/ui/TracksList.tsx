@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { Clock, Play, Pause } from 'lucide-react'
 import { useAppSelector } from '@shared/hooks'
+import {
+  PlayingIcon
+} from '@spotify/ui-react'
 
 export interface Track {
   id: string
@@ -16,22 +19,6 @@ interface TracksListProps {
   onTrackClick: (track: Track) => void
 }
 
-const PlayingIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="text-green-500">
-    <rect x="2" y="5" width="2" height="6" rx="1" fill="currentColor">
-      <animate attributeName="height" values="6;12;6" dur="0.6s" repeatCount="indefinite" />
-      <animate attributeName="y" values="5;2;5" dur="0.6s" repeatCount="indefinite" />
-    </rect>
-    <rect x="7" y="3" width="2" height="10" rx="1" fill="currentColor">
-      <animate attributeName="height" values="10;14;10" dur="0.5s" repeatCount="indefinite" begin="0.2s" />
-      <animate attributeName="y" values="3;1;3" dur="0.5s" repeatCount="indefinite" begin="0.2s" />
-    </rect>
-    <rect x="12" y="4" width="2" height="8" rx="1" fill="currentColor">
-      <animate attributeName="height" values="8;11;8" dur="0.65s" repeatCount="indefinite" begin="0.4s" />
-      <animate attributeName="y" values="4;2.5;4" dur="0.65s" repeatCount="indefinite" begin="0.4s" />
-    </rect>
-  </svg>
-)
 
 export const TracksList: React.FC<TracksListProps> = ({ tracks, onTrackClick }) => {
   const { currentTrack, isPlaying } = useAppSelector((state) => state.musicPlayer)
@@ -77,9 +64,8 @@ export const TracksList: React.FC<TracksListProps> = ({ tracks, onTrackClick }) 
                 {showPlayingIcon && <PlayingIcon />}
               </div>
               <div>
-                <div className={`font-medium ${
-                  isCurrentTrack ? 'text-green-500' : 'text-white'
-                } ${isHovered && !isCurrentTrack ? 'underline' : ''}`}>
+                <div className={`font-medium ${isCurrentTrack ? 'text-green-500' : 'text-white'
+                  } ${isHovered && !isCurrentTrack ? 'underline' : ''}`}>
                   {track.name}
                 </div>
                 <div className="text-sm text-gray-400">{track.artist}</div>

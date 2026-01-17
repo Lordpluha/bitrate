@@ -6,6 +6,7 @@ import { fetchClient } from '@shared/api'
 import { useQuery } from '@tanstack/react-query'
 
 import { MusicCardSm } from './MusicCardSm'
+import type { ITrack } from '@shared/types'
 
 interface MusicItem {
   id: string
@@ -24,7 +25,7 @@ interface Playlist {
   user: {
     username: string
   }
-  tracks: any[]
+  tracks?: ITrack[]
 }
 
 const likedSongsItem: MusicItem = {
@@ -37,13 +38,13 @@ const likedSongsItem: MusicItem = {
 }
 
 export const LibraryMusic = () => {
-  const { data: playlists, isLoading } = useQuery({
+  const { data: playlists, isLoading } = useQuery<Playlist[]>({
     queryKey: ['playlists'],
     queryFn: async () => {
       const { data } = await fetchClient.GET('/playlists', {
         params: { path: { page: 1, limit: 20 } }
       })
-      return data as unknown as Playlist[]
+      return data ? (data as Playlist[]) : []
     }
   })
 

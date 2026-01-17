@@ -1,4 +1,5 @@
 import { ExpandIcon, PlusIcon, Typography } from '@spotify/ui-react'
+import {  Maximize2 } from 'lucide-react'
 
 export const LibraryHeader = () => {
   return (
@@ -10,7 +11,7 @@ export const LibraryHeader = () => {
           <span className='font-bold'>Create</span>
         </button>
         <button className='duration-200 hover:opacity-70' type='button'>
-          <ExpandIcon />
+          <Maximize2 size={16} />
         </button>
       </div>
     </div>

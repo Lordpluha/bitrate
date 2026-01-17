@@ -120,7 +120,7 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
     >
       <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg'>
         <div className='flex flex-col items-center'>
-          <LogoIcon width={48} height={48} />
+          <LogoIcon width={64} height={64} />
           <Typography as='h5' size='heading5' className='mt-2 text-center text-text-contrast'>
             Sign Up
           </Typography>

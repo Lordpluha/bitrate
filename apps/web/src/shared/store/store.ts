@@ -1,11 +1,11 @@
 'use client'
 
 import { createSlice, configureStore, combineSlices, combineReducers } from '@reduxjs/toolkit'
-import { musicPlayerSlice } from '@entities/Player'
+import { musicPlayerReducer } from '@entities/Player'
 
 export const createStore = () => configureStore({
   reducer: {
-    musicPlayer: musicPlayerSlice.reducer
+    musicPlayer: musicPlayerReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
