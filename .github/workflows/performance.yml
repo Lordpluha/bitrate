@@ -235,9 +235,7 @@ jobs:
         run: pnpm --filter @spotify/ui-react run build
 
       - name: Build with bundle analyzer
-        run: |
-          cd apps/web
-          ANALYZE=true pnpm run build
+        run: ANALYZE=true pnpm --filter @spotify/web run build
 
       - name: Upload bundle report
         uses: actions/upload-artifact@v4
