@@ -11,6 +11,11 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
+    "paths": {
+      "@modules/*": ["src/modules/*"],
+      "@infra/*": ["src/infra/*"],
+      "@common/*": ["src/common/*"]
+    },
     "skipLibCheck": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
@@ -20,5 +25,5 @@
     "resolveJsonModule": true,
     "noUncheckedIndexedAccess": true
   },
-  "exclude": ["docs/"]
+  "exclude": ["node_modules", "dist", "docs", "coverage"]
 }

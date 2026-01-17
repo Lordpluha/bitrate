@@ -10,8 +10,8 @@ async function bootstrap() {
   app.use(cookieParser())
 
   const config = new DocumentBuilder()
-    .setTitle('@spotify/api')
-    .setDescription('@spotify/api Swagger documentation')
+    .setTitle(process.env.npm_package_name || 'API Documentation')
+    .setDescription(`${process.env.npm_package_name} Swagger documentation`)
     .setVersion(process.env.npm_package_version ?? '1.0')
     .addServer(`http://localhost:${process.env.PORT ?? 3000}`, 'Local server')
     .addServer('https://spotify-clone-api-jp5z.onrender.com/', 'Remote dev server')
