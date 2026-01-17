@@ -1,4 +1,4 @@
-import { UserEntity } from '@modules/users/entities'
+import { UserEntity } from '@modules/users'
 import { ApiProperty } from '@nestjs/swagger'
 import z from 'zod'
 import { LoginSchema } from './login.dto'

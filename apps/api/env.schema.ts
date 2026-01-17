@@ -10,8 +10,8 @@ export const envSchema = z.object({
   JWT_ACCESS_EXPIRES_IN: z.string().default('5m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
 
-  ACCESS_TOKEN_NAME: z.string().default('access_token'),
-  REFRESH_TOKEN_NAME: z.string().default('refresh_token'),
+  ACCESS_TOKEN_NAME: z.string().min(1),
+  REFRESH_TOKEN_NAME: z.string().min(1),
   // OAUTH_GOOGLE_CLIENT_ID: z.string(),
   // OAUTH_GOOGLE_CLIENT_SECRET: z.string(),
 

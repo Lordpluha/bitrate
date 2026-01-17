@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { UserEntity } from '@modules/users/entities'
+import { UserEntity } from '@modules/users'
 import { PrismaClient } from '@prisma/client'
 
 export async function seedUsers(prisma: PrismaClient, count: number = 50) {
@@ -12,6 +12,7 @@ export async function seedUsers(prisma: PrismaClient, count: number = 50) {
     password: 'password123',
     avatar: 'https://i.pravatar.cc/150?img=1',
     description: 'Test user for automated testing',
+    updatedAt: new Date(),
   })
 
   // Примеры слов для создания username
@@ -116,6 +117,7 @@ export async function seedUsers(prisma: PrismaClient, count: number = 50) {
         null, // Некоторые пользователи без описания
         null,
       ]),
+      updatedAt: new Date(),
     }
 
     users.push(user)

@@ -54,6 +54,10 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.playlist
   }
 
+  get trackFile() {
+    return this.prisma.trackFile
+  }
+
   get $transaction() {
     return this.prisma.$transaction.bind(this.prisma)
   }

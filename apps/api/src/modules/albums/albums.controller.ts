@@ -1,5 +1,5 @@
 import { Auth } from '@modules/auth/auth.guard'
-import { UserEntity } from '@modules/users/entities'
+import { UserEntity } from '@modules/users'
 import { Body, Controller, Delete, Get, ParseUUIDPipe, Post, Put, Query, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'

@@ -1,3 +1,4 @@
+import { websocketCorsConfig } from '@common/config/cors.config'
 import { TokenService } from '@modules/auth/token.service'
 import { Logger } from '@nestjs/common'
 import {
@@ -25,9 +26,7 @@ interface PlayingSession {
 }
 
 @WebSocketGateway({
-  cors: {
-    origin: '*',
-  },
+  cors: websocketCorsConfig,
 })
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -44,15 +43,26 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleConnection(client: AuthenticatedSocket): Promise<void> {
     try {
-      // Extract token from client manually for connection-level authentication
-      const authToken = client.handshake.auth?.token as string | undefined
-      const headerAuth = client.handshake.headers.authorization
-      const headerToken = headerAuth ? headerAuth.replace('Bearer ', '') : undefined
-      const queryToken = client.handshake.query?.token as string | undefined
-      const token = authToken || headerToken || queryToken
+      // Extract token ONLY from httpOnly cookies
+      const cookieHeader = client.handshake.headers.cookie
+      let token: string | undefined
+
+      if (cookieHeader) {
+        const cookies = cookieHeader.split(';').reduce(
+          (acc, cookie) => {
+            const [name, value] = cookie.trim().split('=')
+            if (name && value) {
+              acc[name] = value
+            }
+            return acc
+          },
+          {} as Record<string, string>,
+        )
+        token = cookies[process.env.ACCESS_TOKEN_NAME!]
+      }
 
       if (!token) {
-        this.logger.error('No authentication token provided')
+        this.logger.error('No authentication cookie found')
         client.disconnect()
         return
       }

@@ -1,4 +1,4 @@
-import { ArtistEntity } from '@modules/artists/entities'
+import { ArtistEntity } from '@modules/artists'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 

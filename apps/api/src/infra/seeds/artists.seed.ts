@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { ArtistEntity } from '@modules/artists/entities'
+import { ArtistEntity } from '@modules/artists'
 import { PrismaClient } from '@prisma/client'
 
 export async function seedArtists(prisma: PrismaClient, count: number = 20) {
@@ -13,6 +13,7 @@ export async function seedArtists(prisma: PrismaClient, count: number = 20) {
       bio: faker.lorem.paragraph(2),
       avatar: faker.image.avatar(),
       backgroundImage: faker.image.url({ width: 1920, height: 1080 }),
+      updatedAt: new Date(),
     }
     artists.push(artist)
   }

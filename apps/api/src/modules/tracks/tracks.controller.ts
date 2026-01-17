@@ -1,5 +1,5 @@
 import { Auth } from '@modules/auth/auth.guard'
-import { UserEntity } from '@modules/users/entities'
+import { UserEntity } from '@modules/users'
 import {
   BadRequestException,
   Body,
@@ -20,6 +20,7 @@ import {
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Request, Response } from 'express'
 import * as fs from 'fs'
+import { parseFile } from 'music-metadata'
 import { ZodValidationPipe } from 'nestjs-zod'
 import * as path from 'path'
 import { AudioGateway } from './audio.gateway'
@@ -166,11 +167,31 @@ export class TracksController {
       const stat = fs.statSync(filePath)
       const fileSize = stat.size
 
+      // Determine content type based on file extension
+      const fileExtension = path.extname(filePath).toLowerCase()
+      const contentType =
+        fileExtension === '.opus' || fileExtension === '.webm'
+          ? 'audio/webm; codecs="opus"'
+          : 'audio/mpeg'
+
+      // Read track duration from metadata
+      let trackDuration: number | undefined
+      try {
+        const metadata = await parseFile(filePath)
+        trackDuration = metadata.format.duration
+        console.log(`Track duration from metadata: ${trackDuration}s`)
+      } catch (error) {
+        console.warn(`Could not read metadata for ${filePath}:`, error)
+      }
+
       if (range) {
-        // Handle range requests for progressive download/streaming
+        // Handle range requests - allow client to control chunk size
         const parts = range.replace(/bytes=/, '').split('-')
         const start = Number.parseInt(parts[0] ?? '0', 10)
-        const end = parts[1] ? Number.parseInt(parts[1], 10) : fileSize - 1
+        const requestedEnd = parts[1] ? Number.parseInt(parts[1], 10) : fileSize - 1
+
+        // Use requested range (client calculates optimal chunk size)
+        const end = Math.min(requestedEnd, fileSize - 1)
         const chunksize = end - start + 1
 
         const file = fs.createReadStream(filePath, { start, end })
@@ -180,21 +201,22 @@ export class TracksController {
           'Content-Range': `bytes ${start}-${end}/${fileSize}`,
           'Accept-Ranges': 'bytes',
           'Content-Length': chunksize.toString(),
-          'Content-Type': 'audio/mpeg',
+          'Content-Type': contentType,
+          ...(trackDuration ? { 'X-Track-Duration': trackDuration.toString() } : {}),
         })
 
         return new StreamableFile(file, {
           length: chunksize,
-          type: 'audio/mpeg',
+          type: contentType,
         })
       } else {
-        // Handle normal requests - set proper headers to encourage Range requests
+        // Handle normal requests - return full file
         res.set({
           'Content-Length': fileSize.toString(),
-          'Content-Type': 'audio/mpeg',
-          'Accept-Ranges': `bytes 0-0/${fileSize}`,
-          'Cache-Control': 'no-cache', // Prevent full caching
-          Connection: 'keep-alive',
+          'Content-Type': contentType,
+          'Accept-Ranges': 'bytes',
+          'Cache-Control': 'no-cache',
+          ...(trackDuration ? { 'X-Track-Duration': trackDuration.toString() } : {}),
         })
 
         const file = fs.createReadStream(filePath)

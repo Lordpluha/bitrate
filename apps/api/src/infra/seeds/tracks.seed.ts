@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { TrackEntity } from '@modules/tracks/entities'
+import { TrackEntity } from '@modules/tracks'
 import { PrismaClient } from '@prisma/client'
 
 // Функция для генерации реалистичных URL аудиофайлов
@@ -105,6 +105,10 @@ export async function seedTracks(prisma: PrismaClient, count: number = 100) {
       audioUrl: generateAudioUrl(),
       cover: faker.image.url({ width: 800, height: 800 }),
       artistId: randomArtist.id,
+      updatedAt: new Date(),
+      duration: faker.number.int({ min: 120, max: 360 }),
+      releaseDate: faker.date.past({ years: 5 }),
+      lyrics: faker.helpers.maybe(() => faker.lorem.paragraphs(3), { probability: 0.3 }) || null,
     }
 
     tracks.push(track)

@@ -1,5 +1,5 @@
 import { Auth } from '@modules/auth/auth.guard'
-import { UserEntity } from '@modules/users/entities'
+import { UserEntity } from '@modules/users'
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -27,7 +27,7 @@ export class PlaylistsController {
   @ApiOperation({ summary: 'Get playlist by id' })
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: PlaylistEntity['id']) {
-    return await this.playlistService.getById(id)
+    return await this.playlistService.getByIdPopulated(id)
   }
 
   @ApiOperation({ summary: 'Create a new playlist' })

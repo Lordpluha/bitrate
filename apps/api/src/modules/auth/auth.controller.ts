@@ -1,4 +1,4 @@
-import { UserEntity } from '@modules/users/entities'
+import { UserEntity } from '@modules/users'
 import { UsersService } from '@modules/users/users.service'
 import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'

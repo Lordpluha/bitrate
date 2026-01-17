@@ -1,5 +1,5 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { ArtistEntity } from '@modules/artists/entities'
+import { ArtistEntity } from '@modules/artists'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'

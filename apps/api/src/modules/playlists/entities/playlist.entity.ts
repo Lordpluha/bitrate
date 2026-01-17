@@ -19,4 +19,10 @@ export class PlaylistEntity implements Playlist {
 
   @ApiProperty()
   userId: string
+
+  @ApiProperty()
+  updatedAt: Date
+
+  @ApiProperty()
+  isPublic: boolean
 }

@@ -1,4 +1,4 @@
-import { TrackEntity } from '@modules/tracks/entities'
+import { TrackEntity } from '@modules/tracks'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 

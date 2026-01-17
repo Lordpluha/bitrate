@@ -30,6 +30,7 @@ export class AuthService {
       password: registrationDto.password,
       avatar: null,
       description: null,
+      updatedAt: new Date(),
     })
   }
 

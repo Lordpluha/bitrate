@@ -1,5 +1,5 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { UserEntity } from '@modules/users/entities'
+import { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
 import { CreatePlaylistDto } from './dtos/create-playlist.dto'
 import { UpdatePlaylistDto } from './dtos/update-playlist.dto'
@@ -13,7 +13,6 @@ export class PlaylistsService {
     return await this.prisma.playlist.create({
       data: {
         userId,
-        // Url to cover in storage
         cover: '',
         ...playlistDto,
       },
@@ -39,6 +38,17 @@ export class PlaylistsService {
     return await this.prisma.playlist.findUniqueOrThrow({
       where: {
         id,
+      },
+    })
+  }
+
+  async getByIdPopulated(id: PlaylistEntity['id']) {
+    return await this.prisma.playlist.findUniqueOrThrow({
+      where: {
+        id,
+      },
+      include: {
+        tracks: true,
       },
     })
   }

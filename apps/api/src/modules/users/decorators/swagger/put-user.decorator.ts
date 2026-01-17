@@ -1,5 +1,5 @@
-import { ArtistEntity } from '@modules/artists/entities'
-import { UpdateUserDto } from '@modules/users/dtos'
+import { ArtistEntity } from '@modules/artists'
+import { UpdateUserDto } from '@modules/users'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 

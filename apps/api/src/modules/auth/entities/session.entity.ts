@@ -16,4 +16,7 @@ export class SessionEntity implements Session {
 
   @ApiProperty()
   createdAt: Date
+
+  @ApiProperty()
+  expiresAt: Date | null
 }

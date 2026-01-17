@@ -1,4 +1,4 @@
-import { UserEntity } from '@modules/users/entities'
+import { UserEntity } from '@modules/users'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 
@@ -14,7 +14,7 @@ export function AuthMeSwagger() {
             createdAt: new Date('2023-10-01T12:00:00.000Z'),
             email: 'user@example.com',
             id: '1234567890abcdef',
-            updatedAt: '2023-10-01T12:00:00.000Z',
+            updatedAt: new Date('2023-10-01T12:00:00.000Z'),
             username: 'user123',
             avatar: null,
             description: 'Some description about the user',

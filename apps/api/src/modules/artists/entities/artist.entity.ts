@@ -25,4 +25,7 @@ export class ArtistEntity implements Artist {
 
   @ApiProperty()
   createdAt: Date
+
+  @ApiProperty()
+  updatedAt: Date
 }

@@ -19,4 +19,10 @@ export class AlbumEntity implements Album {
 
   @ApiProperty()
   createdAt: Date
+
+  @ApiProperty()
+  updatedAt: Date
+
+  @ApiProperty()
+  releaseDate: Date | null
 }

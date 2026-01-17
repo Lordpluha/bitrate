@@ -39,34 +39,24 @@ export class WsAuthGuard implements CanActivate {
     }
   }
   private extractTokenFromClient(client: Socket): string | null {
-    // Проверяем auth в handshake
-    const authToken = client.handshake.auth?.token as string | undefined
-
-    // Проверяем Authorization header
-    const headerAuth = client.handshake.headers.authorization
-    const headerToken = headerAuth ? headerAuth.replace('Bearer ', '') : undefined
-
-    // Проверяем query параметры
-    const queryToken = client.handshake.query?.token as string | undefined
-
-    // Проверяем cookies
+    // Проверяем ТОЛЬКО httpOnly cookies
     const cookieHeader = client.handshake.headers.cookie
-    let cookieToken: string | undefined
-    if (cookieHeader) {
-      const cookies = cookieHeader.split(';').reduce(
-        (acc, cookie) => {
-          const [name, value] = cookie.trim().split('=')
-          if (name && value) {
-            acc[name] = value
-          }
-          return acc
-        },
-        {} as Record<string, string>,
-      )
 
-      cookieToken = cookies[process.env.ACCESS_TOKEN_NAME || 'access_token']
+    if (!cookieHeader) {
+      return null
     }
 
-    return authToken || headerToken || queryToken || cookieToken || null
+    const cookies = cookieHeader.split(';').reduce(
+      (acc, cookie) => {
+        const [name, value] = cookie.trim().split('=')
+        if (name && value) {
+          acc[name] = value
+        }
+        return acc
+      },
+      {} as Record<string, string>,
+    )
+
+    return cookies[process.env.ACCESS_TOKEN_NAME!] || null
   }
 }

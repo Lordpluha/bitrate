@@ -1,6 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { ArtistEntity } from '@modules/artists/entities'
-import { UserEntity } from '@modules/users/entities'
+import { ArtistEntity } from '@modules/artists'
+import { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
 import { Artist } from '@prisma/client'
 import { CreateTrackDto } from './dtos'

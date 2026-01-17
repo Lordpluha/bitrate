@@ -67,11 +67,8 @@ export class AuthGuard implements CanActivate {
     ])
 
     const request = context.switchToHttp().getRequest<Request>()
-    // Try to extract tokens from both cookies and Authorization header
-    const { access_token: cookieAccessToken, refresh_token } = this.extractTokenFromCookie(request)
-
-    // If not found in cookies, try Authorization header
-    const access_token = cookieAccessToken || this.extractTokenFromHeader(request)
+    // Extract tokens ONLY from httpOnly cookies
+    const { access_token, refresh_token } = this.extractTokenFromCookie(request)
 
     // 1) проверяем наличие нужных токенов
     switch (tokenReq) {
@@ -127,18 +124,10 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromCookie(request: Request) {
-    const access_token_name = process.env.ACCESS_TOKEN_NAME || ''
-    const refresh_token_name = process.env.REFRESH_TOKEN_NAME || ''
+    const access_token_name = process.env.ACCESS_TOKEN_NAME!
+    const refresh_token_name = process.env.REFRESH_TOKEN_NAME!
     const access_token = request.cookies?.[access_token_name] as string | undefined
     const refresh_token = request.cookies?.[refresh_token_name] as string | undefined
     return { access_token, refresh_token }
-  }
-
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const authorization = request.headers.authorization
-    if (authorization?.startsWith('Bearer ')) {
-      return authorization.slice(7) // Remove 'Bearer ' prefix
-    }
-    return undefined
   }
 }

@@ -1,4 +1,4 @@
-import { TrackEntity } from '@modules/tracks/entities'
+import { TrackEntity } from '@modules/tracks'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
@@ -37,6 +37,10 @@ export function TracksGetLikedSwagger() {
               audioUrl: '',
               userId: '',
               createdAt: new Date(),
+              updatedAt: new Date(),
+              duration: 180,
+              releaseDate: new Date('2023-10-01T12:00:00.000Z'),
+              lyrics: null,
             } as TrackEntity,
           ],
         },

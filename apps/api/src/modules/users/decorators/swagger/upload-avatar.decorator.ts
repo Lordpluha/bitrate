@@ -1,4 +1,4 @@
-import { UploadAvatarDto } from '@modules/users/dtos/upload-avatar.dto'
+import { UploadAvatarDto } from '@modules/users'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 

@@ -19,4 +19,16 @@ export class TrackEntity implements Track {
 
   @ApiProperty()
   artistId: string
+
+  @ApiProperty()
+  updatedAt: Date
+
+  @ApiProperty()
+  duration: number | null
+
+  @ApiProperty()
+  releaseDate: Date | null
+
+  @ApiProperty()
+  lyrics: string | null
 }
