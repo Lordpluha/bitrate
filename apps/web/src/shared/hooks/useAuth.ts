@@ -13,15 +13,29 @@ export const useAuth = () => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const { data: user, isLoading, isSuccess: isAuthenticated } = useQuery({
+  const { data: user, isLoading, isSuccess, error, isPending } = useQuery({
     queryKey: userQueryKeys.user,
     queryFn: async () => {
       const { data, response } = await fetchClient.GET('/auth/me')
-      if (!response.ok) throw new Error('Not authenticated')
+      
+      if (!response.ok) {
+        throw new Error('Not authenticated')
+      }
+      
       return data
     },
-    retry: false
+    retry: 1, // Only retry once
+    retryDelay: 1000, // Wait 1 second before retry
+    staleTime: Infinity, // Data never becomes stale - only refetch manually
+    gcTime: Infinity, // Keep in cache forever until manual invalidation
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+    refetchOnMount: false, // Don't refetch on every mount - use cache
+    refetchOnReconnect: false, // Don't refetch on reconnect
   })
+
+  // User is authenticated if we have user data (even if it's from cache)
+  // Only consider unauthenticated if explicitly got 401/403 error
+  const isAuthenticated = !!user
 
   const { mutate } = useMutation({
     onSuccess: async () => {
@@ -39,7 +53,7 @@ export const useAuth = () => {
   return {
     user,
     isAuthenticated,
-    isLoading,
+    isLoading: isLoading || isPending,
     logout: mutate
   }
 }

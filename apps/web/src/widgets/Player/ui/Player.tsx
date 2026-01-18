@@ -20,7 +20,8 @@ export const Player: React.FC = () => {
     handleTimeUpdate,
     handleEnded,
     handleVolumeChange,
-    handleSeeked
+    handleSeeked,
+    handleProgress
   } = useAudioPlayer()
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export const Player: React.FC = () => {
 
   useEffect(() => {
     handleVolumeChange()
-  }, [volume])
+  }, [handleVolumeChange])
 
   if (!currentTrack) {
     return null
@@ -43,12 +44,13 @@ export const Player: React.FC = () => {
     <>
       <audio
         ref={audioRef}
-        src={currentTrack.audioUrl || currentTrack.file}
+        preload="none"
         autoPlay={isPlaying}
         onLoadedMetadata={handleLoadedMetadata}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnded}
         onSeeked={handleSeeked}
+        onProgress={handleProgress}
       />
       
       <div 
