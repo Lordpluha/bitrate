@@ -85,7 +85,7 @@ async function bootstrap() {
       status: HttpStatus.TOO_MANY_REQUESTS,
       description: 'Too many requests',
     })
-    .setExternalDoc('Mintlify', 'https://lordpluha.mintlify.app/')
+    .setExternalDoc('@spotify/docs', '')
     .build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, config)

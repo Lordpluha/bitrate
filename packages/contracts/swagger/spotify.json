@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/": {
+    "/api/v1": {
       "get": {
-        "operationId": "AppController_getWelcome",
+        "operationId": "AppController_getWelcome_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -53,9 +53,9 @@
         "tags": ["Welcome"]
       }
     },
-    "/auth/login": {
+    "/api/v1/auth/login": {
       "post": {
-        "operationId": "AuthController_login",
+        "operationId": "AuthController_login_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -136,9 +136,9 @@
         "tags": ["Auth"]
       }
     },
-    "/auth/registration": {
+    "/api/v1/auth/registration": {
       "post": {
-        "operationId": "AuthController_registration",
+        "operationId": "AuthController_registration_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -213,9 +213,9 @@
         "tags": ["Auth"]
       }
     },
-    "/auth/logout": {
+    "/api/v1/auth/logout": {
       "post": {
-        "operationId": "AuthController_logout",
+        "operationId": "AuthController_logout_v1",
         "parameters": [],
         "responses": {
           "201": {
@@ -299,9 +299,9 @@
         "tags": ["Auth"]
       }
     },
-    "/auth/refresh": {
+    "/api/v1/auth/refresh": {
       "post": {
-        "operationId": "AuthController_refresh",
+        "operationId": "AuthController_refresh_v1",
         "parameters": [],
         "responses": {
           "201": {
@@ -394,9 +394,9 @@
         "tags": ["Auth"]
       }
     },
-    "/auth/me": {
+    "/api/v1/auth/me": {
       "get": {
-        "operationId": "AuthController_getMe",
+        "operationId": "AuthController_getMe_v1",
         "parameters": [],
         "responses": {
           "200": {
@@ -493,9 +493,9 @@
         "tags": ["Auth"]
       }
     },
-    "/users": {
+    "/api/v1/users": {
       "get": {
-        "operationId": "UsersController_getAll",
+        "operationId": "UsersController_getAll_v1",
         "parameters": [
           {
             "name": "limit",
@@ -537,7 +537,7 @@
                     "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                     "backgroundImage": "",
                     "bio": "Some bio",
-                    "createdAt": "2025-12-28T19:52:39.610Z"
+                    "createdAt": "2026-01-18T09:41:47.020Z"
                   },
                   {
                     "id": "2",
@@ -545,7 +545,7 @@
                     "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                     "backgroundImage": "",
                     "bio": "Some bio 2",
-                    "createdAt": "2025-12-28T19:52:39.610Z"
+                    "createdAt": "2026-01-18T09:41:47.020Z"
                   }
                 ]
               }
@@ -592,7 +592,7 @@
         "tags": ["Users"]
       },
       "put": {
-        "operationId": "UsersController_putById",
+        "operationId": "UsersController_putById_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -616,7 +616,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-12-28T19:52:39.612Z"
+                  "createdAt": "2026-01-18T09:41:47.021Z"
                 }
               }
             }
@@ -699,9 +699,9 @@
         "tags": ["Users"]
       }
     },
-    "/users/username/{username}": {
+    "/api/v1/users/username/{username}": {
       "get": {
-        "operationId": "UsersController_getByUsername",
+        "operationId": "UsersController_getByUsername_v1",
         "parameters": [
           {
             "name": "username",
@@ -724,7 +724,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-12-28T19:52:39.611Z"
+                  "createdAt": "2026-01-18T09:41:47.021Z"
                 }
               }
             }
@@ -780,9 +780,9 @@
         "tags": ["Users"]
       }
     },
-    "/users/{id}": {
+    "/api/v1/users/{id}": {
       "get": {
-        "operationId": "UsersController_getById",
+        "operationId": "UsersController_getById_v1",
         "parameters": [],
         "responses": {
           "200": {
@@ -795,7 +795,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-12-28T19:52:39.612Z"
+                  "createdAt": "2026-01-18T09:41:47.021Z"
                 }
               }
             }
@@ -841,9 +841,9 @@
         "tags": ["Users"]
       }
     },
-    "/users/avatar": {
+    "/api/v1/users/avatar": {
       "post": {
-        "operationId": "UsersController_uploadAvatar",
+        "operationId": "UsersController_uploadAvatar_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -867,7 +867,7 @@
                   "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                   "backgroundImage": "",
                   "bio": "Some bio",
-                  "createdAt": "2025-12-28T19:52:39.613Z",
+                  "createdAt": "2026-01-18T09:41:47.021Z",
                   "email": "example@gmail.com"
                 }
               }
@@ -954,9 +954,9 @@
         "tags": ["Users"]
       }
     },
-    "/artists": {
+    "/api/v1/artists": {
       "get": {
-        "operationId": "ArtistsController_getAll",
+        "operationId": "ArtistsController_getAll_v1",
         "parameters": [
           {
             "name": "page",
@@ -1044,65 +1044,11 @@
         },
         "summary": "Get all artists with pagination",
         "tags": ["Artists"]
-      },
-      "post": {
-        "operationId": "ArtistsController_create",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateArtistDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "summary": "Create a new artist",
-        "tags": ["Artists"]
       }
     },
-    "/artists/{id}": {
+    "/api/v1/artists/{id}": {
       "get": {
-        "operationId": "ArtistsController_getById",
+        "operationId": "ArtistsController_getById_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -1153,7 +1099,7 @@
         "tags": ["Artists"]
       },
       "put": {
-        "operationId": "ArtistsController_updateProfile",
+        "operationId": "ArtistsController_updateProfile_v1",
         "parameters": [],
         "responses": {
           "401": {
@@ -1234,7 +1180,7 @@
         "tags": ["Artists"]
       },
       "delete": {
-        "operationId": "ArtistsController_deleteProfile",
+        "operationId": "ArtistsController_deleteProfile_v1",
         "parameters": [],
         "responses": {
           "401": {
@@ -1315,9 +1261,9 @@
         "tags": ["Artists"]
       }
     },
-    "/artists/username/{username}": {
+    "/api/v1/artists/username/{username}": {
       "get": {
-        "operationId": "ArtistsController_getByUsername",
+        "operationId": "ArtistsController_getByUsername_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -1368,9 +1314,128 @@
         "tags": ["Artists"]
       }
     },
-    "/tracks": {
+    "/api/v1/artists/register": {
+      "post": {
+        "operationId": "ArtistsController_register_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateArtistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new artist",
+        "tags": ["Artists"]
+      }
+    },
+    "/api/v1/artists/login": {
+      "post": {
+        "operationId": "ArtistsController_login_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateArtistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Login an artist",
+        "tags": ["Artists"]
+      }
+    },
+    "/api/v1/tracks": {
       "get": {
-        "operationId": "TracksController_getAll",
+        "operationId": "TracksController_getAll_v1",
         "parameters": [
           {
             "name": "page",
@@ -1418,7 +1483,11 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2025-12-28T19:52:39.648Z"
+                    "createdAt": "2026-01-18T09:41:47.072Z",
+                    "updatedAt": "2026-01-18T09:41:47.072Z",
+                    "duration": 180,
+                    "releaseDate": "2023-10-01T12:00:00.000Z",
+                    "lyrics": null
                   }
                 ]
               }
@@ -1466,7 +1535,7 @@
         "tags": ["Tracks"]
       },
       "post": {
-        "operationId": "TracksController_postTrack",
+        "operationId": "TracksController_postTrack_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1487,7 +1556,7 @@
                   "title": "Track Title",
                   "cover": "https://example.com/cover.jpg",
                   "audioUrl": "",
-                  "createdAt": "2025-12-28T19:52:39.648Z"
+                  "createdAt": "2026-01-18T09:41:47.073Z"
                 }
               }
             },
@@ -1571,9 +1640,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/tracks/liked": {
+    "/api/v1/tracks/liked": {
       "get": {
-        "operationId": "TracksController_getLikedTracks",
+        "operationId": "TracksController_getLikedTracks_v1",
         "parameters": [
           {
             "name": "page",
@@ -1612,7 +1681,11 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2025-12-28T19:52:39.648Z"
+                    "createdAt": "2026-01-18T09:41:47.072Z",
+                    "updatedAt": "2026-01-18T09:41:47.072Z",
+                    "duration": 180,
+                    "releaseDate": "2023-10-01T12:00:00.000Z",
+                    "lyrics": null
                   }
                 ]
               }
@@ -1697,9 +1770,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/tracks/{id}": {
+    "/api/v1/tracks/{id}": {
       "get": {
-        "operationId": "TracksController_getById",
+        "operationId": "TracksController_getById_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -1750,7 +1823,7 @@
         "tags": ["Tracks"]
       },
       "put": {
-        "operationId": "TracksController_putTrack",
+        "operationId": "TracksController_putTrack_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1841,9 +1914,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/tracks/stream/{id}": {
+    "/api/v1/tracks/stream/{id}": {
       "get": {
-        "operationId": "TracksController_streamTrack",
+        "operationId": "TracksController_streamTrack_v1",
         "parameters": [
           {
             "name": "id",
@@ -1941,9 +2014,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/tracks/play/{id}": {
+    "/api/v1/tracks/play/{id}": {
       "post": {
-        "operationId": "TracksController_playTrack",
+        "operationId": "TracksController_playTrack_v1",
         "parameters": [
           {
             "name": "id",
@@ -2033,9 +2106,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/tracks/pause/{id}": {
+    "/api/v1/tracks/pause/{id}": {
       "post": {
-        "operationId": "TracksController_pauseTrack",
+        "operationId": "TracksController_pauseTrack_v1",
         "parameters": [
           {
             "name": "id",
@@ -2125,9 +2198,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/tracks/update-state/{id}": {
+    "/api/v1/tracks/update-state/{id}": {
       "post": {
-        "operationId": "TracksController_updateTrackState",
+        "operationId": "TracksController_updateTrackState_v1",
         "parameters": [
           {
             "name": "id",
@@ -2217,9 +2290,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/tracks/current-state": {
+    "/api/v1/tracks/current-state": {
       "get": {
-        "operationId": "TracksController_getCurrentState",
+        "operationId": "TracksController_getCurrentState_v1",
         "parameters": [],
         "responses": {
           "401": {
@@ -2300,9 +2373,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/playlists": {
+    "/api/v1/playlists": {
       "get": {
-        "operationId": "PlaylistsController_getAll",
+        "operationId": "PlaylistsController_getAll_v1",
         "parameters": [
           {
             "name": "page",
@@ -2375,7 +2448,7 @@
         "tags": ["Playlists"]
       },
       "post": {
-        "operationId": "PlaylistsController_post",
+        "operationId": "PlaylistsController_post_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2466,9 +2539,9 @@
         "tags": ["Playlists"]
       }
     },
-    "/playlists/{id}": {
+    "/api/v1/playlists/{id}": {
       "get": {
-        "operationId": "PlaylistsController_getById",
+        "operationId": "PlaylistsController_getById_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -2505,14 +2578,21 @@
             "description": "Loop detected"
           },
           "default": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "summary": "Get playlist by id",
         "tags": ["Playlists"]
       },
       "put": {
-        "operationId": "PlaylistsController_update",
+        "operationId": "PlaylistsController_update_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2603,9 +2683,9 @@
         "tags": ["Playlists"]
       }
     },
-    "/albums": {
+    "/api/v1/albums": {
       "get": {
-        "operationId": "AlbumsController_getAllAlbums",
+        "operationId": "AlbumsController_getAllAlbums_v1",
         "parameters": [
           {
             "name": "page",
@@ -2676,7 +2756,7 @@
         "tags": ["Albums"]
       },
       "post": {
-        "operationId": "AlbumsController_createAlbum",
+        "operationId": "AlbumsController_createAlbum_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2767,9 +2847,9 @@
         "tags": ["Albums"]
       }
     },
-    "/albums/{id}": {
+    "/api/v1/albums/{id}": {
       "get": {
-        "operationId": "AlbumsController_getById",
+        "operationId": "AlbumsController_getById_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -2820,7 +2900,7 @@
         "tags": ["Albums"]
       },
       "put": {
-        "operationId": "AlbumsController_updateAlbum",
+        "operationId": "AlbumsController_updateAlbum_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2912,7 +2992,7 @@
       },
       "delete": {
         "description": "Deletes an album by its ID. Requires authentication.",
-        "operationId": "AlbumsController_deleteAlbum",
+        "operationId": "AlbumsController_deleteAlbum_v1",
         "parameters": [],
         "responses": {
           "401": {
@@ -2992,136 +3072,6 @@
         "summary": "Delete an album by ID",
         "tags": ["Albums"]
       }
-    },
-    "/files/users/avatars/{filename}": {
-      "get": {
-        "operationId": "FilesController_getUserAvatar",
-        "parameters": [
-          {
-            "name": "filename",
-            "required": true,
-            "in": "path",
-            "description": "Avatar filename",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Avatar file"
-          },
-          "403": {
-            "description": "Access denied"
-          },
-          "404": {
-            "description": "Avatar not found"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "summary": "Get user avatar",
-        "tags": ["files"]
-      }
-    },
-    "/files/audio/{filename}": {
-      "get": {
-        "operationId": "FilesController_getAudioFile",
-        "parameters": [
-          {
-            "name": "filename",
-            "required": true,
-            "in": "path",
-            "description": "Audio filename",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Audio file"
-          },
-          "403": {
-            "description": "Access denied"
-          },
-          "404": {
-            "description": "Audio file not found"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "summary": "Get audio file",
-        "tags": ["files"]
-      }
     }
   },
   "info": {
@@ -3177,9 +3127,14 @@
           "createdAt": {
             "format": "date-time",
             "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
           }
         },
-        "required": ["id", "userId", "access_token", "refresh_token", "createdAt"]
+        "required": ["id", "userId", "access_token", "refresh_token", "createdAt", "expiresAt"]
       },
       "LoginDto": {
         "type": "object",
@@ -3244,9 +3199,22 @@
           "avatar": {
             "type": "string",
             "nullable": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
           }
         },
-        "required": ["id", "username", "email", "password", "createdAt", "description", "avatar"]
+        "required": [
+          "id",
+          "username",
+          "email",
+          "password",
+          "createdAt",
+          "description",
+          "avatar",
+          "updatedAt"
+        ]
       },
       "UpdateUserDto": {
         "type": "object",
@@ -3322,9 +3290,37 @@
           },
           "artistId": {
             "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "duration": {
+            "type": "number",
+            "nullable": true
+          },
+          "releaseDate": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "lyrics": {
+            "type": "string",
+            "nullable": true
           }
         },
-        "required": ["id", "title", "audioUrl", "cover", "createdAt", "artistId"]
+        "required": [
+          "id",
+          "title",
+          "audioUrl",
+          "cover",
+          "createdAt",
+          "artistId",
+          "updatedAt",
+          "duration",
+          "releaseDate",
+          "lyrics"
+        ]
       },
       "CreateTrackDto": {
         "type": "object",
@@ -3366,9 +3362,25 @@
           },
           "userId": {
             "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           }
         },
-        "required": ["id", "title", "cover", "description", "createdAt", "userId"]
+        "required": [
+          "id",
+          "title",
+          "cover",
+          "description",
+          "createdAt",
+          "userId",
+          "updatedAt",
+          "isPublic"
+        ]
       },
       "CreatePlaylistDto": {
         "type": "object",
@@ -3433,7 +3445,7 @@
     }
   },
   "externalDocs": {
-    "description": "Mintlify",
-    "url": "https://lordpluha.mintlify.app/"
+    "description": "@spotify/docs",
+    "url": ""
   }
 }

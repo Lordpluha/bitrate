@@ -1,64 +1,81 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 import 'dotenv/config'
+import { existsSync, mkdirSync } from 'node:fs'
+import { join } from 'node:path'
 import { Pool } from 'pg'
-
-import { seedAlbums } from './albums.seed'
-import { seedArtists } from './artists.seed'
-import { seedPlaylists, seedPlaylistTracks } from './playlists.seed'
-import { seedTrackAlbumRelations, seedTracks } from './tracks.seed'
-import { seedUserLikedTracks, seedUsers } from './users.seed'
+import config from './config'
+import { DownloadResourcesService } from './download-resources.service'
+import { SeedService } from './seed.service'
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter })
 
+// Подготовка директорий для хранения файлов
+const STORAGE_BASE = process.cwd()
+const TRACKS_DIR = join(STORAGE_BASE, config.storagePaths.tracks)
+const COVERS_DIR = join(STORAGE_BASE, config.storagePaths.covers)
+
+console.log('📁 Storage directories:')
+console.log('  Tracks:', TRACKS_DIR)
+console.log('  Covers:', COVERS_DIR)
+
+// Создаём директории если их нет
+if (!existsSync(TRACKS_DIR)) {
+  mkdirSync(TRACKS_DIR, { recursive: true })
+}
+if (!existsSync(COVERS_DIR)) {
+  mkdirSync(COVERS_DIR, { recursive: true })
+}
+
+/**
+ * Главная функция для запуска всех seed процессов
+ */
 async function main() {
   try {
     console.log('🌱 Starting database seeding...')
+    console.log('📡 NCS Import + Faker Data Generation\n')
 
-    // Очищаем существующие данные (опционально)
-    await prisma.playlist.deleteMany()
-    console.log('🗑️ Cleared existing playlists')
+    // Создаём сервисы
+    const downloadService = new DownloadResourcesService(STORAGE_BASE)
+    const seedService = new SeedService(prisma, downloadService)
 
-    await prisma.session.deleteMany()
-    console.log('🗑️ Cleared existing sessions')
+    // Шаг 1: Очистка базы данных (опционально)
+    if (config.clearBeforeImport) {
+      await seedService.clearDatabase()
+    }
 
-    await prisma.user.deleteMany()
-    console.log('🗑️ Cleared existing users')
+    // Шаг 2: Импорт артистов и треков из NCS
+    const stats = await seedService.importFromNCS()
 
-    await prisma.track.deleteMany()
-    console.log('🗑️ Cleared existing tracks')
+    // Шаг 3: Создание альбомов для артистов (1 альбом = все треки артиста)
+    await seedService.createAlbumsForArtists()
 
-    await prisma.album.deleteMany()
-    console.log('🗑️ Cleared existing albums')
+    // Шаг 4: Создание пользователей (faker)
+    await seedService.createUsers(50)
 
-    await prisma.artist.deleteMany()
-    console.log('🗑️ Cleared existing artists')
+    // Шаг 5: Создание плейлистов с треками для пользователей
+    await seedService.createPlaylistsForUsers(100)
 
-    // Добавляем фейковые данные
-    await seedArtists(prisma, 50)
-    await seedAlbums(prisma, 100)
-    await seedTracks(prisma, 200)
-    await seedUsers(prisma, 75)
-    await seedPlaylists(prisma, 150)
+    // Шаг 6: Добавление лайков для пользователей
+    await seedService.createUserLikes()
 
-    // Создаем связи между треками и альбомами
-    await seedTrackAlbumRelations(prisma)
+    // Шаг 7: Финальная статистика
+    await seedService.printStats(stats)
 
-    // Создаем связи между пользователями и треками (лайки)
-    await seedUserLikedTracks(prisma)
-
-    // Создаем связи между плейлистами и треками
-    await seedPlaylistTracks(prisma)
-
-    console.log('✅ Database seeding completed!')
+    console.log('\n✅ Database seeding completed successfully!')
   } catch (error) {
-    console.error('❌ Error during seeding:', error)
+    console.error('\n❌ Fatal error during seeding:', error)
+    throw error
   } finally {
     await prisma.$disconnect()
     await pool.end()
   }
 }
 
-main()
+// Запускаем seeding
+main().catch((error) => {
+  console.error('Unhandled error:', error)
+  process.exit(1)
+})

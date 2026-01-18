@@ -5,21 +5,22 @@ import { AuthModule } from '@modules/auth/auth.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
 import { TracksModule } from '@modules/tracks/tracks.module'
 import { UsersModule } from '@modules/users/users.module'
+import { BullModule } from '@nestjs/bullmq'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
-import { envSchema, envType } from '../env.schema'
+import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
-import { PathTraversalMiddleware } from './common/middleware/path-traversal.middleware'
+import { PathTraversalMiddleware } from './common'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.local', '.env.development', '.env.production'],
+      envFilePath: ['.env', '.env.local', '.env.production', '.env.development'],
 
-      validate: (env: Record<string, unknown>): envType => envSchema.parse(env),
+      validate: (env) => envSchema.parse(env),
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'storage', 'public'),
@@ -29,7 +30,7 @@ import { PathTraversalMiddleware } from './common/middleware/path-traversal.midd
         fallthrough: false,
         dotfiles: 'deny', // Deny access to hidden files (.env, .git, etc.)
         redirect: false,
-        setHeaders: (res, path) => {
+        setHeaders: (res) => {
           // Prevent directory listing and sensitive file access
           res.setHeader('X-Content-Type-Options', 'nosniff')
           res.setHeader('X-Frame-Options', 'DENY')
@@ -42,6 +43,15 @@ import { PathTraversalMiddleware } from './common/middleware/path-traversal.midd
           })
         },
       },
+    }),
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+      },
+    }),
+    BullModule.registerQueue({
+      name: 'audio-processing',
     }),
     PrismaModule,
     AuthModule,

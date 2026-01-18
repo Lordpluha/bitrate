@@ -28,6 +28,7 @@
     "doc:gen": "pnpm dlx @compodoc/compodoc -p tsconfig.json -s -d docs"
   },
   "dependencies": {
+    "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.1.12",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.12",
@@ -39,6 +40,8 @@
     "@nestjs/websockets": "^11.1.12",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "@spotify/ncs-parser": "workspace:*",
+    "bullmq": "^5.66.5",
     "cookie-parser": "^1.4.7",
     "music-metadata": "^11.10.6",
     "nestjs-zod": "^5.1.1",
