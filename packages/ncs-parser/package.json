@@ -6,7 +6,7 @@
     "module": "dist/esm/main.js",
     "scripts": {
         "clean": "rm -rf dist",
-        "build": "tsc --module CommonJS --outDir dist/cjs; tsc --module ESNext --outDir dist/esm; cp -r src/api dist/cjs/api; cp -r src/api dist/esm/api",
+        "build": "tsc --module CommonJS --outDir dist/cjs && tsc --module ESNext --outDir dist/esm",
         "buildWatch": "tsc --watch --module CommonJS --outDir dist/cjs; tsc --watch --module ESNext --outDir dist/esm",
         "dev": "concurrently \"npm run buildWatch\" \"npm run devStart\"",
         "prepublishOnly": "npm run clean; npm run build; npm run prettier",
