@@ -1,6 +1,6 @@
 import React from 'react'
 import { Typography } from '@spotify/ui-react'
-// import { SavedSongIcon } from '@shared/ui'
+import { SavedSongIcon } from '@spotify/ui-react'
 
 export const FavoriteTracks: React.FC = () => (
   <div>
@@ -17,7 +17,7 @@ export const FavoriteTracks: React.FC = () => (
           <Typography as='p' size='body' className='text-green-500'>
             Michael Jackson
           </Typography>
-          {/* <SavedSongIcon /> */}
+          <SavedSongIcon />
         </div>
       </div>
     </div>

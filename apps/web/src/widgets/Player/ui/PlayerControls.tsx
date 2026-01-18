@@ -1,5 +1,8 @@
+'use client'
+
 import React, { useRef, useState } from 'react'
 import { Play, Pause, SkipBack, SkipForward, Shuffle, Repeat } from 'lucide-react'
+import { cn } from '@spotify/ui-react'
 
 interface PlayerControlsProps {
   isPlaying: boolean
@@ -97,9 +100,10 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       <div className="flex items-center gap-4">
         <button
           onClick={onShuffleToggle}
-          className={`p-1 hover:scale-110 transition-transform ${
+          className={cn(
+            'p-1 hover:scale-110 transition-transform',
             isShuffled ? 'text-green-500' : 'text-gray-400'
-          }`}
+          )}
         >
           <Shuffle size={16} />
         </button>
@@ -131,9 +135,10 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
 
         <button
           onClick={onRepeatToggle}
-          className={`p-1 hover:scale-110 transition-transform ${
+          className={cn(
+            'p-1 hover:scale-110 transition-transform',
             repeatMode !== 'off' ? 'text-green-500' : 'text-gray-400'
-          }`}
+          )}
         >
           <Repeat size={16} />
         </button>

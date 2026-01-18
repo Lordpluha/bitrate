@@ -1,7 +1,6 @@
 export * from './usePersistedState'
 export * from './useAuth'
 export * from './useTracks'
-export * from './usePlaylist'
 export * from './useAppDispatch'
 export * from './useAppSelector'
 export * from './useAudioPlayer'

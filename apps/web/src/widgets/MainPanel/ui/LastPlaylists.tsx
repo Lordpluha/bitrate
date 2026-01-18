@@ -1,12 +1,9 @@
 import React from 'react'
+import type { ApiSchemas } from '@spotify/contracts'
 import { MusicCardMd } from './MusicCardMd'
+import { getPlaylistName, getPlaylistImage } from '@shared/utils/apiHelpers'
 
-interface LastPlaylistItem {
-  id: string
-  name: string
-  description?: string
-  imageUrl?: string
-}
+type LastPlaylistItem = ApiSchemas['PlaylistEntity']
 
 interface LastPlaylistsProps {
   items: LastPlaylistItem[]
@@ -19,9 +16,9 @@ export const LastPlaylists: React.FC<LastPlaylistsProps> = ({ items, onPlaylistC
       <MusicCardMd
         key={item.id}
         id={item.id}
-        name={item.name}
-        description={item.description}
-        imageUrl={item.imageUrl}
+        name={getPlaylistName(item)}
+        description={item.description || ''}
+        imageUrl={getPlaylistImage(item)}
         onClick={onPlaylistClick}
       />
     ))}

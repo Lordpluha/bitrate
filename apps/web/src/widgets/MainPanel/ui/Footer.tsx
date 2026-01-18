@@ -1,8 +1,8 @@
 import React from 'react'
 
-import Link from 'next/dist/client/link'
+import Link from 'next/link'
 
-// import { FacebookIcon, InstIcon, TwitIcon } from '@shared/ui'
+import { FacebookIcon, InstIcon, TwitIcon } from '@spotify/ui-react'
 
 const sections = [
   {
@@ -72,19 +72,19 @@ function Footer() {
               href='#'
               className=' bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]'
             >
-              {/* <FacebookIcon /> */}
+              <FacebookIcon />
             </Link>
             <Link
               href='#'
               className=' bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]'
             >
-              {/* <TwitIcon /> */}
+              <TwitIcon />
             </Link>
             <Link
               href='#'
               className=' bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]'
             >
-              {/* <InstIcon /> */}
+              <InstIcon />
             </Link>
           </div>
         </div>

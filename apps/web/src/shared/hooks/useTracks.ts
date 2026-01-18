@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
-import axios, {AxiosResponse} from 'axios'
+'use client'
+
+import { useQuery } from '@shared/api'
 import { ITrack } from '@shared/types'
 
 interface UseTracksParams {
@@ -11,17 +12,13 @@ interface UseTracksParams {
 export const useTracks = (params: UseTracksParams = {}) => {
   const { page = 1, limit = 100, title } = params
 
-  return useQuery({
-    queryKey: ['tracks', page, limit, title],
-    queryFn: async () => {
-      const resp = await axios.get<any, AxiosResponse<{data: ITrack[]}>>(`${process.env.NEXT_PUBLIC_API_URL}tracks`, {
-        params: {
-          page,
-          limit,
-          ...(title && { title })
-        }
-      })
-      return resp.data
+  return useQuery('get', '/tracks', {
+    params: {
+      query: {
+        page,
+        limit,
+        ...(title && { title })
+      }
     }
-  })
+  } as any)
 }

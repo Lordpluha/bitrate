@@ -1,5 +1,6 @@
 import React from 'react'
 import { Heart, PictureInPicture2 } from 'lucide-react'
+import { cn } from '@spotify/ui-react'
 
 interface TrackInfoProps {
   title: string
@@ -36,7 +37,9 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
         >
           <Heart
             size={16}
-            className={isLiked ? 'fill-green-500 text-green-500' : 'text-gray-400 hover:text-white'}
+            className={cn(
+              isLiked ? 'fill-green-500 text-green-500' : 'text-gray-400 hover:text-white'
+            )}
           />
         </button>
         <button

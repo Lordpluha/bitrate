@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, ArrowRight } from '@spotify/ui-react'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, ArrowRight, cn } from '@spotify/ui-react'
 
 
 const tags = ['Playlists', 'Artists', 'Albums', 'Podcasts']
@@ -34,11 +34,12 @@ export const LibraryTags = () => {
               <button
                 onClick={() => toggleTag(tag)}
                 type='button'
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                className={cn(
+                  'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap',
                   selectedTags.includes(tag)
                     ? 'bg-white text-black'
                     : 'bg-gray-600/30 text-white hover:bg-opacity-80'
-                }`}
+                )}
               >
                 {tag}
               </button>

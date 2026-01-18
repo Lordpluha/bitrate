@@ -4,9 +4,11 @@ import React from 'react'
 
 import { fetchClient } from '@shared/api'
 import { useQuery } from '@tanstack/react-query'
+import { ApiSchemas } from '@spotify/contracts'
 
 import { MusicCardSm } from './MusicCardSm'
 import type { ITrack } from '@shared/types'
+import { getPlaylistOwner, getPlaylistTracksCount } from '@shared/utils/apiHelpers'
 
 interface MusicItem {
   id: string
@@ -17,16 +19,7 @@ interface MusicItem {
   tracksCount?: number
 }
 
-interface Playlist {
-  id: string
-  title: string
-  cover: string | null
-  description: string | null
-  user: {
-    username: string
-  }
-  tracks?: ITrack[]
-}
+type Playlist = ApiSchemas['PlaylistEntity']
 
 const likedSongsItem: MusicItem = {
   id: 'liked-songs',
@@ -38,7 +31,7 @@ const likedSongsItem: MusicItem = {
 }
 
 export const LibraryMusic = () => {
-  const { data: playlists, isLoading } = useQuery<Playlist[]>({
+  const { data: playlists, isLoading } = useQuery({
     queryKey: ['playlists'],
     queryFn: async () => {
       const { data } = await fetchClient.GET('/playlists', {
@@ -48,17 +41,17 @@ export const LibraryMusic = () => {
     }
   })
 
-  const musicItems: MusicItem[] = [likedSongsItem]
+  const musicItems = [likedSongsItem]
   if (Array.isArray(playlists)) {
-    playlists.forEach((playlist: Playlist) => {
-      if (playlist && playlist.user && playlist.user.username) {
+    playlists.forEach((playlist) => {
+      if (playlist) {
         musicItems.push({
           id: playlist.id,
           title: playlist.title,
-          artist: playlist.user.username,
+          artist: getPlaylistOwner(playlist),
           type: 'playlist',
           cover: playlist.cover || '/images/default-playlist.jpg',
-          tracksCount: playlist.tracks?.length || 0
+          tracksCount: getPlaylistTracksCount(playlist)
         })
       }
     })
@@ -69,7 +62,7 @@ export const LibraryMusic = () => {
       <div className='mt-4 flex-1 overflow-hidden'>
         <div className='h-full overflow-y-auto pr-2 custom-scrollbar'>
           <div className='space-y-0.5 pb-4'>
-            {Array.from({ length: 40 }).map((_, i) => (
+            {Array.from({ length: 10 }).map((_, i) => (
               <div
                 key={i}
                 className='flex items-center gap-3 p-2 rounded-md'

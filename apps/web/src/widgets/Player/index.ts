@@ -1,1 +1,1 @@
-export { Player } from './ui/Player'
+export * from './ui/Player'

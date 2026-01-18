@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+'use client'
 
-import { fetchClient } from '@shared/api'
-// import { CustomNextIcon, CustomPrevIcon } from '@shared/ui'
+import React from 'react'
+
+import { useQuery } from '@shared/api'
+import { CustomNextIcon, CustomPrevIcon } from '@spotify/ui-react'
 import {
   Carousel,
   CarouselContent,
@@ -20,35 +22,22 @@ interface MusicItem {
 }
 
 export const PopularArtists: React.FC = () => {
-  const [artists, setArtists] = useState<MusicItem[]>([])
-  const [loadingArtists, setLoadingArtists] = useState(true)
-
-  const fetchArtists = async () => {
-    try {
-      setLoadingArtists(true)
-      const { data } = await fetchClient.GET('/artists', {
-        params: { query: { limit: 20 } }
-      })
-      if (Array.isArray(data)) {
-        const formattedArtists = data.map((artist: any) => ({
-          id: artist.id,
-          name:
-            artist.name || artist.username || artist.title || 'Unknown Artist',
-          description: 'Artist',
-          imageUrl: artist.imageUrl || artist.avatar || artist.cover
-        }))
-        setArtists(formattedArtists)
+  const { data, isPending: loadingArtists, error } = useQuery('get', '/artists', {
+    params: {
+      query: {
+        limit: 20
       }
-    } catch (error) {
-      console.error('Error fetching artists:', error)
-    } finally {
-      setLoadingArtists(false)
     }
-  }
+  } as any)
 
-  useEffect(() => {
-    fetchArtists()
-  }, [])
+  const artists: MusicItem[] = Array.isArray(data)
+    ? data.map((artist) => ({
+        id: artist.id,
+        name: artist.name || artist.username || artist.title || 'Unknown Artist',
+        description: 'Artist',
+        imageUrl: artist.imageUrl || artist.avatar || artist.cover
+      }))
+    : []
 
   return (
     <div className='relative mt-8'>
@@ -65,11 +54,11 @@ export const PopularArtists: React.FC = () => {
           className='w-full'
         >
           <CarouselPrevious
-            // icon={<CustomPrevIcon />}
+            icon={<CustomPrevIcon />}
             className='absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
           />
           <CarouselNext
-            // icon={<CustomNextIcon />}
+            icon={<CustomNextIcon />}
             className='absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
           />
           <CarouselContent className='flex'>

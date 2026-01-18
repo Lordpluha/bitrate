@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { PlaylistHeader } from './PlaylistHeader'
 import { TracksList, Track } from './TracksList'
@@ -8,18 +9,27 @@ import { useTracks } from '@shared/hooks/useTracks'
 import { ITrack } from '@shared/types'
 import {setPlaylist} from '@entities/Player'
 import { play } from '@entities/Player'
+import { getTrackArtist, getTrackDuration } from '@shared/utils/apiHelpers'
 
 interface PlaylistPageProps {
-  playlistId: string
   onBack?: () => void
 }
 
-export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId, onBack }) => {
+export const PlaylistPage: React.FC<PlaylistPageProps> = ({ onBack }) => {
+  const router = useRouter()
   const dispatch = useAppDispatch()
   const { data, isPending } = useTracks()
-  const tracks = data?.data || []
-
+  
+  const tracks = (data as any)?.data || data || []
   const tracksArray = Array.isArray(tracks) ? tracks : []
+
+  const handleBack = () => {
+    if (onBack) {
+      onBack()
+    } else {
+      router.back()
+    }
+  }
 
   useEffect(() => {
     if (tracksArray && tracksArray.length > 0) {
@@ -43,7 +53,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId, onBack }
     return (
       <div className='h-full overflow-y-auto custom-scrollbar'>
         <PlaylistHeader
-          onBack={onBack}
+          onBack={handleBack}
           title='Loading...'
           type='Playlist'
           imageUrl='/images/drive-cover-big.jpg'
@@ -59,53 +69,37 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId, onBack }
     )
   }
 
-  const handleTrackClick = (track: Track) => {
-    const apiTrack = tracksArray.find((t) => t.id === track.id)
-    if (apiTrack) {
-      const iTrack: ITrack = {
-        id: apiTrack.id,
-        title: apiTrack.title,
-        audioUrl: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${apiTrack.id}`,
-        cover: apiTrack.cover,
-        createdAt: apiTrack.createdAt || new Date().toISOString(),
-        artistId: apiTrack.artistId || '',
-        artist: apiTrack.artist || 'Unknown Artist',
-        duration: apiTrack.duration || 0,
-        name: apiTrack.title,
-        file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${apiTrack.id}`
-      }
-      dispatch(play(iTrack))
+  const handlePlayTrack = (track: Track) => {
+    const iTrack: ITrack = {
+      id: track.id,
+      title: track.title,
+      audioUrl: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
+      cover: track.cover,
+      createdAt: track.createdAt || new Date().toISOString(),
+      artistId: track.artistId || '',
+      artist: getTrackArtist(track),
+      duration: getTrackDuration(track),
+      name: track.title,
+      file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`
     }
+    dispatch(play(iTrack))
   }
-
-  const displayTracks = tracksArray.map((track) => ({
-    id: track.id,
-    name: track.title,
-    artist: track.artist || 'Unknown Artist',
-    album: track.album || 'Unknown Album',
-    dateAdded: track.createdAt ? new Date(track.createdAt).toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
-    }) : 'Unknown',
-    duration: `${Math.floor(track.duration / 60)}:${String(track.duration % 60).padStart(2, '0')}`
-  }))
 
   return (
     <div className='h-full overflow-y-auto custom-scrollbar'>
       <PlaylistHeader
-        onBack={onBack}
+        onBack={handleBack}
         title='All Tracks'
         type='Playlist'
         imageUrl='/images/drive-cover-big.jpg'
         author='Music Library'
         songsCount={0}
-        tracksCount={displayTracks?.length || 0}
+        tracksCount={tracksArray?.length || 0}
         duration='6 hr 30 min'
       />
       <TracksList 
-        tracks={displayTracks}
-        onTrackClick={handleTrackClick}
+        tracks={tracksArray}
+        onPlayTrack={handlePlayTrack}
       />
     </div>
   )

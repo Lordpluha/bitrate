@@ -4,12 +4,11 @@ import { useState, useEffect } from 'react'
 import { TrackInfo } from './TrackInfo'
 import { PlayerControls } from './PlayerControls'
 import { PlayerActions } from './PlayerActions'
-import { RootState } from '@shared/store'
 import { useAudioPlayer, useAppSelector, useAppDispatch } from '@shared/hooks'
-import { setVolume } from '@entities/Player/store/PlayerSlice'
+import { setVolume, selectMusicPlayer } from '@entities/Player/store/PlayerSlice'
 
 export const Player: React.FC = () => {
-  const { currentTrack, isPlaying, volume, currentTime, duration } = useAppSelector((state) => state.musicPlayer)
+  const { currentTrack, isPlaying, volume, currentTime, duration } = useAppSelector(selectMusicPlayer)
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
   const { 

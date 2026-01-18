@@ -10,18 +10,22 @@ interface MusicItem {
   tracksCount?: number
 }
 
-export const MusicCardSm = ({ item }: { item: MusicItem }) => {
-  const [imageError, setImageError] = useState(false)
+interface MusicCardSmProps {
+  item: MusicItem
+}
 
-  const getTypeColor = () => {
-    switch (item.type) {
-      case 'playlist': return 'from-green-500 to-blue-500'
-      case 'album': return 'from-orange-500 to-red-500'
-      case 'single': return 'from-purple-500 to-pink-500'
-      case 'podcast': return 'from-blue-600 to-indigo-600'
-      default: return 'from-gray-500 to-gray-700'
-    }
+const getTypeColor = (type: MusicItem['type']) => {
+  switch (type) {
+    case 'playlist': return 'from-green-500 to-blue-500'
+    case 'album': return 'from-orange-500 to-red-500'
+    case 'single': return 'from-purple-500 to-pink-500'
+    case 'podcast': return 'from-blue-600 to-indigo-600'
+    default: return 'from-gray-500 to-gray-700'
   }
+}
+
+export const MusicCardSm = ({ item }: MusicCardSmProps) => {
+  const [imageError, setImageError] = useState(false)
 
   const handleImageError = () => {
     setImageError(true)
@@ -38,7 +42,7 @@ export const MusicCardSm = ({ item }: { item: MusicItem }) => {
             onError={handleImageError}
           />
         ) : (
-          <div className={`w-full h-full bg-gradient-to-br ${getTypeColor()} flex items-center justify-center`}>
+          <div className={`w-full h-full bg-gradient-to-br ${getTypeColor(item.type)} flex items-center justify-center`}>
             <span className='text-white text-xs font-bold drop-shadow-sm'>
               {item.title.charAt(0).toUpperCase()}
             </span>
@@ -51,7 +55,7 @@ export const MusicCardSm = ({ item }: { item: MusicItem }) => {
           {item.title}
         </h3>
         <p className='text-gray-400 text-xs truncate group-hover:text-gray-300 transition-colors duration-150 mt-0.5'>
-          {item.type === 'playlist' ? 'Playlist' : item.type === 'album' ? 'Album' : item.type === 'single' ? 'Single' : 'Podcast'} • {item.artist}
+          {item.type.slice(0, 1).toUpperCase() + item.type.slice(1)} • {item.artist}
           {item.tracksCount && ` • ${item.tracksCount} songs`}
         </p>
       </div>

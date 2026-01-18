@@ -1,1 +1,1 @@
-export { MainPanel } from './ui/MainPanel'
+export * from './ui/MainPanel'

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { Menu, X } from 'lucide-react'
+import { cn } from '@spotify/ui-react'
 import { NavLinks } from '../NavLinks'
 import { AuthButtons } from '../AuthButtons'
 import { InstallBtn } from '../InstallBtn'
@@ -35,9 +36,10 @@ export const BurgerMenu = () => {
       )}
 
       <div
-        className={`fixed top-0 right-0 h-full w-full bg-black border-l border-gray-800 z-50 transform transition-transform duration-300 ease-in-out ${
+        className={cn(
+          'fixed top-0 right-0 h-full w-full bg-black border-l border-gray-800 z-50 transform transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        )}
       >
         <div className='p-6'>
           <div className='flex justify-between items-center mb-8'>
@@ -53,12 +55,12 @@ export const BurgerMenu = () => {
           <div className='space-y-6'>
             <div className='border-b border-gray-800 pb-6'>
               <div className='flex flex-col space-y-4'>
-                <NavLinks isMobile={true} />
+                <NavLinks />
               </div>
             </div>
 
             <div className='border-b border-gray-800 pb-6'>
-              <InstallBtn isMobile={true} />
+              <InstallBtn />
             </div>
 
             <div>

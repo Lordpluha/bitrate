@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { Volume2, VolumeX, ListMusic, Mic2, MonitorSpeaker, Maximize2 } from 'lucide-react'
 

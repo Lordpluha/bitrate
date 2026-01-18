@@ -1,26 +1,18 @@
+'use client'
 import React, { useState } from 'react'
-import { Clock, Play, Pause } from 'lucide-react'
+import { Clock } from 'lucide-react'
 import { useAppSelector } from '@shared/hooks'
-import {
-  PlayingIcon
-} from '@spotify/ui-react'
+import { ApiSchemas } from '@spotify/contracts'
+import { TrackCard } from './TrackCard'
 
-export interface Track {
-  id: string
-  name: string
-  artist: string
-  album: string
-  dateAdded: string
-  duration: string
-}
+export type Track = ApiSchemas['TrackEntity']
 
 interface TracksListProps {
   tracks: Track[]
-  onTrackClick: (track: Track) => void
+  onPlayTrack: (track: Track) => void
 }
 
-
-export const TracksList: React.FC<TracksListProps> = ({ tracks, onTrackClick }) => {
+export const TracksList: React.FC<TracksListProps> = ({ tracks, onPlayTrack }) => {
   const { currentTrack, isPlaying } = useAppSelector((state) => state.musicPlayer)
   const [hoveredTrackId, setHoveredTrackId] = useState<string | null>(null)
 
@@ -37,45 +29,19 @@ export const TracksList: React.FC<TracksListProps> = ({ tracks, onTrackClick }) 
       </div>
 
       <div className="space-y-1">
-        {tracks.map((track, index) => {
-          const isCurrentTrack = currentTrack?.id === track.id
-          const isHovered = hoveredTrackId === track.id
-          const showPlayIcon = isHovered && !isCurrentTrack
-          const showPauseIcon = isHovered && isCurrentTrack && isPlaying
-          const showPlayingIcon = isCurrentTrack && isPlaying && !isHovered
-          const showNumber = !showPlayIcon && !showPauseIcon && !showPlayingIcon
-
-          return (
-            <div
-              key={track.id}
-              onClick={() => onTrackClick(track)}
-              onMouseEnter={() => setHoveredTrackId(track.id)}
-              onMouseLeave={() => setHoveredTrackId(null)}
-              className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 rounded hover:bg-white/10 cursor-pointer group items-center"
-            >
-              <div className="text-sm flex items-center justify-center">
-                {showNumber && (
-                  <span className={isCurrentTrack ? 'text-green-500' : 'text-gray-400'}>
-                    {index + 1}
-                  </span>
-                )}
-                {showPlayIcon && <Play size={14} className="text-white" fill="white" />}
-                {showPauseIcon && <Pause size={14} className="text-white" fill="white" />}
-                {showPlayingIcon && <PlayingIcon />}
-              </div>
-              <div>
-                <div className={`font-medium ${isCurrentTrack ? 'text-green-500' : 'text-white'
-                  } ${isHovered && !isCurrentTrack ? 'underline' : ''}`}>
-                  {track.name}
-                </div>
-                <div className="text-sm text-gray-400">{track.artist}</div>
-              </div>
-              <div className="text-sm text-gray-400">{track.album}</div>
-              <div className="text-sm text-gray-400">{track.dateAdded}</div>
-              <div className="text-sm text-gray-400 text-right">{track.duration}</div>
-            </div>
-          )
-        })}
+        {tracks.map((track, index) => (
+          <TrackCard
+            key={track.id}
+            track={track}
+            index={index}
+            isCurrentTrack={currentTrack?.id === track.id}
+            isPlaying={isPlaying}
+            isHovered={hoveredTrackId === track.id}
+            onMouseEnter={() => setHoveredTrackId(track.id)}
+            onMouseLeave={() => setHoveredTrackId(null)}
+            onClick={() => onPlayTrack(track)}
+          />
+        ))}
       </div>
     </div>
   )

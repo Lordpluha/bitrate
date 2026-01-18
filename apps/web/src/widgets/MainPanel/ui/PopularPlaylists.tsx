@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
-import { fetchClient } from '@shared/api'
-// import { CustomNextIcon, CustomPrevIcon } from '@shared/ui'
+import { useQuery } from '@shared/api'
+import { CustomNextIcon, CustomPrevIcon } from '@spotify/ui-react'
 import {
   Carousel,
   CarouselContent,
@@ -19,59 +19,26 @@ interface MusicItem {
   imageUrl?: string
 }
 
-interface PopularPlaylistsProps {
-  onPlaylistClick?: (playlistId: string) => void
-}
-
-export const PopularPlaylists: React.FC<PopularPlaylistsProps> = ({ onPlaylistClick }) => {
-  const [playlists, setPlaylists] = useState<MusicItem[]>([])
-  const [loadingPlaylists, setLoadingPlaylists] = useState(true)
-
-  const fetchPlaylists = async () => {
-    try {
-      setLoadingPlaylists(true)
-      const { data } = await fetchClient.GET('/playlists', {
-        params: { path: { page: 1, limit: 3 } } // Загружаем только 3 плейлиста
-      })
-
-      const responseData = data as any
-      if (Array.isArray(responseData)) {
-        const formattedPlaylists = responseData.map((playlist: any) => ({
-          id: playlist.id,
-          name: playlist.title,
-          description:
-            playlist.description ||
-            `Playlist • ${playlist.user?.username || 'Unknown'}`,
-          imageUrl: playlist.cover
-        }))
-        setPlaylists(formattedPlaylists)
-      } else if (
-        responseData &&
-        typeof responseData === 'object' &&
-        Array.isArray((responseData as any).items)
-      ) {
-        const formattedPlaylists = (responseData as any).items.map((playlist: any) => ({
-          id: playlist.id,
-          name: playlist.title,
-          description:
-            playlist.description ||
-            `Playlist • ${playlist.user?.username || 'Unknown'}`,
-          imageUrl: playlist.cover
-        }))
-        setPlaylists(formattedPlaylists)
-      } else {
-        setPlaylists([])
+export const PopularPlaylists: React.FC = () => {
+  const { data, isPending: loadingPlaylists, error } = useQuery('get', '/playlists', {
+    params: {
+      query: {
+        page: 1,
+        limit: 3
       }
-    } catch (error) {
-      console.error('Error fetching playlists:', error)
-    } finally {
-      setLoadingPlaylists(false)
     }
-  }
+  } as any)
 
-  useEffect(() => {
-    fetchPlaylists()
-  }, [])
+  const playlists: MusicItem[] = Array.isArray(data) 
+    ? data.map((playlist) => ({
+        id: playlist.id,
+        name: playlist.title,
+        description:
+          playlist.description ||
+          `Playlist • ${playlist.user?.username || 'Unknown'}`,
+        imageUrl: playlist.cover
+      }))
+    : []
 
   return (
     <div className='relative mt-8'>
@@ -87,11 +54,11 @@ export const PopularPlaylists: React.FC<PopularPlaylistsProps> = ({ onPlaylistCl
           className='w-full'
         >
           <CarouselPrevious
-            // icon={<CustomPrevIcon />}
+            icon={<CustomPrevIcon />}
             className='absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
           />
           <CarouselNext
-            // icon={<CustomNextIcon />}
+            icon={<CustomNextIcon />}
             className='absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
           />
           <CarouselContent className='flex'>
@@ -111,7 +78,6 @@ export const PopularPlaylists: React.FC<PopularPlaylistsProps> = ({ onPlaylistCl
                     description={playlist.description}
                     imageUrl={playlist.imageUrl}
                     isArtist={false}
-                    onClick={onPlaylistClick}
                   />
                 </CarouselItem>
               ))

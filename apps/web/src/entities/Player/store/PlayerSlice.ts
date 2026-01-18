@@ -1,7 +1,17 @@
 'use client'
 
 import { createAction, createReducer } from '@reduxjs/toolkit'
-import { ITrack, IMusicPlayerState } from '@shared/types'
+import { ITrack } from '@shared/types'
+
+export interface IMusicPlayerState {
+  currentTrack: ITrack | null
+  playlist: ITrack[]
+  isPlaying: boolean
+  currentTime: number
+  duration: number
+  volume: number
+  progress: number
+}
 
 const initialState: IMusicPlayerState = {
   currentTrack: null,
@@ -78,6 +88,7 @@ export const musicPlayerReducer = createReducer(initialState, (builder) => {
 })
 
 // Selectors
+export const selectMusicPlayer = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer
 export const selectCurrentTrack = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.currentTrack
 export const selectPlaylist = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.playlist
 export const selectIsPlaying = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.isPlaying
