@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import Link from 'next/link'
-import { cn } from '@spotify/ui-react'
+import { cn, PlayIcon } from '@spotify/ui-react'
 
 interface MusicCardLgProps {
   id: string
@@ -35,7 +35,7 @@ export const MusicCardLg: React.FC<MusicCardLgProps> = ({
           )}
         />
         <div className='absolute bottom-2 right-2 flex items-center justify-center opacity-0 group-hover/card:opacity-100 translate-y-2 group-hover/card:translate-y-0 transition-all duration-200'>
-          {/* <PlayIcon /> */}
+          <PlayIcon />
         </div>
       </div>
       <h3 className='text-text font-medium text-sm mb-2 line-clamp-1'>

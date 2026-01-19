@@ -1,4 +1,4 @@
-// import { InstallIcon } from '@shared/ui'
+
 import { InstallIcon } from '@spotify/ui-react'
 import Link from 'next/link'
 import React from 'react'

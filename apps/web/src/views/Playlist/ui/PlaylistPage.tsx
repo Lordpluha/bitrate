@@ -23,14 +23,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ onBack }) => {
   const tracks = (data as any)?.data || data || []
   const tracksArray = Array.isArray(tracks) ? tracks : []
 
-  const handleBack = () => {
-    if (onBack) {
-      onBack()
-    } else {
-      router.back()
-    }
-  }
-
+  
   useEffect(() => {
     if (tracksArray && tracksArray.length > 0) {
       const iTracks = tracksArray.map((track) => ({
@@ -53,7 +46,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ onBack }) => {
     return (
       <div className='h-full overflow-y-auto custom-scrollbar'>
         <PlaylistHeader
-          onBack={handleBack}
+          onBack={() => router.back()}
           title='Loading...'
           type='Playlist'
           imageUrl='/images/drive-cover-big.jpg'
