@@ -130,7 +130,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/playlists/playlists.controller.ts</code>
+            <code>src/modules/playlists/playlists.controller.ts</code>
         </p>
             <p class="comment">
                 <h3>Prefix</h3>
@@ -232,7 +232,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="20"
-                                    class="link-to-prism">src/playlists/playlists.controller.ts:20</a></div>
+                                    class="link-to-prism">src/modules/playlists/playlists.controller.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -322,7 +322,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="29"
-                                    class="link-to-prism">src/playlists/playlists.controller.ts:29</a></div>
+                                    class="link-to-prism">src/modules/playlists/playlists.controller.ts:29</a></div>
                         </td>
                     </tr>
 
@@ -401,7 +401,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="36"
-                                    class="link-to-prism">src/playlists/playlists.controller.ts:36</a></div>
+                                    class="link-to-prism">src/modules/playlists/playlists.controller.ts:36</a></div>
                         </td>
                     </tr>
 
@@ -492,7 +492,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="48"
-                                    class="link-to-prism">src/playlists/playlists.controller.ts:48</a></div>
+                                    class="link-to-prism">src/modules/playlists/playlists.controller.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -566,11 +566,11 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from &#x27;@nestjs/common&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Auth } from &#x27;@modules/auth/auth.guard&#x27;
+import { UserEntity } from &#x27;@modules/users&#x27;
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from &#x27;@nestjs/common&#x27;
 import { ApiExtraModels, ApiOperation, ApiTags } from &#x27;@nestjs/swagger&#x27;
 import { ZodValidationPipe } from &#x27;nestjs-zod&#x27;
-import { Auth } from &#x27;src/auth/auth.guard&#x27;
-import { UserEntity } from &#x27;src/users/entities&#x27;
 import { GetPlaylistsSwagger } from &#x27;./decorators/get-playlists.decorator&#x27;
 import { CreatePlaylistDto, CreatePlaylistSchema } from &#x27;./dtos/create-playlist.dto&#x27;
 import { UpdatePlaylistDto, UpdatePlaylistSchema } from &#x27;./dtos/update-playlist.dto&#x27;
@@ -595,7 +595,7 @@ export class PlaylistsController {
   @ApiOperation({ summary: &#x27;Get playlist by id&#x27; })
   @Get(&#x27;:id&#x27;)
   async getById(@Param(&#x27;id&#x27;, ParseUUIDPipe) id: PlaylistEntity[&#x27;id&#x27;]) {
-    return await this.playlistService.getById(id)
+    return await this.playlistService.getByIdPopulated(id)
   }
 
   @ApiOperation({ summary: &#x27;Create a new playlist&#x27; })

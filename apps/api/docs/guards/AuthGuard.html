@@ -135,7 +135,7 @@
                 <h3>File</h3>
             </p>
             <p class="comment">
-                <code>src/auth/auth.guard.ts</code>
+                <code>src/modules/auth/auth.guard.ts</code>
             </p>
 
 
@@ -164,10 +164,6 @@
                                     <span class="modifier">Private</span>
                                 <a href="#extractTokenFromCookie" >extractTokenFromCookie</a>
                             </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#extractTokenFromHeader" >extractTokenFromHeader</a>
-                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -191,7 +187,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/auth/auth.guard.ts:56</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/modules/auth/auth.guard.ts:56</a></div>
                             </td>
                         </tr>
 
@@ -281,7 +277,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="63"
-                                    class="link-to-prism">src/auth/auth.guard.ts:63</a></div>
+                                    class="link-to-prism">src/modules/auth/auth.guard.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -349,8 +345,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="129"
-                                    class="link-to-prism">src/auth/auth.guard.ts:129</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="126"
+                                    class="link-to-prism">src/modules/auth/auth.guard.ts:126</a></div>
                         </td>
                     </tr>
 
@@ -396,81 +392,13 @@
             </tr>
         </tbody>
     </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="extractTokenFromHeader"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>extractTokenFromHeader</b></span>
-                        <a href="#extractTokenFromHeader"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>extractTokenFromHeader(request: Request)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="137"
-                                    class="link-to-prism">src/auth/auth.guard.ts:137</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>request</td>
-                                            <td>
-                                                        <code>Request</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>string | undefined</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 </section>
         </div>
 
 
         <div class="tab-pane fade  tab-source-code" id="source">
-            <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+            <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PrismaService } from &#x27;@infra/prisma/prisma.service&#x27;
+import {
   applyDecorators,
   CanActivate,
   ExecutionContext,
@@ -483,7 +411,6 @@
 import { Reflector } from &#x27;@nestjs/core&#x27;
 import { ApiCookieAuth, ApiResponse } from &#x27;@nestjs/swagger&#x27;
 import { Request } from &#x27;express&#x27;
-import { PrismaService } from &#x27;src/prisma/prisma.service&#x27;
 import { UNAUTHORIZED_ERRORS } from &#x27;./errors/unauthorized.errors&#x27;
 import { TokenService } from &#x27;./token.service&#x27;
 import { JWTPayload } from &#x27;./types&#x27;
@@ -539,11 +466,8 @@ export class AuthGuard implements CanActivate {
     ])
 
     const request &#x3D; context.switchToHttp().getRequest&lt;Request&gt;()
-    // Try to extract tokens from both cookies and Authorization header
-    const { access_token: cookieAccessToken, refresh_token } &#x3D; this.extractTokenFromCookie(request)
-
-    // If not found in cookies, try Authorization header
-    const access_token &#x3D; cookieAccessToken || this.extractTokenFromHeader(request)
+    // Extract tokens ONLY from httpOnly cookies
+    const { access_token, refresh_token } &#x3D; this.extractTokenFromCookie(request)
 
     // 1) проверяем наличие нужных токенов
     switch (tokenReq) {
@@ -599,19 +523,11 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromCookie(request: Request) {
-    const access_token_name &#x3D; process.env.ACCESS_TOKEN_NAME || &#x27;&#x27;
-    const refresh_token_name &#x3D; process.env.REFRESH_TOKEN_NAME || &#x27;&#x27;
+    const access_token_name &#x3D; process.env.ACCESS_TOKEN_NAME!
+    const refresh_token_name &#x3D; process.env.REFRESH_TOKEN_NAME!
     const access_token &#x3D; request.cookies?.[access_token_name] as string | undefined
     const refresh_token &#x3D; request.cookies?.[refresh_token_name] as string | undefined
     return { access_token, refresh_token }
-  }
-
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const authorization &#x3D; request.headers.authorization
-    if (authorization?.startsWith(&#x27;Bearer &#x27;)) {
-      return authorization.slice(7) // Remove &#x27;Bearer &#x27; prefix
-    }
-    return undefined
   }
 }
 </code></pre>

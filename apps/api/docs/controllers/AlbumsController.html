@@ -130,7 +130,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/albums/albums.controller.ts</code>
+            <code>src/modules/albums/albums.controller.ts</code>
         </p>
             <p class="comment">
                 <h3>Prefix</h3>
@@ -240,7 +240,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="57"
-                                    class="link-to-prism">src/albums/albums.controller.ts:57</a></div>
+                                    class="link-to-prism">src/modules/albums/albums.controller.ts:57</a></div>
                         </td>
                     </tr>
 
@@ -331,7 +331,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="68"
-                                    class="link-to-prism">src/albums/albums.controller.ts:68</a></div>
+                                    class="link-to-prism">src/modules/albums/albums.controller.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -421,7 +421,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="24"
-                                    class="link-to-prism">src/albums/albums.controller.ts:24</a></div>
+                                    class="link-to-prism">src/modules/albums/albums.controller.ts:24</a></div>
                         </td>
                     </tr>
 
@@ -523,7 +523,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">src/albums/albums.controller.ts:38</a></div>
+                                    class="link-to-prism">src/modules/albums/albums.controller.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -602,7 +602,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="45"
-                                    class="link-to-prism">src/albums/albums.controller.ts:45</a></div>
+                                    class="link-to-prism">src/modules/albums/albums.controller.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -676,11 +676,11 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Body, Controller, Delete, Get, ParseUUIDPipe, Post, Put, Query, Req } from &#x27;@nestjs/common&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Auth } from &#x27;@modules/auth/auth.guard&#x27;
+import { UserEntity } from &#x27;@modules/users&#x27;
+import { Body, Controller, Delete, Get, ParseUUIDPipe, Post, Put, Query, Req } from &#x27;@nestjs/common&#x27;
 import { ApiTags } from &#x27;@nestjs/swagger&#x27;
 import { ZodValidationPipe } from &#x27;nestjs-zod&#x27;
-import { Auth } from &#x27;src/auth/auth.guard&#x27;
-import { UserEntity } from &#x27;src/users/entities&#x27;
 import { AlbumsService } from &#x27;./albums.service&#x27;
 import {
   CreateAlbumSwagger,

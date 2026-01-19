@@ -237,7 +237,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/albums/albums.module.ts</code>
+            <code>src/modules/albums/albums.module.ts</code>
         </p>
 
 
@@ -296,10 +296,10 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Module } from &#x27;@nestjs/common&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PrismaModule } from &#x27;@infra/prisma/prisma.module&#x27;
+import { AuthModule } from &#x27;@modules/auth/auth.module&#x27;
+import { Module } from &#x27;@nestjs/common&#x27;
 import { JwtModule } from &#x27;@nestjs/jwt&#x27;
-import { AuthModule } from &#x27;src/auth/auth.module&#x27;
-import { PrismaModule } from &#x27;src/prisma/prisma.module&#x27;
 import { AlbumsController } from &#x27;./albums.controller&#x27;
 import { AlbumsService } from &#x27;./albums.service&#x27;
 

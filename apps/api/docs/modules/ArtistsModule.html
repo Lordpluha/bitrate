@@ -135,10 +135,6 @@
 <title>cluster_ArtistsModule</title>
 <polygon fill="none" stroke="black" stroke-dasharray="1,5" points="52,-70 52,-268 444,-268 444,-70 52,-70"/>
 </g>
-<g id="clust4" class="cluster">
-<title>cluster_ArtistsModule_exports</title>
-<polygon fill="none" stroke="black" points="171,-208 171,-260 285,-260 285,-208 171,-208"/>
-</g>
 <g id="clust6" class="cluster">
 <title>cluster_ArtistsModule_providers</title>
 <polygon fill="none" stroke="black" points="288,-78 288,-130 436,-130 436,-78 288,-78"/>
@@ -146,6 +142,10 @@
 <g id="clust3" class="cluster">
 <title>cluster_ArtistsModule_imports</title>
 <polygon fill="none" stroke="black" points="60,-78 60,-130 280,-130 280,-78 60,-78"/>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_ArtistsModule_exports</title>
+<polygon fill="none" stroke="black" points="171,-208 171,-260 285,-260 285,-208 171,-208"/>
 </g>
 <!-- AuthModule -->
 <g id="node1" class="node">
@@ -237,7 +237,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/artists/artists.module.ts</code>
+            <code>src/modules/artists/artists.module.ts</code>
         </p>
 
 
@@ -296,10 +296,10 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Module } from &#x27;@nestjs/common&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PrismaModule } from &#x27;@infra/prisma/prisma.module&#x27;
+import { AuthModule } from &#x27;@modules/auth/auth.module&#x27;
+import { Module } from &#x27;@nestjs/common&#x27;
 import { JwtModule } from &#x27;@nestjs/jwt&#x27;
-import { AuthModule } from &#x27;src/auth/auth.module&#x27;
-import { PrismaModule } from &#x27;src/prisma/prisma.module&#x27;
 import { ArtistsController } from &#x27;./artists.controller&#x27;
 import { ArtistsService } from &#x27;./artists.service&#x27;
 

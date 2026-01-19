@@ -133,7 +133,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/tracks/tracks.service.ts</code>
+            <code>src/modules/tracks/tracks.service.ts</code>
         </p>
 
 
@@ -208,7 +208,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/tracks/tracks.service.ts:10</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/modules/tracks/tracks.service.ts:10</a></div>
                             </td>
                         </tr>
 
@@ -274,7 +274,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="102"
-                                    class="link-to-prism">src/tracks/tracks.service.ts:102</a></div>
+                                    class="link-to-prism">src/modules/tracks/tracks.service.ts:102</a></div>
                         </td>
                     </tr>
 
@@ -355,7 +355,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="13"
-                                    class="link-to-prism">src/tracks/tracks.service.ts:13</a></div>
+                                    class="link-to-prism">src/modules/tracks/tracks.service.ts:13</a></div>
                         </td>
                     </tr>
 
@@ -423,7 +423,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="47"
-                                    class="link-to-prism">src/tracks/tracks.service.ts:47</a></div>
+                                    class="link-to-prism">src/modules/tracks/tracks.service.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -503,7 +503,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="64"
-                                    class="link-to-prism">src/tracks/tracks.service.ts:64</a></div>
+                                    class="link-to-prism">src/modules/tracks/tracks.service.ts:64</a></div>
                         </td>
                     </tr>
 
@@ -572,7 +572,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="76"
-                                    class="link-to-prism">src/tracks/tracks.service.ts:76</a></div>
+                                    class="link-to-prism">src/modules/tracks/tracks.service.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -641,7 +641,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="84"
-                                    class="link-to-prism">src/tracks/tracks.service.ts:84</a></div>
+                                    class="link-to-prism">src/modules/tracks/tracks.service.ts:84</a></div>
                         </td>
                     </tr>
 
@@ -710,7 +710,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="92"
-                                    class="link-to-prism">src/tracks/tracks.service.ts:92</a></div>
+                                    class="link-to-prism">src/modules/tracks/tracks.service.ts:92</a></div>
                         </td>
                     </tr>
 
@@ -779,7 +779,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="111"
-                                    class="link-to-prism">src/tracks/tracks.service.ts:111</a></div>
+                                    class="link-to-prism">src/modules/tracks/tracks.service.ts:111</a></div>
                         </td>
                     </tr>
 
@@ -843,11 +843,11 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PrismaService } from &#x27;@infra/prisma/prisma.service&#x27;
+import { ArtistEntity } from &#x27;@modules/artists&#x27;
+import { UserEntity } from &#x27;@modules/users&#x27;
+import { Injectable } from &#x27;@nestjs/common&#x27;
 import { Artist } from &#x27;@prisma/client&#x27;
-import { ArtistEntity } from &#x27;src/artists/entities&#x27;
-import { PrismaService } from &#x27;src/prisma/prisma.service&#x27;
-import { UserEntity } from &#x27;src/users/entities&#x27;
 import { CreateTrackDto } from &#x27;./dtos&#x27;
 import { TrackEntity } from &#x27;./entities&#x27;
 

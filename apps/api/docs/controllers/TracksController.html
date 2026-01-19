@@ -130,7 +130,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/tracks/tracks.controller.ts</code>
+            <code>src/modules/tracks/tracks.controller.ts</code>
         </p>
             <p class="comment">
                 <h3>Prefix</h3>
@@ -266,8 +266,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="48"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:48</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -367,8 +367,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="77"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:77</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:78</a></div>
                         </td>
                     </tr>
 
@@ -445,8 +445,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="322"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:322</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="344"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:344</a></div>
                         </td>
                     </tr>
 
@@ -523,8 +523,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="63"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:63</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="64"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:64</a></div>
                         </td>
                     </tr>
 
@@ -626,8 +626,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="252"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:252</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="274"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:274</a></div>
                         </td>
                     </tr>
 
@@ -737,8 +737,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="215"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:215</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="237"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:237</a></div>
                         </td>
                     </tr>
 
@@ -847,8 +847,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="84"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:84</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="85"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:85</a></div>
                         </td>
                     </tr>
 
@@ -937,8 +937,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="96"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:96</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:97</a></div>
                         </td>
                     </tr>
 
@@ -1028,8 +1028,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="107"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:107</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:108</a></div>
                         </td>
                     </tr>
 
@@ -1143,8 +1143,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="285"
-                                    class="link-to-prism">src/tracks/tracks.controller.ts:285</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="307"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:307</a></div>
                         </td>
                     </tr>
 
@@ -1218,7 +1218,9 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Auth } from &#x27;@modules/auth/auth.guard&#x27;
+import { UserEntity } from &#x27;@modules/users&#x27;
+import {
   BadRequestException,
   Body,
   Controller,
@@ -1238,10 +1240,9 @@
 import { ApiExtraModels, ApiOperation, ApiTags } from &#x27;@nestjs/swagger&#x27;
 import { Request, Response } from &#x27;express&#x27;
 import * as fs from &#x27;fs&#x27;
+import { parseFile } from &#x27;music-metadata&#x27;
 import { ZodValidationPipe } from &#x27;nestjs-zod&#x27;
 import * as path from &#x27;path&#x27;
-import { Auth } from &#x27;src/auth/auth.guard&#x27;
-import { UserEntity } from &#x27;src/users/entities&#x27;
 import { AudioGateway } from &#x27;./audio.gateway&#x27;
 import {
   GetTrackByIdSwagger,
@@ -1371,8 +1372,8 @@ export class TracksController {
         // It&#x27;s an absolute file path
         filePath &#x3D; track.audioUrl
       } else {
-        // It&#x27;s a relative path, assume it&#x27;s relative to uploads/tracks directory
-        filePath &#x3D; path.join(process.cwd(), &#x27;uploads&#x27;, &#x27;tracks&#x27;, track.audioUrl)
+        // It&#x27;s a relative path, assume it&#x27;s relative to storage/private/tracks directory
+        filePath &#x3D; path.join(process.cwd(), &#x27;storage&#x27;, &#x27;private&#x27;, &#x27;tracks&#x27;, track.audioUrl)
       }
 
       console.log(&#x60;Constructed file path: ${filePath}&#x60;)
@@ -1386,11 +1387,31 @@ export class TracksController {
       const stat &#x3D; fs.statSync(filePath)
       const fileSize &#x3D; stat.size
 
+      // Determine content type based on file extension
+      const fileExtension &#x3D; path.extname(filePath).toLowerCase()
+      const contentType &#x3D;
+        fileExtension &#x3D;&#x3D;&#x3D; &#x27;.opus&#x27; || fileExtension &#x3D;&#x3D;&#x3D; &#x27;.webm&#x27;
+          ? &#x27;audio/webm; codecs&#x3D;&quot;opus&quot;&#x27;
+          : &#x27;audio/mpeg&#x27;
+
+      // Read track duration from metadata
+      let trackDuration: number | undefined
+      try {
+        const metadata &#x3D; await parseFile(filePath)
+        trackDuration &#x3D; metadata.format.duration
+        console.log(&#x60;Track duration from metadata: ${trackDuration}s&#x60;)
+      } catch (error) {
+        console.warn(&#x60;Could not read metadata for ${filePath}:&#x60;, error)
+      }
+
       if (range) {
-        // Handle range requests for progressive download/streaming
+        // Handle range requests - allow client to control chunk size
         const parts &#x3D; range.replace(/bytes&#x3D;/, &#x27;&#x27;).split(&#x27;-&#x27;)
         const start &#x3D; Number.parseInt(parts[0] ?? &#x27;0&#x27;, 10)
-        const end &#x3D; parts[1] ? Number.parseInt(parts[1], 10) : fileSize - 1
+        const requestedEnd &#x3D; parts[1] ? Number.parseInt(parts[1], 10) : fileSize - 1
+
+        // Use requested range (client calculates optimal chunk size)
+        const end &#x3D; Math.min(requestedEnd, fileSize - 1)
         const chunksize &#x3D; end - start + 1
 
         const file &#x3D; fs.createReadStream(filePath, { start, end })
@@ -1400,21 +1421,22 @@ export class TracksController {
           &#x27;Content-Range&#x27;: &#x60;bytes ${start}-${end}/${fileSize}&#x60;,
           &#x27;Accept-Ranges&#x27;: &#x27;bytes&#x27;,
           &#x27;Content-Length&#x27;: chunksize.toString(),
-          &#x27;Content-Type&#x27;: &#x27;audio/mpeg&#x27;,
+          &#x27;Content-Type&#x27;: contentType,
+          ...(trackDuration ? { &#x27;X-Track-Duration&#x27;: trackDuration.toString() } : {}),
         })
 
         return new StreamableFile(file, {
           length: chunksize,
-          type: &#x27;audio/mpeg&#x27;,
+          type: contentType,
         })
       } else {
-        // Handle normal requests - set proper headers to encourage Range requests
+        // Handle normal requests - return full file
         res.set({
           &#x27;Content-Length&#x27;: fileSize.toString(),
-          &#x27;Content-Type&#x27;: &#x27;audio/mpeg&#x27;,
-          &#x27;Accept-Ranges&#x27;: &#x60;bytes 0-0/${fileSize}&#x60;,
-          &#x27;Cache-Control&#x27;: &#x27;no-cache&#x27;, // Prevent full caching
-          Connection: &#x27;keep-alive&#x27;,
+          &#x27;Content-Type&#x27;: contentType,
+          &#x27;Accept-Ranges&#x27;: &#x27;bytes&#x27;,
+          &#x27;Cache-Control&#x27;: &#x27;no-cache&#x27;,
+          ...(trackDuration ? { &#x27;X-Track-Duration&#x27;: trackDuration.toString() } : {}),
         })
 
         const file &#x3D; fs.createReadStream(filePath)

@@ -135,7 +135,7 @@
                 <h3>File</h3>
             </p>
             <p class="comment">
-                <code>src/auth/ws-auth.guard.ts</code>
+                <code>src/modules/auth/ws-auth.guard.ts</code>
             </p>
 
 
@@ -203,7 +203,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/auth/ws-auth.guard.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/modules/auth/ws-auth.guard.ts:8</a></div>
                             </td>
                         </tr>
 
@@ -269,7 +269,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="12"
-                                    class="link-to-prism">src/auth/ws-auth.guard.ts:12</a></div>
+                                    class="link-to-prism">src/modules/auth/ws-auth.guard.ts:12</a></div>
                         </td>
                     </tr>
 
@@ -338,7 +338,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="41"
-                                    class="link-to-prism">src/auth/ws-auth.guard.ts:41</a></div>
+                                    class="link-to-prism">src/modules/auth/ws-auth.guard.ts:41</a></div>
                         </td>
                     </tr>
 
@@ -430,35 +430,25 @@ export class WsAuthGuard implements CanActivate {
     }
   }
   private extractTokenFromClient(client: Socket): string | null {
-    // Проверяем auth в handshake
-    const authToken &#x3D; client.handshake.auth?.token as string | undefined
-
-    // Проверяем Authorization header
-    const headerAuth &#x3D; client.handshake.headers.authorization
-    const headerToken &#x3D; headerAuth ? headerAuth.replace(&#x27;Bearer &#x27;, &#x27;&#x27;) : undefined
-
-    // Проверяем query параметры
-    const queryToken &#x3D; client.handshake.query?.token as string | undefined
-
-    // Проверяем cookies
+    // Проверяем ТОЛЬКО httpOnly cookies
     const cookieHeader &#x3D; client.handshake.headers.cookie
-    let cookieToken: string | undefined
-    if (cookieHeader) {
-      const cookies &#x3D; cookieHeader.split(&#x27;;&#x27;).reduce(
-        (acc, cookie) &#x3D;&gt; {
-          const [name, value] &#x3D; cookie.trim().split(&#x27;&#x3D;&#x27;)
-          if (name &amp;&amp; value) {
-            acc[name] &#x3D; value
-          }
-          return acc
-        },
-        {} as Record&lt;string, string&gt;,
-      )
 
-      cookieToken &#x3D; cookies[process.env.ACCESS_TOKEN_NAME || &#x27;access_token&#x27;]
+    if (!cookieHeader) {
+      return null
     }
 
-    return authToken || headerToken || queryToken || cookieToken || null
+    const cookies &#x3D; cookieHeader.split(&#x27;;&#x27;).reduce(
+      (acc, cookie) &#x3D;&gt; {
+        const [name, value] &#x3D; cookie.trim().split(&#x27;&#x3D;&#x27;)
+        if (name &amp;&amp; value) {
+          acc[name] &#x3D; value
+        }
+        return acc
+      },
+      {} as Record&lt;string, string&gt;,
+    )
+
+    return cookies[process.env.ACCESS_TOKEN_NAME!] || null
   }
 }
 </code></pre>

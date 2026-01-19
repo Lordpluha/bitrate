@@ -140,7 +140,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/tracks/types/audio-events.types.ts</code>
+            <code>src/modules/tracks/types/audio-events.types.ts</code>
         </p>
 
 
@@ -384,12 +384,7 @@ export interface AudioSocketEvents {
   // Client to Server events
   playTrack: (data: { trackId: string; userId: string; currentTime: number }) &#x3D;&gt; void
   pauseTrack: (data: { trackId: string; userId: string; currentTime: number }) &#x3D;&gt; void
-  updateStreaming: (data: {
-    trackId: string
-    userId: string
-    currentTime: number
-    isPlaying: boolean
-  }) &#x3D;&gt; void
+  updateStreaming: (data: TrackUpdatedEvent) &#x3D;&gt; void
   getCurrentState: () &#x3D;&gt; void
 
   // Server to Client events

@@ -133,7 +133,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/users/users.service.ts</code>
+            <code>src/modules/users/users.service.ts</code>
         </p>
 
 
@@ -212,7 +212,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">src/users/users.service.ts:6</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">src/modules/users/users.service.ts:6</a></div>
                             </td>
                         </tr>
 
@@ -278,7 +278,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="82"
-                                    class="link-to-prism">src/users/users.service.ts:82</a></div>
+                                    class="link-to-prism">src/modules/users/users.service.ts:82</a></div>
                         </td>
                     </tr>
 
@@ -347,7 +347,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="60"
-                                    class="link-to-prism">src/users/users.service.ts:60</a></div>
+                                    class="link-to-prism">src/modules/users/users.service.ts:60</a></div>
                         </td>
                     </tr>
 
@@ -415,7 +415,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="17"
-                                    class="link-to-prism">src/users/users.service.ts:17</a></div>
+                                    class="link-to-prism">src/modules/users/users.service.ts:17</a></div>
                         </td>
                     </tr>
 
@@ -484,7 +484,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="9"
-                                    class="link-to-prism">src/users/users.service.ts:9</a></div>
+                                    class="link-to-prism">src/modules/users/users.service.ts:9</a></div>
                         </td>
                     </tr>
 
@@ -553,7 +553,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="29"
-                                    class="link-to-prism">src/users/users.service.ts:29</a></div>
+                                    class="link-to-prism">src/modules/users/users.service.ts:29</a></div>
                         </td>
                     </tr>
 
@@ -622,7 +622,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="40"
-                                    class="link-to-prism">src/users/users.service.ts:40</a></div>
+                                    class="link-to-prism">src/modules/users/users.service.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -691,7 +691,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="48"
-                                    class="link-to-prism">src/users/users.service.ts:48</a></div>
+                                    class="link-to-prism">src/modules/users/users.service.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -760,7 +760,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="91"
-                                    class="link-to-prism">src/users/users.service.ts:91</a></div>
+                                    class="link-to-prism">src/modules/users/users.service.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -841,7 +841,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="101"
-                                    class="link-to-prism">src/users/users.service.ts:101</a></div>
+                                    class="link-to-prism">src/modules/users/users.service.ts:101</a></div>
                         </td>
                     </tr>
 
@@ -905,8 +905,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;
-import { PrismaService } from &#x27;src/prisma/prisma.service&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PrismaService } from &#x27;@infra/prisma/prisma.service&#x27;
+import { Injectable } from &#x27;@nestjs/common&#x27;
 import { UserEntity } from &#x27;./entities&#x27;
 
 @Injectable()
@@ -1006,7 +1006,7 @@ export class UsersService {
   }
 
   async uploadAvatar(userId: string, filename: string) {
-    const avatarPath &#x3D; &#x60;/uploads/users/avatars/${filename}&#x60;
+    const avatarPath &#x3D; &#x60;/static/users/avatars/${filename}&#x60;
     return await this.prisma.user.update({
       where: { id: userId },
       data: { avatar: avatarPath },

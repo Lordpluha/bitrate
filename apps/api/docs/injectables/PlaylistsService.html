@@ -133,7 +133,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/playlists/playlists.service.ts</code>
+            <code>src/modules/playlists/playlists.service.ts</code>
         </p>
 
 
@@ -171,6 +171,10 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
+                                <a href="#getByIdPopulated" >getByIdPopulated</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#update" >update</a>
                             </li>
                         </ul>
@@ -196,7 +200,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/playlists/playlists.service.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/modules/playlists/playlists.service.ts:9</a></div>
                             </td>
                         </tr>
 
@@ -262,7 +266,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="12"
-                                    class="link-to-prism">src/playlists/playlists.service.ts:12</a></div>
+                                    class="link-to-prism">src/modules/playlists/playlists.service.ts:12</a></div>
                         </td>
                     </tr>
 
@@ -342,8 +346,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="58"
-                                    class="link-to-prism">src/playlists/playlists.service.ts:58</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="68"
+                                    class="link-to-prism">src/modules/playlists/playlists.service.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -423,8 +427,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="23"
-                                    class="link-to-prism">src/playlists/playlists.service.ts:23</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="22"
+                                    class="link-to-prism">src/modules/playlists/playlists.service.ts:22</a></div>
                         </td>
                     </tr>
 
@@ -491,8 +495,77 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">src/playlists/playlists.service.ts:38</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">src/modules/playlists/playlists.service.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="../classes/PlaylistEntity.html" target="_self" >PlaylistEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getByIdPopulated"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getByIdPopulated</b></span>
+                        <a href="#getByIdPopulated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getByIdPopulated(id: <a href="../classes/PlaylistEntity.html" target="_self">PlaylistEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="45"
+                                    class="link-to-prism">src/modules/playlists/playlists.service.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -560,8 +633,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="46"
-                                    class="link-to-prism">src/playlists/playlists.service.ts:46</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">src/modules/playlists/playlists.service.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -637,9 +710,9 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;
-import { PrismaService } from &#x27;src/prisma/prisma.service&#x27;
-import { UserEntity } from &#x27;src/users/entities&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PrismaService } from &#x27;@infra/prisma/prisma.service&#x27;
+import { UserEntity } from &#x27;@modules/users&#x27;
+import { Injectable } from &#x27;@nestjs/common&#x27;
 import { CreatePlaylistDto } from &#x27;./dtos/create-playlist.dto&#x27;
 import { UpdatePlaylistDto } from &#x27;./dtos/update-playlist.dto&#x27;
 import { PlaylistEntity } from &#x27;./entities&#x27;
@@ -652,7 +725,6 @@ export class PlaylistsService {
     return await this.prisma.playlist.create({
       data: {
         userId,
-        // Url to cover in storage
         cover: &#x27;&#x27;,
         ...playlistDto,
       },
@@ -678,6 +750,17 @@ export class PlaylistsService {
     return await this.prisma.playlist.findUniqueOrThrow({
       where: {
         id,
+      },
+    })
+  }
+
+  async getByIdPopulated(id: PlaylistEntity[&#x27;id&#x27;]) {
+    return await this.prisma.playlist.findUniqueOrThrow({
+      where: {
+        id,
+      },
+      include: {
+        tracks: true,
       },
     })
   }

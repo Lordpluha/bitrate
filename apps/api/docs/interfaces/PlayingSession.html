@@ -140,7 +140,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/tracks/audio.gateway.ts</code>
+            <code>src/modules/tracks/audio.gateway.ts</code>
         </p>
 
 
@@ -291,7 +291,9 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Logger } from &#x27;@nestjs/common&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { websocketCorsConfig } from &#x27;@common/config/cors.config&#x27;
+import { TokenService } from &#x27;@modules/auth/token.service&#x27;
+import { Logger } from &#x27;@nestjs/common&#x27;
 import {
   ConnectedSocket,
   MessageBody,
@@ -303,7 +305,6 @@ import {
   WsResponse,
 } from &#x27;@nestjs/websockets&#x27;
 import { Server, Socket } from &#x27;socket.io&#x27;
-import { TokenService } from &#x27;src/auth/token.service&#x27;
 import { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from &#x27;./dtos&#x27;
 import { TracksService } from &#x27;./tracks.service&#x27;
 
@@ -318,9 +319,7 @@ interface PlayingSession {
 }
 
 @WebSocketGateway({
-  cors: {
-    origin: &#x27;*&#x27;,
-  },
+  cors: websocketCorsConfig,
 })
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -337,15 +336,26 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleConnection(client: AuthenticatedSocket): Promise&lt;void&gt; {
     try {
-      // Extract token from client manually for connection-level authentication
-      const authToken &#x3D; client.handshake.auth?.token as string | undefined
-      const headerAuth &#x3D; client.handshake.headers.authorization
-      const headerToken &#x3D; headerAuth ? headerAuth.replace(&#x27;Bearer &#x27;, &#x27;&#x27;) : undefined
-      const queryToken &#x3D; client.handshake.query?.token as string | undefined
-      const token &#x3D; authToken || headerToken || queryToken
+      // Extract token ONLY from httpOnly cookies
+      const cookieHeader &#x3D; client.handshake.headers.cookie
+      let token: string | undefined
+
+      if (cookieHeader) {
+        const cookies &#x3D; cookieHeader.split(&#x27;;&#x27;).reduce(
+          (acc, cookie) &#x3D;&gt; {
+            const [name, value] &#x3D; cookie.trim().split(&#x27;&#x3D;&#x27;)
+            if (name &amp;&amp; value) {
+              acc[name] &#x3D; value
+            }
+            return acc
+          },
+          {} as Record&lt;string, string&gt;,
+        )
+        token &#x3D; cookies[process.env.ACCESS_TOKEN_NAME!]
+      }
 
       if (!token) {
-        this.logger.error(&#x27;No authentication token provided&#x27;)
+        this.logger.error(&#x27;No authentication cookie found&#x27;)
         client.disconnect()
         return
       }
