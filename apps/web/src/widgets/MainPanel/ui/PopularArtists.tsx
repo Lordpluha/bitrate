@@ -22,7 +22,7 @@ interface MusicItem {
 }
 
 export const PopularArtists: React.FC = () => {
-  const { data, isPending: loadingArtists, error } = useQuery('get', '/artists', {
+  const { data, isPending: loadingArtists, error } = useQuery('get', '/api/v1/artists', {
     params: {
       query: {
         limit: 20
@@ -43,7 +43,7 @@ export const PopularArtists: React.FC = () => {
     <div className='relative mt-8'>
       <div className='flex items-center justify-between mb-4'>
         <h2 className='text-text text-2xl font-bold'>Popular artists</h2>
-        <button className='text-gray-400 hover:text-white text-sm font-medium'>
+        <button type='button' className='text-gray-400 hover:text-white text-sm font-medium'>
           Show all
         </button>
       </div>

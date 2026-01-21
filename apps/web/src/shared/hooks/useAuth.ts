@@ -16,12 +16,12 @@ export const useAuth = () => {
   const { data: user, isLoading, isSuccess, error, isPending } = useQuery({
     queryKey: userQueryKeys.user,
     queryFn: async () => {
-      const { data, response } = await fetchClient.GET('/auth/me')
-      
+      const { data, response } = await fetchClient.GET('/api/v1/auth/me')
+
       if (!response.ok) {
         throw new Error('Not authenticated')
       }
-      
+
       return data
     },
     retry: 1, // Only retry once
@@ -45,7 +45,7 @@ export const useAuth = () => {
       router.push(ROUTES.landing)
     },
     mutationFn: async () => {
-      const { response } = await fetchClient.POST('/auth/logout')
+      const { response } = await fetchClient.POST('/api/v1/auth/logout')
       if (!response.ok) throw new Error('Logout failed')
     }
   })

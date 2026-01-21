@@ -152,7 +152,7 @@ db_operations() {
             ;;
         2)
             print_info "Generating Prisma Client..."
-            docker-compose exec api pnpm --filter @spotify/api run db:generate
+            docker-compose exec api pnpm --filter @spotify/api run db:gen
             ;;
         3)
             print_warning "This will reset the entire database!"

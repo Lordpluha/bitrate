@@ -1,0 +1,932 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@spotify/api documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@spotify/api documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-functions">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Functions</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#Auth" title="src/modules/auth/auth.guard.ts" ><b>Auth</b>&nbsp;&nbsp;&nbsp;(src/.../auth.guard.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AuthLoginSwagger" title="src/modules/auth/decorators/swagger/AuthLogin.decorator.ts" ><b>AuthLoginSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../AuthLogin.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AuthLogoutSwagger" title="src/modules/auth/decorators/swagger/AuthLogout.decorator.ts" ><b>AuthLogoutSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../AuthLogout.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AuthMeSwagger" title="src/modules/auth/decorators/swagger/AuthMe.decorator.ts" ><b>AuthMeSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../AuthMe.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AuthRefreshSwagger" title="src/modules/auth/decorators/swagger/AuthRefresh.decorator.ts" ><b>AuthRefreshSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../AuthRefresh.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AuthRegistrationSwagger" title="src/modules/auth/decorators/swagger/AuthRegistration.decorator.ts" ><b>AuthRegistrationSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../AuthRegistration.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#bootstrap" title="src/main.ts" ><b>bootstrap</b>&nbsp;&nbsp;&nbsp;(src/.../main.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CreateAlbumSwagger" title="src/modules/albums/decorators/create-album.decorator.ts" ><b>CreateAlbumSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../create-album.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DeleteAlbumSwagger" title="src/modules/albums/decorators/delete-album.decorator.ts" ><b>DeleteAlbumSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../delete-album.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#GetAlbumByIdSwagger" title="src/modules/albums/decorators/get-album-by-id.decorator.ts" ><b>GetAlbumByIdSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-album-by-id.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#GetAlbumsSwagger" title="src/modules/albums/decorators/get-albums.decorator.ts" ><b>GetAlbumsSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-albums.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#GetArtistsSwagger" title="src/modules/artists/decorators/swagger/get-artists.decorator.ts" ><b>GetArtistsSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-artists.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#GetPlaylistsSwagger" title="src/modules/playlists/decorators/get-playlists.decorator.ts" ><b>GetPlaylistsSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-playlists.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#GetTrackByIdSwagger" title="src/modules/tracks/decorators/swagger/get-track-by-id.decorator.ts" ><b>GetTrackByIdSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-track-by-id.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#GetUserByUsernameSwagger" title="src/modules/users/decorators/swagger/get-user-by-username.decorator.ts" ><b>GetUserByUsernameSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-user-by-username.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#GetUsersSwagger" title="src/modules/users/decorators/swagger/get-users.decorator.ts" ><b>GetUsersSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-users.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#GetUserSwagger" title="src/modules/users/decorators/swagger/get-user.decorator.ts" ><b>GetUserSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-user.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#main" title="src/infra/seeds/seed.ts" ><b>main</b>&nbsp;&nbsp;&nbsp;(src/.../seed.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PostTrackSwagger" title="src/modules/tracks/decorators/swagger/post-track.decorator.ts" ><b>PostTrackSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../post-track.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PutUserSwagger" title="src/modules/users/decorators/swagger/put-user.decorator.ts" ><b>PutUserSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../put-user.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TracksGetAllSwagger" title="src/modules/tracks/decorators/swagger/get-tracks.decorator.ts" ><b>TracksGetAllSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-tracks.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TracksGetLikedSwagger" title="src/modules/tracks/decorators/swagger/get-liked-tracks.decorator.ts" ><b>TracksGetLikedSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../get-liked-tracks.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UpdateAlbumByIdSwagger" title="src/modules/albums/decorators/update-album.decorator.ts" ><b>UpdateAlbumByIdSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../update-album.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UpdateTrackByIdSwagger" title="src/modules/tracks/decorators/swagger/update-track.decorator.ts" ><b>UpdateTrackByIdSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../update-track.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UploadAvatarSwagger" title="src/modules/users/decorators/swagger/upload-avatar.decorator.ts" ><b>UploadAvatarSwagger</b>&nbsp;&nbsp;&nbsp;(src/.../upload-avatar.decorator.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/modules/auth/auth.guard.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Auth"></a>
+                    <span class="name">
+                        <span ><b>Auth</b></span>
+                        <a href="#Auth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Auth(tokenRequirement: <a href="../miscellaneous/typealiases.html#TokenRequirement" target="_self">TokenRequirement</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Metadata wrapper to control AuthGuard behavior.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tokenRequirement</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#TokenRequirement" target="_self" >TokenRequirement</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;access&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/modules/auth/decorators/swagger/AuthLogin.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AuthLoginSwagger"></a>
+                    <span class="name">
+                        <span ><b>AuthLoginSwagger</b></span>
+                        <a href="#AuthLoginSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>AuthLoginSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/auth/decorators/swagger/AuthLogout.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AuthLogoutSwagger"></a>
+                    <span class="name">
+                        <span ><b>AuthLogoutSwagger</b></span>
+                        <a href="#AuthLogoutSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>AuthLogoutSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/auth/decorators/swagger/AuthMe.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AuthMeSwagger"></a>
+                    <span class="name">
+                        <span ><b>AuthMeSwagger</b></span>
+                        <a href="#AuthMeSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>AuthMeSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/auth/decorators/swagger/AuthRefresh.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AuthRefreshSwagger"></a>
+                    <span class="name">
+                        <span ><b>AuthRefreshSwagger</b></span>
+                        <a href="#AuthRefreshSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>AuthRefreshSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/auth/decorators/swagger/AuthRegistration.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AuthRegistrationSwagger"></a>
+                    <span class="name">
+                        <span ><b>AuthRegistrationSwagger</b></span>
+                        <a href="#AuthRegistrationSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>AuthRegistrationSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/main.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bootstrap"></a>
+                    <span class="name">
+                        <span ><b>bootstrap</b></span>
+                        <a href="#bootstrap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>bootstrap()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/albums/decorators/create-album.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CreateAlbumSwagger"></a>
+                    <span class="name">
+                        <span ><b>CreateAlbumSwagger</b></span>
+                        <a href="#CreateAlbumSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>CreateAlbumSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/albums/decorators/delete-album.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DeleteAlbumSwagger"></a>
+                    <span class="name">
+                        <span ><b>DeleteAlbumSwagger</b></span>
+                        <a href="#DeleteAlbumSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>DeleteAlbumSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/albums/decorators/get-album-by-id.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetAlbumByIdSwagger"></a>
+                    <span class="name">
+                        <span ><b>GetAlbumByIdSwagger</b></span>
+                        <a href="#GetAlbumByIdSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetAlbumByIdSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/albums/decorators/get-albums.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetAlbumsSwagger"></a>
+                    <span class="name">
+                        <span ><b>GetAlbumsSwagger</b></span>
+                        <a href="#GetAlbumsSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetAlbumsSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/artists/decorators/swagger/get-artists.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetArtistsSwagger"></a>
+                    <span class="name">
+                        <span ><b>GetArtistsSwagger</b></span>
+                        <a href="#GetArtistsSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetArtistsSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/playlists/decorators/get-playlists.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetPlaylistsSwagger"></a>
+                    <span class="name">
+                        <span ><b>GetPlaylistsSwagger</b></span>
+                        <a href="#GetPlaylistsSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetPlaylistsSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/tracks/decorators/swagger/get-track-by-id.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetTrackByIdSwagger"></a>
+                    <span class="name">
+                        <span ><b>GetTrackByIdSwagger</b></span>
+                        <a href="#GetTrackByIdSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetTrackByIdSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/users/decorators/swagger/get-user-by-username.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetUserByUsernameSwagger"></a>
+                    <span class="name">
+                        <span ><b>GetUserByUsernameSwagger</b></span>
+                        <a href="#GetUserByUsernameSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetUserByUsernameSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/users/decorators/swagger/get-users.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetUsersSwagger"></a>
+                    <span class="name">
+                        <span ><b>GetUsersSwagger</b></span>
+                        <a href="#GetUsersSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetUsersSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/users/decorators/swagger/get-user.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetUserSwagger"></a>
+                    <span class="name">
+                        <span ><b>GetUserSwagger</b></span>
+                        <a href="#GetUserSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetUserSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/infra/seeds/seed.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="main"></a>
+                    <span class="name">
+                        <span ><b>main</b></span>
+                        <a href="#main"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>main()</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Главная функция для запуска всех seed процессов</p>
+</div>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/modules/tracks/decorators/swagger/post-track.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PostTrackSwagger"></a>
+                    <span class="name">
+                        <span ><b>PostTrackSwagger</b></span>
+                        <a href="#PostTrackSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>PostTrackSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/users/decorators/swagger/put-user.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PutUserSwagger"></a>
+                    <span class="name">
+                        <span ><b>PutUserSwagger</b></span>
+                        <a href="#PutUserSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>PutUserSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/tracks/decorators/swagger/get-tracks.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TracksGetAllSwagger"></a>
+                    <span class="name">
+                        <span ><b>TracksGetAllSwagger</b></span>
+                        <a href="#TracksGetAllSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>TracksGetAllSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/tracks/decorators/swagger/get-liked-tracks.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TracksGetLikedSwagger"></a>
+                    <span class="name">
+                        <span ><b>TracksGetLikedSwagger</b></span>
+                        <a href="#TracksGetLikedSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>TracksGetLikedSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/albums/decorators/update-album.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UpdateAlbumByIdSwagger"></a>
+                    <span class="name">
+                        <span ><b>UpdateAlbumByIdSwagger</b></span>
+                        <a href="#UpdateAlbumByIdSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>UpdateAlbumByIdSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/tracks/decorators/swagger/update-track.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UpdateTrackByIdSwagger"></a>
+                    <span class="name">
+                        <span ><b>UpdateTrackByIdSwagger</b></span>
+                        <a href="#UpdateTrackByIdSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>UpdateTrackByIdSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>    <h3>src/modules/users/decorators/swagger/upload-avatar.decorator.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UploadAvatarSwagger"></a>
+                    <span class="name">
+                        <span ><b>UploadAvatarSwagger</b></span>
+                        <a href="#UploadAvatarSwagger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>UploadAvatarSwagger()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-functions';
+            var COMPODOC_CURRENT_PAGE_URL = 'functions.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

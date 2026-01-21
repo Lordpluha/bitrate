@@ -3,15 +3,15 @@ import { z } from 'zod'
 export const envSchema = z.object({
   NODE_ENV: z.enum(['local', 'development', 'production', 'test']).default('local'),
   PORT: z.coerce.number().default(3000),
-  WEB_HOST: z.string().url(),
+  WEB_HOST: z.url(),
 
   // Auth
   JWT_SECRET: z.string().min(10),
   JWT_ACCESS_EXPIRES_IN: z.string().default('5m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
 
-  ACCESS_TOKEN_NAME: z.string().default('access_token'),
-  REFRESH_TOKEN_NAME: z.string().default('refresh_token'),
+  ACCESS_TOKEN_NAME: z.string().min(1).default('access_token'),
+  REFRESH_TOKEN_NAME: z.string().min(1).default('refresh_token'),
   // OAUTH_GOOGLE_CLIENT_ID: z.string(),
   // OAUTH_GOOGLE_CLIENT_SECRET: z.string(),
 
@@ -23,10 +23,11 @@ export const envSchema = z.object({
   // EMAIL_FROM: z.string().email(),
 
   // Database
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.url(),
 
   // Redis
-  // REDIS_URL: z.string().url(),
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.coerce.number().default(6379),
 
   // Sentry
   // SENTRY_DSN: z.string().url().optional(),

@@ -18,7 +18,7 @@ FROM base AS development
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
-RUN pnpm --filter @spotify/api run db:generate
+RUN pnpm --filter @spotify/api run db:gen
 EXPOSE 3000
 CMD ["pnpm", "--filter", "@spotify/api", "run", "start:dev"]
 
@@ -27,7 +27,7 @@ FROM base AS build
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
-RUN pnpm --filter @spotify/api run db:generate
+RUN pnpm --filter @spotify/api run db:gen
 RUN pnpm --filter @spotify/api run build
 
 # Stage 5: Production Dependencies
@@ -49,7 +49,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
 
 # Generate Prisma Client
-RUN pnpm --filter @spotify/api run db:generate:prod
+RUN pnpm --filter @spotify/api run db:gen:prod
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \

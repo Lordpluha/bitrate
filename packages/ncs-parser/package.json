@@ -1,0 +1,33 @@
+{
+    "name": "@spotify/ncs-parser",
+    "version": "0.0.1",
+    "description": "NoCopyrightSounds website parser to provide an API",
+    "main": "dist/cjs/main.js",
+    "module": "dist/esm/main.js",
+    "scripts": {
+        "clean": "rm -rf dist",
+        "build": "tsc --module CommonJS --outDir dist/cjs && tsc --module ESNext --outDir dist/esm",
+        "buildWatch": "tsc --watch --module CommonJS --outDir dist/cjs; tsc --watch --module ESNext --outDir dist/esm",
+        "dev": "concurrently \"npm run buildWatch\" \"npm run devStart\"",
+        "prepublishOnly": "npm run clean; npm run build; npm run prettier",
+        "prettier": "prettier --write .",
+        "test": "tsc -p tests/tsconfig.test.json ; node --enable_source_maps tests/dist/tests/main.test.js",
+        "testCache": "tsc -p tests/tsconfig.test.json ; node --enable_source_maps tests/dist/tests/cache.test.js"
+    },
+    "author": "Lordpluha",
+    "devDependencies": {
+        "@biomejs/biome": "2.3.11",
+        "@types/jsdom": "^21.1.6",
+        "@types/node": "^20.11.28",
+        "concurrently": "^8.2.2",
+        "prettier": "^3.2.5",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "axios": "^1.6.7",
+        "jsdom": "^24.0.0"
+    },
+    "files": [
+        "dist"
+    ]
+}
