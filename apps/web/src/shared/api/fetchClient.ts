@@ -11,3 +11,20 @@ export const fetchClient = createFetchClient<ApiPaths>({
   },
   credentials: 'include',
 })
+
+// Helper function to refresh token
+export const refreshAccessToken = async (): Promise<boolean> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    return response.ok
+  } catch (error) {
+    console.error('Token refresh failed:', error)
+    return false
+  }
+}

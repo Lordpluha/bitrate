@@ -1,0 +1,35 @@
+import type { SVGProps } from "react"
+
+export const WaveIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 14 14"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+    {...props}
+  >
+    <style>
+      {`
+        @keyframes wave {
+          0%, 100% { transform: scaleY(1); }
+          50% { transform: scaleY(0.5); }
+        }
+        .wave-bar {
+          animation: wave 1s ease-in-out infinite;
+          transform-origin: center;
+        }
+        .wave-bar:nth-child(1) { animation-delay: 0s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.6s; }
+      `}
+    </style>
+    <rect className="wave-bar" x="1" y="4" width="2" height="16" rx="1" fill="#1DB954" />
+    <rect className="wave-bar" x="4.5" y="2" width="2" height="20" rx="1" fill="#1DB954" />
+    <rect className="wave-bar" x="8" y="3" width="2" height="18" rx="1" fill="#1DB954" />
+    <rect className="wave-bar" x="11.5" y="5" width="2" height="14" rx="1" fill="#1DB954" />
+  </svg>
+)

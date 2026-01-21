@@ -23,11 +23,11 @@ export const Plans = () => {
           {paymentMethods.map((icon) => (
             <Image
               alt={icon.alt}
-              className="w-auto h-auto max-h-16"
-              height={38}
+              className=""
+              height={36}
               key={icon.src}
               src={icon.src}
-              width={38}
+              width={36}
             />
           ))}
         </div>

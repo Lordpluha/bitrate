@@ -1,8 +1,15 @@
 @theme {
   --color-green-500: #1ed760;
   --color-green-600: #0e672e;
+  --color-spotify-green: #1db954;
+  --color-spotify-green-hover: rgb(29 185 84 / 0.8);
   --color-blue-500: #003480;
   --color-grey-500: #a7a7a7;
+  --color-grey-600: #6a6a6a;
+  --color-grey-900: #1a1a1a;
+  --color-grey-200: #e5e5e5;
+  --color-contrast: var(--color-white);
+  --color-text-contrast: var(--color-black);
   --color-white: #fff;
   --color-black: #000;
   --color-black-900: #0a0a0a;
@@ -33,9 +40,7 @@
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
   --radius: 0.5rem;
-
-  /* Tailwind utilities - make text color available as border-text, bg-text, etc */
   --color-text: oklch(0.7 0 0);
   --color-bg: oklch(0.1 0 0);
-  --color-bg-secondary: oklch(0.15 0 0);
+  --color-bg-secondary: oklch(0.20 0 0);
 }

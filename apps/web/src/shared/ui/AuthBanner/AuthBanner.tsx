@@ -2,7 +2,6 @@
 
 import { Carousel, CarouselContent, CarouselItem } from '@spotify/ui-react'
 import Autoplay from 'embla-carousel-autoplay'
-import Image from 'next/image'
 import { useRef } from 'react'
 
 const slides = [
@@ -22,36 +21,34 @@ export const AuthBanner = () => {
   )
 
   return (
-    <div className="basis-[50%] overflow-hidden rounded-[0_10px_10px_0] max-lg:hidden absolute h-full top-0 right-5 left-1/2 flex-grow-0">
-      <Carousel
-        className="h-full"
-        opts={{
-          loop: true,
-          align: 'start',
-          skipSnaps: false,
-          dragFree: false,
-          containScroll: 'trimSnaps',
-          watchDrag: false,
-        }}
-        orientation="vertical"
-        plugins={[plugin.current]}
-      >
-        <CarouselContent className="h-full w-full mt-0">
-          {slides.map(({ src, alt }) => (
-            <CarouselItem className="relative h-full basis-full" key={src}>
-              <Image
-                alt={alt}
-                className="w-full h-full object-cover select-none"
-                draggable={false}
-                fill
-                priority
-                sizes="50vw"
-                src={src}
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
-    </div>
+    <Carousel
+      orientation='vertical'
+      opts={{
+        loop: true,
+        align: 'start',
+        skipSnaps: false,
+        dragFree: false,
+        containScroll: 'trimSnaps',
+        watchDrag: false
+      }}
+      plugins={[plugin.current as any]}
+      className='w-1/2 overflow-hidden rounded-[0_10px_10px_0] max-xl:hidden'
+    >
+      <CarouselContent className='m-0 h-[1008px] w-full'>
+        {slides.map(({ src, alt }, i) => (
+          <CarouselItem
+            key={i}
+            className='p-0 basis-full'
+          >
+            <img
+              src={src}
+              alt={alt}
+              className='h-full w-full object-cover object-center select-none'
+              draggable={false}
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+    </Carousel>
   )
 }
