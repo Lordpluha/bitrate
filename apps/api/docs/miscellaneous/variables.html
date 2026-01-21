@@ -1,0 +1,1226 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@spotify/api documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@spotify/api documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-variables">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Variables</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#adapter" title="src/infra/seeds/seed.ts" ><b>adapter</b>&nbsp;&nbsp;&nbsp;(src/.../seed.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#config" title="src/infra/seeds/config.ts" ><b>config</b>&nbsp;&nbsp;&nbsp;(src/.../config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#corsConfig" title="src/common/config/cors.config.ts" ><b>corsConfig</b>&nbsp;&nbsp;&nbsp;(src/.../cors.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#COVERS_DIR" title="src/infra/seeds/seed.ts" ><b>COVERS_DIR</b>&nbsp;&nbsp;&nbsp;(src/.../seed.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CreateAlbumSchema" title="src/modules/albums/dtos/create-album.dto.ts" ><b>CreateAlbumSchema</b>&nbsp;&nbsp;&nbsp;(src/.../create-album.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CreateArtistSchema" title="src/modules/artists/dtos/create-artist.dto.ts" ><b>CreateArtistSchema</b>&nbsp;&nbsp;&nbsp;(src/.../create-artist.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CreatePlaylistSchema" title="src/modules/playlists/dtos/create-playlist.dto.ts" ><b>CreatePlaylistSchema</b>&nbsp;&nbsp;&nbsp;(src/.../create-playlist.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CreateTrackSchema" title="src/modules/tracks/dtos/create-track.dto.ts" ><b>CreateTrackSchema</b>&nbsp;&nbsp;&nbsp;(src/.../create-track.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#envSchema" title="env.schema.ts" ><b>envSchema</b>&nbsp;&nbsp;&nbsp;(env.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getAllowedOrigins" title="src/common/config/cors.config.ts" ><b>getAllowedOrigins</b>&nbsp;&nbsp;&nbsp;(src/.../cors.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LoginSchema" title="src/modules/auth/dtos/login.dto.ts" ><b>LoginSchema</b>&nbsp;&nbsp;&nbsp;(src/.../login.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PauseTrackSchema" title="src/modules/tracks/dtos/pause-track.dto.ts" ><b>PauseTrackSchema</b>&nbsp;&nbsp;&nbsp;(src/.../pause-track.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#pool" title="src/infra/seeds/seed.ts" ><b>pool</b>&nbsp;&nbsp;&nbsp;(src/.../seed.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/infra/seeds/seed.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../seed.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RegistrationSchema" title="src/modules/auth/dtos/registration.dto.ts" ><b>RegistrationSchema</b>&nbsp;&nbsp;&nbsp;(src/.../registration.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#StartTrackSchema" title="src/modules/tracks/dtos/start-track.dto.ts" ><b>StartTrackSchema</b>&nbsp;&nbsp;&nbsp;(src/.../start-track.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#STORAGE_BASE" title="src/infra/seeds/seed.ts" ><b>STORAGE_BASE</b>&nbsp;&nbsp;&nbsp;(src/.../seed.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TOKEN_REQUIREMENT" title="src/modules/auth/auth.guard.ts" ><b>TOKEN_REQUIREMENT</b>&nbsp;&nbsp;&nbsp;(src/.../auth.guard.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TRACKS_DIR" title="src/infra/seeds/seed.ts" ><b>TRACKS_DIR</b>&nbsp;&nbsp;&nbsp;(src/.../seed.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UNAUTHORIZED_ERRORS" title="src/modules/auth/errors/unauthorized.errors.ts" ><b>UNAUTHORIZED_ERRORS</b>&nbsp;&nbsp;&nbsp;(src/.../unauthorized.errors.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UpdateAlbumSchema" title="src/modules/albums/dtos/update-album.dto.ts" ><b>UpdateAlbumSchema</b>&nbsp;&nbsp;&nbsp;(src/.../update-album.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UpdatePlaylistSchema" title="src/modules/playlists/dtos/update-playlist.dto.ts" ><b>UpdatePlaylistSchema</b>&nbsp;&nbsp;&nbsp;(src/.../update-playlist.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UpdateStreamingSchema" title="src/modules/tracks/dtos/update-streaming.dto.ts" ><b>UpdateStreamingSchema</b>&nbsp;&nbsp;&nbsp;(src/.../update-streaming.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UpdateUserSchema" title="src/modules/users/dtos/update-user.dto.ts" ><b>UpdateUserSchema</b>&nbsp;&nbsp;&nbsp;(src/.../update-user.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#websocketCorsConfig" title="src/common/config/cors.config.ts" ><b>websocketCorsConfig</b>&nbsp;&nbsp;&nbsp;(src/.../cors.config.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/infra/seeds/seed.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="adapter"></a>
+                    <span class="name">
+                        <span ><b>adapter</b></span>
+                        <a href="#adapter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaPg(pool)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="COVERS_DIR"></a>
+                    <span class="name">
+                        <span ><b>COVERS_DIR</b></span>
+                        <a href="#COVERS_DIR"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>join(STORAGE_BASE, config.storagePaths.covers)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pool"></a>
+                    <span class="name">
+                        <span ><b>pool</b></span>
+                        <a href="#pool"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Pool({ connectionString: process.env.DATABASE_URL })</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient({ adapter })</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="STORAGE_BASE"></a>
+                    <span class="name">
+                        <span ><b>STORAGE_BASE</b></span>
+                        <a href="#STORAGE_BASE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>process.cwd()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TRACKS_DIR"></a>
+                    <span class="name">
+                        <span ><b>TRACKS_DIR</b></span>
+                        <a href="#TRACKS_DIR"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>join(STORAGE_BASE, config.storagePaths.tracks)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/infra/seeds/config.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="config"></a>
+                    <span class="name">
+                        <span ><b>config</b></span>
+                        <a href="#config"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  /**
+   * Количество страниц NCS для импорта
+   * Каждая страница содержит ~30-50 треков
+   */
+  pagesToImport: 1,
+
+  /**
+   * Задержка между запросами к NCS API (в миллисекундах)
+   * Увеличьте если получаете rate limiting ошибки
+   */
+  delayBetweenPages: 2000,
+
+  /**
+   * Фильтры для импорта треков
+   * Оставьте пустым {} для импорта всех треков
+   *
+   * Примеры:
+   * - { genre: &#x27;drumstep&#x27; }
+   * - { mood: &#x27;dark&#x27; }
+   * - { search: &#x27;uplifting&#x27; }
+   * - { version: &#x27;regular&#x27; | &#x27;instrumental&#x27; | &#x27;both&#x27; }
+   */
+  filters: {},
+
+  /**
+   * Очистить существующие данные перед импортом
+   */
+  clearBeforeImport: true,
+
+  /**
+   * Пути к директориям хранения (относительно apps/api)
+   */
+  storagePaths: {
+    tracks: &#x27;storage/private/tracks&#x27;,
+    covers: &#x27;storage/public/tracks/covers&#x27;,
+  },
+
+  /**
+   * Таймауты для скачивания файлов (в миллисекундах)
+   */
+  downloadTimeout: 60000,
+
+  /**
+   * Формат файлов
+   */
+  fileFormat: {
+    audio: &#x27;mp3&#x27;,
+    cover: &#x27;jpg&#x27;,
+    bitrate: 320,
+    codec: &#x27;mp3&#x27;,
+  },
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Конфигурация для NCS Seed скрипта</p>
+<p>Отредактируйте этот файл для изменения параметров импорта</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/common/config/cors.config.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="corsConfig"></a>
+                    <span class="name">
+                        <span ><b>corsConfig</b></span>
+                        <a href="#corsConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>CorsOptions</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  origin: getAllowedOrigins(),
+  methods: [&#x27;GET&#x27;, &#x27;POST&#x27;, &#x27;PUT&#x27;, &#x27;DELETE&#x27;, &#x27;OPTIONS&#x27;, &#x27;PATCH&#x27;, &#x27;HEAD&#x27;],
+  allowedHeaders: [
+    &#x27;Content-Type&#x27;,
+    &#x27;Authorization&#x27;,
+    &#x27;X-Requested-With&#x27;,
+    &#x27;Accept&#x27;,
+    &#x27;Origin&#x27;,
+    &#x27;Range&#x27;,
+    &#x27;Access-Control-Request-Method&#x27;,
+    &#x27;Access-Control-Request-Headers&#x27;,
+  ],
+  exposedHeaders: [
+    &#x27;Set-Cookie&#x27;,
+    &#x27;Content-Range&#x27;,
+    &#x27;Accept-Ranges&#x27;,
+    &#x27;Content-Length&#x27;,
+    &#x27;X-Track-Duration&#x27;,
+  ],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 200,
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Common CORS configuration for HTTP requests</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllowedOrigins"></a>
+                    <span class="name">
+                        <span ><b>getAllowedOrigins</b></span>
+                        <a href="#getAllowedOrigins"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(): (string | RegExp)[] &#x3D;&gt; [
+  process.env.WEB_HOST || &#x27;http://localhost:3001&#x27;, // Web app
+  &#x27;http://localhost:3000&#x27;, // API docs
+  &#x27;http://localhost:5555&#x27;, // Prisma Studio
+  &#x27;http://localhost:8080&#x27;, // Test client server
+  &#x27;http://localhost:8081&#x27;, // Alternative test client server
+  &#x27;http://0.0.0.0:8080&#x27;,
+  &#x27;file://&#x27;, // For local HTML files
+  /^file:\/\//, // Regex for file protocol
+]</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Allowed origins for CORS</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="websocketCorsConfig"></a>
+                    <span class="name">
+                        <span ><b>websocketCorsConfig</b></span>
+                        <a href="#websocketCorsConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) &#x3D;&gt; void) &#x3D;&gt; {
+    const allowedOrigins &#x3D; getAllowedOrigins()
+
+    // Allow undefined origin (for local files) or file:// protocol
+    if (!origin || origin.startsWith(&#x27;file://&#x27;)) {
+      callback(null, true)
+      return
+    }
+
+    // Check if origin matches any allowed origin (including regex)
+    const isAllowed &#x3D; allowedOrigins.some((allowed) &#x3D;&gt; {
+      if (typeof allowed &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+        return allowed &#x3D;&#x3D;&#x3D; origin
+      }
+      // RegExp
+      return allowed.test(origin)
+    })
+
+    if (isAllowed) {
+      callback(null, true)
+    } else {
+      callback(new Error(&#x27;Not allowed by CORS&#x27;))
+    }
+  },
+  credentials: true,
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>CORS configuration for WebSocket connections</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/albums/dtos/create-album.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CreateAlbumSchema"></a>
+                    <span class="name">
+                        <span ><b>CreateAlbumSchema</b></span>
+                        <a href="#CreateAlbumSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  title: z.string(),
+  description: z.string().optional(),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/artists/dtos/create-artist.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CreateArtistSchema"></a>
+                    <span class="name">
+                        <span ><b>CreateArtistSchema</b></span>
+                        <a href="#CreateArtistSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  email: z.string().email({ message: &#x27;Invalid email format&#x27; }),
+  password: z
+    .string()
+    .min(6, { message: &#x27;Password must be at least 6 characters long&#x27; })
+    .max(32, { message: &#x27;Password must not exceed 32 characters&#x27; }),
+  username: z.string().min(3, { message: &#x27;Username must be at least 3 characters long&#x27; }),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/playlists/dtos/create-playlist.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CreatePlaylistSchema"></a>
+                    <span class="name">
+                        <span ><b>CreatePlaylistSchema</b></span>
+                        <a href="#CreatePlaylistSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  title: z.string(),
+  description: z.string().optional(),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/tracks/dtos/create-track.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CreateTrackSchema"></a>
+                    <span class="name">
+                        <span ><b>CreateTrackSchema</b></span>
+                        <a href="#CreateTrackSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  title: z.string(),
+  audioUrl: z.string(),
+  cover: z.string().optional(),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>env.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="envSchema"></a>
+                    <span class="name">
+                        <span ><b>envSchema</b></span>
+                        <a href="#envSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  NODE_ENV: z.enum([&#x27;local&#x27;, &#x27;development&#x27;, &#x27;production&#x27;, &#x27;test&#x27;]).default(&#x27;local&#x27;),
+  PORT: z.coerce.number().default(3000),
+  WEB_HOST: z.url(),
+
+  // Auth
+  JWT_SECRET: z.string().min(10),
+  JWT_ACCESS_EXPIRES_IN: z.string().default(&#x27;5m&#x27;),
+  JWT_REFRESH_EXPIRES_IN: z.string().default(&#x27;30d&#x27;),
+
+  ACCESS_TOKEN_NAME: z.string().min(1),
+  REFRESH_TOKEN_NAME: z.string().min(1),
+  // OAUTH_GOOGLE_CLIENT_ID: z.string(),
+  // OAUTH_GOOGLE_CLIENT_SECRET: z.string(),
+
+  // Mail
+  // SMTP_HOST: z.string(),
+  // SMTP_PORT: z.coerce.number().default(587),
+  // SMTP_USER: z.string(),
+  // SMTP_PASS: z.string(),
+  // EMAIL_FROM: z.string().email(),
+
+  // Database
+  DATABASE_URL: z.url(),
+
+  // Redis
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.coerce.number().default(6379),
+
+  // Sentry
+  // SENTRY_DSN: z.string().url().optional(),
+
+  // CDN
+  // CDN_URL: z.string().url().optional(),
+
+  // Postfix
+  // POSTFIX_DOMAIN: z.string(),
+  // POSTFIX_USER: z.string(),
+  // POSTFIX_PASS: z.string(),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/auth/dtos/login.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LoginSchema"></a>
+                    <span class="name">
+                        <span ><b>LoginSchema</b></span>
+                        <a href="#LoginSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  email: z.string().email({ message: &#x27;Invalid email format&#x27; }),
+  password: z
+    .string()
+    .min(6, { message: &#x27;Password must be at least 6 characters long&#x27; })
+    .max(32, { message: &#x27;Password must not exceed 32 characters&#x27; }),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/tracks/dtos/pause-track.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PauseTrackSchema"></a>
+                    <span class="name">
+                        <span ><b>PauseTrackSchema</b></span>
+                        <a href="#PauseTrackSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  trackId: z.string().uuid(),
+  userId: z.string().uuid(),
+  currentTime: z.number().min(0),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/auth/dtos/registration.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RegistrationSchema"></a>
+                    <span class="name">
+                        <span ><b>RegistrationSchema</b></span>
+                        <a href="#RegistrationSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>LoginSchema.extend({
+  username: z
+    .string()
+    .min(3, { message: &#x27;Username must be at least 3 characters long&#x27; })
+    .max(20, { message: &#x27;Username must not exceed 20 characters&#x27; }),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/tracks/dtos/start-track.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="StartTrackSchema"></a>
+                    <span class="name">
+                        <span ><b>StartTrackSchema</b></span>
+                        <a href="#StartTrackSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  trackId: z.string().uuid(),
+  userId: z.string().uuid(),
+  currentTime: z.number().min(0).default(0),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/auth/auth.guard.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TOKEN_REQUIREMENT"></a>
+                    <span class="name">
+                        <span ><b>TOKEN_REQUIREMENT</b></span>
+                        <a href="#TOKEN_REQUIREMENT"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;tokenRequirement&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/auth/errors/unauthorized.errors.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UNAUTHORIZED_ERRORS"></a>
+                    <span class="name">
+                        <span ><b>UNAUTHORIZED_ERRORS</b></span>
+                        <a href="#UNAUTHORIZED_ERRORS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  ACCESS_TOKEN_REQUIRED: &#x27;Access token required&#x27;,
+  REFRESH_TOKEN_REQUIRED: &#x27;Refresh token required&#x27;,
+  INVALID_TOKEN_REQUIREMENT: &#x27;Invalid token requirement&#x27;,
+  INVALID_OR_EXPIRED_TOKEN: &#x27;Invalid or expired token&#x27;,
+  USER_NOT_FOUND: &#x27;User not found&#x27;,
+  SESSION_NOT_FOUND: &#x27;Session not found&#x27;,
+} as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/albums/dtos/update-album.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UpdateAlbumSchema"></a>
+                    <span class="name">
+                        <span ><b>UpdateAlbumSchema</b></span>
+                        <a href="#UpdateAlbumSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  title: z.string(),
+  description: z.string().optional(),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/playlists/dtos/update-playlist.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UpdatePlaylistSchema"></a>
+                    <span class="name">
+                        <span ><b>UpdatePlaylistSchema</b></span>
+                        <a href="#UpdatePlaylistSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  title: z.string(),
+  description: z.string().optional(),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/tracks/dtos/update-streaming.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UpdateStreamingSchema"></a>
+                    <span class="name">
+                        <span ><b>UpdateStreamingSchema</b></span>
+                        <a href="#UpdateStreamingSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  trackId: z.string().uuid(),
+  userId: z.string().uuid(),
+  currentTime: z.number().min(0),
+  isPlaying: z.boolean(),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/modules/users/dtos/update-user.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UpdateUserSchema"></a>
+                    <span class="name">
+                        <span ><b>UpdateUserSchema</b></span>
+                        <a href="#UpdateUserSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.object({
+  username: z.string().min(3, { message: &#x27;Username must be at least 3 characters long&#x27; }),
+  email: z.string().email({ message: &#x27;Invalid email format&#x27; }),
+  description: z
+    .string()
+    .max(500, { message: &#x27;Description must not exceed 500 characters&#x27; })
+    .optional(),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-variables';
+            var COMPODOC_CURRENT_PAGE_URL = 'variables.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

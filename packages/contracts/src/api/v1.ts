@@ -4,14 +4,14 @@
  */
 
 export interface paths {
-    "/": {
+    "/api/v1": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["AppController_getWelcome"];
+        get: operations["AppController_getWelcome_v1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -20,7 +20,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/login": {
+    "/api/v1/auth/login": {
         parameters: {
             query?: never;
             header?: never;
@@ -30,14 +30,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** User login */
-        post: operations["AuthController_login"];
+        post: operations["AuthController_login_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/auth/registration": {
+    "/api/v1/auth/registration": {
         parameters: {
             query?: never;
             header?: never;
@@ -47,14 +47,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** User registration */
-        post: operations["AuthController_registration"];
+        post: operations["AuthController_registration_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/auth/logout": {
+    "/api/v1/auth/logout": {
         parameters: {
             query?: never;
             header?: never;
@@ -64,14 +64,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** User logout */
-        post: operations["AuthController_logout"];
+        post: operations["AuthController_logout_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/auth/refresh": {
+    "/api/v1/auth/refresh": {
         parameters: {
             query?: never;
             header?: never;
@@ -81,14 +81,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Refresh access token */
-        post: operations["AuthController_refresh"];
+        post: operations["AuthController_refresh_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/auth/me": {
+    "/api/v1/auth/me": {
         parameters: {
             query?: never;
             header?: never;
@@ -96,7 +96,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get current authenticated user */
-        get: operations["AuthController_getMe"];
+        get: operations["AuthController_getMe_v1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -105,7 +105,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/users": {
+    "/api/v1/users": {
         parameters: {
             query?: never;
             header?: never;
@@ -113,9 +113,9 @@ export interface paths {
             cookie?: never;
         };
         /** Get all users with filters and pagination */
-        get: operations["UsersController_getAll"];
+        get: operations["UsersController_getAll_v1"];
         /** Update user by id */
-        put: operations["UsersController_putById"];
+        put: operations["UsersController_putById_v1"];
         post?: never;
         delete?: never;
         options?: never;
@@ -123,7 +123,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/users/username/{username}": {
+    "/api/v1/users/username/{username}": {
         parameters: {
             query?: never;
             header?: never;
@@ -131,7 +131,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get user by username */
-        get: operations["UsersController_getByUsername"];
+        get: operations["UsersController_getByUsername_v1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -140,7 +140,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/users/{id}": {
+    "/api/v1/users/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -148,7 +148,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get user by id */
-        get: operations["UsersController_getById"];
+        get: operations["UsersController_getById_v1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -157,7 +157,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/users/avatar": {
+    "/api/v1/users/avatar": {
         parameters: {
             query?: never;
             header?: never;
@@ -167,14 +167,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Upload avatar for user */
-        post: operations["UsersController_uploadAvatar"];
+        post: operations["UsersController_uploadAvatar_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/artists": {
+    "/api/v1/artists": {
         parameters: {
             query?: never;
             header?: never;
@@ -182,17 +182,16 @@ export interface paths {
             cookie?: never;
         };
         /** Get all artists with pagination */
-        get: operations["ArtistsController_getAll"];
+        get: operations["ArtistsController_getAll_v1"];
         put?: never;
-        /** Create a new artist */
-        post: operations["ArtistsController_create"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/artists/{id}": {
+    "/api/v1/artists/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -200,18 +199,18 @@ export interface paths {
             cookie?: never;
         };
         /** Get artist by id */
-        get: operations["ArtistsController_getById"];
+        get: operations["ArtistsController_getById_v1"];
         /** Update artist profile */
-        put: operations["ArtistsController_updateProfile"];
+        put: operations["ArtistsController_updateProfile_v1"];
         post?: never;
         /** Delete artist profile */
-        delete: operations["ArtistsController_deleteProfile"];
+        delete: operations["ArtistsController_deleteProfile_v1"];
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/artists/username/{username}": {
+    "/api/v1/artists/username/{username}": {
         parameters: {
             query?: never;
             header?: never;
@@ -219,7 +218,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get artist by username */
-        get: operations["ArtistsController_getByUsername"];
+        get: operations["ArtistsController_getByUsername_v1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -228,7 +227,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/tracks": {
+    "/api/v1/artists/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a new artist */
+        post: operations["ArtistsController_register_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/artists/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login an artist */
+        post: operations["ArtistsController_login_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/tracks": {
         parameters: {
             query?: never;
             header?: never;
@@ -236,17 +269,17 @@ export interface paths {
             cookie?: never;
         };
         /** Get all tracks with pagination */
-        get: operations["TracksController_getAll"];
+        get: operations["TracksController_getAll_v1"];
         put?: never;
         /** Create track */
-        post: operations["TracksController_postTrack"];
+        post: operations["TracksController_postTrack_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/tracks/liked": {
+    "/api/v1/tracks/liked": {
         parameters: {
             query?: never;
             header?: never;
@@ -254,7 +287,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get liked user tracks with pagination */
-        get: operations["TracksController_getLikedTracks"];
+        get: operations["TracksController_getLikedTracks_v1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -263,7 +296,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/tracks/{id}": {
+    "/api/v1/tracks/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -271,9 +304,9 @@ export interface paths {
             cookie?: never;
         };
         /** Get track by id */
-        get: operations["TracksController_getById"];
+        get: operations["TracksController_getById_v1"];
         /** Update track by id */
-        put: operations["TracksController_putTrack"];
+        put: operations["TracksController_putTrack_v1"];
         post?: never;
         delete?: never;
         options?: never;
@@ -281,7 +314,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/tracks/stream/{id}": {
+    "/api/v1/tracks/stream/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -289,7 +322,7 @@ export interface paths {
             cookie?: never;
         };
         /** Stream audio track */
-        get: operations["TracksController_streamTrack"];
+        get: operations["TracksController_streamTrack_v1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -298,7 +331,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/tracks/play/{id}": {
+    "/api/v1/tracks/play/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -308,14 +341,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Start playing track for authenticated user */
-        post: operations["TracksController_playTrack"];
+        post: operations["TracksController_playTrack_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/tracks/pause/{id}": {
+    "/api/v1/tracks/pause/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -325,14 +358,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Pause track for authenticated user */
-        post: operations["TracksController_pauseTrack"];
+        post: operations["TracksController_pauseTrack_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/tracks/update-state/{id}": {
+    "/api/v1/tracks/update-state/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -342,14 +375,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Update track streaming state for authenticated user */
-        post: operations["TracksController_updateTrackState"];
+        post: operations["TracksController_updateTrackState_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/tracks/current-state": {
+    "/api/v1/tracks/current-state": {
         parameters: {
             query?: never;
             header?: never;
@@ -357,7 +390,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get current track state for authenticated user */
-        get: operations["TracksController_getCurrentState"];
+        get: operations["TracksController_getCurrentState_v1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -366,7 +399,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/playlists": {
+    "/api/v1/playlists": {
         parameters: {
             query?: never;
             header?: never;
@@ -374,17 +407,17 @@ export interface paths {
             cookie?: never;
         };
         /** Get all playlists with pagination and filters */
-        get: operations["PlaylistsController_getAll"];
+        get: operations["PlaylistsController_getAll_v1"];
         put?: never;
         /** Create a new playlist */
-        post: operations["PlaylistsController_post"];
+        post: operations["PlaylistsController_post_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/playlists/{id}": {
+    "/api/v1/playlists/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -392,9 +425,9 @@ export interface paths {
             cookie?: never;
         };
         /** Get playlist by id */
-        get: operations["PlaylistsController_getById"];
+        get: operations["PlaylistsController_getById_v1"];
         /** Update playlist by id */
-        put: operations["PlaylistsController_update"];
+        put: operations["PlaylistsController_update_v1"];
         post?: never;
         delete?: never;
         options?: never;
@@ -402,7 +435,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/albums": {
+    "/api/v1/albums": {
         parameters: {
             query?: never;
             header?: never;
@@ -410,17 +443,17 @@ export interface paths {
             cookie?: never;
         };
         /** Get all albums with pagination and filters */
-        get: operations["AlbumsController_getAllAlbums"];
+        get: operations["AlbumsController_getAllAlbums_v1"];
         put?: never;
         /** Create a new album */
-        post: operations["AlbumsController_createAlbum"];
+        post: operations["AlbumsController_createAlbum_v1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/albums/{id}": {
+    "/api/v1/albums/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -428,49 +461,15 @@ export interface paths {
             cookie?: never;
         };
         /** Get album by id */
-        get: operations["AlbumsController_getById"];
+        get: operations["AlbumsController_getById_v1"];
         /** Update album by id */
-        put: operations["AlbumsController_updateAlbum"];
+        put: operations["AlbumsController_updateAlbum_v1"];
         post?: never;
         /**
          * Delete an album by ID
          * @description Deletes an album by its ID. Requires authentication.
          */
-        delete: operations["AlbumsController_deleteAlbum"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/files/users/avatars/{filename}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get user avatar */
-        get: operations["FilesController_getUserAvatar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/files/audio/{filename}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get audio file */
-        get: operations["FilesController_getAudioFile"];
-        put?: never;
-        post?: never;
-        delete?: never;
+        delete: operations["AlbumsController_deleteAlbum_v1"];
         options?: never;
         head?: never;
         patch?: never;
@@ -487,6 +486,8 @@ export interface components {
             refresh_token: string;
             /** Format: date-time */
             createdAt: string;
+            /** Format: date-time */
+            expiresAt: string | null;
         };
         LoginDto: {
             /**
@@ -526,6 +527,8 @@ export interface components {
             createdAt: string;
             description: string | null;
             avatar: string | null;
+            /** Format: date-time */
+            updatedAt: string;
         };
         UpdateUserDto: {
             /**
@@ -576,6 +579,12 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             artistId: string;
+            /** Format: date-time */
+            updatedAt: string;
+            duration: number | null;
+            /** Format: date-time */
+            releaseDate: string | null;
+            lyrics: string | null;
         };
         CreateTrackDto: {
             /** @description Track title */
@@ -593,6 +602,9 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             userId: string;
+            /** Format: date-time */
+            updatedAt: string;
+            isPublic: boolean;
         };
         CreatePlaylistDto: {
             /** @description Playlist title */
@@ -627,7 +639,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    AppController_getWelcome: {
+    AppController_getWelcome_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -723,7 +735,7 @@ export interface operations {
             };
         };
     };
-    AuthController_login: {
+    AuthController_login_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -849,7 +861,7 @@ export interface operations {
             };
         };
     };
-    AuthController_registration: {
+    AuthController_registration_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -980,7 +992,7 @@ export interface operations {
             };
         };
     };
-    AuthController_logout: {
+    AuthController_logout_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1100,7 +1112,7 @@ export interface operations {
             };
         };
     };
-    AuthController_refresh: {
+    AuthController_refresh_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1222,7 +1234,7 @@ export interface operations {
             };
         };
     };
-    AuthController_getMe: {
+    AuthController_getMe_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1355,7 +1367,7 @@ export interface operations {
             };
         };
     };
-    UsersController_getAll: {
+    UsersController_getAll_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1385,7 +1397,7 @@ export interface operations {
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio",
-                     *         "createdAt": "2026-01-17T08:40:23.734Z"
+                     *         "createdAt": "2026-01-21T15:30:31.446Z"
                      *       },
                      *       {
                      *         "id": "2",
@@ -1393,7 +1405,7 @@ export interface operations {
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio 2",
-                     *         "createdAt": "2026-01-17T08:40:23.734Z"
+                     *         "createdAt": "2026-01-21T15:30:31.446Z"
                      *       }
                      *     ]
                      */
@@ -1485,7 +1497,7 @@ export interface operations {
             };
         };
     };
-    UsersController_putById: {
+    UsersController_putById_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1512,7 +1524,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2026-01-17T08:40:23.735Z"
+                     *       "createdAt": "2026-01-21T15:30:31.447Z"
                      *     }
                      */
                     "application/json": unknown;
@@ -1622,7 +1634,7 @@ export interface operations {
             };
         };
     };
-    UsersController_getByUsername: {
+    UsersController_getByUsername_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1647,7 +1659,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2026-01-17T08:40:23.735Z"
+                     *       "createdAt": "2026-01-21T15:30:31.446Z"
                      *     }
                      */
                     "application/json": unknown;
@@ -1747,7 +1759,7 @@ export interface operations {
             };
         };
     };
-    UsersController_getById: {
+    UsersController_getById_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1769,7 +1781,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2026-01-17T08:40:23.735Z"
+                     *       "createdAt": "2026-01-21T15:30:31.447Z"
                      *     }
                      */
                     "application/json": unknown;
@@ -1860,7 +1872,7 @@ export interface operations {
             };
         };
     };
-    UsersController_uploadAvatar: {
+    UsersController_uploadAvatar_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1887,7 +1899,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2026-01-17T08:40:23.752Z",
+                     *       "createdAt": "2026-01-21T15:30:31.447Z",
                      *       "email": "example@gmail.com"
                      *     }
                      */
@@ -2005,7 +2017,7 @@ export interface operations {
             };
         };
     };
-    ArtistsController_getAll: {
+    ArtistsController_getAll_v1: {
         parameters: {
             query?: {
                 /** @description Page number */
@@ -2125,7 +2137,425 @@ export interface operations {
             };
         };
     };
-    ArtistsController_create: {
+    ArtistsController_getById_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Method not allowed */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request timeout */
+            408: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Gateway timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description HTTP version not supported */
+            505: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient storage */
+            507: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Loop detected */
+            508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    ArtistsController_updateProfile_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example 401 */
+                        statusCode?: number;
+                        /**
+                         * @example Invalid or expired token
+                         * @enum {string}
+                         */
+                        message?: "Access token required" | "Refresh token required" | "Invalid token requirement" | "Invalid or expired token" | "User not found" | "Session not found";
+                        /** @example Unauthorized */
+                        error?: string;
+                    };
+                };
+            };
+            /** @description Method not allowed */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request timeout */
+            408: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Gateway timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description HTTP version not supported */
+            505: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient storage */
+            507: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Loop detected */
+            508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ArtistsController_deleteProfile_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example 401 */
+                        statusCode?: number;
+                        /**
+                         * @example Invalid or expired token
+                         * @enum {string}
+                         */
+                        message?: "Access token required" | "Refresh token required" | "Invalid token requirement" | "Invalid or expired token" | "User not found" | "Session not found";
+                        /** @example Unauthorized */
+                        error?: string;
+                    };
+                };
+            };
+            /** @description Method not allowed */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request timeout */
+            408: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Gateway timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description HTTP version not supported */
+            505: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient storage */
+            507: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Loop detected */
+            508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ArtistsController_getByUsername_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Method not allowed */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request timeout */
+            408: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Gateway timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description HTTP version not supported */
+            505: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient storage */
+            507: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Loop detected */
+            508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    ArtistsController_register_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -2223,14 +2653,18 @@ export interface operations {
             };
         };
     };
-    ArtistsController_getById: {
+    ArtistsController_login_v1: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateArtistDto"];
+            };
+        };
         responses: {
             /** @description Method not allowed */
             405: {
@@ -2319,329 +2753,7 @@ export interface operations {
             };
         };
     };
-    ArtistsController_updateProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example 401 */
-                        statusCode?: number;
-                        /**
-                         * @example Invalid or expired token
-                         * @enum {string}
-                         */
-                        message?: "Access token required" | "Refresh token required" | "Invalid token requirement" | "Invalid or expired token" | "User not found" | "Session not found";
-                        /** @example Unauthorized */
-                        error?: string;
-                    };
-                };
-            };
-            /** @description Method not allowed */
-            405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Request timeout */
-            408: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Too many requests */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not implemented */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Gateway timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description HTTP version not supported */
-            505: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Insufficient storage */
-            507: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Loop detected */
-            508: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ArtistsController_deleteProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example 401 */
-                        statusCode?: number;
-                        /**
-                         * @example Invalid or expired token
-                         * @enum {string}
-                         */
-                        message?: "Access token required" | "Refresh token required" | "Invalid token requirement" | "Invalid or expired token" | "User not found" | "Session not found";
-                        /** @example Unauthorized */
-                        error?: string;
-                    };
-                };
-            };
-            /** @description Method not allowed */
-            405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Request timeout */
-            408: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Too many requests */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not implemented */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Gateway timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description HTTP version not supported */
-            505: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Insufficient storage */
-            507: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Loop detected */
-            508: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ArtistsController_getByUsername: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Method not allowed */
-            405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Request timeout */
-            408: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Too many requests */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not implemented */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Gateway timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description HTTP version not supported */
-            505: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Insufficient storage */
-            507: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Loop detected */
-            508: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-        };
-    };
-    TracksController_getAll: {
+    TracksController_getAll_v1: {
         parameters: {
             query?: {
                 /** @description Page number */
@@ -2675,7 +2787,11 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2026-01-17T08:40:24.010Z"
+                     *         "createdAt": "2026-01-21T15:30:31.518Z",
+                     *         "updatedAt": "2026-01-21T15:30:31.518Z",
+                     *         "duration": 180,
+                     *         "releaseDate": "2023-10-01T12:00:00.000Z",
+                     *         "lyrics": null
                      *       }
                      *     ]
                      */
@@ -2767,7 +2883,7 @@ export interface operations {
             };
         };
     };
-    TracksController_postTrack: {
+    TracksController_postTrack_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -2791,7 +2907,7 @@ export interface operations {
                      *       "title": "Track Title",
                      *       "cover": "https://example.com/cover.jpg",
                      *       "audioUrl": "",
-                     *       "createdAt": "2026-01-17T08:40:24.010Z"
+                     *       "createdAt": "2026-01-21T15:30:31.518Z"
                      *     }
                      */
                     "application/json": unknown;
@@ -2901,7 +3017,7 @@ export interface operations {
             };
         };
     };
-    TracksController_getLikedTracks: {
+    TracksController_getLikedTracks_v1: {
         parameters: {
             query?: {
                 /** @description Page number */
@@ -2933,7 +3049,11 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2026-01-17T08:40:24.010Z"
+                     *         "createdAt": "2026-01-21T15:30:31.518Z",
+                     *         "updatedAt": "2026-01-21T15:30:31.518Z",
+                     *         "duration": 180,
+                     *         "releaseDate": "2023-10-01T12:00:00.000Z",
+                     *         "lyrics": null
                      *       }
                      *     ]
                      */
@@ -3044,7 +3164,7 @@ export interface operations {
             };
         };
     };
-    TracksController_getById: {
+    TracksController_getById_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3140,7 +3260,7 @@ export interface operations {
             };
         };
     };
-    TracksController_putTrack: {
+    TracksController_putTrack_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3257,7 +3377,7 @@ export interface operations {
             };
         };
     };
-    TracksController_streamTrack: {
+    TracksController_streamTrack_v1: {
         parameters: {
             query?: never;
             header: {
@@ -3374,7 +3494,7 @@ export interface operations {
             };
         };
     };
-    TracksController_playTrack: {
+    TracksController_playTrack_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3489,7 +3609,7 @@ export interface operations {
             };
         };
     };
-    TracksController_pauseTrack: {
+    TracksController_pauseTrack_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3604,7 +3724,7 @@ export interface operations {
             };
         };
     };
-    TracksController_updateTrackState: {
+    TracksController_updateTrackState_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3719,7 +3839,7 @@ export interface operations {
             };
         };
     };
-    TracksController_getCurrentState: {
+    TracksController_getCurrentState_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3832,7 +3952,7 @@ export interface operations {
             };
         };
     };
-    PlaylistsController_getAll: {
+    PlaylistsController_getAll_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3933,7 +4053,7 @@ export interface operations {
             };
         };
     };
-    PlaylistsController_post: {
+    PlaylistsController_post_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -4050,7 +4170,7 @@ export interface operations {
             };
         };
     };
-    PlaylistsController_getById: {
+    PlaylistsController_getById_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -4140,11 +4260,13 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": Record<string, never>;
+                };
             };
         };
     };
-    PlaylistsController_update: {
+    PlaylistsController_update_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -4261,7 +4383,7 @@ export interface operations {
             };
         };
     };
-    AlbumsController_getAllAlbums: {
+    AlbumsController_getAllAlbums_v1: {
         parameters: {
             query: {
                 page: string;
@@ -4360,7 +4482,7 @@ export interface operations {
             };
         };
     };
-    AlbumsController_createAlbum: {
+    AlbumsController_createAlbum_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -4477,7 +4599,7 @@ export interface operations {
             };
         };
     };
-    AlbumsController_getById: {
+    AlbumsController_getById_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -4573,7 +4695,7 @@ export interface operations {
             };
         };
     };
-    AlbumsController_updateAlbum: {
+    AlbumsController_updateAlbum_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -4690,7 +4812,7 @@ export interface operations {
             };
         };
     };
-    AlbumsController_deleteAlbum: {
+    AlbumsController_deleteAlbum_v1: {
         parameters: {
             query?: never;
             header?: never;
@@ -4717,242 +4839,6 @@ export interface operations {
                         error?: string;
                     };
                 };
-            };
-            /** @description Method not allowed */
-            405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Request timeout */
-            408: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Too many requests */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not implemented */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Gateway timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description HTTP version not supported */
-            505: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Insufficient storage */
-            507: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Loop detected */
-            508: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    FilesController_getUserAvatar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Avatar filename */
-                filename: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Avatar file */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Access denied */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Avatar not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Method not allowed */
-            405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Request timeout */
-            408: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Too many requests */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Not implemented */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad gateway */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Gateway timeout */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description HTTP version not supported */
-            505: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Insufficient storage */
-            507: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Loop detected */
-            508: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    FilesController_getAudioFile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Audio filename */
-                filename: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Audio file */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Access denied */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Audio file not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
             /** @description Method not allowed */
             405: {

@@ -1,0 +1,1664 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@spotify/api documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@spotify/api documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content controller">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Controllers</li>
+  <li class="breadcrumb-item" >TracksController</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/tracks/tracks.controller.ts</code>
+        </p>
+            <p class="comment">
+                <h3>Prefix</h3>
+            </p>
+            <p class="comment">
+                <code>tracks</code>
+            </p>
+
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#getAll" >getAll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#getById" >getById</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#getCurrentState" >getCurrentState</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#getLikedTracks" >getLikedTracks</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#pauseTrack" >pauseTrack</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#playTrack" >playTrack</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#postTrack" >postTrack</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#putTrack" >putTrack</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#streamTrack" >streamTrack</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateTrackState" >updateTrackState</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAll"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>getAll</b></span>
+                        <a href="#getAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAll(page?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, limit?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, title?: <a href="../classes/TrackEntity.html" target="_self">TrackEntity</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@TracksGetAllSwagger()<br />@Get(&#x27;&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>page</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>limit</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>title</td>
+                                            <td>
+                                                            <code><a href="../classes/TrackEntity.html" target="_self" >TrackEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getById"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>getById</b></span>
+                        <a href="#getById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getById(id: <a href="../classes/TrackEntity.html" target="_self">TrackEntity</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@GetTrackByIdSwagger()<br />@Get(&#x27;:id&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="../classes/TrackEntity.html" target="_self" >TrackEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCurrentState"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>getCurrentState</b></span>
+                        <a href="#getCurrentState"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCurrentState(req: Request)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Get current track state for authenticated user&#x27;})<br />@Auth()<br />@Get(&#x27;current-state&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="344"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:344</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>{ message: string; userId: any; }</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getLikedTracks"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>getLikedTracks</b></span>
+                        <a href="#getLikedTracks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getLikedTracks(req: Request, page?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, limit?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Auth()<br />@TracksGetLikedSwagger()<br />@Get(&#x27;liked&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="64"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>page</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>limit</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pauseTrack"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>pauseTrack</b></span>
+                        <a href="#pauseTrack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>pauseTrack(trackId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req: Request, currentTime: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Pause track for authenticated user&#x27;})<br />@Auth()<br />@Post(&#x27;pause/:id&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="274"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:274</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>trackId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>currentTime</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>0</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="playTrack"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>playTrack</b></span>
+                        <a href="#playTrack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>playTrack(trackId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req: Request, currentTime: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Start playing track for authenticated user&#x27;})<br />@Auth()<br />@Post(&#x27;play/:id&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="237"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:237</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>trackId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>currentTime</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>0</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="postTrack"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>postTrack</b></span>
+                        <a href="#postTrack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>postTrack(req: Request, createTrackDto: <a href="../classes/CreateTrackDto.html" target="_self">CreateTrackDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@PostTrackSwagger()<br />@Auth()<br />@Post(&#x27;&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="85"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:85</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>createTrackDto</td>
+                                            <td>
+                                                            <code><a href="../classes/CreateTrackDto.html" target="_self" >CreateTrackDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="putTrack"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>putTrack</b></span>
+                        <a href="#putTrack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>putTrack(id: <a href="../classes/TrackEntity.html" target="_self">TrackEntity</a>, createTrackDto: <a href="../classes/CreateTrackDto.html" target="_self">CreateTrackDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@UpdateTrackByIdSwagger()<br />@Auth()<br />@Put(&#x27;:id&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:97</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="../classes/TrackEntity.html" target="_self" >TrackEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>createTrackDto</td>
+                                            <td>
+                                                            <code><a href="../classes/CreateTrackDto.html" target="_self" >CreateTrackDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="streamTrack"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>streamTrack</b></span>
+                        <a href="#streamTrack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>streamTrack(trackId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req: Request, res: Response, range?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Stream audio track&#x27;})<br />@Auth()<br />@Get(&#x27;stream/:id&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:108</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>trackId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>res</td>
+                                            <td>
+                                                        <code>Response</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>range</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateTrackState"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>updateTrackState</b></span>
+                        <a href="#updateTrackState"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateTrackState(trackId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, req: Request, body: literal type)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Update track streaming state for authenticated user&#x27;})<br />@Auth()<br />@Post(&#x27;update-state/:id&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="307"
+                                    class="link-to-prism">src/modules/tracks/tracks.controller.ts:307</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>trackId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Auth } from &#x27;@modules/auth/auth.guard&#x27;
+import { UserEntity } from &#x27;@modules/users&#x27;
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Headers,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
+  Req,
+  Res,
+  StreamableFile,
+} from &#x27;@nestjs/common&#x27;
+import { ApiExtraModels, ApiOperation, ApiTags } from &#x27;@nestjs/swagger&#x27;
+import { Request, Response } from &#x27;express&#x27;
+import * as fs from &#x27;fs&#x27;
+import { parseFile } from &#x27;music-metadata&#x27;
+import { ZodValidationPipe } from &#x27;nestjs-zod&#x27;
+import * as path from &#x27;path&#x27;
+import { AudioGateway } from &#x27;./audio.gateway&#x27;
+import {
+  GetTrackByIdSwagger,
+  PostTrackSwagger,
+  TracksGetAllSwagger,
+  TracksGetLikedSwagger,
+  UpdateTrackByIdSwagger,
+} from &#x27;./decorators&#x27;
+import { CreateTrackDto, CreateTrackSchema } from &#x27;./dtos/create-track.dto&#x27;
+import { TrackEntity } from &#x27;./entities&#x27;
+import { TracksService } from &#x27;./tracks.service&#x27;
+
+@ApiExtraModels(TrackEntity)
+@ApiTags(&#x27;Tracks&#x27;)
+@Controller(&#x27;tracks&#x27;)
+export class TracksController {
+  constructor(
+    private tracksService: TracksService,
+    private audioGateway: AudioGateway,
+  ) {}
+
+  @TracksGetAllSwagger()
+  @Get(&#x27;&#x27;)
+  getAll(
+    @Query(&#x27;page&#x27;, new ParseIntPipe({ optional: true })) page?: number,
+    @Query(&#x27;limit&#x27;, new ParseIntPipe({ optional: true })) limit?: number,
+    @Query(&#x27;title&#x27;) title?: TrackEntity[&#x27;title&#x27;],
+  ) {
+    return this.tracksService.findAll({
+      limit,
+      page,
+      title,
+    })
+  }
+
+  @Auth()
+  @TracksGetLikedSwagger()
+  @Get(&#x27;liked&#x27;)
+  getLikedTracks(
+    @Req() req: Request,
+    @Query(&#x27;page&#x27;, new ParseIntPipe({ optional: true })) page?: number,
+    @Query(&#x27;limit&#x27;, new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    const user &#x3D; req[&#x27;user&#x27;] as UserEntity
+    return this.tracksService.findLikedTracks(user.id, {
+      page,
+      limit,
+    })
+  }
+
+  @GetTrackByIdSwagger()
+  @Get(&#x27;:id&#x27;)
+  getById(@Param(&#x27;id&#x27;, ParseUUIDPipe) id: TrackEntity[&#x27;id&#x27;]) {
+    return this.tracksService.findTrackById(id)
+  }
+
+  @PostTrackSwagger()
+  @Auth()
+  @Post(&#x27;&#x27;)
+  postTrack(
+    @Req() req: Request,
+    @Body(new ZodValidationPipe(CreateTrackSchema))
+    createTrackDto: CreateTrackDto,
+  ) {
+    const user &#x3D; req[&#x27;user&#x27;] as UserEntity
+    return this.tracksService.create(user.id, createTrackDto)
+  }
+
+  @UpdateTrackByIdSwagger()
+  @Auth()
+  @Put(&#x27;:id&#x27;)
+  putTrack(
+    @Param(&#x27;id&#x27;, ParseUUIDPipe) id: TrackEntity[&#x27;id&#x27;],
+    @Body(new ZodValidationPipe(CreateTrackSchema))
+    createTrackDto: CreateTrackDto,
+  ) {
+    return this.tracksService.update(id, createTrackDto)
+  }
+
+  @ApiOperation({ summary: &#x27;Stream audio track&#x27; })
+  @Auth() // Добавляем аутентификацию для доступа к стримингу
+  @Get(&#x27;stream/:id&#x27;)
+  async streamTrack(
+    @Param(&#x27;id&#x27;, ParseUUIDPipe) trackId: string,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    @Headers(&#x27;range&#x27;) range?: string,
+  ) {
+    try {
+      console.log(&#x60;Attempting to stream track: ${trackId}&#x60;)
+
+      // Verify track exists
+      const track &#x3D; await this.tracksService.findTrackById(trackId)
+      if (!track) {
+        throw new NotFoundException(&#x27;Track not found&#x27;)
+      }
+
+      console.log(&#x27;Track found:&#x27;, {
+        id: track.id,
+        title: track.title,
+        audioUrl: track.audioUrl,
+        audioUrlType: typeof track.audioUrl,
+      })
+
+      // Check if audioUrl exists
+      if (!track.audioUrl) {
+        console.error(&#x60;Track ${trackId} has no audioUrl&#x60;)
+        throw new NotFoundException(&#x27;Track audio file not configured&#x27;)
+      }
+
+      // Build file path - handle both URLs and file paths
+      let filePath: string
+
+      if (track.audioUrl.startsWith(&#x27;http://&#x27;) || track.audioUrl.startsWith(&#x27;https://&#x27;)) {
+        // It&#x27;s a URL, extract the file path from it
+        try {
+          const url &#x3D; new URL(track.audioUrl)
+          // Extract the pathname and join with current working directory
+          // Remove leading slash from pathname to properly join with cwd
+          const relativePath &#x3D; url.pathname.startsWith(&#x27;/&#x27;) ? url.pathname.slice(1) : url.pathname
+          filePath &#x3D; path.join(process.cwd(), relativePath)
+        } catch (error) {
+          console.error(&#x60;Invalid URL in audioUrl: ${track.audioUrl}&#x60;, error)
+          throw new NotFoundException(&#x27;Invalid audio URL format&#x27;)
+        }
+      } else if (path.isAbsolute(track.audioUrl)) {
+        // It&#x27;s an absolute file path
+        filePath &#x3D; track.audioUrl
+      } else {
+        // It&#x27;s a relative path, assume it&#x27;s relative to storage/private/tracks directory
+        filePath &#x3D; path.join(process.cwd(), &#x27;storage&#x27;, &#x27;private&#x27;, &#x27;tracks&#x27;, track.audioUrl)
+      }
+
+      console.log(&#x60;Constructed file path: ${filePath}&#x60;)
+
+      // Check if file exists
+      if (!fs.existsSync(filePath)) {
+        console.error(&#x60;Audio file not found: ${filePath}&#x60;)
+        throw new NotFoundException(&#x60;Audio file not found: ${track.audioUrl}&#x60;)
+      }
+
+      const stat &#x3D; fs.statSync(filePath)
+      const fileSize &#x3D; stat.size
+
+      // Determine content type based on file extension
+      const fileExtension &#x3D; path.extname(filePath).toLowerCase()
+      const contentType &#x3D;
+        fileExtension &#x3D;&#x3D;&#x3D; &#x27;.opus&#x27; || fileExtension &#x3D;&#x3D;&#x3D; &#x27;.webm&#x27;
+          ? &#x27;audio/webm; codecs&#x3D;&quot;opus&quot;&#x27;
+          : &#x27;audio/mpeg&#x27;
+
+      // Read track duration from metadata
+      let trackDuration: number | undefined
+      try {
+        const metadata &#x3D; await parseFile(filePath)
+        trackDuration &#x3D; metadata.format.duration
+        console.log(&#x60;Track duration from metadata: ${trackDuration}s&#x60;)
+      } catch (error) {
+        console.warn(&#x60;Could not read metadata for ${filePath}:&#x60;, error)
+      }
+
+      if (range) {
+        // Handle range requests - allow client to control chunk size
+        const parts &#x3D; range.replace(/bytes&#x3D;/, &#x27;&#x27;).split(&#x27;-&#x27;)
+        const start &#x3D; Number.parseInt(parts[0] ?? &#x27;0&#x27;, 10)
+        const requestedEnd &#x3D; parts[1] ? Number.parseInt(parts[1], 10) : fileSize - 1
+
+        // Use requested range (client calculates optimal chunk size)
+        const end &#x3D; Math.min(requestedEnd, fileSize - 1)
+        const chunksize &#x3D; end - start + 1
+
+        const file &#x3D; fs.createReadStream(filePath, { start, end })
+
+        res.status(206)
+        res.set({
+          &#x27;Content-Range&#x27;: &#x60;bytes ${start}-${end}/${fileSize}&#x60;,
+          &#x27;Accept-Ranges&#x27;: &#x27;bytes&#x27;,
+          &#x27;Content-Length&#x27;: chunksize.toString(),
+          &#x27;Content-Type&#x27;: contentType,
+          ...(trackDuration ? { &#x27;X-Track-Duration&#x27;: trackDuration.toString() } : {}),
+        })
+
+        return new StreamableFile(file, {
+          length: chunksize,
+          type: contentType,
+        })
+      } else {
+        // Handle normal requests - return full file
+        res.set({
+          &#x27;Content-Length&#x27;: fileSize.toString(),
+          &#x27;Content-Type&#x27;: contentType,
+          &#x27;Accept-Ranges&#x27;: &#x27;bytes&#x27;,
+          &#x27;Cache-Control&#x27;: &#x27;no-cache&#x27;,
+          ...(trackDuration ? { &#x27;X-Track-Duration&#x27;: trackDuration.toString() } : {}),
+        })
+
+        const file &#x3D; fs.createReadStream(filePath)
+        return new StreamableFile(file)
+      }
+    } catch (error) {
+      console.error(&#x27;Error streaming track:&#x27;, error)
+      if (error instanceof NotFoundException) {
+        throw error
+      }
+      throw new NotFoundException(&#x27;Error streaming audio file&#x27;)
+    }
+  }
+
+  @ApiOperation({ summary: &#x27;Start playing track for authenticated user&#x27; })
+  @Auth()
+  @Post(&#x27;play/:id&#x27;)
+  async playTrack(
+    @Param(&#x27;id&#x27;, ParseUUIDPipe) trackId: string,
+    @Req() req: Request,
+    @Body(&#x27;currentTime&#x27;) currentTime: number &#x3D; 0,
+  ) {
+    const user &#x3D; req[&#x27;user&#x27;] as UserEntity
+
+    // Verify track exists
+    const track &#x3D; await this.tracksService.findTrackById(trackId)
+    if (!track) {
+      throw new NotFoundException(&#x27;Track not found&#x27;)
+    }
+
+    // Emit play event to user&#x27;s room
+    this.audioGateway.emitToUser(user.id, &#x27;trackPlaying&#x27;, {
+      trackId,
+      currentTime,
+      userId: user.id,
+      track: {
+        id: track.id,
+        title: track.title,
+        audioUrl: track.audioUrl,
+        cover: track.cover,
+      },
+    })
+
+    return {
+      success: true,
+      message: &#x27;Track playback started&#x27;,
+      trackId,
+      currentTime,
+    }
+  }
+
+  @ApiOperation({ summary: &#x27;Pause track for authenticated user&#x27; })
+  @Auth()
+  @Post(&#x27;pause/:id&#x27;)
+  async pauseTrack(
+    @Param(&#x27;id&#x27;, ParseUUIDPipe) trackId: string,
+    @Req() req: Request,
+    @Body(&#x27;currentTime&#x27;) currentTime: number &#x3D; 0,
+  ) {
+    const user &#x3D; req[&#x27;user&#x27;] as UserEntity
+
+    // Verify track exists
+    const track &#x3D; await this.tracksService.findTrackById(trackId)
+    if (!track) {
+      throw new NotFoundException(&#x27;Track not found&#x27;)
+    }
+
+    // Emit pause event to user&#x27;s room
+    this.audioGateway.emitToUser(user.id, &#x27;trackPaused&#x27;, {
+      trackId,
+      currentTime,
+      userId: user.id,
+    })
+
+    return {
+      success: true,
+      message: &#x27;Track playback paused&#x27;,
+      trackId,
+      currentTime,
+    }
+  }
+
+  @ApiOperation({
+    summary: &#x27;Update track streaming state for authenticated user&#x27;,
+  })
+  @Auth()
+  @Post(&#x27;update-state/:id&#x27;)
+  async updateTrackState(
+    @Param(&#x27;id&#x27;, ParseUUIDPipe) trackId: string,
+    @Req() req: Request,
+    @Body() body: { currentTime: number; isPlaying: boolean },
+  ) {
+    const user &#x3D; req[&#x27;user&#x27;] as UserEntity
+
+    if (typeof body.currentTime !&#x3D;&#x3D; &#x27;number&#x27; || typeof body.isPlaying !&#x3D;&#x3D; &#x27;boolean&#x27;) {
+      throw new BadRequestException(&#x27;Invalid body parameters&#x27;)
+    }
+
+    // Verify track exists
+    const track &#x3D; await this.tracksService.findTrackById(trackId)
+    if (!track) {
+      throw new NotFoundException(&#x27;Track not found&#x27;)
+    }
+
+    // Emit update event to user&#x27;s room
+    this.audioGateway.emitToUser(user.id, &#x27;trackUpdated&#x27;, {
+      trackId,
+      currentTime: body.currentTime,
+      isPlaying: body.isPlaying,
+      userId: user.id,
+    })
+
+    return {
+      success: true,
+      message: &#x27;Track state updated&#x27;,
+      trackId,
+      currentTime: body.currentTime,
+      isPlaying: body.isPlaying,
+    }
+  }
+
+  @ApiOperation({ summary: &#x27;Get current track state for authenticated user&#x27; })
+  @Auth()
+  @Get(&#x27;current-state&#x27;)
+  getCurrentState(@Req() req: Request) {
+    const user &#x3D; req[&#x27;user&#x27;] as UserEntity
+
+    // This would typically be handled by the WebSocket gateway
+    // But we can provide a REST endpoint as well
+    return {
+      message: &#x27;Current state available via WebSocket connection&#x27;,
+      userId: user.id,
+    }
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'controller';
+            var COMPODOC_CURRENT_PAGE_URL = 'TracksController.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

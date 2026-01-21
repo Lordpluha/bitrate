@@ -51,7 +51,7 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.27.0
+          version: 10.28.0
 
       - uses: actions/setup-node@v4
         with:
@@ -173,7 +173,7 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.27.0
+          version: 10.28.0
 
       - uses: actions/setup-node@v4
         with:
@@ -218,7 +218,7 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.27.0
+          version: 10.28.0
 
       - uses: actions/setup-node@v4
         with:
@@ -229,15 +229,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @spotify/api run db:generate
+        run: pnpm --filter @spotify/api run db:gen
 
       - name: Build dependencies
         run: pnpm --filter @spotify/ui-react run build
 
       - name: Build with bundle analyzer
-        run: |
-          cd apps/web
-          ANALYZE=true pnpm run build
+        run: ANALYZE=true pnpm --filter @spotify/web run build
 
       - name: Upload bundle report
         uses: actions/upload-artifact@v4
@@ -277,7 +275,7 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.27.0
+          version: 10.28.0
 
       - uses: actions/setup-node@v4
         with:

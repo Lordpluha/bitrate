@@ -1,15 +1,14 @@
 'use client'
-import React from 'react'
 
 import { useQuery } from '@shared/api'
-import { CustomNextIcon, CustomPrevIcon } from '@spotify/ui-react'
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
-  CarouselPrevious
+  CarouselPrevious, CustomNextIcon, CustomPrevIcon
 } from '@spotify/ui-react'
+import React from 'react'
 
 import { MusicCardLg } from './MusicCardLg'
 
@@ -21,7 +20,7 @@ interface MusicItem {
 }
 
 export const PopularPlaylists: React.FC = () => {
-  const { data, isPending: loadingPlaylists, error } = useQuery('get', '/playlists', {
+  const { data, isPending: loadingPlaylists, error } = useQuery('get', '/api/v1/playlists', {
     params: {
       query: {
         page: 1,
@@ -30,7 +29,7 @@ export const PopularPlaylists: React.FC = () => {
     }
   } as any)
 
-  const playlists: MusicItem[] = Array.isArray(data) 
+  const playlists: MusicItem[] = Array.isArray(data)
     ? data.map((playlist) => ({
         id: playlist.id,
         name: playlist.title,
@@ -45,7 +44,7 @@ export const PopularPlaylists: React.FC = () => {
     <div className='relative mt-8'>
       <div className='flex items-center justify-between mb-4'>
         <h2 className='text-text text-2xl font-bold'>Popular playlists</h2>
-        <button className='text-gray-400 hover:text-white text-sm font-medium'>
+        <button type='button' className='text-gray-400 hover:text-white text-sm font-medium'>
           Show all
         </button>
       </div>

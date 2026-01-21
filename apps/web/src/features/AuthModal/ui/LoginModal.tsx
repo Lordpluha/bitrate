@@ -1,32 +1,31 @@
 'use client'
 
-import React, { useState } from 'react'
-
-import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
-import {SocialsAuthDivider } from '@shared/ui'
+import { useMutation } from '@shared/api'
+import { ROUTES } from '@shared/routes'
+import { SocialsAuthDivider } from '@shared/ui'
 import {
   Button,
-  Input,
-  InputProvider,
-  PasswordInput,
   DynamicLabel,
-  toast,
-  Typography,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
+  GoogleIcon,
+  Input,
+  InputProvider,
   LogoIcon,
-  GoogleIcon
+  PasswordInput,
+  Typography,
+  toast
 } from '@spotify/ui-react'
-import { Modal } from './Modal'
 import Link from 'next/link'
-import { useMutation } from '@shared/api'
+import { useRouter } from 'next/navigation'
+import React from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { LoginFormData, loginSchema } from '../../Login/validation'
-import { ROUTES } from '@shared/routes'
+import { Modal } from './Modal'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -36,7 +35,7 @@ interface LoginModalProps {
 
 export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onOpenChange, onSwitchToSignUp }) => {
   const router = useRouter()
-  const { mutate, isPending: isLoading } = useMutation('post', '/auth/login', {
+  const { mutate, isPending: isLoading } = useMutation('post', '/api/v1/auth/login', {
     onSuccess: () => {
       onOpenChange(false)
       void router.push('/main')

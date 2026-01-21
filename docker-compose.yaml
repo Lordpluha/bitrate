@@ -170,7 +170,7 @@ services:
       - /app/apps/desktop/node_modules
     networks:
       - spotify-network
-    command: pnpm --filter spotify-desktop run dev
+    command: pnpm --filter @spotify/desktop run dev
     profiles:
       - desktop
 

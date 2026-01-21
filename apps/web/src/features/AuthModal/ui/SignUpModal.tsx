@@ -43,7 +43,7 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
 
   const { mutate: registerMutate, isPending: isRegistering } = useMutation(
     'post',
-    '/auth/registration',
+    '/api/v1/auth/registration',
     {
       onSuccess: () => {
         toast.success('Registration successful! Please log in.')
