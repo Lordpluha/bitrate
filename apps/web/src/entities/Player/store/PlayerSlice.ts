@@ -3,7 +3,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ITrack } from '@shared/types'
 
-export interface IMusicPlayerState {
+export interface MusicPlayerState {
   currentTrack: ITrack | null
   playlist: ITrack[]
   isPlaying: boolean
@@ -13,7 +13,7 @@ export interface IMusicPlayerState {
   progress: number
 }
 
-const initialState: IMusicPlayerState = {
+const initialState: MusicPlayerState = {
   currentTrack: null,
   playlist: [],
   isPlaying: false,
@@ -25,15 +25,7 @@ const initialState: IMusicPlayerState = {
 
 const musicPlayerSlice = createSlice({
   name: 'musicPlayer',
-  initialState: {
-    currentTrack: null,
-    playlist: [],
-    isPlaying: false,
-    currentTime: 0,
-    duration: 0,
-    volume: 0.5,
-    progress: 0,
-  } satisfies IMusicPlayerState as IMusicPlayerState,
+  initialState,
   reducers: (create) => ({
     play: create.reducer<ITrack>((state, action) => {
       state.currentTrack = action.payload
@@ -83,7 +75,17 @@ const musicPlayerSlice = createSlice({
       state.currentTime = 0
       state.duration = state.playlist[newIndex]?.duration || 0
     })
-  })
+  }),
+  selectors: {
+    selectMusicPlayer: (state) => state,
+    selectCurrentTrack: (state) => state.currentTrack,
+    selectPlaylist: (state) => state.playlist,
+    selectIsPlaying: (state) => state.isPlaying,
+    selectCurrentTime: (state) => state.currentTime,
+    selectDuration: (state) => state.duration,
+    selectVolume: (state) => state.volume,
+    selectProgress: (state) => state.progress,
+  },
 })
 
 // Actions
@@ -102,12 +104,5 @@ export const {
 // Reducer
 export const musicPlayerReducer = musicPlayerSlice.reducer
 
-// Selectors
-export const selectMusicPlayer = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer
-export const selectCurrentTrack = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.currentTrack
-export const selectPlaylist = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.playlist
-export const selectIsPlaying = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.isPlaying
-export const selectCurrentTime = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.currentTime
-export const selectDuration = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.duration
-export const selectVolume = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.volume
-export const selectProgress = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer.progress
+
+export const {selectCurrentTime, selectCurrentTrack, selectDuration, selectIsPlaying, selectMusicPlayer, selectPlaylist, selectProgress, selectVolume } = musicPlayerSlice.selectors
