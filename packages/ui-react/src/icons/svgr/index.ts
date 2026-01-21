@@ -31,5 +31,4 @@ export * from "./SearchIcon"
 export * from "./SpotifyLogo"
 export * from "./Twit"
 export * from "./TwitIcon"
-export * from "./PlayingIcon"
-export * from "./WaveIcon"
+export * from './WaveIcon'
