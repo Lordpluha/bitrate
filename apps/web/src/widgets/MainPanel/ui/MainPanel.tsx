@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useAuth } from '@shared/hooks'
 import { Typography } from '@spotify/ui-react'
 import { PlaylistPage } from '@/views/Playlist'
-import { getUsername } from '@shared/utils/apiHelpers'
+
 
 import { Tabs } from './Tabs'
 import { LastPlaylists } from './LastPlaylists'
@@ -53,7 +53,7 @@ export const MainPanel = () => {
   if (showTestTracks) {
     return (
       <div className='h-full overflow-y-auto custom-scrollbar relative z-10'>
-        <PlaylistPage onBack={() => setShowTestTracks(false)} />
+        <PlaylistPage />
       </div>
     )
   }
@@ -67,7 +67,7 @@ export const MainPanel = () => {
           <div className='min-w-[280px] mb-8'>
             <p className='text-gray-400 text-xs'>Made For</p>
             <Typography as='h5' size='heading5' className='text-text'>
-              {getUsername(user)}
+              {(user as any).username || 'User'}
             </Typography>
           </div>
         ) : null}

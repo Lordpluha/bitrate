@@ -64,7 +64,7 @@ export const BurgerMenu = () => {
             </div>
 
             <div>
-              <AuthButtons isMobile={true} />
+              <AuthButtons />
             </div>
           </div>
         </div>

@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { ProfileButton } from './ProfileButton'
 import { useAuth } from '@shared/hooks'
 import { Logo } from '@shared/ui'
-import { getUsername } from '@shared/utils/apiHelpers'
+
 import { MembersIcon, NotificationIcon } from '@spotify/ui-react'
 
 export const MainHeader = () => {
@@ -44,7 +44,7 @@ export const MainHeader = () => {
               <Link className='hover:opacity-70 transition-opacity duration-200' href="#">
                 <MembersIcon />
               </Link>
-              <ProfileButton username={getUsername(user)} />
+              <ProfileButton username={(user as any).username || 'User'} />
             </>
           ) : (
             <>

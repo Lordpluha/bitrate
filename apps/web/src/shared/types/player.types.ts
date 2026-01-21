@@ -1,3 +1,4 @@
+
 import type { ApiSchemas } from '@spotify/contracts'
 
 export type ITrack = ApiSchemas['TrackEntity'] & {
@@ -8,4 +9,3 @@ export type ITrack = ApiSchemas['TrackEntity'] & {
   album?: string
 }
 
-// с Владом обговорить это, так как я понял у апи нету типов artist, duration, name, file, album или я тупой(более вероятно)

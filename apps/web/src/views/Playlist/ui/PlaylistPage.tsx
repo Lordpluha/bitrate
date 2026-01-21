@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { PlaylistHeader } from './PlaylistHeader'
 import { TracksList, Track } from './TracksList'
@@ -9,14 +8,9 @@ import { useTracks } from '@shared/hooks/useTracks'
 import { ITrack } from '@shared/types'
 import {setPlaylist} from '@entities/Player'
 import { play } from '@entities/Player'
-import { getTrackArtist, getTrackDuration } from '@shared/utils/apiHelpers'
 
-interface PlaylistPageProps {
-  onBack?: () => void
-}
 
-export const PlaylistPage: React.FC<PlaylistPageProps> = ({ onBack }) => {
-  const router = useRouter()
+export const PlaylistPage: React.FC = () => {
   const dispatch = useAppDispatch()
   const { data, isPending } = useTracks()
   
@@ -33,8 +27,8 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ onBack }) => {
         cover: track.cover,
         createdAt: track.createdAt,
         artistId: track.artistId || '',
-        artist: track.artist || 'Unknown Artist',
-        duration: track.duration || 0,
+        artist: (track as any).artist || 'Unknown Artist',
+        duration: (track as any).duration || 0,
         name: track.title,
         file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`
       }))
@@ -46,7 +40,6 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ onBack }) => {
     return (
       <div className='h-full overflow-y-auto custom-scrollbar'>
         <PlaylistHeader
-          onBack={() => router.back()}
           title='Loading...'
           type='Playlist'
           imageUrl='/images/drive-cover-big.jpg'
@@ -70,8 +63,8 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ onBack }) => {
       cover: track.cover,
       createdAt: track.createdAt || new Date().toISOString(),
       artistId: track.artistId || '',
-      artist: getTrackArtist(track),
-      duration: getTrackDuration(track),
+      artist: (track as any).artist?.name || (track as any).artist || 'Unknown Artist',
+      duration: (track as any).duration || 0,
       name: track.title,
       file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`
     }
@@ -81,7 +74,6 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ onBack }) => {
   return (
     <div className='h-full overflow-y-auto custom-scrollbar'>
       <PlaylistHeader
-        onBack={handleBack}
         title='All Tracks'
         type='Playlist'
         imageUrl='/images/drive-cover-big.jpg'

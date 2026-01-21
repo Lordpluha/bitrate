@@ -68,7 +68,7 @@ export const musicPlayerReducer = createReducer(initialState, (builder) => {
       if (!state.currentTrack || state.playlist.length === 0) return
       
       const currentIndex = state.playlist.findIndex(
-        track => track.id === state.currentTrack?.id
+        track => (track as ITrack).id === (state.currentTrack as ITrack)?.id
       )
       
       if (currentIndex === -1) return

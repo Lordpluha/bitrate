@@ -36,7 +36,7 @@ export const PopularPlaylists: React.FC = () => {
         name: playlist.title,
         description:
           playlist.description ||
-          `Playlist • ${playlist.user?.username || 'Unknown'}`,
+          `Playlist • ${(playlist as any).user?.username || 'Unknown'}`,
         imageUrl: playlist.cover
       }))
     : []

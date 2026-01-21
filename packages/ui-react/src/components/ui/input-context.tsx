@@ -14,13 +14,7 @@ export const InputContext = React.createContext<InputContextValue | null>(null)
 export const useInputContext = () => {
   const context = React.useContext(InputContext)
   if (!context) {
-    // Возвращаем fallback значения если контекст не доступен
-    return {
-      isFocused: false,
-      hasValue: false,
-      setFocused: () => {},
-      setValue: () => {}
-    }
+    throw new Error('useInputContext use no InputProvider')
   }
   return context
 }

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { ArrowLeft, Play } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 interface PlaylistHeaderProps {
   title: string
@@ -11,7 +12,6 @@ interface PlaylistHeaderProps {
   songsCount: number
   tracksCount: number
   duration: string
-  onBack?: () => void
 }
 
 export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
@@ -20,19 +20,17 @@ export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
   imageUrl,
   author,
   tracksCount,
-  duration,
-  onBack
+  duration
 }) => {
+  const router = useRouter()
   return (
     <div className="relative h-[340px] bg-gradient-to-b from-purple-800 to-gray-900 p-6">
-      {onBack && (
-        <button
-          onClick={onBack}
-          className="absolute top-6 left-6 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors"
-        >
-          <ArrowLeft size={20} className="text-white" />
-        </button>
-      )}
+      <button
+        onClick={() => router.back()}
+        className="absolute top-6 left-6 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors"
+      >
+        <ArrowLeft size={20} className="text-white" />
+      </button>
       
       <div className="flex items-end gap-6 h-full">
         <img

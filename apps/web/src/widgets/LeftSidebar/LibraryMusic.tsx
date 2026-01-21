@@ -8,7 +8,7 @@ import { ApiSchemas } from '@spotify/contracts'
 
 import { MusicCardSm } from './MusicCardSm'
 import type { ITrack } from '@shared/types'
-import { getPlaylistOwner, getPlaylistTracksCount } from '@shared/utils/apiHelpers'
+
 
 interface MusicItem {
   id: string
@@ -48,10 +48,10 @@ export const LibraryMusic = () => {
         musicItems.push({
           id: playlist.id,
           title: playlist.title,
-          artist: getPlaylistOwner(playlist),
+          artist: (playlist as any).user?.username || 'Unknown',
           type: 'playlist',
           cover: playlist.cover || '/images/default-playlist.jpg',
-          tracksCount: getPlaylistTracksCount(playlist)
+          tracksCount: (playlist as any).tracks?.length || 0
         })
       }
     })

@@ -61,7 +61,7 @@ export const Player: React.FC = () => {
         <div className="w-[25%]">
           <TrackInfo
             title={currentTrack.title || currentTrack.name || 'Unknown'}
-            artist={currentTrack.artist || 'Unknown Artist'}
+            artist={(currentTrack as any).artist || 'Unknown Artist'}
             coverUrl={currentTrack.cover}
             isLiked={false}
           />

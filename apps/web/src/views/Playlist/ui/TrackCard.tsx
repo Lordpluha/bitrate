@@ -3,7 +3,7 @@ import React from 'react'
 import { Play, Pause } from 'lucide-react'
 import { WaveIcon } from '@spotify/ui-react'
 import { Track } from './TracksList'
-import { getTrackArtist, getTrackAlbum, getTrackDuration, formatDuration } from '@shared/utils/apiHelpers'
+import { formatDuration } from '@shared/utils/apiHelpers'
 
 interface TrackCardProps {
   track: Track
@@ -59,9 +59,9 @@ export const TrackCard: React.FC<TrackCardProps> = ({
           } ${isHovered && !isCurrentTrack ? 'underline' : ''}`}>
           {track.title}
         </div>
-        <div className="text-sm text-gray-400">{getTrackArtist(track)}</div>
+        <div className="text-sm text-gray-400">{(track as any).artist?.name || (track as any).artist || 'Unknown Artist'}</div>
       </div>
-      <div className="text-sm text-gray-400">{getTrackAlbum(track)}</div>
+      <div className="text-sm text-gray-400">{(track as any).album || 'Unknown Album'}</div>
       <div className="text-sm text-gray-400">
         {track.createdAt ? new Date(track.createdAt).toLocaleDateString('en-US', { 
           month: 'short', 
@@ -70,7 +70,7 @@ export const TrackCard: React.FC<TrackCardProps> = ({
         }) : 'Unknown'}
       </div>
       <div className="text-sm text-gray-400 text-right">
-        {formatDuration(getTrackDuration(track))}
+        {formatDuration((track as any).duration || 0)}
       </div>
     </div>
   )
