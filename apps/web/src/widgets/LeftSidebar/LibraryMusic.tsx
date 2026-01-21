@@ -1,14 +1,9 @@
 'use client'
 
-import React from 'react'
-
 import { fetchClient } from '@shared/api'
-import { useQuery } from '@tanstack/react-query'
 import { ApiSchemas } from '@spotify/contracts'
-
+import { useQuery } from '@tanstack/react-query'
 import { MusicCardSm } from './MusicCardSm'
-import type { ITrack } from '@shared/types'
-
 
 interface MusicItem {
   id: string
@@ -34,7 +29,7 @@ export const LibraryMusic = () => {
   const { data: playlists, isLoading } = useQuery({
     queryKey: ['playlists'],
     queryFn: async () => {
-      const { data } = await fetchClient.GET('/playlists', {
+      const { data } = await fetchClient.GET('/api/v1/playlists', {
         params: { path: { page: 1, limit: 20 } }
       })
       return data ? (data as Playlist[]) : []
@@ -64,6 +59,7 @@ export const LibraryMusic = () => {
           <div className='space-y-0.5 pb-4'>
             {Array.from({ length: 10 }).map((_, i) => (
               <div
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={i}
                 className='flex items-center gap-3 p-2 rounded-md'
               >

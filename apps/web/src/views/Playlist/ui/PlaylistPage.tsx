@@ -1,23 +1,22 @@
 'use client'
 
-import React, { useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from '@shared/hooks'
-import { PlaylistHeader } from './PlaylistHeader'
-import { TracksList, Track } from './TracksList'
+import { play, setPlaylist } from '@entities/Player'
+import { useAppDispatch } from '@shared/hooks'
 import { useTracks } from '@shared/hooks/useTracks'
 import { ITrack } from '@shared/types'
-import {setPlaylist} from '@entities/Player'
-import { play } from '@entities/Player'
+import React, { useEffect } from 'react'
+import { PlaylistHeader } from './PlaylistHeader'
+import { Track, TracksList } from './TracksList'
 
 
 export const PlaylistPage: React.FC = () => {
   const dispatch = useAppDispatch()
   const { data, isPending } = useTracks()
-  
+
   const tracks = (data as any)?.data || data || []
   const tracksArray = Array.isArray(tracks) ? tracks : []
 
-  
+
   useEffect(() => {
     if (tracksArray && tracksArray.length > 0) {
       const iTracks = tracksArray.map((track) => ({
@@ -32,7 +31,7 @@ export const PlaylistPage: React.FC = () => {
         name: track.title,
         file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`
       }))
-      dispatch(setPlaylist(iTracks))
+      dispatch(setPlaylist(iTracks as any))
     }
   }, [tracksArray, dispatch])
 
@@ -66,7 +65,10 @@ export const PlaylistPage: React.FC = () => {
       artist: (track as any).artist?.name || (track as any).artist || 'Unknown Artist',
       duration: (track as any).duration || 0,
       name: track.title,
-      file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`
+      file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
+      lyrics: null,
+      releaseDate: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
     dispatch(play(iTrack))
   }
@@ -82,7 +84,7 @@ export const PlaylistPage: React.FC = () => {
         tracksCount={tracksArray?.length || 0}
         duration='6 hr 30 min'
       />
-      <TracksList 
+      <TracksList
         tracks={tracksArray}
         onPlayTrack={handlePlayTrack}
       />
