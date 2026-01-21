@@ -20,12 +20,13 @@ type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
 type CarouselOptions = UseCarouselParameters[0]
 type CarouselPlugin = UseCarouselParameters[1]
 
-type CarouselProps = {
+export type CarouselProps = {
   opts?: CarouselOptions
   plugins?: CarouselPlugin
   orientation?: "horizontal" | "vertical"
   showNavigation?: boolean
   setApi?: (api: CarouselApi) => void
+  slidesToShow?: number
 }
 
 type CarouselContextProps = {
@@ -56,14 +57,16 @@ export const CarouselComponent = ({
   setApi,
   plugins,
   showNavigation = true,
+  slidesToShow,
   className,
   children,
   ...props
-}: ComponentProps<"div"> & CarouselProps) => {
+}: Omit<ComponentProps<"div">, keyof CarouselProps> & CarouselProps) => {
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y",
+      ...(slidesToShow && { slidesToScroll: 1 }),
     },
     plugins,
   )
@@ -180,13 +183,8 @@ export const CarouselItem = ({ className, ...props }: ComponentProps<"div">) => 
     <div
       role="group"
       aria-roledescription="slide"
-      // Ensure each slide takes full viewport size for the current orientation so Embla can snap correctly.
-      className={cn("min-w-0 shrink-0 grow-0 basis-full", className)}
-      style={
-        orientation === "horizontal"
-          ? ({ minWidth: "100%", flex: "0 0 100%" } as CSSProperties)
-          : ({ minHeight: "100%", flex: "0 0 100%" } as CSSProperties)
-      }
+      // Allow flexible sizing unless explicitly overridden via className
+      className={cn("min-w-0 shrink-0 grow-0", className)}
       {...props}
     />
   )
@@ -254,10 +252,20 @@ export const CarouselNext = ({
   )
 }
 
+type CarouselComponentType = React.FC<
+  Omit<ComponentProps<"div">, keyof CarouselProps> & CarouselProps
+> & {
+  Root: typeof CarouselComponent
+  Content: typeof CarouselContent
+  Item: typeof CarouselItem
+  Previous: typeof CarouselPrevious
+  Next: typeof CarouselNext
+}
+
 export const Carousel = Object.assign(CarouselComponent, {
   Root: CarouselComponent,
   Content: CarouselContent,
   Item: CarouselItem,
   Previous: CarouselPrevious,
   Next: CarouselNext,
-})
+}) as CarouselComponentType

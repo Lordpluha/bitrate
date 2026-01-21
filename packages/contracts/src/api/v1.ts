@@ -1397,7 +1397,7 @@ export interface operations {
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio",
-                     *         "createdAt": "2026-01-18T09:41:47.020Z"
+                     *         "createdAt": "2026-01-21T15:30:31.446Z"
                      *       },
                      *       {
                      *         "id": "2",
@@ -1405,7 +1405,7 @@ export interface operations {
                      *         "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *         "backgroundImage": "",
                      *         "bio": "Some bio 2",
-                     *         "createdAt": "2026-01-18T09:41:47.020Z"
+                     *         "createdAt": "2026-01-21T15:30:31.446Z"
                      *       }
                      *     ]
                      */
@@ -1524,7 +1524,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2026-01-18T09:41:47.021Z"
+                     *       "createdAt": "2026-01-21T15:30:31.447Z"
                      *     }
                      */
                     "application/json": unknown;
@@ -1659,7 +1659,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2026-01-18T09:41:47.021Z"
+                     *       "createdAt": "2026-01-21T15:30:31.446Z"
                      *     }
                      */
                     "application/json": unknown;
@@ -1781,7 +1781,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2026-01-18T09:41:47.021Z"
+                     *       "createdAt": "2026-01-21T15:30:31.447Z"
                      *     }
                      */
                     "application/json": unknown;
@@ -1899,7 +1899,7 @@ export interface operations {
                      *       "avatar": "https://example.com/uploads/avatars/avatar.jpg",
                      *       "backgroundImage": "",
                      *       "bio": "Some bio",
-                     *       "createdAt": "2026-01-18T09:41:47.021Z",
+                     *       "createdAt": "2026-01-21T15:30:31.447Z",
                      *       "email": "example@gmail.com"
                      *     }
                      */
@@ -2787,8 +2787,8 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2026-01-18T09:41:47.072Z",
-                     *         "updatedAt": "2026-01-18T09:41:47.072Z",
+                     *         "createdAt": "2026-01-21T15:30:31.518Z",
+                     *         "updatedAt": "2026-01-21T15:30:31.518Z",
                      *         "duration": 180,
                      *         "releaseDate": "2023-10-01T12:00:00.000Z",
                      *         "lyrics": null
@@ -2907,7 +2907,7 @@ export interface operations {
                      *       "title": "Track Title",
                      *       "cover": "https://example.com/cover.jpg",
                      *       "audioUrl": "",
-                     *       "createdAt": "2026-01-18T09:41:47.073Z"
+                     *       "createdAt": "2026-01-21T15:30:31.518Z"
                      *     }
                      */
                     "application/json": unknown;
@@ -3049,8 +3049,8 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2026-01-18T09:41:47.072Z",
-                     *         "updatedAt": "2026-01-18T09:41:47.072Z",
+                     *         "createdAt": "2026-01-21T15:30:31.518Z",
+                     *         "updatedAt": "2026-01-21T15:30:31.518Z",
                      *         "duration": 180,
                      *         "releaseDate": "2023-10-01T12:00:00.000Z",
                      *         "lyrics": null
