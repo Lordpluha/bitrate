@@ -1,7 +1,7 @@
 
 import type { ApiSchemas } from '@spotify/contracts'
 
-export type ITrack = ApiSchemas['TrackEntity'] & {
+export interface ITrack extends ApiSchemas['TrackEntity'] {
   name: string
   file: string
   artist: string

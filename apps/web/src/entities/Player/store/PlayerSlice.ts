@@ -1,6 +1,6 @@
 'use client'
 
-import { createAction, createReducer } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ITrack } from '@shared/types'
 
 export interface IMusicPlayerState {
@@ -23,52 +23,50 @@ const initialState: IMusicPlayerState = {
   progress: 0,
 }
 
-// Actions
-export const play = createAction<ITrack>('musicPlayer/play')
-export const pause = createAction('musicPlayer/pause')
-export const togglePlay = createAction('musicPlayer/togglePlay')
-export const setCurrentTime = createAction<number>('musicPlayer/setCurrentTime')
-export const setDuration = createAction<number>('musicPlayer/setDuration')
-export const setProgress = createAction<number>('musicPlayer/setProgress')
-export const setVolume = createAction<number>('musicPlayer/setVolume')
-export const setPlaylist = createAction<ITrack[]>('musicPlayer/setPlaylist')
-export const changeTrack = createAction<'next' | 'prev'>('musicPlayer/changeTrack')
-
-// Reducer
-export const musicPlayerReducer = createReducer(initialState, (builder) => {
-  builder
-    .addCase(play, (state, action) => {
+const musicPlayerSlice = createSlice({
+  name: 'musicPlayer',
+  initialState: {
+    currentTrack: null,
+    playlist: [],
+    isPlaying: false,
+    currentTime: 0,
+    duration: 0,
+    volume: 0.5,
+    progress: 0,
+  } satisfies IMusicPlayerState as IMusicPlayerState,
+  reducers: (create) => ({
+    play: create.reducer<ITrack>((state, action) => {
       state.currentTrack = action.payload
       state.isPlaying = true
       state.currentTime = 0
       state.duration = action.payload.duration || 0
-    })
-    .addCase(pause, (state) => {
+    }),
+    pause: create.reducer((state) => {
       state.isPlaying = false
-    })
-    .addCase(togglePlay, (state) => {
+    }),
+    togglePlay: create.reducer((state) => {
       state.isPlaying = !state.isPlaying
-    })
-    .addCase(setCurrentTime, (state, action) => {
+    }),
+    setCurrentTime: create.reducer<number>((state, action) => {
       state.currentTime = action.payload
-    })
-    .addCase(setDuration, (state, action) => {
+    }),
+    setDuration: create.reducer<number>((state, action) => {
       state.duration = action.payload
-    })
-    .addCase(setProgress, (state, action) => {
+    }),
+    setProgress: create.reducer<number>((state, action) => {
       state.progress = action.payload
-    })
-    .addCase(setVolume, (state, action) => {
+    }),
+    setVolume: create.reducer<number>((state, action) => {
       state.volume = action.payload
-    })
-    .addCase(setPlaylist, (state, action) => {
+    }),
+    setPlaylist: create.reducer<ITrack[]>((state, action) => {
       state.playlist = action.payload
-    })
-    .addCase(changeTrack, (state, action) => {
+    }),
+    changeTrack: create.reducer<'next' | 'prev'>((state, action) => {
       if (!state.currentTrack || state.playlist.length === 0) return
       
       const currentIndex = state.playlist.findIndex(
-        track => (track as ITrack).id === (state.currentTrack as ITrack)?.id
+        track => track.id === state.currentTrack?.id
       )
       
       if (currentIndex === -1) return
@@ -85,7 +83,24 @@ export const musicPlayerReducer = createReducer(initialState, (builder) => {
       state.currentTime = 0
       state.duration = state.playlist[newIndex]?.duration || 0
     })
+  })
 })
+
+// Actions
+export const {
+  play,
+  pause,
+  togglePlay,
+  setCurrentTime,
+  setDuration,
+  setProgress,
+  setVolume,
+  setPlaylist,
+  changeTrack
+} = musicPlayerSlice.actions
+
+// Reducer
+export const musicPlayerReducer = musicPlayerSlice.reducer
 
 // Selectors
 export const selectMusicPlayer = (state: { musicPlayer: IMusicPlayerState }) => state.musicPlayer
