@@ -1,6 +1,6 @@
 'use client'
 
-// import { Logo, MembersIcon, NotificationIcon } from '@shared/ui'
+
 import React from 'react'
 import { HomeBtn } from './HomeBtn'
 import { HeaderSearch } from './HeaderSearch'
