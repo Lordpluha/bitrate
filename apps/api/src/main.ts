@@ -80,7 +80,6 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
   })
-  
   app.enableCors({
     origin: [
       process.env.WEB_HOST || 'http://localhost:3001', // Web app
