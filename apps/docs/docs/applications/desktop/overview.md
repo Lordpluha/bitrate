@@ -1,6 +1,10 @@
-# 🖥️ Desktop App Development Guide
+---
+sidebar_position: 1
+---
 
-Руководство по разработке и запуску Desktop приложения (Tauri + React).
+# Desktop App Overview
+
+Complete guide for developing and running the Tauri desktop application.
 
 ## 📋 Содержание
 

@@ -1,6 +1,10 @@
-# 🗺️ Roadmap - Music Platform (Spotify Clone)
+---
+sidebar_position: 1
+---
 
-> Последнее обновление: 11 января 2026
+# Project Roadmap
+
+> Last updated: January 11, 2026
 
 ## 📋 Содержание
 

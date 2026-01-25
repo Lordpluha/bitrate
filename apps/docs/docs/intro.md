@@ -1,47 +1,149 @@
 ---
 sidebar_position: 1
+slug: /
 ---
 
-# Tutorial Intro
+# Welcome to Spotify Clone
 
-Let's discover **Docusaurus in less than 5 minutes**.
+**Spotify Clone** is a full-featured music streaming platform built from scratch using modern technologies. This project demonstrates best practices in monorepo architecture, microservices, and cross-platform development.
 
-## Getting Started
+## 🎯 Project Overview
 
-Get started by **creating a new site**.
+This is a comprehensive music streaming service including:
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+- 🎵 **Backend API** - NestJS REST API with PostgreSQL
+- 🌐 **Web Application** - Next.js with React 19
+- 📱 **Mobile App** - React Native with Expo
+- 🖥️ **Desktop App** - Tauri-based native application
+- ⚙️ **Admin Panel** - Kottster-based management interface
+- 📚 **Documentation** - You're reading it!
 
-### What you'll need
+## 🚀 Quick Start
 
-- [Node.js](https://nodejs.org/en/download/) version 20.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+### Prerequisites
 
-## Generate a new site
+- **Node.js** 20.0 or above
+- **pnpm** 10.28.1 or above
+- **Docker** & Docker Compose (optional, for containerized development)
+- **PostgreSQL** 15+ (or use Docker)
 
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
+### Installation
 
 ```bash
-cd my-website
-npm run start
+# Clone the repository
+git clone https://github.com/Lordpluha/spotify-clone.git
+cd spotify-clone
+
+# Install dependencies
+pnpm install
+
+# Set up environment variables
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env
+
+# Start PostgreSQL (via Docker)
+docker compose up -d postgres
+
+# Run database migrations
+pnpm --filter @spotify/api db:migration:start
+
+# Seed the database
+pnpm --filter @spotify/api db:seed
 ```
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+### Development
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+```bash
+# Start all applications
+pnpm dev
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+# Or start individual apps
+pnpm --filter @spotify/api start:dev      # Backend API
+pnpm --filter @spotify/web dev            # Web app
+pnpm --filter @spotify/mobile start       # Mobile app
+pnpm --filter @spotify/desktop tauri dev  # Desktop app
+```
+
+## 📖 Documentation Structure
+
+### Getting Started
+- **[Introduction](/)** - Project overview (you are here)
+- **[Architecture](/architecture)** - System architecture and design decisions
+- **[Development Setup](/development)** - Detailed setup guide
+
+### Applications
+- **[Backend API](/backend)** - NestJS API documentation
+- **[Web Application](/web)** - Next.js web app guide
+- **[Mobile App](/mobile)** - React Native development
+- **[Desktop App](/desktop)** - Tauri desktop application
+
+### Advanced
+- **[CLI Tools](/cli-tools)** - Custom build tools and utilities
+- **[Deployment](/deployment)** - Production deployment guide
+- **[API Reference](/api-reference)** - Complete API documentation
+
+### Project Planning
+- **[Roadmap](/roadmap)** - Development roadmap and milestones
+
+## 🛠️ Technology Stack
+
+### Backend
+- **NestJS** - Modular Node.js framework
+- **PostgreSQL** - Primary database
+- **Prisma** - Type-safe ORM
+- **BullMQ** - Job queue for background tasks
+- **WebSockets** - Real-time synchronization
+
+### Frontend
+- **Next.js 15** - React framework with App Router
+- **React 19** - UI library
+- **Tailwind CSS v4** - Utility-first CSS (Rust-based)
+- **TypeScript** - Type safety across the stack
+
+### Mobile & Desktop
+- **React Native** - Cross-platform mobile development
+- **Expo** - Development toolchain
+- **Tauri** - Lightweight desktop framework
+
+### DevOps
+- **pnpm workspaces** - Monorepo package management
+- **Turbo** - Incremental builds
+- **Biome** - Fast linting and formatting
+- **Docker** - Containerization
+- **GitHub Actions** - CI/CD pipelines
+
+## 🎨 Key Features
+
+- ✅ **Real-time Music Streaming** - Stream audio with low latency
+- ✅ **User Authentication** - JWT-based auth with refresh tokens
+- ✅ **Playlists & Collections** - Organize music your way
+- ✅ **Cross-device Sync** - Seamless playback across devices
+- ✅ **Audio Conversion** - Automatic conversion to OGG Opus
+- ✅ **Responsive Design** - Works on all screen sizes
+- ✅ **Type-safe API** - Shared contracts between frontend and backend
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](https://github.com/Lordpluha/spotify-clone/blob/develop/CONTRIBUTING.md) for details.
+
+### Ways to Contribute
+
+- 🐛 Report bugs via [GitHub Issues](https://github.com/Lordpluha/spotify-clone/issues)
+- 💡 Suggest features or improvements
+- 🔀 Submit Pull Requests
+- 📖 Improve documentation
+- ⭐ Star the repository
+
+## 📝 License
+
+This project is licensed under the UNLICENSED license - see the [LICENSE](https://github.com/Lordpluha/spotify-clone/blob/develop/LICENSE) file for details.
+
+## 🔗 Links
+
+- **GitHub Repository:** [github.com/Lordpluha/spotify-clone](https://github.com/Lordpluha/spotify-clone)
+- **API Documentation:** [API Docs](/api-docs/)
+- **Blog:** [/blog](/blog) - Development updates and technical insights
+
+---
+
+Ready to dive in? Check out the [Development Setup](/development) guide to get started!

@@ -1,6 +1,10 @@
-# 📱 Mobile App Development Guide
+---
+sidebar_position: 1
+---
 
-Руководство по разработке и запуску Mobile приложения (React Native + Expo).
+# Mobile App Overview
+
+Complete guide for developing and running the React Native mobile application.
 
 ## 📋 Содержание
 
