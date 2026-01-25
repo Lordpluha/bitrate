@@ -14,6 +14,7 @@ interface TrackCardProps {
   onMouseEnter: () => void
   onMouseLeave: () => void
   onClick: () => void
+  getArtistName: (artistId: string) => string
 }
 
 export const TrackCard: React.FC<TrackCardProps> = ({
@@ -24,7 +25,8 @@ export const TrackCard: React.FC<TrackCardProps> = ({
   isHovered,
   onMouseEnter,
   onMouseLeave,
-  onClick
+  onClick,
+  getArtistName
 }) => {
   const showPlayIcon = isHovered && !isCurrentTrack
   const showPauseIcon = isHovered && isCurrentTrack && isPlaying
@@ -33,11 +35,12 @@ export const TrackCard: React.FC<TrackCardProps> = ({
   const showNumber = !showPlayIcon && !showPauseIcon && !showWaveIcon && !showGreenNumber
 
   return (
-    <div
+    <button
+      type="button"
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 rounded hover:bg-white/10 cursor-pointer group items-center"
+      className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 rounded hover:bg-white/10 group items-center w-full text-left"
     >
       <div className="text-sm flex items-center justify-center">
         {showNumber && (
@@ -59,9 +62,9 @@ export const TrackCard: React.FC<TrackCardProps> = ({
           } ${isHovered && !isCurrentTrack ? 'underline' : ''}`}>
           {track.title}
         </div>
-        <div className="text-sm text-gray-400">{(track as any).artist?.name || (track as any).artist || 'Unknown Artist'}</div>
+        <div className="text-sm text-gray-400">{getArtistName(track.artistId)}</div>
       </div>
-      <div className="text-sm text-gray-400">{(track as any).album || 'Unknown Album'}</div>
+      <div className="text-sm text-gray-400">Unknown Album</div>
       <div className="text-sm text-gray-400">
         {track.createdAt ? new Date(track.createdAt).toLocaleDateString('en-US', { 
           month: 'short', 
@@ -70,8 +73,8 @@ export const TrackCard: React.FC<TrackCardProps> = ({
         }) : 'Unknown'}
       </div>
       <div className="text-sm text-gray-400 text-right">
-        {formatDuration((track as any).duration || 0)}
+        {formatDuration(track.duration ?? 0)}
       </div>
-    </div>
+    </button>
   )
 }

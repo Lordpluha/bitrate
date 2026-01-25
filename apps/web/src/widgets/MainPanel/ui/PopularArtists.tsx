@@ -28,7 +28,7 @@ export const PopularArtists: React.FC = () => {
         limit: 20
       }
     }
-  } as any)
+  } as any) // пока оставляем
 
   const artists: MusicItem[] = Array.isArray(data)
     ? data.map((artist) => ({

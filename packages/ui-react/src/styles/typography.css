@@ -1,31 +1,155 @@
-/* Typography system */
+/**
+ * Typography System
+ * Font families, sizes, weights, line heights, and letter spacing
+ */
 @theme {
-  /* Font sizes */
-  /* --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.75rem;
-  --text-4xl: 2rem;
-  --text-5xl: 2.25rem;
-  --text-6xl: 2.5rem;
-  --text-7xl: 3rem;
-  --text-8xl: 3.5rem;
-  --text-9xl: 4rem; */
-  /* Line heights */
-  /* --line-height-xs: 1.5;
-  --line-height-sm: 1.5;
-  --line-height-base: 1.5;
-  --line-height-lg: 1.5;
-  --line-height-xl: 1.5;
-  --line-height-2xl: 1.5;
-  --line-height-3xl: 1.5;
-  --line-height-4xl: 1.25;
-  --line-height-5xl: 1;
-  --line-height-6xl: 1;
-  --line-height-7xl: 1;
-  --line-height-8xl: 1.25;
-  --line-height-9xl: 1.25; */
+  /* Font Families */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-display: var(--font-sans);
+  --font-body: var(--font-sans);
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;  /* 12px */
+  --text-sm: 0.875rem;  /* 14px */
+  --text-base: 1rem;  /* 16px */
+  --text-lg: 1.125rem;  /* 18px */
+  --text-xl: 1.25rem;  /* 20px */
+  --text-2xl: 1.5rem;  /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;  /* 36px */
+  --text-5xl: 3rem;  /* 48px */
+  --text-6xl: 3.75rem;  /* 60px */
+  --text-7xl: 4.5rem;  /* 72px */
+  --text-8xl: 6rem;  /* 96px */
+  --text-9xl: 8rem;  /* 128px */
+
+  /* Font Weights */
+  --font-thin: 100;
+  --font-extralight: 200;
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  --font-black: 900;
+
+  /* Line Heights */
+  --leading-3: 0.75rem;
+  --leading-4: 1rem;
+  --leading-5: 1.25rem;
+  --leading-6: 1.5rem;
+  --leading-7: 1.75rem;
+  --leading-8: 2rem;
+  --leading-9: 2.25rem;
+  --leading-10: 2.5rem;
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* Semantic Typography Tokens */
+
+  /* Display */
+  --typography-display-size: var(--text-6xl);
+  --typography-display-weight: var(--font-black);
+  --typography-display-line-height: var(--leading-none);
+  --typography-display-letter-spacing: var(--tracking-tight);
+
+  /* H1 */
+  --typography-h1-size: var(--text-5xl);
+  --typography-h1-weight: var(--font-bold);
+  --typography-h1-line-height: var(--leading-tight);
+  --typography-h1-letter-spacing: var(--tracking-tight);
+
+  /* H2 */
+  --typography-h2-size: var(--text-4xl);
+  --typography-h2-weight: var(--font-bold);
+  --typography-h2-line-height: var(--leading-tight);
+  --typography-h2-letter-spacing: var(--tracking-tight);
+
+  /* H3 */
+  --typography-h3-size: var(--text-3xl);
+  --typography-h3-weight: var(--font-bold);
+  --typography-h3-line-height: var(--leading-snug);
+  --typography-h3-letter-spacing: var(--tracking-normal);
+
+  /* H4 */
+  --typography-h4-size: var(--text-2xl);
+  --typography-h4-weight: var(--font-semibold);
+  --typography-h4-line-height: var(--leading-snug);
+  --typography-h4-letter-spacing: var(--tracking-normal);
+
+  /* H5 */
+  --typography-h5-size: var(--text-xl);
+  --typography-h5-weight: var(--font-semibold);
+  --typography-h5-line-height: var(--leading-normal);
+  --typography-h5-letter-spacing: var(--tracking-normal);
+
+  /* H6 */
+  --typography-h6-size: var(--text-lg);
+  --typography-h6-weight: var(--font-semibold);
+  --typography-h6-line-height: var(--leading-normal);
+  --typography-h6-letter-spacing: var(--tracking-normal);
+
+  /* Body-lg */
+  --typography-body-lg-size: var(--text-lg);
+  --typography-body-lg-weight: var(--font-normal);
+  --typography-body-lg-line-height: var(--leading-relaxed);
+  --typography-body-lg-letter-spacing: var(--tracking-normal);
+
+  /* Body */
+  --typography-body-size: var(--text-base);
+  --typography-body-weight: var(--font-normal);
+  --typography-body-line-height: var(--leading-normal);
+  --typography-body-letter-spacing: var(--tracking-normal);
+
+  /* Body-sm */
+  --typography-body-sm-size: var(--text-sm);
+  --typography-body-sm-weight: var(--font-normal);
+  --typography-body-sm-line-height: var(--leading-normal);
+  --typography-body-sm-letter-spacing: var(--tracking-normal);
+
+  /* Label */
+  --typography-label-size: var(--text-sm);
+  --typography-label-weight: var(--font-medium);
+  --typography-label-line-height: var(--leading-tight);
+  --typography-label-letter-spacing: var(--tracking-wide);
+
+  /* Caption */
+  --typography-caption-size: var(--text-xs);
+  --typography-caption-weight: var(--font-normal);
+  --typography-caption-line-height: var(--leading-normal);
+  --typography-caption-letter-spacing: var(--tracking-normal);
+
+  /* Overline */
+  --typography-overline-size: var(--text-xs);
+  --typography-overline-weight: var(--font-semibold);
+  --typography-overline-line-height: var(--leading-tight);
+  --typography-overline-letter-spacing: var(--tracking-widest);
+
+  /* Button */
+  --typography-button-size: var(--text-sm);
+  --typography-button-weight: var(--font-semibold);
+  --typography-button-line-height: var(--leading-tight);
+  --typography-button-letter-spacing: var(--tracking-wide);
+
+  /* Code */
+  --typography-code-size: var(--text-sm);
+  --typography-code-weight: var(--font-normal);
+  --typography-code-line-height: var(--leading-normal);
+  --typography-code-letter-spacing: var(--tracking-normal);
+
 }

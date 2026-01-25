@@ -8,7 +8,6 @@ import { NavLinks } from './NavLinks'
 import { AuthButtons } from './AuthButtons'
 import { InstallBtn } from './InstallBtn'
 import { BurgerMenu } from './BurgerMenu'
-import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { ProfileButton } from './ProfileButton'
 import { useAuth } from '@shared/hooks'
@@ -44,7 +43,8 @@ export const MainHeader = () => {
               <Link className='hover:opacity-70 transition-opacity duration-200' href="#">
                 <MembersIcon />
               </Link>
-              <ProfileButton username={(user as any).username || 'User'} />
+              <ProfileButton username={(user as any).username || 'User'} /> 
+              {/* пока оставляем */}
             </>
           ) : (
             <>

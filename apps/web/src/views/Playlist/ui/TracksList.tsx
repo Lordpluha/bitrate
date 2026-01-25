@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { Clock } from 'lucide-react'
 import { useAppSelector } from '@shared/hooks'
+import { useArtists } from '@shared/hooks/useArtists'
 import { ApiSchemas } from '@spotify/contracts'
 import { TrackCard } from './TrackCard'
 
@@ -15,6 +16,7 @@ interface TracksListProps {
 export const TracksList: React.FC<TracksListProps> = ({ tracks, onPlayTrack }) => {
   const { currentTrack, isPlaying } = useAppSelector((state) => state.musicPlayer)
   const [hoveredTrackId, setHoveredTrackId] = useState<string | null>(null)
+  const { getArtistName } = useArtists()
 
   return (
     <div className="px-6 py-4">
@@ -40,6 +42,7 @@ export const TracksList: React.FC<TracksListProps> = ({ tracks, onPlayTrack }) =
             onMouseEnter={() => setHoveredTrackId(track.id)}
             onMouseLeave={() => setHoveredTrackId(null)}
             onClick={() => onPlayTrack(track)}
+            getArtistName={getArtistName}
           />
         ))}
       </div>

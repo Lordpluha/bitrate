@@ -22,12 +22,12 @@ interface MusicItem {
 export const PopularPlaylists: React.FC = () => {
   const { data, isPending: loadingPlaylists, error } = useQuery('get', '/api/v1/playlists', {
     params: {
-      query: {
+      path: {
         page: 1,
         limit: 3
       }
     }
-  } as any)
+  } as any) // пока оставляем
 
   const playlists: MusicItem[] = Array.isArray(data)
     ? data.map((playlist) => ({
@@ -35,7 +35,7 @@ export const PopularPlaylists: React.FC = () => {
         name: playlist.title,
         description:
           playlist.description ||
-          `Playlist • ${(playlist as any).user?.username || 'Unknown'}`,
+          `Playlist • ${(playlist).user?.username || 'Unknown'}`,
         imageUrl: playlist.cover
       }))
     : []

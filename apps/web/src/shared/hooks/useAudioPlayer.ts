@@ -26,7 +26,7 @@ export const useAudioPlayer = () => {
   const trackUrl = currentTrack?.audioUrl 
     ? (currentTrack.audioUrl.startsWith('http') 
         ? currentTrack.audioUrl 
-        : `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${currentTrack.id}`)
+        : `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${currentTrack.id}`)
     : null
 
   // Progressive streaming setup

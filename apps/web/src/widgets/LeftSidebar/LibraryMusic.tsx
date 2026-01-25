@@ -1,6 +1,7 @@
 'use client'
 
 import { fetchClient } from '@shared/api'
+import { useUsers } from '@shared/hooks/useUsers'
 import { ApiSchemas } from '@spotify/contracts'
 import { useQuery } from '@tanstack/react-query'
 import { MusicCardSm } from './MusicCardSm'
@@ -26,6 +27,8 @@ const likedSongsItem: MusicItem = {
 }
 
 export const LibraryMusic = () => {
+  const { getUserName } = useUsers()
+  
   const { data: playlists, isLoading } = useQuery({
     queryKey: ['playlists'],
     queryFn: async () => {
@@ -43,10 +46,10 @@ export const LibraryMusic = () => {
         musicItems.push({
           id: playlist.id,
           title: playlist.title,
-          artist: (playlist as any).user?.username || 'Unknown',
+          artist: getUserName(playlist.userId),
           type: 'playlist',
           cover: playlist.cover || '/images/default-playlist.jpg',
-          tracksCount: (playlist as any).tracks?.length || 0
+          tracksCount: 0
         })
       }
     })
