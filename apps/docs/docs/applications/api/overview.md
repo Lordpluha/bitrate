@@ -641,4 +641,4 @@ docker compose logs api | grep ERROR
 
 ---
 
-**Next:** [Web Application](/web) - Frontend development guide
+**Next:** [Web Application](/docs/applications/web/overview) - Frontend development guide

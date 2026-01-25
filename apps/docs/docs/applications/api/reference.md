@@ -30,16 +30,14 @@ pnpm doc:gen
 
 The documentation will be available at `http://localhost:8080`
 
-### Production
-
-The API documentation is available at: [API Documentation](/api-docs/)
-
 ## 📖 Key Sections
 
-- **[Modules](/api-docs/modules.html)** - Module dependencies and structure
-- **[Controllers](/api-docs/controllers.html)** - REST API endpoints
-- **[Services](/api-docs/injectables.html)** - Business logic
-- **[Routes](/api-docs/routes.html)** - API route overview
+When documentation is generated, you can navigate through:
+
+- **Modules** - Module dependencies and structure
+- **Controllers** - REST API endpoints
+- **Services** - Business logic
+- **Routes** - API route overview
 
 ## 🔧 Updating Documentation
 

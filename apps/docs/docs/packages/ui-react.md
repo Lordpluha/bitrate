@@ -205,5 +205,4 @@ pnpm build-storybook
 ---
 
 **Related:**
-- [CLI Tools](/packages/cli-tools) - Build utilities
-- [Design Tokens](/packages/tokens) - Token system
+- [CLI Tools](/docs/packages/cli-tools) - Build tools

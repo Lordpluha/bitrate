@@ -431,5 +431,5 @@ docker compose restart postgres
 ---
 
 **Related:**
-- [Setup Guide](/getting-started/setup)
-- [Deployment Guide](/infrastructure/deployment)
+- [Setup Guide](/docs/getting-started/setup)
+- [Deployment](/docs/infrastructure/deployment)

@@ -373,7 +373,7 @@ pnpm start
 # Android: Expo Go app
 ```
 
-See [Mobile App Guide](/mobile) for detailed instructions.
+See [Mobile App Guide](/docs/applications/mobile/overview) for detailed instructions.
 
 ## 🖥️ Desktop Development
 
@@ -435,7 +435,7 @@ pnpm tauri dev
 pnpm tauri build
 ```
 
-See [Desktop App Guide](/desktop) for detailed instructions.
+See [Desktop App Guide](/docs/applications/desktop/overview) for detailed instructions.
 
 ## 🔍 Debugging
 
@@ -582,10 +582,10 @@ pnpm turbo build --force
 
 ## 📚 Next Steps
 
-- **[Architecture](/architecture)** - Understand the system design
-- **[Backend Guide](/backend)** - Deep dive into the API
-- **[Web Guide](/web)** - Frontend development
-- **[CLI Tools](/cli-tools)** - Custom build utilities
+- **[Architecture](/docs/getting-started/architecture)** - Understand the system design
+- **[Backend Guide](/docs/applications/api/overview)** - Deep dive into the API
+- **[Web Guide](/docs/applications/web/overview)** - Frontend development
+- **[CLI Tools](/docs/packages/cli-tools)** - Custom build utilities
 
 ---
 

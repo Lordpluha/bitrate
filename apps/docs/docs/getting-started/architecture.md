@@ -312,8 +312,8 @@ build → test → lint → deploy
 Docker  Jest  Biome  Production
 ```
 
-See [Deployment](/deployment) for detailed CI/CD configuration.
+See [Deployment](/docs/infrastructure/deployment) for detailed CI/CD configuration.
 
 ---
 
-Next: [Development Setup](/development) - Get your local environment ready.
+Next: [Development Setup](/docs/getting-started/setup) - Get your local environment ready.

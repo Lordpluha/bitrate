@@ -441,5 +441,4 @@ server {
 ---
 
 **Related:**
-- [Docker Setup](/infrastructure/docker)
-- [Security Guide](/guides/security)
+- [Docker Setup](/docs/infrastructure/docker)

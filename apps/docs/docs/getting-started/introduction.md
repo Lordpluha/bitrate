@@ -66,23 +66,23 @@ pnpm --filter @spotify/desktop tauri dev  # Desktop app
 ## 📖 Documentation Structure
 
 ### Getting Started
-- **[Introduction](/)** - Project overview (you are here)
-- **[Architecture](/architecture)** - System architecture and design decisions
-- **[Development Setup](/development)** - Detailed setup guide
+- **[Introduction](/docs/getting-started/introduction)** - Project overview (you are here)
+- **[Architecture](/docs/getting-started/architecture)** - System architecture and design decisions
+- **[Development Setup](/docs/getting-started/setup)** - Detailed setup guide
 
 ### Applications
-- **[Backend API](/backend)** - NestJS API documentation
-- **[Web Application](/web)** - Next.js web app guide
-- **[Mobile App](/mobile)** - React Native development
-- **[Desktop App](/desktop)** - Tauri desktop application
+- **[Backend API](/docs/applications/api/overview)** - NestJS API documentation
+- **[Web Application](/docs/applications/web/overview)** - Next.js web app guide
+- **[Mobile App](/docs/applications/mobile/overview)** - React Native development
+- **[Desktop App](/docs/applications/desktop/overview)** - Tauri desktop application
 
 ### Advanced
-- **[CLI Tools](/cli-tools)** - Custom build tools and utilities
-- **[Deployment](/deployment)** - Production deployment guide
-- **[API Reference](/api-reference)** - Complete API documentation
+- **[CLI Tools](/docs/packages/cli-tools)** - Custom build tools and utilities
+- **[Deployment](/docs/infrastructure/deployment)** - Production deployment guide
+- **[API Reference](/docs/applications/api/reference)** - Complete API documentation
 
 ### Project Planning
-- **[Roadmap](/roadmap)** - Development roadmap and milestones
+- **[Roadmap](/docs/guides/roadmap)** - Development roadmap and milestones
 
 ## 🛠️ Technology Stack
 
@@ -140,9 +140,8 @@ This project is licensed under the UNLICENSED license - see the [LICENSE](https:
 ## 🔗 Links
 
 - **GitHub Repository:** [github.com/Lordpluha/spotify-clone](https://github.com/Lordpluha/spotify-clone)
-- **API Documentation:** [API Docs](/api-docs/)
-- **Blog:** [/blog](/blog) - Development updates and technical insights
+- **Blog:** [Blog](/blog) - Development updates and technical insights
 
 ---
 
-Ready to dive in? Check out the [Development Setup](/development) guide to get started!
+Ready to dive in? Check out the [Development Setup](/docs/getting-started/setup) guide to get started!

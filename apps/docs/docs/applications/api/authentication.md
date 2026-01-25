@@ -468,5 +468,4 @@ describe('AuthService', () => {
 ---
 
 **Related:**
-- [API Overview](/applications/api/overview)
-- [Security Best Practices](/guides/security)
+- [API Overview](/docs/applications/api/overview)

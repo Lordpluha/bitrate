@@ -243,6 +243,6 @@ docker compose up -d web
 ---
 
 **Related:**
-- [Setup Guide](/getting-started/setup)
-- [API Documentation](/applications/api/overview)
-- [UI Components](/packages/ui-react)
+- [Setup Guide](/docs/getting-started/setup)
+- [API Documentation](/docs/applications/api/overview)
+- [UI Components](/docs/packages/ui-react)
