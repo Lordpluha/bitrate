@@ -1,17 +1,27 @@
+import { context } from "esbuild"
+import { glob } from "glob"
 import { exec } from "node:child_process"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { context } from "esbuild"
-import { glob } from "glob"
 import { aliasResolver } from "./alias-resolver.mjs"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// Находим все .ts и .tsx файлы, кроме тестов и stories
-const entryPoints = await glob("src/**/*.{ts,tsx}", {
-  cwd: path.resolve(__dirname, ".."),
-  ignore: ["**/*.test.*", "**/*.stories.*", "**/__tests__/**"],
-})
+export async function runDev(options = {}) {
+  const {
+    cwd = process.cwd(),
+    entry = 'src/**/*.{ts,tsx}',
+    ignore = ['**/*.test.*', '**/*.stories.*', '**/__tests__/**'],
+    outdir = 'dist',
+    cssInput = './src/styles/index.css',
+    cssOutput = './dist/globals.css',
+  } = options;
+
+  // Находим все .ts и .tsx файлы, кроме тестов и stories
+  const entryPoints = await glob(entry, {
+    cwd,
+    ignore,
+  })
 
 /** @type {import("esbuild").BuildOptions} */
 const sharedConfig = {
@@ -27,23 +37,23 @@ const sharedConfig = {
   },
 }
 
-async function watchBuild() {
+async function watchBuild(cwd, outdir, cssInput, cssOutput) {
   try {
     // Generate initial type definitions
     console.log("Generating type definitions...")
-    exec(
-      "pnpm tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir dist/types --watch",
-      (_error, stdout, stderr) => {
-        if (stdout) console.log(`[TypeScript] ${stdout.trim()}`)
-        if (stderr) console.error(`[TypeScript] ${stderr.trim()}`)
-      },
+    const tscWatcher = exec(
+      `pnpm tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir ${path.join(outdir, 'types')} --watch`,
+      { cwd },
     )
+
+    tscWatcher.stdout?.on("data", (data) => console.log(`[TypeScript] ${data.trim()}`))
+    tscWatcher.stderr?.on("data", (data) => console.error(`[TypeScript] ${data.trim()}`))
 
     // Create watch contexts for both ESM and CJS
     const esmContext = await context({
       ...sharedConfig,
       format: "esm",
-      outdir: "dist/esm",
+      outdir: path.join(outdir, "esm"),
       plugins: [
         {
           name: "rebuild-notify",
@@ -56,7 +66,7 @@ async function watchBuild() {
                 console.log("❌ [ESM] Build failed")
               } else {
                 // Resolve aliases after successful build
-                await aliasResolver(path.resolve(__dirname, "..", "dist/esm"))
+                await aliasResolver(path.join(cwd, outdir, "esm"))
                 console.log("✓ [ESM] Build succeeded")
               }
             })
@@ -68,7 +78,7 @@ async function watchBuild() {
     const cjsContext = await context({
       ...sharedConfig,
       format: "cjs",
-      outdir: "dist/cjs",
+      outdir: path.join(outdir, "cjs"),
       plugins: [
         {
           name: "rebuild-notify",
@@ -81,7 +91,7 @@ async function watchBuild() {
                 console.log("❌ [CJS] Build failed")
               } else {
                 // Resolve aliases after successful build
-                await aliasResolver(path.resolve(__dirname, "..", "dist/cjs"))
+                await aliasResolver(path.join(cwd, outdir, "cjs"))
                 console.log("✓ [CJS] Build succeeded")
               }
             })
@@ -96,10 +106,9 @@ async function watchBuild() {
     console.log("👀 Watching for changes...")
 
     // Start CSS watchers in background
-    const srcDir = path.resolve(__dirname, "..")
     const cssWatcher = exec(
-      `pnpm dlx @tailwindcss/cli -i ./src/styles/index.css -o ./dist/globals.css --watch`,
-      { cwd: srcDir },
+      `pnpm dlx @tailwindcss/cli -i ${cssInput} -o ${cssOutput} --watch`,
+      { cwd },
     )
 
     cssWatcher.stdout?.on("data", (data) => console.log(`[Tailwind CSS] ${data.trim()}`))
@@ -110,6 +119,7 @@ async function watchBuild() {
     // Keep the process running
     process.on("SIGINT", async () => {
       console.log("\n⏹️  Stopping watch mode...")
+      tscWatcher.kill()
       cssWatcher.kill()
       await esmContext.dispose()
       await cjsContext.dispose()
@@ -121,4 +131,15 @@ async function watchBuild() {
   }
 }
 
-watchBuild()
+  try {
+    await watchBuild(cwd, outdir, cssInput, cssOutput);
+  } catch (error) {
+    console.error("Watch failed:", error);
+    process.exit(1);
+  }
+}
+
+// Allow running directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runDev();
+}

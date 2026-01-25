@@ -1,4 +1,4 @@
-# @svgr/ultimate
+# @spotify/svgr
 
 Конвертер SVG файлов в React/TypeScript компоненты с продвинутой обработкой цветов.
 
@@ -9,32 +9,73 @@
 - 🔧 Кастомные имена переменных для управления цветами
 - 👀 Dev режим с watch
 - 📦 TypeScript поддержка
+- 🎯 CLI интерфейс
+
+## Установка
+
+```bash
+npm install @spotify/svgr
+# или
+pnpm add @spotify/svgr
+# или
+yarn add @spotify/svgr
+```
 
 ## Использование
 
-### Базовая конвертация
+### CLI
+
+#### Базовая конвертация
 
 ```bash
 # Build режим (одноразовая конвертация)
-node svgr build -i @spotify/tokens/icons -o src/icons/svgr
+react-svgr build -i @spotify/tokens/icons -o src/icons/svgr
 
 # Dev режим (с отслеживанием изменений)
-node svgr dev -i @spotify/tokens/icons -o src/icons/svgr
+react-svgr dev -i @spotify/tokens/icons -o src/icons/svgr
 ```
 
-### С кастомными переменными для цветов
+#### С кастомными переменными для цветов
 
 Вы можете указать массив имён переменных, которые будут использоваться для управления цветами в SVG:
 
 ```bash
 # С одной переменной
-node svgr build -i ../tokens/icons -o src/icons/svgr --variables "primaryColor"
+react-svgr build -i ../tokens/icons -o src/icons/svgr --variables "primaryColor"
 
 # С несколькими переменными
-node svgr build -i ../tokens/icons -o src/icons/svgr --variables "primaryColor,secondaryColor,accentColor"
+react-svgr build -i ../tokens/icons -o src/icons/svgr --variables "primaryColor,secondaryColor,accentColor"
 
 # В dev режиме
-node svgr dev -i ../tokens/icons -o src/icons/svgr --variables "color1,color2"
+react-svgr dev -i ../tokens/icons -o src/icons/svgr --variables "color1,color2"
+```
+
+### В npm scripts
+
+```json
+{
+  "scripts": {
+    "icons:build": "react-svgr build -i @company/tokens/icons -o src/icons",
+    "icons:watch": "react-svgr dev -i @company/tokens/icons -o src/icons"
+  }
+}
+```
+
+### Как модуль
+
+```javascript
+import { build } from '@spotify/svgr/build';
+import { dev } from '@spotify/svgr/dev';
+
+// Build
+await build(inputDir, outputDir, {
+  colorVarNames: ['primaryColor', 'secondaryColor'],
+});
+
+// Watch mode
+await dev(inputDir, outputDir, {
+  colorVarNames: ['primaryColor'],
+});
 ```
 
 ### Примеры сгенерированных компонентов

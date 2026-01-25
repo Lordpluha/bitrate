@@ -1,0 +1,34 @@
+{
+  "name": "@spotify/tokens-generator",
+  "version": "1.0.0",
+  "description": "Modular design tokens to CSS generator with CLI support",
+  "type": "module",
+  "main": "./src/generate-tokens.mjs",
+  "bin": {
+    "tokens-generator": "./bin/generate-tokens.mjs"
+  },
+  "exports": {
+    ".": "./src/generate-tokens.mjs",
+    "./config": "./src/generate-tokens.config.mjs",
+    "./schema": "./src/tokens.schema.json"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "design-tokens",
+    "css-variables",
+    "tailwind",
+    "theming",
+    "tokens",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.28.1"
+}

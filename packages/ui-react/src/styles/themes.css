@@ -1,30 +1,163 @@
-@import "./pallete.css";
+@import "./palette.css";
 @import "./typography.css";
 @import "./layout.css";
 @import "./animations.css";
 
 /**
- * Dark theme variables (Default)
+ * Semantic Theme Tokens
+ * These tokens reference the palette and provide semantic meaning.
+ */
+
+/**
+ * Dark Theme (Default)
  */
 @theme {
-  --color-foreground: #fff;
-  --color-bg: #0a0a0a;
-  --color-bg-secondary: #121212;
-  --color-text: #fff;
-  --color-text-contrast: #000;
-  --color-contrast: #fff;
-  --color-bg-secondary-rgb: 10 10 10;
+  /* Background */
+  --color-background: var(--color-black);
+  --color-background-elevated: #121212;
+  --color-background-tinted: #1a1a1a;
+  --color-background-secondary: #121212;
+  --color-background-highlight: var(--color-neutral-900);
+  --color-background-pressed: var(--color-black);
+
+  /* Foreground */
+  --color-foreground: var(--color-white);
+  --color-foreground-secondary: var(--color-neutral-200);
+
+  /* Text */
+  --color-text: var(--color-white);
+  --color-text-secondary: var(--color-neutral-400);
+  --color-text-subdued: var(--color-neutral-500);
+  --color-text-muted: var(--color-neutral-600);
+  --color-text-contrast: var(--color-black);
+
+  /* Primary (Brand) */
+  --color-primary: var(--color-green-500);
+  --color-primary-hover: var(--color-green-400);
+  --color-primary-active: var(--color-green-600);
+  --color-primary-foreground: var(--color-black);
+
+  /* Secondary */
+  --color-secondary: var(--color-neutral-800);
+  --color-secondary-hover: var(--color-neutral-700);
+  --color-secondary-foreground: var(--color-white);
+
+  /* Accent */
+  --color-accent: var(--color-green-400);
+  --color-accent-foreground: var(--color-black);
+
+  /* Semantic States */
+  --color-success: var(--color-green-500);
+  --color-success-foreground: var(--color-black);
+  --color-error: var(--color-red-500);
+  --color-error-foreground: var(--color-white);
+  --color-warning: var(--color-orange-500);
+  --color-warning-foreground: var(--color-black);
+  --color-info: var(--color-blue-500);
+  --color-info-foreground: var(--color-white);
+
+  /* Destructive */
+  --color-destructive: var(--color-red-500);
+  --color-destructive-foreground: var(--color-white);
+
+  /* Muted */
+  --color-muted: var(--color-neutral-800);
+  --color-muted-foreground: var(--color-neutral-400);
+
+  /* Border & Input */
+  --color-border: var(--color-neutral-800);
+  --color-border-subtle: var(--color-neutral-900);
+  --color-input: var(--color-neutral-800);
+  --color-ring: var(--color-green-500);
+
+  /* Card & Popover */
+  --color-card: #121212;
+  --color-card-foreground: var(--color-white);
+  --color-popover: #1a1a1a;
+  --color-popover-foreground: var(--color-white);
+
+  /* Charts */
+  --color-chart-1: var(--color-green-500);
+  --color-chart-2: var(--color-blue-500);
+  --color-chart-3: var(--color-purple-500);
+  --color-chart-4: var(--color-orange-500);
+  --color-chart-5: var(--color-red-500);
+
 }
 
 /**
- * Light theme variables
+ * Light Theme
  */
 :root.light {
-  --color-foreground: #000;
-  --color-bg: #fff;
-  --color-bg-secondary: #f7f7f7;
-  --color-text: #0a0a0a;
-  --color-contrast: #000;
-  --color-text-contrast: #fff;
-  --color-bg-secondary-rgb: 247 247 247;
+  /* Background */
+  --color-background: var(--color-white);
+  --color-background-elevated: var(--color-neutral-50);
+  --color-background-tinted: var(--color-neutral-100);
+  --color-background-secondary: var(--color-neutral-100);
+  --color-background-highlight: var(--color-neutral-200);
+  --color-background-pressed: var(--color-neutral-200);
+
+  /* Foreground */
+  --color-foreground: var(--color-black);
+  --color-foreground-secondary: var(--color-neutral-800);
+
+  /* Text */
+  --color-text: var(--color-black);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-subdued: var(--color-neutral-600);
+  --color-text-muted: var(--color-neutral-500);
+  --color-text-contrast: var(--color-white);
+
+  /* Primary (Brand) */
+  --color-primary: var(--color-green-600);
+  --color-primary-hover: var(--color-green-700);
+  --color-primary-active: var(--color-green-800);
+  --color-primary-foreground: var(--color-white);
+
+  /* Secondary */
+  --color-secondary: var(--color-neutral-200);
+  --color-secondary-hover: var(--color-neutral-300);
+  --color-secondary-foreground: var(--color-black);
+
+  /* Accent */
+  --color-accent: var(--color-green-600);
+  --color-accent-foreground: var(--color-white);
+
+  /* Semantic States */
+  --color-success: var(--color-green-600);
+  --color-success-foreground: var(--color-white);
+  --color-error: var(--color-red-600);
+  --color-error-foreground: var(--color-white);
+  --color-warning: var(--color-orange-600);
+  --color-warning-foreground: var(--color-white);
+  --color-info: var(--color-blue-600);
+  --color-info-foreground: var(--color-white);
+
+  /* Destructive */
+  --color-destructive: var(--color-red-600);
+  --color-destructive-foreground: var(--color-white);
+
+  /* Muted */
+  --color-muted: var(--color-neutral-100);
+  --color-muted-foreground: var(--color-neutral-600);
+
+  /* Border & Input */
+  --color-border: var(--color-neutral-300);
+  --color-border-subtle: var(--color-neutral-200);
+  --color-input: var(--color-neutral-300);
+  --color-ring: var(--color-green-600);
+
+  /* Card & Popover */
+  --color-card: var(--color-white);
+  --color-card-foreground: var(--color-black);
+  --color-popover: var(--color-white);
+  --color-popover-foreground: var(--color-black);
+
+  /* Charts */
+  --color-chart-1: var(--color-green-600);
+  --color-chart-2: var(--color-blue-600);
+  --color-chart-3: var(--color-purple-600);
+  --color-chart-4: var(--color-orange-600);
+  --color-chart-5: var(--color-red-600);
+
 }

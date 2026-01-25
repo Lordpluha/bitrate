@@ -21,8 +21,11 @@ const SwatchList = ({ colors }: { colors: Record<string, string> }) => {
         const color = styles.getPropertyValue(value)
 
         return (
-          <div key={value} className="bg-background flex w-full flex-col gap-1 pb-3">
-            <div className="h-16 w-full" style={{ backgroundColor: color }} />
+          <div key={value} className="flex w-full flex-col gap-1 pb-3">
+            <div
+              className="h-16 w-full"
+              style={{ backgroundColor: `hsl(var(${value}))` }}
+            />
             <p className="text-center font-semibold">{name}</p>
             <p className="text-center text-xs opacity-70">{value}</p>
             <p className="text-center text-xs">{color}</p>
@@ -73,7 +76,7 @@ type Story = StoryObj<typeof meta>
  * Functional color tokens are used to define the core colors of the design system.
  * These colors are used throughout the application for backgrounds, text, borders, etc.
  */
-export const Functional: Story = {
+export const Pallete: Story = {
   args: {
     swatch: [
       {
@@ -100,8 +103,8 @@ export const Functional: Story = {
       {
         name: "Accent",
         colors: {
-          default: "--accent",
-          foreground: "--accent-foreground",
+          default: "--color-accent-green",
+          hover: "--color-accent-green-hover",
         },
       },
       {
@@ -126,7 +129,7 @@ export const Functional: Story = {
  * Component color tokens are used to define the colors of specific components in the design system.
  * These colors are used to style components like buttons, inputs, and alerts.
  */
-export const Component: Story = {
+export const Themes: Story = {
   args: {
     swatch: [
       {

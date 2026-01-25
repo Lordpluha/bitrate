@@ -41,24 +41,29 @@ export async function runCli() {
   const args = parseArgs(process.argv)
 
   if (!args.mode || !args.input || !args.output) {
-    console.error("Usage: node svgr [build|dev] -i <inputDir> -o <outputDir> [--variables <vars>]")
+    console.error("Usage: react-svgr [command] [options]")
+    console.error("\nCommands:")
+    console.error("  build             Build SVG to React components once")
+    console.error("  dev, watch        Watch mode for development")
     console.error("\nOptions:")
-    console.error("  -i, --input      Input directory with SVG files")
-    console.error("  -o, --output     Output directory for React components")
+    console.error("  -i, --input      Input directory with SVG files (required)")
+    console.error("  -o, --output     Output directory for React components (required)")
     console.error("  --variables      Comma-separated color variable names (optional)")
     console.error("\nExamples:")
-    console.error("  node svgr build -i @spotify/tokens/icons -o src/icons/svgr")
-    console.error("  node svgr build -i ../tokens/icons -o src/icons/svgr")
-    console.error(
-      '  node svgr build -i ../icons -o ./output --variables "primaryColor,secondaryColor"',
-    )
-    console.error("  node svgr dev --input @spotify/tokens/icons --output src/icons/svgr")
+    console.error("  # Build from package")
+    console.error("  react-svgr build -i @spotify/tokens/icons -o src/icons/svgr")
+    console.error("\n  # Build from relative path")
+    console.error("  react-svgr build -i ../tokens/icons -o src/icons/svgr")
+    console.error("\n  # With color variables")
+    console.error('  react-svgr build -i ../icons -o ./output --variables "primaryColor,secondaryColor"')
+    console.error("\n  # Watch mode")
+    console.error("  react-svgr dev --input @spotify/tokens/icons --output src/icons/svgr")
     process.exit(1)
   }
 
   try {
     // Разрешаем пути (поддержка как @scope/package/path, так и обычных путей)
-    const basePath = path.resolve(__dirname, "../..")
+    const basePath = process.cwd()
     const inputDir = await resolvePath(args.input, basePath)
     const outputDir = args.output.startsWith("@")
       ? await resolvePath(args.output, basePath)

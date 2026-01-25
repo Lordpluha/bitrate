@@ -1,0 +1,38 @@
+{
+  "name": "@spotify/esbuild-bundler",
+  "version": "1.0.0",
+  "description": "ESBuild-based bundler for React libraries with TypeScript support",
+  "type": "module",
+  "main": "./src/build.mjs",
+  "bin": {
+    "react-bundler": "./bin/react-bundler.mjs"
+  },
+  "exports": {
+    ".": "./src/build.mjs",
+    "./build": "./src/build.mjs",
+    "./dev": "./src/dev.mjs",
+    "./alias-resolver": "./src/alias-resolver.mjs"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "esbuild",
+    "bundler",
+    "react",
+    "typescript",
+    "build-tool"
+  ],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.28.1",
+  "peerDependencies": {
+    "esbuild": "^0.27.0",
+    "glob": "^13.0.0",
+    "typescript": "^5.0.0"
+  }
+}
