@@ -1,12 +1,12 @@
 'use client'
 
-import * as React from 'react'
+import type * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 import { useInputContext } from './input-context'
 
 const labelVariants = cva(
-  'absolute left-3 transition-all duration-200 pointer-events-none z-10 px-1',
+  'absolute left-3 transition-all duration-300 pointer-events-none z-10 px-1',
   {
     variants: {
       variant: {
@@ -60,7 +60,9 @@ export const DynamicLabel: React.FC<DynamicLabelProps> = ({
   className,
   ...props
 }) => {
-  const { isFocused, hasValue } = useInputContext()
+  const context = useInputContext()
+  const isFocused = context?.isFocused ?? false
+  const hasValue = context?.hasValue ?? false
 
   const isFloating = isFocused || hasValue
 

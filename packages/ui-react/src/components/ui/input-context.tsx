@@ -13,9 +13,6 @@ export const InputContext = React.createContext<InputContextValue | null>(null)
 
 export const useInputContext = () => {
   const context = React.useContext(InputContext)
-  if (!context) {
-    throw new Error('useInputContext use no InputProvider')
-  }
   return context
 }
 
@@ -23,14 +20,22 @@ export const InputProvider: React.FC<React.PropsWithChildren> = ({ children }) =
   const [isFocused, setFocused] = React.useState(false)
   const [hasValue, setValue] = React.useState(false)
 
+  const handleSetFocused = React.useCallback((focused: boolean) => {
+    setFocused(focused)
+  }, [])
+
+  const handleSetValue = React.useCallback((value: boolean) => {
+    setValue(value)
+  }, [])
+
   const value = React.useMemo(
     () => ({
       isFocused,
       hasValue,
-      setFocused,
-      setValue
+      setFocused: handleSetFocused,
+      setValue: handleSetValue
     }),
-    [isFocused, hasValue]
+    [isFocused, hasValue, handleSetFocused, handleSetValue]
   )
 
   return <InputContext.Provider value={value}>{children}</InputContext.Provider>
