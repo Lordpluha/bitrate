@@ -9,7 +9,7 @@ export const ArtistLogo = () => {
       href={ROUTES.landing}
     >
       <ArtistlogoIcon
-        width={146}
+        width={147}
         height={36}
         className={cn('text-text fill-text')}
       />
