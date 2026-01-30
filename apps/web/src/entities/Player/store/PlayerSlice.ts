@@ -6,6 +6,7 @@ import { ITrack } from '@shared/types'
 export interface MusicPlayerState {
   currentTrack: ITrack | null
   playlist: ITrack[]
+  currentPlaylistName: string | null
   isPlaying: boolean
   currentTime: number
   duration: number
@@ -16,6 +17,7 @@ export interface MusicPlayerState {
 const initialState: MusicPlayerState = {
   currentTrack: null,
   playlist: [],
+  currentPlaylistName: null,
   isPlaying: false,
   currentTime: 0,
   duration: 0,
@@ -54,6 +56,9 @@ const musicPlayerSlice = createSlice({
     setPlaylist: create.reducer<ITrack[]>((state, action) => {
       state.playlist = action.payload
     }),
+    setCurrentPlaylistName: create.reducer<string | null>((state, action) => {
+      state.currentPlaylistName = action.payload
+    }),
     changeTrack: create.reducer<'next' | 'prev'>((state, action) => {
       if (!state.currentTrack || state.playlist.length === 0) return
       
@@ -80,6 +85,7 @@ const musicPlayerSlice = createSlice({
     selectMusicPlayer: (state) => state,
     selectCurrentTrack: (state) => state.currentTrack,
     selectPlaylist: (state) => state.playlist,
+    selectCurrentPlaylistName: (state) => state.currentPlaylistName,
     selectIsPlaying: (state) => state.isPlaying,
     selectCurrentTime: (state) => state.currentTime,
     selectDuration: (state) => state.duration,
@@ -98,6 +104,7 @@ export const {
   setProgress,
   setVolume,
   setPlaylist,
+  setCurrentPlaylistName,
   changeTrack
 } = musicPlayerSlice.actions
 
@@ -105,4 +112,4 @@ export const {
 export const musicPlayerReducer = musicPlayerSlice.reducer
 
 
-export const {selectCurrentTime, selectCurrentTrack, selectDuration, selectIsPlaying, selectMusicPlayer, selectPlaylist, selectProgress, selectVolume } = musicPlayerSlice.selectors
+export const {selectCurrentTime, selectCurrentTrack, selectDuration, selectIsPlaying, selectMusicPlayer, selectPlaylist, selectCurrentPlaylistName, selectProgress, selectVolume } = musicPlayerSlice.selectors

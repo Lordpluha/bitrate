@@ -43,7 +43,7 @@ export const MainHeader = () => {
               <Link className='hover:opacity-70 transition-opacity duration-200' href="#">
                 <MembersIcon />
               </Link>
-              <ProfileButton username={(user as any).username || 'User'} /> 
+              <ProfileButton username={(user).username || 'User'} /> 
               {/* пока оставляем */}
             </>
           ) : (

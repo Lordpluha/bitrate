@@ -6,11 +6,14 @@ import { PlayerControls } from './PlayerControls'
 import { PlayerActions } from './PlayerActions'
 import { useAudioPlayer, useAppSelector, useAppDispatch } from '@shared/hooks'
 import { setVolume, selectMusicPlayer } from '@entities/Player/store/PlayerSlice'
+import { useArtistName } from '@shared/hooks/useArtistName'
 
 export const Player: React.FC = () => {
   const { currentTrack, isPlaying, volume, currentTime, duration } = useAppSelector(selectMusicPlayer)
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
+  const artistName = useArtistName(currentTrack?.artistId)
+  
   const { 
     audioRef, 
     togglePlayPause, 
@@ -27,6 +30,9 @@ export const Player: React.FC = () => {
   useEffect(() => {
     if (currentTrack) {
       setIsVisible(true)
+      // Выводим URL картинки в консоль для проверки
+      console.log('Track cover URL:', currentTrack.cover)
+      console.log('Full URL:', `${process.env.NEXT_PUBLIC_API_URL}${currentTrack.cover}`)
     } else {
       setIsVisible(false)
     }
@@ -40,6 +46,8 @@ export const Player: React.FC = () => {
     return null
   }
 
+  console.log(currentTrack.cover);
+   
   return (
     <>
       <audio
@@ -60,8 +68,8 @@ export const Player: React.FC = () => {
       >
         <div className="w-[25%]">
           <TrackInfo
-            title={currentTrack.title || currentTrack.name || 'Unknown'}
-            artist={(currentTrack).artist || 'Unknown Artist'}
+            title={currentTrack.title || 'Unknown'}
+            artist={artistName}
             coverUrl={currentTrack.cover}
             isLiked={false}
           />

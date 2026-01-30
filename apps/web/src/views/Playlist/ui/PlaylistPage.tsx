@@ -1,6 +1,6 @@
 'use client'
 
-import { play, setPlaylist } from '@entities/Player'
+import { play, setPlaylist, setCurrentPlaylistName } from '@entities/Player'
 import { useAppDispatch } from '@shared/hooks'
 import { useTracks } from '@shared/hooks/useTracks'
 import { ITrack } from '@shared/types'
@@ -26,14 +26,12 @@ export const PlaylistPage: React.FC = () => {
         createdAt: track.createdAt,
         updatedAt: track.updatedAt || track.createdAt,
         artistId: track.artistId,
-        artist: track.artistId,
         duration: track.duration || 0,
         releaseDate: track.releaseDate || null,
-        lyrics: track.lyrics || null,
-        name: track.title,
-        file: `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${track.id}`
+        lyrics: track.lyrics || null
       }))
       dispatch(setPlaylist(iTracks))
+      dispatch(setCurrentPlaylistName('All Tracks'))
     }
   }, [tracks, dispatch])
 
@@ -66,12 +64,9 @@ export const PlaylistPage: React.FC = () => {
       createdAt: track.createdAt || new Date().toISOString(),
       updatedAt: track.updatedAt || new Date().toISOString(),
       artistId: track.artistId || '',
-      artist: track.artistId || 'Unknown Artist',
       duration: track.duration || 0,
       releaseDate: track.releaseDate || null,
-      lyrics: track.lyrics || null,
-      name: track.title,
-      file: `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${track.id}`
+      lyrics: track.lyrics || null
     }
     dispatch(play(iTrack))
   }

@@ -1,5 +1,5 @@
 
-import { FavoriteTracks } from './FavoriteTracks'
+import { CurrentPlaylist } from './CurrentPlaylist'
 import { AboutArtist } from './AboutArtist'
 import { Credits } from './Credits'
 import { NextInQueue } from './NextInQueue'
@@ -7,9 +7,9 @@ import { NextInQueue } from './NextInQueue'
 export const RightSidebar: React.FC = () => {
   return (
     <div className='h-full py-4 px-6 overflow-y-auto custom-scrollbar'>
-      <FavoriteTracks />
+      <CurrentPlaylist />
       <AboutArtist />
-      <Credits />
+      {/* <Credits /> */}
       <NextInQueue />
     </div>
   )

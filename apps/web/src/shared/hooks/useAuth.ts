@@ -5,6 +5,16 @@ import { ROUTES } from '@shared/routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 
+interface User {
+  id: string
+  username: string
+  email: string
+  avatar: string | null
+  description: string | null
+  createdAt: string
+  updatedAt: string
+}
+
 const userQueryKeys = {
   user: ['user'] as const,
 }
@@ -13,7 +23,7 @@ export const useAuth = () => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const { data: user, isLoading, isSuccess, error, isPending } = useQuery({
+  const { data: user, isLoading, isSuccess, error, isPending } = useQuery<User>({
     queryKey: userQueryKeys.user,
     queryFn: async () => {
       const { data, response } = await fetchClient.GET('/api/v1/auth/me')
@@ -22,7 +32,7 @@ export const useAuth = () => {
         throw new Error('Not authenticated')
       }
 
-      return data
+      return data as User
     },
     retry: 1, // Only retry once
     retryDelay: 1000, // Wait 1 second before retry

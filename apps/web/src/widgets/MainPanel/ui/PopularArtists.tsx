@@ -21,6 +21,8 @@ interface MusicItem {
   imageUrl?: string
 }
 
+// типизировать дату
+
 export const PopularArtists: React.FC = () => {
   const { data, isPending: loadingArtists, error } = useQuery('get', '/api/v1/artists', {
     params: {
@@ -55,11 +57,11 @@ export const PopularArtists: React.FC = () => {
         >
           <CarouselPrevious
             icon={<CustomPrevIcon />}
-            className='absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
+            className='absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-bg-secondary'
           />
           <CarouselNext
             icon={<CustomNextIcon />}
-            className='absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
+            className='absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-bg-secondary'
           />
           <CarouselContent className='flex'>
             {loadingArtists ? (

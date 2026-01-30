@@ -34,14 +34,13 @@ export const useAudioPlayer = () => {
     if (!audioRef.current) return
 
     try {
-      console.log('Setting up progressive streaming for:', trackUrl)
 
       // Simple approach: preload=none forces browser to use Range requests
       audioRef.current.preload = 'none'
       audioRef.current.src = trackUrl
       audioRef.current.load()
       
-      console.log('Progressive streaming enabled')
+
     } catch (error) {
       console.error('Error setting up progressive streaming:', error)
     }
