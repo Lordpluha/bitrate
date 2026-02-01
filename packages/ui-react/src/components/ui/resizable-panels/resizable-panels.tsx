@@ -53,14 +53,12 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
   )
 }
 
-export const ResizableHandle: React.FC<ResizableHandleProps> = ({
-  className,
-}) => {
+export const ResizableHandle: React.FC<ResizableHandleProps> = ({ className }) => {
   return (
     <PanelResizeHandle
       className={cn(
         'w-1 bg-border hover:bg-primary transition-all duration-200 cursor-col-resize',
-        className
+        className,
       )}
     />
   )

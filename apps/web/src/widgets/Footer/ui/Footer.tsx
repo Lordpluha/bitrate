@@ -65,7 +65,13 @@ export const Footer: FC<FooterProps> = (props) => {
                     href={social.href}
                     key={social.href}
                   >
-                    {IconComponent && <IconComponent className='text-text fill-text' width={32} height={32} />}
+                    {IconComponent && (
+                      <IconComponent
+                        className="text-text fill-text"
+                        width={32}
+                        height={32}
+                      />
+                    )}
                   </Link>
                 )
               })}

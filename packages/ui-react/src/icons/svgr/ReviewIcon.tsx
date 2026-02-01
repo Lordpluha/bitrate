@@ -1,10 +1,10 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface ReviewIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
-export const ReviewIcon = ({ primaryColor = "#b3b3b3", ...props }: ReviewIconProps) => (
+export const ReviewIcon = ({ primaryColor = '#b3b3b3', ...props }: ReviewIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"

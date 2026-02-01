@@ -22,12 +22,12 @@ import {
   FormMessage,
   LogoIcon,
   PlusIcon,
-  GoogleIcon
+  GoogleIcon,
 } from '@spotify/ui-react'
 import { Modal } from './Modal'
 import {
   RegistrationFormData,
-  registrationSchema
+  registrationSchema,
 } from '../../Registration/validation'
 import { ROUTES } from '@shared/routes'
 
@@ -53,24 +53,24 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
           router.push(ROUTES.auth.login)
         }
       },
-      onError: error => {
+      onError: (error) => {
         toast.error(`Registration error: ${JSON.stringify(error)}`)
-      }
-    }
+      },
+    },
   )
 
   const defaultValues: RegistrationFormData = {
     fullName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   }
 
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
     mode: 'onChange',
     defaultValues,
-    shouldFocusError: true
+    shouldFocusError: true,
   })
 
   const onSubmit: SubmitHandler<RegistrationFormData> = (data) => {
@@ -78,23 +78,24 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
       body: {
         email: data.email,
         password: data.password,
-        username: data.fullName
-      }
+        username: data.fullName,
+      },
     })
   }
 
   return (
-    <Modal
-      {...modalProps}
-      className='max-w-[500px]  w-full'
-    >
-      <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg'>
-        <div className='flex flex-col items-center'>
+    <Modal {...modalProps} className="max-w-[500px]  w-full">
+      <div className="flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg">
+        <div className="flex flex-col items-center">
           <LogoIcon width={64} height={64} />
-          <Typography as='h5' size='heading5' className='mt-2 text-center text-text-contrast'>
+          <Typography
+            as="h5"
+            size="heading5"
+            className="mt-2 text-center text-text-contrast"
+          >
             Sign Up
           </Typography>
-          <Typography as='p' size='body' className='text-center text-grey-500'>
+          <Typography as="p" size="body" className="text-center text-grey-500">
             Sign up to enjoy the feature of Revolutie
           </Typography>
         </div>
@@ -102,26 +103,26 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className='flex flex-col gap-4'
+            className="flex flex-col gap-4"
           >
             <FormField
               control={form.control}
-              name='fullName'
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <InputProvider>
-                      <div className='relative'>
+                      <div className="relative">
                         <DynamicLabel
-                          htmlFor='signup-fullname'
-                          variant='contrast'
+                          htmlFor="signup-fullname"
+                          variant="contrast"
                         >
                           Full Name
                         </DynamicLabel>
                         <Input
-                          id='signup-fullname'
-                          variant='contrast'
-                          placeholder=''
+                          id="signup-fullname"
+                          variant="contrast"
+                          placeholder=""
                           {...field}
                         />
                       </div>
@@ -134,23 +135,20 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
 
             <FormField
               control={form.control}
-              name='email'
+              name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <InputProvider>
-                      <div className='relative'>
-                        <DynamicLabel
-                          htmlFor='signup-email'
-                          variant='contrast'
-                        >
+                      <div className="relative">
+                        <DynamicLabel htmlFor="signup-email" variant="contrast">
                           Email Address
                         </DynamicLabel>
                         <Input
-                          id='signup-email'
-                          variant='contrast'
-                          type='email'
-                          placeholder=''
+                          id="signup-email"
+                          variant="contrast"
+                          type="email"
+                          placeholder=""
                           {...field}
                         />
                       </div>
@@ -163,22 +161,22 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
 
             <FormField
               control={form.control}
-              name='password'
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <InputProvider>
-                      <div className='relative'>
+                      <div className="relative">
                         <DynamicLabel
-                          htmlFor='signup-password'
-                          variant='contrast'
+                          htmlFor="signup-password"
+                          variant="contrast"
                         >
                           Password
                         </DynamicLabel>
                         <PasswordInput
-                          id='signup-password'
-                          variant='contrast'
-                          placeholder=''
+                          id="signup-password"
+                          variant="contrast"
+                          placeholder=""
                           {...field}
                         />
                       </div>
@@ -191,22 +189,22 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
 
             <FormField
               control={form.control}
-              name='confirmPassword'
+              name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <InputProvider>
-                      <div className='relative'>
+                      <div className="relative">
                         <DynamicLabel
-                          htmlFor='signup-confirm-password'
-                          variant='contrast'
+                          htmlFor="signup-confirm-password"
+                          variant="contrast"
                         >
                           Confirm Password
                         </DynamicLabel>
                         <PasswordInput
-                          id='signup-confirm-password'
-                          variant='contrast'
-                          placeholder=''
+                          id="signup-confirm-password"
+                          variant="contrast"
+                          placeholder=""
                           {...field}
                         />
                       </div>
@@ -217,11 +215,11 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
               )}
             />
 
-            <div className='mt-2 flex flex-col items-stretch gap-4'>
+            <div className="mt-2 flex flex-col items-stretch gap-4">
               <Button
-                variant='primary'
-                className='rounded'
-                type='submit'
+                variant="primary"
+                className="rounded"
+                type="submit"
                 disabled={isRegistering}
                 isLoading={isRegistering}
                 aria-busy={isRegistering}
@@ -231,22 +229,19 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
 
               <SocialsAuthDivider />
 
-              <Button
-                variant='contrast'
-                type='button'
-              >
-                <GoogleIcon className='mr-2' />
-                <Typography as='p' size='body' className='text-text-contrast'>
+              <Button variant="contrast" type="button">
+                <GoogleIcon className="mr-2" />
+                <Typography as="p" size="body" className="text-text-contrast">
                   Continue with Google
                 </Typography>
               </Button>
 
-              <p className='text-base text-center text-text-contrast'>
+              <p className="text-base text-center text-text-contrast">
                 Already have an account?{' '}
                 {onSwitchToLogin ? (
                   <button
-                    type='button'
-                    className='font-bold text-green-500 hover:opacity-70 underline'
+                    type="button"
+                    className="font-bold text-green-500 hover:opacity-70 underline"
                     onClick={onSwitchToLogin}
                   >
                     Log in.
@@ -254,7 +249,7 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                 ) : (
                   <Link
                     href={ROUTES.auth.login}
-                    className='font-bold text-green-500 hover:opacity-70 underline'
+                    className="font-bold text-green-500 hover:opacity-70 underline"
                   >
                     Log in.
                   </Link>

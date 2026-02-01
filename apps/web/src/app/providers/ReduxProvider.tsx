@@ -1,4 +1,4 @@
- 'use client'
+'use client'
 
 import React, { useRef, PropsWithChildren } from 'react'
 import { Provider } from 'react-redux'

@@ -28,9 +28,9 @@ export const InputProvider: React.FC<React.PropsWithChildren> = ({ children }) =
       isFocused,
       hasValue,
       setFocused,
-      setValue
+      setValue,
     }),
-    [isFocused, hasValue]
+    [isFocused, hasValue],
   )
 
   return <InputContext.Provider value={value}>{children}</InputContext.Provider>

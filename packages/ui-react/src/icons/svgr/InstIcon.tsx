@@ -1,11 +1,11 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface InstIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
 export const InstIcon = ({
-  primaryColor = "var(--fg-color, currentcolor)",
+  primaryColor = 'var(--fg-color, currentcolor)',
   ...props
 }: InstIconProps) => (
   <svg

@@ -8,14 +8,12 @@ import React, { useEffect } from 'react'
 import { PlaylistHeader } from './PlaylistHeader'
 import { Track, TracksList } from './TracksList'
 
-
 export const PlaylistPage: React.FC = () => {
   const dispatch = useAppDispatch()
   const { data, isPending } = useTracks()
 
   const tracks = (data as any)?.data || data || []
   const tracksArray = Array.isArray(tracks) ? tracks : []
-
 
   useEffect(() => {
     if (tracksArray && tracksArray.length > 0) {
@@ -29,7 +27,7 @@ export const PlaylistPage: React.FC = () => {
         artist: (track as any).artist || 'Unknown Artist',
         duration: (track as any).duration || 0,
         name: track.title,
-        file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`
+        file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
       }))
       dispatch(setPlaylist(iTracks as any))
     }
@@ -37,18 +35,18 @@ export const PlaylistPage: React.FC = () => {
 
   if (isPending) {
     return (
-      <div className='h-full overflow-y-auto custom-scrollbar'>
+      <div className="h-full overflow-y-auto custom-scrollbar">
         <PlaylistHeader
-          title='Loading...'
-          type='Playlist'
-          imageUrl='/images/drive-cover-big.jpg'
-          author='Loading...'
+          title="Loading..."
+          type="Playlist"
+          imageUrl="/images/drive-cover-big.jpg"
+          author="Loading..."
           songsCount={0}
           tracksCount={0}
-          duration='0 min'
+          duration="0 min"
         />
-        <div className='flex justify-center items-center h-64'>
-          <div className='text-text'>Loading tracks...</div>
+        <div className="flex justify-center items-center h-64">
+          <div className="text-text">Loading tracks...</div>
         </div>
       </div>
     )
@@ -62,7 +60,10 @@ export const PlaylistPage: React.FC = () => {
       cover: track.cover,
       createdAt: track.createdAt || new Date().toISOString(),
       artistId: track.artistId || '',
-      artist: (track as any).artist?.name || (track as any).artist || 'Unknown Artist',
+      artist:
+        (track as any).artist?.name ||
+        (track as any).artist ||
+        'Unknown Artist',
       duration: (track as any).duration || 0,
       name: track.title,
       file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
@@ -74,20 +75,17 @@ export const PlaylistPage: React.FC = () => {
   }
 
   return (
-    <div className='h-full overflow-y-auto custom-scrollbar'>
+    <div className="h-full overflow-y-auto custom-scrollbar">
       <PlaylistHeader
-        title='All Tracks'
-        type='Playlist'
-        imageUrl='/images/drive-cover-big.jpg'
-        author='Music Library'
+        title="All Tracks"
+        type="Playlist"
+        imageUrl="/images/drive-cover-big.jpg"
+        author="Music Library"
         songsCount={0}
         tracksCount={tracksArray?.length || 0}
-        duration='6 hr 30 min'
+        duration="6 hr 30 min"
       />
-      <TracksList
-        tracks={tracksArray}
-        onPlayTrack={handlePlayTrack}
-      />
+      <TracksList tracks={tracksArray} onPlayTrack={handlePlayTrack} />
     </div>
   )
 }

@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import type { Root as LabelRoot } from "@radix-ui/react-label"
+import type { Root as LabelRoot } from '@radix-ui/react-label'
 import {
   type ComponentPropsWithoutRef,
   cloneElement,
@@ -9,7 +9,7 @@ import {
   type ReactElement,
   useContext,
   useId,
-} from "react"
+} from 'react'
 import {
   Controller,
   type ControllerProps,
@@ -17,9 +17,9 @@ import {
   type FieldValues,
   FormProvider,
   useFormContext,
-} from "react-hook-form"
-import { cn } from "@/lib/utils"
-import { Label } from "./label"
+} from 'react-hook-form'
+import { cn } from '@/lib/utils'
+import { Label } from './label'
 
 export const Form = FormProvider
 
@@ -53,7 +53,7 @@ export const useFormField = () => {
   const fieldState = getFieldState(fieldContext.name, formState)
 
   if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>")
+    throw new Error('useFormField should be used within <FormField>')
   }
 
   const { id } = itemContext
@@ -79,7 +79,7 @@ export const FormItem = ({ className, ...props }: HTMLAttributes<HTMLDivElement>
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div className={cn("space-y-2", className)} {...props} />
+      <div className={cn('space-y-2', className)} {...props} />
     </FormItemContext.Provider>
   )
 }
@@ -89,7 +89,7 @@ export const FormLabel = ({ className, ...props }: ComponentPropsWithoutRef<type
 
   return (
     <Label
-      className={cn(error && "text-red-500 dark:text-red-900", className)}
+      className={cn(error && 'text-red-500 dark:text-red-900', className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -104,8 +104,8 @@ export const FormControl = ({
 
   const childProps: HTMLAttributes<HTMLElement> = {
     id: formItemId,
-    "aria-describedby": !error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`,
-    "aria-invalid": !!error,
+    'aria-describedby': !error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`,
+    'aria-invalid': !!error,
     ...props,
   }
 
@@ -118,7 +118,7 @@ export const FormDescription = ({ className, ...props }: HTMLAttributes<HTMLPara
   return (
     <p
       id={formDescriptionId}
-      className={cn("text-sm text-slate-500 dark:text-slate-400", className)}
+      className={cn('text-sm text-slate-500 dark:text-slate-400', className)}
       {...props}
     />
   )
@@ -130,14 +130,14 @@ export const FormMessage = ({
   ...props
 }: HTMLAttributes<HTMLParagraphElement>) => {
   const { error, formMessageId } = useFormField()
-  const body = error ? String(error?.message ?? "") : children
+  const body = error ? String(error?.message ?? '') : children
 
   if (!body) {
     return null
   }
 
   return (
-    <p id={formMessageId} className={cn("text-sm font-medium text-red-600", className)} {...props}>
+    <p id={formMessageId} className={cn('text-sm font-medium text-red-600', className)} {...props}>
       {body}
     </p>
   )

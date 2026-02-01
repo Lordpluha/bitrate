@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import {
   Check,
   CheckIcon,
@@ -18,16 +18,16 @@ import {
   SearchIcon,
   Star,
   StarIcon,
-} from "lucide-react"
-import * as React from "react"
+} from 'lucide-react'
+import * as React from 'react'
 
-import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group"
+import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 import {
   InputGroup,
   InputGroupAddon,
@@ -35,21 +35,21 @@ import {
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
-} from "@/components/ui/input-group"
-import { Label } from "@/components/ui/label"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Spinner } from "@/components/ui/spinner"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+} from '@/components/ui/input-group'
+import { Label } from '@/components/ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Spinner } from '@/components/ui/spinner'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 /**
  * Display additional information or actions to an input or textarea.
  */
 const meta: Meta<typeof InputGroup> = {
-  title: "ui/InputGroup",
+  title: 'ui/InputGroup',
   component: InputGroup,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
 } satisfies Meta<typeof InputGroup>
 
@@ -161,7 +161,7 @@ export const WithButtons: Story = {
               title="Copy"
               size="icon-xs"
               onClick={() => {
-                copyToClipboard("https://x.com/shadcn")
+                copyToClipboard('https://x.com/shadcn')
               }}
             >
               {isCopied ? <Check /> : <Copy />}

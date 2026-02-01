@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import {
   Table,
   TableBody,
@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table'
 
 type Spacing = {
   name: string
@@ -15,7 +15,7 @@ type Spacing = {
 
 const SpacingRow = ({ value, name }: Spacing) => {
   const style = window.getComputedStyle(document.body)
-  const size = style.getPropertyValue("--spacing")
+  const size = style.getPropertyValue('--spacing')
   const rem = parseFloat(size) * value
   const pixels = parseFloat(size) * 16 * value
   return (
@@ -38,7 +38,7 @@ const SpacingRow = ({ value, name }: Spacing) => {
 const meta: Meta<{
   scale: Spacing[]
 }> = {
-  title: "design/Spacing",
+  title: 'design/Spacing',
   argTypes: {},
   render: (args) => (
     <Table>
@@ -71,27 +71,27 @@ type Story = StoryObj<typeof meta>
 export const Core: Story = {
   args: {
     scale: [
-      { name: "x-1", value: 1 },
-      { name: "x-4", value: 4 },
-      { name: "x-8", value: 8 },
-      { name: "x-12", value: 12 },
-      { name: "x-16", value: 16 },
-      { name: "x-20", value: 20 },
-      { name: "x-24", value: 24 },
-      { name: "x-28", value: 28 },
-      { name: "x-32", value: 32 },
-      { name: "x-36", value: 36 },
-      { name: "x-40", value: 40 },
-      { name: "x-44", value: 44 },
-      { name: "x-48", value: 48 },
-      { name: "x-52", value: 52 },
-      { name: "x-56", value: 56 },
-      { name: "x-60", value: 60 },
-      { name: "x-64", value: 64 },
-      { name: "x-68", value: 68 },
-      { name: "x-72", value: 72 },
-      { name: "x-76", value: 76 },
-      { name: "x-80", value: 80 },
+      { name: 'x-1', value: 1 },
+      { name: 'x-4', value: 4 },
+      { name: 'x-8', value: 8 },
+      { name: 'x-12', value: 12 },
+      { name: 'x-16', value: 16 },
+      { name: 'x-20', value: 20 },
+      { name: 'x-24', value: 24 },
+      { name: 'x-28', value: 28 },
+      { name: 'x-32', value: 32 },
+      { name: 'x-36', value: 36 },
+      { name: 'x-40', value: 40 },
+      { name: 'x-44', value: 44 },
+      { name: 'x-48', value: 48 },
+      { name: 'x-52', value: 52 },
+      { name: 'x-56', value: 56 },
+      { name: 'x-60', value: 60 },
+      { name: 'x-64', value: 64 },
+      { name: 'x-68', value: 68 },
+      { name: 'x-72', value: 72 },
+      { name: 'x-76', value: 76 },
+      { name: 'x-80', value: 80 },
     ],
   },
 }

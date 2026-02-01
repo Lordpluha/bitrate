@@ -20,7 +20,7 @@ export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
   imageUrl,
   author,
   tracksCount,
-  duration
+  duration,
 }) => {
   const router = useRouter()
   return (
@@ -31,7 +31,7 @@ export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
       >
         <ArrowLeft size={20} className="text-white" />
       </button>
-      
+
       <div className="flex items-end gap-6 h-full">
         <img
           src={imageUrl}

@@ -14,7 +14,7 @@ export const Provider: FC<PropsWithChildren> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient())
   const [theme, setTheme, , hydrated] = usePersistedState<Theme>(
     'theme',
-    'dark'
+    'dark',
   )
 
   useEffect(() => {

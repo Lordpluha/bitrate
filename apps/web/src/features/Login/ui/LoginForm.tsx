@@ -52,7 +52,7 @@ export const LoginForm = () => {
       body: {
         ...body,
         username: body.email,
-      }
+      },
     })
   }
 

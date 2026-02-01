@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { Mail, Plus, PlusCircle, Search, UserPlus } from "lucide-react"
-import { expect, userEvent, within } from "storybook/test"
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Mail, Plus, PlusCircle, Search, UserPlus } from 'lucide-react'
+import { expect, userEvent, within } from 'storybook/test'
 
 import {
   DropdownMenu,
@@ -18,16 +18,16 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 
 /**
  * Displays a menu to the user — such as a set of actions or functions —
  * triggered by a button.
  */
 const meta = {
-  title: "ui/DropdownMenu",
+  title: 'ui/DropdownMenu',
   component: DropdownMenu,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {},
   render: (args) => (
     <DropdownMenu {...args}>
@@ -43,7 +43,7 @@ const meta = {
     </DropdownMenu>
   ),
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
 } satisfies Meta<typeof DropdownMenu>
 
@@ -160,19 +160,19 @@ export const WithCheckboxes: Story = {
 }
 
 export const ShouldOpenClose: Story = {
-  name: "when clicking an item, should close the dropdown menu",
-  tags: ["!dev", "!autodocs"],
+  name: 'when clicking an item, should close the dropdown menu',
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvasElement, step }) => {
     const body = within(canvasElement.ownerDocument.body)
 
-    await step("Open the dropdown menu", async () => {
-      await userEvent.click(await body.findByRole("button", { name: /open/i }))
-      expect(await body.findByRole("menu")).toBeInTheDocument()
+    await step('Open the dropdown menu', async () => {
+      await userEvent.click(await body.findByRole('button', { name: /open/i }))
+      expect(await body.findByRole('menu')).toBeInTheDocument()
     })
-    const items = await body.findAllByRole("menuitem")
+    const items = await body.findAllByRole('menuitem')
     expect(items).toHaveLength(4)
 
-    await step("Click the first menu item", async () => {
+    await step('Click the first menu item', async () => {
       const firstItem = items[0]
       if (firstItem) await userEvent.click(firstItem, { delay: 100 })
     })

@@ -1,4 +1,3 @@
-
 import type { ApiSchemas } from '@spotify/contracts'
 
 export type ITrack = ApiSchemas['TrackEntity'] & {
@@ -8,4 +7,3 @@ export type ITrack = ApiSchemas['TrackEntity'] & {
   duration: number
   album?: string
 }
-
