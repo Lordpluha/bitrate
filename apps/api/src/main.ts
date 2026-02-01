@@ -23,7 +23,7 @@ async function bootstrap() {
     defaultVersion: '1',
   })
 
-  app.enableCors(configService.getOrThrow('cors').http)
+  app.enableCors(configService.getOrThrow('connections').http)
 
   const config = new DocumentBuilder()
     .setTitle(process.env.npm_package_name || 'API Documentation')
@@ -97,7 +97,7 @@ async function bootstrap() {
     jsonDocumentUrl: 'swagger/json',
   })
 
-  await app.listen(configService.get<number>('PORT') ?? 3000)
+  await app.listen(configService.getOrThrow('PORT'))
 }
 
 bootstrap()

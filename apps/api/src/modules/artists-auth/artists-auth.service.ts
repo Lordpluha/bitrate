@@ -13,21 +13,21 @@ import { ArtistSessionEntity } from './entities'
 @Injectable()
 export class ArtistsAuthService {
   constructor(
-    private artistService: ArtistsService,
-    private artistPrivateService: ArtistsPrivateService,
+    private artists: ArtistsService,
+    private artistsPrivate: ArtistsPrivateService,
     private jwtService: JwtService,
     private prisma: PrismaService,
-    private tokenService: TokenService,
+    private token: TokenService,
   ) {}
 
   async registerArtist(registrationDto: RegistrationDto) {
-    const artist = await this.artistService.findByEmail(registrationDto.email)
+    const artist = await this.artists.findByEmail(registrationDto.email)
 
     if (artist) {
       throw new ConflictException('Artist with this email already exists')
     }
 
-    await this.artistService.register({
+    await this.artists.register({
       username: registrationDto.username,
       email: registrationDto.email,
       password: registrationDto.password,
@@ -35,15 +35,15 @@ export class ArtistsAuthService {
   }
 
   async loginArtist(email: ArtistEntity['email'], password: ArtistEntity['password']) {
-    const artist = await this.artistPrivateService.findByEmail(email)
+    const artist = await this.artistsPrivate.findByEmail(email)
     if (!artist || artist?.password !== password) {
       throw new UnauthorizedException({
         message: 'Invalid credentials',
       })
     }
 
-    const access_token = await this.tokenService.generateAccessToken(artist.id, artist.username)
-    const refresh_token = await this.tokenService.generateRefreshToken(artist.id, artist.username)
+    const access_token = await this.token.generateAccessToken(artist.id, artist.username)
+    const refresh_token = await this.token.generateRefreshToken(artist.id, artist.username)
 
     const session = await this.prisma.artistSession.create({
       data: {
@@ -64,12 +64,12 @@ export class ArtistsAuthService {
       const payload = await this.jwtService.verifyAsync<JWTPayload>(refresh_token, {
         secret: process.env.REFRESH_TOKEN_SECRET,
       })
-      const user = await this.artistService.findByUsername(payload.username)
+      const user = await this.artists.findByUsername(payload.username)
       if (!user) {
         throw new UnauthorizedException('Invalid refresh token')
       }
       return {
-        access_token: await this.tokenService.generateAccessToken(user.id, user.username),
+        access_token: await this.token.generateAccessToken(user.id, user.username),
       }
     } catch {
       throw new UnauthorizedException('Invalid refresh token')
@@ -80,7 +80,7 @@ export class ArtistsAuthService {
     artistId: ArtistSession['artistId'],
     refresh_token: ArtistSessionEntity['refresh_token'],
   ) {
-    const artist = await this.artistService.findById(artistId)
+    const artist = await this.artists.findById(artistId)
     if (!artist) {
       throw new UnauthorizedException('Invalid access token')
     }

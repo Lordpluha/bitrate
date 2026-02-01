@@ -2,7 +2,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import { UserEntity } from './entities'
 
-@Injectable({})
+@Injectable()
 export class UsersPrivateService {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -10,10 +10,6 @@ export class UsersPrivateService {
     return await this.prisma.user.findUniqueOrThrow({
       where: {
         id,
-      },
-      omit: {
-        password: true,
-        email: true,
       },
     })
   }
@@ -23,9 +19,6 @@ export class UsersPrivateService {
       where: {
         email,
       },
-      omit: {
-        password: true,
-      },
     })
   }
 
@@ -33,10 +26,6 @@ export class UsersPrivateService {
     return await this.prisma.user.findFirst({
       where: {
         username,
-      },
-      omit: {
-        password: true,
-        email: true,
       },
     })
   }
@@ -56,19 +45,12 @@ export class UsersPrivateService {
       },
       skip: page ? (page - 1) * limit : undefined,
       take: limit,
-      omit: {
-        password: true,
-        email: true,
-      },
     })
   }
 
   async create(data: Omit<UserEntity, 'id' | 'createdAt'>) {
     return await this.prisma.user.create({
       data,
-      omit: {
-        password: true,
-      },
     })
   }
 
@@ -76,9 +58,6 @@ export class UsersPrivateService {
     return await this.prisma.user.update({
       where: { id },
       data: userData,
-      omit: {
-        password: true,
-      },
     })
   }
 
@@ -87,7 +66,6 @@ export class UsersPrivateService {
     return await this.prisma.user.update({
       where: { id: userId },
       data: { avatar: avatarPath },
-      omit: { password: true },
     })
   }
 }

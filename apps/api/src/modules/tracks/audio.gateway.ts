@@ -1,5 +1,5 @@
 import type { AppConfig } from '@common/config'
-import { websocketCorsConfig } from '@common/config/cors.config'
+import { websocketConfig } from '@common/config/connections'
 import { TokenService } from '@modules/tokens/token.service'
 import { Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -27,9 +27,7 @@ interface PlayingSession {
   timestamp: number
 }
 
-@WebSocketGateway({
-  cors: websocketCorsConfig,
-})
+@WebSocketGateway(websocketConfig)
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server

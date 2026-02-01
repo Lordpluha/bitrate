@@ -63,6 +63,7 @@ model ArtistSession {
 model Track {
   id       String  @id @default(uuid(7)) @db.Uuid
   title    String
+  audioUrl String
   cover    String?
   artistId String  @db.Uuid
 

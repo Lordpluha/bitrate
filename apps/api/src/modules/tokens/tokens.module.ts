@@ -1,3 +1,4 @@
+import { AppConfig } from '@common/config'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { TokenService } from '@modules/tokens/token.service'
 import { Module } from '@nestjs/common'
@@ -11,8 +12,8 @@ import { JwtModule } from '@nestjs/jwt'
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET'),
+      useFactory: (config: ConfigService<AppConfig>) => ({
+        secret: config.getOrThrow('JWT_SECRET'),
         signOptions: { expiresIn: '60s' },
         global: true,
       }),

@@ -3,7 +3,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { ArtistEntity } from '@modules/artists'
 import { UserEntity } from '@modules/users'
 import { InjectQueue } from '@nestjs/bullmq'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Artist } from '@prisma/client'
 import { Queue } from 'bullmq'
@@ -18,6 +18,8 @@ export class TracksService {
     @InjectQueue('audio-processing') private readonly audioQueue: Queue,
     private readonly configService: ConfigService<AppConfig>,
   ) {}
+
+  private readonly logger = new Logger(TracksService.name, { timestamp: true })
 
   async findAll({
     page = 1,
@@ -150,20 +152,16 @@ export class TracksService {
       return created
     })
 
-    await this.audioQueue.add(
-      'convert-audio',
-      {
-        trackId: track.id,
-        artistId,
-        inputPath: this.configService.getOrThrow('storage').getTracksDir(audioFile.filename),
-        outputDir: this.configService.getOrThrow('storage').getTracksDir(),
-        format: 'opus',
-        bitrates: ['128k', '192k', '320k'],
-      },
-      {
-        delay: 10000,
-      },
-    )
+    await this.audioQueue.add('convert-audio', {
+      trackId: track.id,
+      artistId,
+      inputPath: this.configService.getOrThrow('storage').getTracksDir(audioFile.filename),
+      outputDir: this.configService.getOrThrow('storage').getTracksDir(),
+      format: 'opus',
+      bitrates: ['128k', '192k', '320k'],
+    })
+
+    this.logger.log(`Queued audio conversion for track ID: ${track.id} added`)
 
     return track
   }
@@ -229,20 +227,14 @@ export class TracksService {
     })
 
     if (audioFile) {
-      await this.audioQueue.add(
-        'convert-audio',
-        {
-          trackId: track.id,
-          artistId: track.artistId,
-          inputPath: this.configService.getOrThrow('storage').getTracksDir(audioFile.filename),
-          outputDir: this.configService.getOrThrow('storage').getTracksDir(),
-          format: 'opus',
-          bitrates: ['128k', '192k', '320k'],
-        },
-        {
-          delay: 10000,
-        },
-      )
+      await this.audioQueue.add('convert-audio', {
+        trackId: track.id,
+        artistId: track.artistId,
+        inputPath: this.configService.getOrThrow('storage').getTracksDir(audioFile.filename),
+        outputDir: this.configService.getOrThrow('storage').getTracksDir(),
+        format: 'opus',
+        bitrates: ['128k', '192k', '320k'],
+      })
     }
 
     return track

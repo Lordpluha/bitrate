@@ -1325,8 +1325,8 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2026-02-01T13:00:34.906Z",
-                    "updatedAt": "2026-02-01T13:00:34.906Z",
+                    "createdAt": "2026-02-01T19:30:04.853Z",
+                    "updatedAt": "2026-02-01T19:30:04.853Z",
                     "duration": 180,
                     "releaseDate": "2023-10-01T12:00:00.000Z",
                     "lyrics": null
@@ -1617,7 +1617,14 @@
             "description": "Loop detected"
           },
           "default": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "security": [

@@ -1,5 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Processor, WorkerHost } from '@nestjs/bullmq'
+import { Logger } from '@nestjs/common'
 import { Job } from 'bullmq'
 import { stat } from 'fs/promises'
 import { join, parse } from 'path'
@@ -18,6 +19,8 @@ export class AudioProcessingConsumer extends WorkerHost {
   constructor(private readonly prisma: PrismaService) {
     super()
   }
+
+  private readonly logger = new Logger(AudioProcessingConsumer.name, { timestamp: true })
 
   async process(job: Job<ConvertAudioJob>) {
     if (job.name !== 'convert-audio') {
@@ -56,6 +59,9 @@ export class AudioProcessingConsumer extends WorkerHost {
           size: stats.size,
         },
       })
+      this.logger.log(
+        `Processed track ID: ${trackId}, bitrate: ${bitrate}, output: ${outputFilename}`,
+      )
     }
   }
 

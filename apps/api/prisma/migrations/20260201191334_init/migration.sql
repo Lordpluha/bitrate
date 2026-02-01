@@ -40,6 +40,7 @@ CREATE TABLE "ArtistSession" (
 CREATE TABLE "Track" (
     "id" UUID NOT NULL,
     "title" TEXT NOT NULL,
+    "audioUrl" TEXT NOT NULL,
     "cover" TEXT,
     "artistId" UUID NOT NULL,
     "duration" INTEGER,
