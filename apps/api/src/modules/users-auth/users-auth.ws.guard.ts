@@ -1,11 +1,11 @@
 import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common'
 import { WsException } from '@nestjs/websockets'
 import { Socket } from 'socket.io'
-import { TokenService } from './token.service'
+import { TokenService } from '../tokens/token.service'
 
 @Injectable()
-export class WsAuthGuard implements CanActivate {
-  private readonly logger = new Logger(WsAuthGuard.name)
+export class WsUserAuthGuard implements CanActivate {
+  private readonly logger = new Logger(WsUserAuthGuard.name, { timestamp: true })
 
   constructor(private tokenService: TokenService) {}
 

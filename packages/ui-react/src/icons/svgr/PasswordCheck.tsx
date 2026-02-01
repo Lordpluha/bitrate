@@ -1,4 +1,4 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface PasswordCheckProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
@@ -6,8 +6,8 @@ interface PasswordCheckProps extends SVGProps<SVGSVGElement> {
 }
 
 export const PasswordCheck = ({
-  primaryColor = "#000000",
-  secondaryColor = "#ffffff",
+  primaryColor = '#000000',
+  secondaryColor = '#ffffff',
   ...props
 }: PasswordCheckProps) => (
   <svg

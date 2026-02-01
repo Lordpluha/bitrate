@@ -1,11 +1,11 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface TwitIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
 export const TwitIcon = ({
-  primaryColor = "var(--fg-color, currentcolor)",
+  primaryColor = 'var(--fg-color, currentcolor)',
   ...props
 }: TwitIconProps) => (
   <svg

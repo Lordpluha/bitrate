@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import {
   Table,
   TableBody,
@@ -6,14 +6,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table'
 
 type Radius = {
   name: string
   value: string
 }
 
-const RadiusTile = ({ value }: Pick<Radius, "value">) => {
+const RadiusTile = ({ value }: Pick<Radius, 'value'>) => {
   const style = window.getComputedStyle(document.body)
   const radius = style.getPropertyValue(value)
 
@@ -32,7 +32,7 @@ const RadiusTile = ({ value }: Pick<Radius, "value">) => {
 const meta: Meta<{
   radius: Radius[]
 }> = {
-  title: "design/Radius",
+  title: 'design/Radius',
   argTypes: {},
   render: (args) => (
     <Table>
@@ -68,10 +68,10 @@ type Story = StoryObj<typeof meta>
 export const Core: Story = {
   args: {
     radius: [
-      { name: "xs", value: "--radius-xs" },
-      { name: "sm", value: "--radius-sm" },
-      { name: "md", value: "--radius-md" },
-      { name: "lg", value: "--radius-lg" },
+      { name: 'xs', value: '--radius-xs' },
+      { name: 'sm', value: '--radius-sm' },
+      { name: 'md', value: '--radius-md' },
+      { name: 'lg', value: '--radius-lg' },
     ],
   },
 }

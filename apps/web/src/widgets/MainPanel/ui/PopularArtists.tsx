@@ -9,7 +9,7 @@ import {
   CarouselContent,
   CarouselItem,
   CarouselNext,
-  CarouselPrevious
+  CarouselPrevious,
 } from '@spotify/ui-react'
 
 import { MusicCardLg } from './MusicCardLg'
@@ -22,55 +22,60 @@ interface MusicItem {
 }
 
 export const PopularArtists: React.FC = () => {
-  const { data, isPending: loadingArtists, error } = useQuery('get', '/api/v1/artists', {
+  const {
+    data,
+    isPending: loadingArtists,
+    error,
+  } = useQuery('get', '/api/v1/artists', {
     params: {
       query: {
-        limit: 20
-      }
-    }
+        limit: 20,
+      },
+    },
   } as any)
 
   const artists: MusicItem[] = Array.isArray(data)
     ? data.map((artist) => ({
         id: artist.id,
-        name: artist.name || artist.username || artist.title || 'Unknown Artist',
+        name:
+          artist.name || artist.username || artist.title || 'Unknown Artist',
         description: 'Artist',
-        imageUrl: artist.imageUrl || artist.avatar || artist.cover
+        imageUrl: artist.imageUrl || artist.avatar || artist.cover,
       }))
     : []
 
   return (
-    <div className='relative mt-8'>
-      <div className='flex items-center justify-between mb-4'>
-        <h2 className='text-text text-2xl font-bold'>Popular artists</h2>
-        <button type='button' className='text-gray-400 hover:text-white text-sm font-medium'>
+    <div className="relative mt-8">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-text text-2xl font-bold">Popular artists</h2>
+        <button
+          type="button"
+          className="text-gray-400 hover:text-white text-sm font-medium"
+        >
           Show all
         </button>
       </div>
-      <div className='relative group'>
+      <div className="relative group">
         {/* Carousel with navigation */}
-        <Carousel
-          slidesToShow={5}
-          className='w-full'
-        >
+        <Carousel slidesToShow={5} className="w-full">
           <CarouselPrevious
             icon={<CustomPrevIcon />}
-            className='absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
           />
           <CarouselNext
             icon={<CustomNextIcon />}
-            className='absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200'
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
           />
-          <CarouselContent className='flex'>
+          <CarouselContent className="flex">
             {loadingArtists ? (
-              <div className='text-gray-400 p-4'>Loading...</div>
+              <div className="text-gray-400 p-4">Loading...</div>
             ) : artists.length === 0 ? (
-              <div className='text-gray-400 p-4'>No artists found</div>
+              <div className="text-gray-400 p-4">No artists found</div>
             ) : (
-              artists.map(artist => (
+              artists.map((artist) => (
                 <CarouselItem
                   key={artist.id}
-                  className='basis-auto max-w-[200px]'
+                  className="basis-auto max-w-[200px]"
                 >
                   <MusicCardLg
                     id={artist.id}

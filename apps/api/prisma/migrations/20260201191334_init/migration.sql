@@ -1,6 +1,3 @@
--- CreateSchema
-CREATE SCHEMA IF NOT EXISTS "public";
-
 -- CreateTable
 CREATE TABLE "User" (
     "id" UUID NOT NULL,
@@ -16,7 +13,7 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Session" (
+CREATE TABLE "UserSession" (
     "id" UUID NOT NULL,
     "userId" UUID NOT NULL,
     "access_token" TEXT NOT NULL,
@@ -24,7 +21,19 @@ CREATE TABLE "Session" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "expiresAt" TIMESTAMP(3),
 
-    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "UserSession_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ArtistSession" (
+    "id" UUID NOT NULL,
+    "artistId" UUID NOT NULL,
+    "access_token" TEXT NOT NULL,
+    "refresh_token" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" TIMESTAMP(3),
+
+    CONSTRAINT "ArtistSession_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -109,6 +118,14 @@ CREATE TABLE "_UserLikedTracks" (
 );
 
 -- CreateTable
+CREATE TABLE "_UserLikedArtists" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL,
+
+    CONSTRAINT "_UserLikedArtists_AB_pkey" PRIMARY KEY ("A","B")
+);
+
+-- CreateTable
 CREATE TABLE "_AlbumToTrack" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL,
@@ -117,11 +134,27 @@ CREATE TABLE "_AlbumToTrack" (
 );
 
 -- CreateTable
+CREATE TABLE "_UserLikedAlbums" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL,
+
+    CONSTRAINT "_UserLikedAlbums_AB_pkey" PRIMARY KEY ("A","B")
+);
+
+-- CreateTable
 CREATE TABLE "_PlaylistToTrack" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL,
 
     CONSTRAINT "_PlaylistToTrack_AB_pkey" PRIMARY KEY ("A","B")
+);
+
+-- CreateTable
+CREATE TABLE "_UserLikedPlaylists" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL,
+
+    CONSTRAINT "_UserLikedPlaylists_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -137,19 +170,34 @@ CREATE INDEX "User_email_idx" ON "User"("email");
 CREATE INDEX "User_username_idx" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_access_token_key" ON "Session"("access_token");
+CREATE UNIQUE INDEX "UserSession_access_token_key" ON "UserSession"("access_token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_refresh_token_key" ON "Session"("refresh_token");
+CREATE UNIQUE INDEX "UserSession_refresh_token_key" ON "UserSession"("refresh_token");
 
 -- CreateIndex
-CREATE INDEX "Session_userId_idx" ON "Session"("userId");
+CREATE INDEX "UserSession_userId_idx" ON "UserSession"("userId");
 
 -- CreateIndex
-CREATE INDEX "Session_access_token_idx" ON "Session"("access_token");
+CREATE INDEX "UserSession_access_token_idx" ON "UserSession"("access_token");
 
 -- CreateIndex
-CREATE INDEX "Session_refresh_token_idx" ON "Session"("refresh_token");
+CREATE INDEX "UserSession_refresh_token_idx" ON "UserSession"("refresh_token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ArtistSession_access_token_key" ON "ArtistSession"("access_token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ArtistSession_refresh_token_key" ON "ArtistSession"("refresh_token");
+
+-- CreateIndex
+CREATE INDEX "ArtistSession_artistId_idx" ON "ArtistSession"("artistId");
+
+-- CreateIndex
+CREATE INDEX "ArtistSession_access_token_idx" ON "ArtistSession"("access_token");
+
+-- CreateIndex
+CREATE INDEX "ArtistSession_refresh_token_idx" ON "ArtistSession"("refresh_token");
 
 -- CreateIndex
 CREATE INDEX "Track_artistId_idx" ON "Track"("artistId");
@@ -200,13 +248,25 @@ CREATE INDEX "Playlist_isPublic_idx" ON "Playlist"("isPublic");
 CREATE INDEX "_UserLikedTracks_B_index" ON "_UserLikedTracks"("B");
 
 -- CreateIndex
+CREATE INDEX "_UserLikedArtists_B_index" ON "_UserLikedArtists"("B");
+
+-- CreateIndex
 CREATE INDEX "_AlbumToTrack_B_index" ON "_AlbumToTrack"("B");
+
+-- CreateIndex
+CREATE INDEX "_UserLikedAlbums_B_index" ON "_UserLikedAlbums"("B");
 
 -- CreateIndex
 CREATE INDEX "_PlaylistToTrack_B_index" ON "_PlaylistToTrack"("B");
 
+-- CreateIndex
+CREATE INDEX "_UserLikedPlaylists_B_index" ON "_UserLikedPlaylists"("B");
+
 -- AddForeignKey
-ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserSession" ADD CONSTRAINT "UserSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ArtistSession" ADD CONSTRAINT "ArtistSession_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Track" ADD CONSTRAINT "Track_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -227,10 +287,22 @@ ALTER TABLE "_UserLikedTracks" ADD CONSTRAINT "_UserLikedTracks_A_fkey" FOREIGN 
 ALTER TABLE "_UserLikedTracks" ADD CONSTRAINT "_UserLikedTracks_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "_UserLikedArtists" ADD CONSTRAINT "_UserLikedArtists_A_fkey" FOREIGN KEY ("A") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserLikedArtists" ADD CONSTRAINT "_UserLikedArtists_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "_AlbumToTrack" ADD CONSTRAINT "_AlbumToTrack_A_fkey" FOREIGN KEY ("A") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_AlbumToTrack" ADD CONSTRAINT "_AlbumToTrack_B_fkey" FOREIGN KEY ("B") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserLikedAlbums" ADD CONSTRAINT "_UserLikedAlbums_A_fkey" FOREIGN KEY ("A") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserLikedAlbums" ADD CONSTRAINT "_UserLikedAlbums_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_PlaylistToTrack" ADD CONSTRAINT "_PlaylistToTrack_A_fkey" FOREIGN KEY ("A") REFERENCES "Playlist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -238,3 +310,8 @@ ALTER TABLE "_PlaylistToTrack" ADD CONSTRAINT "_PlaylistToTrack_A_fkey" FOREIGN 
 -- AddForeignKey
 ALTER TABLE "_PlaylistToTrack" ADD CONSTRAINT "_PlaylistToTrack_B_fkey" FOREIGN KEY ("B") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- AddForeignKey
+ALTER TABLE "_UserLikedPlaylists" ADD CONSTRAINT "_UserLikedPlaylists_A_fkey" FOREIGN KEY ("A") REFERENCES "Playlist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserLikedPlaylists" ADD CONSTRAINT "_UserLikedPlaylists_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

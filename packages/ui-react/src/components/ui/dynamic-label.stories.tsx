@@ -13,8 +13,8 @@ const meta = {
   component: DynamicLabel,
   tags: ['autodocs'],
   parameters: {
-    layout: 'centered'
-  }
+    layout: 'centered',
+  },
 } satisfies Meta<typeof DynamicLabel>
 
 export default meta
@@ -28,13 +28,9 @@ export const WithInput: Story = {
   render: () => (
     <div className="relative w-96">
       <DynamicLabel htmlFor="email-input">Email Address</DynamicLabel>
-      <Input
-        id="email-input"
-        type="email"
-        placeholder=""
-      />
+      <Input id="email-input" type="email" placeholder="" />
     </div>
-  )
+  ),
 }
 
 /**
@@ -44,12 +40,9 @@ export const WithPasswordInput: Story = {
   render: () => (
     <div className="relative w-96">
       <DynamicLabel htmlFor="password-input">Password</DynamicLabel>
-      <PasswordInput
-        id="password-input"
-        placeholder=""
-      />
+      <PasswordInput id="password-input" placeholder="" />
     </div>
-  )
+  ),
 }
 
 /**
@@ -57,19 +50,15 @@ export const WithPasswordInput: Story = {
  */
 export const Contrast: Story = {
   render: () => (
-    <div className='bg-contrast p-8 rounded-lg'>
+    <div className="bg-contrast p-8 rounded-lg">
       <div className="relative w-96">
         <DynamicLabel htmlFor="username-input" variant="contrast">
           Username
         </DynamicLabel>
-        <Input
-          id="username-input"
-          variant="contrast"
-          placeholder=""
-        />
+        <Input id="username-input" variant="contrast" placeholder="" />
       </div>
     </div>
-  )
+  ),
 }
 
 /**
@@ -93,5 +82,5 @@ export const FormExample: Story = {
         <PasswordInput id="form-password" placeholder="" />
       </div>
     </form>
-  )
+  ),
 }

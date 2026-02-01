@@ -8,6 +8,7 @@ export default defineConfig({
     seed: 'tsx src/infra/seeds/seed.ts',
   },
   datasource: {
-    url: env('DATABASE_URL')
+    url: env('DATABASE_URL'),
+    shadowDatabaseUrl: env('SHADOW_DATABASE_URL'),
   },
 })

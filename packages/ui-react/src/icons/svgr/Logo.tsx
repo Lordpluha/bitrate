@@ -1,4 +1,4 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface LogoProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
@@ -7,9 +7,9 @@ interface LogoProps extends SVGProps<SVGSVGElement> {
 }
 
 export const Logo = ({
-  primaryColor = "#1ed760",
-  secondaryColor = "#212121",
-  color3 = "#ffffff",
+  primaryColor = '#1ed760',
+  secondaryColor = '#212121',
+  color3 = '#ffffff',
   ...props
 }: LogoProps) => (
   <svg

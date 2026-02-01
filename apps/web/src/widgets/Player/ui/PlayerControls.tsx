@@ -1,7 +1,14 @@
 'use client'
 
 import React, { useRef, useState } from 'react'
-import { Play, Pause, SkipBack, SkipForward, Shuffle, Repeat } from 'lucide-react'
+import {
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Shuffle,
+  Repeat,
+} from 'lucide-react'
 import { cn } from '@spotify/ui-react'
 
 interface PlayerControlsProps {
@@ -44,7 +51,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
 
   const calculateTime = (e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
     if (!progressBarRef.current || !duration) return null
-    
+
     const rect = progressBarRef.current.getBoundingClientRect()
     const clickX = e.clientX - rect.left
     const percentage = Math.max(0, Math.min(1, clickX / rect.width))
@@ -87,7 +94,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove)
       document.addEventListener('mouseup', handleMouseUp)
-      
+
       return () => {
         document.removeEventListener('mousemove', handleMouseMove)
         document.removeEventListener('mouseup', handleMouseUp)
@@ -102,7 +109,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           onClick={onShuffleToggle}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            isShuffled ? 'text-green-500' : 'text-gray-400'
+            isShuffled ? 'text-green-500' : 'text-gray-400',
           )}
         >
           <Shuffle size={16} />
@@ -137,7 +144,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           onClick={onRepeatToggle}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            repeatMode !== 'off' ? 'text-green-500' : 'text-gray-400'
+            repeatMode !== 'off' ? 'text-green-500' : 'text-gray-400',
           )}
         >
           <Repeat size={16} />
@@ -148,7 +155,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         <span className="text-xs text-gray-400 min-w-[40px] text-right">
           {formatTime(seekTime !== null ? seekTime : currentTime)}
         </span>
-        <div 
+        <div
           ref={progressBarRef}
           className="flex-1 h-1 bg-gray-600 rounded-full cursor-pointer group relative"
           onMouseDown={handleMouseDown}

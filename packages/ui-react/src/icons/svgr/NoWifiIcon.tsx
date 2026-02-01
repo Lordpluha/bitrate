@@ -1,11 +1,11 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface NoWifiIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
 export const NoWifiIcon = ({
-  primaryColor = "var(--fg-color, currentcolor)",
+  primaryColor = 'var(--fg-color, currentcolor)',
   ...props
 }: NoWifiIconProps) => (
   <svg

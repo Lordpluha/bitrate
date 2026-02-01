@@ -1,4 +1,4 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 export const CustomPrevIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     fill="currentColor"

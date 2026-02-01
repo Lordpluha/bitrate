@@ -1,10 +1,10 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface SearchIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
-export const SearchIcon = ({ primaryColor = "#b3b3b3", ...props }: SearchIconProps) => (
+export const SearchIcon = ({ primaryColor = '#b3b3b3', ...props }: SearchIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"

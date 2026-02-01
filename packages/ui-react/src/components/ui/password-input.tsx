@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import { type ReactNode, useState } from "react"
-import { Eye, EyeOff } from "@/icons"
-import { cn } from "@/lib/utils"
+import { type ReactNode, useState } from 'react'
+import { Eye, EyeOff } from '@/icons'
+import { cn } from '@/lib/utils'
 
-import { Input, type InputProps } from "./input"
+import { Input, type InputProps } from './input'
 
-export interface PasswordInputProps extends Omit<InputProps, "type"> {
+export interface PasswordInputProps extends Omit<InputProps, 'type'> {
   showPassword?: boolean
   onTogglePassword?: () => void
   showIcon?: ReactNode
@@ -32,8 +32,8 @@ export const PasswordInput = ({
   return (
     <div className="relative">
       <Input
-        type={isShowPassword ? "text" : "password"}
-        className={cn("pr-10", className)}
+        type={isShowPassword ? 'text' : 'password'}
+        className={cn('pr-10', className)}
         {...props}
       />
       <button

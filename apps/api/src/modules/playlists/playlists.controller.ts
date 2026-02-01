@@ -1,5 +1,5 @@
-import { Auth } from '@modules/auth/auth.guard'
 import { UserEntity } from '@modules/users'
+import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -31,7 +31,7 @@ export class PlaylistsController {
   }
 
   @ApiOperation({ summary: 'Create a new playlist' })
-  @Auth()
+  @UserAuth()
   @Post('')
   async post(
     @Req() req: Request,
@@ -43,7 +43,7 @@ export class PlaylistsController {
   }
 
   @ApiOperation({ summary: 'Update playlist by id' })
-  @Auth()
+  @UserAuth()
   @Put(':id')
   async update(
     @Req() req: Request,

@@ -1,10 +1,10 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface GreenCheckProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
-export const GreenCheck = ({ primaryColor = "currentcolor", ...props }: GreenCheckProps) => (
+export const GreenCheck = ({ primaryColor = 'currentcolor', ...props }: GreenCheckProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"

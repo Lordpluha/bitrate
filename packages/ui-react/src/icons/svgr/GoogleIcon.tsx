@@ -1,4 +1,4 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface GoogleIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
@@ -8,10 +8,10 @@ interface GoogleIconProps extends SVGProps<SVGSVGElement> {
 }
 
 export const GoogleIcon = ({
-  primaryColor = "#eb4132",
-  secondaryColor = "#fbbd01",
-  color3 = "#31aa52",
-  color4 = "#4086f4",
+  primaryColor = '#eb4132',
+  secondaryColor = '#fbbd01',
+  color3 = '#31aa52',
+  color4 = '#4086f4',
   ...props
 }: GoogleIconProps) => (
   <svg

@@ -1,10 +1,10 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface RecentsIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
-export const RecentsIcon = ({ primaryColor = "#b3b3b3", ...props }: RecentsIconProps) => (
+export const RecentsIcon = ({ primaryColor = '#b3b3b3', ...props }: RecentsIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"

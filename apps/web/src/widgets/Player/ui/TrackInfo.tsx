@@ -15,7 +15,7 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
   artist,
   coverUrl,
   isLiked,
-  onLikeToggle
+  onLikeToggle,
 }) => {
   return (
     <div className="flex items-center gap-3 min-w-[180px] w-[50%]">
@@ -28,7 +28,9 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
         <div className="text-sm font-medium text-white truncate hover:underline cursor-pointer">
           {title}
         </div>
-        <div className="text-xs text-gray-400 truncate hover:underline hover:text-white cursor-pointer">{artist}</div>
+        <div className="text-xs text-gray-400 truncate hover:underline hover:text-white cursor-pointer">
+          {artist}
+        </div>
       </div>
       <div className="flex items-center gap-2">
         <button
@@ -38,13 +40,13 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
           <Heart
             size={16}
             className={cn(
-              isLiked ? 'fill-green-500 text-green-500' : 'text-gray-400 hover:text-white'
+              isLiked
+                ? 'fill-green-500 text-green-500'
+                : 'text-gray-400 hover:text-white',
             )}
           />
         </button>
-        <button
-          className="p-2 hover:scale-110 transition-transform"
-        >
+        <button className="p-2 hover:scale-110 transition-transform">
           <PictureInPicture2
             size={16}
             className="text-gray-400 hover:text-white"

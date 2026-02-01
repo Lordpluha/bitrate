@@ -1,11 +1,11 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface CalendarIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
 export const CalendarIcon = ({
-  primaryColor = "var(--fg-color, currentcolor)",
+  primaryColor = 'var(--fg-color, currentcolor)',
   ...props
 }: CalendarIconProps) => (
   <svg

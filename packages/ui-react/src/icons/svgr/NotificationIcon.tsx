@@ -1,10 +1,10 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface NotificationIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
-export const NotificationIcon = ({ primaryColor = "#b3b3b3", ...props }: NotificationIconProps) => (
+export const NotificationIcon = ({ primaryColor = '#b3b3b3', ...props }: NotificationIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"

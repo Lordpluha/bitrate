@@ -12,9 +12,9 @@ import {
 import { Reflector } from '@nestjs/core'
 import { ApiCookieAuth, ApiResponse } from '@nestjs/swagger'
 import { Request } from 'express'
+import { JWTPayload } from '../tokens'
+import { TokenService } from '../tokens/token.service'
 import { UNAUTHORIZED_ERRORS } from './errors/unauthorized.errors'
-import { TokenService } from './token.service'
-import { JWTPayload } from './types'
 
 export type TokenRequirement = 'access' | 'refresh'
 export const TOKEN_REQUIREMENT = 'tokenRequirement'
@@ -24,7 +24,7 @@ export const TOKEN_REQUIREMENT = 'tokenRequirement'
  * @param tokenRequirement
  * @returns Decorator function that sets the token requirement for the guard.
  */
-export function Auth(tokenRequirement: TokenRequirement = 'access') {
+export function UserAuth(tokenRequirement: TokenRequirement = 'access') {
   return applyDecorators(
     SetMetadata(TOKEN_REQUIREMENT, tokenRequirement),
     ApiCookieAuth(
@@ -48,12 +48,12 @@ export function Auth(tokenRequirement: TokenRequirement = 'access') {
         },
       },
     }),
-    UseGuards(AuthGuard),
+    UseGuards(UserAuthGuard),
   )
 }
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class UserAuthGuard implements CanActivate {
   constructor(
     private prisma: PrismaService,
     private reflector: Reflector,
@@ -104,7 +104,7 @@ export class AuthGuard implements CanActivate {
       if (!user) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 
       // 4) ищем сессию по всем пришедшим токенам
-      const session = await this.prisma.session.findFirst({
+      const session = await this.prisma.userSession.findFirst({
         where: {
           access_token,
           refresh_token,

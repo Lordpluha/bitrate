@@ -1,27 +1,27 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { Loader2, Mail } from "@/icons"
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Loader2, Mail } from '@/icons'
 
-import { Button } from "./button"
+import { Button } from './button'
 
 /**
  * Displays a button or a component that looks like a button.
  */
 const meta = {
-  title: "ui/Button",
+  title: 'ui/Button',
   component: Button,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     children: {
-      control: "text",
+      control: 'text',
     },
   },
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
   args: {
-    variant: "default",
-    size: "default",
-    children: "Button",
+    variant: 'default',
+    size: 'default',
+    children: 'Button',
   },
 } satisfies Meta<typeof Button>
 
@@ -40,7 +40,7 @@ export const Default: Story = {}
  */
 export const Outline: Story = {
   args: {
-    variant: "outline",
+    variant: 'outline',
   },
 }
 
@@ -50,7 +50,7 @@ export const Outline: Story = {
  */
 export const Ghost: Story = {
   args: {
-    variant: "ghost",
+    variant: 'ghost',
   },
 }
 
@@ -60,7 +60,7 @@ export const Ghost: Story = {
  */
 export const Secondary: Story = {
   args: {
-    variant: "secondary",
+    variant: 'secondary',
   },
 }
 
@@ -70,7 +70,7 @@ export const Secondary: Story = {
  */
 export const Destructive: Story = {
   args: {
-    variant: "destructive",
+    variant: 'destructive',
   },
 }
 
@@ -79,8 +79,8 @@ export const Destructive: Story = {
  */
 export const Subscribe: Story = {
   args: {
-    variant: 'subscribe'
-  }
+    variant: 'subscribe',
+  },
 }
 
 /**
@@ -88,7 +88,7 @@ export const Subscribe: Story = {
  */
 export const Primary: Story = {
   args: {
-    variant: "primary",
+    variant: 'primary',
   },
 }
 
@@ -98,7 +98,7 @@ export const Primary: Story = {
 
 export const contrast: Story = {
   args: {
-    variant: "contrast",
+    variant: 'contrast',
   },
 }
 
@@ -108,7 +108,7 @@ export const contrast: Story = {
  */
 export const Link: Story = {
   args: {
-    variant: "link",
+    variant: 'link',
   },
 }
 
@@ -150,7 +150,7 @@ export const WithIcon: Story = {
  */
 export const Small: Story = {
   args: {
-    size: "sm",
+    size: 'sm',
   },
 }
 
@@ -160,7 +160,7 @@ export const Small: Story = {
  */
 export const Large: Story = {
   args: {
-    size: "lg",
+    size: 'lg',
   },
 }
 
@@ -170,8 +170,8 @@ export const Large: Story = {
 export const Icon: Story = {
   args: {
     ...Secondary.args,
-    size: "icon",
-    title: "Mail",
+    size: 'icon',
+    title: 'Mail',
     children: <Mail />,
   },
 }

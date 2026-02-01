@@ -2,16 +2,16 @@
 
 import { useRef, useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from './index'
-import { 
-  togglePlay, 
-  setCurrentTime, 
-  setProgress, 
-  setDuration, 
-  changeTrack, 
+import {
+  togglePlay,
+  setCurrentTime,
+  setProgress,
+  setDuration,
+  changeTrack,
   pause,
   selectIsPlaying,
   selectVolume,
-  selectCurrentTrack
+  selectCurrentTrack,
 } from '@entities/Player'
 
 export const useAudioPlayer = () => {
@@ -23,10 +23,10 @@ export const useAudioPlayer = () => {
   const currentTrack = useAppSelector(selectCurrentTrack)
 
   // Get track URL
-  const trackUrl = currentTrack?.audioUrl 
-    ? (currentTrack.audioUrl.startsWith('http') 
-        ? currentTrack.audioUrl 
-        : `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${currentTrack.id}`)
+  const trackUrl = currentTrack?.audioUrl
+    ? currentTrack.audioUrl.startsWith('http')
+      ? currentTrack.audioUrl
+      : `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${currentTrack.id}`
     : null
 
   // Progressive streaming setup
@@ -40,7 +40,7 @@ export const useAudioPlayer = () => {
       audioRef.current.preload = 'none'
       audioRef.current.src = trackUrl
       audioRef.current.load()
-      
+
       console.log('Progressive streaming enabled')
     } catch (error) {
       console.error('Error setting up progressive streaming:', error)
@@ -65,21 +65,27 @@ export const useAudioPlayer = () => {
     }
   }, [isPlaying, dispatch])
 
-  const onSeek = useCallback((time: number) => {
-    if (audioRef.current && !isNaN(time) && isFinite(time)) {
-      isSeekingRef.current = true
-      audioRef.current.currentTime = time
-    }
-    dispatch(setCurrentTime(time))
-  }, [dispatch])
+  const onSeek = useCallback(
+    (time: number) => {
+      if (audioRef.current && !isNaN(time) && isFinite(time)) {
+        isSeekingRef.current = true
+        audioRef.current.currentTime = time
+      }
+      dispatch(setCurrentTime(time))
+    },
+    [dispatch],
+  )
 
   const handleSeeked = useCallback(() => {
     isSeekingRef.current = false
   }, [])
 
-  const changeTrackHandler = useCallback((direction: 'next' | 'prev') => {
-    dispatch(changeTrack(direction))
-  }, [dispatch])
+  const changeTrackHandler = useCallback(
+    (direction: 'next' | 'prev') => {
+      dispatch(changeTrack(direction))
+    },
+    [dispatch],
+  )
 
   const handleLoadedMetadata = useCallback(() => {
     if (audioRef.current) {
@@ -114,7 +120,9 @@ export const useAudioPlayer = () => {
         const bufferedEnd = buffered.end(buffered.length - 1)
         const duration = audioRef.current.duration
         const bufferedPercent = (bufferedEnd / duration) * 100
-        console.log(`Buffered: ${bufferedEnd.toFixed(2)}s / ${duration.toFixed(2)}s (${bufferedPercent.toFixed(1)}%)`)
+        console.log(
+          `Buffered: ${bufferedEnd.toFixed(2)}s / ${duration.toFixed(2)}s (${bufferedPercent.toFixed(1)}%)`,
+        )
       }
     }
   }, [])

@@ -6,14 +6,6 @@ import { UserEntity } from './entities'
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findById_UNSECURE(id: UserEntity['id']) {
-    return await this.prisma.user.findUniqueOrThrow({
-      where: {
-        id,
-      },
-    })
-  }
-
   async findById(id: UserEntity['id']) {
     return await this.prisma.user.findUniqueOrThrow({
       where: {
@@ -33,14 +25,6 @@ export class UsersService {
       },
       omit: {
         password: true,
-      },
-    })
-  }
-
-  async getByEmail_UNSECURE(email: UserEntity['email']) {
-    return await this.prisma.user.findFirst({
-      where: {
-        email,
       },
     })
   }

@@ -14,14 +14,8 @@ export function UploadAvatarSwagger() {
     ApiResponse({
       status: HttpStatus.OK,
       description: 'Avatar uploaded successfully',
-      example: {
-        id: '1',
-        username: 'user1',
-        avatar: 'https://example.com/uploads/avatars/avatar.jpg',
-        backgroundImage: '',
-        bio: 'Some bio',
-        createdAt: new Date(),
-        email: 'example@gmail.com',
+      schema: {
+        $ref: '#/components/schemas/SafeUserEntity',
       },
     }),
     ApiResponse({

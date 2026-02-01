@@ -1,12 +1,10 @@
-import { Auth } from '@modules/auth/auth.guard'
-import { UserEntity } from '@modules/users'
+import { ArtistEntity } from '@modules/artists'
+import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import {
   BadRequestException,
   Body,
   Controller,
   Get,
-  Headers,
-  NotFoundException,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -14,21 +12,20 @@ import {
   Put,
   Query,
   Req,
-  Res,
-  StreamableFile,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { Request, Response } from 'express'
-import * as fs from 'fs'
-import { parseFile } from 'music-metadata'
+import { FileFieldsInterceptor } from '@nestjs/platform-express'
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
+import { randomUUID } from 'crypto'
+import { Request } from 'express'
+import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
-import * as path from 'path'
-import { AudioGateway } from './audio.gateway'
+import { extname } from 'path'
 import {
   GetTrackByIdSwagger,
   PostTrackSwagger,
   TracksGetAllSwagger,
-  TracksGetLikedSwagger,
   UpdateTrackByIdSwagger,
 } from './decorators'
 import { CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
@@ -39,10 +36,7 @@ import { TracksService } from './tracks.service'
 @ApiTags('Tracks')
 @Controller('tracks')
 export class TracksController {
-  constructor(
-    private tracksService: TracksService,
-    private audioGateway: AudioGateway,
-  ) {}
+  constructor(private tracksService: TracksService) {}
 
   @TracksGetAllSwagger()
   @Get('')
@@ -58,21 +52,6 @@ export class TracksController {
     })
   }
 
-  @Auth()
-  @TracksGetLikedSwagger()
-  @Get('liked')
-  getLikedTracks(
-    @Req() req: Request,
-    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-  ) {
-    const user = req['user'] as UserEntity
-    return this.tracksService.findLikedTracks(user.id, {
-      page,
-      limit,
-    })
-  }
-
   @GetTrackByIdSwagger()
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
@@ -80,275 +59,111 @@ export class TracksController {
   }
 
   @PostTrackSwagger()
-  @Auth()
+  @ArtistAuth()
   @Post('')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'audio', maxCount: 1 },
+        { name: 'cover', maxCount: 1 },
+      ],
+      {
+        storage: diskStorage({
+          destination: (req, file, cb) => {
+            if (file.fieldname === 'audio') {
+              return cb(null, './storage/private/tracks')
+            }
+            return cb(null, './storage/public/tracks/covers')
+          },
+          filename: (req, file, cb) => {
+            const uniqueName = `${randomUUID()}${extname(file.originalname)}`
+            cb(null, uniqueName)
+          },
+        }),
+        fileFilter: (req, file, cb) => {
+          const audioTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
+          const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
+
+          if (file.fieldname === 'audio' && !audioTypes.includes(file.mimetype)) {
+            return cb(new BadRequestException('Invalid audio file type'), false)
+          }
+
+          if (file.fieldname === 'cover' && !coverTypes.includes(file.mimetype)) {
+            return cb(new BadRequestException('Invalid cover file type'), false)
+          }
+
+          cb(null, true)
+        },
+      },
+    ),
+  )
   postTrack(
     @Req() req: Request,
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto,
+    @UploadedFiles()
+    files: { audio?: Express.Multer.File[]; cover?: Express.Multer.File[] },
   ) {
-    const user = req['user'] as UserEntity
-    return this.tracksService.create(user.id, createTrackDto)
+    const artist = req['artist'] as ArtistEntity
+    const audioFile = files?.audio?.[0]
+    const coverFile = files?.cover?.[0]
+
+    if (!audioFile) {
+      throw new BadRequestException('Audio file is required')
+    }
+
+    return this.tracksService.create(artist.id, createTrackDto, audioFile, coverFile)
   }
 
   @UpdateTrackByIdSwagger()
-  @Auth()
+  @ArtistAuth()
   @Put(':id')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'audio', maxCount: 1 },
+        { name: 'cover', maxCount: 1 },
+      ],
+      {
+        storage: diskStorage({
+          destination: (req, file, cb) => {
+            if (file.fieldname === 'audio') {
+              return cb(null, './storage/private/tracks')
+            }
+            return cb(null, './storage/public/tracks/covers')
+          },
+          filename: (req, file, cb) => {
+            const uniqueName = `${randomUUID()}${extname(file.originalname)}`
+            cb(null, uniqueName)
+          },
+        }),
+        fileFilter: (req, file, cb) => {
+          const audioTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
+          const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
+
+          if (file.fieldname === 'audio' && !audioTypes.includes(file.mimetype)) {
+            return cb(new BadRequestException('Invalid audio file type'), false)
+          }
+
+          if (file.fieldname === 'cover' && !coverTypes.includes(file.mimetype)) {
+            return cb(new BadRequestException('Invalid cover file type'), false)
+          }
+
+          cb(null, true)
+        },
+      },
+    ),
+  )
   putTrack(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto,
+    @UploadedFiles()
+    files: { audio?: Express.Multer.File[]; cover?: Express.Multer.File[] },
   ) {
-    return this.tracksService.update(id, createTrackDto)
-  }
+    const audioFile = files?.audio?.[0]
+    const coverFile = files?.cover?.[0]
 
-  @ApiOperation({ summary: 'Stream audio track' })
-  @Auth() // Добавляем аутентификацию для доступа к стримингу
-  @Get('stream/:id')
-  async streamTrack(
-    @Param('id', ParseUUIDPipe) trackId: string,
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-    @Headers('range') range?: string,
-  ) {
-    try {
-      console.log(`Attempting to stream track: ${trackId}`)
-
-      // Verify track exists
-      const track = await this.tracksService.findTrackById(trackId)
-      if (!track) {
-        throw new NotFoundException('Track not found')
-      }
-
-      console.log('Track found:', {
-        id: track.id,
-        title: track.title,
-        audioUrl: track.audioUrl,
-        audioUrlType: typeof track.audioUrl,
-      })
-
-      // Check if audioUrl exists
-      if (!track.audioUrl) {
-        console.error(`Track ${trackId} has no audioUrl`)
-        throw new NotFoundException('Track audio file not configured')
-      }
-
-      // Build file path - handle both URLs and file paths
-      let filePath: string
-
-      if (track.audioUrl.startsWith('http://') || track.audioUrl.startsWith('https://')) {
-        // It's a URL, extract the file path from it
-        try {
-          const url = new URL(track.audioUrl)
-          // Extract the pathname and join with current working directory
-          // Remove leading slash from pathname to properly join with cwd
-          const relativePath = url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname
-          filePath = path.join(process.cwd(), relativePath)
-        } catch (error) {
-          console.error(`Invalid URL in audioUrl: ${track.audioUrl}`, error)
-          throw new NotFoundException('Invalid audio URL format')
-        }
-      } else if (path.isAbsolute(track.audioUrl)) {
-        // It's an absolute file path
-        filePath = track.audioUrl
-      } else {
-        // It's a relative path, assume it's relative to storage/private/tracks directory
-        filePath = path.join(process.cwd(), 'storage', 'private', 'tracks', track.audioUrl)
-      }
-
-      console.log(`Constructed file path: ${filePath}`)
-
-      // Check if file exists
-      if (!fs.existsSync(filePath)) {
-        console.error(`Audio file not found: ${filePath}`)
-        throw new NotFoundException(`Audio file not found: ${track.audioUrl}`)
-      }
-
-      const stat = fs.statSync(filePath)
-      const fileSize = stat.size
-
-      // Determine content type based on file extension
-      const fileExtension = path.extname(filePath).toLowerCase()
-      const contentType =
-        fileExtension === '.opus' || fileExtension === '.webm'
-          ? 'audio/webm; codecs="opus"'
-          : 'audio/mpeg'
-
-      // Read track duration from metadata
-      let trackDuration: number | undefined
-      try {
-        const metadata = await parseFile(filePath)
-        trackDuration = metadata.format.duration
-        console.log(`Track duration from metadata: ${trackDuration}s`)
-      } catch (error) {
-        console.warn(`Could not read metadata for ${filePath}:`, error)
-      }
-
-      if (range) {
-        // Handle range requests - allow client to control chunk size
-        const parts = range.replace(/bytes=/, '').split('-')
-        const start = Number.parseInt(parts[0] ?? '0', 10)
-        const requestedEnd = parts[1] ? Number.parseInt(parts[1], 10) : fileSize - 1
-
-        // Use requested range (client calculates optimal chunk size)
-        const end = Math.min(requestedEnd, fileSize - 1)
-        const chunksize = end - start + 1
-
-        const file = fs.createReadStream(filePath, { start, end })
-
-        res.status(206)
-        res.set({
-          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-          'Accept-Ranges': 'bytes',
-          'Content-Length': chunksize.toString(),
-          'Content-Type': contentType,
-          ...(trackDuration ? { 'X-Track-Duration': trackDuration.toString() } : {}),
-        })
-
-        return new StreamableFile(file, {
-          length: chunksize,
-          type: contentType,
-        })
-      } else {
-        // Handle normal requests - return full file
-        res.set({
-          'Content-Length': fileSize.toString(),
-          'Content-Type': contentType,
-          'Accept-Ranges': 'bytes',
-          'Cache-Control': 'no-cache',
-          ...(trackDuration ? { 'X-Track-Duration': trackDuration.toString() } : {}),
-        })
-
-        const file = fs.createReadStream(filePath)
-        return new StreamableFile(file)
-      }
-    } catch (error) {
-      console.error('Error streaming track:', error)
-      if (error instanceof NotFoundException) {
-        throw error
-      }
-      throw new NotFoundException('Error streaming audio file')
-    }
-  }
-
-  @ApiOperation({ summary: 'Start playing track for authenticated user' })
-  @Auth()
-  @Post('play/:id')
-  async playTrack(
-    @Param('id', ParseUUIDPipe) trackId: string,
-    @Req() req: Request,
-    @Body('currentTime') currentTime: number = 0,
-  ) {
-    const user = req['user'] as UserEntity
-
-    // Verify track exists
-    const track = await this.tracksService.findTrackById(trackId)
-    if (!track) {
-      throw new NotFoundException('Track not found')
-    }
-
-    // Emit play event to user's room
-    this.audioGateway.emitToUser(user.id, 'trackPlaying', {
-      trackId,
-      currentTime,
-      userId: user.id,
-      track: {
-        id: track.id,
-        title: track.title,
-        audioUrl: track.audioUrl,
-        cover: track.cover,
-      },
-    })
-
-    return {
-      success: true,
-      message: 'Track playback started',
-      trackId,
-      currentTime,
-    }
-  }
-
-  @ApiOperation({ summary: 'Pause track for authenticated user' })
-  @Auth()
-  @Post('pause/:id')
-  async pauseTrack(
-    @Param('id', ParseUUIDPipe) trackId: string,
-    @Req() req: Request,
-    @Body('currentTime') currentTime: number = 0,
-  ) {
-    const user = req['user'] as UserEntity
-
-    // Verify track exists
-    const track = await this.tracksService.findTrackById(trackId)
-    if (!track) {
-      throw new NotFoundException('Track not found')
-    }
-
-    // Emit pause event to user's room
-    this.audioGateway.emitToUser(user.id, 'trackPaused', {
-      trackId,
-      currentTime,
-      userId: user.id,
-    })
-
-    return {
-      success: true,
-      message: 'Track playback paused',
-      trackId,
-      currentTime,
-    }
-  }
-
-  @ApiOperation({
-    summary: 'Update track streaming state for authenticated user',
-  })
-  @Auth()
-  @Post('update-state/:id')
-  async updateTrackState(
-    @Param('id', ParseUUIDPipe) trackId: string,
-    @Req() req: Request,
-    @Body() body: { currentTime: number; isPlaying: boolean },
-  ) {
-    const user = req['user'] as UserEntity
-
-    if (typeof body.currentTime !== 'number' || typeof body.isPlaying !== 'boolean') {
-      throw new BadRequestException('Invalid body parameters')
-    }
-
-    // Verify track exists
-    const track = await this.tracksService.findTrackById(trackId)
-    if (!track) {
-      throw new NotFoundException('Track not found')
-    }
-
-    // Emit update event to user's room
-    this.audioGateway.emitToUser(user.id, 'trackUpdated', {
-      trackId,
-      currentTime: body.currentTime,
-      isPlaying: body.isPlaying,
-      userId: user.id,
-    })
-
-    return {
-      success: true,
-      message: 'Track state updated',
-      trackId,
-      currentTime: body.currentTime,
-      isPlaying: body.isPlaying,
-    }
-  }
-
-  @ApiOperation({ summary: 'Get current track state for authenticated user' })
-  @Auth()
-  @Get('current-state')
-  getCurrentState(@Req() req: Request) {
-    const user = req['user'] as UserEntity
-
-    // This would typically be handled by the WebSocket gateway
-    // But we can provide a REST endpoint as well
-    return {
-      message: 'Current state available via WebSocket connection',
-      userId: user.id,
-    }
+    return this.tracksService.update(id, createTrackDto, audioFile, coverFile)
   }
 }

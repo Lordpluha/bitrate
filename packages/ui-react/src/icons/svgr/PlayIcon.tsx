@@ -1,4 +1,4 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface PlayIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
@@ -6,8 +6,8 @@ interface PlayIconProps extends SVGProps<SVGSVGElement> {
 }
 
 export const PlayIcon = ({
-  primaryColor = "#1ed760",
-  secondaryColor = "#000000",
+  primaryColor = '#1ed760',
+  secondaryColor = '#000000',
   ...props
 }: PlayIconProps) => (
   <svg

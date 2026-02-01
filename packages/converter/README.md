@@ -1,6 +1,7 @@
 # @spotify/converter
 
 CLI tool for media conversion using FFmpeg. Convert audio files to OGG Opus and extract audio from video files to AAC format.
+Also supports image conversion to WebP.
 
 ## Installation
 
@@ -90,12 +91,37 @@ media-converter video -i movie.mp4 -b 64k --profile aac_he
 - `aac_he` - HE-AAC, good for low bitrates
 - `aac_he_v2` - HE-AAC v2, optimized for very low bitrates
 
+### Image Conversion (WebP)
+
+Convert images to WebP with configurable quality and lossless mode.
+
+```bash
+# Convert image to WebP (default quality 80)
+media-converter image -i cover.png
+
+# Custom output and quality
+media-converter image -i cover.jpg -o cover.webp -q 85
+
+# Lossless WebP
+media-converter image -i logo.png --lossless
+```
+
+#### Image Options
+
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--input` | `-i` | Input image file (required) | - |
+| `--output` | `-o` | Output file path | `input.webp` |
+| `--quality` | `-q` | WebP quality (1-100) | `80` |
+| `--lossless` | - | Enable lossless WebP | `false` |
+
 ## Programmatic Usage
 
 You can also use the converter in your Node.js code:
 
 ```javascript
 import { convertAudio, convertVideo } from '@spotify/converter'
+import { convertImage } from '@spotify/converter'
 
 // Convert audio
 const audioResult = await convertAudio({
@@ -130,6 +156,22 @@ console.log(videoResult)
 //   output: 'audio.m4a',
 //   inputSize: '150 MB',
 //   outputSize: '12 MB'
+// }
+
+// Convert image
+const imageResult = await convertImage({
+  input: 'cover.png',
+  output: 'cover.webp',
+  quality: 85,
+  lossless: false
+})
+
+console.log(imageResult)
+// {
+//   input: 'cover.png',
+//   output: 'cover.webp',
+//   inputSize: '1.4 MB',
+//   outputSize: '420 KB'
 // }
 ```
 
