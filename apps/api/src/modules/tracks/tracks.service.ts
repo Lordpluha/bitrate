@@ -1,14 +1,23 @@
+import type { AppConfig } from '@common/config'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { ArtistEntity } from '@modules/artists'
 import { UserEntity } from '@modules/users'
+import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { Artist } from '@prisma/client'
+import { Queue } from 'bullmq'
+import { extname } from 'path'
 import { CreateTrackDto } from './dtos'
 import { TrackEntity } from './entities'
 
 @Injectable()
 export class TracksService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @InjectQueue('audio-processing') private readonly audioQueue: Queue,
+    private readonly configService: ConfigService<AppConfig>,
+  ) {}
 
   async findAll({
     page = 1,
@@ -99,21 +108,143 @@ export class TracksService {
     })
   }
 
-  async create(artistId: ArtistEntity['id'], createTrackDto: CreateTrackDto) {
-    return await this.prisma.track.create({
-      data: {
-        artistId,
-        ...createTrackDto,
-      },
+  async create(
+    artistId: ArtistEntity['id'],
+    createTrackDto: CreateTrackDto,
+    audioFile: Express.Multer.File,
+    coverFile?: Express.Multer.File,
+  ) {
+    const formatFromMime: Record<string, { format: string; codec?: string | null }> = {
+      'audio/mpeg': { format: 'mp3', codec: 'mp3' },
+      'audio/ogg': { format: 'ogg', codec: null },
+      'audio/wav': { format: 'wav', codec: null },
+      'audio/webm': { format: 'webm', codec: null },
+    }
+
+    const extension = extname(audioFile.originalname).replace('.', '').toLowerCase()
+    const fromMime = formatFromMime[audioFile.mimetype]
+    const format = fromMime?.format ?? (extension || 'unknown')
+    const codec = fromMime?.codec ?? null
+
+    const track = await this.prisma.$transaction(async (tx) => {
+      const created = await tx.track.create({
+        data: {
+          artistId,
+          title: createTrackDto.title,
+          audioUrl: audioFile.filename,
+          cover: coverFile?.filename ?? null,
+        },
+      })
+
+      await tx.trackFile.create({
+        data: {
+          trackId: created.id,
+          format,
+          bitrate: 0,
+          codec,
+          url: audioFile.filename,
+          size: audioFile.size,
+        },
+      })
+
+      return created
     })
+
+    await this.audioQueue.add(
+      'convert-audio',
+      {
+        trackId: track.id,
+        artistId,
+        inputPath: this.configService.getOrThrow('storage').getTracksDir(audioFile.filename),
+        outputDir: this.configService.getOrThrow('storage').getTracksDir(),
+        format: 'opus',
+        bitrates: ['128k', '192k', '320k'],
+      },
+      {
+        delay: 10000,
+      },
+    )
+
+    return track
   }
 
-  async update(id: TrackEntity['id'], createTrackDto: CreateTrackDto) {
-    return await this.prisma.track.update({
-      where: {
-        id,
-      },
-      data: createTrackDto,
+  async update(
+    id: TrackEntity['id'],
+    createTrackDto: CreateTrackDto,
+    audioFile?: Express.Multer.File,
+    coverFile?: Express.Multer.File,
+  ) {
+    const formatFromMime: Record<string, { format: string; codec?: string | null }> = {
+      'audio/mpeg': { format: 'mp3', codec: 'mp3' },
+      'audio/ogg': { format: 'ogg', codec: null },
+      'audio/wav': { format: 'wav', codec: null },
+      'audio/webm': { format: 'webm', codec: null },
+    }
+
+    const extension = audioFile?.originalname
+      ? extname(audioFile.originalname).replace('.', '').toLowerCase()
+      : ''
+    const fromMime = audioFile ? formatFromMime[audioFile.mimetype] : undefined
+    const format = audioFile ? (fromMime?.format ?? (extension || 'unknown')) : undefined
+    const codec = audioFile ? (fromMime?.codec ?? null) : undefined
+
+    const track = await this.prisma.$transaction(async (tx) => {
+      const updated = await tx.track.update({
+        where: {
+          id,
+        },
+        data: {
+          title: createTrackDto.title,
+          cover: coverFile?.filename ?? undefined,
+          audioUrl: audioFile?.filename ?? undefined,
+        },
+      })
+
+      if (audioFile && format) {
+        await tx.trackFile.upsert({
+          where: {
+            trackId_format_bitrate: {
+              trackId: updated.id,
+              format,
+              bitrate: 0,
+            },
+          },
+          update: {
+            codec,
+            url: audioFile.filename,
+            size: audioFile.size,
+          },
+          create: {
+            trackId: updated.id,
+            format,
+            bitrate: 0,
+            codec,
+            url: audioFile.filename,
+            size: audioFile.size,
+          },
+        })
+      }
+
+      return updated
     })
+
+    if (audioFile) {
+      await this.audioQueue.add(
+        'convert-audio',
+        {
+          trackId: track.id,
+          artistId: track.artistId,
+          inputPath: this.configService.getOrThrow('storage').getTracksDir(audioFile.filename),
+          outputDir: this.configService.getOrThrow('storage').getTracksDir(),
+          format: 'opus',
+          bitrates: ['128k', '192k', '320k'],
+        },
+        {
+          delay: 10000,
+        },
+      )
+    }
+
+    return track
   }
 }

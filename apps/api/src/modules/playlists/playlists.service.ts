@@ -1,8 +1,7 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
-import { CreatePlaylistDto } from './dtos/create-playlist.dto'
-import { UpdatePlaylistDto } from './dtos/update-playlist.dto'
+import { CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
 import { PlaylistEntity } from './entities'
 
 @Injectable()

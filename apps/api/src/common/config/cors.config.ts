@@ -1,4 +1,6 @@
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
+import { registerAs } from '@nestjs/config'
+import { GatewayMetadata } from '@nestjs/websockets'
 
 /**
  * Allowed origins for CORS
@@ -45,7 +47,7 @@ export const corsConfig: CorsOptions = {
 /**
  * CORS configuration for WebSocket connections
  */
-export const websocketCorsConfig = {
+export const websocketCorsConfig: GatewayMetadata['cors'] = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     const allowedOrigins = getAllowedOrigins()
 
@@ -72,3 +74,9 @@ export const websocketCorsConfig = {
   },
   credentials: true,
 }
+
+export const corsConfigFactory = registerAs('cors', () => ({
+  http: corsConfig,
+  ws: websocketCorsConfig,
+  allowedOrigins: getAllowedOrigins(),
+}))

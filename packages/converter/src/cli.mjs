@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { parseArgs } from "node:util"
 import { convertAudio } from "./audio.mjs"
+import { convertImage } from "./image.mjs"
 import { convertVideo } from "./video.mjs"
 
 const HELP_TEXT = `
@@ -12,6 +13,7 @@ USAGE:
 COMMANDS:
   audio       Convert audio to OGG Opus format
   video       Convert video to AAC format
+	image       Convert images to WebP format
   help        Show this help message
 
 AUDIO OPTIONS:
@@ -30,6 +32,12 @@ VIDEO OPTIONS:
   -q, --quality <level>    AAC quality 0.1-2 (default: 1)
   --profile <profile>      AAC profile: aac_low, aac_he, aac_he_v2 (default: aac_low)
 
+IMAGE OPTIONS:
+	-i, --input <file>       Input image file (required)
+	-o, --output <file>      Output file (default: input with .webp extension)
+	-q, --quality <level>    WebP quality 1-100 (default: 80)
+	--lossless               Enable lossless WebP (default: false)
+
 EXAMPLES:
   # Convert audio to Opus with default settings (128k CBR)
   media-converter audio -i song.mp3
@@ -42,6 +50,9 @@ EXAMPLES:
 
   # Convert video audio with high quality AAC
   media-converter video -i movie.mp4 -b 256k -q 2
+
+	# Convert image to WebP
+	media-converter image -i cover.png -q 85
 `
 
 function parseOptions(args) {
@@ -53,6 +64,7 @@ function parseOptions(args) {
 			bitrate: { type: "string", short: "b" },
 			quality: { type: "string", short: "q" },
 			vbr: { type: "boolean", short: "v" },
+			lossless: { type: "boolean" },
 			application: { type: "string" },
 			profile: { type: "string" },
 			help: { type: "boolean", short: "h" },
@@ -105,6 +117,15 @@ async function main() {
 					bitrate: options.bitrate || "128k",
 					quality: options.quality ? Number.parseFloat(options.quality) : 1,
 					profile: options.profile || "aac_low",
+				})
+				break
+
+			case "image":
+				await convertImage({
+					input: options.input,
+					output: options.output,
+					quality: options.quality ? Number.parseInt(options.quality, 10) : 80,
+					lossless: options.lossless || false,
 				})
 				break
 

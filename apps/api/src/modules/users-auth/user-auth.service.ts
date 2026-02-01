@@ -1,15 +1,15 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { JWTPayload } from '../tokens'
+import { TokenService } from '../tokens/token.service'
 import { UserEntity } from '../users/entities'
 import { UsersService } from '../users/users.service'
 import { RegistrationDto } from './dtos'
-import { SessionEntity } from './entities'
-import { TokenService } from './token.service'
-import { JWTPayload } from './types'
+import { UserSessionEntity } from './entities'
 
 @Injectable()
-export class AuthService {
+export class UserAuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -45,7 +45,7 @@ export class AuthService {
     const access_token = await this.tokenService.generateAccessToken(user.id, user.username)
     const refresh_token = await this.tokenService.generateRefreshToken(user.id, user.username)
 
-    const session = await this.prisma.session.create({
+    const session = await this.prisma.userSession.create({
       data: {
         access_token,
         userId: user.id,
@@ -76,19 +76,22 @@ export class AuthService {
     }
   }
 
-  async logout(userId: SessionEntity['userId'], refresh_token: SessionEntity['refresh_token']) {
+  async logout(
+    userId: UserSessionEntity['userId'],
+    refresh_token: UserSessionEntity['refresh_token'],
+  ) {
     const user = await this.usersService.findById(userId)
     if (!user) {
       throw new UnauthorizedException('Invalid access token')
     }
-    const session = await this.prisma.session.findFirst({
+    const session = await this.prisma.userSession.findFirst({
       where: {
         userId: user.id,
         refresh_token,
       },
     })
 
-    await this.prisma.session.delete({
+    await this.prisma.userSession.delete({
       where: {
         id: session?.id,
       },

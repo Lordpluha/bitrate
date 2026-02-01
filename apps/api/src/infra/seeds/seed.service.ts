@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import { Logger } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import type { Artist as NCSArtist, Song as NCSSong } from '@spotify/ncs-parser'
 import * as ncs from '@spotify/ncs-parser'
@@ -14,6 +15,8 @@ export class SeedService {
     private prisma: PrismaClient,
     private downloadService: DownloadResourcesService,
   ) {}
+
+  private readonly logger = new Logger(SeedService.name, { timestamp: true })
 
   /**
    * Создаёт или находит артиста в БД
@@ -46,7 +49,7 @@ export class SeedService {
     })
 
     if (existingTrack) {
-      console.log(`  ⏭️  Track "${ncsSong.name}" already exists, skipping...`)
+      this.logger.log(`  ⏭️  Track "${ncsSong.name}" already exists, skipping...`)
       return existingTrack
     }
 
@@ -133,9 +136,9 @@ export class SeedService {
    * Импортирует артистов и треки из NCS
    */
   async importFromNCS() {
-    console.log('═══════════════════════════════════════')
-    console.log('📡 STEP 1: Importing from NCS')
-    console.log('═══════════════════════════════════════')
+    this.logger.log('═══════════════════════════════════════')
+    this.logger.log('📡 STEP 1: Importing from NCS')
+    this.logger.log('═══════════════════════════════════════')
 
     const PAGES_TO_IMPORT = config.pagesToImport
     const DELAY_BETWEEN_PAGES = config.delayBetweenPages
@@ -145,24 +148,23 @@ export class SeedService {
     const artistCache = new Map<string, string>()
 
     for (let page = 0; page < PAGES_TO_IMPORT; page++) {
-      console.log(`\n📄 Processing NCS page ${page + 1}/${PAGES_TO_IMPORT}...`)
+      this.logger.log(`\n📄 Processing NCS page ${page + 1}/${PAGES_TO_IMPORT}...`)
 
       try {
         const songs = await ncs.search(config.filters, page)
 
         if (!songs || songs.length === 0) {
-          console.log('  ⚠️  No songs found on this page, stopping...')
+          this.logger.warn('  ⚠️  No songs found on this page, stopping...')
           break
         }
 
-        console.log(`  ✅ Found ${songs.length} songs`)
-
+        this.logger.log(`  ✅ Found ${songs.length} songs`)
         for (const song of songs) {
           try {
             const primaryArtist = song.artists[0]
 
             if (!primaryArtist) {
-              console.log(`  ⚠️  Skipping "${song.name}" - no artist information`)
+              this.logger.warn(`  ⚠️  Skipping "${song.name}" - no artist information`)
               continue
             }
 
@@ -173,14 +175,14 @@ export class SeedService {
               artistId = artist.id
               artistCache.set(primaryArtist.name, artistId)
               totalArtistsImported++
-              console.log(`  👤 Created/found artist: ${primaryArtist.name}`)
+              this.logger.log(`  👤 Created/found artist: ${primaryArtist.name}`)
             }
 
             await this.createTrack(song, artistId)
             totalTracksImported++
-            console.log(`  🎵 Imported track: ${song.name} by ${primaryArtist.name}`)
+            this.logger.log(`  🎵 Imported track: ${song.name} by ${primaryArtist.name}`)
           } catch (error) {
-            console.error(
+            this.logger.error(
               `  ❌ Error processing song "${song.name}":`,
               error instanceof Error ? error.message : error,
             )
@@ -188,11 +190,11 @@ export class SeedService {
         }
 
         if (page < PAGES_TO_IMPORT - 1) {
-          console.log(`  ⏳ Waiting ${DELAY_BETWEEN_PAGES}ms before next page...`)
+          this.logger.log(`  ⏳ Waiting ${DELAY_BETWEEN_PAGES}ms before next page...`)
           await new Promise((resolve) => setTimeout(resolve, DELAY_BETWEEN_PAGES))
         }
       } catch (error) {
-        console.error(
+        this.logger.error(
           `  ❌ Error fetching page ${page + 1}:`,
           error instanceof Error ? error.message : error,
         )
@@ -206,9 +208,9 @@ export class SeedService {
    * Создаёт альбомы для артистов (1 альбом = все треки артиста)
    */
   async createAlbumsForArtists() {
-    console.log('\n═══════════════════════════════════════')
-    console.log('📀 STEP 2: Creating albums for artists')
-    console.log('═══════════════════════════════════════')
+    this.logger.log('\n═══════════════════════════════════════')
+    this.logger.log('📀 STEP 2: Creating albums for artists')
+    this.logger.log('═══════════════════════════════════════')
 
     const artists = await this.prisma.artist.findMany({
       include: {
@@ -247,10 +249,10 @@ export class SeedService {
       })
 
       albumsCreated++
-      console.log(`📀 Created album "${album.title}" with ${artist.tracks.length} tracks`)
+      this.logger.log(`📀 Created album "${album.title}" with ${artist.tracks.length} tracks`)
     }
 
-    console.log(`✅ Created ${albumsCreated} albums`)
+    this.logger.log(`✅ Created ${albumsCreated} albums`)
     return albumsCreated
   }
 
@@ -258,33 +260,33 @@ export class SeedService {
    * Создаёт пользователей
    */
   async createUsers(count: number = 50) {
-    console.log('\n═══════════════════════════════════════')
-    console.log('👥 STEP 3: Creating users')
-    console.log('═══════════════════════════════════════')
+    this.logger.log('\n═══════════════════════════════════════')
+    this.logger.log('👥 STEP 3: Creating users')
+    this.logger.log('═══════════════════════════════════════')
 
     const users = FakerService.generateUsers(count)
     await this.prisma.user.createMany({ data: users, skipDuplicates: true })
-    console.log(`✅ Seeded ${count} users`)
+    this.logger.log(`✅ Seeded ${count} users`)
   }
 
   /**
    * Создаёт плейлисты из существующих треков для пользователей
    */
   async createPlaylistsForUsers(playlistCount: number = 100) {
-    console.log('\n═══════════════════════════════════════')
-    console.log('🎵 STEP 4: Creating playlists')
-    console.log('═══════════════════════════════════════')
+    this.logger.log('\n═══════════════════════════════════════')
+    this.logger.log('🎵 STEP 4: Creating playlists')
+    this.logger.log('═══════════════════════════════════════')
 
     const users = await this.prisma.user.findMany({ select: { id: true } })
     const tracks = await this.prisma.track.findMany({ select: { id: true } })
 
     if (users.length === 0) {
-      console.log('⚠️ No users found. Skipping playlists.')
+      this.logger.log('⚠️ No users found. Skipping playlists.')
       return
     }
 
     if (tracks.length === 0) {
-      console.log('⚠️ No tracks found. Skipping playlists.')
+      this.logger.log('⚠️ No tracks found. Skipping playlists.')
       return
     }
 
@@ -292,10 +294,10 @@ export class SeedService {
     const playlists = FakerService.generatePlaylists(userIds, playlistCount)
 
     await this.prisma.playlist.createMany({ data: playlists, skipDuplicates: true })
-    console.log(`✅ Created ${playlistCount} playlists`)
+    this.logger.log(`✅ Created ${playlistCount} playlists`)
 
     // Добавляем треки в плейлисты
-    console.log('🔗 Adding tracks to playlists...')
+    this.logger.log('🔗 Adding tracks to playlists...')
     const createdPlaylists = await this.prisma.playlist.findMany({ select: { id: true } })
 
     let totalTracksAdded = 0
@@ -317,22 +319,22 @@ export class SeedService {
       }
     }
 
-    console.log(`✅ Added ${totalTracksAdded} track-playlist relations`)
+    this.logger.log(`✅ Added ${totalTracksAdded} track-playlist relations`)
   }
 
   /**
    * Создаёт лайки пользователей
    */
   async createUserLikes() {
-    console.log('\n═══════════════════════════════════════')
-    console.log('❤️  STEP 5: Adding user liked tracks')
-    console.log('═══════════════════════════════════════')
+    this.logger.log('\n═══════════════════════════════════════')
+    this.logger.log('❤️  STEP 5: Adding user liked tracks')
+    this.logger.log('═══════════════════════════════════════')
 
     const users = await this.prisma.user.findMany({ select: { id: true } })
     const tracks = await this.prisma.track.findMany({ select: { id: true } })
 
     if (users.length === 0 || tracks.length === 0) {
-      console.log('⚠️ No users or tracks found.')
+      this.logger.log('⚠️ No users or tracks found.')
       return
     }
 
@@ -355,30 +357,31 @@ export class SeedService {
       }
     }
 
-    console.log(`✅ Created ${totalLikes} liked track relations`)
+    this.logger.log(`✅ Created ${totalLikes} liked track relations`)
   }
 
   /**
    * Очищает базу данных
    */
   async clearDatabase() {
-    console.log('🗑️  Clearing existing data...')
+    this.logger.log('🗑️  Clearing existing data...')
     await this.prisma.playlist.deleteMany()
-    await this.prisma.session.deleteMany()
+    await this.prisma.userSession.deleteMany()
+    await this.prisma.artistSession.deleteMany()
     await this.prisma.user.deleteMany()
     await this.prisma.track.deleteMany()
     await this.prisma.album.deleteMany()
     await this.prisma.artist.deleteMany()
-    console.log('✅ Database cleared\n')
+    this.logger.log('✅ Database cleared\n')
   }
 
   /**
    * Выводит финальную статистику
    */
   async printStats(stats: { totalTracksImported: number; totalArtistsImported: number }) {
-    console.log('\n═══════════════════════════════════════')
-    console.log('📊 FINAL SUMMARY')
-    console.log('═══════════════════════════════════════')
+    this.logger.log('\n═══════════════════════════════════════')
+    this.logger.log('📊 FINAL SUMMARY')
+    this.logger.log('═══════════════════════════════════════')
 
     const dbStats = {
       artists: await this.prisma.artist.count(),
@@ -388,14 +391,14 @@ export class SeedService {
       playlists: await this.prisma.playlist.count(),
     }
 
-    console.log(
+    this.logger.log(
       `👤 Artists (from NCS):     ${stats.totalArtistsImported} imported, ${dbStats.artists} total`,
     )
-    console.log(
+    this.logger.log(
       `🎵 Tracks (from NCS):      ${stats.totalTracksImported} imported, ${dbStats.tracks} total`,
     )
-    console.log(`📀 Albums:                 ${dbStats.albums}`)
-    console.log(`👥 Users (faker):          ${dbStats.users}`)
-    console.log(`🎵 Playlists (faker):      ${dbStats.playlists}`)
+    this.logger.log(`📀 Albums:                 ${dbStats.albums}`)
+    this.logger.log(`👥 Users (faker):          ${dbStats.users}`)
+    this.logger.log(`🎵 Playlists (faker):      ${dbStats.playlists}`)
   }
 }

@@ -1,12 +1,13 @@
+import { ArtistEntity } from '@modules/artists'
 import { ApiProperty } from '@nestjs/swagger'
-import { Session } from '@prisma/client'
+import { ArtistSession } from '@prisma/client'
 
-export class SessionEntity implements Session {
+export class ArtistSessionEntity implements ArtistSession {
   @ApiProperty()
   id: string
 
   @ApiProperty()
-  userId: string
+  artistId: ArtistEntity['id']
 
   @ApiProperty()
   access_token: string

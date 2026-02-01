@@ -21,7 +21,7 @@ export class ArtistsService {
   }
 
   async login({ email, password }: CreateArtistDto) {
-    return await this.prisma.artist.findFirst({
+    const user = await this.prisma.artist.findFirst({
       where: {
         email,
         password,
@@ -30,6 +30,12 @@ export class ArtistsService {
         password: true,
       },
     })
+
+    if (!user) {
+      throw new Error('Invalid credentials')
+    }
+
+    return user
   }
 
   async findAll({
@@ -83,12 +89,9 @@ export class ArtistsService {
   async findByEmail(email: ArtistEntity['email']) {
     return await this.prisma.artist.findUnique({
       where: { email },
-    })
-  }
-
-  async findById_UNSECURE(id: ArtistEntity['id']) {
-    return await this.prisma.artist.findUnique({
-      where: { id },
+      omit: {
+        password: true,
+      },
     })
   }
 

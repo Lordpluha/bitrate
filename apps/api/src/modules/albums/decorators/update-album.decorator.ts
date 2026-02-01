@@ -1,6 +1,13 @@
 import { applyDecorators } from '@nestjs/common'
-import { ApiOperation } from '@nestjs/swagger'
+import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 export function UpdateAlbumByIdSwagger() {
-  return applyDecorators(ApiOperation({ summary: 'Update album by id' }))
+  return applyDecorators(
+    ApiOperation({ summary: 'Update album by id' }),
+    ApiResponse({
+      schema: {
+        $ref: '#/components/schemas/AlbumEntity',
+      },
+    }),
+  )
 }

@@ -1,6 +1,8 @@
+import type { AppConfig } from '@common/config'
 import { websocketCorsConfig } from '@common/config/cors.config'
-import { TokenService } from '@modules/auth/token.service'
+import { TokenService } from '@modules/tokens/token.service'
 import { Logger } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import {
   ConnectedSocket,
   MessageBody,
@@ -32,16 +34,17 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server
 
-  private readonly logger = new Logger(AudioGateway.name)
+  private readonly logger = new Logger(AudioGateway.name, { timestamp: true })
   private userSessions = new Map<string, string>() // userId -> socketId
   private playingSessions = new Map<string, PlayingSession>() // userId -> playing track info
 
   constructor(
     private tracksService: TracksService,
     private tokenService: TokenService,
+    private configService: ConfigService<AppConfig>,
   ) {}
 
-  async handleConnection(client: AuthenticatedSocket): Promise<void> {
+  async handleConnection(client: AuthenticatedSocket) {
     try {
       // Extract token ONLY from httpOnly cookies
       const cookieHeader = client.handshake.headers.cookie
@@ -58,7 +61,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
           },
           {} as Record<string, string>,
         )
-        token = cookies[process.env.ACCESS_TOKEN_NAME!]
+        token = cookies[this.configService.getOrThrow('ACCESS_TOKEN_NAME')]
       }
 
       if (!token) {

@@ -1,23 +1,12 @@
-import { Auth } from '@modules/auth/auth.guard'
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
-import { ZodValidationPipe } from 'nestjs-zod'
+import { UserAuth } from '@modules/users-auth/users-auth.guard'
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Put, Query } from '@nestjs/common'
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ArtistsService } from './artists.service'
 import { GetArtistsSwagger } from './decorators'
-import { CreateArtistDto, CreateArtistSchema } from './dtos'
-import { ArtistEntity } from './entities'
+import { ArtistEntity, SafeArtistEntity } from './entities'
 
 @ApiTags('Artists')
+@ApiExtraModels(ArtistEntity, SafeArtistEntity)
 @Controller('artists')
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
@@ -48,26 +37,8 @@ export class ArtistsController {
     return this.artistsService.findByUsername(username)
   }
 
-  @ApiOperation({ summary: 'Create a new artist' })
-  @Post('register')
-  register(
-    @Body(new ZodValidationPipe(CreateArtistSchema))
-    createArtistDto: CreateArtistDto,
-  ) {
-    return this.artistsService.register(createArtistDto)
-  }
-
-  @ApiOperation({ summary: 'Login an artist' })
-  @Post('login')
-  login(
-    @Body(new ZodValidationPipe(CreateArtistSchema))
-    createArtistDto: CreateArtistDto,
-  ) {
-    return this.artistsService.login(createArtistDto)
-  }
-
   @ApiOperation({ summary: 'Update artist profile' })
-  @Auth()
+  @UserAuth()
   @Put(':id')
   updateProfile(
     @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
@@ -77,7 +48,7 @@ export class ArtistsController {
   }
 
   @ApiOperation({ summary: 'Delete artist profile' })
-  @Auth()
+  @UserAuth()
   @Delete(':id')
   deleteProfile(@Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
     return this.artistsService.delete(id)

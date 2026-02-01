@@ -1,10 +1,11 @@
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { AlbumsModule } from '@modules/albums/albums.module'
 import { ArtistsModule } from '@modules/artists/artists.module'
-import { AuthModule } from '@modules/auth/auth.module'
+import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
 import { TracksModule } from '@modules/tracks/tracks.module'
 import { UsersModule } from '@modules/users/users.module'
+import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { BullModule } from '@nestjs/bullmq'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
@@ -13,13 +14,14 @@ import { join } from 'path'
 import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
 import { PathTraversalMiddleware } from './common'
+import { appConfigs } from './common/config'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.local', '.env.production', '.env.development'],
-
+      load: appConfigs,
       validate: (env) => envSchema.parse(env),
     }),
     ServeStaticModule.forRoot({
@@ -50,16 +52,14 @@ import { PathTraversalMiddleware } from './common'
         port: Number(process.env.REDIS_PORT),
       },
     }),
-    BullModule.registerQueue({
-      name: 'audio-processing',
-    }),
     PrismaModule,
-    AuthModule,
+    UsersAuthModule,
     ArtistsModule,
     UsersModule,
     TracksModule,
     PlaylistsModule,
     AlbumsModule,
+    ArtistsAuthModule,
   ],
   controllers: [AppController],
 })

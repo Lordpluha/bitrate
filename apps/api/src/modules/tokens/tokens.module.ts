@@ -1,16 +1,13 @@
 import { PrismaModule } from '@infra/prisma/prisma.module'
+import { TokenService } from '@modules/tokens/token.service'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
-import { UsersModule } from '../users/users.module'
-import { AuthController } from './auth.controller'
-import { AuthService } from './auth.service'
-import { TokenService } from './token.service'
 
 @Module({
+  providers: [TokenService],
   imports: [
     PrismaModule,
-    UsersModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -21,8 +18,6 @@ import { TokenService } from './token.service'
       }),
     }),
   ],
-  providers: [AuthService, TokenService],
-  controllers: [AuthController],
-  exports: [AuthService, JwtModule, TokenService],
+  exports: [JwtModule, TokenService],
 })
-export class AuthModule {}
+export class TokensModule {}

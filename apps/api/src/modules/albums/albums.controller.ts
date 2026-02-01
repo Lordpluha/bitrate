@@ -1,5 +1,5 @@
-import { Auth } from '@modules/auth/auth.guard'
 import { UserEntity } from '@modules/users'
+import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import { Body, Controller, Delete, Get, ParseUUIDPipe, Post, Put, Query, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -39,8 +39,19 @@ export class AlbumsController {
     return await this.albumsService.getById(id)
   }
 
+  @CreateAlbumSwagger()
+  @UserAuth()
+  @Post('')
+  async createAlbum(
+    @Req() req: Request,
+    @Body(new ZodValidationPipe(CreateAlbumSchema)) createDto: CreateAlbumDto,
+  ) {
+    const jwtArtist = req['user'] as UserEntity
+    return await this.albumsService.create(jwtArtist.id, createDto)
+  }
+
   @UpdateAlbumByIdSwagger()
-  @Auth()
+  @UserAuth()
   @Put(':id')
   async updateAlbum(
     @Req() req: Request,
@@ -51,19 +62,8 @@ export class AlbumsController {
     return await this.albumsService.update(jwtArtist.id, id, updateDto)
   }
 
-  @CreateAlbumSwagger()
-  @Auth()
-  @Post('')
-  async createAlbum(
-    @Req() req: Request,
-    @Body(new ZodValidationPipe(CreateAlbumSchema)) createDto: CreateAlbumDto,
-  ) {
-    const jwtArtist = req['user'] as UserEntity
-    return await this.albumsService.create(jwtArtist.id, createDto)
-  }
-
   @DeleteAlbumSwagger()
-  @Auth()
+  @UserAuth()
   @Delete(':id')
   async deleteAlbum(@Req() req: Request, @Query('id', ParseUUIDPipe) id: AlbumEntity['id']) {
     const jwtArtist = req['user'] as UserEntity
