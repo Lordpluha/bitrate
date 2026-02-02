@@ -36,7 +36,7 @@ export const MusicCardMd: React.FC<MusicCardMdProps> = ({
 
   if (id === 'example-playlist') {
     return (
-      <Link href='/main/example-playlist' className={className}>
+      <Link href="/main/example-playlist" className={className}>
         {content}
       </Link>
     )

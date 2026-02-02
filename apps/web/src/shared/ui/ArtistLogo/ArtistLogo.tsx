@@ -4,10 +4,7 @@ import Link from 'next/link'
 
 export const ArtistLogo = () => {
   return (
-    <Link
-      aria-label="for Artists"
-      href={ROUTES.landing}
-    >
+    <Link aria-label="for Artists" href={ROUTES.landing}>
       <ArtistlogoIcon
         width={147}
         height={36}

@@ -23,7 +23,13 @@ export const useAuth = () => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const { data: user, isLoading, isSuccess, error, isPending } = useQuery<User>({
+  const {
+    data: user,
+    isLoading,
+    isSuccess,
+    error,
+    isPending,
+  } = useQuery<User>({
     queryKey: userQueryKeys.user,
     queryFn: async () => {
       const { data, response } = await fetchClient.GET('/api/v1/auth/me')

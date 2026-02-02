@@ -31,30 +31,42 @@ export const AboutArtist: React.FC = () => {
       : avatarUrl
 
   return (
-    <div className='relative bg-surface rounded-lg overflow-hidden mt-4'>
-      <div className='relative'>
-        <Typography as='h6' size='heading6' className='text-text absolute top-4 left-4 z-10'>
+    <div className="relative bg-surface rounded-lg overflow-hidden mt-4">
+      <div className="relative">
+        <Typography
+          as="h6"
+          size="heading6"
+          className="text-text absolute top-4 left-4 z-10"
+        >
           About the artist
         </Typography>
         <img
           src={backgroundUrl}
           alt={artist.username || 'Artist'}
-          className='w-full object-cover'
+          className="w-full object-cover"
         />
       </div>
-      <div className='flex flex-col p-4'>
-        <div className='flex items-center gap-3 mb-2'>
+      <div className="flex flex-col p-4">
+        <div className="flex items-center gap-3 mb-2">
           <img
             src={avatarUrl}
             alt={artist.username || 'Artist'}
-            className='w-12 h-12 rounded-full object-cover'
+            className="w-12 h-12 rounded-full object-cover"
           />
-          <Typography as='h6' size='heading6' className='text-text font-semibold text-base'>
+          <Typography
+            as="h6"
+            size="heading6"
+            className="text-text font-semibold text-base"
+          >
             {artist.username || 'Unknown Artist'}
           </Typography>
         </div>
         {artist.bio && (
-          <Typography as='p' size='body' className='text-grey-500 text-xs mt-2 line-clamp-3'>
+          <Typography
+            as="p"
+            size="body"
+            className="text-grey-500 text-xs mt-2 line-clamp-3"
+          >
             {artist.bio}
           </Typography>
         )}

@@ -30,20 +30,20 @@ export const PopularPlaylists: React.FC = () => {
     params: {
       path: {
         page: 1,
-        limit: 3
-      }
-    }
+        limit: 3,
+      },
+    },
   } as any) // пока оставляем
 
   const playlists: MusicItem[] = Array.isArray(data)
     ? data.map((playlist) => ({
-      id: playlist.id,
-      name: playlist.title,
-      description:
-        playlist.description ||
-        `Playlist • ${(playlist).user?.username || 'Unknown'}`,
-      imageUrl: playlist.cover
-    }))
+        id: playlist.id,
+        name: playlist.title,
+        description:
+          playlist.description ||
+          `Playlist • ${playlist.user?.username || 'Unknown'}`,
+        imageUrl: playlist.cover,
+      }))
     : []
 
   return (
@@ -61,11 +61,11 @@ export const PopularPlaylists: React.FC = () => {
         <Carousel slidesToShow={5} className="w-full">
           <CarouselPrevious
             icon={<CustomPrevIcon />}
-            className='absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-bg-secondary'
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
           />
           <CarouselNext
             icon={<CustomNextIcon />}
-            className='absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-bg-secondary'
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
           />
           <CarouselContent className="flex">
             {loadingPlaylists ? (

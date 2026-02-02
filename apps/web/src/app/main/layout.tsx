@@ -1,7 +1,11 @@
 'use client'
 
 import { useAppSelector } from '@shared/hooks'
-import { ResizableHandle, ResizableLayout as ResizableLayoutShadCN, ResizablePanel } from '@spotify/ui-react'
+import {
+  ResizableHandle,
+  ResizableLayout as ResizableLayoutShadCN,
+  ResizablePanel,
+} from '@spotify/ui-react'
 import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
 import { Player } from '@widgets/Player'
@@ -13,7 +17,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
   const hasPlayer = !!currentTrack
 
   return (
-    <div className="h-screen bg-bg text-text">
+    <div className="h-screen bg-background text-text">
       <MainHeader />
       <div
         className="transition-all duration-300 ease-in-out"
@@ -39,7 +43,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
             <ResizablePanel
               defaultSize={60}
               minSize={40}
-               className='overflow-hidden rounded-lg bg-bg-secondary m-1.5 relative'
+              className="overflow-hidden rounded-lg bg-background-secondary m-1.5 relative"
             >
               {children}
             </ResizablePanel>
@@ -50,7 +54,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
               defaultSize={20}
               minSize={15}
               maxSize={30}
-              className="overflow-hidden rounded-lg bg-bg-secondary m-1.5"
+              className="overflow-hidden rounded-lg bg-background-secondary m-1.5"
             >
               <RightSidebar />
             </ResizablePanel>

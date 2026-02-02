@@ -1,8 +1,8 @@
-import { cva, type VariantProps } from "class-variance-authority"
-import * as React from "react"
-import type { ComponentProps } from "react"
-import { cn } from "@/lib/utils"
-import { useInputContext } from "./input-context"
+import { cva, type VariantProps } from 'class-variance-authority'
+import * as React from 'react'
+import type { ComponentProps } from 'react'
+import { cn } from '@/lib/utils'
+import { useInputContext } from './input-context'
 
 export const inputVariants = cva(
   'px-3 py-2 flex w-full rounded-md border text-base ring-offset-white placeholder:text-slate-500 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300',
@@ -23,7 +23,16 @@ export const inputVariants = cva(
 
 export interface InputProps extends ComponentProps<'input'>, VariantProps<typeof inputVariants> {}
 
-export const Input = ({ className, type, variant, value, onChange, onFocus, onBlur, ...props }: InputProps) => {
+export const Input = ({
+  className,
+  type,
+  variant,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  ...props
+}: InputProps) => {
   const context = useInputContext()
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {

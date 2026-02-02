@@ -42,7 +42,9 @@ const lastPlaylists: any[] = [
 
 export const MainPanel = () => {
   const { user, isAuthenticated } = useAuth()
-  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null)
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(
+    null,
+  )
 
   const handlePlaylistClick = (id: string) => {
     setSelectedPlaylistId(id)
@@ -50,7 +52,7 @@ export const MainPanel = () => {
 
   if (selectedPlaylistId) {
     return (
-      <div className='h-full overflow-y-auto custom-scrollbar relative z-10'>
+      <div className="h-full overflow-y-auto custom-scrollbar relative z-10">
         <PlaylistPage playlistId={selectedPlaylistId} />
       </div>
     )
@@ -61,12 +63,15 @@ export const MainPanel = () => {
   return (
     <div className="h-full py-4 px-6 overflow-y-auto custom-scrollbar relative z-10">
       <Tabs tabs={tabs} />
-      <LastPlaylists items={lastPlaylists} onPlaylistClick={handlePlaylistClick} />
-      <div className='mt-6'>
+      <LastPlaylists
+        items={lastPlaylists}
+        onPlaylistClick={handlePlaylistClick}
+      />
+      <div className="mt-6">
         {isAuthenticated && currentUser ? (
-          <div className='min-w-[280px] mb-8'>
-            <p className='text-gray-400 text-xs'>Made For</p>
-            <Typography as='h5' size='heading5' className='text-text'>
+          <div className="min-w-[280px] mb-8">
+            <p className="text-gray-400 text-xs">Made For</p>
+            <Typography as="h5" size="heading5" className="text-text">
               {currentUser.username || 'User'}
             </Typography>
           </div>

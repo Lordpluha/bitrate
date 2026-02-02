@@ -10,14 +10,14 @@ export const useArtistName = (artistId: string | undefined) => {
     {
       params: {
         path: {
-          id: artistId || ''
-        }
-      }
+          id: artistId || '',
+        },
+      },
     },
     {
       enabled: !!artistId,
       staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    }
+    },
   )
 
   return useMemo(() => {

@@ -26,7 +26,7 @@ export const ExamplePlaylist: React.FC = () => {
         artistId: track.artistId,
         duration: track.duration || 0,
         releaseDate: track.releaseDate || null,
-        lyrics: track.lyrics || null
+        lyrics: track.lyrics || null,
       }))
       dispatch(setPlaylist(iTracks))
       dispatch(setCurrentPlaylistName('All Tracks'))
@@ -35,18 +35,18 @@ export const ExamplePlaylist: React.FC = () => {
 
   if (isPending) {
     return (
-      <div className='h-full overflow-y-auto custom-scrollbar'>
+      <div className="h-full overflow-y-auto custom-scrollbar">
         <PlaylistHeader
-          title='Loading...'
-          type='Playlist'
-          imageUrl='/images/default-playlist.jpg'
-          author='Loading...'
+          title="Loading..."
+          type="Playlist"
+          imageUrl="/images/default-playlist.jpg"
+          author="Loading..."
           songsCount={0}
           tracksCount={0}
-          duration='0 min'
+          duration="0 min"
         />
-        <div className='flex justify-center items-center h-64'>
-          <div className='text-text'>Loading tracks...</div>
+        <div className="flex justify-center items-center h-64">
+          <div className="text-text">Loading tracks...</div>
         </div>
       </div>
     )
@@ -63,36 +63,37 @@ export const ExamplePlaylist: React.FC = () => {
       artistId: track.artistId || '',
       duration: track.duration || 0,
       releaseDate: track.releaseDate || null,
-      lyrics: track.lyrics || null
+      lyrics: track.lyrics || null,
     }
     dispatch(play(iTrack))
   }
 
-  const totalDuration = tracks.reduce((acc: number, track: any) => acc + (track.duration || 0), 0)
+  const totalDuration = tracks.reduce(
+    (acc: number, track: any) => acc + (track.duration || 0),
+    0,
+  )
   const durationMinutes = Math.floor(totalDuration / 60)
   const durationHours = Math.floor(durationMinutes / 60)
-  const durationText = durationHours > 0
-    ? `${durationHours} hr ${durationMinutes % 60} min`
-    : `${durationMinutes} min`
+  const durationText =
+    durationHours > 0
+      ? `${durationHours} hr ${durationMinutes % 60} min`
+      : `${durationMinutes} min`
 
   return (
-    <div className='h-full overflow-y-auto custom-scrollbar'>
+    <div className="h-full overflow-y-auto custom-scrollbar">
       <PlaylistHeader
-        title='All Tracks'
-        type='Playlist'
-        imageUrl='/images/default-playlist.jpg'
-        author='Music Library'
+        title="All Tracks"
+        type="Playlist"
+        imageUrl="/images/default-playlist.jpg"
+        author="Music Library"
         songsCount={tracks.length}
         tracksCount={tracks.length}
         duration={durationText}
       />
       {tracks.length === 0 ? (
-        <div className='text-white p-8'>No tracks available</div>
+        <div className="text-white p-8">No tracks available</div>
       ) : (
-        <TracksList
-          tracks={tracks}
-          onPlayTrack={handlePlayTrack}
-        />
+        <TracksList tracks={tracks} onPlayTrack={handlePlayTrack} />
       )}
     </div>
   )

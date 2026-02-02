@@ -15,9 +15,8 @@ const FeatureList: FeatureItem[] = [
     emoji: '⚡',
     description: (
       <>
-        Built with <strong>TypeScript</strong>, <strong>NestJS</strong>,{' '}
-        <strong>Next.js</strong> and <strong>React Native</strong>. Full type safety
-        and best development practices.
+        Built with <strong>TypeScript</strong>, <strong>NestJS</strong>, <strong>Next.js</strong>{' '}
+        and <strong>React Native</strong>. Full type safety and best development practices.
       </>
     ),
   },
@@ -36,8 +35,8 @@ const FeatureList: FeatureItem[] = [
     emoji: '🏗️',
     description: (
       <>
-        Monorepo with <strong>Turborepo</strong>, microservices architecture,
-        Docker containerization and production-ready setup.
+        Monorepo with <strong>Turborepo</strong>, microservices architecture, Docker
+        containerization and production-ready setup.
       </>
     ),
   },
@@ -46,8 +45,8 @@ const FeatureList: FeatureItem[] = [
     emoji: '🎧',
     description: (
       <>
-        Support for <strong>OGG Opus</strong> and <strong>AAC</strong> codecs.
-        FFmpeg conversion for optimal quality and file size.
+        Support for <strong>OGG Opus</strong> and <strong>AAC</strong> codecs. FFmpeg conversion for
+        optimal quality and file size.
       </>
     ),
   },
@@ -56,8 +55,8 @@ const FeatureList: FeatureItem[] = [
     emoji: '📚',
     description: (
       <>
-        Comprehensive API documentation, development guides, code examples and best
-        practices. Everything you need to get started.
+        Comprehensive API documentation, development guides, code examples and best practices.
+        Everything you need to get started.
       </>
     ),
   },
@@ -66,8 +65,7 @@ const FeatureList: FeatureItem[] = [
     emoji: '💚',
     description: (
       <>
-        Fully open source under <strong>MIT License</strong>.
-        Contributions are welcome!
+        Fully open source under <strong>MIT License</strong>. Contributions are welcome!
       </>
     ),
   },

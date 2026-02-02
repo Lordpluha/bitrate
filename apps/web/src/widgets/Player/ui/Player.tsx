@@ -5,7 +5,10 @@ import { TrackInfo } from './TrackInfo'
 import { PlayerControls } from './PlayerControls'
 import { PlayerActions } from './PlayerActions'
 import { useAudioPlayer, useAppSelector, useAppDispatch } from '@shared/hooks'
-import { setVolume, selectMusicPlayer } from '@entities/Player/store/PlayerSlice'
+import {
+  setVolume,
+  selectMusicPlayer,
+} from '@entities/Player/store/PlayerSlice'
 import { useArtistName } from '@shared/hooks/useArtistName'
 
 export const Player: React.FC = () => {
@@ -14,11 +17,11 @@ export const Player: React.FC = () => {
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
   const artistName = useArtistName(currentTrack?.artistId)
-  
-  const { 
-    audioRef, 
-    togglePlayPause, 
-    onSeek, 
+
+  const {
+    audioRef,
+    togglePlayPause,
+    onSeek,
     changeTrack,
     handleLoadedMetadata,
     handleTimeUpdate,
@@ -33,7 +36,10 @@ export const Player: React.FC = () => {
       setIsVisible(true)
       // Выводим URL картинки в консоль для проверки
       console.log('Track cover URL:', currentTrack.cover)
-      console.log('Full URL:', `${process.env.NEXT_PUBLIC_API_URL}${currentTrack.cover}`)
+      console.log(
+        'Full URL:',
+        `${process.env.NEXT_PUBLIC_API_URL}${currentTrack.cover}`,
+      )
     } else {
       setIsVisible(false)
     }
@@ -47,8 +53,8 @@ export const Player: React.FC = () => {
     return null
   }
 
-  console.log(currentTrack.cover);
-   
+  console.log(currentTrack.cover)
+
   return (
     <>
       <audio

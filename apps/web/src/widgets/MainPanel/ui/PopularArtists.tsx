@@ -31,9 +31,9 @@ export const PopularArtists: React.FC = () => {
   } = useQuery('get', '/api/v1/artists', {
     params: {
       query: {
-        limit: 20
-      }
-    }
+        limit: 20,
+      },
+    },
   } as any) // пока оставляем
 
   const artists: MusicItem[] = Array.isArray(data)
@@ -62,11 +62,11 @@ export const PopularArtists: React.FC = () => {
         <Carousel slidesToShow={5} className="w-full">
           <CarouselPrevious
             icon={<CustomPrevIcon />}
-            className='absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-bg-secondary'
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
           />
           <CarouselNext
             icon={<CustomNextIcon />}
-            className='absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-bg-secondary'
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
           />
           <CarouselContent className="flex">
             {loadingArtists ? (

@@ -2,10 +2,13 @@ import React from 'react'
 import { Button, Typography } from '@spotify/ui-react'
 
 export const Credits: React.FC = () => (
-  <div className='bg-surface rounded-lg p-0 overflow-hidden mt-4'>
-    <div className='flex items-center justify-between px-4 pt-3 pb-1'>
-      <div className='text-text text-sm font-semibold'>Credits</div>
-      <Button variant='link' className='text-grey-500 text-xs font-medium hover:underline'>
+  <div className="bg-surface rounded-lg p-0 overflow-hidden mt-4">
+    <div className="flex items-center justify-between px-4 pt-3 pb-1">
+      <div className="text-text text-sm font-semibold">Credits</div>
+      <Button
+        variant="link"
+        className="text-grey-500 text-xs font-medium hover:underline"
+      >
         Show all
       </Button>
     </div>
@@ -19,7 +22,9 @@ export const Credits: React.FC = () => (
             Main Artist
           </Typography>
         </div>
-        <Button className='h-auto text-xs px-2 py-1' variant='default'>Follow</Button>
+        <Button className="h-auto text-xs px-2 py-1" variant="default">
+          Follow
+        </Button>
       </div>
       <div className="mb-2">
         <Typography as="p" size="body" className="text-text text-sm">

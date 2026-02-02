@@ -133,7 +133,6 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
   )
 }
 
-
 const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = ({ data }) => {
   return (
     <div className="container pb-10 pt-8 grid grid-cols-4 gap-8">
@@ -191,7 +190,7 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
   return (
     <div className="container grid grid-cols-12 gap-x-6 py-8">
       <section className="col-span-3 flex flex-col gap-4">
-        <h5 className='text-base text-subdued'>Deep dives</h5>
+        <h5 className="text-base text-subdued">Deep dives</h5>
         {data.slice(0, 2).map((item) => (
           <h4 key={item.id} className="text-5xl font-bold">
             <Link
@@ -215,7 +214,7 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
       </section>
 
       <section className="col-span-3 flex flex-col gap-2">
-        <h5 className='text-base text-subdued'>Deep dives</h5>
+        <h5 className="text-base text-subdued">Deep dives</h5>
         {data.slice(2).map((r) => (
           <h5 key={r.id} className="text-2xl font-semibold">
             <Link

@@ -15,19 +15,23 @@ interface PlaylistPageProps {
 export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
   const dispatch = useAppDispatch()
 
-  const { data: playlist, isPending: loadingPlaylist, error } = useQuery(
+  const {
+    data: playlist,
+    isPending: loadingPlaylist,
+    error,
+  } = useQuery(
     'get',
     '/api/v1/playlists/{id}',
     {
       params: {
         path: {
-          id: playlistId
-        }
-      }
+          id: playlistId,
+        },
+      },
     },
     {
-      enabled: !!playlistId
-    }
+      enabled: !!playlistId,
+    },
   )
 
   console.log('Playlist ID:', playlistId)
@@ -50,7 +54,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
         artistId: track.artistId,
         duration: track.duration || 0,
         releaseDate: track.releaseDate || null,
-        lyrics: track.lyrics || null
+        lyrics: track.lyrics || null,
       }))
       dispatch(setPlaylist(iTracks))
       dispatch(setCurrentPlaylistName(playlistData?.title || 'Playlist'))
@@ -61,16 +65,16 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
     return (
       <div className="h-full overflow-y-auto custom-scrollbar">
         <PlaylistHeader
-          title='Loading...'
-          type='Playlist'
-          imageUrl='/images/default-playlist.jpg'
-          author='Loading...'
+          title="Loading..."
+          type="Playlist"
+          imageUrl="/images/default-playlist.jpg"
+          author="Loading..."
           songsCount={0}
           tracksCount={0}
           duration="0 min"
         />
-        <div className='flex justify-center items-center h-64'>
-          <div className='text-text'>Loading playlist...</div>
+        <div className="flex justify-center items-center h-64">
+          <div className="text-text">Loading playlist...</div>
         </div>
       </div>
     )
@@ -78,9 +82,9 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
 
   if (!loadingPlaylist && !playlistData) {
     return (
-      <div className='h-full overflow-y-auto custom-scrollbar'>
-        <div className='flex justify-center items-center h-64'>
-          <div className='text-text'>Playlist not found</div>
+      <div className="h-full overflow-y-auto custom-scrollbar">
+        <div className="flex justify-center items-center h-64">
+          <div className="text-text">Playlist not found</div>
         </div>
       </div>
     )
@@ -88,12 +92,16 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
 
   const coverUrl = playlistData?.cover || '/images/default-playlist.jpg'
 
-  const totalDuration = tracks.reduce((acc: number, track: any) => acc + (track.duration || 0), 0)
+  const totalDuration = tracks.reduce(
+    (acc: number, track: any) => acc + (track.duration || 0),
+    0,
+  )
   const durationMinutes = Math.floor(totalDuration / 60)
   const durationHours = Math.floor(durationMinutes / 60)
-  const durationText = durationHours > 0
-    ? `${durationHours} hr ${durationMinutes % 60} min`
-    : `${durationMinutes} min`
+  const durationText =
+    durationHours > 0
+      ? `${durationHours} hr ${durationMinutes % 60} min`
+      : `${durationMinutes} min`
 
   const handlePlayTrack = (track: Track) => {
     const iTrack: ITrack = {
@@ -106,7 +114,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
       artistId: track.artistId || '',
       duration: track.duration || 0,
       releaseDate: track.releaseDate || null,
-      lyrics: track.lyrics || null
+      lyrics: track.lyrics || null,
     }
     dispatch(play(iTrack))
   }
@@ -115,7 +123,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
     <div className="h-full overflow-y-auto custom-scrollbar">
       <PlaylistHeader
         title={playlistData.title || 'Playlist'}
-        type='Playlist'
+        type="Playlist"
         imageUrl={coverUrl}
         author={playlistData.user?.username || 'Unknown'}
         songsCount={tracks.length}
@@ -123,12 +131,9 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
         duration={durationText}
       />
       {tracks.length === 0 ? (
-        <div className='text-white p-8'>No tracks in this playlist</div>
+        <div className="text-white p-8">No tracks in this playlist</div>
       ) : (
-        <TracksList
-          tracks={tracks}
-          onPlayTrack={handlePlayTrack}
-        />
+        <TracksList tracks={tracks} onPlayTrack={handlePlayTrack} />
       )}
     </div>
   )

@@ -39,7 +39,11 @@ interface NavLinksProps {
   closeSubmenu: () => void
 }
 
-export const NavLinks = ({ activeSubmenu, setActiveSubmenu, closeSubmenu }: NavLinksProps) => {
+export const NavLinks = ({
+  activeSubmenu,
+  setActiveSubmenu,
+  closeSubmenu,
+}: NavLinksProps) => {
   const typedLinks = links as LinkItem[]
 
   const handleMouseEnter = (link: LinkItem) => {
@@ -63,7 +67,7 @@ export const NavLinks = ({ activeSubmenu, setActiveSubmenu, closeSubmenu }: NavL
             <Link
               className={cn(
                 linkUnderlineClasses,
-                isActive && 'before:scale-x-100'
+                isActive && 'before:scale-x-100',
               )}
               href={link.href}
               key={link.title}

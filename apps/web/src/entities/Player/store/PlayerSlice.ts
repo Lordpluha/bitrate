@@ -106,11 +106,20 @@ export const {
   setVolume,
   setPlaylist,
   setCurrentPlaylistName,
-  changeTrack
+  changeTrack,
 } = musicPlayerSlice.actions
 
 // Reducer
 export const musicPlayerReducer = musicPlayerSlice.reducer
 
-
-export const {selectCurrentTime, selectCurrentTrack, selectDuration, selectIsPlaying, selectMusicPlayer, selectPlaylist, selectCurrentPlaylistName, selectProgress, selectVolume } = musicPlayerSlice.selectors
+export const {
+  selectCurrentTime,
+  selectCurrentTrack,
+  selectDuration,
+  selectIsPlaying,
+  selectMusicPlayer,
+  selectPlaylist,
+  selectCurrentPlaylistName,
+  selectProgress,
+  selectVolume,
+} = musicPlayerSlice.selectors

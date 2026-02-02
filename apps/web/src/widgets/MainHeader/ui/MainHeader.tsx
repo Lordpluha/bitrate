@@ -46,7 +46,7 @@ export const MainHeader = () => {
               >
                 <MembersIcon />
               </Link>
-              <ProfileButton username={(user).username || 'User'} /> 
+              <ProfileButton username={user.username || 'User'} />
               {/* пока оставляем */}
             </>
           ) : (

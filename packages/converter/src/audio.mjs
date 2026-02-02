@@ -1,6 +1,6 @@
-import { exec } from "node:child_process"
-import fs from "node:fs/promises"
-import { promisify } from "node:util"
+import { exec } from 'node:child_process'
+import fs from 'node:fs/promises'
+import { promisify } from 'node:util'
 
 const execAsync = promisify(exec)
 
@@ -16,75 +16,75 @@ const execAsync = promisify(exec)
  * @returns {Promise<{input: string, output: string, inputSize: string, outputSize: string}>}
  */
 export async function convertAudio({
-	input,
-	output,
-	bitrate = "128k",
-	quality = 10,
-	vbr = false,
-	application = "audio",
+  input,
+  output,
+  bitrate = '128k',
+  quality = 10,
+  vbr = false,
+  application = 'audio',
 }) {
-	// Validate input file exists
-	try {
-		await fs.access(input)
-	} catch (error) {
-		throw new Error(`Input file not found: ${input}`)
-	}
+  // Validate input file exists
+  try {
+    await fs.access(input)
+  } catch (error) {
+    throw new Error(`Input file not found: ${input}`)
+  }
 
-	// Determine output path
-	const outputPath = output || input.replace(/\.[^.]+$/, ".opus")
+  // Determine output path
+  const outputPath = output || input.replace(/\.[^.]+$/, '.opus')
 
-	// Validate bitrate
-	const validBitrates = ["64k", "96k", "128k", "192k", "256k", "320k"]
-	if (!validBitrates.includes(bitrate)) {
-		console.warn(
-			`⚠️  Warning: Unusual bitrate "${bitrate}". Common values: ${validBitrates.join(", ")}`,
-		)
-	}
+  // Validate bitrate
+  const validBitrates = ['64k', '96k', '128k', '192k', '256k', '320k']
+  if (!validBitrates.includes(bitrate)) {
+    console.warn(
+      `⚠️  Warning: Unusual bitrate "${bitrate}". Common values: ${validBitrates.join(', ')}`,
+    )
+  }
 
-	// Validate quality
-	if (quality < 0 || quality > 10) {
-		throw new Error("Quality must be between 0 and 10")
-	}
+  // Validate quality
+  if (quality < 0 || quality > 10) {
+    throw new Error('Quality must be between 0 and 10')
+  }
 
-	// Validate application
-	const validApplications = ["audio", "voip", "lowdelay"]
-	if (!validApplications.includes(application)) {
-		throw new Error(`Invalid application type. Must be one of: ${validApplications.join(", ")}`)
-	}
+  // Validate application
+  const validApplications = ['audio', 'voip', 'lowdelay']
+  if (!validApplications.includes(application)) {
+    throw new Error(`Invalid application type. Must be one of: ${validApplications.join(', ')}`)
+  }
 
-	console.log("🎵 Converting audio to OGG Opus...")
-	console.log(`   Input:  ${input}`)
-	console.log(`   Output: ${outputPath}`)
-	console.log(`   Bitrate: ${bitrate} ${vbr ? "VBR" : "CBR"}`)
-	console.log(`   Quality: ${quality}/10`)
-	console.log(`   Application: ${application}`)
+  console.log('🎵 Converting audio to OGG Opus...')
+  console.log(`   Input:  ${input}`)
+  console.log(`   Output: ${outputPath}`)
+  console.log(`   Bitrate: ${bitrate} ${vbr ? 'VBR' : 'CBR'}`)
+  console.log(`   Quality: ${quality}/10`)
+  console.log(`   Application: ${application}`)
 
-	// Build FFmpeg command
-	const vbrFlag = vbr ? "on" : "off"
-	const command = `ffmpeg -i "${input}" -c:a libopus -b:a ${bitrate} -vbr ${vbrFlag} -application ${application} -compression_level ${quality} -y "${outputPath}"`
+  // Build FFmpeg command
+  const vbrFlag = vbr ? 'on' : 'off'
+  const command = `ffmpeg -i "${input}" -c:a libopus -b:a ${bitrate} -vbr ${vbrFlag} -application ${application} -compression_level ${quality} -y "${outputPath}"`
 
-	try {
-		await execAsync(command)
+  try {
+    await execAsync(command)
 
-		// Get file sizes
-		const inputStats = await fs.stat(input)
-		const outputStats = await fs.stat(outputPath)
-		const inputSize = formatBytes(inputStats.size)
-		const outputSize = formatBytes(outputStats.size)
+    // Get file sizes
+    const inputStats = await fs.stat(input)
+    const outputStats = await fs.stat(outputPath)
+    const inputSize = formatBytes(inputStats.size)
+    const outputSize = formatBytes(outputStats.size)
 
-		console.log("✅ Conversion complete!")
-		console.log(`   Input size:  ${inputSize}`)
-		console.log(`   Output size: ${outputSize}`)
+    console.log('✅ Conversion complete!')
+    console.log(`   Input size:  ${inputSize}`)
+    console.log(`   Output size: ${outputSize}`)
 
-		return {
-			input,
-			output: outputPath,
-			inputSize,
-			outputSize,
-		}
-	} catch (error) {
-		throw new Error(`FFmpeg error: ${error.message}`)
-	}
+    return {
+      input,
+      output: outputPath,
+      inputSize,
+      outputSize,
+    }
+  } catch (error) {
+    throw new Error(`FFmpeg error: ${error.message}`)
+  }
 }
 
 /**
@@ -93,9 +93,9 @@ export async function convertAudio({
  * @returns {string}
  */
 function formatBytes(bytes) {
-	if (bytes === 0) return "0 B"
-	const k = 1024
-	const sizes = ["B", "KB", "MB", "GB"]
-	const i = Math.floor(Math.log(bytes) / Math.log(k))
-	return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`
 }

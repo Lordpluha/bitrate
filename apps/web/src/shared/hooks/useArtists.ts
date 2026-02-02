@@ -7,18 +7,21 @@ export const useArtists = () => {
     params: {
       query: {
         page: 1,
-        limit: 100
-      }
-    }
+        limit: 100,
+      },
+    },
   }) as any
 
   const artists = Array.isArray(data) ? data : data?.data || []
-  const artistsMap = new Map<string, string>(artists.map((artist: any) => [artist.id, artist.username]))
+  const artistsMap = new Map<string, string>(
+    artists.map((artist: any) => [artist.id, artist.username]),
+  )
 
   return {
     artistsMap,
     isPending,
     error,
-    getArtistName: (artistId: string): string => artistsMap.get(artistId) || artistId
+    getArtistName: (artistId: string): string =>
+      artistsMap.get(artistId) || artistId,
   }
 }

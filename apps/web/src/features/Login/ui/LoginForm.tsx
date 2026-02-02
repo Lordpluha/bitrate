@@ -49,7 +49,7 @@ export const LoginForm = () => {
 
   const onSubmit: SubmitHandler<LoginFormData> = async (body) => {
     await mutate({
-      body
+      body,
     })
   }
 

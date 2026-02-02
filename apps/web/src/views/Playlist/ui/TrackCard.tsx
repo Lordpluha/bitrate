@@ -26,7 +26,7 @@ export const TrackCard: React.FC<TrackCardProps> = ({
   onMouseEnter,
   onMouseLeave,
   onClick,
-  getArtistName
+  getArtistName,
 }) => {
   const showPlayIcon = isHovered && !isCurrentTrack
   const showPauseIcon = isHovered && isCurrentTrack && isPlaying
@@ -60,9 +60,10 @@ export const TrackCard: React.FC<TrackCardProps> = ({
         >
           {track.title}
         </div>
-        <div className="text-sm text-gray-400">{getArtistName(track.artistId)}</div>
+        <div className="text-sm text-gray-400">
+          {getArtistName(track.artistId)}
+        </div>
       </div>
-      <div className="text-sm text-gray-400">Unknown Album</div>
       <div className="text-sm text-gray-400">
         {(track as any).album || 'Unknown Album'}
       </div>

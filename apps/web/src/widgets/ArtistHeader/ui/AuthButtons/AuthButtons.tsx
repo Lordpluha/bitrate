@@ -9,7 +9,7 @@ export const AuthButtons = () => (
         'text-sm text-center text-text font-bold',
         'py-1 px-4 h-8',
         'rounded-3xl border-solid border',
-        'transform hover:scale-105 transition duration-300 ease-in-out'
+        'transform hover:scale-105 transition duration-300 ease-in-out',
       )}
       href={ROUTES.auth.login}
     >
@@ -20,7 +20,7 @@ export const AuthButtons = () => (
         'text-sm text-center bg-white font-bold',
         'py-1 px-4 h-8',
         'rounded-3xl border-solid border',
-        'transform hover:scale-105 transition duration-300 ease-in-out'
+        'transform hover:scale-105 transition duration-300 ease-in-out',
       )}
       href={ROUTES.auth.registration}
     >

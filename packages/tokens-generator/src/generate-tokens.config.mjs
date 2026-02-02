@@ -31,11 +31,11 @@ export default {
         tokenKey: 'spacing',
         prefix: 'spacing',
         format: (key, value) => {
-          if (key === '0') return { key: '0', value: '0', comment: null };
-          if (key === 'px') return { key: 'px', value: '1px', comment: null };
-          const name = key.replace('.', '_');
-          const comment = value !== '0' ? `${parseFloat(value) * 16}px` : null;
-          return { key: name, value, comment };
+          if (key === '0') return { key: '0', value: '0', comment: null }
+          if (key === 'px') return { key: 'px', value: '1px', comment: null }
+          const name = key.replace('.', '_')
+          const comment = value !== '0' ? `${parseFloat(value) * 16}px` : null
+          return { key: name, value, comment }
         },
       },
       {
@@ -136,14 +136,9 @@ export default {
 
   // Theme groups configuration
   themes: {
-    imports: [
-      './palette.css',
-      './typography.css',
-      './layout.css',
-      './animations.css',
-    ],
+    imports: ['./palette.css', './typography.css', './layout.css', './animations.css'],
     groups: {
-      'Background': [
+      Background: [
         'background',
         'background-elevated',
         'background-tinted',
@@ -151,11 +146,11 @@ export default {
         'background-highlight',
         'background-pressed',
       ],
-      'Foreground': ['foreground', 'foreground-secondary'],
-      'Text': ['text', 'text-secondary', 'text-subdued', 'text-muted', 'text-contrast'],
+      Foreground: ['foreground', 'foreground-secondary'],
+      Text: ['text', 'text-secondary', 'text-subdued', 'text-muted', 'text-contrast'],
       'Primary (Brand)': ['primary', 'primary-hover', 'primary-active', 'primary-foreground'],
-      'Secondary': ['secondary', 'secondary-hover', 'secondary-foreground'],
-      'Accent': ['accent', 'accent-foreground'],
+      Secondary: ['secondary', 'secondary-hover', 'secondary-foreground'],
+      Accent: ['accent', 'accent-foreground'],
       'Semantic States': [
         'success',
         'success-foreground',
@@ -166,11 +161,11 @@ export default {
         'info',
         'info-foreground',
       ],
-      'Destructive': ['destructive', 'destructive-foreground'],
-      'Muted': ['muted', 'muted-foreground'],
+      Destructive: ['destructive', 'destructive-foreground'],
+      Muted: ['muted', 'muted-foreground'],
       'Border & Input': ['border', 'border-subtle', 'input', 'ring'],
       'Card & Popover': ['card', 'card-foreground', 'popover', 'popover-foreground'],
-      'Charts': ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'],
+      Charts: ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'],
     },
     prefix: 'color',
   },
@@ -180,7 +175,8 @@ export default {
     'palette.css': {
       header: {
         title: 'Base Color Palette',
-        description: 'These are the raw colors without semantic meaning. Use theme tokens for actual implementation.',
+        description:
+          'These are the raw colors without semantic meaning. Use theme tokens for actual implementation.',
       },
       generator: 'palette',
     },
@@ -202,4 +198,4 @@ export default {
       generator: 'themes',
     },
   },
-};
+}

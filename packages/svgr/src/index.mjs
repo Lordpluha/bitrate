@@ -1,7 +1,7 @@
-import { runCli } from "./cli.mjs"
+import { runCli } from './cli.mjs'
 
-export { build } from "./modes/build.mjs"
-export { dev } from "./modes/dev.mjs"
+export { build } from './modes/build.mjs'
+export { dev } from './modes/dev.mjs'
 
 // Запускаем CLI если файл выполняется напрямую
 const scriptPath = process.argv[1]

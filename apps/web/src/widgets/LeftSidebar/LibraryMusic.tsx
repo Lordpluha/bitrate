@@ -28,7 +28,7 @@ const likedSongsItem: MusicItem = {
 
 export const LibraryMusic = () => {
   const { getUserName } = useUsers()
-  
+
   const { data: playlists, isLoading } = useQuery({
     queryKey: ['playlists'],
     queryFn: async () => {
@@ -49,7 +49,7 @@ export const LibraryMusic = () => {
           artist: getUserName(playlist.userId),
           type: 'playlist',
           cover: playlist.cover || '/images/default-playlist.jpg',
-          tracksCount: 0
+          tracksCount: 0,
         })
       }
     })

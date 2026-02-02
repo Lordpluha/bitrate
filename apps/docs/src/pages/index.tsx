@@ -34,8 +34,7 @@ function HomepageHeader() {
         </div>
         <div style={{ marginTop: '2rem', opacity: 0.9 }}>
           <p>
-            <strong>Open Source</strong> • <strong>TypeScript</strong> •{' '}
-            <strong>Monorepo</strong>
+            <strong>Open Source</strong> • <strong>TypeScript</strong> • <strong>Monorepo</strong>
           </p>
         </div>
       </div>

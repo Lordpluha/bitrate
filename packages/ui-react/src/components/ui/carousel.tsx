@@ -192,8 +192,8 @@ export const CarouselItem = ({ className, ...props }: ComponentProps<'div'>) => 
 
 export const CarouselPrevious = ({
   className,
-  variant = "default",
-  size = "icon",
+  variant = 'default',
+  size = 'icon',
   ...props
 }: ComponentProps<typeof Button>) => {
   const { orientation, scrollPrev, canScrollPrev, showNavigation } = useCarousel()
@@ -223,8 +223,8 @@ export const CarouselPrevious = ({
 
 export const CarouselNext = ({
   className,
-  variant = "default",
-  size = "icon",
+  variant = 'default',
+  size = 'icon',
   ...props
 }: ComponentProps<typeof Button>) => {
   const { orientation, scrollNext, canScrollNext, showNavigation } = useCarousel()

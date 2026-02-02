@@ -42,7 +42,7 @@ export const LibraryTags = () => {
                   'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap',
                   selectedTags.includes(tag)
                     ? 'bg-white text-black'
-                    : 'bg-gray-900/85 text-white hover:bg-opacity-80'
+                    : 'bg-gray-900/85 text-white hover:bg-opacity-80',
                 )}
               >
                 {tag}
@@ -52,7 +52,7 @@ export const LibraryTags = () => {
         </CarouselContent>
         <CarouselNext
           icon={<ArrowRight />}
-          className='absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 border-none hover:bg-zinc-700 rounded-full'
+          className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 border-none hover:bg-zinc-700 rounded-full"
         />
       </Carousel>
     </div>

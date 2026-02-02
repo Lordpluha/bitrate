@@ -23,10 +23,10 @@ export const useAudioPlayer = () => {
   const currentTrack = useAppSelector(selectCurrentTrack)
 
   // Get track URL
-  const trackUrl = currentTrack?.audioUrl 
-    ? (currentTrack.audioUrl.startsWith('http') 
-        ? currentTrack.audioUrl 
-        : `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${currentTrack.id}`)
+  const trackUrl = currentTrack?.audioUrl
+    ? currentTrack.audioUrl.startsWith('http')
+      ? currentTrack.audioUrl
+      : `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${currentTrack.id}`
     : null
 
   // Progressive streaming setup
@@ -34,13 +34,10 @@ export const useAudioPlayer = () => {
     if (!audioRef.current) return
 
     try {
-
       // Simple approach: preload=none forces browser to use Range requests
       audioRef.current.preload = 'none'
       audioRef.current.src = trackUrl
       audioRef.current.load()
-      
-
     } catch (error) {
       console.error('Error setting up progressive streaming:', error)
     }
