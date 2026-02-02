@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import React from 'react'
 import Link from 'next/link'
 import { cn, PlayIcon } from '@spotify/ui-react'
@@ -16,34 +16,37 @@ export const MusicCardLg: React.FC<MusicCardLgProps> = ({
   name,
   description,
   imageUrl,
-  isArtist
+  isArtist,
 }) => {
   const href = isArtist ? `/main/artist/${id}` : `/main/playlist/${id}`
 
   return (
     <Link
       href={href}
-      className='block min-w-[180px] p-4 rounded-lg cursor-pointer hover:bg-gray-700/50 transition-all duration-200 group/card'
+      className="block min-w-[180px] p-4 rounded-lg cursor-pointer hover:bg-gray-700/50 transition-all duration-200 group/card"
     >
-      <div className='relative mb-4'>
+      <div className="relative mb-4">
         <img
-          src={imageUrl || (isArtist ? '/images/default-artist.jpg' : '/images/default-playlist.jpg')}
+          src={
+            imageUrl ||
+            (isArtist
+              ? '/images/default-artist.jpg'
+              : '/images/default-playlist.jpg')
+          }
           alt={name}
           className={cn(
             'w-full aspect-square object-cover',
-            isArtist ? 'rounded-full' : 'rounded-md'
+            isArtist ? 'rounded-full' : 'rounded-md',
           )}
         />
         <div className='absolute bottom-2 right-2 flex items-center justify-center opacity-0 group-hover/card:opacity-100 translate-y-2 group-hover/card:translate-y-0 transition-all duration-200'>
           <PlayIcon width={48} height={48} />
         </div>
       </div>
-      <h3 className='text-text font-medium text-sm mb-2 line-clamp-1'>
+      <h3 className="text-text font-medium text-sm mb-2 line-clamp-1">
         {name}
       </h3>
-      <p className='text-gray-400 text-xs line-clamp-2'>
-        {description}
-      </p>
+      <p className="text-gray-400 text-xs line-clamp-2">{description}</p>
     </Link>
   )
 }

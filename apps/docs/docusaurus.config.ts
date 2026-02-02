@@ -6,7 +6,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 
 const config: Config = {
   title: 'Spotify Clone Documentation',
-  tagline: 'Dinosaurs are cool',
+  tagline: 'Open source music streaming platform built with modern web technologies',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -91,7 +91,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Documentation',
         },
         { to: '/blog', label: 'Blog', position: 'left' },
         {
@@ -105,28 +105,36 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Documentation',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
+              label: 'Getting Started',
+              to: '/docs/getting-started/introduction',
+            },
+            {
+              label: 'API Reference',
+              to: '/docs/applications/api/overview',
+            },
+            {
+              label: 'Contributing',
+              to: '/docs/guides/contributing',
             },
           ],
         },
         {
-          title: 'Community',
+          title: 'Applications',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'Web App',
+              to: '/docs/applications/web/overview',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: 'Mobile App',
+              to: '/docs/applications/mobile/overview',
             },
             {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              label: 'Desktop App',
+              to: '/docs/applications/desktop/overview',
             },
           ],
         },
@@ -144,7 +152,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Lordpluha, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Lordpluha. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

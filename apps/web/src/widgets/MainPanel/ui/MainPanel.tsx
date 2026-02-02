@@ -16,7 +16,7 @@ import { Footer } from './Footer'
 const tabs = [
   { id: 'all', label: 'All' },
   { id: 'music', label: 'Music' },
-  { id: 'podcasts', label: 'Podcasts' }
+  { id: 'podcasts', label: 'Podcasts' },
 ]
 
 const lastPlaylists: any[] = [
@@ -24,20 +24,20 @@ const lastPlaylists: any[] = [
     id: 'test-all-tracks',
     name: 'Test All Tracks',
     description: 'For player testing',
-    imageUrl: '/images/default-playlist.jpg'
+    imageUrl: '/images/default-playlist.jpg',
   },
   {
     id: 'liked',
     name: 'Liked Songs',
     description: '317 songs',
-    imageUrl: '/images/liked-songs.jpg'
+    imageUrl: '/images/liked-songs.jpg',
   },
   {
     id: 'drive',
     name: 'Drive',
     description: 'Playlist',
-    imageUrl: '/images/drive-cover.jpg'
-  }
+    imageUrl: '/images/drive-cover.jpg',
+  },
 ]
 
 export const MainPanel = () => {
@@ -59,7 +59,7 @@ export const MainPanel = () => {
   const currentUser = user as ApiSchemas['UserEntity'] | null
 
   return (
-    <div className='h-full py-4 px-6 overflow-y-auto custom-scrollbar relative z-10'>
+    <div className="h-full py-4 px-6 overflow-y-auto custom-scrollbar relative z-10">
       <Tabs tabs={tabs} />
       <LastPlaylists items={lastPlaylists} onPlaylistClick={handlePlaylistClick} />
       <div className='mt-6'>

@@ -1,4 +1,5 @@
-import { Auth } from '@modules/auth/auth.guard'
+import { SafeUserEntity } from '@modules/users'
+import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
   Body,
@@ -30,7 +31,7 @@ import { UpdateUserDto, UpdateUserSchema } from './dtos'
 import { UserEntity } from './entities'
 import { UsersService } from './users.service'
 
-@ApiExtraModels(UserEntity)
+@ApiExtraModels(UserEntity, SafeUserEntity)
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
@@ -70,7 +71,7 @@ export class UsersController {
   }
 
   @PutUserSwagger()
-  @Auth()
+  @UserAuth()
   @Put('')
   async putById(
     @Req() req: Request,
@@ -81,7 +82,7 @@ export class UsersController {
   }
 
   @UploadAvatarSwagger()
-  @Auth()
+  @UserAuth()
   @Post('avatar')
   @UseInterceptors(
     FileInterceptor('avatar', {

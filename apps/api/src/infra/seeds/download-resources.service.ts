@@ -3,6 +3,7 @@ import { createWriteStream } from 'node:fs'
 import * as path from 'node:path'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
+import { Logger } from '@nestjs/common'
 import type { Song as NCSSong } from '@spotify/ncs-parser'
 import config from './config'
 
@@ -12,6 +13,8 @@ import config from './config'
 export class DownloadResourcesService {
   private tracksDir: string
   private coversDir: string
+
+  private readonly logger = new Logger(DownloadResourcesService.name, { timestamp: true })
 
   constructor(storageBase: string) {
     this.tracksDir = path.join(storageBase, config.storagePaths.tracks)
@@ -30,8 +33,8 @@ export class DownloadResourcesService {
     filepath: string,
   ): Promise<{ success: boolean; size?: number }> {
     try {
-      console.log(`      🔗 URL: ${url}`)
-      console.log(`      💾 Saving to: ${filepath}`)
+      this.logger.log(`      🔗 URL: ${url}`)
+      this.logger.log(`      💾 Saving to: ${filepath}`)
 
       const response = await fetch(url, {
         headers: {
@@ -56,11 +59,11 @@ export class DownloadResourcesService {
       await pipeline(nodeStream, fileStream)
 
       const stats = fs.statSync(filepath)
-      console.log(`      ✅ File saved: ${(stats.size / 1024 / 1024).toFixed(2)} MB`)
+      this.logger.log(`      ✅ File saved: ${(stats.size / 1024 / 1024).toFixed(2)} MB`)
 
       return { success: true, size: stats.size }
     } catch (error) {
-      console.error(
+      this.logger.error(
         `    ⚠️  Failed to download file: ${error instanceof Error ? error.message : error}`,
       )
       return { success: false }
@@ -96,10 +99,10 @@ export class DownloadResourcesService {
       coverFilename = `${sanitizedTitle}_${trackId}${coverExt}`
       const coverPath = path.join(this.coversDir, coverFilename)
 
-      console.log('    📥 Downloading cover...')
+      this.logger.log('    📥 Downloading cover...')
       const result = await this.downloadFile(ncsSong.coverUrl, coverPath)
       if (result.success) {
-        console.log('    ✅ Cover saved')
+        this.logger.log('    ✅ Cover saved')
         coverSize = result.size
       } else {
         coverFilename = null
@@ -111,10 +114,10 @@ export class DownloadResourcesService {
       audioFilename = `${sanitizedTitle}_${trackId}.mp3`
       const audioPath = path.join(this.tracksDir, audioFilename)
 
-      console.log('    📥 Downloading audio file (regular)...')
+      this.logger.log('    📥 Downloading audio file (regular)...')
       const result = await this.downloadFile(ncsSong.download.regular, audioPath)
       if (result.success) {
-        console.log('    ✅ Regular version saved')
+        this.logger.log('    ✅ Regular version saved')
         audioSize = result.size
       } else {
         audioFilename = null
@@ -126,14 +129,14 @@ export class DownloadResourcesService {
       audioFilename = `${sanitizedTitle}_${trackId}_preview.mp3`
       const previewPath = path.join(this.tracksDir, audioFilename)
 
-      console.log('    📥 Downloading preview...')
+      this.logger.log('    📥 Downloading preview...')
       const result = await this.downloadFile(ncsSong.previewUrl, previewPath)
       if (result.success) {
         audioSize = result.size
       } else {
         // Fallback на оригинальный URL
         audioFilename = ncsSong.previewUrl
-        console.log('    ⚠️  Using original preview URL as fallback')
+        this.logger.warn('    ⚠️  Using original preview URL as fallback')
       }
     }
 
@@ -143,10 +146,10 @@ export class DownloadResourcesService {
       instrumentalFilename = `${sanitizedTitle}_${trackId}_instrumental.mp3`
       const instrumentalPath = path.join(this.tracksDir, instrumentalFilename)
 
-      console.log('    📥 Downloading instrumental version...')
+      this.logger.log('    📥 Downloading instrumental version...')
       const result = await this.downloadFile(ncsSong.download.instrumental, instrumentalPath)
       if (result.success) {
-        console.log('    ✅ Instrumental version saved')
+        this.logger.log('    ✅ Instrumental version saved')
         instrumentalSize = result.size
       } else {
         instrumentalFilename = null

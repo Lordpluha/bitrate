@@ -18,7 +18,7 @@ import {
   LogoIcon,
   PasswordInput,
   Typography,
-  toast
+  toast,
 } from '@spotify/ui-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -33,43 +33,63 @@ interface LoginModalProps {
   onSwitchToSignUp?: () => void
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onOpenChange, onSwitchToSignUp }) => {
+export const LoginModal: React.FC<LoginModalProps> = ({
+  isOpen,
+  onOpenChange,
+  onSwitchToSignUp,
+}) => {
   const router = useRouter()
-  const { mutate, isPending: isLoading } = useMutation('post', '/api/v1/auth/login', {
-    onSuccess: () => {
-      onOpenChange(false)
-      void router.push('/main')
+  const { mutate, isPending: isLoading } = useMutation(
+    'post',
+    '/api/v1/auth/login',
+    {
+      onSuccess: () => {
+        onOpenChange(false)
+        void router.push('/main')
+      },
+      onError: (error) => {
+        toast.error(`Login error: ${JSON.stringify(error)}`)
+      },
     },
-    onError: error => {
-      toast.error(`Login error: ${JSON.stringify(error)}`)
-    }
-  })
+  )
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: 'onChange',
     defaultValues: {
       email: '',
-      password: ''
+      password: '',
     },
-    shouldFocusError: true
+    shouldFocusError: true,
   })
 
-  const onSubmit: SubmitHandler<LoginFormData> = body => {
+  const onSubmit: SubmitHandler<LoginFormData> = (body) => {
     mutate({
-      body
+      body,
     })
   }
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-[500px] w-full">
-      <div className='flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg'>
-        <div className='flex flex-col items-center'>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      className="max-w-[500px] w-full"
+    >
+      <div className="flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg">
+        <div className="flex flex-col items-center">
           <LogoIcon width={64} height={64} />
-          <Typography as="h5" size={'heading5'} className='mt-2 text-center text-text-contrast'>
+          <Typography
+            as="h5"
+            size={'heading5'}
+            className="mt-2 text-center text-text-contrast"
+          >
             Sign in
           </Typography>
-          <Typography as="p" size={'body'} className='text-center text-grey-500'>
+          <Typography
+            as="p"
+            size={'body'}
+            className="text-center text-grey-500"
+          >
             Please login to continue to your account.
           </Typography>
         </div>
@@ -77,11 +97,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onOpenChange, on
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className='flex flex-col gap-4'
+            className="flex flex-col gap-4"
           >
             <FormField
               control={form.control}
-              name='email'
+              name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -107,13 +127,16 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onOpenChange, on
 
             <FormField
               control={form.control}
-              name='password'
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <InputProvider>
                       <div className="relative">
-                        <DynamicLabel htmlFor="login-password" variant="contrast">
+                        <DynamicLabel
+                          htmlFor="login-password"
+                          variant="contrast"
+                        >
                           Password
                         </DynamicLabel>
                         <PasswordInput
@@ -131,17 +154,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onOpenChange, on
             />
 
             <Link
-              className='text-right text-green-500 hover:opacity-70 text-sm'
+              className="text-right text-green-500 hover:opacity-70 text-sm"
               href={ROUTES.auth.forgotPassword}
             >
               Forgot password?
             </Link>
 
-            <div className='mt-2 flex flex-col items-stretch gap-4'>
+            <div className="mt-2 flex flex-col items-stretch gap-4">
               <Button
-                variant='primary'
-                className='rounded'
-                type='submit'
+                variant="primary"
+                className="rounded"
+                type="submit"
                 disabled={isLoading}
                 isLoading={isLoading}
               >
@@ -150,21 +173,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onOpenChange, on
 
               <SocialsAuthDivider />
 
-              <Button
-                variant='contrast'
-                type='button'
-              >
-                <GoogleIcon className='mr-2' />
+              <Button variant="contrast" type="button">
+                <GoogleIcon className="mr-2" />
                 <Typography as="p" size={'body'} className="text-text-contrast">
                   Continue with Google
                 </Typography>
               </Button>
 
-              <p className='text-base text-center text-text-contrast'>
+              <p className="text-base text-center text-text-contrast">
                 Don't have an account?{' '}
                 <button
                   type="button"
-                  className='font-bold text-green-500 hover:opacity-70 underline'
+                  className="font-bold text-green-500 hover:opacity-70 underline"
                   onClick={() => {
                     if (onSwitchToSignUp) {
                       onSwitchToSignUp()

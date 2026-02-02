@@ -1,36 +1,36 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { useState } from "react"
-import { expect, userEvent, within } from "storybook/test"
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState } from 'react'
+import { expect, userEvent, within } from 'storybook/test'
 
-import { Button } from "./button"
-import { Label } from "./label"
-import { PasswordInput } from "./password-input"
+import { Button } from './button'
+import { Label } from './label'
+import { PasswordInput } from './password-input'
 
 /**
  * A password input field with toggle visibility functionality.
  * Extends the regular Input component with show/hide password capability.
  */
 const meta = {
-  title: "ui/PasswordInput",
+  title: 'ui/PasswordInput',
   component: PasswordInput,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     showPassword: {
-      control: "boolean",
-      description: "Controls password visibility (controlled mode)",
+      control: 'boolean',
+      description: 'Controls password visibility (controlled mode)',
     },
     onTogglePassword: {
-      action: "togglePassword",
-      description: "Callback when toggle button is clicked",
+      action: 'togglePassword',
+      description: 'Callback when toggle button is clicked',
     },
   },
   args: {
-    className: "w-96",
-    placeholder: "Enter your password",
+    className: 'w-96',
+    placeholder: 'Enter your password',
     disabled: false,
   },
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
 } satisfies Meta<typeof PasswordInput>
 
@@ -53,8 +53,8 @@ export const contrast: StoryObj = {
     </div>
   ),
   args: {
-    placeholder: "Password",
-    variant: "contrast",
+    placeholder: 'Password',
+    variant: 'contrast',
   },
 }
 
@@ -64,7 +64,7 @@ export const contrast: StoryObj = {
 export const Disabled: Story = {
   args: {
     disabled: true,
-    value: "disabled123",
+    value: 'disabled123',
   },
 }
 
@@ -124,7 +124,7 @@ export const Controlled: Story = {
           onTogglePassword={() => setShowPassword(!showPassword)}
         />
         <p className="text-foreground/60 text-sm">
-          Password is {showPassword ? "visible" : "hidden"}
+          Password is {showPassword ? 'visible' : 'hidden'}
         </p>
       </div>
     )
@@ -160,8 +160,8 @@ export const WithCustomIcons: Story = {
         {...args}
         id="custom-password"
         placeholder="Enter password"
-        showIcon={<span style={{ fontSize: "12px" }}>👀</span>}
-        hideIcon={<span style={{ fontSize: "12px" }}>🙈</span>}
+        showIcon={<span style={{ fontSize: '12px' }}>👀</span>}
+        hideIcon={<span style={{ fontSize: '12px' }}>🙈</span>}
       />
       <p className="text-foreground/60 text-sm">
         Uses custom emoji icons instead of default eye icons.
@@ -171,32 +171,32 @@ export const WithCustomIcons: Story = {
 }
 
 export const ShouldToggleVisibility: Story = {
-  name: "when user clicks toggle button, should show/hide password",
-  tags: ["!dev", "!autodocs"],
+  name: 'when user clicks toggle button, should show/hide password',
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     const input = canvas.getByPlaceholderText(/password/i)
-    const toggleButton = canvas.getByRole("button")
-    const testPassword = "secretPassword123"
+    const toggleButton = canvas.getByRole('button')
+    const testPassword = 'secretPassword123'
 
-    await step("enter password", async () => {
+    await step('enter password', async () => {
       await userEvent.click(input)
       await userEvent.type(input, testPassword)
     })
 
-    await step("password should be hidden initially", async () => {
-      await expect(input).toHaveAttribute("type", "password")
+    await step('password should be hidden initially', async () => {
+      await expect(input).toHaveAttribute('type', 'password')
       await expect(input).toHaveValue(testPassword)
     })
 
-    await step("click toggle to show password", async () => {
+    await step('click toggle to show password', async () => {
       await userEvent.click(toggleButton)
-      await expect(input).toHaveAttribute("type", "text")
+      await expect(input).toHaveAttribute('type', 'text')
     })
 
-    await step("click toggle to hide password again", async () => {
+    await step('click toggle to hide password again', async () => {
       await userEvent.click(toggleButton)
-      await expect(input).toHaveAttribute("type", "password")
+      await expect(input).toHaveAttribute('type', 'password')
     })
   },
 }

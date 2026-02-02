@@ -1,4 +1,4 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface SpotifyLogoProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
@@ -8,10 +8,10 @@ interface SpotifyLogoProps extends SVGProps<SVGSVGElement> {
 }
 
 export const SpotifyLogo = ({
-  primaryColor = "#1ed760",
-  secondaryColor = "#212121",
-  color3 = "var(--fg-color, currentcolor)",
-  color4 = "#ffffff",
+  primaryColor = '#1ed760',
+  secondaryColor = '#212121',
+  color3 = 'var(--fg-color, currentcolor)',
+  color4 = '#ffffff',
   ...props
 }: SpotifyLogoProps) => (
   <svg

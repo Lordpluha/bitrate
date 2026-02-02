@@ -34,8 +34,12 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.user
   }
 
-  get session() {
-    return this.prisma.session
+  get userSession() {
+    return this.prisma.userSession
+  }
+
+  get artistSession() {
+    return this.prisma.artistSession
   }
 
   get track() {

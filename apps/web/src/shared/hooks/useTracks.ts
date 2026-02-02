@@ -16,8 +16,8 @@ export const useTracks = (params: UseTracksParams = {}) => {
       query: {
         page,
         limit,
-        ...(title && { title })
-      }
-    }
-  }) as any // тут оставляем пока
+        ...(title && { title }),
+      },
+    },
+  } as any)
 }

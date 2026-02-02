@@ -1,11 +1,11 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface PhoneIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
 export const PhoneIcon = ({
-  primaryColor = "var(--fg-color, currentcolor)",
+  primaryColor = 'var(--fg-color, currentcolor)',
   ...props
 }: PhoneIconProps) => (
   <svg

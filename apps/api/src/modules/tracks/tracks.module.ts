@@ -1,15 +1,22 @@
 import { PrismaModule } from '@infra/prisma/prisma.module'
-import { AuthModule } from '@modules/auth/auth.module'
+import { TokensModule } from '@modules/tokens/tokens.module'
+import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
+import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
-import { JwtModule } from '@nestjs/jwt'
 import { AudioGateway } from './audio.gateway'
+import { AudioProcessingConsumer } from './audio-processing.consumer'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
 @Module({
-  providers: [TracksService, AudioGateway],
+  providers: [TracksService, AudioGateway, AudioProcessingConsumer],
   controllers: [TracksController],
-  imports: [PrismaModule, AuthModule, JwtModule],
+  imports: [
+    PrismaModule,
+    UsersAuthModule,
+    TokensModule,
+    BullModule.registerQueue({ name: 'audio-processing' }),
+  ],
   exports: [TracksService, AudioGateway],
 })
 export class TracksModule {}

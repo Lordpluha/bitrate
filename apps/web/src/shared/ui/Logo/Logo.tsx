@@ -21,7 +21,7 @@ export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
           'transition-[0.3s]',
           color === 'dark'
             ? 'text-text fill-text'
-            : 'text-text-contrast fill-text-contrast'
+            : 'text-text-contrast fill-text-contrast',
         )}
       />
     </Link>

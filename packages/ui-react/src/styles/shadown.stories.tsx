@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import {
   Table,
   TableBody,
@@ -6,14 +6,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table"
+} from '../components/ui/table'
 
 type Shadow = {
   name: string
   value: string
 }
 
-const ShadowTile = ({ value }: Pick<Shadow, "value">) => {
+const ShadowTile = ({ value }: Pick<Shadow, 'value'>) => {
   const style = window.getComputedStyle(document.body)
   const shadow = style.getPropertyValue(value)
 
@@ -32,7 +32,7 @@ const ShadowTile = ({ value }: Pick<Shadow, "value">) => {
 const meta: Meta<{
   shadow: Shadow[]
 }> = {
-  title: "design/Shadow",
+  title: 'design/Shadow',
   argTypes: {},
   render: (args) => (
     <Table>
@@ -68,13 +68,13 @@ type Story = StoryObj<typeof meta>
 export const Core: Story = {
   args: {
     shadow: [
-      { name: "xxs", value: "--shadow-2xs" },
-      { name: "xs", value: "--shadow-xs" },
-      { name: "sm", value: "--shadow-sm" },
-      { name: "md", value: "--shadow-md" },
-      { name: "lg", value: "--shadow-lg" },
-      { name: "xl", value: "--shadow-xl" },
-      { name: "2xl", value: "--shadow-2xl" },
+      { name: 'xxs', value: '--shadow-2xs' },
+      { name: 'xs', value: '--shadow-xs' },
+      { name: 'sm', value: '--shadow-sm' },
+      { name: 'md', value: '--shadow-md' },
+      { name: 'lg', value: '--shadow-lg' },
+      { name: 'xl', value: '--shadow-xl' },
+      { name: '2xl', value: '--shadow-2xl' },
     ],
   },
 }

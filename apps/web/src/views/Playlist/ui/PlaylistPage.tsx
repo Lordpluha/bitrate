@@ -59,7 +59,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
 
   if (loadingPlaylist) {
     return (
-      <div className='h-full overflow-y-auto custom-scrollbar'>
+      <div className="h-full overflow-y-auto custom-scrollbar">
         <PlaylistHeader
           title='Loading...'
           type='Playlist'
@@ -67,7 +67,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
           author='Loading...'
           songsCount={0}
           tracksCount={0}
-          duration='0 min'
+          duration="0 min"
         />
         <div className='flex justify-center items-center h-64'>
           <div className='text-text'>Loading playlist...</div>
@@ -112,7 +112,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
   }
 
   return (
-    <div className='h-full overflow-y-auto custom-scrollbar'>
+    <div className="h-full overflow-y-auto custom-scrollbar">
       <PlaylistHeader
         title={playlistData.title || 'Playlist'}
         type='Playlist'

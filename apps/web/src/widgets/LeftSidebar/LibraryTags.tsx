@@ -1,8 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, ArrowRight, cn } from '@spotify/ui-react'
-
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  ArrowRight,
+  cn,
+} from '@spotify/ui-react'
 
 const tags = ['Playlists', 'Artists', 'Albums', 'Podcasts']
 
@@ -10,30 +16,28 @@ export const LibraryTags = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag)
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     )
   }
 
   return (
-    <div className='mt-4'>
+    <div className="mt-4">
       <Carousel
         opts={{
           dragFree: true,
           containScroll: 'trimSnaps',
-          align: 'start'
+          align: 'start',
         }}
         showNavigation={true}
-        className='w-full'
+        className="w-full"
       >
-        <CarouselContent className='gap-2'>
+        <CarouselContent className="gap-2">
           {tags.map((tag) => (
-            <CarouselItem key={tag} className='px-1 basis-auto'>
+            <CarouselItem key={tag} className="px-1 basis-auto">
               <button
                 onClick={() => toggleTag(tag)}
-                type='button'
+                type="button"
                 className={cn(
                   'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap',
                   selectedTags.includes(tag)

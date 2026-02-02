@@ -1,29 +1,29 @@
-import { dirname, resolve } from "node:path"
-import { fileURLToPath } from "node:url"
-import type { StorybookConfig } from "@storybook/react-vite"
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import type { StorybookConfig } from '@storybook/react-vite'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const config: StorybookConfig = {
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
-  addons: ["@storybook/addon-docs"],
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  addons: ['@storybook/addon-docs'],
   framework: {
-    name: "@storybook/react-vite",
+    name: '@storybook/react-vite',
     options: {},
   },
   viteFinal: async (config) => {
     if (config.resolve) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        "@": resolve(__dirname, "../src"),
+        '@': resolve(__dirname, '../src'),
       }
     }
 
     // Define process global for Next.js compatibility
     config.define = {
       ...config.define,
-      "process.env": {},
+      'process.env': {},
     }
 
     return config

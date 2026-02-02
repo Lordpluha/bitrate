@@ -1,11 +1,11 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface MusicIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
 export const MusicIcon = ({
-  primaryColor = "var(--fg-color, currentcolor)",
+  primaryColor = 'var(--fg-color, currentcolor)',
   ...props
 }: MusicIconProps) => (
   <svg

@@ -61,25 +61,26 @@ const musicPlayerSlice = createSlice({
     }),
     changeTrack: create.reducer<'next' | 'prev'>((state, action) => {
       if (!state.currentTrack || state.playlist.length === 0) return
-      
+
       const currentIndex = state.playlist.findIndex(
-        track => track.id === state.currentTrack?.id
+        (track) => track.id === state.currentTrack?.id,
       )
-      
+
       if (currentIndex === -1) return
-      
+
       let newIndex: number
       if (action.payload === 'next') {
         newIndex = (currentIndex + 1) % state.playlist.length
       } else {
-        newIndex = currentIndex === 0 ? state.playlist.length - 1 : currentIndex - 1
+        newIndex =
+          currentIndex === 0 ? state.playlist.length - 1 : currentIndex - 1
       }
-      
+
       state.currentTrack = state.playlist[newIndex] ?? null
       state.isPlaying = true
       state.currentTime = 0
       state.duration = state.playlist[newIndex]?.duration || 0
-    })
+    }),
   }),
   selectors: {
     selectMusicPlayer: (state) => state,

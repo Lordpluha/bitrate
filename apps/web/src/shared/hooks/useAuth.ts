@@ -50,20 +50,20 @@ export const useAuth = () => {
   const { mutate } = useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: userQueryKeys.user
+        queryKey: userQueryKeys.user,
       })
       router.push(ROUTES.landing)
     },
     mutationFn: async () => {
       const { response } = await fetchClient.POST('/api/v1/auth/logout')
       if (!response.ok) throw new Error('Logout failed')
-    }
+    },
   })
 
   return {
     user,
     isAuthenticated,
     isLoading: isLoading || isPending,
-    logout: mutate
+    logout: mutate,
   }
 }

@@ -1,14 +1,15 @@
 import { PrismaModule } from '@infra/prisma/prisma.module'
-import { AuthModule } from '@modules/auth/auth.module'
+import { TokensModule } from '@modules/tokens/tokens.module'
+import { UsersPrivateService } from '@modules/users/users.private.service'
+import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { forwardRef, Module } from '@nestjs/common'
-import { JwtModule } from '@nestjs/jwt'
 import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
 
 @Module({
-  providers: [UsersService],
+  providers: [UsersService, UsersPrivateService],
   controllers: [UsersController],
-  exports: [UsersService],
-  imports: [PrismaModule, JwtModule, forwardRef(() => AuthModule)],
+  exports: [UsersService, UsersPrivateService],
+  imports: [PrismaModule, TokensModule, forwardRef(() => UsersAuthModule)],
 })
 export class UsersModule {}

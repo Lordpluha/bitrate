@@ -12,7 +12,7 @@ export const Modal: React.FC<ModalProps> = ({
   isOpen,
   onOpenChange: toggleIsOpen,
   children,
-  className
+  className,
 }) => {
   // Close on Escape key
   useEffect(() => {
@@ -46,7 +46,7 @@ export const Modal: React.FC<ModalProps> = ({
         className={cn(
           'relative z-10 max-h-[90vh] max-w-[90vw] overflow-auto rounded-lg shadow-xl',
           'animate-in zoom-in-95 duration-200',
-          className
+          className,
         )}
         onClick={(e) => e.stopPropagation()}
       >
@@ -55,5 +55,3 @@ export const Modal: React.FC<ModalProps> = ({
     </div>
   )
 }
-
-

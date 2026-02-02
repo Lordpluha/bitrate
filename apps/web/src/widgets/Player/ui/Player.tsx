@@ -9,7 +9,8 @@ import { setVolume, selectMusicPlayer } from '@entities/Player/store/PlayerSlice
 import { useArtistName } from '@shared/hooks/useArtistName'
 
 export const Player: React.FC = () => {
-  const { currentTrack, isPlaying, volume, currentTime, duration } = useAppSelector(selectMusicPlayer)
+  const { currentTrack, isPlaying, volume, currentTime, duration } =
+    useAppSelector(selectMusicPlayer)
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
   const artistName = useArtistName(currentTrack?.artistId)
@@ -24,7 +25,7 @@ export const Player: React.FC = () => {
     handleEnded,
     handleVolumeChange,
     handleSeeked,
-    handleProgress
+    handleProgress,
   } = useAudioPlayer()
 
   useEffect(() => {
@@ -60,8 +61,8 @@ export const Player: React.FC = () => {
         onSeeked={handleSeeked}
         onProgress={handleProgress}
       />
-      
-      <div 
+
+      <div
         className={`fixed bottom-0 left-0 right-0 h-[90px] bg-black border-t border-gray-800 px-4 flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${
           isVisible ? 'translate-y-0' : 'translate-y-full'
         }`}
@@ -88,7 +89,7 @@ export const Player: React.FC = () => {
         </div>
 
         <div className="w-[35%] flex justify-end">
-          <PlayerActions 
+          <PlayerActions
             volume={volume}
             onVolumeChange={(vol) => dispatch(setVolume(vol))}
           />

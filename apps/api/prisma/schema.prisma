@@ -17,15 +17,18 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 
-  sessions    Session[]
+  sessions    UserSession[]
   playlists   Playlist[]
   likedTracks Track[]    @relation("UserLikedTracks")
+  likedArtists Artist[]  @relation("UserLikedArtists")
+  likedAlbums  Album[]    @relation("UserLikedAlbums")
+  likedPlaylists Playlist[] @relation("UserLikedPlaylists")
 
   @@index([email])
   @@index([username])
 }
 
-model Session {
+model UserSession {
   id            String @id @default(uuid(7)) @db.Uuid
   userId        String @db.Uuid
   access_token  String @unique
@@ -41,10 +44,26 @@ model Session {
   @@index([refresh_token])
 }
 
+model ArtistSession {
+  id            String @id @default(uuid(7)) @db.Uuid
+  artistId        String @db.Uuid
+  access_token  String @unique
+  refresh_token String @unique
+
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId])
+  @@index([access_token])
+  @@index([refresh_token])
+}
+
 model Track {
   id       String  @id @default(uuid(7)) @db.Uuid
   title    String
-  audioUrl String // Primary audio file URL
+  audioUrl String
   cover    String?
   artistId String  @db.Uuid
 
@@ -101,6 +120,10 @@ model Artist {
   tracks Track[]
   albums Album[]
 
+  sessions    ArtistSession[]
+
+  likedBy    User[]      @relation("UserLikedArtists")
+
   @@index([email])
   @@index([username])
 }
@@ -121,6 +144,8 @@ model Album {
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
+  likedBy    User[]      @relation("UserLikedAlbums")
+
   @@index([artistId])
   @@index([title])
   @@index([releaseDate])
@@ -138,6 +163,8 @@ model Playlist {
   userId    String   @db.Uuid
 
   tracks Track[]
+
+  likedBy    User[]      @relation("UserLikedPlaylists")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

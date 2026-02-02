@@ -1,10 +1,10 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface InstallIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
-export const InstallIcon = ({ primaryColor = "#b3b3b3", ...props }: InstallIconProps) => (
+export const InstallIcon = ({ primaryColor = '#b3b3b3', ...props }: InstallIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"

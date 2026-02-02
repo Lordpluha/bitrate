@@ -1,14 +1,17 @@
 import { HttpStatus, VersioningType } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
 
 import { AppModule } from './app.module'
-import { corsConfig } from './common/config/cors.config'
+import type { AppConfig } from './common/config'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  const configService = app.get<ConfigService<AppConfig>>(ConfigService)
+
   app.use(cookieParser())
   app.useGlobalFilters(new HttpExceptionFilter())
 
@@ -19,23 +22,24 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: '1',
   })
-  app.enableCors(corsConfig)
+
+  app.enableCors(configService.getOrThrow('connections').http)
 
   const config = new DocumentBuilder()
     .setTitle(process.env.npm_package_name || 'API Documentation')
     .setDescription(`${process.env.npm_package_name} Swagger documentation`)
     .setVersion(process.env.npm_package_version ?? '1.0')
-    .addServer(`http://localhost:${process.env.PORT ?? 3000}`, 'Local server')
+    .addServer(`http://localhost:${configService.getOrThrow('PORT')}`, 'Local server')
     .addServer('https://spotify-clone-api-jp5z.onrender.com/', 'Remote dev server')
     // In progress
     .addOAuth2({
       type: 'openIdConnect',
     })
-    .addCookieAuth(process.env.ACCESS_TOKEN_NAME, {
+    .addCookieAuth(configService.getOrThrow('ACCESS_TOKEN_NAME'), {
       type: 'apiKey',
       in: 'cookie',
-      name: process.env.ACCESS_TOKEN_NAME,
-      description: `HttpOnly cookies: ${process.env.ACCESS_TOKEN_NAME} and ${process.env.REFRESH_TOKEN_NAME}`,
+      name: configService.getOrThrow('ACCESS_TOKEN_NAME'),
+      description: `HttpOnly cookies: ${configService.getOrThrow('ACCESS_TOKEN_NAME')} and ${configService.getOrThrow('REFRESH_TOKEN_NAME')}`,
     })
     .setContact('Lordpluha', 'https://github.com/Lordpluha', 'vladislavteslyukofficial@gmail.com')
     // Global server errors
@@ -93,7 +97,7 @@ async function bootstrap() {
     jsonDocumentUrl: 'swagger/json',
   })
 
-  await app.listen(process.env.PORT ?? 3000)
+  await app.listen(configService.getOrThrow('PORT'))
 }
 
 bootstrap()

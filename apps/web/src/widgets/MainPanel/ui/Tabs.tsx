@@ -17,8 +17,8 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, onTabChange }) => {
   const [activeTab, setActiveTab] = useState(tabs[0]?.id || '')
 
   return (
-    <div className='flex items-center justify-start gap-2'>
-      {tabs.map(tab => (
+    <div className="flex items-center justify-start gap-2">
+      {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => {

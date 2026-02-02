@@ -10,11 +10,11 @@ interface ProgressiveStreamingOptions {
 export const useProgressiveAudioStreaming = (
   audioElement: HTMLAudioElement | null,
   trackUrl: string | null,
-  options: ProgressiveStreamingOptions = {}
+  options: ProgressiveStreamingOptions = {},
 ) => {
   const {
     chunkSize = 256 * 1024, // 256KB chunks like Spotify
-    bufferAhead = 30 // Buffer 30 seconds ahead
+    bufferAhead = 30, // Buffer 30 seconds ahead
   } = options
 
   const mediaSourceRef = useRef<MediaSource | null>(null)
@@ -26,7 +26,7 @@ export const useProgressiveAudioStreaming = (
 
   const stopStreaming = useCallback(() => {
     isStreamingRef.current = false
-    
+
     if (fetchControllerRef.current) {
       fetchControllerRef.current.abort()
       fetchControllerRef.current = null
@@ -43,37 +43,40 @@ export const useProgressiveAudioStreaming = (
     currentPositionRef.current = 0
   }, [])
 
-  const fetchChunk = useCallback(async (start: number, end: number, signal: AbortSignal) => {
-    if (!trackUrl) return null
+  const fetchChunk = useCallback(
+    async (start: number, end: number, signal: AbortSignal) => {
+      if (!trackUrl) return null
 
-    try {
-      console.log(`Fetching chunk: bytes ${start}-${end}`)
-      
-      const response = await fetch(trackUrl, {
-        headers: {
-          'Range': `bytes=${start}-${end}`
-        },
-        credentials: 'include',
-        signal
-      })
+      try {
+        console.log(`Fetching chunk: bytes ${start}-${end}`)
 
-      if (!response.ok && response.status !== 206) {
-        throw new Error(`HTTP ${response.status}`)
+        const response = await fetch(trackUrl, {
+          headers: {
+            Range: `bytes=${start}-${end}`,
+          },
+          credentials: 'include',
+          signal,
+        })
+
+        if (!response.ok && response.status !== 206) {
+          throw new Error(`HTTP ${response.status}`)
+        }
+
+        const arrayBuffer = await response.arrayBuffer()
+        console.log(`✓ Chunk loaded: ${arrayBuffer.byteLength} bytes`)
+
+        return arrayBuffer
+      } catch (error: any) {
+        if (error.name === 'AbortError') {
+          console.log('Chunk fetch aborted')
+        } else {
+          console.error('Error fetching chunk:', error)
+        }
+        return null
       }
-
-      const arrayBuffer = await response.arrayBuffer()
-      console.log(`✓ Chunk loaded: ${arrayBuffer.byteLength} bytes`)
-      
-      return arrayBuffer
-    } catch (error: any) {
-      if (error.name === 'AbortError') {
-        console.log('Chunk fetch aborted')
-      } else {
-        console.error('Error fetching chunk:', error)
-      }
-      return null
-    }
-  }, [trackUrl])
+    },
+    [trackUrl],
+  )
 
   const appendChunk = useCallback(async (chunk: ArrayBuffer) => {
     const sourceBuffer = sourceBufferRef.current
@@ -113,11 +116,14 @@ export const useProgressiveAudioStreaming = (
     isStreamingRef.current = true
     fetchControllerRef.current = new AbortController()
 
-    while (isStreamingRef.current && currentPositionRef.current < fileSizeRef.current) {
+    while (
+      isStreamingRef.current &&
+      currentPositionRef.current < fileSizeRef.current
+    ) {
       // Check if we need more buffering
       const currentTime = audioElement.currentTime
       const buffered = audioElement.buffered
-      
+
       let bufferedEnd = 0
       if (buffered.length > 0) {
         bufferedEnd = buffered.end(buffered.length - 1)
@@ -125,8 +131,10 @@ export const useProgressiveAudioStreaming = (
 
       // If we have enough buffer ahead, wait
       if (bufferedEnd > currentTime + bufferAhead) {
-        console.log(`Buffer sufficient: ${bufferedEnd.toFixed(1)}s buffered, current: ${currentTime.toFixed(1)}s`)
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        console.log(
+          `Buffer sufficient: ${bufferedEnd.toFixed(1)}s buffered, current: ${currentTime.toFixed(1)}s`,
+        )
+        await new Promise((resolve) => setTimeout(resolve, 1000))
         continue
       }
 
@@ -134,16 +142,20 @@ export const useProgressiveAudioStreaming = (
       const start = currentPositionRef.current
       const end = Math.min(start + chunkSize - 1, fileSizeRef.current - 1)
 
-      const chunk = await fetchChunk(start, end, fetchControllerRef.current.signal)
-      
+      const chunk = await fetchChunk(
+        start,
+        end,
+        fetchControllerRef.current.signal,
+      )
+
       if (!chunk || !isStreamingRef.current) break
 
       const success = await appendChunk(chunk)
-      
+
       if (success) {
         currentPositionRef.current = end + 1
       } else {
-        await new Promise(resolve => setTimeout(resolve, 100))
+        await new Promise((resolve) => setTimeout(resolve, 100))
       }
     }
 
@@ -160,7 +172,7 @@ export const useProgressiveAudioStreaming = (
       // Get file size first
       const headResponse = await fetch(trackUrl, {
         method: 'HEAD',
-        credentials: 'include'
+        credentials: 'include',
       })
 
       const contentLength = headResponse.headers.get('content-length')
@@ -188,9 +200,9 @@ export const useProgressiveAudioStreaming = (
         try {
           const sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg')
           sourceBufferRef.current = sourceBuffer
-          
+
           currentPositionRef.current = 0
-          
+
           // Start streaming chunks
           streamChunks()
         } catch (e) {
@@ -199,7 +211,6 @@ export const useProgressiveAudioStreaming = (
       })
 
       audioElement.src = URL.createObjectURL(mediaSource)
-      
     } catch (error) {
       console.error('Error starting streaming:', error)
     }
@@ -215,6 +226,6 @@ export const useProgressiveAudioStreaming = (
   return {
     startStreaming,
     stopStreaming,
-    isStreaming: isStreamingRef.current
+    isStreaming: isStreamingRef.current,
   }
 }

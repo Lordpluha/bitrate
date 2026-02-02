@@ -1,4 +1,3 @@
-import { ArtistEntity } from '@modules/artists'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
@@ -27,24 +26,12 @@ export function GetUsersSwagger() {
     ApiResponse({
       status: HttpStatus.OK,
       description: 'List of users retrieved successfully',
-      example: [
-        {
-          id: '1',
-          username: 'user1',
-          avatar: 'https://example.com/uploads/avatars/avatar.jpg',
-          backgroundImage: '',
-          bio: 'Some bio',
-          createdAt: new Date(),
+      schema: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/SafeUserEntity',
         },
-        {
-          id: '2',
-          username: 'user2',
-          avatar: 'https://example.com/uploads/avatars/avatar.jpg',
-          backgroundImage: '',
-          bio: 'Some bio 2',
-          createdAt: new Date(),
-        },
-      ] as Omit<ArtistEntity, 'password'>[],
+      },
     }),
   )
 }

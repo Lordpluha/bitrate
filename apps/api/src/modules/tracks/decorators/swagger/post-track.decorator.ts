@@ -1,23 +1,19 @@
-import { TrackEntity } from '@modules/tracks'
+import { CreateTrackDto } from '@modules/tracks/dtos/create-track.dto'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
-import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 export function PostTrackSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Create track' }),
-    ApiConsumes('application/json'),
+    ApiConsumes('multipart/form-data'),
+    ApiBody({
+      type: CreateTrackDto,
+      required: true,
+    }),
     ApiResponse({
       status: HttpStatus.CREATED,
-      content: {
-        'application/json': {
-          example: {
-            id: '1',
-            title: 'Track Title',
-            cover: 'https://example.com/cover.jpg',
-            audioUrl: '',
-            createdAt: new Date(),
-          } as Omit<TrackEntity, 'artistId'>,
-        },
+      schema: {
+        $ref: '#/components/schemas/TrackEntity',
       },
     }),
   )

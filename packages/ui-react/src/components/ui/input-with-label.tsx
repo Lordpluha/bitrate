@@ -21,7 +21,7 @@ export const InputWithLabel: React.FC<InputWithLabelProps> = ({
 
   return (
     <InputProvider>
-      <div className='relative'>
+      <div className="relative">
         <DynamicLabel htmlFor={inputId} {...labelProps}>
           {label}
         </DynamicLabel>

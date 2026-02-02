@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useAppSelector } from '@shared/hooks'
 import { ResizableHandle, ResizableLayout as ResizableLayoutShadCN, ResizablePanel } from '@spotify/ui-react'
@@ -13,26 +13,28 @@ export default function MainLayout({ children }: PropsWithChildren) {
   const hasPlayer = !!currentTrack
 
   return (
-    <div className='h-screen bg-bg text-text'>
+    <div className="h-screen bg-bg text-text">
       <MainHeader />
       <div
-        className='transition-all duration-300 ease-in-out'
+        className="transition-all duration-300 ease-in-out"
         style={{
-          height: hasPlayer ? 'calc(100vh - 64px - 90px)' : 'calc(100vh - 64px)'
+          height: hasPlayer
+            ? 'calc(100vh - 64px - 90px)'
+            : 'calc(100vh - 64px)',
         }}
       >
-        <div className='h-full'>
-          <ResizableLayoutShadCN className='h-full' direction='horizontal'>
+        <div className="h-full">
+          <ResizableLayoutShadCN className="h-full" direction="horizontal">
             <ResizablePanel
               defaultSize={20}
               minSize={15}
               maxSize={30}
-              className='overflow-hidden rounded-lg bg-bg-secondary m-1.5'
+              className="overflow-hidden rounded-lg bg-bg-secondary m-1.5"
             >
               <LeftSidebar />
             </ResizablePanel>
 
-            <ResizableHandle className='w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]' />
+            <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
 
             <ResizablePanel
               defaultSize={60}
@@ -42,13 +44,13 @@ export default function MainLayout({ children }: PropsWithChildren) {
               {children}
             </ResizablePanel>
 
-            <ResizableHandle className='w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]' />
+            <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
 
             <ResizablePanel
               defaultSize={20}
               minSize={15}
               maxSize={30}
-              className='overflow-hidden rounded-lg bg-bg-secondary m-1.5'
+              className="overflow-hidden rounded-lg bg-bg-secondary m-1.5"
             >
               <RightSidebar />
             </ResizablePanel>

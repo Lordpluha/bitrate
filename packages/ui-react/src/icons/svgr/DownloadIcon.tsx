@@ -1,4 +1,4 @@
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react'
 
 interface DownloadIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
@@ -6,8 +6,8 @@ interface DownloadIconProps extends SVGProps<SVGSVGElement> {
 }
 
 export const DownloadIcon = ({
-  primaryColor = "var(--bg-color, currentcolor)",
-  secondaryColor = "var(--fg-color, currentcolor)",
+  primaryColor = 'var(--bg-color, currentcolor)',
+  secondaryColor = 'var(--fg-color, currentcolor)',
   ...props
 }: DownloadIconProps) => (
   <svg

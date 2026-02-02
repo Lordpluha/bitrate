@@ -9,21 +9,33 @@ export const Credits: React.FC = () => (
         Show all
       </Button>
     </div>
-    <div className='px-4 pb-4'>
-      <div className='flex items-center justify-between mb-2'>
+    <div className="px-4 pb-4">
+      <div className="flex items-center justify-between mb-2">
         <div>
-          <Typography as='p' size='body' className='text-text text-sm'>Crystal Castles</Typography>
-          <Typography as='p' size='body' className='text-grey-500  text-xs'>Main Artist</Typography>
+          <Typography as="p" size="body" className="text-text text-sm">
+            Crystal Castles
+          </Typography>
+          <Typography as="p" size="body" className="text-grey-500  text-xs">
+            Main Artist
+          </Typography>
         </div>
         <Button className='h-auto text-xs px-2 py-1' variant='default'>Follow</Button>
       </div>
-      <div className='mb-2'>
-        <Typography as='p' size='body' className='text-text text-sm'>Van She</Typography>
-        <Typography as='p' size='body' className='text-grey-500  text-xs'>Composer</Typography>
+      <div className="mb-2">
+        <Typography as="p" size="body" className="text-text text-sm">
+          Van She
+        </Typography>
+        <Typography as="p" size="body" className="text-grey-500  text-xs">
+          Composer
+        </Typography>
       </div>
       <div>
-        <Typography as='p' size='body' className='text-text text-sm'>Ethan Kath</Typography>
-        <Typography as='p' size='body' className='text-grey-500 text-xs'>Composer, Producer</Typography>
+        <Typography as="p" size="body" className="text-text text-sm">
+          Ethan Kath
+        </Typography>
+        <Typography as="p" size="body" className="text-grey-500 text-xs">
+          Composer, Producer
+        </Typography>
       </div>
     </div>
   </div>

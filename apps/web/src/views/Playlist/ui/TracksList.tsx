@@ -13,8 +13,13 @@ interface TracksListProps {
   onPlayTrack: (track: Track) => void
 }
 
-export const TracksList: React.FC<TracksListProps> = ({ tracks, onPlayTrack }) => {
-  const { currentTrack, isPlaying } = useAppSelector((state) => state.musicPlayer)
+export const TracksList: React.FC<TracksListProps> = ({
+  tracks,
+  onPlayTrack,
+}) => {
+  const { currentTrack, isPlaying } = useAppSelector(
+    (state) => state.musicPlayer,
+  )
   const [hoveredTrackId, setHoveredTrackId] = useState<string | null>(null)
   const { getArtistName } = useArtists()
 
