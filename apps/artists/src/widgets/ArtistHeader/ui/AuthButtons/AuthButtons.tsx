@@ -1,4 +1,3 @@
-import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { cn } from '@spotify/ui-react'
 
@@ -11,7 +10,7 @@ export const AuthButtons = () => (
         'rounded-3xl border-solid border',
         'transform hover:scale-105 transition duration-300 ease-in-out'
       )}
-      href={ROUTES.auth.login}
+      href={'/login'}
     >
       Log out
     </Link>
@@ -22,7 +21,7 @@ export const AuthButtons = () => (
         'rounded-3xl border-solid border',
         'transform hover:scale-105 transition duration-300 ease-in-out'
       )}
-      href={ROUTES.auth.registration}
+      href={'/registration'}
     >
       Get access
     </Link>

@@ -1,5 +1,4 @@
 export * from './AuthBanner'
-export * from './ArtistLogo'
 export * from './Logo'
 export * from './SocialsAuthDivider'
-export * from './SwitchLanguagesLogo'
+

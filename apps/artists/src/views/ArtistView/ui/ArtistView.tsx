@@ -1,4 +1,4 @@
-import { ArtistHeader } from "@widgets/ArtistHeader/ui/ArtistHeader"
+import { ArtistHeader } from "@widgets/ArtistHeader"
 
 export const ArtistView: React.FC = () => {
 

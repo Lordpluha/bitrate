@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { cn } from '@spotify/ui-react'
+import Link from 'next/link'
 import links from '../../config/nav-links.json'
 
 export const NavLinks = () => (

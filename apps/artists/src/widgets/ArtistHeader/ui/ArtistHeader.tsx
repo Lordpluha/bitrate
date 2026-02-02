@@ -35,7 +35,7 @@ export const ArtistHeader = () => {
 
   const typedLinks = links as LinkItem[]
   const activeLink = typedLinks.find((link) => link.title === activeSubmenu)
-  
+
   const submenuData = activeLink?.submenu || activeLink?.resources || null
   const submenuType = activeLink?.submenu ? 'features' : 'resources'
 
@@ -54,7 +54,7 @@ export const ArtistHeader = () => {
 
   const handleCloseSubmenu = React.useCallback(() => {
     if (!activeSubmenu || isClosing) return
-    
+
     clearTimer()
     setIsClosing(true)
     timeoutRef.current = setTimeout(() => {
@@ -74,8 +74,8 @@ export const ArtistHeader = () => {
 
   return (
     <>
-      <header 
-        className="fixed top-0 left-0 right-0 bg-black-900 z-1052"
+      <header
+        className="fixed top-0 left-0 right-0 bg-black z-1052"
         onMouseEnter={handleMenuEnter}
         onMouseLeave={handleCloseSubmenu}
       >
@@ -83,7 +83,7 @@ export const ArtistHeader = () => {
 
           <ArtistLogo />
 
-          <NavLinks 
+          <NavLinks
             activeSubmenu={activeSubmenu}
             setActiveSubmenu={handleSetActiveSubmenu}
             closeSubmenu={handleCloseSubmenu}
