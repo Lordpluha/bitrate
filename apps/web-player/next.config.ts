@@ -15,20 +15,6 @@ const nextConfig = {
   //     }
   //   }
   // },
-  async redirects() {
-    return [
-      {
-        source: '/artists',
-        destination: 'http://artists.localhost:3002/',
-        permanent: false,
-      },
-      {
-        source: '/artists/:path+',
-        destination: 'http://artists.localhost:3002/:path+',
-        permanent: false,
-      },
-    ]
-  },
 } satisfies NextConfig
 
 export default nextConfig
