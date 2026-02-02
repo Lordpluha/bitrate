@@ -27,6 +27,14 @@ export const MusicCardMd: React.FC<MusicCardMdProps> = ({ id, name, description,
 
   const className = 'flex bg-gray-800/50 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-700/50 transition-all duration-200 flex-1 min-w-0 max-w-[calc(33.333%-0.667rem)]'
 
+  if (id === 'example-playlist') {
+    return (
+      <Link href='/main/example-playlist' className={className}>
+        {content}
+      </Link>
+    )
+  }
+
   if (id === 'test-all-tracks' && onClick) {
     return (
       <div onClick={() => onClick(id)} className={className}>
@@ -36,7 +44,7 @@ export const MusicCardMd: React.FC<MusicCardMdProps> = ({ id, name, description,
   }
 
   return (
-    <Link href={`/playlist/${id}`} className={className}>
+    <Link href={`/main/playlist/${id}`} className={className}>
       {content}
     </Link>
   )

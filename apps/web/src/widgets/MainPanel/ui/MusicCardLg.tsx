@@ -18,7 +18,7 @@ export const MusicCardLg: React.FC<MusicCardLgProps> = ({
   imageUrl,
   isArtist
 }) => {
-  const href = isArtist ? `/artist/${id}` : `/playlist/${id}`
+  const href = isArtist ? `/main/artist/${id}` : `/main/playlist/${id}`
 
   return (
     <Link

@@ -15,7 +15,7 @@ export const LastPlaylists: React.FC<LastPlaylistsProps> = ({ items, onPlaylistC
     {items.map(item => (
       <MusicCardMd
         key={item.id}
-        id={item.id}
+        id='example-playlist'
         name={item.title}
         description={item.description || ''}
         imageUrl={item.cover || '/images/default-playlist.jpg'}

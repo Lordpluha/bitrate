@@ -42,18 +42,16 @@ const lastPlaylists: any[] = [
 
 export const MainPanel = () => {
   const { user, isAuthenticated } = useAuth()
-  const [showTestTracks, setShowTestTracks] = useState(false)
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null)
 
   const handlePlaylistClick = (id: string) => {
-    if (id === 'test-all-tracks') {
-      setShowTestTracks(true)
-    }
+    setSelectedPlaylistId(id)
   }
 
-  if (showTestTracks) {
+  if (selectedPlaylistId) {
     return (
       <div className='h-full overflow-y-auto custom-scrollbar relative z-10'>
-        <PlaylistPage />
+        <PlaylistPage playlistId={selectedPlaylistId} />
       </div>
     )
   }

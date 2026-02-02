@@ -8,7 +8,7 @@ import { usePersistedState } from '@shared/hooks'
 import { Toaster } from '@spotify/ui-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import ReduxProvider from './providers/ReduxProvider'
+import { ReduxProvider } from './_redux-provider'
 
 export const Provider: FC<PropsWithChildren> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient())
