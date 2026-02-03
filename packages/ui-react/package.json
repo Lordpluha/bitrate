@@ -15,7 +15,13 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
     },
-    "./globals.css": "./dist/globals.css"
+    "./globals.css": {
+      "style": "./dist/globals.css",
+      "default": "./dist/globals.css"
+    },
+    "./src": {
+      "default": "./src"
+    }
   },
   "files": [
     "dist"
