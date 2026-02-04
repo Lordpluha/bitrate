@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Source_Sans_3 } from 'next/font/google'
 
-import './globals.css'
+import './global.css'
 
 const sourceSans = Source_Sans_3({
   variable: '--font-source-sans',
@@ -21,7 +21,7 @@ export default function RootLayout({
   const lang = 'en'
 
   return (
-    <html lang={lang} data-scroll-behavior="smooth">
+    <html data-scroll-behavior="smooth" lang={lang}>
       <body className={`${sourceSans.variable} antialiased`}>{children}</body>
     </html>
   )
