@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 
@@ -19,7 +19,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof Avatar>
+} satisfies StrictMeta<typeof Avatar>
 
 export default meta
 

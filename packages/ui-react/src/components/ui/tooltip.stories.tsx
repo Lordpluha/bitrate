@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import type { Meta, StoryObj, StrictMeta } from '@storybook/react-vite'
 import { Plus } from 'lucide-react'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 /**
  * A popup that displays information related to an element when the element
  * receives keyboard focus or the mouse hovers over it.
  */
-const meta: Meta<typeof TooltipContent> = {
+const meta = {
   title: 'ui/Tooltip',
   component: TooltipContent,
   tags: ['autodocs'],
@@ -40,7 +40,7 @@ const meta: Meta<typeof TooltipContent> = {
       </Tooltip>
     </TooltipProvider>
   ),
-} satisfies Meta<typeof TooltipContent>
+} satisfies StrictMeta<typeof TooltipContent>
 
 export default meta
 

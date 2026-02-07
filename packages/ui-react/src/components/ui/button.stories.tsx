@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Loader2, Mail } from '@/icons'
-
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { Button } from './button'
 
 /**
@@ -14,6 +13,23 @@ const meta = {
     children: {
       control: 'text',
     },
+    variant: {
+      control: 'select',
+      options: [
+        'link',
+        'default',
+        'destructive',
+        'outline',
+        'secondary',
+        'primary',
+        'contrast',
+        'ghost',
+      ],
+    },
+    size: {
+      control: 'inline-radio',
+      options: ['default', 'sm', 'lg', 'icon'],
+    },
   },
   parameters: {
     layout: 'centered',
@@ -23,7 +39,7 @@ const meta = {
     size: 'default',
     children: 'Button',
   },
-} satisfies Meta<typeof Button>
+} satisfies StrictMeta<typeof Button>
 
 export default meta
 
@@ -71,15 +87,6 @@ export const Secondary: Story = {
 export const Destructive: Story = {
   args: {
     variant: 'destructive',
-  },
-}
-
-/**
- * Use the `subscribe` button to subscribe to updates or notifications.
- */
-export const Subscribe: Story = {
-  args: {
-    variant: 'subscribe',
   },
 }
 

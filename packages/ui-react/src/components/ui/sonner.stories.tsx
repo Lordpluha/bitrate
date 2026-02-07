@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj, StrictMeta } from '@storybook/react-vite'
 import { toast } from 'sonner'
 import { action } from 'storybook/actions'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
@@ -9,7 +9,7 @@ import { Toaster } from '@/components/ui/sonner'
 /**
  * An opinionated toast component for React.
  */
-const meta: Meta<typeof Toaster> = {
+const meta = {
   title: 'ui/Sonner',
   component: Toaster,
   tags: ['autodocs'],
@@ -38,7 +38,7 @@ const meta: Meta<typeof Toaster> = {
       <Toaster {...args} />
     </div>
   ),
-} satisfies Meta<typeof Toaster>
+} satisfies StrictMeta<typeof Toaster>
 
 export default meta
 

@@ -1,8 +1,6 @@
-import { exec } from "node:child_process"
+import { execa } from "execa"
+import ffmpegPath from "ffmpeg-static"
 import fs from "node:fs/promises"
-import { promisify } from "node:util"
-
-const execAsync = promisify(exec)
 
 /**
  * Convert video audio to AAC format
@@ -21,6 +19,10 @@ export async function convertVideo({
 	quality = 1,
 	profile = "aac_low",
 }) {
+	if (!ffmpegPath) {
+		throw new Error("FFmpeg binary not found. Ensure ffmpeg-static is installed correctly.")
+	}
+
 	// Validate input file exists
 	try {
 		await fs.access(input)
@@ -57,16 +59,33 @@ export async function convertVideo({
 	console.log(`   Quality: ${quality}`)
 	console.log(`   Profile: ${profile}`)
 
-	// Build FFmpeg command
+	// Build FFmpeg args
 	// -vn: no video output (audio only)
 	// -c:a aac: use AAC codec
 	// -b:a: audio bitrate
 	// -q:a: quality setting
 	// -profile:a: AAC profile
-	const command = `ffmpeg -i "${input}" -vn -c:a aac -b:a ${bitrate} -q:a ${quality} -profile:a ${profile} -y "${outputPath}"`
+	const args = [
+		"-hide_banner",
+		"-loglevel",
+		"error",
+		"-i",
+		input,
+		"-vn",
+		"-c:a",
+		"aac",
+		"-b:a",
+		bitrate,
+		"-q:a",
+		String(quality),
+		"-profile:a",
+		profile,
+		"-y",
+		outputPath,
+	]
 
 	try {
-		await execAsync(command)
+		await execa(ffmpegPath, args)
 
 		// Get file sizes
 		const inputStats = await fs.stat(input)

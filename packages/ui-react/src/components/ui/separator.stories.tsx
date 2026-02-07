@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
 import { Separator } from './separator'
 
@@ -10,7 +10,7 @@ const meta = {
   component: Separator,
   tags: ['autodocs'],
   argTypes: {},
-} satisfies Meta<typeof Separator>
+} satisfies StrictMeta<typeof Separator>
 
 export default meta
 

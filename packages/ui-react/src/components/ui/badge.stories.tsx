@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
 import { Badge } from '@/components/ui/badge'
 
@@ -26,7 +26,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof Badge>
+} satisfies StrictMeta<typeof Badge>
 
 export default meta
 
