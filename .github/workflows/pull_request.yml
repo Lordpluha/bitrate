@@ -130,7 +130,7 @@ jobs:
 
     strategy:
       matrix:
-        service: [api, web]
+        service: [api, web-player, web-artists]
 
     steps:
       - name: Checkout

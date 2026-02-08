@@ -30,7 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       api: ${{ steps.filter.outputs.api }}
-      web: ${{ steps.filter.outputs.web }}
+      web_player: ${{ steps.filter.outputs.web_player }}
+      web_artists: ${{ steps.filter.outputs.web_artists }}
       admin: ${{ steps.filter.outputs.admin }}
       mobile: ${{ steps.filter.outputs.mobile }}
       desktop: ${{ steps.filter.outputs.desktop }}
@@ -43,8 +44,11 @@ jobs:
             api:
               - 'apps/api/**'
               - 'packages/contracts/**'
-            web:
-              - 'apps/web/**'
+            web_player:
+              - 'apps/web-player/**'
+              - 'packages/ui-react/**'
+            web_artists:
+              - 'apps/web-artists/**'
               - 'packages/ui-react/**'
             admin:
               - 'apps/admin/**'
@@ -60,7 +64,8 @@ jobs:
     needs: changes
     if: |
       needs.changes.outputs.api == 'true' ||
-      needs.changes.outputs.web == 'true' ||
+      needs.changes.outputs.web_player == 'true' ||
+      needs.changes.outputs.web_artists == 'true' ||
       needs.changes.outputs.admin == 'true'
 
     permissions:
@@ -71,12 +76,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [api, web, admin]
+        service: [api, web-player, web-artists, admin]
         include:
           - service: api
             condition: needs.changes.outputs.api == 'true'
-          - service: web
-            condition: needs.changes.outputs.web == 'true'
+          - service: web-player
+            condition: needs.changes.outputs.web_player == 'true'
+          - service: web-artists
+            condition: needs.changes.outputs.web_artists == 'true'
           - service: admin
             condition: needs.changes.outputs.admin == 'true'
 
@@ -338,8 +345,8 @@ jobs:
     steps:
       - name: Send notification
         run: |
-          if [ "${{ needs.build-and-push.result }}" == "success" ] && \
-             [ "${{ needs.integration-test.result }}" == "success" ]; then
+          if [[ "${{ needs.build-and-push.result }}" =~ ^(success|skipped)$ ]] && \
+             [[ "${{ needs.integration-test.result }}" =~ ^(success|skipped)$ ]]; then
             echo "✅ Docker CI/CD completed successfully"
           else
             echo "❌ Docker CI/CD failed"
