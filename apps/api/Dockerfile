@@ -11,7 +11,9 @@ WORKDIR /app
 FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
+COPY packages/converter/package.json ./packages/converter/
 COPY packages/contracts/package.json ./packages/contracts/
+COPY packages/ncs-parser/package.json ./packages/ncs-parser/
 COPY turbo.json ./
 RUN pnpm install --frozen-lockfile
 
@@ -40,7 +42,9 @@ RUN pnpm --filter @spotify/api run build
 FROM base AS prod-dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
+COPY packages/converter/package.json ./packages/converter/
 COPY packages/contracts/package.json ./packages/contracts/
+COPY packages/ncs-parser/package.json ./packages/ncs-parser/
 RUN pnpm install --prod --frozen-lockfile
 
 # Stage 6: Production
