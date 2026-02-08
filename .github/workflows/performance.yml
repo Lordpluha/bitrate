@@ -4,7 +4,8 @@ on:
   pull_request:
     paths:
       - 'apps/api/**'
-      - 'apps/web/**'
+      - 'apps/web-player/**'
+      - 'apps/web-artists/**'
   schedule:
     # Run weekly performance tests
     - cron: '0 2 * * 1'
@@ -65,6 +66,8 @@ jobs:
         run: |
           cd apps/api
           pnpm prisma generate
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Build API
         run: |
@@ -187,23 +190,23 @@ jobs:
         run: pnpm --filter @spotify/ui-react run build
 
       - name: Build web app
-        run: pnpm --filter @spotify/web run build
+        run: pnpm --filter @spotify/web-player run build
         env:
           NEXT_PUBLIC_API_URL: http://localhost:3001
 
       - name: Start web app
         run: |
-          cd apps/web
-          pnpm run start &
+          cd apps/web-player
+          pnpm run start -- --port 3001 &
           sleep 10
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v10
         with:
           urls: |
-            http://localhost:3000
-            http://localhost:3000/browse
-            http://localhost:3000/search
+            http://localhost:3001
+            http://localhost:3001/browse
+            http://localhost:3001/search
           uploadArtifacts: false
           temporaryPublicStorage: true
 
@@ -230,24 +233,26 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm --filter @spotify/api run db:gen
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Build dependencies
         run: pnpm --filter @spotify/ui-react run build
 
       - name: Build with bundle analyzer
-        run: ANALYZE=true pnpm --filter @spotify/web run build
+        run: ANALYZE=true pnpm --filter @spotify/web-player run build
 
       - name: Upload bundle report
         uses: actions/upload-artifact@v4
         with:
           name: bundle-analysis
-          path: apps/web/.next/analyze
+          path: apps/web-player/.next/analyze
 
       - name: Compare bundle sizes
         uses: preactjs/compressed-size-action@v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: 'apps/web/.next/static/**/*.js'
+          pattern: 'apps/web-player/.next/static/**/*.js'
           compression: gzip
 
   # Database query performance
@@ -289,6 +294,8 @@ jobs:
         run: |
           cd apps/api
           pnpm prisma generate
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Setup database
         run: |
