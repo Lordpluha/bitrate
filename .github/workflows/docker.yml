@@ -279,12 +279,12 @@ jobs:
 
       - name: Run database migrations
         run: |
-          docker compose exec -T api pnpm --filter @spotify/api run db:gen
-          docker compose exec -T api pnpm --filter @spotify/api run db:migration:start
+          docker compose -f docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:gen
+          docker compose -f docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:migration:start
 
       - name: Seed database
         run: |
-          docker compose exec -T api sh -c "cd apps/api && pnpm prisma db seed"
+          docker compose -f docker-compose.preprod.yaml exec -T api sh -c "cd apps/api && pnpm prisma db seed"
 
       - name: API smoke tests
         run: |
@@ -296,11 +296,11 @@ jobs:
         if: failure()
         run: |
           echo "=== API Logs ==="
-          docker compose logs api
+          docker compose -f docker-compose.preprod.yaml logs api
           echo "=== Web Logs ==="
-          docker compose logs web
+          docker compose -f docker-compose.preprod.yaml logs web-player
           echo "=== Postgres Logs ==="
-          docker compose logs postgres
+          docker compose -f docker-compose.preprod.yaml logs postgres
 
       - name: Cleanup
         if: always()
