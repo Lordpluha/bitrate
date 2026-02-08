@@ -215,7 +215,7 @@ jobs:
       - name: Start web app
         run: |
           cd apps/web-player
-          pnpm run start -- --port 3001 &
+          pnpm run start -- -p 3001 &
           # Wait for server to be ready
           for i in {1..30}; do
             if curl -f http://localhost:3001 > /dev/null 2>&1; then
@@ -361,7 +361,7 @@ jobs:
       - name: Run query performance tests
         run: |
           cd apps/api
-          pnpm run test:e2e -- -t "performance" --passWithNoTests
+          pnpm run test:e2e:performance
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
