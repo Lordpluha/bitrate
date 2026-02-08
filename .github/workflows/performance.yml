@@ -68,6 +68,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
+      - name: Build ncs-parser
+        run: pnpm --filter @spotify/ncs-parser run build
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
       - name: Create shadow database
         run: |
           psql -h localhost -U spotify -c "CREATE DATABASE spotify_test_shadow;" || true
