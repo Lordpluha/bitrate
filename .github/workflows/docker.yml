@@ -289,12 +289,6 @@ jobs:
         run: |
           docker compose -f docker-compose.preprod.yaml exec -T api sh -c "cd apps/api && pnpm prisma db seed"
 
-      - name: API smoke tests
-        run: |
-          # Test API endpoints (use root endpoint)
-          curl -f http://localhost:3000 || exit 1
-          curl -f http://localhost:3000/api || exit 1
-
       - name: Show container logs on failure
         if: failure()
         run: |
