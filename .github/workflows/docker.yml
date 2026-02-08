@@ -305,7 +305,7 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: docker compose down -v
+        run: docker compose -f docker-compose.preprod.yaml down -v
 
   # Performance benchmarks
   performance:

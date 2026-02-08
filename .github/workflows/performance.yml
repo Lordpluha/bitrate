@@ -63,13 +63,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Create shadow database
+        run: |
+          psql -h localhost -U spotify -c "CREATE DATABASE spotify_test_shadow;" || true
+        env:
+          PGPASSWORD: spotify_password
+
       - name: Generate Prisma Client
         run: |
           cd apps/api
           pnpm prisma generate
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
       - name: Build ncs-parser
         run: pnpm --filter @spotify/ncs-parser run build
@@ -314,12 +325,7 @@ jobs:
           pnpm prisma db seed
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-
-      - name: Install PostgreSQL client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
       - name: Enable pg_stat_statements extension
         run: |
