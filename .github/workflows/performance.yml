@@ -68,6 +68,7 @@ jobs:
           pnpm prisma generate
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Build API
         run: |
@@ -235,6 +236,7 @@ jobs:
         run: pnpm --filter @spotify/api run db:gen
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Build dependencies
         run: pnpm --filter @spotify/ui-react run build
@@ -296,6 +298,7 @@ jobs:
           pnpm prisma generate
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Setup database
         run: |
