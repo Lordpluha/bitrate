@@ -10,6 +10,10 @@ FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web-artists/package.json ./apps/web-artists/
 COPY packages/ui-react/package.json ./packages/ui-react/
+COPY packages/svgr/package.json ./packages/svgr/
+COPY packages/esbuild-bundler/package.json ./packages/esbuild-bundler/
+COPY packages/tokens/package.json ./packages/tokens/
+COPY packages/tokens-generator/package.json ./packages/tokens-generator/
 COPY packages/contracts/package.json ./packages/contracts/
 COPY turbo.json ./
 RUN pnpm install --frozen-lockfile
