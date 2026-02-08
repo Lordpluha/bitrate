@@ -101,6 +101,9 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm --filter @spotify/api run db:gen
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test
 
       - name: Build all packages
         run: pnpm build

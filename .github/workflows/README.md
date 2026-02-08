@@ -12,7 +12,7 @@ This document summarizes all GitHub Actions workflows in this repository: what t
 ## Production Deploy ([deploy.yml](deploy.yml))
 **Triggers**
 - `workflow_dispatch` with `environment` input (`staging` or `production`).
-- `push` to `main` when changes touch `apps/**`, `packages/**`, or `docker-compose.prod.yaml`.
+- `push` to `master` when changes touch `apps/**`, `packages/**`, or `docker-compose.prod.yaml`.
 
 **Purpose**
 - Build/push Docker images (api/web/admin) and deploy to server via SSH.
@@ -30,7 +30,7 @@ This document summarizes all GitHub Actions workflows in this repository: what t
 ## Docker CI/CD ([docker.yml](docker.yml))
 **Triggers**
 - `push` to `master` or `develop` when `apps/**`, `packages/**`, `docker-compose*.yaml`, or the workflow changes.
-- `pull_request` to `main` or `develop` when `apps/**` or `packages/**` changes.
+- `pull_request` to `master` or `develop` when `apps/**` or `packages/**` changes.
 
 **Purpose**
 - Detect changed services and build Docker images for `api/web-player/web-artists/admin`.

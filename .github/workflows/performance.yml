@@ -35,6 +35,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          -c shared_preload_libraries=pg_stat_statements
         ports:
           - 5432:5432
 
@@ -86,7 +87,6 @@ jobs:
           pnpm prisma db seed
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
           SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Start API server
@@ -317,24 +317,26 @@ jobs:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
           SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
-      # TODO: Add e2e performance tests
-      # - name: Run query performance tests
-      #   run: |
-      #     cd apps/api
-      #     pnpm run test:e2e -t "performance"
-      #   env:
-      #     DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
 
-      # TODO: Enable pg_stat_statements for query performance analysis
-      # Requires postgres to be configured with shared_preload_libraries='pg_stat_statements'
-      # - name: Enable pg_stat_statements extension
-      #   run: |
-      #     psql -h localhost -U spotify -d spotify_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
-      #   env:
-      #     PGPASSWORD: spotify_password
+      - name: Enable pg_stat_statements extension
+        run: |
+          psql -h localhost -U spotify -d spotify_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
+        env:
+          PGPASSWORD: spotify_password
 
-      # - name: Analyze slow queries
-      #   run: |
-      #     psql -h localhost -U spotify -d spotify_test -c "SELECT query, calls, total_exec_time, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;"
-      #   env:
-      #     PGPASSWORD: spotify_password
+      - name: Run query performance tests
+        run: |
+          cd apps/api
+          pnpm run test:e2e -- -t "performance" --passWithNoTests
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+
+      - name: Analyze slow queries
+        run: |
+          psql -h localhost -U spotify -d spotify_test -c "SELECT query, calls, total_exec_time, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;"
+        env:
+          PGPASSWORD: spotify_password
