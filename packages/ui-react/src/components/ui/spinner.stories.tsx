@@ -1,30 +1,30 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { ArrowUpIcon } from "lucide-react"
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
+import { ArrowUpIcon } from 'lucide-react'
 
-import { Badge } from "./badge"
-import { Button } from "./button"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "./empty"
+import { Badge } from './badge'
+import { Button } from './button'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from './empty'
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
   InputGroupTextarea,
-} from "./input-group"
-import { Item, ItemContent, ItemMedia, ItemTitle } from "./item"
-import { Spinner } from "./spinner"
+} from './input-group'
+import { Item, ItemContent, ItemMedia, ItemTitle } from './item'
+import { Spinner } from './spinner'
 
 /**
  * An indicator that can be used to show a loading state.
  */
-const meta: Meta<typeof Spinner> = {
-  title: "ui/Spinner",
+const meta = {
+  title: 'ui/Spinner',
   component: Spinner,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-} satisfies Meta<typeof Spinner>
+} satisfies StrictMeta<typeof Spinner>
 
 export default meta
 

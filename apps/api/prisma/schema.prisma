@@ -7,86 +7,167 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  username    String    @unique
-  email       String    @unique
-  password    String
+  id       String @id @default(uuid(7)) @db.Uuid
+  username String @unique
+  email    String @unique
+  password String
 
   avatar      String?
   description String?
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 
-  sessions    Session[]
+  sessions    UserSession[]
   playlists   Playlist[]
-  likedTracks  Track[]    @relation("UserLikedTracks")
+  likedTracks Track[]    @relation("UserLikedTracks")
+  likedArtists Artist[]  @relation("UserLikedArtists")
+  likedAlbums  Album[]    @relation("UserLikedAlbums")
+  likedPlaylists Playlist[] @relation("UserLikedPlaylists")
+
+  @@index([email])
+  @@index([username])
 }
 
-model Session {
-  id            String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  userId        String   @db.Uuid
-  access_token  String   @unique
-  refresh_token String   @unique
+model UserSession {
+  id            String @id @default(uuid(7)) @db.Uuid
+  userId        String @db.Uuid
+  access_token  String @unique
+  refresh_token String @unique
 
-  createdAt     DateTime @default(now())
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
 
-  user          User     @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([access_token])
+  @@index([refresh_token])
+}
+
+model ArtistSession {
+  id            String @id @default(uuid(7)) @db.Uuid
+  artistId        String @db.Uuid
+  access_token  String @unique
+  refresh_token String @unique
+
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId])
+  @@index([access_token])
+  @@index([refresh_token])
 }
 
 model Track {
-  id        String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title     String
-  audioUrl  String
-  cover     String?
-  artistId  String     @db.Uuid
+  id       String  @id @default(uuid(7)) @db.Uuid
+  title    String
+  audioUrl String
+  cover    String?
+  artistId String  @db.Uuid
 
-  createdAt DateTime   @default(now())
+  duration    Int? // Duration in seconds
+  releaseDate DateTime?
+  lyrics      String?   @db.Text
 
-  albums    Album[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  audioFiles TrackFile[]
+  albums     Album[]
   playlists  Playlist[]
   likedBy    User[]      @relation("UserLikedTracks")
 
-  artist    Artist     @relation(fields: [artistId], references: [id])
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId])
+  @@index([title])
+  @@index([releaseDate])
 }
 
+model TrackFile {
+  id      String  @id @default(uuid(7)) @db.Uuid
+  trackId String  @db.Uuid
+  format  String // "opus", "ogg", "mp3", "flac"
+  bitrate Int // 128, 192, 256, 320
+  codec   String? // "opus", "vorbis", "mp3"
+  url     String
+  size    Int? // File size in bytes
+
+  createdAt DateTime @default(now())
+
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@unique([trackId, format, bitrate])
+  @@index([trackId])
+  @@index([format])
+}
 
 model Artist {
-  id              String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  username        String   @unique
-  email           String   @unique
-  password	      String
+  id       String @id @default(uuid(7)) @db.Uuid
+  username String @unique
+  email    String @unique
+  password String
 
-  bio             String?
+  bio             String? @db.Text
   avatar          String?
   backgroundImage String?
 
-  createdAt       DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-  tracks          Track[]
-  albums          Album[]
+  tracks Track[]
+  albums Album[]
+
+  sessions    ArtistSession[]
+
+  likedBy    User[]      @relation("UserLikedArtists")
+
+  @@index([email])
+  @@index([username])
 }
 
 model Album {
-  id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title        String
-  cover        String?
-  artistId     String   @db.Uuid
-  description  String?
-  createdAt    DateTime @default(now())
+  id          String  @id @default(uuid(7)) @db.Uuid
+  title       String
+  cover       String?
+  artistId    String  @db.Uuid
+  description String? @db.Text
 
-  tracks       Track[]
+  releaseDate DateTime?
 
-  artist       Artist   @relation(fields: [artistId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  tracks Track[]
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  likedBy    User[]      @relation("UserLikedAlbums")
+
+  @@index([artistId])
+  @@index([title])
+  @@index([releaseDate])
 }
 
 model Playlist {
-  id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title        String
-  cover        String?
-  description  String?
-  createdAt    DateTime @default(now())
-  userId       String   @db.Uuid
+  id          String  @id @default(uuid(7)) @db.Uuid
+  title       String
+  cover       String?
+  description String? @db.Text
+  isPublic    Boolean @default(false)
 
-  tracks       Track[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  userId    String   @db.Uuid
 
-  user         User     @relation(fields: [userId], references: [id])
+  tracks Track[]
+
+  likedBy    User[]      @relation("UserLikedPlaylists")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isPublic])
 }

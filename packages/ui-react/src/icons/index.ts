@@ -9,6 +9,6 @@ export {
   Moon,
   Sun,
   X,
-} from "lucide-react"
+} from 'lucide-react'
 
-// export * from './svgr';
+export * from './svgr'

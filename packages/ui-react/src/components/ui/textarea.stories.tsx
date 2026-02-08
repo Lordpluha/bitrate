@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
-import { Button } from "./button"
-import { Label } from "./label"
-import { Textarea } from "./textarea"
+import { Button } from './button'
+import { Label } from './label'
+import { Textarea } from './textarea'
 
 /**
  * Displays a form textarea or a component that looks like a textarea.
  */
 const meta = {
-  title: "ui/Textarea",
+  title: 'ui/Textarea',
   component: Textarea,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {},
   args: {
-    placeholder: "Type your message here.",
+    placeholder: 'Type your message here.',
     disabled: false,
   },
-} satisfies Meta<typeof Textarea>
+} satisfies StrictMeta<typeof Textarea>
 
 export default meta
 

@@ -1,0 +1,265 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  # Create GitHub Release
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v4
+        with:
+          configurationJson: |
+            {
+              "categories": [
+                {
+                  "title": "## 🚀 Features",
+                  "labels": ["feature", "enhancement"]
+                },
+                {
+                  "title": "## 🐛 Bug Fixes",
+                  "labels": ["bug", "fix"]
+                },
+                {
+                  "title": "## 📝 Documentation",
+                  "labels": ["documentation"]
+                },
+                {
+                  "title": "## 🔧 Maintenance",
+                  "labels": ["chore", "dependencies"]
+                },
+                {
+                  "title": "## ⚡ Performance",
+                  "labels": ["performance"]
+                },
+                {
+                  "title": "## 🔒 Security",
+                  "labels": ["security"]
+                }
+              ],
+              "ignore_labels": ["ignore-changelog"],
+              "sort": "ASC",
+              "template": "${{CHANGELOG}}",
+              "pr_template": "- ${{TITLE}} (#${{NUMBER}})",
+              "empty_template": "- No changes",
+              "label_extractor": [
+                {
+                  "pattern": "^(feat|feature)",
+                  "target": "feature"
+                },
+                {
+                  "pattern": "^fix",
+                  "target": "bug"
+                },
+                {
+                  "pattern": "^docs",
+                  "target": "documentation"
+                },
+                {
+                  "pattern": "^(chore|refactor)",
+                  "target": "chore"
+                },
+                {
+                  "pattern": "^perf",
+                  "target": "performance"
+                }
+              ]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.get_version.outputs.version }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+  # Build and publish Docker images
+  publish-images:
+    name: Publish ${{ matrix.service }} Image
+    runs-on: ubuntu-latest
+    needs: create-release
+
+    strategy:
+      matrix:
+        service: [api, web-player, web-artists, admin, mobile, desktop]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        if: secrets.DOCKERHUB_USERNAME != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}/${{ matrix.service }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.repository }}/${{ matrix.service }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/${{ matrix.service }}/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          target: production
+
+  # Build desktop applications
+  build-desktop:
+    name: Build Desktop - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs: create-release
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install system dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build desktop app
+        run: |
+          cd apps/desktop
+          pnpm run build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.os }}
+          path: |
+            apps/desktop/src-tauri/target/release/bundle/**/*
+            apps/desktop/src-tauri/target/release/*.exe
+            apps/desktop/src-tauri/target/release/*.app
+
+      - name: Upload to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: apps/desktop/src-tauri/target/release/bundle
+          asset_name: desktop-${{ matrix.os }}.zip
+          asset_content_type: application/zip
+
+  # Publish npm packages
+  publish-packages:
+    name: Publish NPM Packages
+    runs-on: ubuntu-latest
+    needs: create-release
+    if: secrets.NPM_TOKEN != ''
+
+    strategy:
+      matrix:
+        package: [ui-react, contracts]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build package
+        run: pnpm --filter @spotify/${{ matrix.package }} run build
+
+      - name: Publish to npm
+        run: pnpm --filter @spotify/${{ matrix.package }} publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # Deploy to production
+  deploy-production:
+    name: Deploy to Production
+    needs: [create-release, publish-images]
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: production
+    secrets: inherit

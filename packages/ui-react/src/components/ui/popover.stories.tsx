@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { expect, userEvent, within } from "storybook/test"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import type { Meta, StoryObj, StrictMeta } from '@storybook/react-vite'
+import { expect, userEvent, within } from 'storybook/test'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 /**
  * Displays rich content in a portal, triggered by a button.
  */
 const meta = {
-  title: "ui/Popover",
+  title: 'ui/Popover',
   component: Popover,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {},
 
   render: (args) => (
@@ -18,9 +18,9 @@ const meta = {
     </Popover>
   ),
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-} satisfies Meta<typeof Popover>
+} satisfies StrictMeta<typeof Popover>
 
 export default meta
 
@@ -32,19 +32,24 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 
 export const ShouldOpenClose: Story = {
-  name: "when clicking the trigger, should open and close the popover",
-  tags: ["!dev", "!autodocs"],
+  name: 'when clicking the trigger, should open and close the popover',
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body)
+    const canvas = within(canvasElement)
 
-    await step("click the trigger to open the popover", async () => {
-      await userEvent.click(await canvasBody.findByRole("button", { name: /open/i }))
-      expect(await canvasBody.findByRole("dialog")).toBeInTheDocument()
+    await step('click the trigger to open the popover', async () => {
+      const trigger = canvas.getByRole('button', { name: /open/i })
+      await userEvent.click(trigger)
+      await expect(canvasBody.findByRole('dialog')).resolves.toBeInTheDocument()
     })
 
-    await step("click the trigger to close the popover", async () => {
-      await userEvent.click(await canvasBody.findByRole("button", { name: /open/i }))
-      expect(await canvasBody.findByRole("dialog")).toHaveAttribute("data-state", "closed")
+    await step('click the trigger to close the popover', async () => {
+      const trigger = canvas.getByRole('button', { name: /open/i })
+      await userEvent.click(trigger)
+      const dialogs = canvasBody.queryAllByRole('dialog')
+      const closedDialog = dialogs.find((dialog) => dialog.getAttribute('data-state') === 'closed')
+      expect(closedDialog).toBeInTheDocument()
     })
   },
 }

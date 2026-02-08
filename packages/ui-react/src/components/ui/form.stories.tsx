@@ -1,11 +1,11 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { useForm } from "react-hook-form"
-import { action } from "storybook/actions"
-import { expect, userEvent } from "storybook/test"
-import * as z from "zod"
+import { zodResolver } from '@hookform/resolvers/zod'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useForm } from 'react-hook-form'
+import { action } from 'storybook/actions'
+import { expect, userEvent } from 'storybook/test'
+import * as z from 'zod'
 
-import { Button } from "./button"
+import { Button } from './button'
 import {
   Form,
   FormControl,
@@ -14,15 +14,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./form"
+} from './form'
 
 /**
  * Building forms with React Hook Form and Zod.
  */
 const meta: Meta<typeof Form> = {
-  title: "ui/Form",
+  title: 'ui/Form',
   component: Form,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {},
   render: (args) => <ProfileForm {...args} />,
 } satisfies Meta<typeof Form>
@@ -33,19 +33,19 @@ type Story = StoryObj<typeof meta>
 
 const formSchema = z.object({
   username: z.string().min(6, {
-    message: "Username must be at least 6 characters.",
+    message: 'Username must be at least 6 characters.',
   }),
 })
 
-const ProfileForm = (args: Story["args"]) => {
+const ProfileForm = (args: Story['args']) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      username: '',
     },
   })
   function onSubmit(values: z.infer<typeof formSchema>) {
-    action("onSubmit")(values)
+    action('onSubmit')(values)
   }
   return (
     <Form {...args} {...form}>
@@ -80,15 +80,15 @@ const ProfileForm = (args: Story["args"]) => {
 export const Default: Story = {}
 
 export const ShouldSucceedOnSubmit: Story = {
-  name: "when typing a valid username, should not show an error message",
-  tags: ["!dev", "!autodocs"],
+  name: 'when typing a valid username, should not show an error message',
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, step }) => {
-    await step("Type a valid username", async () => {
-      await userEvent.type(await canvas.findByRole("textbox", { name: /username/i }), "mockuser")
+    await step('Type a valid username', async () => {
+      await userEvent.type(await canvas.findByRole('textbox', { name: /username/i }), 'mockuser')
     })
 
-    await step("Click the submit button", async () => {
-      await userEvent.click(await canvas.findByRole("button", { name: /submit/i }))
+    await step('Click the submit button', async () => {
+      await userEvent.click(await canvas.findByRole('button', { name: /submit/i }))
       expect(
         await canvas.queryByText(/username must be at least 6 characters/i, {
           exact: true,
@@ -99,15 +99,15 @@ export const ShouldSucceedOnSubmit: Story = {
 }
 
 export const ShouldWarnOnSubmit: Story = {
-  name: "when typing a short username, should show an error message",
-  tags: ["!dev", "!autodocs"],
+  name: 'when typing a short username, should show an error message',
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, step }) => {
-    await step("Type a short username", async () => {
-      await userEvent.type(await canvas.findByRole("textbox", { name: /username/i }), "fail")
+    await step('Type a short username', async () => {
+      await userEvent.type(await canvas.findByRole('textbox', { name: /username/i }), 'fail')
     })
 
-    await step("Click the submit button", async () => {
-      await userEvent.click(await canvas.findByRole("button", { name: /submit/i }))
+    await step('Click the submit button', async () => {
+      await userEvent.click(await canvas.findByRole('button', { name: /submit/i }))
       expect(
         await canvas.queryByText(/username must be at least 6 characters/i, {
           exact: true,

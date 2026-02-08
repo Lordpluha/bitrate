@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { Meta, StoryObj, StrictMeta } from '@storybook/react-vite'
 import {
   BadgeCheckIcon,
   ChevronDownIcon,
@@ -6,18 +6,18 @@ import {
   Plus,
   PlusIcon,
   ShieldAlertIcon,
-} from "lucide-react"
-import Image from "next/image"
-import * as React from "react"
+} from 'lucide-react'
+import Image from 'next/image'
+import * as React from 'react'
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 import {
   Item,
   ItemActions,
@@ -28,33 +28,33 @@ import {
   ItemMedia,
   ItemSeparator,
   ItemTitle,
-} from "@/components/ui/item"
+} from '@/components/ui/item'
 
 /**
  * A versatile component that you can use to display any content.
  */
-const meta: Meta<typeof Item> = {
-  title: "ui/Item",
+const meta = {
+  title: 'ui/Item',
   component: Item,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     variant: {
-      control: "select",
-      options: ["default", "outline", "muted"],
+      control: 'select',
+      options: ['default', 'outline', 'muted'],
     },
     size: {
-      control: "select",
-      options: ["default", "sm"],
+      control: 'select',
+      options: ['default', 'sm'],
     },
   },
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
   args: {
-    variant: "default",
-    size: "default",
+    variant: 'default',
+    size: 'default',
   },
-} satisfies Meta<typeof Item>
+} satisfies StrictMeta<typeof Item>
 
 export default meta
 
@@ -267,22 +267,22 @@ export const WithImage: Story = {
   render: (args) => {
     const music = [
       {
-        title: "Midnight City Lights",
-        artist: "Neon Dreams",
-        album: "Electric Nights",
-        duration: "3:45",
+        title: 'Midnight City Lights',
+        artist: 'Neon Dreams',
+        album: 'Electric Nights',
+        duration: '3:45',
       },
       {
-        title: "Coffee Shop Conversations",
-        artist: "The Morning Brew",
-        album: "Urban Stories",
-        duration: "4:05",
+        title: 'Coffee Shop Conversations',
+        artist: 'The Morning Brew',
+        album: 'Urban Stories',
+        duration: '4:05',
       },
       {
-        title: "Digital Rain",
-        artist: "Cyber Symphony",
-        album: "Binary Beats",
-        duration: "3:30",
+        title: 'Digital Rain',
+        artist: 'Cyber Symphony',
+        album: 'Binary Beats',
+        duration: '3:30',
       },
     ]
 
@@ -326,19 +326,19 @@ export const WithGroup: Story = {
   render: (args) => {
     const people = [
       {
-        username: "shadcn",
-        avatar: "https://github.com/shadcn.png",
-        email: "shadcn@vercel.com",
+        username: 'shadcn',
+        avatar: 'https://github.com/shadcn.png',
+        email: 'shadcn@vercel.com',
       },
       {
-        username: "maxleiter",
-        avatar: "https://github.com/maxleiter.png",
-        email: "maxleiter@vercel.com",
+        username: 'maxleiter',
+        avatar: 'https://github.com/maxleiter.png',
+        email: 'maxleiter@vercel.com',
       },
       {
-        username: "evilrabbit",
-        avatar: "https://github.com/evilrabbit.png",
-        email: "evilrabbit@vercel.com",
+        username: 'evilrabbit',
+        avatar: 'https://github.com/evilrabbit.png',
+        email: 'evilrabbit@vercel.com',
       },
     ]
 
@@ -380,25 +380,25 @@ export const WithHeader: Story = {
   render: (args) => {
     const models = [
       {
-        name: "v0-1.5-sm",
-        description: "Everyday tasks and UI generation.",
+        name: 'v0-1.5-sm',
+        description: 'Everyday tasks and UI generation.',
         image:
-          "https://images.unsplash.com/photo-1650804068570-7fb2e3dbf888?q=80&w=640&auto=format&fit=crop",
-        credit: "Valeria Reverdo on Unsplash",
+          'https://images.unsplash.com/photo-1650804068570-7fb2e3dbf888?q=80&w=640&auto=format&fit=crop',
+        credit: 'Valeria Reverdo on Unsplash',
       },
       {
-        name: "v0-1.5-lg",
-        description: "Advanced thinking or reasoning.",
+        name: 'v0-1.5-lg',
+        description: 'Advanced thinking or reasoning.',
         image:
-          "https://images.unsplash.com/photo-1610280777472-54133d004c8c?q=80&w=640&auto=format&fit=crop",
-        credit: "Michael Oeser on Unsplash",
+          'https://images.unsplash.com/photo-1610280777472-54133d004c8c?q=80&w=640&auto=format&fit=crop',
+        credit: 'Michael Oeser on Unsplash',
       },
       {
-        name: "v0-2.0-mini",
-        description: "Open Source model for everyone.",
+        name: 'v0-2.0-mini',
+        description: 'Open Source model for everyone.',
         image:
-          "https://images.unsplash.com/photo-1602146057681-08560aee8cde?q=80&w=640&auto=format&fit=crop",
-        credit: "Cherry Laithang on Unsplash",
+          'https://images.unsplash.com/photo-1602146057681-08560aee8cde?q=80&w=640&auto=format&fit=crop',
+        credit: 'Cherry Laithang on Unsplash',
       },
     ]
 
@@ -435,19 +435,19 @@ export const WithDropdown: Story = {
   render: (args) => {
     const people = [
       {
-        username: "shadcn",
-        avatar: "https://github.com/shadcn.png",
-        email: "shadcn@vercel.com",
+        username: 'shadcn',
+        avatar: 'https://github.com/shadcn.png',
+        email: 'shadcn@vercel.com',
       },
       {
-        username: "maxleiter",
-        avatar: "https://github.com/maxleiter.png",
-        email: "maxleiter@vercel.com",
+        username: 'maxleiter',
+        avatar: 'https://github.com/maxleiter.png',
+        email: 'maxleiter@vercel.com',
       },
       {
-        username: "evilrabbit",
-        avatar: "https://github.com/evilrabbit.png",
-        email: "evilrabbit@vercel.com",
+        username: 'evilrabbit',
+        avatar: 'https://github.com/evilrabbit.png',
+        email: 'evilrabbit@vercel.com',
       },
     ]
 

@@ -1,0 +1,24 @@
+'use client'
+
+import { useQuery } from '@shared/api'
+import { ITrack } from '@shared/types'
+
+interface UseTracksParams {
+  page?: number
+  limit?: number
+  title?: string
+}
+
+export const useTracks = (params: UseTracksParams = {}) => {
+  const { page = 1, limit = 100, title } = params
+
+  return useQuery('get', '/api/v1/tracks', {
+    params: {
+      query: {
+        page,
+        limit,
+        ...(title && { title }),
+      },
+    },
+  } as any)
+}

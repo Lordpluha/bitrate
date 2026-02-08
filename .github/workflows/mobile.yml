@@ -1,0 +1,185 @@
+name: Mobile Build
+
+on:
+  push:
+    branches: [ master, develop ]
+    paths:
+      - 'apps/mobile/**'
+      - '.github/workflows/mobile.yml'
+  pull_request:
+    branches: [ master, develop ]
+    paths:
+      - 'apps/mobile/**'
+
+jobs:
+  test-expo-server:
+    name: Test Expo Dev Server
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Expo Server
+      run: |
+        docker build -t mobile-expo-test \
+          --target development \
+          --cache-from type=gha \
+          --cache-to type=gha,mode=max \
+          -f apps/mobile/Dockerfile .
+
+    - name: Run Expo Server
+      run: |
+        docker run -d \
+          -p 8081:8081 \
+          -p 19000:19000 \
+          --name expo-test \
+          mobile-expo-test
+
+    - name: Wait for server
+      run: sleep 20
+
+    - name: Check Metro Bundler
+      run: |
+        curl -f http://localhost:8081/status || exit 1
+
+    - name: Show logs
+      if: failure()
+      run: docker logs expo-test
+
+    - name: Cleanup
+      if: always()
+      run: docker stop expo-test && docker rm expo-test
+
+  build-web:
+    name: Build Expo Web
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Web Production
+      run: |
+        docker build -t mobile-web-prod \
+          --target production-web \
+          --cache-from type=gha \
+          --cache-to type=gha,mode=max \
+          -f apps/mobile/Dockerfile .
+
+    - name: Test Web Build
+      run: |
+        docker run -d -p 8080:80 --name web-test mobile-web-prod
+        sleep 5
+        curl -f http://localhost:8080 || exit 1
+
+    - name: Extract Web Build
+      run: |
+        docker create --name temp-web mobile-web-prod
+        docker cp temp-web:/usr/share/nginx/html ./web-build
+        docker rm temp-web
+
+    - name: Upload Web Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mobile-web-build
+        path: web-build/
+        retention-days: 7
+
+    - name: Cleanup
+      if: always()
+      run: docker stop web-test && docker rm web-test || true
+
+  build-android-eas:
+    name: Build Android with EAS
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Expo
+      uses: expo/expo-github-action@v8
+      with:
+        expo-version: latest
+        eas-version: latest
+        token: ${{ secrets.EXPO_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10.28.2
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Build Android APK
+      working-directory: apps/mobile
+      run: |
+        PROFILE=${{ github.ref == 'refs/heads/master' && 'production' || 'preview' }}
+        eas build --platform android \
+          --profile $PROFILE \
+          --non-interactive
+
+    - name: Download APK
+      if: success()
+      working-directory: apps/mobile
+      run: |
+        eas build:download --platform android --latest
+
+    - name: Upload APK
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: mobile-android-apk
+        path: apps/mobile/*.apk
+        retention-days: 7
+
+  build-ios-eas:
+    name: Build iOS with EAS
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Expo
+      uses: expo/expo-github-action@v8
+      with:
+        expo-version: latest
+        eas-version: latest
+        token: ${{ secrets.EXPO_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10.28.2
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Build iOS IPA
+      working-directory: apps/mobile
+      run: |
+        PROFILE=${{ github.ref == 'refs/heads/master' && 'production' || 'preview' }}
+        eas build --platform ios \
+          --profile $PROFILE \
+          --non-interactive

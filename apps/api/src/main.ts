@@ -1,29 +1,45 @@
-import { HttpStatus } from '@nestjs/common'
+import { HttpStatus, VersioningType } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
 
 import { AppModule } from './app.module'
+import type { AppConfig } from './common/config'
+import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  const configService = app.get<ConfigService<AppConfig>>(ConfigService)
+
   app.use(cookieParser())
+  app.useGlobalFilters(new HttpExceptionFilter())
+
+  // Add global prefix /api to all routes except static files and swagger
+  app.setGlobalPrefix('api')
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  })
+
+  app.enableCors(configService.getOrThrow('connections').http)
 
   const config = new DocumentBuilder()
-    .setTitle('@spotify/api')
-    .setDescription('@spotify/api Swagger documentation')
+    .setTitle(process.env.npm_package_name || 'API Documentation')
+    .setDescription(`${process.env.npm_package_name} Swagger documentation`)
     .setVersion(process.env.npm_package_version ?? '1.0')
-    .addServer(`http://localhost:${process.env.PORT ?? 3000}`, 'Local server')
+    .addServer(`http://localhost:${configService.getOrThrow('PORT')}`, 'Local server')
     .addServer('https://spotify-clone-api-jp5z.onrender.com/', 'Remote dev server')
     // In progress
     .addOAuth2({
       type: 'openIdConnect',
     })
-    .addCookieAuth(process.env.ACCESS_TOKEN_NAME, {
+    .addCookieAuth(configService.getOrThrow('ACCESS_TOKEN_NAME'), {
       type: 'apiKey',
       in: 'cookie',
-      name: process.env.ACCESS_TOKEN_NAME,
-      description: `HttpOnly cookies: ${process.env.ACCESS_TOKEN_NAME} and ${process.env.REFRESH_TOKEN_NAME}`,
+      name: configService.getOrThrow('ACCESS_TOKEN_NAME'),
+      description: `HttpOnly cookies: ${configService.getOrThrow('ACCESS_TOKEN_NAME')} and ${configService.getOrThrow('REFRESH_TOKEN_NAME')}`,
     })
     .setContact('Lordpluha', 'https://github.com/Lordpluha', 'vladislavteslyukofficial@gmail.com')
     // Global server errors
@@ -73,41 +89,15 @@ async function bootstrap() {
       status: HttpStatus.TOO_MANY_REQUESTS,
       description: 'Too many requests',
     })
-    .setExternalDoc('Mintlify', 'https://lordpluha.mintlify.app/')
+    .setExternalDoc('@spotify/docs', '')
     .build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('swagger', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
   })
-  app.enableCors({
-    origin: [
-      process.env.WEB_HOST || 'http://localhost:3001', // Web app
-      'http://localhost:3000', // API docs
-      'http://localhost:5555', // Prisma Studio
-      'http://localhost:8080', // Test client server
-      'http://localhost:8081', // Alternative test client server
-      'http://0.0.0.0:8080',
-      'file://', // For local HTML files
-      /^file:\/\//,
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'X-Requested-With',
-      'Accept',
-      'Origin',
-      'Range',
-      'Access-Control-Request-Method',
-      'Access-Control-Request-Headers',
-    ],
-    exposedHeaders: ['Set-Cookie', 'Content-Range', 'Accept-Ranges', 'Content-Length'],
-    credentials: true,
-    preflightContinue: false,
-    optionsSuccessStatus: 200,
-  })
-  await app.listen(process.env.PORT ?? 3000)
+
+  await app.listen(configService.getOrThrow('PORT'))
 }
 
 bootstrap()

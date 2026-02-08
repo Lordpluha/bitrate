@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import {
   Table,
   TableBody,
@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table"
+} from '../components/ui/table'
 
 type Swatch = {
   name: string
@@ -21,8 +21,8 @@ const SwatchList = ({ colors }: { colors: Record<string, string> }) => {
         const color = styles.getPropertyValue(value)
 
         return (
-          <div key={value} className="bg-background flex w-full flex-col gap-1 pb-3">
-            <div className="h-16 w-full" style={{ backgroundColor: color }} />
+          <div key={value} className="flex w-full flex-col gap-1 pb-3">
+            <div className="h-16 w-full" style={{ backgroundColor: `hsl(var(${value}))` }} />
             <p className="text-center font-semibold">{name}</p>
             <p className="text-center text-xs opacity-70">{value}</p>
             <p className="text-center text-xs">{color}</p>
@@ -39,7 +39,7 @@ const SwatchList = ({ colors }: { colors: Record<string, string> }) => {
 const meta: Meta<{
   swatch: Swatch[]
 }> = {
-  title: "design/Color",
+  title: 'design/Color',
   argTypes: {},
   render: (args) => (
     <Table>
@@ -73,49 +73,49 @@ type Story = StoryObj<typeof meta>
  * Functional color tokens are used to define the core colors of the design system.
  * These colors are used throughout the application for backgrounds, text, borders, etc.
  */
-export const Functional: Story = {
+export const Pallete: Story = {
   args: {
     swatch: [
       {
-        name: "Background",
+        name: 'Background',
         colors: {
-          default: "--background",
-          foreground: "--foreground",
+          default: '--color-background',
+          foreground: '--color-foreground',
         },
       },
       {
-        name: "Primary",
+        name: 'Primary',
         colors: {
-          default: "--primary",
-          foreground: "--primary-foreground",
+          default: '--color-primary',
+          foreground: '--color-primary-foreground',
         },
       },
       {
-        name: "Secondary",
+        name: 'Secondary',
         colors: {
-          default: "--secondary",
-          foreground: "--secondary-foreground",
+          default: '--color-secondary',
+          foreground: '--color-secondary-foreground',
         },
       },
       {
-        name: "Accent",
+        name: 'Accent',
         colors: {
-          default: "--accent",
-          foreground: "--accent-foreground",
+          default: '--color-accent-green',
+          hover: '--color-accent-green-hover',
         },
       },
       {
-        name: "Muted",
+        name: 'Muted',
         colors: {
-          default: "--muted",
-          foreground: "--muted-foreground",
+          default: '--color-muted',
+          foreground: '--color-muted-foreground',
         },
       },
 
       {
-        name: "Destructive",
+        name: 'Destructive',
         colors: {
-          default: "--destructive",
+          default: '--color-destructive',
         },
       },
     ],
@@ -126,57 +126,57 @@ export const Functional: Story = {
  * Component color tokens are used to define the colors of specific components in the design system.
  * These colors are used to style components like buttons, inputs, and alerts.
  */
-export const Component: Story = {
+export const Themes: Story = {
   args: {
     swatch: [
       {
-        name: "Border",
+        name: 'Border',
         colors: {
-          default: "--border",
-          ring: "--ring",
+          default: '--color-border',
+          ring: '--color-ring',
         },
       },
       {
-        name: "Card",
+        name: 'Card',
         colors: {
-          default: "--card",
-          foreground: "--card-foreground",
+          default: '--color-card',
+          foreground: '--color-card-foreground',
         },
       },
       {
-        name: "Input",
+        name: 'Input',
         colors: {
-          default: "--input",
+          default: '--color-input',
         },
       },
       {
-        name: "Popover",
+        name: 'Popover',
         colors: {
-          default: "--popover",
-          foreground: "--popover-foreground",
+          default: '--color-popover',
+          foreground: '--color-popover-foreground',
         },
       },
       {
-        name: "Chart",
+        name: 'Chart',
         colors: {
-          "1": "--chart-1",
-          "2": "--chart-2",
-          "3": "--chart-3",
-          "4": "--chart-4",
-          "5": "--chart-5",
+          '1': '--color-chart-1',
+          '2': '--color-chart-2',
+          '3': '--color-chart-3',
+          '4': '--color-chart-4',
+          '5': '--color-chart-5',
         },
       },
       {
-        name: "Sidebar",
+        name: 'Sidebar',
         colors: {
-          background: "--sidebar",
-          foreground: "--sidebar-foreground",
-          primary: "--sidebar-primary",
-          "primary-foreground": "--sidebar-primary-foreground",
-          accent: "--sidebar-accent",
-          "accent-foreground": "--sidebar-accent-foreground",
-          border: "--sidebar-border",
-          ring: "--sidebar-ring",
+          background: '--color-sidebar',
+          foreground: '--color-sidebar-foreground',
+          primary: '--color-sidebar-primary',
+          'primary-foreground': '--color-sidebar-primary-foreground',
+          accent: '--color-sidebar-accent',
+          'accent-foreground': '--color-sidebar-accent-foreground',
+          border: '--color-sidebar-border',
+          ring: '--color-sidebar-ring',
         },
       },
     ],

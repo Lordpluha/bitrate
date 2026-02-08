@@ -8,55 +8,29 @@
       "ignoreBinaries": ["biome"]
     },
     "apps/api": {
-      "entry": ["src/main.ts", "prisma.config.ts", "src/**/*.guard.ts", "src/seeds/**/*.ts"],
-      "ignore": [
-        "src/**/index.ts",
-        "src/auth/errors/index.ts",
-        "src/playlists/decorators/index.ts",
-        "src/playlists/dtos/index.ts",
-        "src/playlists/errors/index.ts",
-        "src/auth/ws-auth.guard.ts",
-        "src/tracks/types/audio-events.types.ts"
-      ],
-      "ignoreBinaries": ["tsx"],
-      "ignoreDependencies": [
-        "@nestjs/serve-static",
-        "@nestjs/testing",
-        "@spotify/contracts",
-        "@types/supertest",
-        "globals",
-        "source-map-support",
-        "supertest",
-        "ts-loader"
-      ]
+      "entry": ["src/main.ts", "src/**/*.module.ts", "src/infra/**/*.ts"],
+      "ignoreFiles": ["prisma.config.ts"],
+      "prisma": false,
+      "ignore": ["src/**/index.ts"]
     },
-    "apps/web": {
+    "apps/web-artists": {
       "entry": [
         "src/app/**/*.tsx",
         "src/app/**/*.ts",
-        "!src/app/**/*.test.tsx",
-        "!src/app/**/*.stories.tsx"
-      ],
-      "ignore": [
-        "src/**/index.ts",
-        "src/entities/**/index.ts",
-        "src/shared/redux/createAppSlice.ts",
-        "env.schema.ts",
         "src/app/global.css"
       ],
-      "ignoreDependencies": [
-        "class-variance-authority",
-        "motion",
-        "tailwind-merge",
-        "autoprefixer",
-        "openapi-typescript"
-      ]
+      "ignore": ["env.schema.ts"]
     },
-    "packages/contracts": {
-      "ignoreDependencies": ["@nestjs/swagger"]
+    "apps/web-player": {
+      "entry": [
+        "src/app/**/*.tsx",
+        "src/app/**/*.ts",
+        "src/app/global.css"
+      ],
+      "ignore": ["env.schema.ts"]
     },
     "packages/ui-react": {
-      "entry": ["src/index.ts", "scripts/**/*.mjs"],
+      "entry": ["src/**/index.css"],
       "ignoreDependencies": ["chromatic", "tsc-alias"]
     }
   },

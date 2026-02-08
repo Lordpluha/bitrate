@@ -1,24 +1,24 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
-import { Label } from "./label"
+import { Label } from './label'
 
 /**
  * Renders an accessible label associated with controls.
  */
 const meta = {
-  title: "ui/Label",
+  title: 'ui/Label',
   component: Label,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     children: {
-      control: { type: "text" },
+      control: { type: 'text' },
     },
   },
   args: {
-    children: "Your email address",
-    htmlFor: "email",
+    children: 'Your email address',
+    htmlFor: 'email',
   },
-} satisfies Meta<typeof Label>
+} satisfies StrictMeta<typeof Label>
 
 export default meta
 
@@ -28,3 +28,23 @@ type Story = StoryObj<typeof Label>
  * The default form of the label.
  */
 export const Default: Story = {}
+
+/**
+ * Modal variant with smaller text and bottom margin.
+ */
+export const Modal: Story = {
+  args: {
+    variant: 'modal',
+    children: 'Email Address',
+  },
+}
+
+/**
+ * Large variant for headings or important labels.
+ */
+export const Large: Story = {
+  args: {
+    variant: 'large',
+    children: 'Important Label',
+  },
+}

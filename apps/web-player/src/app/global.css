@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@import "@spotify/ui-react/globals.css";
+
+@source "../";
+@source "@spotify/ui-react/src";
+
+@theme {
+  /* Breakpoints */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 650px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1025px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+@layer base {
+  * {
+    scroll-behavior: smooth;
+    font-family: var(--font-source-sans);
+  }
+
+  /* Custom scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #5a5a5a;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #4a4a4a transparent;
+  }
+}
+
+@layer utilities {
+  .container {
+    max-width: 100%;
+    padding-inline: 1.25rem;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 650px) {
+    .container {
+      max-width: 1540px;
+    }
+  }
+
+  .bg-auth-spotify {
+    background-image: linear-gradient(
+      30deg,
+      #0c7832,
+      #601e7a,
+      #121212,
+      #820c17,
+      #0c7832,
+      #601e7a,
+      #121212,
+      #820c17
+    );
+  }
+
+  .bg-gradient-animated {
+    background-size: 600% 600%;
+  }
+}

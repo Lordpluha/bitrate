@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -8,50 +8,50 @@ import {
   MoreHorizontalIcon,
   PlusIcon,
   SearchIcon,
-} from "lucide-react"
-import * as React from "react"
+} from 'lucide-react'
+import * as React from 'react'
 
-import { Button } from "@/components/ui/button"
-import { ButtonGroup, ButtonGroupSeparator } from "@/components/ui/button-group"
+import { Button } from '@/components/ui/button'
+import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/components/ui/input-group"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Textarea } from "@/components/ui/textarea"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+} from '@/components/ui/input-group'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
+import { Textarea } from '@/components/ui/textarea'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 /**
  * A container that groups related buttons together with consistent styling.
  */
-const meta: Meta<typeof ButtonGroup> = {
-  title: "ui/ButtonGroup",
+const meta = {
+  title: 'ui/ButtonGroup',
   component: ButtonGroup,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     orientation: {
-      control: "select",
-      options: ["horizontal", "vertical"],
+      control: 'select',
+      options: ['horizontal', 'vertical'],
     },
   },
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
   args: {
-    orientation: "horizontal",
+    orientation: 'horizontal',
   },
-} satisfies Meta<typeof ButtonGroup>
+} satisfies StrictMeta<typeof ButtonGroup>
 
 export default meta
 
@@ -85,7 +85,7 @@ export const Orientation: Story = {
     </ButtonGroup>
   ),
   args: {
-    orientation: "vertical",
+    orientation: 'vertical',
   },
 }
 
@@ -188,7 +188,7 @@ export const WithInputGroup: Story = {
           <ButtonGroup>
             <InputGroup>
               <InputGroupInput
-                placeholder={voiceEnabled ? "Record and send audio..." : "Send a message..."}
+                placeholder={voiceEnabled ? 'Record and send audio...' : 'Send a message...'}
                 disabled={voiceEnabled}
               />
               <InputGroupAddon align="inline-end">
@@ -249,12 +249,12 @@ export const WithDropdownMenu: Story = {
  */
 export const WithSelect: Story = {
   render: () => {
-    const [currency, setCurrency] = React.useState("$")
+    const [currency, setCurrency] = React.useState('$')
 
     const CURRENCIES = [
-      { value: "$", label: "US Dollar" },
-      { value: "€", label: "Euro" },
-      { value: "£", label: "British Pound" },
+      { value: '$', label: 'US Dollar' },
+      { value: '€', label: 'Euro' },
+      { value: '£', label: 'British Pound' },
     ]
 
     return (

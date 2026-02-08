@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { Bell, Cloud, PlusIcon, RefreshCcwIcon, SearchIcon } from "lucide-react"
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
+import { Bell, Cloud, PlusIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   Empty,
   EmptyContent,
@@ -10,21 +10,21 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty"
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import { Kbd } from "@/components/ui/kbd"
+} from '@/components/ui/empty'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
+import { Kbd } from '@/components/ui/kbd'
 
 /**
  * Use the Empty component to display a empty state.
  */
-const meta: Meta<typeof Empty> = {
-  title: "ui/Empty",
+const meta = {
+  title: 'ui/Empty',
   component: Empty,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-} satisfies Meta<typeof Empty>
+} satisfies StrictMeta<typeof Empty>
 
 export default meta
 
@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>
  */
 export const Default: Story = {
   args: {
-    className: "border border-dashed",
+    className: 'border border-dashed',
   },
   render: (args) => (
     <Empty {...args}>
@@ -62,7 +62,7 @@ export const Default: Story = {
  */
 export const Background: Story = {
   args: {
-    className: "from-muted/50 to-background h-full bg-gradient-to-b from-30%",
+    className: 'from-muted/50 to-background h-full bg-gradient-to-b from-30%',
   },
   render: (args) => (
     <Empty {...args}>

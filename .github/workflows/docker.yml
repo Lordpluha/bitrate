@@ -1,0 +1,354 @@
+name: Docker CI/CD
+
+on:
+  push:
+    branches: [master, develop]
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'docker-compose*.yaml'
+      - '.github/workflows/docker.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+
+# Cancel previous runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+
+jobs:
+  # Determine which services changed
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      api: ${{ steps.filter.outputs.api }}
+      web_player: ${{ steps.filter.outputs.web_player }}
+      web_artists: ${{ steps.filter.outputs.web_artists }}
+      admin: ${{ steps.filter.outputs.admin }}
+      mobile: ${{ steps.filter.outputs.mobile }}
+      desktop: ${{ steps.filter.outputs.desktop }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            api:
+              - 'apps/api/**'
+              - 'packages/contracts/**'
+            web_player:
+              - 'apps/web-player/**'
+              - 'packages/ui-react/**'
+            web_artists:
+              - 'apps/web-artists/**'
+              - 'packages/ui-react/**'
+            admin:
+              - 'apps/admin/**'
+            mobile:
+              - 'apps/mobile/**'
+            desktop:
+              - 'apps/desktop/**'
+
+  # Build and push Docker images
+  build-and-push:
+    name: Build ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    needs: changes
+    if: |
+      needs.changes.outputs.api == 'true' ||
+      needs.changes.outputs.web_player == 'true' ||
+      needs.changes.outputs.web_artists == 'true' ||
+      needs.changes.outputs.admin == 'true'
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [api, web-player, web-artists, admin]
+        include:
+          - service: api
+            condition: needs.changes.outputs.api == 'true'
+          - service: web-player
+            condition: needs.changes.outputs.web_player == 'true'
+          - service: web-artists
+            condition: needs.changes.outputs.web_artists == 'true'
+          - service: admin
+            condition: needs.changes.outputs.admin == 'true'
+
+    steps:
+      - name: Checkout
+        if: matrix.condition == 'true' || github.event_name == 'push'
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        if: matrix.condition == 'true' || github.event_name == 'push'
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        if: matrix.condition == 'true' || github.event_name == 'push'
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        if: matrix.condition == 'true' || github.event_name == 'push'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/${{ matrix.service }}/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+          target: production
+          platforms: linux/amd64
+          build-args: |
+            NODE_ENV=production
+            BUILDKIT_INLINE_CACHE=1
+
+      - name: Generate SBOM
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:latest
+          format: cyclonedx-json
+          output-file: sbom-${{ matrix.service }}.json
+
+      - name: Upload SBOM
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.service }}
+          path: sbom-${{ matrix.service }}.json
+          retention-days: 30
+
+  # Security scanning
+  security-scan:
+    name: Security Scan ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.event_name == 'push'
+
+    strategy:
+      matrix:
+        service: [api, web, admin]
+
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ github.ref_name }}-${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # Integration tests with actual Docker containers
+  integration-test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Free up disk space
+        run: |
+          # Remove unnecessary packages
+          sudo apt-get clean
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+
+          # Clean Docker
+          docker system prune -af --volumes
+
+          # Show available space
+          df -h
+
+      - name: Create .env file
+        run: |
+          cp .env.example .env
+          echo "JWT_SECRET=test_secret_key_for_ci" >> .env
+          echo "DATABASE_URL=postgresql://admin:admin@postgres:5432/spotify" >> .env
+
+      - name: Start services
+        run: |
+          docker compose up -d postgres redis
+          sleep 10
+
+      - name: Wait for services
+        run: |
+          timeout 60 bash -c 'until docker compose exec -T postgres pg_isready -U admin; do sleep 1; done'
+          docker compose exec -T redis redis-cli ping
+
+      - name: Start application services
+        run: |
+          docker compose up -d api web admin
+          sleep 20
+
+      - name: Check container status
+        run: |
+          docker compose ps
+          docker compose logs --tail=50 api
+          docker compose logs --tail=50 web
+          docker compose logs --tail=50 admin
+
+      - name: Run health checks
+        run: |
+          for i in {1..30}; do
+            echo "=== Health check attempt $i/30 ==="
+
+            # Check API (use root endpoint since /health doesn't exist)
+            if curl -sf http://localhost:3000; then
+              echo "✅ API is healthy"
+              API_OK=1
+            else
+              echo "❌ API health check failed"
+              API_OK=0
+            fi
+
+            # Check Web - Next.js may need time to compile on first request
+            if curl -sf -m 10 http://localhost:3001; then
+              echo "✅ Web is healthy"
+              WEB_OK=1
+            else
+              echo "❌ Web health check failed"
+              WEB_OK=0
+            fi
+
+            # Check Admin - Kottster runs on port 5480 internally, mapped to 3002
+            # But we need to check the internal port since that's what's actually running
+            if docker compose exec -T admin curl -sf http://localhost:5480 2>/dev/null; then
+              echo "✅ Admin is healthy"
+              ADMIN_OK=1
+            else
+              echo "❌ Admin health check failed"
+              ADMIN_OK=0
+            fi
+
+            # All healthy?
+            if [ "$API_OK" = "1" ] && [ "$WEB_OK" = "1" ] && [ "$ADMIN_OK" = "1" ]; then
+              echo "✅ All services are healthy"
+              exit 0
+            fi
+            echo "Waiting for services... ($i/30)"
+            sleep 2
+          done
+          echo "❌ Services failed to become healthy"
+          exit 1
+
+      - name: Run database migrations
+        run: |
+          docker compose exec -T api pnpm --filter @spotify/api run db:gen
+          docker compose exec -T api pnpm --filter @spotify/api run db:migration:start
+
+      - name: Seed database
+        run: |
+          docker compose exec -T api sh -c "cd apps/api && pnpm prisma db seed"
+
+      - name: API smoke tests
+        run: |
+          # Test API endpoints (use root endpoint)
+          curl -f http://localhost:3000 || exit 1
+          curl -f http://localhost:3000/api || exit 1
+
+      - name: Show container logs on failure
+        if: failure()
+        run: |
+          echo "=== API Logs ==="
+          docker compose logs api
+          echo "=== Web Logs ==="
+          docker compose logs web
+          echo "=== Postgres Logs ==="
+          docker compose logs postgres
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v
+
+  # Performance benchmarks
+  performance:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    needs: integration-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create .env
+        run: cp .env.example .env
+
+      - name: Start services
+        run: |
+          docker compose up -d
+          sleep 30
+
+      - name: Run k6 load tests
+        uses: grafana/k6-action@v0.3.1
+        with:
+          filename: tests/load/api-load-test.js
+        continue-on-error: true
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v
+
+  # Notify on completion
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    needs: [build-and-push, security-scan, integration-test]
+    if: always() && github.event_name == 'push'
+
+    steps:
+      - name: Send notification
+        run: |
+          if [[ "${{ needs.build-and-push.result }}" =~ ^(success|skipped)$ ]] && \
+             [[ "${{ needs.integration-test.result }}" =~ ^(success|skipped)$ ]]; then
+            echo "✅ Docker CI/CD completed successfully"
+          else
+            echo "❌ Docker CI/CD failed"
+            exit 1
+          fi

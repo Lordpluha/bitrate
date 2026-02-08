@@ -1,23 +1,23 @@
-import type { Meta, StoryObj } from "@storybook/react-vite"
-import { SearchIcon } from "lucide-react"
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
+import { SearchIcon } from 'lucide-react'
 
-import { Button } from "@/components/ui/button"
-import { ButtonGroup } from "@/components/ui/button-group"
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import { Kbd, KbdGroup } from "@/components/ui/kbd"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
+import { Kbd, KbdGroup } from '@/components/ui/kbd'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 /**
  * Used to display textual user input from keyboard.
  */
-const meta: Meta<typeof Kbd> = {
-  title: "ui/Kbd",
+const meta = {
+  title: 'ui/Kbd',
   component: Kbd,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-} satisfies Meta<typeof Kbd>
+} satisfies StrictMeta<typeof Kbd>
 
 export default meta
 
@@ -30,11 +30,11 @@ export const Group: Story = {
   render: (args) => (
     <div className="flex flex-col items-center gap-4">
       <p className="text-muted-foreground text-sm">
-        Use{" "}
+        Use{' '}
         <KbdGroup>
           <Kbd {...args}>Ctrl + B</Kbd>
           <Kbd {...args}>Ctrl + K</Kbd>
-        </KbdGroup>{" "}
+        </KbdGroup>{' '}
         to open the command palette
       </p>
     </div>
@@ -85,7 +85,7 @@ export const WithTooltip: Story = {
             </TooltipTrigger>
             <TooltipContent>
               <div className="flex items-center gap-2">
-                Print Document{" "}
+                Print Document{' '}
                 <KbdGroup>
                   <Kbd {...args}>Ctrl</Kbd>
                   <Kbd {...args}>P</Kbd>
@@ -93,7 +93,7 @@ export const WithTooltip: Story = {
               </div>
             </TooltipContent>
           </Tooltip>
-        </ButtonGroup>{" "}
+        </ButtonGroup>{' '}
       </TooltipProvider>
     </div>
   ),

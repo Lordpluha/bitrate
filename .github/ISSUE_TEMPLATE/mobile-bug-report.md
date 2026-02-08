@@ -1,38 +1,28 @@
 ---
 name: 📱 Mobile Bug Report
-about: Report a bug in the mobile application (iOS/Android)
-title: "[MOBILE-BUG] "
+about: Report a bug in the Expo mobile app (iOS/Android)
+title: "[MOBILE] "
 labels: ["bug", "mobile", "needs-triage"]
-assignees: ["lordpluha"]
+assignees: []
 ---
 
-## 🐛 Mobile Bug Description
-<!-- Provide a clear and concise description of what the bug is -->
+## 🐛 Bug Description
+<!-- Clear description of the bug -->
 
 
-## 📱 Device Information
-<!-- Please complete the following information -->
-
-### Device Details
-- **Platform**: [iOS/Android]
-- **Device Model**: [e.g. iPhone 14 Pro, Samsung Galaxy S23]
-- **OS Version**: [e.g. iOS 17.1, Android 14]
-- **App Version**: [e.g. 1.2.3 (Build 123)]
-- **Installation Method**: [App Store, Google Play, TestFlight, APK]
-
-### Device Specifications
-- **RAM**: [e.g. 6GB, 8GB]
-- **Storage Available**: [e.g. 32GB free of 128GB]
-- **Screen Size**: [e.g. 6.1", 6.7"]
-- **Screen Resolution**: [e.g. 1179×2556, 1080×2340]
+## 📱 Device & Environment
+- **Platform**: [iOS | Android]
+- **Device**: [iPhone 15 Pro | Pixel 8 | Samsung Galaxy S24]
+- **OS Version**: [iOS 17.2 | Android 14]
+- **App Version**: From `app.json` version field
+- **Expo SDK**: `52.x.x`
+- **Install Method**: [Expo Go | Development Build | Production Build]
 
 ## 🔍 Steps to Reproduce
-<!-- Steps to reproduce the behavior -->
-1. Open the app
-2. Navigate to '[Screen Name]'
-3. Tap on '[Element]'
-4. Scroll to '[Section]'
-5. See error
+1. Open app via `npx expo start`
+2. Navigate to [Screen]
+3. Tap [Element]
+4. Observe error
 
 ## 🎯 Expected Behavior
 <!-- A clear and concise description of what you expected to happen -->

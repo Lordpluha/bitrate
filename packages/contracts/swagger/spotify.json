@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/": {
+    "/api/v1": {
       "get": {
-        "operationId": "AppController_getWelcome",
+        "operationId": "AppController_getWelcome_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -53,9 +53,9 @@
         "tags": ["Welcome"]
       }
     },
-    "/auth/login": {
+    "/api/v1/auth/login": {
       "post": {
-        "operationId": "AuthController_login",
+        "operationId": "UsersAuthController_login_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -133,12 +133,12 @@
           }
         },
         "summary": "User login",
-        "tags": ["Auth"]
+        "tags": ["Users Auth"]
       }
     },
-    "/auth/registration": {
+    "/api/v1/auth/registration": {
       "post": {
-        "operationId": "AuthController_registration",
+        "operationId": "UsersAuthController_registration_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -210,12 +210,12 @@
           }
         },
         "summary": "User registration",
-        "tags": ["Auth"]
+        "tags": ["Users Auth"]
       }
     },
-    "/auth/logout": {
+    "/api/v1/auth/logout": {
       "post": {
-        "operationId": "AuthController_logout",
+        "operationId": "UsersAuthController_logout_v1",
         "parameters": [],
         "responses": {
           "201": {
@@ -296,12 +296,12 @@
           }
         ],
         "summary": "User logout",
-        "tags": ["Auth"]
+        "tags": ["Users Auth"]
       }
     },
-    "/auth/refresh": {
+    "/api/v1/auth/refresh": {
       "post": {
-        "operationId": "AuthController_refresh",
+        "operationId": "UsersAuthController_refresh_v1",
         "parameters": [],
         "responses": {
           "201": {
@@ -391,26 +391,20 @@
           }
         ],
         "summary": "Refresh access token",
-        "tags": ["Auth"]
+        "tags": ["Users Auth"]
       }
     },
-    "/auth/me": {
+    "/api/v1/auth/me": {
       "get": {
-        "operationId": "AuthController_getMe",
+        "operationId": "UsersAuthController_getMe_v1",
         "parameters": [],
         "responses": {
           "200": {
             "description": "Successfully logged out",
             "content": {
               "application/json": {
-                "example": {
-                  "createdAt": "2023-10-01T12:00:00.000Z",
-                  "email": "user@example.com",
-                  "id": "1234567890abcdef",
-                  "updatedAt": "2023-10-01T12:00:00.000Z",
-                  "username": "user123",
-                  "avatar": null,
-                  "description": "Some description about the user"
+                "schema": {
+                  "$ref": "#/components/schemas/SafeUserEntity"
                 }
               }
             }
@@ -490,12 +484,12 @@
           }
         ],
         "summary": "Get current authenticated user",
-        "tags": ["Auth"]
+        "tags": ["Users Auth"]
       }
     },
-    "/users": {
+    "/api/v1/users": {
       "get": {
-        "operationId": "UsersController_getAll",
+        "operationId": "UsersController_getAll_v1",
         "parameters": [
           {
             "name": "limit",
@@ -530,24 +524,12 @@
             "description": "List of users retrieved successfully",
             "content": {
               "application/json": {
-                "example": [
-                  {
-                    "id": "1",
-                    "username": "user1",
-                    "avatar": "https://example.com/uploads/avatars/avatar.jpg",
-                    "backgroundImage": "",
-                    "bio": "Some bio",
-                    "createdAt": "2025-12-28T19:52:39.610Z"
-                  },
-                  {
-                    "id": "2",
-                    "username": "user2",
-                    "avatar": "https://example.com/uploads/avatars/avatar.jpg",
-                    "backgroundImage": "",
-                    "bio": "Some bio 2",
-                    "createdAt": "2025-12-28T19:52:39.610Z"
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SafeUserEntity"
                   }
-                ]
+                }
               }
             }
           },
@@ -592,7 +574,7 @@
         "tags": ["Users"]
       },
       "put": {
-        "operationId": "UsersController_putById",
+        "operationId": "UsersController_putById_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -610,13 +592,8 @@
             "description": "User profile updated successfully",
             "content": {
               "application/json": {
-                "example": {
-                  "id": "1",
-                  "username": "user1",
-                  "avatar": "https://example.com/uploads/avatars/avatar.jpg",
-                  "backgroundImage": "",
-                  "bio": "Some bio",
-                  "createdAt": "2025-12-28T19:52:39.612Z"
+                "schema": {
+                  "$ref": "#/components/schemas/SafeUserEntity"
                 }
               }
             }
@@ -699,9 +676,9 @@
         "tags": ["Users"]
       }
     },
-    "/users/username/{username}": {
+    "/api/v1/users/username/{username}": {
       "get": {
-        "operationId": "UsersController_getByUsername",
+        "operationId": "UsersController_getByUsername_v1",
         "parameters": [
           {
             "name": "username",
@@ -718,13 +695,8 @@
             "description": "User retrieved successfully",
             "content": {
               "application/json": {
-                "example": {
-                  "id": "1",
-                  "username": "user1",
-                  "avatar": "https://example.com/uploads/avatars/avatar.jpg",
-                  "backgroundImage": "",
-                  "bio": "Some bio",
-                  "createdAt": "2025-12-28T19:52:39.611Z"
+                "schema": {
+                  "$ref": "#/components/schemas/SafeUserEntity"
                 }
               }
             }
@@ -780,22 +752,17 @@
         "tags": ["Users"]
       }
     },
-    "/users/{id}": {
+    "/api/v1/users/{id}": {
       "get": {
-        "operationId": "UsersController_getById",
+        "operationId": "UsersController_getById_v1",
         "parameters": [],
         "responses": {
           "200": {
             "description": "User retrieved successfully",
             "content": {
               "application/json": {
-                "example": {
-                  "id": "1",
-                  "username": "user1",
-                  "avatar": "https://example.com/uploads/avatars/avatar.jpg",
-                  "backgroundImage": "",
-                  "bio": "Some bio",
-                  "createdAt": "2025-12-28T19:52:39.612Z"
+                "schema": {
+                  "$ref": "#/components/schemas/SafeUserEntity"
                 }
               }
             }
@@ -841,9 +808,9 @@
         "tags": ["Users"]
       }
     },
-    "/users/avatar": {
+    "/api/v1/users/avatar": {
       "post": {
-        "operationId": "UsersController_uploadAvatar",
+        "operationId": "UsersController_uploadAvatar_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -861,14 +828,8 @@
             "description": "Avatar uploaded successfully",
             "content": {
               "application/json": {
-                "example": {
-                  "id": "1",
-                  "username": "user1",
-                  "avatar": "https://example.com/uploads/avatars/avatar.jpg",
-                  "backgroundImage": "",
-                  "bio": "Some bio",
-                  "createdAt": "2025-12-28T19:52:39.613Z",
-                  "email": "example@gmail.com"
+                "schema": {
+                  "$ref": "#/components/schemas/SafeUserEntity"
                 }
               }
             }
@@ -954,9 +915,9 @@
         "tags": ["Users"]
       }
     },
-    "/artists": {
+    "/api/v1/artists": {
       "get": {
-        "operationId": "ArtistsController_getAll",
+        "operationId": "ArtistsController_getAll_v1",
         "parameters": [
           {
             "name": "page",
@@ -1044,65 +1005,11 @@
         },
         "summary": "Get all artists with pagination",
         "tags": ["Artists"]
-      },
-      "post": {
-        "operationId": "ArtistsController_create",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateArtistDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "summary": "Create a new artist",
-        "tags": ["Artists"]
       }
     },
-    "/artists/{id}": {
+    "/api/v1/artists/{id}": {
       "get": {
-        "operationId": "ArtistsController_getById",
+        "operationId": "ArtistsController_getById_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -1153,7 +1060,7 @@
         "tags": ["Artists"]
       },
       "put": {
-        "operationId": "ArtistsController_updateProfile",
+        "operationId": "ArtistsController_updateProfile_v1",
         "parameters": [],
         "responses": {
           "401": {
@@ -1234,7 +1141,7 @@
         "tags": ["Artists"]
       },
       "delete": {
-        "operationId": "ArtistsController_deleteProfile",
+        "operationId": "ArtistsController_deleteProfile_v1",
         "parameters": [],
         "responses": {
           "401": {
@@ -1315,9 +1222,9 @@
         "tags": ["Artists"]
       }
     },
-    "/artists/username/{username}": {
+    "/api/v1/artists/username/{username}": {
       "get": {
-        "operationId": "ArtistsController_getByUsername",
+        "operationId": "ArtistsController_getByUsername_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -1368,9 +1275,9 @@
         "tags": ["Artists"]
       }
     },
-    "/tracks": {
+    "/api/v1/tracks": {
       "get": {
-        "operationId": "TracksController_getAll",
+        "operationId": "TracksController_getAll_v1",
         "parameters": [
           {
             "name": "page",
@@ -1418,7 +1325,11 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2025-12-28T19:52:39.648Z"
+                    "createdAt": "2026-02-01T19:30:04.853Z",
+                    "updatedAt": "2026-02-01T19:30:04.853Z",
+                    "duration": 180,
+                    "releaseDate": "2023-10-01T12:00:00.000Z",
+                    "lyrics": null
                   }
                 ]
               }
@@ -1466,12 +1377,12 @@
         "tags": ["Tracks"]
       },
       "post": {
-        "operationId": "TracksController_postTrack",
+        "operationId": "TracksController_postTrack_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/CreateTrackDto"
               }
@@ -1480,18 +1391,14 @@
         },
         "responses": {
           "201": {
+            "description": "",
             "content": {
               "application/json": {
-                "example": {
-                  "id": "1",
-                  "title": "Track Title",
-                  "cover": "https://example.com/cover.jpg",
-                  "audioUrl": "",
-                  "createdAt": "2025-12-28T19:52:39.648Z"
+                "schema": {
+                  "$ref": "#/components/schemas/TrackEntity"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "401": {
             "description": "Unauthorized",
@@ -1559,7 +1466,14 @@
             "description": "Loop detected"
           },
           "default": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1571,135 +1485,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/tracks/liked": {
+    "/api/v1/tracks/{id}": {
       "get": {
-        "operationId": "TracksController_getLikedTracks",
-        "parameters": [
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page number",
-            "schema": {
-              "example": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Items per page",
-            "schema": {
-              "example": 10,
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "example": [
-                  {
-                    "artist": "123",
-                    "title": "Track Title",
-                    "id": "1",
-                    "likedBy": [],
-                    "album": "Album Name",
-                    "albumId": "album123",
-                    "artistId": "artist123",
-                    "cover": "https://example.com/cover.jpg",
-                    "audioUrl": "",
-                    "userId": "",
-                    "createdAt": "2025-12-28T19:52:39.648Z"
-                  }
-                ]
-              }
-            },
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "message": {
-                      "type": "string",
-                      "enum": [
-                        "Access token required",
-                        "Refresh token required",
-                        "Invalid token requirement",
-                        "Invalid or expired token",
-                        "User not found",
-                        "Session not found"
-                      ],
-                      "example": "Invalid or expired token"
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Unauthorized"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
-        "summary": "Get liked user tracks with pagination",
-        "tags": ["Tracks"]
-      }
-    },
-    "/tracks/{id}": {
-      "get": {
-        "operationId": "TracksController_getById",
+        "operationId": "TracksController_getById_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -1750,7 +1538,7 @@
         "tags": ["Tracks"]
       },
       "put": {
-        "operationId": "TracksController_putTrack",
+        "operationId": "TracksController_putTrack_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1829,7 +1617,14 @@
             "description": "Loop detected"
           },
           "default": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1841,468 +1636,9 @@
         "tags": ["Tracks"]
       }
     },
-    "/tracks/stream/{id}": {
+    "/api/v1/playlists": {
       "get": {
-        "operationId": "TracksController_streamTrack",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "range",
-            "required": true,
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "message": {
-                      "type": "string",
-                      "enum": [
-                        "Access token required",
-                        "Refresh token required",
-                        "Invalid token requirement",
-                        "Invalid or expired token",
-                        "User not found",
-                        "Session not found"
-                      ],
-                      "example": "Invalid or expired token"
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Unauthorized"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
-        "summary": "Stream audio track",
-        "tags": ["Tracks"]
-      }
-    },
-    "/tracks/play/{id}": {
-      "post": {
-        "operationId": "TracksController_playTrack",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "message": {
-                      "type": "string",
-                      "enum": [
-                        "Access token required",
-                        "Refresh token required",
-                        "Invalid token requirement",
-                        "Invalid or expired token",
-                        "User not found",
-                        "Session not found"
-                      ],
-                      "example": "Invalid or expired token"
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Unauthorized"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
-        "summary": "Start playing track for authenticated user",
-        "tags": ["Tracks"]
-      }
-    },
-    "/tracks/pause/{id}": {
-      "post": {
-        "operationId": "TracksController_pauseTrack",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "message": {
-                      "type": "string",
-                      "enum": [
-                        "Access token required",
-                        "Refresh token required",
-                        "Invalid token requirement",
-                        "Invalid or expired token",
-                        "User not found",
-                        "Session not found"
-                      ],
-                      "example": "Invalid or expired token"
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Unauthorized"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
-        "summary": "Pause track for authenticated user",
-        "tags": ["Tracks"]
-      }
-    },
-    "/tracks/update-state/{id}": {
-      "post": {
-        "operationId": "TracksController_updateTrackState",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "message": {
-                      "type": "string",
-                      "enum": [
-                        "Access token required",
-                        "Refresh token required",
-                        "Invalid token requirement",
-                        "Invalid or expired token",
-                        "User not found",
-                        "Session not found"
-                      ],
-                      "example": "Invalid or expired token"
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Unauthorized"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
-        "summary": "Update track streaming state for authenticated user",
-        "tags": ["Tracks"]
-      }
-    },
-    "/tracks/current-state": {
-      "get": {
-        "operationId": "TracksController_getCurrentState",
-        "parameters": [],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "message": {
-                      "type": "string",
-                      "enum": [
-                        "Access token required",
-                        "Refresh token required",
-                        "Invalid token requirement",
-                        "Invalid or expired token",
-                        "User not found",
-                        "Session not found"
-                      ],
-                      "example": "Invalid or expired token"
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Unauthorized"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "408": {
-            "description": "Request timeout"
-          },
-          "429": {
-            "description": "Too many requests"
-          },
-          "500": {
-            "description": "Internal server error"
-          },
-          "501": {
-            "description": "Not implemented"
-          },
-          "502": {
-            "description": "Bad gateway"
-          },
-          "503": {
-            "description": "Service unavailable"
-          },
-          "504": {
-            "description": "Gateway timeout"
-          },
-          "505": {
-            "description": "HTTP version not supported"
-          },
-          "507": {
-            "description": "Insufficient storage"
-          },
-          "508": {
-            "description": "Loop detected"
-          },
-          "default": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
-        "summary": "Get current track state for authenticated user",
-        "tags": ["Tracks"]
-      }
-    },
-    "/playlists": {
-      "get": {
-        "operationId": "PlaylistsController_getAll",
+        "operationId": "PlaylistsController_getAll_v1",
         "parameters": [
           {
             "name": "page",
@@ -2375,7 +1711,7 @@
         "tags": ["Playlists"]
       },
       "post": {
-        "operationId": "PlaylistsController_post",
+        "operationId": "PlaylistsController_post_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2466,9 +1802,9 @@
         "tags": ["Playlists"]
       }
     },
-    "/playlists/{id}": {
+    "/api/v1/playlists/{id}": {
       "get": {
-        "operationId": "PlaylistsController_getById",
+        "operationId": "PlaylistsController_getById_v1",
         "parameters": [],
         "responses": {
           "405": {
@@ -2505,14 +1841,21 @@
             "description": "Loop detected"
           },
           "default": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "summary": "Get playlist by id",
         "tags": ["Playlists"]
       },
       "put": {
-        "operationId": "PlaylistsController_update",
+        "operationId": "PlaylistsController_update_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2603,9 +1946,9 @@
         "tags": ["Playlists"]
       }
     },
-    "/albums": {
+    "/api/v1/albums": {
       "get": {
-        "operationId": "AlbumsController_getAllAlbums",
+        "operationId": "AlbumsController_getAllAlbums_v1",
         "parameters": [
           {
             "name": "page",
@@ -2665,7 +2008,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object"
+                    "$ref": "#/components/schemas/AlbumEntity"
                   }
                 }
               }
@@ -2676,7 +2019,7 @@
         "tags": ["Albums"]
       },
       "post": {
-        "operationId": "AlbumsController_createAlbum",
+        "operationId": "AlbumsController_createAlbum_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2689,6 +2032,16 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumEntity"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -2767,11 +2120,21 @@
         "tags": ["Albums"]
       }
     },
-    "/albums/{id}": {
+    "/api/v1/albums/{id}": {
       "get": {
-        "operationId": "AlbumsController_getById",
+        "operationId": "AlbumsController_getById_v1",
         "parameters": [],
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumEntity"
+                }
+              }
+            }
+          },
           "405": {
             "description": "Method not allowed"
           },
@@ -2820,7 +2183,7 @@
         "tags": ["Albums"]
       },
       "put": {
-        "operationId": "AlbumsController_updateAlbum",
+        "operationId": "AlbumsController_updateAlbum_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2899,7 +2262,14 @@
             "description": "Loop detected"
           },
           "default": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumEntity"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2912,9 +2282,12 @@
       },
       "delete": {
         "description": "Deletes an album by its ID. Requires authentication.",
-        "operationId": "AlbumsController_deleteAlbum",
+        "operationId": "AlbumsController_deleteAlbum_v1",
         "parameters": [],
         "responses": {
+          "200": {
+            "description": ""
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -2993,29 +2366,47 @@
         "tags": ["Albums"]
       }
     },
-    "/files/users/avatars/{filename}": {
-      "get": {
-        "operationId": "FilesController_getUserAvatar",
-        "parameters": [
-          {
-            "name": "filename",
-            "required": true,
-            "in": "path",
-            "description": "Avatar filename",
-            "schema": {
-              "type": "string"
+    "/api/v1/artists/auth/login": {
+      "post": {
+        "operationId": "AuthController_login_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "200": {
-            "description": "Avatar file"
+          "201": {
+            "description": "Successfully logged in",
+            "headers": {
+              "Set-Cookie": {
+                "description": "HttpOnly cookies: access_token и refresh_token",
+                "schema": {
+                  "type": "string",
+                  "example": "access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;\nrefresh_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;"
+                }
+              }
+            }
           },
-          "403": {
-            "description": "Access denied"
-          },
-          "404": {
-            "description": "Avatar not found"
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "errors": [
+                    {
+                      "field": "email",
+                      "message": "email must be an email"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "405": {
             "description": "Method not allowed"
@@ -3054,33 +2445,126 @@
             "description": ""
           }
         },
-        "summary": "Get user avatar",
-        "tags": ["files"]
+        "summary": "User login",
+        "tags": ["Artists Auth"]
       }
     },
-    "/files/audio/{filename}": {
-      "get": {
-        "operationId": "FilesController_getAudioFile",
-        "parameters": [
-          {
-            "name": "filename",
-            "required": true,
-            "in": "path",
-            "description": "Audio filename",
-            "schema": {
-              "type": "string"
+    "/api/v1/artists/auth/registration": {
+      "post": {
+        "operationId": "AuthController_registration_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationDto"
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "200": {
-            "description": "Audio file"
+          "201": {
+            "description": "Successfully registered"
           },
-          "403": {
-            "description": "Access denied"
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "errors": [
+                    {
+                      "field": "email",
+                      "message": "email must be an email"
+                    }
+                  ]
+                }
+              }
+            }
           },
-          "404": {
-            "description": "Audio file not found"
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "409": {
+            "description": "User already exists"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "User registration",
+        "tags": ["Artists Auth"]
+      }
+    },
+    "/api/v1/artists/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout_v1",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Successfully logged out"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
           },
           "405": {
             "description": "Method not allowed"
@@ -3119,8 +2603,208 @@
             "description": ""
           }
         },
-        "summary": "Get audio file",
-        "tags": ["files"]
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "User logout",
+        "tags": ["Artists Auth"]
+      }
+    },
+    "/api/v1/artists/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh_v1",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Token refreshed",
+            "headers": {
+              "Set-Cookie": {
+                "description": "HttpOnly cookies: access_token",
+                "schema": {
+                  "type": "string",
+                  "example": "access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Refresh access token",
+        "tags": ["Artists Auth"]
+      }
+    },
+    "/api/v1/artists/auth/me": {
+      "get": {
+        "operationId": "AuthController_getMe_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeUserEntity"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Get current authenticated user",
+        "tags": ["Artists Auth"]
       }
     }
   },
@@ -3159,7 +2843,7 @@
       }
     },
     "schemas": {
-      "SessionEntity": {
+      "UserSessionEntity": {
         "type": "object",
         "properties": {
           "id": {
@@ -3177,9 +2861,14 @@
           "createdAt": {
             "format": "date-time",
             "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
           }
         },
-        "required": ["id", "userId", "access_token", "refresh_token", "createdAt"]
+        "required": ["id", "userId", "access_token", "refresh_token", "createdAt", "expiresAt"]
       },
       "LoginDto": {
         "type": "object",
@@ -3244,9 +2933,53 @@
           "avatar": {
             "type": "string",
             "nullable": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
           }
         },
-        "required": ["id", "username", "email", "password", "createdAt", "description", "avatar"]
+        "required": [
+          "id",
+          "username",
+          "email",
+          "password",
+          "createdAt",
+          "description",
+          "avatar",
+          "updatedAt"
+        ]
+      },
+      "SafeUserEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": ["id", "username", "email", "createdAt", "description", "avatar", "updatedAt"]
       },
       "UpdateUserDto": {
         "type": "object",
@@ -3280,26 +3013,85 @@
         },
         "required": ["avatar"]
       },
-      "CreateArtistDto": {
+      "ArtistEntity": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "description": "User email",
-            "example": "user@example.com"
-          },
-          "password": {
-            "type": "string",
-            "description": "User password",
-            "example": "password123"
+          "id": {
+            "type": "string"
           },
           "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "bio": {
             "type": "string",
-            "description": "User username",
-            "example": "user123"
+            "nullable": true
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
+          },
+          "backgroundImage": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
           }
         },
-        "required": ["email", "password", "username"]
+        "required": [
+          "id",
+          "username",
+          "password",
+          "email",
+          "bio",
+          "avatar",
+          "backgroundImage",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "SafeArtistEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
+          },
+          "backgroundImage": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": ["id", "username", "bio", "avatar", "backgroundImage", "createdAt", "updatedAt"]
       },
       "TrackEntity": {
         "type": "object",
@@ -3322,9 +3114,37 @@
           },
           "artistId": {
             "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "duration": {
+            "type": "number",
+            "nullable": true
+          },
+          "releaseDate": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "lyrics": {
+            "type": "string",
+            "nullable": true
           }
         },
-        "required": ["id", "title", "audioUrl", "cover", "createdAt", "artistId"]
+        "required": [
+          "id",
+          "title",
+          "audioUrl",
+          "cover",
+          "createdAt",
+          "artistId",
+          "updatedAt",
+          "duration",
+          "releaseDate",
+          "lyrics"
+        ]
       },
       "CreateTrackDto": {
         "type": "object",
@@ -3333,16 +3153,18 @@
             "type": "string",
             "description": "Track title"
           },
-          "audioUrl": {
+          "audio": {
             "type": "string",
-            "description": "Url to audio"
+            "description": "Audio file",
+            "format": "binary"
           },
           "cover": {
             "type": "string",
-            "description": "Url to cover image"
+            "description": "Cover image file",
+            "format": "binary"
           }
         },
-        "required": ["title", "audioUrl"]
+        "required": ["title", "audio"]
       },
       "PlaylistEntity": {
         "type": "object",
@@ -3366,9 +3188,25 @@
           },
           "userId": {
             "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           }
         },
-        "required": ["id", "title", "cover", "description", "createdAt", "userId"]
+        "required": [
+          "id",
+          "title",
+          "cover",
+          "description",
+          "createdAt",
+          "userId",
+          "updatedAt",
+          "isPublic"
+        ]
       },
       "CreatePlaylistDto": {
         "type": "object",
@@ -3400,6 +3238,21 @@
         },
         "required": ["title"]
       },
+      "CreateAlbumDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Playlist title"
+          },
+          "description": {
+            "type": "string",
+            "description": "",
+            "example": "user123"
+          }
+        },
+        "required": ["title"]
+      },
       "UpdateAlbumDto": {
         "type": "object",
         "properties": {
@@ -3415,25 +3268,37 @@
         },
         "required": ["title"]
       },
-      "CreateAlbumDto": {
+      "ArtistSessionEntity": {
         "type": "object",
         "properties": {
-          "title": {
-            "type": "string",
-            "description": "Playlist title"
+          "id": {
+            "type": "string"
           },
-          "description": {
+          "artistId": {
+            "type": "string"
+          },
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
             "type": "string",
-            "description": "",
-            "example": "user123"
+            "nullable": true
           }
         },
-        "required": ["title"]
+        "required": ["id", "artistId", "access_token", "refresh_token", "createdAt", "expiresAt"]
       }
     }
   },
   "externalDocs": {
-    "description": "Mintlify",
-    "url": "https://lordpluha.mintlify.app/"
+    "description": "@spotify/docs",
+    "url": ""
   }
 }

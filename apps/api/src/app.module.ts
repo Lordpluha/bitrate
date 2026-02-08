@@ -1,35 +1,70 @@
-import { Module } from '@nestjs/common'
+import { PrismaModule } from '@infra/prisma/prisma.module'
+import { AlbumsModule } from '@modules/albums/albums.module'
+import { ArtistsModule } from '@modules/artists/artists.module'
+import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
+import { PlaylistsModule } from '@modules/playlists/playlists.module'
+import { TracksModule } from '@modules/tracks/tracks.module'
+import { UsersModule } from '@modules/users/users.module'
+import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
+import { BullModule } from '@nestjs/bullmq'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { envSchema, envType } from '../env.schema'
-import { AlbumsModule } from './albums/albums.module'
+import { ServeStaticModule } from '@nestjs/serve-static'
+import { join } from 'path'
+import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
-import { AppService } from './app.service'
-import { ArtistsModule } from './artists/artists.module'
-import { AuthModule } from './auth/auth.module'
-import { FilesModule } from './files/files.module'
-import { PlaylistsModule } from './playlists/playlists.module'
-import { PrismaModule } from './prisma/prisma.module'
-import { TracksModule } from './tracks/tracks.module'
-import { UsersModule } from './users/users.module'
+import { PathTraversalMiddleware } from './common'
+import { appConfigs } from './common/config'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.local', '.env.development', '.env.production'],
+      envFilePath: ['.env', '.env.local', '.env.production', '.env.development'],
+      load: appConfigs,
+      validate: (env) => envSchema.parse(env),
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'storage', 'public'),
+      serveRoot: '/static',
+      serveStaticOptions: {
+        index: false,
+        fallthrough: false,
+        dotfiles: 'deny', // Deny access to hidden files (.env, .git, etc.)
+        redirect: false,
+        setHeaders: (res) => {
+          // Prevent directory listing and sensitive file access
+          res.setHeader('X-Content-Type-Options', 'nosniff')
+          res.setHeader('X-Frame-Options', 'DENY')
 
-      validate: (env: Record<string, unknown>): envType => envSchema.parse(env),
+          // Custom error handling for static files
+          res.on('finish', () => {
+            if (res.statusCode === 404) {
+              res.statusMessage = 'Resource not found'
+            }
+          })
+        },
+      },
+    }),
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+      },
     }),
     PrismaModule,
-    AuthModule,
+    UsersAuthModule,
     ArtistsModule,
     UsersModule,
     TracksModule,
     PlaylistsModule,
     AlbumsModule,
-    FilesModule,
+    ArtistsAuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(PathTraversalMiddleware).forRoutes('*path')
+  }
+}

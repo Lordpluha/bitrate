@@ -1,0 +1,340 @@
+name: Performance Testing
+
+on:
+  pull_request:
+    paths:
+      - 'apps/api/**'
+      - 'apps/web-player/**'
+      - 'apps/web-artists/**'
+  schedule:
+    # Run weekly performance tests
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  # API load testing
+  api-load-test:
+    name: API Load Testing
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: spotify
+          POSTGRES_PASSWORD: spotify_password
+          POSTGRES_DB: spotify_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: |
+          cd apps/api
+          pnpm prisma generate
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+
+      - name: Build ncs-parser
+        run: pnpm --filter @spotify/ncs-parser run build
+
+      - name: Build API
+        run: |
+          pnpm --filter @spotify/api run build
+          ls -la apps/api/dist || echo "dist folder not found"
+
+      - name: Setup database
+        run: |
+          cd apps/api
+          pnpm prisma migrate deploy
+          pnpm prisma db seed
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+
+      - name: Start API server
+        run: |
+          cd apps/api
+          ls -la dist/ || echo "No dist folder"
+          pnpm run start:prod &
+          sleep 10
+          # Wait for server to be ready
+          for i in {1..30}; do
+            if curl -f http://localhost:3001/api > /dev/null 2>&1; then
+              echo "API server is ready"
+              break
+            fi
+            echo "Waiting for API server... ($i/30)"
+            sleep 1
+          done
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          REDIS_URL: redis://localhost:6379
+          JWT_SECRET: test_secret
+          PORT: 3001
+
+      - name: Setup k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Run load tests
+        run: pnpm --filter @spotify/load-test run load:api
+        env:
+          API_URL: http://localhost:3001
+        continue-on-error: true
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-results
+          path: results.json
+          if-no-files-found: ignore
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Check if results file exists and has content
+            if (!fs.existsSync('results.json')) {
+              console.log('No results.json file found - load test may have failed');
+              return;
+            }
+
+            const results = JSON.parse(fs.readFileSync('results.json', 'utf8'));
+
+            // Check if metrics exist
+            if (!results.metrics || !results.metrics.http_reqs) {
+              console.log('No metrics found in results - load test did not complete successfully');
+              return;
+            }
+
+            const metrics = results.metrics;
+            const comment = `## 📊 Performance Test Results
+
+            | Metric | Value |
+            |--------|-------|
+            | Requests | ${metrics.http_reqs?.values?.count || 0} |
+            | Failed Requests | ${metrics.http_req_failed?.values?.passes || 0} |
+            | Avg Response Time | ${metrics.http_req_duration?.values?.avg?.toFixed(2) || 'N/A'}ms |
+            | P95 Response Time | ${metrics.http_req_duration?.values?.['p(95)']?.toFixed(2) || 'N/A'}ms |
+            | P99 Response Time | ${metrics.http_req_duration?.values?.['p(99)']?.toFixed(2) || 'N/A'}ms |
+            | RPS | ${metrics.http_reqs?.values?.rate?.toFixed(2) || 'N/A'} |
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # Web performance testing
+  lighthouse:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build dependencies
+        run: pnpm --filter @spotify/ui-react run build
+
+      - name: Build web app
+        run: pnpm --filter @spotify/web-player run build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3001
+
+      - name: Start web app
+        run: |
+          cd apps/web-player
+          pnpm run start -- --port 3001 &
+          sleep 10
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            http://localhost:3001
+            http://localhost:3001/browse
+            http://localhost:3001/search
+          uploadArtifacts: false
+          temporaryPublicStorage: true
+
+  # Bundle analysis
+  bundle-analysis:
+    name: Bundle Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm --filter @spotify/api run db:gen
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+
+      - name: Build dependencies
+        run: pnpm --filter @spotify/ui-react run build
+
+      - name: Build with bundle analyzer
+        run: ANALYZE=true pnpm --filter @spotify/web-player run build
+
+      - name: Upload bundle report
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis
+          path: apps/web-player/.next/analyze
+
+      - name: Compare bundle sizes
+        uses: preactjs/compressed-size-action@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: 'apps/web-player/.next/static/**/*.js'
+          compression: gzip
+
+  # Database query performance
+  db-performance:
+    name: Database Performance
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: spotify
+          POSTGRES_PASSWORD: spotify_password
+          POSTGRES_DB: spotify_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: |
+          cd apps/api
+          pnpm prisma generate
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+
+      - name: Setup database
+        run: |
+          cd apps/api
+          pnpm prisma migrate deploy
+          pnpm prisma db seed
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+
+      # TODO: Add e2e performance tests
+      # - name: Run query performance tests
+      #   run: |
+      #     cd apps/api
+      #     pnpm run test:e2e -t "performance"
+      #   env:
+      #     DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+
+      # TODO: Enable pg_stat_statements for query performance analysis
+      # Requires postgres to be configured with shared_preload_libraries='pg_stat_statements'
+      # - name: Enable pg_stat_statements extension
+      #   run: |
+      #     psql -h localhost -U spotify -d spotify_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
+      #   env:
+      #     PGPASSWORD: spotify_password
+
+      # - name: Analyze slow queries
+      #   run: |
+      #     psql -h localhost -U spotify -d spotify_test -c "SELECT query, calls, total_exec_time, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;"
+      #   env:
+      #     PGPASSWORD: spotify_password

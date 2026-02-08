@@ -1,0 +1,52 @@
+{
+  "name": "@spotify/converter",
+  "version": "1.0.0",
+  "description": "CLI tool for media conversion using FFmpeg (audio to OGG Opus, video to AAC)",
+  "type": "module",
+  "bin": {
+    "media-converter": "./bin/media-converter.mjs"
+  },
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.mjs"
+    },
+    "./audio": {
+      "types": "./src/audio.d.ts",
+      "default": "./src/audio.mjs"
+    },
+    "./video": {
+      "types": "./src/video.d.ts",
+      "default": "./src/video.mjs"
+    },
+    "./image": {
+      "types": "./src/image.d.ts",
+      "default": "./src/image.mjs"
+    }
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ffmpeg",
+    "opus",
+    "aac",
+    "audio-conversion",
+    "video-conversion",
+    "media-converter"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.1",
+  "dependencies": {
+    "execa": "^9.5.2",
+    "ffmpeg-static": "^5.2.0",
+    "sharp": "^0.34.1"
+  }
+}

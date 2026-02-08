@@ -1,0 +1,87 @@
+{
+  "root": false,
+  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+  },
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "tailwindDirectives": true
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "attributePosition": "auto",
+    "bracketSameLine": false,
+    "indentWidth": 2,
+    "bracketSpacing": true,
+    "lineWidth": 80
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noChildrenProp": "error",
+        "useHookAtTopLevel": "error",
+        "useJsxKeyInIterable": "error",
+        "noUnusedFunctionParameters": "warn"
+      },
+      "security": { "noDangerouslySetInnerHtmlWithChildren": "error" },
+      "style": { "useBlockStatements": "off" },
+      "suspicious": {
+        "noCommentText": "error",
+        "noDuplicateJsxProps": "error",
+        "noUnknownAtRules": "off"
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    },
+    "includes": ["**", "!.next/**", "!out/**", "!build/**", "!next-env.d.ts"]
+  },
+  "javascript": {
+    "formatter": { "quoteStyle": "single" },
+    "globals": [
+      "onnotificationclose",
+      "onbackgroundfetchfail",
+      "onactivate",
+      "onerror",
+      "onpaymentrequest",
+      "onpushsubscriptionchange",
+      "onbackgroundfetchabort",
+      "onabortpayment",
+      "onsync",
+      "onpush",
+      "onfetch",
+      "oninstall",
+      "onbackgroundfetchsuccess",
+      "onmessage",
+      "onperiodicsync",
+      "oncanmakepayment",
+      "oncookiechange",
+      "onrejectionhandled",
+      "onbackgroundfetchclick",
+      "onmessageerror",
+      "onunhandledrejection",
+      "onnotificationclick",
+      "onlanguagechange"
+    ]
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on",
+        "useSortedAttributes": "on",
+        "useSortedProperties": "on"
+      }
+    }
+  },
+  "extends": ["../../biome.json", "./biome.fsd.json"]
+}
