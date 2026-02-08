@@ -210,6 +210,7 @@ jobs:
           cp .env.example .env
           echo "JWT_SECRET=test_secret_key_for_ci" >> .env
           echo "DATABASE_URL=postgresql://admin:admin@postgres:5432/spotify" >> .env
+          echo "SHADOW_DATABASE_URL=postgresql://admin:admin@postgres:5432/spotify_shadow" >> .env
 
       - name: Start services
         run: |

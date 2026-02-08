@@ -50,6 +50,7 @@ services:
     environment:
       NODE_ENV: development
       DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-spotify}
+      SHADOW_DATABASE_URL: ${SHADOW_DATABASE_URL:-postgresql://admin:admin@postgres:5432/spotify_shadow}
       REDIS_URL: redis://redis:6379
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
