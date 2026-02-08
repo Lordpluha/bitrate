@@ -1,5 +1,6 @@
 import { ArtistEntity } from '@modules/artists'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
+import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
   Body,
@@ -12,13 +13,14 @@ import {
   Put,
   Query,
   Req,
+  Res,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common'
 import { FileFieldsInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { randomUUID } from 'crypto'
-import { Request } from 'express'
+import { Request, Response } from 'express'
 import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { extname } from 'path'
@@ -56,6 +58,31 @@ export class TracksController {
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
     return this.tracksService.findTrackById(id)
+  }
+
+  @UserAuth()
+  @Get('stream/:id')
+  async streamTrack(
+    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const range = req.headers.range
+    const streamData = await this.tracksService.getTrackStream(id, range)
+
+    res.status(streamData.isPartial ? 206 : 200)
+    res.set({
+      'Content-Type': streamData.contentType,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': streamData.contentLength,
+      ...(streamData.isPartial
+        ? {
+            'Content-Range': `bytes ${streamData.start}-${streamData.end}/${streamData.fileSize}`,
+          }
+        : {}),
+    })
+
+    return streamData.stream.pipe(res)
   }
 
   @PostTrackSwagger()

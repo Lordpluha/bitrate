@@ -4,11 +4,12 @@ import { Module } from '@nestjs/common'
 import { UsersModule } from '../users/users.module'
 import { UserAuthService } from './user-auth.service'
 import { UsersAuthController } from './users-auth.controller'
+import { WsUserAuthGuard } from './users-auth.ws.guard'
 
 @Module({
   imports: [PrismaModule, UsersModule, TokensModule],
   controllers: [UsersAuthController],
-  providers: [UserAuthService],
-  exports: [UserAuthService],
+  providers: [UserAuthService, WsUserAuthGuard],
+  exports: [UserAuthService, WsUserAuthGuard],
 })
 export class UsersAuthModule {}

@@ -13,13 +13,15 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "lint": "pnpm exec biome lint --write",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test": "jest --config ./test/jest-unit.json",
+    "test:watch": "jest --config ./test/jest-unit.json --watch",
+    "test:cov": "jest --config ./test/jest-unit.json --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand --config ./test/jest-unit.json",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:int": "jest --config ./test/jest-integration.json",
     "db:start": "prisma dev",
     "db:migration:reset": "prisma migrate reset --force",
+    "test:db:migration:reset": "DATABASE_URL='postgresql://admin:admin@localhost:5433/spotify_test' SHADOW_DATABASE_URL='postgresql://admin:admin@localhost:5433/spotify_test_shadow' prisma migrate reset --force",
     "db:migration:start": "prisma migrate dev --name init",
     "db:gen": "prisma generate",
     "db:gen:prod": "prisma generate",
@@ -71,6 +73,7 @@
     "@types/pg": "^8.16.0",
     "@types/supertest": "^6.0.3",
     "globals": "^17.0.0",
+    "jest-mock-extended": "^4.0.0",
     "jest": "^30.2.0",
     "prisma": "^7.3.0",
     "source-map-support": "^0.5.21",
@@ -80,22 +83,5 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"
-  },
-  "jest": {
-    "moduleFileExtensions": ["js", "json", "ts"],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": ["**/*.(t|j)s"],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
-    "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>/$1",
-      "^@modules/(.*)$": "<rootDir>/modules/$1",
-      "^@infra/(.*)$": "<rootDir>/infra/$1",
-      "^@common/(.*)$": "<rootDir>/common/$1"
-    }
   }
 }
