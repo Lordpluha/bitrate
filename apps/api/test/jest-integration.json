@@ -4,9 +4,7 @@
   "testEnvironment": "node",
   "setupFiles": ["<rootDir>/../test/jest.setup.ts"],
   "maxWorkers": 1,
-  "testMatch": [
-    "<rootDir>/modules/**/__tests__/**/*.int-spec.ts"
-  ],
+  "testMatch": ["<rootDir>/modules/**/__tests__/**/*.int-spec.ts"],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },

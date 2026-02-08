@@ -1,15 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import {
-  ResizableHandle,
-  ResizableLayout,
-  ResizablePanel,
-} from '.'
+import { ResizableHandle, ResizableLayout, ResizablePanel } from '.'
 
 const PanelContent = ({ label }: { label: string }) => (
-  <div className="flex h-full items-center justify-center text-sm text-foreground/70">
-    {label}
-  </div>
+  <div className="flex h-full items-center justify-center text-sm text-foreground/70">{label}</div>
 )
 
 /**
@@ -37,10 +31,7 @@ type Story = StoryObj<typeof meta>
 export const Horizontal: Story = {
   render: (args) => (
     <div className="h-64 w-[720px] rounded-lg border bg-card">
-      <ResizableLayout
-        {...args}
-        className={["h-full", args.className].filter(Boolean).join(' ')}
-      >
+      <ResizableLayout {...args} className={['h-full', args.className].filter(Boolean).join(' ')}>
         <ResizablePanel defaultSize={55} className="bg-muted/30">
           <PanelContent label="Library" />
         </ResizablePanel>
@@ -62,7 +53,7 @@ export const Vertical: Story = {
       <ResizableLayout
         {...args}
         direction="vertical"
-        className={["h-full", args.className].filter(Boolean).join(' ')}
+        className={['h-full', args.className].filter(Boolean).join(' ')}
       >
         <ResizablePanel defaultSize={60} className="bg-muted/30">
           <PanelContent label="Playlist" />
