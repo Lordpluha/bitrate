@@ -11,9 +11,12 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web-player/package.json ./apps/web-player/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/svgr/package.json ./packages/svgr/
+COPY packages/svgr/bin ./packages/svgr/bin
 COPY packages/esbuild-bundler/package.json ./packages/esbuild-bundler/
+COPY packages/esbuild-bundler/bin ./packages/esbuild-bundler/bin
 COPY packages/tokens/package.json ./packages/tokens/
 COPY packages/tokens-generator/package.json ./packages/tokens-generator/
+COPY packages/tokens-generator/bin ./packages/tokens-generator/bin
 COPY packages/contracts/package.json ./packages/contracts/
 COPY turbo.json ./
 RUN pnpm install --frozen-lockfile
