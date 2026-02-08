@@ -3,6 +3,8 @@ name: PR Quality Checks
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  push:
+    branches: [develop]
 
 # Cancel previous runs for the same PR
 concurrency:
@@ -110,6 +112,18 @@ jobs:
 
       - name: Run tests
         run: pnpm test
+        continue-on-error: true
+
+      - name: Run integration tests
+        run: pnpm --filter @spotify/api run test:int
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+        continue-on-error: true
+
+      - name: Run e2e tests
+        run: pnpm --filter @spotify/api run test:e2e
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
         continue-on-error: true
 
       - name: Upload coverage
