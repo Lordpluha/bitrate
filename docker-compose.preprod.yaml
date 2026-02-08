@@ -94,6 +94,10 @@ services:
       - /app/node_modules
       - /app/apps/web-player/node_modules
       - /app/apps/web-player/.next
+      - /app/packages/ui-react/node_modules
+      - /app/packages/svgr/node_modules
+      - /app/packages/esbuild-bundler/node_modules
+      - /app/packages/tokens-generator/node_modules
     depends_on:
       - api
     networks:
@@ -120,6 +124,10 @@ services:
       - /app/node_modules
       - /app/apps/web-artists/node_modules
       - /app/apps/web-artists/.next
+      - /app/packages/ui-react/node_modules
+      - /app/packages/svgr/node_modules
+      - /app/packages/esbuild-bundler/node_modules
+      - /app/packages/tokens-generator/node_modules
     depends_on:
       - api
     networks:
