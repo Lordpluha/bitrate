@@ -3,7 +3,7 @@
 import type { FC, PropsWithChildren } from 'react'
 import { useEffect, useState } from 'react'
 
-import { Theme } from '@shared/constants'
+import type { Theme } from '@shared/constants'
 import { ThemeProvider } from '@shared/contexts'
 import { usePersistedState } from '@shared/hooks'
 import { Toaster } from '@spotify/ui-react'
