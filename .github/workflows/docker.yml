@@ -280,6 +280,8 @@ jobs:
 
       - name: Run database migrations
         run: |
+          docker compose -f docker-compose.preprod.yaml exec -T postgres psql -U e WHERE datname='spotify_shadow'" | grep -q 1 || \admin -d postgres -tc "SELECT 1 FROM pg_databas
+            docker compose -f docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE spotify_shadow;"
           docker compose -f docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:gen
           docker compose -f docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:migration:start
 
