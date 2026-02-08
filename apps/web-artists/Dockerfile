@@ -2,7 +2,9 @@
 
 # Stage 1: Base
 FROM node:22-alpine AS base
-RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
 # Stage 2: Dependencies
@@ -24,6 +26,7 @@ RUN pnpm install --frozen-lockfile
 # Stage 3: Development
 FROM base AS development
 COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
@@ -37,6 +40,7 @@ ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NODE_ENV=production
 
 COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
