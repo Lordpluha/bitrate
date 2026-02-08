@@ -213,25 +213,26 @@ jobs:
 
       - name: Start services
         run: |
-          docker compose up -d postgres redis
+          docker compose -f docker-compose.preprod.yaml up -d postgres redis
           sleep 10
 
       - name: Wait for services
         run: |
-          timeout 60 bash -c 'until docker compose exec -T postgres pg_isready -U admin; do sleep 1; done'
-          docker compose exec -T redis redis-cli ping
+          timeout 60 bash -c 'until docker compose -f docker-compose.preprod.yaml exec -T postgres pg_isready -U admin; do sleep 1; done'
+          docker compose -f docker-compose.preprod.yaml exec -T redis redis-cli ping
 
       - name: Start application services
         run: |
-          docker compose up -d api web admin
+          docker compose -f docker-compose.preprod.yaml up -d api web-player web-artists admin
           sleep 20
 
       - name: Check container status
         run: |
-          docker compose ps
-          docker compose logs --tail=50 api
-          docker compose logs --tail=50 web
-          docker compose logs --tail=50 admin
+          docker compose -f docker-compose.preprod.yaml ps
+          docker compose -f docker-compose.preprod.yaml logs --tail=50 api
+          docker compose -f docker-compose.preprod.yaml logs --tail=50 web-player
+          docker compose -f docker-compose.preprod.yaml logs --tail=50 web-artists
+          docker compose -f docker-compose.preprod.yaml logs --tail=50 admin
 
       - name: Run health checks
         run: |

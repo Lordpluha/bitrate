@@ -70,13 +70,13 @@ services:
       - spotify-network
     command: pnpm --filter @spotify/api run start:dev
 
-  # Web Frontend (Next.js)
-  web:
+  # Web Player (Next.js)
+  web-player:
     build:
       context: .
-      dockerfile: ./apps/web/Dockerfile
+      dockerfile: ./apps/web-player/Dockerfile
       target: development
-    container_name: spotify-web
+    container_name: spotify-web-player
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -85,16 +85,42 @@ services:
     ports:
       - "${WEB_PORT:-3001}:3001"
     volumes:
-      - ./apps/web:/app/apps/web
+      - ./apps/web-player:/app/apps/web-player
       - ./packages:/app/packages
       - /app/node_modules
-      - /app/apps/web/node_modules
-      - /app/apps/web/.next
+      - /app/apps/web-player/node_modules
+      - /app/apps/web-player/.next
     depends_on:
       - api
     networks:
       - spotify-network
-    command: pnpm --filter @spotify/web run dev
+    command: pnpm --filter @spotify/web-player run dev
+
+  # Web Artists (Next.js)
+  web-artists:
+    build:
+      context: .
+      dockerfile: ./apps/web-artists/Dockerfile
+      target: development
+    container_name: spotify-web-artists
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+      PORT: 3002
+    ports:
+      - "${WEB_ARTISTS_PORT:-3004}:3002"
+    volumes:
+      - ./apps/web-artists:/app/apps/web-artists
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/web-artists/node_modules
+      - /app/apps/web-artists/.next
+    depends_on:
+      - api
+    networks:
+      - spotify-network
+    command: pnpm --filter @spotify/web-artists run dev
 
   # Admin Panel (Kottster)
   admin:
@@ -220,7 +246,8 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     depends_on:
       - api
-      - web
+      - web-player
+      - web-artists
       - admin
     networks:
       - spotify-network
