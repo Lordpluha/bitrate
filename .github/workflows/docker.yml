@@ -249,7 +249,7 @@ jobs:
             fi
 
             # Check Web - run inside container (curl not guaranteed on host)
-            if docker compose exec -T web-player node -e "const req=require('http').get('http://localhost:3001', (r)=>{process.exit(r.statusCode && r.statusCode < 400 ? 0 : 1)}); req.on('error', ()=>process.exit(1));"; then
+            if docker compose -f docker-compose.preprod.yaml exec -T web-player node -e "const req=require('http').get('http://localhost:3001', (r)=>{process.exit(r.statusCode && r.statusCode < 400 ? 0 : 1)}); req.on('error', ()=>process.exit(1));"; then
               echo "✅ Web is healthy"
               WEB_OK=1
             else
@@ -258,7 +258,7 @@ jobs:
             fi
 
             # Check Admin - Kottster runs on port 5480 internally
-            if docker compose exec -T admin node -e "const req=require('http').get('http://localhost:5480', (r)=>{process.exit(r.statusCode && r.statusCode < 400 ? 0 : 1)}); req.on('error', ()=>process.exit(1));"; then
+            if docker compose -f docker-compose.preprod.yaml exec -T admin node -e "const req=require('http').get('http://localhost:5480', (r)=>{process.exit(r.statusCode && r.statusCode < 400 ? 0 : 1)}); req.on('error', ()=>process.exit(1));"; then
               echo "✅ Admin is healthy"
               ADMIN_OK=1
             else
