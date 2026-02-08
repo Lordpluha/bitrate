@@ -25,6 +25,7 @@ RUN pnpm install --frozen-lockfile
 FROM base AS development
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/node_modules
+COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
 COPY . .
 EXPOSE 3002
 CMD ["pnpm", "--filter", "@spotify/web-artists", "run", "dev"]
@@ -37,6 +38,7 @@ ENV NODE_ENV=production
 
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/node_modules
+COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
 COPY . .
 
 # Build приложения
