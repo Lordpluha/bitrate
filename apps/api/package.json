@@ -9,6 +9,7 @@
     "build": "nest build",
     "format": "pnpm exec biome format --write",
     "start": "nest start",
+    "prestart:dev": "pnpm --filter @spotify/ncs-parser run build",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
