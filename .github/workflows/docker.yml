@@ -239,8 +239,8 @@ jobs:
           for i in {1..30}; do
             echo "=== Health check attempt $i/30 ==="
 
-            # Check API (use root endpoint since /health doesn't exist)
-            if curl -sf http://localhost:3000; then
+            # Check API health endpoint
+            if curl -sf http://localhost:3000/api/v1/health; then
               echo "✅ API is healthy"
               API_OK=1
             else
