@@ -1,6 +1,7 @@
 'use client'
 
-import { FC, PropsWithChildren, useEffect, useState } from 'react'
+import type { FC, PropsWithChildren } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Theme } from '@shared/constants'
 import { ThemeProvider } from '@shared/contexts'
