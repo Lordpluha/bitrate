@@ -24,9 +24,9 @@ RUN pnpm install --frozen-lockfile
 # Stage 3: Development
 FROM base AS development
 COPY --from=dependencies /app/node_modules ./node_modules
+COPY . .
 COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
-COPY . .
 EXPOSE 3001
 CMD ["pnpm", "--filter", "@spotify/web-player", "run", "dev"]
 
@@ -37,9 +37,9 @@ ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NODE_ENV=production
 
 COPY --from=dependencies /app/node_modules ./node_modules
+COPY . .
 COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
-COPY . .
 
 # Build приложения
 RUN pnpm --filter @spotify/web-player run build
