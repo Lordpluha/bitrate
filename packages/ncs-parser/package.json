@@ -4,6 +4,7 @@
     "description": "NoCopyrightSounds website parser to provide an API",
     "main": "dist/cjs/main.js",
     "module": "dist/esm/main.js",
+    "types": "dist/esm/main.d.ts",
     "scripts": {
         "clean": "rm -rf dist",
         "build": "tsc --module CommonJS --outDir dist/cjs && tsc --module ESNext --outDir dist/esm",

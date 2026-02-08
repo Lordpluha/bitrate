@@ -70,6 +70,9 @@ jobs:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
           SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
+      - name: Build ncs-parser
+        run: pnpm --filter @spotify/ncs-parser run build
+
       - name: Build API
         run: |
           pnpm --filter @spotify/api run build
@@ -82,6 +85,8 @@ jobs:
           pnpm prisma db seed
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Start API server
         run: |
@@ -307,6 +312,7 @@ jobs:
           pnpm prisma db seed
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       # TODO: Add e2e performance tests
       # - name: Run query performance tests
