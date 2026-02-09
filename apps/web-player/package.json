@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "predev": "pnpm --filter @spotify/ui-react run build",
     "dev": "next dev --port 3001",
     "dev:debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",

@@ -63,16 +63,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Create shadow database
+        run: |
+          psql -h localhost -U spotify -c "CREATE DATABASE spotify_test_shadow;" || true
+        env:
+          PGPASSWORD: spotify_password
+
+      - name: Build ncs-parser
+        run: pnpm --filter @spotify/ncs-parser run build
+
       - name: Generate Prisma Client
         run: |
           cd apps/api
           pnpm prisma generate
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-
-      - name: Build ncs-parser
-        run: pnpm --filter @spotify/ncs-parser run build
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
       - name: Build API
         run: |
@@ -86,8 +97,7 @@ jobs:
           pnpm prisma db seed
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
       - name: Start API server
         run: |
@@ -205,8 +215,18 @@ jobs:
       - name: Start web app
         run: |
           cd apps/web-player
-          pnpm run start -- --port 3001 &
-          sleep 10
+          pnpm exec next start -p 3001 &
+          # Wait for server to be ready
+          for i in {1..30}; do
+            if curl -f http://localhost:3001 > /dev/null 2>&1; then
+              echo "Web app is ready"
+              break
+            fi
+            echo "Waiting for web app... ($i/30)"
+            sleep 1
+          done
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3001
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v10
@@ -300,13 +320,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Create shadow database
+        run: |
+          psql -h localhost -U spotify -c "CREATE DATABASE spotify_test_shadow;" || true
+        env:
+          PGPASSWORD: spotify_password
+
+      - name: Build ncs-parser
+        run: pnpm --filter @spotify/ncs-parser run build
+
       - name: Generate Prisma Client
         run: |
           cd apps/api
           pnpm prisma generate
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
       - name: Setup database
         run: |
@@ -315,26 +349,25 @@ jobs:
           pnpm prisma db seed
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
-      # TODO: Add e2e performance tests
-      # - name: Run query performance tests
-      #   run: |
-      #     cd apps/api
-      #     pnpm run test:e2e -t "performance"
-      #   env:
-      #     DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+      - name: Enable pg_stat_statements extension
+        run: |
+          psql -h localhost -U spotify -d spotify_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;" \
+            || echo "pg_stat_statements not available; skipping"
+        env:
+          PGPASSWORD: spotify_password
 
-      # TODO: Enable pg_stat_statements for query performance analysis
-      # Requires postgres to be configured with shared_preload_libraries='pg_stat_statements'
-      # - name: Enable pg_stat_statements extension
-      #   run: |
-      #     psql -h localhost -U spotify -d spotify_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
-      #   env:
-      #     PGPASSWORD: spotify_password
+      - name: Run query performance tests
+        run: |
+          cd apps/api
+          pnpm run test:e2e:performance
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
-      # - name: Analyze slow queries
-      #   run: |
-      #     psql -h localhost -U spotify -d spotify_test -c "SELECT query, calls, total_exec_time, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;"
-      #   env:
-      #     PGPASSWORD: spotify_password
+      - name: Analyze slow queries
+        run: |
+          psql -h localhost -U spotify -d spotify_test -c "SELECT query, calls, total_exec_time, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;" \
+            || echo "pg_stat_statements not available; skipping"
+        env:
+          PGPASSWORD: spotify_password

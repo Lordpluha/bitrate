@@ -19,9 +19,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
       if (typeof exceptionResponse === 'string') {
         message = exceptionResponse
       } else if (typeof exceptionResponse === 'object') {
-        const responseObj = exceptionResponse as Record<string, any>
-        message = responseObj.message || message
-        error = responseObj.error || error
+        const responseObj = exceptionResponse as Record<string, unknown>
+        if (typeof responseObj.message === 'string') {
+          message = responseObj.message
+        } else if (Array.isArray(responseObj.message)) {
+          message =
+            responseObj.message.filter((item) => typeof item === 'string').join(', ') || message
+        }
+
+        if (typeof responseObj.error === 'string') {
+          error = responseObj.error
+        }
       }
     } else if (exception instanceof Error) {
       // Handle NotFoundError from serve-static/send
