@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
 import { Button } from './button'
 import { Label } from './label'
@@ -16,7 +16,7 @@ const meta = {
     placeholder: 'Type your message here.',
     disabled: false,
   },
-} satisfies Meta<typeof Textarea>
+} satisfies StrictMeta<typeof Textarea>
 
 export default meta
 

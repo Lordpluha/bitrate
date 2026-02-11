@@ -10,7 +10,7 @@ export class CreateTrackDto implements z.infer<typeof CreateTrackSchema> {
   title: string
 
   @ApiProperty({ description: 'Audio file', type: 'string', format: 'binary' })
-  audio: any
+  audio: Express.Multer.File
 
   @ApiProperty({
     description: 'Cover image file',
@@ -18,5 +18,5 @@ export class CreateTrackDto implements z.infer<typeof CreateTrackSchema> {
     type: 'string',
     format: 'binary',
   })
-  cover?: any
+  cover?: Express.Multer.File
 }

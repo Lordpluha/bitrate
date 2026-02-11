@@ -11,11 +11,8 @@ pnpm add @spotify/converter
 
 ## Requirements
 
-- **FFmpeg** must be installed on your system
-- Install FFmpeg:
-  - Ubuntu/Debian: `sudo apt install ffmpeg`
-  - macOS: `brew install ffmpeg`
-  - Windows: Download from [ffmpeg.org](https://ffmpeg.org/download.html)
+- FFmpeg is bundled via `ffmpeg-static`, so no system install is required.
+- If you prefer system FFmpeg, ensure it’s available in PATH and replace `ffmpeg-static` usage accordingly.
 
 ## CLI Usage
 

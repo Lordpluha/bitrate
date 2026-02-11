@@ -1,8 +1,7 @@
-import type { AppConfig } from '@common/config'
 import { websocketConfig } from '@common/config/connections'
-import { TokenService } from '@modules/tokens/token.service'
-import { Logger } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { WsUserAuthGuard } from '@modules/users-auth/users-auth.ws.guard'
+import { Logger, UseGuards } from '@nestjs/common'
+import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host'
 import {
   ConnectedSocket,
   MessageBody,
@@ -14,6 +13,7 @@ import {
   WsResponse,
 } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
+import { z } from 'zod'
 import { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
 import { TracksService } from './tracks.service'
 
@@ -28,6 +28,7 @@ interface PlayingSession {
 }
 
 @WebSocketGateway(websocketConfig)
+@UseGuards(WsUserAuthGuard)
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server
@@ -36,41 +37,23 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private userSessions = new Map<string, string>() // userId -> socketId
   private playingSessions = new Map<string, PlayingSession>() // userId -> playing track info
 
+  private readonly trackPayloadSchema = z.object({
+    trackId: z.uuidv7(),
+    currentTime: z.number().min(0),
+  })
+
+  private readonly updatePayloadSchema = this.trackPayloadSchema.extend({
+    isPlaying: z.boolean(),
+  })
+
   constructor(
     private tracksService: TracksService,
-    private tokenService: TokenService,
-    private configService: ConfigService<AppConfig>,
+    private wsAuthGuard: WsUserAuthGuard,
   ) {}
 
   async handleConnection(client: AuthenticatedSocket) {
     try {
-      // Extract token ONLY from httpOnly cookies
-      const cookieHeader = client.handshake.headers.cookie
-      let token: string | undefined
-
-      if (cookieHeader) {
-        const cookies = cookieHeader.split(';').reduce(
-          (acc, cookie) => {
-            const [name, value] = cookie.trim().split('=')
-            if (name && value) {
-              acc[name] = value
-            }
-            return acc
-          },
-          {} as Record<string, string>,
-        )
-        token = cookies[this.configService.getOrThrow('ACCESS_TOKEN_NAME')]
-      }
-
-      if (!token) {
-        this.logger.error('No authentication cookie found')
-        client.disconnect()
-        return
-      }
-
-      // Verify token and set user data
-      const payload = await this.tokenService.verifyToken(token)
-      client.userId = payload.sub
+      await this.wsAuthGuard.canActivate(this.createWsContext(client))
 
       if (!client.userId) {
         this.logger.error('Invalid token payload - no user ID')
@@ -119,23 +102,28 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         throw new Error('Unauthorized')
       }
 
+      const parsed = this.trackPayloadSchema.safeParse(payload)
+      if (!parsed.success) {
+        throw new Error('Invalid payload')
+      }
+
       // Verify track exists
-      const track = await this.tracksService.findTrackById(payload.trackId)
+      const track = await this.tracksService.findTrackById(parsed.data.trackId)
       if (!track) {
         throw new Error('Track not found')
       }
 
       // Update user's playing session
       this.playingSessions.set(client.userId, {
-        trackId: payload.trackId,
-        currentTime: payload.currentTime,
+        trackId: parsed.data.trackId,
+        currentTime: parsed.data.currentTime,
         timestamp: Date.now(),
       })
 
       // Emit only to the user's personal room
       this.server.to(`user_${client.userId}`).emit('trackPlaying', {
-        trackId: payload.trackId,
-        currentTime: payload.currentTime,
+        trackId: parsed.data.trackId,
+        currentTime: parsed.data.currentTime,
         userId: client.userId,
       })
 
@@ -143,8 +131,8 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         event: 'playTrack',
         data: {
           success: true,
-          trackId: payload.trackId,
-          currentTime: payload.currentTime,
+          trackId: parsed.data.trackId,
+          currentTime: parsed.data.currentTime,
         },
       }
     } catch (error) {
@@ -172,13 +160,18 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         throw new Error('Unauthorized')
       }
 
+      const parsed = this.trackPayloadSchema.safeParse(payload)
+      if (!parsed.success) {
+        throw new Error('Invalid payload')
+      }
+
       // Remove from playing sessions
       this.playingSessions.delete(client.userId)
 
       // Emit only to the user's personal room
       this.server.to(`user_${client.userId}`).emit('trackPaused', {
-        trackId: payload.trackId,
-        currentTime: payload.currentTime,
+        trackId: parsed.data.trackId,
+        currentTime: parsed.data.currentTime,
         userId: client.userId,
       })
 
@@ -186,8 +179,8 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         event: 'pauseTrack',
         data: {
           success: true,
-          trackId: payload.trackId,
-          currentTime: payload.currentTime,
+          trackId: parsed.data.trackId,
+          currentTime: parsed.data.currentTime,
         },
       }
     } catch (error) {
@@ -215,10 +208,15 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         throw new Error('Unauthorized')
       }
 
-      if (payload.isPlaying) {
+      const parsed = this.updatePayloadSchema.safeParse(payload)
+      if (!parsed.success) {
+        throw new Error('Invalid payload')
+      }
+
+      if (parsed.data.isPlaying) {
         this.playingSessions.set(client.userId, {
-          trackId: payload.trackId,
-          currentTime: payload.currentTime,
+          trackId: parsed.data.trackId,
+          currentTime: parsed.data.currentTime,
           timestamp: Date.now(),
         })
       } else {
@@ -227,9 +225,9 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       // Emit only to the user's personal room
       this.server.to(`user_${client.userId}`).emit('trackUpdated', {
-        trackId: payload.trackId,
-        currentTime: payload.currentTime,
-        isPlaying: payload.isPlaying,
+        trackId: parsed.data.trackId,
+        currentTime: parsed.data.currentTime,
+        isPlaying: parsed.data.isPlaying,
         userId: client.userId,
       })
 
@@ -237,9 +235,9 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         event: 'updateStreaming',
         data: {
           success: true,
-          trackId: payload.trackId,
-          currentTime: payload.currentTime,
-          isPlaying: payload.isPlaying,
+          trackId: parsed.data.trackId,
+          currentTime: parsed.data.currentTime,
+          isPlaying: parsed.data.isPlaying,
         },
       }
     } catch (error) {
@@ -286,6 +284,12 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private calculateCurrentTime(session: PlayingSession): number {
     const elapsed = (Date.now() - session.timestamp) / 1000
     return session.currentTime + elapsed
+  }
+
+  private createWsContext(client: AuthenticatedSocket) {
+    const context = new ExecutionContextHost([client])
+    context.setType('ws')
+    return context
   }
 
   // Method to emit events from controller

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -35,7 +35,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 /**
  * A container that groups related buttons together with consistent styling.
  */
-const meta: Meta<typeof ButtonGroup> = {
+const meta = {
   title: 'ui/ButtonGroup',
   component: ButtonGroup,
   tags: ['autodocs'],
@@ -51,7 +51,7 @@ const meta: Meta<typeof ButtonGroup> = {
   args: {
     orientation: 'horizontal',
   },
-} satisfies Meta<typeof ButtonGroup>
+} satisfies StrictMeta<typeof ButtonGroup>
 
 export default meta
 

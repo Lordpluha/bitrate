@@ -12,7 +12,7 @@ on:
           - production
 
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - 'apps/**'
       - 'packages/**'
@@ -55,7 +55,7 @@ jobs:
 
       - name: Build and push images
         run: |
-          for service in api web admin; do
+          for service in api web-player web-artists admin; do
             docker build \
               --file ./apps/$service/Dockerfile \
               --tag ghcr.io/${{ github.repository }}/$service:${{ env.DEPLOY_ENV }} \

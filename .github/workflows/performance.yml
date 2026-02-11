@@ -4,7 +4,8 @@ on:
   pull_request:
     paths:
       - 'apps/api/**'
-      - 'apps/web/**'
+      - 'apps/web-player/**'
+      - 'apps/web-artists/**'
   schedule:
     # Run weekly performance tests
     - cron: '0 2 * * 1'
@@ -20,6 +21,7 @@ jobs:
   api-load-test:
     name: API Load Testing
     runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     services:
       postgres:
@@ -61,10 +63,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Create shadow database
+        run: |
+          psql -h localhost -U spotify -c "CREATE DATABASE spotify_test_shadow;" || true
+        env:
+          PGPASSWORD: spotify_password
+
+      - name: Build ncs-parser
+        run: pnpm --filter @spotify/ncs-parser run build
+
       - name: Generate Prisma Client
         run: |
           cd apps/api
           pnpm prisma generate
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
       - name: Build API
         run: |
@@ -78,6 +97,7 @@ jobs:
           pnpm prisma db seed
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
       - name: Start API server
         run: |
@@ -109,7 +129,7 @@ jobs:
           sudo apt-get install k6
 
       - name: Run load tests
-        run: k6 run tests/load/api-load-test.js --summary-export=results.json
+        run: pnpm --filter @spotify/load-test run load:api
         env:
           API_URL: http://localhost:3001
         continue-on-error: true
@@ -167,6 +187,7 @@ jobs:
   lighthouse:
     name: Lighthouse CI
     runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v4
@@ -187,23 +208,33 @@ jobs:
         run: pnpm --filter @spotify/ui-react run build
 
       - name: Build web app
-        run: pnpm --filter @spotify/web run build
+        run: pnpm --filter @spotify/web-player run build
         env:
           NEXT_PUBLIC_API_URL: http://localhost:3001
 
       - name: Start web app
         run: |
-          cd apps/web
-          pnpm run start &
-          sleep 10
+          cd apps/web-player
+          pnpm exec next start -p 3001 &
+          # Wait for server to be ready
+          for i in {1..30}; do
+            if curl -f http://localhost:3001 > /dev/null 2>&1; then
+              echo "Web app is ready"
+              break
+            fi
+            echo "Waiting for web app... ($i/30)"
+            sleep 1
+          done
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3001
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v10
         with:
           urls: |
-            http://localhost:3000
-            http://localhost:3000/browse
-            http://localhost:3000/search
+            http://localhost:3001
+            http://localhost:3001/browse
+            http://localhost:3001/search
           uploadArtifacts: false
           temporaryPublicStorage: true
 
@@ -211,7 +242,7 @@ jobs:
   bundle-analysis:
     name: Bundle Analysis
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v4
@@ -230,30 +261,34 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm --filter @spotify/api run db:gen
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Build dependencies
         run: pnpm --filter @spotify/ui-react run build
 
       - name: Build with bundle analyzer
-        run: ANALYZE=true pnpm --filter @spotify/web run build
+        run: ANALYZE=true pnpm --filter @spotify/web-player run build
 
       - name: Upload bundle report
         uses: actions/upload-artifact@v4
         with:
           name: bundle-analysis
-          path: apps/web/.next/analyze
+          path: apps/web-player/.next/analyze
 
       - name: Compare bundle sizes
         uses: preactjs/compressed-size-action@v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: 'apps/web/.next/static/**/*.js'
+          pattern: 'apps/web-player/.next/static/**/*.js'
           compression: gzip
 
   # Database query performance
   db-performance:
     name: Database Performance
     runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     services:
       postgres:
@@ -285,10 +320,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Create shadow database
+        run: |
+          psql -h localhost -U spotify -c "CREATE DATABASE spotify_test_shadow;" || true
+        env:
+          PGPASSWORD: spotify_password
+
+      - name: Build ncs-parser
+        run: pnpm --filter @spotify/ncs-parser run build
+
       - name: Generate Prisma Client
         run: |
           cd apps/api
           pnpm prisma generate
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
       - name: Setup database
         run: |
@@ -297,25 +349,25 @@ jobs:
           pnpm prisma db seed
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
-      # TODO: Add e2e performance tests
-      # - name: Run query performance tests
-      #   run: |
-      #     cd apps/api
-      #     pnpm run test:e2e -t "performance"
-      #   env:
-      #     DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+      - name: Enable pg_stat_statements extension
+        run: |
+          psql -h localhost -U spotify -d spotify_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;" \
+            || echo "pg_stat_statements not available; skipping"
+        env:
+          PGPASSWORD: spotify_password
 
-      # TODO: Enable pg_stat_statements for query performance analysis
-      # Requires postgres to be configured with shared_preload_libraries='pg_stat_statements'
-      # - name: Enable pg_stat_statements extension
-      #   run: |
-      #     psql -h localhost -U spotify -d spotify_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
-      #   env:
-      #     PGPASSWORD: spotify_password
+      - name: Run query performance tests
+        run: |
+          cd apps/api
+          pnpm run test:e2e:performance
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
-      # - name: Analyze slow queries
-      #   run: |
-      #     psql -h localhost -U spotify -d spotify_test -c "SELECT query, calls, total_exec_time, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;"
-      #   env:
-      #     PGPASSWORD: spotify_password
+      - name: Analyze slow queries
+        run: |
+          psql -h localhost -U spotify -d spotify_test -c "SELECT query, calls, total_exec_time, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;" \
+            || echo "pg_stat_statements not available; skipping"
+        env:
+          PGPASSWORD: spotify_password

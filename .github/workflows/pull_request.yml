@@ -3,6 +3,8 @@ name: PR Quality Checks
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  push:
+    branches: [develop]
 
 # Cancel previous runs for the same PR
 concurrency:
@@ -99,6 +101,9 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm --filter @spotify/api run db:gen
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test
 
       - name: Build all packages
         run: pnpm build
@@ -110,6 +115,18 @@ jobs:
 
       - name: Run tests
         run: pnpm test
+        continue-on-error: true
+
+      - name: Run integration tests
+        run: pnpm --filter @spotify/api run test:int
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+        continue-on-error: true
+
+      - name: Run e2e tests
+        run: pnpm --filter @spotify/api run test:e2e
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
         continue-on-error: true
 
       - name: Upload coverage
@@ -130,7 +147,7 @@ jobs:
 
     strategy:
       matrix:
-        service: [api, web]
+        service: [api, web-player, web-artists]
 
     steps:
       - name: Checkout

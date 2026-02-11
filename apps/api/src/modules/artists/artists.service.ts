@@ -1,5 +1,5 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { CreateArtistDto } from './dtos'
 import { ArtistEntity } from './entities'
 
@@ -64,24 +64,42 @@ export class ArtistsService {
   async findByUsername(username: ArtistEntity['username']) {
     return await this.prisma.artist.findUnique({
       where: { username },
+      omit: {
+        password: true,
+        email: true,
+      },
     })
   }
 
-  async update(id: ArtistEntity['id'], artist: Partial<ArtistEntity>) {
+  async update(
+    id: ArtistEntity['id'],
+    artist: Partial<ArtistEntity>,
+    currentArtistId: ArtistEntity['id'],
+  ) {
+    if (id !== currentArtistId) {
+      throw new UnauthorizedException('Unauthorized')
+    }
+
     return await this.prisma.artist.update({
       where: { id },
       data: artist,
       omit: {
         password: true,
+        email: true,
       },
     })
   }
 
-  async delete(id: ArtistEntity['id']) {
+  async requestDelete(id: ArtistEntity['id'], currentArtistId: ArtistEntity['id']) {
+    if (id !== currentArtistId) {
+      throw new UnauthorizedException('Unauthorized')
+    }
+
     return await this.prisma.artist.delete({
       where: { id },
       omit: {
         password: true,
+        email: true,
       },
     })
   }

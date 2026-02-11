@@ -67,7 +67,7 @@ export class ArtistAuthGuard implements CanActivate {
     ])
 
     const request = context.switchToHttp().getRequest<Request>()
-    // Extract tokens ONLY from httpOnly cookies
+    // Extract tokens from httpOnly cookies
     const { access_token, refresh_token } = this.extractTokenFromCookie(request)
 
     // 1) проверяем наличие нужных токенов

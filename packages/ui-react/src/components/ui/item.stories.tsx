@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj, StrictMeta } from '@storybook/react-vite'
 import {
   BadgeCheckIcon,
   ChevronDownIcon,
@@ -33,7 +33,7 @@ import {
 /**
  * A versatile component that you can use to display any content.
  */
-const meta: Meta<typeof Item> = {
+const meta = {
   title: 'ui/Item',
   component: Item,
   tags: ['autodocs'],
@@ -54,7 +54,7 @@ const meta: Meta<typeof Item> = {
     variant: 'default',
     size: 'default',
   },
-} satisfies Meta<typeof Item>
+} satisfies StrictMeta<typeof Item>
 
 export default meta
 

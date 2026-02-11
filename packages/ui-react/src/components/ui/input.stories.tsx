@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { expect, userEvent } from 'storybook/test'
 
 import { Button } from './button'
@@ -22,7 +22,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof Input>
+} satisfies StrictMeta<typeof Input>
 
 export default meta
 

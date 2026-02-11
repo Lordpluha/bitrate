@@ -1,28 +1,28 @@
 'use client'
 
-import React from 'react'
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { cn } from '@/lib/utils'
+import type { FC, ReactNode } from 'react'
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
 export interface ResizablePanelProps {
   defaultSize?: number
   minSize?: number
   maxSize?: number
   className?: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export interface ResizableLayoutProps {
   direction?: 'horizontal' | 'vertical'
   className?: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export interface ResizableHandleProps {
   className?: string
 }
 
-export const ResizableLayout: React.FC<ResizableLayoutProps> = ({
+export const ResizableLayout: FC<ResizableLayoutProps> = ({
   direction = 'horizontal',
   className,
   children,
@@ -34,7 +34,7 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = ({
   )
 }
 
-export const ResizablePanel: React.FC<ResizablePanelProps> = ({
+export const ResizablePanel: FC<ResizablePanelProps> = ({
   defaultSize = 50,
   minSize = 10,
   maxSize = 90,
@@ -53,7 +53,7 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
   )
 }
 
-export const ResizableHandle: React.FC<ResizableHandleProps> = ({ className }) => {
+export const ResizableHandle: FC<ResizableHandleProps> = ({ className }) => {
   return (
     <PanelResizeHandle
       className={cn(

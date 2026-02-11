@@ -1,6 +1,18 @@
-import { UserEntity } from '@modules/users'
-import { UserAuth } from '@modules/users-auth/users-auth.guard'
-import { Body, Controller, Delete, Get, ParseUUIDPipe, Post, Put, Query, Req } from '@nestjs/common'
+import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
+import { ArtistAuthRequest } from '@modules/artists-auth/types'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
+  Req,
+} from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AlbumsService } from './albums.service'
@@ -22,51 +34,54 @@ export class AlbumsController {
   @GetAlbumsSwagger()
   @Get('')
   async getAllAlbums(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
+    @Query('page', ParseIntPipe) page?: number,
+    @Query('limit', ParseIntPipe) limit?: number,
     @Query('title') title?: AlbumEntity['title'],
   ) {
     return await this.albumsService.findAll({
-      limit: Number(limit),
-      page: Number(page),
+      limit,
+      page,
       title,
     })
   }
 
   @GetAlbumByIdSwagger()
   @Get(':id')
-  async getById(@Query('id', ParseUUIDPipe) id: AlbumEntity['id']) {
+  async getById(@Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
     return await this.albumsService.getById(id)
   }
 
   @CreateAlbumSwagger()
-  @UserAuth()
+  @ArtistAuth()
   @Post('')
   async createAlbum(
-    @Req() req: Request,
+    @Req() req: ArtistAuthRequest,
     @Body(new ZodValidationPipe(CreateAlbumSchema)) createDto: CreateAlbumDto,
   ) {
-    const jwtArtist = req['user'] as UserEntity
-    return await this.albumsService.create(jwtArtist.id, createDto)
+    const artistId = req.artist.id
+    return await this.albumsService.create(artistId, createDto)
   }
 
   @UpdateAlbumByIdSwagger()
-  @UserAuth()
+  @ArtistAuth()
   @Put(':id')
   async updateAlbum(
-    @Req() req: Request,
-    @Query('id', ParseUUIDPipe) id: AlbumEntity['id'],
+    @Req() req: ArtistAuthRequest,
+    @Param('id', ParseUUIDPipe) id: AlbumEntity['id'],
     @Body(new ZodValidationPipe(UpdateAlbumSchema)) updateDto: UpdateAlbumDto,
   ) {
-    const jwtArtist = req['user'] as UserEntity
-    return await this.albumsService.update(jwtArtist.id, id, updateDto)
+    const artistId = req.artist.id
+    return await this.albumsService.update(artistId, id, updateDto)
   }
 
   @DeleteAlbumSwagger()
-  @UserAuth()
+  @ArtistAuth()
   @Delete(':id')
-  async deleteAlbum(@Req() req: Request, @Query('id', ParseUUIDPipe) id: AlbumEntity['id']) {
-    const jwtArtist = req['user'] as UserEntity
-    return await this.albumsService.delete(jwtArtist.id, id)
+  async deleteAlbum(
+    @Req() req: ArtistAuthRequest,
+    @Param('id', ParseUUIDPipe) id: AlbumEntity['id'],
+  ) {
+    const artistId = req.artist.id
+    return await this.albumsService.delete(artistId, id)
   }
 }

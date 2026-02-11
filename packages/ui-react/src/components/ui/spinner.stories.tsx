@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { ArrowUpIcon } from 'lucide-react'
 
 import { Badge } from './badge'
@@ -17,14 +17,14 @@ import { Spinner } from './spinner'
 /**
  * An indicator that can be used to show a loading state.
  */
-const meta: Meta<typeof Spinner> = {
+const meta = {
   title: 'ui/Spinner',
   component: Spinner,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof Spinner>
+} satisfies StrictMeta<typeof Spinner>
 
 export default meta
 

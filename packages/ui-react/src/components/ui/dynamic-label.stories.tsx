@@ -1,8 +1,72 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
+import * as React from 'react'
 
 import { DynamicLabel } from './dynamic-label'
-import { Input } from './input'
-import { PasswordInput } from './password-input'
+import { Input, type InputProps } from './input'
+import { InputProvider, useInputContext } from './input-context'
+import { PasswordInput, type PasswordInputProps } from './password-input'
+
+const InputWithContext: React.FC<InputProps> = ({ className, type, variant, ...props }) => {
+  const { setFocused, setValue } = useInputContext()
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    setFocused(true)
+    props.onFocus?.(e)
+  }
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setFocused(false)
+    setValue(!!e.target.value)
+    props.onBlur?.(e)
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(!!e.target.value)
+    props.onChange?.(e)
+  }
+
+  return (
+    <Input
+      type={type}
+      className={className}
+      variant={variant}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onChange={handleChange}
+      {...props}
+    />
+  )
+}
+
+const PasswordInputWithContext: React.FC<PasswordInputProps> = ({ className, ...props }) => {
+  const { setFocused, setValue } = useInputContext()
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    setFocused(true)
+    props.onFocus?.(e)
+  }
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setFocused(false)
+    setValue(!!e.target.value)
+    props.onBlur?.(e)
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(!!e.target.value)
+    props.onChange?.(e)
+  }
+
+  return (
+    <PasswordInput
+      className={className}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onChange={handleChange}
+      {...props}
+    />
+  )
+}
 
 /**
  * A dynamic floating label that can be used as a drop-in replacement for regular labels.
@@ -15,7 +79,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof DynamicLabel>
+} satisfies StrictMeta<typeof DynamicLabel>
 
 export default meta
 
@@ -26,10 +90,12 @@ type Story = StoryObj<typeof DynamicLabel>
  */
 export const WithInput: Story = {
   render: () => (
-    <div className="relative w-96">
-      <DynamicLabel htmlFor="email-input">Email Address</DynamicLabel>
-      <Input id="email-input" type="email" placeholder="" />
-    </div>
+    <InputProvider>
+      <div className="relative w-96">
+        <DynamicLabel htmlFor="email-input">Email Address</DynamicLabel>
+        <InputWithContext id="email-input" type="email" placeholder="" />
+      </div>
+    </InputProvider>
   ),
 }
 
@@ -38,10 +104,12 @@ export const WithInput: Story = {
  */
 export const WithPasswordInput: Story = {
   render: () => (
-    <div className="relative w-96">
-      <DynamicLabel htmlFor="password-input">Password</DynamicLabel>
-      <PasswordInput id="password-input" placeholder="" />
-    </div>
+    <InputProvider>
+      <div className="relative w-96">
+        <DynamicLabel htmlFor="password-input">Password</DynamicLabel>
+        <PasswordInputWithContext id="password-input" placeholder="" />
+      </div>
+    </InputProvider>
   ),
 }
 
@@ -50,14 +118,16 @@ export const WithPasswordInput: Story = {
  */
 export const Contrast: Story = {
   render: () => (
-    <div className="bg-contrast p-8 rounded-lg">
-      <div className="relative w-96">
-        <DynamicLabel htmlFor="username-input" variant="contrast">
-          Username
-        </DynamicLabel>
-        <Input id="username-input" variant="contrast" placeholder="" />
+    <InputProvider>
+      <div className="bg-contrast p-8 rounded-lg">
+        <div className="relative w-96">
+          <DynamicLabel htmlFor="username-input" variant="contrast">
+            Username
+          </DynamicLabel>
+          <InputWithContext id="username-input" variant="contrast" placeholder="" />
+        </div>
       </div>
-    </div>
+    </InputProvider>
   ),
 }
 
@@ -66,21 +136,23 @@ export const Contrast: Story = {
  */
 export const FormExample: Story = {
   render: () => (
-    <form className="space-y-6 w-96">
-      <div className="relative">
-        <DynamicLabel htmlFor="form-name">Full Name</DynamicLabel>
-        <Input id="form-name" placeholder="" />
-      </div>
+    <InputProvider>
+      <form className="space-y-6 w-96">
+        <div className="relative">
+          <DynamicLabel htmlFor="form-name">Full Name</DynamicLabel>
+          <InputWithContext id="form-name" placeholder="" />
+        </div>
 
-      <div className="relative">
-        <DynamicLabel htmlFor="form-email">Email Address</DynamicLabel>
-        <Input id="form-email" type="email" placeholder="" />
-      </div>
+        <div className="relative">
+          <DynamicLabel htmlFor="form-email">Email Address</DynamicLabel>
+          <InputWithContext id="form-email" type="email" placeholder="" />
+        </div>
 
-      <div className="relative">
-        <DynamicLabel htmlFor="form-password">Password</DynamicLabel>
-        <PasswordInput id="form-password" placeholder="" />
-      </div>
-    </form>
+        <div className="relative">
+          <DynamicLabel htmlFor="form-password">Password</DynamicLabel>
+          <PasswordInputWithContext id="form-password" placeholder="" />
+        </div>
+      </form>
+    </InputProvider>
   ),
 }

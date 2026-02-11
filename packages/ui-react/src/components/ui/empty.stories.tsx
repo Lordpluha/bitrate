@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { Bell, Cloud, PlusIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -17,14 +17,14 @@ import { Kbd } from '@/components/ui/kbd'
 /**
  * Use the Empty component to display a empty state.
  */
-const meta: Meta<typeof Empty> = {
+const meta = {
   title: 'ui/Empty',
   component: Empty,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof Empty>
+} satisfies StrictMeta<typeof Empty>
 
 export default meta
 
