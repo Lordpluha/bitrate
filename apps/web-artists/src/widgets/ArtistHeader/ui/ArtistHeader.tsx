@@ -1,84 +1,111 @@
 'use client'
 
-import React from 'react'
+import { useState, useCallback, useRef, useEffect, useMemo, type ReactNode } from 'react'
 import { ArtistLogo } from '@shared/ui'
+import { cn } from '@spotify/ui-react'
 
 import { NavLinks } from './NavLink/NavLink'
 import { AuthButtons } from './AuthButtons/AuthButtons'
+import { BurgerMenu } from './BurgerMenu/BurgerMenu'
 import { SwitchLanguagesButton } from './SwitchLanguagesButton/SwitchLanguagesButton'
 import { SubMenuContent } from './SubMenuContent/SubMenuContent'
+import { SubmenuProvider } from '../model/SubmenuContext'
 import links from '../config/nav-links.json'
 
-interface LinkItem {
-  title: string
-  href: string
-  submenu?: Array<{
-    title: string
-    sections?: Array<{
-      title: string
-      href: string
-    }>
-  }>
-  resources?: Array<{
-    id: string
-    title: string
-    description: string
-    imageSrc: string
-    href: string
-  }>
+interface ArtistHeaderProps {
+  children?: ReactNode
 }
 
-export const ArtistHeader = () => {
-  const [activeSubmenu, setActiveSubmenu] = React.useState<string | null>(null)
-  const [isClosing, setIsClosing] = React.useState(false)
-  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+export const ArtistHeader = ({ children }: ArtistHeaderProps) => {
 
-  const typedLinks = links as LinkItem[]
-  const activeLink = typedLinks.find((link) => link.title === activeSubmenu)
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const submenuData = activeLink?.submenu || activeLink?.resources || null
-  const submenuType = activeLink?.submenu ? 'features' : 'resources'
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const rafRef = useRef<number | null>(null);
 
-  const clearTimer = React.useCallback(() => {
+  const activeLink = links.find((link) => link.title === activeSubmenu);
+
+  const submenuData = activeLink?.submenu || activeLink?.resources || null;
+  const submenuType = activeLink?.submenu ? 'features' : 'resources';
+
+  const clearTimer = useCallback(() => {
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
-      timeoutRef.current = null
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
   }, [])
 
-  const handleSetActiveSubmenu = React.useCallback(
+  const handleSetActiveSubmenu = useCallback(
     (value: string | null) => {
-      clearTimer()
-      setIsClosing(false)
-      setActiveSubmenu(value)
+      clearTimer();
+      setIsClosing(false);
+      setActiveSubmenu(value);
     },
     [clearTimer],
   )
 
-  const handleCloseSubmenu = React.useCallback(() => {
+  const handleCloseSubmenu = useCallback(() => {
     if (!activeSubmenu || isClosing) return
 
-    clearTimer()
-    setIsClosing(true)
+    clearTimer();
+    setIsClosing(true);
     timeoutRef.current = setTimeout(() => {
-      setActiveSubmenu(null)
-      setIsClosing(false)
+      setActiveSubmenu(null);
+      setIsClosing(false);
     }, 300)
   }, [activeSubmenu, isClosing, clearTimer])
 
-  const handleMenuEnter = React.useCallback(() => {
-    clearTimer()
-    setIsClosing(false)
+  const handleMenuEnter = useCallback(() => {
+    clearTimer();
+    setIsClosing(false);
   }, [clearTimer])
 
-  React.useEffect(() => {
-    return () => clearTimer()
+  useEffect(() => {
+    return () => clearTimer();
   }, [clearTimer])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const threshold = 10;
+
+    const onScroll = () => {
+      if (rafRef.current !== null) return
+
+      rafRef.current = requestAnimationFrame(() => {
+        const y = window.scrollY || window.pageYOffset;
+        setIsScrolled(y > threshold);
+        if (rafRef.current) {
+          window.cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+      })
+    }
+
+    onScroll();
+    window.addEventListener('scroll', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (rafRef.current) {
+        window.cancelAnimationFrame(rafRef.current);
+      }
+    }
+  }, []);
+
+  const headerIsDark = useMemo(() => {
+    return Boolean(isScrolled || (activeSubmenu && submenuData) || isClosing);
+  }, [isScrolled, activeSubmenu, submenuData, isClosing]);
 
   return (
-    <>
+    <SubmenuProvider activeSubmenu={activeSubmenu} isClosing={isClosing}>
       <header
-        className="fixed top-0 left-0 right-0 bg-black z-1052"
+        className={
+          cn("fixed top-0 left-0 right-0 z-1052",
+            'transition-colors duration-400 ease-out',
+            headerIsDark ? 'bg-black' : 'bg-transparent')}
         onMouseEnter={handleMenuEnter}
         onMouseLeave={handleCloseSubmenu}
       >
@@ -86,15 +113,20 @@ export const ArtistHeader = () => {
           <ArtistLogo />
 
           <NavLinks
+            className='hidden lg:flex'
             activeSubmenu={activeSubmenu}
             setActiveSubmenu={handleSetActiveSubmenu}
             closeSubmenu={handleCloseSubmenu}
           />
 
-          <section className="flex items-center gap-2">
+          <section className="items-center gap-2 hidden lg:flex">
             <SwitchLanguagesButton />
             <AuthButtons />
           </section>
+
+          <div className='lg:hidden'>
+            <BurgerMenu />
+          </div>
         </div>
       </header>
 
@@ -106,6 +138,8 @@ export const ArtistHeader = () => {
         onMouseEnter={handleMenuEnter}
         onMouseLeave={handleCloseSubmenu}
       />
-    </>
+
+      {children}
+    </SubmenuProvider>
   )
 }

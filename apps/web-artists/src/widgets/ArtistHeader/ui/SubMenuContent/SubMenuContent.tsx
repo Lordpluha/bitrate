@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import { useEffect, useState, useRef, useCallback, memo, useMemo } from 'react'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { cn } from '@spotify/ui-react'
 import Link from 'next/link'
@@ -26,25 +26,19 @@ interface ResourceItem {
   href: string
 }
 
+interface ResourceGroup {
+  title: string
+  sections?: ResourceItem[]
+}
+
 interface SubMenuContentProps {
   activeSubmenu: string | null
-  submenuData: SubmenuGroup[] | ResourceItem[] | null
+  submenuData: SubmenuGroup[] | ResourceGroup[] | null
   type: 'features' | 'resources'
   isClosing: boolean
   onMouseEnter?: () => void
   onMouseLeave?: () => void
 }
-
-const linkUnderlineClasses = cn(
-  'text-white font-bold',
-  'relative inline-block',
-  'before:content-[""]',
-  'before:absolute before:left-0 before:-bottom-px',
-  'before:h-0.5 before:w-full before:bg-white',
-  'before:origin-left before:scale-x-0',
-  'before:transition-transform before:duration-300 before:ease-in-out',
-  'hover:before:scale-x-100',
-)
 
 export const SubMenuContent: React.FC<SubMenuContentProps> = ({
   activeSubmenu,
@@ -54,40 +48,63 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
   onMouseEnter,
   onMouseLeave,
 }) => {
-  const nodeRef = React.useRef(null)
-  const contentRef = React.useRef<HTMLDivElement>(null)
-  const [contentHeight, setContentHeight] = React.useState<number>(0)
-  const isVisible = (activeSubmenu && submenuData) || isClosing
+  const nodeRef = useRef<HTMLDivElement | null>(null);
+  const [contentHeight, setContentHeight] = useState<number>(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const isVisible = (activeSubmenu && submenuData) || isClosing;
 
-  React.useEffect(() => {
-    if (!contentRef.current) return
+  const updateHeight = useCallback((immediate = false) => {
+    if (!nodeRef.current) {
+      setContentHeight(0)
+      return
+    }
 
-    const updateHeight = () => {
-      if (contentRef.current && isVisible) {
-        const height = contentRef.current.scrollHeight
+    const height = nodeRef.current.scrollHeight
+    if (immediate) {
+      setContentHeight(height)
+    } else {
+      requestAnimationFrame(() => {
         setContentHeight(height)
-      } else {
-        setContentHeight(0)
-      }
+      })
     }
+  }, [])
 
-    updateHeight()
+  const handleExiting = useCallback(() => {
+    setIsTransitioning(true)
+    if (nodeRef.current) {
+      setContentHeight(nodeRef.current.scrollHeight)
+    }
+  }, [])
 
-    const resizeObserver = new ResizeObserver(() => {
-      updateHeight()
+  const handleExited = useCallback(() => {
+    setIsTransitioning(false)
+  }, [])
+
+  const handleEntering = useCallback(() => {
+    setIsTransitioning(true)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (nodeRef.current) {
+          setContentHeight(nodeRef.current.scrollHeight)
+        }
+      })
     })
+  }, [])
 
-    if (contentRef.current) {
-      resizeObserver.observe(contentRef.current)
+  const handleEntered = useCallback(() => {
+    setIsTransitioning(false)
+    if (nodeRef.current) {
+      setContentHeight(nodeRef.current.scrollHeight)
     }
+  }, [])
 
-    const timeoutId = setTimeout(updateHeight, 100)
-
-    return () => {
-      resizeObserver.disconnect()
-      clearTimeout(timeoutId)
+  useEffect(() => {
+    if (!isVisible) {
+      setContentHeight(0)
+      return
     }
-  }, [isVisible, type, submenuData])
+    updateHeight(true)
+  }, [isVisible, submenuData, updateHeight])
 
   return (
     <div
@@ -95,59 +112,62 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       className={cn(
-        'fixed left-0 right-0 bg-black backdrop-blur-xl z-1051 top-[72px]',
+        'fixed left-0 right-0 bg-black z-1051 top-[72px]',
         'transition-all duration-300 ease-out',
         activeSubmenu && submenuData && !isClosing
           ? 'translate-y-0 opacity-100 pointer-events-auto visible'
           : '-translate-y-4 opacity-0 pointer-events-none invisible',
       )}
       style={{
-        maxHeight: isVisible ? `${contentHeight}px` : '0px',
+        height: isVisible ? `${contentHeight}px` : '0px',
         overflow: 'hidden',
+        transition: 'height 300ms cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
-      <div ref={contentRef}>
-        <SwitchTransition mode="out-in">
-          <CSSTransition
-            key={type}
-            nodeRef={nodeRef}
-            timeout={300}
-            classNames="submenu-fade"
-          >
-            <div ref={nodeRef}>
-              {type === 'features' &&
-                submenuData &&
-                Array.isArray(submenuData) && (
-                  <FeaturesContent data={submenuData as SubmenuGroup[]} />
-                )}
-              {type === 'resources' &&
-                submenuData &&
-                Array.isArray(submenuData) && (
-                  <ResourcesContent data={submenuData as ResourceItem[]} />
-                )}
-            </div>
-          </CSSTransition>
-        </SwitchTransition>
-      </div>
+      <SwitchTransition mode="out-in">
+        <CSSTransition
+          key={type}
+          nodeRef={nodeRef}
+          timeout={300}
+          classNames="submenu-fade"
+          onExiting={handleExiting}
+          onExited={handleExited}
+          onEntering={handleEntering}
+          onEntered={handleEntered}
+        >
+          <div ref={nodeRef}>
+            {type === 'features' &&
+              submenuData &&
+              Array.isArray(submenuData) && (
+                <FeaturesContent data={submenuData as SubmenuGroup[]} />
+              )}
+            {type === 'resources' &&
+              submenuData &&
+              Array.isArray(submenuData) && (
+                <ResourcesContent data={submenuData as ResourceGroup[]} />
+              )}
+          </div>
+        </CSSTransition>
+      </SwitchTransition>
     </div>
   )
 }
 
-const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = ({ data }) => {
+const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = memo(({ data }) => {
   return (
     <div className="container pb-10 pt-8 grid grid-cols-4 gap-8">
       {data.map((group) => (
-        <div key={group.title}>
-          <h4 className="text-base text-subdued font-bold">{group.title}</h4>
+        <div key={group.title}>memo(
+          <h4 className="text-base text-neutral-400 font-[400]">{group.title}</h4>
 
           {group.sections && group.sections.length > 0 && (
             <ul className="mt-4 space-y-2">
               {group.sections.map((section, idx) => (
-                <li key={section.title} className={cn('mb-4')}>
+                <li key={section.title} className={cn('mb-4 font-[700]')}>
                   <Link
                     href={section.href}
                     className={cn(
-                      linkUnderlineClasses,
+                      'link-underline text-white',
                       idx === 0 && 'text-4xl',
                     )}
                   >
@@ -161,87 +181,112 @@ const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = ({ data }) => {
       ))}
     </div>
   )
-}
+})
 
-const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
-  const newsId = data.find((d) => d.id === 'news')?.id ?? data[0]?.id ?? null
-  const [activeId, setActiveId] = React.useState<string | null>(newsId)
-  const [lastActiveId, setLastActiveId] = React.useState<string | null>(newsId)
+FeaturesContent.displayName = 'FeaturesContent'
 
-  const activeItem = data.find((d) => d.id === activeId) || data[0]
+const ResourcesContent: React.FC<{ data: ResourceGroup[] }> = memo(({ data }) => {
+  const allItems = useMemo(
+    () => data.flatMap((group) => group.sections || []),
+    [data]
+  )
+  
+  const newsId = useMemo(
+    () => allItems.find((d) => d.id === 'news')?.id ?? allItems[0]?.id ?? null,
+    [allItems]
+  )
+  
+  const [activeId, setActiveId] = useState<string | null>(newsId)
+  const [lastActiveId, setLastActiveId] = useState<string | null>(newsId)
 
-  React.useEffect(() => {
-    data.forEach((d) => {
+  const activeItem = useMemo(
+    () => allItems.find((d) => d.id === activeId) || allItems[0],
+    [allItems, activeId]
+  )
+
+  useEffect(() => {
+    allItems.forEach((d) => {
       const img = new window.Image()
       img.src = d.imageSrc
     })
-  }, [data])
+  }, [allItems])
 
-  const handleEnter = (id: string) => {
+  const handleEnter = useCallback((id: string) => {
     setActiveId(id)
     setLastActiveId(id)
     sessionStorage.setItem('resourcesActiveId', id)
-  }
+  }, [])
 
-  const handleLeave = () => {
+  const handleLeave = useCallback(() => {
     setActiveId(lastActiveId)
-  }
+  }, [lastActiveId])
 
   return (
     <div className="container grid grid-cols-12 gap-x-6 py-8">
-      <section className="col-span-3 flex flex-col gap-4">
-        <h5 className="text-base text-subdued">Deep dives</h5>
-        {data.slice(0, 2).map((item) => (
-          <h4 key={item.id} className="text-5xl font-bold">
-            <Link
-              href={item.href}
-              onMouseEnter={() => handleEnter(item.id)}
-              onMouseLeave={handleLeave}
-              onFocus={() => handleEnter(item.id)}
-              onBlur={handleLeave}
-              className={cn(
-                linkUnderlineClasses,
-                'text-subdued transition-colors duration-300',
-                {
-                  'text-white': activeId === item.id,
-                },
-              )}
-            >
-              {item.title}
-            </Link>
-          </h4>
-        ))}
-      </section>
-
-      <section className="col-span-3 flex flex-col gap-2">
-        <h5 className="text-base text-subdued">Deep dives</h5>
-        {data.slice(2).map((r) => (
-          <h5 key={r.id} className="text-2xl font-semibold">
-            <Link
-              href={r.href}
-              onMouseEnter={() => handleEnter(r.id)}
-              onMouseLeave={handleLeave}
-              onFocus={() => handleEnter(r.id)}
-              onBlur={handleLeave}
-              className={cn(
-                linkUnderlineClasses,
-                'text-subdued transition-colors duration-300',
-                {
-                  'text-white': activeId === r.id,
-                },
-              )}
-            >
-              {r.title}
-            </Link>
-          </h5>
-        ))}
-      </section>
+      {data.map((group, groupIdx) => {
+        const sections = group.sections || []
+        const isFirstGroup = groupIdx === 0
+        
+        return (
+          <section
+            key={group.title}
+            className={cn('flex flex-col gap-4', {
+              'col-span-3': isFirstGroup,
+              'col-span-3 gap-2': !isFirstGroup,
+            })}
+          >
+            <h5 className="text-base text-neutral-400">{group.title}</h5>
+            {sections.map((item, idx) => {
+              const isLargeText = isFirstGroup
+              return isLargeText ? (
+                <h4 key={item.id} className="text-5xl text-neutral-400 font-[700]">
+                  <Link
+                    href={item.href}
+                    onMouseEnter={() => handleEnter(item.id)}
+                    onMouseLeave={handleLeave}
+                    onFocus={() => handleEnter(item.id)}
+                    onBlur={handleLeave}
+                    className={cn(
+                      'link-underline',
+                      'transition-colors duration-300',
+                      {
+                        'text-white': activeId === item.id,
+                      },
+                    )}
+                  >
+                    {item.title}
+                  </Link>
+                </h4>
+              ) : (
+                <h5 key={item.id} className="text-2xl text-neutral-400 font-[700]">
+                  <Link
+                    href={item.href}
+                    onMouseEnter={() => handleEnter(item.id)}
+                    onMouseLeave={handleLeave}
+                    onFocus={() => handleEnter(item.id)}
+                    onBlur={handleLeave}
+                    className={cn(
+                      'link-underline',
+                      'transition-colors duration-300',
+                      {
+                        'text-white': activeId === item.id,
+                      },
+                    )}
+                  >
+                    {item.title}
+                  </Link>
+                </h5>
+              )
+            })}
+          </section>
+        )
+      })}
 
       <div
         className="col-span-6 row-span-2 relative rounded-lg overflow-hidden"
         style={{ height: '420px' }}
       >
-        {data.map((img) => {
+        {allItems.map((img) => {
           const isActive = img.id === activeId
           return (
             <div
@@ -268,7 +313,7 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
       </div>
 
       <div
-        className="col-span-4 flex items-end text-subdued text-base relative overflow-hidden"
+        className="col-span-4 flex items-end text-neutral-400 text-base relative overflow-hidden"
         style={{ minHeight: '3rem' }}
       >
         <div key={activeId} className="animate-fade-in">
@@ -277,4 +322,6 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
       </div>
     </div>
   )
-}
+})
+
+ResourcesContent.displayName = 'ResourcesContent'
