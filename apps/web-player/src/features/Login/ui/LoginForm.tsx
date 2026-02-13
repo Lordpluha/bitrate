@@ -28,7 +28,7 @@ import { type LoginFormData, loginSchema } from '../validation'
 
 export const LoginForm = () => {
   const router = useRouter()
-  const { mutate } = useMutation('post', '/api/v1/artists/login', {
+  const { mutate } = useMutation('post', '/api/v1/auth/login', {
     onSuccess: () => {
       router.push(ROUTES.main)
     },
@@ -49,10 +49,7 @@ export const LoginForm = () => {
 
   const onSubmit: SubmitHandler<LoginFormData> = async (body) => {
     await mutate({
-      body: {
-        ...body,
-        username: body.email,
-      },
+      body
     })
   }
 
