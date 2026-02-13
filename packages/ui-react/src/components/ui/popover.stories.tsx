@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj, StrictMeta } from '@storybook/react-vite'
 import { expect, userEvent, within } from 'storybook/test'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
@@ -20,7 +20,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof Popover>
+} satisfies StrictMeta<typeof Popover>
 
 export default meta
 

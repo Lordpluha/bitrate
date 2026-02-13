@@ -15,7 +15,6 @@ RUN pnpm install --frozen-lockfile
 # Stage 3: Development
 FROM base AS development
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
 COPY . .
 EXPOSE 3002
 CMD ["pnpm", "--filter", "@spotify/admin", "run", "dev"]
@@ -23,7 +22,6 @@ CMD ["pnpm", "--filter", "@spotify/admin", "run", "dev"]
 # Stage 4: Build
 FROM base AS build
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
 COPY . .
 RUN pnpm --filter @spotify/admin run build
 
@@ -39,7 +37,6 @@ ENV NODE_ENV=production
 ENV PORT=3002
 
 COPY --from=prod-dependencies /app/node_modules ./node_modules
-COPY --from=prod-dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
 COPY --from=build /app/apps/admin/dist ./apps/admin/dist
 COPY apps/admin/package.json ./apps/admin/
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./

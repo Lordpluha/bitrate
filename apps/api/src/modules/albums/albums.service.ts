@@ -56,7 +56,7 @@ export class AlbumsService {
     })
 
     if (!album) {
-      throw new Error('Album not found or does not belong to the artist')
+      throw new NotFoundException('Album not found or does not belong to the artist')
     }
 
     return await this.prisma.album.update({
@@ -71,7 +71,7 @@ export class AlbumsService {
     })
 
     if (!album) {
-      throw new Error('Album not found or does not belong to the artist')
+      throw new NotFoundException('Album not found or does not belong to the artist')
     }
 
     return await this.prisma.album.delete({

@@ -176,7 +176,7 @@ export const useProgressiveAudioStreaming = (
       })
 
       const contentLength = headResponse.headers.get('content-length')
-      fileSizeRef.current = contentLength ? parseInt(contentLength) : 0
+      fileSizeRef.current = contentLength ? parseInt(contentLength, 10) : 0
 
       if (fileSizeRef.current === 0) {
         console.error('Could not determine file size')

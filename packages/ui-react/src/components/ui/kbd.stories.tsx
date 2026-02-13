@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { SearchIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -10,14 +10,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 /**
  * Used to display textual user input from keyboard.
  */
-const meta: Meta<typeof Kbd> = {
+const meta = {
   title: 'ui/Kbd',
   component: Kbd,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof Kbd>
+} satisfies StrictMeta<typeof Kbd>
 
 export default meta
 

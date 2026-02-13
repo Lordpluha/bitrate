@@ -79,22 +79,22 @@ export const Pallete: Story = {
       {
         name: 'Background',
         colors: {
-          default: '--background',
-          foreground: '--foreground',
+          default: '--color-background',
+          foreground: '--color-foreground',
         },
       },
       {
         name: 'Primary',
         colors: {
-          default: '--primary',
-          foreground: '--primary-foreground',
+          default: '--color-primary',
+          foreground: '--color-primary-foreground',
         },
       },
       {
         name: 'Secondary',
         colors: {
-          default: '--secondary',
-          foreground: '--secondary-foreground',
+          default: '--color-secondary',
+          foreground: '--color-secondary-foreground',
         },
       },
       {
@@ -107,15 +107,15 @@ export const Pallete: Story = {
       {
         name: 'Muted',
         colors: {
-          default: '--muted',
-          foreground: '--muted-foreground',
+          default: '--color-muted',
+          foreground: '--color-muted-foreground',
         },
       },
 
       {
         name: 'Destructive',
         colors: {
-          default: '--destructive',
+          default: '--color-destructive',
         },
       },
     ],
@@ -132,51 +132,51 @@ export const Themes: Story = {
       {
         name: 'Border',
         colors: {
-          default: '--border',
-          ring: '--ring',
+          default: '--color-border',
+          ring: '--color-ring',
         },
       },
       {
         name: 'Card',
         colors: {
-          default: '--card',
-          foreground: '--card-foreground',
+          default: '--color-card',
+          foreground: '--color-card-foreground',
         },
       },
       {
         name: 'Input',
         colors: {
-          default: '--input',
+          default: '--color-input',
         },
       },
       {
         name: 'Popover',
         colors: {
-          default: '--popover',
-          foreground: '--popover-foreground',
+          default: '--color-popover',
+          foreground: '--color-popover-foreground',
         },
       },
       {
         name: 'Chart',
         colors: {
-          '1': '--chart-1',
-          '2': '--chart-2',
-          '3': '--chart-3',
-          '4': '--chart-4',
-          '5': '--chart-5',
+          '1': '--color-chart-1',
+          '2': '--color-chart-2',
+          '3': '--color-chart-3',
+          '4': '--color-chart-4',
+          '5': '--color-chart-5',
         },
       },
       {
         name: 'Sidebar',
         colors: {
-          background: '--sidebar',
-          foreground: '--sidebar-foreground',
-          primary: '--sidebar-primary',
-          'primary-foreground': '--sidebar-primary-foreground',
-          accent: '--sidebar-accent',
-          'accent-foreground': '--sidebar-accent-foreground',
-          border: '--sidebar-border',
-          ring: '--sidebar-ring',
+          background: '--color-sidebar',
+          foreground: '--color-sidebar-foreground',
+          primary: '--color-sidebar-primary',
+          'primary-foreground': '--color-sidebar-primary-foreground',
+          accent: '--color-sidebar-accent',
+          'accent-foreground': '--color-sidebar-accent-foreground',
+          border: '--color-sidebar-border',
+          ring: '--color-sidebar-ring',
         },
       },
     ],

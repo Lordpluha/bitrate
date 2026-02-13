@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { Mail, Plus, PlusCircle, Search, UserPlus } from 'lucide-react'
 import { expect, userEvent, within } from 'storybook/test'
 
@@ -45,7 +45,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof DropdownMenu>
+} satisfies StrictMeta<typeof DropdownMenu>
 
 export default meta
 

@@ -6,6 +6,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Put,
@@ -40,10 +41,9 @@ export class UsersController {
   @GetUsersSwagger()
   @Get('')
   async getAll(
-    @Query('limit', new ZodValidationPipe(z.number())) limit?: number,
-    @Query('page', new ZodValidationPipe(z.number())) page?: number,
-    @Query('username', new ZodValidationPipe(z.string()))
-    username?: UserEntity['username'],
+    @Query('limit', ParseIntPipe) limit?: number,
+    @Query('page', ParseIntPipe) page?: number,
+    @Query('username') username?: UserEntity['username'],
   ) {
     if (!username) {
       return Promise.reject(new Error('User not found'))

@@ -33,7 +33,7 @@ const meta: Meta<StoryArgs> = {
       description: 'Enable/disable looping of the carousel',
     },
   },
-}
+} satisfies Meta<StoryArgs>
 
 export default meta
 type Story = StoryObj<typeof meta>

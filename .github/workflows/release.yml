@@ -111,7 +111,7 @@ jobs:
 
     strategy:
       matrix:
-        service: [api, web, admin, mobile, desktop]
+        service: [api, web-player, web-artists, admin, mobile, desktop]
 
     steps:
       - uses: actions/checkout@v4

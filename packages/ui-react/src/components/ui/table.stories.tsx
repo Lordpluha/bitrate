@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
 import {
   Table,
@@ -68,7 +68,7 @@ const meta = {
       </TableBody>
     </Table>
   ),
-} satisfies Meta<typeof Table>
+} satisfies StrictMeta<typeof Table>
 
 export default meta
 

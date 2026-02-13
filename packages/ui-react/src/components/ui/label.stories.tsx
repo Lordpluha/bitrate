@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
 import { Label } from './label'
 
@@ -18,7 +18,7 @@ const meta = {
     children: 'Your email address',
     htmlFor: 'email',
   },
-} satisfies Meta<typeof Label>
+} satisfies StrictMeta<typeof Label>
 
 export default meta
 

@@ -1,0 +1,12 @@
+{
+  "name": "@spotify/load-test",
+  "version": "1.0.0",
+  "description": "K6 load testing scenarios for Spotify Clone",
+  "private": true,
+  "scripts": {
+    "load:api": "k6 run src/load/api-load-test.js --summary-export=results.json",
+    "load:api:stdout": "k6 run src/load/api-load-test.js"
+  },
+  "author": "Lordpluha",
+  "packageManager": "pnpm@10.28.2"
+}

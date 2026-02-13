@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { expect, fn, userEvent, within } from 'storybook/test'
 
 import {
@@ -15,7 +15,7 @@ import {
 /**
  * Displays a list of options for the user to pick from—triggered by a button.
  */
-const meta: Meta<typeof Select> = {
+const meta = {
   title: 'ui/Select',
   component: Select,
   tags: ['autodocs'],
@@ -62,7 +62,7 @@ const meta: Meta<typeof Select> = {
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof Select>
+} satisfies StrictMeta<typeof Select>
 
 export default meta
 

@@ -1,4 +1,4 @@
-# Production Docker Compose Configuration
+# Docker Compose configuration for production environment with PostgreSQL, Redis, and all application services.
 
 services:
   postgres:
@@ -48,6 +48,8 @@ services:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
       JWT_SECRET: ${JWT_SECRET}
       PORT: 3000
     volumes:
@@ -67,14 +69,37 @@ services:
         reservations:
           memory: 256M
 
-  web:
+  web-player:
     build:
       context: .
-      dockerfile: ./apps/web/Dockerfile
+      dockerfile: ./apps/web-player/Dockerfile
       target: production
       args:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-    container_name: spotify-web-prod
+    container_name: spotify-web-player-prod
+    restart: always
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    depends_on:
+      - api
+    networks:
+      - spotify-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  web-artists:
+    build:
+      context: .
+      dockerfile: ./apps/web-artists/Dockerfile
+      target: production
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    container_name: spotify-web-artists-prod
     restart: always
     environment:
       NODE_ENV: production
@@ -126,7 +151,8 @@ services:
       - ./nginx/logs:/var/log/nginx
     depends_on:
       - api
-      - web
+      - web-player
+      - web-artists
       - admin
     networks:
       - spotify-network

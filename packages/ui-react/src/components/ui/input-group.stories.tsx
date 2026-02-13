@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import {
   Check,
   CheckIcon,
@@ -44,14 +44,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 /**
  * Display additional information or actions to an input or textarea.
  */
-const meta: Meta<typeof InputGroup> = {
+const meta = {
   title: 'ui/InputGroup',
   component: InputGroup,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof InputGroup>
+} satisfies StrictMeta<typeof InputGroup>
 
 export default meta
 

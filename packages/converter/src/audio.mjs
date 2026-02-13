@@ -1,8 +1,6 @@
-import { exec } from "node:child_process"
+import { execa } from "execa"
+import ffmpegPath from "ffmpeg-static"
 import fs from "node:fs/promises"
-import { promisify } from "node:util"
-
-const execAsync = promisify(exec)
 
 /**
  * Convert audio file to OGG Opus format
@@ -23,6 +21,10 @@ export async function convertAudio({
 	vbr = false,
 	application = "audio",
 }) {
+	if (!ffmpegPath) {
+		throw new Error("FFmpeg binary not found. Ensure ffmpeg-static is installed correctly.")
+	}
+
 	// Validate input file exists
 	try {
 		await fs.access(input)
@@ -59,12 +61,30 @@ export async function convertAudio({
 	console.log(`   Quality: ${quality}/10`)
 	console.log(`   Application: ${application}`)
 
-	// Build FFmpeg command
+	// Build FFmpeg args
 	const vbrFlag = vbr ? "on" : "off"
-	const command = `ffmpeg -i "${input}" -c:a libopus -b:a ${bitrate} -vbr ${vbrFlag} -application ${application} -compression_level ${quality} -y "${outputPath}"`
+	const args = [
+		"-hide_banner",
+		"-loglevel",
+		"error",
+		"-i",
+		input,
+		"-c:a",
+		"libopus",
+		"-b:a",
+		bitrate,
+		"-vbr",
+		vbrFlag,
+		"-application",
+		application,
+		"-compression_level",
+		String(quality),
+		"-y",
+		outputPath,
+	]
 
 	try {
-		await execAsync(command)
+		await execa(ffmpegPath, args)
 
 		// Get file sizes
 		const inputStats = await fs.stat(input)

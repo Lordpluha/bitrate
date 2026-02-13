@@ -1,4 +1,4 @@
-import { Slot } from '@radix-ui/react-slot'
+import { Slot, Slottable } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import type { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
@@ -68,7 +68,7 @@ export const Button = ({
       disabled={disabled}
       {...props}
     >
-      {children}
+      <Slottable>{children}</Slottable>
       {!asChild && isLoading && <Spinner />}
     </Component>
   )
