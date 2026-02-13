@@ -53,6 +53,51 @@
         "tags": ["Welcome"]
       }
     },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "AppController_getHealth_v1",
+        "parameters": [],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Welcome"]
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "operationId": "UsersAuthController_login_v1",
@@ -1010,7 +1055,18 @@
     "/api/v1/artists/{id}": {
       "get": {
         "operationId": "ArtistsController_getById_v1",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Artist ID (UUID)",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "405": {
             "description": "Method not allowed"
@@ -1061,7 +1117,18 @@
       },
       "put": {
         "operationId": "ArtistsController_updateProfile_v1",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Artist ID (UUID)",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "401": {
             "description": "Unauthorized",
@@ -1142,7 +1209,18 @@
       },
       "delete": {
         "operationId": "ArtistsController_deleteProfile_v1",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Artist ID (UUID)",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "401": {
             "description": "Unauthorized",
@@ -1225,7 +1303,17 @@
     "/api/v1/artists/username/{username}": {
       "get": {
         "operationId": "ArtistsController_getByUsername_v1",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "description": "Artist username",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "405": {
             "description": "Method not allowed"
@@ -1325,8 +1413,8 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2026-02-01T19:30:04.853Z",
-                    "updatedAt": "2026-02-01T19:30:04.853Z",
+                    "createdAt": "2026-02-13T13:32:53.388Z",
+                    "updatedAt": "2026-02-13T13:32:53.388Z",
                     "duration": 180,
                     "releaseDate": "2023-10-01T12:00:00.000Z",
                     "lyrics": null
@@ -1633,6 +1721,88 @@
           }
         ],
         "summary": "Update track by id",
+        "tags": ["Tracks"]
+      }
+    },
+    "/api/v1/tracks/stream/{id}": {
+      "get": {
+        "operationId": "TracksController_streamTrack_v1",
+        "parameters": [],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
         "tags": ["Tracks"]
       }
     },
@@ -1955,7 +2125,7 @@
             "required": true,
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           },
           {
@@ -1963,7 +2133,7 @@
             "required": true,
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],

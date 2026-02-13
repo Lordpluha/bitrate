@@ -12,7 +12,7 @@ import {
   Query,
   Req,
 } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExtraModels, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 import { ArtistsService } from './artists.service'
 import { GetArtistsSwagger } from './decorators'
 import { ArtistEntity, SafeArtistEntity } from './entities'
@@ -38,18 +38,35 @@ export class ArtistsController {
   }
 
   @ApiOperation({ summary: 'Get artist by id' })
+  @ApiParam({
+    name: 'id',
+    description: 'Artist ID (UUID)',
+    type: 'string',
+    format: 'uuid',
+  })
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
     return await this.artistsService.findById(id)
   }
 
   @ApiOperation({ summary: 'Get artist by username' })
+  @ApiParam({
+    name: 'username',
+    description: 'Artist username',
+    type: 'string',
+  })
   @Get('username/:username')
   getByUsername(@Param('username') username: ArtistEntity['username']) {
     return this.artistsService.findByUsername(username)
   }
 
   @ApiOperation({ summary: 'Update artist profile' })
+  @ApiParam({
+    name: 'id',
+    description: 'Artist ID (UUID)',
+    type: 'string',
+    format: 'uuid',
+  })
   @ArtistAuth()
   @Put(':id')
   updateProfile(
@@ -62,6 +79,12 @@ export class ArtistsController {
   }
 
   @ApiOperation({ summary: 'Delete artist profile' })
+  @ApiParam({
+    name: 'id',
+    description: 'Artist ID (UUID)',
+    type: 'string',
+    format: 'uuid',
+  })
   @ArtistAuth()
   @Delete(':id')
   deleteProfile(@Req() req: ArtistAuthRequest, @Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
