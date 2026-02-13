@@ -9,7 +9,7 @@ export const useArtist = (artistId: string | undefined) => {
     error,
   } = useQuery(
     'get',
-    `/api/v1/artists/{id}` as any,
+    `/api/v1/artists/{id}` as any, // оно тогда начинает ругаться на path, нечего не могу с этим сделать
     {
       params: {
         path: {

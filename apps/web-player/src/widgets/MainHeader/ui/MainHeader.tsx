@@ -22,12 +22,12 @@ export const MainHeader = () => {
       <div className="w-full px-5 py-2 flex justify-between items-center relative">
         <Logo />
 
-        <div className="hidden xl:flex items-center space-x-4">
+        <div className="flex max-xl:hidden items-center space-x-4">
           <HomeBtn />
           <HeaderSearch />
         </div>
 
-        <div className="hidden xl:flex items-center gap-8">
+        <div className="flex max-xl:hidden items-center gap-8">
           <InstallBtn />
 
           {isLoading ? (

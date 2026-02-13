@@ -9,14 +9,15 @@ import {
   setVolume,
   selectMusicPlayer,
 } from '@entities/Player/store/PlayerSlice'
-import { useArtistName } from '@shared/hooks/useArtistName'
+import { useArtist } from '@shared/hooks/useArtist'
 
 export const Player: React.FC = () => {
   const { currentTrack, isPlaying, volume, currentTime, duration } =
     useAppSelector(selectMusicPlayer)
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
-  const artistName = useArtistName(currentTrack?.artistId)
+  const { artist } = useArtist(currentTrack?.artistId)
+  const artistName = artist?.username || artist?.name || 'Unknown Artist'
 
   const {
     audioRef,
@@ -34,12 +35,6 @@ export const Player: React.FC = () => {
   useEffect(() => {
     if (currentTrack) {
       setIsVisible(true)
-      // Выводим URL картинки в консоль для проверки
-      console.log('Track cover URL:', currentTrack.cover)
-      console.log(
-        'Full URL:',
-        `${process.env.NEXT_PUBLIC_API_URL}${currentTrack.cover}`,
-      )
     } else {
       setIsVisible(false)
     }

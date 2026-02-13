@@ -2,6 +2,14 @@
 
 import { useQuery } from '@shared/api'
 
+interface Artist {
+  id: string
+  username: string
+  avatar?: string
+  backgroundImage?: string
+  bio?: string
+}
+
 export const useArtists = () => {
   const { data, isPending, error } = useQuery('get', '/api/v1/artists', {
     params: {
@@ -10,11 +18,11 @@ export const useArtists = () => {
         limit: 100,
       },
     },
-  }) as any
+  })
 
-  const artists = Array.isArray(data) ? data : data?.data || []
+  const artists = Array.isArray(data) ? (data as Artist[]) : []
   const artistsMap = new Map<string, string>(
-    artists.map((artist: any) => [artist.id, artist.username]),
+    artists.map((artist) => [artist.id, artist.username]),
   )
 
   return {

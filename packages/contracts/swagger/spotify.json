@@ -53,6 +53,51 @@
         "tags": ["Welcome"]
       }
     },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "AppController_getHealth_v1",
+        "parameters": [],
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "tags": ["Welcome"]
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "operationId": "UsersAuthController_login_v1",
@@ -1325,8 +1370,8 @@
                     "cover": "https://example.com/cover.jpg",
                     "audioUrl": "",
                     "userId": "",
-                    "createdAt": "2026-02-01T19:30:04.853Z",
-                    "updatedAt": "2026-02-01T19:30:04.853Z",
+                    "createdAt": "2026-02-13T10:30:00.893Z",
+                    "updatedAt": "2026-02-13T10:30:00.893Z",
                     "duration": 180,
                     "releaseDate": "2023-10-01T12:00:00.000Z",
                     "lyrics": null
@@ -1636,6 +1681,88 @@
         "tags": ["Tracks"]
       }
     },
+    "/api/v1/tracks/stream/{id}": {
+      "get": {
+        "operationId": "TracksController_streamTrack_v1",
+        "parameters": [],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "Access token required",
+                        "Refresh token required",
+                        "Invalid token requirement",
+                        "Invalid or expired token",
+                        "User not found",
+                        "Session not found"
+                      ],
+                      "example": "Invalid or expired token"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "408": {
+            "description": "Request timeout"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "501": {
+            "description": "Not implemented"
+          },
+          "502": {
+            "description": "Bad gateway"
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "504": {
+            "description": "Gateway timeout"
+          },
+          "505": {
+            "description": "HTTP version not supported"
+          },
+          "507": {
+            "description": "Insufficient storage"
+          },
+          "508": {
+            "description": "Loop detected"
+          },
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "tags": ["Tracks"]
+      }
+    },
     "/api/v1/playlists": {
       "get": {
         "operationId": "PlaylistsController_getAll_v1",
@@ -1805,15 +1932,7 @@
     "/api/v1/playlists/{id}": {
       "get": {
         "operationId": "PlaylistsController_getById_v1",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Playlist ID",
-            "schema": {}
-          }
-        ],
+        "parameters": [],
         "responses": {
           "405": {
             "description": "Method not allowed"
@@ -1963,7 +2082,7 @@
             "required": true,
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           },
           {
@@ -1971,7 +2090,7 @@
             "required": true,
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],

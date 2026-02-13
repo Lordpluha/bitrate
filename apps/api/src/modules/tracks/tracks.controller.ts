@@ -1,6 +1,5 @@
 import { ArtistEntity } from '@modules/artists'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import { UserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
@@ -29,7 +28,6 @@ import {
   GetTrackByIdSwagger,
   PostTrackSwagger,
   TracksGetAllSwagger,
-  TracksGetLikedSwagger,
   UpdateTrackByIdSwagger,
 } from './decorators'
 import { CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
@@ -54,18 +52,6 @@ export class TracksController {
       page,
       title,
     })
-  }
-
-  @TracksGetLikedSwagger()
-  @UserAuth()
-  @Get('liked')
-  getLikedTracks(
-    @Req() req: Request,
-    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-  ) {
-    const user = req['user'] as UserEntity
-    return this.tracksService.findLikedTracks(user.id, { page, limit })
   }
 
   @GetTrackByIdSwagger()

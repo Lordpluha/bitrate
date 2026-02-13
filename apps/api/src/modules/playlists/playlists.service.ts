@@ -47,12 +47,7 @@ export class PlaylistsService {
         id,
       },
       include: {
-        tracks: {
-          omit: {
-            audioUrl: true,
-            lyrics: false,
-          },
-        },
+        tracks: true,
       },
     })
   }

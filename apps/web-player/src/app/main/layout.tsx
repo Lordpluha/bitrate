@@ -5,6 +5,7 @@ import {
   ResizableHandle,
   ResizableLayout as ResizableLayoutShadCN,
   ResizablePanel,
+  RollupIcon,
 } from '@spotify/ui-react'
 import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
@@ -81,23 +82,11 @@ export default function MainLayout({ children }: PropsWithChildren) {
                 className="fixed right-4 top-20 z-50 p-2 rounded-lg bg-background-secondary hover:bg-gray-700/50 transition-colors"
                 aria-label="Expand sidebar"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  viewBox="0 0 16 16"
-                  className="text-gray-400 hover:text-white transition-colors rotate-180"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M5.026 10.524a.75.75 0 1 1-1.059-1.06l1.47-1.469-1.47-1.469a.75.75 0 0 1 1.06-1.06l1.998 2a.75.75 0 0 1 0 1.059z"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M1 0a1 1 0 0 0-1 1v13.99a1 1 0 0 0 1 1h13.99a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1zm.499 1.499h7.995v12.992H1.499zm12.992 12.992h-3.498V1.499h3.498z"
-                  />
-                </svg>
+                <RollupIcon
+                  width={16}
+                  height={16}
+                  primaryColor={'#b3b3b3'}
+                />
               </button>
             )}
           </ResizableLayoutShadCN>

@@ -5,7 +5,7 @@ import React from 'react'
 import { useAppSelector, useAppDispatch } from '@shared/hooks'
 import { selectPlaylist, selectCurrentTrack, play } from '@entities/Player'
 import { PlayIcon } from '@spotify/ui-react'
-import { useArtistName } from '@shared/hooks/useArtistName'
+import { useArtist } from '@shared/hooks/useArtist'
 
 export const NextInQueue: React.FC = () => {
   const playlist = useAppSelector(selectPlaylist)
@@ -23,7 +23,8 @@ export const NextInQueue: React.FC = () => {
       : null
 
   // Хук должен вызываться всегда, до условных return
-  const artistName = useArtistName(nextTrack?.artistId)
+  const { artist } = useArtist(nextTrack?.artistId)
+  const artistName = artist?.username || artist?.name || 'Unknown Artist'
 
   if (!currentTrack || playlist.length === 0) {
     return null

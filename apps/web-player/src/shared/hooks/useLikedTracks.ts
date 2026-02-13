@@ -17,5 +17,5 @@ export const useLikedTracks = (params: UseLikedTracksParams = {}) => {
         limit,
       },
     },
-  } as any)
+  })
 }

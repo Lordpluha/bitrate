@@ -5,12 +5,13 @@ import { Typography, RollupIcon } from '@spotify/ui-react'
 import { SavedSongIcon } from '@spotify/ui-react'
 import { useAppSelector } from '@shared/hooks'
 import { selectCurrentTrack, selectCurrentPlaylistName } from '@entities/Player'
-import { useArtistName } from '@shared/hooks/useArtistName'
+import { useArtist } from '@shared/hooks/useArtist'
 
 export const CurrentPlaylist: React.FC<{ onCollapse?: () => void }> = ({ onCollapse }) => {
   const currentTrack = useAppSelector(selectCurrentTrack)
   const playlistName = useAppSelector(selectCurrentPlaylistName)
-  const artistName = useArtistName(currentTrack?.artistId)
+  const { artist } = useArtist(currentTrack?.artistId)
+  const artistName = artist?.username || artist?.name || 'Unknown Artist'
   const [isIconHovered, setIsIconHovered] = useState(false)
 
   if (!currentTrack) {

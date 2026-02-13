@@ -65,7 +65,7 @@ export const TrackCard: React.FC<TrackCardProps> = ({
         </div>
       </div>
       <div className="text-sm text-gray-400">
-        {(track as any).album || 'Unknown Album'}
+        Unknown Album
       </div>
       <div className="text-sm text-gray-400">
         {track.createdAt
