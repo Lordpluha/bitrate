@@ -67,7 +67,7 @@ export const MobileSubMenu = ({ isOpen, title, data, type, onClose, onFullClose 
           isOpen ? 'translate-x-0' : 'translate-x-full',
         )}
       >
-        <div className={cn("p-5 h-full flex flex-col", 'max-sm:p-4')}>
+        <div className={cn("p-5 h-full flex flex-col", 'max-sm:p-3')}>
           <div className={cn("flex items-center justify-between mb-10", 'max-sm:mb-0 py-2')}>
             <button
               onClick={onClose}

@@ -119,7 +119,7 @@ export const ArtistHeader = ({ children }: ArtistHeaderProps) => {
             closeSubmenu={handleCloseSubmenu}
           />
 
-          <section className="items-center gap-2 hidden lg:flex">
+          <section className="hidden lg:flex items-center gap-2">
             <SwitchLanguagesButton />
             <AuthButtons />
           </section>

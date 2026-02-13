@@ -74,12 +74,12 @@ export const NavLinks = ({
   }
 
   return (
-    <section className={className}>
-      <nav className={cn(
-        'flex items-center',
-        isMobile ? 'flex-col gap-4' : 'flex-row gap-8'
-      )}>
-        {typedLinks.map((link) => {
+    <nav className={cn(
+      'flex items-center',
+      isMobile ? 'flex-col gap-4' : 'flex-row gap-8',
+      className
+    )}>
+      {typedLinks.map((link) => {
           const isActive = activeSubmenu === link.title
           const hasSubmenu = Boolean(link.submenu || link.resources)
           
@@ -120,7 +120,6 @@ export const NavLinks = ({
             </button>
           )
         })}
-      </nav>
-    </section>
+    </nav>
   )
 }
