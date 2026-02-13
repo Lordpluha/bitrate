@@ -116,11 +116,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: ./.github/actions/setup-docker
+        with:
+          qemu: "true"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -175,14 +174,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -192,9 +185,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Build desktop app
         run: |
@@ -234,18 +224,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
         with:
-          version: 10.28.2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+          cache: pnpm
+          registry-url: "https://registry.npmjs.org"
 
       - name: Build package
         run: pnpm --filter @spotify/${{ matrix.package }} run build

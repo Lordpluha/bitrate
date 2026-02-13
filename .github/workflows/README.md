@@ -2,6 +2,11 @@
 
 This document summarizes all GitHub Actions workflows in this repository: what they do and when they run.
 
+## Shared actions
+Common setup steps were moved into composite actions to keep workflows DRY:
+- .github/actions/setup-node-pnpm: setup Node.js + pnpm (optional install)
+- .github/actions/setup-docker: setup Docker Buildx (optional QEMU)
+
 ## Chromatic ([chromatic.yml](chromatic.yml))
 **Triggers**
 - `pull_request` targeting `develop`.

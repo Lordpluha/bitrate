@@ -1,0 +1,22 @@
+name: Setup Docker Buildx
+description: Setup Docker Buildx (and optional QEMU)
+inputs:
+  qemu:
+    description: Enable QEMU for multi-arch builds
+    required: false
+    default: "false"
+  buildx-driver-opts:
+    description: Driver options for buildx (optional)
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - name: Set up QEMU
+      if: ${{ inputs.qemu == 'true' }}
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      with:
+        driver-opts: ${{ inputs.buildx-driver-opts }}

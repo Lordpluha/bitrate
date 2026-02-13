@@ -21,7 +21,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      uses: ./.github/actions/setup-docker
 
     - name: Build Desktop App (Docker)
       run: |
@@ -61,21 +61,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 10.28.2
+    - name: Setup Node.js and pnpm
+      uses: ./.github/actions/setup-node-pnpm
 
     - name: Setup Rust
       uses: dtolnay/rust-toolchain@stable
-
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
 
     - name: Build Desktop App
       run: |
@@ -109,21 +99,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 10.28.2
+    - name: Setup Node.js and pnpm
+      uses: ./.github/actions/setup-node-pnpm
 
     - name: Setup Rust
       uses: dtolnay/rust-toolchain@stable
-
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
 
     - name: Build Desktop App
       run: |
@@ -157,8 +137,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup Docker
-      uses: docker/setup-buildx-action@v3
+    - name: Setup Docker Buildx
+      uses: ./.github/actions/setup-docker
 
     - name: Build UI Dev Server
       run: |

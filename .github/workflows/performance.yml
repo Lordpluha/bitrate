@@ -51,17 +51,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
 
       - name: Generate Prisma Client
         run: |
@@ -182,17 +173,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
 
       - name: Build dependencies
         run: pnpm --filter @spotify/ui-react run build
@@ -227,17 +209,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
 
       - name: Generate Prisma Client
         run: pnpm --filter @spotify/api run db:gen
@@ -288,17 +261,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
 
       - name: Generate Prisma Client
         run: |
