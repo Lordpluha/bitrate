@@ -19,5 +19,5 @@ export const useTracks = (params: UseTracksParams = {}) => {
         ...(title && { title }),
       },
     },
-  } as any)
+  })
 }

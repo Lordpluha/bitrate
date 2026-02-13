@@ -11,7 +11,7 @@ interface Artist {
 }
 
 export const useArtists = () => {
-  const { data, isPending, error } = useQuery('get', '/api/v1/artists', {
+  const { data: artists, isPending, error } = useQuery('get', '/api/v1/artists', {
     params: {
       query: {
         page: 1,
@@ -20,9 +20,9 @@ export const useArtists = () => {
     },
   })
 
-  const artists = Array.isArray(data) ? (data as Artist[]) : []
+  
   const artistsMap = new Map<string, string>(
-    artists.map((artist) => [artist.id, artist.username]),
+    artists?.map((artist) => [artist.id, artist.username]),
   )
 
   return {

@@ -14,12 +14,6 @@ import {
 
 import { MusicCardLg } from './MusicCardLg'
 
-interface MusicItem {
-  id: string
-  name: string
-  description?: string
-  imageUrl?: string
-}
 
 // типизировать дату
 
@@ -34,15 +28,15 @@ export const PopularArtists: React.FC = () => {
         limit: 20,
       },
     },
-  } as any) // пока оставляем
+  }) 
 
-  const artists: MusicItem[] = Array.isArray(data)
+  const artists = Array.isArray(data)
     ? data.map((artist) => ({
         id: artist.id,
         name:
-          artist.name || artist.username || artist.title || 'Unknown Artist',
+          artist.username,
         description: 'Artist',
-        imageUrl: artist.imageUrl || artist.avatar || artist.cover,
+        imageUrl: artist.avatar,
       }))
     : []
 
@@ -83,7 +77,7 @@ export const PopularArtists: React.FC = () => {
                     id={artist.id}
                     name={artist.name}
                     description={artist.description}
-                    imageUrl={artist.imageUrl}
+                    imageUrl={artist.imageUrl || undefined}
                     isArtist={true}
                   />
                 </CarouselItem>

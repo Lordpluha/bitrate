@@ -8,7 +8,7 @@ import { useArtist } from '@shared/hooks/useArtist'
 
 export const AboutArtist: React.FC = () => {
   const currentTrack = useAppSelector(selectCurrentTrack)
-  const { artist, isLoading } = useArtist(currentTrack?.artistId)
+  const { data: artist, isLoading } = useArtist(currentTrack?.artistId)
 
   if (!currentTrack || !currentTrack.artistId) {
     return null

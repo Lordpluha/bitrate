@@ -3,10 +3,11 @@
 import { play, setPlaylist, setCurrentPlaylistName } from '@entities/Player'
 import { useAppDispatch } from '@shared/hooks'
 import { useLikedTracks } from '@shared/hooks/useLikedTracks'
-import { ITrack } from '@shared/types'
+
 import React, { useEffect } from 'react'
 import { PlaylistHeader } from './PlaylistHeader'
 import { Track, TracksList } from './TracksList'
+import { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 
 interface TrackData {
   id: string
@@ -20,7 +21,7 @@ interface TrackData {
   lyrics?: string | null
 }
 
-const mapToPlayerTrack = (track: TrackData): ITrack => ({
+const mapToPlayerTrack = (track: TrackData): TrackEntity => ({
   id: track.id,
   title: track.title,
   audioUrl: `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${track.id}`,

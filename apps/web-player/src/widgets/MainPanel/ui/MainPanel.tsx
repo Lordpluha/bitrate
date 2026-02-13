@@ -4,7 +4,6 @@ import React from 'react'
 
 import { useAuth } from '@shared/hooks'
 import { Typography } from '@spotify/ui-react'
-import type { ApiSchemas } from '@spotify/contracts'
 
 import { Tabs } from './Tabs'
 import { LikedPlaylist } from './LikedPlaylist'
@@ -20,7 +19,7 @@ const tabs = [
 
 export const MainPanel = () => {
   const { user, isAuthenticated } = useAuth()
-  const currentUser = user as ApiSchemas['UserEntity'] | null
+  const currentUser = user;
 
   return (
     <div className="h-full py-4 px-6 overflow-y-auto custom-scrollbar relative z-10">

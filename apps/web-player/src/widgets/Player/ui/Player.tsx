@@ -16,8 +16,8 @@ export const Player: React.FC = () => {
     useAppSelector(selectMusicPlayer)
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
-  const { artist } = useArtist(currentTrack?.artistId)
-  const artistName = artist?.username || artist?.name || 'Unknown Artist'
+  const { data: artist } = useArtist(currentTrack?.artistId)
+  const artistName = artist?.username || 'Unknown Artist'
 
   const {
     audioRef,

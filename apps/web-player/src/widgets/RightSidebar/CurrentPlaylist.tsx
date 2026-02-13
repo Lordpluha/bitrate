@@ -10,8 +10,8 @@ import { useArtist } from '@shared/hooks/useArtist'
 export const CurrentPlaylist: React.FC<{ onCollapse?: () => void }> = ({ onCollapse }) => {
   const currentTrack = useAppSelector(selectCurrentTrack)
   const playlistName = useAppSelector(selectCurrentPlaylistName)
-  const { artist } = useArtist(currentTrack?.artistId)
-  const artistName = artist?.username || artist?.name || 'Unknown Artist'
+  const { data: artist } = useArtist(currentTrack?.artistId)
+  const artistName = artist?.username  || 'Unknown Artist'
   const [isIconHovered, setIsIconHovered] = useState(false)
 
   if (!currentTrack) {

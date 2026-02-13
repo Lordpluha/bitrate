@@ -1,7 +1,17 @@
 import { UserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Req,
+} from '@nestjs/common'
+import { ApiExtraModels, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { GetPlaylistsSwagger } from './decorators/get-playlists.decorator'
@@ -26,6 +36,13 @@ export class PlaylistsController {
   }
 
   @ApiOperation({ summary: 'Get playlist by id' })
+  @ApiParam({ name: 'id', description: 'Playlist id', type: 'string', format: 'uuid' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      $ref: '#/components/schemas/PlaylistEntity',
+    },
+  })
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: PlaylistEntity['id']) {
     return await this.playlistService.getByIdPopulated(id)

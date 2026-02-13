@@ -1,11 +1,12 @@
 'use client'
 
+import { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ITrack } from '@shared/types'
+
 
 export interface MusicPlayerState {
-  currentTrack: ITrack | null
-  playlist: ITrack[]
+  currentTrack: TrackEntity | null
+  playlist: TrackEntity[]
   currentPlaylistName: string | null
   isPlaying: boolean
   currentTime: number
@@ -29,7 +30,7 @@ const musicPlayerSlice = createSlice({
   name: 'musicPlayer',
   initialState,
   reducers: (create) => ({
-    play: create.reducer<ITrack>((state, action) => {
+    play: create.reducer<TrackEntity>((state, action) => {
       state.currentTrack = action.payload
       state.isPlaying = true
       state.currentTime = 0
@@ -53,7 +54,7 @@ const musicPlayerSlice = createSlice({
     setVolume: create.reducer<number>((state, action) => {
       state.volume = action.payload
     }),
-    setPlaylist: create.reducer<ITrack[]>((state, action) => {
+    setPlaylist: create.reducer<TrackEntity[]>((state, action) => {
       state.playlist = action.payload
     }),
     setCurrentPlaylistName: create.reducer<string | null>((state, action) => {

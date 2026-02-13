@@ -3,37 +3,19 @@
 import { play, setPlaylist, setCurrentPlaylistName } from '@entities/Player'
 import { useAppDispatch } from '@shared/hooks'
 import { useQuery } from '@shared/api'
-import { ITrack } from '@shared/types'
+
 import React, { useEffect } from 'react'
 import { PlaylistHeader } from './PlaylistHeader'
 import { Track, TracksList } from './TracksList'
+import { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 
 interface PlaylistPageProps {
   playlistId: string
 }
 
-interface TrackData {
-  id: string
-  title: string
-  cover: string
-  createdAt?: string
-  updatedAt?: string
-  artistId?: string
-  duration?: number | null
-  releaseDate?: string | null
-  lyrics?: string | null
-}
 
-interface PlaylistData {
-  title?: string
-  cover?: string
-  tracks?: TrackData[]
-  user?: {
-    username?: string
-  }
-}
 
-const mapToPlayerTrack = (track: TrackData): ITrack => ({
+const mapToPlayerTrack = (track: TrackEntity): TrackEntity => ({
   id: track.id,
   title: track.title,
   audioUrl: `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${track.id}`,
@@ -68,21 +50,14 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
     },
   )
 
-  console.log('Playlist ID:', playlistId)
-  console.log('Playlist data:', playlist)
-  console.log('Loading:', loadingPlaylist)
-  console.log('Error:', error)
-
-  const playlistData = playlist as PlaylistData | undefined
-  const rawTracks = playlistData?.tracks || []
-  const tracks = rawTracks.map(mapToPlayerTrack)
+  const tracks = (playlist as any)?.tracks.map(mapToPlayerTrack)
 
   useEffect(() => {
-    if (tracks.length > 0) {
+    if (tracks?.length > 0) {
       dispatch(setPlaylist(tracks))
-      dispatch(setCurrentPlaylistName(playlistData?.title || 'Playlist'))
+      dispatch(setCurrentPlaylistName(playlist?.title || 'Playlist'))
     }
-  }, [tracks, playlistData?.title, dispatch])
+  }, [tracks, playlist?.title, dispatch])
 
   if (loadingPlaylist) {
     return (
@@ -103,7 +78,7 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
     )
   }
 
-  if (!loadingPlaylist && !playlistData) {
+  if (!loadingPlaylist && !playlist) {
     return (
       <div className="h-full overflow-y-auto custom-scrollbar">
         <div className="flex justify-center items-center h-64">
@@ -113,10 +88,10 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
     )
   }
 
-  const coverUrl = playlistData?.cover || '/images/default-playlist.jpg'
+  const coverUrl = playlist?.cover || '/images/default-playlist.jpg'
 
-  const totalDuration = rawTracks.reduce(
-    (acc, track) => acc + (track.duration || 0),
+  const totalDuration = (playlist as any)?.tracks.reduce(
+    (acc: number, track: any) => acc + (track.duration || 0),
     0,
   )
   const durationMinutes = Math.floor(totalDuration / 60)
@@ -133,10 +108,10 @@ export const PlaylistPage: React.FC<PlaylistPageProps> = ({ playlistId }) => {
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
       <PlaylistHeader
-        title={playlistData?.title || 'Playlist'}
+        title={playlist?.title || 'Playlist'}
         type="Playlist"
         imageUrl={coverUrl}
-        author={playlistData?.user?.username || 'Unknown'}
+        author={(playlist as any).user?.username || 'Unknown'}
         songsCount={tracks.length}
         tracksCount={tracks.length}
         duration={durationText}

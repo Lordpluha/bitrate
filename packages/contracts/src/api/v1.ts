@@ -290,6 +290,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/tracks/liked": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get liked tracks of the authenticated user */
+        get: operations["TracksController_getLikedTracks_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/playlists": {
         parameters: {
             query?: never;
@@ -452,7 +469,7 @@ export interface paths {
         trace?: never;
     };
 }
-export type webhooks = Record<string, never>
+export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         UserSessionEntity: {
@@ -660,7 +677,7 @@ export interface components {
     headers: never;
     pathItems: never;
 }
-export type $defs = Record<string, never>
+export type $defs = Record<string, never>;
 export interface operations {
     AppController_getWelcome_v1: {
         parameters: {
@@ -2083,18 +2100,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example [
-                     *       {
-                     *         "avatar": "https://example.com/avatar.jpg",
-                     *         "id": "1",
-                     *         "username": "artist1",
-                     *         "backgroundImage": "",
-                     *         "bio": ""
-                     *       }
-                     *     ]
-                     */
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["SafeArtistEntity"][];
                 };
             };
             /** @description Method not allowed */
@@ -2194,6 +2200,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SafeArtistEntity"];
+                };
+            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -2646,8 +2660,8 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2026-02-13T14:18:24.095Z",
-                     *         "updatedAt": "2026-02-13T14:18:24.095Z",
+                     *         "createdAt": "2026-02-13T15:37:52.041Z",
+                     *         "updatedAt": "2026-02-13T15:37:52.041Z",
                      *         "duration": 180,
                      *         "releaseDate": "2023-10-01T12:00:00.000Z",
                      *         "lyrics": null
@@ -3197,6 +3211,130 @@ export interface operations {
             };
         };
     };
+    TracksController_getLikedTracks_v1: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrackEntity"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example 401 */
+                        statusCode?: number;
+                        /**
+                         * @example Invalid or expired token
+                         * @enum {string}
+                         */
+                        message?: "Access token required" | "Refresh token required" | "Invalid token requirement" | "Invalid or expired token" | "User not found" | "Session not found";
+                        /** @example Unauthorized */
+                        error?: string;
+                    };
+                };
+            };
+            /** @description Method not allowed */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Request timeout */
+            408: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Gateway timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description HTTP version not supported */
+            505: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient storage */
+            507: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Loop detected */
+            508: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     PlaylistsController_getAll_v1: {
         parameters: {
             query?: never;
@@ -3211,6 +3349,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaylistEntity"][];
+                };
+            };
             /** @description Method not allowed */
             405: {
                 headers: {
@@ -3419,11 +3565,22 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description Playlist id */
+                id: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaylistEntity"];
+                };
+            };
             /** @description Method not allowed */
             405: {
                 headers: {

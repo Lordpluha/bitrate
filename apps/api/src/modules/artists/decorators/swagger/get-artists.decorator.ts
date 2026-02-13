@@ -1,4 +1,3 @@
-import { ArtistEntity } from '@modules/artists'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
@@ -28,17 +27,10 @@ export function GetArtistsSwagger() {
     ApiConsumes('application/json'),
     ApiResponse({
       status: HttpStatus.OK,
-      content: {
-        'application/json': {
-          example: [
-            {
-              avatar: 'https://example.com/avatar.jpg',
-              id: '1',
-              username: 'artist1',
-              backgroundImage: '',
-              bio: '',
-            } as Omit<ArtistEntity, 'password' | 'email'>,
-          ],
+      schema: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/SafeArtistEntity',
         },
       },
     }),

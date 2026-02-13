@@ -2,18 +2,13 @@
 
 import { useQuery } from '@shared/api'
 
-export const useArtist = (artistId: string | undefined) => {
-  const {
-    data: artist,
-    isLoading,
-    error,
-  } = useQuery(
+export const useArtist = (artistId?: string) => useQuery(
     'get',
-    `/api/v1/artists/{id}` as any, // оно тогда начинает ругаться на path, нечего не могу с этим сделать
+    `/api/v1/artists/{id}`,
     {
       params: {
         path: {
-          id: artistId || '',
+          id: artistId!,
         },
       },
     },
@@ -23,9 +18,4 @@ export const useArtist = (artistId: string | undefined) => {
     },
   )
 
-  return {
-    artist: artist as any,
-    isLoading,
-    error,
-  }
-}
+  

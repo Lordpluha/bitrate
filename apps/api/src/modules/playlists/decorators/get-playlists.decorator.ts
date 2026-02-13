@@ -1,5 +1,5 @@
-import { applyDecorators } from '@nestjs/common'
-import { ApiConsumes, ApiOperation, ApiParam } from '@nestjs/swagger'
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
 export function GetPlaylistsSwagger() {
   return applyDecorators(
@@ -16,6 +16,15 @@ export function GetPlaylistsSwagger() {
       required: false,
       description: 'Number of items per page',
       type: Number,
+    }),
+    ApiResponse({
+      status: HttpStatus.OK,
+      schema: {
+        type: 'array',
+        items: {
+          $ref: '#/components/schemas/PlaylistEntity',
+        },
+      },
     }),
   )
 }
