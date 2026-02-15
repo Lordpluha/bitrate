@@ -1,35 +1,21 @@
 'use client'
 
-import type { FC, PropsWithChildren } from 'react'
-import { useEffect, useState } from 'react'
+import type { PropsWithChildren } from 'react'
+import { useState } from 'react'
 
-import type { Theme } from '@shared/constants'
 import { ThemeProvider } from '@shared/contexts'
-import { usePersistedState } from '@shared/hooks'
 import { Toaster } from '@spotify/ui-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ReduxProvider } from './_redux-provider'
+import { ReduxProvider } from '@shared/store/ReduxProvider'
 
-export const Provider: FC<PropsWithChildren> = ({ children }) => {
+export const Provider = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(() => new QueryClient())
-  const [theme, setTheme, , hydrated] = usePersistedState<Theme>(
-    'theme',
-    'dark',
-  )
-
-  useEffect(() => {
-    if (!hydrated) return
-    document.documentElement.classList.remove('light', 'dark')
-    document.documentElement.classList.add(theme)
-  }, [theme, hydrated])
-
-  if (!hydrated) return null
 
   return (
     <ReduxProvider>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider value={{ theme, setTheme }}>
+        <ThemeProvider>
           <Toaster />
           {children}
         </ThemeProvider>

@@ -1,8 +1,5 @@
 'use client'
 
-import React from 'react'
-
-import { useQuery } from '@shared/api'
 import { CustomNextIcon, CustomPrevIcon } from '@spotify/ui-react'
 import {
   Carousel,
@@ -12,23 +9,14 @@ import {
   CarouselPrevious,
 } from '@spotify/ui-react'
 
-import { MusicCardLg } from './MusicCardLg'
+import { MusicCardLg } from '../../../shared/ui/MusicCardLg'
+import { useArtists } from '@shared/hooks/useArtists'
 
-
-// типизировать дату
-
-export const PopularArtists: React.FC = () => {
+export const PopularArtists = () => {
   const {
     data,
     isPending: loadingArtists,
-    error,
-  } = useQuery('get', '/api/v1/artists', {
-    params: {
-      query: {
-        limit: 20,
-      },
-    },
-  }) 
+  } = useArtists()
 
   const artists = Array.isArray(data)
     ? data.map((artist) => ({

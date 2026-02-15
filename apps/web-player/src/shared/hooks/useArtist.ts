@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@shared/api'
+import { useQuery } from '@shared/api/client'
 
 export const useArtist = (artistId?: string) => useQuery(
     'get',
@@ -18,4 +18,3 @@ export const useArtist = (artistId?: string) => useQuery(
     },
   )
 
-  

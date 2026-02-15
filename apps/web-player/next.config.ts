@@ -15,6 +15,14 @@ const nextConfig = {
   //     }
   //   }
   // },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
+    ],
+  },
 } satisfies NextConfig
 
 export default nextConfig

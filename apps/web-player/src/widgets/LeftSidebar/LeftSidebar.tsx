@@ -1,5 +1,3 @@
-import React from 'react'
-import { Button, Typography } from '@spotify/ui-react'
 import { LibraryHeader } from './LibraryHeader'
 import { LibraryTags } from './LibraryTags'
 import { LibraryControls } from './LibraryControls'

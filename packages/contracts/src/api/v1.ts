@@ -2660,8 +2660,8 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2026-02-13T15:37:52.041Z",
-                     *         "updatedAt": "2026-02-13T15:37:52.041Z",
+                     *         "createdAt": "2026-02-14T12:53:59.767Z",
+                     *         "updatedAt": "2026-02-14T12:53:59.767Z",
                      *         "duration": 180,
                      *         "releaseDate": "2023-10-01T12:00:00.000Z",
                      *         "lyrics": null
@@ -3337,14 +3337,14 @@ export interface operations {
     };
     PlaylistsController_getAll_v1: {
         parameters: {
-            query?: never;
-            header?: never;
-            path: {
+            query?: {
                 /** @description Page number for pagination */
-                page: number;
+                page?: number;
                 /** @description Number of items per page */
-                limit: number;
+                limit?: number;
             };
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;

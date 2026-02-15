@@ -1,42 +1,40 @@
-'use client'
-
-import React from 'react'
-import { ArrowLeft, Play } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
+import Image from 'next/image'
+import { TimeUtils } from '@shared/utils/TimeUtils'
+import { BackButton } from '@shared/ui/BackButton'
 
 interface PlaylistHeaderProps {
   title: string
   type: string
   imageUrl: string
   author: string
-  songsCount: number
   tracksCount: number
-  duration: string
+  duration: number
 }
 
-export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
+export const PlaylistHeader = ({
   title,
   type,
   imageUrl,
   author,
   tracksCount,
   duration,
-}) => {
-  const router = useRouter()
+}: PlaylistHeaderProps) => {
   return (
-    <div className="relative h-[340px] bg-gradient-to-b from-purple-800 to-gray-900 p-6">
-      <button
-        onClick={() => router.back()}
+    <div className="relative h-85 bg-linear-to-b from-purple-800 to-gray-900 p-6">
+      <BackButton
         className="absolute top-6 left-6 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors"
       >
         <ArrowLeft size={20} className="text-white" />
-      </button>
+      </BackButton>
 
       <div className="flex items-end gap-6 h-full">
-        <img
+        <Image
           src={imageUrl}
           alt={title}
-          className="w-[232px] h-[232px] shadow-2xl rounded"
+          width={232}
+          height={232}
+          className="shadow-2xl rounded"
         />
         <div className="flex flex-col gap-2 pb-4">
           <span className="text-sm font-bold uppercase">{type}</span>
@@ -46,7 +44,7 @@ export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
             <span>•</span>
             <span>{tracksCount} songs</span>
             <span>•</span>
-            <span>{duration}</span>
+            <span>{TimeUtils.formatDuration(duration)}</span>
           </div>
         </div>
       </div>

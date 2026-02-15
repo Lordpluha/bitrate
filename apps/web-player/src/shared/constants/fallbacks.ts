@@ -1,0 +1,1 @@
+export const fallbackPlaylistCover = '/images/default-playlist.jpg'

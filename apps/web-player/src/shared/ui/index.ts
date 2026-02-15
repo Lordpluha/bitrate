@@ -1,3 +1,5 @@
 export * from './AuthBanner'
 export * from './Logo'
 export * from './SocialsAuthDivider'
+export * from './MusicCardLg'
+export * from './MusicCardMd'

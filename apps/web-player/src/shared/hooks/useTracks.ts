@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@shared/api'
+import { useQuery } from '@shared/api/client'
 
 interface UseTracksParams {
   page?: number

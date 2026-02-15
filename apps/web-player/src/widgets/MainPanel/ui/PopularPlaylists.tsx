@@ -1,6 +1,5 @@
 'use client'
 
-import { useQuery } from '@shared/api'
 import {
   Carousel,
   CarouselContent,
@@ -10,36 +9,19 @@ import {
   CustomNextIcon,
   CustomPrevIcon,
 } from '@spotify/ui-react'
-import React from 'react'
 
-import { MusicCardLg } from './MusicCardLg'
+import { MusicCardLg } from '@shared/ui'
+import { usePlaylists } from '@entities/Playlist'
 
-
-export const PopularPlaylists: React.FC = () => {
+export const PopularPlaylists = () => {
   const {
-    data,
-    isLoading
-  } = useQuery('get', '/api/v1/playlists', {
-    params: {
-      path: {
-        page: 1,
-        limit: 3,
-      },
-    },
-  })
+    data: playlists,
+    isPending
+  } = usePlaylists(1, 3)
 
-  if (isLoading) {
+  if (isPending) {
     return null;
   }
-
-  const playlists = data?.map((playlist) => ({
-    id: playlist.id,
-    name: playlist.title,
-    description:
-      playlist.description ||
-      `Playlist • ${(playlist as any).user?.username || 'Unknown'}`,
-    imageUrl: playlist.cover,
-  }))
 
   return (
     <div className="relative mt-8">
@@ -63,7 +45,7 @@ export const PopularPlaylists: React.FC = () => {
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
           />
           <CarouselContent className="flex">
-            {isLoading ? (
+            {isPending ? (
               <div className="text-gray-400 p-4">Loading...</div>
             ) : playlists?.length === 0 ? (
               <div className="text-gray-400 p-4">No playlists found</div>
@@ -71,13 +53,13 @@ export const PopularPlaylists: React.FC = () => {
               playlists?.map((playlist) => (
                 <CarouselItem
                   key={playlist.id}
-                  className="basis-auto max-w-[200px]"
+                  className="basis-auto max-w-50"
                 >
                   <MusicCardLg
                     id={playlist.id}
-                    name={playlist.name}
+                    name={playlist.title}
                     description={playlist.description}
-                    imageUrl={playlist.imageUrl}
+                    imageUrl={playlist.cover}
                     isArtist={false}
                   />
                 </CarouselItem>

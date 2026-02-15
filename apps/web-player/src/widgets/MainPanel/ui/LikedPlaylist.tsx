@@ -1,7 +1,6 @@
-import React from 'react'
-import { MusicCardMd } from './MusicCardMd'
+import { MusicCardMd } from '../../../shared/ui/MusicCardMd'
 
-export const LikedPlaylist: React.FC = () => (
+export const LikedPlaylist = () => (
   <div className="flex flex-wrap gap-4 mt-4">
     <MusicCardMd
       id="liked-songs"

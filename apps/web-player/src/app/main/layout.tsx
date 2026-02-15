@@ -24,7 +24,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
     if (hasPlayer && isRightSidebarCollapsed) {
       setIsRightSidebarCollapsed(false)
     }
-  }, [hasPlayer])
+  }, [hasPlayer, isRightSidebarCollapsed])
 
   return (
     <div className="h-screen bg-background text-text">
@@ -78,15 +78,12 @@ export default function MainLayout({ children }: PropsWithChildren) {
             )}
             {isRightSidebarCollapsed && hasPlayer && (
               <button
+                type="button"
                 onClick={() => setIsRightSidebarCollapsed(false)}
                 className="fixed right-4 top-20 z-50 p-2 rounded-lg bg-background-secondary hover:bg-gray-700/50 transition-colors"
                 aria-label="Expand sidebar"
               >
-                <RollupIcon
-                  width={16}
-                  height={16}
-                  primaryColor={'#b3b3b3'}
-                />
+                <RollupIcon width={16} height={16} primaryColor={'#b3b3b3'} />
               </button>
             )}
           </ResizableLayoutShadCN>

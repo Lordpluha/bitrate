@@ -20,6 +20,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, onTabChange }) => {
     <div className="flex items-center justify-start gap-2">
       {tabs.map((tab) => (
         <button
+          type="button"
           key={tab.id}
           onClick={() => {
             setActiveTab(tab.id)

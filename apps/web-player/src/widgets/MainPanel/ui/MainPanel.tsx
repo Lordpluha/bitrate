@@ -1,7 +1,5 @@
 'use client'
 
-import React from 'react'
-
 import { useAuth } from '@shared/hooks'
 import { Typography } from '@spotify/ui-react'
 
@@ -19,18 +17,17 @@ const tabs = [
 
 export const MainPanel = () => {
   const { user, isAuthenticated } = useAuth()
-  const currentUser = user;
 
   return (
     <div className="h-full py-4 px-6 overflow-y-auto custom-scrollbar relative z-10">
       <Tabs tabs={tabs} />
       <LikedPlaylist />
       <div className="mt-6">
-        {isAuthenticated && currentUser ? (
+        {isAuthenticated && user ? (
           <div className="min-w-[280px] mb-8">
             <p className="text-gray-400 text-xs">Made For</p>
             <Typography as="h5" size="heading5" className="text-text">
-              {currentUser.username || 'User'}
+              {user.username || 'User'}
             </Typography>
           </div>
         ) : null}
