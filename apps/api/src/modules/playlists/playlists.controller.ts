@@ -1,3 +1,4 @@
+import { TrackEntity } from '@modules/tracks/entities'
 import { UserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
@@ -20,7 +21,7 @@ import { UpdatePlaylistDto, UpdatePlaylistSchema } from './dtos/update-playlist.
 import { PlaylistEntity } from './entities'
 import { PlaylistsService } from './playlists.service'
 
-@ApiExtraModels(PlaylistEntity)
+@ApiExtraModels(PlaylistEntity, TrackEntity)
 @ApiTags('Playlists')
 @Controller('playlists')
 export class PlaylistsController {
@@ -40,7 +41,26 @@ export class PlaylistsController {
   @ApiResponse({
     status: HttpStatus.OK,
     schema: {
-      $ref: '#/components/schemas/PlaylistEntity',
+      allOf: [
+        { $ref: '#/components/schemas/PlaylistEntity' },
+        {
+          type: 'object',
+          properties: {
+            tracks: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/TrackEntity' },
+            },
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                username: { type: 'string' },
+                avatar: { type: 'string', nullable: true },
+              },
+            },
+          },
+        },
+      ],
     },
   })
   @Get(':id')

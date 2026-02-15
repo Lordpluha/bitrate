@@ -5,6 +5,7 @@ import type { ComponentPropsWithRef } from 'react'
 
 export const BackButton = ({
   onClick,
+  children,
   ...props
 }: ComponentPropsWithRef<'button'>) => {
   const router = useRouter()
@@ -18,7 +19,7 @@ export const BackButton = ({
       }}
       {...props}
     >
-      BackButton
+      {children}
     </button>
   )
 }

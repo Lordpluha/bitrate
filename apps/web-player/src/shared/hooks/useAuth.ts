@@ -5,7 +5,6 @@ import { ROUTES } from '@shared/routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter, usePathname } from 'next/navigation'
 
-
 const userQueryKeys = {
   user: ['user'] as const,
 }

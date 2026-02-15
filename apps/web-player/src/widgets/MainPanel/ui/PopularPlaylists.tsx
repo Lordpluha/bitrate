@@ -14,13 +14,10 @@ import { MusicCardLg } from '@shared/ui'
 import { usePlaylists } from '@entities/Playlist'
 
 export const PopularPlaylists = () => {
-  const {
-    data: playlists,
-    isPending
-  } = usePlaylists(1, 3)
+  const { data: playlists, isPending } = usePlaylists(1, 3)
 
   if (isPending) {
-    return null;
+    return null
   }
 
   return (
@@ -51,14 +48,11 @@ export const PopularPlaylists = () => {
               <div className="text-gray-400 p-4">No playlists found</div>
             ) : (
               playlists?.map((playlist) => (
-                <CarouselItem
-                  key={playlist.id}
-                  className="basis-auto max-w-50"
-                >
+                <CarouselItem key={playlist.id} className="basis-auto max-w-50">
                   <MusicCardLg
                     id={playlist.id}
                     name={playlist.title}
-                    description={playlist.description}
+                    description={playlist.description || undefined}
                     imageUrl={playlist.cover}
                     isArtist={false}
                   />

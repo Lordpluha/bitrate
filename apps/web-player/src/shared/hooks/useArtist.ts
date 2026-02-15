@@ -2,7 +2,8 @@
 
 import { useQuery } from '@shared/api/client'
 
-export const useArtist = (artistId?: string) => useQuery(
+export const useArtist = (artistId?: string) =>
+  useQuery(
     'get',
     `/api/v1/artists/{id}`,
     {
@@ -17,4 +18,3 @@ export const useArtist = (artistId?: string) => useQuery(
       staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     },
   )
-

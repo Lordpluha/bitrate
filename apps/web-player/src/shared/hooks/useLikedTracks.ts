@@ -3,7 +3,11 @@
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { useQuery } from '@shared/api/client'
 
-export const useLikedTracks = (page = 1, limit = 100, onSuccess?: (data: TrackEntity[]) => void) =>
+export const useLikedTracks = (
+  page = 1,
+  limit = 100,
+  onSuccess?: (data: TrackEntity[]) => void,
+) =>
   useQuery(
     'get',
     '/api/v1/tracks/liked',
@@ -22,9 +26,9 @@ export const useLikedTracks = (page = 1, limit = 100, onSuccess?: (data: TrackEn
           audioUrl: `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${track.id}`,
         }))
 
-				onSuccess?.(result)
+        onSuccess?.(result)
 
-				return result
+        return result
       },
     },
   )

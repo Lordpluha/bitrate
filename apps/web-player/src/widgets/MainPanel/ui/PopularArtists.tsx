@@ -13,16 +13,12 @@ import { MusicCardLg } from '../../../shared/ui/MusicCardLg'
 import { useArtists } from '@shared/hooks/useArtists'
 
 export const PopularArtists = () => {
-  const {
-    data,
-    isPending: loadingArtists,
-  } = useArtists()
+  const { data, isPending: loadingArtists } = useArtists()
 
   const artists = Array.isArray(data)
     ? data.map((artist) => ({
         id: artist.id,
-        name:
-          artist.username,
+        name: artist.username,
         description: 'Artist',
         imageUrl: artist.avatar,
       }))

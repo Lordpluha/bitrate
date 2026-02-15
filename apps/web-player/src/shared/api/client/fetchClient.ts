@@ -15,13 +15,16 @@ async function refreshToken(): Promise<boolean> {
 
   refreshPromise = (async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/refresh`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/refresh`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
 
       if (!response.ok) {
         return false
@@ -69,8 +72,10 @@ const authRefreshMiddleware: Middleware = {
       // Refresh не удался - очищаем cookies и редиректим на логин
       if (typeof window !== 'undefined') {
         // Удаляем просроченные токены из cookies
-        document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-        document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+        document.cookie =
+          'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+        document.cookie =
+          'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
 
         // Редиректим на логин ТОЛЬКО если мы еще не на странице авторизации
         const currentPath = window.location.pathname

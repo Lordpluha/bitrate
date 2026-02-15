@@ -48,6 +48,13 @@ export class PlaylistsService {
       },
       include: {
         tracks: true,
+        user: {
+          select: {
+            avatar: true,
+            id: true,
+            username: true,
+          },
+        },
       },
     })
   }

@@ -16,7 +16,7 @@ import {
 import { FC, HTMLAttributes, useState } from 'react'
 
 interface ProfileButtonProps extends HTMLAttributes<HTMLDivElement> {
-  username: string,
+  username: string
 }
 
 export const ProfileButton: FC<ProfileButtonProps> = ({

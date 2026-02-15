@@ -12,7 +12,6 @@ interface MusicItem {
   tracksCount?: number
 }
 
-
 const likedSongsItem: MusicItem = {
   id: 'liked-songs',
   title: 'Liked Songs',
@@ -23,14 +22,13 @@ const likedSongsItem: MusicItem = {
 }
 
 export const LibraryMusic = () => {
-
   const { data: playlists, isLoading } = useQuery('get', '/api/v1/playlists', {
     params: {
-      path: {
+      query: {
         page: 1,
-        limit: 20
-      }
-    }
+        limit: 20,
+      },
+    },
   })
 
   const musicItems = [likedSongsItem]

@@ -36,7 +36,7 @@ export const TrackCard = ({ track, index }: TrackCardProps) => {
       onClick={() => handlePlayTrack(track)}
       className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 rounded hover:bg-white/10 group items-center w-full text-left"
     >
-      <div className="text-sm items-center justify-center hidden group-hover:flex">
+      <div className="text-sm items-center justify-center flex">
         {showNumber && <span className="text-gray-400">{index + 1}</span>}
         {showGreenNumber && <span className="text-green-500">{index + 1}</span>}
         {showPlayIcon && <Play size={14} className="text-white" fill="white" />}
@@ -55,9 +55,7 @@ export const TrackCard = ({ track, index }: TrackCardProps) => {
         >
           {track.title}
         </div>
-        <div className="text-sm text-gray-400">
-          {track.artistId}
-        </div>
+        <div className="text-sm text-gray-400">{track.artistId}</div>
       </div>
       <div className="text-sm text-gray-400">Unknown Album</div>
       <div className="text-sm text-gray-400">

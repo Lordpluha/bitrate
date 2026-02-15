@@ -22,8 +22,8 @@ export const MusicCardMd: React.FC<MusicCardMdProps> = ({
       <Image
         className="flex items-center justify-center object-cover"
         src={imageUrl || '/images/default-playlist.jpg'}
-				width={64}
-				height={64}
+        width={64}
+        height={64}
         alt={name}
       />
       <div className="flex-1 flex flex-col justify-center px-4">
@@ -39,7 +39,7 @@ export const MusicCardMd: React.FC<MusicCardMdProps> = ({
   if (id === 'liked-songs') {
     return (
       <Link href="/main/liked-songs" className={className}>
-        {content}	
+        {content}
       </Link>
     )
   }

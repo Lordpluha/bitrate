@@ -24,7 +24,7 @@ export const NextInQueue: React.FC = () => {
 
   // Хук должен вызываться всегда, до условных return
   const { data: artist } = useArtist(nextTrack?.artistId)
-  const artistName = artist?.username  || 'Unknown Artist'
+  const artistName = artist?.username || 'Unknown Artist'
 
   if (!currentTrack || playlist.length === 0) {
     return null

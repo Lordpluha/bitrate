@@ -2660,8 +2660,8 @@ export interface operations {
                      *         "cover": "https://example.com/cover.jpg",
                      *         "audioUrl": "",
                      *         "userId": "",
-                     *         "createdAt": "2026-02-14T12:53:59.767Z",
-                     *         "updatedAt": "2026-02-14T12:53:59.767Z",
+                     *         "createdAt": "2026-02-15T18:35:55.228Z",
+                     *         "updatedAt": "2026-02-15T18:35:55.228Z",
                      *         "duration": 180,
                      *         "releaseDate": "2023-10-01T12:00:00.000Z",
                      *         "lyrics": null
@@ -3578,7 +3578,14 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PlaylistEntity"];
+                    "application/json": components["schemas"]["PlaylistEntity"] & {
+                        tracks?: components["schemas"]["TrackEntity"][];
+                        user?: {
+                            id?: string;
+                            username?: string;
+                            avatar?: string | null;
+                        };
+                    };
                 };
             };
             /** @description Method not allowed */
