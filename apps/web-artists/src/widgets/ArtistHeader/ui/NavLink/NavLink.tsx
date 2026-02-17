@@ -98,6 +98,7 @@ export const NavLinks = ({
                 key={link.title}
                 href={link.href}
                 className={linkClassName}
+                onMouseEnter={() => handleMouseEnter(link)}
                 onClick={() => handleClick(link)}
               >
                 {link.title}

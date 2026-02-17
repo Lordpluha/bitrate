@@ -6,7 +6,7 @@ import { cn } from '@spotify/ui-react'
 import { ArtistLogo } from '@shared/ui'
 import { NavLinks } from '../NavLink/NavLink'
 import { AuthButtons } from '../AuthButtons/AuthButtons'
-import { SwitchLanguagesButton } from '../SwitchLanguagesButton/SwitchLanguagesButton'
+import { SwitchLanguagesButton } from '../../../../shared/ui/SwitchLanguages/SwitchLanguagesButton/SwitchLanguagesButton'
 import { MobileSubMenu } from './MobileSubMenu'
 import links from '../../config/nav-links.json'
 

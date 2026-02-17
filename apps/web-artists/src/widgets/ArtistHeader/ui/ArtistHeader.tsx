@@ -1,13 +1,12 @@
 'use client'
 
 import { useState, useCallback, useRef, useEffect, useMemo, type ReactNode } from 'react'
-import { ArtistLogo } from '@shared/ui'
+import { ArtistLogo, SwitchLanguagesButton } from '@shared/ui'
 import { cn } from '@spotify/ui-react'
 
 import { NavLinks } from './NavLink/NavLink'
 import { AuthButtons } from './AuthButtons/AuthButtons'
 import { BurgerMenu } from './BurgerMenu/BurgerMenu'
-import { SwitchLanguagesButton } from './SwitchLanguagesButton/SwitchLanguagesButton'
 import { SubMenuContent } from './SubMenuContent/SubMenuContent'
 import { SubmenuProvider } from '../model/SubmenuContext'
 import links from '../config/nav-links.json'
@@ -120,7 +119,7 @@ export const ArtistHeader = ({ children }: ArtistHeaderProps) => {
           />
 
           <section className="hidden lg:flex items-center gap-2">
-            <SwitchLanguagesButton />
+            <SwitchLanguagesButton className=' transform hover:scale-110 transition duration-300 ease-in-out'/>
             <AuthButtons />
           </section>
 
