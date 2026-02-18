@@ -17,8 +17,6 @@ export class DownloadResourcesService {
   private readonly logger = new Logger(DownloadResourcesService.name, { timestamp: true })
 
   constructor(storageBase: string) {
-    // Скачиваем файлы напрямую в финальные директории
-    // так же как это делает Multer в контроллерах
     this.tracksDir = path.join(storageBase, config.storagePaths.tracks)
     this.coversDir = path.join(storageBase, config.storagePaths.covers)
 
@@ -89,8 +87,8 @@ export class DownloadResourcesService {
     const trackId = ncsSong.id || Date.now().toString()
     const sanitizedTitle = this.sanitizeFilename(ncsSong.name)
 
-    let audioFilePath: string | null = null
-    let coverFilePath: string | null = null
+    let audioFilename: string | null = null
+    let coverFilename: string | null = null
     let audioSize: number | undefined
     let coverSize: number | undefined
     let instrumentalSize: number | undefined
@@ -98,60 +96,63 @@ export class DownloadResourcesService {
     // Скачиваем обложку
     if (ncsSong.coverUrl) {
       const coverExt = path.extname(new URL(ncsSong.coverUrl).pathname) || '.jpg'
-      const coverFilename = `${sanitizedTitle}_${trackId}${coverExt}`
+      coverFilename = `${sanitizedTitle}_${trackId}${coverExt}`
       const coverPath = path.join(this.coversDir, coverFilename)
 
       this.logger.log('    📥 Downloading cover...')
       const result = await this.downloadFile(ncsSong.coverUrl, coverPath)
       if (result.success) {
         this.logger.log('    ✅ Cover saved')
-        coverFilePath = coverPath
         coverSize = result.size
+      } else {
+        coverFilename = null
       }
     }
 
     // Скачиваем основной аудио файл (regular)
     if (ncsSong.download.regular) {
-      const audioFilename = `${sanitizedTitle}_${trackId}.mp3`
+      audioFilename = `${sanitizedTitle}_${trackId}.mp3`
       const audioPath = path.join(this.tracksDir, audioFilename)
 
       this.logger.log('    📥 Downloading audio file (regular)...')
       const result = await this.downloadFile(ncsSong.download.regular, audioPath)
       if (result.success) {
         this.logger.log('    ✅ Regular version saved')
-        audioFilePath = audioPath
         audioSize = result.size
+      } else {
+        audioFilename = null
       }
     }
 
     // Если regular нет, пробуем preview
-    if (!audioFilePath && ncsSong.previewUrl) {
-      const audioFilename = `${sanitizedTitle}_${trackId}_preview.mp3`
+    if (!audioFilename && ncsSong.previewUrl) {
+      audioFilename = `${sanitizedTitle}_${trackId}_preview.mp3`
       const previewPath = path.join(this.tracksDir, audioFilename)
 
       this.logger.log('    📥 Downloading preview...')
       const result = await this.downloadFile(ncsSong.previewUrl, previewPath)
       if (result.success) {
-        audioFilePath = previewPath
         audioSize = result.size
       } else {
         // Fallback на оригинальный URL
+        audioFilename = ncsSong.previewUrl
         this.logger.warn('    ⚠️  Using original preview URL as fallback')
       }
     }
 
     // Скачиваем instrumental версию
-    let instrumentalFilePath: string | null = null
+    let instrumentalFilename: string | null = null
     if (ncsSong.download.instrumental) {
-      const instrumentalFilename = `${sanitizedTitle}_${trackId}_instrumental.mp3`
+      instrumentalFilename = `${sanitizedTitle}_${trackId}_instrumental.mp3`
       const instrumentalPath = path.join(this.tracksDir, instrumentalFilename)
 
       this.logger.log('    📥 Downloading instrumental version...')
       const result = await this.downloadFile(ncsSong.download.instrumental, instrumentalPath)
       if (result.success) {
         this.logger.log('    ✅ Instrumental version saved')
-        instrumentalFilePath = instrumentalPath
         instrumentalSize = result.size
+      } else {
+        instrumentalFilename = null
       }
     }
 
@@ -159,9 +160,9 @@ export class DownloadResourcesService {
     const duration = Math.floor(Math.random() * (300 - 180 + 1)) + 180
 
     return {
-      audioFilePath,
-      coverFilePath,
-      instrumentalFilePath,
+      audioFilename,
+      coverFilename,
+      instrumentalFilename,
       audioSize,
       coverSize,
       instrumentalSize,
