@@ -13,8 +13,6 @@ export async function runDev(options = {}) {
     entry = 'src/**/*.{ts,tsx}',
     ignore = ['**/*.test.*', '**/*.stories.*', '**/__tests__/**'],
     outdir = 'dist',
-    cssInput = './src/styles/index.css',
-    cssOutput = './dist/globals.css',
   } = options
 
   // Находим все .ts и .tsx файлы, кроме тестов и stories
@@ -32,12 +30,9 @@ export async function runDev(options = {}) {
     target: ['es2020'],
     jsx: 'automatic',
     packages: 'external',
-    loader: {
-      '.css': 'css',
-    },
   }
 
-  async function watchBuild(cwd, outdir, cssInput, cssOutput) {
+  async function watchBuild(cwd, outdir) {
     try {
       // Generate initial type definitions
       console.log('Generating type definitions...')
@@ -105,21 +100,12 @@ export async function runDev(options = {}) {
 
       console.log('👀 Watching for changes...')
 
-      // Start CSS watchers in background
-      const cssWatcher = exec(`pnpm dlx @tailwindcss/cli -i ${cssInput} -o ${cssOutput} --watch`, {
-        cwd,
-      })
-
-      cssWatcher.stdout?.on('data', (data) => console.log(`[Tailwind CSS] ${data.trim()}`))
-      cssWatcher.stderr?.on('data', (data) => console.error(`[Tailwind CSS] ${data.trim()}`))
-
       console.log('Press Ctrl+C to stop')
 
       // Keep the process running
       process.on('SIGINT', async () => {
         console.log('\n⏹️  Stopping watch mode...')
         tscWatcher.kill()
-        cssWatcher.kill()
         await esmContext.dispose()
         await cjsContext.dispose()
         process.exit(0)
@@ -131,7 +117,7 @@ export async function runDev(options = {}) {
   }
 
   try {
-    await watchBuild(cwd, outdir, cssInput, cssOutput)
+    await watchBuild(cwd, outdir)
   } catch (error) {
     console.error('Watch failed:', error)
     process.exit(1)

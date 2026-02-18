@@ -15,8 +15,6 @@ export async function runBuild(options = {}) {
     entry = 'src/**/*.{ts,tsx}',
     ignore = ['**/*.test.*', '**/*.stories.*', '**/__tests__/**'],
     outdir = 'dist',
-    cssInput = './src/styles/index.css',
-    cssOutput = './dist/globals.css',
   } = options
 
   // Находим все .ts и .tsx файлы, кроме тестов и stories
@@ -33,13 +31,10 @@ export async function runBuild(options = {}) {
     target: ['es2020', 'chrome90', 'firefox88', 'safari14', 'edge90'],
     jsx: 'automatic',
     packages: 'external',
-    loader: {
-      '.css': 'css',
-    },
     logLevel: 'info',
   }
 
-  async function buildPackage(cwd, outdir, cssInput, cssOutput) {
+  async function buildPackage(cwd, outdir) {
     try {
       // Build ESM and CJS in parallel
       await Promise.all([
@@ -64,13 +59,6 @@ export async function runBuild(options = {}) {
         aliasResolver(path.join(cwd, outdir, 'cjs')),
       ])
       console.log('✓ Path aliases resolved')
-
-      // Compile CSS files with Tailwind CLI
-      console.log('Compiling CSS files...')
-      await Promise.all([
-        execAsync(`pnpm dlx @tailwindcss/cli -i ${cssInput} -o ${cssOutput} --minify`, { cwd }),
-      ])
-      console.log('✓ CSS files compiled')
 
       // Generate types
       console.log('Generating type definitions...')

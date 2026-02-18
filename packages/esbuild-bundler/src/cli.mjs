@@ -24,8 +24,6 @@ Options:
   --entry <pattern>     Entry points glob pattern (default: src/**/*.{ts,tsx})
   --ignore <patterns>   Comma-separated patterns to ignore (default: **/*.test.*,**/*.stories.*,**/__tests__/**)
   --outdir <path>       Output directory (default: dist)
-  --css-input <path>    CSS input file for Tailwind (default: ./src/styles/index.css)
-  --css-output <path>   CSS output file (default: ./dist/globals.css)
 
 Examples:
   # Build for production
@@ -51,8 +49,6 @@ async function main() {
         entry: { type: 'string' },
         ignore: { type: 'string' },
         outdir: { type: 'string' },
-        'css-input': { type: 'string' },
-        'css-output': { type: 'string' },
       },
       allowPositionals: true,
     })
@@ -75,8 +71,6 @@ async function main() {
         ? values.ignore.split(',').map((p) => p.trim())
         : ['**/*.test.*', '**/*.stories.*', '**/__tests__/**'],
       outdir: values.outdir || 'dist',
-      cssInput: values['css-input'] || './src/styles/index.css',
-      cssOutput: values['css-output'] || './dist/globals.css',
     }
 
     // Import and run the appropriate command

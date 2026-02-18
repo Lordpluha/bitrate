@@ -1,7 +1,10 @@
+@custom-variant light (&:is(.light *));
+
 @import "./palette.css";
 @import "./typography.css";
 @import "./layout.css";
 @import "./animations.css";
+
 
 /**
  * Semantic Theme Tokens
@@ -85,6 +88,7 @@
   --color-chart-3: var(--color-purple-500);
   --color-chart-4: var(--color-orange-500);
   --color-chart-5: var(--color-red-500);
+
 }
 
 /**
@@ -164,4 +168,5 @@
   --color-chart-3: var(--color-purple-600);
   --color-chart-4: var(--color-orange-600);
   --color-chart-5: var(--color-red-600);
+
 }

@@ -15,9 +15,9 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
     },
-    "./globals.css": {
-      "style": "./dist/globals.css",
-      "default": "./dist/globals.css"
+    "./themes.css": {
+      "style": "./src/styles/themes.css",
+      "default": "./src/styles/themes.css"
     },
     "./src": {
       "default": "./src/index.ts"
@@ -63,6 +63,7 @@
     "@svgr/plugin-jsx": "^8.1.0",
     "@svgr/plugin-prettier": "^8.1.0",
     "@svgr/plugin-svgo": "^8.1.0",
+    "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^25.2.2",
     "@types/react": "~19.1.17",
     "@types/react-dom": "~19.1.11",
