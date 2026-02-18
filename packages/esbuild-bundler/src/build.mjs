@@ -76,7 +76,7 @@ export async function runBuild(options = {}) {
   }
 
   try {
-    await buildPackage(cwd, outdir, cssInput, cssOutput)
+    await buildPackage(cwd, outdir)
   } catch (error) {
     console.error('Build failed:', error)
     process.exit(1)
