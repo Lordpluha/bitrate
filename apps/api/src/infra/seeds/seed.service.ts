@@ -6,6 +6,17 @@ import * as ncs from '@spotify/ncs-parser'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
 import { FakerService } from './faker.service'
+import { createMulterFileFromPath } from './file-helper'
+
+// Интерфейс для TracksService без привязки к seed
+interface ITracksService {
+  create(
+    artistId: string,
+    createTrackDto: { title: string },
+    audioFile: Express.Multer.File,
+    coverFile?: Express.Multer.File,
+  ): Promise<{ id: string }>
+}
 
 /**
  * Главный сервис для заполнения базы данных
@@ -14,6 +25,7 @@ export class SeedService {
   constructor(
     private prisma: PrismaClient,
     private downloadService: DownloadResourcesService,
+    private tracksService: ITracksService,
   ) {}
 
   private readonly logger = new Logger(SeedService.name, { timestamp: true })
@@ -54,71 +66,60 @@ export class SeedService {
     }
 
     // Скачиваем ресурсы
-    const {
-      audioFilename,
-      coverFilename,
-      instrumentalFilename,
-      audioSize,
-      instrumentalSize,
-      duration,
-    } = await this.downloadService.downloadTrackResources(ncsSong)
+    const { audioFilePath, coverFilePath, instrumentalFilePath, duration } =
+      await this.downloadService.downloadTrackResources(ncsSong)
 
-    if (!audioFilename) {
+    if (!audioFilePath) {
       throw new Error('No audio URL available for track')
     }
 
-    // Создаём трек
-    const track = await this.prisma.track.create({
+    // Создаём Multer-совместимые объекты из файлов
+    const audioFile = createMulterFileFromPath(audioFilePath, 'audio')
+    const coverFile = coverFilePath ? createMulterFileFromPath(coverFilePath, 'cover') : undefined
+
+    // Создаём основной трек через стандартный метод TracksService
+    const track = await this.tracksService.create(
+      artistId,
+      { title: ncsSong.name },
+      audioFile,
+      coverFile,
+    )
+
+    // Обновляем дополнительные поля, которые не поддерживаются в стандартном create
+    await this.prisma.track.update({
+      where: { id: track.id },
       data: {
-        title: ncsSong.name,
-        audioUrl: audioFilename,
-        cover: coverFilename || undefined,
-        artistId,
         releaseDate: ncsSong.date,
         duration,
-        lyrics: undefined,
       },
     })
 
-    // Создаём TrackFiles для different версий
-    const trackFiles: Array<{
-      trackId: string
-      format: string
-      bitrate: number
-      codec: string
-      url: string
-      size: number | undefined
-    }> = []
+    // Если есть instrumental версия, создаём отдельный трек
+    if (instrumentalFilePath) {
+      try {
+        const instrumentalAudioFile = createMulterFileFromPath(instrumentalFilePath, 'audio')
+        const instrumentalTrack = await this.tracksService.create(
+          artistId,
+          { title: `${ncsSong.name} (Instrumental)` },
+          instrumentalAudioFile,
+          coverFile,
+        )
 
-    // Regular версия
-    if (audioFilename && !audioFilename.startsWith('http')) {
-      trackFiles.push({
-        trackId: track.id,
-        format: config.fileFormat.audio,
-        bitrate: config.fileFormat.bitrate,
-        codec: config.fileFormat.codec,
-        url: audioFilename,
-        size: audioSize,
-      })
-    }
+        // Обновляем дополнительные поля для instrumental версии
+        await this.prisma.track.update({
+          where: { id: instrumentalTrack.id },
+          data: {
+            releaseDate: ncsSong.date,
+            duration,
+          },
+        })
 
-    // Instrumental версия
-    if (instrumentalFilename) {
-      trackFiles.push({
-        trackId: track.id,
-        format: config.fileFormat.audio,
-        bitrate: config.fileFormat.bitrate,
-        codec: config.fileFormat.codec,
-        url: instrumentalFilename,
-        size: instrumentalSize,
-      })
-    }
-
-    if (trackFiles.length > 0) {
-      await this.prisma.trackFile.createMany({
-        data: trackFiles,
-        skipDuplicates: true,
-      })
+        this.logger.log('  🎹 Created instrumental version')
+      } catch (error) {
+        this.logger.warn(
+          `  ⚠️  Failed to create instrumental version: ${error instanceof Error ? error.message : error}`,
+        )
+      }
     }
 
     return track
