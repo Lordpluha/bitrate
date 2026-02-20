@@ -7,7 +7,7 @@ import { Statistics } from './Statistics'
 export const Welcome = () => {
   return (
     <div className="hero flex gap-2 items-stretch container p-0 box-border max-lg:grid max-lg:grid-rows-2 -mt-[112px] max-lg:-mt-25">
-      <div className=" flex-1 p-20 pt-40 rounded-3xl bg-bgSecondary mt-2 flex flex-col items-start gap-8 max-lg:p-10 max-lg:pt-35">
+      <div className="flex-1 p-20 pt-40 rounded-3xl bg-background-secondary mt-2 flex flex-col items-start gap-8 max-lg:p-10 max-lg:pt-35">
         <Typography as="h1" className={'leading-[1.2]'} size={'heading1'}>
           Discover a World of Music with Spotify
         </Typography>

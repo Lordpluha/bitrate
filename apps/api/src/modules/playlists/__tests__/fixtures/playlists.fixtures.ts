@@ -41,5 +41,10 @@ export const buildPlaylistWithUser = (overrides: Partial<FindAllResult[number]> 
 export const buildPlaylistWithTracks = (overrides: Partial<GetByIdResult> = {}): GetByIdResult => ({
   ...buildPlaylist(),
   tracks: [],
+  user: {
+    id: 'user-1',
+    username: 'user',
+    avatar: null,
+  },
   ...overrides,
 })

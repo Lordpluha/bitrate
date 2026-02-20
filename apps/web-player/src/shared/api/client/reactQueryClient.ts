@@ -2,12 +2,9 @@
 
 import createClient from 'openapi-react-query'
 
-import { fetchClient } from './fetchClient'
+import { clientFetchClient } from './fetchClient'
 
-/**
- * Query TS client for the API.
- */
-export const rqClient = createClient(fetchClient)
+export const rqClient = createClient(clientFetchClient)
 const {
   useQuery,
   useMutation,

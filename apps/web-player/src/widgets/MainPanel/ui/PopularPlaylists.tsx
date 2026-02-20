@@ -1,6 +1,5 @@
 'use client'
 
-import { useQuery } from '@shared/api'
 import {
   Carousel,
   CarouselContent,
@@ -10,41 +9,16 @@ import {
   CustomNextIcon,
   CustomPrevIcon,
 } from '@spotify/ui-react'
-import React from 'react'
 
-import { MusicCardLg } from './MusicCardLg'
+import { MusicCardLg } from '@shared/ui'
+import { usePlaylists } from '@entities/Playlist'
 
-interface MusicItem {
-  id: string
-  name: string
-  description?: string
-  imageUrl?: string
-}
+export const PopularPlaylists = () => {
+  const { data: playlists, isPending } = usePlaylists(1, 3)
 
-export const PopularPlaylists: React.FC = () => {
-  const {
-    data,
-    isPending: loadingPlaylists,
-    error,
-  } = useQuery('get', '/api/v1/playlists', {
-    params: {
-      query: {
-        page: 1,
-        limit: 3,
-      },
-    },
-  } as any)
-
-  const playlists: MusicItem[] = Array.isArray(data)
-    ? data.map((playlist) => ({
-        id: playlist.id,
-        name: playlist.title,
-        description:
-          playlist.description ||
-          `Playlist • ${(playlist as any).user?.username || 'Unknown'}`,
-        imageUrl: playlist.cover,
-      }))
-    : []
+  if (isPending) {
+    return null
+  }
 
   return (
     <div className="relative mt-8">
@@ -61,28 +35,25 @@ export const PopularPlaylists: React.FC = () => {
         <Carousel slidesToShow={5} className="w-full">
           <CarouselPrevious
             icon={<CustomPrevIcon />}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
           />
           <CarouselNext
             icon={<CustomNextIcon />}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
           />
           <CarouselContent className="flex">
-            {loadingPlaylists ? (
+            {isPending ? (
               <div className="text-gray-400 p-4">Loading...</div>
-            ) : playlists.length === 0 ? (
+            ) : playlists?.length === 0 ? (
               <div className="text-gray-400 p-4">No playlists found</div>
             ) : (
-              playlists.map((playlist) => (
-                <CarouselItem
-                  key={playlist.id}
-                  className="basis-auto max-w-[200px]"
-                >
+              playlists?.map((playlist) => (
+                <CarouselItem key={playlist.id} className="basis-auto max-w-50">
                   <MusicCardLg
                     id={playlist.id}
-                    name={playlist.name}
-                    description={playlist.description}
-                    imageUrl={playlist.imageUrl}
+                    name={playlist.title}
+                    description={playlist.description || undefined}
+                    imageUrl={playlist.cover}
                     isArtist={false}
                   />
                 </CarouselItem>

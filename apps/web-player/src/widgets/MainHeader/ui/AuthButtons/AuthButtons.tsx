@@ -20,11 +20,11 @@ export const AuthButtons = () => {
 
   return (
     <>
-      <div className="flex items-start xl:flex-row xl:gap-8 flex-col space-y-4 xl:space-y-0">
+      <div className="flex items-center xl:gap-8 flex-row space-y-4 xl:space-y-0">
         <Button
           onClick={openSignUp}
           variant="ghost"
-          className="hover:opacity-70 transition-[.3s] text-base font-semibold text-text xl:justify-center justify-start py-3"
+          className="text-base font-semibold text-text xl:justify-center justify-start py-3 rounded-full h-12 min-w-25"
         >
           Sign up
         </Button>
@@ -32,7 +32,7 @@ export const AuthButtons = () => {
         <Button
           onClick={openLogin}
           variant="default"
-          className="bg-white text-black hover:bg-grey-400 hover:opacity-70 transition-[.3s] px-8 py-3 rounded-full font-bold text-base h-12 min-w-[100px] xl:justify-center justify-start"
+          className="px-8 py-3 rounded-full font-bold text-base h-12 min-w-25 xl:justify-center justify-start"
         >
           Log in
         </Button>

@@ -1,7 +1,6 @@
 'use client'
 
-import { useQuery } from '@shared/api'
-import { ITrack } from '@shared/types'
+import { useQuery } from '@shared/api/client'
 
 interface UseTracksParams {
   page?: number
@@ -20,5 +19,5 @@ export const useTracks = (params: UseTracksParams = {}) => {
         ...(title && { title }),
       },
     },
-  } as any)
+  })
 }

@@ -20,6 +20,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, onTabChange }) => {
     <div className="flex items-center justify-start gap-2">
       {tabs.map((tab) => (
         <button
+          type="button"
           key={tab.id}
           onClick={() => {
             setActiveTab(tab.id)
@@ -29,7 +30,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, onTabChange }) => {
             'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap',
             activeTab === tab.id
               ? 'bg-white text-black'
-              : 'bg-gray-600/30 text-white hover:bg-gray-600/50',
+              : 'bg-black-800 text-white hover:bg-gray-600/50',
           )}
         >
           {tab.label}

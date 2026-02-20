@@ -2,7 +2,7 @@
 
 import { useAuth } from '@shared/hooks'
 import { generateColor } from '@shared/utils'
-import { ApiSchemas } from '@spotify/contracts'
+
 import {
   Button,
   Popover,
@@ -16,7 +16,7 @@ import {
 import { FC, HTMLAttributes, useState } from 'react'
 
 interface ProfileButtonProps extends HTMLAttributes<HTMLDivElement> {
-  username: ApiSchemas['UserEntity']['username']
+  username: string
 }
 
 export const ProfileButton: FC<ProfileButtonProps> = ({

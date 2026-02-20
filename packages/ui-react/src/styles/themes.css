@@ -1,7 +1,10 @@
+@custom-variant light (&:is(.light *));
+
 @import "./palette.css";
 @import "./typography.css";
 @import "./layout.css";
 @import "./animations.css";
+
 
 /**
  * Semantic Theme Tokens
@@ -13,7 +16,7 @@
  */
 @theme {
   /* Background */
-  --color-background: var(--color-black);
+  --color-background: #0a0a0a;
   --color-background-elevated: #121212;
   --color-background-tinted: #1a1a1a;
   --color-background-secondary: #121212;
@@ -29,7 +32,10 @@
   --color-text-secondary: var(--color-neutral-400);
   --color-text-subdued: var(--color-neutral-500);
   --color-text-muted: var(--color-neutral-600);
-  --color-text-contrast: var(--color-black);
+  --color-text-contrast: #000000;
+
+  /* Contrast */
+  --color-contrast: #ffffff;
 
   /* Primary (Brand) */
   --color-primary: var(--color-green-500);
@@ -90,10 +96,10 @@
  */
 :root.light {
   /* Background */
-  --color-background: var(--color-white);
+  --color-background: #ffffff;
   --color-background-elevated: var(--color-neutral-50);
   --color-background-tinted: var(--color-neutral-100);
-  --color-background-secondary: var(--color-neutral-100);
+  --color-background-secondary: #f7f7f7;
   --color-background-highlight: var(--color-neutral-200);
   --color-background-pressed: var(--color-neutral-200);
 
@@ -106,7 +112,10 @@
   --color-text-secondary: var(--color-neutral-700);
   --color-text-subdued: var(--color-neutral-600);
   --color-text-muted: var(--color-neutral-500);
-  --color-text-contrast: var(--color-white);
+  --color-text-contrast: #ffffff;
+
+  /* Contrast */
+  --color-contrast: #000000;
 
   /* Primary (Brand) */
   --color-primary: var(--color-green-600);

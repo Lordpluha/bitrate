@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface MusicCardMdProps {
   id: string
@@ -15,14 +16,15 @@ export const MusicCardMd: React.FC<MusicCardMdProps> = ({
   name,
   description,
   imageUrl,
-  onClick,
 }) => {
   const content = (
     <>
-      <img
-        className="w-16 h-16 flex items-center justify-center object-cover"
-        src={imageUrl}
-        alt=""
+      <Image
+        className="flex items-center justify-center object-cover"
+        src={imageUrl || '/images/default-playlist.jpg'}
+        width={64}
+        height={64}
+        alt={name}
       />
       <div className="flex-1 flex flex-col justify-center px-4">
         <h3 className="text-white font-medium text-sm">{name}</h3>
@@ -34,16 +36,16 @@ export const MusicCardMd: React.FC<MusicCardMdProps> = ({
   const className =
     'flex bg-gray-800/50 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-700/50 transition-all duration-200 flex-1 min-w-0 max-w-[calc(33.333%-0.667rem)]'
 
-  if (id === 'test-all-tracks' && onClick) {
+  if (id === 'liked-songs') {
     return (
-      <div onClick={() => onClick(id)} className={className}>
+      <Link href="/main/liked-songs" className={className}>
         {content}
-      </div>
+      </Link>
     )
   }
 
   return (
-    <Link href={`/playlist/${id}`} className={className}>
+    <Link href={`/main/playlist/${id}`} className={className}>
       {content}
     </Link>
   )
