@@ -84,7 +84,7 @@ export const NavLinks = ({
           const hasSubmenu = Boolean(link.submenu || link.resources)
           
           const linkClassName = cn(
-            'text-white font-[700]',
+            'text-white font-bold',
             !isMobile && 'link-underline',
             !isMobile && isActive && 'before:scale-x-100',
             isMobile && 'text-6xl w-full text-left hover:opacity-70 transition-opacity',

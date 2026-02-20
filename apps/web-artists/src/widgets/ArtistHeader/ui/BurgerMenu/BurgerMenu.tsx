@@ -89,7 +89,7 @@ export const BurgerMenu = () => {
               <div className='flex items-center gap-2'>
                 <SwitchLanguagesButton />
                 <span>
-                  <p className='text-white text-base font-[700]'>English</p>
+                  <p className='text-white text-base font-bold'>English</p>
                 </span>
               </div>
             </div>

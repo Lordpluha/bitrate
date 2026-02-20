@@ -112,7 +112,7 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       className={cn(
-        'fixed left-0 right-0 bg-black z-1051 top-[72px]',
+        'fixed left-0 right-0 bg-black z-1051 top-18',
         'transition-all duration-300 ease-out',
         activeSubmenu && submenuData && !isClosing
           ? 'translate-y-0 opacity-100 pointer-events-auto visible'
@@ -158,12 +158,12 @@ const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = memo(({ data }) => {
     <div className="container pb-10 pt-8 grid grid-cols-4 gap-8">
       {data.map((group) => (
         <div key={group.title}>memo(
-          <h4 className="text-base text-neutral-400 font-[400]">{group.title}</h4>
+          <h4 className="text-base text-neutral-400 font-normal">{group.title}</h4>
 
           {group.sections && group.sections.length > 0 && (
             <ul className="mt-4 space-y-2">
               {group.sections.map((section, idx) => (
-                <li key={section.title} className={cn('mb-4 font-[700]')}>
+                <li key={section.title} className={cn('mb-4 font-bold')}>
                   <Link
                     href={section.href}
                     className={cn(
@@ -239,7 +239,7 @@ const ResourcesContent: React.FC<{ data: ResourceGroup[] }> = memo(({ data }) =>
             {sections.map((item, idx) => {
               const isLargeText = isFirstGroup
               return isLargeText ? (
-                <h4 key={item.id} className="text-5xl text-neutral-400 font-[700]">
+                <h4 key={item.id} className="text-5xl text-neutral-400 font-bold">
                   <Link
                     href={item.href}
                     onMouseEnter={() => handleEnter(item.id)}
@@ -258,7 +258,7 @@ const ResourcesContent: React.FC<{ data: ResourceGroup[] }> = memo(({ data }) =>
                   </Link>
                 </h4>
               ) : (
-                <h5 key={item.id} className="text-2xl text-neutral-400 font-[700]">
+                <h5 key={item.id} className="text-2xl text-neutral-400 font-bold">
                   <Link
                     href={item.href}
                     onMouseEnter={() => handleEnter(item.id)}
