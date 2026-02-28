@@ -31,6 +31,8 @@
     "format": "pnpm exec biome format --write",
     "storybook": "storybook dev -p 6006",
     "clean-build": "rimraf dist",
+    "loki:init": "CI=1 pnpm dlx loki update",
+    "loki:test": "CI=1 pnpm dlx loki test",
     "clean-svgr": "rimraf src/icons/svgr",
     "build-storybook": "storybook build",
     "gen:tokens": "tokens-generator --tokens ../tokens/tokens.json --config ./tokens.config.mjs --output ./src/styles",
@@ -56,9 +58,9 @@
     "@spotify/svgr": "workspace:*",
     "@spotify/tokens": "workspace:*",
     "@spotify/tokens-generator": "workspace:*",
-    "@storybook/addon-a11y": "^10.2.7",
-    "@storybook/addon-docs": "^10.2.7",
-    "@storybook/react-vite": "^10.2.7",
+    "@storybook/addon-a11y": "^10.2.13",
+    "@storybook/addon-docs": "^10.2.13",
+    "@storybook/react-vite": "^10.2.13",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@svgr/plugin-prettier": "^8.1.0",
@@ -66,11 +68,12 @@
     "@types/node": "^25.2.2",
     "@types/react": "~19.1.17",
     "@types/react-dom": "~19.1.11",
-    "chromatic": "^15.0.0",
     "esbuild": "0.27.3",
     "glob": "^13.0.0",
+    "loki": "^0.35.1",
+    "loki-sb7": "^0.33.0",
     "rimraf": "^6.1.2",
-    "storybook": "^10.2.7",
+    "storybook": "^10.2.13",
     "tailwindcss": "^4.1.18",
     "tsc-alias": "^1.8.16",
     "typescript": "^5.9.3"
@@ -91,5 +94,20 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "zod": "^4.3.4"
+  },
+  "loki": {
+    "configurations": {
+      "chrome.laptop": {
+        "target": "chrome.docker",
+        "width": 1366,
+        "height": 768,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "chrome.iphone7": {
+        "target": "chrome.docker",
+        "preset": "iPhone 7"
+      }
+    }
   }
 }

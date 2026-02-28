@@ -298,6 +298,7 @@ export const WithImage: Story = {
                     alt={song.title}
                     width={32}
                     height={32}
+                    unoptimized
                     className="object-cover grayscale"
                   />
                 </ItemMedia>
@@ -413,6 +414,7 @@ export const WithHeader: Story = {
                   alt={model.name}
                   width={128}
                   height={128}
+                  unoptimized
                   className="aspect-square w-full rounded-sm object-cover"
                 />
               </ItemHeader>
