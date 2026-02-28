@@ -5,7 +5,7 @@ This document summarizes all GitHub Actions workflows in this repository: what t
 ## Shared actions
 Common setup steps were moved into composite actions to keep workflows DRY:
 - .github/actions/setup-node-pnpm: setup Node.js + pnpm (optional install)
-- .github/actions/setup-docker: setup Docker Buildx (optional QEMU)
+- .github/actions/setup-docker: setup Docker Buildx (optional QEMU) + optional GHCR login
 
 ## Chromatic ([chromatic.yml](chromatic.yml))
 **Triggers**
@@ -17,7 +17,7 @@ Common setup steps were moved into composite actions to keep workflows DRY:
 ## Production Deploy ([deploy.yml](deploy.yml))
 **Triggers**
 - `workflow_dispatch` with `environment` input (`staging` or `production`).
-- `push` to `main` when changes touch `apps/**`, `packages/**`, or `docker-compose.prod.yaml`.
+- `push` to `master` when changes touch `apps/**`, `packages/**`, or `docker-compose.prod.yaml`.
 
 **Purpose**
 - Build/push Docker images (api/web/admin) and deploy to server via SSH.
@@ -25,8 +25,8 @@ Common setup steps were moved into composite actions to keep workflows DRY:
 
 ## Desktop Build ([desktop.yml](desktop.yml))
 **Triggers**
-- `push` to `main` or `develop` when `apps/desktop/**` changes.
-- `pull_request` to `main` or `develop` when `apps/desktop/**` changes.
+- `push` to `master` or `develop` when `apps/desktop/**` changes.
+- `pull_request` to `master` or `develop` when `apps/desktop/**` changes.
 
 **Purpose**
 - Build Tauri desktop apps for Linux, Windows, macOS.
@@ -35,7 +35,7 @@ Common setup steps were moved into composite actions to keep workflows DRY:
 ## Docker CI/CD ([docker.yml](docker.yml))
 **Triggers**
 - `push` to `master` or `develop` when `apps/**`, `packages/**`, `docker-compose*.yaml`, or the workflow changes.
-- `pull_request` to `main` or `develop` when `apps/**` or `packages/**` changes.
+- `pull_request` to `master` or `develop` when `apps/**` or `packages/**` changes.
 
 **Purpose**
 - Detect changed services and build Docker images for `api/web-player/web-artists/admin`.
@@ -92,9 +92,8 @@ Common setup steps were moved into composite actions to keep workflows DRY:
 
 **Purpose**
 - Create GitHub Release with changelog.
-- Publish Docker images.
+- Publish Docker images to GHCR.
 - Build desktop apps for all OSes and attach to release.
-- Publish npm packages (if `NPM_TOKEN` is set).
 
 ## Security Checks ([security.yml](security.yml))
 **Triggers**

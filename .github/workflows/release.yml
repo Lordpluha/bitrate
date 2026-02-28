@@ -116,24 +116,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker
         with:
           qemu: "true"
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Log in to Docker Hub
-        if: secrets.DOCKERHUB_USERNAME != ''
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          ghcr: "true"
+          ghcr-registry: ghcr.io
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata
         id: meta
@@ -141,7 +131,6 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository }}/${{ matrix.service }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.repository }}/${{ matrix.service }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -209,34 +198,6 @@ jobs:
           asset_path: apps/desktop/src-tauri/target/release/bundle
           asset_name: desktop-${{ matrix.os }}.zip
           asset_content_type: application/zip
-
-  # Publish npm packages
-  publish-packages:
-    name: Publish NPM Packages
-    runs-on: ubuntu-latest
-    needs: create-release
-    if: secrets.NPM_TOKEN != ''
-
-    strategy:
-      matrix:
-        package: [ui-react, contracts]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-node-pnpm
-        with:
-          cache: pnpm
-          registry-url: "https://registry.npmjs.org"
-
-      - name: Build package
-        run: pnpm --filter @spotify/${{ matrix.package }} run build
-
-      - name: Publish to npm
-        run: pnpm --filter @spotify/${{ matrix.package }} publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   # Deploy to production
   deploy-production:

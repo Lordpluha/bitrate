@@ -1,5 +1,5 @@
 name: Setup Docker Buildx
-description: Setup Docker Buildx (and optional QEMU)
+description: Setup Docker Buildx (and optional QEMU/GHCR login)
 inputs:
   qemu:
     description: Enable QEMU for multi-arch builds
@@ -7,6 +7,22 @@ inputs:
     default: "false"
   buildx-driver-opts:
     description: Driver options for buildx (optional)
+    required: false
+    default: ""
+  ghcr:
+    description: Login to GHCR
+    required: false
+    default: "false"
+  ghcr-registry:
+    description: GHCR registry URL
+    required: false
+    default: ghcr.io
+  ghcr-username:
+    description: GHCR username
+    required: false
+    default: ""
+  ghcr-password:
+    description: GHCR password/token
     required: false
     default: ""
 runs:
@@ -20,3 +36,11 @@ runs:
       uses: docker/setup-buildx-action@v3
       with:
         driver-opts: ${{ inputs.buildx-driver-opts }}
+
+    - name: Log in to GHCR
+      if: ${{ inputs.ghcr == 'true' && inputs.ghcr-username != '' && inputs.ghcr-password != '' }}
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ inputs.ghcr-registry }}
+        username: ${{ inputs.ghcr-username }}
+        password: ${{ inputs.ghcr-password }}

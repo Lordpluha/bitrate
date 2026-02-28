@@ -15,7 +15,7 @@ This project uses a comprehensive CI/CD pipeline with GitHub Actions covering:
 ### Core Workflows
 
 #### 1. Pull Request (`pull_request.yml`)
-**Triggers:** On pull requests to main/develop branches
+**Triggers:** On pull requests to master/develop branches
 
 **Jobs:**
 - **code-quality**: Runs Biome linter & formatter checks
@@ -39,7 +39,7 @@ git push origin feature/my-feature
 ---
 
 #### 2. Docker CI/CD (`docker.yml`)
-**Triggers:** Push to main/develop, manual dispatch
+**Triggers:** Push to master/develop, manual dispatch
 
 **Jobs:**
 - **detect-changes**: Uses dorny/paths-filter to detect which apps changed
@@ -58,8 +58,8 @@ git push origin feature/my-feature
 
 **Usage:**
 ```bash
-# Runs automatically on push to main/develop
-git push origin main
+# Runs automatically on push to master/develop
+git push origin master
 
 # Manual trigger
 gh workflow run docker.yml
@@ -198,7 +198,6 @@ gh workflow run monitoring.yml
 - **create-release**: Generate GitHub release with changelog
 - **publish-images**: Publish Docker images to GHCR + Docker Hub
 - **build-desktop**: Build desktop apps (Windows, macOS, Linux)
-- **publish-packages**: Publish NPM packages (@spotify/ui-react, @spotify/contracts)
 - **deploy-production**: Trigger production deployment
 
 **Key Features:**
@@ -218,15 +217,11 @@ git push origin v1.2.3
 # 1. GitHub release creation
 # 2. Docker images published
 # 3. Desktop apps built for all platforms
-# 4. NPM packages published
-# 5. Production deployment
+# 4. Production deployment
 ```
 
 **Required Secrets:**
 - `GITHUB_TOKEN` (auto-provided)
-- `DOCKERHUB_USERNAME` (optional)
-- `DOCKERHUB_TOKEN` (optional)
-- `NPM_TOKEN` (optional)
 
 ---
 
@@ -269,12 +264,6 @@ SERVER_HOST=your-server.com
 SERVER_USER=deploy
 SERVER_SSH_KEY=<private-key>
 
-# Docker Registry
-DOCKERHUB_USERNAME=yourusername
-DOCKERHUB_TOKEN=<access-token>
-
-# NPM Publishing
-NPM_TOKEN=<npm-token>
 ```
 
 ### Optional
@@ -312,7 +301,7 @@ graph TB
     PR --> Tests[Tests]
     PR --> Docker[Docker Build]
 
-    Main[Push to Main] --> DockerCI[Docker CI/CD]
+    Master[Push to Master] --> DockerCI[Docker CI/CD]
     DockerCI --> Security[Security Scan]
     DockerCI --> Performance[Performance Tests]
 
@@ -374,8 +363,8 @@ git push origin v1.2.3
 
 ### Hotfix Flow
 ```bash
-# 1. Create hotfix from main
-git checkout main
+# 1. Create hotfix from master
+git checkout master
 git checkout -b hotfix/critical-bug
 
 # 2. Fix and commit
@@ -387,7 +376,7 @@ git push origin hotfix/critical-bug
 gh pr create
 
 # 4. After merge, tag and release
-git checkout main
+git checkout master
 git pull
 git tag v1.2.4
 git push origin v1.2.4
@@ -496,7 +485,7 @@ k6 run tests/load/api-load-test.js
 
 ## 📚 Additional Resources
 
-- [README.md](../README.md) - Main documentation including Docker setup
+- [README.md](../README.md) - Master documentation including Docker setup
 - [GitHub Actions Docs](https://docs.github.com/actions)
 - [k6 Load Testing](https://k6.io/docs/)
 - [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
@@ -506,7 +495,7 @@ k6 run tests/load/api-load-test.js
 
 ## 🎯 Best Practices
 
-1. **Always create PRs** - Never push directly to main
+1. **Always create PRs** - Never push directly to master
 2. **Use semantic versioning** - v1.2.3 (major.minor.patch)
 3. **Write descriptive commits** - Follow conventional commits
 4. **Test locally first** - Run `pnpm test` before pushing
