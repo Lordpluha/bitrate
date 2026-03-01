@@ -1,5 +1,5 @@
 import { PlaylistHeader } from '@views/Playlist/ui/PlaylistHeader'
-import { Spinner } from "@spotify/ui-react"
+import { Spinner } from '@spotify/ui-react'
 
 export default function Loading() {
   return (
@@ -13,7 +13,9 @@ export default function Loading() {
         duration={0}
       />
       <div className="flex justify-center items-center h-64">
-        <div className="text-text"><Spinner /></div>
+        <div className="text-text">
+          <Spinner />
+        </div>
       </div>
     </>
   )

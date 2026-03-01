@@ -20,7 +20,9 @@ type StorybookExtractedStory = {
 }
 
 type StorybookPreviewCompat = {
-  extract?: (options?: { includeDocsOnly?: boolean }) => Promise<Record<string, StorybookExtractedStory>>
+  extract?: (options?: {
+    includeDocsOnly?: boolean
+  }) => Promise<Record<string, StorybookExtractedStory>>
   storyStoreValue?: {
     raw?: () => LokiStory[]
     extract?: (options?: { includeDocsOnly?: boolean }) => Record<string, StorybookExtractedStory>
@@ -46,7 +48,11 @@ const installLokiStoryStoreRawShim = () => {
   const preview = (window as typeof window & { __STORYBOOK_PREVIEW__?: StorybookPreviewCompat })
     .__STORYBOOK_PREVIEW__
 
-  if (!preview?.extract || !preview.storyStoreValue || typeof preview.storyStoreValue.raw === 'function') {
+  if (
+    !preview?.extract ||
+    !preview.storyStoreValue ||
+    typeof preview.storyStoreValue.raw === 'function'
+  ) {
     return
   }
 

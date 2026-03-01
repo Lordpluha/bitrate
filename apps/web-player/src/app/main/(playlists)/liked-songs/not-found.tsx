@@ -1,4 +1,4 @@
-import { PlaylistHeader } from "@views/Playlist/ui/PlaylistHeader";
+import { PlaylistHeader } from '@views/Playlist/ui/PlaylistHeader'
 
 export default function LikedSongsNotFound() {
   return (
