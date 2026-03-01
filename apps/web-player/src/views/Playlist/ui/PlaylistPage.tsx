@@ -1,91 +1,41 @@
 'use client'
 
-import { play, setPlaylist } from '@entities/Player'
+import { setPlaylistTracks, setCurrentPlaylistName } from '@entities/Player'
 import { useAppDispatch } from '@shared/hooks'
-import { useTracks } from '@shared/hooks/useTracks'
-import { ITrack } from '@shared/types'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { PlaylistHeader } from './PlaylistHeader'
-import { Track, TracksList } from './TracksList'
+import { TracksList } from '../../../entities/Track/ui/TracksList'
+import { getPlaylistDuration } from '../utils/getPlaylistDuration'
+import { fallbackPlaylistCover } from '@shared/constants'
+import type { PlaylistServerApi } from '@entities/Playlist/api/server/PlaylistApi.server'
 
-export const PlaylistPage: React.FC = () => {
+interface PlaylistPageProps {
+  playlist: Awaited<ReturnType<typeof PlaylistServerApi.getPlaylists>>['data']
+}
+
+export const PlaylistPage = ({ playlist }: PlaylistPageProps) => {
   const dispatch = useAppDispatch()
-  const { data, isPending } = useTracks()
-
-  const tracks = (data as any)?.data || data || []
-  const tracksArray = Array.isArray(tracks) ? tracks : []
 
   useEffect(() => {
-    if (tracksArray && tracksArray.length > 0) {
-      const iTracks = tracksArray.map((track) => ({
-        id: track.id,
-        title: track.title,
-        audioUrl: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
-        cover: track.cover,
-        createdAt: track.createdAt,
-        artistId: track.artistId || '',
-        artist: (track as any).artist || 'Unknown Artist',
-        duration: (track as any).duration || 0,
-        name: track.title,
-        file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
-      }))
-      dispatch(setPlaylist(iTracks as any))
-    }
-  }, [tracksArray, dispatch])
-
-  if (isPending) {
-    return (
-      <div className="h-full overflow-y-auto custom-scrollbar">
-        <PlaylistHeader
-          title="Loading..."
-          type="Playlist"
-          imageUrl="/images/drive-cover-big.jpg"
-          author="Loading..."
-          songsCount={0}
-          tracksCount={0}
-          duration="0 min"
-        />
-        <div className="flex justify-center items-center h-64">
-          <div className="text-text">Loading tracks...</div>
-        </div>
-      </div>
-    )
-  }
-
-  const handlePlayTrack = (track: Track) => {
-    const iTrack: ITrack = {
-      id: track.id,
-      title: track.title,
-      audioUrl: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
-      cover: track.cover,
-      createdAt: track.createdAt || new Date().toISOString(),
-      artistId: track.artistId || '',
-      artist:
-        (track as any).artist?.name ||
-        (track as any).artist ||
-        'Unknown Artist',
-      duration: (track as any).duration || 0,
-      name: track.title,
-      file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
-      lyrics: null,
-      releaseDate: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-    dispatch(play(iTrack))
-  }
+    dispatch(setPlaylistTracks(playlist?.tracks || []))
+    dispatch(setCurrentPlaylistName(playlist?.title || 'Playlist'))
+  }, [dispatch, playlist])
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
+    <>
       <PlaylistHeader
-        title="All Tracks"
+        title={playlist?.title || 'Playlist'}
         type="Playlist"
-        imageUrl="/images/drive-cover-big.jpg"
-        author="Music Library"
-        songsCount={0}
-        tracksCount={tracksArray?.length || 0}
-        duration="6 hr 30 min"
+        imageUrl={playlist?.cover || fallbackPlaylistCover}
+        author={playlist?.user?.username || 'Unknown'}
+        tracksCount={playlist?.tracks?.length || 0}
+        duration={getPlaylistDuration(playlist?.tracks || [])}
       />
-      <TracksList tracks={tracksArray} onPlayTrack={handlePlayTrack} />
-    </div>
+      {playlist?.tracks?.length === 0 ? (
+        <div className="text-white p-8">No tracks in this playlist</div>
+      ) : (
+        <TracksList tracks={playlist?.tracks || []} />
+      )}
+    </>
   )
 }

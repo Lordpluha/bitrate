@@ -1,7 +1,18 @@
+import { TrackEntity } from '@modules/tracks/entities'
 import { UserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Req,
+} from '@nestjs/common'
+import { ApiExtraModels, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { GetPlaylistsSwagger } from './decorators/get-playlists.decorator'
@@ -10,7 +21,7 @@ import { UpdatePlaylistDto, UpdatePlaylistSchema } from './dtos/update-playlist.
 import { PlaylistEntity } from './entities'
 import { PlaylistsService } from './playlists.service'
 
-@ApiExtraModels(PlaylistEntity)
+@ApiExtraModels(PlaylistEntity, TrackEntity)
 @ApiTags('Playlists')
 @Controller('playlists')
 export class PlaylistsController {
@@ -26,6 +37,32 @@ export class PlaylistsController {
   }
 
   @ApiOperation({ summary: 'Get playlist by id' })
+  @ApiParam({ name: 'id', description: 'Playlist id', type: 'string', format: 'uuid' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      allOf: [
+        { $ref: '#/components/schemas/PlaylistEntity' },
+        {
+          type: 'object',
+          properties: {
+            tracks: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/TrackEntity' },
+            },
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                username: { type: 'string' },
+                avatar: { type: 'string', nullable: true },
+              },
+            },
+          },
+        },
+      ],
+    },
+  })
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: PlaylistEntity['id']) {
     return await this.playlistService.getByIdPopulated(id)

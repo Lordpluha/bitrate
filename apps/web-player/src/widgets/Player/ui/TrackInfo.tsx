@@ -20,7 +20,7 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
   return (
     <div className="flex items-center gap-3 min-w-[180px] w-[50%]">
       <img
-        src={coverUrl || '/images/drive-cover-big.jpg'}
+        src={coverUrl || '/images/default-playlist.jpg'}
         alt={title}
         className="w-14 h-14 rounded object-cover"
       />

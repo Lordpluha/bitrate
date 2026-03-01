@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 interface MusicItem {
   id: string
   title: string
-  artist: string
+  username: string
   type: 'playlist' | 'album' | 'single' | 'podcast'
   cover: string
   tracksCount?: number
@@ -63,7 +63,7 @@ export const MusicCardSm = ({ item }: MusicCardSmProps) => {
         </h3>
         <p className="text-gray-400 text-xs truncate group-hover:text-gray-300 transition-colors duration-150 mt-0.5">
           {item.type.slice(0, 1).toUpperCase() + item.type.slice(1)} •{' '}
-          {item.artist}
+          {item.username}
           {item.tracksCount && ` • ${item.tracksCount} songs`}
         </p>
       </div>

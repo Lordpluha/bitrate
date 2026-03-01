@@ -1,8 +1,5 @@
 'use client'
 
-import React from 'react'
-
-import { useQuery } from '@shared/api'
 import { CustomNextIcon, CustomPrevIcon } from '@spotify/ui-react'
 import {
   Carousel,
@@ -12,35 +9,18 @@ import {
   CarouselPrevious,
 } from '@spotify/ui-react'
 
-import { MusicCardLg } from './MusicCardLg'
+import { MusicCardLg } from '../../../shared/ui/MusicCardLg'
+import { useArtists } from '@shared/hooks/useArtists'
 
-interface MusicItem {
-  id: string
-  name: string
-  description?: string
-  imageUrl?: string
-}
+export const PopularArtists = () => {
+  const { data, isPending: loadingArtists } = useArtists()
 
-export const PopularArtists: React.FC = () => {
-  const {
-    data,
-    isPending: loadingArtists,
-    error,
-  } = useQuery('get', '/api/v1/artists', {
-    params: {
-      query: {
-        limit: 20,
-      },
-    },
-  } as any)
-
-  const artists: MusicItem[] = Array.isArray(data)
+  const artists = Array.isArray(data)
     ? data.map((artist) => ({
         id: artist.id,
-        name:
-          artist.name || artist.username || artist.title || 'Unknown Artist',
+        name: artist.username,
         description: 'Artist',
-        imageUrl: artist.imageUrl || artist.avatar || artist.cover,
+        imageUrl: artist.avatar,
       }))
     : []
 
@@ -60,11 +40,11 @@ export const PopularArtists: React.FC = () => {
         <Carousel slidesToShow={5} className="w-full">
           <CarouselPrevious
             icon={<CustomPrevIcon />}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
           />
           <CarouselNext
             icon={<CustomNextIcon />}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
           />
           <CarouselContent className="flex">
             {loadingArtists ? (
@@ -81,7 +61,7 @@ export const PopularArtists: React.FC = () => {
                     id={artist.id}
                     name={artist.name}
                     description={artist.description}
-                    imageUrl={artist.imageUrl}
+                    imageUrl={artist.imageUrl || undefined}
                     isArtist={true}
                   />
                 </CarouselItem>

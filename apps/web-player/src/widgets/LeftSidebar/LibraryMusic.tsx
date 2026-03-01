@@ -1,38 +1,33 @@
 'use client'
 
-import { fetchClient } from '@shared/api'
-import { ApiSchemas } from '@spotify/contracts'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@shared/api/client'
 import { MusicCardSm } from './MusicCardSm'
 
 interface MusicItem {
   id: string
   title: string
-  artist: string
+  username: string
   type: 'playlist' | 'album' | 'single' | 'podcast'
   cover: string
   tracksCount?: number
 }
 
-type Playlist = ApiSchemas['PlaylistEntity']
-
 const likedSongsItem: MusicItem = {
   id: 'liked-songs',
   title: 'Liked Songs',
-  artist: 'Playlist',
+  username: 'Playlist',
   type: 'playlist',
   cover: '/images/liked-songs.jpg',
   tracksCount: 0,
 }
 
 export const LibraryMusic = () => {
-  const { data: playlists, isLoading } = useQuery({
-    queryKey: ['playlists'],
-    queryFn: async () => {
-      const { data } = await fetchClient.GET('/api/v1/playlists', {
-        params: { path: { page: 1, limit: 20 } },
-      })
-      return data ? (data as Playlist[]) : []
+  const { data: playlists, isLoading } = useQuery('get', '/api/v1/playlists', {
+    params: {
+      query: {
+        page: 1,
+        limit: 20,
+      },
     },
   })
 
@@ -43,10 +38,10 @@ export const LibraryMusic = () => {
         musicItems.push({
           id: playlist.id,
           title: playlist.title,
-          artist: (playlist as any).user?.username || 'Unknown',
+          username: (playlist as any).user.username,
           type: 'playlist',
           cover: playlist.cover || '/images/default-playlist.jpg',
-          tracksCount: (playlist as any).tracks?.length || 0,
+          tracksCount: 0,
         })
       }
     })

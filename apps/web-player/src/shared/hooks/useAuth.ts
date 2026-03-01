@@ -1,9 +1,9 @@
 'use client'
 
-import { fetchClient } from '@shared/api'
+import { clientFetchClient } from '@shared/api/client'
 import { ROUTES } from '@shared/routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 const userQueryKeys = {
   user: ['user'] as const,
@@ -12,26 +12,29 @@ const userQueryKeys = {
 export const useAuth = () => {
   const router = useRouter()
   const queryClient = useQueryClient()
+  const pathname = usePathname()
+
+  // Не запрашиваем данные пользователя на страницах авторизации
+  const isAuthPage = pathname?.startsWith('/auth/')
 
   const {
     data: user,
     isLoading,
-    isSuccess,
-    error,
     isPending,
   } = useQuery({
     queryKey: userQueryKeys.user,
     queryFn: async () => {
-      const { data, response } = await fetchClient.GET('/api/v1/auth/me')
+      const { data, response } = await clientFetchClient.GET('/api/v1/auth/me')
 
-      if (!response.ok) {
-        throw new Error('Not authenticated')
+      // Если ответ не OK и это не 401 (401 обрабатывается middleware)
+      if (!response.ok && response.status !== 401) {
+        throw new Error('Failed to fetch user')
       }
 
       return data
     },
-    retry: 1, // Only retry once
-    retryDelay: 1000, // Wait 1 second before retry
+    enabled: !isAuthPage, // Отключаем запрос на страницах авторизации
+    retry: false, // Не делаем retry - middleware сам обработает 401
     staleTime: Infinity, // Data never becomes stale - only refetch manually
     gcTime: Infinity, // Keep in cache forever until manual invalidation
     refetchOnWindowFocus: false, // Don't refetch on window focus
@@ -51,7 +54,7 @@ export const useAuth = () => {
       router.push(ROUTES.landing)
     },
     mutationFn: async () => {
-      const { response } = await fetchClient.POST('/api/v1/auth/logout')
+      const { response } = await clientFetchClient.POST('/api/v1/auth/logout')
       if (!response.ok) throw new Error('Logout failed')
     },
   })

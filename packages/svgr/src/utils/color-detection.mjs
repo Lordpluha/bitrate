@@ -1,5 +1,5 @@
-import convert from "color-convert"
-import colorName from "color-name"
+import convert from 'color-convert'
+import colorName from 'color-name'
 
 /**
  * Парсит цвет из строки в RGB массив [r, g, b]
@@ -8,15 +8,15 @@ function parseColor(colorString) {
   const c = colorString.toLowerCase().trim()
 
   // HEX формат
-  if (c.startsWith("#")) {
-    const hex = c.replace("#", "")
+  if (c.startsWith('#')) {
+    const hex = c.replace('#', '')
     // Короткий формат (#000 -> #000000)
     const fullHex =
       hex.length === 3
         ? hex
-            .split("")
+            .split('')
             .map((h) => h + h)
-            .join("")
+            .join('')
         : hex
     return convert.hex.rgb(fullHex)
   }
@@ -46,7 +46,7 @@ function parseColor(colorString) {
  * RGB массив в HEX
  */
 function rgbToHex(rgb) {
-  return `#${rgb.map((x) => x.toString(16).padStart(2, "0")).join("")}`
+  return `#${rgb.map((x) => x.toString(16).padStart(2, '0')).join('')}`
 }
 
 /**
@@ -69,14 +69,14 @@ export function extractColors(svgContent) {
 
   for (const match of fillMatches) {
     const color = match[1].toLowerCase()
-    if (color !== "none" && color !== "transparent" && !color.startsWith("url(")) {
+    if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
       colors.add(color)
     }
   }
 
   for (const match of strokeMatches) {
     const color = match[1].toLowerCase()
-    if (color !== "none" && color !== "transparent" && !color.startsWith("url(")) {
+    if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
       colors.add(color)
     }
   }
@@ -90,7 +90,7 @@ export function extractColors(svgContent) {
     const fillStyleMatch = styleContent.match(/fill\s*:\s*([^;]+)/i)
     if (fillStyleMatch) {
       const color = fillStyleMatch[1].trim().toLowerCase()
-      if (color !== "none" && color !== "transparent" && !color.startsWith("url(")) {
+      if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
         colors.add(color)
       }
     }
@@ -99,7 +99,7 @@ export function extractColors(svgContent) {
     const strokeStyleMatch = styleContent.match(/stroke\s*:\s*([^;]+)/i)
     if (strokeStyleMatch) {
       const color = strokeStyleMatch[1].trim().toLowerCase()
-      if (color !== "none" && color !== "transparent" && !color.startsWith("url(")) {
+      if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
         colors.add(color)
       }
     }
@@ -109,7 +109,7 @@ export function extractColors(svgContent) {
   const stopColorMatches = svgContent.matchAll(/stop-color="([^"]+)"/g)
   for (const match of stopColorMatches) {
     const color = match[1].toLowerCase()
-    if (color !== "none" && color !== "transparent") {
+    if (color !== 'none' && color !== 'transparent') {
       colors.add(color)
     }
   }
@@ -121,7 +121,7 @@ export function extractColors(svgContent) {
     const stopColorMatch = styleContent.match(/stop-color\s*:\s*([^;]+)/i)
     if (stopColorMatch) {
       const color = stopColorMatch[1].trim().toLowerCase()
-      if (color !== "none" && color !== "transparent") {
+      if (color !== 'none' && color !== 'transparent') {
         colors.add(color)
       }
     }
@@ -149,7 +149,7 @@ export function extractColorsWithOriginals(svgContent) {
 
   for (const match of fillMatches) {
     const color = match[1].toLowerCase()
-    if (color !== "none" && color !== "transparent" && !color.startsWith("url(")) {
+    if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
       const hexColor = colorToHex(color)
       if (!colorMap.has(hexColor)) {
         colorMap.set(hexColor, color)
@@ -159,7 +159,7 @@ export function extractColorsWithOriginals(svgContent) {
 
   for (const match of strokeMatches) {
     const color = match[1].toLowerCase()
-    if (color !== "none" && color !== "transparent" && !color.startsWith("url(")) {
+    if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
       const hexColor = colorToHex(color)
       if (!colorMap.has(hexColor)) {
         colorMap.set(hexColor, color)
@@ -175,7 +175,7 @@ export function extractColorsWithOriginals(svgContent) {
     const fillStyleMatch = styleContent.match(/fill\s*:\s*([^;]+)/i)
     if (fillStyleMatch) {
       const color = fillStyleMatch[1].trim().toLowerCase()
-      if (color !== "none" && color !== "transparent" && !color.startsWith("url(")) {
+      if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
         const hexColor = colorToHex(color)
         if (!colorMap.has(hexColor)) {
           colorMap.set(hexColor, color)
@@ -186,7 +186,7 @@ export function extractColorsWithOriginals(svgContent) {
     const strokeStyleMatch = styleContent.match(/stroke\s*:\s*([^;]+)/i)
     if (strokeStyleMatch) {
       const color = strokeStyleMatch[1].trim().toLowerCase()
-      if (color !== "none" && color !== "transparent" && !color.startsWith("url(")) {
+      if (color !== 'none' && color !== 'transparent' && !color.startsWith('url(')) {
         const hexColor = colorToHex(color)
         if (!colorMap.has(hexColor)) {
           colorMap.set(hexColor, color)
@@ -199,7 +199,7 @@ export function extractColorsWithOriginals(svgContent) {
   const stopColorMatches = svgContent.matchAll(/stop-color="([^"]+)"/g)
   for (const match of stopColorMatches) {
     const color = match[1].toLowerCase()
-    if (color !== "none" && color !== "transparent") {
+    if (color !== 'none' && color !== 'transparent') {
       const hexColor = colorToHex(color)
       if (!colorMap.has(hexColor)) {
         colorMap.set(hexColor, color)
@@ -213,7 +213,7 @@ export function extractColorsWithOriginals(svgContent) {
     const stopColorMatch = styleContent.match(/stop-color\s*:\s*([^;]+)/i)
     if (stopColorMatch) {
       const color = stopColorMatch[1].trim().toLowerCase()
-      if (color !== "none" && color !== "transparent") {
+      if (color !== 'none' && color !== 'transparent') {
         const hexColor = colorToHex(color)
         if (!colorMap.has(hexColor)) {
           colorMap.set(hexColor, color)
@@ -235,7 +235,7 @@ export function isMonochrome(svgContent) {
   if (colors.size === 0) return true
   if (colors.size === 1) {
     const color = Array.from(colors)[0]
-    return color === "#000000" || color === "#ffffff"
+    return color === '#000000' || color === '#ffffff'
   }
 
   return false

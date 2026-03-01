@@ -1,5 +1,5 @@
-import jsx from "@svgr/plugin-jsx"
-import svgo from "@svgr/plugin-svgo"
+import jsx from '@svgr/plugin-jsx'
+import svgo from '@svgr/plugin-svgo'
 
 /**
  * Создает конфигурацию SVGR в зависимости от типа SVG
@@ -13,14 +13,14 @@ export function createSvgrConfig(isMonochrome, _colorVariables = null) {
     icon: true,
     prettier: false,
     svg: true,
-    exportType: "named",
-    jsxRuntime: "automatic",
+    exportType: 'named',
+    jsxRuntime: 'automatic',
     native: false,
     svgProps: {
-      "aria-hidden": "true",
-      focusable: "false",
+      'aria-hidden': 'true',
+      focusable: 'false',
     },
-    expandProps: "end",
+    expandProps: 'end',
     template: (variables, { tpl }) => {
       return tpl`
 ${variables.imports};
@@ -37,7 +37,7 @@ export const ${variables.componentName} = (${variables.props}) => (
 
   const commonPlugins = [
     {
-      name: "preset-default",
+      name: 'preset-default',
       params: {
         overrides: {
           removeViewBox: false,
@@ -46,27 +46,27 @@ export const ${variables.componentName} = (${variables.props}) => (
       },
     },
     {
-      name: "prefixIds",
+      name: 'prefixIds',
       params: {
         prefix: (_node, info) => {
           if (!info || !info.path) {
-            return "svg"
+            return 'svg'
           }
 
           return info.path
-            .split("/")
+            .split('/')
             .pop()
-            .replace(".svg", "")
-            .replace(/[^a-zA-Z0-9-_]/g, "")
+            .replace('.svg', '')
+            .replace(/[^a-zA-Z0-9-_]/g, '')
         },
-        delim: "-",
+        delim: '-',
       },
     },
     // Удаляем xmlns:xlink атрибуты
     {
-      name: "removeAttrs",
+      name: 'removeAttrs',
       params: {
-        attrs: ["xmlns:xlink"],
+        attrs: ['xmlns:xlink'],
       },
     },
   ]
@@ -79,7 +79,7 @@ export const ${variables.componentName} = (${variables.props}) => (
         plugins: [
           ...commonPlugins,
           {
-            name: "convertColors",
+            name: 'convertColors',
             params: {
               currentColor: true,
             },
@@ -87,12 +87,12 @@ export const ${variables.componentName} = (${variables.props}) => (
         ],
       },
       replaceAttrValues: {
-        "#000000": "currentColor",
-        "#000": "currentColor",
-        "#ffffff": "currentColor",
-        "#fff": "currentColor",
-        white: "currentColor",
-        black: "currentColor",
+        '#000000': 'currentColor',
+        '#000': 'currentColor',
+        '#ffffff': 'currentColor',
+        '#fff': 'currentColor',
+        white: 'currentColor',
+        black: 'currentColor',
       },
     }
   } else {
@@ -102,7 +102,7 @@ export const ${variables.componentName} = (${variables.props}) => (
       svgoConfig: {
         plugins: [
           ...commonPlugins.map((plugin) =>
-            plugin.name === "preset-default"
+            plugin.name === 'preset-default'
               ? {
                   ...plugin,
                   params: {

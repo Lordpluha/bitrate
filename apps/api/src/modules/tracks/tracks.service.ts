@@ -108,18 +108,6 @@ export class TracksService {
     })
   }
 
-  async findLikedTracksByUserId(userId: UserEntity['id']) {
-    return await this.prisma.track.findMany({
-      where: {
-        likedBy: {
-          some: {
-            id: userId,
-          },
-        },
-      },
-    })
-  }
-
   async findTrackById(id: TrackEntity['id']) {
     return await this.prisma.track.findUnique({
       where: {

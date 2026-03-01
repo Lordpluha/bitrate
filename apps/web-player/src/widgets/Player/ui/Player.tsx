@@ -9,12 +9,16 @@ import {
   setVolume,
   selectMusicPlayer,
 } from '@entities/Player/store/PlayerSlice'
+import { useArtist } from '@shared/hooks/useArtist'
 
 export const Player: React.FC = () => {
   const { currentTrack, isPlaying, volume, currentTime, duration } =
     useAppSelector(selectMusicPlayer)
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
+  const { data: artist } = useArtist(currentTrack?.artistId)
+  const artistName = artist?.username || 'Unknown Artist'
+
   const {
     audioRef,
     togglePlayPause,
@@ -44,6 +48,8 @@ export const Player: React.FC = () => {
     return null
   }
 
+  console.log(currentTrack.cover)
+
   return (
     <>
       <audio
@@ -64,8 +70,8 @@ export const Player: React.FC = () => {
       >
         <div className="w-[25%]">
           <TrackInfo
-            title={currentTrack.title || currentTrack.name || 'Unknown'}
-            artist={(currentTrack as any).artist || 'Unknown Artist'}
+            title={currentTrack.title || 'Unknown'}
+            artist={artistName}
             coverUrl={currentTrack.cover}
             isLiked={false}
           />

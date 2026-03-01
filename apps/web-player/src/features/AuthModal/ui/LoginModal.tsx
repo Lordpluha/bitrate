@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@shared/api'
+import { useMutation } from '@shared/api/client'
 import { ROUTES } from '@shared/routes'
 import { SocialsAuthDivider } from '@shared/ui'
 import {
