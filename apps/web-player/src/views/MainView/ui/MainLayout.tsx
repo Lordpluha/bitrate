@@ -30,10 +30,10 @@ export default function MainLayout({ children }: PropsWithChildren) {
         <div className="h-full">
           <ResizableLayoutShadCN className="h-full" direction="horizontal">
             <ResizablePanel
-              defaultSize={20}
-              minSize={15}
-              maxSize={30}
               className="overflow-hidden rounded-lg bg-bg-secondary m-1.5"
+              defaultSize={20}
+              maxSize={30}
+              minSize={15}
             >
               <LeftSidebar />
             </ResizablePanel>
@@ -41,9 +41,9 @@ export default function MainLayout({ children }: PropsWithChildren) {
             <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
 
             <ResizablePanel
+              className="overflow-hidden rounded-lg bg-background-secondary m-1.5 relative"
               defaultSize={60}
               minSize={40}
-              className="overflow-hidden rounded-lg bg-background-secondary m-1.5 relative"
             >
               {children}
             </ResizablePanel>
@@ -51,10 +51,10 @@ export default function MainLayout({ children }: PropsWithChildren) {
             <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
 
             <ResizablePanel
-              defaultSize={20}
-              minSize={15}
-              maxSize={30}
               className="overflow-hidden rounded-lg bg-background-secondary m-1.5"
+              defaultSize={20}
+              maxSize={30}
+              minSize={15}
             >
               <RightSidebar />
             </ResizablePanel>

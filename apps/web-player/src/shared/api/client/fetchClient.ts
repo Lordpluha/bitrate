@@ -1,7 +1,7 @@
 'use client'
 
-import type { ApiPaths } from '@spotify/contracts'
 import { ROUTES } from '@shared/routes'
+import type { ApiPaths } from '@spotify/contracts'
 import createClient, { type Middleware } from 'openapi-fetch'
 
 // Состояние refresh запроса для предотвращения гонки

@@ -1,16 +1,16 @@
-import { PlaylistHeader } from '@views/Playlist/ui/PlaylistHeader'
 import { Spinner } from '@spotify/ui-react'
+import { PlaylistHeader } from '@views/Playlist/ui/PlaylistHeader'
 
 export default function Loading() {
   return (
     <>
       <PlaylistHeader
-        title="Liked Songs"
-        type="Playlist"
-        imageUrl="/images/liked-songs.jpg"
         author="Your Library"
-        tracksCount={0}
         duration={0}
+        imageUrl="/images/liked-songs.jpg"
+        title="Liked Songs"
+        tracksCount={0}
+        type="Playlist"
       />
       <div className="flex justify-center items-center h-64">
         <div className="text-text">

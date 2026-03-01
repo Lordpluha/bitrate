@@ -1,18 +1,18 @@
 'use client'
 
-import { useRef, useCallback, useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from './index'
 import {
-  togglePlay,
-  setCurrentTime,
-  setProgress,
-  setDuration,
   changeTrack,
   pause,
+  selectCurrentTrack,
   selectIsPlaying,
   selectVolume,
-  selectCurrentTrack,
+  setCurrentTime,
+  setDuration,
+  setProgress,
+  togglePlay,
 } from '@entities/Player'
+import { useCallback, useEffect, useRef } from 'react'
+import { useAppDispatch, useAppSelector } from './index'
 
 export const useAudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null)

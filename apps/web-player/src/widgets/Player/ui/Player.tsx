@@ -1,15 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { TrackInfo } from './TrackInfo'
-import { PlayerControls } from './PlayerControls'
-import { PlayerActions } from './PlayerActions'
-import { useAudioPlayer, useAppSelector, useAppDispatch } from '@shared/hooks'
 import {
-  setVolume,
   selectMusicPlayer,
+  setVolume,
 } from '@entities/Player/store/PlayerSlice'
+import { useAppDispatch, useAppSelector, useAudioPlayer } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
+import { useEffect, useState } from 'react'
+import { PlayerActions } from './PlayerActions'
+import { PlayerControls } from './PlayerControls'
+import { TrackInfo } from './TrackInfo'
 
 export const Player: React.FC = () => {
   const { currentTrack, isPlaying, volume, currentTime, duration } =
@@ -53,14 +53,14 @@ export const Player: React.FC = () => {
   return (
     <>
       <audio
-        ref={audioRef}
-        preload="none"
         autoPlay={isPlaying}
-        onLoadedMetadata={handleLoadedMetadata}
-        onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnded}
-        onSeeked={handleSeeked}
+        onLoadedMetadata={handleLoadedMetadata}
         onProgress={handleProgress}
+        onSeeked={handleSeeked}
+        onTimeUpdate={handleTimeUpdate}
+        preload="none"
+        ref={audioRef}
       />
 
       <div
@@ -70,29 +70,29 @@ export const Player: React.FC = () => {
       >
         <div className="w-[25%]">
           <TrackInfo
-            title={currentTrack.title || 'Unknown'}
             artist={artistName}
             coverUrl={currentTrack.cover}
             isLiked={false}
+            title={currentTrack.title || 'Unknown'}
           />
         </div>
 
         <div className="w-[40%] flex justify-center">
           <PlayerControls
-            isPlaying={isPlaying}
             currentTime={currentTime}
             duration={duration}
-            onPlayPause={togglePlayPause}
-            onSeek={onSeek}
+            isPlaying={isPlaying}
             onNext={() => changeTrack('next')}
+            onPlayPause={togglePlayPause}
             onPrevious={() => changeTrack('prev')}
+            onSeek={onSeek}
           />
         </div>
 
         <div className="w-[35%] flex justify-end">
           <PlayerActions
-            volume={volume}
             onVolumeChange={(vol) => dispatch(setVolume(vol))}
+            volume={volume}
           />
         </div>
       </div>

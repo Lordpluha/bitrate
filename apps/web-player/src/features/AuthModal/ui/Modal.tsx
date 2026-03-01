@@ -1,7 +1,7 @@
 'use client'
 
-import React, { type ComponentProps, useEffect } from 'react'
 import { cn } from '@spotify/ui-react'
+import React, { type ComponentProps, useEffect } from 'react'
 
 interface ModalProps extends ComponentProps<'div'> {
   isOpen: boolean

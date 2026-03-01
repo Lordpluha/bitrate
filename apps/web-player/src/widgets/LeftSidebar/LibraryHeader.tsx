@@ -4,7 +4,7 @@ import { Maximize2 } from 'lucide-react'
 export const LibraryHeader = () => {
   return (
     <div className="flex gap-2 justify-between items-center">
-      <Typography as="h6" size="heading6" className="">
+      <Typography as="h6" className="" size="heading6">
         Your Library
       </Typography>
       <div className="flex gap-2 items-center">

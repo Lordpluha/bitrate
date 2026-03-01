@@ -1,8 +1,8 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import type { FC, ReactNode } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
+import { cn } from '@/lib/utils'
 
 export interface ResizablePanelProps {
   defaultSize?: number

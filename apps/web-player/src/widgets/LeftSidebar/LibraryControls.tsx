@@ -1,5 +1,5 @@
-import React from 'react'
 import { RecentsIcon, SearchIcon } from '@spotify/ui-react'
+import React from 'react'
 
 export const LibraryControls = () => {
   return (

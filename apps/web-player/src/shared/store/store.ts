@@ -1,12 +1,12 @@
 'use client'
 
-import {
-  createSlice,
-  configureStore,
-  combineSlices,
-  combineReducers,
-} from '@reduxjs/toolkit'
 import { musicPlayerReducer } from '@entities/Player'
+import {
+  combineReducers,
+  combineSlices,
+  configureStore,
+  createSlice,
+} from '@reduxjs/toolkit'
 
 export const createStore = () =>
   configureStore({

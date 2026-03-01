@@ -2,8 +2,8 @@
 
 import type { TrackEntity } from '@entities/Track'
 import { useQuery } from '@shared/api/client'
-import type { PlaylistEntity } from '../models/schemas/Playlist.entity'
 import { useEffect } from 'react'
+import type { PlaylistEntity } from '../models/schemas/Playlist.entity'
 
 export type WithTracks<T> = T & { tracks: TrackEntity[] }
 

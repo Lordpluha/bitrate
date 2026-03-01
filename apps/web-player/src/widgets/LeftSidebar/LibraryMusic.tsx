@@ -55,8 +55,8 @@ export const LibraryMusic = () => {
             {Array.from({ length: 10 }).map((_, i) => (
               <div
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                key={i}
                 className="flex items-center gap-3 p-2 rounded-md"
+                key={i}
               >
                 <div className="w-12 h-12 bg-gray-600 rounded-md animate-pulse" />
                 <div className="flex-1">
@@ -76,7 +76,7 @@ export const LibraryMusic = () => {
       <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
         <div className="space-y-0.5 pb-4">
           {musicItems.map((item) => (
-            <MusicCardSm key={item.id} item={item} />
+            <MusicCardSm item={item} key={item.id} />
           ))}
         </div>
       </div>

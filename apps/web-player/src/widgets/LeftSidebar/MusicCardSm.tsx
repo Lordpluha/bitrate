@@ -41,10 +41,10 @@ export const MusicCardSm = ({ item }: MusicCardSmProps) => {
       <div className="w-12 h-12 rounded-md flex-shrink-0 overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-150">
         {!imageError ? (
           <img
-            src={item.cover}
             alt={item.title}
             className="w-full h-full object-cover"
             onError={handleImageError}
+            src={item.cover}
           />
         ) : (
           <div

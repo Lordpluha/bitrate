@@ -1,6 +1,6 @@
-import React from 'react'
-import { Heart, PictureInPicture2 } from 'lucide-react'
 import { cn } from '@spotify/ui-react'
+import { Heart, PictureInPicture2 } from 'lucide-react'
+import type React from 'react'
 
 interface TrackInfoProps {
   title: string
@@ -20,9 +20,9 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
   return (
     <div className="flex items-center gap-3 min-w-[180px] w-[50%]">
       <img
-        src={coverUrl || '/images/default-playlist.jpg'}
         alt={title}
         className="w-14 h-14 rounded object-cover"
+        src={coverUrl || '/images/default-playlist.jpg'}
       />
       <div className="min-w-8">
         <div className="text-sm font-medium text-white truncate hover:underline cursor-pointer">
@@ -34,22 +34,22 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
       </div>
       <div className="flex items-center gap-2">
         <button
-          onClick={onLikeToggle}
           className="p-2 hover:scale-110 transition-transform"
+          onClick={onLikeToggle}
         >
           <Heart
-            size={16}
             className={cn(
               isLiked
                 ? 'fill-green-500 text-green-500'
                 : 'text-gray-400 hover:text-white',
             )}
+            size={16}
           />
         </button>
         <button className="p-2 hover:scale-110 transition-transform">
           <PictureInPicture2
-            size={16}
             className="text-gray-400 hover:text-white"
+            size={16}
           />
         </button>
       </div>

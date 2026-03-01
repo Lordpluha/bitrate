@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@spotify/ui-react'
-import { FC, HTMLAttributes, useState } from 'react'
+import { type FC, type HTMLAttributes, useState } from 'react'
 
 interface ProfileButtonProps extends HTMLAttributes<HTMLDivElement> {
   username: string

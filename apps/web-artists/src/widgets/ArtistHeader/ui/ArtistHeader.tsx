@@ -1,13 +1,12 @@
 'use client'
 
-import React from 'react'
 import { ArtistLogo } from '@shared/ui'
-
-import { NavLinks } from './NavLink/NavLink'
-import { AuthButtons } from './AuthButtons/AuthButtons'
-import { SwitchLanguagesButton } from './SwitchLanguagesButton/SwitchLanguagesButton'
-import { SubMenuContent } from './SubMenuContent/SubMenuContent'
+import React from 'react'
 import links from '../config/nav-links.json'
+import { AuthButtons } from './AuthButtons/AuthButtons'
+import { NavLinks } from './NavLink/NavLink'
+import { SubMenuContent } from './SubMenuContent/SubMenuContent'
+import { SwitchLanguagesButton } from './SwitchLanguagesButton/SwitchLanguagesButton'
 
 interface LinkItem {
   title: string
@@ -87,8 +86,8 @@ export const ArtistHeader = () => {
 
           <NavLinks
             activeSubmenu={activeSubmenu}
-            setActiveSubmenu={handleSetActiveSubmenu}
             closeSubmenu={handleCloseSubmenu}
+            setActiveSubmenu={handleSetActiveSubmenu}
           />
 
           <section className="flex items-center gap-2">
@@ -100,11 +99,11 @@ export const ArtistHeader = () => {
 
       <SubMenuContent
         activeSubmenu={activeSubmenu}
-        submenuData={submenuData}
-        type={submenuType as 'features' | 'resources'}
         isClosing={isClosing}
         onMouseEnter={handleMenuEnter}
         onMouseLeave={handleCloseSubmenu}
+        submenuData={submenuData}
+        type={submenuType as 'features' | 'resources'}
       />
     </>
   )

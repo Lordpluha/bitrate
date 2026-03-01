@@ -1,15 +1,15 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import { cn } from '@spotify/ui-react'
 import {
-  Play,
   Pause,
+  Play,
+  Repeat,
+  Shuffle,
   SkipBack,
   SkipForward,
-  Shuffle,
-  Repeat,
 } from 'lucide-react'
-import { cn } from '@spotify/ui-react'
+import React, { useRef, useState } from 'react'
 
 interface PlayerControlsProps {
   isPlaying: boolean
@@ -106,46 +106,46 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     <div className="flex-1 flex flex-col items-center gap-2 max-w-[722px]">
       <div className="flex items-center gap-4">
         <button
-          onClick={onShuffleToggle}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
             isShuffled ? 'text-green-500' : 'text-gray-400',
           )}
+          onClick={onShuffleToggle}
         >
           <Shuffle size={16} />
         </button>
 
         <button
-          onClick={onPrevious}
           className="p-1 text-gray-400 hover:text-white hover:scale-110 transition-all"
+          onClick={onPrevious}
         >
           <SkipBack size={20} />
         </button>
 
         <button
-          onClick={onPlayPause}
           className="w-8 h-8 rounded-full bg-white hover:scale-105 transition-transform flex items-center justify-center"
+          onClick={onPlayPause}
         >
           {isPlaying ? (
-            <Pause size={20} className="text-black" fill="black" />
+            <Pause className="text-black" fill="black" size={20} />
           ) : (
-            <Play size={20} className="text-black ml-0.5" fill="black" />
+            <Play className="text-black ml-0.5" fill="black" size={20} />
           )}
         </button>
 
         <button
-          onClick={onNext}
           className="p-1 text-gray-400 hover:text-white hover:scale-110 transition-all"
+          onClick={onNext}
         >
           <SkipForward size={20} />
         </button>
 
         <button
-          onClick={onRepeatToggle}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
             repeatMode !== 'off' ? 'text-green-500' : 'text-gray-400',
           )}
+          onClick={onRepeatToggle}
         >
           <Repeat size={16} />
         </button>
@@ -156,10 +156,10 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           {formatTime(seekTime !== null ? seekTime : currentTime)}
         </span>
         <div
-          ref={progressBarRef}
           className="flex-1 h-1 bg-gray-600 rounded-full cursor-pointer group relative"
-          onMouseDown={handleMouseDown}
           onClick={handleProgressClick}
+          onMouseDown={handleMouseDown}
+          ref={progressBarRef}
         >
           <div
             className="absolute top-0 left-0 h-full bg-white group-hover:bg-green-500 rounded-full pointer-events-none transition-colors"

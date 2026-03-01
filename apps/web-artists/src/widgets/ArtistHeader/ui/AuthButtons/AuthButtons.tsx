@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { cn } from '@spotify/ui-react'
+import Link from 'next/link'
 
 export const AuthButtons = () => (
   <div className="flex items-center gap-4">

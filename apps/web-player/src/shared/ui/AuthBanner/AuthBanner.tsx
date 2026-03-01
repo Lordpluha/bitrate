@@ -22,7 +22,7 @@ export const AuthBanner = () => {
 
   return (
     <Carousel
-      orientation="vertical"
+      className="w-1/2 overflow-hidden rounded-[0_10px_10px_0] max-xl:hidden"
       opts={{
         loop: true,
         align: 'start',
@@ -31,17 +31,17 @@ export const AuthBanner = () => {
         containScroll: 'trimSnaps',
         watchDrag: false,
       }}
+      orientation="vertical"
       plugins={[plugin.current]}
-      className="w-1/2 overflow-hidden rounded-[0_10px_10px_0] max-xl:hidden"
     >
       <CarouselContent className="m-0 h-[1008px] w-full">
         {slides.map(({ src, alt }, i) => (
-          <CarouselItem key={i} className="p-0 basis-full">
+          <CarouselItem className="p-0 basis-full" key={i}>
             <img
-              src={src}
               alt={alt}
               className="h-full w-full object-cover object-center select-none"
               draggable={false}
+              src={src}
             />
           </CarouselItem>
         ))}

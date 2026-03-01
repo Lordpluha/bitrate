@@ -1,7 +1,7 @@
 'use client'
-import React from 'react'
-import Link from 'next/link'
 import { cn, PlayIcon } from '@spotify/ui-react'
+import Link from 'next/link'
+import type React from 'react'
 
 interface MusicCardLgProps {
   id: string
@@ -22,25 +22,25 @@ export const MusicCardLg: React.FC<MusicCardLgProps> = ({
 
   return (
     <Link
-      href={href}
       className="block min-w-[180px] p-4 rounded-lg cursor-pointer hover:bg-gray-700/50 transition-all duration-200 group/card"
+      href={href}
     >
       <div className="relative mb-4">
         <img
+          alt={name}
+          className={cn(
+            'w-full aspect-square object-cover',
+            isArtist ? 'rounded-full' : 'rounded-md',
+          )}
           src={
             imageUrl ||
             (isArtist
               ? '/images/default-artist.jpg'
               : '/images/default-playlist.jpg')
           }
-          alt={name}
-          className={cn(
-            'w-full aspect-square object-cover',
-            isArtist ? 'rounded-full' : 'rounded-md',
-          )}
         />
         <div className="absolute bottom-2 right-2 flex items-center justify-center opacity-0 group-hover/card:opacity-100 translate-y-2 group-hover/card:translate-y-0 transition-all duration-200">
-          <PlayIcon width={48} height={48} />
+          <PlayIcon height={48} width={48} />
         </div>
       </div>
       <h3 className="text-text font-medium text-sm mb-2 line-clamp-1">

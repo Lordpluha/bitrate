@@ -1,8 +1,8 @@
-import { context } from 'esbuild'
-import { glob } from 'glob'
 import { exec } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { context } from 'esbuild'
+import { glob } from 'glob'
 import { aliasResolver } from './alias-resolver.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))

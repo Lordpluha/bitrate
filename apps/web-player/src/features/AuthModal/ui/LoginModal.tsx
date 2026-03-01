@@ -22,9 +22,9 @@ import {
 } from '@spotify/ui-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { LoginFormData, loginSchema } from '../../Login/validation'
+import type React from 'react'
+import { type SubmitHandler, useForm } from 'react-hook-form'
+import { type LoginFormData, loginSchema } from '../../Login/validation'
 import { Modal } from './Modal'
 
 interface LoginModalProps {
@@ -71,24 +71,24 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   return (
     <Modal
+      className="max-w-[500px] w-full"
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      className="max-w-[500px] w-full"
     >
       <div className="flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg">
         <div className="flex flex-col items-center">
-          <LogoIcon width={64} height={64} />
+          <LogoIcon height={64} width={64} />
           <Typography
             as="h5"
-            size={'heading5'}
             className="mt-2 text-center text-text-contrast"
+            size={'heading5'}
           >
             Sign in
           </Typography>
           <Typography
             as="p"
-            size={'body'}
             className="text-center text-grey-500"
+            size={'body'}
           >
             Please login to continue to your account.
           </Typography>
@@ -96,8 +96,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
+            onSubmit={form.handleSubmit(onSubmit)}
           >
             <FormField
               control={form.control}
@@ -112,9 +112,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         </DynamicLabel>
                         <Input
                           id="login-email"
-                          variant="contrast"
-                          type="email"
                           placeholder=""
+                          type="email"
+                          variant="contrast"
                           {...field}
                         />
                       </div>
@@ -141,8 +141,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         </DynamicLabel>
                         <PasswordInput
                           id="login-password"
-                          variant="contrast"
                           placeholder=""
+                          variant="contrast"
                           {...field}
                         />
                       </div>
@@ -162,20 +162,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
             <div className="mt-2 flex flex-col items-stretch gap-4">
               <Button
-                variant="primary"
                 className="rounded"
-                type="submit"
                 disabled={isLoading}
                 isLoading={isLoading}
+                type="submit"
+                variant="primary"
               >
                 {isLoading ? 'Logging in...' : 'Log in'}
               </Button>
 
               <SocialsAuthDivider />
 
-              <Button variant="contrast" type="button">
+              <Button type="button" variant="contrast">
                 <GoogleIcon className="mr-2" />
-                <Typography as="p" size={'body'} className="text-text-contrast">
+                <Typography as="p" className="text-text-contrast" size={'body'}>
                   Continue with Google
                 </Typography>
               </Button>
@@ -183,7 +183,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               <p className="text-base text-center text-text-contrast">
                 Don't have an account?{' '}
                 <button
-                  type="button"
                   className="font-bold text-green-500 hover:opacity-70 underline"
                   onClick={() => {
                     if (onSwitchToSignUp) {
@@ -192,6 +191,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                       onOpenChange(false)
                     }
                   }}
+                  type="button"
                 >
                   Sign up.
                 </button>

@@ -1,5 +1,5 @@
-import { Loader2, Mail } from '@/icons'
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
+import { Loader2, Mail } from '@/icons'
 import { Button } from './button'
 
 /**

@@ -1,9 +1,9 @@
 'use client'
-import React, { useState } from 'react'
-import { Clock } from 'lucide-react'
+import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { useAppSelector } from '@shared/hooks'
+import { Clock } from 'lucide-react'
+import React, { useState } from 'react'
 import { TrackCard } from './TrackCard'
-import { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 
 interface TracksListProps {
   tracks: TrackEntity[]
@@ -24,7 +24,7 @@ export const TracksList = ({ tracks }: TracksListProps) => {
 
       <div className="space-y-1">
         {tracks.map((track, index) => (
-          <TrackCard key={track.id} track={track} index={index} />
+          <TrackCard index={index} key={track.id} track={track} />
         ))}
       </div>
     </div>

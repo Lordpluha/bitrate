@@ -1,9 +1,9 @@
 'use client'
 
 import * as React from 'react'
-import { InputProvider } from './input-context'
-import { Input, type InputProps } from './input'
 import { DynamicLabel, type DynamicLabelProps } from './dynamic-label'
+import { Input, type InputProps } from './input'
+import { InputProvider } from './input-context'
 
 export interface InputWithLabelProps extends InputProps {
   label: string

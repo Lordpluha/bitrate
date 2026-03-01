@@ -11,8 +11,8 @@ import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
 import { Player } from '@widgets/Player'
 import { RightSidebar } from '@widgets/RightSidebar'
-import { useState, useEffect } from 'react'
 import type { PropsWithChildren } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function MainLayout({ children }: PropsWithChildren) {
   const { currentTrack } = useAppSelector((state) => state.musicPlayer)
@@ -40,10 +40,10 @@ export default function MainLayout({ children }: PropsWithChildren) {
         <div className="h-full">
           <ResizableLayoutShadCN className="h-full" direction="horizontal">
             <ResizablePanel
-              defaultSize={20}
-              minSize={15}
-              maxSize={30}
               className="overflow-hidden rounded-lg bg-bg-secondary m-1.5"
+              defaultSize={20}
+              maxSize={30}
+              minSize={15}
             >
               <LeftSidebar />
             </ResizablePanel>
@@ -51,9 +51,9 @@ export default function MainLayout({ children }: PropsWithChildren) {
             <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
 
             <ResizablePanel
+              className="overflow-hidden rounded-lg bg-background-secondary m-1.5 relative"
               defaultSize={60}
               minSize={40}
-              className="overflow-hidden rounded-lg bg-background-secondary m-1.5 relative"
             >
               {children}
             </ResizablePanel>
@@ -65,10 +65,10 @@ export default function MainLayout({ children }: PropsWithChildren) {
                 <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
 
                 <ResizablePanel
-                  defaultSize={20}
-                  minSize={15}
-                  maxSize={30}
                   className="overflow-hidden rounded-lg bg-background-secondary m-1.5"
+                  defaultSize={20}
+                  maxSize={30}
+                  minSize={15}
                 >
                   <RightSidebar
                     onCollapse={() => setIsRightSidebarCollapsed(true)}
@@ -78,12 +78,12 @@ export default function MainLayout({ children }: PropsWithChildren) {
             )}
             {isRightSidebarCollapsed && hasPlayer && (
               <button
-                type="button"
-                onClick={() => setIsRightSidebarCollapsed(false)}
-                className="fixed right-4 top-20 z-50 p-2 rounded-lg bg-background-secondary hover:bg-gray-700/50 transition-colors"
                 aria-label="Expand sidebar"
+                className="fixed right-4 top-20 z-50 p-2 rounded-lg bg-background-secondary hover:bg-gray-700/50 transition-colors"
+                onClick={() => setIsRightSidebarCollapsed(false)}
+                type="button"
               >
-                <RollupIcon width={16} height={16} primaryColor={'#b3b3b3'} />
+                <RollupIcon height={16} primaryColor={'#b3b3b3'} width={16} />
               </button>
             )}
           </ResizableLayoutShadCN>

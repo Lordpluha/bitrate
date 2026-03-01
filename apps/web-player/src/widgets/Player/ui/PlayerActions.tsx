@@ -1,14 +1,14 @@
 'use client'
 
-import React from 'react'
 import {
-  Volume2,
-  VolumeX,
   ListMusic,
+  Maximize2,
   Mic2,
   MonitorSpeaker,
-  Maximize2,
+  Volume2,
+  VolumeX,
 } from 'lucide-react'
+import type React from 'react'
 
 interface PlayerActionsProps {
   volume: number
@@ -39,8 +39,8 @@ export const PlayerActions: React.FC<PlayerActionsProps> = ({
         <MonitorSpeaker size={16} />
       </button>
       <button
-        onClick={toggleMute}
         className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
+        onClick={toggleMute}
       >
         {volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </button>
@@ -52,13 +52,13 @@ export const PlayerActions: React.FC<PlayerActionsProps> = ({
           }}
         />
         <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
           className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+          max="1"
+          min="0"
+          onChange={handleVolumeChange}
+          step="0.01"
+          type="range"
+          value={volume}
         />
       </div>
       <button className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all">
