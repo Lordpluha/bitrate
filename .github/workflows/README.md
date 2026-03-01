@@ -7,12 +7,12 @@ Common setup steps were moved into composite actions to keep workflows DRY:
 - .github/actions/setup-node-pnpm: setup Node.js + pnpm (optional install)
 - .github/actions/setup-docker: setup Docker Buildx (optional QEMU) + optional GHCR login
 
-## Chromatic ([chromatic.yml](chromatic.yml))
+## Loki Visual Tests ([loki.yml](loki.yml))
 **Triggers**
 - `pull_request` targeting `develop`.
 
 **Purpose**
-- Build `@spotify/ui-react` Storybook and publish to Chromatic.
+- Build `@spotify/ui-react` Storybook and run Loki visual regression tests.
 
 ## Production Deploy ([deploy.yml](deploy.yml))
 **Triggers**
