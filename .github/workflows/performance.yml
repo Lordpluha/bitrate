@@ -257,6 +257,13 @@ jobs:
           pattern: 'apps/web-player/.next/static/**/*.js'
           compression: gzip
 
+      - name: Restore repository state
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
   # Database query performance
   db-performance:
     name: Database Performance
