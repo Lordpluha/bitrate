@@ -13,7 +13,7 @@ import {
   Query,
   Req,
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AlbumsService } from './albums.service'
 import {
@@ -26,6 +26,7 @@ import {
 import { CreateAlbumDto, CreateAlbumSchema, UpdateAlbumDto, UpdateAlbumSchema } from './dtos'
 import { AlbumEntity } from './entities'
 
+@ApiExtraModels(AlbumEntity)
 @ApiTags('Albums')
 @Controller('albums')
 export class AlbumsController {
