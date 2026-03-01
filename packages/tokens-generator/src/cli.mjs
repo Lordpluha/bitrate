@@ -5,11 +5,11 @@
  * Supports custom tokens and configuration
  */
 
-import { existsSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { parseArgs } from 'node:util';
-import defaultConfig from './generate-tokens.config.mjs';
-import { generateTokens } from './generate-tokens.mjs';
+import { existsSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { parseArgs } from 'node:util'
+import defaultConfig from './generate-tokens.config.mjs'
+import { generateTokens } from './generate-tokens.mjs'
 
 const USAGE = `
 Usage: tokens-generator [options]
@@ -33,7 +33,7 @@ Examples:
 
   # Use from external package
   tokens-generator --tokens @my-scope/tokens/tokens.json --output ./src/styles
-`;
+`
 
 const DEFAULT_CONFIG_TEMPLATE = `/**
  * Token Generator Configuration
@@ -135,7 +135,7 @@ export default {
     },
   },
 };
-`;
+`
 
 async function main() {
   try {
@@ -148,55 +148,55 @@ async function main() {
         help: { type: 'boolean', short: 'h', default: false },
       },
       allowPositionals: true,
-    });
+    })
 
     // Show help
     if (values.help) {
-      console.log(USAGE);
-      process.exit(0);
+      console.log(USAGE)
+      process.exit(0)
     }
 
     // Initialize config
     if (values.init) {
-      const configPath = resolve(process.cwd(), 'tokens.config.mjs');
+      const configPath = resolve(process.cwd(), 'tokens.config.mjs')
       if (existsSync(configPath)) {
-        console.error(`❌ Config file already exists: ${configPath}`);
-        process.exit(1);
+        console.error(`❌ Config file already exists: ${configPath}`)
+        process.exit(1)
       }
-      writeFileSync(configPath, DEFAULT_CONFIG_TEMPLATE, 'utf-8');
-      console.log(`✅ Created config file: ${configPath}`);
-      console.log('\nEdit this file to customize token generation.');
-      process.exit(0);
+      writeFileSync(configPath, DEFAULT_CONFIG_TEMPLATE, 'utf-8')
+      console.log(`✅ Created config file: ${configPath}`)
+      console.log('\nEdit this file to customize token generation.')
+      process.exit(0)
     }
 
     // Validate required arguments
     if (!values.tokens) {
-      console.error('❌ Error: --tokens argument is required\n');
-      console.log(USAGE);
-      process.exit(1);
+      console.error('❌ Error: --tokens argument is required\n')
+      console.log(USAGE)
+      process.exit(1)
     }
 
     // Resolve paths
-    const tokensPath = resolve(process.cwd(), values.tokens);
+    const tokensPath = resolve(process.cwd(), values.tokens)
 
     if (!existsSync(tokensPath)) {
-      console.error(`❌ Tokens file not found: ${tokensPath}`);
-      process.exit(1);
+      console.error(`❌ Tokens file not found: ${tokensPath}`)
+      process.exit(1)
     }
 
     // Load config
-    let config = { ...defaultConfig };
+    let config = { ...defaultConfig }
     if (values.config) {
-      const configPath = resolve(process.cwd(), values.config);
+      const configPath = resolve(process.cwd(), values.config)
       if (!existsSync(configPath)) {
-        console.error(`❌ Config file not found: ${configPath}`);
-        process.exit(1);
+        console.error(`❌ Config file not found: ${configPath}`)
+        process.exit(1)
       }
-      const imported = await import(`file://${configPath}`);
-      config = imported.default;
-      console.log(`📝 Using config from: ${configPath}`);
+      const imported = await import(`file://${configPath}`)
+      config = imported.default
+      console.log(`📝 Using config from: ${configPath}`)
     } else {
-      console.log('📝 Using default configuration');
+      console.log('📝 Using default configuration')
     }
 
     // Override output path if provided
@@ -204,23 +204,22 @@ async function main() {
       config.paths = {
         ...config.paths,
         output: values.output,
-      };
+      }
     }
 
     // Set tokens path
-    config.paths.tokens = tokensPath;
+    config.paths.tokens = tokensPath
 
     // Generate tokens
-    console.log(`🎨 Reading tokens from: ${tokensPath}\n`);
-    await generateTokens(config);
-
+    console.log(`🎨 Reading tokens from: ${tokensPath}\n`)
+    await generateTokens(config)
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('❌ Error:', error.message)
     if (error.stack && process.env.DEBUG) {
-      console.error(error.stack);
+      console.error(error.stack)
     }
-    process.exit(1);
+    process.exit(1)
   }
 }
 
-main();
+main()

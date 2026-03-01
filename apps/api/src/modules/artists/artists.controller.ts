@@ -5,6 +5,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -12,7 +13,7 @@ import {
   Query,
   Req,
 } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
+import { ApiExtraModels, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ArtistsService } from './artists.service'
 import { GetArtistsSwagger } from './decorators'
 import { ArtistEntity, SafeArtistEntity } from './entities'
@@ -43,6 +44,12 @@ export class ArtistsController {
     description: 'Artist ID (UUID)',
     type: 'string',
     format: 'uuid',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      $ref: '#/components/schemas/SafeArtistEntity',
+    },
   })
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {

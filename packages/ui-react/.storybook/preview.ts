@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
 import 'loki/configure-react'
-import '../dist/globals.css'
+import '../src/styles/index.css'
 
 type LokiStory = {
   id: string

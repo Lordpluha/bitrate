@@ -148,6 +148,7 @@ export default {
       ],
       Foreground: ['foreground', 'foreground-secondary'],
       Text: ['text', 'text-secondary', 'text-subdued', 'text-muted', 'text-contrast'],
+      Contrast: ['contrast'],
       'Primary (Brand)': ['primary', 'primary-hover', 'primary-active', 'primary-foreground'],
       Secondary: ['secondary', 'secondary-hover', 'secondary-foreground'],
       Accent: ['accent', 'accent-foreground'],

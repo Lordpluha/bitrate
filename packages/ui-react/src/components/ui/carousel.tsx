@@ -192,7 +192,7 @@ export const CarouselItem = ({ className, ...props }: ComponentProps<'div'>) => 
 
 export const CarouselPrevious = ({
   className,
-  variant = 'outline',
+  variant = 'default',
   size = 'icon',
   ...props
 }: ComponentProps<typeof Button>) => {
@@ -223,7 +223,7 @@ export const CarouselPrevious = ({
 
 export const CarouselNext = ({
   className,
-  variant = 'outline',
+  variant = 'default',
   size = 'icon',
   ...props
 }: ComponentProps<typeof Button>) => {

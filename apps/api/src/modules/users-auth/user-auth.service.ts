@@ -70,8 +70,22 @@ export class UserAuthService {
       if (!user) {
         throw new UnauthorizedException('Invalid refresh token')
       }
+
+      const access_token = await this.token.generateAccessToken(user.id, user.username)
+
+      // Обновляем сессию с новым access_token
+      await this.prisma.userSession.updateMany({
+        where: {
+          userId: user.id,
+          refresh_token,
+        },
+        data: {
+          access_token,
+        },
+      })
+
       return {
-        access_token: await this.token.generateAccessToken(user.id, user.username),
+        access_token,
       }
     } catch {
       throw new UnauthorizedException('Invalid refresh token')

@@ -8,4 +8,3 @@ export * as default from './main'
 export * from './modules/artists/artist'
 export * from './modules/musiclist'
 export * from './modules/search'
-

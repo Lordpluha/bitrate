@@ -1,5 +1,5 @@
-import { readdir, readFile, writeFile } from "node:fs/promises"
-import path from "node:path"
+import { readdir, readFile, writeFile } from 'node:fs/promises'
+import path from 'node:path'
 
 // Function to replace @/ aliases with relative paths
 export async function aliasResolver(dir) {
@@ -12,8 +12,8 @@ export async function aliasResolver(dir) {
       continue
     }
 
-    if (file.isFile() && (file.name.endsWith(".js") || file.name.endsWith(".mjs"))) {
-      const content = await readFile(filePath, "utf8")
+    if (file.isFile() && (file.name.endsWith('.js') || file.name.endsWith('.mjs'))) {
+      const content = await readFile(filePath, 'utf8')
 
       // Replace @/ imports with relative paths (handles both ESM and CommonJS)
       const replaced = content.replace(
@@ -26,19 +26,19 @@ export async function aliasResolver(dir) {
           let relativePath = path.relative(fileDir, targetPath)
 
           // Ensure path starts with ./ or ../
-          if (!relativePath.startsWith(".")) {
+          if (!relativePath.startsWith('.')) {
             relativePath = `./${relativePath}`
           }
 
           // Normalize path separators for cross-platform
-          relativePath = relativePath.replace(/\\/g, "/")
+          relativePath = relativePath.replace(/\\/g, '/')
 
           return `${prefix}${relativePath}${suffix}`
         },
       )
 
       if (replaced !== content) {
-        await writeFile(filePath, replaced, "utf8")
+        await writeFile(filePath, replaced, 'utf8')
       }
     }
   }

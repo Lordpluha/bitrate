@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { SocialsAuthDivider } from '@shared/ui'
 import Link from 'next/link'
-import { useMutation } from '@shared/api'
+import { useMutation } from '@shared/api/client'
 import {
   Button,
   Input,
