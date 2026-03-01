@@ -34,7 +34,7 @@
     "loki:init": "CI=1 pnpm dlx loki update",
     "loki:test": "CI=1 pnpm dlx loki test",
     "clean-svgr": "rimraf src/icons/svgr",
-    "build-storybook": "storybook build",
+    "storybook:build": "storybook build",
     "gen:tokens": "tokens-generator --tokens ../tokens/tokens.json --config ./tokens.config.mjs --output ./src/styles",
     "svgr:build": "react-svgr build -i @spotify/tokens/icons -o src/icons/svgr --variables \"primaryColor,secondaryColor\"",
     "svgr:dev": "react-svgr dev -i @spotify/tokens/icons -o src/icons/svgr --variables \"primaryColor,secondaryColor\"",
