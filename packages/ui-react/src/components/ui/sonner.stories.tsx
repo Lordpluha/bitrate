@@ -1,10 +1,12 @@
-import type { Meta, StoryObj, StrictMeta } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { toast } from 'sonner'
 import { action } from 'storybook/actions'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
+
+const TOAST_TIMESTAMP = '2026-01-01 12:00'
 
 /**
  * An opinionated toast component for React.
@@ -25,7 +27,7 @@ const meta = {
       <Button
         onClick={() =>
           toast('Event has been created', {
-            description: new Date().toLocaleString(),
+            description: TOAST_TIMESTAMP,
             action: {
               label: 'Undo',
               onClick: action('Undo clicked'),

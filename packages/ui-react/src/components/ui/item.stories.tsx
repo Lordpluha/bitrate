@@ -1,4 +1,4 @@
-import type { Meta, StoryObj, StrictMeta } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import {
   BadgeCheckIcon,
   ChevronDownIcon,
@@ -7,8 +7,10 @@ import {
   PlusIcon,
   ShieldAlertIcon,
 } from 'lucide-react'
-import Image from 'next/image'
 import * as React from 'react'
+import banner1 from '../../../assets/images/banner-1.jpg'
+import banner2 from '../../../assets/images/banner-2.jpg'
+import banner3 from '../../../assets/images/banner-3.jpg'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -103,7 +105,7 @@ export const Outline: Story = {
       <Item {...args} variant="outline">
         <ItemMedia>
           <Avatar className="size-10">
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage src={banner1} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </ItemMedia>
@@ -155,7 +157,7 @@ export const Small: Story = {
         <Item {...args} variant="outline" size="sm">
           <ItemMedia>
             <Avatar className="size-8">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={banner1} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </ItemMedia>
@@ -168,7 +170,7 @@ export const Small: Story = {
         <Item variant="outline" size="sm">
           <ItemMedia>
             <Avatar className="size-8">
-              <AvatarImage src="https://github.com/maxleiter.png" />
+              <AvatarImage src={banner2} />
               <AvatarFallback>ML</AvatarFallback>
             </Avatar>
           </ItemMedia>
@@ -215,7 +217,7 @@ export const WithAvatar: Story = {
       <Item {...args} variant="outline">
         <ItemMedia>
           <Avatar className="size-10">
-            <AvatarImage src="https://github.com/evilrabbit.png" />
+            <AvatarImage src={banner3} />
             <AvatarFallback>ER</AvatarFallback>
           </Avatar>
         </ItemMedia>
@@ -233,15 +235,15 @@ export const WithAvatar: Story = {
         <ItemMedia>
           <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
             <Avatar className="hidden sm:flex">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src={banner1} alt="@member-1" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <Avatar className="hidden sm:flex">
-              <AvatarImage src="https://github.com/maxleiter.png" alt="@maxleiter" />
+              <AvatarImage src={banner2} alt="@member-2" />
               <AvatarFallback>LR</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
+              <AvatarImage src={banner3} alt="@member-3" />
               <AvatarFallback>ER</AvatarFallback>
             </Avatar>
           </div>
@@ -265,6 +267,8 @@ export const WithAvatar: Story = {
  */
 export const WithImage: Story = {
   render: (args) => {
+    const coverImages = [banner1, banner2, banner3]
+
     const music = [
       {
         title: 'Midnight City Lights',
@@ -289,31 +293,34 @@ export const WithImage: Story = {
     return (
       <div className="flex w-full max-w-md flex-col gap-6">
         <ItemGroup className="gap-4">
-          {music.map((song) => (
-            <Item key={song.title} {...args} variant="outline" asChild role="listitem">
-              <a href="#item">
-                <ItemMedia variant="image">
-                  <Image
-                    src={`https://avatar.vercel.sh/${song.title}`}
-                    alt={song.title}
-                    width={32}
-                    height={32}
-                    unoptimized
-                    className="object-cover grayscale"
-                  />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle className="line-clamp-1">
-                    {song.title} - <span className="text-muted-foreground">{song.album}</span>
-                  </ItemTitle>
-                  <ItemDescription>{song.artist}</ItemDescription>
-                </ItemContent>
-                <ItemContent className="flex-none text-center">
-                  <ItemDescription>{song.duration}</ItemDescription>
-                </ItemContent>
-              </a>
-            </Item>
-          ))}
+          {music.map((song, index) => {
+            const coverImage = coverImages[index % coverImages.length] ?? banner1
+
+            return (
+              <Item key={song.title} {...args} variant="outline" asChild role="listitem">
+                <a href="#item">
+                  <ItemMedia variant="image">
+                    <img
+                      src={coverImage}
+                      alt={song.title}
+                      width={32}
+                      height={32}
+                      className="object-cover grayscale"
+                    />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle className="line-clamp-1">
+                      {song.title} - <span className="text-muted-foreground">{song.album}</span>
+                    </ItemTitle>
+                    <ItemDescription>{song.artist}</ItemDescription>
+                  </ItemContent>
+                  <ItemContent className="flex-none text-center">
+                    <ItemDescription>{song.duration}</ItemDescription>
+                  </ItemContent>
+                </a>
+              </Item>
+            )
+          })}
         </ItemGroup>
       </div>
     )
@@ -328,17 +335,17 @@ export const WithGroup: Story = {
     const people = [
       {
         username: 'shadcn',
-        avatar: 'https://github.com/shadcn.png',
+        avatar: banner1,
         email: 'shadcn@vercel.com',
       },
       {
         username: 'maxleiter',
-        avatar: 'https://github.com/maxleiter.png',
+        avatar: banner2,
         email: 'maxleiter@vercel.com',
       },
       {
         username: 'evilrabbit',
-        avatar: 'https://github.com/evilrabbit.png',
+        avatar: banner3,
         email: 'evilrabbit@vercel.com',
       },
     ]
@@ -383,22 +390,19 @@ export const WithHeader: Story = {
       {
         name: 'v0-1.5-sm',
         description: 'Everyday tasks and UI generation.',
-        image:
-          'https://images.unsplash.com/photo-1650804068570-7fb2e3dbf888?q=80&w=640&auto=format&fit=crop',
+        image: banner1,
         credit: 'Valeria Reverdo on Unsplash',
       },
       {
         name: 'v0-1.5-lg',
         description: 'Advanced thinking or reasoning.',
-        image:
-          'https://images.unsplash.com/photo-1610280777472-54133d004c8c?q=80&w=640&auto=format&fit=crop',
+        image: banner2,
         credit: 'Michael Oeser on Unsplash',
       },
       {
         name: 'v0-2.0-mini',
         description: 'Open Source model for everyone.',
-        image:
-          'https://images.unsplash.com/photo-1602146057681-08560aee8cde?q=80&w=640&auto=format&fit=crop',
+        image: banner3,
         credit: 'Cherry Laithang on Unsplash',
       },
     ]
@@ -409,12 +413,11 @@ export const WithHeader: Story = {
           {models.map((model) => (
             <Item key={model.name} {...args} variant="outline">
               <ItemHeader>
-                <Image
+                <img
                   src={model.image}
                   alt={model.name}
                   width={128}
                   height={128}
-                  unoptimized
                   className="aspect-square w-full rounded-sm object-cover"
                 />
               </ItemHeader>
@@ -438,17 +441,17 @@ export const WithDropdown: Story = {
     const people = [
       {
         username: 'shadcn',
-        avatar: 'https://github.com/shadcn.png',
+        avatar: banner1,
         email: 'shadcn@vercel.com',
       },
       {
         username: 'maxleiter',
-        avatar: 'https://github.com/maxleiter.png',
+        avatar: banner2,
         email: 'maxleiter@vercel.com',
       },
       {
         username: 'evilrabbit',
-        avatar: 'https://github.com/evilrabbit.png',
+        avatar: banner3,
         email: 'evilrabbit@vercel.com',
       },
     ]
