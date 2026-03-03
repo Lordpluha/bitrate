@@ -1,0 +1,71 @@
+name: "[desktop][master] Build"
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'apps/desktop/**'
+      - '.github/workflows/desktop_master.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+
+jobs:
+  desktop-build:
+    name: Desktop Build (Docker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Desktop App (Docker)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/desktop/Dockerfile
+          target: ci-build
+          load: true
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/desktop:master
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/desktop:${{ github.sha }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop:buildcache
+            type=gha,scope=desktop
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop:buildcache,mode=max
+            type=gha,mode=max,scope=desktop
+
+      - name: Extract Build Artifacts
+        run: |
+          docker create --name temp-desktop-master ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/desktop:${{ github.sha }}
+          docker cp temp-desktop-master:/app/apps/desktop/src-tauri/target/release/bundle ./desktop-artifacts || true
+          docker rm temp-desktop-master
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-master-linux
+          path: desktop-artifacts/**/*
+          retention-days: 7
+          if-no-files-found: ignore

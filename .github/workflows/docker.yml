@@ -1,18 +1,18 @@
-name: Docker CI/CD
+name: "[apps][pr+develop+master] Docker CI/CD"
 
 on:
   push:
     branches: [master, develop]
     paths:
-      - 'apps/**'
-      - 'packages/**'
       - 'docker-compose*.yaml'
       - '.github/workflows/docker.yml'
+      - '.github/actions/setup-docker/**'
   pull_request:
     branches: [master, develop]
     paths:
-      - 'apps/**'
-      - 'packages/**'
+      - 'docker-compose*.yaml'
+      - '.github/workflows/docker.yml'
+      - '.github/actions/setup-docker/**'
 
 # Cancel previous runs
 concurrency:
@@ -62,11 +62,6 @@ jobs:
     name: Build ${{ matrix.service }}
     runs-on: ubuntu-latest
     needs: changes
-    if: |
-      needs.changes.outputs.api == 'true' ||
-      needs.changes.outputs.web_player == 'true' ||
-      needs.changes.outputs.web_artists == 'true' ||
-      needs.changes.outputs.admin == 'true'
 
     permissions:
       contents: read
@@ -89,21 +84,21 @@ jobs:
 
     steps:
       - name: Checkout
-        if: matrix.condition == 'true' || github.event_name == 'push'
+        if: matrix.condition == 'true' || github.event_name == 'push' || github.event_name == 'pull_request'
         uses: actions/checkout@v4
 
       - name: Setup Docker + registries
-        if: matrix.condition == 'true' || github.event_name == 'push'
+        if: matrix.condition == 'true' || github.event_name == 'push' || github.event_name == 'pull_request'
         uses: ./.github/actions/setup-docker
         with:
           buildx-driver-opts: network=host
-          ghcr: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
+          ghcr: "true"
           ghcr-registry: ${{ env.REGISTRY }}
           ghcr-username: ${{ github.actor }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata
-        if: matrix.condition == 'true' || github.event_name == 'push'
+        if: matrix.condition == 'true' || github.event_name == 'push' || github.event_name == 'pull_request'
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -117,7 +112,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
-        if: matrix.condition == 'true' || github.event_name == 'push'
+        if: matrix.condition == 'true' || github.event_name == 'push' || github.event_name == 'pull_request'
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -125,8 +120,12 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=${{ matrix.service }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache
+            type=gha,scope=${{ matrix.service }}
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache,mode=max
+            type=gha,mode=max,scope=${{ matrix.service }}
           target: production
           platforms: linux/amd64
           build-args: |

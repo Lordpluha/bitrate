@@ -1,11 +1,13 @@
-name: Performance Testing
+name: "[api+web][pr+develop+master] Performance Testing"
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, labeled]
     paths:
       - 'apps/api/**'
       - 'apps/web-player/**'
       - 'apps/web-artists/**'
+      - '.github/workflows/performance.yml'
   schedule:
     # Run weekly performance tests
     - cron: '0 2 * * 1'
@@ -21,7 +23,9 @@ jobs:
   api-load-test:
     name: API Load Testing
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+    if: |
+      (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'performance') || contains(github.event.pull_request.title, '[performance]')) &&
+      (github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
 
     services:
       postgres:
@@ -178,7 +182,9 @@ jobs:
   lighthouse:
     name: Lighthouse CI
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+    if: |
+      (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'performance') || contains(github.event.pull_request.title, '[performance]')) &&
+      (github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
 
     steps:
       - uses: actions/checkout@v4
@@ -224,7 +230,9 @@ jobs:
   bundle-analysis:
     name: Bundle Analysis
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+    if: |
+      (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'performance') || contains(github.event.pull_request.title, '[performance]')) &&
+      (github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
 
     steps:
       - uses: actions/checkout@v4
@@ -268,7 +276,9 @@ jobs:
   db-performance:
     name: Database Performance
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+    if: |
+      (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'performance') || contains(github.event.pull_request.title, '[performance]')) &&
+      (github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
 
     services:
       postgres:

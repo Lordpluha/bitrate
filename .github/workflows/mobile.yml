@@ -1,15 +1,15 @@
-name: Mobile Build
+name: "[mobile][pr+develop+master] Build"
 
 on:
-  push:
-    branches: [ master, develop ]
-    paths:
-      - 'apps/mobile/**'
-      - '.github/workflows/mobile.yml'
-  pull_request:
-    branches: [ master, develop ]
-    paths:
-      - 'apps/mobile/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
 
 jobs:
   test-expo-server:
@@ -22,14 +22,27 @@ jobs:
 
     - name: Setup Docker Buildx
       uses: ./.github/actions/setup-docker
+      with:
+        ghcr: "true"
+        ghcr-registry: ${{ env.REGISTRY }}
+        ghcr-username: ${{ github.actor }}
+        ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build Expo Server
-      run: |
-        docker build -t mobile-expo-test \
-          --target development \
-          --cache-from type=gha \
-          --cache-to type=gha,mode=max \
-          -f apps/mobile/Dockerfile .
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./apps/mobile/Dockerfile
+        target: development
+        load: true
+        push: false
+        tags: mobile-expo-test:${{ github.sha }}
+        cache-from: |
+          type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-dev:buildcache
+          type=gha,scope=mobile-dev
+        cache-to: |
+          type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-dev:buildcache,mode=max
+          type=gha,mode=max,scope=mobile-dev
 
     - name: Run Expo Server
       run: |
@@ -37,7 +50,7 @@ jobs:
           -p 8081:8081 \
           -p 19000:19000 \
           --name expo-test \
-          mobile-expo-test
+          mobile-expo-test:${{ github.sha }}
 
     - name: Wait for server
       run: sleep 20
@@ -64,24 +77,37 @@ jobs:
 
     - name: Setup Docker Buildx
       uses: ./.github/actions/setup-docker
+      with:
+        ghcr: "true"
+        ghcr-registry: ${{ env.REGISTRY }}
+        ghcr-username: ${{ github.actor }}
+        ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build Web Production
-      run: |
-        docker build -t mobile-web-prod \
-          --target production-web \
-          --cache-from type=gha \
-          --cache-to type=gha,mode=max \
-          -f apps/mobile/Dockerfile .
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./apps/mobile/Dockerfile
+        target: production-web
+        load: true
+        push: false
+        tags: mobile-web-prod:${{ github.sha }}
+        cache-from: |
+          type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache
+          type=gha,scope=mobile-web
+        cache-to: |
+          type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache,mode=max
+          type=gha,mode=max,scope=mobile-web
 
     - name: Test Web Build
       run: |
-        docker run -d -p 8080:80 --name web-test mobile-web-prod
+        docker run -d -p 8080:80 --name web-test mobile-web-prod:${{ github.sha }}
         sleep 5
         curl -f http://localhost:8080 || exit 1
 
     - name: Extract Web Build
       run: |
-        docker create --name temp-web mobile-web-prod
+        docker create --name temp-web mobile-web-prod:${{ github.sha }}
         docker cp temp-web:/usr/share/nginx/html ./web-build
         docker rm temp-web
 
@@ -99,29 +125,37 @@ jobs:
   build-android-eas:
     name: Build Android with EAS
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
     - name: Setup Expo
+      if: env.EXPO_TOKEN != ''
       uses: expo/expo-github-action@v8
       with:
         expo-version: latest
         eas-version: latest
-        token: ${{ secrets.EXPO_TOKEN }}
+        token: ${{ env.EXPO_TOKEN }}
 
     - name: Setup Node.js and pnpm
+      if: env.EXPO_TOKEN != ''
       uses: ./.github/actions/setup-node-pnpm
 
     - name: Build Android APK
+      if: env.EXPO_TOKEN != ''
       working-directory: apps/mobile
       run: |
         PROFILE=${{ github.ref == 'refs/heads/master' && 'production' || 'preview' }}
         eas build --platform android \
           --profile $PROFILE \
           --non-interactive
+
+    - name: Skip Android EAS build (no token)
+      if: env.EXPO_TOKEN == ''
+      run: echo "EXPO_TOKEN is not set, skipping Android EAS build"
 
     - name: Download APK
       if: success()
@@ -140,26 +174,34 @@ jobs:
   build-ios-eas:
     name: Build iOS with EAS
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
     - name: Setup Expo
+      if: env.EXPO_TOKEN != ''
       uses: expo/expo-github-action@v8
       with:
         expo-version: latest
         eas-version: latest
-        token: ${{ secrets.EXPO_TOKEN }}
+        token: ${{ env.EXPO_TOKEN }}
 
     - name: Setup Node.js and pnpm
+      if: env.EXPO_TOKEN != ''
       uses: ./.github/actions/setup-node-pnpm
 
     - name: Build iOS IPA
+      if: env.EXPO_TOKEN != ''
       working-directory: apps/mobile
       run: |
         PROFILE=${{ github.ref == 'refs/heads/master' && 'production' || 'preview' }}
         eas build --platform ios \
           --profile $PROFILE \
           --non-interactive
+
+    - name: Skip iOS EAS build (no token)
+      if: env.EXPO_TOKEN == ''
+      run: echo "EXPO_TOKEN is not set, skipping iOS EAS build"

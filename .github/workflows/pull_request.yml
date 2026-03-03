@@ -1,19 +1,40 @@
-name: PR Quality Checks
+name: "[monorepo][pr] Quality Checks"
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - 'packages/**'
+      - '.github/actions/**'
+      - '.github/workflows/pull_request.yml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'turbo.json'
   push:
     branches: [develop]
+    paths:
+      - 'packages/**'
+      - '.github/actions/**'
+      - '.github/workflows/pull_request.yml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'turbo.json'
 
 # Cancel previous runs for the same PR
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 
 permissions:
   contents: read
   pull-requests: write
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
 
 jobs:
   # Code Quality & Type Check
@@ -133,6 +154,11 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
@@ -141,8 +167,12 @@ jobs:
           file: ./apps/${{ matrix.service }}/Dockerfile
           push: false
           target: production
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache
+            type=gha,scope=${{ matrix.service }}
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache,mode=max
+            type=gha,mode=max,scope=${{ matrix.service }}
           tags: spotify-${{ matrix.service }}:test
 
   # PR Summary

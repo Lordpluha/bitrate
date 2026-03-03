@@ -1,10 +1,18 @@
-name: Continuous Monitoring
+name: "[platform][master] Continuous Monitoring"
 
 on:
   schedule:
     # Run every 6 hours
     - cron: '0 */6 * * *'
   workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
 
 jobs:
   # Check production health
@@ -91,6 +99,11 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
         uses: docker/build-push-action@v5
@@ -98,9 +111,15 @@ jobs:
           context: .
           file: ./apps/${{ matrix.service }}/Dockerfile
           push: false
+          load: true
           target: production
           tags: size-check:latest
-          cache-from: type=gha
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache
+            type=gha,scope=${{ matrix.service }}
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache,mode=max
+            type=gha,mode=max,scope=${{ matrix.service }}
 
       - name: Check image size
         run: |

@@ -1,4 +1,4 @@
-name: Production Deploy
+name: "[platform][master] Production Deploy"
 
 on:
   workflow_dispatch:
@@ -10,21 +10,25 @@ on:
         options:
           - staging
           - production
-
-  push:
-    branches: [master]
-    paths:
-      - 'apps/**'
-      - 'packages/**'
-      - 'docker-compose.prod.yaml'
+      service:
+        description: 'Service to deploy'
+        required: true
+        type: choice
+        options:
+          - all
+          - api
+          - web-player
+          - web-artists
+          - admin
 
 # Prevent concurrent deployments
 concurrency:
-  group: deploy-${{ github.event.inputs.environment || 'production' }}
+  group: deploy-${{ github.event.inputs.environment || 'production' }}-${{ github.event.inputs.service || 'all' }}
   cancel-in-progress: false
 
 env:
   DEPLOY_ENV: ${{ github.event.inputs.environment || 'production' }}
+  TARGET_SERVICE: ${{ github.event.inputs.service || 'all' }}
 
 jobs:
   # Build and Deploy
@@ -33,7 +37,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment || 'production' }}
-      url: https://${{ secrets.SERVER_HOST }}
     timeout-minutes: 30
 
     steps:
@@ -53,13 +56,22 @@ jobs:
 
       - name: Build and push images
         run: |
-          for service in api web-player web-artists admin; do
-            docker build \
+          if [ "${{ env.TARGET_SERVICE }}" = "all" ]; then
+            SERVICES="api web-player web-artists admin"
+          else
+            SERVICES="${{ env.TARGET_SERVICE }}"
+          fi
+
+          for service in $SERVICES; do
+            docker buildx build \
               --file ./apps/$service/Dockerfile \
               --tag ghcr.io/${{ github.repository }}/$service:${{ env.DEPLOY_ENV }} \
               --tag ghcr.io/${{ github.repository }}/$service:${{ github.sha }} \
+              --cache-from type=registry,ref=ghcr.io/${{ github.repository }}/cache/$service:buildcache \
               --cache-from type=gha,scope=$service \
+              --cache-to type=registry,ref=ghcr.io/${{ github.repository }}/cache/$service:buildcache,mode=max \
               --cache-to type=gha,mode=max,scope=$service \
+              --target production \
               --push .
           done
 
@@ -73,12 +85,18 @@ jobs:
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
             cd ${{ secrets.DEPLOY_PATH }}
 
+            if [ "${{ env.TARGET_SERVICE }}" = "all" ]; then
+              SERVICES="api web-player web-artists admin"
+            else
+              SERVICES="${{ env.TARGET_SERVICE }}"
+            fi
+
             # Backup database
             docker compose exec -T postgres pg_dump > backup.sql
 
             # Pull and deploy
-            docker compose -f docker-compose.prod.yaml pull
-            docker compose -f docker-compose.prod.yaml up -d
+            docker compose -f docker-compose.prod.yaml pull $SERVICES
+            docker compose -f docker-compose.prod.yaml up -d $SERVICES
             # Cleanup
             docker image prune -af
           ENDSSH

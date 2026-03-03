@@ -1,0 +1,18 @@
+name: "[ui-react][master] Visual Tests"
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'packages/ui-react/**'
+      - '.github/workflows/ui_react_master.yml'
+      - '.github/workflows/loki_reusable.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  loki:
+    uses: ./.github/workflows/loki_reusable.yml

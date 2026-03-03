@@ -1,0 +1,19 @@
+name: "[ui-react][pr] Visual Tests"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop]
+    paths:
+      - 'packages/ui-react/**'
+      - '.github/workflows/ui_react_pr.yml'
+      - '.github/workflows/loki_reusable.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  loki:
+    uses: ./.github/workflows/loki_reusable.yml
