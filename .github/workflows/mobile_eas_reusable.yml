@@ -1,64 +1,33 @@
-name: "[mobile][master] Build"
+name: "[mobile] EAS Reusable"
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - 'apps/mobile/**'
-      - '.github/workflows/mobile_master.yml'
-  workflow_dispatch:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  workflow_call:
+    inputs:
+      run-eas-android:
+        description: Run EAS Android build
+        required: true
+        type: boolean
+      run-eas-ios:
+        description: Run EAS iOS build
+        required: true
+        type: boolean
+      eas-profile:
+        description: EAS profile to use (preview/production)
+        required: true
+        type: string
+      artifact-suffix:
+        description: Artifact suffix for uploaded APK
+        required: true
+        type: string
 
 permissions:
   contents: read
   packages: write
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
-
 jobs:
-  mobile-web-build:
-    name: Mobile Expo Web Build
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Docker Buildx
-        uses: ./.github/actions/setup-docker
-        with:
-          ghcr: "true"
-          ghcr-registry: ${{ env.REGISTRY }}
-          ghcr-username: ${{ github.actor }}
-          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Web Production
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./apps/mobile/Dockerfile
-          target: production-web
-          load: false
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/mobile-web:master
-            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/mobile-web:${{ github.sha }}
-          cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache
-            type=gha,scope=mobile-web
-          cache-to: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache,mode=max
-            type=gha,mode=max,scope=mobile-web
-
   build-android-eas:
+    if: ${{ inputs.run-eas-android }}
     name: Build Android with EAS (manual)
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -80,17 +49,17 @@ jobs:
         if: env.EXPO_TOKEN != ''
         uses: ./.github/actions/setup-node-pnpm
 
-      - name: Build Android APK (production)
+      - name: Build Android APK
         if: env.EXPO_TOKEN != ''
         working-directory: apps/mobile
         run: |
           eas build --platform android \
-            --profile production \
+            --profile ${{ inputs.eas-profile }} \
             --non-interactive
 
       - name: Skip Android EAS build (no token)
         if: env.EXPO_TOKEN == ''
-        run: echo "EXPO_TOKEN is not set, skipping Android EAS production build"
+        run: echo "EXPO_TOKEN is not set, skipping Android EAS build"
 
       - name: Download APK
         if: env.EXPO_TOKEN != '' && success()
@@ -102,13 +71,13 @@ jobs:
         if: env.EXPO_TOKEN != '' && success()
         uses: actions/upload-artifact@v4
         with:
-          name: mobile-android-apk-master-manual
+          name: mobile-android-apk-${{ inputs.artifact-suffix }}
           path: apps/mobile/*.apk
           retention-days: 7
 
   build-ios-eas:
+    if: ${{ inputs.run-eas-ios }}
     name: Build iOS with EAS (manual)
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -130,14 +99,14 @@ jobs:
         if: env.EXPO_TOKEN != ''
         uses: ./.github/actions/setup-node-pnpm
 
-      - name: Build iOS IPA (production)
+      - name: Build iOS IPA
         if: env.EXPO_TOKEN != ''
         working-directory: apps/mobile
         run: |
           eas build --platform ios \
-            --profile production \
+            --profile ${{ inputs.eas-profile }} \
             --non-interactive
 
       - name: Skip iOS EAS build (no token)
         if: env.EXPO_TOKEN == ''
-        run: echo "EXPO_TOKEN is not set, skipping iOS EAS production build"
+        run: echo "EXPO_TOKEN is not set, skipping iOS EAS build"

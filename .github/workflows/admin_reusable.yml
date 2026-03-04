@@ -1,30 +1,35 @@
-name: "[admin][master] Build"
+name: "[admin] Reusable"
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - 'apps/admin/**'
-      - '.github/workflows/admin_master.yml'
-  workflow_dispatch:
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  workflow_call:
+    inputs:
+      push-image:
+        description: Push admin image
+        required: true
+        type: boolean
+      image-tags:
+        description: Docker tags for admin image (multiline)
+        required: true
+        type: string
+      timeout-minutes:
+        description: Timeout for build job
+        required: false
+        default: 15
+        type: number
 
 permissions:
   contents: read
   packages: write
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
 jobs:
-  admin-build-and-image:
-    name: Build Admin and Docker Image
+  admin-build:
+    name: Admin Build
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: ${{ inputs.timeout-minutes }}
 
     steps:
       - name: Checkout
@@ -38,15 +43,13 @@ jobs:
           ghcr-username: ${{ github.actor }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Admin image
+      - name: Build Admin Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./apps/admin/Dockerfile
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/admin:master
-            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/admin:${{ github.sha }}
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.image-tags }}
           cache-from: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache
             type=gha,scope=admin

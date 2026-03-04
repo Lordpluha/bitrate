@@ -1,0 +1,160 @@
+name: "[desktop] Docker Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      push-image:
+        description: Push desktop Docker image
+        required: true
+        type: boolean
+      image-tags:
+        description: Tags for desktop ci-build image (multiline)
+        required: true
+        type: string
+      load-image:
+        description: Load desktop ci-build image into local docker cache
+        required: false
+        default: false
+        type: boolean
+      timeout-minutes:
+        description: Timeout for desktop ci-build job
+        required: false
+        default: 20
+        type: number
+      run-ui-test:
+        description: Run desktop UI dev-server smoke test
+        required: false
+        default: false
+        type: boolean
+      ui-image-tag:
+        description: Local tag for desktop development image
+        required: false
+        default: desktop-ui-test:latest
+        type: string
+      ui-container-name:
+        description: Container name for desktop UI smoke test
+        required: false
+        default: desktop-ui-test
+        type: string
+      extract-artifacts:
+        description: Extract desktop build artifacts from pushed image
+        required: false
+        default: false
+        type: boolean
+      artifact-image-ref:
+        description: Full image ref used for artifact extraction
+        required: false
+        default: ""
+        type: string
+      artifact-name:
+        description: Uploaded artifact name
+        required: false
+        default: desktop-artifacts
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
+jobs:
+  desktop-build:
+    name: Desktop Build (Docker)
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Desktop App (Docker)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/desktop/Dockerfile
+          target: ci-build
+          load: ${{ inputs.load-image }}
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.image-tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop:buildcache
+            type=gha,scope=desktop
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop:buildcache,mode=max
+            type=gha,mode=max,scope=desktop
+
+      - name: Pull pushed image for artifact extraction
+        if: ${{ inputs.extract-artifacts }}
+        run: docker pull ${{ inputs.artifact-image-ref }}
+
+      - name: Extract Build Artifacts
+        if: ${{ inputs.extract-artifacts }}
+        run: |
+          docker create --name temp-desktop-build ${{ inputs.artifact-image-ref }}
+          docker cp temp-desktop-build:/app/apps/desktop/src-tauri/target/release/bundle ./desktop-artifacts || true
+          docker rm temp-desktop-build
+
+      - name: Upload Artifacts
+        if: ${{ inputs.extract-artifacts }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: desktop-artifacts/**/*
+          retention-days: 7
+          if-no-files-found: ignore
+
+  desktop-ui-test:
+    if: ${{ inputs.run-ui-test }}
+    name: Desktop UI Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: desktop-build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build UI Dev Server
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/desktop/Dockerfile
+          target: development
+          load: true
+          push: false
+          tags: ${{ inputs.ui-image-tag }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop-dev:buildcache
+            type=gha,scope=desktop-dev
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop-dev:buildcache,mode=max
+            type=gha,mode=max,scope=desktop-dev
+
+      - name: Run UI Server and test endpoint
+        run: |
+          docker run -d -p 1420:1420 --name ${{ inputs.ui-container-name }} ${{ inputs.ui-image-tag }}
+          sleep 10
+          curl -f http://localhost:1420 || exit 1
+
+      - name: Cleanup
+        if: always()
+        run: docker stop ${{ inputs.ui-container-name }} && docker rm ${{ inputs.ui-container-name }} || true

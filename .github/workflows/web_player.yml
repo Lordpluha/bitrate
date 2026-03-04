@@ -1,0 +1,73 @@
+name: "[web-player] Checks"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'apps/web-player/**'
+      - 'packages/ui-react/**'
+      - 'packages/contracts/**'
+      - '.github/workflows/web_player.yml'
+      - '.github/workflows/web_player_reusable.yml'
+  pull_request:
+    branches: [master, develop]
+    paths:
+      - 'apps/web-player/**'
+      - 'packages/ui-react/**'
+      - 'packages/contracts/**'
+      - '.github/workflows/web_player.yml'
+      - '.github/workflows/web_player_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  web-player-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/web_player_reusable.yml
+    with:
+      push-image: false
+      tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:pr-${{ github.sha }}
+      timeout-minutes: 30
+      run-biome: true
+      cache-to-registry: false
+
+  web-player-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/web_player_reusable.yml
+    with:
+      push-image: true
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:develop-${{ github.sha }}
+      timeout-minutes: 15
+      run-biome: true
+      cache-to-registry: true
+
+  web-player-master:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/web_player_reusable.yml
+    with:
+      push-image: true
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:${{ github.sha }}
+      timeout-minutes: 20
+      run-biome: false
+      cache-to-registry: true

@@ -1,0 +1,103 @@
+name: "[mobile] Checks"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'apps/mobile/**'
+      - '.github/workflows/mobile.yml'
+      - '.github/workflows/mobile_reusable.yml'
+      - '.github/workflows/mobile_expo_reusable.yml'
+      - '.github/workflows/mobile_web_reusable.yml'
+      - '.github/workflows/mobile_eas_reusable.yml'
+  pull_request:
+    branches: [master, develop]
+    paths:
+      - 'apps/mobile/**'
+      - '.github/workflows/mobile.yml'
+      - '.github/workflows/mobile_reusable.yml'
+      - '.github/workflows/mobile_expo_reusable.yml'
+      - '.github/workflows/mobile_web_reusable.yml'
+      - '.github/workflows/mobile_eas_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  mobile-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/mobile_reusable.yml
+    secrets: inherit
+    with:
+      run-expo-check: true
+      expo-image-tag: mobile-expo-pr:${{ github.sha }}
+      expo-container-name: mobile-expo-pr-test
+      run-mobile-web-build: true
+      mobile-web-push: false
+      mobile-web-load: true
+      mobile-web-tags: mobile-web-pr:${{ github.sha }}
+      run-mobile-web-test: true
+      mobile-web-test-image: mobile-web-pr:${{ github.sha }}
+      mobile-web-test-pull: false
+      mobile-web-test-container: mobile-web-pr-test
+      run-eas-android: ${{ github.event_name == 'workflow_dispatch' }}
+      run-eas-ios: ${{ github.event_name == 'workflow_dispatch' }}
+      eas-profile: preview
+      artifact-suffix: pr-manual
+
+  mobile-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/mobile_reusable.yml
+    secrets: inherit
+    with:
+      run-expo-check: true
+      expo-image-tag: mobile-expo-develop:${{ github.sha }}
+      expo-container-name: mobile-expo-develop-test
+      run-mobile-web-build: true
+      mobile-web-push: true
+      mobile-web-load: false
+      mobile-web-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:develop-${{ github.sha }}
+      run-mobile-web-test: true
+      mobile-web-test-image: ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:develop-${{ github.sha }}
+      mobile-web-test-pull: true
+      mobile-web-test-container: mobile-web-develop-test
+      run-eas-android: ${{ github.event_name == 'workflow_dispatch' }}
+      run-eas-ios: ${{ github.event_name == 'workflow_dispatch' }}
+      eas-profile: preview
+      artifact-suffix: develop-manual
+
+  mobile-master:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/mobile_reusable.yml
+    secrets: inherit
+    with:
+      run-expo-check: false
+      run-mobile-web-build: true
+      mobile-web-push: true
+      mobile-web-load: false
+      mobile-web-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:${{ github.sha }}
+      run-mobile-web-test: false
+      run-eas-android: ${{ github.event_name == 'workflow_dispatch' }}
+      run-eas-ios: ${{ github.event_name == 'workflow_dispatch' }}
+      eas-profile: production
+      artifact-suffix: master-manual

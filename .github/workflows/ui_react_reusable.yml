@@ -1,20 +1,17 @@
-name: "[ui-react][develop] Visual Tests"
+name: "[ui-react] Reusable"
 
 on:
-  push:
-    branches: [develop]
-    paths:
-      - 'packages/ui-react/**'
-      - '.github/workflows/ui_react_develop.yml'
-      - '.github/workflows/loki_reusable.yml'
-  workflow_dispatch:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_call:
+    inputs:
+      run-biome:
+        description: Run biome check before Loki
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   biome:
+    if: ${{ inputs.run-biome }}
     name: UI React Biome
     runs-on: ubuntu-latest
 
@@ -28,6 +25,11 @@ jobs:
       - name: Run Biome check
         run: pnpm exec biome ci packages/ui-react
 
-  loki:
+  loki-with-biome:
+    if: ${{ inputs.run-biome }}
     needs: biome
+    uses: ./.github/workflows/loki_reusable.yml
+
+  loki-no-biome:
+    if: ${{ !inputs.run-biome }}
     uses: ./.github/workflows/loki_reusable.yml

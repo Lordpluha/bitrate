@@ -1,0 +1,52 @@
+name: "[ui-react] Visual Tests"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'packages/ui-react/**'
+      - '.github/workflows/ui_react.yml'
+      - '.github/workflows/ui_react_reusable.yml'
+      - '.github/workflows/loki_reusable.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop]
+    paths:
+      - 'packages/ui-react/**'
+      - '.github/workflows/ui_react.yml'
+      - '.github/workflows/ui_react_reusable.yml'
+      - '.github/workflows/loki_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+jobs:
+  ui-react-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/ui_react_reusable.yml
+    with:
+      run-biome: true
+
+  ui-react-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/ui_react_reusable.yml
+    with:
+      run-biome: true
+
+  ui-react-master:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/ui_react_reusable.yml
+    with:
+      run-biome: false

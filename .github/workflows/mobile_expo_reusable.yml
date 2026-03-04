@@ -1,0 +1,77 @@
+name: "[mobile] Expo Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      expo-image-tag:
+        description: Docker tag for Expo development image
+        required: true
+        type: string
+      expo-container-name:
+        description: Docker container name for Expo dev server test
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
+jobs:
+  expo-dev-server-check:
+    name: Expo Dev Server Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Expo Server
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/mobile/Dockerfile
+          target: development
+          load: true
+          push: false
+          tags: ${{ inputs.expo-image-tag }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-dev:buildcache
+            type=gha,scope=mobile-dev
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-dev:buildcache,mode=max
+            type=gha,mode=max,scope=mobile-dev
+
+      - name: Run Expo Server
+        run: |
+          docker run -d \
+            -p 8081:8081 \
+            -p 19000:19000 \
+            --name ${{ inputs.expo-container-name }} \
+            ${{ inputs.expo-image-tag }}
+
+      - name: Wait for server
+        run: sleep 20
+
+      - name: Check Metro Bundler
+        run: curl -f http://localhost:8081/status || exit 1
+
+      - name: Show logs
+        if: failure()
+        run: docker logs ${{ inputs.expo-container-name }}
+
+      - name: Cleanup
+        if: always()
+        run: docker stop ${{ inputs.expo-container-name }} && docker rm ${{ inputs.expo-container-name }} || true

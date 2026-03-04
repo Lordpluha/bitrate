@@ -1,17 +1,31 @@
-name: "[api][pr] Checks"
+name: "[api] Reusable"
 
 on:
-  pull_request:
-    branches: [master, develop]
-    paths:
-      - 'apps/api/**'
-      - 'packages/contracts/**'
-      - '.github/workflows/api_pr.yml'
-  workflow_dispatch:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
-  cancel-in-progress: true
+  workflow_call:
+    inputs:
+      push-image:
+        description: Push API image
+        required: true
+        type: boolean
+      image-tags:
+        description: Docker tags for API image (multiline)
+        required: true
+        type: string
+      timeout-build:
+        description: Timeout for API build job
+        required: false
+        default: 15
+        type: number
+      run-biome:
+        description: Run biome check before Docker build
+        required: false
+        default: true
+        type: boolean
+      run-tests:
+        description: Run API tests after image build
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -22,19 +36,21 @@ env:
   IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
 
 jobs:
-  api-quality:
-    name: API Quality
+  api-build:
+    name: API Build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.timeout-build }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js and pnpm
+        if: ${{ inputs.run-biome }}
         uses: ./.github/actions/setup-node-pnpm
 
       - name: Run Biome check
+        if: ${{ inputs.run-biome }}
         run: pnpm exec biome ci apps/api packages/contracts
 
       - name: Setup Docker + registries
@@ -50,8 +66,8 @@ jobs:
         with:
           context: .
           file: ./apps/api/Dockerfile
-          push: false
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:pr-${{ github.sha }}
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.image-tags }}
           cache-from: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache
             type=gha,scope=api
@@ -61,10 +77,11 @@ jobs:
           target: production
 
   api-tests:
+    if: ${{ inputs.run-tests }}
     name: API Tests
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    needs: api-quality
+    needs: api-build
 
     services:
       postgres:

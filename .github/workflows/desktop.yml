@@ -1,0 +1,104 @@
+name: "[desktop] Checks"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'apps/desktop/**'
+      - '.github/workflows/desktop.yml'
+      - '.github/workflows/desktop_native_reusable.yml'
+      - '.github/workflows/desktop_docker_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+      platform:
+        description: "Platform to build (native build only)"
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - linux
+          - windows
+          - macos
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  desktop-pr-native:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr' }}
+    uses: ./.github/workflows/desktop_native_reusable.yml
+    with:
+      artifact-prefix: desktop-pr
+      platform: ${{ github.event.inputs.platform }}
+
+  desktop-pr-docker:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr' }}
+    uses: ./.github/workflows/desktop_docker_reusable.yml
+    with:
+      push-image: false
+      image-tags: spotify-desktop-pr:${{ github.sha }}
+      load-image: true
+      timeout-minutes: 20
+      run-ui-test: true
+      ui-image-tag: desktop-ui-pr:${{ github.sha }}
+      ui-container-name: desktop-ui-pr-test
+      extract-artifacts: false
+
+  desktop-develop-native:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/desktop_native_reusable.yml
+    with:
+      artifact-prefix: desktop-develop
+      platform: all
+
+  desktop-develop-docker:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/desktop_docker_reusable.yml
+    with:
+      push-image: true
+      image-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/desktop:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/desktop:develop-${{ github.sha }}
+      load-image: false
+      timeout-minutes: 20
+      run-ui-test: true
+      ui-image-tag: desktop-ui-develop:${{ github.sha }}
+      ui-container-name: desktop-ui-develop-test
+      extract-artifacts: false
+
+  desktop-master-native:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/desktop_native_reusable.yml
+    with:
+      artifact-prefix: desktop-master
+      platform: all
+
+  desktop-master-docker:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/desktop_docker_reusable.yml
+    with:
+      push-image: true
+      image-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/desktop:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/desktop:${{ github.sha }}
+      load-image: false
+      timeout-minutes: 25
+      run-ui-test: false
+      extract-artifacts: true
+      artifact-image-ref: ghcr.io/lordpluha/${{ github.event.repository.name }}/desktop:${{ github.sha }}
+      artifact-name: desktop-master-linux

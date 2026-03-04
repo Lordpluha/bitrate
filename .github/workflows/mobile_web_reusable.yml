@@ -1,0 +1,93 @@
+name: "[mobile] Web Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      mobile-web-push:
+        description: Push mobile web image
+        required: true
+        type: boolean
+      mobile-web-load:
+        description: Load mobile web image locally
+        required: true
+        type: boolean
+      mobile-web-tags:
+        description: Docker tags for mobile web image (multiline)
+        required: true
+        type: string
+      run-mobile-web-test:
+        description: Run mobile web container smoke test
+        required: true
+        type: boolean
+      mobile-web-test-image:
+        description: Image reference/tag used for smoke test
+        required: false
+        default: ""
+        type: string
+      mobile-web-test-pull:
+        description: Pull smoke-test image before running container
+        required: false
+        default: false
+        type: boolean
+      mobile-web-test-container:
+        description: Container name for mobile web smoke test
+        required: false
+        default: mobile-web-test
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
+jobs:
+  mobile-web-build:
+    name: Mobile Expo Web Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Web Production
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/mobile/Dockerfile
+          target: production-web
+          load: ${{ inputs.mobile-web-load }}
+          push: ${{ inputs.mobile-web-push }}
+          tags: ${{ inputs.mobile-web-tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache
+            type=gha,scope=mobile-web
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache,mode=max
+            type=gha,mode=max,scope=mobile-web
+
+      - name: Pull image for smoke test
+        if: ${{ inputs.run-mobile-web-test && inputs.mobile-web-test-pull }}
+        run: docker pull ${{ inputs.mobile-web-test-image }}
+
+      - name: Test Web Build
+        if: ${{ inputs.run-mobile-web-test }}
+        run: |
+          docker run -d -p 8080:80 --name ${{ inputs.mobile-web-test-container }} ${{ inputs.mobile-web-test-image }}
+          sleep 5
+          curl -f http://localhost:8080 || exit 1
+
+      - name: Cleanup
+        if: ${{ always() && inputs.run-mobile-web-test }}
+        run: docker stop ${{ inputs.mobile-web-test-container }} && docker rm ${{ inputs.mobile-web-test-container }} || true

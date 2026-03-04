@@ -1,0 +1,118 @@
+name: "[mobile] Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      run-expo-check:
+        description: Run Expo dev server smoke check
+        required: false
+        default: true
+        type: boolean
+      expo-image-tag:
+        description: Docker tag for Expo development image
+        required: false
+        default: mobile-expo-test:latest
+        type: string
+      expo-container-name:
+        description: Docker container name for Expo dev server test
+        required: false
+        default: mobile-expo-test
+        type: string
+
+      run-mobile-web-build:
+        description: Build mobile web production image
+        required: false
+        default: true
+        type: boolean
+      mobile-web-push:
+        description: Push mobile web image
+        required: false
+        default: false
+        type: boolean
+      mobile-web-load:
+        description: Load mobile web image locally
+        required: false
+        default: false
+        type: boolean
+      mobile-web-tags:
+        description: Docker tags for mobile web image (multiline)
+        required: false
+        default: ""
+        type: string
+      run-mobile-web-test:
+        description: Run mobile web container smoke test
+        required: false
+        default: false
+        type: boolean
+      mobile-web-test-image:
+        description: Image reference/tag used for smoke test
+        required: false
+        default: ""
+        type: string
+      mobile-web-test-pull:
+        description: Pull smoke-test image before running container
+        required: false
+        default: false
+        type: boolean
+      mobile-web-test-container:
+        description: Container name for mobile web smoke test
+        required: false
+        default: mobile-web-test
+        type: string
+
+      run-eas-android:
+        description: Run EAS Android build
+        required: false
+        default: false
+        type: boolean
+      run-eas-ios:
+        description: Run EAS iOS build
+        required: false
+        default: false
+        type: boolean
+      eas-profile:
+        description: EAS profile to use (preview/production)
+        required: false
+        default: preview
+        type: string
+      artifact-suffix:
+        description: Artifact suffix for uploaded APK
+        required: false
+        default: manual
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  expo-dev-server-check:
+    if: ${{ inputs.run-expo-check }}
+    uses: ./.github/workflows/mobile_expo_reusable.yml
+    with:
+      expo-image-tag: ${{ inputs.expo-image-tag }}
+      expo-container-name: ${{ inputs.expo-container-name }}
+    secrets: inherit
+
+  mobile-web-build:
+    if: ${{ inputs.run-mobile-web-build }}
+    uses: ./.github/workflows/mobile_web_reusable.yml
+    with:
+      mobile-web-push: ${{ inputs.mobile-web-push }}
+      mobile-web-load: ${{ inputs.mobile-web-load }}
+      mobile-web-tags: ${{ inputs.mobile-web-tags }}
+      run-mobile-web-test: ${{ inputs.run-mobile-web-test }}
+      mobile-web-test-image: ${{ inputs.mobile-web-test-image }}
+      mobile-web-test-pull: ${{ inputs.mobile-web-test-pull }}
+      mobile-web-test-container: ${{ inputs.mobile-web-test-container }}
+    secrets: inherit
+
+  mobile-eas:
+    if: ${{ inputs.run-eas-android || inputs.run-eas-ios }}
+    uses: ./.github/workflows/mobile_eas_reusable.yml
+    with:
+      run-eas-android: ${{ inputs.run-eas-android }}
+      run-eas-ios: ${{ inputs.run-eas-ios }}
+      eas-profile: ${{ inputs.eas-profile }}
+      artifact-suffix: ${{ inputs.artifact-suffix }}
+    secrets: inherit
