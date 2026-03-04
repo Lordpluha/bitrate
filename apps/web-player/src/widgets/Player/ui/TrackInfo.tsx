@@ -50,7 +50,10 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
             size={16}
           />
         </button>
-        <button className="p-2 hover:scale-110 transition-transform" type="button">
+        <button
+          className="p-2 hover:scale-110 transition-transform"
+          type="button"
+        >
           <PictureInPicture2
             className="text-gray-400 hover:text-white"
             size={16}

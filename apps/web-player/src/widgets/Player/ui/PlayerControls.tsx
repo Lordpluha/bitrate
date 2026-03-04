@@ -187,7 +187,10 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           aria-label="Seek track"
           aria-valuemax={Math.max(0, duration)}
           aria-valuemin={0}
-          aria-valuenow={Math.max(0, seekTime !== null ? seekTime : currentTime)}
+          aria-valuenow={Math.max(
+            0,
+            seekTime !== null ? seekTime : currentTime,
+          )}
           className="flex-1 h-1 bg-gray-600 rounded-full cursor-pointer group relative"
           onClick={handleProgressClick}
           onKeyDown={handleProgressKeyDown}
