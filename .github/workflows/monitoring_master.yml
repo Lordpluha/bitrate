@@ -20,7 +20,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_PREFIX: ${{ github.repository }}
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
   BACKUP_MAX_AGE_HOURS: 48
 
 jobs:
