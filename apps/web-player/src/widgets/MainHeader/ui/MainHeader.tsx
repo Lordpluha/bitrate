@@ -1,18 +1,16 @@
 'use client'
 
-import React from 'react'
-import { HomeBtn } from './HomeBtn'
-import { HeaderSearch } from './HeaderSearch'
-import { NavLinks } from './NavLinks'
-import { AuthButtons } from './AuthButtons'
-import { InstallBtn } from './InstallBtn'
-import { BurgerMenu } from './BurgerMenu'
-import Link from 'next/link'
-import { ProfileButton } from './ProfileButton'
 import { useAuth } from '@shared/hooks'
 import { Logo } from '@shared/ui'
-
 import { MembersIcon, NotificationIcon } from '@spotify/ui-react'
+import Link from 'next/link'
+import { AuthButtons } from './AuthButtons'
+import { BurgerMenu } from './BurgerMenu'
+import { HeaderSearch } from './HeaderSearch'
+import { HomeBtn } from './HomeBtn'
+import { InstallBtn } from './InstallBtn'
+import { NavLinks } from './NavLinks'
+import { ProfileButton } from './ProfileButton'
 
 export const MainHeader = () => {
   const { user, isAuthenticated, isLoading } = useAuth()

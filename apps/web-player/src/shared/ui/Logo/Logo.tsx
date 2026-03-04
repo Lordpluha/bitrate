@@ -1,5 +1,5 @@
 import { ROUTES } from '@shared/routes'
-import { SpotifyLogo, cn } from '@spotify/ui-react'
+import { cn, SpotifyLogo } from '@spotify/ui-react'
 import Link from 'next/link'
 import type { FC } from 'react'
 
@@ -15,14 +15,14 @@ export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
       href={ROUTES.landing}
     >
       <SpotifyLogo
-        width={112}
-        height={32}
         className={cn(
           'transition-[0.3s]',
           color === 'dark'
             ? 'text-text fill-text'
             : 'text-text-contrast fill-text-contrast',
         )}
+        height={32}
+        width={112}
       />
     </Link>
   )

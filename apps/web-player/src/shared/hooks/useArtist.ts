@@ -9,7 +9,7 @@ export const useArtist = (artistId?: string) =>
     {
       params: {
         path: {
-          id: artistId!,
+          id: artistId ?? '',
         },
       },
     },

@@ -1,12 +1,12 @@
 'use client'
 
-import { Play, Pause } from 'lucide-react'
-import { cn, WaveIcon } from '@spotify/ui-react'
-import { formatDuration } from '@shared/utils/apiHelpers'
-import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { DateUtils } from '@shared/utils/DateUtils'
-import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { play } from '@entities/Player'
+import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
+import { useAppDispatch, useAppSelector } from '@shared/hooks'
+import { formatDuration } from '@shared/utils/apiHelpers'
+import { DateUtils } from '@shared/utils/DateUtils'
+import { cn, WaveIcon } from '@spotify/ui-react'
+import { Pause, Play } from 'lucide-react'
 
 interface TrackCardProps {
   track: TrackEntity
@@ -32,16 +32,16 @@ export const TrackCard = ({ track, index }: TrackCardProps) => {
 
   return (
     <button
-      type="button"
-      onClick={() => handlePlayTrack(track)}
       className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 rounded hover:bg-white/10 group items-center w-full text-left"
+      onClick={() => handlePlayTrack(track)}
+      type="button"
     >
       <div className="text-sm items-center justify-center flex">
         {showNumber && <span className="text-gray-400">{index + 1}</span>}
         {showGreenNumber && <span className="text-green-500">{index + 1}</span>}
-        {showPlayIcon && <Play size={14} className="text-white" fill="white" />}
+        {showPlayIcon && <Play className="text-white" fill="white" size={14} />}
         {showPauseIcon && (
-          <Pause size={14} className="text-white" fill="white" />
+          <Pause className="text-white" fill="white" size={14} />
         )}
         {showWaveIcon && <WaveIcon />}
       </div>

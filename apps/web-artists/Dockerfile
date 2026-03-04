@@ -54,7 +54,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web-artists/package.json ./apps/web-artists/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/contracts/package.json ./packages/contracts/
-RUN pnpm install --prod --frozen-lockfile
+RUN node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));if(pkg.scripts&&pkg.scripts.prepare){delete pkg.scripts.prepare;fs.writeFileSync(p, JSON.stringify(pkg, null, 2));}" \
+  && pnpm install --prod --frozen-lockfile
 
 # Stage 6: Production
 FROM base AS production

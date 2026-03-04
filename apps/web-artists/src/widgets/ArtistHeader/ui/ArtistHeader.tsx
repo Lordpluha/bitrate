@@ -1,13 +1,12 @@
 'use client'
 
-import React from 'react'
 import { ArtistLogo } from '@shared/ui'
-
-import { NavLinks } from './NavLink/NavLink'
-import { AuthButtons } from './AuthButtons/AuthButtons'
-import { SwitchLanguagesButton } from './SwitchLanguagesButton/SwitchLanguagesButton'
-import { SubMenuContent } from './SubMenuContent/SubMenuContent'
+import React from 'react'
 import links from '../config/nav-links.json'
+import { AuthButtons } from './AuthButtons/AuthButtons'
+import { NavLinks } from './NavLink/NavLink'
+import { SubMenuContent } from './SubMenuContent/SubMenuContent'
+import { SwitchLanguagesButton } from './SwitchLanguagesButton/SwitchLanguagesButton'
 
 interface LinkItem {
   title: string
@@ -77,6 +76,7 @@ export const ArtistHeader = () => {
 
   return (
     <>
+      {/** biome-ignore lint/a11y/noStaticElementInteractions: header hover state controls submenu visibility */}
       <header
         className="fixed top-0 left-0 right-0 bg-black z-1052"
         onMouseEnter={handleMenuEnter}
@@ -87,8 +87,8 @@ export const ArtistHeader = () => {
 
           <NavLinks
             activeSubmenu={activeSubmenu}
-            setActiveSubmenu={handleSetActiveSubmenu}
             closeSubmenu={handleCloseSubmenu}
+            setActiveSubmenu={handleSetActiveSubmenu}
           />
 
           <section className="flex items-center gap-2">
@@ -100,11 +100,11 @@ export const ArtistHeader = () => {
 
       <SubMenuContent
         activeSubmenu={activeSubmenu}
-        submenuData={submenuData}
-        type={submenuType as 'features' | 'resources'}
         isClosing={isClosing}
         onMouseEnter={handleMenuEnter}
         onMouseLeave={handleCloseSubmenu}
+        submenuData={submenuData}
+        type={submenuType as 'features' | 'resources'}
       />
     </>
   )

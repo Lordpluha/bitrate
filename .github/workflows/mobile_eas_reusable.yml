@@ -1,0 +1,112 @@
+name: "[mobile] EAS Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      run-eas-android:
+        description: Run EAS Android build
+        required: true
+        type: boolean
+      run-eas-ios:
+        description: Run EAS iOS build
+        required: true
+        type: boolean
+      eas-profile:
+        description: EAS profile to use (preview/production)
+        required: true
+        type: string
+      artifact-suffix:
+        description: Artifact suffix for uploaded APK
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-android-eas:
+    if: ${{ inputs.run-eas-android }}
+    name: Build Android with EAS (manual)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Expo
+        if: env.EXPO_TOKEN != ''
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ env.EXPO_TOKEN }}
+
+      - name: Setup Node.js and pnpm
+        if: env.EXPO_TOKEN != ''
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Build Android APK
+        if: env.EXPO_TOKEN != ''
+        working-directory: apps/mobile
+        run: |
+          eas build --platform android \
+            --profile ${{ inputs.eas-profile }} \
+            --non-interactive
+
+      - name: Skip Android EAS build (no token)
+        if: env.EXPO_TOKEN == ''
+        run: echo "EXPO_TOKEN is not set, skipping Android EAS build"
+
+      - name: Download APK
+        if: env.EXPO_TOKEN != '' && success()
+        working-directory: apps/mobile
+        run: |
+          eas build:download --platform android --latest
+
+      - name: Upload APK
+        if: env.EXPO_TOKEN != '' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-android-apk-${{ inputs.artifact-suffix }}
+          path: apps/mobile/*.apk
+          retention-days: 7
+
+  build-ios-eas:
+    if: ${{ inputs.run-eas-ios }}
+    name: Build iOS with EAS (manual)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Expo
+        if: env.EXPO_TOKEN != ''
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ env.EXPO_TOKEN }}
+
+      - name: Setup Node.js and pnpm
+        if: env.EXPO_TOKEN != ''
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Build iOS IPA
+        if: env.EXPO_TOKEN != ''
+        working-directory: apps/mobile
+        run: |
+          eas build --platform ios \
+            --profile ${{ inputs.eas-profile }} \
+            --non-interactive
+
+      - name: Skip iOS EAS build (no token)
+        if: env.EXPO_TOKEN == ''
+        run: echo "EXPO_TOKEN is not set, skipping iOS EAS build"

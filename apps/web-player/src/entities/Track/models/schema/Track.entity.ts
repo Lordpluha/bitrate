@@ -1,3 +1,3 @@
-import { ApiSchemas } from '@spotify/contracts'
+import type { ApiSchemas } from '@spotify/contracts'
 
 export type TrackEntity = ApiSchemas['TrackEntity']

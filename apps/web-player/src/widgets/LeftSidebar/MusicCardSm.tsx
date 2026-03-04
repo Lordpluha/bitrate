@@ -1,5 +1,6 @@
 'use client'
-import React, { useState } from 'react'
+import Image from 'next/image'
+import { useState } from 'react'
 
 interface MusicItem {
   id: string
@@ -38,17 +39,20 @@ export const MusicCardSm = ({ item }: MusicCardSmProps) => {
 
   return (
     <div className="group flex items-center gap-3 p-2 rounded-md hover:bg-white/10 cursor-pointer transition-all duration-150">
-      <div className="w-12 h-12 rounded-md flex-shrink-0 overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-150">
+      <div className="relative w-12 h-12 rounded-md shrink-0 overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-150">
         {!imageError ? (
-          <img
-            src={item.cover}
+          <Image
             alt={item.title}
-            className="w-full h-full object-cover"
+            className="object-cover"
+            fill
             onError={handleImageError}
+            sizes="48px"
+            src={item.cover}
+            unoptimized
           />
         ) : (
           <div
-            className={`w-full h-full bg-gradient-to-br ${getTypeColor(item.type)} flex items-center justify-center`}
+            className={`w-full h-full bg-linear-to-br ${getTypeColor(item.type)} flex items-center justify-center`}
           >
             <span className="text-white text-xs font-bold drop-shadow-sm">
               {item.title.charAt(0).toUpperCase()}

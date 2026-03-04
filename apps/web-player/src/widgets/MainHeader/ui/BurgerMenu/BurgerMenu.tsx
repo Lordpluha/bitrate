@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Menu, X } from 'lucide-react'
 import { cn } from '@spotify/ui-react'
-import { NavLinks } from '../NavLinks'
+import { Menu, X } from 'lucide-react'
+import { useState } from 'react'
 import { AuthButtons } from '../AuthButtons'
 import { InstallBtn } from '../InstallBtn'
+import { NavLinks } from '../NavLinks'
 
 export const BurgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -21,17 +21,20 @@ export const BurgerMenu = () => {
   return (
     <>
       <button
-        onClick={toggleMenu}
-        className="p-2 text-white hover:opacity-70 transition-opacity"
         aria-label="Toggle menu"
+        className="p-2 text-white hover:opacity-70 transition-opacity"
+        onClick={toggleMenu}
+        type="button"
       >
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
       {isOpen && (
-        <div
+        <button
+          aria-label="Close menu"
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={closeMenu}
+          type="button"
         />
       )}
 
@@ -45,8 +48,9 @@ export const BurgerMenu = () => {
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-white text-lg font-semibold">Menu</h2>
             <button
-              onClick={closeMenu}
               className="p-2 text-white hover:opacity-70 transition-opacity"
+              onClick={closeMenu}
+              type="button"
             >
               <X className="w-5 h-5" />
             </button>

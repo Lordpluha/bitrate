@@ -1,0 +1,49 @@
+name: "[monitoring] Health Reusable"
+
+on:
+  workflow_call:
+    secrets:
+      monitor-host:
+        required: true
+
+jobs:
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+
+    env:
+      MONITOR_HOST: ${{ secrets.monitor-host }}
+
+    steps:
+      - name: Validate monitoring host
+        run: |
+          if [ -z "${{ env.MONITOR_HOST }}" ]; then
+            echo "❌ Missing monitoring host"
+            exit 1
+          fi
+
+      - name: Check API health
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.MONITOR_HOST }}/health)
+          if [ "$response" -ne 200 ]; then
+            echo "❌ API health check failed with status $response"
+            exit 1
+          fi
+          echo "✅ API is healthy"
+
+      - name: Check Web availability
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.MONITOR_HOST }})
+          if [ "$response" -ne 200 ]; then
+            echo "❌ Web check failed with status $response"
+            exit 1
+          fi
+          echo "✅ Web is available"
+
+      - name: Check response times
+        run: |
+          time=$(curl -o /dev/null -s -w '%{time_total}' https://${{ env.MONITOR_HOST }}/api)
+          echo "API response time: ${time}s"
+          if (( $(echo "$time > 2.0" | bc -l) )); then
+            echo "⚠️  Slow response time: ${time}s"
+          fi

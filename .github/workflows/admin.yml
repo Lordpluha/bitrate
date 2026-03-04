@@ -1,0 +1,63 @@
+name: "[admin] Checks"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'apps/admin/**'
+      - '.github/workflows/admin.yml'
+      - '.github/workflows/admin_reusable.yml'
+  pull_request:
+    branches: [master, develop]
+    paths:
+      - 'apps/admin/**'
+      - '.github/workflows/admin.yml'
+      - '.github/workflows/admin_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  admin-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/admin_reusable.yml
+    with:
+      push-image: false
+      image-tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:pr-${{ github.sha }}
+      timeout-minutes: 15
+
+  admin-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/admin_reusable.yml
+    with:
+      push-image: true
+      image-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:develop-${{ github.sha }}
+      timeout-minutes: 15
+
+  admin-master:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/admin_reusable.yml
+    with:
+      push-image: true
+      image-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:${{ github.sha }}
+      timeout-minutes: 20

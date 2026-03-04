@@ -1,6 +1,6 @@
-import { execa } from "execa"
-import ffmpegPath from "ffmpeg-static"
-import fs from "node:fs/promises"
+import fs from 'node:fs/promises'
+import { execa } from 'execa'
+import ffmpegPath from 'ffmpeg-static'
 
 /**
  * Convert audio file to OGG Opus format
@@ -21,16 +21,16 @@ export async function convertAudio({
   vbr = false,
   application = 'audio',
 }) {
-	if (!ffmpegPath) {
-		throw new Error("FFmpeg binary not found. Ensure ffmpeg-static is installed correctly.")
-	}
+  if (!ffmpegPath) {
+    throw new Error('FFmpeg binary not found. Ensure ffmpeg-static is installed correctly.')
+  }
 
-	// Validate input file exists
-	try {
-		await fs.access(input)
-	} catch (error) {
-		throw new Error(`Input file not found: ${input}`)
-	}
+  // Validate input file exists
+  try {
+    await fs.access(input)
+  } catch (error) {
+    throw new Error(`Input file not found: ${input}`)
+  }
 
   // Determine output path
   const outputPath = output || input.replace(/\.[^.]+$/, '.opus')
@@ -61,30 +61,30 @@ export async function convertAudio({
   console.log(`   Quality: ${quality}/10`)
   console.log(`   Application: ${application}`)
 
-	// Build FFmpeg args
-	const vbrFlag = vbr ? "on" : "off"
-	const args = [
-		"-hide_banner",
-		"-loglevel",
-		"error",
-		"-i",
-		input,
-		"-c:a",
-		"libopus",
-		"-b:a",
-		bitrate,
-		"-vbr",
-		vbrFlag,
-		"-application",
-		application,
-		"-compression_level",
-		String(quality),
-		"-y",
-		outputPath,
-	]
+  // Build FFmpeg args
+  const vbrFlag = vbr ? 'on' : 'off'
+  const args = [
+    '-hide_banner',
+    '-loglevel',
+    'error',
+    '-i',
+    input,
+    '-c:a',
+    'libopus',
+    '-b:a',
+    bitrate,
+    '-vbr',
+    vbrFlag,
+    '-application',
+    application,
+    '-compression_level',
+    String(quality),
+    '-y',
+    outputPath,
+  ]
 
-	try {
-		await execa(ffmpegPath, args)
+  try {
+    await execa(ffmpegPath, args)
 
     // Get file sizes
     const inputStats = await fs.stat(input)

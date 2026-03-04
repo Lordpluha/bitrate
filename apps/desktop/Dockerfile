@@ -110,7 +110,7 @@ COPY . .
 
 # Сборка
 WORKDIR /app/apps/desktop
-RUN pnpm run tauri build
+RUN rm -f src-tauri/Cargo.lock && pnpm run tauri build
 
 # Артефакты будут в src-tauri/target/release/bundle/
 CMD ["sh"]

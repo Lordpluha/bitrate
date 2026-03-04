@@ -12,11 +12,11 @@ export const BackButton = ({
 
   return (
     <button
-      type="button"
       onClick={(e) => {
         onClick?.(e)
         router.back()
       }}
+      type="button"
       {...props}
     >
       {children}
