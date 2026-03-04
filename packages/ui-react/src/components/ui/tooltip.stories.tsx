@@ -1,4 +1,4 @@
-import type { Meta, StoryObj, StrictMeta } from '@storybook/react-vite'
+import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { Plus } from 'lucide-react'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'

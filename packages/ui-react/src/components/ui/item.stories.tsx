@@ -8,10 +8,6 @@ import {
   ShieldAlertIcon,
 } from 'lucide-react'
 import * as React from 'react'
-import banner1 from '../../../assets/images/banner-1.jpg'
-import banner2 from '../../../assets/images/banner-2.jpg'
-import banner3 from '../../../assets/images/banner-3.jpg'
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -31,6 +27,9 @@ import {
   ItemSeparator,
   ItemTitle,
 } from '@/components/ui/item'
+import banner1 from '../../../assets/images/banner-1.jpg'
+import banner2 from '../../../assets/images/banner-2.jpg'
+import banner3 from '../../../assets/images/banner-3.jpg'
 
 /**
  * A versatile component that you can use to display any content.

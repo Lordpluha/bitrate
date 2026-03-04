@@ -76,6 +76,7 @@ export const ArtistHeader = () => {
 
   return (
     <>
+      {/** biome-ignore lint/a11y/noStaticElementInteractions: header hover state controls submenu visibility */}
       <header
         className="fixed top-0 left-0 right-0 bg-black z-1052"
         onMouseEnter={handleMenuEnter}
