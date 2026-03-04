@@ -1,0 +1,266 @@
+name: "[platform][master] Release Monitoring"
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/monitoring_master.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: read
+  issues: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+  BACKUP_MAX_AGE_HOURS: 48
+
+jobs:
+  health-check:
+    name: Production Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check API health
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ secrets.SERVER_HOST }}/health)
+          if [ "$response" -ne 200 ]; then
+            echo "❌ API health check failed with status $response"
+            exit 1
+          fi
+          echo "✅ API is healthy"
+
+      - name: Check Web availability
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ secrets.SERVER_HOST }})
+          if [ "$response" -ne 200 ]; then
+            echo "❌ Web check failed with status $response"
+            exit 1
+          fi
+          echo "✅ Web is available"
+
+      - name: Check response times
+        run: |
+          time=$(curl -o /dev/null -s -w '%{time_total}' https://${{ secrets.SERVER_HOST }}/api)
+          echo "API response time: ${time}s"
+          if (( $(echo "$time > 2.0" | bc -l) )); then
+            echo "⚠️  Slow response time: ${time}s"
+          fi
+
+  dependency-updates:
+    name: Check Dependency Updates
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          install: "false"
+
+      - name: Check for updates
+        run: |
+          pnpm outdated --long > dependency-updates.txt || true
+          cat dependency-updates.txt
+
+      - name: Create or update issue for major updates
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const updates = fs.readFileSync('dependency-updates.txt', 'utf8');
+
+            if (!updates.includes('major')) {
+              core.info('No major dependency updates found');
+              return;
+            }
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = '🔄 Dependency Updates Available';
+            const body = `## Available dependency updates\n\n\
+            \\`\\`\\`\n${updates}\n\\`\\`\\`\n\nPlease review and update.`;
+
+            const existing = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'open',
+              labels: 'dependencies,maintenance',
+              per_page: 100,
+            });
+
+            const issue = existing.find((item) => item.title === title);
+
+            if (issue) {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: issue.number,
+                body,
+              });
+              core.info(`Updated existing issue #${issue.number}`);
+              return;
+            }
+
+            await github.rest.issues.create({
+              owner,
+              repo,
+              title,
+              body,
+              labels: ['dependencies', 'maintenance'],
+            });
+
+  image-size-monitor:
+    name: Monitor Image Sizes
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [api, web-player, web-artists, admin]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/${{ matrix.service }}/Dockerfile
+          push: false
+          load: true
+          target: production
+          tags: size-check:${{ matrix.service }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache
+            type=gha,scope=${{ matrix.service }}
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache,mode=max
+            type=gha,mode=max,scope=${{ matrix.service }}
+
+      - name: Check image size
+        run: |
+          size=$(docker images size-check:${{ matrix.service }} --format "{{.Size}}")
+          echo "${{ matrix.service }} image size: $size"
+          echo "${{ matrix.service }}: $size" >> image-sizes.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-sizes-${{ matrix.service }}
+          path: image-sizes.txt
+          retention-days: 30
+
+  ssl-check:
+    name: SSL Certificate Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check certificate
+        run: |
+          expiry=$(echo | openssl s_client -servername ${{ secrets.SERVER_HOST }} -connect ${{ secrets.SERVER_HOST }}:443 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+          echo "SSL certificate expires: $expiry"
+
+          expiry_epoch=$(date -d "$expiry" +%s)
+          now_epoch=$(date +%s)
+          days_left=$(( (expiry_epoch - now_epoch) / 86400 ))
+
+          echo "Days until expiry: $days_left"
+
+          if [ "$days_left" -lt 30 ]; then
+            echo "⚠️  SSL certificate expires in $days_left days!"
+            exit 1
+          fi
+
+  backup-check:
+    name: Verify Backups
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate backup-check configuration
+        run: |
+          if [ -z "${{ secrets.SERVER_HOST }}" ] || [ -z "${{ secrets.SERVER_USER }}" ] || [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
+            echo "❌ Missing one of required secrets: SERVER_HOST, SERVER_USER, SSH_PRIVATE_KEY"
+            exit 1
+          fi
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Check backup recency and basic integrity
+        run: |
+          BACKUP_DIR="${{ secrets.BACKUP_DIR }}"
+          if [ -z "$BACKUP_DIR" ]; then
+            BACKUP_DIR="${{ secrets.DEPLOY_PATH }}/backups"
+          fi
+
+          echo "Checking backups in: $BACKUP_DIR"
+
+          ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" <<ENDSSH
+            set -euo pipefail
+
+            BACKUP_DIR="$BACKUP_DIR"
+            MAX_AGE_HOURS="${{ env.BACKUP_MAX_AGE_HOURS }}"
+
+            if [ ! -d "\$BACKUP_DIR" ]; then
+              echo "❌ Backup directory not found: \$BACKUP_DIR"
+              exit 1
+            fi
+
+            latest_file=\$(find "\$BACKUP_DIR" -maxdepth 1 -type f \( -name "*.sql" -o -name "*.dump" -o -name "*.sql.gz" -o -name "*.dump.gz" \) -printf '%T@ %p\n' | sort -nr | head -n1 | cut -d' ' -f2-)
+
+            if [ -z "\$latest_file" ]; then
+              echo "❌ No backup files found in \$BACKUP_DIR"
+              exit 1
+            fi
+
+            echo "Latest backup: \$latest_file"
+
+            now=\$(date +%s)
+            file_time=\$(stat -c %Y "\$latest_file")
+            age_hours=\$(( (now - file_time) / 3600 ))
+            size_bytes=\$(stat -c %s "\$latest_file")
+
+            echo "Backup age: \${age_hours}h"
+            echo "Backup size: \${size_bytes} bytes"
+
+            if [ "\$size_bytes" -le 0 ]; then
+              echo "❌ Backup file is empty"
+              exit 1
+            fi
+
+            if [ "\$age_hours" -gt "\$MAX_AGE_HOURS" ]; then
+              echo "❌ Backup is too old: \${age_hours}h (max: \${MAX_AGE_HOURS}h)"
+              exit 1
+            fi
+
+            case "\$latest_file" in
+              *.gz)
+                gzip -t "\$latest_file"
+                ;;
+              *)
+                head -n 1 "\$latest_file" > /dev/null
+                ;;
+            esac
+
+            echo "✅ Backup verification passed"
+          ENDSSH

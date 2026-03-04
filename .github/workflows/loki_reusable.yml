@@ -1,8 +1,7 @@
-name: "Loki"
+name: "[ui-react][reusable] Loki"
 
 on:
-  pull_request:
-    branches: [develop]
+  workflow_call:
 
 jobs:
   loki:
@@ -17,7 +16,7 @@ jobs:
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
         with:
-          install-args: ""
+          install-args: "--frozen-lockfile"
 
       - name: Restore Storybook static cache
         id: storybook-cache

@@ -1,14 +1,13 @@
-name: Performance Testing
+name: "[api+web][master] Performance Testing"
 
 on:
-  pull_request:
+  push:
+    branches: [master]
     paths:
       - 'apps/api/**'
       - 'apps/web-player/**'
       - 'apps/web-artists/**'
-  schedule:
-    # Run weekly performance tests
-    - cron: '0 2 * * 1'
+      - '.github/workflows/performance_master.yml'
   workflow_dispatch:
 
 permissions:
@@ -21,7 +20,6 @@ jobs:
   api-load-test:
     name: API Load Testing
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     services:
       postgres:
@@ -178,7 +176,6 @@ jobs:
   lighthouse:
     name: Lighthouse CI
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v4
@@ -224,7 +221,6 @@ jobs:
   bundle-analysis:
     name: Bundle Analysis
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v4
@@ -268,7 +264,6 @@ jobs:
   db-performance:
     name: Database Performance
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     services:
       postgres:
@@ -342,3 +337,35 @@ jobs:
             || echo "pg_stat_statements not available; skipping"
         env:
           PGPASSWORD: spotify_password
+
+  # Docker compose performance testing
+  docker-performance:
+    name: Docker Performance Benchmarks
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create .env
+        run: cp .env.example .env
+
+      - name: Build images
+        run: |
+          docker compose build api web-player web-artists admin
+
+      - name: Start services
+        run: |
+          docker compose up -d
+          sleep 30
+
+      - name: Run k6 load tests
+        uses: grafana/k6-action@v0.3.1
+        with:
+          filename: tests/load/api-load-test.js
+        continue-on-error: true
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v

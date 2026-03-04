@@ -1,0 +1,101 @@
+name: "[desktop][develop] Checks"
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - 'apps/desktop/**'
+      - '.github/workflows/desktop_develop.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+
+jobs:
+  desktop-build:
+    name: Desktop Build (Docker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Desktop App (Docker)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/desktop/Dockerfile
+          target: ci-build
+          load: false
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/desktop:develop
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/desktop:develop-${{ github.sha }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop:buildcache
+            type=gha,scope=desktop
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop:buildcache,mode=max
+            type=gha,mode=max,scope=desktop
+
+  desktop-ui-test:
+    name: Desktop UI Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: desktop-build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build UI Dev Server
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/desktop/Dockerfile
+          target: development
+          load: true
+          push: false
+          tags: desktop-ui-develop:${{ github.sha }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop-dev:buildcache
+            type=gha,scope=desktop-dev
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop-dev:buildcache,mode=max
+            type=gha,mode=max,scope=desktop-dev
+
+      - name: Run UI Server and test endpoint
+        run: |
+          docker run -d -p 1420:1420 --name desktop-ui-develop-test desktop-ui-develop:${{ github.sha }}
+          sleep 10
+          curl -f http://localhost:1420 || exit 1
+
+      - name: Cleanup
+        if: always()
+        run: docker stop desktop-ui-develop-test && docker rm desktop-ui-develop-test || true

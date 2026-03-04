@@ -1,0 +1,64 @@
+name: "[web-player][develop] Checks"
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - 'apps/web-player/**'
+      - 'packages/ui-react/**'
+      - 'packages/contracts/**'
+      - '.github/workflows/web_player_develop.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+
+jobs:
+  web-player-checks:
+    name: Web Player Build and Push Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run Biome check
+        run: pnpm exec biome ci apps/web-player packages/ui-react packages/contracts
+
+      - name: Setup Docker + registries
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Web Player Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/web-player/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web-player:develop
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web-player:develop-${{ github.sha }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache
+            type=gha,scope=web-player
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache,mode=max
+            type=gha,mode=max,scope=web-player
+          target: production

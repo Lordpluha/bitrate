@@ -1,0 +1,56 @@
+name: "[admin][develop] Checks"
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - 'apps/admin/**'
+      - '.github/workflows/admin_develop.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+
+jobs:
+  admin-checks:
+    name: Admin Build and Push Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Docker + registries
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Admin Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/admin/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/admin:develop
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/admin:develop-${{ github.sha }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache
+            type=gha,scope=admin
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache,mode=max
+            type=gha,mode=max,scope=admin
+          target: production
