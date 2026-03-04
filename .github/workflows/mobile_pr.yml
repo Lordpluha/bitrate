@@ -21,6 +21,61 @@ env:
   IMAGE_PREFIX: ${{ github.repository }}
 
 jobs:
+  expo-dev-server-check:
+    name: Expo Dev Server Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Expo Server
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/mobile/Dockerfile
+          target: development
+          load: true
+          push: false
+          tags: mobile-expo-pr:${{ github.sha }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-dev:buildcache
+            type=gha,scope=mobile-dev
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-dev:buildcache,mode=max
+            type=gha,mode=max,scope=mobile-dev
+
+      - name: Run Expo Server
+        run: |
+          docker run -d \
+            -p 8081:8081 \
+            -p 19000:19000 \
+            --name mobile-expo-pr-test \
+            mobile-expo-pr:${{ github.sha }}
+
+      - name: Wait for server
+        run: sleep 20
+
+      - name: Check Metro Bundler
+        run: curl -f http://localhost:8081/status || exit 1
+
+      - name: Show logs
+        if: failure()
+        run: docker logs mobile-expo-pr-test
+
+      - name: Cleanup
+        if: always()
+        run: docker stop mobile-expo-pr-test && docker rm mobile-expo-pr-test || true
+
   mobile-web-build:
     name: Mobile Expo Web Build
     runs-on: ubuntu-latest
@@ -63,3 +118,89 @@ jobs:
       - name: Cleanup
         if: always()
         run: docker stop mobile-web-pr-test && docker rm mobile-web-pr-test || true
+
+  build-android-eas:
+    name: Build Android with EAS (manual)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Expo
+        if: env.EXPO_TOKEN != ''
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ env.EXPO_TOKEN }}
+
+      - name: Setup Node.js and pnpm
+        if: env.EXPO_TOKEN != ''
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Build Android APK
+        if: env.EXPO_TOKEN != ''
+        working-directory: apps/mobile
+        run: |
+          eas build --platform android \
+            --profile preview \
+            --non-interactive
+
+      - name: Skip Android EAS build (no token)
+        if: env.EXPO_TOKEN == ''
+        run: echo "EXPO_TOKEN is not set, skipping Android EAS build"
+
+      - name: Download APK
+        if: env.EXPO_TOKEN != '' && success()
+        working-directory: apps/mobile
+        run: |
+          eas build:download --platform android --latest
+
+      - name: Upload APK
+        if: env.EXPO_TOKEN != '' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-android-apk-pr-manual
+          path: apps/mobile/*.apk
+          retention-days: 7
+
+  build-ios-eas:
+    name: Build iOS with EAS (manual)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Expo
+        if: env.EXPO_TOKEN != ''
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ env.EXPO_TOKEN }}
+
+      - name: Setup Node.js and pnpm
+        if: env.EXPO_TOKEN != ''
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Build iOS IPA
+        if: env.EXPO_TOKEN != ''
+        working-directory: apps/mobile
+        run: |
+          eas build --platform ios \
+            --profile preview \
+            --non-interactive
+
+      - name: Skip iOS EAS build (no token)
+        if: env.EXPO_TOKEN == ''
+        run: echo "EXPO_TOKEN is not set, skipping iOS EAS build"

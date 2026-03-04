@@ -44,7 +44,7 @@ jobs:
           context: .
           file: ./apps/desktop/Dockerfile
           target: ci-build
-          load: true
+          load: false
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/desktop:master
@@ -55,6 +55,9 @@ jobs:
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop:buildcache,mode=max
             type=gha,mode=max,scope=desktop
+
+      - name: Pull pushed image for artifact extraction
+        run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/desktop:${{ github.sha }}
 
       - name: Extract Build Artifacts
         run: |

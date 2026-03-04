@@ -44,9 +44,11 @@ jobs:
           context: .
           file: ./apps/desktop/Dockerfile
           target: ci-build
-          load: true
-          push: false
-          tags: spotify-desktop-develop:${{ github.sha }}
+          load: false
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/desktop:develop
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/desktop:develop-${{ github.sha }}
           cache-from: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/desktop:buildcache
             type=gha,scope=desktop

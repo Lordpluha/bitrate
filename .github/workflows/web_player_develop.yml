@@ -24,7 +24,7 @@ env:
 
 jobs:
   web-player-checks:
-    name: Web Player Build and Type Check
+    name: Web Player Build and Push Image
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -45,8 +45,10 @@ jobs:
         with:
           context: .
           file: ./apps/web-player/Dockerfile
-          push: false
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web-player:develop-${{ github.sha }}
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web-player:develop
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web-player:develop-${{ github.sha }}
           cache-from: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache
             type=gha,scope=web-player

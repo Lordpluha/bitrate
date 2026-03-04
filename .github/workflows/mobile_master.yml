@@ -44,7 +44,7 @@ jobs:
           context: .
           file: ./apps/mobile/Dockerfile
           target: production-web
-          load: true
+          load: false
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/mobile-web:master
@@ -56,9 +56,11 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache,mode=max
             type=gha,mode=max,scope=mobile-web
 
-  mobile-eas-prod:
-    name: Mobile EAS Production Build
+  build-android-eas:
+    name: Build Android with EAS (manual)
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
@@ -78,11 +80,64 @@ jobs:
         if: env.EXPO_TOKEN != ''
         uses: ./.github/actions/setup-node-pnpm
 
-      - name: Build Android and iOS (production)
+      - name: Build Android APK (production)
         if: env.EXPO_TOKEN != ''
         working-directory: apps/mobile
-        run: eas build --platform all --profile production --non-interactive
+        run: |
+          eas build --platform android \
+            --profile production \
+            --non-interactive
 
-      - name: Skip EAS build (no token)
+      - name: Skip Android EAS build (no token)
         if: env.EXPO_TOKEN == ''
-        run: echo "EXPO_TOKEN is not set, skipping EAS production build"
+        run: echo "EXPO_TOKEN is not set, skipping Android EAS production build"
+
+      - name: Download APK
+        if: env.EXPO_TOKEN != '' && success()
+        working-directory: apps/mobile
+        run: |
+          eas build:download --platform android --latest
+
+      - name: Upload APK
+        if: env.EXPO_TOKEN != '' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-android-apk-master-manual
+          path: apps/mobile/*.apk
+          retention-days: 7
+
+  build-ios-eas:
+    name: Build iOS with EAS (manual)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Expo
+        if: env.EXPO_TOKEN != ''
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ env.EXPO_TOKEN }}
+
+      - name: Setup Node.js and pnpm
+        if: env.EXPO_TOKEN != ''
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Build iOS IPA (production)
+        if: env.EXPO_TOKEN != ''
+        working-directory: apps/mobile
+        run: |
+          eas build --platform ios \
+            --profile production \
+            --non-interactive
+
+      - name: Skip iOS EAS build (no token)
+        if: env.EXPO_TOKEN == ''
+        run: echo "EXPO_TOKEN is not set, skipping iOS EAS production build"

@@ -24,7 +24,7 @@ env:
 
 jobs:
   web-artists-checks:
-    name: Web Artists Build and Type Check
+    name: Web Artists Build and Push Image
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -45,8 +45,10 @@ jobs:
         with:
           context: .
           file: ./apps/web-artists/Dockerfile
-          push: false
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web-artists:develop-${{ github.sha }}
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web-artists:develop
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web-artists:develop-${{ github.sha }}
           cache-from: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-artists:buildcache
             type=gha,scope=web-artists
