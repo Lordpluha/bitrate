@@ -26,7 +26,7 @@ jobs:
   web-player-checks:
     name: Web Player Build and Type Check
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -57,6 +57,5 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache
             type=gha,scope=web-player
           cache-to: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache,mode=max
             type=gha,mode=max,scope=web-player
           target: production
