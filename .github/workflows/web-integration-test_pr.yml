@@ -1,16 +1,6 @@
-name: "[docker][pr+develop+master] Web Integration Test"
+name: "[docker][pr] Web Integration Test"
 
 on:
-  push:
-    branches: [master, develop]
-    paths:
-      - 'docker-compose*.yaml'
-      - 'apps/api/**'
-      - 'apps/web-player/**'
-      - 'apps/web-artists/**'
-      - 'apps/admin/**'
-      - '.github/workflows/web-integration-test.yml'
-      - '.github/actions/setup-docker/**'
   pull_request:
     branches: [master, develop]
     paths:
@@ -19,7 +9,7 @@ on:
       - 'apps/web-player/**'
       - 'apps/web-artists/**'
       - 'apps/admin/**'
-      - '.github/workflows/web-integration-test.yml'
+      - '.github/workflows/web-integration-test_pr.yml'
       - '.github/actions/setup-docker/**'
   workflow_dispatch:
 
