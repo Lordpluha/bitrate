@@ -21,6 +21,59 @@ env:
   IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
 
 jobs:
+  desktop-native-build:
+    name: Desktop Native Build (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: windows
+          - os: macos-latest
+            platform: macos
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libxdo-dev \
+            libssl-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            pkg-config
+
+      - name: Build desktop app (native)
+        run: pnpm --filter @spotify/desktop run tauri build
+
+      - name: Upload native artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-develop-${{ matrix.platform }}
+          path: apps/desktop/src-tauri/target/release/bundle/**/*
+          retention-days: 7
+          if-no-files-found: warn
+
   desktop-build:
     name: Desktop Build (Docker)
     runs-on: ubuntu-latest

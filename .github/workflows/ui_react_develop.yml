@@ -14,5 +14,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  biome:
+    name: UI React Biome
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run Biome check
+        run: pnpm exec biome ci packages/ui-react
+
   loki:
+    needs: biome
     uses: ./.github/workflows/loki_reusable.yml
