@@ -8,6 +8,11 @@ on:
         required: false
         default: true
         type: boolean
+      run-loki:
+        description: Run Loki visual tests
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   biome:
@@ -25,11 +30,7 @@ jobs:
       - name: Run Biome check
         run: pnpm exec biome ci packages/ui-react
 
-  loki-with-biome:
-    if: ${{ inputs.run-biome }}
+  loki:
+    if: ${{ always() && inputs.run-loki && (!inputs.run-biome || needs.biome.result == 'success') }}
     needs: biome
-    uses: ./.github/workflows/loki_reusable.yml
-
-  loki-no-biome:
-    if: ${{ !inputs.run-biome }}
     uses: ./.github/workflows/loki_reusable.yml
