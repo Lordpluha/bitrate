@@ -31,6 +31,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run Biome check
+        run: pnpm exec biome ci apps/api packages/contracts
+
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker
         with:

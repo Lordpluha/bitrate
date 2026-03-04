@@ -1,10 +1,9 @@
-name: "[monorepo][develop+master] Security Checks"
+name: "[monorepo][develop] Security Checks"
 
 on:
   push:
-    branches: [master, develop]
+    branches: [develop]
   schedule:
-    # Run weekly security scans
     - cron: '0 0 * * 0'
   workflow_dispatch:
 
@@ -13,11 +12,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Security audit and scanning
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v4
@@ -40,11 +37,9 @@ jobs:
           extra_args: --only-verified
         continue-on-error: true
 
-  # CodeQL analysis
   codeql:
     name: CodeQL
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
     permissions:
       security-events: write
       actions: read
@@ -62,11 +57,9 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
-  # Docker image security scan
   docker-security-scan:
     name: Docker Security Scan ${{ matrix.service }}
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
 
     strategy:
       fail-fast: false
