@@ -1,19 +1,16 @@
 'use client'
 
-import React from 'react'
-import { HomeBtn } from './HomeBtn'
-import { HeaderSearch } from './HeaderSearch'
-import { NavLinks } from './NavLinks'
-import { AuthButtons } from './AuthButtons'
-import { InstallBtn } from './InstallBtn'
-import { BurgerMenu } from './BurgerMenu'
-import { ROUTES } from '@shared/routes'
-import Link from 'next/link'
-import { ProfileButton } from './ProfileButton'
 import { useAuth } from '@shared/hooks'
 import { Logo } from '@shared/ui'
-
 import { MembersIcon, NotificationIcon } from '@spotify/ui-react'
+import Link from 'next/link'
+import { AuthButtons } from './AuthButtons'
+import { BurgerMenu } from './BurgerMenu'
+import { HeaderSearch } from './HeaderSearch'
+import { HomeBtn } from './HomeBtn'
+import { InstallBtn } from './InstallBtn'
+import { NavLinks } from './NavLinks'
+import { ProfileButton } from './ProfileButton'
 
 export const MainHeader = () => {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -23,12 +20,12 @@ export const MainHeader = () => {
       <div className="w-full px-5 py-2 flex justify-between items-center relative">
         <Logo />
 
-        <div className="hidden xl:flex items-center space-x-4">
+        <div className="flex max-xl:hidden items-center space-x-4">
           <HomeBtn />
           <HeaderSearch />
         </div>
 
-        <div className="hidden xl:flex items-center gap-8">
+        <div className="flex max-xl:hidden items-center gap-8">
           <InstallBtn />
 
           {isLoading ? (
@@ -47,7 +44,8 @@ export const MainHeader = () => {
               >
                 <MembersIcon />
               </Link>
-              <ProfileButton username={(user as any).username || 'User'} />
+              <ProfileButton username={user.username || 'User'} />
+              {/* пока оставляем */}
             </>
           ) : (
             <>

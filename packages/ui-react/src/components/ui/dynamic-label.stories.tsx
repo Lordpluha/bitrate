@@ -1,5 +1,5 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
-import * as React from 'react'
+import type * as React from 'react'
 
 import { DynamicLabel } from './dynamic-label'
 import { Input, type InputProps } from './input'

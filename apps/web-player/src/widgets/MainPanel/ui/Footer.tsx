@@ -1,8 +1,5 @@
-import React from 'react'
-
-import Link from 'next/link'
-
 import { FacebookIcon, InstIcon, TwitIcon } from '@spotify/ui-react'
+import Link from 'next/link'
 
 const sections = [
   {
@@ -56,8 +53,8 @@ function Footer() {
               {section.links.map((link) => (
                 <li key={link}>
                   <Link
-                    href="#"
                     className="text-gray-400 hover:text-white text-sm transition-[0.3s]"
+                    href="#"
                   >
                     {link}
                   </Link>
@@ -69,20 +66,20 @@ function Footer() {
         <div className="flex justify-end mb-8">
           <div className="flex items-start space-x-4">
             <Link
-              href="#"
               className=" bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
+              href="#"
             >
               <FacebookIcon />
             </Link>
             <Link
-              href="#"
               className=" bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
+              href="#"
             >
               <TwitIcon />
             </Link>
             <Link
-              href="#"
               className=" bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
+              href="#"
             >
               <InstIcon />
             </Link>
@@ -93,9 +90,9 @@ function Footer() {
         <div className="flex flex-wrap items-center space-x-6 text-xs text-gray-400 mb-4 md:mb-0">
           {bottomLinks.map((link) => (
             <Link
-              key={link}
-              href="#"
               className="hover:text-white transition-[0.3s]"
+              href="#"
+              key={link}
             >
               {link}
             </Link>

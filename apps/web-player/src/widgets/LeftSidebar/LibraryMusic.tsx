@@ -1,38 +1,46 @@
 'use client'
 
-import { fetchClient } from '@shared/api'
-import { ApiSchemas } from '@spotify/contracts'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@shared/api/client'
 import { MusicCardSm } from './MusicCardSm'
 
 interface MusicItem {
   id: string
   title: string
-  artist: string
+  username: string
   type: 'playlist' | 'album' | 'single' | 'podcast'
   cover: string
   tracksCount?: number
 }
 
-type Playlist = ApiSchemas['PlaylistEntity']
-
 const likedSongsItem: MusicItem = {
   id: 'liked-songs',
   title: 'Liked Songs',
-  artist: 'Playlist',
+  username: 'Playlist',
   type: 'playlist',
   cover: '/images/liked-songs.jpg',
   tracksCount: 0,
 }
 
+const loadingItemKeys = [
+  'loading-1',
+  'loading-2',
+  'loading-3',
+  'loading-4',
+  'loading-5',
+  'loading-6',
+  'loading-7',
+  'loading-8',
+  'loading-9',
+  'loading-10',
+]
+
 export const LibraryMusic = () => {
-  const { data: playlists, isLoading } = useQuery({
-    queryKey: ['playlists'],
-    queryFn: async () => {
-      const { data } = await fetchClient.GET('/api/v1/playlists', {
-        params: { path: { page: 1, limit: 20 } },
-      })
-      return data ? (data as Playlist[]) : []
+  const { data: playlists, isLoading } = useQuery('get', '/api/v1/playlists', {
+    params: {
+      query: {
+        page: 1,
+        limit: 20,
+      },
     },
   })
 
@@ -40,13 +48,17 @@ export const LibraryMusic = () => {
   if (Array.isArray(playlists)) {
     playlists.forEach((playlist) => {
       if (playlist) {
+        const playlistWithUser = playlist as {
+          user?: { username?: string }
+        }
+
         musicItems.push({
           id: playlist.id,
           title: playlist.title,
-          artist: (playlist as any).user?.username || 'Unknown',
+          username: playlistWithUser.user?.username ?? 'Unknown Artist',
           type: 'playlist',
           cover: playlist.cover || '/images/default-playlist.jpg',
-          tracksCount: (playlist as any).tracks?.length || 0,
+          tracksCount: 0,
         })
       }
     })
@@ -57,11 +69,10 @@ export const LibraryMusic = () => {
       <div className="mt-4 flex-1 overflow-hidden">
         <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
           <div className="space-y-0.5 pb-4">
-            {Array.from({ length: 10 }).map((_, i) => (
+            {loadingItemKeys.map((loadingKey) => (
               <div
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                key={i}
                 className="flex items-center gap-3 p-2 rounded-md"
+                key={loadingKey}
               >
                 <div className="w-12 h-12 bg-gray-600 rounded-md animate-pulse" />
                 <div className="flex-1">
@@ -81,7 +92,7 @@ export const LibraryMusic = () => {
       <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
         <div className="space-y-0.5 pb-4">
           {musicItems.map((item) => (
-            <MusicCardSm key={item.id} item={item} />
+            <MusicCardSm item={item} key={item.id} />
           ))}
         </div>
       </div>

@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@import "@spotify/ui-react/globals.css";
+@import "@spotify/ui-react/themes.css";
 
 @source "../";
-@source "@spotify/ui-react/src";
+@source "../../node_modules/@spotify/ui-react/src";
 
 @theme {
   /* Breakpoints */
@@ -32,21 +32,21 @@
 
   ::-webkit-scrollbar-thumb {
     background: #4a4a4a;
-    border-radius: 6px;
-    border: 2px solid transparent;
     background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 6px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
     background: #5a5a5a;
-    border: 2px solid transparent;
     background-clip: padding-box;
+    border: 2px solid transparent;
   }
 
   /* Firefox scrollbar */
   * {
-    scrollbar-width: thin;
     scrollbar-color: #4a4a4a transparent;
+    scrollbar-width: thin;
   }
 }
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { parseArgs } from "node:util"
-import { convertAudio } from "./audio.mjs"
-import { convertImage } from "./image.mjs"
-import { convertVideo } from "./video.mjs"
+import { parseArgs } from 'node:util'
+import { convertAudio } from './audio.mjs'
+import { convertImage } from './image.mjs'
+import { convertVideo } from './video.mjs'
 
 const HELP_TEXT = `
 media-converter - Convert media files using FFmpeg
@@ -56,88 +56,88 @@ EXAMPLES:
 `
 
 function parseOptions(args) {
-	const { values } = parseArgs({
-		args,
-		options: {
-			input: { type: "string", short: "i" },
-			output: { type: "string", short: "o" },
-			bitrate: { type: "string", short: "b" },
-			quality: { type: "string", short: "q" },
-			vbr: { type: "boolean", short: "v" },
-			lossless: { type: "boolean" },
-			application: { type: "string" },
-			profile: { type: "string" },
-			help: { type: "boolean", short: "h" },
-		},
-		strict: false,
-	})
+  const { values } = parseArgs({
+    args,
+    options: {
+      input: { type: 'string', short: 'i' },
+      output: { type: 'string', short: 'o' },
+      bitrate: { type: 'string', short: 'b' },
+      quality: { type: 'string', short: 'q' },
+      vbr: { type: 'boolean', short: 'v' },
+      lossless: { type: 'boolean' },
+      application: { type: 'string' },
+      profile: { type: 'string' },
+      help: { type: 'boolean', short: 'h' },
+    },
+    strict: false,
+  })
 
-	return values
+  return values
 }
 
 async function main() {
-	const args = process.argv.slice(2)
+  const args = process.argv.slice(2)
 
-	if (args.length === 0 || args[0] === "help" || args.includes("--help") || args.includes("-h")) {
-		console.log(HELP_TEXT)
-		process.exit(0)
-	}
+  if (args.length === 0 || args[0] === 'help' || args.includes('--help') || args.includes('-h')) {
+    console.log(HELP_TEXT)
+    process.exit(0)
+  }
 
-	const command = args[0]
-	const options = parseOptions(args.slice(1))
+  const command = args[0]
+  const options = parseOptions(args.slice(1))
 
-	if (options.help) {
-		console.log(HELP_TEXT)
-		process.exit(0)
-	}
+  if (options.help) {
+    console.log(HELP_TEXT)
+    process.exit(0)
+  }
 
-	if (!options.input) {
-		console.error("❌ Error: --input is required\n")
-		console.log(HELP_TEXT)
-		process.exit(1)
-	}
+  if (!options.input) {
+    console.error('❌ Error: --input is required\n')
+    console.log(HELP_TEXT)
+    process.exit(1)
+  }
 
-	try {
-		switch (command) {
-			case "audio":
-				await convertAudio({
-					input: options.input,
-					output: options.output,
-					bitrate: options.bitrate || "128k",
-					quality: options.quality ? Number.parseInt(options.quality, 10) : 10,
-					vbr: options.vbr || false,
-					application: options.application || "audio",
-				})
-				break
+  try {
+    switch (command) {
+      case 'audio':
+        await convertAudio({
+          input: options.input,
+          output: options.output,
+          bitrate: options.bitrate || '128k',
+          quality: options.quality ? Number.parseInt(options.quality, 10) : 10,
+          vbr: options.vbr || false,
+          application: options.application || 'audio',
+        })
+        break
 
-			case "video":
-				await convertVideo({
-					input: options.input,
-					output: options.output,
-					bitrate: options.bitrate || "128k",
-					quality: options.quality ? Number.parseFloat(options.quality) : 1,
-					profile: options.profile || "aac_low",
-				})
-				break
+      case 'video':
+        await convertVideo({
+          input: options.input,
+          output: options.output,
+          bitrate: options.bitrate || '128k',
+          quality: options.quality ? Number.parseFloat(options.quality) : 1,
+          profile: options.profile || 'aac_low',
+        })
+        break
 
-			case "image":
-				await convertImage({
-					input: options.input,
-					output: options.output,
-					quality: options.quality ? Number.parseInt(options.quality, 10) : 80,
-					lossless: options.lossless || false,
-				})
-				break
+      case 'image':
+        await convertImage({
+          input: options.input,
+          output: options.output,
+          quality: options.quality ? Number.parseInt(options.quality, 10) : 80,
+          lossless: options.lossless || false,
+        })
+        break
 
-			default:
-				console.error(`❌ Unknown command: ${command}\n`)
-				console.log(HELP_TEXT)
-				process.exit(1)
-		}
-	} catch (error) {
-		console.error(`❌ Conversion failed: ${error.message}`)
-		process.exit(1)
-	}
+      default:
+        console.error(`❌ Unknown command: ${command}\n`)
+        console.log(HELP_TEXT)
+        process.exit(1)
+    }
+  } catch (error) {
+    console.error(`❌ Conversion failed: ${error.message}`)
+    process.exit(1)
+  }
 }
 
 main()

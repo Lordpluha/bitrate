@@ -1,0 +1,104 @@
+name: "[monitoring] Backup Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      backup-max-age-hours:
+        required: true
+        type: string
+    secrets:
+      deploy-host:
+        required: true
+      deploy-user:
+        required: true
+      deploy-path:
+        required: false
+      deploy-ssh-key:
+        required: true
+      backup-dir-secret:
+        required: false
+
+jobs:
+  backup-check:
+    name: Verify Backups
+    runs-on: ubuntu-latest
+
+    env:
+      BACKUP_MAX_AGE_HOURS: ${{ inputs.backup-max-age-hours }}
+      DEPLOY_HOST: ${{ secrets.deploy-host }}
+      DEPLOY_USER: ${{ secrets.deploy-user }}
+      DEPLOY_PATH: ${{ secrets.deploy-path }}
+      DEPLOY_SSH_KEY: ${{ secrets.deploy-ssh-key }}
+      BACKUP_DIR_SECRET: ${{ secrets.backup-dir-secret }}
+
+    steps:
+      - name: Validate backup-check configuration
+        run: |
+          if [ -z "${{ env.DEPLOY_HOST }}" ] || [ -z "${{ env.DEPLOY_USER }}" ] || [ -z "${{ env.DEPLOY_SSH_KEY }}" ]; then
+            echo "❌ Missing one of required deployment secrets"
+            exit 1
+          fi
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ env.DEPLOY_SSH_KEY }}
+
+      - name: Check backup recency and basic integrity
+        run: |
+          BACKUP_DIR="${{ env.BACKUP_DIR_SECRET }}"
+          if [ -z "$BACKUP_DIR" ]; then
+            BACKUP_DIR="${{ env.DEPLOY_PATH }}/backups"
+          fi
+
+          echo "Checking backups in: $BACKUP_DIR"
+
+          ssh -o StrictHostKeyChecking=no "${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}" <<ENDSSH
+            set -euo pipefail
+
+            BACKUP_DIR="$BACKUP_DIR"
+            MAX_AGE_HOURS="${{ env.BACKUP_MAX_AGE_HOURS }}"
+
+            if [ ! -d "\$BACKUP_DIR" ]; then
+              echo "❌ Backup directory not found: \$BACKUP_DIR"
+              exit 1
+            fi
+
+            latest_file=\$(find "\$BACKUP_DIR" -maxdepth 1 -type f \( -name "*.sql" -o -name "*.dump" -o -name "*.sql.gz" -o -name "*.dump.gz" \) -printf '%T@ %p\n' | sort -nr | head -n1 | cut -d' ' -f2-)
+
+            if [ -z "\$latest_file" ]; then
+              echo "❌ No backup files found in \$BACKUP_DIR"
+              exit 1
+            fi
+
+            echo "Latest backup: \$latest_file"
+
+            now=\$(date +%s)
+            file_time=\$(stat -c %Y "\$latest_file")
+            age_hours=\$(( (now - file_time) / 3600 ))
+            size_bytes=\$(stat -c %s "\$latest_file")
+
+            echo "Backup age: \${age_hours}h"
+            echo "Backup size: \${size_bytes} bytes"
+
+            if [ "\$size_bytes" -le 0 ]; then
+              echo "❌ Backup file is empty"
+              exit 1
+            fi
+
+            if [ "\$age_hours" -gt "\$MAX_AGE_HOURS" ]; then
+              echo "❌ Backup is too old: \${age_hours}h (max: \${MAX_AGE_HOURS}h)"
+              exit 1
+            fi
+
+            case "\$latest_file" in
+              *.gz)
+                gzip -t "\$latest_file"
+                ;;
+              *)
+                head -n 1 "\$latest_file" > /dev/null
+                ;;
+            esac
+
+            echo "✅ Backup verification passed"
+          ENDSSH

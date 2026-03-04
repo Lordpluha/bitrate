@@ -1,0 +1,35 @@
+name: "[performance] Docker Reusable"
+
+on:
+  workflow_call:
+
+jobs:
+  docker-performance:
+    name: Docker Performance Benchmarks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create .env
+        run: cp .env.example .env
+
+      - name: Build images
+        run: |
+          docker compose build api web-player web-artists admin
+
+      - name: Start services
+        run: |
+          docker compose up -d
+          sleep 30
+
+      - name: Run k6 load tests
+        uses: grafana/k6-action@v0.3.1
+        with:
+          filename: tests/load/api-load-test.js
+        continue-on-error: true
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v

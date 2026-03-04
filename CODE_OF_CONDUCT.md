@@ -56,7 +56,7 @@
 
 **Контакты для сообщений:**
 
-- **Владислав Теслюк** (Lead Maintainer)
+- **Vladyslav Tesliuk** (Lead Maintainer)
   - 📧 Email: vladislavteslyukofficial@gmail.com
   - 🐙 GitHub: [@Lordpluha](https://github.com/Lordpluha)
 

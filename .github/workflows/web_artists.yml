@@ -1,0 +1,73 @@
+name: "[web-artists] Checks"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'apps/web-artists/**'
+      - 'packages/ui-react/**'
+      - 'packages/contracts/**'
+      - '.github/workflows/web_artists.yml'
+      - '.github/workflows/web_artists_reusable.yml'
+  pull_request:
+    branches: [master, develop]
+    paths:
+      - 'apps/web-artists/**'
+      - 'packages/ui-react/**'
+      - 'packages/contracts/**'
+      - '.github/workflows/web_artists.yml'
+      - '.github/workflows/web_artists_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  web-artists-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/web_artists_reusable.yml
+    with:
+      push-image: false
+      tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:pr-${{ github.sha }}
+      timeout-minutes: 15
+      run-biome: true
+      cache-to-registry: true
+
+  web-artists-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/web_artists_reusable.yml
+    with:
+      push-image: true
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:develop-${{ github.sha }}
+      timeout-minutes: 15
+      run-biome: true
+      cache-to-registry: true
+
+  web-artists-master:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/web_artists_reusable.yml
+    with:
+      push-image: true
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:${{ github.sha }}
+      timeout-minutes: 20
+      run-biome: false
+      cache-to-registry: true

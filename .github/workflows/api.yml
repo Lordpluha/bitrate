@@ -1,0 +1,71 @@
+name: "[api] Checks"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'apps/api/**'
+      - 'packages/contracts/**'
+      - '.github/workflows/api.yml'
+      - '.github/workflows/api_reusable.yml'
+  pull_request:
+    branches: [master, develop]
+    paths:
+      - 'apps/api/**'
+      - 'packages/contracts/**'
+      - '.github/workflows/api.yml'
+      - '.github/workflows/api_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  api-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/api_reusable.yml
+    with:
+      push-image: false
+      image-tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/api:pr-${{ github.sha }}
+      timeout-build: 15
+      run-biome: true
+      run-tests: true
+
+  api-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/api_reusable.yml
+    with:
+      push-image: true
+      image-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/api:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/api:develop-${{ github.sha }}
+      timeout-build: 15
+      run-biome: true
+      run-tests: true
+
+  api-master:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/api_reusable.yml
+    with:
+      push-image: true
+      image-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/api:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/api:${{ github.sha }}
+      timeout-build: 25
+      run-biome: false
+      run-tests: false

@@ -1,0 +1,82 @@
+name: "[performance] DB Reusable"
+
+on:
+  workflow_call:
+
+jobs:
+  db-performance:
+    name: Database Performance
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: spotify
+          POSTGRES_PASSWORD: spotify_password
+          POSTGRES_DB: spotify_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Create shadow database
+        run: |
+          psql -h localhost -U spotify -c "CREATE DATABASE spotify_test_shadow;" || true
+        env:
+          PGPASSWORD: spotify_password
+
+      - name: Build ncs-parser
+        run: pnpm --filter @spotify/ncs-parser run build
+
+      - name: Generate Prisma Client
+        run: |
+          cd apps/api
+          pnpm prisma generate
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
+
+      - name: Setup database
+        run: |
+          cd apps/api
+          pnpm prisma migrate deploy
+          pnpm prisma db seed
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
+
+      - name: Enable pg_stat_statements extension
+        run: |
+          psql -h localhost -U spotify -d spotify_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;" \
+            || echo "pg_stat_statements not available; skipping"
+        env:
+          PGPASSWORD: spotify_password
+
+      - name: Run query performance tests
+        run: |
+          cd apps/api
+          pnpm run test:e2e:performance
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+
+      - name: Analyze slow queries
+        run: |
+          psql -h localhost -U spotify -d spotify_test -c "SELECT query, calls, total_exec_time, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;" \
+            || echo "pg_stat_statements not available; skipping"
+        env:
+          PGPASSWORD: spotify_password

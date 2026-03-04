@@ -3,7 +3,6 @@
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react'
 import {
   type ComponentProps,
-  type CSSProperties,
   createContext,
   type KeyboardEvent,
   useCallback,
@@ -176,7 +175,7 @@ export const CarouselContent = ({ className, ...props }: ComponentProps<'div'>) 
 }
 
 export const CarouselItem = ({ className, ...props }: ComponentProps<'div'>) => {
-  const { orientation } = useCarousel()
+  useCarousel()
 
   return (
     /* biome-ignore lint/a11y/useSemanticElements: hz */
@@ -192,7 +191,7 @@ export const CarouselItem = ({ className, ...props }: ComponentProps<'div'>) => 
 
 export const CarouselPrevious = ({
   className,
-  variant = 'outline',
+  variant = 'default',
   size = 'icon',
   ...props
 }: ComponentProps<typeof Button>) => {
@@ -223,7 +222,7 @@ export const CarouselPrevious = ({
 
 export const CarouselNext = ({
   className,
-  variant = 'outline',
+  variant = 'default',
   size = 'icon',
   ...props
 }: ComponentProps<typeof Button>) => {

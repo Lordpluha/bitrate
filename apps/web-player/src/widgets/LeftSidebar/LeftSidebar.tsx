@@ -1,9 +1,7 @@
-import React from 'react'
-import { Button, Typography } from '@spotify/ui-react'
-import { LibraryHeader } from './LibraryHeader'
-import { LibraryTags } from './LibraryTags'
 import { LibraryControls } from './LibraryControls'
+import { LibraryHeader } from './LibraryHeader'
 import { LibraryMusic } from './LibraryMusic'
+import { LibraryTags } from './LibraryTags'
 
 export const LeftSidebar = () => {
   return (

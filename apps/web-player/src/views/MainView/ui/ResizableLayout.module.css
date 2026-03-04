@@ -1,9 +1,9 @@
 .resizable-layout__handle {
+  position: relative;
   width: 0px;
+  cursor: col-resize;
   background-color: rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
-  cursor: col-resize;
-  position: relative;
 }
 
 .resizable-layout__handle:hover {
@@ -20,25 +20,27 @@
 }
 
 .resizable-layout__sidebar--left {
-  border-radius: 8px;
-  background-color: var(--color-bg-secondary);
   margin: 6px;
+  background-color: var(--color-bg-secondary);
+  border-radius: 8px;
 }
 
 .resizable-layout__content {
-  border-radius: 8px;
-  background-color: var(--color-bg-secondary);
-  margin: 6px;
   position: relative;
+  margin: 6px;
+  background-color: var(--color-bg-secondary);
+  border-radius: 8px;
 }
 
 .resizable-layout__content::after {
-  content: "";
   position: absolute;
   top: 0;
-  left: 0;
   right: 0;
   bottom: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
   background: linear-gradient(
     to bottom,
     #1a0f2e 0%,
@@ -46,12 +48,10 @@
     var(--color-bg-secondary) 20%
   );
   border-radius: 8px;
-  pointer-events: none;
-  z-index: 0;
 }
 
 .resizable-layout__sidebar--right {
-  background-color: var(--color-bg-secondary);
   margin: 6px;
+  background-color: var(--color-bg-secondary);
   border-radius: 8px;
 }

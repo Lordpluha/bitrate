@@ -1,0 +1,66 @@
+name: "[monitoring] Image Size Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      branch-name:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
+jobs:
+  image-size-monitor:
+    name: Monitor Image Sizes
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [api, web-player, web-artists, admin]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/${{ matrix.service }}/Dockerfile
+          push: false
+          load: true
+          target: production
+          tags: size-check:${{ matrix.service }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache
+            type=gha,scope=${{ matrix.service }}
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/${{ matrix.service }}:buildcache,mode=max
+            type=gha,mode=max,scope=${{ matrix.service }}
+
+      - name: Check image size
+        run: |
+          size=$(docker images size-check:${{ matrix.service }} --format "{{.Size}}")
+          echo "${{ matrix.service }} image size: $size"
+          echo "${{ matrix.service }}: $size" >> image-sizes.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-sizes-${{ inputs.branch-name }}-${{ matrix.service }}
+          path: image-sizes.txt
+          retention-days: 30

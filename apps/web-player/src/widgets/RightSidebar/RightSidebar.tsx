@@ -1,14 +1,17 @@
-import { FavoriteTracks } from './FavoriteTracks'
 import { AboutArtist } from './AboutArtist'
-import { Credits } from './Credits'
+import { CurrentPlaylist } from './CurrentPlaylist'
 import { NextInQueue } from './NextInQueue'
 
-export const RightSidebar: React.FC = () => {
+interface RightSidebarProps {
+  onCollapse?: () => void
+}
+
+export const RightSidebar: React.FC<RightSidebarProps> = ({ onCollapse }) => {
   return (
-    <div className="h-full py-4 px-6 overflow-y-auto custom-scrollbar">
-      <FavoriteTracks />
+    <div className="h-full py-4 px-6 overflow-y-auto custom-scrollbar group/sidebar relative">
+      <CurrentPlaylist onCollapse={onCollapse} />
       <AboutArtist />
-      <Credits />
+      {/* <Credits /> */}
       <NextInQueue />
     </div>
   )

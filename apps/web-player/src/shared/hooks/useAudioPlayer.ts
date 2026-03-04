@@ -1,18 +1,18 @@
 'use client'
 
-import { useRef, useCallback, useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from './index'
 import {
-  togglePlay,
-  setCurrentTime,
-  setProgress,
-  setDuration,
   changeTrack,
   pause,
+  selectCurrentTrack,
   selectIsPlaying,
   selectVolume,
-  selectCurrentTrack,
+  setCurrentTime,
+  setDuration,
+  setProgress,
+  togglePlay,
 } from '@entities/Player'
+import { useCallback, useEffect, useRef } from 'react'
+import { useAppDispatch, useAppSelector } from './index'
 
 export const useAudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -26,7 +26,7 @@ export const useAudioPlayer = () => {
   const trackUrl = currentTrack?.audioUrl
     ? currentTrack.audioUrl.startsWith('http')
       ? currentTrack.audioUrl
-      : `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${currentTrack.id}`
+      : `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${currentTrack.id}`
     : null
 
   // Progressive streaming setup
@@ -34,14 +34,10 @@ export const useAudioPlayer = () => {
     if (!audioRef.current) return
 
     try {
-      console.log('Setting up progressive streaming for:', trackUrl)
-
       // Simple approach: preload=none forces browser to use Range requests
       audioRef.current.preload = 'none'
       audioRef.current.src = trackUrl
       audioRef.current.load()
-
-      console.log('Progressive streaming enabled')
     } catch (error) {
       console.error('Error setting up progressive streaming:', error)
     }
@@ -67,7 +63,7 @@ export const useAudioPlayer = () => {
 
   const onSeek = useCallback(
     (time: number) => {
-      if (audioRef.current && !isNaN(time) && isFinite(time)) {
+      if (audioRef.current && !Number.isNaN(time) && Number.isFinite(time)) {
         isSeekingRef.current = true
         audioRef.current.currentTime = time
       }

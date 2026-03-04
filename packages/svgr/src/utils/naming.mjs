@@ -5,7 +5,7 @@
  */
 export function toPascalCase(filename) {
   return filename
-    .replace(/\.svg$/, "")
+    .replace(/\.svg$/, '')
     .replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase())
     .replace(/^(.)/, (chr) => chr.toUpperCase())
 }

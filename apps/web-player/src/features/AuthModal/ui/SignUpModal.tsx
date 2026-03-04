@@ -1,35 +1,35 @@
 'use client'
 
-import React, { type ComponentProps } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
+import { useMutation } from '@shared/api/client'
+import { ROUTES } from '@shared/routes'
 import { SocialsAuthDivider } from '@shared/ui'
-import Link from 'next/link'
-import { useMutation } from '@shared/api'
 import {
   Button,
-  Input,
-  InputProvider,
-  PasswordInput,
   DynamicLabel,
-  toast,
-  Typography,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-  LogoIcon,
-  PlusIcon,
   GoogleIcon,
+  Input,
+  InputProvider,
+  LogoIcon,
+  PasswordInput,
+  Typography,
+  toast,
 } from '@spotify/ui-react'
-import { Modal } from './Modal'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import type React from 'react'
+import type { ComponentProps } from 'react'
+import { type SubmitHandler, useForm } from 'react-hook-form'
 import {
-  RegistrationFormData,
+  type RegistrationFormData,
   registrationSchema,
 } from '../../Registration/validation'
-import { ROUTES } from '@shared/routes'
+import { Modal } from './Modal'
 
 interface SignUpModalProps extends ComponentProps<typeof Modal> {
   onSwitchToLogin?: () => void
@@ -84,26 +84,26 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
   }
 
   return (
-    <Modal {...modalProps} className="max-w-[500px]  w-full">
+    <Modal {...modalProps} className="max-w-125  w-full">
       <div className="flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg">
         <div className="flex flex-col items-center">
-          <LogoIcon width={64} height={64} />
+          <LogoIcon height={64} width={64} />
           <Typography
             as="h5"
-            size="heading5"
             className="mt-2 text-center text-text-contrast"
+            size="heading5"
           >
             Sign Up
           </Typography>
-          <Typography as="p" size="body" className="text-center text-grey-500">
+          <Typography as="p" className="text-center text-grey-500" size="body">
             Sign up to enjoy the feature of Revolutie
           </Typography>
         </div>
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
+            onSubmit={form.handleSubmit(onSubmit)}
           >
             <FormField
               control={form.control}
@@ -121,8 +121,8 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                         </DynamicLabel>
                         <Input
                           id="signup-fullname"
-                          variant="contrast"
                           placeholder=""
+                          variant="contrast"
                           {...field}
                         />
                       </div>
@@ -146,9 +146,9 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                         </DynamicLabel>
                         <Input
                           id="signup-email"
-                          variant="contrast"
-                          type="email"
                           placeholder=""
+                          type="email"
+                          variant="contrast"
                           {...field}
                         />
                       </div>
@@ -175,8 +175,8 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                         </DynamicLabel>
                         <PasswordInput
                           id="signup-password"
-                          variant="contrast"
                           placeholder=""
+                          variant="contrast"
                           {...field}
                         />
                       </div>
@@ -203,8 +203,8 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                         </DynamicLabel>
                         <PasswordInput
                           id="signup-confirm-password"
-                          variant="contrast"
                           placeholder=""
+                          variant="contrast"
                           {...field}
                         />
                       </div>
@@ -217,21 +217,21 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
 
             <div className="mt-2 flex flex-col items-stretch gap-4">
               <Button
-                variant="primary"
+                aria-busy={isRegistering}
                 className="rounded"
-                type="submit"
                 disabled={isRegistering}
                 isLoading={isRegistering}
-                aria-busy={isRegistering}
+                type="submit"
+                variant="primary"
               >
                 Register
               </Button>
 
               <SocialsAuthDivider />
 
-              <Button variant="contrast" type="button">
+              <Button type="button" variant="contrast">
                 <GoogleIcon className="mr-2" />
-                <Typography as="p" size="body" className="text-text-contrast">
+                <Typography as="p" className="text-text-contrast" size="body">
                   Continue with Google
                 </Typography>
               </Button>
@@ -240,16 +240,16 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
                 Already have an account?{' '}
                 {onSwitchToLogin ? (
                   <button
-                    type="button"
                     className="font-bold text-green-500 hover:opacity-70 underline"
                     onClick={onSwitchToLogin}
+                    type="button"
                   >
                     Log in.
                   </button>
                 ) : (
                   <Link
-                    href={ROUTES.auth.login}
                     className="font-bold text-green-500 hover:opacity-70 underline"
+                    href={ROUTES.auth.login}
                   >
                     Log in.
                   </Link>

@@ -1,0 +1,32 @@
+name: "[performance] Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      run-docker-performance:
+        description: Run docker compose performance benchmarks
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  api-load:
+    uses: ./.github/workflows/performance_api_load_reusable.yml
+
+  lighthouse:
+    uses: ./.github/workflows/performance_lighthouse_reusable.yml
+
+  bundle-analysis:
+    uses: ./.github/workflows/performance_bundle_reusable.yml
+
+  db-performance:
+    uses: ./.github/workflows/performance_db_reusable.yml
+
+  docker-performance:
+    if: ${{ inputs.run-docker-performance }}
+    uses: ./.github/workflows/performance_docker_reusable.yml
