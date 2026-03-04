@@ -2,6 +2,7 @@
 
 import { Carousel, CarouselContent, CarouselItem } from '@spotify/ui-react'
 import Autoplay from 'embla-carousel-autoplay'
+import Image from 'next/image'
 import { useRef } from 'react'
 
 const slides = [
@@ -34,15 +35,19 @@ export const AuthBanner = () => {
       orientation="vertical"
       plugins={[plugin.current]}
     >
-      <CarouselContent className="m-0 h-[1008px] w-full">
-        {slides.map(({ src, alt }, i) => (
-          <CarouselItem className="p-0 basis-full" key={i}>
-            <img
-              alt={alt}
-              className="h-full w-full object-cover object-center select-none"
-              draggable={false}
-              src={src}
-            />
+      <CarouselContent className="m-0 h-252 w-full">
+        {slides.map(({ src, alt }) => (
+          <CarouselItem className="p-0 basis-full" key={src}>
+            <div className="relative h-full w-full">
+              <Image
+                alt={alt}
+                className="object-cover object-center select-none"
+                draggable={false}
+                fill
+                sizes="50vw"
+                src={src}
+              />
+            </div>
           </CarouselItem>
         ))}
       </CarouselContent>

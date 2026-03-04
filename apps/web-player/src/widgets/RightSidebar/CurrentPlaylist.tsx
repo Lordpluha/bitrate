@@ -4,6 +4,7 @@ import { selectCurrentPlaylistName, selectCurrentTrack } from '@entities/Player'
 import { useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { RollupIcon, SavedSongIcon, Typography } from '@spotify/ui-react'
+import Image from 'next/image'
 import type React from 'react'
 import { useState } from 'react'
 
@@ -34,6 +35,7 @@ export const CurrentPlaylist: React.FC<{ onCollapse?: () => void }> = ({
             onClick={onCollapse}
             onMouseEnter={() => setIsIconHovered(true)}
             onMouseLeave={() => setIsIconHovered(false)}
+            type="button"
           >
             <RollupIcon
               height={16}
@@ -47,11 +49,15 @@ export const CurrentPlaylist: React.FC<{ onCollapse?: () => void }> = ({
         </Typography>
       </div>
       <div className="flex flex-col items-center pb-2 mt-1">
-        <img
-          alt={currentTrack.title}
-          className="w-full rounded-md mb-2 object-cover"
-          src={coverUrl}
-        />
+        <div className="relative w-full aspect-square mb-2">
+          <Image
+            alt={currentTrack.title}
+            className="rounded-md object-cover"
+            fill
+            sizes="320px"
+            src={coverUrl}
+          />
+        </div>
         <div className="w-full">
           <Typography as="p" className="text-grey-500 truncate" size="body">
             {currentTrack.title}

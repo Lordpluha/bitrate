@@ -37,6 +37,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
 RUN pnpm --filter @spotify/api run db:gen
+RUN pnpm --filter @spotify/ncs-parser run build
 RUN pnpm --filter @spotify/api run build
 
 # Stage 5: Production Dependencies

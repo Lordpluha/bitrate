@@ -28,19 +28,29 @@ export const PlayerActions: React.FC<PlayerActionsProps> = ({
   }
 
   return (
-    <div className="flex items-center gap-2 min-w-[180px] justify-end">
-      <button className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all">
+    <div className="flex items-center gap-2 min-w-45 justify-end">
+      <button
+        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
+        type="button"
+      >
         <Mic2 size={16} />
       </button>
-      <button className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all">
+      <button
+        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
+        type="button"
+      >
         <ListMusic size={16} />
       </button>
-      <button className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all">
+      <button
+        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
+        type="button"
+      >
         <MonitorSpeaker size={16} />
       </button>
       <button
         className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
         onClick={toggleMute}
+        type="button"
       >
         {volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </button>
@@ -61,7 +71,10 @@ export const PlayerActions: React.FC<PlayerActionsProps> = ({
           value={volume}
         />
       </div>
-      <button className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all">
+      <button
+        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
+        type="button"
+      >
         <Maximize2 size={16} />
       </button>
     </div>

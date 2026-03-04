@@ -2,7 +2,7 @@
 
 import { cn } from '@spotify/ui-react'
 import { Menu, X } from 'lucide-react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { AuthButtons } from '../AuthButtons'
 import { InstallBtn } from '../InstallBtn'
 import { NavLinks } from '../NavLinks'
@@ -24,14 +24,17 @@ export const BurgerMenu = () => {
         aria-label="Toggle menu"
         className="p-2 text-white hover:opacity-70 transition-opacity"
         onClick={toggleMenu}
+        type="button"
       >
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
       {isOpen && (
-        <div
+        <button
+          aria-label="Close menu"
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={closeMenu}
+          type="button"
         />
       )}
 
@@ -47,6 +50,7 @@ export const BurgerMenu = () => {
             <button
               className="p-2 text-white hover:opacity-70 transition-opacity"
               onClick={closeMenu}
+              type="button"
             >
               <X className="w-5 h-5" />
             </button>

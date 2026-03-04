@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@spotify/ui-react'
-import { type FC, type HTMLAttributes, useState } from 'react'
+import type { FC, HTMLAttributes } from 'react'
 
 interface ProfileButtonProps extends HTMLAttributes<HTMLDivElement> {
   username: string
@@ -24,25 +24,20 @@ export const ProfileButton: FC<ProfileButtonProps> = ({
   className,
   ...etcDivProps
 }) => {
-  const [isHovered, setIsHovered] = useState(false)
-
   const firstLetter = username.charAt(0).toUpperCase()
   const backgroundColor = generateColor(username)
 
   const { logout } = useAuth()
 
   return (
-    <div
-      className={className}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      {...etcDivProps}
-    >
+    <div className={className} {...etcDivProps}>
       <Popover>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <PopoverTrigger className="w-12 h-12 rounded-full hover:scale-105 transition-transform duration-200 bg-grey-900 p-2">
+              <PopoverTrigger
+                className="w-12 h-12 rounded-full hover:scale-105 transition-transform duration-200 bg-grey-900 p-2"
+              >
                 <div
                   className="w-full h-full rounded-full flex items-center justify-center text-black font-semibold text-xl"
                   style={{ backgroundColor }}

@@ -4,6 +4,7 @@ import { play, selectCurrentTrack, selectPlaylist } from '@entities/Player'
 import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { Button, PlayIcon, Typography } from '@spotify/ui-react'
+import Image from 'next/image'
 import type React from 'react'
 
 export const NextInQueue: React.FC = () => {
@@ -54,14 +55,17 @@ export const NextInQueue: React.FC = () => {
           Open queue
         </Button>
       </div>
-      <div
+      <button
         className="px-4 py-3 flex items-center gap-3 hover:bg-white/5 cursor-pointer transition-colors group"
         onClick={() => dispatch(play(nextTrack))}
+        type="button"
       >
-        <div className="relative w-12 h-12 flex-shrink-0">
-          <img
+        <div className="relative w-12 h-12 shrink-0">
+          <Image
             alt={nextTrack.title}
-            className="w-full h-full rounded-md object-cover"
+            className="rounded-md object-cover"
+            fill
+            sizes="48px"
             src={coverUrl}
           />
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
@@ -84,7 +88,7 @@ export const NextInQueue: React.FC = () => {
             {artistName}
           </Typography>
         </div>
-      </div>
+      </button>
     </div>
   )
 }
