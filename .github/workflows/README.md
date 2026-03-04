@@ -3,9 +3,9 @@
 Current workflow map for .github/workflows.
 
 ## Core Principles
-- CI/CD is split by domain: pr, develop, master.
-- App-specific pipelines follow this pattern: <app>_pr.yml, <app>_develop.yml, <app>_master.yml.
-- Cross-domain and infrastructure checks are separated into dedicated workflows (security.yml, performance.yml, monitoring.yml, web-integration-test.yml).
+- Workflows are organized by domain with one entry workflow per domain.
+- Entry workflows stay thin (triggers + routing), while reusable workflows contain implementation logic.
+- Complex domains are split into orchestration reusable workflows and smaller atomic reusable blocks.
 - Shared setup logic is reused via composite actions:
   - .github/actions/setup-node-pnpm
   - .github/actions/setup-docker
@@ -13,39 +13,33 @@ Current workflow map for .github/workflows.
 ## Workflow Quick Review
 
 ### API
-- api_pr.yml — API checks for pull requests (Docker build + tests).
-- api_develop.yml — build/push + tests for develop.
-- api_master.yml — build/push for master.
+- api.yml — API pipeline entry workflow.
+- api_reusable.yml — reusable implementation for API jobs.
 
 ### Admin
-- admin_pr.yml — Admin Docker build for pull requests.
-- admin_develop.yml — Admin build/push for develop.
-- admin_master.yml — Admin build/push for master.
+- admin.yml — Admin pipeline entry workflow.
+- admin_reusable.yml — reusable implementation for Admin jobs.
 
 ### Web Player
-- web_player_pr.yml — Docker build + Biome check for pull requests.
-- web_player_develop.yml — build/push + Biome check for develop.
-- web_player_master.yml — build/push for master.
+- web_player.yml — Web Player pipeline entry workflow.
+- web_player_reusable.yml — reusable implementation for Web Player jobs.
 
 ### Web Artists
-- web_artists_pr.yml — Docker build + Biome check for pull requests.
-- web_artists_develop.yml — build/push + Biome check for develop.
-- web_artists_master.yml — build/push for master.
+- web_artists.yml — Web Artists pipeline entry workflow.
+- web_artists_reusable.yml — reusable implementation for Web Artists jobs.
 
 ### Mobile
-- mobile_pr.yml — pull request checks (Expo dev server, web build, manual EAS jobs).
-- mobile_develop.yml — develop checks + web image push + manual EAS jobs.
-- mobile_master.yml — master web build + manual production EAS jobs.
+- mobile.yml — Mobile pipeline entry workflow.
+- mobile_reusable.yml — Mobile orchestration reusable workflow.
+- mobile_expo_reusable.yml / mobile_web_reusable.yml / mobile_eas_reusable.yml — smaller reusable Mobile blocks.
 
 ### Desktop
-- desktop_pr.yml — desktop checks for pull requests.
-- desktop_develop.yml — desktop build/push + UI smoke test for develop.
-- desktop_master.yml — desktop build/push + artifact extraction for master.
+- desktop.yml — Desktop pipeline entry workflow.
+- desktop_native_reusable.yml / desktop_docker_reusable.yml — reusable Desktop blocks.
 
 ### UI React / Visual Tests
-- ui_react_pr.yml — visual tests for pull requests.
-- ui_react_develop.yml — visual tests for develop.
-- ui_react_master.yml — visual tests for master.
+- ui_react.yml — UI React visual tests entry workflow.
+- ui_react_reusable.yml — reusable orchestration for UI React visual checks.
 - loki_reusable.yml — reusable workflow for Loki.
 
 ### Integration Tests (Docker Compose)
@@ -65,7 +59,7 @@ Current workflow map for .github/workflows.
 - monitoring_reusable.yml — monitoring orchestration reusable workflow.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_image_size_reusable.yml / monitoring_ssl_reusable.yml / monitoring_backup_reusable.yml — smaller reusable monitoring blocks.
 
-## Trigger Model (Short)
-- *_pr.yml → pull_request + workflow_dispatch
-- *_develop.yml → push to develop + workflow_dispatch (and schedule where needed)
-- *_master.yml → push to master + workflow_dispatch (and schedule where needed)
+## Structure Summary
+- Entry workflows: admin.yml, api.yml, desktop.yml, mobile.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, performance.yml, monitoring.yml, web-integration-test.yml.
+- Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
+- Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
