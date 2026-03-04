@@ -1,17 +1,7 @@
-name: "[docker][pr] Web Integration Test"
+name: "[docker] Web Integration Test Reusable"
 
 on:
-  pull_request:
-    branches: [master, develop]
-    paths:
-      - 'docker-compose*.yaml'
-      - 'apps/api/**'
-      - 'apps/web-player/**'
-      - 'apps/web-artists/**'
-      - 'apps/admin/**'
-      - '.github/workflows/web-integration-test_pr.yml'
-      - '.github/actions/setup-docker/**'
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   integration-test:

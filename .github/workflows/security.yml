@@ -1,0 +1,16 @@
+name: "[monorepo] Security Checks"
+
+on:
+  push:
+    branches: [develop, master]
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security:
+    uses: ./.github/workflows/security_reusable.yml

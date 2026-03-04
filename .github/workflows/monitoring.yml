@@ -1,0 +1,49 @@
+name: "[platform] Release Monitoring"
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  push:
+    branches: [develop, master]
+    paths:
+      - '.github/workflows/monitoring.yml'
+      - '.github/workflows/monitoring_reusable.yml'
+      - '.github/workflows/monitoring_health_reusable.yml'
+      - '.github/workflows/monitoring_dependency_reusable.yml'
+      - '.github/workflows/monitoring_image_size_reusable.yml'
+      - '.github/workflows/monitoring_ssl_reusable.yml'
+      - '.github/workflows/monitoring_backup_reusable.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  monitoring-develop:
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    uses: ./.github/workflows/monitoring_reusable.yml
+    with:
+      branch-name: develop
+      backup-max-age-hours: '72'
+    secrets:
+      monitor-host: ${{ secrets.DEVELOP_SERVER_HOST || secrets.SERVER_HOST }}
+      deploy-host: ${{ secrets.DEVELOP_SERVER_HOST || secrets.SERVER_HOST }}
+      deploy-user: ${{ secrets.DEVELOP_SERVER_USER || secrets.SERVER_USER }}
+      deploy-path: ${{ secrets.DEVELOP_DEPLOY_PATH || secrets.DEPLOY_PATH }}
+      deploy-ssh-key: ${{ secrets.DEVELOP_SSH_PRIVATE_KEY || secrets.SSH_PRIVATE_KEY }}
+      backup-dir-secret: ${{ secrets.DEVELOP_BACKUP_DIR || secrets.BACKUP_DIR }}
+
+  monitoring-master:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    uses: ./.github/workflows/monitoring_reusable.yml
+    with:
+      branch-name: master
+      backup-max-age-hours: '48'
+    secrets:
+      monitor-host: ${{ secrets.SERVER_HOST }}
+      deploy-host: ${{ secrets.SERVER_HOST }}
+      deploy-user: ${{ secrets.SERVER_USER }}
+      deploy-path: ${{ secrets.DEPLOY_PATH }}
+      deploy-ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      backup-dir-secret: ${{ secrets.BACKUP_DIR }}

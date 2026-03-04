@@ -1,0 +1,25 @@
+name: "[api+web] Performance Testing"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'apps/api/**'
+      - 'apps/web-player/**'
+      - 'apps/web-artists/**'
+      - '.github/workflows/performance.yml'
+      - '.github/workflows/performance_reusable.yml'
+      - '.github/workflows/performance_api_load_reusable.yml'
+      - '.github/workflows/performance_lighthouse_reusable.yml'
+      - '.github/workflows/performance_bundle_reusable.yml'
+      - '.github/workflows/performance_db_reusable.yml'
+      - '.github/workflows/performance_docker_reusable.yml'
+  schedule:
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+jobs:
+  performance:
+    uses: ./.github/workflows/performance_reusable.yml
+    with:
+      run-docker-performance: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}

@@ -1,71 +1,71 @@
 # CI/CD Workflows
 
-Актуальная карта workflow в `.github/workflows`.
+Current workflow map for .github/workflows.
 
-## Основные принципы
-- CI/CD разделён по доменам: `pr`, `develop`, `master`.
-- Для приложений используются app-specific workflow (`<app>_pr.yml`, `<app>_develop.yml`, `<app>_master.yml`).
-- Инфраструктурные и кросс-доменные проверки вынесены отдельно (`security_*`, `performance_*`, `monitoring_*`, `web-integration-test_*`).
-- Общие setup-шаги переиспользуются через composite actions:
-  - `.github/actions/setup-node-pnpm`
-  - `.github/actions/setup-docker`
+## Core Principles
+- CI/CD is split by domain: pr, develop, master.
+- App-specific pipelines follow this pattern: <app>_pr.yml, <app>_develop.yml, <app>_master.yml.
+- Cross-domain and infrastructure checks are separated into dedicated workflows (security.yml, performance.yml, monitoring.yml, web-integration-test.yml).
+- Shared setup logic is reused via composite actions:
+  - .github/actions/setup-node-pnpm
+  - .github/actions/setup-docker
 
-## Workflow quick review
+## Workflow Quick Review
 
 ### API
-- `api_pr.yml` — PR проверки API (docker build + tests).
-- `api_develop.yml` — develop build/push + tests.
-- `api_master.yml` — master build/push.
+- api_pr.yml — API checks for pull requests (Docker build + tests).
+- api_develop.yml — build/push + tests for develop.
+- api_master.yml — build/push for master.
 
 ### Admin
-- `admin_pr.yml` — PR docker build admin.
-- `admin_develop.yml` — develop build/push admin.
-- `admin_master.yml` — master build/push admin.
+- admin_pr.yml — Admin Docker build for pull requests.
+- admin_develop.yml — Admin build/push for develop.
+- admin_master.yml — Admin build/push for master.
 
 ### Web Player
-- `web_player_pr.yml` — PR docker build + biome check.
-- `web_player_develop.yml` — develop build/push + biome check.
-- `web_player_master.yml` — master build/push.
+- web_player_pr.yml — Docker build + Biome check for pull requests.
+- web_player_develop.yml — build/push + Biome check for develop.
+- web_player_master.yml — build/push for master.
 
 ### Web Artists
-- `web_artists_pr.yml` — PR docker build + biome check.
-- `web_artists_develop.yml` — develop build/push + biome check.
-- `web_artists_master.yml` — master build/push.
+- web_artists_pr.yml — Docker build + Biome check for pull requests.
+- web_artists_develop.yml — build/push + Biome check for develop.
+- web_artists_master.yml — build/push for master.
 
 ### Mobile
-- `mobile_pr.yml` — PR проверки (Expo dev server, web build, manual EAS jobs).
-- `mobile_develop.yml` — develop проверки + web image push + manual EAS jobs.
-- `mobile_master.yml` — master web build + manual production EAS jobs.
+- mobile_pr.yml — pull request checks (Expo dev server, web build, manual EAS jobs).
+- mobile_develop.yml — develop checks + web image push + manual EAS jobs.
+- mobile_master.yml — master web build + manual production EAS jobs.
 
 ### Desktop
-- `desktop_pr.yml` — PR desktop checks.
-- `desktop_develop.yml` — develop desktop build/push + UI smoke test.
-- `desktop_master.yml` — master desktop build/push + artifact extraction.
+- desktop_pr.yml — desktop checks for pull requests.
+- desktop_develop.yml — desktop build/push + UI smoke test for develop.
+- desktop_master.yml — desktop build/push + artifact extraction for master.
 
 ### UI React / Visual Tests
-- `ui_react_pr.yml` — PR visual tests.
-- `ui_react_develop.yml` — develop visual tests.
-- `ui_react_master.yml` — master visual tests.
-- `loki_reusable.yml` — reusable workflow для Loki.
+- ui_react_pr.yml — visual tests for pull requests.
+- ui_react_develop.yml — visual tests for develop.
+- ui_react_master.yml — visual tests for master.
+- loki_reusable.yml — reusable workflow for Loki.
 
 ### Integration Tests (Docker Compose)
-- `web-integration-test_pr.yml` — integration на PR.
-- `web-integration-test_develop.yml` — integration на develop push.
-- `web-integration-test_master.yml` — integration на master push.
+- web-integration-test.yml — integration tests for PR and push (develop/master) + workflow_dispatch.
+- web-integration-test_reusable.yml — reusable integration test scenario.
 
 ### Security
-- `security_develop.yml` — security checks для develop (`push`, `schedule`, `workflow_dispatch`).
-- `security_master.yml` — security checks для master (`push`, `workflow_dispatch`).
+- security.yml — security checks for develop/master (push, schedule, workflow_dispatch).
 
 ### Performance
-- `performance_develop.yml` — performance checks для develop (`push`, `schedule`, `workflow_dispatch`).
-- `performance_master.yml` — performance checks для master (`push`, `workflow_dispatch`).
+- performance.yml — performance checks for develop/master (push, schedule, workflow_dispatch).
+- performance_reusable.yml — performance orchestration reusable workflow.
+- performance_api_load_reusable.yml / performance_lighthouse_reusable.yml / performance_bundle_reusable.yml / performance_db_reusable.yml / performance_docker_reusable.yml — smaller reusable performance blocks.
 
 ### Monitoring
-- `monitoring_develop.yml` — release monitoring develop (`schedule`, `push`, `workflow_dispatch`).
-- `monitoring_master.yml` — release monitoring master (`schedule`, `push`, `workflow_dispatch`).
+- monitoring.yml — release monitoring for develop/master (schedule, push, workflow_dispatch).
+- monitoring_reusable.yml — monitoring orchestration reusable workflow.
+- monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_image_size_reusable.yml / monitoring_ssl_reusable.yml / monitoring_backup_reusable.yml — smaller reusable monitoring blocks.
 
-## Trigger-модель (коротко)
-- `*_pr.yml` → `pull_request` + `workflow_dispatch`
-- `*_develop.yml` → `push` в `develop` + `workflow_dispatch` (и где нужно `schedule`)
-- `*_master.yml` → `push` в `master` + `workflow_dispatch` (и где нужно `schedule`)
+## Trigger Model (Short)
+- *_pr.yml → pull_request + workflow_dispatch
+- *_develop.yml → push to develop + workflow_dispatch (and schedule where needed)
+- *_master.yml → push to master + workflow_dispatch (and schedule where needed)
