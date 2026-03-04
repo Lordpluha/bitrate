@@ -14,7 +14,7 @@ export function proxy(request: NextRequest) {
   const publicRoutes = [...authRoutes, ROUTES.landing]
 
   const isPublicRoute = publicRoutes.some((route) => pathname === route)
-  const isAuthRoute = authRoutes.some((route) => pathname === route)
+  // const isAuthRoute = authRoutes.some((route) => pathname === route)
 
   // Если пользователь НЕ авторизован
   if (!token) {

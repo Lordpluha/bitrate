@@ -1,8 +1,6 @@
 'use client'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { useAppSelector } from '@shared/hooks'
 import { Clock } from 'lucide-react'
-import React, { useState } from 'react'
 import { TrackCard } from './TrackCard'
 
 interface TracksListProps {

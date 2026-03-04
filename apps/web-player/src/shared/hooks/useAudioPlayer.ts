@@ -63,7 +63,7 @@ export const useAudioPlayer = () => {
 
   const onSeek = useCallback(
     (time: number) => {
-      if (audioRef.current && !isNaN(time) && isFinite(time)) {
+      if (audioRef.current && !Number.isNaN(time) && Number.isFinite(time)) {
         isSeekingRef.current = true
         audioRef.current.currentTime = time
       }

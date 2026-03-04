@@ -3,7 +3,8 @@
 import { selectCurrentTrack } from '@entities/Player'
 import { useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
-import { Button, Typography } from '@spotify/ui-react'
+import { Typography } from '@spotify/ui-react'
+import Image from 'next/image'
 import type React from 'react'
 
 export const AboutArtist: React.FC = () => {
@@ -40,18 +41,26 @@ export const AboutArtist: React.FC = () => {
         >
           About the artist
         </Typography>
-        <img
-          alt={artist.username || 'Artist'}
-          className="w-full object-cover"
-          src={backgroundUrl}
-        />
+        <div className="relative w-full aspect-square">
+          <Image
+            alt={artist.username || 'Artist'}
+            className="object-cover"
+            fill
+            sizes="320px"
+            src={backgroundUrl}
+            unoptimized
+          />
+        </div>
       </div>
       <div className="flex flex-col p-4">
         <div className="flex items-center gap-3 mb-2">
-          <img
+          <Image
             alt={artist.username || 'Artist'}
             className="w-12 h-12 rounded-full object-cover"
+            height={48}
             src={avatarUrl}
+            unoptimized
+            width={48}
           />
           <Typography
             as="h6"

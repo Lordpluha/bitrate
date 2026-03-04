@@ -17,7 +17,6 @@ import {
   InputProvider,
   LogoIcon,
   PasswordInput,
-  PlusIcon,
   Typography,
   toast,
 } from '@spotify/ui-react'
@@ -85,7 +84,7 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({
   }
 
   return (
-    <Modal {...modalProps} className="max-w-[500px]  w-full">
+    <Modal {...modalProps} className="max-w-125  w-full">
       <div className="flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg">
         <div className="flex flex-col items-center">
           <LogoIcon height={64} width={64} />

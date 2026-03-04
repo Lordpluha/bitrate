@@ -1,5 +1,4 @@
 import { AboutArtist } from './AboutArtist'
-import { Credits } from './Credits'
 import { CurrentPlaylist } from './CurrentPlaylist'
 import { NextInQueue } from './NextInQueue'
 

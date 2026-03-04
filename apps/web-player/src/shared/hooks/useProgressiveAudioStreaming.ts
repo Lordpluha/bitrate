@@ -66,8 +66,8 @@ export const useProgressiveAudioStreaming = (
         console.log(`✓ Chunk loaded: ${arrayBuffer.byteLength} bytes`)
 
         return arrayBuffer
-      } catch (error: any) {
-        if (error.name === 'AbortError') {
+      } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
           console.log('Chunk fetch aborted')
         } else {
           console.error('Error fetching chunk:', error)

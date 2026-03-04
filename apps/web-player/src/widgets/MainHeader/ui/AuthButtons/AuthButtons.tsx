@@ -1,8 +1,8 @@
 'use client'
 
 import { LoginModal, SignUpModal } from '@features/AuthModal'
-import { Button, cn } from '@spotify/ui-react'
-import React, { useState } from 'react'
+import { Button } from '@spotify/ui-react'
+import { useState } from 'react'
 
 export const AuthButtons = () => {
   const [loginOpen, setLoginOpen] = useState(false)

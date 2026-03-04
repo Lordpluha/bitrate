@@ -1,4 +1,4 @@
-import { ExpandIcon, PlusIcon, Typography } from '@spotify/ui-react'
+import { PlusIcon, Typography } from '@spotify/ui-react'
 import { Maximize2 } from 'lucide-react'
 
 export const LibraryHeader = () => {
