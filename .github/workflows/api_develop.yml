@@ -106,6 +106,11 @@ jobs:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test
 
+      - name: Create shadow database
+        run: |
+          PGPASSWORD=test psql -h localhost -U test -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'test_shadow'" | grep -q 1 || \
+          PGPASSWORD=test psql -h localhost -U test -d postgres -c "CREATE DATABASE test_shadow;"
+
       - name: Run migrations
         run: pnpm --filter @spotify/api run db:migration:start
         env:
