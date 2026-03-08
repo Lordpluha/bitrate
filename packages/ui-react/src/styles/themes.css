@@ -1,10 +1,7 @@
-@custom-variant light (&:is(.light *));
-
 @import "./palette.css";
 @import "./typography.css";
 @import "./layout.css";
 @import "./animations.css";
-
 
 /**
  * Semantic Theme Tokens
@@ -17,6 +14,8 @@
 @theme {
   /* Background */
   --color-background: #0a0a0a;
+  --color-surface: rgba(255, 255, 255, 0.1);
+  --color-surface-hover: rgba(255, 255, 255, 0.15);
   --color-background-elevated: #121212;
   --color-background-tinted: #1a1a1a;
   --color-background-secondary: #121212;
@@ -97,6 +96,8 @@
 :root.light {
   /* Background */
   --color-background: #ffffff;
+  --color-surface: rgba(0, 0, 0, 0.06);
+  --color-surface-hover: rgba(0, 0, 0, 0.1);
   --color-background-elevated: var(--color-neutral-50);
   --color-background-tinted: var(--color-neutral-100);
   --color-background-secondary: #f7f7f7;

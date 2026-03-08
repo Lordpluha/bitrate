@@ -12,7 +12,7 @@ export const inputVariants = cva(
         default:
           'border-slate-200 bg-white text-slate-900 focus-visible:ring-slate-950 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
         contrast: 'border-grey-500 bg-contrast text-textContrast focus-visible:ring-slate-950',
-        search: 'bg-grey-900 text-grey-200 placeholder:text-grey-500 rounded-full h-12',
+        search: 'bg-background-elevated text-text placeholder:text-text-subdued rounded-full h-12',
       },
     },
     defaultVariants: {

@@ -21,7 +21,7 @@ export const PlaylistHeader = ({
   duration,
 }: PlaylistHeaderProps) => {
   return (
-    <div className="relative h-85 bg-linear-to-b from-purple-800 to-gray-900 p-6">
+    <div className="relative h-85 bg-linear-to-b from-purple-800 to-background p-6 text-white">
       <BackButton className="absolute top-6 left-6 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors">
         <ArrowLeft size={20} className="text-white" />
       </BackButton>

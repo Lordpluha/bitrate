@@ -29,22 +29,22 @@ export const PlayerActions: React.FC<PlayerActionsProps> = ({
 
   return (
     <div className="flex items-center gap-2 min-w-[180px] justify-end">
-      <button className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all">
+      <button className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all">
         <Mic2 size={16} />
       </button>
-      <button className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all">
+      <button className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all">
         <ListMusic size={16} />
       </button>
-      <button className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all">
+      <button className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all">
         <MonitorSpeaker size={16} />
       </button>
       <button
         onClick={toggleMute}
-        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
+        className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all"
       >
         {volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </button>
-      <div className="w-24 relative h-1 bg-gray-600 rounded-full group">
+      <div className="w-24 relative h-1 bg-text/20 rounded-full group">
         <div
           className="absolute top-0 left-0 h-full bg-green-500 rounded-full transition-all"
           style={{
@@ -61,7 +61,7 @@ export const PlayerActions: React.FC<PlayerActionsProps> = ({
           className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
         />
       </div>
-      <button className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all">
+      <button className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all">
         <Maximize2 size={16} />
       </button>
     </div>

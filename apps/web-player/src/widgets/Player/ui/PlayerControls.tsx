@@ -109,7 +109,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           onClick={onShuffleToggle}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            isShuffled ? 'text-green-500' : 'text-gray-400',
+            isShuffled ? 'text-green-500' : 'text-text-subdued',
           )}
         >
           <Shuffle size={16} />
@@ -117,25 +117,25 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
 
         <button
           onClick={onPrevious}
-          className="p-1 text-gray-400 hover:text-white hover:scale-110 transition-all"
+          className="p-1 text-text-subdued hover:text-text hover:scale-110 transition-all"
         >
           <SkipBack size={20} />
         </button>
 
         <button
           onClick={onPlayPause}
-          className="w-8 h-8 rounded-full bg-white hover:scale-105 transition-transform flex items-center justify-center"
+          className="w-8 h-8 rounded-full bg-text hover:scale-105 transition-transform flex items-center justify-center"
         >
           {isPlaying ? (
-            <Pause size={20} className="text-black" fill="black" />
+            <Pause size={20} className="text-background" fill="currentColor" />
           ) : (
-            <Play size={20} className="text-black ml-0.5" fill="black" />
+            <Play size={20} className="text-background ml-0.5" fill="currentColor" />
           )}
         </button>
 
         <button
           onClick={onNext}
-          className="p-1 text-gray-400 hover:text-white hover:scale-110 transition-all"
+          className="p-1 text-text-subdued hover:text-text hover:scale-110 transition-all"
         >
           <SkipForward size={20} />
         </button>
@@ -144,7 +144,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           onClick={onRepeatToggle}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            repeatMode !== 'off' ? 'text-green-500' : 'text-gray-400',
+            repeatMode !== 'off' ? 'text-green-500' : 'text-text-subdued',
           )}
         >
           <Repeat size={16} />
@@ -152,25 +152,25 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       </div>
 
       <div className="flex items-center gap-2 w-full">
-        <span className="text-xs text-gray-400 min-w-[40px] text-right">
+        <span className="text-xs text-text-subdued min-w-[40px] text-right">
           {formatTime(seekTime !== null ? seekTime : currentTime)}
         </span>
         <div
           ref={progressBarRef}
-          className="flex-1 h-1 bg-gray-600 rounded-full cursor-pointer group relative"
+          className="flex-1 h-1 bg-border rounded-full cursor-pointer group relative"
           onMouseDown={handleMouseDown}
           onClick={handleProgressClick}
         >
           <div
-            className="absolute top-0 left-0 h-full bg-white group-hover:bg-green-500 rounded-full pointer-events-none transition-colors"
+            className="absolute top-0 left-0 h-full bg-text group-hover:bg-primary rounded-full pointer-events-none transition-colors"
             style={{
               width: `${duration && isFinite(duration) ? ((seekTime !== null ? seekTime : currentTime) / duration) * 100 : 0}%`,
             }}
           >
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-text rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
-        <span className="text-xs text-gray-400 min-w-[40px]">
+        <span className="text-xs text-text-subdued min-w-[40px]">
           {formatTime(duration)}
         </span>
       </div>

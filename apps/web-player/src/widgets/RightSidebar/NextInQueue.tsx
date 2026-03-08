@@ -50,14 +50,14 @@ export const NextInQueue: React.FC = () => {
         </Typography>
         <Button
           variant="link"
-          className="text-grey-500 text-xs font-medium hover:underline p-0"
+          className="text-text-subdued text-xs font-medium hover:underline p-0"
         >
           Open queue
         </Button>
       </div>
       <div
         onClick={() => dispatch(play(nextTrack))}
-        className="px-4 py-3 flex items-center gap-3 hover:bg-white/5 cursor-pointer transition-colors group"
+        className="px-4 py-3 flex items-center gap-3 hover:bg-surface cursor-pointer transition-colors group"
       >
         <div className="relative w-12 h-12 flex-shrink-0">
           <img
@@ -80,7 +80,7 @@ export const NextInQueue: React.FC = () => {
           <Typography
             as="p"
             size="body"
-            className="text-grey-500 text-xs truncate"
+            className="text-text-subdued text-xs truncate"
           >
             {artistName}
           </Typography>

@@ -47,7 +47,7 @@ function Footer() {
       <div className="grid grid-cols-5 gap-8 mb-8">
         {sections.map((section) => (
           <div key={section.title}>
-            <h3 className="text-white font-semibold text-base mb-4">
+            <h3 className="text-text font-semibold text-base mb-4">
               {section.title}
             </h3>
             <ul className="space-y-3">
@@ -55,7 +55,7 @@ function Footer() {
                 <li key={link}>
                   <Link
                     href="#"
-                    className="text-gray-400 hover:text-white text-sm transition-[0.3s]"
+                    className="text-text-subdued hover:text-text text-sm transition-[0.3s]"
                   >
                     {link}
                   </Link>
@@ -68,38 +68,38 @@ function Footer() {
           <div className="flex items-start space-x-4">
             <Link
               href="#"
-              className=" bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
+              className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
             >
-              <FacebookIcon />
+              <FacebookIcon width={50} height={50} />
             </Link>
             <Link
               href="#"
-              className=" bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
+              className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
             >
-              <TwitIcon />
+              <TwitIcon width={50} height={50} />
             </Link>
             <Link
               href="#"
-              className=" bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
+              className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
             >
-              <InstIcon />
+              <InstIcon width={50} height={50} />
             </Link>
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-center justify-between pt-8 border-t border-gray-700">
-        <div className="flex flex-wrap items-center space-x-6 text-xs text-gray-400 mb-4 md:mb-0">
+      <div className="flex flex-wrap items-center justify-between pt-8 border-t border-border">
+        <div className="flex flex-wrap items-center space-x-6 text-xs text-text-subdued mb-4 md:mb-0">
           {bottomLinks.map((link) => (
             <Link
               key={link}
               href="#"
-              className="hover:text-white transition-[0.3s]"
+              className="hover:text-text transition-[0.3s]"
             >
               {link}
             </Link>
           ))}
         </div>
-        <div className="text-xs text-gray-400">© 2025 Spotify AB</div>
+        <div className="text-xs text-text-subdued">© 2025 Spotify AB</div>
       </div>
     </footer>
   )

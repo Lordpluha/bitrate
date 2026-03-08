@@ -19,6 +19,8 @@ export default {
       { name: 'Red Scale', key: 'red' },
       { name: 'Orange Scale', key: 'orange' },
       { name: 'Purple Scale', key: 'purple' },
+      { name: 'Grey Scale', key: 'grey' },
+      { name: 'White Alpha Scale', key: 'white-alpha' },
     ],
     pureColors: ['white', 'black'],
   },
@@ -140,6 +142,7 @@ export default {
     groups: {
       Background: [
         'background',
+        'contrast',
         'background-elevated',
         'background-tinted',
         'background-secondary',
@@ -164,7 +167,7 @@ export default {
       Destructive: ['destructive', 'destructive-foreground'],
       Muted: ['muted', 'muted-foreground'],
       'Border & Input': ['border', 'border-subtle', 'input', 'ring'],
-      'Card & Popover': ['card', 'card-foreground', 'popover', 'popover-foreground'],
+      'Card & Popover': ['card', 'card-foreground', 'surface', 'surface-hover', 'surface-active', 'popover', 'popover-foreground'],
       Charts: ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'],
     },
     prefix: 'color',

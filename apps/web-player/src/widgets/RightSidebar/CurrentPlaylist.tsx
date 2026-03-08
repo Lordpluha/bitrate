@@ -32,7 +32,7 @@ export const CurrentPlaylist: React.FC<{ onCollapse?: () => void }> = ({
             onClick={onCollapse}
             onMouseEnter={() => setIsIconHovered(true)}
             onMouseLeave={() => setIsIconHovered(false)}
-            className="w-0 opacity-0 group-hover/sidebar:w-auto group-hover/sidebar:opacity-100 transition-all duration-200 overflow-hidden p-1 hover:bg-gray-700/50 rounded mr-2"
+            className="w-0 opacity-0 group-hover/sidebar:w-auto group-hover/sidebar:opacity-100 transition-all duration-200 overflow-hidden p-1 hover:bg-surface rounded mr-2"
             aria-label="Collapse sidebar"
           >
             <RollupIcon

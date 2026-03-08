@@ -64,7 +64,7 @@ export const Player: React.FC = () => {
       />
 
       <div
-        className={`fixed bottom-0 left-0 right-0 h-[90px] bg-black border-t border-gray-800 px-4 flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${
+        className={`fixed bottom-0 left-0 right-0 h-[90px] bg-background border-t border-border px-4 flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${
           isVisible ? 'translate-y-0' : 'translate-y-full'
         }`}
       >

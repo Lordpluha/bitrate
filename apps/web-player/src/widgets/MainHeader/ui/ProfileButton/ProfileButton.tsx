@@ -42,7 +42,7 @@ export const ProfileButton: FC<ProfileButtonProps> = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <PopoverTrigger className="w-12 h-12 rounded-full hover:scale-105 transition-transform duration-200 bg-grey-900 p-2">
+              <PopoverTrigger className="w-12 h-12 rounded-full hover:scale-105 transition-transform duration-200 bg-background-elevated p-2">
                 <div
                   className="w-full h-full rounded-full flex items-center justify-center text-black font-semibold text-xl"
                   style={{ backgroundColor }}

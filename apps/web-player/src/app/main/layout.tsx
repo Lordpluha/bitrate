@@ -1,95 +1,103 @@
-'use client'
+"use client";
 
-import { useAppSelector } from '@shared/hooks'
+import { useAppSelector } from "@shared/hooks";
 import {
   ResizableHandle,
   ResizableLayout as ResizableLayoutShadCN,
   ResizablePanel,
-  RollupIcon,
-} from '@spotify/ui-react'
-import { LeftSidebar } from '@widgets/LeftSidebar'
-import { MainHeader } from '@widgets/MainHeader'
-import { Player } from '@widgets/Player'
-import { RightSidebar } from '@widgets/RightSidebar'
-import { useState, useEffect } from 'react'
-import type { PropsWithChildren } from 'react'
+  cn,
+  usePanelRef,
+} from "@spotify/ui-react";
+import { LeftSidebar } from "@widgets/LeftSidebar";
+import { MainHeader } from "@widgets/MainHeader";
+import { Player } from "@widgets/Player";
+import { RightSidebar } from "@widgets/RightSidebar";
+import { useState } from "react";
+import type { PropsWithChildren } from "react";
+import { ChevronLeft } from "lucide-react";
 
 export default function MainLayout({ children }: PropsWithChildren) {
-  const { currentTrack } = useAppSelector((state) => state.musicPlayer)
-  const hasPlayer = !!currentTrack
-  const [isRightSidebarCollapsed, setIsRightSidebarCollapsed] = useState(true)
+  const { currentTrack } = useAppSelector((state) => state.musicPlayer);
+  const hasPlayer = !!currentTrack;
+  const [isRightSidebarCollapsed, setIsRightSidebarCollapsed] = useState(false);
+  const rightPanelRef = usePanelRef();
 
-  // Auto-expand sidebar when player becomes active
-  useEffect(() => {
-    if (hasPlayer && isRightSidebarCollapsed) {
-      setIsRightSidebarCollapsed(false)
-    }
-  }, [hasPlayer, isRightSidebarCollapsed])
+  const handleCollapse = () => {
+    rightPanelRef.current?.collapse();
+  };
+
+  const handleExpand = () => {
+    rightPanelRef.current?.expand();
+  };
+
+  const handleRightPanelResize = ({ asPercentage }: { asPercentage: number }) => {
+    setIsRightSidebarCollapsed(asPercentage <= 4);
+  };
 
   return (
     <div className="h-screen bg-background text-text">
       <MainHeader />
       <div
-        className="transition-all duration-300 ease-in-out"
-        style={{
-          height: hasPlayer
-            ? 'calc(100vh - 64px - 90px)'
-            : 'calc(100vh - 64px)',
-        }}
+        className={cn(
+          "transition-all duration-300 ease-in-out",
+          hasPlayer ? "h-[calc(100vh-64px-90px)]" : "h-[calc(100vh-64px)]",
+        )}
       >
-        <div className="h-full">
-          <ResizableLayoutShadCN className="h-full" direction="horizontal">
+        <div className="h-full overflow-hidden">
+          <ResizableLayoutShadCN
+            orientation="horizontal"
+            className="h-full"
+
+          >
             <ResizablePanel
-              defaultSize={20}
-              minSize={15}
-              maxSize={30}
-              className="overflow-hidden rounded-lg bg-bg-secondary m-1.5"
+              defaultSize={12}
+              minSize={10}
+              maxSize={20}
+              className="overflow-hidden rounded-lg bg-background-secondary m-1.5"
             >
               <LeftSidebar />
             </ResizablePanel>
 
-            <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
+            <ResizableHandle />
 
             <ResizablePanel
-              defaultSize={60}
+              defaultSize={68}
               minSize={40}
               className="overflow-hidden rounded-lg bg-background-secondary m-1.5 relative"
             >
               {children}
             </ResizablePanel>
 
-            <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
+            {hasPlayer && <ResizableHandle disabled={isRightSidebarCollapsed} />}
 
-            {!isRightSidebarCollapsed && (
-              <>
-                <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
-
-                <ResizablePanel
-                  defaultSize={20}
-                  minSize={15}
-                  maxSize={30}
-                  className="overflow-hidden rounded-lg bg-background-secondary m-1.5"
-                >
-                  <RightSidebar
-                    onCollapse={() => setIsRightSidebarCollapsed(true)}
-                  />
-                </ResizablePanel>
-              </>
-            )}
-            {isRightSidebarCollapsed && hasPlayer && (
-              <button
-                type="button"
-                onClick={() => setIsRightSidebarCollapsed(false)}
-                className="fixed right-4 top-20 z-50 p-2 rounded-lg bg-background-secondary hover:bg-gray-700/50 transition-colors"
-                aria-label="Expand sidebar"
+            {hasPlayer && (
+              <ResizablePanel
+                panelRef={rightPanelRef}
+                defaultSize={20}
+                minSize={20}
+                maxSize={30}
+                collapsible
+                collapsedSize={4}
+                onResize={handleRightPanelResize}
+                className="overflow-hidden rounded-lg bg-background-secondary m-1.5 relative"
               >
-                <RollupIcon width={16} height={16} primaryColor={'#b3b3b3'} />
-              </button>
+                <RightSidebar onCollapse={handleCollapse} />
+                {isRightSidebarCollapsed && (
+                  <div
+                    className="absolute inset-0 z-10 flex items-center justify-center rounded-lg cursor-pointer bg-background-secondary opacity-100 hover:opacity-80 transition-opacity duration-300 ease-in-out"
+                    onClick={handleExpand}
+                    role="button"
+                    aria-label="Expand sidebar"
+                  >
+                    <ChevronLeft className="text-gray-300 w-5 h-5 transition-transform duration-300 hover:scale-110" />
+                  </div>
+                )}
+              </ResizablePanel>
             )}
           </ResizableLayoutShadCN>
         </div>
       </div>
       <Player />
     </div>
-  )
+  );
 }

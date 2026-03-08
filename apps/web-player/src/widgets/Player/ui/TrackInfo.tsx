@@ -25,10 +25,10 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
         className="w-14 h-14 rounded object-cover"
       />
       <div className="min-w-8">
-        <div className="text-sm font-medium text-white truncate hover:underline cursor-pointer">
+        <div className="text-sm font-medium text-text truncate hover:underline cursor-pointer">
           {title}
         </div>
-        <div className="text-xs text-gray-400 truncate hover:underline hover:text-white cursor-pointer">
+        <div className="text-xs text-text-subdued truncate hover:underline hover:text-text cursor-pointer">
           {artist}
         </div>
       </div>
@@ -42,14 +42,14 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
             className={cn(
               isLiked
                 ? 'fill-green-500 text-green-500'
-                : 'text-gray-400 hover:text-white',
+                : 'text-text-subdued hover:text-text',
             )}
           />
         </button>
         <button className="p-2 hover:scale-110 transition-transform">
           <PictureInPicture2
             size={16}
-            className="text-gray-400 hover:text-white"
+            className="text-text-subdued hover:text-text"
           />
         </button>
       </div>

@@ -140,6 +140,8 @@ export default {
     groups: {
       Background: [
         'background',
+        'surface',
+        'surface-hover',
         'background-elevated',
         'background-tinted',
         'background-secondary',

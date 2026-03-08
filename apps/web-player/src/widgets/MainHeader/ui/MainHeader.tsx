@@ -13,6 +13,7 @@ import { useAuth } from '@shared/hooks'
 import { Logo } from '@shared/ui'
 
 import { MembersIcon, NotificationIcon } from '@spotify/ui-react'
+import { ThemeSwitcher } from '@features/SwitchTheme'
 
 export const MainHeader = () => {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -47,7 +48,7 @@ export const MainHeader = () => {
                 <MembersIcon />
               </Link>
               <ProfileButton username={user.username || 'User'} />
-              {/* пока оставляем */}
+              <ThemeSwitcher />
             </>
           ) : (
             <>

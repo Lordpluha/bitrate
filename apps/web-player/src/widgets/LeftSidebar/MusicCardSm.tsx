@@ -37,7 +37,7 @@ export const MusicCardSm = ({ item }: MusicCardSmProps) => {
   }
 
   return (
-    <div className="group flex items-center gap-3 p-2 rounded-md hover:bg-white/10 cursor-pointer transition-all duration-150">
+    <div className="group flex items-center gap-3 p-2 rounded-md hover:bg-surface cursor-pointer transition-all duration-150">
       <div className="w-12 h-12 rounded-md flex-shrink-0 overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-150">
         {!imageError ? (
           <img
@@ -58,10 +58,10 @@ export const MusicCardSm = ({ item }: MusicCardSmProps) => {
       </div>
 
       <div className="flex-1 min-w-0">
-        <h3 className="text-text font-semibold text-sm truncate group-hover:text-white transition-colors duration-150 leading-tight">
+        <h3 className="text-text font-semibold text-sm truncate group-hover:text-text transition-colors duration-150 leading-tight">
           {item.title}
         </h3>
-        <p className="text-gray-400 text-xs truncate group-hover:text-gray-300 transition-colors duration-150 mt-0.5">
+        <p className="text-text-subdued text-xs truncate group-hover:text-text-secondary transition-colors duration-150 mt-0.5">
           {item.type.slice(0, 1).toUpperCase() + item.type.slice(1)} •{' '}
           {item.username}
           {item.tracksCount && ` • ${item.tracksCount} songs`}
