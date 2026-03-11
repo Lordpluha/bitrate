@@ -5,3 +5,6 @@ export * from './useAppDispatch'
 export * from './useAppSelector'
 export * from './useAudioPlayer'
 export * from './useProgressiveAudioStreaming'
+export * from './useImageColor'
+export * from './useMediaQuery'
+

@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppSelector } from "@shared/hooks";
+import { useAppSelector, useMediaQuery } from "@shared/hooks";
 import {
   ResizableHandle,
   ResizableLayout as ResizableLayoutShadCN,
@@ -21,6 +21,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
   const hasPlayer = !!currentTrack;
   const [isRightSidebarCollapsed, setIsRightSidebarCollapsed] = useState(false);
   const rightPanelRef = usePanelRef();
+  const isDesktop = useMediaQuery('(min-width: 1280px)');
 
   const handleCollapse = () => {
     rightPanelRef.current?.collapse();
@@ -50,8 +51,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
 
           >
             <ResizablePanel
-              defaultSize={12}
-              minSize={10}
+              defaultSize={15}
+              minSize={15}
               maxSize={20}
               className="overflow-hidden rounded-lg bg-background-secondary m-1.5"
             >
@@ -61,19 +62,19 @@ export default function MainLayout({ children }: PropsWithChildren) {
             <ResizableHandle />
 
             <ResizablePanel
-              defaultSize={68}
+              defaultSize={70}
               minSize={40}
               className="overflow-hidden rounded-lg bg-background-secondary m-1.5 relative"
             >
               {children}
             </ResizablePanel>
 
-            {hasPlayer && <ResizableHandle disabled={isRightSidebarCollapsed} />}
+            {hasPlayer && isDesktop && <ResizableHandle disabled={isRightSidebarCollapsed} />}
 
-            {hasPlayer && (
+            {hasPlayer && isDesktop && (
               <ResizablePanel
                 panelRef={rightPanelRef}
-                defaultSize={20}
+                defaultSize={15}
                 minSize={20}
                 maxSize={30}
                 collapsible
@@ -83,14 +84,14 @@ export default function MainLayout({ children }: PropsWithChildren) {
               >
                 <RightSidebar onCollapse={handleCollapse} />
                 {isRightSidebarCollapsed && (
-                  <div
+                  <button
+                    type="button"
                     className="absolute inset-0 z-10 flex items-center justify-center rounded-lg cursor-pointer bg-background-secondary opacity-100 hover:opacity-80 transition-opacity duration-300 ease-in-out"
                     onClick={handleExpand}
-                    role="button"
                     aria-label="Expand sidebar"
                   >
                     <ChevronLeft className="text-gray-300 w-5 h-5 transition-transform duration-300 hover:scale-110" />
-                  </div>
+                  </button>
                 )}
               </ResizablePanel>
             )}

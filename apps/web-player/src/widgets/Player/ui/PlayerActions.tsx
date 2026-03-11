@@ -13,11 +13,13 @@ import {
 interface PlayerActionsProps {
   volume: number
   onVolumeChange: (volume: number) => void
+  onExpand?: () => void
 }
 
 export const PlayerActions: React.FC<PlayerActionsProps> = ({
   volume,
   onVolumeChange,
+  onExpand,
 }) => {
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onVolumeChange(Number(e.target.value))
@@ -44,7 +46,7 @@ export const PlayerActions: React.FC<PlayerActionsProps> = ({
       >
         {volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </button>
-      <div className="w-24 relative h-1 bg-text/20 rounded-full group">
+      <div className="w-24 relative h-1 bg-surface rounded-full group">
         <div
           className="absolute top-0 left-0 h-full bg-green-500 rounded-full transition-all"
           style={{
@@ -61,7 +63,12 @@ export const PlayerActions: React.FC<PlayerActionsProps> = ({
           className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
         />
       </div>
-      <button className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all">
+      <button
+        onClick={onExpand}
+        className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all"
+        type="button"
+        aria-label="Open full player"
+      >
         <Maximize2 size={16} />
       </button>
     </div>

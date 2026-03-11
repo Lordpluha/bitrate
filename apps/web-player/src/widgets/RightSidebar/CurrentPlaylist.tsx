@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Typography, RollupIcon } from '@spotify/ui-react'
+import { Typography, RollupIcon, cn } from '@spotify/ui-react'
 import { SavedSongIcon } from '@spotify/ui-react'
 import { useAppSelector } from '@shared/hooks'
 import { selectCurrentTrack, selectCurrentPlaylistName } from '@entities/Player'
@@ -32,8 +32,9 @@ export const CurrentPlaylist: React.FC<{ onCollapse?: () => void }> = ({
             onClick={onCollapse}
             onMouseEnter={() => setIsIconHovered(true)}
             onMouseLeave={() => setIsIconHovered(false)}
-            className="w-0 opacity-0 group-hover/sidebar:w-auto group-hover/sidebar:opacity-100 transition-all duration-200 overflow-hidden p-1 hover:bg-surface rounded mr-2"
+            className="w-0 opacity-0 group-hover/sidebar:w-auto group-hover/sidebar:opacity-100 touch:w-auto touch:opacity-100 transition-all duration-200 overflow-hidden p-1 hover:bg-surface rounded mr-2"
             aria-label="Collapse sidebar"
+            type="button"
           >
             <RollupIcon
               width={16}
@@ -47,11 +48,13 @@ export const CurrentPlaylist: React.FC<{ onCollapse?: () => void }> = ({
         </Typography>
       </div>
       <div className="flex flex-col items-center pb-2 mt-1">
-        <img
-          src={coverUrl}
-          alt={currentTrack.title}
-          className="w-full rounded-md mb-2 object-cover"
-        />
+        <div className="relative w-full aspect-square mb-2">
+          <img
+            src={coverUrl}
+            alt={currentTrack.title}
+            className="w-full h-full rounded-md object-cover"
+          />
+        </div>
         <div className="w-full">
           <Typography as="p" size="body" className="text-grey-500 truncate">
             {currentTrack.title}
