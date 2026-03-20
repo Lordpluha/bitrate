@@ -1,22 +1,22 @@
 # Music Platform (Spotify Clone)
 
-## 📚 Документация
+## 📚 Documentation
 
-### Основная документация
-- **[README.md](README.md)** - основная документация (вы здесь)
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - руководство для контрибьюторов
-- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - кодекс поведения
-- **[SECURITY.md](SECURITY.md)** - политика безопасности
+### Main documentation
+- **[README.md](README.md)** - main documentation (you are here)
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - contributor guide
+- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - code of conduct
+- **[SECURITY.md](SECURITY.md)** - security policy
 
-### 📋 Планирование и архитектура
-- **[🗺️ Roadmap](apps/docs/docs/ROADMAP.md)** - дорожная карта проекта с milestones
-- **[⚙️ Workflows](.github/WORKFLOWS.md)** - CI/CD документация
+### 📋 Planning and architecture
+- **[🗺️ Roadmap](apps/docs/docs/ROADMAP.md)** - project roadmap with milestones
+- **[⚙️ Workflows](.github/WORKFLOWS.md)** - CI/CD documentation
 
-### Приложения
-- **[MOBILE.md](apps/docs/docs/MOBILE.md)** - детальная документация Mobile
-- **[DESKTOP.md](apps/docs/docs/DESKTOP.md)** - детальная документация Desktop
+### Applications
+- **[MOBILE.md](apps/docs/docs/MOBILE.md)** - detailed Mobile documentation
+- **[DESKTOP.md](apps/docs/docs/DESKTOP.md)** - detailed Desktop documentation
 
-## 🔗 Полезные ссылки
+## 🔗 Useful links
 
 - **GitHub Project** - https://github.com/users/Lordpluha/projects/6
 - **Chromatic** - https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
@@ -27,41 +27,41 @@
 
 # 🚀 Quick Start
 
-## 💻 Системные требования
+## 💻 System requirements
 
-### Минимальные требования
+### Minimum requirements
 
-- **CPU:** 4 ядра (рекомендуется 8+)
-- **RAM:** 8 GB (рекомендуется 16+ GB для Docker)
-- **Диск:** 80+ GB свободного места (для всех Docker образов)
-- **ОС:** Linux, macOS, Windows 10/11 с WSL2
+- **CPU:** 4 cores (8+ recommended)
+- **RAM:** 8 GB (16+ GB recommended for Docker)
+- **Disk:** 80+ GB free space (for all Docker images)
+- **OS:** Linux, macOS, Windows 10/11 with WSL2
 
 ---
 
-## 📦 Зависимости по приложениям
+## 📦 Dependencies by application
 
-### 🌐 Общие зависимости (для всех приложений)
+### 🌐 Common dependencies (for all applications)
 
-Необходимы для работы с любой частью проекта:
+Required to work with any part of the project:
 
-| Инструмент | Версия | Установка |
+| Tool | Version | Installation |
 |------------|--------|-----------|
 | **Node.js** | >= 20.x | [Linux](#linux-nodejs) • [Windows](#windows-nodejs) • [macOS](#macos-nodejs) |
 | **pnpm** | 10.27.0 | `npm install -g pnpm@10.27.0` |
 | **Git** | >= 2.x | [git-scm.com](https://git-scm.com/) |
 | **Docker** | >= 24.x | [Linux](#linux-docker) • [Windows](#windows-docker) • [macOS](#macos-docker) |
-| **Docker Compose** | >= 2.x | Включен в Docker |
+| **Docker Compose** | >= 2.x | Included with Docker |
 
 ---
 
-## 📲 Дополнительные зависимости
+## 📲 Additional dependencies
 
 ### 📱 Mobile App (React Native + Expo)
 
 <details>
-<summary><b>Для Android разработки</b></summary>
+<summary><b>For Android development</b></summary>
 
-**Все платформы:**
+**All platforms:**
 
 1. **Android Studio**
    - Linux: [developer.android.com/studio](https://developer.android.com/studio)
@@ -73,20 +73,20 @@
    - Windows: [adoptium.net](https://adoptium.net/)
    - macOS: `brew install openjdk@17`
 
-3. **Android SDK** (устанавливается через Android Studio)
+3. **Android SDK** (installed via Android Studio)
 
-4. **Эмулятор Android** (через Android Studio) или физическое устройство
+4. **Android Emulator** (via Android Studio) or a physical device
 </details>
 
 <details>
-<summary><b>Для iOS разработки (только macOS)</b></summary>
+<summary><b>For iOS development (macOS only)</b></summary>
 
-1. **Xcode** (из App Store)
+1. **Xcode** (from the App Store)
    ```bash
    xcode-select --install
    ```
 
-2. **iOS Simulator** (включен в Xcode)
+2. **iOS Simulator** (included in Xcode)
 
 3. **CocoaPods**
    ```bash
@@ -94,28 +94,28 @@
    ```
 </details>
 
-**Для тестирования на физическом устройстве:**
+**For testing on a physical device:**
 
-- Установите **Expo Go** на телефон:
+- Install **Expo Go** on your phone:
   - Android: [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
   - iOS: [App Store](https://apps.apple.com/app/expo-go/id982107779)
 
-**Способы запуска:**
+**Run options:**
 
-1. **Docker (только Metro Bundler + tunnel):**
+1. **Docker (Metro Bundler + tunnel only):**
    ```bash
    docker compose --profile mobile up -d mobile
-   # Откройте http://localhost:19000 для QR-кода
+   # Open http://localhost:19000 for the QR code
    ```
 
-2. **Нативно (рекомендуется):**
+2. **Native (recommended):**
    ```bash
    cd apps/mobile
    pnpm install
    pnpm start
    ```
 
-**⚠️ Рекомендация:** Для Mobile разработки используйте нативный запуск, Docker только для демонстрации.
+**⚠️ Recommendation:** For Mobile development, use native execution. Docker is mainly for demos.
 
 ---
 
@@ -125,7 +125,7 @@
 <summary><b>Linux (Ubuntu/Debian)</b></summary>
 
 ```bash
-# Системные библиотеки для WebView
+# System libraries for WebView
 sudo apt install -y \
   libwebkit2gtk-4.1-dev \
   build-essential \
@@ -143,52 +143,52 @@ sudo apt install -y \
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env
 
-# Tauri CLI (устанавливается автоматически при pnpm install)
+# Tauri CLI (installed automatically during pnpm install)
 ```
 </details>
 
 <details>
 <summary><b>Windows</b></summary>
 
-**⚠️ Для Windows разработчиков настоятельно рекомендуется использовать WSL2!**
+**⚠️ Windows developers are strongly recommended to use WSL2!**
 
-**Быстрая установка WSL2:**
+**Quick WSL2 setup:**
 
 ```powershell
-# PowerShell как Администратор
+# PowerShell as Administrator
 wsl --install
-# Перезагрузить компьютер
+# Reboot your computer
 ```
 
-**В WSL2 (после установки):**
+**Inside WSL2 (after installation):**
 
 ```bash
-# Установить зависимости (как в Linux)
+# Install dependencies (same as Linux)
 sudo apt update
 sudo apt install -y build-essential libwebkit2gtk-4.1-dev curl
 
-# Установить Rust
+# Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env
 ```
 
 <details>
-<summary><i>Альтернатива: Нативная Windows (не рекомендуется)</i></summary>
+<summary><i>Alternative: Native Windows (not recommended)</i></summary>
 
 1. **Visual Studio 2022 Build Tools**
-   - Скачайте с [visualstudio.microsoft.com](https://visualstudio.microsoft.com/downloads/)
-   - Выберите "Desktop development with C++"
+   - Download from [visualstudio.microsoft.com](https://visualstudio.microsoft.com/downloads/)
+   - Select "Desktop development with C++"
 
-2. **WebView2 Runtime** (обычно уже установлен в Windows 11)
-   - Скачайте с [microsoft.com](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+2. **WebView2 Runtime** (usually already installed on Windows 11)
+   - Download from [microsoft.com](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 
 3. **Rust**
    ```powershell
-   # Скачайте rustup-init.exe с https://rustup.rs/
-   # Запустите установщик и следуйте инструкциям
+   # Download rustup-init.exe from https://rustup.rs/
+   # Run the installer and follow the instructions
    ```
 
-4. **После установки проверьте:**
+4. **After installation, verify:**
    ```powershell
    rustc --version
    cargo --version
@@ -208,64 +208,64 @@ xcode-select --install
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env
 
-# Tauri CLI (устанавливается автоматически при pnpm install)
+# Tauri CLI (installed automatically during pnpm install)
 ```
 </details>
 
-**Способы запуска:**
+**Run options:**
 
-1. **Нативно (рекомендуется):**
+1. **Native (recommended):**
    ```bash
    cd apps/desktop
    pnpm install
-   pnpm dev  # Запустит Tauri приложение с нативным окном
+   pnpm dev  # Starts Tauri app with a native window
    ```
 
-2. **Docker UI only (без Tauri backend):**
+2. **Docker UI only (without Tauri backend):**
    ```bash
    docker compose --profile desktop up -d desktop
-   # Откройте http://localhost:1420 в браузере
+   # Open http://localhost:1420 in your browser
    ```
 
-3. **Docker с VNC (полное GUI через браузер):**
+3. **Docker with VNC (full GUI in browser):**
    ```bash
    cd apps/desktop
    docker compose -f docker-compose.vnc.yml up --build
-   # Откройте http://localhost:6080/vnc.html
-   # Пароль: spotify
+   # Open http://localhost:6080/vnc.html
+   # Password: spotify
    ```
 
-**⚠️ Рекомендация:** Для Desktop разработки используйте нативный запуск. Docker VNC полезен для CI/CD или демонстрации.
+**⚠️ Recommendation:** For Desktop development, use native execution. Docker VNC is useful for CI/CD and demos.
 
 ---
 
 ## 📥 Installation
 
-После установки всех необходимых системных зависимостей, установите зависимости проекта:
+After installing all required system dependencies, install project dependencies:
 
 ```bash
 # Install dependencies
 pnpm install
 ```
 
-### 🪟 Windows разработчики
+### 🪟 Windows developers
 
-**Рекомендуется использовать WSL2** для лучшей совместимости и производительности:
+**WSL2 is recommended** for better compatibility and performance:
 
-1. Установите WSL2: `wsl --install` (PowerShell как Администратор)
-2. Клонируйте проект **внутри WSL**: `cd ~ && git clone ...`
-3. Работайте в WSL терминале - все команды будут работать как в Linux
+1. Install WSL2: `wsl --install` (PowerShell as Administrator)
+2. Clone the project **inside WSL**: `cd ~ && git clone ...`
+3. Work in a WSL terminal - all commands behave like Linux
 
-**Если НЕ используете WSL2:**
-- Перед git push удаляйте dist через Docker: `docker compose down && docker compose run --rm api sh -c "find /app -type d -name 'dist' -exec rm -rf {} +"`
+**If you do NOT use WSL2:**
+- Before `git push`, remove `dist` via Docker: `docker compose down && docker compose run --rm api sh -c "find /app -type d -name 'dist' -exec rm -rf {} +"`
 
 ---
 
-## ✅ Проверка установки
+## ✅ Installation check
 
-После установки необходимых зависимостей для вашего приложения, проверьте версии:
+After installing required dependencies for your app, verify versions:
 
-### Общие инструменты (для всех)
+### Common tools (for all)
 
 ```bash
 node --version          # >= v20.x
@@ -275,150 +275,150 @@ docker --version        # >= 24.x
 docker compose version  # >= 2.x
 ```
 
-### Для Mobile приложения
+### For the Mobile app
 
 ```bash
-java --version          # 17.x (для Android)
+java --version          # 17.x (for Android)
 ```
 
-### Для Desktop приложения
+### For the Desktop app
 
 ```bash
-rustc --version         # любая стабильная версия
-cargo --version         # любая стабильная версия
+rustc --version         # any stable version
+cargo --version         # any stable version
 ```
 
-Если все необходимые команды выполняются успешно, вы готовы к разработке! ✨
+If all required commands run successfully, you are ready to develop! ✨
 
 ---
 
 ## 🛠️ Development
 
-Вы можете запустить проект тремя способами:
+You can run the project in three ways:
 
-### 📦 Option 1: Native (без Docker)
+### 📦 Option 1: Native (without Docker)
 
-Для локальной разработки без Docker:
+For local development without Docker:
 
 ```bash
-# 1. Запустить только базу данных
+# 1. Start only the database
 docker-compose -f docker-compose.minimal.yaml up -d
 
-# 2. Запустить все приложения
+# 2. Start all applications
 pnpm dev
 
-# Доступ к сервисам:
+# Service access:
 # - API: http://localhost:3000
 # - Web: http://localhost:3001
 # - Admin: http://localhost:3002
 ```
 
-### 🐳 Option 2: Full Docker (рекомендуется)
+### 🐳 Option 2: Full Docker (recommended)
 
-#### Используя Makefile (Linux/macOS/WSL)
+#### Using Makefile (Linux/macOS/WSL)
 
 ```bash
-# Первый запуск (сборка + миграции + seed)
+# First run (build + migrations + seed)
 make init
 
-# Последующие запуски
+# Subsequent runs
 make dev
 
-# Остановка
+# Stop
 make stop
 
-# Просмотр логов
+# View logs
 make logs
 
-# Миграции БД
+# Database migrations
 make db-migrate
 
-# Заполнить тестовыми данными
+# Seed test data
 make db-seed
 
-# Полный список команд
+# Full command list
 make help
 ```
 
-#### Используя pnpm скрипты (кросс-платформенно)
+#### Using pnpm scripts (cross-platform)
 
 ```bash
-# Первый запуск
+# First run
 pnpm docker:dev:build
 pnpm docker:db:migrate
 pnpm docker:db:seed
 
-# Последующие запуски
+# Subsequent runs
 pnpm docker:dev
 
-# Остановка
+# Stop
 pnpm docker:down
 
-# Просмотр логов
-pnpm docker:logs          # все логи
-pnpm docker:logs:api      # только API
-pnpm docker:logs:web      # только Web
+# View logs
+pnpm docker:logs          # all logs
+pnpm docker:logs:api      # API only
+pnpm docker:logs:web      # Web only
 
-# Миграции БД
+# Database migrations
 pnpm docker:db:migrate
 pnpm docker:db:seed
 
-# Интерактивное управление
+# Interactive management
 pnpm docker:manage
 ```
 
-#### Используя Docker Compose напрямую
+#### Using Docker Compose directly
 
 ```bash
-# Первый запуск
+# First run
 docker-compose up -d --build
 docker-compose exec api pnpm --filter @spotify/api run db:migration:start
 docker-compose exec api pnpm --filter @spotify/api run seed
 
-# Последующие запуски
+# Subsequent runs
 docker-compose up -d
 
-# Остановка
+# Stop
 docker-compose down
 
-# Просмотр логов
+# View logs
 docker-compose logs -f
 
-# Миграции
+# Migrations
 docker-compose exec api pnpm --filter @spotify/api run db:migration:start
 ```
 
-### 📱 Mobile & Desktop (опционально)
+### 📱 Mobile & Desktop (optional)
 
 #### 📱 Mobile (React Native + Expo)
 
-**⚠️ Важно:** Для мобильной разработки рекомендуется нативный запуск.
+**⚠️ Important:** Native execution is recommended for mobile development.
 
-**Быстрый запуск:**
+**Quick start:**
 
 ```bash
 # Docker (Metro Bundler + Tunnel)
 docker compose --profile mobile up -d mobile
-# Откройте http://localhost:19000 для QR-кода
+# Open http://localhost:19000 for the QR code
 
-# Нативно (рекомендуется)
+# Native (recommended)
 cd apps/mobile && pnpm start
 ```
 
-**Подключение:**
-- Установите [Expo Go](https://expo.dev/client) на телефон
-- Отсканируйте QR-код с http://localhost:19000
-- Или введите tunnel URL из логов
+**Connect:**
+- Install [Expo Go](https://expo.dev/client) on your phone
+- Scan the QR code from http://localhost:19000
+- Or enter the tunnel URL from logs
 
-📚 **[Подробная документация →](docs/MOBILE.md)**
+📚 **[Detailed documentation →](docs/MOBILE.md)**
 
 ---
 
 #### 🖥️ Desktop (Tauri + React)
 
-**3 способа запуска:**
+**3 run options:**
 
-**1. Локально (рекомендуется):**
+**1. Local (recommended):**
 ```bash
 cd apps/desktop && pnpm dev
 ```
@@ -426,21 +426,21 @@ cd apps/desktop && pnpm dev
 **2. Docker UI only:**
 ```bash
 docker compose --profile desktop up -d desktop
-# Откройте http://localhost:1420
+# Open http://localhost:1420
 ```
 
-**3. Docker VNC (полное GUI):**
+**3. Docker VNC (full GUI):**
 ```bash
 cd apps/desktop
 docker compose -f docker-compose.vnc.yml up --build
-# Откройте http://localhost:6080/vnc.html (пароль: spotify)
+# Open http://localhost:6080/vnc.html (password: spotify)
 ```
 
-📚 **[Подробная документация →](docs/DESKTOP.md)** • **[VNC Guide →](apps/desktop/VNC-README.md)**
+📚 **[Detailed documentation →](docs/DESKTOP.md)** • **[VNC Guide →](apps/desktop/VNC-README.md)**
 
-## 🌐 Доступ к сервисам
+## 🌐 Service access
 
-| Сервис | URL | Порт |
+| Service | URL | Port |
 |--------|-----|------|
 | Web Frontend | http://localhost:3001 | 3001 |
 | API Backend | http://localhost:3000 | 3000 |
@@ -454,83 +454,83 @@ docker compose -f docker-compose.vnc.yml up --build
 | PostgreSQL | localhost:5432 | 5432 |
 | Redis | localhost:6379 | 6379 |
 
-## 📦 Размеры Docker образов
+## 📦 Docker image sizes
 
-Приблизительные размеры образов после сборки:
+Approximate image sizes after build:
 
-| Образ | Размер | Описание |
+| Image | Size | Description |
 |-------|--------|----------|
-| `desktop-desktop-vnc` | ~12.5 GB | Desktop с VNC (включает Rust, Tauri, X11, VNC сервер) |
-| `spotify-clone-mobile` | ~10 GB | Mobile (Node.js, Expo, React Native зависимости) |
-| `spotify-clone-api` | ~9.4 GB | Backend API (NestJS, Prisma, зависимости) |
-| `spotify-clone-web` | ~9.5 GB | Web Frontend (Next.js, React, зависимости) |
-| `spotify-clone-admin` | ~9.4 GB | Admin Panel (Kottster, зависимости) |
+| `desktop-desktop-vnc` | ~12.5 GB | Desktop with VNC (includes Rust, Tauri, X11, VNC server) |
+| `spotify-clone-mobile` | ~10 GB | Mobile (Node.js, Expo, React Native dependencies) |
+| `spotify-clone-api` | ~9.4 GB | Backend API (NestJS, Prisma, dependencies) |
+| `spotify-clone-web` | ~9.5 GB | Web Frontend (Next.js, React, dependencies) |
+| `spotify-clone-admin` | ~9.4 GB | Admin Panel (Kottster, dependencies) |
 | `spotify-clone-desktop` | ~9.4 GB | Desktop UI only (Vite, React) |
-| `postgres:16-alpine` | ~280 MB | База данных PostgreSQL |
-| `redis:7-alpine` | ~41 MB | Redis для кэширования |
+| `postgres:16-alpine` | ~280 MB | PostgreSQL database |
+| `redis:7-alpine` | ~41 MB | Redis for caching |
 
-**Итого:** ~70 GB для всех образов (при полной сборке всех сервисов)
+**Total:** ~70 GB for all images (full build of all services)
 
-**Рекомендации для экономии места:**
+**Space-saving recommendations:**
 
 ```bash
-# Используйте минимальную конфигурацию для разработки
-docker compose -f docker-compose.minimal.yaml up -d  # Только postgres + redis (~320 MB)
+# Use a minimal development setup
+docker compose -f docker-compose.minimal.yaml up -d  # Only postgres + redis (~320 MB)
 
-# Запускайте только нужные сервисы
+# Start only required services
 docker compose up -d api web  # API + Web (~20 GB)
 
-# Очистка неиспользуемых образов
+# Remove unused images
 docker image prune -a
 
-# Полная очистка (осторожно!)
+# Full cleanup (careful!)
 docker system prune -af --volumes
 ```
 
 ---
 
-## 🛠️ Полезные команды
+## 🛠️ Useful commands
 
-### Makefile команды
+### Makefile commands
 
 ```bash
-make dev              # Запустить development
-make stop             # Остановить все сервисы
-make restart          # Перезапустить
-make logs             # Просмотр логов
-make db-migrate       # Применить миграции
-make db-seed          # Заполнить БД
-make db-studio        # Открыть Prisma Studio
-make clean            # Очистить volumes
-make prod             # Запустить production
+make dev              # Start development
+make stop             # Stop all services
+make restart          # Restart
+make logs             # View logs
+make db-migrate       # Apply migrations
+make db-seed          # Seed database
+make db-studio        # Open Prisma Studio
+make clean            # Clean volumes
+make prod             # Start production
 ```
 
-### npm/pnpm скрипты
+### npm/pnpm scripts
 
 ```bash
-pnpm dev                    # Запустить все приложения (native)
-pnpm build                  # Собрать все приложения
-pnpm lint                   # Линтинг
-pnpm format                 # Форматирование
+pnpm dev                    # Start all apps (native)
+pnpm build                  # Build all apps
+pnpm lint                   # Lint
+pnpm format                 # Format
 pnpm docker:dev             # Docker development
-pnpm docker:manage          # Интерактивное управление Docker
+pnpm docker:manage          # Interactive Docker management
 ```
 
-### Database команды
+### Database commands
 
 ```bash
-# Через Makefile
-make db-migrate       # Применить миграции
-make db-seed          # Заполнить тестовыми данными
-make db-studio        # Открыть Prisma Studio
-make db-backup        # Создать бэкап
+# Via Makefile
+make db-migrate       # Apply migrations
+make db-seed          # Seed test data
+make db-studio        # Open Prisma Studio
+make db-backup        # Create backup
 
-# Через pnpm
+# Via pnpm
 pnpm docker:db:migrate
 pnpm docker:db:seed
 pnpm docker:db:studio
 
-# Напрямую в API
+# Directly in API
 cd apps/api
 pnpm run db:migration:start
 pnpm run seed
@@ -630,41 +630,41 @@ pnpm run db:ui
 
 ## 🐛 Troubleshooting
 
-### EACCES: permission denied при git push
+### EACCES: permission denied on git push
 
-Docker контейнеры создают файлы в `dist/` от имени root/nfsnobody. Перед git push:
+Docker containers may create files in `dist/` as root/nfsnobody. Before `git push`:
 
 ```bash
 pnpm clean:dist
 git push
 ```
 
-### Порты заняты
+### Ports are busy
 
 ```bash
-# Найти процесс использующий порт
+# Find the process using the port
 sudo lsof -i :3000
 
-# Остановить все Docker сервисы
+# Stop all Docker services
 docker compose down
 ```
 
-### Проблемы с БД
+### Database issues
 
 ```bash
-# Пересоздать БД
+# Recreate DB
 docker compose down -v
 docker compose up -d postgres
 docker compose exec api pnpm --filter @spotify/api run db:migration:start
 ```
 
-### Очистка Docker
+### Docker cleanup
 
 ```bash
-# Удалить неиспользуемые образы
+# Remove unused images
 docker image prune -a
 
-# Пересобрать без кэша
+# Rebuild without cache
 docker compose build --no-cache
 ```
 

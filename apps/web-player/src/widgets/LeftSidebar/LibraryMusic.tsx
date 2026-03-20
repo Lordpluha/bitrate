@@ -21,6 +21,19 @@ const likedSongsItem: MusicItem = {
   tracksCount: 0,
 }
 
+const loadingItemKeys = [
+  'loading-1',
+  'loading-2',
+  'loading-3',
+  'loading-4',
+  'loading-5',
+  'loading-6',
+  'loading-7',
+  'loading-8',
+  'loading-9',
+  'loading-10',
+]
+
 export const LibraryMusic = () => {
   const { data: playlists, isLoading } = useQuery('get', '/api/v1/playlists', {
     params: {
@@ -35,10 +48,14 @@ export const LibraryMusic = () => {
   if (Array.isArray(playlists)) {
     playlists.forEach((playlist) => {
       if (playlist) {
+        const playlistWithUser = playlist as {
+          user?: { username?: string }
+        }
+
         musicItems.push({
           id: playlist.id,
           title: playlist.title,
-          username: (playlist as any).user.username,
+          username: playlistWithUser.user?.username ?? 'Unknown Artist',
           type: 'playlist',
           cover: playlist.cover || '/images/default-playlist.jpg',
           tracksCount: 0,
@@ -52,11 +69,10 @@ export const LibraryMusic = () => {
       <div className="mt-4 flex-1 overflow-hidden">
         <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
           <div className="space-y-0.5 pb-4">
-            {Array.from({ length: 10 }).map((_, i) => (
+            {loadingItemKeys.map((loadingKey) => (
               <div
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                key={i}
                 className="flex items-center gap-3 p-2 rounded-md"
+                key={loadingKey}
               >
                 <div className="w-12 h-12 bg-gray-600 rounded-md animate-pulse" />
                 <div className="flex-1">
@@ -76,7 +92,7 @@ export const LibraryMusic = () => {
       <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
         <div className="space-y-0.5 pb-4">
           {musicItems.map((item) => (
-            <MusicCardSm key={item.id} item={item} />
+            <MusicCardSm item={item} key={item.id} />
           ))}
         </div>
       </div>

@@ -12,12 +12,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  GoogleIcon,
   Input,
+  LogoIcon,
   PasswordInput,
   Typography,
   toast,
-  LogoIcon,
-  GoogleIcon,
 } from '@spotify/ui-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -61,7 +61,7 @@ export const RegistrationForm = () => {
   return (
     <div className="flex flex-col items-stretch justify-center gap-4 px-14 py-32 bg-contrast text-text-contrast rounded-[10px_0_0_10px] basis-[50%] max-xl:basis-full max-xl:rounded-[10px] max-lg:p-6 box-border">
       <div className="flex flex-col items-center">
-        <LogoIcon width={64} height={64} />
+        <LogoIcon height={64} width={64} />
         <Typography as="h5" className="mt-2 text-center" size={'heading5'}>
           Create your account for free and start listening
         </Typography>
@@ -168,7 +168,7 @@ export const RegistrationForm = () => {
             </Button>
             <SocialsAuthDivider />
             <Button variant="contrast">
-              <GoogleIcon className="mr-2" width={20} height={20} />
+              <GoogleIcon className="mr-2" height={20} width={20} />
               <Typography as="p" size={'body'}>
                 Continue with Google
               </Typography>

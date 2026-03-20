@@ -1,7 +1,7 @@
 'use client'
 
-import React, { type ComponentProps, useEffect } from 'react'
 import { cn } from '@spotify/ui-react'
+import React, { type ComponentProps, useEffect } from 'react'
 
 interface ModalProps extends ComponentProps<'div'> {
   isOpen: boolean
@@ -36,11 +36,13 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      onClick={() => toggleIsOpen(false)}
-    >
-      <div className="absolute inset-0 w-[100vw] bg-black/60 backdrop-blur-sm" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <button
+        aria-label="Close modal"
+        className="absolute inset-0 w-screen bg-black/60 backdrop-blur-sm"
+        onClick={() => toggleIsOpen(false)}
+        type="button"
+      />
 
       <div
         className={cn(
@@ -48,7 +50,6 @@ export const Modal: React.FC<ModalProps> = ({
           'animate-in zoom-in-95 duration-200',
           className,
         )}
-        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>

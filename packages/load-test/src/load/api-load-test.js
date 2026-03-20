@@ -60,11 +60,9 @@ export function setup() {
   for (let i = 0; i < USER_EMAILS.length; i += 1) {
     const email = USER_EMAILS[i]
     const password = USER_PASSWORDS[i] || USER_PASSWORDS[0]
-    const loginRes = http.post(
-      `${BASE_URL}/auth/login`,
-      JSON.stringify({ email, password }),
-      { headers: { 'Content-Type': 'application/json' } },
-    )
+    const loginRes = http.post(`${BASE_URL}/auth/login`, JSON.stringify({ email, password }), {
+      headers: { 'Content-Type': 'application/json' },
+    })
 
     if (loginRes.status === 200) {
       tokens.push(loginRes.json('access_token'))
@@ -160,7 +158,10 @@ function validate(response, name, expectedStatus, maxMs) {
 function parseCsvEnv(name, fallback) {
   const raw = __ENV[name]
   if (!raw) return fallback
-  const items = raw.split(',').map((v) => v.trim()).filter(Boolean)
+  const items = raw
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean)
   return items.length ? items : fallback
 }
 

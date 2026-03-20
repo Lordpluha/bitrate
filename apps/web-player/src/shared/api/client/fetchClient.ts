@@ -1,7 +1,7 @@
 'use client'
 
-import type { ApiPaths } from '@spotify/contracts'
 import { ROUTES } from '@shared/routes'
+import type { ApiPaths } from '@spotify/contracts'
 import createClient, { type Middleware } from 'openapi-fetch'
 
 // Состояние refresh запроса для предотвращения гонки
@@ -71,12 +71,6 @@ const authRefreshMiddleware: Middleware = {
 
       // Refresh не удался - очищаем cookies и редиректим на логин
       if (typeof window !== 'undefined') {
-        // Удаляем просроченные токены из cookies
-        document.cookie =
-          'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-        document.cookie =
-          'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-
         // Редиректим на логин ТОЛЬКО если мы еще не на странице авторизации
         const currentPath = window.location.pathname
         const isOnAuthPage = currentPath.startsWith('/auth/')

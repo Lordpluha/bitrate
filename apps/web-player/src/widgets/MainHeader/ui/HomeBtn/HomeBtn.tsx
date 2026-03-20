@@ -1,7 +1,6 @@
 import { ROUTES } from '@shared/routes'
 import { HomeIcon } from '@spotify/ui-react'
 import Link from 'next/link'
-import React from 'react'
 
 export const HomeBtn = () => {
   return (

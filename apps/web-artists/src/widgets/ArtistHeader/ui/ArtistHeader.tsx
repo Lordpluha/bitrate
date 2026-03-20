@@ -91,8 +91,8 @@ export const ArtistHeader = ({ children }: ArtistHeaderProps) => {
           <NavLinks
             className='hidden lg:flex'
             activeSubmenu={activeSubmenu}
-            setActiveSubmenu={handleSetActiveSubmenu}
             closeSubmenu={handleCloseSubmenu}
+            setActiveSubmenu={handleSetActiveSubmenu}
           />
 
           <section className="hidden lg:flex items-center gap-2">
@@ -108,11 +108,11 @@ export const ArtistHeader = ({ children }: ArtistHeaderProps) => {
 
       <SubMenuContent
         activeSubmenu={activeSubmenu}
-        submenuData={submenuData}
-        type={submenuType as 'features' | 'resources'}
         isClosing={isClosing}
         onMouseEnter={handleMenuEnter}
         onMouseLeave={handleCloseSubmenu}
+        submenuData={submenuData}
+        type={submenuType as 'features' | 'resources'}
       />
 
       {children}

@@ -1,0 +1,79 @@
+name: "[desktop] Native Build Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      artifact-prefix:
+        description: Artifact name prefix
+        required: true
+        type: string
+      platform:
+        description: Platform filter (all/linux/windows/macos)
+        required: false
+        default: all
+        type: string
+
+jobs:
+  desktop-native-build:
+    name: Desktop Native Build (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: windows
+          - os: macos-latest
+            platform: macos
+
+    steps:
+      - name: Checkout repository
+        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          install: "false"
+
+      - name: Setup Rust
+        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Linux system dependencies
+        if: ${{ (inputs.platform == 'all' || inputs.platform == matrix.platform) && runner.os == 'Linux' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libxdo-dev \
+            libssl-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            pkg-config
+
+      - name: Install desktop dependencies
+        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
+        run: pnpm install --frozen-lockfile --filter @spotify/desktop...
+
+      - name: Build desktop app (native)
+        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
+        run: pnpm --filter @spotify/desktop run tauri build
+
+      - name: Upload native artifacts
+        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-prefix }}-${{ matrix.platform }}
+          path: apps/desktop/src-tauri/target/release/bundle/**/*
+          retention-days: 7
+          if-no-files-found: warn

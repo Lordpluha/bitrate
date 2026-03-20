@@ -3,8 +3,9 @@
 import { useEffect, useState, useRef, useCallback, memo, useMemo } from 'react'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { cn } from '@spotify/ui-react'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
 
 import './submenu-animation.css'
 
@@ -108,9 +109,6 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
 
   return (
     <div
-      role="menu"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
       className={cn(
         'fixed left-0 right-0 bg-black z-1051 top-18',
         'transition-all duration-300 ease-out',
@@ -118,6 +116,9 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
           ? 'translate-y-0 opacity-100 pointer-events-auto visible'
           : '-translate-y-4 opacity-0 pointer-events-none invisible',
       )}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      role="menu"
       style={{
         height: isVisible ? `${contentHeight}px` : '0px',
         overflow: 'hidden',
@@ -165,11 +166,11 @@ const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = memo(({ data }) => {
               {group.sections.map((section, idx) => (
                 <li key={section.title} className={cn('mb-4 font-bold')}>
                   <Link
-                    href={section.href}
                     className={cn(
                       'link-underline text-white',
                       idx === 0 && 'text-4xl',
                     )}
+                    href={section.href}
                   >
                     {section.title}
                   </Link>
@@ -290,7 +291,7 @@ const ResourcesContent: React.FC<{ data: ResourceGroup[] }> = memo(({ data }) =>
           const isActive = img.id === activeId
           return (
             <div
-              key={img.id}
+              aria-hidden={!isActive}
               className={cn(
                 'absolute aspect-w-16 aspect-h-9 inset-0 transition-all duration-400 ease-in-out transform-gpu',
                 {
@@ -298,14 +299,14 @@ const ResourcesContent: React.FC<{ data: ResourceGroup[] }> = memo(({ data }) =>
                   'opacity-0 scale-98 z-10 pointer-events-none': !isActive,
                 },
               )}
-              aria-hidden={!isActive}
+              key={img.id}
             >
               <Image
-                src={img.imageSrc}
                 alt={img.title}
                 className="object-cover"
                 fill
                 priority
+                src={img.imageSrc}
               />
             </div>
           )
@@ -316,7 +317,7 @@ const ResourcesContent: React.FC<{ data: ResourceGroup[] }> = memo(({ data }) =>
         className="col-span-4 flex items-end text-neutral-400 text-base relative overflow-hidden"
         style={{ minHeight: '3rem' }}
       >
-        <div key={activeId} className="animate-fade-in">
+        <div className="animate-fade-in" key={activeId}>
           <p aria-live="polite">{activeItem?.description || ''}</p>
         </div>
       </div>

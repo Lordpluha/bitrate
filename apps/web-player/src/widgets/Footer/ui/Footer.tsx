@@ -1,7 +1,7 @@
+import { Logo } from '@shared/ui'
+import { Facebook, Inst, Twit } from '@spotify/ui-react'
 import Link from 'next/link'
 import type { FC, HTMLAttributes } from 'react'
-import { Inst, Twit, Facebook } from '@spotify/ui-react'
-import { Logo } from '@shared/ui'
 
 import footerLinks from '../config/footer-links.json'
 
@@ -68,8 +68,8 @@ export const Footer: FC<FooterProps> = (props) => {
                     {IconComponent && (
                       <IconComponent
                         className="text-text fill-text"
-                        width={32}
                         height={32}
+                        width={32}
                       />
                     )}
                   </Link>

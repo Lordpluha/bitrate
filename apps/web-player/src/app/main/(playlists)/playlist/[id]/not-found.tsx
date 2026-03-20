@@ -4,12 +4,12 @@ export default function PlaylistNotFound() {
   return (
     <>
       <PlaylistHeader
-        title="Playlist Not Found"
-        type="Playlist"
-        imageUrl="/images/default-playlist.jpg"
         author="Unknown"
-        tracksCount={0}
         duration={0}
+        imageUrl="/images/default-playlist.jpg"
+        title="Playlist Not Found"
+        tracksCount={0}
+        type="Playlist"
       />
       <div className="flex justify-center items-center h-64">
         <div className="text-text">Playlist not found</div>

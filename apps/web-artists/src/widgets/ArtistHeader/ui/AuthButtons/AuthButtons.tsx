@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { cn } from '@spotify/ui-react'
+import Link from 'next/link'
 
 interface AuthButtonsProps {
   variant?: 'default' | 'burger'

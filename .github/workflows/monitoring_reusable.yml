@@ -1,0 +1,69 @@
+name: "[monitoring] Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      branch-name:
+        description: Branch label for reports/artifacts
+        required: true
+        type: string
+      backup-max-age-hours:
+        description: Max allowed backup age in hours
+        required: true
+        type: string
+    secrets:
+      monitor-host:
+        description: Host for health and SSL checks
+        required: true
+      deploy-host:
+        description: Host for backup SSH checks
+        required: true
+      deploy-user:
+        description: SSH user for backup checks
+        required: true
+      deploy-path:
+        description: Deploy path used as backup dir fallback
+        required: false
+      deploy-ssh-key:
+        description: Private SSH key for backup checks
+        required: true
+      backup-dir-secret:
+        description: Explicit backup directory
+        required: false
+
+permissions:
+  contents: read
+  packages: read
+  issues: write
+
+jobs:
+  health:
+    uses: ./.github/workflows/monitoring_health_reusable.yml
+    secrets:
+      monitor-host: ${{ secrets.monitor-host }}
+
+  dependencies:
+    uses: ./.github/workflows/monitoring_dependency_reusable.yml
+    with:
+      branch-name: ${{ inputs.branch-name }}
+
+  image-size:
+    uses: ./.github/workflows/monitoring_image_size_reusable.yml
+    with:
+      branch-name: ${{ inputs.branch-name }}
+
+  ssl:
+    uses: ./.github/workflows/monitoring_ssl_reusable.yml
+    secrets:
+      monitor-host: ${{ secrets.monitor-host }}
+
+  backup:
+    uses: ./.github/workflows/monitoring_backup_reusable.yml
+    with:
+      backup-max-age-hours: ${{ inputs.backup-max-age-hours }}
+    secrets:
+      deploy-host: ${{ secrets.deploy-host }}
+      deploy-user: ${{ secrets.deploy-user }}
+      deploy-path: ${{ secrets.deploy-path }}
+      deploy-ssh-key: ${{ secrets.deploy-ssh-key }}
+      backup-dir-secret: ${{ secrets.backup-dir-secret }}
