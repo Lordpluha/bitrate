@@ -4,6 +4,10 @@ import { ArtistHeader } from '@widgets/ArtistHeader'
 import { Footer } from '@widgets/Footer'
 import { useSubmenuContext } from '@widgets/ArtistHeader/model/SubmenuContext'
 import { cn } from '@spotify/ui-react'
+import { ArtistVideo } from './ArtistVideo/ui/ArtistVideo'
+import { ArtistHero } from './ArtistVideo/ui/ArtistHero'
+import { ArtistFeatures } from './ArtistVideo/ui/ArtistFeatures'
+import { ArtistBlog } from './ArtistVideo/ui/ArtistBlog'
 
 const ArtistViewContent = () => {
   const { activeSubmenu, isClosing } = useSubmenuContext()
@@ -11,12 +15,6 @@ const ArtistViewContent = () => {
 
   return (
     <>
-      <div className='relative'>
-        <div className="h-[200vh] text-center flex items-center justify-center bg-red-500">
-          <h1 className="text-4xl text-white font-bold">Artist</h1>
-        </div>
-      </div>
-
       <div
         className={cn(
           'fixed inset-0 backdrop-blur-3xl bg-white/30 z-1050',
@@ -36,7 +34,10 @@ export const ArtistView = () => {
       <ArtistHeader>
         <ArtistViewContent />
       </ArtistHeader>
-
+      <ArtistHero />
+      <ArtistFeatures />
+      <ArtistVideo />
+      <ArtistBlog />
       <Footer />
     </>
   )

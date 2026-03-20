@@ -31,7 +31,7 @@ export const AuthButtons = ({ variant = 'default', className }: AuthButtonsProps
         className={cn(
           'text-sm text-center bg-white font-bold',
           'py-1 px-4',
-          'rounded-3xl border-solid border',
+          'rounded-3xl',
           'transform hover:scale-105 transition duration-300 ease-in-out',
           isBurger && 'text-base w-full py-3 px-12'
         )}

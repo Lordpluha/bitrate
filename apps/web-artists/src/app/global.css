@@ -9,7 +9,7 @@
   --breakpoint-xs: 480px;
   --breakpoint-sm: 650px;
   --breakpoint-md: 768px;
-  --breakpoint-lg: 1025px;
+  --breakpoint-lg: 991px;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
 }
@@ -17,7 +17,7 @@
 @layer base {
   * {
     scroll-behavior: smooth;
-    font-family: var(--font-source-sans);
+    font-family: var(--font-league-spartan, var(--font-source-sans));
   }
 
   /* Custom scrollbar styles */

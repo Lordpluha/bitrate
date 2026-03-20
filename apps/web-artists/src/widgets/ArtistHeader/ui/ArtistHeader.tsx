@@ -22,7 +22,6 @@ export const ArtistHeader = ({ children }: ArtistHeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const rafRef = useRef<number | null>(null);
 
   const activeLink = links.find((link) => link.title === activeSubmenu);
 
@@ -66,32 +65,10 @@ export const ArtistHeader = ({ children }: ArtistHeaderProps) => {
   }, [clearTimer])
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const threshold = 10;
-
-    const onScroll = () => {
-      if (rafRef.current !== null) return
-
-      rafRef.current = requestAnimationFrame(() => {
-        const y = window.scrollY || window.pageYOffset;
-        setIsScrolled(y > threshold);
-        if (rafRef.current) {
-          window.cancelAnimationFrame(rafRef.current);
-          rafRef.current = null;
-        }
-      })
-    }
-
-    onScroll();
-    window.addEventListener('scroll', onScroll)
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (rafRef.current) {
-        window.cancelAnimationFrame(rafRef.current);
-      }
-    }
+    const onScroll = () => setIsScrolled(window.scrollY > 10)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, []);
 
   const headerIsDark = useMemo(() => {
@@ -102,9 +79,9 @@ export const ArtistHeader = ({ children }: ArtistHeaderProps) => {
     <SubmenuProvider activeSubmenu={activeSubmenu} isClosing={isClosing}>
       <header
         className={
-          cn("fixed top-0 left-0 right-0 z-1052",
-            'transition-colors duration-400 ease-out',
-            headerIsDark ? 'bg-black' : 'bg-transparent')}
+          cn("fixed top-0 left-0 right-0 w-full z-1052",
+            'transition-[background-color] duration-800 ease-out',
+            headerIsDark ? 'bg-black' : 'bg-black/0')}
         onMouseEnter={handleMenuEnter}
         onMouseLeave={handleCloseSubmenu}
       >

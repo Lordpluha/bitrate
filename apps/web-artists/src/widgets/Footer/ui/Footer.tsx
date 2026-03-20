@@ -31,12 +31,11 @@ const isSocialButtonType = (icon: string): icon is SocialButtonType => {
 
 export const Footer = () => {
   return (
-    <footer className={
-      cn('flex flex-col text-white bg-black px-5 pt-5 gap-14',
+    <footer className='w-full bg-black px-5 text-white'>
+      <div className={cn(
+        'flex flex-col max-w-screen-2xl mx-auto pt-5 gap-14',
         'xs:px-6 xs:pt-4 gap-8',
         'sm:px-14 sm:pt-10',
-        '2xl:px-48 2xl:gap-24'
-
       )}>
       <div className={cn('flex flex-col gap-4',
         'xs:grid xs:grid-cols-2 xs:gap-x-4 xs:gap-y-6',
@@ -115,6 +114,7 @@ export const Footer = () => {
             English
           </span>
         </div>
+      </div>
       </div>
     </footer>
   )

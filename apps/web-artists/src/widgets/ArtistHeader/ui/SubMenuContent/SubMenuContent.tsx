@@ -157,7 +157,7 @@ const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = memo(({ data }) => {
   return (
     <div className="container pb-10 pt-8 grid grid-cols-4 gap-8">
       {data.map((group) => (
-        <div key={group.title}>memo(
+        <div key={group.title}>
           <h4 className="text-base text-neutral-400 font-normal">{group.title}</h4>
 
           {group.sections && group.sections.length > 0 && (
