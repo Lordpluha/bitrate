@@ -4,6 +4,13 @@
 
 set -e
 
+# Always run from repo root so relative paths work correctly
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT"
+
+COMPOSE_DEV="infra/docker-compose.preprod.yaml"
+COMPOSE_PROD="infra/docker-compose.prod.yaml"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -30,6 +37,9 @@ if [ ! -f .env ]; then
     print_info "Please update .env file with your configuration"
 fi
 
+DC_DEV="docker-compose -f $COMPOSE_DEV"
+DC_PROD="docker-compose -f $COMPOSE_PROD"
+
 # Main menu
 show_menu() {
     echo ""
@@ -53,10 +63,10 @@ show_menu() {
 # Start development
 start_dev() {
     print_info "Starting development environment..."
-    docker-compose up -d
+    $DC_DEV up -d
     print_info "Waiting for services to be healthy..."
     sleep 5
-    docker-compose ps
+    $DC_DEV ps
     print_info "Development environment started!"
     echo ""
     print_info "Services available at:"
@@ -68,14 +78,14 @@ start_dev() {
 # Stop development
 stop_dev() {
     print_info "Stopping development environment..."
-    docker-compose down
+    $DC_DEV down
     print_info "Development environment stopped!"
 }
 
 # Restart services
 restart_services() {
     print_info "Restarting all services..."
-    docker-compose restart
+    $DC_DEV restart
     print_info "Services restarted!"
 }
 
@@ -93,12 +103,12 @@ view_logs() {
     read log_choice
 
     case $log_choice in
-        1) docker-compose logs -f ;;
-        2) docker-compose logs -f api ;;
-        3) docker-compose logs -f web ;;
-        4) docker-compose logs -f admin ;;
-        5) docker-compose logs -f postgres ;;
-        6) docker-compose logs -f redis ;;
+        1) $DC_DEV logs -f ;;
+        2) $DC_DEV logs -f api ;;
+        3) $DC_DEV logs -f web ;;
+        4) $DC_DEV logs -f admin ;;
+        5) $DC_DEV logs -f postgres ;;
+        6) $DC_DEV logs -f redis ;;
         *) print_error "Invalid choice" ;;
     esac
 }
@@ -106,7 +116,7 @@ view_logs() {
 # Build images
 build_images() {
     print_info "Building all Docker images..."
-    docker-compose build --parallel
+    $DC_DEV build --parallel
     print_info "Build completed!"
 }
 
@@ -118,13 +128,13 @@ clean_rebuild() {
 
     if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
         print_info "Stopping and removing containers..."
-        docker-compose down -v
+        $DC_DEV down -v
         print_info "Removing images..."
-        docker-compose rm -f
+        $DC_DEV rm -f
         print_info "Rebuilding..."
-        docker-compose build --no-cache --parallel
+        $DC_DEV build --no-cache --parallel
         print_info "Starting services..."
-        docker-compose up -d
+        $DC_DEV up -d
         print_info "Clean rebuild completed!"
     else
         print_info "Operation cancelled"
@@ -148,39 +158,39 @@ db_operations() {
     case $db_choice in
         1)
             print_info "Running migrations..."
-            docker-compose exec api pnpm --filter @spotify/api run db:migration:start
+            $DC_DEV exec api pnpm --filter @spotify/api run db:migration:start
             ;;
         2)
             print_info "Generating Prisma Client..."
-            docker-compose exec api pnpm --filter @spotify/api run db:gen
+            $DC_DEV exec api pnpm --filter @spotify/api run db:gen
             ;;
         3)
             print_warning "This will reset the entire database!"
             echo -n "Are you sure? (y/N): "
             read confirm
             if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
-                docker-compose exec api pnpm --filter @spotify/api run db:migration:reset
+                $DC_DEV exec api pnpm --filter @spotify/api run db:migration:reset
             fi
             ;;
         4)
             print_info "Seeding database..."
-            docker-compose exec api pnpm --filter @spotify/api run seed
+            $DC_DEV exec api pnpm --filter @spotify/api run seed
             ;;
         5)
             print_info "Opening Prisma Studio..."
-            docker-compose exec api pnpm --filter @spotify/api run db:ui
+            $DC_DEV exec api pnpm --filter @spotify/api run db:ui
             ;;
         6)
             print_info "Creating database backup..."
             mkdir -p ./backups
-            docker-compose exec postgres pg_dump -U admin spotify > "./backups/backup_$(date +%Y%m%d_%H%M%S).sql"
+            $DC_DEV exec postgres pg_dump -U admin spotify > "./backups/backup_$(date +%Y%m%d_%H%M%S).sql"
             print_info "Backup created in ./backups/"
             ;;
         7)
             echo -n "Enter backup filename: "
             read backup_file
             if [ -f "./backups/$backup_file" ]; then
-                docker-compose exec -T postgres psql -U admin spotify < "./backups/$backup_file"
+                $DC_DEV exec -T postgres psql -U admin spotify < "./backups/$backup_file"
                 print_info "Database restored!"
             else
                 print_error "Backup file not found!"
@@ -199,7 +209,7 @@ run_production() {
     read confirm
 
     if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
-        docker-compose -f docker-compose.prod.yaml up -d
+        $DC_PROD up -d
         print_info "Production environment started!"
     fi
 }

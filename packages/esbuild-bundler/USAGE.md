@@ -1,14 +1,14 @@
-# Использование @spotify/esbuild-bundler
+# Using @spotify/esbuild-bundler
 
-## Быстрый старт
+## Quick Start
 
-### 1. Добавьте зависимость
+### 1. Add the dependency
 
 ```bash
 pnpm add -D @spotify/esbuild-bundler
 ```
 
-### 2. Настройте package.json
+### 2. Configure package.json
 
 ```json
 {
@@ -19,18 +19,18 @@ pnpm add -D @spotify/esbuild-bundler
 }
 ```
 
-### 3. Убедитесь что есть tsconfig.build.json
+### 3. Make sure tsconfig.build.json exists
 
-Пакет использует `tsconfig.build.json` для генерации типов.
+The package uses `tsconfig.build.json` for type generation.
 
-### 4. Запустите сборку
+### 4. Run the build
 
 ```bash
 pnpm build    # Production build
 pnpm dev      # Development mode
 ```
 
-## Требования к структуре проекта
+## Project Structure Requirements
 
 ```
 your-package/
@@ -43,24 +43,24 @@ your-package/
 └── package.json
 ```
 
-## Опции конфигурации
+## Configuration Options
 
-### Через CLI флаги
+### Via CLI flags
 
 ```bash
-# Кастомный entry pattern
+# Custom entry pattern
 react-bundler build --entry "lib/**/*.ts"
 
-# Кастомная директория вывода
+# Custom output directory
 react-bundler build --outdir ./build
 
-# Кастомные CSS пути
+# Custom CSS paths
 react-bundler build \
   --css-input ./styles/main.css \
   --css-output ./dist/bundle.css
 ```
 
-### Через код
+### Via code
 
 ```javascript
 // build.mjs
@@ -73,7 +73,7 @@ runBuild({
 });
 ```
 
-## Что входит в сборку
+## What's Included in the Build
 
 ### Build (Production)
 
@@ -85,14 +85,14 @@ runBuild({
 
 ### Dev (Watch mode)
 
-🔄 Автоматическая пересборка при изменениях
+🔄 Automatic rebuild on changes
 🔄 TypeScript watch mode
 🔄 Tailwind CSS watch mode
-⚡ Быстрая инкрементальная сборка
+⚡ Fast incremental builds
 
-## Примеры использования
+## Usage Examples
 
-### В monorepo
+### In a monorepo
 
 ```json
 {
@@ -103,7 +103,7 @@ runBuild({
 }
 ```
 
-### С кастомными настройками
+### With custom settings
 
 ```json
 {
@@ -117,23 +117,23 @@ runBuild({
 
 ## Path Aliases
 
-Бандлер автоматически заменяет `@/` импорты на относительные пути:
+The bundler automatically replaces `@/` imports with relative paths:
 
 ```typescript
-// Исходный код
+// Source code
 import { Button } from '@/components/ui/button';
 
-// После сборки в dist/esm/index.js
+// After build in dist/esm/index.js
 import { Button } from './components/ui/button.js';
 ```
 
-Это делает собранные файлы независимыми от tsconfig paths.
+This makes built files independent of tsconfig paths.
 
 ## Troubleshooting
 
 ### "Cannot find module tsconfig.build.json"
 
-Создайте файл `tsconfig.build.json`:
+Create a `tsconfig.build.json` file:
 
 ```json
 {
@@ -148,8 +148,8 @@ import { Button } from './components/ui/button.js';
 
 ### "pnpm: command not found"
 
-Бандлер использует `pnpm dlx` для запуска Tailwind CLI. Установите pnpm или измените команду в коде.
+The bundler uses `pnpm dlx` to run the Tailwind CLI. Install pnpm or change the command in the code.
 
-### Медленная сборка
+### Slow build
 
-В dev режиме используйте только `pnpm dev` без предварительной очистки dist.
+In dev mode, use only `pnpm dev` without pre-cleaning the dist directory.

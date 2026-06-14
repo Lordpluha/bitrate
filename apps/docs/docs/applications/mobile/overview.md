@@ -6,32 +6,32 @@ sidebar_position: 1
 
 Complete guide for developing and running the React Native mobile application.
 
-## 📋 Содержание
+## 📋 Table of Contents
 
-- [⚙️ Запуск Mobile контейнера](#️-запуск-mobile-контейнера)
-- [📱 Подключение с телефона через Expo Go](#-подключение-с-телефона-через-expo-go)
-- [📦 Обновление зависимостей](#-обновление-зависимостей)
-- [🔌 Доступные порты](#-доступные-порты)
-- [🔍 Отладка Mobile контейнера](#-отладка-mobile-контейнера)
-- [🐛 Типичные проблемы](#-типичные-проблемы)
+- [⚙️ Starting the Mobile Container](#️-starting-the-mobile-container)
+- [📱 Connecting from Phone via Expo Go](#-connecting-from-phone-via-expo-go)
+- [📦 Updating Dependencies](#-updating-dependencies)
+- [🔌 Available Ports](#-available-ports)
+- [🔍 Debugging the Mobile Container](#-debugging-the-mobile-container)
+- [🐛 Common Issues](#-common-issues)
 
 ---
 
-## ⚙️ Запуск Mobile контейнера
+## ⚙️ Starting the Mobile Container
 
-**⚠️ Важно:** Для мобильной разработки рекомендуется нативный запуск (без Docker), так как это проще и быстрее.
+**⚠️ Important:** For mobile development, native execution is recommended (without Docker), as it is simpler and faster.
 
-### Docker (только Metro Bundler + tunnel)
+### Docker (Metro Bundler + tunnel only)
 
 ```bash
-# Запуск контейнера
+# Start container
 docker compose --profile mobile up -d mobile
 
-# Просмотр логов
+# View logs
 docker compose logs -f mobile
 ```
 
-### Нативный запуск (рекомендуется)
+### Native run (recommended)
 
 ```bash
 cd apps/mobile
@@ -41,110 +41,110 @@ pnpm start
 
 ---
 
-## 📱 Подключение с телефона через Expo Go
+## 📱 Connecting from Phone via Expo Go
 
-### Предварительная установка
+### Prerequisites
 
-Установите **Expo Go** на телефон:
+Install **Expo Go** on your phone:
 - **Android:** [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
 - **iOS:** [App Store](https://apps.apple.com/app/expo-go/id982107779)
 
-### Способ 1: Tunnel mode (рекомендуется)
+### Method 1: Tunnel mode (recommended)
 
-Работает из любой сети, включая разные WiFi или мобильный интернет.
+Works from any network, including different WiFi or mobile internet.
 
 ```bash
-# Уже настроено в docker-compose.yaml с флагом --tunnel
-docker compose logs mobile  # Найдите URL вида exp://u.expo.dev/...
+# Already configured in docker-compose.yaml with --tunnel flag
+docker compose logs mobile  # Find URL like exp://u.expo.dev/...
 
-# Откройте Expo DevTools для QR-кода
+# Open Expo DevTools for QR code
 http://localhost:19000
 ```
 
-**В приложении Expo Go:**
-1. Отсканируйте QR-код из браузера (localhost:19000)
-2. Или введите вручную URL `exp://u.expo.dev/...` из логов
+**In the Expo Go app:**
+1. Scan the QR code from the browser (localhost:19000)
+2. Or manually enter the URL `exp://u.expo.dev/...` from logs
 
-### Способ 2: Local network
+### Method 2: Local network
 
-Требует, чтобы телефон и компьютер были в одной WiFi сети.
+Requires the phone and computer to be on the same WiFi network.
 
-**1. Узнайте IP вашей машины:**
+**1. Find your machine's IP:**
 ```bash
 ip addr show | grep "inet " | grep -v 127.0.0.1
-# или
+# or
 ifconfig | grep "inet " | grep -v 127.0.0.1
 ```
 
-**2. Создайте `.env` файл в корне проекта:**
+**2. Create a `.env` file in the project root:**
 ```bash
-echo "MOBILE_HOST=192.168.0.31" >> .env  # замените на ваш IP
+echo "MOBILE_HOST=192.168.0.31" >> .env  # replace with your IP
 ```
 
-**3. Перезапустите контейнер:**
+**3. Restart the container:**
 ```bash
 docker compose --profile mobile down
 docker compose --profile mobile up -d mobile
 ```
 
-**4. В Expo Go введите:**
+**4. In Expo Go enter:**
 ```
-exp://ВАШ_IP:8081
+exp://YOUR_IP:8081
 ```
 
 ---
 
-## 📦 Обновление зависимостей
+## 📦 Updating Dependencies
 
 ```bash
-# Рекомендуется делать на хосте (не в контейнере)
+# Recommended to do on the host (not in the container)
 cd apps/mobile
 pnpm add expo@~54.0.31 expo-constants@~18.0.13
 
-# Перезапустить контейнер
+# Restart container
 docker compose restart mobile
 ```
 
 ---
 
-## 🔌 Доступные порты
+## 🔌 Available Ports
 
-| Порт | Назначение |
-|------|------------|
+| Port | Purpose |
+|------|---------|
 | 8081 | Metro Bundler |
-| 19000 | Expo DevTools (QR-код и управление) |
+| 19000 | Expo DevTools (QR code and management) |
 | 19001 | Metro UI |
-| 19006 | Expo Web версия |
+| 19006 | Expo Web version |
 
 ---
 
-## 🔍 Отладка Mobile контейнера
+## 🔍 Debugging the Mobile Container
 
-### Проверка Metro Bundler
+### Check Metro Bundler
 
 ```bash
 curl http://localhost:8081/status
 ```
 
-### Проверка переменных окружения
+### Check environment variables
 
 ```bash
 docker compose exec mobile printenv | grep -E "(EXPO|MOBILE)"
 ```
 
-### Вход в контейнер
+### Enter the container
 
 ```bash
 docker compose exec mobile sh
 ```
 
-### Просмотр логов Metro
+### View Metro logs
 
 ```bash
 docker compose logs mobile | grep "Metro\|Bundler\|exp://"
 ```
 
-### Перезапуск с очисткой кеша
+### Restart with cache clear
 
 ```bash
 docker compose exec mobile npx expo start --clear
@@ -152,38 +152,38 @@ docker compose exec mobile npx expo start --clear
 
 ---
 
-## 🐛 Типичные проблемы
+## 🐛 Common Issues
 
-### Ошибка: "Failed to download remote update"
+### Error: "Failed to download remote update"
 
-**Причина:** Expo Go не может скачать bundle с Metro Bundler.
+**Cause:** Expo Go cannot download the bundle from Metro Bundler.
 
-**Решение:**
-- Используйте tunnel mode (уже включен по умолчанию)
-- Или убедитесь, что телефон в той же WiFi сети и правильно указан `MOBILE_HOST`
+**Solution:**
+- Use tunnel mode (already enabled by default)
+- Or make sure the phone is on the same WiFi network and `MOBILE_HOST` is set correctly
 
-### Ошибка: "ERR_PNPM_UNEXPECTED_STORE"
+### Error: "ERR_PNPM_UNEXPECTED_STORE"
 
-**Причина:** Конфликт pnpm store между хостом и контейнером.
+**Cause:** pnpm store conflict between host and container.
 
-**Решение:**
-- Обновляйте пакеты на хосте, а не в контейнере
-- Или пересоберите контейнер: `docker compose build --no-cache mobile`
+**Solution:**
+- Update packages on the host, not in the container
+- Or rebuild the container: `docker compose build --no-cache mobile`
 
-### QR-код не появляется
+### QR code doesn't appear
 
-**Решение:**
-- Откройте http://localhost:19000 в браузере
-- Или используйте прямой URL из логов
+**Solution:**
+- Open http://localhost:19000 in the browser
+- Or use the direct URL from logs
 
-### Приложение не загружается
+### Application won't load
 
-**Решение:**
+**Solution:**
 ```bash
-# Проверьте что Metro работает
+# Check that Metro is running
 curl http://localhost:8081/status
 
-# Перезапустите с очисткой кеша
+# Restart with cache clear
 docker compose down
 docker compose --profile mobile up -d mobile
 docker compose logs -f mobile
@@ -191,7 +191,7 @@ docker compose logs -f mobile
 
 ---
 
-## 📚 Дополнительные ресурсы
+## 📚 Additional Resources
 
 - [Expo Documentation](https://docs.expo.dev/)
 - [React Native Documentation](https://reactnative.dev/)
@@ -200,21 +200,21 @@ docker compose logs -f mobile
 
 ---
 
-## ⚡ Быстрые команды
+## ⚡ Quick Commands
 
 ```bash
-# Запуск
+# Start
 docker compose --profile mobile up -d mobile
 
-# Логи
+# Logs
 docker compose logs -f mobile
 
-# Остановка
+# Stop
 docker compose --profile mobile down
 
-# Перезапуск
+# Restart
 docker compose restart mobile
 
-# Вход в контейнер
+# Enter container
 docker compose exec mobile sh
 ```

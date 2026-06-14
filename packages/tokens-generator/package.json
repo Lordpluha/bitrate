@@ -1,16 +1,16 @@
 {
   "name": "@spotify/tokens-generator",
   "version": "1.0.0",
-  "description": "Modular design tokens to CSS generator with CLI support",
+  "description": "Tailwind v4 design tokens generator with CLI support",
   "type": "module",
   "main": "./src/generate-tokens.mjs",
   "private": true,
   "bin": {
-    "tokens-generator": "./bin/generate-tokens.mjs"
+    "tokens-generator": "./bin/generate-tokens.mjs",
+		"test": ""
   },
   "exports": {
     ".": "./src/generate-tokens.mjs",
-    "./config": "./src/generate-tokens.config.mjs",
     "./schema": "./src/tokens.schema.json"
   },
   "files": [
@@ -19,7 +19,7 @@
     "README.md"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test src/__tests__/*.test.mjs"
   },
   "keywords": [
     "design-tokens",

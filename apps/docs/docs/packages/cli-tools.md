@@ -25,7 +25,7 @@ All tools follow the same pattern:
 
 ## 🎨 tokens-generator
 
-Generate CSS variables from design tokens (JSON).
+Generate Tailwind v4 CSS tokens from design tokens (JSON).
 
 ### Installation
 
@@ -39,11 +39,7 @@ pnpm add @spotify/tokens-generator
 # Basic usage
 tokens-generator \
   --tokens ./tokens.json \
-  --config ./tokens.config.mjs \
   --output ./src/styles
-
-# Initialize config file
-tokens-generator --init
 ```
 
 ### Options
@@ -51,26 +47,9 @@ tokens-generator --init
 | Flag | Description | Default |
 |------|-------------|---------|
 | `--tokens` | Path to tokens JSON file | Required |
-| `--config` | Path to config file | `tokens.config.mjs` |
 | `--output` | Output directory | `./styles` |
-| `--init` | Create default config | - |
 
-### Configuration
-
-**tokens.config.mjs:**
-
-```javascript
-export default {
-  output: {
-    palette: 'palette.css',
-    layout: 'layout.css',
-    typography: 'typography.css',
-    themes: 'themes.css'
-  },
-  themes: ['light', 'dark'],
-  prefix: '--sp'
-}
-```
+`tokens-generator` now uses a fixed Tailwind preset and does not require an external config file.
 
 ### Input Format
 
@@ -99,17 +78,13 @@ Generates CSS files with custom properties:
 
 ```css
 /* palette.css */
-:root {
-  --sp-color-primary-50: #eff6ff;
-  --sp-color-primary-500: #3b82f6;
-  --sp-color-primary-900: #1e3a8a;
+@theme {
+  --color-green-500: #1db954;
 }
 
 /* layout.css */
-:root {
-  --sp-spacing-xs: 4px;
-  --sp-spacing-sm: 8px;
-  --sp-spacing-md: 16px;
+@theme {
+  --spacing-4: 1rem;
 }
 ```
 
@@ -118,13 +93,10 @@ Generates CSS files with custom properties:
 ```javascript
 import { generateTokens } from '@spotify/tokens-generator'
 
-const config = {
+await generateTokens({
   tokensPath: './tokens.json',
-  output: './styles',
-  themes: ['light', 'dark']
-}
-
-await generateTokens(config)
+  outputDir: './styles',
+})
 ```
 
 ## ⚡ esbuild-bundler

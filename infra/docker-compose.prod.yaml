@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backups:/backups
+      - ../backups:/backups
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -37,7 +37,7 @@ services:
 
   api:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/api/Dockerfile
       target: production
       args:
@@ -53,8 +53,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       PORT: 3000
     volumes:
-      - ./apps/api/uploads:/app/apps/api/uploads
-      - ./apps/api/public:/app/apps/api/public
+      - ../apps/api/uploads:/app/apps/api/uploads
+      - ../apps/api/public:/app/apps/api/public
     depends_on:
       postgres:
         condition: service_healthy
@@ -71,7 +71,7 @@ services:
 
   web-player:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/web-player/Dockerfile
       target: production
       args:
@@ -94,7 +94,7 @@ services:
 
   web-artists:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/web-artists/Dockerfile
       target: production
       args:
@@ -117,7 +117,7 @@ services:
 
   admin:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/admin/Dockerfile
       target: production
     container_name: spotify-admin-prod

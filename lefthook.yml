@@ -1,0 +1,21 @@
+pre-commit:
+  commands:
+    lint-staged:
+      run: pnpm exec lint-staged
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}
+
+pre-push:
+  commands:
+    build:
+      run: |
+        if [ "$WEB_ONLY" = "true" ]; then
+          echo "Building web stack (api, web, ui-react)..."
+          pnpm --filter @spotify/api --filter @spotify/web --filter @spotify/ui-react build
+        else
+          echo "Building full monorepo..."
+          pnpm build
+        fi

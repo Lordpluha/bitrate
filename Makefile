@@ -1,5 +1,8 @@
 .PHONY: help dev dev-build stop clean logs prod backup
 
+DC_DEV := docker-compose -f infra/docker-compose.preprod.yaml
+DC_PROD := docker-compose -f infra/docker-compose.prod.yaml
+
 # Default target
 help:
 	@echo "Spotify Clone - Docker Commands"
@@ -42,7 +45,7 @@ help:
 # Development
 dev:
 	@echo "🚀 Starting development environment..."
-	@docker-compose up -d
+	@$(DC_DEV) up -d
 	@echo "✅ Development environment started!"
 	@echo ""
 	@echo "Services:"
@@ -52,112 +55,112 @@ dev:
 
 dev-build:
 	@echo "🔨 Building and starting development environment..."
-	@docker-compose up -d --build
+	@$(DC_DEV) up -d --build
 
 stop:
 	@echo "🛑 Stopping all services..."
-	@docker-compose down
+	@$(DC_DEV) down
 
 restart:
 	@echo "🔄 Restarting all services..."
-	@docker-compose restart
+	@$(DC_DEV) restart
 
 clean:
 	@echo "🧹 Cleaning up (removing volumes)..."
-	@docker-compose down -v
+	@$(DC_DEV) down -v
 
 # Logs
 logs:
-	@docker-compose logs -f
+	@$(DC_DEV) logs -f
 
 logs-api:
-	@docker-compose logs -f api
+	@$(DC_DEV) logs -f api
 
 logs-web:
-	@docker-compose logs -f web
+	@$(DC_DEV) logs -f web
 
 logs-admin:
-	@docker-compose logs -f admin
+	@$(DC_DEV) logs -f admin
 
 # Database
 db-migrate:
 	@echo "📦 Running database migrations..."
-	@docker-compose exec api pnpm --filter @spotify/api run db:migration:start
+	@$(DC_DEV) exec api pnpm --filter @spotify/api run db:migration:start
 
 db-seed:
 	@echo "🌱 Seeding database..."
-	@docker-compose exec api pnpm --filter @spotify/api run seed
+	@$(DC_DEV) exec api pnpm --filter @spotify/api run seed
 
 db-studio:
 	@echo "🎨 Opening Prisma Studio..."
-	@docker-compose exec api pnpm --filter @spotify/api run db:ui
+	@$(DC_DEV) exec api pnpm --filter @spotify/api run db:ui
 
 db-backup:
 	@echo "💾 Creating database backup..."
 	@mkdir -p ./backups
-	@docker-compose exec postgres pg_dump -U admin spotify > "./backups/backup_$$(date +%Y%m%d_%H%M%S).sql"
+	@$(DC_DEV) exec postgres pg_dump -U admin spotify > "./backups/backup_$$(date +%Y%m%d_%H%M%S).sql"
 	@echo "✅ Backup created in ./backups/"
 
 db-reset:
 	@echo "⚠️  Resetting database..."
-	@docker-compose exec api pnpm --filter @spotify/api run db:migration:reset
+	@$(DC_DEV) exec api pnpm --filter @spotify/api run db:migration:reset
 
 # Production
 prod:
 	@echo "🚀 Starting production environment..."
-	@docker-compose -f docker-compose.prod.yaml up -d
+	@$(DC_PROD) up -d
 
 prod-build:
 	@echo "🔨 Building and starting production..."
-	@docker-compose -f docker-compose.prod.yaml up -d --build
+	@$(DC_PROD) up -d --build
 
 # Desktop & Mobile
 desktop-dev:
 	@echo "🖥️  Starting desktop development server..."
-	@docker-compose --profile desktop up -d desktop
+	@$(DC_DEV) --profile desktop up -d desktop
 	@echo "✅ Desktop server started at http://localhost:1420"
 
 desktop-logs:
-	@docker-compose logs -f desktop
-package.docker.json
+	@$(DC_DEV) logs -f desktop
+
 desktop-stop:
-	@docker-compose --profile desktop down
+	@$(DC_DEV) --profile desktop down
 
 mobile-dev:
 	@echo "📱 Starting mobile Expo server..."
-	@docker-compose --profile mobile up -d mobile
+	@$(DC_DEV) --profile mobile up -d mobile
 	@echo "✅ Expo server started!"
 	@echo ""
 	@echo "Scan QR code with Expo Go app:"
 	@sleep 5
-	@docker-compose logs mobile | grep -A 5 "exp://" || echo "Check logs with: make mobile-logs"
+	@$(DC_DEV) logs mobile | grep -A 5 "exp://" || echo "Check logs with: make mobile-logs"
 
 mobile-logs:
-	@docker-compose logs -f mobile
+	@$(DC_DEV) logs -f mobile
 
 mobile-qr:
 	@echo "📱 Expo QR Code:"
-	@docker-compose logs mobile | grep "exp://" | tail -1 || echo "Server not running. Start with: make mobile-dev"
+	@$(DC_DEV) logs mobile | grep "exp://" | tail -1 || echo "Server not running. Start with: make mobile-dev"
 
 mobile-stop:
-	@docker-compose --profile mobile down
+	@$(DC_DEV) --profile mobile down
 
 mobile-web:
 	@echo "🌐 Starting Expo web..."
-	@docker-compose exec mobile pnpm run web
+	@$(DC_DEV) exec mobile pnpm run web
 
 # Utils
 status:
-	@docker-compose ps
+	@$(DC_DEV) ps
 
 shell-api:
-	@docker-compose exec api sh
+	@$(DC_DEV) exec api sh
 
 shell-web:
-	@docker-compose exec web sh
+	@$(DC_DEV) exec web sh
 
 shell-admin:
-	@docker-compose exec admin sh
+	@$(DC_DEV) exec admin sh
 
 prune:
 	@echo "🧹 Cleaning unused Docker resources..."

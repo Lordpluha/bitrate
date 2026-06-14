@@ -17,9 +17,9 @@ Before you begin, ensure you have the following installed:
   node --version  # Should be v20.0.0 or higher
   ```
 
-- **pnpm** 10.28.1+ ([Installation](https://pnpm.io/installation))
+- **pnpm** 10.30.3+ ([Installation](https://pnpm.io/installation))
   ```bash
-  npm install -g pnpm@10.28.1
+  npm install -g pnpm@10.30.3
   pnpm --version
   ```
 
@@ -31,14 +31,16 @@ Before you begin, ensure you have the following installed:
 ### Recommended
 
 - **Docker Desktop** ([Download](https://www.docker.com/products/docker-desktop/))
-  - For running PostgreSQL, Redis, MinIO locally
-  - Optional if you prefer native installations
+  - For running PostgreSQL and Redis locally
+
+- **task (go-task)** ([Installation](https://taskfile.dev/installation/))
+  - Cross-platform task runner (replaces Makefile)
+  - Available via `winget`, `brew`, `scoop`, or binary download
 
 - **VSCode** ([Download](https://code.visualstudio.com/))
   - Recommended extensions:
     - Biome
     - Prisma
-    - ESLint
     - Tailwind CSS IntelliSense
     - Docker
 
@@ -59,100 +61,41 @@ pnpm install
 ```
 
 This will install dependencies for all apps and packages defined in `pnpm-workspace.yaml`.
+It also runs `lefthook install` automatically (pre-commit, commit-msg, pre-push hooks).
 
 ### 3. Environment Variables
 
-Create `.env` files for applications that need them:
+Copy the root `.env.example` for Docker Compose variables:
 
 ```bash
-# Backend API
-cp apps/api/.env.example apps/api/.env
-
-# Web Application
-cp apps/web/.env.example apps/web/.env
-
-# Mobile (if needed)
-cp apps/mobile/.env.example apps/mobile/.env
+cp .env.example .env
 ```
 
-#### API Environment Variables
+The API validates its own environment at startup via Zod (`apps/api/env.schema.ts`).
+Required variables: `DATABASE_URL`, `REDIS_HOST`, `REDIS_PORT`, `JWT_SECRET`, `WEB_HOST`.
 
-Edit `apps/api/.env`:
+### 4. Start Infrastructure
 
-```bash
-# Database
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/spotify_clone?schema=public"
-
-# JWT
-JWT_SECRET="your-super-secret-jwt-key-change-in-production"
-JWT_REFRESH_SECRET="your-super-secret-refresh-key-change-in-production"
-
-# Application
-NODE_ENV="development"
-PORT=3000
-
-# File Storage
-UPLOAD_DIR="./storage/uploads"
-MAX_FILE_SIZE=104857600  # 100MB
-
-# Redis (optional)
-REDIS_HOST="localhost"
-REDIS_PORT=6379
-```
-
-#### Web Environment Variables
-
-Edit `apps/web/.env.local`:
+The recommended workflow is a **minimal Docker stack** (postgres + redis only) with apps running natively:
 
 ```bash
-# API URL
-NEXT_PUBLIC_API_URL="http://localhost:3000"
+# Option A: via task (cross-platform)
+task infra:up
 
-# WebSocket URL
-NEXT_PUBLIC_WS_URL="ws://localhost:3000"
-```
-
-### 4. Start Database
-
-#### Option A: Docker (Recommended)
-
-```bash
-# Start PostgreSQL + Redis + MinIO
-docker compose up -d postgres redis minio
+# Option B: via Docker Compose directly
+docker compose -f infra/docker-compose.dev.yaml up -d
 
 # Verify containers are running
-docker compose ps
-```
-
-#### Option B: Native Installation
-
-Install PostgreSQL 15+ and create a database:
-
-```bash
-# Ubuntu/Debian
-sudo apt install postgresql-15
-
-# macOS
-brew install postgresql@15
-
-# Create database
-createdb spotify_clone
+docker compose -f infra/docker-compose.dev.yaml ps
 ```
 
 ### 5. Run Database Migrations
 
 ```bash
-# Navigate to API directory
-cd apps/api
-
-# Generate Prisma Client
-pnpm db:gen
-
-# Run migrations
-pnpm db:migration:start
+pnpm --filter @spotify/api run db:migration:start
 
 # Seed the database with sample data
-pnpm db:seed
+pnpm --filter @spotify/api run seed
 ```
 
 ### 6. Start Development Servers
@@ -164,10 +107,10 @@ pnpm db:seed
 pnpm dev
 ```
 
-This starts:
+This starts (via Turbo):
 - API on `http://localhost:3000`
-- Web on `http://localhost:3001`
-- Docs on `http://localhost:3002`
+- Web Player on `http://localhost:3001`
+- Admin on `http://localhost:3002`
 
 #### Individual Applications
 
@@ -175,8 +118,8 @@ This starts:
 # Backend API
 pnpm --filter @spotify/api start:dev
 
-# Web Application
-pnpm --filter @spotify/web dev
+# Web Player
+pnpm --filter @spotify/web-player dev
 
 # Mobile Application
 pnpm --filter @spotify/mobile start
@@ -191,6 +134,29 @@ pnpm --filter @spotify/admin dev
 pnpm --filter @spotify/docs start
 ```
 
+## 🐳 Full Docker Stack (alternative)
+
+If you prefer running all apps in Docker:
+
+```bash
+# First run — build images, migrate, seed
+task init
+# or
+pnpm docker:dev:build
+pnpm docker:db:migrate
+pnpm docker:db:seed
+
+# Subsequent runs
+task dev:up
+# or
+pnpm docker:dev
+
+# Stop
+task dev:down
+# or
+pnpm docker:down
+```
+
 ## 🔧 Development Workflow
 
 ### Working with Packages
@@ -203,16 +169,23 @@ pnpm build
 
 # Build specific package
 pnpm --filter @spotify/ui-react build
-
-# Build with Turbo cache
-pnpm turbo build
 ```
 
-#### Watching for Changes
+#### Regenerating Assets
 
+After editing `packages/tokens/tokens.json`:
 ```bash
-# Watch mode for UI components
-pnpm --filter @spotify/ui-react dev
+pnpm --filter @spotify/ui-react gen:tokens
+```
+
+After adding SVG icons to `packages/tokens/icons/`:
+```bash
+pnpm --filter @spotify/ui-react svgr:build
+```
+
+After API schema changes (API must be running on :3000):
+```bash
+pnpm --filter @spotify/contracts gen:api
 ```
 
 ### Database Management
@@ -220,111 +193,67 @@ pnpm --filter @spotify/ui-react dev
 #### Prisma Studio (GUI)
 
 ```bash
-cd apps/api
-pnpm db:ui
+pnpm --filter @spotify/api run db:ui
+# Opens at http://localhost:5555
 ```
-
-Opens Prisma Studio at `http://localhost:5555`
 
 #### Creating Migrations
 
 ```bash
-cd apps/api
-
 # After modifying schema.prisma
-pnpm db:migration:start
-
-# Name your migration
-# Migration will be created in prisma/migrations/
+pnpm --filter @spotify/api run db:migration:start
 ```
 
 #### Resetting Database
 
 ```bash
-cd apps/api
-
 # ⚠️ WARNING: This will delete all data!
-pnpm db:migration:reset
+pnpm --filter @spotify/api run db:migration:reset
+# or via task (with confirmation prompt):
+task db:reset
 ```
 
 ### Running Tests
 
 ```bash
-# Run all tests
-pnpm test
-
-# Run tests for specific app
+# API unit tests
 pnpm --filter @spotify/api test
 
-# Watch mode
-pnpm --filter @spotify/api test:watch
+# API integration tests (needs running DB)
+pnpm --filter @spotify/api test:int
 
-# Coverage
-pnpm --filter @spotify/api test:cov
+# API E2E tests
+pnpm --filter @spotify/api test:e2e
+
+# tokens-generator integration tests
+pnpm --filter @spotify/tokens-generator test
 ```
 
 ### Linting & Formatting
 
 ```bash
-# Lint all files
+# Lint all files (Biome)
 pnpm lint
 
-# Format all files
+# Format all files (Biome)
 pnpm format
 
-# Specific app
-pnpm --filter @spotify/web lint
-pnpm --filter @spotify/web format
+# Type checking
+pnpm check-types
 ```
 
-## 🐳 Docker Development
+### Committing
 
-### Full Stack with Docker
+Use the interactive Conventional Commits wizard:
 
 ```bash
-# Start all services
-docker compose up -d
-
-# View logs
-docker compose logs -f
-
-# Stop all services
-docker compose down
-
-# Rebuild after changes
-docker compose up -d --build
+pnpm commit
 ```
 
-### Individual Services
+For packages that changed behaviour, also run:
 
 ```bash
-# Start only API
-docker compose up -d api
-
-# Start only Web
-docker compose up -d web
-
-# Start only Database
-docker compose up -d postgres
-```
-
-### Docker Commands
-
-```bash
-# View running containers
-docker compose ps
-
-# Execute command in container
-docker compose exec api pnpm db:migration:start
-
-# View logs for specific service
-docker compose logs -f api
-
-# Restart service
-docker compose restart api
-
-# Remove all containers and volumes
-docker compose down -v
+pnpm changeset
 ```
 
 ## 📱 Mobile Development
@@ -332,45 +261,20 @@ docker compose down -v
 ### iOS (macOS only)
 
 ```bash
-cd apps/mobile
-
-# Install CocoaPods dependencies
-npx pod-install
-
-# Start Metro bundler
-pnpm start
-
-# Run on iOS simulator
-pnpm ios
-
-# Run on device
-pnpm ios --device
+pnpm --filter @spotify/mobile ios
 ```
 
 ### Android
 
 ```bash
-cd apps/mobile
-
-# Start Metro bundler
-pnpm start
-
-# Run on Android emulator
-pnpm android
-
-# Run on device
-pnpm android --device
+pnpm --filter @spotify/mobile android
 ```
 
 ### Expo Go
 
 ```bash
-cd apps/mobile
-pnpm start
-
+pnpm --filter @spotify/mobile start
 # Scan QR code with Expo Go app
-# iOS: Camera app
-# Android: Expo Go app
 ```
 
 See [Mobile App Guide](/docs/applications/mobile/overview) for detailed instructions.
@@ -426,13 +330,12 @@ source $HOME/.cargo/env
 ### Running Desktop App
 
 ```bash
-cd apps/desktop
+# Development mode (native Tauri window)
+pnpm --filter @spotify/desktop tauri dev
 
-# Development mode
-pnpm tauri dev
-
-# Build for production
-pnpm tauri build
+# UI only in Docker (no Tauri backend)
+docker compose --profile desktop up -d desktop
+# Open http://localhost:1420
 ```
 
 See [Desktop App Guide](/docs/applications/desktop/overview) for detailed instructions.
@@ -444,9 +347,6 @@ See [Desktop App Guide](/docs/applications/desktop/overview) for detailed instru
 ```bash
 # Debug mode with inspector
 pnpm --filter @spotify/api start:debug
-
-# Attach debugger in VSCode
-# Press F5 or use "Attach to Node Process"
 ```
 
 **VSCode Debug Configuration:**
@@ -462,71 +362,32 @@ pnpm --filter @spotify/api start:debug
 }
 ```
 
-### Frontend (Web)
-
-Use React DevTools and Next.js built-in debugging:
-
-```bash
-# Development mode includes source maps
-pnpm --filter @spotify/web dev
-
-# Debug in browser
-# Open DevTools → Sources → Set breakpoints
-```
-
-### Mobile (React Native)
-
-```bash
-# Enable React Native Debugger
-# Shake device → "Debug"
-# Or press Cmd+D (iOS) / Cmd+M (Android)
-
-# Use Flipper for advanced debugging
-npx flipper
-```
-
 ## 🛠️ Useful Commands
 
-### Generate API Documentation
+### Generate TypeScript Types from Swagger
 
 ```bash
-cd apps/api
-pnpm doc:gen
-
-# Opens at http://localhost:8080
-```
-
-### Generate TypeScript Types
-
-```bash
-# For UI components
-pnpm --filter @spotify/ui-react build
-
-# For API contracts
-pnpm --filter @spotify/contracts build
+# API must be running on :3000
+pnpm --filter @spotify/contracts gen:api
 ```
 
 ### Clean Build Artifacts
 
 ```bash
-# Clean all build outputs
-pnpm clean
-
-# Clean and rebuild
-pnpm clean && pnpm build
+# Cross-platform (uses scripts/clean-dist.mjs)
+pnpm clean:dist
+# or via task:
+task clean:dist
 ```
 
 ### Update Dependencies
 
 ```bash
-# Update all dependencies
-pnpm update -r
-
-# Update specific package
-pnpm --filter @spotify/web update next
-
 # Check for outdated packages
 pnpm outdated -r
+
+# Update all dependencies
+pnpm update -r
 ```
 
 ## 🐛 Troubleshooting
@@ -537,28 +398,24 @@ pnpm outdated -r
 # Find process using port 3000
 lsof -i :3000
 
-# Kill process
-kill -9 <PID>
+# Or stop all Docker services
+docker compose -f infra/docker-compose.preprod.yaml down
 ```
 
 ### Database Connection Issues
 
 ```bash
-# Check if PostgreSQL is running
-docker compose ps postgres
+# Check if postgres is running
+docker compose -f infra/docker-compose.dev.yaml ps
 
-# Check logs
-docker compose logs postgres
-
-# Restart database
-docker compose restart postgres
+# Restart
+docker compose -f infra/docker-compose.dev.yaml restart postgres
 ```
 
 ### Prisma Client Out of Sync
 
 ```bash
-cd apps/api
-pnpm db:gen
+pnpm --filter @spotify/api run db:gen
 ```
 
 ### node_modules Issues
@@ -573,19 +430,16 @@ pnpm install
 ### Turbo Cache Issues
 
 ```bash
-# Clear Turbo cache
-pnpm turbo clean
-
 # Run without cache
 pnpm turbo build --force
 ```
 
 ## 📚 Next Steps
 
-- **[Architecture](/docs/getting-started/architecture)** - Understand the system design
-- **[Backend Guide](/docs/applications/api/overview)** - Deep dive into the API
-- **[Web Guide](/docs/applications/web/overview)** - Frontend development
-- **[CLI Tools](/docs/packages/cli-tools)** - Custom build utilities
+- **[Architecture](/docs/getting-started/architecture)** — Understand the system design
+- **[Backend Guide](/docs/applications/api/overview)** — Deep dive into the API
+- **[Web Guide](/docs/applications/web/overview)** — Frontend development
+- **[CLI Tools](/docs/packages/cli-tools)** — Custom build utilities
 
 ---
 

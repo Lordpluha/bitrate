@@ -14,7 +14,7 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./docker/postgres/initdb:/docker-entrypoint-initdb.d
+      - ../docker/postgres/initdb:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d spotify"]
       interval: 10s
@@ -43,7 +43,7 @@ services:
   # Backend API (NestJS)
   api:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/api/Dockerfile
       target: development
     container_name: spotify-api
@@ -60,10 +60,10 @@ services:
     ports:
       - "${API_PORT:-3000}:3000"
     volumes:
-      - ./apps/api:/app/apps/api
-      - ./packages:/app/packages
-      - ./apps/api/uploads:/app/apps/api/uploads
-      - ./apps/api/public:/app/apps/api/public
+      - ../apps/api:/app/apps/api
+      - ../packages:/app/packages
+      - ../apps/api/uploads:/app/apps/api/uploads
+      - ../apps/api/public:/app/apps/api/public
       - /app/node_modules
       - /app/apps/api/node_modules
     depends_on:
@@ -78,7 +78,7 @@ services:
   # Web Player (Next.js)
   web-player:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/web-player/Dockerfile
       target: development
     container_name: spotify-web-player
@@ -90,8 +90,8 @@ services:
     ports:
       - "${WEB_PORT:-3001}:3001"
     volumes:
-      - ./apps/web-player:/app/apps/web-player
-      - ./packages:/app/packages
+      - ../apps/web-player:/app/apps/web-player
+      - ../packages:/app/packages
       - /app/node_modules
       - /app/apps/web-player/node_modules
       - /app/apps/web-player/.next
@@ -108,7 +108,7 @@ services:
   # Web Artists (Next.js)
   web-artists:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/web-artists/Dockerfile
       target: development
     container_name: spotify-web-artists
@@ -120,8 +120,8 @@ services:
     ports:
       - "${WEB_ARTISTS_PORT:-3004}:3002"
     volumes:
-      - ./apps/web-artists:/app/apps/web-artists
-      - ./packages:/app/packages
+      - ../apps/web-artists:/app/apps/web-artists
+      - ../packages:/app/packages
       - /app/node_modules
       - /app/apps/web-artists/node_modules
       - /app/apps/web-artists/.next
@@ -138,7 +138,7 @@ services:
   # Admin Panel (Kottster)
   admin:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/admin/Dockerfile
       target: development
     container_name: spotify-admin
@@ -150,8 +150,8 @@ services:
     ports:
       - "${ADMIN_PORT:-3002}:3002"
     volumes:
-      - ./apps/admin:/app/apps/admin
-      - ./packages:/app/packages
+      - ../apps/admin:/app/apps/admin
+      - ../packages:/app/packages
       - /app/node_modules
       - /app/apps/admin/node_modules
     depends_on:
@@ -164,7 +164,7 @@ services:
   # Mobile App (Expo Development Server)
   mobile:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/mobile/Dockerfile
       target: development
     container_name: spotify-mobile
@@ -174,13 +174,13 @@ services:
       EXPO_DEVTOOLS_LISTEN_ADDRESS: 0.0.0.0
       REACT_NATIVE_PACKAGER_HOSTNAME: ${MOBILE_HOST:-192.168.1.100}
     ports:
-      - "${MOBILE_METRO_PORT:-8081}:8081"      # Metro bundler
-      - "${MOBILE_DEVTOOLS_PORT:-19000}:19000" # Expo DevTools
-      - "${MOBILE_METRO_UI_PORT:-19001}:19001" # Metro UI
-      - "${MOBILE_WEB_PORT:-19006}:19006"      # Expo Web
+      - "${MOBILE_METRO_PORT:-8081}:8081"
+      - "${MOBILE_DEVTOOLS_PORT:-19000}:19000"
+      - "${MOBILE_METRO_UI_PORT:-19001}:19001"
+      - "${MOBILE_WEB_PORT:-19006}:19006"
     volumes:
-      - ./apps/mobile:/app/apps/mobile
-      - ./packages:/app/packages
+      - ../apps/mobile:/app/apps/mobile
+      - ../packages:/app/packages
       - /app/node_modules
       - /app/apps/mobile/node_modules
       - /app/apps/mobile/.expo
@@ -193,7 +193,7 @@ services:
   # Desktop App (UI Development Server)
   desktop:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/desktop/Dockerfile
       target: development
     container_name: spotify-desktop
@@ -203,8 +203,8 @@ services:
     ports:
       - "${DESKTOP_PORT:-1420}:1420"
     volumes:
-      - ./apps/desktop:/app/apps/desktop
-      - ./packages:/app/packages
+      - ../apps/desktop:/app/apps/desktop
+      - ../packages:/app/packages
       - /app/node_modules
       - /app/apps/desktop/node_modules
     networks:
@@ -213,10 +213,10 @@ services:
     profiles:
       - desktop
 
-  # Documentation (Docusaurus)
+  # Documentation
   docs:
     build:
-      context: .
+      context: ..
       dockerfile: ./apps/docs/Dockerfile
       target: development
     container_name: spotify-docs
@@ -226,11 +226,11 @@ services:
     ports:
       - "${DOCS_PORT:-3003}:3003"
     volumes:
-      - ./apps/docs:/app/apps/docs
-      - ./package.json:/app/package.json
-      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
-      - ./pnpm-workspace.yaml:/app/pnpm-workspace.yaml
-      - ./turbo.json:/app/turbo.json
+      - ../apps/docs:/app/apps/docs
+      - ../package.json:/app/package.json
+      - ../pnpm-lock.yaml:/app/pnpm-lock.yaml
+      - ../pnpm-workspace.yaml:/app/pnpm-workspace.yaml
+      - ../turbo.json:/app/turbo.json
       - /app/node_modules
       - /app/apps/docs/node_modules
       - /app/apps/docs/.docusaurus
@@ -246,7 +246,7 @@ services:
     profiles:
       - docs
 
-  # Nginx Reverse Proxy (опционально для production-like окружения)
+  # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
     container_name: spotify-nginx

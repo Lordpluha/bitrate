@@ -1,14 +1,14 @@
-# Использование @spotify/svgr
+# Using @spotify/svgr
 
-## Быстрый старт
+## Quick Start
 
-### 1. Установка
+### 1. Installation
 
 ```bash
 pnpm add -D @spotify/svgr
 ```
 
-### 2. Настройка package.json
+### 2. Configure package.json
 
 ```json
 {
@@ -19,16 +19,16 @@ pnpm add -D @spotify/svgr
 }
 ```
 
-### 3. Запуск
+### 3. Run
 
 ```bash
-pnpm icons:build    # Одноразовая генерация
-pnpm icons:watch    # Watch режим
+pnpm icons:build    # One-time generation
+pnpm icons:watch    # Watch mode
 ```
 
-## Типичные сценарии
+## Typical Use Cases
 
-### Из пакета токенов в monorepo
+### From a tokens package in a monorepo
 
 ```json
 {
@@ -38,7 +38,7 @@ pnpm icons:watch    # Watch режим
 }
 ```
 
-### С цветовыми переменными
+### With color variables
 
 ```bash
 react-svgr build \
@@ -47,52 +47,52 @@ react-svgr build \
   --variables "primaryColor,secondaryColor"
 ```
 
-Это создаст компоненты с пропсами для управления цветами:
+This creates components with props for color control:
 
 ```tsx
 <MyIcon primaryColor="#FF0000" secondaryColor="#00FF00" />
 ```
 
-### Относительные пути
+### Relative paths
 
 ```bash
-# Из соседнего пакета
+# From a neighboring package
 react-svgr build -i ../design-system/icons -o ./src/icons
 
-# Из текущей директории
+# From the current directory
 react-svgr build -i ./assets/icons -o ./src/components/icons
 ```
 
-## Опции CLI
+## CLI Options
 
-| Опция | Короткая | Описание | Обязательна |
-|-------|----------|----------|-------------|
-| `--input` | `-i` | Путь к SVG файлам | ✅ |
-| `--output` | `-o` | Путь для вывода компонентов | ✅ |
-| `--variables` | `--vars` | Имена цветовых переменных | ❌ |
+| Option | Short | Description | Required |
+|--------|-------|-------------|----------|
+| `--input` | `-i` | Path to SVG files | ✅ |
+| `--output` | `-o` | Path for component output | ✅ |
+| `--variables` | `--vars` | Color variable names | ❌ |
 
-## Типы иконок
+## Icon Types
 
-### Монохромные (одноцветные)
+### Monochrome (single-color)
 
-Если SVG содержит только один уникальный цвет, он автоматически заменяется на `currentColor`:
+If an SVG contains only one unique color, it is automatically replaced with `currentColor`:
 
 ```tsx
-// Исходный SVG: <path fill="#000000" />
-// Результат:
+// Original SVG: <path fill="#000000" />
+// Result:
 export const Icon = (props) => (
   <svg {...props}>
     <path fill="currentColor" />
   </svg>
 );
 
-// Использование:
-<Icon className="text-blue-500" /> // Будет синей
+// Usage:
+<Icon className="text-blue-500" /> // Will be blue
 ```
 
-### Многоцветные
+### Multicolor
 
-Без переменных - цвета сохраняются:
+Without variables - colors are preserved:
 
 ```tsx
 export const Icon = (props) => (
@@ -103,7 +103,7 @@ export const Icon = (props) => (
 );
 ```
 
-С переменными - добавляются пропсы:
+With variables - props are added:
 
 ```tsx
 interface IconProps extends SVGProps<SVGSVGElement> {
@@ -119,18 +119,18 @@ export const Icon = ({ primaryColor, secondaryColor, ...props }: IconProps) => (
 );
 ```
 
-## Работа с package scopes
+## Working with Package Scopes
 
-Пакет поддерживает разрешение путей через node_modules:
+The package supports path resolution through node_modules:
 
 ```bash
-# Автоматически найдет node_modules/@company/tokens/icons
+# Will automatically find node_modules/@company/tokens/icons
 react-svgr build -i @company/tokens/icons -o ./src/icons
 ```
 
-## Примеры интеграции
+## Integration Examples
 
-### С React + TypeScript
+### With React + TypeScript
 
 ```tsx
 import { MyIcon } from './icons/generated/MyIcon';
@@ -149,13 +149,13 @@ function App() {
 }
 ```
 
-### С Tailwind CSS
+### With Tailwind CSS
 
 ```tsx
 <Icon className="w-6 h-6 text-blue-500 hover:text-blue-600" />
 ```
 
-### В Storybook
+### In Storybook
 
 ```tsx
 import { MyIcon } from './MyIcon';
@@ -175,26 +175,26 @@ export const WithColors = () => (
 
 ### "Cannot find module @company/tokens"
 
-Убедитесь что пакет установлен:
+Make sure the package is installed:
 ```bash
 pnpm add @company/tokens
 ```
 
-### Цвета не заменяются переменными
+### Colors not being replaced by variables
 
-Проверьте порядок цветов в SVG. Переменные назначаются в порядке появления:
+Check the color order in SVG. Variables are assigned in order of appearance:
 ```bash
 react-svgr build -i ./icons -o ./out --variables "first,second,third"
 ```
 
-### Слишком много файлов генерируется
+### Too many files being generated
 
-Используйте `.gitignore` для исключения сгенерированных файлов:
+Use `.gitignore` to exclude generated files:
 ```
 src/icons/generated/
 ```
 
-И добавьте в package.json:
+And add to package.json:
 ```json
 {
   "files": [
@@ -204,12 +204,12 @@ src/icons/generated/
 }
 ```
 
-## Watch режим для разработки
+## Watch Mode for Development
 
-В dev режиме используйте watch для автоматической регенерации:
+In dev mode, use watch for automatic regeneration:
 
 ```bash
 react-svgr dev -i @company/tokens/icons -o ./src/icons
 ```
 
-При изменении любого SVG файла компоненты автоматически пересоздадутся.
+When any SVG file changes, the components will be automatically recreated.

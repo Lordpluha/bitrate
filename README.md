@@ -3,25 +3,27 @@
 ## 📚 Documentation
 
 ### Main documentation
-- **[README.md](README.md)** - main documentation (you are here)
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - contributor guide
-- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - code of conduct
-- **[SECURITY.md](SECURITY.md)** - security policy
+- **[README.md](README.md)** — main documentation (you are here)
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** — contributor guide
+- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** — code of conduct
+- **[SECURITY.md](SECURITY.md)** — security policy
+- **[CLAUDE.md](CLAUDE.md)** — AI assistant guide for this codebase
 
-### 📋 Planning and architecture
-- **[🗺️ Roadmap](apps/docs/docs/ROADMAP.md)** - project roadmap with milestones
-- **[⚙️ Workflows](.github/WORKFLOWS.md)** - CI/CD documentation
+### Planning and architecture
+- **[Roadmap](apps/docs/docs/guides/roadmap.md)** — project roadmap with milestones
+- **[CI/CD Workflows](.github/workflows/README.md)** — GitHub Actions documentation
 
-### Applications
-- **[MOBILE.md](apps/docs/docs/MOBILE.md)** - detailed Mobile documentation
-- **[DESKTOP.md](apps/docs/docs/DESKTOP.md)** - detailed Desktop documentation
+### App-specific guides
+- **[Mobile](apps/docs/docs/applications/mobile/overview.md)** — Mobile app documentation
+- **[Desktop](apps/docs/docs/applications/desktop/overview.md)** — Desktop app documentation
+- **[API](apps/docs/docs/applications/api/overview.md)** — API documentation
 
 ## 🔗 Useful links
 
-- **GitHub Project** - https://github.com/users/Lordpluha/projects/6
-- **Chromatic** - https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
-- **Storybook** - https://spotify-clone-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
-- **Web App** - https://spotify-clone-web-olive.vercel.app/
+- **GitHub Project** — https://github.com/users/Lordpluha/projects/6
+- **Chromatic** — https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
+- **Storybook** — https://spotify-clone-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
+- **Web App** — https://spotify-clone-web-olive.vercel.app/
 
 ---
 
@@ -47,7 +49,7 @@ Required to work with any part of the project:
 | Tool | Version | Installation |
 |------------|--------|-----------|
 | **Node.js** | >= 20.x | [Linux](#linux-nodejs) • [Windows](#windows-nodejs) • [macOS](#macos-nodejs) |
-| **pnpm** | 10.27.0 | `npm install -g pnpm@10.27.0` |
+| **pnpm** | 10.30.3 | `npm install -g pnpm@10.30.3` |
 | **Git** | >= 2.x | [git-scm.com](https://git-scm.com/) |
 | **Docker** | >= 24.x | [Linux](#linux-docker) • [Windows](#windows-docker) • [macOS](#macos-docker) |
 | **Docker Compose** | >= 2.x | Included with Docker |
@@ -110,16 +112,14 @@ Required to work with any part of the project:
 
 2. **Native (recommended):**
    ```bash
-   cd apps/mobile
-   pnpm install
-   pnpm start
+   pnpm --filter @spotify/mobile start
    ```
 
 **⚠️ Recommendation:** For Mobile development, use native execution. Docker is mainly for demos.
 
 ---
 
-### 🖥️ Desktop App (Tauri + React)
+### 🖥️ Desktop App (Tauri 2 + React)
 
 <details>
 <summary><b>Linux (Ubuntu/Debian)</b></summary>
@@ -216,9 +216,7 @@ source $HOME/.cargo/env
 
 1. **Native (recommended):**
    ```bash
-   cd apps/desktop
-   pnpm install
-   pnpm dev  # Starts Tauri app with a native window
+   pnpm --filter @spotify/desktop tauri dev
    ```
 
 2. **Docker UI only (without Tauri backend):**
@@ -254,10 +252,7 @@ pnpm install
 
 1. Install WSL2: `wsl --install` (PowerShell as Administrator)
 2. Clone the project **inside WSL**: `cd ~ && git clone ...`
-3. Work in a WSL terminal - all commands behave like Linux
-
-**If you do NOT use WSL2:**
-- Before `git push`, remove `dist` via Docker: `docker compose down && docker compose run --rm api sh -c "find /app -type d -name 'dist' -exec rm -rf {} +"`
+3. Work in a WSL terminal — all commands behave like Linux
 
 ---
 
@@ -269,7 +264,7 @@ After installing required dependencies for your app, verify versions:
 
 ```bash
 node --version          # >= v20.x
-pnpm --version          # 10.27.0
+pnpm --version          # >= 10.30.3
 git --version           # >= 2.x
 docker --version        # >= 24.x
 docker compose version  # >= 2.x
@@ -294,53 +289,54 @@ If all required commands run successfully, you are ready to develop! ✨
 
 ## 🛠️ Development
 
-You can run the project in three ways:
+You can run the project in several ways:
 
-### 📦 Option 1: Native (without Docker)
+### 📦 Option 1: Native (recommended for most devs)
 
-For local development without Docker:
+Start only the database infrastructure in Docker, run apps natively:
 
 ```bash
-# 1. Start only the database
-docker-compose -f docker-compose.minimal.yaml up -d
+# 1. Start postgres + redis only (~320 MB)
+docker compose -f infra/docker-compose.dev.yaml up -d
+# Or with task:
+task infra:up
 
 # 2. Start all applications
 pnpm dev
-
-# Service access:
-# - API: http://localhost:3000
-# - Web: http://localhost:3001
-# - Admin: http://localhost:3002
 ```
 
-### 🐳 Option 2: Full Docker (recommended)
+### 🐳 Option 2: Full Docker stack
 
-#### Using Makefile (Linux/macOS/WSL)
+All apps and infrastructure in containers:
+
+#### Using task (cross-platform — Linux, macOS, Windows)
 
 ```bash
-# First run (build + migrations + seed)
-make init
+# First run (build + migrate + seed)
+task init
 
 # Subsequent runs
-make dev
+task dev:up
 
 # Stop
-make stop
+task dev:down
 
 # View logs
-make logs
+task dev:logs          # all
+task dev:logs -- api   # API only
 
-# Database migrations
-make db-migrate
+# Database
+task db:migrate
+task db:seed
+task db:studio
 
-# Seed test data
-make db-seed
-
-# Full command list
-make help
+# Full list
+task
 ```
 
-#### Using pnpm scripts (cross-platform)
+> **Installing task:** https://taskfile.dev/installation/ — available via `winget`, `brew`, `scoop`, or binary download.
+
+#### Using pnpm scripts (no extra tool needed)
 
 ```bash
 # First run
@@ -354,12 +350,12 @@ pnpm docker:dev
 # Stop
 pnpm docker:down
 
-# View logs
-pnpm docker:logs          # all logs
-pnpm docker:logs:api      # API only
-pnpm docker:logs:web      # Web only
+# Logs
+pnpm docker:logs
+pnpm docker:logs:api
+pnpm docker:logs:web
 
-# Database migrations
+# Database
 pnpm docker:db:migrate
 pnpm docker:db:seed
 
@@ -371,21 +367,18 @@ pnpm docker:manage
 
 ```bash
 # First run
-docker-compose up -d --build
-docker-compose exec api pnpm --filter @spotify/api run db:migration:start
-docker-compose exec api pnpm --filter @spotify/api run seed
+docker compose -f infra/docker-compose.preprod.yaml up -d --build
+docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @spotify/api run db:migration:start
+docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @spotify/api run seed
 
 # Subsequent runs
-docker-compose up -d
+docker compose -f infra/docker-compose.preprod.yaml up -d
 
 # Stop
-docker-compose down
+docker compose -f infra/docker-compose.preprod.yaml down
 
-# View logs
-docker-compose logs -f
-
-# Migrations
-docker-compose exec api pnpm --filter @spotify/api run db:migration:start
+# Logs
+docker compose -f infra/docker-compose.preprod.yaml logs -f
 ```
 
 ### 📱 Mobile & Desktop (optional)
@@ -402,7 +395,7 @@ docker compose --profile mobile up -d mobile
 # Open http://localhost:19000 for the QR code
 
 # Native (recommended)
-cd apps/mobile && pnpm start
+pnpm --filter @spotify/mobile start
 ```
 
 **Connect:**
@@ -410,17 +403,17 @@ cd apps/mobile && pnpm start
 - Scan the QR code from http://localhost:19000
 - Or enter the tunnel URL from logs
 
-📚 **[Detailed documentation →](docs/MOBILE.md)**
+📚 **[Detailed documentation →](apps/docs/docs/applications/mobile/overview.md)**
 
 ---
 
-#### 🖥️ Desktop (Tauri + React)
+#### 🖥️ Desktop (Tauri 2 + React)
 
 **3 run options:**
 
 **1. Local (recommended):**
 ```bash
-cd apps/desktop && pnpm dev
+pnpm --filter @spotify/desktop tauri dev
 ```
 
 **2. Docker UI only:**
@@ -436,7 +429,7 @@ docker compose -f docker-compose.vnc.yml up --build
 # Open http://localhost:6080/vnc.html (password: spotify)
 ```
 
-📚 **[Detailed documentation →](docs/DESKTOP.md)** • **[VNC Guide →](apps/desktop/VNC-README.md)**
+📚 **[Detailed documentation →](apps/docs/docs/applications/desktop/overview.md)** • **[VNC Guide →](apps/desktop/VNC-README.md)**
 
 ## 🌐 Service access
 
@@ -444,8 +437,9 @@ docker compose -f docker-compose.vnc.yml up --build
 |--------|-----|------|
 | Web Frontend | http://localhost:3001 | 3001 |
 | API Backend | http://localhost:3000 | 3000 |
-| API Docs (Swagger) | http://localhost:3000/swagger | - |
+| API Docs (Swagger) | http://localhost:3000/swagger | — |
 | Admin Panel | http://localhost:3002 | 3002 |
+| Storybook (ui-react) | http://localhost:6006 | 6006 |
 | Mobile (Metro) | http://localhost:8081 | 8081 |
 | Mobile (DevTools) | http://localhost:19000 | 19000 |
 | Desktop (Vite) | http://localhost:1420 | 1420 |
@@ -474,11 +468,11 @@ Approximate image sizes after build:
 **Space-saving recommendations:**
 
 ```bash
-# Use a minimal development setup
-docker compose -f docker-compose.minimal.yaml up -d  # Only postgres + redis (~320 MB)
+# Use a minimal development setup — only postgres + redis (~320 MB)
+docker compose -f infra/docker-compose.dev.yaml up -d
 
 # Start only required services
-docker compose up -d api web  # API + Web (~20 GB)
+docker compose -f infra/docker-compose.preprod.yaml up -d api web
 
 # Remove unused images
 docker image prune -a
@@ -491,140 +485,110 @@ docker system prune -af --volumes
 
 ## 🛠️ Useful commands
 
-### Makefile commands
+### task commands (cross-platform)
 
 ```bash
-make dev              # Start development
-make stop             # Stop all services
-make restart          # Restart
-make logs             # View logs
-make db-migrate       # Apply migrations
-make db-seed          # Seed database
-make db-studio        # Open Prisma Studio
-make clean            # Clean volumes
-make prod             # Start production
+task infra:up       # Start postgres + redis only
+task dev:up         # Start full Docker dev stack
+task dev:down       # Stop all services
+task dev:logs       # View logs
+task db:migrate     # Apply migrations
+task db:seed        # Seed database
+task db:studio      # Open Prisma Studio
+task dev:clean      # Remove volumes
+task prod:up        # Start production
+task shell:api      # Shell into API container
+task prune          # Clean unused Docker resources
+task                # List all commands
 ```
 
-### npm/pnpm scripts
+### pnpm scripts
 
 ```bash
 pnpm dev                    # Start all apps (native)
 pnpm build                  # Build all apps
 pnpm lint                   # Lint
 pnpm format                 # Format
-pnpm docker:dev             # Docker development
+pnpm docker:dev             # Full Docker development
 pnpm docker:manage          # Interactive Docker management
+pnpm changeset              # Describe change for versioning
 ```
 
 ### Database commands
 
 ```bash
-# Via Makefile
-make db-migrate       # Apply migrations
-make db-seed          # Seed test data
-make db-studio        # Open Prisma Studio
-make db-backup        # Create backup
+# Via task
+task db:migrate       # Apply migrations
+task db:seed          # Seed test data
+task db:studio        # Open Prisma Studio
+task db:backup        # Create backup
 
 # Via pnpm
 pnpm docker:db:migrate
 pnpm docker:db:seed
 pnpm docker:db:studio
 
-# Directly in API
-cd apps/api
-pnpm run db:migration:start
-pnpm run seed
-pnpm run db:ui
+# Directly in API (native)
+pnpm --filter @spotify/api run db:migration:start
+pnpm --filter @spotify/api run seed
+pnpm --filter @spotify/api run db:ui
 ```
 
 ## 📦 Tech Stack
 
-### Client
-- Next.js 15 App Router + Server Actions + middleware, TypeScript, PWA
-- TurboBuild
-- TailwindCSS, Module.css, clsx
-- Zustand, React Hook Form + Zod
-- i18n, MSW
-- @tanstack/react-query (Codegen via openApiTS) + Socket.io
-- Storybook, Shadcn UI
-- Feature-Sliced Design
+### Client (Web — Next.js)
+- Next.js 15 App Router + Server Actions + middleware, TypeScript
+- TailwindCSS v4, shadcn/ui, Zustand, React Hook Form + Zod
+- @tanstack/react-query (via `openapi-react-query`) + Socket.io
+- Feature-Sliced Design, Sentry
+#### Testing
+- Vitest (Unit), RTL (Integration), Playwright (E2E)
+
+### Mobile (React Native + Expo)
+- React Native, Expo, Zustand
+- React Navigation, @tanstack/react-query + Socket.io
 - Sentry
 #### Testing
-- Vitest (Unit)
-- RTL (Intergration)
-- msw + openapi-msw (mocks)
-- Playwright (E2E)
+- Jest (Unit), RTL/Native (Integration), Detox (E2E)
 
-### Android
-- React Native, NativeBase, Zustand, Faker
-- React Navigation
-- i18n
-- @tanstack/react-query + AsyncStorage + Persistor + Socket.io
-- Sentry
-#### Testing
-- Jest (Unit)
-- RTL/Native (Integration)
-- detox (E2E)
-
-### iOS
-- Flutter
-- Sentry
-#### Testing
-- Flutter testing utils
-
-### MacOS
-- Flutter
-- Sentry
-#### Testing
-- Flutter testing utils
-
-### Windows
-- Tauri
-
-### Linux
-- Tauri
+### Desktop
+- Tauri 2 + React + Vite
 
 ### Admin Panel
-- Kottster app based on postgresql schema
+- Kottster app based on PostgreSQL schema
 
 ### Backend
 - NestJS, TypeScript
-- PostgreSQL via Prisma
-- REST API, SSE, Socket.io, Long-polling, RabbitMQ
-- JWT, OAuth(google, facebook, discord), CORS, CSP, 2FA, Redis
-- Swagger + Zod (codegen sync)
-- Postfix + NodeMailer, Multer
-- @nestjs/throttler, Fingerprint auth
-- ConfigModule, @nestjs/schedule (CRON)
-- Prometheus + Grafana, nestjs-pino
-- Sentry
+- PostgreSQL via Prisma, Redis, BullMQ
+- REST API, SSE, Socket.io, Long-polling
+- JWT, OAuth (Google, Facebook, Discord), CORS, CSP, 2FA
+- Swagger + Zod codegen, Postfix + NodeMailer, Multer
+- @nestjs/throttler, @nestjs/schedule (CRON)
+- Prometheus + Grafana, nestjs-pino, Sentry
 #### Testing
-- Jest
+- Jest (Unit), real Prisma (Integration), HTTP (E2E)
 #### Security
-- SHA-3
-- CSP
-- Helmet
-- Rate-limitting + Ip-ban
-- SSL/TLS
-- CSRF
-- Global error filters throught `@Catch`
-- Files security
-- Cloudflare
-- RBAC/ACL
+- SHA-3, CSP, Helmet, Rate-limiting + IP-ban, SSL/TLS, CSRF
+- Global error filters, Cloudflare, RBAC/ACL
 
+### Shared packages
+- `@spotify/ui-react` — React 19 + Tailwind v4 + shadcn/ui + Storybook
+- `@spotify/tokens` — design tokens JSON + SVG icons
+- `@spotify/tokens-generator` — CSS token generator CLI
+- `@spotify/contracts` — OpenAPI TypeScript types (auto-generated)
+- `@spotify/esbuild-bundler` — ESBuild wrapper (dual ESM/CJS)
+- `@spotify/svgr` — SVG → typed React component converter
+- `@spotify/converter` — media/audio conversion utilities
 
 ### Infrastructure
-- Monorepo: TurboRepo + Pnpm
-- Linting: Biome
-- Git tools: Husky, Lint-staged, Commit-lint, Gitflow
-- CI/CD: GitHub Actions, Docker, self-hosted Sentry
-- Env: .env per app + .env.schema (Zod-based)
-- Backup: `redis-cli --rdb`
+- Monorepo: TurboRepo + pnpm workspaces
+- Task runner: task (go-task) — cross-platform Taskfile.yml
+- Linting: Biome (lint + format)
+- Git tools: Lefthook, Lint-staged, Commitlint, Commitizen
+- Versioning: Changesets
+- CI/CD: GitHub Actions (20+ workflows)
+- Docker Compose files in `infra/`
 - Docs: Mintlify
-
-### Future features
-- Microservices, Micro-Frontends
-- CDN + S3, Logs, Metrics
 
 ---
 
@@ -632,7 +596,7 @@ pnpm run db:ui
 
 ### EACCES: permission denied on git push
 
-Docker containers may create files in `dist/` as root/nfsnobody. Before `git push`:
+Docker containers may create files in `dist/` as root. Before `git push`:
 
 ```bash
 pnpm clean:dist
@@ -646,16 +610,16 @@ git push
 sudo lsof -i :3000
 
 # Stop all Docker services
-docker compose down
+docker compose -f infra/docker-compose.preprod.yaml down
 ```
 
 ### Database issues
 
 ```bash
 # Recreate DB
-docker compose down -v
-docker compose up -d postgres
-docker compose exec api pnpm --filter @spotify/api run db:migration:start
+docker compose -f infra/docker-compose.preprod.yaml down -v
+docker compose -f infra/docker-compose.preprod.yaml up -d postgres
+docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @spotify/api run db:migration:start
 ```
 
 ### Docker cleanup
@@ -665,11 +629,11 @@ docker compose exec api pnpm --filter @spotify/api run db:migration:start
 docker image prune -a
 
 # Rebuild without cache
-docker compose build --no-cache
+docker compose -f infra/docker-compose.preprod.yaml build --no-cache
 ```
 
 ---
 
 ## 📄 License
 
-MIT © 2025 Lordpluha
+MIT © 2026 Lordpluha

@@ -9,7 +9,7 @@ Welcome to the official **Spotify Clone** blog - a full-featured music streaming
 
 This is an ambitious pet project aimed at recreating the functionality of a popular music service using modern technology stack.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## 🎯 What Is This Project?
 

@@ -16,9 +16,9 @@ ESBuild-based bundler for React libraries with TypeScript support.
 
 ```bash
 npm install @spotify/esbuild-bundler
-# или
+# or
 pnpm add @spotify/esbuild-bundler
-# или
+# or
 yarn add @spotify/esbuild-bundler
 ```
 

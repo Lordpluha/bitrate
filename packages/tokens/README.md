@@ -1,3 +1,3 @@
 # @spotify/tokens
 
-> Нужно будет сделать registry.json для подключения $shema в json
+> A `registry.json` needs to be created for connecting `$schema` in JSON

@@ -1,6 +1,12 @@
 #!/bin/bash
 # Utility scripts for Docker monitoring and maintenance
 
+# Always run from repo root so relative paths work correctly
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT"
+
+DC="docker-compose -f infra/docker-compose.preprod.yaml"
+
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -14,7 +20,7 @@ print_header() {
 # Check Docker health
 check_health() {
     print_header "Service Health Status"
-    docker-compose ps
+    $DC ps
 
     echo -e "\n${YELLOW}Service URLs:${NC}"
     echo "  Web:   http://localhost:3001"
@@ -62,13 +68,13 @@ logs_summary() {
     print_header "Recent Errors in Logs"
 
     echo -e "${YELLOW}API Errors:${NC}"
-    docker-compose logs --tail=50 api 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+    $DC logs --tail=50 api 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
 
     echo -e "\n${YELLOW}Web Errors:${NC}"
-    docker-compose logs --tail=50 web 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+    $DC logs --tail=50 web 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
 
     echo -e "\n${YELLOW}Admin Errors:${NC}"
-    docker-compose logs --tail=50 admin 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+    $DC logs --tail=50 admin 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
 }
 
 # Network info
@@ -84,13 +90,13 @@ database_info() {
     print_header "Database Information"
 
     echo -e "${YELLOW}Database Size:${NC}"
-    docker-compose exec -T postgres psql -U admin -d spotify -c "SELECT pg_size_pretty(pg_database_size('spotify')) as size;" 2>/dev/null || echo "  Database not accessible"
+    $DC exec -T postgres psql -U admin -d spotify -c "SELECT pg_size_pretty(pg_database_size('spotify')) as size;" 2>/dev/null || echo "  Database not accessible"
 
     echo -e "\n${YELLOW}Table Sizes:${NC}"
-    docker-compose exec -T postgres psql -U admin -d spotify -c "SELECT schemaname,tablename,pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size FROM pg_tables WHERE schemaname = 'public' ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC LIMIT 10;" 2>/dev/null || echo "  Database not accessible"
+    $DC exec -T postgres psql -U admin -d spotify -c "SELECT schemaname,tablename,pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size FROM pg_tables WHERE schemaname = 'public' ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC LIMIT 10;" 2>/dev/null || echo "  Database not accessible"
 
     echo -e "\n${YELLOW}Connection Count:${NC}"
-    docker-compose exec -T postgres psql -U admin -d spotify -c "SELECT count(*) as connections FROM pg_stat_activity;" 2>/dev/null || echo "  Database not accessible"
+    $DC exec -T postgres psql -U admin -d spotify -c "SELECT count(*) as connections FROM pg_stat_activity;" 2>/dev/null || echo "  Database not accessible"
 }
 
 # Full report
@@ -107,7 +113,7 @@ quick_fix() {
     print_header "Running Quick Fix"
 
     echo "1. Restarting unhealthy containers..."
-    docker-compose ps --filter "status=unhealthy" -q | xargs -r docker restart
+    $DC ps --filter "status=unhealthy" -q | xargs -r docker restart
 
     echo "2. Pruning unused networks..."
     docker network prune -f

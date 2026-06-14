@@ -4,21 +4,16 @@ sidebar_position: 1
 
 # Project Roadmap
 
-> Last updated: January 11, 2026
+> Last updated: June 14, 2026
 
-## 📋 Содержание
+## 📋 Table of Contents
 
-- [Текущий статус](#-текущий-статус)
-- [Фазы разработки](#-фазы-разработки)
-- [Phase 1: MVP (Q1 2026)](#phase-1-mvp-q1-2026)
-- [Phase 2: Core Features (Q2 2026)](#phase-2-core-features-q2-2026)
-- [Phase 3: Social & Discovery (Q3 2026)](#phase-3-social--discovery-q3-2026)
-- [Phase 4: Advanced Features (Q4 2026)](#phase-4-advanced-features-q4-2026)
-- [Phase 5: Scale & Optimize (2027+)](#phase-5-scale--optimize-2027)
+- [Current Status](#-current-status)
+- [Milestones Roadmap](#-milestones-roadmap)
 
 ---
 
-## 📊 Текущий статус
+## 📊 Current Status
 
 ### 🎯 Milestones Overview
 
@@ -37,8 +32,8 @@ sidebar_position: 1
 | **v1.1.0-public-release** | Release for mobile and web |
 | **v1.2.0-desktop-beta** | MVP desktop app |
 
-### Завершено ✅
-- [x] **v0.1.0-setup** - Базовая архитектура монорепозитория (Turborepo)
+### Completed ✅
+- [x] **v0.1.0-setup** - Basic monorepo architecture (Turborepo)
 - [x] **v0.4.0-admin-panel** - Admin Panel (React + Kottster)
 - [x] API Backend (NestJS + Prisma + PostgreSQL)
 - [x] Web Frontend (Next.js + React)
@@ -50,7 +45,7 @@ sidebar_position: 1
 - [x] File upload system
 - [x] Database migrations & seeding
 
-### В работе 🚧
+### In Progress 🚧
 - [ ] **v1.1.0-public-release** (88% complete - 1 issue remaining) 🔥
 - [ ] **v0.2.0-auth-core** (86% complete - 2 issues remaining)
 - [ ] **v0.3.0-music-engine** (70% complete - 3 issues remaining)
@@ -59,11 +54,11 @@ sidebar_position: 1
 - [ ] OAuth integration (#49, #91)
 - [ ] Two-Factor Authentication (#47, #61)
 
-### В бэклоге 📝
+### In Backlog 📝
 - **v0.8.0-security-hardening** - 2 issues
-- **v1.0.0-rebranding** - Rebranding проекта
-- 11 задач в планировании
-- 46 задач готовы к релизу
+- **v1.0.0-rebranding** - Project rebranding
+- 11 tasks in planning
+- 46 tasks ready for release
 
 ---
 
@@ -84,7 +79,7 @@ sidebar_position: 1
 - [x] Docker infrastructure
 - [x] CI/CD pipelines (GitHub Actions)
 - [x] ESLint, Prettier, Biome configuration
-- [x] Git hooks (Husky, Commitlint)
+- [x] Git hooks (Lefthook, Commitlint)
 - [x] Database setup (PostgreSQL, Prisma)
 - [x] Basic project structure
 
@@ -428,7 +423,7 @@ sidebar_position: 1
 
 ---
 
-## 📌 Приоритизация задач
+## 📌 Task Prioritization
 
 ### High Priority (Must Have)
 1. Media Player (#90, #105)
@@ -453,7 +448,7 @@ sidebar_position: 1
 
 ---
 
-## 🎯 Метрики успеха
+## 🎯 Success Metrics
 
 ### Technical Metrics
 - **Performance:**
@@ -483,9 +478,10 @@ sidebar_position: 1
 
 ## 🔄 Review & Updates
 
-Этот roadmap обновляется **ежеквартально** или при значительных изменениях в приоритетах.
+This roadmap is updated **quarterly** or when there are significant changes in priorities.
 
-**Следующая ревизия:** Апрель 2026
+**Next revision:** September 2026
 
-**История изменений:**
-- 2026-01-11: Начальная версия roadmap
+**Change history:**
+- 2026-01-11: Initial roadmap version
+- 2026-06-14: Updated dates; added Taskfile.yml, Changesets, infra/ migration to architecture
