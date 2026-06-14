@@ -57,14 +57,14 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
-    "@commitlint/cli": "^20.5.3",
-    "@commitlint/config-conventional": "^20.5.3",
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
     "@types/node": "^25.9.3",
     "commitizen": "^4.3.2",
     "cz-customizable": "^7.5.4",
-    "knip": "^5.88.1",
-    "lefthook": "^1.13.6",
-    "lint-staged": "^16.4.0",
+    "knip": "^6.16.1",
+    "lefthook": "^2.1.9",
+    "lint-staged": "^17.0.7",
     "turbo": "^2.9.18",
     "typescript": "^5.9.3"
   },
@@ -88,6 +88,7 @@
     "onlyBuiltDependencies": [
       "@nestjs/core",
       "@parcel/watcher",
+      "lefthook",
       "@prisma/engines",
       "@scarf/scarf",
       "@swc/core",
