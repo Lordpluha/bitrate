@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Avatar snapshots > matches snapshot — empty avatar 1`] = `
+<span
+  class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+/>
+`;
+
+exports[`Avatar snapshots > matches snapshot — with fallback 1`] = `
+<span
+  class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+>
+  <span
+    class="flex h-full w-full items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800"
+  >
+    AB
+  </span>
+</span>
+`;

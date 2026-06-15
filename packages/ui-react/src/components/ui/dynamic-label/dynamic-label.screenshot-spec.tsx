@@ -10,7 +10,8 @@ describe('DynamicLabel screenshots', () => {
         <DynamicLabel>Email</DynamicLabel>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('dynamic-label-idle')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('dynamic-label-idle')
   })
 
   it('contrast variant', async () => {
@@ -19,6 +20,7 @@ describe('DynamicLabel screenshots', () => {
         <DynamicLabel variant="contrast">Email</DynamicLabel>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('dynamic-label-contrast')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('dynamic-label-contrast')
   })
 })

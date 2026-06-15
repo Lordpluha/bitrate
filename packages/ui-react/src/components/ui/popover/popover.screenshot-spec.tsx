@@ -11,6 +11,7 @@ describe('Popover screenshots', () => {
         <PopoverContent>Popover content</PopoverContent>
       </Popover>,
     )
-    await expect(page).toMatchScreenshot('popover-open')
+    const { base64 } = await page.screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('popover-open')
   })
 })

@@ -15,6 +15,7 @@ describe('InputGroup screenshots', () => {
         </InputGroup>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('input-group-addon')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('input-group-addon')
   })
 })

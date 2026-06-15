@@ -14,7 +14,8 @@ describe('ButtonGroup screenshots', () => {
         </ButtonGroup>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('button-group-horizontal')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('button-group-horizontal')
   })
 
   it('vertical', async () => {
@@ -26,6 +27,7 @@ describe('ButtonGroup screenshots', () => {
         </ButtonGroup>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('button-group-vertical')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('button-group-vertical')
   })
 })

@@ -15,6 +15,7 @@ describe('Empty screenshots', () => {
         </Empty>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('empty-default')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('empty-default')
   })
 })

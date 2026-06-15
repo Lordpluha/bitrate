@@ -18,6 +18,7 @@ describe('Select screenshots', () => {
         </Select>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('select-closed')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('select-closed')
   })
 })

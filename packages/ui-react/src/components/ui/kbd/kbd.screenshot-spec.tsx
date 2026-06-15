@@ -10,7 +10,8 @@ describe('Kbd screenshots', () => {
         <Kbd>Ctrl</Kbd>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('kbd-single')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('kbd-single')
   })
 
   it('group', async () => {
@@ -22,6 +23,7 @@ describe('Kbd screenshots', () => {
         </KbdGroup>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('kbd-group')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('kbd-group')
   })
 })

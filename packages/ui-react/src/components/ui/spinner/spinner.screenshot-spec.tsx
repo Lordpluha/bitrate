@@ -10,7 +10,8 @@ describe('Spinner screenshots', () => {
         <Spinner />
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('spinner-default')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('spinner-default')
   })
 
   it('large', async () => {
@@ -19,6 +20,7 @@ describe('Spinner screenshots', () => {
         <Spinner className="size-8" />
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('spinner-large')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('spinner-large')
   })
 })

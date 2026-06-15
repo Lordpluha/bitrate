@@ -11,7 +11,8 @@ describe('Badge screenshots', () => {
           <Badge variant={variant}>{variant}</Badge>
         </div>,
       )
-      await expect(page.getByTestId('subject')).toMatchScreenshot(`badge-${variant}`)
+      const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+      expect(base64).toMatchSnapshot(`badge-${variant}`)
     })
   }
 })

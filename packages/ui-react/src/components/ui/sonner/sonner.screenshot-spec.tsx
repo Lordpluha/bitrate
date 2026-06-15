@@ -5,11 +5,8 @@ import { Toaster } from './sonner'
 
 describe('Sonner screenshots', () => {
   it('default toaster', async () => {
-    render(
-      <div data-testid="subject">
-        <Toaster />
-      </div>,
-    )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('sonner-default')
+    render(<Toaster />)
+    const { base64 } = await page.screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('sonner-default')
   })
 })

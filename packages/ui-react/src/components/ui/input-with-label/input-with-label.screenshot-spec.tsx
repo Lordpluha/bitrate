@@ -10,6 +10,7 @@ describe('InputWithLabel screenshots', () => {
         <InputWithLabel label="Email" id="email" />
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('input-with-label-idle')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('input-with-label-idle')
   })
 })

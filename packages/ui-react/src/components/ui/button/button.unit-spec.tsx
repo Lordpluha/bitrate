@@ -48,7 +48,9 @@ describe('Button', () => {
   it('renders as a child element when asChild is set', () => {
     render(
       <Button asChild>
-        <a href="/home" aria-label="Go to home page">Home</a>
+        <a href="/home" aria-label="Go to home page">
+          Home
+        </a>
       </Button>,
     )
     expect(screen.getByRole('link', { name: 'Go to home page' })).toHaveAttribute('href', '/home')

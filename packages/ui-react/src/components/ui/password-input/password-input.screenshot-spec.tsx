@@ -10,7 +10,8 @@ describe('PasswordInput screenshots', () => {
         <PasswordInput placeholder="Password" />
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('password-input-hidden')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('password-input-hidden')
   })
 
   it('visible', async () => {
@@ -19,6 +20,7 @@ describe('PasswordInput screenshots', () => {
         <PasswordInput showPassword placeholder="Password" />
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('password-input-visible')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('password-input-visible')
   })
 })

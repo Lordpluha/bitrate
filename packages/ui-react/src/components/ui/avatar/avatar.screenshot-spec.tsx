@@ -12,15 +12,19 @@ describe('Avatar screenshots', () => {
         </Avatar>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('avatar-fallback')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('avatar-fallback')
   })
 
-  it('empty', async () => {
+  it('no image shows fallback placeholder', async () => {
     render(
-      <div data-testid="subject">
-        <Avatar />
+      <div style={{ display: 'inline-block', padding: 8 }}>
+        <Avatar>
+          <AvatarFallback delayMs={0}>?</AvatarFallback>
+        </Avatar>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('avatar-empty')
+    const { base64 } = await page.screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('avatar-no-image')
   })
 })

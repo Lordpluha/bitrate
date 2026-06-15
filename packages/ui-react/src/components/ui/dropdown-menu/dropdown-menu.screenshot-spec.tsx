@@ -23,6 +23,7 @@ describe('DropdownMenu screenshots', () => {
         </DropdownMenuContent>
       </DropdownMenu>,
     )
-    await expect(page).toMatchScreenshot('dropdown-menu-open')
+    const { base64 } = await page.screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('dropdown-menu-open')
   })
 })

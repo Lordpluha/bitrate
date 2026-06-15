@@ -13,6 +13,7 @@ describe('Typography screenshots', () => {
         <Typography as="p">Body text</Typography>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('typography-scale')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('typography-scale')
   })
 })

@@ -11,7 +11,8 @@ describe('Input screenshots', () => {
           <Input variant={variant} placeholder="Placeholder" />
         </div>,
       )
-      await expect(page.getByTestId('subject')).toMatchScreenshot(`input-${variant}`)
+      const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+      expect(base64).toMatchSnapshot(`input-${variant}`)
     })
   }
 })

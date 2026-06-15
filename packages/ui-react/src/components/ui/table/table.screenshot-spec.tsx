@@ -27,6 +27,7 @@ describe('Table screenshots', () => {
         </Table>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('table-basic')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('table-basic')
   })
 })

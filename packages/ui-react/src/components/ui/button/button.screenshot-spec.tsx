@@ -10,7 +10,8 @@ describe('Button screenshots', () => {
         <Button>Default Button</Button>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('button-default')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('button-default')
   })
 
   it('destructive variant', async () => {
@@ -19,7 +20,8 @@ describe('Button screenshots', () => {
         <Button variant="destructive">Delete</Button>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('button-destructive')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('button-destructive')
   })
 
   it('primary variant', async () => {
@@ -28,7 +30,8 @@ describe('Button screenshots', () => {
         <Button variant="primary">Primary</Button>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('button-primary')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('button-primary')
   })
 
   it('loading state', async () => {
@@ -37,6 +40,7 @@ describe('Button screenshots', () => {
         <Button isLoading>Loading</Button>
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('button-loading')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('button-loading')
   })
 })

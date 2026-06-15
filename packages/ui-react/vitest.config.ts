@@ -34,20 +34,14 @@ export default defineConfig({
           globals: true,
           setupFiles: ['./vitest-browser-setup.ts'],
           include: ['src/**/*.screenshot-spec.{ts,tsx}'],
+          snapshotOptions: {
+            snapshotsDirName: '__screenshots__',
+          },
           browser: {
             enabled: true,
             provider: 'playwright',
             headless: true,
             instances: [{ browser: 'chromium' }],
-            expect: {
-              toMatchScreenshot: {
-                comparatorName: 'pixelmatch',
-                comparatorOptions: {
-                  threshold: 0.2,
-                  allowedMismatchedPixelRatio: 0.01,
-                },
-              },
-            },
           },
         },
       },

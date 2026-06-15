@@ -6,19 +6,21 @@ import { Separator } from './separator'
 describe('Separator screenshots', () => {
   it('horizontal', async () => {
     render(
-      <div data-testid="subject" style={{ width: 200 }}>
+      <div data-testid="subject" style={{ width: 200, padding: '8px 0' }}>
         <Separator />
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('separator-horizontal')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('separator-horizontal')
   })
 
   it('vertical', async () => {
     render(
-      <div data-testid="subject" style={{ height: 80 }}>
+      <div data-testid="subject" style={{ height: 80, padding: '0 8px', display: 'flex' }}>
         <Separator orientation="vertical" />
       </div>,
     )
-    await expect(page.getByTestId('subject')).toMatchScreenshot('separator-vertical')
+    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('separator-vertical')
   })
 })

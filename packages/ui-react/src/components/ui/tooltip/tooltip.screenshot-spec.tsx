@@ -13,6 +13,7 @@ describe('Tooltip screenshots', () => {
         </Tooltip>
       </TooltipProvider>,
     )
-    await expect(page).toMatchScreenshot('tooltip-open')
+    const { base64 } = await page.screenshot({ base64: true })
+    expect(base64).toMatchSnapshot('tooltip-open')
   })
 })

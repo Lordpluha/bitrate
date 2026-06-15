@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Item snapshots > matches snapshot — default 1`] = `
+<div
+  class="group/item [a]:hover:bg-slate-100/50 focus-visible:border-slate-950 focus-visible:ring-slate-950/50 [a]:transition-colors flex flex-wrap items-center rounded-md border border-transparent text-sm outline-none transition-colors duration-100 focus-visible:ring-[3px] dark:[a]:hover:bg-slate-800/50 dark:focus-visible:border-slate-300 dark:focus-visible:ring-slate-300/50 dark:border-slate-800 bg-transparent gap-4 p-4"
+  data-size="default"
+  data-slot="item"
+  data-variant="default"
+>
+  <div
+    class="flex flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none"
+    data-slot="item-content"
+  >
+    <div
+      class="flex w-fit items-center gap-2 text-sm font-medium leading-snug"
+      data-slot="item-title"
+    >
+      Title
+    </div>
+    <p
+      class="text-slate-500 line-clamp-2 text-balance text-sm font-normal leading-normal dark:text-slate-400 [&>a:hover]:text-slate-900 [&>a]:underline [&>a]:underline-offset-4 dark:[&>a:hover]:text-slate-50"
+      data-slot="item-description"
+    >
+      Description
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Item snapshots > matches snapshot — outline small 1`] = `
+<div
+  class="group/item [a]:hover:bg-slate-100/50 focus-visible:border-slate-950 focus-visible:ring-slate-950/50 [a]:transition-colors flex flex-wrap items-center rounded-md border text-sm outline-none transition-colors duration-100 focus-visible:ring-[3px] dark:[a]:hover:bg-slate-800/50 dark:focus-visible:border-slate-300 dark:focus-visible:ring-slate-300/50 border-slate-200 dark:border-slate-800 gap-2.5 px-4 py-3"
+  data-size="sm"
+  data-slot="item"
+  data-variant="outline"
+>
+  <div
+    class="flex flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none"
+    data-slot="item-content"
+  >
+    <div
+      class="flex w-fit items-center gap-2 text-sm font-medium leading-snug"
+      data-slot="item-title"
+    >
+      Title
+    </div>
+  </div>
+</div>
+`;
