@@ -31,8 +31,6 @@
     "format": "pnpm exec biome format --write",
     "storybook": "storybook dev -p 6006",
     "clean-build": "rimraf dist",
-    "loki:init": "pnpm dlx loki update --reactUri=file:./storybook-static",
-    "loki:test": "pnpm dlx loki test --reactUri=file:./storybook-static",
     "clean-svgr": "rimraf src/icons/svgr",
     "storybook:build": "storybook build",
     "gen:tokens": "tokens-generator --tokens ../tokens/tokens.json --output ./src/styles",
@@ -40,7 +38,16 @@
     "svgr:dev": "react-svgr dev -i @spotify/tokens/icons -o src/icons/svgr --variables \"primaryColor,secondaryColor\"",
     "build": "pnpm clean-build && pnpm svgr:build && react-bundler build",
     "dev": "pnpm clean-build && react-bundler dev",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "vitest run --project=unit",
+    "test:watch": "vitest --project=unit",
+    "test:unit": "vitest run --project=unit --reporter=verbose",
+    "test:snapshot": "vitest run --project=unit --reporter=verbose",
+    "test:int": "vitest run --project=unit --reporter=verbose",
+    "test:screenshot": "vitest run --project=screenshot",
+    "test:screenshot:update": "vitest run --project=screenshot --update",
+    "test:all": "vitest run",
+    "test:cov": "vitest run --project=unit --coverage"
   },
   "peerDependencies": {
     "@radix-ui/react-avatar": "^1.1.10",
@@ -66,18 +73,25 @@
     "@svgr/plugin-prettier": "^8.1.0",
     "@svgr/plugin-svgo": "^8.1.0",
     "@tailwindcss/vite": "^4.3.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^25.9.3",
     "@types/react": "~19.2.17",
     "@types/react-dom": "~19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "@vitest/browser": "^3.2.4",
+    "@vitest/coverage-v8": "^3.2.4",
     "esbuild": "0.27.3",
     "glob": "^13.0.6",
-    "loki": "^0.35.1",
-    "loki-sb7": "^0.33.0",
+    "happy-dom": "^17.5.6",
+    "playwright": "^1.53.1",
     "rimraf": "^6.1.3",
     "storybook": "^10.4.4",
     "tailwindcss": "^4.3.1",
     "tsc-alias": "^1.8.17",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
@@ -95,20 +109,5 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
-  },
-  "loki": {
-    "configurations": {
-      "chrome.laptop": {
-        "target": "chrome.docker",
-        "width": 1366,
-        "height": 768,
-        "deviceScaleFactor": 1,
-        "mobile": false
-      },
-      "chrome.iphone7": {
-        "target": "chrome.docker",
-        "preset": "iPhone 7"
-      }
-    }
   }
 }
