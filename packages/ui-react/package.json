@@ -40,7 +40,7 @@
     "svgr:dev": "react-svgr dev -i @spotify/tokens/icons -o src/icons/svgr --variables \"primaryColor,secondaryColor\"",
     "build": "pnpm clean-build && pnpm svgr:build && react-bundler build",
     "dev": "pnpm clean-build && react-bundler dev",
-    "typecheck": "tsc --noEmit"
+    "check-types": "tsc --noEmit"
   },
   "peerDependencies": {
     "@radix-ui/react-avatar": "^1.1.10",

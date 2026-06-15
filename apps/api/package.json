@@ -23,7 +23,7 @@
     "test:int": "jest --config ./test/jest-integration.json",
     "db:start": "prisma dev",
     "db:migration:reset": "prisma migrate reset --force",
-    "test:db:migration:reset": "DATABASE_URL='postgresql://admin:admin@localhost:5433/spotify_test' SHADOW_DATABASE_URL='postgresql://admin:admin@localhost:5433/spotify_test_shadow' prisma migrate reset --force",
+    "test:db:migration:reset": "cross-env DATABASE_URL=postgresql://admin:admin@localhost:5433/spotify_test SHADOW_DATABASE_URL=postgresql://admin:admin@localhost:5433/spotify_test_shadow prisma migrate reset --force",
     "db:migration:start": "prisma migrate dev --name init",
     "db:gen": "prisma generate",
     "db:gen:prod": "prisma generate",
@@ -59,6 +59,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
     "@compodoc/compodoc": "^1.2.1",
+    "cross-env": "^7.0.3",
     "@faker-js/faker": "^10.4.0",
     "@nestjs/cli": "^11.0.23",
     "@nestjs/schematics": "^11.1.0",

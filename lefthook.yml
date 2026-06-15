@@ -1,7 +1,7 @@
 pre-commit:
   commands:
-    lint-staged:
-      run: pnpm exec lint-staged
+    biome:
+      run: pnpm exec biome check --staged --write --no-errors-on-unmatched
 
 commit-msg:
   commands:
@@ -13,8 +13,8 @@ pre-push:
     build:
       run: |
         if [ "$WEB_ONLY" = "true" ]; then
-          echo "Building web stack (api, web, ui-react)..."
-          pnpm --filter @spotify/api --filter @spotify/web --filter @spotify/ui-react build
+          echo "Building web stack (api, web-player, web-artists, ui-react)..."
+          pnpm --filter @spotify/api --filter @spotify/web-player --filter @spotify/web-artists --filter @spotify/ui-react build
         else
           echo "Building full monorepo..."
           pnpm build
