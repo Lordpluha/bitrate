@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, it } from '@jest/globals'
 import { INestApplication } from '@nestjs/common'
-import * as request from 'supertest'
+import request from 'supertest'
 import { closeE2eApp, createE2eApp } from './e2e-app'
 
 describe('AppController (e2e)', () => {

@@ -66,7 +66,7 @@
     "lefthook": "^2.1.9",
     "lint-staged": "^17.0.7",
     "turbo": "^2.9.18",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "packageManager": "pnpm@10.30.3",
   "engines": {
@@ -86,15 +86,19 @@
       "esbuild": "0.27.3"
     },
     "onlyBuiltDependencies": [
+      "@compodoc/compodoc",
       "@nestjs/core",
       "@parcel/watcher",
-      "lefthook",
       "@prisma/engines",
       "@scarf/scarf",
       "@swc/core",
       "aws-sdk",
       "better-sqlite3",
+      "core-js",
       "esbuild",
+      "ffmpeg-static",
+      "lefthook",
+      "msgpackr-extract",
       "prisma",
       "sharp",
       "unrs-resolver"

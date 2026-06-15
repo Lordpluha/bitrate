@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
 import { INestApplication } from '@nestjs/common'
-import * as request from 'supertest'
+import request from 'supertest'
 import { closeE2eApp, createE2eApp } from './e2e-app'
 
 const makeRunId = () => Math.random().toString(36).slice(2, 8)
