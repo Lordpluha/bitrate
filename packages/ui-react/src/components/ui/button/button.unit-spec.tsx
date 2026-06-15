@@ -51,6 +51,6 @@ describe('Button', () => {
         <a href="/home" aria-label="Go to home page">Home</a>
       </Button>,
     )
-    expect(screen.getByRole('link', { name: 'Link' })).toHaveAttribute('href', '/home')
+    expect(screen.getByRole('link', { name: 'Go to home page' })).toHaveAttribute('href', '/home')
   })
 })

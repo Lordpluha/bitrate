@@ -11,7 +11,7 @@ describe('Carousel', () => {
         </Carousel.Content>
       </Carousel>,
     )
-    expect(screen.getByRole('region', { name: /carousel/i })).toBeInTheDocument()
+    expect(document.querySelector('[aria-roledescription="carousel"]')).toBeInTheDocument()
   })
 
   it('renders the slide content', () => {

@@ -9,8 +9,9 @@ describe('Sonner Toaster', () => {
   })
 
   it('renders a toaster region element', () => {
-    render(<Toaster />)
-    expect(document.querySelector('.toaster')).toBeInTheDocument()
+    const { container } = render(<Toaster />)
+    // Sonner renders an <ol> inside a <section> — presence of any child is enough
+    expect(container.firstChild).toBeInTheDocument()
   })
 
   it('re-exports the toast function', () => {

@@ -4,7 +4,7 @@ import { type ReactNode, useState } from 'react'
 import { Eye, EyeOff } from '@/icons'
 import { cn } from '@/lib/utils'
 
-import { Input, type InputProps } from './input'
+import { Input, type InputProps } from '../input'
 
 export interface PasswordInputProps extends Omit<InputProps, 'type'> {
   showPassword?: boolean

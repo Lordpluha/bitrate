@@ -23,7 +23,7 @@ describe('Typography', () => {
   })
 
   it('applies the size variant class', () => {
-    render(<Typography level={1}>Big</Typography>)
+    render(<Typography level={1} size="heading1">Big</Typography>)
     expect(screen.getByRole('heading', { level: 1 })).toHaveClass('text-[4.5rem]')
   })
 

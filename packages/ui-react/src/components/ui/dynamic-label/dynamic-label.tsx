@@ -3,7 +3,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 import type * as React from 'react'
 import { cn } from '@/lib/utils'
-import { useInputContext } from './input-context'
+import { useInputContext } from '../input-context'
 
 const labelVariants = cva(
   'absolute left-3 transition-all duration-300 pointer-events-none z-10 px-1',

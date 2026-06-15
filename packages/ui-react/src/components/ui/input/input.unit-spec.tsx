@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { Input } from './input'
 
@@ -32,8 +32,7 @@ describe('Input', () => {
     const onChange = vi.fn()
     render(<Input onChange={onChange} data-testid="input" />)
     const input = screen.getByTestId('input') as HTMLInputElement
-    input.value = 'x'
-    input.dispatchEvent(new Event('input', { bubbles: true }))
+    fireEvent.change(input, { target: { value: 'x' } })
     expect(onChange).toHaveBeenCalled()
   })
 

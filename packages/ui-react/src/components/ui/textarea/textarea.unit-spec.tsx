@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { Textarea } from './textarea'
 
@@ -17,8 +17,7 @@ describe('Textarea', () => {
     const onChange = vi.fn()
     render(<Textarea onChange={onChange} />)
     const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
-    textarea.value = 'x'
-    textarea.dispatchEvent(new Event('input', { bubbles: true }))
+    fireEvent.change(textarea, { target: { value: 'x' } })
     expect(onChange).toHaveBeenCalled()
   })
 
