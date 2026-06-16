@@ -12,10 +12,11 @@ const {
   queryOptions,
   useSuspenseQuery,
 } = rqClient
+
 export {
-  useQuery,
-  useMutation,
-  useInfiniteQuery,
   queryOptions,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
   useSuspenseQuery,
 }

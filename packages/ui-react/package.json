@@ -31,7 +31,7 @@
     "format": "pnpm exec biome format --write",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "gen:tokens": "tokens-generator --tokens ../tokens/tokens.json --output ./src/styles",
+    "gen:tokens": "tokens-generator --tokens ../tokens/tokens.json --output ./src/styles && pnpm format",
     "build": "vite build",
     "dev": "vite build --watch",
     "check-types": "tsc --noEmit",
