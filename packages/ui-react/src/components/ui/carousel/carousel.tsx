@@ -5,6 +5,7 @@ import {
   type ComponentProps,
   createContext,
   type KeyboardEvent,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
@@ -193,8 +194,9 @@ export const CarouselPrevious = ({
   className,
   variant = 'default',
   size = 'icon',
+  icon,
   ...props
-}: ComponentProps<typeof Button>) => {
+}: ComponentProps<typeof Button> & { icon?: ReactNode }) => {
   const { orientation, scrollPrev, canScrollPrev, showNavigation } = useCarousel()
 
   if (showNavigation === false) return null
@@ -214,7 +216,7 @@ export const CarouselPrevious = ({
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeft className="h-4 w-4" />
+      {icon ?? <ArrowLeft className="h-4 w-4" />}
       <span className="sr-only">Previous slide</span>
     </Button>
   )
@@ -224,8 +226,9 @@ export const CarouselNext = ({
   className,
   variant = 'default',
   size = 'icon',
+  icon,
   ...props
-}: ComponentProps<typeof Button>) => {
+}: ComponentProps<typeof Button> & { icon?: ReactNode }) => {
   const { orientation, scrollNext, canScrollNext, showNavigation } = useCarousel()
 
   if (showNavigation === false) return null
@@ -245,7 +248,7 @@ export const CarouselNext = ({
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRight className="h-4 w-4" />
+      {icon ?? <ArrowRight className="h-4 w-4" />}
       <span className="sr-only">Next slide</span>
     </Button>
   )

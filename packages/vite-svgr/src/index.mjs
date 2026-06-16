@@ -33,12 +33,26 @@ export function svgrPlugin(options) {
     })
   }
 
+  let built = false
+
   return {
     name: 'spotify-vite-svgr',
 
+    watchChange(id) {
+      // Reset so the next buildStart re-generates when SVGs actually changed.
+      // Non-SVG changes leave the flag alone — no pointless re-runs.
+      if (resolvedInput && id.startsWith(resolvedInput) && id.endsWith('.svg')) {
+        built = false
+      }
+    },
+
     async buildStart() {
       await resolveDirs()
-      await runBuild()
+
+      if (!built) {
+        await runBuild()
+        built = true
+      }
 
       if (this.meta.watchMode) {
         // Watches the entire input dir so any SVG add/change/delete triggers a Vite rebuild,

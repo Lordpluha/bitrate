@@ -38,11 +38,10 @@ export default defineConfig({
     emptyOutDir: true,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      // externalize everything that's not a relative/absolute path (all node_modules)
-      external: (id) => !id.startsWith('.') && !id.startsWith('/') && !id.startsWith('\0'),
+      external: (id) =>
+        !id.startsWith('.') && !id.startsWith('/') && !id.startsWith('\0') && !id.startsWith('@/'),
       output: [
         {
           format: 'es',
