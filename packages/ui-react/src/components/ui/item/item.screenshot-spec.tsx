@@ -1,12 +1,15 @@
 import { render } from '@testing-library/react'
-import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
+import { page } from 'vitest/browser'
 import { Item, ItemContent, ItemDescription, ItemTitle } from './item'
 
 describe('Item screenshots', () => {
   it('all variants', async () => {
     render(
-      <div data-testid="subject" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 8, width: 320 }}>
+      <div
+        data-testid="subject"
+        style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 8, width: 320 }}
+      >
         <Item variant="outline">
           <ItemContent>
             <ItemTitle>Song name</ItemTitle>
@@ -14,7 +17,9 @@ describe('Item screenshots', () => {
           </ItemContent>
         </Item>
         <Item variant="muted">
-          <ItemContent><ItemTitle>Muted Item</ItemTitle></ItemContent>
+          <ItemContent>
+            <ItemTitle>Muted Item</ItemTitle>
+          </ItemContent>
         </Item>
       </div>,
     )

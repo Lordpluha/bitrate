@@ -57,20 +57,29 @@ describe('Select', () => {
   it('renders disabled SelectItem', () => {
     render(
       <Select defaultOpen>
-        <SelectTrigger><SelectValue placeholder="Pick" /></SelectTrigger>
+        <SelectTrigger>
+          <SelectValue placeholder="Pick" />
+        </SelectTrigger>
         <SelectContent>
           <SelectItem value="a">Active</SelectItem>
-          <SelectItem value="b" disabled>Disabled</SelectItem>
+          <SelectItem value="b" disabled>
+            Disabled
+          </SelectItem>
         </SelectContent>
       </Select>,
     )
-    expect(screen.getByRole('option', { name: 'Disabled' })).toHaveAttribute('aria-disabled', 'true')
+    expect(screen.getByRole('option', { name: 'Disabled' })).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
   })
 
   it('renders SelectLabel and SelectGroup', () => {
     render(
       <Select defaultOpen>
-        <SelectTrigger><SelectValue /></SelectTrigger>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Fruits</SelectLabel>

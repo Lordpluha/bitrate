@@ -1,17 +1,24 @@
 import { render } from '@testing-library/react'
-import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
+import { page } from 'vitest/browser'
 import { ResizableHandle, ResizableLayout, ResizablePanel } from './resizable-panels'
 
 describe('ResizablePanels screenshots', () => {
   it('horizontal and vertical', async () => {
     render(
-      <div data-testid="subject" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 8 }}>
+      <div
+        data-testid="subject"
+        style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 8 }}
+      >
         <div style={{ width: 400, height: 100 }}>
           <ResizableLayout>
-            <ResizablePanel><div style={{ padding: 8 }}>Left</div></ResizablePanel>
+            <ResizablePanel>
+              <div style={{ padding: 8 }}>Left</div>
+            </ResizablePanel>
             <ResizableHandle />
-            <ResizablePanel><div style={{ padding: 8 }}>Right</div></ResizablePanel>
+            <ResizablePanel>
+              <div style={{ padding: 8 }}>Right</div>
+            </ResizablePanel>
           </ResizableLayout>
         </div>
         <div style={{ width: 300, height: 150 }}>

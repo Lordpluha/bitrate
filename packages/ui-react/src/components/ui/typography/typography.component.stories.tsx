@@ -61,11 +61,7 @@ export const Scale: Story = {
   render: () => (
     <div className="space-y-4">
       {([1, 2, 3, 4, 5, 6] as const).map((level) => (
-        <Typography
-          key={level}
-          level={level}
-          size={`heading${level}` as `heading${typeof level}`}
-        >
+        <Typography key={level} level={level} size={`heading${level}` as `heading${typeof level}`}>
           Heading {level}
         </Typography>
       ))}

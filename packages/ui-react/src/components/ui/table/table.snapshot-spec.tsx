@@ -35,13 +35,19 @@ describe('Table snapshots', () => {
       <Table>
         <TableCaption>A list of invoices</TableCaption>
         <TableHeader>
-          <TableRow><TableHead>Invoice</TableHead></TableRow>
+          <TableRow>
+            <TableHead>Invoice</TableHead>
+          </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow><TableCell>INV-001</TableCell></TableRow>
+          <TableRow>
+            <TableCell>INV-001</TableCell>
+          </TableRow>
         </TableBody>
         <TableFooter>
-          <TableRow><TableCell>Total: $100</TableCell></TableRow>
+          <TableRow>
+            <TableCell>Total: $100</TableCell>
+          </TableRow>
         </TableFooter>
       </Table>,
     )

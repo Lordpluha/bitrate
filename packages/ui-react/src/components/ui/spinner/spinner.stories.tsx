@@ -3,7 +3,14 @@ import { ArrowUpIcon } from 'lucide-react'
 
 import { Badge } from '../badge'
 import { Button } from '../button'
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../empty'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '../empty'
 import {
   InputGroup,
   InputGroupAddon,

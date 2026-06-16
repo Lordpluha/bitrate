@@ -42,8 +42,7 @@ export default defineConfig({
     },
     rollupOptions: {
       // externalize everything that's not a relative/absolute path (all node_modules)
-      external: (id) =>
-        !id.startsWith('.') && !id.startsWith('/') && !id.startsWith('\0'),
+      external: (id) => !id.startsWith('.') && !id.startsWith('/') && !id.startsWith('\0'),
       output: [
         {
           format: 'es',

@@ -1,10 +1,9 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import type * as React from 'react'
-
-import { DynamicLabel } from './dynamic-label'
 import { Input, type InputProps } from '../input'
 import { InputProvider, useInputContext } from '../input-context'
 import { PasswordInput, type PasswordInputProps } from '../password-input'
+import { DynamicLabel } from './dynamic-label'
 
 const InputWithContext: React.FC<InputProps> = ({ className, type, variant, ...props }) => {
   const { setFocused, setValue } = useInputContext()

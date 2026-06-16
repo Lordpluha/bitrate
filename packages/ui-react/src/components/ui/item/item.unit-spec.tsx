@@ -64,7 +64,9 @@ describe('Item', () => {
   it('applies the muted variant class', () => {
     render(
       <Item variant="muted" data-testid="item">
-        <ItemContent><ItemTitle>Muted</ItemTitle></ItemContent>
+        <ItemContent>
+          <ItemTitle>Muted</ItemTitle>
+        </ItemContent>
       </Item>,
     )
     expect(screen.getByTestId('item')).toHaveClass('bg-slate-100/50')

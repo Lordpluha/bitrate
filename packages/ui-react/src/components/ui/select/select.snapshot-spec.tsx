@@ -25,7 +25,9 @@ describe('Select snapshots', () => {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="a">Active</SelectItem>
-          <SelectItem value="b" disabled>Disabled</SelectItem>
+          <SelectItem value="b" disabled>
+            Disabled
+          </SelectItem>
         </SelectContent>
       </Select>,
     )

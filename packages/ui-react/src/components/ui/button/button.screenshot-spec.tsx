@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
-import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
+import { page } from 'vitest/browser'
 import { Button } from './button'
 
 describe('Button screenshots', () => {
@@ -18,7 +18,9 @@ describe('Button screenshots', () => {
         <Button isLoading>Loading</Button>
         <Button disabled>Disabled</Button>
         <Button size="sm">Small</Button>
-        <Button size="icon" aria-label="icon">🔍</Button>
+        <Button size="icon" aria-label="icon">
+          🔍
+        </Button>
       </div>,
     )
     await expect(page.getByTestId('subject')).toMatchScreenshot()

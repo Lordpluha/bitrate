@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
-import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
+import { page } from 'vitest/browser'
 import {
   Table,
   TableBody,
@@ -19,13 +19,19 @@ describe('Table screenshots', () => {
         <Table>
           <TableCaption>Invoices</TableCaption>
           <TableHeader>
-            <TableRow><TableHead>Invoice</TableHead></TableRow>
+            <TableRow>
+              <TableHead>Invoice</TableHead>
+            </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow><TableCell>INV-001</TableCell></TableRow>
+            <TableRow>
+              <TableCell>INV-001</TableCell>
+            </TableRow>
           </TableBody>
           <TableFooter>
-            <TableRow><TableCell>Total: $100</TableCell></TableRow>
+            <TableRow>
+              <TableCell>Total: $100</TableCell>
+            </TableRow>
           </TableFooter>
         </Table>
         <Table style={{ width: 320 }}>

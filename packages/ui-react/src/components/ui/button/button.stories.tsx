@@ -205,13 +205,22 @@ export const IconSize: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      {(['default', 'destructive', 'outline', 'secondary', 'ghost', 'link', 'primary', 'contrast'] as const).map(
-        (variant) => (
-          <Button key={variant} variant={variant}>
-            {variant}
-          </Button>
-        ),
-      )}
+      {(
+        [
+          'default',
+          'destructive',
+          'outline',
+          'secondary',
+          'ghost',
+          'link',
+          'primary',
+          'contrast',
+        ] as const
+      ).map((variant) => (
+        <Button key={variant} variant={variant}>
+          {variant}
+        </Button>
+      ))}
     </div>
   ),
 }

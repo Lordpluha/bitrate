@@ -87,7 +87,11 @@ describe('Button', () => {
   })
 
   it('applies the icon size class', () => {
-    render(<Button size="icon" aria-label="icon">🔍</Button>)
+    render(
+      <Button size="icon" aria-label="icon">
+        🔍
+      </Button>,
+    )
     expect(screen.getByRole('button')).toHaveClass('w-10')
   })
 })

@@ -62,9 +62,15 @@ export function svgrPlugin(options) {
 
       const isSvg = (file) => file.startsWith(resolvedInput) && file.endsWith('.svg')
 
-      server.watcher.on('change', (file) => { if (isSvg(file)) rebuild() })
-      server.watcher.on('add',    (file) => { if (isSvg(file)) rebuild() })
-      server.watcher.on('unlink', (file) => { if (isSvg(file)) rebuild() })
+      server.watcher.on('change', (file) => {
+        if (isSvg(file)) rebuild()
+      })
+      server.watcher.on('add', (file) => {
+        if (isSvg(file)) rebuild()
+      })
+      server.watcher.on('unlink', (file) => {
+        if (isSvg(file)) rebuild()
+      })
     },
   }
 }

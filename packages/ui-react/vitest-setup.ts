@@ -32,7 +32,9 @@ globalThis.IntersectionObserver ??= class IntersectionObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
-  takeRecords() { return [] }
+  takeRecords() {
+    return []
+  }
 }
 
 Element.prototype.scrollIntoView ??= () => {}

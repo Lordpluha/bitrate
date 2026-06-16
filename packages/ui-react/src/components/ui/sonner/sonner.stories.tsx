@@ -51,19 +51,27 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 
 export const Success: Story = {
-  play: async () => { toast.success('Operation completed successfully!') },
+  play: async () => {
+    toast.success('Operation completed successfully!')
+  },
 }
 
 export const ErrorToast: Story = {
-  play: async () => { toast.error('Something went wrong.') },
+  play: async () => {
+    toast.error('Something went wrong.')
+  },
 }
 
 export const Warning: Story = {
-  play: async () => { toast.warning('Proceed with caution.') },
+  play: async () => {
+    toast.warning('Proceed with caution.')
+  },
 }
 
 export const Info: Story = {
-  play: async () => { toast.info('Here is some information.') },
+  play: async () => {
+    toast.info('Here is some information.')
+  },
 }
 
 export const PromiseToast: Story = {

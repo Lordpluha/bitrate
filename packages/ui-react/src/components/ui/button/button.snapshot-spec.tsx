@@ -59,7 +59,11 @@ describe('Button snapshots', () => {
   })
 
   it('matches snapshot — icon size', () => {
-    const { container } = render(<Button size="icon" aria-label="icon">🔍</Button>)
+    const { container } = render(
+      <Button size="icon" aria-label="icon">
+        🔍
+      </Button>,
+    )
     expect(container.firstChild).toMatchSnapshot()
   })
 })

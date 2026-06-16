@@ -33,7 +33,9 @@ describe('DynamicLabel', () => {
   it('applies the search variant class', () => {
     render(
       <InputProvider>
-        <DynamicLabel htmlFor="x" variant="search">Label</DynamicLabel>
+        <DynamicLabel htmlFor="x" variant="search">
+          Label
+        </DynamicLabel>
       </InputProvider>,
     )
     expect(screen.getByText('Label')).toHaveClass('bg-white')
