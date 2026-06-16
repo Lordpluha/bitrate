@@ -17,4 +17,24 @@ describe('Sonner Toaster', () => {
   it('re-exports the toast function', () => {
     expect(typeof toast).toBe('function')
   })
+
+  it('exports toast.success function', () => {
+    expect(typeof toast.success).toBe('function')
+  })
+
+  it('exports toast.error function', () => {
+    expect(typeof toast.error).toBe('function')
+  })
+
+  it('exports toast.warning function', () => {
+    expect(typeof toast.warning).toBe('function')
+  })
+
+  it('exports toast.info function', () => {
+    expect(typeof toast.info).toBe('function')
+  })
+
+  it('exports toast.promise function', () => {
+    expect(typeof toast.promise).toBe('function')
+  })
 })

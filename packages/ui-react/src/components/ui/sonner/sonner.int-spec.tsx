@@ -11,4 +11,12 @@ describe('Sonner integration', () => {
     })
     await waitFor(() => expect(screen.getByText('Saved successfully')).toBeInTheDocument())
   })
+
+  it('toast.success is callable', () => {
+    expect(() => toast.success('Test success')).not.toThrow()
+  })
+
+  it('toast.error is callable', () => {
+    expect(() => toast.error('Test error')).not.toThrow()
+  })
 })

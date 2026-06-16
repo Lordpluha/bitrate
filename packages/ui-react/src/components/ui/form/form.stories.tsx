@@ -5,7 +5,7 @@ import { action } from 'storybook/actions'
 import { expect, userEvent } from 'storybook/test'
 import * as z from 'zod'
 
-import { Button } from './button'
+import { Button } from '../button'
 import {
   Form,
   FormControl,

@@ -33,4 +33,15 @@ describe('ResizablePanels', () => {
     expect(screen.getByText('Top')).toBeInTheDocument()
     expect(screen.getByText('Bottom')).toBeInTheDocument()
   })
+
+  it('renders vertical layout', () => {
+    render(
+      <ResizableLayout direction="vertical" data-testid="layout">
+        <ResizablePanel defaultSize={50}>Top</ResizablePanel>
+        <ResizablePanel defaultSize={50}>Bottom</ResizablePanel>
+      </ResizableLayout>,
+    )
+    expect(screen.getByText('Top')).toBeInTheDocument()
+    expect(screen.getByText('Bottom')).toBeInTheDocument()
+  })
 })

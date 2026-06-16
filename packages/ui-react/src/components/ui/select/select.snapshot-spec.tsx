@@ -16,4 +16,19 @@ describe('Select snapshots', () => {
     )
     expect(container.firstChild).toMatchSnapshot()
   })
+
+  it('matches snapshot — open state', () => {
+    const { container } = render(
+      <Select defaultOpen>
+        <SelectTrigger>
+          <SelectValue placeholder="Pick one" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="a">Active</SelectItem>
+          <SelectItem value="b" disabled>Disabled</SelectItem>
+        </SelectContent>
+      </Select>,
+    )
+    expect(container).toMatchSnapshot()
+  })
 })

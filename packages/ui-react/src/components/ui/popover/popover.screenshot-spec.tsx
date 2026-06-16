@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 
@@ -11,7 +11,6 @@ describe('Popover screenshots', () => {
         <PopoverContent>Popover content</PopoverContent>
       </Popover>,
     )
-    const { base64 } = await page.screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('popover-open')
+    await expect(page.elementLocator(document.body)).toMatchScreenshot()
   })
 })

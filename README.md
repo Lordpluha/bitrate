@@ -576,7 +576,7 @@ pnpm --filter @spotify/api run db:ui
 - `@spotify/tokens` — design tokens JSON + SVG icons
 - `@spotify/tokens-generator` — CSS token generator CLI
 - `@spotify/contracts` — OpenAPI TypeScript types (auto-generated)
-- `@spotify/esbuild-bundler` — ESBuild wrapper (dual ESM/CJS)
+- `@spotify/vite-svgr` — Vite plugin that integrates `@spotify/svgr` into the build pipeline
 - `@spotify/svgr` — SVG → typed React component converter
 - `@spotify/converter` — media/audio conversion utilities
 

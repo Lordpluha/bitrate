@@ -1,7 +1,7 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 
-import { Button } from './button'
-import { Label } from './label'
+import { Button } from '../button'
+import { Label } from '../label'
 import { Textarea } from './textarea'
 
 /**

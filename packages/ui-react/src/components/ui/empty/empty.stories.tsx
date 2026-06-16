@@ -1,5 +1,5 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
-import { Bell, Cloud, PlusIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
+import { Bell, Cloud, Music2, PlusIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -81,6 +81,28 @@ export const Background: Story = {
         <Button variant="outline" size="sm">
           <RefreshCcwIcon />
           Refresh
+        </Button>
+      </EmptyContent>
+    </Empty>
+  ),
+}
+
+/**
+ * Dedicated icon-variant media — EmptyMedia with variant="icon" wrapping a lucide icon.
+ */
+export const WithIconMedia: Story = {
+  render: (args) => (
+    <Empty {...args}>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <Music2 />
+        </EmptyMedia>
+        <EmptyTitle>No Tracks Found</EmptyTitle>
+        <EmptyDescription>Add songs to your library to see them here.</EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button size="sm" variant="outline">
+          Browse Music
         </Button>
       </EmptyContent>
     </Empty>

@@ -1,9 +1,9 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { expect, userEvent } from 'storybook/test'
 
-import { Button } from './button'
+import { Button } from '../button'
 import { Input } from './input'
-import { Label } from './label'
+import { Label } from '../label'
 
 /**
  * Displays a form input field or a component that looks like an input field.

@@ -97,7 +97,7 @@ services:
       - /app/apps/web-player/.next
       - /app/packages/ui-react/node_modules
       - /app/packages/svgr/node_modules
-      - /app/packages/esbuild-bundler/node_modules
+      - /app/packages/vite-svgr/node_modules
       - /app/packages/tokens-generator/node_modules
     depends_on:
       - api
@@ -127,7 +127,7 @@ services:
       - /app/apps/web-artists/.next
       - /app/packages/ui-react/node_modules
       - /app/packages/svgr/node_modules
-      - /app/packages/esbuild-bundler/node_modules
+      - /app/packages/vite-svgr/node_modules
       - /app/packages/tokens-generator/node_modules
     depends_on:
       - api

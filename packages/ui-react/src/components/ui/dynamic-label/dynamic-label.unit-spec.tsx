@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { InputProvider } from '../input-context'
 import { DynamicLabel } from './dynamic-label'
 
 describe('DynamicLabel', () => {
@@ -27,5 +28,14 @@ describe('DynamicLabel', () => {
   it('applies the contrast variant background', () => {
     render(<DynamicLabel variant="contrast">Email</DynamicLabel>)
     expect(screen.getByText('Email')).toHaveClass('bg-contrast')
+  })
+
+  it('applies the search variant class', () => {
+    render(
+      <InputProvider>
+        <DynamicLabel htmlFor="x" variant="search">Label</DynamicLabel>
+      </InputProvider>,
+    )
+    expect(screen.getByText('Label')).toHaveClass('bg-white')
   })
 })

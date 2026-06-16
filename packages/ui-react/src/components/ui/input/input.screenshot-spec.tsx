@@ -1,18 +1,17 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { Input } from './input'
 
 describe('Input screenshots', () => {
-  for (const variant of ['default', 'contrast', 'search'] as const) {
-    it(`${variant} variant`, async () => {
-      render(
-        <div data-testid="subject" style={{ width: 240 }}>
-          <Input variant={variant} placeholder="Placeholder" />
-        </div>,
-      )
-      const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-      expect(base64).toMatchSnapshot(`input-${variant}`)
-    })
-  }
+  it('all variants', async () => {
+    render(
+      <div data-testid="subject" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 8, width: 240 }}>
+        {(['default', 'contrast', 'search'] as const).map(variant => (
+          <Input key={variant} variant={variant} placeholder={variant} />
+        ))}
+      </div>,
+    )
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
+  })
 })

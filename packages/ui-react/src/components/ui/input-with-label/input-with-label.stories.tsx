@@ -58,6 +58,13 @@ export const Contrast: Story = {
 }
 
 /**
+ * Search variant — rounded full-width search field with floating label.
+ */
+export const Search: Story = {
+  args: { label: 'Search tracks', variant: 'search' },
+}
+
+/**
  * Example with helper text below the field.
  */
 export const WithHelperText: Story = {

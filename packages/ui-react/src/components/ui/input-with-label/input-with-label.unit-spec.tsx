@@ -30,4 +30,14 @@ describe('InputWithLabel', () => {
     render(<InputWithLabel label="Email" />)
     expect(screen.getByText('Email')).toHaveClass('top-1/2')
   })
+
+  it('renders contrast variant', () => {
+    render(<InputWithLabel label="Name" variant="contrast" />)
+    expect(screen.getByRole('textbox')).toHaveClass('bg-contrast')
+  })
+
+  it('renders search variant', () => {
+    render(<InputWithLabel label="Search" variant="search" />)
+    expect(screen.getByRole('textbox')).toHaveClass('rounded-full')
+  })
 })

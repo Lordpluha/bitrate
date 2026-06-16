@@ -1,13 +1,34 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './table'
 
 describe('Table screenshots', () => {
-  it('basic table', async () => {
+  it('all compositions', async () => {
     render(
-      <div data-testid="subject" style={{ width: 320 }}>
+      <div data-testid="subject" style={{ display: 'flex', gap: 24, padding: 8 }}>
         <Table>
+          <TableCaption>Invoices</TableCaption>
+          <TableHeader>
+            <TableRow><TableHead>Invoice</TableHead></TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow><TableCell>INV-001</TableCell></TableRow>
+          </TableBody>
+          <TableFooter>
+            <TableRow><TableCell>Total: $100</TableCell></TableRow>
+          </TableFooter>
+        </Table>
+        <Table style={{ width: 320 }}>
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
@@ -27,7 +48,6 @@ describe('Table screenshots', () => {
         </Table>
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('table-basic')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })

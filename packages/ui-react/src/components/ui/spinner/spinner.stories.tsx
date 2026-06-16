@@ -1,17 +1,17 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { ArrowUpIcon } from 'lucide-react'
 
-import { Badge } from './badge'
-import { Button } from './button'
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from './empty'
+import { Badge } from '../badge'
+import { Button } from '../button'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../empty'
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
   InputGroupTextarea,
-} from './input-group'
-import { Item, ItemContent, ItemMedia, ItemTitle } from './item'
+} from '../input-group'
+import { Item, ItemContent, ItemMedia, ItemTitle } from '../item'
 import { Spinner } from './spinner'
 
 /**

@@ -2,8 +2,8 @@ import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { useState } from 'react'
 import { expect, userEvent, within } from 'storybook/test'
 
-import { Button } from './button'
-import { Label } from './label'
+import { Button } from '../button'
+import { Label } from '../label'
 import { PasswordInput } from './password-input'
 
 /**

@@ -191,3 +191,27 @@ export const Disabled: Story = {
     disabled: true,
   },
 }
+
+/** Icon size — square button for icon-only actions. */
+export const IconSize: Story = {
+  render: (args) => (
+    <Button {...args} size="icon" aria-label="Search">
+      🔍
+    </Button>
+  ),
+}
+
+/** All variants grid for visual comparison. */
+export const AllVariants: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      {(['default', 'destructive', 'outline', 'secondary', 'ghost', 'link', 'primary', 'contrast'] as const).map(
+        (variant) => (
+          <Button key={variant} variant={variant}>
+            {variant}
+          </Button>
+        ),
+      )}
+    </div>
+  ),
+}

@@ -22,4 +22,44 @@ describe('Button snapshots', () => {
     const { container } = render(<Button isLoading>Loading</Button>)
     expect(container.firstChild).toMatchSnapshot()
   })
+
+  it('matches snapshot — outline variant', () => {
+    const { container } = render(<Button variant="outline">Outline</Button>)
+    expect(container.firstChild).toMatchSnapshot()
+  })
+
+  it('matches snapshot — ghost variant', () => {
+    const { container } = render(<Button variant="ghost">Ghost</Button>)
+    expect(container.firstChild).toMatchSnapshot()
+  })
+
+  it('matches snapshot — secondary variant', () => {
+    const { container } = render(<Button variant="secondary">Secondary</Button>)
+    expect(container.firstChild).toMatchSnapshot()
+  })
+
+  it('matches snapshot — contrast variant', () => {
+    const { container } = render(<Button variant="contrast">Contrast</Button>)
+    expect(container.firstChild).toMatchSnapshot()
+  })
+
+  it('matches snapshot — link variant', () => {
+    const { container } = render(<Button variant="link">Link</Button>)
+    expect(container.firstChild).toMatchSnapshot()
+  })
+
+  it('matches snapshot — disabled', () => {
+    const { container } = render(<Button disabled>Disabled</Button>)
+    expect(container.firstChild).toMatchSnapshot()
+  })
+
+  it('matches snapshot — sm size', () => {
+    const { container } = render(<Button size="sm">Small</Button>)
+    expect(container.firstChild).toMatchSnapshot()
+  })
+
+  it('matches snapshot — icon size', () => {
+    const { container } = render(<Button size="icon" aria-label="icon">🔍</Button>)
+    expect(container.firstChild).toMatchSnapshot()
+  })
 })

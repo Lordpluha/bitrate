@@ -55,4 +55,39 @@ describe('Button', () => {
     )
     expect(screen.getByRole('link', { name: 'Go to home page' })).toHaveAttribute('href', '/home')
   })
+
+  it('applies the outline variant class', () => {
+    render(<Button variant="outline">Outline</Button>)
+    expect(screen.getByRole('button')).toHaveClass('border')
+  })
+
+  it('applies the secondary variant class', () => {
+    render(<Button variant="secondary">Secondary</Button>)
+    expect(screen.getByRole('button')).toHaveClass('bg-slate-800')
+  })
+
+  it('applies the ghost variant class', () => {
+    render(<Button variant="ghost">Ghost</Button>)
+    expect(screen.getByRole('button')).toHaveClass('hover:bg-bg-secondary')
+  })
+
+  it('applies the contrast variant class', () => {
+    render(<Button variant="contrast">Contrast</Button>)
+    expect(screen.getByRole('button')).toHaveClass('bg-contrast')
+  })
+
+  it('applies the link variant class', () => {
+    render(<Button variant="link">Link</Button>)
+    expect(screen.getByRole('button')).toHaveClass('underline-offset-4')
+  })
+
+  it('applies the sm size class', () => {
+    render(<Button size="sm">Small</Button>)
+    expect(screen.getByRole('button')).toHaveClass('h-9')
+  })
+
+  it('applies the icon size class', () => {
+    render(<Button size="icon" aria-label="icon">🔍</Button>)
+    expect(screen.getByRole('button')).toHaveClass('w-10')
+  })
 })

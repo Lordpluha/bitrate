@@ -1,29 +1,19 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { Kbd, KbdGroup } from './kbd'
 
 describe('Kbd screenshots', () => {
-  it('single key', async () => {
+  it('single and group', async () => {
     render(
-      <div data-testid="subject">
+      <div data-testid="subject" style={{ display: 'flex', gap: 12, padding: 8, alignItems: 'center' }}>
         <Kbd>Ctrl</Kbd>
-      </div>,
-    )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('kbd-single')
-  })
-
-  it('group', async () => {
-    render(
-      <div data-testid="subject">
         <KbdGroup>
           <Kbd>Ctrl</Kbd>
           <Kbd>K</Kbd>
         </KbdGroup>
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('kbd-group')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })

@@ -24,12 +24,12 @@ spotify-clone/
 │   ├── tokens/           # Design tokens (tokens.json) + SVG icons source
 │   ├── tokens-generator/ # CLI: tokens.json → CSS files
 │   ├── contracts/        # OpenAPI TypeScript types (auto-generated from Swagger)
-│   ├── esbuild-bundler/  # ESBuild wrapper (dual ESM/CJS output for ui-react)
+│   ├── vite-svgr/        # Vite plugin — SVG generation integrated into Vite build
 │   ├── svgr/             # SVG → typed React component converter
 │   ├── converter/        # Media/audio conversion utilities (FFmpeg wrapper)
 │   ├── ncs-parser/       # NCS (audio format) parser
 │   ├── ui-flutter/       # Flutter UI components
-│   └── load-test/        # Load testing utilities
+│   └── performance-test/ # K6 performance testing scenarios
 │
 ├── infra/             # Docker Compose files + shell scripts
 │   ├── docker-compose.dev.yaml      # Minimal: postgres + redis
@@ -170,8 +170,8 @@ graph TD
     G[apps/admin] --> B
     B --> H[packages/tokens]
     I[packages/tokens-generator] --> H
-    J[packages/esbuild-bundler] --> B
-    K[packages/svgr] --> B
+    J[packages/vite-svgr] --> B
+    K[packages/svgr] --> J
 ```
 
 ### Package Relationships
@@ -182,8 +182,8 @@ graph TD
 | `@spotify/contracts` | — | api, web-player, mobile, desktop |
 | `@spotify/converter` | — | api |
 | `@spotify/tokens-generator` | — | ui-react (via gen:tokens script) |
-| `@spotify/esbuild-bundler` | — | ui-react (build system) |
-| `@spotify/svgr` | — | ui-react (icon generation) |
+| `@spotify/vite-svgr` | `@spotify/svgr` | ui-react (build-time SVG generation) |
+| `@spotify/svgr` | — | vite-svgr |
 
 ## 🎨 Design Token Pipeline
 
@@ -282,12 +282,12 @@ graph LR
 - **Code splitting** — Next.js automatic splitting
 - **Image optimization** — Next.js Image component
 - **Incremental builds** — Turbo caching
-- **Bundle optimization** — ESBuild for packages
+- **Bundle optimization** — Vite library mode for packages
 
 ### Build System
 - **Turborepo** — Incremental builds with remote caching
 - **pnpm** — Fast, disk-efficient package manager
-- **ESBuild** — 10-100x faster than Webpack
+- **Vite** — Fast library builds with Rollup, watch mode, dev server integration
 - **Tailwind v4** — Rust-based, microsecond rebuilds
 
 ## 🔐 Security

@@ -1,26 +1,19 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { PasswordInput } from './password-input'
 
 describe('PasswordInput screenshots', () => {
-  it('hidden', async () => {
+  it('all states', async () => {
     render(
-      <div data-testid="subject" style={{ width: 280 }}>
-        <PasswordInput placeholder="Password" />
+      <div data-testid="subject" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 8, width: 280 }}>
+        <PasswordInput placeholder="Hidden" />
+        <PasswordInput showPassword placeholder="Visible" />
+        <div className="bg-contrast p-2" style={{ display: 'inline-block' }}>
+          <PasswordInput variant="contrast" placeholder="Contrast" />
+        </div>
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('password-input-hidden')
-  })
-
-  it('visible', async () => {
-    render(
-      <div data-testid="subject" style={{ width: 280 }}>
-        <PasswordInput showPassword placeholder="Password" />
-      </div>,
-    )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('password-input-visible')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })

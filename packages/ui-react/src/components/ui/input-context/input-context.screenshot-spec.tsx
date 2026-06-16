@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { InputProvider } from './input-context'
 
@@ -12,7 +12,6 @@ describe('InputContext screenshots', () => {
         </InputProvider>
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('input-context-child')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })

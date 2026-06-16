@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from './input-group'
 
@@ -15,7 +15,6 @@ describe('InputGroup screenshots', () => {
         </InputGroup>
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('input-group-addon')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })

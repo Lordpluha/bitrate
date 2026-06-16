@@ -1,0 +1,11 @@
+{
+  "name": "@spotify/performance-test",
+  "version": "1.0.0",
+  "description": "K6 performance testing scenarios for Spotify Clone",
+  "private": true,
+  "scripts": {
+    "load:api": "k6 run src/load/api-load-test.js --summary-export=results.json",
+    "load:api:stdout": "k6 run src/load/api-load-test.js"
+  },
+  "author": "Lordpluha"
+}

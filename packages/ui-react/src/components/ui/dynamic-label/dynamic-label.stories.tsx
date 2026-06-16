@@ -2,9 +2,9 @@ import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import type * as React from 'react'
 
 import { DynamicLabel } from './dynamic-label'
-import { Input, type InputProps } from './input'
-import { InputProvider, useInputContext } from './input-context'
-import { PasswordInput, type PasswordInputProps } from './password-input'
+import { Input, type InputProps } from '../input'
+import { InputProvider, useInputContext } from '../input-context'
+import { PasswordInput, type PasswordInputProps } from '../password-input'
 
 const InputWithContext: React.FC<InputProps> = ({ className, type, variant, ...props }) => {
   const { setFocused, setValue } = useInputContext()
@@ -126,6 +126,22 @@ export const Contrast: Story = {
           </DynamicLabel>
           <InputWithContext id="username-input" variant="contrast" placeholder="" />
         </div>
+      </div>
+    </InputProvider>
+  ),
+}
+
+/**
+ * Search variant — floats inside a rounded search input.
+ */
+export const Search: Story = {
+  render: () => (
+    <InputProvider>
+      <div className="relative w-96">
+        <DynamicLabel htmlFor="search-input" variant="search">
+          Search tracks
+        </DynamicLabel>
+        <InputWithContext id="search-input" variant="search" placeholder="" />
       </div>
     </InputProvider>
   ),

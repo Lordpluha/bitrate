@@ -19,7 +19,7 @@ Turborepo + pnpm monorepo for a full-stack Spotify clone. All packages share the
 - `tokens` — raw design tokens (`tokens.json`) and SVG icons source
 - `tokens-generator` — CLI/programmatic CSS generator from `tokens.json`
 - `contracts` — OpenAPI TypeScript types, auto-generated from Swagger
-- `esbuild-bundler` — ESBuild wrapper used to build `ui-react` (dual ESM/CJS output)
+- `vite-svgr` — Vite plugin wrapping `@spotify/svgr` — integrates SVG-to-React generation into the build pipeline
 - `svgr` — SVG → typed React component converter (used for icons in `ui-react`)
 - `converter` — media/audio conversion utilities for the API
 
@@ -193,7 +193,7 @@ CSS files use Tailwind v4 `@theme` blocks. First theme in `tokens.themes` become
 
 ### ui-react build
 
-Built by `@spotify/esbuild-bundler` into dual ESM + CJS output (`dist/`). The web-player `prebuild` script runs `ui-react build` first via Turbo's `dependsOn: ["^build"]` pipeline, so `pnpm build` in root handles ordering automatically.
+Built by **Vite** (library mode) into dual ESM + CJS output (`dist/`), configured in `packages/ui-react/vite.config.ts`. The `@spotify/vite-svgr` plugin runs SVG generation as part of `buildStart` — no separate pre-step needed. The `@spotify/vite-svgr` plugin generates types via `vite-plugin-dts`. The web-player `prebuild` script runs `ui-react build` first via Turbo's `dependsOn: ["^build"]` pipeline, so `pnpm build` in root handles ordering automatically.
 
 ## Service ports
 

@@ -17,4 +17,18 @@ describe('ResizablePanels snapshots', () => {
     )
     expect(container.firstChild).toMatchSnapshot()
   })
+
+  it('matches snapshot — vertical layout', () => {
+    const { container } = render(
+      <ResizableLayout direction="vertical">
+        <ResizablePanel defaultSize={50}>
+          <div>Top</div>
+        </ResizablePanel>
+        <ResizablePanel defaultSize={50}>
+          <div>Bottom</div>
+        </ResizablePanel>
+      </ResizableLayout>,
+    )
+    expect(container.firstChild).toMatchSnapshot()
+  })
 })

@@ -6,17 +6,17 @@ exports[`ResizablePanels snapshots > matches snapshot — two panels horizontal 
   data-group="true"
   data-testid="_r_0_"
   id="_r_0_"
-  style="height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: row; flex-wrap: nowrap; touch-action: pan-y;"
+  style="height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: row; flex-wrap: nowrap;"
 >
   <div
     data-panel="true"
     data-testid="_r_1_"
     id="_r_1_"
-    style="min-height: 0; max-height: 100%; height: auto; min-width: 0; max-width: 100%; width: auto; border: 0px none none; padding: 0px; margin: 0px; display: flex; flex-basis: 0px; overflow: visible; flex-shrink: 1; flex-grow: 50;"
+    style="min-height: 0; max-height: 100%; height: auto; min-width: 0; max-width: 100%; width: auto; border-width: 0px; padding: 0px; margin: 0px; display: flex; flex-basis: 0px; overflow: visible; flex-shrink: 1; flex-grow: 50;"
   >
     <div
       class="overflow-hidden"
-      style="max-height: 100%; max-width: 100%; flex-grow: 1; overflow: auto; touch-action: pan-y;"
+      style="max-height: 100%; max-width: 100%; flex-grow: 1; overflow: auto;"
     >
       <div>
         Left
@@ -24,27 +24,72 @@ exports[`ResizablePanels snapshots > matches snapshot — two panels horizontal 
     </div>
   </div>
   <div
+    aria-controls="_r_1_"
     aria-orientation="vertical"
+    aria-valuemax="100"
+    aria-valuemin="0"
+    aria-valuenow="50"
     class="w-1 bg-border hover:bg-primary transition-all duration-200 cursor-col-resize"
     data-separator="inactive"
     data-testid="_r_2_"
     id="_r_2_"
     role="separator"
-    style="flex-basis: auto; flex-grow: 0; flex-shrink: 0; touch-action: none;"
+    style="flex-basis: auto; flex-grow: 0; flex-shrink: 0;"
     tabindex="0"
   />
   <div
     data-panel="true"
     data-testid="_r_3_"
     id="_r_3_"
-    style="min-height: 0; max-height: 100%; height: auto; min-width: 0; max-width: 100%; width: auto; border: 0px none none; padding: 0px; margin: 0px; display: flex; flex-basis: 0px; overflow: visible; flex-shrink: 1; flex-grow: 50;"
+    style="min-height: 0; max-height: 100%; height: auto; min-width: 0; max-width: 100%; width: auto; border-width: 0px; padding: 0px; margin: 0px; display: flex; flex-basis: 0px; overflow: visible; flex-shrink: 1; flex-grow: 50;"
   >
     <div
       class="overflow-hidden"
-      style="max-height: 100%; max-width: 100%; flex-grow: 1; overflow: auto; touch-action: pan-y;"
+      style="max-height: 100%; max-width: 100%; flex-grow: 1; overflow: auto;"
     >
       <div>
         Right
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ResizablePanels snapshots > matches snapshot — vertical layout 1`] = `
+<div
+  class="h-full"
+  data-group="true"
+  data-testid="_r_4_"
+  id="_r_4_"
+  style="height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: column; flex-wrap: nowrap;"
+>
+  <div
+    data-panel="true"
+    data-testid="_r_5_"
+    id="_r_5_"
+    style="min-height: 0; max-height: 100%; height: auto; min-width: 0; max-width: 100%; width: auto; border-width: 0px; padding: 0px; margin: 0px; display: flex; flex-basis: 0px; overflow: visible; flex-shrink: 1; flex-grow: 50;"
+  >
+    <div
+      class="overflow-hidden"
+      style="max-height: 100%; max-width: 100%; flex-grow: 1; overflow: auto;"
+    >
+      <div>
+        Top
+      </div>
+    </div>
+  </div>
+  <div
+    data-panel="true"
+    data-testid="_r_6_"
+    id="_r_6_"
+    style="min-height: 0; max-height: 100%; height: auto; min-width: 0; max-width: 100%; width: auto; border-width: 0px; padding: 0px; margin: 0px; display: flex; flex-basis: 0px; overflow: visible; flex-shrink: 1; flex-grow: 50;"
+  >
+    <div
+      class="overflow-hidden"
+      style="max-height: 100%; max-width: 100%; flex-grow: 1; overflow: auto;"
+    >
+      <div>
+        Bottom
       </div>
     </div>
   </div>

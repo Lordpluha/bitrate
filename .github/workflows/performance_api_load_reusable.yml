@@ -109,7 +109,7 @@ jobs:
           sudo apt-get install k6
 
       - name: Run load tests
-        run: pnpm --filter @spotify/load-test run load:api
+        run: pnpm --filter @spotify/performance-test run load:api
         env:
           API_URL: http://localhost:3001
         continue-on-error: true

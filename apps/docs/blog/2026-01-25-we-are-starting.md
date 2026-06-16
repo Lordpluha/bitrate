@@ -50,7 +50,7 @@ The project is built with modern technologies:
 Reusable CLI utilities created for the project:
 
 - **@spotify/tokens-generator** - Design tokens to CSS generation
-- **@spotify/esbuild-bundler** - Fast React library bundling
+- **@spotify/vite-svgr** - Vite plugin for SVG-to-React generation in the build pipeline
 - **@spotify/svgr** - SVG to React component conversion
 - **@spotify/converter** - Media conversion (OGG Opus, AAC)
 - **@spotify/ncs-parser** - NCS music parsing

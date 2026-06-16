@@ -60,4 +60,13 @@ describe('Item', () => {
     )
     expect(screen.getByRole('link', { name: 'Track link' })).toHaveAttribute('href', '/track')
   })
+
+  it('applies the muted variant class', () => {
+    render(
+      <Item variant="muted" data-testid="item">
+        <ItemContent><ItemTitle>Muted</ItemTitle></ItemContent>
+      </Item>,
+    )
+    expect(screen.getByTestId('item')).toHaveClass('bg-slate-100/50')
+  })
 })

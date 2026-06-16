@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { Typography } from './typography'
 
@@ -13,7 +13,6 @@ describe('Typography screenshots', () => {
         <Typography as="p">Body text</Typography>
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('typography-scale')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })

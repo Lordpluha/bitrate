@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { CSSProperties, ReactNode } from 'react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../table'
 
 type Typography = {
   name: string

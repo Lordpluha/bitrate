@@ -1,5 +1,7 @@
-import { resolve } from 'node:path'
+import path, { resolve } from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { playwright } from '@vitest/browser-playwright'
 import { defineConfig } from 'vitest/config'
 
 const alias = { '@': resolve(__dirname, 'src') }
@@ -13,7 +15,7 @@ export default defineConfig({
         resolve: { alias },
         test: {
           name: 'unit',
-          environment: 'happy-dom',
+          environment: 'jsdom',
           globals: true,
           setupFiles: ['./vitest-setup.ts'],
           include: [
@@ -21,26 +23,40 @@ export default defineConfig({
             'src/**/*.snapshot-spec.{ts,tsx}',
             'src/**/*.int-spec.{ts,tsx}',
           ],
-          snapshotOptions: {
-            snapshotsDirName: '__snapshots__',
-          },
         },
       },
       {
-        plugins: [react()],
+        plugins: [tailwindcss(), react()],
         resolve: { alias },
         test: {
           name: 'screenshot',
           globals: true,
+          fileParallelism: false,
+          testTimeout: 60_000,
           setupFiles: ['./vitest-browser-setup.ts'],
           include: ['src/**/*.screenshot-spec.{ts,tsx}'],
-          snapshotOptions: {
-            snapshotsDirName: '__screenshots__',
-          },
           browser: {
             enabled: true,
-            provider: 'playwright',
-            headless: true,
+            provider: playwright({
+              launchOptions: {
+                args: [
+                  '--font-render-hinting=none',
+                  '--disable-font-subpixel-positioning',
+                  '--disable-lcd-text',
+                ],
+              },
+            }),
+            screenshotFailures: false,
+            expect: {
+              toMatchScreenshot: {
+                resolveScreenshotPath: (data) =>
+                  path.join(
+                    data.testFileDirectory,
+                    '__screenshots__',
+                    `${data.testName}-${data.browserName}${data.ext}`,
+                  ),
+              },
+            },
             instances: [{ browser: 'chromium' }],
           },
         },

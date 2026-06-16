@@ -1,21 +1,26 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
-import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from './empty'
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from './empty'
 
 describe('Empty screenshots', () => {
-  it('default composition', async () => {
+  it('all compositions', async () => {
     render(
-      <div data-testid="subject">
+      <div data-testid="subject" style={{ display: 'flex', gap: 24, padding: 8 }}>
         <Empty>
           <EmptyHeader>
             <EmptyTitle>Nothing here</EmptyTitle>
             <EmptyDescription>Try again later</EmptyDescription>
           </EmptyHeader>
         </Empty>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">⭐</EmptyMedia>
+            <EmptyTitle>No results</EmptyTitle>
+          </EmptyHeader>
+        </Empty>
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('empty-default')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })

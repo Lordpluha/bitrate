@@ -1,16 +1,16 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { Textarea } from './textarea'
 
 describe('Textarea screenshots', () => {
-  it('default', async () => {
+  it('default and disabled', async () => {
     render(
-      <div data-testid="subject" style={{ width: 280 }}>
+      <div data-testid="subject" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 8, width: 280 }}>
         <Textarea placeholder="Write something..." />
+        <Textarea disabled placeholder="Cannot edit" />
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('textarea-default')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })

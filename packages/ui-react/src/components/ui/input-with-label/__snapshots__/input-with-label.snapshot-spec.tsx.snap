@@ -1,5 +1,22 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`InputWithLabel snapshots > matches snapshot — contrast variant 1`] = `
+<div
+  class="relative"
+>
+  <label
+    class="absolute left-3 transition-all duration-300 pointer-events-none z-10 px-1 bg-white text-slate-600 top-1/2 -translate-y-1/2 text-base"
+    for="name"
+  >
+    Name
+  </label>
+  <input
+    class="px-3 py-2 flex w-full rounded-md border text-base ring-offset-white placeholder:text-slate-500 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 border-grey-500 bg-contrast text-textContrast focus-visible:ring-slate-950"
+    id="name"
+  />
+</div>
+`;
+
 exports[`InputWithLabel snapshots > matches snapshot — default 1`] = `
 <div
   class="relative"
@@ -13,6 +30,23 @@ exports[`InputWithLabel snapshots > matches snapshot — default 1`] = `
   <input
     class="px-3 py-2 flex w-full rounded-md border text-base ring-offset-white placeholder:text-slate-500 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 border-slate-200 bg-white text-slate-900 focus-visible:ring-slate-950 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50"
     id="email"
+  />
+</div>
+`;
+
+exports[`InputWithLabel snapshots > matches snapshot — search variant 1`] = `
+<div
+  class="relative"
+>
+  <label
+    class="absolute left-3 transition-all duration-300 pointer-events-none z-10 px-1 bg-white text-slate-600 top-1/2 -translate-y-1/2 text-base"
+    for="search"
+  >
+    Search
+  </label>
+  <input
+    class="px-3 py-2 flex w-full border text-base ring-offset-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-grey-900 text-grey-200 placeholder:text-grey-500 rounded-full h-12"
+    id="search"
   />
 </div>
 `;

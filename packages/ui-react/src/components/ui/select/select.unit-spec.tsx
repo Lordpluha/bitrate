@@ -1,6 +1,14 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from './select'
 
 describe('Select', () => {
   it('renders the trigger with a placeholder', () => {
@@ -44,5 +52,33 @@ describe('Select', () => {
       </Select>,
     )
     expect(screen.getByRole('combobox')).toHaveTextContent('Option B')
+  })
+
+  it('renders disabled SelectItem', () => {
+    render(
+      <Select defaultOpen>
+        <SelectTrigger><SelectValue placeholder="Pick" /></SelectTrigger>
+        <SelectContent>
+          <SelectItem value="a">Active</SelectItem>
+          <SelectItem value="b" disabled>Disabled</SelectItem>
+        </SelectContent>
+      </Select>,
+    )
+    expect(screen.getByRole('option', { name: 'Disabled' })).toHaveAttribute('aria-disabled', 'true')
+  })
+
+  it('renders SelectLabel and SelectGroup', () => {
+    render(
+      <Select defaultOpen>
+        <SelectTrigger><SelectValue /></SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Fruits</SelectLabel>
+            <SelectItem value="apple">Apple</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>,
+    )
+    expect(screen.getByText('Fruits')).toBeInTheDocument()
   })
 })

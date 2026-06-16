@@ -1,10 +1,9 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
-import { toast } from 'sonner'
 import { action } from 'storybook/actions'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import { Button } from '@/components/ui/button'
-import { Toaster } from '@/components/ui/sonner'
+import { Toaster, toast } from './sonner'
 
 const TOAST_TIMESTAMP = '2026-01-01 12:00'
 
@@ -50,6 +49,32 @@ type Story = StoryObj<typeof meta>
  * The default form of the toaster.
  */
 export const Default: Story = {}
+
+export const Success: Story = {
+  play: async () => { toast.success('Operation completed successfully!') },
+}
+
+export const ErrorToast: Story = {
+  play: async () => { toast.error('Something went wrong.') },
+}
+
+export const Warning: Story = {
+  play: async () => { toast.warning('Proceed with caution.') },
+}
+
+export const Info: Story = {
+  play: async () => { toast.info('Here is some information.') },
+}
+
+export const PromiseToast: Story = {
+  play: async () => {
+    toast.promise(new Promise((resolve) => setTimeout(resolve, 2000)), {
+      loading: 'Loading…',
+      success: 'Done!',
+      error: 'Failed',
+    })
+  },
+}
 
 export const ShouldShowToast: Story = {
   name: 'when clicking Show Toast button, should show a toast',

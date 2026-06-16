@@ -1,26 +1,26 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
+import { InputProvider } from '../input-context'
 import { DynamicLabel } from './dynamic-label'
 
 describe('DynamicLabel screenshots', () => {
-  it('default idle', async () => {
+  it('all variants', async () => {
     render(
-      <div data-testid="subject" style={{ position: 'relative', height: 48, width: 240 }}>
-        <DynamicLabel>Email</DynamicLabel>
+      <div data-testid="subject" style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 8 }}>
+        <div style={{ position: 'relative', height: 48, width: 240 }}>
+          <DynamicLabel>Email</DynamicLabel>
+        </div>
+        <div style={{ position: 'relative', height: 48, width: 240 }}>
+          <DynamicLabel variant="contrast">Email contrast</DynamicLabel>
+        </div>
+        <InputProvider>
+          <div style={{ position: 'relative', width: 300, padding: 8 }}>
+            <DynamicLabel htmlFor="search-s" variant="search">Search</DynamicLabel>
+          </div>
+        </InputProvider>
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('dynamic-label-idle')
-  })
-
-  it('contrast variant', async () => {
-    render(
-      <div data-testid="subject" style={{ position: 'relative', height: 48, width: 240 }}>
-        <DynamicLabel variant="contrast">Email</DynamicLabel>
-      </div>,
-    )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('dynamic-label-contrast')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })

@@ -1,46 +1,26 @@
 import { render } from '@testing-library/react'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { Button } from './button'
 
 describe('Button screenshots', () => {
-  it('default variant', async () => {
+  it('all variants', async () => {
     render(
-      <div data-testid="subject">
-        <Button>Default Button</Button>
-      </div>,
-    )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('button-default')
-  })
-
-  it('destructive variant', async () => {
-    render(
-      <div data-testid="subject">
-        <Button variant="destructive">Delete</Button>
-      </div>,
-    )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('button-destructive')
-  })
-
-  it('primary variant', async () => {
-    render(
-      <div data-testid="subject">
+      <div data-testid="subject" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, padding: 8 }}>
+        <Button>Default</Button>
+        <Button variant="destructive">Destructive</Button>
         <Button variant="primary">Primary</Button>
-      </div>,
-    )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('button-primary')
-  })
-
-  it('loading state', async () => {
-    render(
-      <div data-testid="subject">
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="contrast">Contrast</Button>
+        <Button variant="link">Link</Button>
         <Button isLoading>Loading</Button>
+        <Button disabled>Disabled</Button>
+        <Button size="sm">Small</Button>
+        <Button size="icon" aria-label="icon">🔍</Button>
       </div>,
     )
-    const { base64 } = await page.getByTestId('subject').screenshot({ base64: true })
-    expect(base64).toMatchSnapshot('button-loading')
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
   })
 })
