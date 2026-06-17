@@ -54,7 +54,7 @@ export const LAYOUT_FORMAT_MAP = {
 export const TYPOGRAPHY_PREFIX_MAP = {
   'font-family': 'font',
   'font-size': 'text',
-  'font-weight': 'font',
+  'font-weight': 'font-weight',
   'line-height': 'leading',
   'letter-spacing': 'tracking',
 }
