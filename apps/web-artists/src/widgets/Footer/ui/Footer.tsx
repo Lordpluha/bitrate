@@ -45,7 +45,7 @@ export const Footer = () => {
           <SpotifyLogo primaryColor="#ffffff" color3="#ffffff" color4="#ffffff" className="w-34 h-10" />
         </div>
         <div className={cn("flex flex-col gap-6 justify-between items-start",
-          "xs:col-span-2 xs:row-start-2 xs:flex-row xs:gap-2",
+          "xs:col-span-2 xs:row-start-2 xs:flex-row xs:gap-6",
           "lg:flex lg:flex-row lg:items-start lg:w-[60%] lg:justify-start"
         )}>
           {footerData.columns.map((column, index) => (
