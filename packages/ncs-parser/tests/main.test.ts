@@ -20,5 +20,7 @@ ncs
 console.log('running artist info')
 ncs.getArtistInfo('/artist/172/harley-bird').then((res) => {
   console.log('results artist info')
-  console.dir({ ...res, songs: [res.songs[0]] }, { depth: null })
+  if (res) {
+    console.dir({ ...res, songs: [res.songs[0]] }, { depth: null })
+  }
 })

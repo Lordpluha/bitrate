@@ -11,7 +11,7 @@ export const AboutArtist: React.FC = () => {
   const currentTrack = useAppSelector(selectCurrentTrack)
   const { data: artist, isLoading } = useArtist(currentTrack?.artistId)
 
-  if (!currentTrack || !currentTrack.artistId) {
+  if (!currentTrack?.artistId) {
     return null
   }
 

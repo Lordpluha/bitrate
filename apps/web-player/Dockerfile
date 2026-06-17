@@ -14,8 +14,7 @@ COPY apps/web-player/package.json ./apps/web-player/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/svgr/package.json ./packages/svgr/
 COPY packages/svgr/bin ./packages/svgr/bin
-COPY packages/esbuild-bundler/package.json ./packages/esbuild-bundler/
-COPY packages/esbuild-bundler/bin ./packages/esbuild-bundler/bin
+COPY packages/vite-svgr/package.json ./packages/vite-svgr/
 COPY packages/tokens/package.json ./packages/tokens/
 COPY packages/tokens-generator/package.json ./packages/tokens-generator/
 COPY packages/tokens-generator/bin ./packages/tokens-generator/bin
@@ -44,8 +43,10 @@ COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
+COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 
 # Build приложения
+RUN pnpm --filter @spotify/ui-react run build
 RUN pnpm --filter @spotify/web-player run build
 
 # Stage 5: Production Dependencies
@@ -54,8 +55,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web-player/package.json ./apps/web-player/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/contracts/package.json ./packages/contracts/
-RUN node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));if(pkg.scripts&&pkg.scripts.prepare){delete pkg.scripts.prepare;fs.writeFileSync(p, JSON.stringify(pkg, null, 2));}" \
-  && pnpm install --prod --frozen-lockfile
+RUN pnpm install --prod --frozen-lockfile
 
 # Stage 6: Production
 FROM base AS production

@@ -22,7 +22,6 @@ module.exports = {
     { name: 'docs' },
     { name: 'contracts' },
     { name: 'ui-react' },
-    { name: 'ui-flutter' },
     { name: 'tokens' },
     { name: 'converter' },
     { name: 'esbuild-bundler' },

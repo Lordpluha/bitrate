@@ -1,147 +1,147 @@
 # Contributor Covenant Code of Conduct
 
-## 🤝 Наше обязательство
+## 🤝 Our Pledge
 
-Мы, как участники, контрибьюторы и мейнтейнеры этого проекта, обязуемся сделать участие в нашем сообществе свободным от домогательств для всех, независимо от возраста, размера тела, видимой или невидимой инвалидности, этнической принадлежности, половых характеристик, гендерной идентичности и самовыражения, уровня опыта, образования, социально-экономического статуса, национальности, внешности, расы, религии или сексуальной идентичности и ориентации.
+We, as members, contributors, and maintainers of this project, pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
 
-Мы обязуемся действовать и взаимодействовать таким образом, чтобы способствовать созданию открытого, дружелюбного, разнообразного, инклюзивного и здорового сообщества.
+We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
 
-## 📜 Наши стандарты
+## 📜 Our Standards
 
-Примеры поведения, которое способствует созданию позитивной среды:
+Examples of behavior that contributes to a positive environment:
 
-### ✅ Приветствуется
+### ✅ Welcome
 
-* **Проявление эмпатии и доброты** по отношению к другим людям
-* **Уважение** различных мнений, точек зрения и опыта
-* **Конструктивная критика** и готовность принимать её
-* **Принятие ответственности** за свои ошибки и извинения перед пострадавшими
-* **Фокус на том, что лучше** не только для нас как индивидуумов, но и для всего сообщества
-* **Помощь новичкам** и терпение к вопросам
-* **Признание вклада** других участников
-* **Профессиональное общение** в Issues, PR и Discussions
+* **Demonstrating empathy and kindness** toward other people
+* **Respecting** differing opinions, viewpoints, and experiences
+* **Giving and gracefully accepting constructive feedback**
+* **Accepting responsibility** and apologizing to those affected by our mistakes
+* **Focusing on what is best** not just for us as individuals, but for the overall community
+* **Helping newcomers** and being patient with questions
+* **Recognizing contributions** of other participants
+* **Professional communication** in Issues, PRs, and Discussions
 
-### ❌ Недопустимо
+### ❌ Unacceptable
 
-* **Использование сексуализированных** выражений или изображений
-* **Троллинг, оскорбительные** или унижающие комментарии
-* **Личные или политические** атаки
-* **Публичные или приватные** домогательства
-* **Публикация личной информации** других людей без явного разрешения (doxxing)
-* **Другое поведение**, которое можно обоснованно считать неприемлемым в профессиональной среде
-* **Спам** или нерелевантные сообщения
-* **Агрессивное навязывание** своего мнения
+* **Use of sexualized language** or imagery
+* **Trolling, insulting** or derogatory comments
+* **Personal or political attacks**
+* **Public or private harassment**
+* **Publishing private information** of others without explicit permission (doxxing)
+* **Other conduct** which could reasonably be considered inappropriate in a professional setting
+* **Spam** or irrelevant messages
+* **Aggressive imposition** of one's opinions
 
-## 👮 Обязанности по соблюдению
+## 👮 Enforcement Responsibilities
 
-Мейнтейнеры проекта несут ответственность за разъяснение и обеспечение соблюдения наших стандартов приемлемого поведения и предпримут соответствующие и справедливые корректирующие меры в ответ на любое поведение, которое они сочтут неприемлемым, угрожающим, оскорбительным или вредным.
+Project maintainers are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.
 
-Мейнтейнеры имеют право и ответственность удалять, редактировать или отклонять комментарии, коммиты, код, правки в wiki, issues и другие вклады, которые не соответствуют этому Кодексу поведения, и будут сообщать причины модерационных решений, когда это уместно.
+Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that do not align with this Code of Conduct, and will communicate reasons for moderation decisions when appropriate.
 
-## 🌍 Сфера применения
+## 🌍 Scope
 
-Этот Кодекс поведения применяется во всех пространствах проекта, а также когда человек официально представляет проект или его сообщество в публичных пространствах.
+This Code of Conduct applies within all project spaces, and also applies when an individual is officially representing the project or its community in public spaces.
 
-Примеры представления проекта или сообщества включают:
+Examples of representing the project or community include:
 
-- Использование официального email адреса проекта
-- Публикации через официальный аккаунт в социальных сетях
-- Выступление в качестве назначенного представителя на онлайн или оффлайн мероприятии
-- Работа в GitHub репозитории (Issues, Pull Requests, Discussions)
-- Участие в официальных чатах или форумах проекта
+- Using an official project email address
+- Posting via official social media accounts
+- Acting as an appointed representative at an online or offline event
+- Working in the GitHub repository (Issues, Pull Requests, Discussions)
+- Participating in official project chats or forums
 
-## 🚨 Сообщение о нарушениях
+## 🚨 Reporting
 
-Случаи оскорбительного, домогательского или иного неприемлемого поведения могут быть сообщены мейнтейнерам проекта:
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers:
 
-**Контакты для сообщений:**
+**Contact for reports:**
 
 - **Vladyslav Tesliuk** (Lead Maintainer)
   - 📧 Email: vladislavteslyukofficial@gmail.com
   - 🐙 GitHub: [@Lordpluha](https://github.com/Lordpluha)
 
-Все жалобы будут рассмотрены и расследованы **конфиденциально** и оперативно. Мейнтейнеры обязаны соблюдать конфиденциальность в отношении лица, сообщившего о нарушении.
+All complaints will be reviewed and investigated **confidentially** and promptly. Maintainers are obligated to maintain confidentiality with regard to the reporter of an incident.
 
-### Процесс рассмотрения
+### Review Process
 
-1. **Получение сообщения** - подтверждение в течение **48 часов**
-2. **Расследование** - сбор информации и контекста
-3. **Решение** - определение соответствующих мер
-4. **Уведомление** - информирование всех сторон о решении
-5. **Апелляция** - возможность обжалования в течение **7 дней**
+1. **Receipt of report** - acknowledgment within **48 hours**
+2. **Investigation** - gathering information and context
+3. **Decision** - determining appropriate measures
+4. **Notification** - informing all parties of the decision
+5. **Appeal** - opportunity to appeal within **7 days**
 
-## ⚖️ Меры воздействия
+## ⚖️ Enforcement Guidelines
 
-Мейнтейнеры проекта будут следовать этим Руководящим принципам воздействия сообщества при определении последствий любого действия, которое они считают нарушением этого Кодекса поведения:
+Project maintainers will follow these Community Impact Guidelines in determining the consequences for any action they deem in violation of this Code of Conduct:
 
-### 1. 🟡 Предупреждение
+### 1. 🟡 Warning
 
-**Нарушение:** Использование неприемлемых выражений или другое поведение, считающееся непрофессиональным или нежелательным в сообществе.
+**Violation:** Use of inappropriate language or other behavior deemed unprofessional or unwelcome in the community.
 
-**Последствия:** Приватное письменное предупреждение от мейнтейнеров с разъяснением характера нарушения и объяснением, почему поведение было неприемлемым. Может быть запрошено публичное извинение.
+**Consequence:** A private, written warning from maintainers, providing clarity around the nature of the violation and an explanation of why the behavior was inappropriate. A public apology may be requested.
 
-### 2. 🟠 Временный бан
+### 2. 🟠 Temporary Ban
 
-**Нарушение:** Серьезное нарушение или систематическое неприемлемое поведение.
+**Violation:** A serious violation or a pattern of inappropriate behavior.
 
-**Последствия:** Временный запрет на любое взаимодействие или публичное общение с сообществом на определенный период времени. В течение этого периода не разрешается никакое публичное или приватное взаимодействие с людьми, участвующими в проекте, включая нежелательное взаимодействие с теми, кто обеспечивает соблюдение Кодекса поведения. Нарушение этих условий может привести к постоянному бану.
+**Consequence:** A temporary ban from any sort of interaction or public communication with the community for a specified period of time. No public or private interaction with the people involved, including unsolicited interaction with those enforcing the Code of Conduct, is allowed during this period. Violating these terms may lead to a permanent ban.
 
-### 3. 🔴 Постоянный бан
+### 3. 🔴 Permanent Ban
 
-**Нарушение:** Демонстрация систематического неприемлемого поведения, включая постоянное домогательство индивидуума, или агрессию по отношению к классам индивидуумов или их унижение.
+**Violation:** Demonstrating a pattern of violation of community standards, including sustained inappropriate behavior, harassment of an individual, or aggression toward or disparagement of classes of individuals.
 
-**Последствия:** Постоянный запрет на любое публичное взаимодействие в рамках сообщества.
+**Consequence:** A permanent ban from any sort of public interaction within the community.
 
-## 🎯 Дополнительные рекомендации
+## 🎯 Additional Guidelines
 
-### Для новичков
+### For Newcomers
 
-- Не стесняйтесь задавать вопросы - здесь нет глупых вопросов
-- Используйте поиск в Issues перед созданием нового
-- Читайте [CONTRIBUTING.md](CONTRIBUTING.md) перед первым PR
-- Будьте терпеливы - ревью может занять время
+- Don't hesitate to ask questions - there are no stupid questions
+- Use search in Issues before creating a new one
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) before your first PR
+- Be patient - reviews may take time
 
-### Для опытных участников
+### For Experienced Contributors
 
-- Будьте примером для новичков
-- Помогайте с ревью и менторством
-- Конструктивно формулируйте критику
-- Признавайте вклад других
+- Be a role model for newcomers
+- Help with reviews and mentoring
+- Frame criticism constructively
+- Recognize others' contributions
 
-### Для всех
+### For Everyone
 
-- **Асинхронное общение** - учитывайте часовые пояса
-- **Ясность** - пишите понятно, особенно на технические темы
-- **Контекст** - предоставляйте достаточно информации
-- **Благодарность** - цените время и усилия других
+- **Asynchronous communication** - be mindful of time zones
+- **Clarity** - write clearly, especially on technical topics
+- **Context** - provide enough information
+- **Gratitude** - value others' time and effort
 
-## 🌟 Позитивная среда
+## 🌟 Positive Environment
 
-Мы стремимся создать сообщество, где:
+We strive to create a community where:
 
-- ✅ Люди чувствуют себя в безопасности, задавая вопросы
-- ✅ Различные точки зрения приветствуются
-- ✅ Критика конструктивна и уважительна
-- ✅ Фокус на обучении и росте
-- ✅ Признается вклад всех участников
-- ✅ Работа над проектом приносит удовольствие
+- ✅ People feel safe asking questions
+- ✅ Diverse perspectives are welcomed
+- ✅ Criticism is constructive and respectful
+- ✅ Focus is on learning and growth
+- ✅ Contributions of all members are recognized
+- ✅ Working on the project is enjoyable
 
-## 📚 Ресурсы
+## 📚 Resources
 
-- [Contributor Covenant](https://www.contributor-covenant.org/) - источник этого кодекса
+- [Contributor Covenant](https://www.contributor-covenant.org/) - source of this code
 - [GitHub Community Guidelines](https://docs.github.com/en/site-policy/github-terms/github-community-guidelines)
 - [Open Source Guide](https://opensource.guide/code-of-conduct/)
 
 ## 📝 Attribution
 
-Этот Кодекс поведения адаптирован из [Contributor Covenant](https://www.contributor-covenant.org), версия 2.1, доступная по адресу https://www.contributor-covenant.org/version/2/1/code_of_conduct.html.
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.1, available at https://www.contributor-covenant.org/version/2/1/code_of_conduct.html.
 
-Руководящие принципы воздействия сообщества были вдохновлены [лестницей обеспечения соблюдения кодекса поведения Mozilla](https://github.com/mozilla/diversity).
+Community Impact Guidelines were inspired by [Mozilla's code of conduct enforcement ladder](https://github.com/mozilla/diversity).
 
-Ответы на часто задаваемые вопросы об этом кодексе поведения см. по адресу https://www.contributor-covenant.org/faq. Переводы доступны по адресу https://www.contributor-covenant.org/translations.
+For answers to common questions about this code of conduct, see the FAQ at https://www.contributor-covenant.org/faq. Translations are available at https://www.contributor-covenant.org/translations.
 
 ---
 
-**Помните:** Мы все здесь, чтобы учиться, расти и создавать что-то крутое вместе! 🚀
+**Remember:** We are all here to learn, grow, and create something great together! 🚀
 
-*Последнее обновление: January 2026*
+*Last updated: June 2026*

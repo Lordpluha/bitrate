@@ -1,56 +1,56 @@
 # @spotify/svgr
 
-Конвертер SVG файлов в React/TypeScript компоненты с продвинутой обработкой цветов.
+Converter for SVG files to React/TypeScript components with advanced color handling.
 
-## Основные возможности
+## Key Features
 
-- ✨ Автоматическое определение одноцветных и многоцветных иконок
-- 🎨 Извлечение цветов из всех атрибутов SVG (fill, stroke, style, градиенты)
-- 🔧 Кастомные имена переменных для управления цветами
-- 👀 Dev режим с watch
-- 📦 TypeScript поддержка
-- 🎯 CLI интерфейс
+- ✨ Automatic detection of monochrome and multicolor icons
+- 🎨 Color extraction from all SVG attributes (fill, stroke, style, gradients)
+- 🔧 Custom variable names for color control
+- 👀 Dev mode with watch
+- 📦 TypeScript support
+- 🎯 CLI interface
 
-## Установка
+## Installation
 
 ```bash
 npm install @spotify/svgr
-# или
+# or
 pnpm add @spotify/svgr
-# или
+# or
 yarn add @spotify/svgr
 ```
 
-## Использование
+## Usage
 
 ### CLI
 
-#### Базовая конвертация
+#### Basic conversion
 
 ```bash
-# Build режим (одноразовая конвертация)
+# Build mode (one-time conversion)
 react-svgr build -i @spotify/tokens/icons -o src/icons/svgr
 
-# Dev режим (с отслеживанием изменений)
+# Dev mode (with file watching)
 react-svgr dev -i @spotify/tokens/icons -o src/icons/svgr
 ```
 
-#### С кастомными переменными для цветов
+#### With custom color variables
 
-Вы можете указать массив имён переменных, которые будут использоваться для управления цветами в SVG:
+You can specify an array of variable names to be used for color control in SVG:
 
 ```bash
-# С одной переменной
+# With one variable
 react-svgr build -i ../tokens/icons -o src/icons/svgr --variables "primaryColor"
 
-# С несколькими переменными
+# With multiple variables
 react-svgr build -i ../tokens/icons -o src/icons/svgr --variables "primaryColor,secondaryColor,accentColor"
 
-# В dev режиме
+# In dev mode
 react-svgr dev -i ../tokens/icons -o src/icons/svgr --variables "color1,color2"
 ```
 
-### В npm scripts
+### In npm scripts
 
 ```json
 {
@@ -61,7 +61,7 @@ react-svgr dev -i ../tokens/icons -o src/icons/svgr --variables "color1,color2"
 }
 ```
 
-### Как модуль
+### As a module
 
 ```javascript
 import { build } from '@spotify/svgr/build';
@@ -78,9 +78,9 @@ await dev(inputDir, outputDir, {
 });
 ```
 
-### Примеры сгенерированных компонентов
+### Examples of generated components
 
-#### Без кастомных переменных (многоцветная иконка):
+#### Without custom variables (multicolor icon):
 ```tsx
 export const MyIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg {...props}>
@@ -90,7 +90,7 @@ export const MyIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 ```
 
-#### С кастомными переменными:
+#### With custom variables:
 ```tsx
 interface MyIconProps extends React.SVGProps<SVGSVGElement> {
   primaryColor?: string, secondaryColor?: string
@@ -104,7 +104,7 @@ export const MyIcon = ({ primaryColor, secondaryColor, ...props }: MyIconProps) 
 );
 ```
 
-#### Одноцветная иконка (автоматически):
+#### Monochrome icon (automatic):
 ```tsx
 export const MyIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg {...props}>
@@ -113,21 +113,21 @@ export const MyIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 ```
 
-## Обнаружение цветов
+## Color Detection
 
-Плагин извлекает цвета из следующих источников:
+The plugin extracts colors from the following sources:
 
-1. **Атрибуты `fill` и `stroke`**
+1. **`fill` and `stroke` attributes**
    ```xml
    <path fill="#FF0000" stroke="#000000" />
    ```
 
-2. **Inline стили**
+2. **Inline styles**
    ```xml
    <path style="fill: #FF0000; stroke: #000000" />
    ```
 
-3. **Градиенты**
+3. **Gradients**
    ```xml
    <linearGradient>
      <stop stop-color="#FF0000" />
@@ -135,41 +135,41 @@ export const MyIcon = (props: React.SVGProps<SVGSVGElement>) => (
    </linearGradient>
    ```
 
-## Порядок присвоения имён переменных
+## Variable Name Assignment Order
 
-Цвета извлекаются в порядке их появления в SVG. Первый уникальный цвет получит первое имя из массива, второй - второе и т.д.
+Colors are extracted in the order they appear in the SVG. The first unique color gets the first name from the array, the second gets the second, and so on.
 
-Например, для SVG с цветами `#FF0000`, `#00FF00`, `#0000FF` и массива переменных `"primary,secondary"`:
+For example, for an SVG with colors `#FF0000`, `#00FF00`, `#0000FF` and variable array `"primary,secondary"`:
 - `#FF0000` → `primary`
 - `#00FF00` → `secondary`
-- `#0000FF` → `color3` (автоматически сгенерированное имя)
+- `#0000FF` → `color3` (automatically generated name)
 
 ## API
 
 ### processSvgFiles(inputDir, outputDir, options)
 
-Обрабатывает все SVG файлы из директории.
+Processes all SVG files from a directory.
 
-**Параметры:**
-- `inputDir` - путь к директории с SVG файлами
-- `outputDir` - путь для вывода React компонентов
-- `options` - опции:
-  - `clean` (boolean) - очистить выходную директорию
-  - `verbose` (boolean) - подробный вывод
-  - `colorVarNames` (string[]) - массив имён переменных для цветов
+**Parameters:**
+- `inputDir` - path to the directory with SVG files
+- `outputDir` - path for React component output
+- `options` - options:
+  - `clean` (boolean) - clear the output directory
+  - `verbose` (boolean) - verbose output
+  - `colorVarNames` (string[]) - array of variable names for colors
 
 ### extractColorsWithMapping(svgContent, varNames)
 
-Извлекает цвета из SVG и создаёт mapping к именам переменных.
+Extracts colors from SVG and creates a mapping to variable names.
 
-**Параметры:**
-- `svgContent` - содержимое SVG файла
-- `varNames` - массив имён переменных
+**Parameters:**
+- `svgContent` - SVG file content
+- `varNames` - array of variable names
 
-**Возвращает:**
+**Returns:**
 ```javascript
 {
-  colors: Set<string>,      // Набор цветов в HEX формате
-  mapping: Map<string, string>  // Mapping цвета → имя переменной
+  colors: Set<string>,      // Set of colors in HEX format
+  mapping: Map<string, string>  // Color → variable name mapping
 }
 ```
