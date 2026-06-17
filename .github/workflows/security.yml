@@ -11,6 +11,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
 jobs:
   security:
     uses: ./.github/workflows/security_reusable.yml
