@@ -4,14 +4,14 @@
  * These match Tailwind v4 conventions.
  */
 export const LAYOUT_PREFIX_MAP = {
-  'spacing': 'spacing',
+  spacing: 'spacing',
   'border-radius': 'radius',
   'border-width': 'border',
-  'container': 'container',
-  'breakpoints': 'breakpoint',
+  container: 'container',
+  breakpoints: 'breakpoint',
   'z-index': 'z',
-  'shadows': 'shadow',
-  'opacity': 'opacity',
+  shadows: 'shadow',
+  opacity: 'opacity',
   'aspect-ratio': 'aspect',
 }
 
@@ -40,9 +40,7 @@ export const LAYOUT_FORMAT_MAP = {
     key,
     value,
     comment:
-      value !== '100%' && !Number.isNaN(parseFloat(value))
-        ? `${parseFloat(value) * 16}px`
-        : null,
+      value !== '100%' && !Number.isNaN(parseFloat(value)) ? `${parseFloat(value) * 16}px` : null,
   }),
   breakpoints: (key, value) => ({ key, value: `${value}px`, comment: null }),
 }
