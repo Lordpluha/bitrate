@@ -129,7 +129,7 @@ export class TracksService {
 
     const filePath = this.configService.getOrThrow('storage').getTracksDir(track.audioUrl)
 
-    let stat
+    let stat: Awaited<ReturnType<typeof fs.stat>>
     try {
       stat = await fs.stat(filePath)
     } catch {
