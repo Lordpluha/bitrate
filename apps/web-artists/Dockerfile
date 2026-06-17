@@ -43,6 +43,7 @@ COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
+COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 
 # Build приложения
 RUN pnpm --filter @spotify/ui-react run build
