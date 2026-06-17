@@ -35,7 +35,7 @@
     "build": "vite build",
     "dev": "vite build --watch",
     "check-types": "tsc --noEmit",
-    "test": "vitest run --project=unit --project=integration --project=snapshot --project=screenshot",
+    "test": "vitest run --project=unit --project=integration --project=snapshot",
     "test:watch": "vitest --project=unit --project=integration --project=snapshot",
     "test:unit": "vitest run --project=unit --reporter=verbose",
     "test:int": "vitest run --project=integration --reporter=verbose",

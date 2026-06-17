@@ -19,7 +19,7 @@ COPY packages/tokens-generator/package.json ./packages/tokens-generator/
 COPY packages/tokens-generator/bin ./packages/tokens-generator/bin
 COPY packages/contracts/package.json ./packages/contracts/
 COPY turbo.json ./
-RUN pnpm install --frozen-lockfile
+RUN LEFTHOOK=0 pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development

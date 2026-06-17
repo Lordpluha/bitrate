@@ -35,7 +35,7 @@ jobs:
       - name: Run Biome check
         run: pnpm exec biome ci packages/ui-react
 
-  tests:
+  unit:
     if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
     needs: biome
     name: UI React Unit Tests
@@ -48,8 +48,40 @@ jobs:
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
 
-      - name: Run unit / snapshot / integration tests
-        run: pnpm --filter @spotify/ui-react run test
+      - name: Run unit tests
+        run: pnpm --filter @spotify/ui-react run test:unit
+
+  integration:
+    if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
+    needs: biome
+    name: UI React Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run integration tests
+        run: pnpm --filter @spotify/ui-react run test:int
+
+  snapshot:
+    if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
+    needs: biome
+    name: UI React Snapshot Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run snapshot tests
+        run: pnpm --filter @spotify/ui-react run test:snapshot
 
   screenshot:
     if: ${{ always() && inputs.run-screenshot && (!inputs.run-biome || needs.biome.result == 'success') }}

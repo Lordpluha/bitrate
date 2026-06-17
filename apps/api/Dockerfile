@@ -16,7 +16,7 @@ COPY packages/converter/bin ./packages/converter/bin
 COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/ncs-parser/package.json ./packages/ncs-parser/
 COPY turbo.json ./
-RUN pnpm install --frozen-lockfile
+RUN LEFTHOOK=0 pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development
