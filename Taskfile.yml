@@ -1,0 +1,276 @@
+version: '3'
+
+vars:
+  DC_DEV: docker compose -f infra/docker-compose.preprod.yaml
+  DC_PROD: docker compose -f infra/docker-compose.prod.yaml
+  DC_INFRA: docker compose -f infra/docker-compose.dev.yaml
+
+tasks:
+  # ─────────────────────────────────────────
+  # Default — list tasks
+  # ─────────────────────────────────────────
+  default:
+    desc: List all available tasks
+    silent: true
+    cmds:
+      - task --list
+
+  # ─────────────────────────────────────────
+  # Minimal infra (postgres + redis only)
+  # Recommended for native app development
+  # ─────────────────────────────────────────
+  infra:up:
+    desc: Start postgres + redis only (~320 MB)
+    cmds:
+      - cmd: '{{.DC_INFRA}} up -d'
+
+  infra:down:
+    desc: Stop postgres + redis
+    cmds:
+      - cmd: '{{.DC_INFRA}} down'
+
+  # ─────────────────────────────────────────
+  # Full development stack (all apps in Docker)
+  # ─────────────────────────────────────────
+  dev:up:
+    desc: Start full development stack (all apps)
+    cmds:
+      - cmd: '{{.DC_DEV}} up -d'
+      - task: _print-urls
+
+  dev:build:
+    desc: Build images and start development stack
+    cmds:
+      - cmd: '{{.DC_DEV}} up -d --build'
+      - task: _print-urls
+
+  dev:down:
+    desc: Stop all development services
+    cmds:
+      - cmd: '{{.DC_DEV}} down'
+
+  dev:restart:
+    desc: Restart all development services
+    cmds:
+      - cmd: '{{.DC_DEV}} restart'
+
+  dev:clean:
+    desc: Stop services and remove volumes
+    prompt: This will delete all container data. Continue?
+    cmds:
+      - cmd: '{{.DC_DEV}} down -v'
+
+  dev:status:
+    desc: Show container status
+    cmds:
+      - cmd: '{{.DC_DEV}} ps'
+
+  dev:logs:
+    desc: 'Tail logs. Optionally filter by service: task dev:logs -- api'
+    cmds:
+      - cmd: '{{.DC_DEV}} logs -f {{.CLI_ARGS}}'
+
+  # ─────────────────────────────────────────
+  # Database
+  # ─────────────────────────────────────────
+  db:migrate:
+    desc: Run Prisma migrations
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:migration:start'
+
+  db:seed:
+    desc: Seed database with test data
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run seed'
+
+  db:studio:
+    desc: Open Prisma Studio in browser
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:ui'
+
+  db:reset:
+    desc: Reset database — drops and recreates all tables
+    prompt: This will destroy all data. Continue?
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:migration:reset'
+
+  db:backup:
+    desc: Dump database to backups/
+    vars:
+      TIMESTAMP: '{{now | date "20060102_150405"}}'
+    cmds:
+      - cmd: mkdir -p backups
+        platforms: [linux, darwin]
+      - cmd: if not exist backups mkdir backups
+        platforms: [windows]
+      - cmd: '{{.DC_DEV}} exec -T postgres pg_dump -U admin spotify > backups/backup_{{.TIMESTAMP}}.sql'
+      - cmd: echo "Saved to backups/backup_{{.TIMESTAMP}}.sql"
+
+  db:restore:
+    desc: 'Restore from a backup file: task db:restore -- backup_20240101_120000.sql'
+    cmds:
+      - cmd: '{{.DC_DEV}} exec -T postgres psql -U admin spotify < backups/{{.CLI_ARGS}}'
+
+  # ─────────────────────────────────────────
+  # Container shells
+  # ─────────────────────────────────────────
+  shell:api:
+    desc: Open shell in api container
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api sh'
+
+  shell:web:
+    desc: Open shell in web-player container
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec web-player sh'
+
+  shell:admin:
+    desc: Open shell in admin container
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec admin sh'
+
+  shell:postgres:
+    desc: Open psql in postgres container
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec postgres psql -U admin spotify'
+
+  # ─────────────────────────────────────────
+  # Mobile
+  # ─────────────────────────────────────────
+  mobile:up:
+    desc: Start Expo Metro bundler in Docker
+    cmds:
+      - cmd: '{{.DC_DEV}} --profile mobile up -d mobile'
+      - cmd: echo "Open http://localhost:19000 for the QR code"
+
+  mobile:down:
+    desc: Stop mobile service
+    cmds:
+      - cmd: '{{.DC_DEV}} --profile mobile down'
+
+  mobile:logs:
+    desc: Tail mobile service logs
+    cmds:
+      - cmd: '{{.DC_DEV}} logs -f mobile'
+
+  mobile:qr:
+    desc: Print Expo tunnel URL for scanning
+    cmds:
+      - cmd: '{{.DC_DEV}} logs mobile 2>&1 | grep exp:// | tail -1'
+
+  # ─────────────────────────────────────────
+  # Desktop
+  # ─────────────────────────────────────────
+  desktop:up:
+    desc: Start desktop Vite dev server in Docker (UI only, no Tauri)
+    cmds:
+      - cmd: '{{.DC_DEV}} --profile desktop up -d desktop'
+      - cmd: echo "Open http://localhost:1420"
+
+  desktop:down:
+    desc: Stop desktop service
+    cmds:
+      - cmd: '{{.DC_DEV}} --profile desktop down'
+
+  desktop:logs:
+    desc: Tail desktop service logs
+    cmds:
+      - cmd: '{{.DC_DEV}} logs -f desktop'
+
+  # ─────────────────────────────────────────
+  # Production
+  # ─────────────────────────────────────────
+  prod:up:
+    desc: Start production stack
+    prompt: Start PRODUCTION environment?
+    cmds:
+      - cmd: '{{.DC_PROD}} up -d'
+
+  prod:build:
+    desc: Build images and start production stack
+    prompt: Build and start PRODUCTION environment?
+    cmds:
+      - cmd: '{{.DC_PROD}} up -d --build'
+
+  prod:down:
+    desc: Stop production stack
+    cmds:
+      - cmd: '{{.DC_PROD}} down'
+
+  prod:logs:
+    desc: 'Tail production logs. Optionally filter: task prod:logs -- api'
+    cmds:
+      - cmd: '{{.DC_PROD}} logs -f {{.CLI_ARGS}}'
+
+  # ─────────────────────────────────────────
+  # Monorepo dev (native, no Docker for apps)
+  # ─────────────────────────────────────────
+  app:dev:
+    desc: Start all apps natively (requires infra:up first)
+    cmds:
+      - cmd: pnpm dev
+
+  app:build:
+    desc: Build all packages and apps
+    cmds:
+      - cmd: pnpm build
+
+  app:lint:
+    desc: Lint all packages and apps
+    cmds:
+      - cmd: pnpm lint
+
+  app:test:
+    desc: Run all tests across the monorepo
+    cmds:
+      - cmd: pnpm test
+
+  # ─────────────────────────────────────────
+  # Utils
+  # ─────────────────────────────────────────
+  clean:dist:
+    desc: Remove all dist/ build artifacts from packages and apps
+    cmds:
+      - cmd: node scripts/clean-dist.mjs
+
+  prune:
+    desc: Remove all unused Docker images, containers and volumes
+    prompt: Remove all unused Docker resources?
+    cmds:
+      - cmd: docker system prune -af
+
+  # ─────────────────────────────────────────
+  # Quick-start workflows
+  # ─────────────────────────────────────────
+  init:
+    desc: First-time setup — build Docker images, migrate DB, seed data
+    cmds:
+      - task: dev:build
+      - task: db:migrate
+      - task: db:seed
+      - cmd: echo "Project initialized!"
+
+  init:native:
+    desc: First-time native setup — start infra, migrate DB, seed, run apps
+    cmds:
+      - task: infra:up
+      - task: db:migrate
+      - task: db:seed
+      - task: app:dev
+
+  # ─────────────────────────────────────────
+  # Internal helpers (not listed)
+  # ─────────────────────────────────────────
+  _print-urls:
+    internal: true
+    silent: true
+    cmds:
+      - cmd: echo "Services:"
+      - cmd: echo "  API    -> http://localhost:3000"
+      - cmd: echo "  Web    -> http://localhost:3001"
+      - cmd: echo "  Admin  -> http://localhost:3002"
+      - cmd: echo "  Swagger-> http://localhost:3000/swagger"

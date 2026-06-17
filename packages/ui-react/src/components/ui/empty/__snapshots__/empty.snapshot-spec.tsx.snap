@@ -1,0 +1,54 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Empty snapshots > matches snapshot — full composition 1`] = `
+<div
+  class="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 text-balance rounded-lg border-dashed p-6 text-center md:p-12"
+  data-slot="empty"
+>
+  <div
+    class="flex max-w-sm flex-col items-center gap-2 text-center"
+    data-slot="empty-header"
+  >
+    <div
+      class="text-lg font-medium tracking-tight"
+      data-slot="empty-title"
+    >
+      Nothing here
+    </div>
+    <div
+      class="text-slate-500 [&>a:hover]:text-slate-900 text-sm/relaxed [&>a]:underline [&>a]:underline-offset-4 dark:text-slate-400 dark:[&>a:hover]:text-slate-50"
+      data-slot="empty-description"
+    >
+      Try again later
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Empty snapshots > renders EmptyMedia icon variant 1`] = `
+<div>
+  <div
+    class="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 text-balance rounded-lg border-dashed p-6 text-center md:p-12"
+    data-slot="empty"
+  >
+    <div
+      class="flex max-w-sm flex-col items-center gap-2 text-center"
+      data-slot="empty-header"
+    >
+      <div
+        class="mb-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 bg-slate-100 text-slate-950 flex size-10 shrink-0 items-center justify-center rounded-lg [&_svg:not([class*='size-'])]:size-6 dark:bg-slate-800 dark:text-slate-50"
+        data-slot="empty-icon"
+        data-variant="icon"
+      >
+        ⭐
+      </div>
+      <div
+        class="text-lg font-medium tracking-tight"
+        data-slot="empty-title"
+      >
+        No results
+      </div>
+    </div>
+  </div>
+</div>
+`;

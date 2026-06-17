@@ -1,7 +1,7 @@
 'use client'
 
 import type { FC, ReactNode } from 'react'
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
+import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels'
 import { cn } from '@/lib/utils'
 
 export interface ResizablePanelProps {
@@ -28,7 +28,7 @@ export const ResizableLayout: FC<ResizableLayoutProps> = ({
   children,
 }) => {
   return (
-    <PanelGroup direction={direction} className={cn('h-full', className)}>
+    <PanelGroup orientation={direction} className={cn('h-full', className)}>
       {children}
     </PanelGroup>
   )

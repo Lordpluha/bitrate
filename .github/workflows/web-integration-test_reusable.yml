@@ -37,30 +37,30 @@ jobs:
 
       - name: Build application images
         run: |
-          docker compose -f docker-compose.preprod.yaml build api web-player web-artists admin
+          docker compose -f infra/docker-compose.preprod.yaml build api web-player web-artists admin
 
       - name: Start services
         run: |
-          docker compose -f docker-compose.preprod.yaml up -d postgres redis
+          docker compose -f infra/docker-compose.preprod.yaml up -d postgres redis
           sleep 10
 
       - name: Wait for services
         run: |
-          timeout 60 bash -c 'until docker compose -f docker-compose.preprod.yaml exec -T postgres pg_isready -U admin; do sleep 1; done'
-          docker compose -f docker-compose.preprod.yaml exec -T redis redis-cli ping
+          timeout 60 bash -c 'until docker compose -f infra/docker-compose.preprod.yaml exec -T postgres pg_isready -U admin; do sleep 1; done'
+          docker compose -f infra/docker-compose.preprod.yaml exec -T redis redis-cli ping
 
       - name: Start application services
         run: |
-          docker compose -f docker-compose.preprod.yaml up -d api web-player web-artists admin
+          docker compose -f infra/docker-compose.preprod.yaml up -d api web-player web-artists admin
           sleep 20
 
       - name: Check container status
         run: |
-          docker compose -f docker-compose.preprod.yaml ps
-          docker compose -f docker-compose.preprod.yaml logs --tail=50 api
-          docker compose -f docker-compose.preprod.yaml logs --tail=50 web-player
-          docker compose -f docker-compose.preprod.yaml logs --tail=50 web-artists
-          docker compose -f docker-compose.preprod.yaml logs --tail=50 admin
+          docker compose -f infra/docker-compose.preprod.yaml ps
+          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 api
+          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 web-player
+          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 web-artists
+          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 admin
 
       - name: Run health checks
         run: |
@@ -77,7 +77,7 @@ jobs:
             fi
 
             # Check Web - run inside container (curl not guaranteed on host)
-            if docker compose -f docker-compose.preprod.yaml exec -T web-player node -e "const req=require('http').get('http://localhost:3001', (r)=>{console.log('Web status:', r.statusCode); process.exit(0);}); req.on('error', (e)=>{console.error('Web error:', e.message); process.exit(1);});"; then
+            if docker compose -f infra/docker-compose.preprod.yaml exec -T web-player node -e "const req=require('http').get('http://localhost:3001', (r)=>{console.log('Web status:', r.statusCode); process.exit(0);}); req.on('error', (e)=>{console.error('Web error:', e.message); process.exit(1);});"; then
               echo "✅ Web is healthy"
               WEB_OK=1
             else
@@ -86,7 +86,7 @@ jobs:
             fi
 
             # Check Admin - Kottster runs on port 5480 internally
-            if docker compose -f docker-compose.preprod.yaml exec -T admin node -e "const req=require('http').get('http://localhost:5480', (r)=>{console.log('Admin status:', r.statusCode); process.exit(0);}); req.on('error', (e)=>{console.error('Admin error:', e.message); process.exit(1);});"; then
+            if docker compose -f infra/docker-compose.preprod.yaml exec -T admin node -e "const req=require('http').get('http://localhost:5480', (r)=>{console.log('Admin status:', r.statusCode); process.exit(0);}); req.on('error', (e)=>{console.error('Admin error:', e.message); process.exit(1);});"; then
               echo "✅ Admin is healthy"
               ADMIN_OK=1
             else
@@ -107,25 +107,25 @@ jobs:
 
       - name: Run database migrations
         run: |
-          docker compose -f docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='spotify_shadow'" | grep -q 1 || \
-            docker compose -f docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE spotify_shadow;"
-          docker compose -f docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:gen
-          docker compose -f docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:migration:start
+          docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='spotify_shadow'" | grep -q 1 || \
+            docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE spotify_shadow;"
+          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:gen
+          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:migration:start
 
       - name: Seed database
         run: |
-          docker compose -f docker-compose.preprod.yaml exec -T api sh -c "cd apps/api && pnpm prisma db seed"
+          docker compose -f infra/docker-compose.preprod.yaml exec -T api sh -c "cd apps/api && pnpm prisma db seed"
 
       - name: Show container logs on failure
         if: failure()
         run: |
           echo "=== API Logs ==="
-          docker compose -f docker-compose.preprod.yaml logs api
+          docker compose -f infra/docker-compose.preprod.yaml logs api
           echo "=== Web Logs ==="
-          docker compose -f docker-compose.preprod.yaml logs web-player
+          docker compose -f infra/docker-compose.preprod.yaml logs web-player
           echo "=== Postgres Logs ==="
-          docker compose -f docker-compose.preprod.yaml logs postgres
+          docker compose -f infra/docker-compose.preprod.yaml logs postgres
 
       - name: Cleanup
         if: always()
-        run: docker compose -f docker-compose.preprod.yaml down -v
+        run: docker compose -f infra/docker-compose.preprod.yaml down -v

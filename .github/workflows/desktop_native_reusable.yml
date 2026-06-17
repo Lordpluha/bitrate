@@ -37,6 +37,8 @@ jobs:
       - name: Setup Node.js and pnpm
         if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
         uses: ./.github/actions/setup-node-pnpm
+        with:
+          install: "false"
 
       - name: Setup Rust
         if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
@@ -58,6 +60,10 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev \
             pkg-config
+
+      - name: Install desktop dependencies
+        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
+        run: pnpm install --frozen-lockfile --filter @spotify/desktop...
 
       - name: Build desktop app (native)
         if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
