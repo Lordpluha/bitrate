@@ -44,6 +44,7 @@ COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/nod
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
 
 # Build приложения
+RUN pnpm --filter @spotify/ui-react run build
 RUN pnpm --filter @spotify/web-player run build
 
 # Stage 5: Production Dependencies

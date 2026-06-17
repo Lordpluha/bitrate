@@ -44,6 +44,7 @@ COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/n
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
 
 # Build приложения
+RUN pnpm --filter @spotify/ui-react run build
 RUN pnpm --filter @spotify/web-artists run build
 
 # Stage 5: Production Dependencies
