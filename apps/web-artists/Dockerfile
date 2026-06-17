@@ -14,6 +14,7 @@ COPY apps/web-artists/package.json ./apps/web-artists/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/svgr/package.json ./packages/svgr/
 COPY packages/svgr/bin ./packages/svgr/bin
+COPY packages/vite-svgr/package.json ./packages/vite-svgr/
 COPY packages/tokens/package.json ./packages/tokens/
 COPY packages/tokens-generator/package.json ./packages/tokens-generator/
 COPY packages/tokens-generator/bin ./packages/tokens-generator/bin
