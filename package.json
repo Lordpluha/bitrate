@@ -25,7 +25,7 @@
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
     "format": "turbo run format",
-    "prepare": "lefthook install",
+    "prepare": "lefthook install || true",
     "commit": "cz",
     "changeset": "changeset",
     "changeset:version": "changeset version",
