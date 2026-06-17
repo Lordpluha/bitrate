@@ -16,7 +16,8 @@ COPY packages/converter/bin ./packages/converter/bin
 COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/ncs-parser/package.json ./packages/ncs-parser/
 COPY turbo.json ./
-RUN LEFTHOOK=0 pnpm install --frozen-lockfile
+RUN node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));if(pkg.scripts&&pkg.scripts.prepare){delete pkg.scripts.prepare;fs.writeFileSync(p, JSON.stringify(pkg, null, 2));}" \
+  && pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development

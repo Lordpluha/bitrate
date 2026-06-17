@@ -19,7 +19,8 @@ COPY packages/tokens-generator/package.json ./packages/tokens-generator/
 COPY packages/tokens-generator/bin ./packages/tokens-generator/bin
 COPY packages/contracts/package.json ./packages/contracts/
 COPY turbo.json ./
-RUN LEFTHOOK=0 pnpm install --frozen-lockfile
+RUN node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));if(pkg.scripts&&pkg.scripts.prepare){delete pkg.scripts.prepare;fs.writeFileSync(p, JSON.stringify(pkg, null, 2));}" \
+  && pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development
