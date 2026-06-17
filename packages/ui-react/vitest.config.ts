@@ -18,11 +18,29 @@ export default defineConfig({
           environment: 'jsdom',
           globals: true,
           setupFiles: ['./vitest-setup.ts'],
-          include: [
-            'src/**/*.unit-spec.{ts,tsx}',
-            'src/**/*.snapshot-spec.{ts,tsx}',
-            'src/**/*.int-spec.{ts,tsx}',
-          ],
+          include: ['src/**/*.unit-spec.{ts,tsx}'],
+        },
+      },
+      {
+        plugins: [react()],
+        resolve: { alias },
+        test: {
+          name: 'integration',
+          environment: 'jsdom',
+          globals: true,
+          setupFiles: ['./vitest-setup.ts'],
+          include: ['src/**/*.int-spec.{ts,tsx}'],
+        },
+      },
+      {
+        plugins: [react()],
+        resolve: { alias },
+        test: {
+          name: 'snapshot',
+          environment: 'jsdom',
+          globals: true,
+          setupFiles: ['./vitest-setup.ts'],
+          include: ['src/**/*.snapshot-spec.{ts,tsx}'],
         },
       },
       {

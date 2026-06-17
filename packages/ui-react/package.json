@@ -35,15 +35,15 @@
     "build": "vite build",
     "dev": "vite build --watch",
     "check-types": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest --project=unit",
-    "test:unit": "vitest run --project=unit --reporter=verbose \"src/**/*.unit-spec.{ts,tsx}\"",
-    "test:int": "vitest run --project=unit --reporter=verbose \"src/**/*.int-spec.{ts,tsx}\"",
-    "test:snapshot": "vitest run --project=unit --reporter=verbose \"src/**/*.snapshot-spec.{ts,tsx}\"",
-    "test:snapshot:update": "vitest run --project=unit --reporter=verbose --update \"src/**/*.snapshot-spec.{ts,tsx}\"",
+    "test": "vitest run --project=unit --project=integration --project=snapshot --project=screenshot",
+    "test:watch": "vitest --project=unit --project=integration --project=snapshot",
+    "test:unit": "vitest run --project=unit --reporter=verbose",
+    "test:int": "vitest run --project=integration --reporter=verbose",
+    "test:snapshot": "vitest run --project=snapshot --reporter=verbose",
+    "test:snapshot:update": "vitest run --project=snapshot --reporter=verbose --update",
     "test:screenshot": "vitest run --project=screenshot",
     "test:screenshot:update": "vitest run --project=screenshot --update",
-    "test:cov": "vitest run --project=unit --coverage"
+    "test:cov": "vitest run --project=unit --project=integration --project=snapshot --coverage"
   },
   "peerDependencies": {
     "@radix-ui/react-avatar": "^1.1.10",
