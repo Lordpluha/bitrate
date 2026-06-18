@@ -81,23 +81,17 @@ describe('convertImage', () => {
 
     it('calls .webp() with the given quality', async () => {
       await convertImage({ input: '/a.png', quality: 60 })
-      expect(sharpMocks.webp).toHaveBeenCalledWith(
-        expect.objectContaining({ quality: 60 }),
-      )
+      expect(sharpMocks.webp).toHaveBeenCalledWith(expect.objectContaining({ quality: 60 }))
     })
 
     it('calls .webp() with lossless: false by default', async () => {
       await convertImage({ input: '/a.png' })
-      expect(sharpMocks.webp).toHaveBeenCalledWith(
-        expect.objectContaining({ lossless: false }),
-      )
+      expect(sharpMocks.webp).toHaveBeenCalledWith(expect.objectContaining({ lossless: false }))
     })
 
     it('calls .webp() with lossless: true when requested', async () => {
       await convertImage({ input: '/a.png', lossless: true })
-      expect(sharpMocks.webp).toHaveBeenCalledWith(
-        expect.objectContaining({ lossless: true }),
-      )
+      expect(sharpMocks.webp).toHaveBeenCalledWith(expect.objectContaining({ lossless: true }))
     })
 
     it('calls .toFile() with the output path', async () => {
@@ -107,9 +101,7 @@ describe('convertImage', () => {
 
     it('uses the default quality of 80 when not specified', async () => {
       await convertImage({ input: '/a.png' })
-      expect(sharpMocks.webp).toHaveBeenCalledWith(
-        expect.objectContaining({ quality: 80 }),
-      )
+      expect(sharpMocks.webp).toHaveBeenCalledWith(expect.objectContaining({ quality: 80 }))
     })
   })
 
@@ -123,7 +115,7 @@ describe('convertImage', () => {
     it('returns inputSize and outputSize as human-readable strings', async () => {
       fsMocks.stat
         .mockResolvedValueOnce({ size: 4 * 1024 * 1024 }) // input: 4 MB
-        .mockResolvedValueOnce({ size: 512 * 1024 })        // output: 512 KB
+        .mockResolvedValueOnce({ size: 512 * 1024 }) // output: 512 KB
 
       const result = await convertImage({ input: '/a.png' })
       expect(result.inputSize).toBe('4 MB')
@@ -141,9 +133,7 @@ describe('convertImage', () => {
 
     for (const [size, label] of cases) {
       it(`formats ${size} bytes as "${label}"`, async () => {
-        fsMocks.stat
-          .mockResolvedValueOnce({ size })
-          .mockResolvedValueOnce({ size })
+        fsMocks.stat.mockResolvedValueOnce({ size }).mockResolvedValueOnce({ size })
 
         const result = await convertImage({ input: '/a.png' })
         expect(result.inputSize).toBe(label)

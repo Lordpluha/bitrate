@@ -144,10 +144,7 @@ describe('convertAudio', () => {
 
     it('passes -y to allow overwriting the output file', async () => {
       await convertAudio({ input: '/a.mp3' })
-      expect(execaMock).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.arrayContaining(['-y']),
-      )
+      expect(execaMock).toHaveBeenCalledWith(expect.anything(), expect.arrayContaining(['-y']))
     })
 
     it('suppresses ffmpeg banner output', async () => {
@@ -168,8 +165,8 @@ describe('convertAudio', () => {
 
     it('returns inputSize and outputSize as human-readable strings', async () => {
       fsMocks.stat
-        .mockResolvedValueOnce({ size: 2 * 1024 * 1024 })  // input: 2 MB
-        .mockResolvedValueOnce({ size: 512 * 1024 })         // output: 512 KB
+        .mockResolvedValueOnce({ size: 2 * 1024 * 1024 }) // input: 2 MB
+        .mockResolvedValueOnce({ size: 512 * 1024 }) // output: 512 KB
 
       const result = await convertAudio({ input: '/a.mp3' })
       expect(result.inputSize).toContain('MB')
@@ -194,9 +191,7 @@ describe('convertAudio', () => {
 
     for (const [size, label] of cases) {
       it(`formats ${size} bytes as "${label}"`, async () => {
-        fsMocks.stat
-          .mockResolvedValueOnce({ size })
-          .mockResolvedValueOnce({ size })
+        fsMocks.stat.mockResolvedValueOnce({ size }).mockResolvedValueOnce({ size })
 
         const result = await convertAudio({ input: '/a.mp3' })
         expect(result.inputSize).toBe(label)

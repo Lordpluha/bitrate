@@ -260,7 +260,7 @@ export const WithSelect: Story = {
     return (
       <ButtonGroup>
         <ButtonGroup>
-          <Select value={currency} onValueChange={setCurrency}>
+          <Select value={currency} onValueChange={(v) => setCurrency(v ?? '')}>
             <SelectTrigger className="font-mono">{currency}</SelectTrigger>
             <SelectContent className="min-w-24">
               {CURRENCIES.map((currency) => (

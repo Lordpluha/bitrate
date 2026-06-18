@@ -2,17 +2,16 @@
 
 exports[`Select snapshots > matches snapshot — closed trigger 1`] = `
 <button
-  aria-autocomplete="none"
   aria-expanded="false"
-  class="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white data-[placeholder]:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:data-[placeholder]:text-slate-400 dark:focus:ring-slate-300"
+  aria-haspopup="listbox"
+  class="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white data-placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:data-placeholder:text-slate-400 dark:focus:ring-slate-300"
   data-placeholder=""
-  data-state="closed"
-  dir="ltr"
   role="combobox"
+  tabindex="0"
   type="button"
 >
   <span
-    style="pointer-events: none;"
+    data-placeholder=""
   >
     Pick one
   </span>
@@ -37,25 +36,22 @@ exports[`Select snapshots > matches snapshot — closed trigger 1`] = `
 `;
 
 exports[`Select snapshots > matches snapshot — open state 1`] = `
-<div
-  aria-hidden="true"
-  data-aria-hidden="true"
->
+<div>
   <button
-    aria-autocomplete="none"
-    aria-controls="radix-_r_2_"
+    aria-controls="base-ui-_r_2_-list"
     aria-expanded="true"
-    class="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white data-[placeholder]:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:data-[placeholder]:text-slate-400 dark:focus:ring-slate-300"
+    aria-haspopup="listbox"
+    class="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white data-placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:data-placeholder:text-slate-400 dark:focus:ring-slate-300"
+    data-base-ui-inert=""
     data-placeholder=""
-    data-radix-popper-align="start"
-    data-radix-popper-side="bottom"
-    data-state="open"
-    dir="ltr"
+    data-popup-open=""
+    data-pressed=""
     role="combobox"
+    tabindex="0"
     type="button"
   >
     <span
-      style="pointer-events: none;"
+      data-placeholder=""
     >
       Pick one
     </span>
@@ -77,5 +73,37 @@ exports[`Select snapshots > matches snapshot — open state 1`] = `
       />
     </svg>
   </button>
+  <span
+    aria-hidden="true"
+    data-base-ui-inert=""
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px;"
+    tabindex="-1"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    data-type="outside"
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+  <span
+    aria-owns="_r_4_"
+    data-base-ui-inert=""
+    style="clip-path: inset(50%); position: fixed; top: 0px; left: 0px;"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    data-type="outside"
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+  <input
+    aria-hidden="true"
+    data-base-ui-inert=""
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="-1"
+    value=""
+  />
 </div>
 `;

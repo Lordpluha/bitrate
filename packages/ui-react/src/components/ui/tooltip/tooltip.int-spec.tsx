@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tool
 describe('Tooltip integration', () => {
   it('shows the tooltip content on focus', async () => {
     render(
-      <TooltipProvider delayDuration={0}>
+      <TooltipProvider delay={0}>
         <Tooltip>
           <TooltipTrigger>Hover me</TooltipTrigger>
           <TooltipContent>Helpful tip</TooltipContent>

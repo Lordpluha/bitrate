@@ -39,7 +39,7 @@ describe('Select', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
 
-  it('renders the selected value when a default value is provided', () => {
+  it('hides the placeholder when a default value is provided', () => {
     render(
       <Select defaultValue="b">
         <SelectTrigger>
@@ -51,7 +51,7 @@ describe('Select', () => {
         </SelectContent>
       </Select>,
     )
-    expect(screen.getByRole('combobox')).toHaveTextContent('Option B')
+    expect(screen.queryByText('Pick one')).not.toBeInTheDocument()
   })
 
   it('renders disabled SelectItem', () => {

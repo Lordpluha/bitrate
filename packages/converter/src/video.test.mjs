@@ -95,10 +95,7 @@ describe('convertVideo', () => {
 
     it('strips video stream with -vn', async () => {
       await convertVideo({ input: '/a.mp4' })
-      expect(execaMock).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.arrayContaining(['-vn']),
-      )
+      expect(execaMock).toHaveBeenCalledWith(expect.anything(), expect.arrayContaining(['-vn']))
     })
 
     it('uses the AAC codec', async () => {
@@ -135,10 +132,7 @@ describe('convertVideo', () => {
 
     it('passes -y to allow overwriting the output file', async () => {
       await convertVideo({ input: '/a.mp4' })
-      expect(execaMock).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.arrayContaining(['-y']),
-      )
+      expect(execaMock).toHaveBeenCalledWith(expect.anything(), expect.arrayContaining(['-y']))
     })
 
     it('suppresses ffmpeg banner output', async () => {
@@ -160,7 +154,7 @@ describe('convertVideo', () => {
     it('returns inputSize and outputSize as human-readable strings', async () => {
       fsMocks.stat
         .mockResolvedValueOnce({ size: 50 * 1024 * 1024 }) // input: 50 MB
-        .mockResolvedValueOnce({ size: 3 * 1024 * 1024 })  // output: 3 MB
+        .mockResolvedValueOnce({ size: 3 * 1024 * 1024 }) // output: 3 MB
 
       const result = await convertVideo({ input: '/a.mp4' })
       expect(result.inputSize).toBe('50 MB')
@@ -184,9 +178,7 @@ describe('convertVideo', () => {
 
     for (const [size, label] of cases) {
       it(`formats ${size} bytes as "${label}"`, async () => {
-        fsMocks.stat
-          .mockResolvedValueOnce({ size })
-          .mockResolvedValueOnce({ size })
+        fsMocks.stat.mockResolvedValueOnce({ size }).mockResolvedValueOnce({ size })
 
         const result = await convertVideo({ input: '/a.mp4' })
         expect(result.inputSize).toBe(label)
