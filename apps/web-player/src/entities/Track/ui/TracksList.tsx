@@ -11,8 +11,8 @@ interface TracksListProps {
 
 export const TracksList = ({ tracks }: TracksListProps) => {
   return (
-    <div className="px-6 py-4">
-      <div className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2">
+    <div className="px-6 py-4 max-[1024px]:px-3 max-[1024px]:py-3">
+      <div className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden">
         <div>#</div>
         <div>TITLE</div>
         <div>ALBUM</div>

@@ -5,10 +5,11 @@ import { TrackInfo } from './TrackInfo'
 import { PlayerControls } from './PlayerControls'
 import { PlayerActions } from './PlayerActions'
 import { NowPlayingView } from './NowPlayingView'
-import { useAudioPlayer, useAppSelector, useAppDispatch, useMediaQuery } from '@shared/hooks'
+import { useAudioPlayer, useAppSelector, useAppDispatch } from '@shared/hooks'
 import {
   setVolume,
   selectMusicPlayer,
+  selectCurrentPlaylistName,
 } from '@entities/Player/store/PlayerSlice'
 import { useArtist } from '@shared/hooks/useArtist'
 import { MiniPlayer } from './MiniPlayer'
@@ -16,12 +17,12 @@ import { MiniPlayer } from './MiniPlayer'
 export const Player: React.FC = () => {
   const { currentTrack, isPlaying, volume, currentTime, duration } =
     useAppSelector(selectMusicPlayer)
+  const currentPlaylistName = useAppSelector(selectCurrentPlaylistName)
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const { data: artist } = useArtist(currentTrack?.artistId)
   const artistName = artist?.username || 'Unknown Artist'
-  const isDesktop = useMediaQuery('(min-width: 1280px)')
 
   const {
     audioRef,
@@ -87,22 +88,25 @@ export const Player: React.FC = () => {
         onSeek={onSeek}
         onNext={() => changeTrack('next')}
         onPrevious={() => changeTrack('prev')}
+        volume={volume}
+        onVolumeChange={(vol) => dispatch(setVolume(vol))}
+        playlistTitle={currentPlaylistName || 'Playlist'}
       />
 
-      {/* Мини-плеер — только на < xl */}
+      {/* Мини-плеер — только на <=1024 */}
       <MiniPlayer
         title={currentTrack.title || 'Unknown'}
         artist={artistName}
         coverUrl={coverUrl}
         isPlaying={isPlaying}
-        isVisible={isVisible && !isDesktop}
+        isVisible={isVisible}
         onPlayPause={togglePlayPause}
         onExpand={() => setIsExpanded(true)}
       />
 
-      {/* Полный плеер — только на xl+ */}
+      {/* Полный плеер — только на >=1025 */}
       <div
-        className={`fixed bottom-0 left-0 right-0 h-22.5 bg-background border-t border-border px-4 hidden xl:flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${
+        className={`fixed bottom-0 left-0 right-0 h-22.5 bg-background border-t border-border px-4 hidden [@media(min-width:1025px)]:flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${
           isVisible ? 'translate-y-0' : 'translate-y-full'
         }`}
       >

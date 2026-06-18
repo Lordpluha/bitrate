@@ -8,6 +8,8 @@ import { NextInQueue } from '@widgets/RightSidebar/NextInQueue'
 import { Heart, ChevronDown, Minimize2 } from 'lucide-react'
 import { useEffect } from 'react'
 import { PlayerControls } from './PlayerControls'
+import { PlayerActions } from './PlayerActions'
+import { TrackInfo } from './TrackInfo'
 
 interface NowPlayingViewProps {
   isOpen: boolean
@@ -22,6 +24,9 @@ interface NowPlayingViewProps {
   onSeek: (time: number) => void
   onNext: () => void
   onPrevious: () => void
+  volume: number
+  onVolumeChange: (volume: number) => void
+  playlistTitle?: string
 }
 
 export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
@@ -37,9 +42,11 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
   onSeek,
   onNext,
   onPrevious,
+  volume,
+  onVolumeChange,
+  playlistTitle = 'Playlist',
 }) => {
-  // Предзагружаем цвет всегда, а не только когда открыто — чтобы градиент
-  // был готов в момент открытия, а не появлялся с задержкой
+
   const [r, g, b] = useImageColor(coverUrl)
 
   useEffect(() => {
@@ -61,8 +68,8 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
   return (
     <div
       className={cn(
-        'fixed inset-0 z-60 overflow-y-auto transition-transform duration-500 ease-in-out',
-        isOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none',
+        'fixed inset-0 z-60 overflow-y-auto transition-opacity duration-400 ease-out',
+        isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none',
       )}
       style={{
         background: `linear-gradient(180deg,
@@ -74,71 +81,111 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
           #0a0a0a 100%)`,
       }}
     >
-      <div className="sticky top-0 z-10 flex items-center justify-between px-4 pt-4 pb-2">
-        <button
-          onClick={onClose}
-          className="p-2 text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/10"
-          aria-label="Minimize now playing"
-          type="button"
-        >
-          <ChevronDown size={24} />
-        </button>
+      <div className="sticky top-0 z-20 flex items-center justify-between px-4 pt-4 pb-2 bg-linear-to-b from-black/35 to-transparent">
+        <p className="text-white/90 text-sm font-semibold truncate">{playlistTitle}</p>
 
-        <div className="min-w-0 flex-1 text-center px-4">
-          <p className="text-white/50 text-xs uppercase tracking-widest truncate">Now Playing</p>
-          <p className="text-white text-sm font-semibold truncate">{title}</p>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={onClose}
+            className="p-2 text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/10"
+            aria-label="Minimize now playing"
+            type="button"
+          >
+            <ChevronDown size={22} />
+          </button>
+          <button
+            onClick={onClose}
+            className="p-2 text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/10"
+            aria-label="Return to normal view"
+            type="button"
+          >
+            <Minimize2 size={18} />
+          </button>
         </div>
-
-        <button
-          onClick={onClose}
-          className="p-2 text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/10"
-          aria-label="Return to normal view"
-          type="button"
-        >
-          <Minimize2 size={18} />
-        </button>
       </div>
 
-      <div className="flex flex-col items-center px-6 pt-4 pb-20">
-        <img
-          src={coverUrl}
-          alt={title}
-          className="w-full max-w-sm aspect-square rounded-xl shadow-2xl object-cover"
-        />
-
-        <div className="w-full max-w-xl mt-6">
-          <div className="flex items-center justify-between mb-5">
-            <div className="min-w-0 flex-1">
-              <h2 className="text-white text-2xl font-bold truncate">{title}</h2>
-              <p className="text-white/60 mt-1 text-sm">{artist}</p>
-            </div>
-            <button
-              className="ml-4 p-2 text-white/50 hover:text-white transition-colors shrink-0"
-              type="button"
-              aria-label="Like"
-            >
-              <Heart size={20} />
-            </button>
-          </div>
-
-          <PlayerControls
-            isPlaying={isPlaying}
-            currentTime={currentTime}
-            duration={duration}
-            onPlayPause={onPlayPause}
-            onSeek={onSeek}
-            onNext={onNext}
-            onPrevious={onPrevious}
+      <section className="min-h-[calc(100dvh-82px)] flex flex-col">
+        <div className="flex-1 flex flex-col items-center justify-center px-6 pt-8 pb-28 max-[1024px]:pb-24 sm:max-[1024px]:pb-26">
+          <img
+            src={coverUrl}
+            alt={title}
+            className="w-full max-w-122 aspect-square rounded-xl shadow-2xl object-cover"
           />
-        </div>
 
-        <div className="w-full max-w-5xl mt-10">
+          <div className="w-full max-w-122 mt-6">
+            <div className="flex items-center justify-between mb-5">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-white text-2xl font-bold truncate">{title}</h2>
+                <p className="text-white/60 mt-1 text-sm">{artist}</p>
+              </div>
+              <button
+                className="ml-4 p-2 text-white/50 hover:text-white transition-colors shrink-0"
+                type="button"
+                aria-label="Like"
+              >
+                <Heart size={20} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 pb-28 max-[1024px]:pb-24 sm:max-[1024px]:pb-26 pt-10">
+        <div className="mx-auto w-full max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <AboutArtist />
             <div className="flex flex-col gap-4">
-              <Credits />
+              <AboutArtist />
               <NextInQueue />
             </div>
+            <div className="flex flex-col gap-4">
+              <Credits />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="fixed bottom-0 left-0 right-0 z-30 w-full border-t border-white/10 bg-black/65 backdrop-blur-sm px-4 py-3">
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="flex max-[1024px]:hidden items-center justify-between gap-4">
+            <div className="w-[28%] min-w-0">
+              <TrackInfo
+                title={title}
+                artist={artist}
+                coverUrl={coverUrl}
+                isLiked={false}
+              />
+            </div>
+
+            <div className="w-[44%] flex justify-center">
+              <PlayerControls
+                isPlaying={isPlaying}
+                currentTime={currentTime}
+                duration={duration}
+                onPlayPause={onPlayPause}
+                onSeek={onSeek}
+                onNext={onNext}
+                onPrevious={onPrevious}
+              />
+            </div>
+
+            <div className="w-[28%] flex justify-end">
+              <PlayerActions
+                volume={volume}
+                onVolumeChange={onVolumeChange}
+              />
+            </div>
+          </div>
+
+          <div className="hidden max-[1024px]:block mx-auto w-full max-w-122">
+            <PlayerControls
+              isPlaying={isPlaying}
+              currentTime={currentTime}
+              duration={duration}
+              onPlayPause={onPlayPause}
+              onSeek={onSeek}
+              onNext={onNext}
+              onPrevious={onPrevious}
+            />
           </div>
         </div>
       </div>
