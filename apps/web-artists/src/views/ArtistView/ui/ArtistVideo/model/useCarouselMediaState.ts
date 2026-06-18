@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
 export const useCarouselMediaState = () => {
-  const [isLgUp, setIsLgUp] = useState<boolean | null>(null)
-  const [canHover, setCanHover] = useState(true)
+  const [isLgUp, setIsLgUp] = useState<boolean | null>(false)
+  const [canHover, setCanHover] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return

@@ -23,6 +23,8 @@ export const ArtistBlog = () => {
                     src={item.imageSrc}
                     alt={item.titleImage}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    loading={index === 0 ? 'eager' : 'lazy'}
                     className='object-cover transform transition-transform duration-300 group-hover:scale-105'
                   />
                 </div>
