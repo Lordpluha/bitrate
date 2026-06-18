@@ -2,7 +2,7 @@ import { HttpStatus, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import * as cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 
 import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'

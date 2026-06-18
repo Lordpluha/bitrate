@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  ArrowRight,
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -50,10 +49,7 @@ export const LibraryTags = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselNext
-          className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 border-none hover:bg-zinc-700 rounded-full"
-          icon={<ArrowRight />}
-        />
+        <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 border-none hover:bg-zinc-700 rounded-full" />
       </Carousel>
     </div>
   )

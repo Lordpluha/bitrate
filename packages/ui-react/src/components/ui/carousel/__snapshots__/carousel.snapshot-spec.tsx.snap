@@ -1,0 +1,66 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Carousel snapshots > matches snapshot — horizontal with slides 1`] = `
+<div
+  aria-roledescription="carousel"
+  class="relative"
+  role="region"
+>
+  <div
+    class="w-full"
+  >
+    <div
+      class="overflow-hidden w-full"
+    >
+      <div
+        class="flex flex-row"
+        style="gap: 0; transform: translate3d(NaNpx,0px,0px);"
+      >
+        <div
+          aria-roledescription="slide"
+          class="min-w-0 shrink-0 grow-0"
+          role="group"
+        >
+          Slide 1
+        </div>
+        <div
+          aria-roledescription="slide"
+          class="min-w-0 shrink-0 grow-0"
+          role="group"
+        >
+          Slide 2
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Carousel snapshots > matches snapshot — vertical orientation 1`] = `
+<div
+  aria-roledescription="carousel"
+  class="relative"
+  role="region"
+>
+  <div
+    class="h-full"
+  >
+    <div
+      class="overflow-hidden h-full"
+    >
+      <div
+        class="flex flex-col"
+        style="gap: 0; transform: translate3d(0px,0px,0px);"
+      >
+        <div
+          aria-roledescription="slide"
+          class="min-w-0 shrink-0 grow-0"
+          role="group"
+        >
+          Slide 1
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

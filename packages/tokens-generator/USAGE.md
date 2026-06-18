@@ -1,40 +1,32 @@
-# Использование @spotify/tokens-generator в других приложениях
+# Using @spotify/tokens-generator in Other Applications
 
-## Быстрый старт
+## Quick Start
 
-### 1. Добавьте зависимость
+### 1. Add the dependency
 
 ```bash
 pnpm add -D @spotify/tokens-generator
 ```
 
-### 2. Создайте конфиг токенов
-
-```bash
-tokens-generator --init
-```
-
-Или создайте `tokens.config.mjs` вручную (см. примеры в README.md).
-
-### 3. Добавьте скрипт в package.json
+### 2. Add a script to package.json
 
 ```json
 {
   "scripts": {
-    "gen:tokens": "tokens-generator --tokens ./path/to/tokens.json --config ./tokens.config.mjs --output ./styles"
+    "gen:tokens": "tokens-generator --tokens ./path/to/tokens.json --output ./styles"
   }
 }
 ```
 
-### 4. Запустите генерацию
+### 3. Run generation
 
 ```bash
 pnpm gen:tokens
 ```
 
-## Примеры использования в monorepo
+## Usage Examples in a Monorepo
 
-### В apps/web
+### In apps/web
 
 ```json
 {
@@ -44,7 +36,7 @@ pnpm gen:tokens
 }
 ```
 
-### В apps/mobile
+### In apps/mobile
 
 ```json
 {
@@ -54,24 +46,21 @@ pnpm gen:tokens
 }
 ```
 
-## Использование как модуля
+## Using as a Module
 
 ```javascript
 // scripts/build-tokens.mjs
-import { generateTokens } from '@spotify/tokens-generator';
-import config from '@spotify/tokens-generator/config';
+import { generateTokens } from '@spotify/tokens-generator'
 
-config.paths = {
-  tokens: './tokens.json',
-  output: './dist/styles',
-};
-
-await generateTokens(config);
+await generateTokens({
+  tokensPath: './tokens.json',
+  outputDir: './dist/styles',
+})
 ```
 
 ## JSON Schema
 
-Добавьте в ваш `tokens.json`:
+Add to your `tokens.json`:
 
 ```json
 {
@@ -82,4 +71,9 @@ await generateTokens(config);
 }
 ```
 
-Это даст вам автодополнение и валидацию в VSCode.
+This gives you autocompletion and validation in VSCode.
+
+## Important
+
+- The generator only works with Tailwind CSS v4.
+- External `tokens.config.mjs` is not supported.

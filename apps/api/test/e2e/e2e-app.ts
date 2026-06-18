@@ -8,7 +8,7 @@ import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { INestApplication, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
-import * as cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 import { envSchema } from '../../env.schema'
 import { AppController } from '../../src/app.controller'
 

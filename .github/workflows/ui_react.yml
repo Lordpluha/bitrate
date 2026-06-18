@@ -1,4 +1,4 @@
-name: "[ui-react] Visual Tests"
+name: "[ui-react] Tests"
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
       - 'packages/ui-react/**'
       - '.github/workflows/ui_react.yml'
       - '.github/workflows/ui_react_reusable.yml'
-      - '.github/workflows/loki_reusable.yml'
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [develop]
@@ -15,7 +14,6 @@ on:
       - 'packages/ui-react/**'
       - '.github/workflows/ui_react.yml'
       - '.github/workflows/ui_react_reusable.yml'
-      - '.github/workflows/loki_reusable.yml'
   workflow_dispatch:
     inputs:
       mode:
@@ -32,10 +30,15 @@ on:
         required: false
         default: true
         type: boolean
-      run-loki:
-        description: "Run Loki visual tests"
+      run-tests:
+        description: "Run Vitest unit/snapshot/int tests"
         required: false
         default: true
+        type: boolean
+      run-screenshot:
+        description: "Run Vitest screenshot tests"
+        required: false
+        default: false
         type: boolean
 
 concurrency:
@@ -48,18 +51,21 @@ jobs:
     uses: ./.github/workflows/ui_react_reusable.yml
     with:
       run-biome: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-biome'] == 'true' || true }}
-      run-loki: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-loki'] == 'true' || true }}
+      run-tests: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-tests'] == 'true' || true }}
+      run-screenshot: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-screenshot'] == 'true' || false }}
 
   ui-react-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
     uses: ./.github/workflows/ui_react_reusable.yml
     with:
       run-biome: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-biome'] == 'true' || true }}
-      run-loki: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-loki'] == 'true' || true }}
+      run-tests: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-tests'] == 'true' || true }}
+      run-screenshot: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-screenshot'] == 'true' || false }}
 
   ui-react-master:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
     uses: ./.github/workflows/ui_react_reusable.yml
     with:
       run-biome: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-biome'] == 'true' || false }}
-      run-loki: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-loki'] == 'true' || true }}
+      run-tests: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-tests'] == 'true' || true }}
+      run-screenshot: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-screenshot'] == 'true' || false }}

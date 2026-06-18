@@ -1,17 +1,17 @@
 import { createReadStream, promises as fs } from 'node:fs'
 import type { AppConfig } from '@common/config'
-import { PrismaService } from '@infra/prisma/prisma.service'
-import { ArtistEntity } from '@modules/artists'
-import { UserEntity } from '@modules/users'
+import type { PrismaService } from '@infra/prisma/prisma.service'
+import type { ArtistEntity } from '@modules/artists'
+import type { UserEntity } from '@modules/users'
 import { InjectQueue } from '@nestjs/bullmq'
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { Artist } from '@prisma/client'
-import { Queue } from 'bullmq'
+import type { ConfigService } from '@nestjs/config'
+import type { Artist } from '@prisma/client'
+import type { Queue } from 'bullmq'
 import { parseFile } from 'music-metadata'
 import { extname } from 'path'
-import { CreateTrackDto } from './dtos'
-import { TrackEntity } from './entities'
+import type { CreateTrackDto } from './dtos'
+import type { TrackEntity } from './entities'
 
 @Injectable()
 export class TracksService {
@@ -129,7 +129,7 @@ export class TracksService {
 
     const filePath = this.configService.getOrThrow('storage').getTracksDir(track.audioUrl)
 
-    let stat
+    let stat: Awaited<ReturnType<typeof fs.stat>>
     try {
       stat = await fs.stat(filePath)
     } catch {

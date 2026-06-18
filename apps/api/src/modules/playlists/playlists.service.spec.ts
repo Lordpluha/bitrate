@@ -96,7 +96,16 @@ describe('PlaylistsService', () => {
 
     expect(prisma.playlist.findUniqueOrThrow).toHaveBeenCalledWith({
       where: { id: 'playlist-1' },
-      include: { tracks: true },
+      include: {
+        tracks: true,
+        user: {
+          select: {
+            avatar: true,
+            id: true,
+            username: true,
+          },
+        },
+      },
     })
     expect(result).toBe(playlist)
   })
