@@ -1,10 +1,10 @@
 'use client'
 
-import React from 'react'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { cn } from '@spotify/ui-react'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import './submenu-animation.css'
 
@@ -87,20 +87,20 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
       resizeObserver.disconnect()
       clearTimeout(timeoutId)
     }
-  }, [isVisible, type, submenuData])
+  }, [isVisible])
 
   return (
     <div
-      role="menu"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
       className={cn(
-        'fixed left-0 right-0 bg-black backdrop-blur-xl z-1051 top-[72px]',
+        'fixed left-0 right-0 bg-black backdrop-blur-xl z-1051 top-18',
         'transition-all duration-300 ease-out',
         activeSubmenu && submenuData && !isClosing
           ? 'translate-y-0 opacity-100 pointer-events-auto visible'
           : '-translate-y-4 opacity-0 pointer-events-none invisible',
       )}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      role="menu"
       style={{
         maxHeight: isVisible ? `${contentHeight}px` : '0px',
         overflow: 'hidden',
@@ -109,10 +109,10 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
       <div ref={contentRef}>
         <SwitchTransition mode="out-in">
           <CSSTransition
+            classNames="submenu-fade"
             key={type}
             nodeRef={nodeRef}
             timeout={300}
-            classNames="submenu-fade"
           >
             <div ref={nodeRef}>
               {type === 'features' &&
@@ -143,13 +143,13 @@ const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = ({ data }) => {
           {group.sections && group.sections.length > 0 && (
             <ul className="mt-4 space-y-2">
               {group.sections.map((section, idx) => (
-                <li key={section.title} className={cn('mb-4')}>
+                <li className={cn('mb-4')} key={section.title}>
                   <Link
-                    href={section.href}
                     className={cn(
                       linkUnderlineClasses,
                       idx === 0 && 'text-4xl',
                     )}
+                    href={section.href}
                   >
                     {section.title}
                   </Link>
@@ -192,13 +192,8 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
       <section className="col-span-3 flex flex-col gap-4">
         <h5 className="text-base text-subdued">Deep dives</h5>
         {data.slice(0, 2).map((item) => (
-          <h4 key={item.id} className="text-5xl font-bold">
+          <h4 className="text-5xl font-bold" key={item.id}>
             <Link
-              href={item.href}
-              onMouseEnter={() => handleEnter(item.id)}
-              onMouseLeave={handleLeave}
-              onFocus={() => handleEnter(item.id)}
-              onBlur={handleLeave}
               className={cn(
                 linkUnderlineClasses,
                 'text-subdued transition-colors duration-300',
@@ -206,6 +201,11 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
                   'text-white': activeId === item.id,
                 },
               )}
+              href={item.href}
+              onBlur={handleLeave}
+              onFocus={() => handleEnter(item.id)}
+              onMouseEnter={() => handleEnter(item.id)}
+              onMouseLeave={handleLeave}
             >
               {item.title}
             </Link>
@@ -216,13 +216,8 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
       <section className="col-span-3 flex flex-col gap-2">
         <h5 className="text-base text-subdued">Deep dives</h5>
         {data.slice(2).map((r) => (
-          <h5 key={r.id} className="text-2xl font-semibold">
+          <h5 className="text-2xl font-semibold" key={r.id}>
             <Link
-              href={r.href}
-              onMouseEnter={() => handleEnter(r.id)}
-              onMouseLeave={handleLeave}
-              onFocus={() => handleEnter(r.id)}
-              onBlur={handleLeave}
               className={cn(
                 linkUnderlineClasses,
                 'text-subdued transition-colors duration-300',
@@ -230,6 +225,11 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
                   'text-white': activeId === r.id,
                 },
               )}
+              href={r.href}
+              onBlur={handleLeave}
+              onFocus={() => handleEnter(r.id)}
+              onMouseEnter={() => handleEnter(r.id)}
+              onMouseLeave={handleLeave}
             >
               {r.title}
             </Link>
@@ -245,7 +245,7 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
           const isActive = img.id === activeId
           return (
             <div
-              key={img.id}
+              aria-hidden={!isActive}
               className={cn(
                 'absolute aspect-w-16 aspect-h-9 inset-0 transition-all duration-400 ease-in-out transform-gpu',
                 {
@@ -253,14 +253,14 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
                   'opacity-0 scale-98 z-10 pointer-events-none': !isActive,
                 },
               )}
-              aria-hidden={!isActive}
+              key={img.id}
             >
               <Image
-                src={img.imageSrc}
                 alt={img.title}
                 className="object-cover"
                 fill
                 priority
+                src={img.imageSrc}
               />
             </div>
           )
@@ -271,7 +271,7 @@ const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
         className="col-span-4 flex items-end text-subdued text-base relative overflow-hidden"
         style={{ minHeight: '3rem' }}
       >
-        <div key={activeId} className="animate-fade-in">
+        <div className="animate-fade-in" key={activeId}>
           <p aria-live="polite">{activeItem?.description || ''}</p>
         </div>
       </div>

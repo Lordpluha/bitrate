@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
 import { cn } from '@spotify/ui-react'
+import type React from 'react'
+import { useState } from 'react'
 
 interface Tab {
   id: string
@@ -20,18 +21,18 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, onTabChange }) => {
     <div className="flex items-center justify-start gap-2">
       {tabs.map((tab) => (
         <button
-          type="button"
-          key={tab.id}
-          onClick={() => {
-            setActiveTab(tab.id)
-            onTabChange?.(tab.id)
-          }}
           className={cn(
             'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap',
             activeTab === tab.id
               ? 'bg-text text-background'
               : 'bg-surface text-text hover:bg-surface-hover',
           )}
+          key={tab.id}
+          onClick={() => {
+            setActiveTab(tab.id)
+            onTabChange?.(tab.id)
+          }}
+          type="button"
         >
           {tab.label}
         </button>

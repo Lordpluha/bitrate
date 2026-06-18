@@ -1,6 +1,6 @@
 'use client'
 
-import { TrackEntity } from '@entities/Track/models/schema/Track.entity'
+import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { createSlice } from '@reduxjs/toolkit'
 
 export interface MusicPlayerState {

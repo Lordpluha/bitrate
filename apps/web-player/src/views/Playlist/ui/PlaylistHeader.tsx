@@ -1,7 +1,7 @@
+import { BackButton } from '@shared/ui/BackButton'
+import { TimeUtils } from '@shared/utils/TimeUtils'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
-import { TimeUtils } from '@shared/utils/TimeUtils'
-import { BackButton } from '@shared/ui/BackButton'
 
 interface PlaylistHeaderProps {
   title: string
@@ -28,7 +28,6 @@ export const PlaylistHeader = ({
 
       <div className="h-full flex flex-row items-end gap-6 mt-0 max-[1024px]:mt-4 max-[1024px]:flex-col max-[1024px]:items-start max-[1024px]:gap-4">
         <Image
-          src={imageUrl}
           alt={title}
           width={232}
           height={232}

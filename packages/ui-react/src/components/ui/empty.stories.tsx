@@ -1,6 +1,5 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { Bell, Cloud, PlusIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,6 +12,9 @@ import {
 } from '@/components/ui/empty'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Kbd } from '@/components/ui/kbd'
+import banner1 from '../../../assets/images/banner-1.jpg'
+import banner2 from '../../../assets/images/banner-2.jpg'
+import banner3 from '../../../assets/images/banner-3.jpg'
 
 /**
  * Use the Empty component to display a empty state.
@@ -94,7 +96,7 @@ export const WithAvatar: Story = {
       <EmptyHeader>
         <EmptyMedia variant="default">
           <Avatar className="size-12">
-            <AvatarImage src="https://github.com/shadcn.png" className="grayscale" />
+            <AvatarImage src={banner1} className="grayscale" />
             <AvatarFallback>LR</AvatarFallback>
           </Avatar>
         </EmptyMedia>
@@ -120,15 +122,15 @@ export const AvatarGroup: Story = {
         <EmptyMedia>
           <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:size-12 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src={banner1} alt="@member-1" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage src="https://github.com/maxleiter.png" alt="@maxleiter" />
+              <AvatarImage src={banner2} alt="@member-2" />
               <AvatarFallback>LR</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
+              <AvatarImage src={banner3} alt="@member-3" />
               <AvatarFallback>ER</AvatarFallback>
             </Avatar>
           </div>

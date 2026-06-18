@@ -2,12 +2,11 @@
 
 import { useAuth } from '@shared/hooks'
 import { Typography } from '@spotify/ui-react'
-
-import { Tabs } from './Tabs'
-import { LikedPlaylist } from './LikedPlaylist'
-import { PopularPlaylists } from './PopularPlaylists'
-import { PopularArtists } from './PopularArtists'
 import { Footer } from './Footer'
+import { LikedPlaylist } from './LikedPlaylist'
+import { PopularArtists } from './PopularArtists'
+import { PopularPlaylists } from './PopularPlaylists'
+import { Tabs } from './Tabs'
 
 const tabs = [
   { id: 'all', label: 'All' },

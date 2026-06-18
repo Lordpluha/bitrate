@@ -1,10 +1,11 @@
 'use client'
 
-import React from 'react'
-import { Button, Typography } from '@spotify/ui-react'
-import { useAppSelector } from '@shared/hooks'
 import { selectCurrentTrack } from '@entities/Player'
+import { useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
+import { Typography } from '@spotify/ui-react'
+import Image from 'next/image'
+import type React from 'react'
 
 export const AboutArtist: React.FC = () => {
   const currentTrack = useAppSelector(selectCurrentTrack)
@@ -35,28 +36,36 @@ export const AboutArtist: React.FC = () => {
       <div className="relative">
         <Typography
           as="h6"
-          size="heading6"
           className="text-text absolute top-4 left-4 z-10"
+          size="heading6"
         >
           About the artist
         </Typography>
-        <img
-          src={backgroundUrl}
-          alt={artist.username || 'Artist'}
-          className="w-full object-cover"
-        />
+        <div className="relative w-full aspect-square">
+          <Image
+            alt={artist.username || 'Artist'}
+            className="object-cover"
+            fill
+            sizes="320px"
+            src={backgroundUrl}
+            unoptimized
+          />
+        </div>
       </div>
       <div className="flex flex-col p-4">
         <div className="flex items-center gap-3 mb-2">
-          <img
-            src={avatarUrl}
+          <Image
             alt={artist.username || 'Artist'}
             className="w-12 h-12 rounded-full object-cover"
+            height={48}
+            src={avatarUrl}
+            unoptimized
+            width={48}
           />
           <Typography
             as="h6"
-            size="heading6"
             className="text-text font-semibold text-base"
+            size="heading6"
           >
             {artist.username || 'Unknown Artist'}
           </Typography>
@@ -64,8 +73,8 @@ export const AboutArtist: React.FC = () => {
         {artist.bio && (
           <Typography
             as="p"
-            size="body"
             className="text-grey-500 text-xs mt-2 line-clamp-3"
+            size="body"
           >
             {artist.bio}
           </Typography>

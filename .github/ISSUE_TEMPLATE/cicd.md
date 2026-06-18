@@ -36,7 +36,7 @@ assignees: []
 
 ## 🌐 Environment
 - **Trigger**: [push | pull_request | schedule | workflow_dispatch]
-- **Branch**: [main | develop | feature/...]
+- **Branch**: [master | develop | feature/...]
 - **Runner**: [ubuntu-latest | windows-latest | macos-latest]
 
 ## 🛠️ Affected Services

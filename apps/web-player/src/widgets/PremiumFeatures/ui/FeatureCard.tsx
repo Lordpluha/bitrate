@@ -1,9 +1,9 @@
 import {
-  Typography,
   CalendarIcon,
+  MusicIcon,
   NoWifiIcon,
   PhoneIcon,
-  MusicIcon,
+  Typography,
 } from '@spotify/ui-react'
 import type { FC, ReactNode } from 'react'
 
@@ -33,8 +33,8 @@ export const FeatureCard: FC<FeatureCardProps> = ({
         {IconComponent && (
           <IconComponent
             className="text-green-500 fill-green-500"
-            width={48}
             height={48}
+            width={48}
           />
         )}
       </div>

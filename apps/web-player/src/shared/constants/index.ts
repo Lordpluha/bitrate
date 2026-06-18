@@ -1,2 +1,2 @@
-export * from './themes'
 export * from './fallbacks'
+export * from './themes'

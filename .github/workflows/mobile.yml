@@ -1,185 +1,103 @@
-name: Mobile Build
+name: "[mobile] Checks"
 
 on:
   push:
-    branches: [ master, develop ]
+    branches: [develop, master]
     paths:
       - 'apps/mobile/**'
       - '.github/workflows/mobile.yml'
+      - '.github/workflows/mobile_reusable.yml'
+      - '.github/workflows/mobile_expo_reusable.yml'
+      - '.github/workflows/mobile_web_reusable.yml'
+      - '.github/workflows/mobile_eas_reusable.yml'
   pull_request:
-    branches: [ master, develop ]
+    branches: [master, develop]
     paths:
       - 'apps/mobile/**'
+      - '.github/workflows/mobile.yml'
+      - '.github/workflows/mobile_reusable.yml'
+      - '.github/workflows/mobile_expo_reusable.yml'
+      - '.github/workflows/mobile_web_reusable.yml'
+      - '.github/workflows/mobile_eas_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
-  test-expo-server:
-    name: Test Expo Dev Server
-    runs-on: ubuntu-latest
+  mobile-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/mobile_reusable.yml
+    secrets: inherit
+    with:
+      run-expo-check: true
+      expo-image-tag: mobile-expo-pr:${{ github.sha }}
+      expo-container-name: mobile-expo-pr-test
+      run-mobile-web-build: true
+      mobile-web-push: false
+      mobile-web-load: true
+      mobile-web-tags: mobile-web-pr:${{ github.sha }}
+      run-mobile-web-test: true
+      mobile-web-test-image: mobile-web-pr:${{ github.sha }}
+      mobile-web-test-pull: false
+      mobile-web-test-container: mobile-web-pr-test
+      run-eas-android: ${{ github.event_name == 'workflow_dispatch' }}
+      run-eas-ios: ${{ github.event_name == 'workflow_dispatch' }}
+      eas-profile: preview
+      artifact-suffix: pr-manual
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+  mobile-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/mobile_reusable.yml
+    secrets: inherit
+    with:
+      run-expo-check: true
+      expo-image-tag: mobile-expo-develop:${{ github.sha }}
+      expo-container-name: mobile-expo-develop-test
+      run-mobile-web-build: true
+      mobile-web-push: true
+      mobile-web-load: false
+      mobile-web-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:develop-${{ github.sha }}
+      run-mobile-web-test: true
+      mobile-web-test-image: ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:develop-${{ github.sha }}
+      mobile-web-test-pull: true
+      mobile-web-test-container: mobile-web-develop-test
+      run-eas-android: ${{ github.event_name == 'workflow_dispatch' }}
+      run-eas-ios: ${{ github.event_name == 'workflow_dispatch' }}
+      eas-profile: preview
+      artifact-suffix: develop-manual
 
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Build Expo Server
-      run: |
-        docker build -t mobile-expo-test \
-          --target development \
-          --cache-from type=gha \
-          --cache-to type=gha,mode=max \
-          -f apps/mobile/Dockerfile .
-
-    - name: Run Expo Server
-      run: |
-        docker run -d \
-          -p 8081:8081 \
-          -p 19000:19000 \
-          --name expo-test \
-          mobile-expo-test
-
-    - name: Wait for server
-      run: sleep 20
-
-    - name: Check Metro Bundler
-      run: |
-        curl -f http://localhost:8081/status || exit 1
-
-    - name: Show logs
-      if: failure()
-      run: docker logs expo-test
-
-    - name: Cleanup
-      if: always()
-      run: docker stop expo-test && docker rm expo-test
-
-  build-web:
-    name: Build Expo Web
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Build Web Production
-      run: |
-        docker build -t mobile-web-prod \
-          --target production-web \
-          --cache-from type=gha \
-          --cache-to type=gha,mode=max \
-          -f apps/mobile/Dockerfile .
-
-    - name: Test Web Build
-      run: |
-        docker run -d -p 8080:80 --name web-test mobile-web-prod
-        sleep 5
-        curl -f http://localhost:8080 || exit 1
-
-    - name: Extract Web Build
-      run: |
-        docker create --name temp-web mobile-web-prod
-        docker cp temp-web:/usr/share/nginx/html ./web-build
-        docker rm temp-web
-
-    - name: Upload Web Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: mobile-web-build
-        path: web-build/
-        retention-days: 7
-
-    - name: Cleanup
-      if: always()
-      run: docker stop web-test && docker rm web-test || true
-
-  build-android-eas:
-    name: Build Android with EAS
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Expo
-      uses: expo/expo-github-action@v8
-      with:
-        expo-version: latest
-        eas-version: latest
-        token: ${{ secrets.EXPO_TOKEN }}
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 10.28.2
-
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
-
-    - name: Build Android APK
-      working-directory: apps/mobile
-      run: |
-        PROFILE=${{ github.ref == 'refs/heads/master' && 'production' || 'preview' }}
-        eas build --platform android \
-          --profile $PROFILE \
-          --non-interactive
-
-    - name: Download APK
-      if: success()
-      working-directory: apps/mobile
-      run: |
-        eas build:download --platform android --latest
-
-    - name: Upload APK
-      if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: mobile-android-apk
-        path: apps/mobile/*.apk
-        retention-days: 7
-
-  build-ios-eas:
-    name: Build iOS with EAS
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Expo
-      uses: expo/expo-github-action@v8
-      with:
-        expo-version: latest
-        eas-version: latest
-        token: ${{ secrets.EXPO_TOKEN }}
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 10.28.2
-
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
-
-    - name: Build iOS IPA
-      working-directory: apps/mobile
-      run: |
-        PROFILE=${{ github.ref == 'refs/heads/master' && 'production' || 'preview' }}
-        eas build --platform ios \
-          --profile $PROFILE \
-          --non-interactive
+  mobile-master:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/mobile_reusable.yml
+    secrets: inherit
+    with:
+      run-expo-check: false
+      run-mobile-web-build: true
+      mobile-web-push: true
+      mobile-web-load: false
+      mobile-web-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:${{ github.sha }}
+      run-mobile-web-test: false
+      run-eas-android: ${{ github.event_name == 'workflow_dispatch' }}
+      run-eas-ios: ${{ github.event_name == 'workflow_dispatch' }}
+      eas-profile: production
+      artifact-suffix: master-manual

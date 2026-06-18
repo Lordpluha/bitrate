@@ -1,0 +1,35 @@
+name: "[ui-react][reusable] Loki"
+
+on:
+  workflow_call:
+
+jobs:
+  loki:
+    name: Run Loki visual tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          install-args: "--frozen-lockfile"
+
+      - name: Restore Storybook static cache
+        id: storybook-cache
+        uses: actions/cache@v4
+        with:
+          path: packages/ui-react/storybook-static
+          key: ${{ runner.os }}-storybook-ui-react-${{ hashFiles('pnpm-lock.yaml', 'packages/ui-react/package.json', 'packages/ui-react/.storybook/**', 'packages/ui-react/src/**') }}
+          restore-keys: |
+            ${{ runner.os }}-storybook-ui-react-
+
+      - name: Build Storybook
+        if: steps.storybook-cache.outputs.cache-hit != 'true'
+        run: cd packages/ui-react && pnpm storybook:build
+
+      - name: Run Loki tests
+        run: cd packages/ui-react && pnpm loki:test

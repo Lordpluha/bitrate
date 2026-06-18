@@ -34,7 +34,6 @@ WORKDIR /app
 
 # Копирование исходников
 COPY --from=node-dependencies /app/node_modules ./node_modules
-COPY --from=node-dependencies /app/apps/desktop/node_modules ./apps/desktop/node_modules
 COPY . .
 
 # Сборка приложения
@@ -51,7 +50,6 @@ RUN apk add --no-cache \
     supervisor
 
 COPY --from=node-dependencies /app/node_modules ./node_modules
-COPY --from=node-dependencies /app/apps/desktop/node_modules ./apps/desktop/node_modules
 COPY . .
 
 # VNC настройка
@@ -67,7 +65,6 @@ CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 # Stage 5: Development (только веб-сервер для разработки UI)
 FROM base AS development
 COPY --from=node-dependencies /app/node_modules ./node_modules
-COPY --from=node-dependencies /app/apps/desktop/node_modules ./apps/desktop/node_modules
 COPY . .
 
 EXPOSE 1420
@@ -110,7 +107,7 @@ COPY . .
 
 # Сборка
 WORKDIR /app/apps/desktop
-RUN pnpm run tauri build
+RUN rm -f src-tauri/Cargo.lock && pnpm run tauri build
 
 # Артефакты будут в src-tauri/target/release/bundle/
 CMD ["sh"]

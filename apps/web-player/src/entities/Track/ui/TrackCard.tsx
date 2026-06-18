@@ -8,6 +8,12 @@ import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { DateUtils } from '@shared/utils/DateUtils'
 import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { play } from '@entities/Player'
+import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
+import { useAppDispatch, useAppSelector } from '@shared/hooks'
+import { formatDuration } from '@shared/utils/apiHelpers'
+import { DateUtils } from '@shared/utils/DateUtils'
+import { cn, WaveIcon } from '@spotify/ui-react'
+import { Pause, Play } from 'lucide-react'
 
 interface TrackCardProps {
   track: TrackEntity
@@ -26,6 +32,7 @@ export const TrackCard = ({ track, index }: TrackCardProps) => {
 
   return (
     <button
+<<<<<<< HEAD
       type="button"
       onClick={() => handlePlayTrack(track)}
       className="w-full text-left rounded hover:bg-surface group items-center grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 max-[1024px]:block max-[1024px]:px-3"
@@ -78,6 +85,30 @@ export const TrackCard = ({ track, index }: TrackCardProps) => {
 
         <div className="text-sm text-text-subdued shrink-0 text-right max-[1024px]:text-left">
           {formatDuration(track.duration ?? 0)}
+=======
+      className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 rounded hover:bg-white/10 group items-center w-full text-left"
+      onClick={() => handlePlayTrack(track)}
+      type="button"
+    >
+      <div className="text-sm items-center justify-center flex">
+        {showNumber && <span className="text-gray-400">{index + 1}</span>}
+        {showGreenNumber && <span className="text-green-500">{index + 1}</span>}
+        {showPlayIcon && <Play className="text-white" fill="white" size={14} />}
+        {showPauseIcon && (
+          <Pause className="text-white" fill="white" size={14} />
+        )}
+        {showWaveIcon && <WaveIcon />}
+      </div>
+      <div>
+        <div
+          className={cn(
+            'font-medium',
+            isCurrentTrack ? 'text-green-500' : 'text-white',
+            !isCurrentTrack && 'group-hover:underline',
+          )}
+        >
+          {track.title}
+>>>>>>> develop
         </div>
       </div>
 

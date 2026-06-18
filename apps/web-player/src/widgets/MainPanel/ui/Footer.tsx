@@ -1,6 +1,5 @@
-import Link from 'next/link'
-
 import { FacebookIcon, InstIcon, TwitIcon } from '@spotify/ui-react'
+import Link from 'next/link'
 
 const sections = [
   {

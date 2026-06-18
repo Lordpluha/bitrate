@@ -1,0 +1,93 @@
+name: "[web-player] Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      push-image:
+        description: Push docker image
+        required: true
+        type: boolean
+      tags:
+        description: Docker tags (multiline)
+        required: true
+        type: string
+      timeout-minutes:
+        description: Job timeout in minutes
+        required: false
+        default: 20
+        type: number
+      run-biome:
+        description: Run biome check before docker build
+        required: false
+        default: false
+        type: boolean
+      cache-to-registry:
+        description: Export build cache to GHCR registry
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
+jobs:
+  web-player-checks:
+    name: Web Player Build and Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        if: ${{ inputs.run-biome }}
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run Biome check
+        if: ${{ inputs.run-biome }}
+        run: pnpm exec biome ci apps/web-player packages/ui-react packages/contracts
+
+      - name: Setup Docker + registries
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Web Player Docker image (with registry cache export)
+        if: ${{ inputs.cache-to-registry }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/web-player/Dockerfile
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache
+            type=gha,scope=web-player
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache,mode=max
+            type=gha,mode=max,scope=web-player
+          target: production
+
+      - name: Build Web Player Docker image (GHA cache export only)
+        if: ${{ !inputs.cache-to-registry }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/web-player/Dockerfile
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache
+            type=gha,scope=web-player
+          cache-to: |
+            type=gha,mode=max,scope=web-player
+          target: production
