@@ -2,7 +2,7 @@
 
 ### Install dependencies
 ```bash
-pnpm ci
+pnpm install
 ```
 
 ### Run dev server

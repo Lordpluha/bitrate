@@ -40,7 +40,6 @@ Current workflow map for .github/workflows.
 ### UI React / Visual Tests
 - ui_react.yml — UI React visual tests entry workflow.
 - ui_react_reusable.yml — reusable orchestration for UI React visual checks.
-- loki_reusable.yml — reusable workflow for Loki.
 
 ### Integration Tests (Docker Compose)
 - web-integration-test.yml — integration tests for PR and push (develop/master) + workflow_dispatch.

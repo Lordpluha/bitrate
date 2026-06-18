@@ -12,16 +12,18 @@ Turborepo + pnpm monorepo for a full-stack Spotify clone. All packages share the
 - `admin` — Kottster admin panel (port 3002)
 - `desktop` — Tauri 2 + React + Vite desktop app (port 1420 in dev)
 - `mobile` — React Native + Expo
-- `docs` — Mintlify documentation site
+- `docs` — Docusaurus 3 documentation site (port 3003)
 
 **Packages** (`packages/`):
-- `ui-react` — shared React component library (React 19, Tailwind v4, shadcn/ui, Storybook)
+- `ui-react` — shared React component library (React 19, Tailwind v4, Base UI, shadcn/ui-style components, Storybook)
 - `tokens` — raw design tokens (`tokens.json`) and SVG icons source
 - `tokens-generator` — CLI/programmatic CSS generator from `tokens.json`
 - `contracts` — OpenAPI TypeScript types, auto-generated from Swagger
 - `vite-svgr` — Vite plugin wrapping `@spotify/svgr` — integrates SVG-to-React generation into the build pipeline
 - `svgr` — SVG → typed React component converter (used for icons in `ui-react`)
 - `converter` — media/audio conversion utilities for the API
+- `ncs-parser` — NCS audio format parser, used by the API
+- `performance-test` — K6 performance testing scenarios
 
 ## Commands
 

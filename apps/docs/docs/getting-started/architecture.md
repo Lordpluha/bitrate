@@ -17,7 +17,7 @@ spotify-clone/
 │   ├── mobile/       # Mobile app (React Native + Expo)
 │   ├── desktop/      # Desktop app (Tauri 2 + React)
 │   ├── admin/        # Admin panel (Kottster)
-│   └── docs/         # Documentation (Mintlify)
+│   └── docs/         # Documentation (Docusaurus 3)
 │
 ├── packages/         # Shared packages (@spotify/ namespace)
 │   ├── ui-react/         # React 19 component library (Tailwind v4, shadcn/ui, Storybook)
@@ -28,7 +28,6 @@ spotify-clone/
 │   ├── svgr/             # SVG → typed React component converter
 │   ├── converter/        # Media/audio conversion utilities (FFmpeg wrapper)
 │   ├── ncs-parser/       # NCS (audio format) parser
-│   ├── ui-flutter/       # Flutter UI components
 │   └── performance-test/ # K6 performance testing scenarios
 │
 ├── infra/             # Docker Compose files + shell scripts
