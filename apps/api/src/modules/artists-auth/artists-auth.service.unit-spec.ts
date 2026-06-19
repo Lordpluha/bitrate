@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { ConflictException, UnauthorizedException } from '@nestjs/common'
-import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
-import { buildArtistSession } from './__tests__/fixtures/artists-auth.fixtures'
 import type { ArtistsPrivateService } from '@modules/artists/artists.private.service'
 import type { ArtistsService } from '@modules/artists/artists.service'
 import type { TokenService } from '@modules/tokens/token.service'
+import { ConflictException, UnauthorizedException } from '@nestjs/common'
 import type { JwtService } from '@nestjs/jwt'
+import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { buildArtistSession } from './__tests__/fixtures/artists-auth.fixtures'
 import { ArtistsAuthService } from './artists-auth.service'
 
 const makeArtistsServiceMock = () =>

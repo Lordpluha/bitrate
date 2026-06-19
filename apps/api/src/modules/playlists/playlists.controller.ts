@@ -1,16 +1,7 @@
 import { TrackEntity } from '@modules/tracks/entities'
 import type { UserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  Req,
-} from '@nestjs/common'
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import type { Request } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'

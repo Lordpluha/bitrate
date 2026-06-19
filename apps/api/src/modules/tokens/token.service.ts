@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import type { AppConfig } from '@common/config'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -5,7 +6,6 @@ import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
 import { Response } from 'express'
 import { type StringValue } from 'ms'
-import { createHash } from 'node:crypto'
 import { JWTPayload } from '../tokens'
 
 @Injectable()

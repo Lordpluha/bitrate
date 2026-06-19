@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
+import type { TokenService } from '@modules/tokens/token.service'
 import { UnauthorizedException } from '@nestjs/common'
 import type { Reflector } from '@nestjs/core'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
-import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
 import { buildArtistSession } from './__tests__/fixtures/artists-auth.fixtures'
-import type { TokenService } from '@modules/tokens/token.service'
 import { ArtistAuthGuard } from './artists-auth.guard'
 import { UNAUTHORIZED_ERRORS } from './errors/unauthorized.errors'
 

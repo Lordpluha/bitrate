@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
-import { buildAlbum, buildArtist, FindAllResult } from './__tests__/fixtures/albums.fixtures'
+import { buildAlbum, buildArtist, type FindAllResult } from './__tests__/fixtures/albums.fixtures'
 import { AlbumsController } from './albums.controller'
 import type { AlbumsService } from './albums.service'
 

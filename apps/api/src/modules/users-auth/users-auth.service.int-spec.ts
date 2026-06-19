@@ -1,14 +1,14 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { TokenService } from '@modules/tokens/token.service'
+import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
 import { UsersPrivateService } from '@modules/users/users.private.service'
 import { UsersService } from '@modules/users/users.service'
-import { TokenService } from '@modules/tokens/token.service'
+import { buildUserSession } from '@modules/users-auth/__tests__/fixtures/users-auth.fixtures'
 import { ConflictException, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
-import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
-import { buildUserSession } from '@modules/users-auth/__tests__/fixtures/users-auth.fixtures'
 import { UserAuthService } from './user-auth.service'
 
 const makeUsersServiceMock = () =>

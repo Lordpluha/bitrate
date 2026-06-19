@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import { PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
 import { UsersService } from './users.service'
 

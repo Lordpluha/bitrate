@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
-import { PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildAlbum, buildArtist } from './__tests__/fixtures/albums.fixtures'
 import { AlbumsService } from './albums.service'
 

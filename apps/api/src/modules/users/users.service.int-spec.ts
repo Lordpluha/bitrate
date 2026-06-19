@@ -1,5 +1,5 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'

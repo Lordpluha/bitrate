@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
-import { TokenService } from '../tokens/token.service'
+import type { TokenService } from '../tokens/token.service'
 import { buildUser } from '../users/__tests__/fixtures/users.fixtures'
-import { UsersService } from '../users/users.service'
-import { UserAuthService } from './user-auth.service'
+import type { UsersService } from '../users/users.service'
+import type { UserAuthService } from './user-auth.service'
 import { UsersAuthController } from './users-auth.controller'
 
 const createResponse = (): DeepMockProxy<Response> => mockDeep<Response>()

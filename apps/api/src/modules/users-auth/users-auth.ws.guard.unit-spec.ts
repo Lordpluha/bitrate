@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import { ExecutionContext } from '@nestjs/common'
+import type { ExecutionContext } from '@nestjs/common'
 import { WsException } from '@nestjs/websockets'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
-import { Socket } from 'socket.io'
-import { TokenService } from '../tokens/token.service'
+import type { Socket } from 'socket.io'
+import type { TokenService } from '../tokens/token.service'
 import { WsUserAuthGuard } from './users-auth.ws.guard'
 
 const createWsContext = (client: Socket): ExecutionContext =>
