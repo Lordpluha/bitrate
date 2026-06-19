@@ -1,14 +1,14 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { ArtistEntity } from '@modules/artists'
+import type { ArtistEntity } from '@modules/artists'
 import { ArtistsPrivateService } from '@modules/artists/artists.private.service'
 import { ArtistsService } from '@modules/artists/artists.service'
 import { TokenService } from '@modules/tokens/token.service'
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { ArtistSession } from '@prisma/client'
-import { JWTPayload } from '../tokens'
-import { RegistrationDto } from './dtos'
-import { ArtistSessionEntity } from './entities'
+import type { ArtistSession } from '@prisma/client'
+import type { JWTPayload } from '../tokens'
+import type { RegistrationDto } from './dtos'
+import type { ArtistSessionEntity } from './entities'
 
 @Injectable()
 export class ArtistsAuthService {
@@ -30,33 +30,29 @@ export class ArtistsAuthService {
     await this.artists.register({
       username: registrationDto.username,
       email: registrationDto.email,
-      password: registrationDto.password,
+      password: await this.token.hashPassword(registrationDto.password),
     })
   }
 
   async loginArtist(email: ArtistEntity['email'], password: ArtistEntity['password']) {
     const artist = await this.artistsPrivate.findByEmail(email)
-    if (!artist || artist?.password !== password) {
-      throw new UnauthorizedException({
-        message: 'Invalid credentials',
-      })
+    const passwordValid = artist && (await this.token.verifyPassword(password, artist.password))
+    if (!passwordValid) {
+      throw new UnauthorizedException({ message: 'Invalid credentials' })
     }
 
     const access_token = await this.token.generateAccessToken(artist.id, artist.username)
     const refresh_token = await this.token.generateRefreshToken(artist.id, artist.username)
 
-    const session = await this.prisma.artistSession.create({
+    await this.prisma.artistSession.create({
       data: {
-        access_token,
+        access_token: this.token.hashToken(access_token),
+        refresh_token: this.token.hashToken(refresh_token),
         artistId: artist.id,
-        refresh_token,
       },
     })
 
-    return {
-      access_token: session.access_token,
-      refresh_token: session.refresh_token,
-    }
+    return { access_token, refresh_token }
   }
 
   async refresh(refresh_token: string) {
@@ -71,20 +67,17 @@ export class ArtistsAuthService {
 
       const access_token = await this.token.generateAccessToken(user.id, user.username)
 
-      // Обновляем сессию с новым access_token
       await this.prisma.artistSession.updateMany({
         where: {
           artistId: user.id,
-          refresh_token,
+          refresh_token: this.token.hashToken(refresh_token),
         },
         data: {
-          access_token,
+          access_token: this.token.hashToken(access_token),
         },
       })
 
-      return {
-        access_token,
-      }
+      return { access_token }
     } catch {
       throw new UnauthorizedException('Invalid refresh token')
     }
@@ -92,22 +85,17 @@ export class ArtistsAuthService {
 
   async logout(
     artistId: ArtistSession['artistId'],
-    refresh_token: ArtistSessionEntity['refresh_token'],
+    access_token: ArtistSessionEntity['access_token'],
   ) {
     const artist = await this.artists.findById(artistId)
     if (!artist) {
       throw new UnauthorizedException('Invalid access token')
     }
-    const session = await this.prisma.artistSession.findFirst({
+
+    await this.prisma.artistSession.deleteMany({
       where: {
         artistId: artist.id,
-        refresh_token,
-      },
-    })
-
-    await this.prisma.artistSession.delete({
-      where: {
-        id: session?.id,
+        access_token: this.token.hashToken(access_token),
       },
     })
   }

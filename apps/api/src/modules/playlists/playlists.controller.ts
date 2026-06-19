@@ -1,23 +1,27 @@
 import { TrackEntity } from '@modules/tracks/entities'
-import { UserEntity } from '@modules/users'
+import type { UserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Body,
   Controller,
   Get,
-  HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
   Put,
   Req,
 } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { Request } from 'express'
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
+import type { Request } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { GetPlaylistsSwagger } from './decorators/get-playlists.decorator'
-import { CreatePlaylistDto, CreatePlaylistSchema } from './dtos/create-playlist.dto'
-import { UpdatePlaylistDto, UpdatePlaylistSchema } from './dtos/update-playlist.dto'
+import {
+  CreatePlaylistSwagger,
+  GetPlaylistByIdSwagger,
+  GetPlaylistsSwagger,
+  UpdatePlaylistSwagger,
+} from './decorators'
+import { type CreatePlaylistDto, CreatePlaylistSchema } from './dtos/create-playlist.dto'
+import { type UpdatePlaylistDto, UpdatePlaylistSchema } from './dtos/update-playlist.dto'
 import { PlaylistEntity } from './entities'
 import { PlaylistsService } from './playlists.service'
 
@@ -36,39 +40,13 @@ export class PlaylistsController {
     })
   }
 
-  @ApiOperation({ summary: 'Get playlist by id' })
-  @ApiParam({ name: 'id', description: 'Playlist id', type: 'string', format: 'uuid' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      allOf: [
-        { $ref: '#/components/schemas/PlaylistEntity' },
-        {
-          type: 'object',
-          properties: {
-            tracks: {
-              type: 'array',
-              items: { $ref: '#/components/schemas/TrackEntity' },
-            },
-            user: {
-              type: 'object',
-              properties: {
-                id: { type: 'string' },
-                username: { type: 'string' },
-                avatar: { type: 'string', nullable: true },
-              },
-            },
-          },
-        },
-      ],
-    },
-  })
+  @GetPlaylistByIdSwagger()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: PlaylistEntity['id']) {
     return await this.playlistService.getByIdPopulated(id)
   }
 
-  @ApiOperation({ summary: 'Create a new playlist' })
+  @CreatePlaylistSwagger()
   @UserAuth()
   @Post('')
   async post(
@@ -80,7 +58,7 @@ export class PlaylistsController {
     return await this.playlistService.create(user.id, playlistDto)
   }
 
-  @ApiOperation({ summary: 'Update playlist by id' })
+  @UpdatePlaylistSwagger()
   @UserAuth()
   @Put(':id')
   async update(

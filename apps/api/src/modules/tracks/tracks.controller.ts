@@ -1,13 +1,12 @@
-import { ArtistEntity } from '@modules/artists'
+import type { ArtistEntity } from '@modules/artists'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import { UserEntity } from '@modules/users'
+import type { UserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
   Body,
   Controller,
   Get,
-  HttpStatus,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -20,9 +19,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { FileFieldsInterceptor } from '@nestjs/platform-express'
-import { ApiExtraModels, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { randomUUID } from 'crypto'
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { extname } from 'path'
@@ -30,9 +29,10 @@ import {
   GetTrackByIdSwagger,
   PostTrackSwagger,
   TracksGetAllSwagger,
+  TracksGetLikedSwagger,
   UpdateTrackByIdSwagger,
 } from './decorators'
-import { CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
+import { type CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
 import { TrackEntity } from './entities'
 import { TracksService } from './tracks.service'
 
@@ -196,16 +196,7 @@ export class TracksController {
     return this.tracksService.update(id, createTrackDto, audioFile, coverFile)
   }
 
-  @ApiOperation({ summary: 'Get liked tracks of the authenticated user' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      type: 'array',
-      items: { $ref: '#/components/schemas/TrackEntity' },
-    },
-  })
-  @ApiQuery({ name: 'page', required: false, type: Number })
-  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @TracksGetLikedSwagger()
   @UserAuth()
   @Get('liked')
   getLikedTracks(

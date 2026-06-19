@@ -2,8 +2,10 @@ import type { AppConfig } from '@common/config'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
+import * as argon2 from 'argon2'
 import { Response } from 'express'
 import { type StringValue } from 'ms'
+import { createHash } from 'node:crypto'
 import { JWTPayload } from '../tokens'
 
 @Injectable()
@@ -58,5 +60,17 @@ export class TokenService {
   clearAuthCookies(res: Response) {
     res.clearCookie(this.configService.getOrThrow('ACCESS_TOKEN_NAME'))
     res.clearCookie(this.configService.getOrThrow('REFRESH_TOKEN_NAME'))
+  }
+
+  hashToken(token: string): string {
+    return createHash('sha256').update(token).digest('hex')
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return await argon2.hash(password, { type: argon2.argon2id })
+  }
+
+  async verifyPassword(password: string, hash: string): Promise<boolean> {
+    return await argon2.verify(hash, password)
   }
 }

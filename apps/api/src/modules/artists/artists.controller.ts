@@ -1,11 +1,10 @@
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
-import { ArtistAuthRequest } from '@modules/artists-auth/types'
+import type { ArtistAuthRequest } from '@modules/artists-auth/types'
 import {
   Body,
   Controller,
   Delete,
   Get,
-  HttpStatus,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -13,9 +12,18 @@ import {
   Query,
   Req,
 } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
+import { ZodValidationPipe } from 'nestjs-zod'
 import { ArtistsService } from './artists.service'
-import { GetArtistsSwagger } from './decorators'
+import {
+  DeleteArtistSwagger,
+  GetArtistByIdSwagger,
+  GetArtistByUsernameSwagger,
+  GetArtistsSwagger,
+  UpdateArtistSwagger,
+} from './decorators'
+import type { UpdateArtistDto } from './dtos'
+import { UpdateArtistSchema } from './dtos'
 import { ArtistEntity, SafeArtistEntity } from './entities'
 
 @ApiTags('Artists')
@@ -38,60 +46,31 @@ export class ArtistsController {
     })
   }
 
-  @ApiOperation({ summary: 'Get artist by id' })
-  @ApiParam({
-    name: 'id',
-    description: 'Artist ID (UUID)',
-    type: 'string',
-    format: 'uuid',
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      $ref: '#/components/schemas/SafeArtistEntity',
-    },
-  })
+  @GetArtistByIdSwagger()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
     return await this.artistsService.findById(id)
   }
 
-  @ApiOperation({ summary: 'Get artist by username' })
-  @ApiParam({
-    name: 'username',
-    description: 'Artist username',
-    type: 'string',
-  })
+  @GetArtistByUsernameSwagger()
   @Get('username/:username')
   getByUsername(@Param('username') username: ArtistEntity['username']) {
     return this.artistsService.findByUsername(username)
   }
 
-  @ApiOperation({ summary: 'Update artist profile' })
-  @ApiParam({
-    name: 'id',
-    description: 'Artist ID (UUID)',
-    type: 'string',
-    format: 'uuid',
-  })
+  @UpdateArtistSwagger()
   @ArtistAuth()
   @Put(':id')
   updateProfile(
     @Req() req: ArtistAuthRequest,
     @Param('id', ParseUUIDPipe) id: ArtistEntity['id'],
-    @Body() artist: Partial<ArtistEntity>,
+    @Body(new ZodValidationPipe(UpdateArtistSchema)) artist: UpdateArtistDto,
   ) {
     const artistId = req.artist.id
     return this.artistsService.update(id, artist, artistId)
   }
 
-  @ApiOperation({ summary: 'Delete artist profile' })
-  @ApiParam({
-    name: 'id',
-    description: 'Artist ID (UUID)',
-    type: 'string',
-    format: 'uuid',
-  })
+  @DeleteArtistSwagger()
   @ArtistAuth()
   @Delete(':id')
   deleteProfile(@Req() req: ArtistAuthRequest, @Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {

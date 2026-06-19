@@ -1,6 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
-import { UserEntity } from './entities'
+import type { UserEntity } from './entities'
 
 @Injectable()
 export class UsersService {
@@ -87,7 +87,7 @@ export class UsersService {
     return await this.prisma.user.update({
       where: { id: userId },
       data: { avatar: avatarPath },
-      omit: { password: true },
+      omit: { password: true, email: true },
     })
   }
 }

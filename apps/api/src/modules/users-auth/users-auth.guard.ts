@@ -1,8 +1,8 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   applyDecorators,
-  CanActivate,
-  ExecutionContext,
+  type CanActivate,
+  type ExecutionContext,
   HttpStatus,
   Injectable,
   SetMetadata,
@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { ApiCookieAuth, ApiResponse } from '@nestjs/swagger'
-import { Request } from 'express'
-import { JWTPayload } from '../tokens'
+import type { Request } from 'express'
+import type { JWTPayload } from '../tokens'
 import { TokenService } from '../tokens/token.service'
 import { UNAUTHORIZED_ERRORS } from './errors/unauthorized.errors'
 
@@ -103,11 +103,11 @@ export class UserAuthGuard implements CanActivate {
       })
       if (!user) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 
-      // 4) ищем сессию по всем пришедшим токенам
+      // 4) ищем сессию по хешам токенов
       const session = await this.prisma.userSession.findFirst({
         where: {
-          access_token,
-          refresh_token,
+          ...(access_token && { access_token: this.tokenService.hashToken(access_token) }),
+          ...(refresh_token && { refresh_token: this.tokenService.hashToken(refresh_token) }),
           userId: payload.sub,
         },
       })

@@ -28,5 +28,15 @@
     "resolveJsonModule": true,
     "noUncheckedIndexedAccess": true
   },
-  "exclude": ["node_modules", "dist", "docs", "coverage"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "docs",
+    "coverage",
+    "test/**",
+    "**/*.spec.ts",
+    "**/*.unit-spec.ts",
+    "**/*.int-spec.ts",
+    "**/*.e2e-spec.ts"
+  ]
 }

@@ -1,9 +1,8 @@
 import { ArtistsService } from '@modules/artists/artists.service'
 import { TokenService } from '@modules/tokens/token.service'
-import { UserEntity } from '@modules/users'
 import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { ArtistAuth } from './artists-auth.guard'
 import { ArtistsAuthService } from './artists-auth.service'
@@ -14,8 +13,9 @@ import {
   AuthRefreshSwagger,
   AuthRegistrationSwagger,
 } from './decorators'
-import { LoginDto, LoginSchema, RegistrationDto, RegistrationSchema } from './dtos'
+import { type LoginDto, LoginSchema, type RegistrationDto, RegistrationSchema } from './dtos'
 import { ArtistSessionEntity } from './entities'
+import type { ArtistAuthRequest } from './types'
 
 @ApiExtraModels(ArtistSessionEntity)
 @ApiTags('Artists Auth')
@@ -53,10 +53,9 @@ export class AuthController {
   @AuthLogoutSwagger()
   @ArtistAuth()
   @Post('logout')
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const user = req['user'] as UserEntity
+  async logout(@Req() req: ArtistAuthRequest & Request, @Res({ passthrough: true }) res: Response) {
     const access_token = req[process.env.ACCESS_TOKEN_NAME!] as string
-    await this.artistAuthService.logout(user.id, access_token)
+    await this.artistAuthService.logout(req.artist.id, access_token)
     this.tokenService.clearAuthCookies(res)
   }
 
@@ -72,8 +71,7 @@ export class AuthController {
   @AuthMeSwagger()
   @ArtistAuth()
   @Get('me')
-  async getMe(@Req() req: Request) {
-    const user = req['user'] as UserEntity
-    return await this.artistService.findById(user.id)
+  async getMe(@Req() req: ArtistAuthRequest) {
+    return await this.artistService.findById(req.artist.id)
   }
 }

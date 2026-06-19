@@ -1,7 +1,7 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { CreateArtistDto } from './dtos'
-import { ArtistEntity } from './entities'
+import type { CreateArtistDto, UpdateArtistDto } from './dtos'
+import type { ArtistEntity } from './entities'
 
 @Injectable()
 export class ArtistsService {
@@ -18,24 +18,6 @@ export class ArtistsService {
         password: true,
       },
     })
-  }
-
-  async login({ email, password }: CreateArtistDto) {
-    const user = await this.prisma.artist.findFirst({
-      where: {
-        email,
-        password,
-      },
-      omit: {
-        password: true,
-      },
-    })
-
-    if (!user) {
-      throw new Error('Invalid credentials')
-    }
-
-    return user
   }
 
   async findAll({
@@ -73,7 +55,7 @@ export class ArtistsService {
 
   async update(
     id: ArtistEntity['id'],
-    artist: Partial<ArtistEntity>,
+    artist: UpdateArtistDto,
     currentArtistId: ArtistEntity['id'],
   ) {
     if (id !== currentArtistId) {
