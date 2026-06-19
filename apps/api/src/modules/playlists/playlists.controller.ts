@@ -1,9 +1,8 @@
 import { TrackEntity } from '@modules/tracks/entities'
-import type { UserEntity } from '@modules/users'
+import type { UserAuthRequest } from '@modules/users-auth/types'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import type { Request } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
   CreatePlaylistSwagger,
@@ -41,11 +40,11 @@ export class PlaylistsController {
   @UserAuth()
   @Post('')
   async post(
-    @Req() req: Request,
+    @Req() req: UserAuthRequest,
     @Body(new ZodValidationPipe(CreatePlaylistSchema))
     playlistDto: CreatePlaylistDto,
   ) {
-    const user = req['user'] as UserEntity
+    const user = req.user
     return await this.playlistService.create(user.id, playlistDto)
   }
 
@@ -53,12 +52,12 @@ export class PlaylistsController {
   @UserAuth()
   @Put(':id')
   async update(
-    @Req() req: Request,
+    @Req() req: UserAuthRequest,
     @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
     @Body(new ZodValidationPipe(UpdatePlaylistSchema))
     updateDto: UpdatePlaylistDto,
   ) {
-    const user = req['user'] as UserEntity
+    const user = req.user
     return await this.playlistService.update(user.id, id, updateDto)
   }
 }

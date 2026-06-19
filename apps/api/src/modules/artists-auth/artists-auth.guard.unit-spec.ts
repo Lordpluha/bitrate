@@ -116,6 +116,6 @@ describe('ArtistAuthGuard', () => {
     const result = await guard.canActivate(ctx as never)
 
     expect(result).toBe(true)
-    expect(req['artist']).toBe(artist)
+    expect(req.artist).toBe(artist)
   })
 })
