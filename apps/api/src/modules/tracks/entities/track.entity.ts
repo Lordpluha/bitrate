@@ -31,4 +31,19 @@ export class TrackEntity implements Track {
 
   @ApiProperty()
   lyrics: string | null
+
+  @ApiProperty({ enum: ['PROCESSING', 'READY', 'FAILED'] })
+  processingStatus: 'PROCESSING' | 'READY' | 'FAILED'
+
+  @ApiProperty()
+  processingError: string | null
+
+  @ApiProperty()
+  processingAttempts: number
+
+  @ApiProperty()
+  processingStartedAt: Date | null
+
+  @ApiProperty()
+  processingFinishedAt: Date | null
 }

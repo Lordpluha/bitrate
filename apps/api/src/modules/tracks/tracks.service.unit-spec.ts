@@ -19,16 +19,21 @@ const makeConfigMock = () =>
     }),
   }) as unknown as jest.Mocked<ConfigService>
 
-jest.mock('music-metadata', () => ({
-  parseFile: jest.fn().mockResolvedValue({
-    format: { duration: 100, bitrate: 128000 },
-  } as never),
-}))
+jest.mock(
+  'music-metadata',
+  () => ({
+    parseFile: jest.fn().mockResolvedValue({
+      format: { duration: 100, bitrate: 128000 },
+    } as never),
+  }),
+  { virtual: true },
+)
 
 jest.mock('node:fs', () => ({
   createReadStream: jest.fn().mockReturnValue({ pipe: jest.fn() }),
   promises: {
     stat: jest.fn().mockResolvedValue({ size: 1024 * 1024 } as never),
+    access: jest.fn().mockResolvedValue(undefined as never),
   },
 }))
 
@@ -100,11 +105,63 @@ describe('TracksService', () => {
     })
   })
 
+  describe('getTrackAudioStream', () => {
+    it('should choose the highest preferred format bitrate not exceeding the request', async () => {
+      prisma.track.findUnique.mockResolvedValue(buildTrack() as never)
+      prisma.trackFile.findMany.mockResolvedValue([
+        { bitrate: 128, format: 'opus', url: 'track_128.opus', codec: 'opus' },
+        { bitrate: 192, format: 'opus', url: 'track_192.opus', codec: 'opus' },
+        { bitrate: 320, format: 'opus', url: 'track_320.opus', codec: 'opus' },
+      ] as never)
+
+      const result = await service.getTrackAudioStream('track-1', 256)
+
+      expect(result.bitrate).toBe(192)
+      expect(result.format).toBe('opus')
+      expect(result.contentType).toBe('audio/ogg')
+    })
+  })
+
   describe('getTrackStream', () => {
     it('should throw NotFoundException when track not in DB', async () => {
       prisma.track.findUnique.mockResolvedValue(null)
 
       await expect(service.getTrackStream('nonexistent')).rejects.toThrow(NotFoundException)
+    })
+
+    it('should return the requested byte range without a ten-second cap', async () => {
+      prisma.track.findUnique.mockResolvedValue(buildTrack() as never)
+      prisma.trackFile.findMany.mockResolvedValue([
+        { bitrate: 192, format: 'opus', url: 'track_192.opus', codec: 'opus' },
+      ] as never)
+
+      const result = await service.getTrackStream('track-1', 'bytes=100-999', 192)
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          start: 100,
+          end: 999,
+          contentLength: 900,
+          isPartial: true,
+          bitrate: 192,
+        }),
+      )
+    })
+  })
+
+  describe('getHlsMasterPlaylist', () => {
+    it('should expose all ready HLS bitrate variants', async () => {
+      prisma.track.findUnique.mockResolvedValue(buildTrack() as never)
+      prisma.trackFile.findMany.mockResolvedValue([
+        { bitrate: 128, format: 'opus', url: 'track_128.opus' },
+        { bitrate: 192, format: 'opus', url: 'track_192.opus' },
+      ] as never)
+
+      const playlist = await service.getHlsMasterPlaylist('track-1')
+
+      expect(playlist).toContain('128/index.m3u8')
+      expect(playlist).toContain('192/index.m3u8')
+      expect(playlist).toContain('CODECS="mp4a.40.2"')
     })
   })
 
@@ -150,9 +207,46 @@ describe('TracksService', () => {
       )
 
       expect(prisma.track.create).toHaveBeenCalled()
-      expect(prisma.trackFile.create).toHaveBeenCalled()
-      expect(queue.add).toHaveBeenCalledWith('convert-audio', expect.any(Object))
+      expect(prisma.trackFile.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ bitrate: 128 }),
+        }),
+      )
+      expect(queue.add).toHaveBeenCalledWith(
+        'convert-audio',
+        expect.objectContaining({
+          bitrates: ['128k'],
+          sourceFileName: audioFile.filename,
+        }),
+        expect.objectContaining({
+          attempts: 5,
+          backoff: { type: 'exponential', delay: 5_000 },
+          jobId: expect.stringContaining(audioFile.filename),
+        }),
+      )
       expect(result).toBe(track)
+    })
+
+    it('should mark the track failed when the queue cannot accept the job', async () => {
+      const track = buildTrack()
+      const audioFile = buildAudioFile()
+      mockTransaction(prisma)
+      prisma.track.create.mockResolvedValue(track as never)
+      prisma.trackFile.create.mockResolvedValue({ id: 'tf-1' } as never)
+      prisma.track.update.mockResolvedValue(track as never)
+      queue.add.mockRejectedValue(new Error('Redis unavailable') as never)
+
+      await expect(
+        service.create('artist-1', { title: 'Track title' } as CreateTrackDto, audioFile),
+      ).rejects.toThrow('Redis unavailable')
+
+      expect(prisma.track.update).toHaveBeenCalledWith({
+        where: { id: track.id },
+        data: expect.objectContaining({
+          processingStatus: 'FAILED',
+          processingError: 'Redis unavailable',
+        }),
+      })
     })
 
     it('should set cover to null when no cover file provided', async () => {
@@ -192,7 +286,11 @@ describe('TracksService', () => {
       )
 
       expect(prisma.track.update).toHaveBeenCalled()
-      expect(queue.add).toHaveBeenCalledWith('convert-audio', expect.any(Object))
+      expect(queue.add).toHaveBeenCalledWith(
+        'convert-audio',
+        expect.objectContaining({ sourceFileName: audioFile.filename }),
+        expect.objectContaining({ attempts: 5 }),
+      )
       expect(result).toBe(track)
     })
 

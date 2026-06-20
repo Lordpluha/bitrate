@@ -1,6 +1,7 @@
+import type { ReadStream } from 'node:fs'
 import { websocketConfig } from '@common/config/connections'
 import { WsUserAuthGuard } from '@modules/users-auth/users-auth.ws.guard'
-import { Logger, UseGuards } from '@nestjs/common'
+import { Inject, Logger, UseGuards } from '@nestjs/common'
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host'
 import {
   ConnectedSocket,
@@ -15,7 +16,7 @@ import {
 import type { Server, Socket } from 'socket.io'
 import { z } from 'zod'
 import type { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
-import type { TracksService } from './tracks.service'
+import * as TracksServiceModule from './tracks.service'
 
 interface AuthenticatedSocket extends Socket {
   userId?: string
@@ -27,6 +28,19 @@ interface PlayingSession {
   timestamp: number
 }
 
+interface AudioStreamSession {
+  stream: ReadStream
+  trackId: string
+}
+
+interface StreamTrackPayload {
+  trackId: string
+  bitrate?: number
+  format?: string
+}
+
+const AUDIO_CHUNK_ACK_TIMEOUT_MS = 10_000
+
 @WebSocketGateway(websocketConfig)
 @UseGuards(WsUserAuthGuard)
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -34,21 +48,34 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server
 
   private readonly logger = new Logger(AudioGateway.name, { timestamp: true })
-  private userSessions = new Map<string, string>() // userId -> socketId
+  private userSessions = new Map<string, Set<string>>() // userId -> socketIds
   private playingSessions = new Map<string, PlayingSession>() // userId -> playing track info
+  private audioStreams = new Map<string, AudioStreamSession>() // socketId -> active audio stream
 
   private readonly trackPayloadSchema = z.object({
     trackId: z.uuidv7(),
     currentTime: z.number().min(0),
   })
 
+  private readonly playPayloadSchema = this.trackPayloadSchema.extend({
+    bitrate: z.number().int().min(1).max(1000).optional(),
+    format: z.string().min(1).max(16).default('opus'),
+  })
+
   private readonly updatePayloadSchema = this.trackPayloadSchema.extend({
     isPlaying: z.boolean(),
   })
 
+  private readonly streamPayloadSchema = z.object({
+    trackId: z.uuidv7(),
+    bitrate: z.number().int().min(1).max(1000).optional(),
+    format: z.string().min(1).max(16).default('opus'),
+  })
+
   constructor(
-    private tracksService: TracksService,
-    private wsAuthGuard: WsUserAuthGuard,
+    @Inject(TracksServiceModule.TracksService)
+    private tracksService: TracksServiceModule.TracksService,
+    @Inject(WsUserAuthGuard) private wsAuthGuard: WsUserAuthGuard,
   ) {}
 
   async handleConnection(client: AuthenticatedSocket) {
@@ -61,21 +88,24 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return
       }
 
-      this.userSessions.set(client.userId, client.id)
+      const socketIds = this.userSessions.get(client.userId) ?? new Set<string>()
+      socketIds.add(client.id)
+      this.userSessions.set(client.userId, socketIds)
       this.logger.log(`User ${client.userId} connected with socket ${client.id}`)
 
-      // Join user to their personal room
       void client.join(`user_${client.userId}`)
 
-      // Send current playing state if exists
       const currentSession = this.playingSessions.get(client.userId)
-      if (currentSession) {
-        client.emit('trackState', {
-          trackId: currentSession.trackId,
-          currentTime: this.calculateCurrentTime(currentSession),
-          isPlaying: true,
-        })
-      }
+      client.emit(
+        'trackState',
+        currentSession
+          ? {
+              trackId: currentSession.trackId,
+              currentTime: this.calculateCurrentTime(currentSession),
+              isPlaying: true,
+            }
+          : { isPlaying: false },
+      )
     } catch (error) {
       this.logger.error(
         'Authentication failed:',
@@ -86,10 +116,57 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: AuthenticatedSocket): void {
-    if (client.userId) {
+    this.stopAudioStream(client.id)
+
+    if (!client.userId) return
+
+    const socketIds = this.userSessions.get(client.userId)
+    socketIds?.delete(client.id)
+
+    if (!socketIds || socketIds.size === 0) {
       this.userSessions.delete(client.userId)
-      this.logger.log(`User ${client.userId} disconnected`)
+      this.playingSessions.delete(client.userId)
     }
+
+    this.logger.log(`User ${client.userId} disconnected`)
+  }
+
+  @SubscribeMessage('streamTrack')
+  async handleStreamTrack(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: unknown,
+  ): Promise<WsResponse> {
+    try {
+      if (!client.userId) throw new Error('Unauthorized')
+
+      const parsed = this.streamPayloadSchema.safeParse(payload)
+      if (!parsed.success) throw new Error('Invalid payload')
+
+      const audio = await this.startAudioStream(client, parsed.data)
+
+      return {
+        event: 'streamTrack',
+        data: { success: true, ...audio },
+      }
+    } catch (error) {
+      this.logger.error(
+        'Error streaming track:',
+        error instanceof Error ? error.message : 'Unknown error',
+      )
+      return {
+        event: 'streamTrack',
+        data: {
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
+      }
+    }
+  }
+
+  @SubscribeMessage('stopTrackStream')
+  handleStopTrackStream(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
+    const stopped = this.stopAudioStream(client.id)
+    return { event: 'stopTrackStream', data: { success: true, stopped } }
   }
 
   @SubscribeMessage('playTrack')
@@ -98,32 +175,26 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() payload: StartTrackDto,
   ): Promise<WsResponse> {
     try {
-      if (!client.userId) {
-        throw new Error('Unauthorized')
-      }
+      if (!client.userId) throw new Error('Unauthorized')
 
-      const parsed = this.trackPayloadSchema.safeParse(payload)
-      if (!parsed.success) {
-        throw new Error('Invalid payload')
-      }
+      const parsed = this.playPayloadSchema.safeParse(payload)
+      if (!parsed.success) throw new Error('Invalid payload')
 
-      // Verify track exists
       const track = await this.tracksService.findTrackById(parsed.data.trackId)
-      if (!track) {
-        throw new Error('Track not found')
-      }
+      if (!track) throw new Error('Track not found')
 
-      // Update user's playing session
+      const audio = await this.startAudioStream(client, parsed.data)
       this.playingSessions.set(client.userId, {
         trackId: parsed.data.trackId,
         currentTime: parsed.data.currentTime,
         timestamp: Date.now(),
       })
 
-      // Emit only to the user's personal room
       this.server.to(`user_${client.userId}`).emit('trackPlaying', {
         trackId: parsed.data.trackId,
         currentTime: parsed.data.currentTime,
+        bitrate: audio.bitrate,
+        format: audio.format,
         userId: client.userId,
       })
 
@@ -133,6 +204,8 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
           success: true,
           trackId: parsed.data.trackId,
           currentTime: parsed.data.currentTime,
+          bitrate: audio.bitrate,
+          format: audio.format,
         },
       }
     } catch (error) {
@@ -156,19 +229,14 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() payload: PauseTrackDto,
   ): WsResponse {
     try {
-      if (!client.userId) {
-        throw new Error('Unauthorized')
-      }
+      if (!client.userId) throw new Error('Unauthorized')
 
       const parsed = this.trackPayloadSchema.safeParse(payload)
-      if (!parsed.success) {
-        throw new Error('Invalid payload')
-      }
+      if (!parsed.success) throw new Error('Invalid payload')
 
-      // Remove from playing sessions
       this.playingSessions.delete(client.userId)
+      this.stopUserAudioStreams(client.userId)
 
-      // Emit only to the user's personal room
       this.server.to(`user_${client.userId}`).emit('trackPaused', {
         trackId: parsed.data.trackId,
         currentTime: parsed.data.currentTime,
@@ -199,21 +267,20 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('updateStreaming')
-  handleUpdateStreaming(
+  async handleUpdateStreaming(
     @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() payload: UpdateStreamingDto,
-  ): WsResponse {
+  ): Promise<WsResponse> {
     try {
-      if (!client.userId) {
-        throw new Error('Unauthorized')
-      }
+      if (!client.userId) throw new Error('Unauthorized')
 
       const parsed = this.updatePayloadSchema.safeParse(payload)
-      if (!parsed.success) {
-        throw new Error('Invalid payload')
-      }
+      if (!parsed.success) throw new Error('Invalid payload')
 
       if (parsed.data.isPlaying) {
+        const track = await this.tracksService.findTrackById(parsed.data.trackId)
+        if (!track) throw new Error('Track not found')
+
         this.playingSessions.set(client.userId, {
           trackId: parsed.data.trackId,
           currentTime: parsed.data.currentTime,
@@ -221,9 +288,9 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         })
       } else {
         this.playingSessions.delete(client.userId)
+        this.stopUserAudioStreams(client.userId)
       }
 
-      // Emit only to the user's personal room
       this.server.to(`user_${client.userId}`).emit('trackUpdated', {
         trackId: parsed.data.trackId,
         currentTime: parsed.data.currentTime,
@@ -273,11 +340,66 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     }
 
+    return { event: 'currentState', data: { isPlaying: false } }
+  }
+
+  private async startAudioStream(client: AuthenticatedSocket, payload: StreamTrackPayload) {
+    const audio = await this.tracksService.getTrackAudioStream(
+      payload.trackId,
+      payload.bitrate,
+      payload.format,
+    )
+
+    this.stopAudioStream(client.id)
+    const session: AudioStreamSession = { stream: audio.stream, trackId: audio.trackId }
+    this.audioStreams.set(client.id, session)
+
+    client.emit('audioStreamStarted', {
+      trackId: audio.trackId,
+      bitrate: audio.bitrate,
+      format: audio.format,
+      codec: audio.codec,
+      contentType: audio.contentType,
+      size: audio.size,
+    })
+
+    void this.pipeAudioStream(client, session)
+
     return {
-      event: 'currentState',
-      data: {
-        isPlaying: false,
-      },
+      trackId: audio.trackId,
+      bitrate: audio.bitrate,
+      format: audio.format,
+    }
+  }
+
+  private async pipeAudioStream(client: AuthenticatedSocket, session: AudioStreamSession) {
+    let sequence = 0
+
+    try {
+      for await (const chunk of session.stream) {
+        if (this.audioStreams.get(client.id) !== session) return
+
+        await client.timeout(AUDIO_CHUNK_ACK_TIMEOUT_MS).emitWithAck('audioChunk', {
+          trackId: session.trackId,
+          sequence,
+          chunk: Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk),
+        })
+        sequence += 1
+      }
+
+      if (this.audioStreams.get(client.id) !== session) return
+
+      this.audioStreams.delete(client.id)
+      client.emit('audioStreamEnded', { trackId: session.trackId, chunks: sequence })
+    } catch (error) {
+      if (this.audioStreams.get(client.id) !== session) return
+
+      this.audioStreams.delete(client.id)
+      session.stream.destroy()
+      client.emit('audioStreamError', {
+        trackId: session.trackId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
     }
   }
 
@@ -292,7 +414,21 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return context
   }
 
-  // Method to emit events from controller
+  private stopAudioStream(socketId: string) {
+    const session = this.audioStreams.get(socketId)
+    if (!session) return false
+
+    this.audioStreams.delete(socketId)
+    session.stream.destroy()
+    return true
+  }
+
+  private stopUserAudioStreams(userId: string) {
+    for (const socketId of this.userSessions.get(userId) ?? []) {
+      this.stopAudioStream(socketId)
+    }
+  }
+
   emitToUser(userId: string, event: string, data: Record<string, unknown>): void {
     this.server.to(`user_${userId}`).emit(event, data)
   }

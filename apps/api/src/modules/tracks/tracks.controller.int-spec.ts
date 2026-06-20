@@ -9,11 +9,15 @@ import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
+jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
+
 const makeServiceMock = () =>
   ({
     findAll: jest.fn(),
     findTrackById: jest.fn(),
     getTrackStream: jest.fn(),
+    getHlsMasterPlaylist: jest.fn(),
+    getHlsAsset: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     findLikedTracks: jest.fn(),
@@ -128,6 +132,8 @@ describe('TracksController (int)', () => {
     expect(service.getTrackStream).toHaveBeenCalledWith(
       'f47ac10b-58cc-4372-a567-0e02b2c3d479',
       undefined,
+      undefined,
+      undefined,
     )
     expect(res.headers['content-type']).toContain('audio/mpeg')
     expect(res.headers['accept-ranges']).toBe('bytes')
@@ -136,6 +142,7 @@ describe('TracksController (int)', () => {
   it('GET /tracks/stream/:id with Range header should return 206', async () => {
     const mockStream = new Readable({
       read() {
+        this.push(Buffer.alloc(512))
         this.push(null)
       },
     })
@@ -157,6 +164,8 @@ describe('TracksController (int)', () => {
     expect(service.getTrackStream).toHaveBeenCalledWith(
       'f47ac10b-58cc-4372-a567-0e02b2c3d479',
       'bytes=0-511',
+      undefined,
+      undefined,
     )
     expect(res.headers['content-range']).toBe('bytes 0-511/2048')
   })
@@ -171,7 +180,7 @@ describe('TracksController (int)', () => {
     expect(res.status).toBe(200)
     expect(service.update).toHaveBeenCalledWith(
       'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-      { title: 'Updated Title' },
+      { title: 'Updated Title' } as never,
       undefined,
       undefined,
     )

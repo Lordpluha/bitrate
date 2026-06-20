@@ -202,10 +202,10 @@ importers:
         version: 10.4.0
       '@nestjs/cli':
         specifier: ^11.0.23
-        version: 11.0.23(@swc/cli@0.8.1(@swc/core@1.15.41)(chokidar@5.0.0))(@swc/core@1.15.41)(@types/node@25.9.3)(prettier@3.8.4)
+        version: 11.0.23(@swc/cli@0.8.1(@swc/core@1.15.41)(chokidar@4.0.3))(@swc/core@1.15.41)(@types/node@25.9.3)(prettier@3.8.4)
       '@nestjs/schematics':
         specifier: ^11.1.0
-        version: 11.1.0(chokidar@5.0.0)(prettier@3.8.4)(typescript@6.0.3)
+        version: 11.1.0(chokidar@4.0.3)(prettier@3.8.4)(typescript@6.0.3)
       '@nestjs/testing':
         specifier: ^11.1.26
         version: 11.1.26(@nestjs/common@11.1.26(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.26)(@nestjs/platform-express@11.1.26)
@@ -214,7 +214,7 @@ importers:
         version: link:../../packages/contracts
       '@swc/cli':
         specifier: ^0.8.1
-        version: 0.8.1(@swc/core@1.15.41)(chokidar@5.0.0)
+        version: 0.8.1(@swc/core@1.15.41)(chokidar@4.0.3)
       '@swc/core':
         specifier: ^1.15.41
         version: 1.15.41(@swc/helpers@0.5.15)
@@ -525,6 +525,9 @@ importers:
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.2.7)
+      hls.js:
+        specifier: ^1.6.16
+        version: 1.6.16
       motion:
         specifier: ^12.40.0
         version: 12.40.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -10322,6 +10325,9 @@ packages:
   history@4.10.1:
     resolution: {integrity: sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==}
 
+  hls.js@1.6.16:
+    resolution: {integrity: sha512-VSIRpLfRwlAAdGL4wiTucx2ScRipo0ed1FBatWkyt832jC4CReKstga6yIhYVwGu9LOBjuX9wzmRMeQdBJtzEA==}
+
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
@@ -16438,17 +16444,6 @@ snapshots:
     optionalDependencies:
       chokidar: 4.0.3
 
-  '@angular-devkit/core@19.2.24(chokidar@5.0.0)':
-    dependencies:
-      ajv: 8.18.0
-      ajv-formats: 3.0.1(ajv@8.18.0)
-      jsonc-parser: 3.3.1
-      picomatch: 4.0.4
-      rxjs: 7.8.1
-      source-map: 0.7.4
-    optionalDependencies:
-      chokidar: 5.0.0
-
   '@angular-devkit/core@19.2.27(chokidar@4.0.3)':
     dependencies:
       ajv: 8.18.0
@@ -16486,16 +16481,6 @@ snapshots:
   '@angular-devkit/schematics@19.2.24(chokidar@4.0.3)':
     dependencies:
       '@angular-devkit/core': 19.2.24(chokidar@4.0.3)
-      jsonc-parser: 3.3.1
-      magic-string: 0.30.17
-      ora: 5.4.1
-      rxjs: 7.8.1
-    transitivePeerDependencies:
-      - chokidar
-
-  '@angular-devkit/schematics@19.2.24(chokidar@5.0.0)':
-    dependencies:
-      '@angular-devkit/core': 19.2.24(chokidar@5.0.0)
       jsonc-parser: 3.3.1
       magic-string: 0.30.17
       ora: 5.4.1
@@ -21616,7 +21601,7 @@ snapshots:
       bullmq: 5.78.1
       tslib: 2.8.1
 
-  '@nestjs/cli@11.0.23(@swc/cli@0.8.1(@swc/core@1.15.41)(chokidar@5.0.0))(@swc/core@1.15.41)(@types/node@25.9.3)(prettier@3.8.4)':
+  '@nestjs/cli@11.0.23(@swc/cli@0.8.1(@swc/core@1.15.41)(chokidar@4.0.3))(@swc/core@1.15.41)(@types/node@25.9.3)(prettier@3.8.4)':
     dependencies:
       '@angular-devkit/core': 19.2.27(chokidar@4.0.3)
       '@angular-devkit/schematics': 19.2.27(chokidar@4.0.3)
@@ -21637,7 +21622,7 @@ snapshots:
       webpack: 5.106.2(@swc/core@1.15.41)
       webpack-node-externals: 3.0.0
     optionalDependencies:
-      '@swc/cli': 0.8.1(@swc/core@1.15.41)(chokidar@5.0.0)
+      '@swc/cli': 0.8.1(@swc/core@1.15.41)(chokidar@4.0.3)
       '@swc/core': 1.15.41(@swc/helpers@0.5.15)
     transitivePeerDependencies:
       - '@minify-html/node'
@@ -21737,10 +21722,10 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/schematics@11.1.0(chokidar@5.0.0)(prettier@3.8.4)(typescript@6.0.3)':
+  '@nestjs/schematics@11.1.0(chokidar@4.0.3)(prettier@3.8.4)(typescript@6.0.3)':
     dependencies:
-      '@angular-devkit/core': 19.2.24(chokidar@5.0.0)
-      '@angular-devkit/schematics': 19.2.24(chokidar@5.0.0)
+      '@angular-devkit/core': 19.2.24(chokidar@4.0.3)
+      '@angular-devkit/schematics': 19.2.24(chokidar@4.0.3)
       comment-json: 5.0.0
       jsonc-parser: 3.3.1
       pluralize: 8.0.0
@@ -23348,7 +23333,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@swc/cli@0.8.1(@swc/core@1.15.41)(chokidar@5.0.0)':
+  '@swc/cli@0.8.1(@swc/core@1.15.41)(chokidar@4.0.3)':
     dependencies:
       '@swc/core': 1.15.41(@swc/helpers@0.5.15)
       '@swc/counter': 0.1.3
@@ -23361,7 +23346,7 @@ snapshots:
       source-map: 0.7.6
       tinyglobby: 0.2.17
     optionalDependencies:
-      chokidar: 5.0.0
+      chokidar: 4.0.3
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
@@ -28481,6 +28466,8 @@ snapshots:
       tiny-invariant: 1.3.3
       tiny-warning: 1.0.3
       value-equal: 1.0.1
+
+  hls.js@1.6.16: {}
 
   hoist-non-react-statics@3.3.2:
     dependencies:

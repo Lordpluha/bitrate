@@ -11,6 +11,7 @@ import ffmpegPath from 'ffmpeg-static'
  * @param {number} [options.quality=10] - Compression level 0-10 (10 is highest quality)
  * @param {boolean} [options.vbr=false] - Enable Variable Bitrate (default: CBR)
  * @param {string} [options.application='audio'] - Application type: audio, voip, lowdelay
+ * @param {number} [options.timeoutMs] - Optional FFmpeg timeout in milliseconds
  * @returns {Promise<{input: string, output: string, inputSize: string, outputSize: string}>}
  */
 export async function convertAudio({
@@ -20,6 +21,7 @@ export async function convertAudio({
   quality = 10,
   vbr = false,
   application = 'audio',
+  timeoutMs,
 }) {
   if (!ffmpegPath) {
     throw new Error('FFmpeg binary not found. Ensure ffmpeg-static is installed correctly.')
@@ -28,7 +30,7 @@ export async function convertAudio({
   // Validate input file exists
   try {
     await fs.access(input)
-  } catch (error) {
+  } catch {
     throw new Error(`Input file not found: ${input}`)
   }
 
@@ -46,6 +48,10 @@ export async function convertAudio({
   // Validate quality
   if (quality < 0 || quality > 10) {
     throw new Error('Quality must be between 0 and 10')
+  }
+
+  if (timeoutMs !== undefined && (!Number.isFinite(timeoutMs) || timeoutMs <= 0)) {
+    throw new Error('Timeout must be a positive number')
   }
 
   // Validate application
@@ -84,7 +90,11 @@ export async function convertAudio({
   ]
 
   try {
-    await execa(ffmpegPath, args)
+    if (timeoutMs === undefined) {
+      await execa(ffmpegPath, args)
+    } else {
+      await execa(ffmpegPath, args, { timeout: timeoutMs })
+    }
 
     // Get file sizes
     const inputStats = await fs.stat(input)

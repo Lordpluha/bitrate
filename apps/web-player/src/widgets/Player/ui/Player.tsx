@@ -20,16 +20,15 @@ export const Player: React.FC = () => {
   const artistName = artist?.username || 'Unknown Artist'
 
   const {
-    audioRef,
+    activeSlot,
+    bindAudioElement,
     togglePlayPause,
     onSeek,
     changeTrack,
     handleLoadedMetadata,
     handleTimeUpdate,
     handleEnded,
-    handleVolumeChange,
     handleSeeked,
-    handleProgress,
   } = useAudioPlayer()
 
   useEffect(() => {
@@ -40,29 +39,25 @@ export const Player: React.FC = () => {
     }
   }, [currentTrack])
 
-  useEffect(() => {
-    handleVolumeChange()
-  }, [handleVolumeChange])
-
   if (!currentTrack) {
     return null
   }
 
-  console.log(currentTrack.cover)
-
   return (
     <>
-      {/* biome-ignore lint/a11y/useMediaCaption: audio-only playback has no caption track */}
-      <audio
-        autoPlay={isPlaying}
-        onEnded={handleEnded}
-        onLoadedMetadata={handleLoadedMetadata}
-        onProgress={handleProgress}
-        onSeeked={handleSeeked}
-        onTimeUpdate={handleTimeUpdate}
-        preload="none"
-        ref={audioRef}
-      />
+      {([0, 1] as const).map((slot) => (
+        // biome-ignore lint/a11y/useMediaCaption: audio-only playback has no caption track
+        <audio
+          data-active={activeSlot === slot}
+          key={slot}
+          onEnded={() => handleEnded(slot)}
+          onLoadedMetadata={() => handleLoadedMetadata(slot)}
+          onSeeked={handleSeeked}
+          onTimeUpdate={() => handleTimeUpdate(slot)}
+          preload="auto"
+          ref={(element) => bindAudioElement(slot, element)}
+        />
+      ))}
 
       <div
         className={`fixed bottom-0 left-0 right-0 h-22.5 bg-black border-t border-gray-800 px-4 flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${

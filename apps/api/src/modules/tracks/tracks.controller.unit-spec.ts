@@ -4,11 +4,15 @@ import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures
 import { TracksController } from './tracks.controller'
 import type { TracksService } from './tracks.service'
 
+jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
+
 const makeServiceMock = () =>
   ({
     findAll: jest.fn(),
     findTrackById: jest.fn(),
     getTrackStream: jest.fn(),
+    getHlsMasterPlaylist: jest.fn(),
+    getHlsAsset: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     findLikedTracks: jest.fn(),
@@ -43,6 +47,39 @@ describe('TracksController', () => {
 
     expect(service.findTrackById).toHaveBeenCalledWith('track-1')
     expect(result).resolves.toBe(track)
+  })
+
+  it('getHlsMasterPlaylist should return the generated playlist', async () => {
+    service.getHlsMasterPlaylist.mockResolvedValue('#EXTM3U\n' as never)
+    const res = {
+      set: jest.fn(),
+      send: jest.fn().mockReturnValue('sent'),
+    }
+
+    const result = await controller.getHlsMasterPlaylist('track-1', res as never)
+
+    expect(service.getHlsMasterPlaylist).toHaveBeenCalledWith('track-1')
+    expect(res.set).toHaveBeenCalledWith(
+      expect.objectContaining({ 'Content-Type': 'application/vnd.apple.mpegurl' }),
+    )
+    expect(result).toBe('sent')
+  })
+
+  it('getHlsAsset should pipe an authenticated segment response', async () => {
+    const stream = { pipe: jest.fn().mockReturnValue('piped') }
+    service.getHlsAsset.mockResolvedValue({
+      stream,
+      contentType: 'video/iso.segment',
+      contentLength: 1024,
+      immutable: true,
+    } as never)
+    const res = { set: jest.fn() }
+
+    const result = await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
+
+    expect(service.getHlsAsset).toHaveBeenCalledWith('track-1', 192, 'segment_00000.m4s')
+    expect(stream.pipe).toHaveBeenCalledWith(res)
+    expect(result).toBe('piped')
   })
 
   it('postTrack should throw BadRequestException when audio file is missing', () => {

@@ -142,6 +142,13 @@ describe('convertAudio', () => {
       )
     })
 
+    it('passes an FFmpeg timeout when requested', async () => {
+      await convertAudio({ input: '/a.mp3', timeoutMs: 600_000 })
+      expect(execaMock).toHaveBeenCalledWith('/fake/ffmpeg', expect.any(Array), {
+        timeout: 600_000,
+      })
+    })
+
     it('passes -y to allow overwriting the output file', async () => {
       await convertAudio({ input: '/a.mp3' })
       expect(execaMock).toHaveBeenCalledWith(expect.anything(), expect.arrayContaining(['-y']))

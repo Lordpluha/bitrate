@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "TrackProcessingStatus" AS ENUM ('PROCESSING', 'READY', 'FAILED');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" UUID NOT NULL,
@@ -70,6 +73,11 @@ CREATE TABLE "Track" (
     "duration" INTEGER,
     "releaseDate" TIMESTAMP(3),
     "lyrics" TEXT,
+    "processingStatus" "TrackProcessingStatus" NOT NULL DEFAULT 'PROCESSING',
+    "processingError" TEXT,
+    "processingAttempts" INTEGER NOT NULL DEFAULT 0,
+    "processingStartedAt" TIMESTAMP(3),
+    "processingFinishedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

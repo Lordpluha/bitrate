@@ -24,10 +24,10 @@ model User {
   passwordResets UserPasswordReset[]
   oauthAccounts  UserOAuthAccount[]
   playlists      Playlist[]
-  likedTracks    Track[]    @relation("UserLikedTracks")
-  likedArtists   Artist[]   @relation("UserLikedArtists")
-  likedAlbums    Album[]    @relation("UserLikedAlbums")
-  likedPlaylists Playlist[] @relation("UserLikedPlaylists")
+  likedTracks    Track[]             @relation("UserLikedTracks")
+  likedArtists   Artist[]            @relation("UserLikedArtists")
+  likedAlbums    Album[]             @relation("UserLikedAlbums")
+  likedPlaylists Playlist[]          @relation("UserLikedPlaylists")
 
   @@index([email])
   @@index([username])
@@ -78,7 +78,7 @@ model UserSession {
 
 model ArtistSession {
   id            String @id @default(uuid(7)) @db.Uuid
-  artistId        String @db.Uuid
+  artistId      String @db.Uuid
   access_token  String @unique
   refresh_token String @unique
 
@@ -92,6 +92,12 @@ model ArtistSession {
   @@index([refresh_token])
 }
 
+enum TrackProcessingStatus {
+  PROCESSING
+  READY
+  FAILED
+}
+
 model Track {
   id       String  @id @default(uuid(7)) @db.Uuid
   title    String
@@ -102,6 +108,12 @@ model Track {
   duration    Int? // Duration in seconds
   releaseDate DateTime?
   lyrics      String?   @db.Text
+
+  processingStatus     TrackProcessingStatus @default(PROCESSING)
+  processingError      String?               @db.Text
+  processingAttempts   Int                   @default(0)
+  processingStartedAt  DateTime?
+  processingFinishedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -152,8 +164,8 @@ model Artist {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  tracks  Track[]
-  albums  Album[]
+  tracks Track[]
+  albums Album[]
 
   sessions       ArtistSession[]
   oauthAccounts  ArtistOAuthAccount[]
@@ -208,7 +220,7 @@ model Album {
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
-  likedBy    User[]      @relation("UserLikedAlbums")
+  likedBy User[] @relation("UserLikedAlbums")
 
   @@index([artistId])
   @@index([title])
@@ -228,7 +240,7 @@ model Playlist {
 
   tracks Track[]
 
-  likedBy    User[]      @relation("UserLikedPlaylists")
+  likedBy User[] @relation("UserLikedPlaylists")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

@@ -62,10 +62,37 @@ export class TracksController {
     })
   }
 
-  @GetTrackByIdSwagger()
-  @Get(':id')
-  getById(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
-    return this.tracksService.findTrackById(id)
+  @UserAuth()
+  @Get('stream/:id/hls/master.m3u8')
+  async getHlsMasterPlaylist(
+    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
+    @Res() res: Response,
+  ) {
+    const playlist = await this.tracksService.getHlsMasterPlaylist(id)
+    res.set({
+      'Content-Type': 'application/vnd.apple.mpegurl',
+      'Cache-Control': 'private, max-age=5, no-transform',
+    })
+    return res.send(playlist)
+  }
+
+  @UserAuth()
+  @Get('stream/:id/hls/:bitrate/:asset')
+  async getHlsAsset(
+    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
+    @Param('bitrate', ParseIntPipe) bitrate: number,
+    @Param('asset') asset: string,
+    @Res() res: Response,
+  ) {
+    const data = await this.tracksService.getHlsAsset(id, bitrate, asset)
+    res.set({
+      'Content-Type': data.contentType,
+      'Content-Length': data.contentLength,
+      'Cache-Control': data.immutable
+        ? 'private, max-age=31536000, immutable, no-transform'
+        : 'private, max-age=30, no-transform',
+    })
+    return data.stream.pipe(res)
   }
 
   @StreamTrackSwagger()
@@ -75,15 +102,20 @@ export class TracksController {
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Req() req: Request,
     @Res() res: Response,
+    @Query('bitrate', new ParseIntPipe({ optional: true })) bitrate?: number,
+    @Query('format') format?: string,
   ) {
     const range = req.headers.range
-    const streamData = await this.tracksService.getTrackStream(id, range)
+    const streamData = await this.tracksService.getTrackStream(id, range, bitrate, format)
 
     res.status(streamData.isPartial ? 206 : 200)
     res.set({
       'Content-Type': streamData.contentType,
       'Accept-Ranges': 'bytes',
       'Content-Length': streamData.contentLength,
+      'Cache-Control': 'private, max-age=3600, no-transform',
+      'X-Audio-Bitrate': streamData.bitrate,
+      'X-Audio-Format': streamData.format,
       ...(streamData.isPartial
         ? {
             'Content-Range': `bytes ${streamData.start}-${streamData.end}/${streamData.fileSize}`,
@@ -216,6 +248,12 @@ export class TracksController {
       page,
       limit,
     })
+  }
+
+  @GetTrackByIdSwagger()
+  @Get(':id')
+  getById(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
+    return this.tracksService.findTrackById(id)
   }
 
   @LikeTrackSwagger()
