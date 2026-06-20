@@ -137,27 +137,59 @@ model TrackFile {
 }
 
 model Artist {
-  id       String @id @default(uuid(7)) @db.Uuid
-  username String @unique
-  email    String @unique
-  password String
+  id       String  @id @default(uuid(7)) @db.Uuid
+  username String  @unique
+  email    String  @unique
+  password String?
 
   bio             String? @db.Text
   avatar          String?
   backgroundImage String?
 
+  twoFactorSecret  String?
+  twoFactorEnabled Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  tracks Track[]
-  albums Album[]
+  tracks  Track[]
+  albums  Album[]
 
-  sessions    ArtistSession[]
+  sessions       ArtistSession[]
+  oauthAccounts  ArtistOAuthAccount[]
+  passwordResets ArtistPasswordReset[]
 
-  likedBy    User[]      @relation("UserLikedArtists")
+  likedBy User[] @relation("UserLikedArtists")
 
   @@index([email])
   @@index([username])
+}
+
+model ArtistOAuthAccount {
+  id                String @id @default(uuid(7)) @db.Uuid
+  artistId          String @db.Uuid
+  provider          String
+  providerAccountId String
+
+  createdAt DateTime @default(now())
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([artistId])
+}
+
+model ArtistPasswordReset {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  artistId  String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([artistId])
 }
 
 model Album {

@@ -29,5 +29,7 @@ export const buildArtist = (
   bio: null,
   avatar: null,
   backgroundImage: null,
+  twoFactorSecret: null,
+  twoFactorEnabled: false,
   ...overrides,
 })

@@ -9,7 +9,7 @@ export class ArtistEntity implements Artist {
   username: string
 
   @ApiProperty()
-  password: string
+  password: string | null
 
   @ApiProperty()
   email: string
@@ -22,6 +22,12 @@ export class ArtistEntity implements Artist {
 
   @ApiProperty()
   backgroundImage: string | null
+
+  @ApiProperty()
+  twoFactorSecret: string | null
+
+  @ApiProperty()
+  twoFactorEnabled: boolean
 
   @ApiProperty()
   createdAt: Date

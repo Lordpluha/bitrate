@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Artist } from '@prisma/client'
 
-export class SafeArtistEntity implements Omit<Artist, 'password' | 'email'> {
+export class SafeArtistEntity implements Omit<Artist, 'password' | 'email' | 'twoFactorSecret'> {
   @ApiProperty()
   id: string
 
@@ -16,6 +16,9 @@ export class SafeArtistEntity implements Omit<Artist, 'password' | 'email'> {
 
   @ApiProperty()
   backgroundImage: string | null
+
+  @ApiProperty()
+  twoFactorEnabled: boolean
 
   @ApiProperty()
   createdAt: Date

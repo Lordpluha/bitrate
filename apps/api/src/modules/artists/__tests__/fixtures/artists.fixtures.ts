@@ -8,6 +8,8 @@ export const buildArtist = (overrides: Partial<ArtistEntity> = {}): ArtistEntity
   bio: null,
   avatar: null,
   backgroundImage: null,
+  twoFactorSecret: null,
+  twoFactorEnabled: false,
   createdAt: new Date(),
   updatedAt: new Date(),
   ...overrides,
