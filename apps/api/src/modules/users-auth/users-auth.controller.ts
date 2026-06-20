@@ -81,7 +81,7 @@ export class UsersAuthController {
   @UserAuth()
   @Post('logout')
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const user = req.user as UserEntity
+    const user = req['user'] as UserEntity
     const access_token = req[process.env.ACCESS_TOKEN_NAME!] as string
     await this.authService.logout(user.id, access_token)
     this.tokenService.clearAuthCookies(res)
@@ -100,7 +100,7 @@ export class UsersAuthController {
   @UserAuth()
   @Get('me')
   async getMe(@Req() req: Request) {
-    const user = req.user as UserEntity
+    const user = req['user'] as UserEntity
     return await this.userService.findById(user.id)
   }
 
