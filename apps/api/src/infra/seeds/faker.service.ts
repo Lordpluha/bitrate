@@ -22,8 +22,30 @@ export class FakerService {
       updatedAt: new Date(),
     })
 
-    const adjectives = ['Cool', 'Amazing', 'Epic', 'Super', 'Mega', 'Ultra', 'Pro', 'Master', 'Dark', 'Light']
-    const nouns = ['Music', 'Beat', 'Rhythm', 'Sound', 'Voice', 'Song', 'Player', 'Listener', 'Fan', 'Lover']
+    const adjectives = [
+      'Cool',
+      'Amazing',
+      'Epic',
+      'Super',
+      'Mega',
+      'Ultra',
+      'Pro',
+      'Master',
+      'Dark',
+      'Light',
+    ]
+    const nouns = [
+      'Music',
+      'Beat',
+      'Rhythm',
+      'Sound',
+      'Voice',
+      'Song',
+      'Player',
+      'Listener',
+      'Fan',
+      'Lover',
+    ]
     const descriptions = [
       'Music lover and playlist curator',
       'Always discovering new sounds',
