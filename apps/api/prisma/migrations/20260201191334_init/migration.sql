@@ -1,3 +1,6 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
 -- CreateEnum
 CREATE TYPE "TrackProcessingStatus" AS ENUM ('PROCESSING', 'READY', 'FAILED');
 
@@ -18,17 +21,6 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "UserPasswordReset" (
-    "id" UUID NOT NULL,
-    "userId" UUID NOT NULL,
-    "token" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "UserPasswordReset_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "UserOAuthAccount" (
     "id" UUID NOT NULL,
     "userId" UUID NOT NULL,
@@ -37,6 +29,17 @@ CREATE TABLE "UserOAuthAccount" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "UserOAuthAccount_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserPasswordReset" (
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "token" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UserPasswordReset_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -103,14 +106,38 @@ CREATE TABLE "Artist" (
     "id" UUID NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
+    "password" TEXT,
     "bio" TEXT,
     "avatar" TEXT,
     "backgroundImage" TEXT,
+    "twoFactorSecret" TEXT,
+    "twoFactorEnabled" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Artist_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ArtistOAuthAccount" (
+    "id" UUID NOT NULL,
+    "artistId" UUID NOT NULL,
+    "provider" TEXT NOT NULL,
+    "providerAccountId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "ArtistOAuthAccount_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ArtistPasswordReset" (
+    "id" UUID NOT NULL,
+    "artistId" UUID NOT NULL,
+    "token" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "ArtistPasswordReset_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -202,6 +229,12 @@ CREATE INDEX "User_email_idx" ON "User"("email");
 CREATE INDEX "User_username_idx" ON "User"("username");
 
 -- CreateIndex
+CREATE INDEX "UserOAuthAccount_userId_idx" ON "UserOAuthAccount"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserOAuthAccount_provider_providerAccountId_key" ON "UserOAuthAccount"("provider", "providerAccountId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "UserPasswordReset_token_key" ON "UserPasswordReset"("token");
 
 -- CreateIndex
@@ -209,12 +242,6 @@ CREATE INDEX "UserPasswordReset_token_idx" ON "UserPasswordReset"("token");
 
 -- CreateIndex
 CREATE INDEX "UserPasswordReset_userId_idx" ON "UserPasswordReset"("userId");
-
--- CreateIndex
-CREATE INDEX "UserOAuthAccount_userId_idx" ON "UserOAuthAccount"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "UserOAuthAccount_provider_providerAccountId_key" ON "UserOAuthAccount"("provider", "providerAccountId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "UserSession_access_token_key" ON "UserSession"("access_token");
@@ -277,6 +304,21 @@ CREATE INDEX "Artist_email_idx" ON "Artist"("email");
 CREATE INDEX "Artist_username_idx" ON "Artist"("username");
 
 -- CreateIndex
+CREATE INDEX "ArtistOAuthAccount_artistId_idx" ON "ArtistOAuthAccount"("artistId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ArtistOAuthAccount_provider_providerAccountId_key" ON "ArtistOAuthAccount"("provider", "providerAccountId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ArtistPasswordReset_token_key" ON "ArtistPasswordReset"("token");
+
+-- CreateIndex
+CREATE INDEX "ArtistPasswordReset_token_idx" ON "ArtistPasswordReset"("token");
+
+-- CreateIndex
+CREATE INDEX "ArtistPasswordReset_artistId_idx" ON "ArtistPasswordReset"("artistId");
+
+-- CreateIndex
 CREATE INDEX "Album_artistId_idx" ON "Album"("artistId");
 
 -- CreateIndex
@@ -310,10 +352,10 @@ CREATE INDEX "_PlaylistToTrack_B_index" ON "_PlaylistToTrack"("B");
 CREATE INDEX "_UserLikedPlaylists_B_index" ON "_UserLikedPlaylists"("B");
 
 -- AddForeignKey
-ALTER TABLE "UserPasswordReset" ADD CONSTRAINT "UserPasswordReset_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserOAuthAccount" ADD CONSTRAINT "UserOAuthAccount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserOAuthAccount" ADD CONSTRAINT "UserOAuthAccount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserPasswordReset" ADD CONSTRAINT "UserPasswordReset_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserSession" ADD CONSTRAINT "UserSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -326,6 +368,12 @@ ALTER TABLE "Track" ADD CONSTRAINT "Track_artistId_fkey" FOREIGN KEY ("artistId"
 
 -- AddForeignKey
 ALTER TABLE "TrackFile" ADD CONSTRAINT "TrackFile_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ArtistOAuthAccount" ADD CONSTRAINT "ArtistOAuthAccount_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ArtistPasswordReset" ADD CONSTRAINT "ArtistPasswordReset_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Album" ADD CONSTRAINT "Album_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
