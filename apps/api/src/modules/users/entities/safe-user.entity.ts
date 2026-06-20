@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
-export class SafeUserEntity implements Omit<User, 'password'> {
+export class SafeUserEntity implements Omit<User, 'password' | 'twoFactorSecret'> {
   @ApiProperty()
   id: string
 
@@ -22,4 +22,7 @@ export class SafeUserEntity implements Omit<User, 'password'> {
 
   @ApiProperty()
   updatedAt: Date
+
+  @ApiProperty()
+  twoFactorEnabled: boolean
 }

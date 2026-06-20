@@ -21,7 +21,7 @@ describe('UsersService', () => {
 
     expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledWith({
       where: { id: 'user-1' },
-      omit: { password: true, email: true },
+      omit: { password: true, email: true, twoFactorSecret: true },
     })
     expect(result).toBe(user)
   })
@@ -34,7 +34,7 @@ describe('UsersService', () => {
 
     expect(prisma.user.findFirst).toHaveBeenCalledWith({
       where: { email: 'user@example.com' },
-      omit: { password: true },
+      omit: { password: true, twoFactorSecret: true },
     })
     expect(result).toBe(user)
   })
@@ -47,7 +47,7 @@ describe('UsersService', () => {
 
     expect(prisma.user.findFirst).toHaveBeenCalledWith({
       where: { username: 'user' },
-      omit: { password: true, email: true },
+      omit: { password: true, email: true, twoFactorSecret: true },
     })
     expect(result).toBe(user)
   })
@@ -62,12 +62,12 @@ describe('UsersService', () => {
       where: { username: 'user' },
       skip: 5,
       take: 5,
-      omit: { password: true, email: true },
+      omit: { password: true, email: true, twoFactorSecret: true },
     })
     expect(result).toBe(users)
   })
 
-  it('create should omit password in result', async () => {
+  it('create should omit password and twoFactorSecret in result', async () => {
     const created = buildUser()
     prisma.user.create.mockResolvedValue(created)
 
@@ -89,7 +89,7 @@ describe('UsersService', () => {
         description: null,
         updatedAt: created.updatedAt,
       },
-      omit: { password: true },
+      omit: { password: true, twoFactorSecret: true },
     })
     expect(result).toBe(created)
   })
@@ -103,7 +103,7 @@ describe('UsersService', () => {
     expect(prisma.user.update).toHaveBeenCalledWith({
       where: { id: 'user-1' },
       data: { username: 'updated' },
-      omit: { password: true },
+      omit: { password: true, twoFactorSecret: true },
     })
     expect(result).toBe(updated)
   })
@@ -117,7 +117,7 @@ describe('UsersService', () => {
     expect(prisma.user.update).toHaveBeenCalledWith({
       where: { id: 'user-1' },
       data: { avatar: '/static/users/avatars/avatar.png' },
-      omit: { password: true },
+      omit: { password: true, email: true, twoFactorSecret: true },
     })
     expect(result).toBe(updated)
   })

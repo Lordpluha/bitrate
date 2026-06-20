@@ -160,4 +160,30 @@ describe('PlaylistsService', () => {
     })
     expect(result).toBe(deleted)
   })
+
+  it('like should connect user to playlist likedBy', async () => {
+    const playlist = buildPlaylist()
+    prisma.playlist.update.mockResolvedValue(playlist)
+
+    const result = await service.like('user-1', 'playlist-1')
+
+    expect(prisma.playlist.update).toHaveBeenCalledWith({
+      where: { id: 'playlist-1' },
+      data: { likedBy: { connect: { id: 'user-1' } } },
+    })
+    expect(result).toBe(playlist)
+  })
+
+  it('unlike should disconnect user from playlist likedBy', async () => {
+    const playlist = buildPlaylist()
+    prisma.playlist.update.mockResolvedValue(playlist)
+
+    const result = await service.unlike('user-1', 'playlist-1')
+
+    expect(prisma.playlist.update).toHaveBeenCalledWith({
+      where: { id: 'playlist-1' },
+      data: { likedBy: { disconnect: { id: 'user-1' } } },
+    })
+    expect(result).toBe(playlist)
+  })
 })

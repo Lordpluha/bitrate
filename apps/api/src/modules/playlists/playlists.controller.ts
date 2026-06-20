@@ -1,13 +1,26 @@
 import { TrackEntity } from '@modules/tracks/entities'
 import type { UserAuthRequest } from '@modules/users-auth/types'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, Req } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Req,
+} from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
   CreatePlaylistSwagger,
   GetPlaylistByIdSwagger,
   GetPlaylistsSwagger,
+  LikePlaylistSwagger,
+  UnlikePlaylistSwagger,
   UpdatePlaylistSwagger,
 } from './decorators'
 import { type CreatePlaylistDto, CreatePlaylistSchema } from './dtos/create-playlist.dto'
@@ -59,5 +72,23 @@ export class PlaylistsController {
   ) {
     const user = req.user
     return await this.playlistService.update(user.id, id, updateDto)
+  }
+
+  @LikePlaylistSwagger()
+  @UserAuth()
+  @Post(':id/like')
+  likePlaylist(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: PlaylistEntity['id']) {
+    return this.playlistService.like(req.user.id, id)
+  }
+
+  @UnlikePlaylistSwagger()
+  @UserAuth()
+  @HttpCode(200)
+  @Delete(':id/like')
+  unlikePlaylist(
+    @Req() req: UserAuthRequest,
+    @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
+  ) {
+    return this.playlistService.unlike(req.user.id, id)
   }
 }

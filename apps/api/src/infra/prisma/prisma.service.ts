@@ -38,6 +38,14 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.userSession
   }
 
+  get userPasswordReset() {
+    return this.prisma.userPasswordReset
+  }
+
+  get userOAuthAccount() {
+    return this.prisma.userOAuthAccount
+  }
+
   get artistSession() {
     return this.prisma.artistSession
   }

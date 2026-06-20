@@ -3,13 +3,37 @@ CREATE TABLE "User" (
     "id" UUID NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
+    "password" TEXT,
     "avatar" TEXT,
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "twoFactorSecret" TEXT,
+    "twoFactorEnabled" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserPasswordReset" (
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "token" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UserPasswordReset_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserOAuthAccount" (
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "provider" TEXT NOT NULL,
+    "providerAccountId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UserOAuthAccount_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -170,6 +194,21 @@ CREATE INDEX "User_email_idx" ON "User"("email");
 CREATE INDEX "User_username_idx" ON "User"("username");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "UserPasswordReset_token_key" ON "UserPasswordReset"("token");
+
+-- CreateIndex
+CREATE INDEX "UserPasswordReset_token_idx" ON "UserPasswordReset"("token");
+
+-- CreateIndex
+CREATE INDEX "UserPasswordReset_userId_idx" ON "UserPasswordReset"("userId");
+
+-- CreateIndex
+CREATE INDEX "UserOAuthAccount_userId_idx" ON "UserOAuthAccount"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserOAuthAccount_provider_providerAccountId_key" ON "UserOAuthAccount"("provider", "providerAccountId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "UserSession_access_token_key" ON "UserSession"("access_token");
 
 -- CreateIndex
@@ -261,6 +300,12 @@ CREATE INDEX "_PlaylistToTrack_B_index" ON "_PlaylistToTrack"("B");
 
 -- CreateIndex
 CREATE INDEX "_UserLikedPlaylists_B_index" ON "_UserLikedPlaylists"("B");
+
+-- AddForeignKey
+ALTER TABLE "UserPasswordReset" ADD CONSTRAINT "UserPasswordReset_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserOAuthAccount" ADD CONSTRAINT "UserOAuthAccount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserSession" ADD CONSTRAINT "UserSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

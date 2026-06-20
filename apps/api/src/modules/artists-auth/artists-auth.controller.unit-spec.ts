@@ -38,6 +38,8 @@ describe('AuthController (artists)', () => {
   let tokenService: jest.Mocked<TokenService>
 
   beforeEach(() => {
+    process.env.ACCESS_TOKEN_NAME = 'access_token'
+    process.env.REFRESH_TOKEN_NAME = 'refresh_token'
     authService = makeAuthServiceMock()
     artistsService = makeArtistsServiceMock()
     tokenService = makeTokenServiceMock()
@@ -73,13 +75,13 @@ describe('AuthController (artists)', () => {
     authService.logout.mockResolvedValue(undefined as never)
     const res = makeResponse()
     const req = {
-      user: { id: 'artist-1' },
-      [process.env.ACCESS_TOKEN_NAME ?? 'access_token']: 'at',
+      artist: { id: 'artist-1' },
+      access_token: 'at',
     } as never
 
     await controller.logout(req, res)
 
-    expect(authService.logout).toHaveBeenCalled()
+    expect(authService.logout).toHaveBeenCalledWith('artist-1', 'at')
     expect(tokenService.clearAuthCookies).toHaveBeenCalledWith(res)
   })
 
@@ -87,7 +89,7 @@ describe('AuthController (artists)', () => {
     authService.refresh.mockResolvedValue({ access_token: 'new-at' } as never)
     const res = makeResponse()
     const req = {
-      [process.env.REFRESH_TOKEN_NAME ?? 'refresh_token']: 'rt',
+      refresh_token: 'rt',
     } as never
 
     await controller.refresh(req, res)
@@ -99,7 +101,7 @@ describe('AuthController (artists)', () => {
   it('getMe should return artist by id from request user', async () => {
     const artist = buildArtist()
     artistsService.findById.mockResolvedValue(artist as never)
-    const req = { user: { id: 'artist-1' } } as never
+    const req = { artist: { id: 'artist-1' } } as never
 
     const result = await controller.getMe(req)
 

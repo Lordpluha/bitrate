@@ -10,10 +10,12 @@ export function AuthLoginSwagger() {
     ApiBody({ type: LoginDto }),
     ApiResponse({
       status: HttpStatus.CREATED,
-      description: 'Successfully logged in',
+      description:
+        'Logged in. If 2FA is not enabled: sets access_token and refresh_token cookies, no body. If 2FA is enabled: returns JSON with requires2fa and pendingToken — no cookies yet.',
       headers: {
         'Set-Cookie': {
-          description: 'HttpOnly cookies: access_token и refresh_token',
+          description:
+            'HttpOnly cookies: access_token and refresh_token (only when 2FA is not required)',
           schema: {
             type: 'string',
             example:
@@ -21,7 +23,18 @@ export function AuthLoginSwagger() {
           },
         },
       },
+      content: {
+        'application/json': {
+          examples: {
+            twoFactorRequired: {
+              summary: '2FA required',
+              value: { requires2fa: true, pendingToken: 'eyJhbGciOiJIUzI1NiJ9...' },
+            },
+          },
+        },
+      },
     }),
+    ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Invalid credentials' }),
     ApiResponse({
       status: HttpStatus.BAD_REQUEST,
       description: 'Validation error',

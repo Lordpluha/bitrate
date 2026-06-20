@@ -11,6 +11,7 @@ import { UNAUTHORIZED_ERRORS } from './errors/unauthorized.errors'
 const makeTokenServiceMock = () =>
   ({
     verifyToken: jest.fn(),
+    hashToken: jest.fn().mockReturnValue('hashed-token'),
   }) as unknown as jest.Mocked<TokenService>
 
 const makeReflectorMock = (requirement: string) =>

@@ -1,12 +1,17 @@
+import { randomUUID } from 'node:crypto'
+import { extname } from 'node:path'
 import type { ArtistEntity } from '@modules/artists'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { UserEntity } from '@modules/users'
+import type { UserAuthRequest } from '@modules/users-auth/types'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -20,16 +25,17 @@ import {
 } from '@nestjs/common'
 import { FileFieldsInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import { randomUUID } from 'crypto'
 import type { Request, Response } from 'express'
 import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { extname } from 'path'
 import {
   GetTrackByIdSwagger,
+  LikeTrackSwagger,
   PostTrackSwagger,
+  StreamTrackSwagger,
   TracksGetAllSwagger,
   TracksGetLikedSwagger,
+  UnlikeTrackSwagger,
   UpdateTrackByIdSwagger,
 } from './decorators'
 import { type CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
@@ -62,6 +68,7 @@ export class TracksController {
     return this.tracksService.findTrackById(id)
   }
 
+  @StreamTrackSwagger()
   @UserAuth()
   @Get('stream/:id')
   async streamTrack(
@@ -98,18 +105,18 @@ export class TracksController {
       ],
       {
         storage: diskStorage({
-          destination: (req, file, cb) => {
+          destination: (_req, file, cb) => {
             if (file.fieldname === 'audio') {
               return cb(null, './storage/private/tracks')
             }
             return cb(null, './storage/public/tracks/covers')
           },
-          filename: (req, file, cb) => {
+          filename: (_req, file, cb) => {
             const uniqueName = `${randomUUID()}${extname(file.originalname)}`
             cb(null, uniqueName)
           },
         }),
-        fileFilter: (req, file, cb) => {
+        fileFilter: (_req, file, cb) => {
           const audioTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
           const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
 
@@ -133,7 +140,7 @@ export class TracksController {
     @UploadedFiles()
     files: { audio?: Express.Multer.File[]; cover?: Express.Multer.File[] },
   ) {
-    const artist = req['artist'] as ArtistEntity
+    const artist = req.artist as ArtistEntity
     const audioFile = files?.audio?.[0]
     const coverFile = files?.cover?.[0]
 
@@ -155,18 +162,18 @@ export class TracksController {
       ],
       {
         storage: diskStorage({
-          destination: (req, file, cb) => {
+          destination: (_req, file, cb) => {
             if (file.fieldname === 'audio') {
               return cb(null, './storage/private/tracks')
             }
             return cb(null, './storage/public/tracks/covers')
           },
-          filename: (req, file, cb) => {
+          filename: (_req, file, cb) => {
             const uniqueName = `${randomUUID()}${extname(file.originalname)}`
             cb(null, uniqueName)
           },
         }),
-        fileFilter: (req, file, cb) => {
+        fileFilter: (_req, file, cb) => {
           const audioTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
           const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
 
@@ -204,10 +211,25 @@ export class TracksController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    const artist = req['user'] as UserEntity
+    const artist = req.user as UserEntity
     return this.tracksService.findLikedTracks(artist.id, {
       page,
       limit,
     })
+  }
+
+  @LikeTrackSwagger()
+  @UserAuth()
+  @Post(':id/like')
+  likeTrack(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
+    return this.tracksService.like(req.user.id, id)
+  }
+
+  @UnlikeTrackSwagger()
+  @UserAuth()
+  @HttpCode(200)
+  @Delete(':id/like')
+  unlikeTrack(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
+    return this.tracksService.unlike(req.user.id, id)
   }
 }

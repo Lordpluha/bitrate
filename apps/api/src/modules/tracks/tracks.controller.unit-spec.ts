@@ -12,6 +12,8 @@ const makeServiceMock = () =>
     create: jest.fn(),
     update: jest.fn(),
     findLikedTracks: jest.fn(),
+    like: jest.fn(),
+    unlike: jest.fn(),
   }) as unknown as jest.Mocked<TracksService>
 
 describe('TracksController', () => {
@@ -43,10 +45,10 @@ describe('TracksController', () => {
     expect(result).resolves.toBe(track)
   })
 
-  it('postTrack should throw BadRequestException when audio file is missing', async () => {
+  it('postTrack should throw BadRequestException when audio file is missing', () => {
     const req = { artist: { id: 'artist-1' } } as never
 
-    await expect(controller.postTrack(req, { title: 'T' } as never, {})).rejects.toThrow(
+    expect(() => controller.postTrack(req, { title: 'T' } as never, {})).toThrow(
       BadRequestException,
     )
   })
@@ -60,7 +62,12 @@ describe('TracksController', () => {
 
     const result = await controller.postTrack(req, { title: 'T' } as never, files)
 
-    expect(service.create).toHaveBeenCalledWith('artist-1', { title: 'T' }, audioFile, undefined)
+    expect(service.create).toHaveBeenCalledWith(
+      'artist-1',
+      { title: 'T' } as never,
+      audioFile,
+      undefined,
+    )
     expect(result).toBe(track)
   })
 
@@ -72,7 +79,7 @@ describe('TracksController', () => {
 
     expect(service.update).toHaveBeenCalledWith(
       'track-1',
-      { title: 'Updated' },
+      { title: 'Updated' } as never,
       undefined,
       undefined,
     )
@@ -88,5 +95,27 @@ describe('TracksController', () => {
 
     expect(service.findLikedTracks).toHaveBeenCalledWith('user-1', { page: 1, limit: 10 })
     expect(result).resolves.toBe(tracks)
+  })
+
+  it('likeTrack should call service.like with user id and track id', () => {
+    const track = buildTrack()
+    service.like.mockResolvedValue(track as never)
+    const req = { user: { id: 'user-1' } } as never
+
+    const result = controller.likeTrack(req, 'track-1')
+
+    expect(service.like).toHaveBeenCalledWith('user-1', 'track-1')
+    expect(result).resolves.toBe(track)
+  })
+
+  it('unlikeTrack should call service.unlike with user id and track id', () => {
+    const track = buildTrack()
+    service.unlike.mockResolvedValue(track as never)
+    const req = { user: { id: 'user-1' } } as never
+
+    const result = controller.unlikeTrack(req, 'track-1')
+
+    expect(service.unlike).toHaveBeenCalledWith('user-1', 'track-1')
+    expect(result).resolves.toBe(track)
   })
 })

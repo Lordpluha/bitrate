@@ -1,5 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { ArtistEntity } from '@modules/artists'
+import type { UserEntity } from '@modules/users'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'
@@ -79,6 +80,20 @@ export class AlbumsService {
       omit: {
         artistId: true,
       },
+    })
+  }
+
+  async like(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
+    return await this.prisma.album.update({
+      where: { id: albumId },
+      data: { likedBy: { connect: { id: userId } } },
+    })
+  }
+
+  async unlike(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
+    return await this.prisma.album.update({
+      where: { id: albumId },
+      data: { likedBy: { disconnect: { id: userId } } },
     })
   }
 }

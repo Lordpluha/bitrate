@@ -1,4 +1,5 @@
 import { createReadStream, promises as fs } from 'node:fs'
+import { extname } from 'node:path'
 import type { AppConfig } from '@common/config'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { ArtistEntity } from '@modules/artists'
@@ -9,7 +10,6 @@ import { ConfigService } from '@nestjs/config'
 import type { Artist } from '@prisma/client'
 import type { Queue } from 'bullmq'
 import { parseFile } from 'music-metadata'
-import { extname } from 'path'
 import type { CreateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
 
@@ -89,6 +89,20 @@ export class TracksService {
         lastPage: Math.ceil(total / limit),
       },
     }
+  }
+
+  async like(userId: UserEntity['id'], trackId: TrackEntity['id']) {
+    return await this.prisma.track.update({
+      where: { id: trackId },
+      data: { likedBy: { connect: { id: userId } } },
+    })
+  }
+
+  async unlike(userId: UserEntity['id'], trackId: TrackEntity['id']) {
+    return await this.prisma.track.update({
+      where: { id: trackId },
+      data: { likedBy: { disconnect: { id: userId } } },
+    })
   }
 
   async findLikedTracks(

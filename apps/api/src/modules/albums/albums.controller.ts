@@ -1,10 +1,13 @@
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import { ArtistAuthRequest } from '@modules/artists-auth/types'
+import type { UserAuthRequest } from '@modules/users-auth/types'
+import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
   Body,
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -21,6 +24,8 @@ import {
   DeleteAlbumSwagger,
   GetAlbumByIdSwagger,
   GetAlbumsSwagger,
+  LikeAlbumSwagger,
+  UnlikeAlbumSwagger,
   UpdateAlbumByIdSwagger,
 } from './decorators'
 import { CreateAlbumDto, CreateAlbumSchema, UpdateAlbumDto, UpdateAlbumSchema } from './dtos'
@@ -84,5 +89,20 @@ export class AlbumsController {
   ) {
     const artistId = req.artist.id
     return await this.albumsService.delete(artistId, id)
+  }
+
+  @LikeAlbumSwagger()
+  @UserAuth()
+  @Post(':id/like')
+  likeAlbum(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
+    return this.albumsService.like(req.user.id, id)
+  }
+
+  @UnlikeAlbumSwagger()
+  @UserAuth()
+  @HttpCode(200)
+  @Delete(':id/like')
+  unlikeAlbum(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
+    return this.albumsService.unlike(req.user.id, id)
   }
 }

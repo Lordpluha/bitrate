@@ -14,6 +14,7 @@ export class UsersService {
       omit: {
         password: true,
         email: true,
+        twoFactorSecret: true,
       },
     })
   }
@@ -25,6 +26,7 @@ export class UsersService {
       },
       omit: {
         password: true,
+        twoFactorSecret: true,
       },
     })
   }
@@ -37,6 +39,7 @@ export class UsersService {
       omit: {
         password: true,
         email: true,
+        twoFactorSecret: true,
       },
     })
   }
@@ -59,15 +62,19 @@ export class UsersService {
       omit: {
         password: true,
         email: true,
+        twoFactorSecret: true,
       },
     })
   }
 
-  async create(data: Omit<UserEntity, 'id' | 'createdAt'>) {
+  async create(
+    data: Omit<UserEntity, 'id' | 'createdAt' | 'twoFactorSecret' | 'twoFactorEnabled'>,
+  ) {
     return await this.prisma.user.create({
       data,
       omit: {
         password: true,
+        twoFactorSecret: true,
       },
     })
   }
@@ -78,6 +85,7 @@ export class UsersService {
       data: userData,
       omit: {
         password: true,
+        twoFactorSecret: true,
       },
     })
   }
@@ -87,7 +95,7 @@ export class UsersService {
     return await this.prisma.user.update({
       where: { id: userId },
       data: { avatar: avatarPath },
-      omit: { password: true, email: true },
+      omit: { password: true, email: true, twoFactorSecret: true },
     })
   }
 }

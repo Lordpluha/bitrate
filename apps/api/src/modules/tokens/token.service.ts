@@ -50,6 +50,13 @@ export class TokenService {
     })
   }
 
+  async generateTwoFAPendingToken(userId: string): Promise<string> {
+    return await this.jwtService.signAsync(
+      { twofa: true },
+      { subject: userId, expiresIn: '10m', secret: this.configService.getOrThrow('JWT_SECRET') },
+    )
+  }
+
   setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
     const cookieConfig = this.configService.getOrThrow('cookie')
 

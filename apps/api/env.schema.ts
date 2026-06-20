@@ -12,15 +12,18 @@ export const envSchema = z.object({
 
   ACCESS_TOKEN_NAME: z.string().min(1).default('access_token'),
   REFRESH_TOKEN_NAME: z.string().min(1).default('refresh_token'),
-  // OAUTH_GOOGLE_CLIENT_ID: z.string(),
-  // OAUTH_GOOGLE_CLIENT_SECRET: z.string(),
+  OAUTH_GOOGLE_CLIENT_ID: z.string().optional(),
+  OAUTH_GOOGLE_CLIENT_SECRET: z.string().optional(),
+  OAUTH_FACEBOOK_APP_ID: z.string().optional(),
+  OAUTH_FACEBOOK_APP_SECRET: z.string().optional(),
+  API_BASE_URL: z.string().url().optional(),
 
-  // Mail
-  // SMTP_HOST: z.string(),
-  // SMTP_PORT: z.coerce.number().default(587),
-  // SMTP_USER: z.string(),
-  // SMTP_PASS: z.string(),
-  // EMAIL_FROM: z.string().email(),
+  // Mail (optional — if unset, password-reset emails are logged but not sent)
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  EMAIL_FROM: z.email().optional(),
 
   // Database
   DATABASE_URL: z.url(),

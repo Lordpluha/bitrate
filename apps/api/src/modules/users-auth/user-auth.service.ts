@@ -1,10 +1,16 @@
+import { randomBytes } from 'node:crypto'
+import { MailService } from '@infra/mail/mail.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { UsersPrivateService } from '@modules/users/users.private.service'
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import type { JWTPayload } from '../tokens'
 import { TokenService } from '../tokens/token.service'
-import type { UserEntity } from '../users/entities'
 import { UsersService } from '../users/users.service'
 import type { RegistrationDto } from './dtos'
 import type { UserSessionEntity } from './entities'
@@ -17,6 +23,7 @@ export class UserAuthService {
     private jwt: JwtService,
     private prisma: PrismaService,
     private token: TokenService,
+    private mail: MailService,
   ) {}
 
   async registerUser(registrationDto: RegistrationDto) {
@@ -36,13 +43,35 @@ export class UserAuthService {
     })
   }
 
-  async loginUser(email: UserEntity['email'], password: UserEntity['password']) {
+  async loginUser(email: string, password: string) {
     const user = await this.usersPrivate.getByEmail(email)
-    const passwordValid = user && (await this.token.verifyPassword(password, user.password))
+    const passwordValid =
+      user?.password && (await this.token.verifyPassword(password, user.password))
     if (!passwordValid) {
       throw new UnauthorizedException({ message: 'Invalid credentials' })
     }
 
+    if (user.twoFactorEnabled) {
+      const pendingToken = await this.token.generateTwoFAPendingToken(user.id)
+      return { requires2fa: true as const, pendingToken }
+    }
+
+    const access_token = await this.token.generateAccessToken(user.id, user.username)
+    const refresh_token = await this.token.generateRefreshToken(user.id, user.username)
+
+    await this.prisma.userSession.create({
+      data: {
+        access_token: this.token.hashToken(access_token),
+        refresh_token: this.token.hashToken(refresh_token),
+        userId: user.id,
+      },
+    })
+
+    return { access_token, refresh_token }
+  }
+
+  async completeTwoFactorLogin(userId: string) {
+    const user = await this.usersPrivate.findById(userId)
     const access_token = await this.token.generateAccessToken(user.id, user.username)
     const refresh_token = await this.token.generateRefreshToken(user.id, user.username)
 
@@ -100,5 +129,38 @@ export class UserAuthService {
         access_token: this.token.hashToken(access_token),
       },
     })
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.usersPrivate.getByEmail(email)
+    if (!user) return // don't reveal whether the email exists
+
+    await this.prisma.userPasswordReset.deleteMany({ where: { userId: user.id } })
+
+    const rawToken = randomBytes(32).toString('hex')
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
+
+    await this.prisma.userPasswordReset.create({
+      data: { userId: user.id, token: this.token.hashToken(rawToken), expiresAt },
+    })
+
+    await this.mail.sendPasswordReset(user.email, rawToken, user.username)
+  }
+
+  async resetPassword(rawToken: string, newPassword: string) {
+    const hashed = this.token.hashToken(rawToken)
+    const reset = await this.prisma.userPasswordReset.findUnique({ where: { token: hashed } })
+
+    if (!reset || reset.expiresAt < new Date()) {
+      throw new BadRequestException('Invalid or expired reset token')
+    }
+
+    const hashedPassword = await this.token.hashPassword(newPassword)
+
+    await this.prisma.$transaction([
+      this.prisma.user.update({ where: { id: reset.userId }, data: { password: hashedPassword } }),
+      this.prisma.userPasswordReset.delete({ where: { token: hashed } }),
+      this.prisma.userSession.deleteMany({ where: { userId: reset.userId } }),
+    ])
   }
 }

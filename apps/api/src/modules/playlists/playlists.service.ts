@@ -79,4 +79,18 @@ export class PlaylistsService {
       },
     })
   }
+
+  async like(userId: UserEntity['id'], playlistId: PlaylistEntity['id']) {
+    return await this.prisma.playlist.update({
+      where: { id: playlistId },
+      data: { likedBy: { connect: { id: userId } } },
+    })
+  }
+
+  async unlike(userId: UserEntity['id'], playlistId: PlaylistEntity['id']) {
+    return await this.prisma.playlist.update({
+      where: { id: playlistId },
+      data: { likedBy: { disconnect: { id: userId } } },
+    })
+  }
 }

@@ -26,6 +26,8 @@ export const buildUser = (overrides: Partial<UserEntity> = {}): UserEntity => ({
   description: null,
   createdAt: new Date(),
   updatedAt: new Date(),
+  twoFactorSecret: null,
+  twoFactorEnabled: false,
   ...overrides,
 })
 

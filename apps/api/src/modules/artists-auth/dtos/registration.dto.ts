@@ -1,4 +1,4 @@
-import { UserEntity } from '@modules/users'
+import type { UserEntity } from '@modules/users'
 import { ApiProperty } from '@nestjs/swagger'
 import z from 'zod'
 import { LoginSchema } from './login.dto'
@@ -18,7 +18,7 @@ export class RegistrationDto implements z.infer<typeof RegistrationSchema> {
   email: UserEntity['email']
 
   @ApiProperty({ description: 'New user password', example: 'password123' })
-  password: UserEntity['password']
+  password: string
 
   @ApiProperty({
     description: 'New user username',

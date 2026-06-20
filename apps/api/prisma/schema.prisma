@@ -7,25 +7,57 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid(7)) @db.Uuid
-  username String @unique
-  email    String @unique
-  password String
+  id       String  @id @default(uuid(7)) @db.Uuid
+  username String  @unique
+  email    String  @unique
+  password String?
 
   avatar      String?
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 
-  sessions    UserSession[]
-  playlists   Playlist[]
-  likedTracks Track[]    @relation("UserLikedTracks")
-  likedArtists Artist[]  @relation("UserLikedArtists")
-  likedAlbums  Album[]    @relation("UserLikedAlbums")
+  twoFactorSecret  String?
+  twoFactorEnabled Boolean @default(false)
+
+  sessions       UserSession[]
+  passwordResets UserPasswordReset[]
+  oauthAccounts  UserOAuthAccount[]
+  playlists      Playlist[]
+  likedTracks    Track[]    @relation("UserLikedTracks")
+  likedArtists   Artist[]   @relation("UserLikedArtists")
+  likedAlbums    Album[]    @relation("UserLikedAlbums")
   likedPlaylists Playlist[] @relation("UserLikedPlaylists")
 
   @@index([email])
   @@index([username])
+}
+
+model UserOAuthAccount {
+  id                String @id @default(uuid(7)) @db.Uuid
+  userId            String @db.Uuid
+  provider          String
+  providerAccountId String
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model UserPasswordReset {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
 }
 
 model UserSession {

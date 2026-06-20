@@ -31,6 +31,9 @@ const makeTokenServiceMock = () =>
   ({
     generateAccessToken: jest.fn(),
     generateRefreshToken: jest.fn(),
+    hashPassword: jest.fn(),
+    hashToken: jest.fn(),
+    verifyPassword: jest.fn(),
   }) as unknown as jest.Mocked<TokenService>
 
 describe('ArtistsAuthService', () => {
@@ -66,6 +69,7 @@ describe('ArtistsAuthService', () => {
 
     it('should register artist if email is unique', async () => {
       artists.findByEmail.mockResolvedValue(null as never)
+      token.hashPassword.mockResolvedValue('hashed-pass' as never)
       artists.register.mockResolvedValue(undefined as never)
 
       await service.registerArtist({
@@ -74,9 +78,10 @@ describe('ArtistsAuthService', () => {
         username: 'newartist',
       })
 
+      expect(token.hashPassword).toHaveBeenCalledWith('pass')
       expect(artists.register).toHaveBeenCalledWith({
         email: 'new@example.com',
-        password: 'pass',
+        password: 'hashed-pass',
         username: 'newartist',
       })
     })
@@ -92,7 +97,8 @@ describe('ArtistsAuthService', () => {
     })
 
     it('should throw UnauthorizedException when password is wrong', async () => {
-      artistsPrivate.findByEmail.mockResolvedValue(buildArtist({ password: 'correct' }) as never)
+      artistsPrivate.findByEmail.mockResolvedValue(buildArtist({ password: 'hash' }) as never)
+      token.verifyPassword.mockResolvedValue(false as never)
 
       await expect(service.loginArtist('artist@example.com', 'wrong')).rejects.toThrow(
         UnauthorizedException,
@@ -102,13 +108,16 @@ describe('ArtistsAuthService', () => {
     it('should return tokens on successful login', async () => {
       const artist = buildArtist()
       artistsPrivate.findByEmail.mockResolvedValue(artist as never)
+      token.verifyPassword.mockResolvedValue(true as never)
       token.generateAccessToken.mockResolvedValue('access-token' as never)
       token.generateRefreshToken.mockResolvedValue('refresh-token' as never)
+      token.hashToken.mockReturnValue('hashed-token')
       const session = buildArtistSession()
       prisma.artistSession.create.mockResolvedValue(session)
 
       const result = await service.loginArtist(artist.email, artist.password)
 
+      expect(token.verifyPassword).toHaveBeenCalledWith(artist.password, artist.password)
       expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
     })
   })
@@ -131,6 +140,7 @@ describe('ArtistsAuthService', () => {
       jwtService.verifyAsync.mockResolvedValue({ sub: 'artist-1', username: 'artist' } as never)
       artists.findByUsername.mockResolvedValue(buildArtist() as never)
       token.generateAccessToken.mockResolvedValue('new-access-token' as never)
+      token.hashToken.mockReturnValue('hashed-token')
       prisma.artistSession.updateMany.mockResolvedValue({ count: 1 })
 
       const result = await service.refresh('refresh-token')
@@ -144,20 +154,22 @@ describe('ArtistsAuthService', () => {
     it('should throw UnauthorizedException when artist not found', async () => {
       artists.findById.mockResolvedValue(null as never)
 
-      await expect(service.logout('artist-1', 'refresh-token')).rejects.toThrow(
+      await expect(service.logout('artist-1', 'access-token')).rejects.toThrow(
         UnauthorizedException,
       )
     })
 
     it('should delete session on valid logout', async () => {
-      artists.findById.mockResolvedValue(buildArtist() as never)
-      const session = buildArtistSession()
-      prisma.artistSession.findFirst.mockResolvedValue(session)
-      prisma.artistSession.delete.mockResolvedValue(session)
+      const artist = buildArtist({ id: 'artist-1' })
+      artists.findById.mockResolvedValue(artist as never)
+      token.hashToken.mockReturnValue('hashed-token')
+      prisma.artistSession.deleteMany.mockResolvedValue({ count: 1 })
 
-      await service.logout('artist-1', 'refresh-token')
+      await service.logout('artist-1', 'access-token')
 
-      expect(prisma.artistSession.delete).toHaveBeenCalledWith({ where: { id: session.id } })
+      expect(prisma.artistSession.deleteMany).toHaveBeenCalledWith({
+        where: { artistId: artist.id, access_token: 'hashed-token' },
+      })
     })
   })
 })

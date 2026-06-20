@@ -238,4 +238,30 @@ describe('AlbumsService', () => {
     })
     expect(result).toBe(deleted)
   })
+
+  it('like should connect user to album likedBy', async () => {
+    const album = buildAlbum()
+    prisma.album.update.mockResolvedValue(album)
+
+    const result = await service.like('user-1', 'album-1')
+
+    expect(prisma.album.update).toHaveBeenCalledWith({
+      where: { id: 'album-1' },
+      data: { likedBy: { connect: { id: 'user-1' } } },
+    })
+    expect(result).toBe(album)
+  })
+
+  it('unlike should disconnect user from album likedBy', async () => {
+    const album = buildAlbum()
+    prisma.album.update.mockResolvedValue(album)
+
+    const result = await service.unlike('user-1', 'album-1')
+
+    expect(prisma.album.update).toHaveBeenCalledWith({
+      where: { id: 'album-1' },
+      data: { likedBy: { disconnect: { id: 'user-1' } } },
+    })
+    expect(result).toBe(album)
+  })
 })

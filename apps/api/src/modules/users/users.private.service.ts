@@ -48,7 +48,9 @@ export class UsersPrivateService {
     })
   }
 
-  async create(data: Omit<UserEntity, 'id' | 'createdAt'>) {
+  async create(
+    data: Omit<UserEntity, 'id' | 'createdAt' | 'twoFactorSecret' | 'twoFactorEnabled'>,
+  ) {
     return await this.prisma.user.create({
       data,
     })
