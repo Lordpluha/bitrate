@@ -1,6 +1,6 @@
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { registerAs } from '@nestjs/config'
-import { GatewayMetadata } from '@nestjs/websockets'
+import type { GatewayMetadata } from '@nestjs/websockets'
 
 /**
  * Allowed origins for CORS

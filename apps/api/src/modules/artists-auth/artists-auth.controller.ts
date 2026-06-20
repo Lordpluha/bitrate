@@ -152,7 +152,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const pendingToken = req.cookies?.['pending_2fa_token'] ?? dto.pendingToken
+    const pendingToken = req.cookies?.pending_2fa_token ?? dto.pendingToken
     const artist = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.artistAuthService.completeTwoFactorLogin(
       artist.id,
@@ -177,7 +177,7 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    if (!state || state !== req.cookies?.['oauth_state']) {
+    if (!state || state !== req.cookies?.oauth_state) {
       return res.redirect(`${process.env.WEB_HOST!}/login?error=oauth_state_mismatch`)
     }
     res.clearCookie('oauth_state')
@@ -201,7 +201,7 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    if (!state || state !== req.cookies?.['oauth_state']) {
+    if (!state || state !== req.cookies?.oauth_state) {
       return res.redirect(`${process.env.WEB_HOST!}/login?error=oauth_state_mismatch`)
     }
     res.clearCookie('oauth_state')

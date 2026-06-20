@@ -1,4 +1,4 @@
-import { ArtistEntity } from '@modules/artists/entities'
+import type { ArtistEntity } from '@modules/artists/entities'
 
 export type ArtistAuthRequest = {
   artist: ArtistEntity

@@ -1,3 +1,5 @@
+import { extname } from 'node:path'
+import type { Request } from 'express'
 import { SafeUserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
@@ -19,7 +21,6 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { extname } from 'path'
 import * as z from 'zod'
 import {
   GetUserByUsernameSwagger,
@@ -77,7 +78,7 @@ export class UsersController {
     @Req() req: Request,
     @Body(new ZodValidationPipe(UpdateUserSchema)) userData: UpdateUserDto,
   ) {
-    const user = req['user'] as UserEntity
+    const user = req.user as UserEntity
     return await this.usersService.updateById(user.id, userData)
   }
 
@@ -88,12 +89,12 @@ export class UsersController {
     FileInterceptor('avatar', {
       storage: diskStorage({
         destination: './storage/public/users/avatars',
-        filename: (req, file, cb) => {
+        filename: (_req, file, cb) => {
           const uniqueName = `${Date.now()}${extname(file.originalname)}`
           cb(null, uniqueName)
         },
       }),
-      fileFilter: (req, file, cb) => {
+      fileFilter: (_req, file, cb) => {
         const allowed = ['image/png', 'image/jpeg', 'image/webp']
         if (!allowed.includes(file.mimetype)) {
           return cb(new BadRequestException('Invalid file type'), false)
@@ -103,7 +104,7 @@ export class UsersController {
     }),
   )
   async uploadAvatar(@Req() req: Request, @UploadedFile() file: Express.Multer.File) {
-    const user = req['user'] as UserEntity
+    const user = req.user as UserEntity
     return await this.usersService.uploadAvatar(user.id, file.filename)
   }
 }

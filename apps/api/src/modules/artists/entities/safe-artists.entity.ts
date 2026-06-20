@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Artist } from '@prisma/client'
+import type { Artist } from '@prisma/client'
 
 export class SafeArtistEntity implements Omit<Artist, 'password' | 'email' | 'twoFactorSecret'> {
   @ApiProperty()

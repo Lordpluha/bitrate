@@ -1,5 +1,5 @@
+import { join } from 'node:path'
 import { registerAs } from '@nestjs/config'
-import { join } from 'path'
 
 export const storageConfigFactory = registerAs('storage', () => ({
   publicPath: join(process.cwd(), 'storage', 'public'),

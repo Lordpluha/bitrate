@@ -35,7 +35,7 @@ describe('TracksController (int)', () => {
         canActivate: (ctx: {
           switchToHttp: () => { getRequest: () => Record<string, unknown> }
         }) => {
-          ctx.switchToHttp().getRequest()['artist'] = { id: 'artist-1', username: 'artist' }
+          ctx.switchToHttp().getRequest().artist = { id: 'artist-1', username: 'artist' }
           return true
         },
       })
@@ -44,7 +44,7 @@ describe('TracksController (int)', () => {
         canActivate: (ctx: {
           switchToHttp: () => { getRequest: () => Record<string, unknown> }
         }) => {
-          ctx.switchToHttp().getRequest()['user'] = { id: 'user-1', username: 'user' }
+          ctx.switchToHttp().getRequest().user = { id: 'user-1', username: 'user' }
           return true
         },
       })

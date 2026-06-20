@@ -54,8 +54,8 @@ describe('AuthController artists (int)', () => {
           switchToHttp: () => { getRequest: () => Record<string, unknown> }
         }) => {
           const req = ctx.switchToHttp().getRequest()
-          req['artist'] = artist
-          req['user'] = artist
+          req.artist = artist
+          req.user = artist
           req[process.env.ACCESS_TOKEN_NAME ?? 'access_token'] = 'at'
           req[process.env.REFRESH_TOKEN_NAME ?? 'refresh_token'] = 'rt'
           return true

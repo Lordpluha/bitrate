@@ -1,13 +1,9 @@
 import { faker } from '@faker-js/faker'
+import { Injectable } from '@nestjs/common'
 
-/**
- * Сервис для генерации фейковых данных
- */
+@Injectable()
 export class FakerService {
-  /**
-   * Генерирует данные пользователей
-   */
-  static generateUsers(count: number) {
+  generateUsers(count: number) {
     const users: Array<{
       username: string
       email: string
@@ -17,7 +13,6 @@ export class FakerService {
       updatedAt: Date
     }> = []
 
-    // Тестовый пользователь
     users.push({
       username: 'testuser',
       email: 'test@example.com',
@@ -27,30 +22,8 @@ export class FakerService {
       updatedAt: new Date(),
     })
 
-    const adjectives = [
-      'Cool',
-      'Amazing',
-      'Epic',
-      'Super',
-      'Mega',
-      'Ultra',
-      'Pro',
-      'Master',
-      'Dark',
-      'Light',
-    ]
-    const nouns = [
-      'Music',
-      'Beat',
-      'Rhythm',
-      'Sound',
-      'Voice',
-      'Song',
-      'Player',
-      'Listener',
-      'Fan',
-      'Lover',
-    ]
+    const adjectives = ['Cool', 'Amazing', 'Epic', 'Super', 'Mega', 'Ultra', 'Pro', 'Master', 'Dark', 'Light']
+    const nouns = ['Music', 'Beat', 'Rhythm', 'Sound', 'Voice', 'Song', 'Player', 'Listener', 'Fan', 'Lover']
     const descriptions = [
       'Music lover and playlist curator',
       'Always discovering new sounds',
@@ -76,10 +49,7 @@ export class FakerService {
     return users
   }
 
-  /**
-   * Генерирует данные плейлистов для пользователей
-   */
-  static generatePlaylists(userIds: string[], count: number) {
+  generatePlaylists(userIds: string[], count: number) {
     const playlistTitles = [
       'My Favorites',
       'Chill Vibes',

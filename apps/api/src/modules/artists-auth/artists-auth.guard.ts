@@ -113,7 +113,7 @@ export class ArtistAuthGuard implements CanActivate {
       })
       if (!session) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND)
 
-      request['artist'] = artist
+      request.artist = artist
       if (access_token) request[process.env.ACCESS_TOKEN_NAME!] = access_token
       if (refresh_token) request[process.env.REFRESH_TOKEN_NAME!] = refresh_token
     } catch {

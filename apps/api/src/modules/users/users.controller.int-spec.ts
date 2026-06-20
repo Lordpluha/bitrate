@@ -35,7 +35,7 @@ describe('UsersController (int)', () => {
         canActivate: (ctx: {
           switchToHttp: () => { getRequest: () => Record<string, unknown> }
         }) => {
-          ctx.switchToHttp().getRequest()['user'] = user
+          ctx.switchToHttp().getRequest().user = user
           return true
         },
       })

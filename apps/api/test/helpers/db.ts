@@ -1,4 +1,4 @@
-import { PrismaService } from '@infra/prisma/prisma.service'
+import type { PrismaService } from '@infra/prisma/prisma.service'
 
 export const resetDatabase = async (prisma: PrismaService) => {
   await resetUsersDatabase(prisma)

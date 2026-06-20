@@ -6,6 +6,7 @@ import { join } from 'node:path'
 import { Pool } from 'pg'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
+import { FakerService } from './faker.service'
 import { SeedService } from './seed.service'
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
@@ -39,7 +40,7 @@ async function main() {
 
     // Создаём сервисы
     const downloadService = new DownloadResourcesService(STORAGE_BASE)
-    const seedService = new SeedService(prisma, downloadService)
+    const seedService = new SeedService(prisma, downloadService, new FakerService())
 
     // Шаг 1: Очистка базы данных (опционально)
     if (config.clearBeforeImport) {

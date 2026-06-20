@@ -5,17 +5,17 @@ import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-hos
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
+  type OnGatewayConnection,
+  type OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
+  type WsResponse,
 } from '@nestjs/websockets'
-import { Server, Socket } from 'socket.io'
+import type { Server, Socket } from 'socket.io'
 import { z } from 'zod'
-import { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
-import { TracksService } from './tracks.service'
+import type { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
+import type { TracksService } from './tracks.service'
 
 interface AuthenticatedSocket extends Socket {
   userId?: string

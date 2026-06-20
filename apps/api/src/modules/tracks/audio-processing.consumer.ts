@@ -1,9 +1,9 @@
-import { PrismaService } from '@infra/prisma/prisma.service'
+import { stat } from 'node:fs/promises'
+import { join, parse } from 'node:path'
+import type { PrismaService } from '@infra/prisma/prisma.service'
 import { Processor, WorkerHost } from '@nestjs/bullmq'
 import { Logger } from '@nestjs/common'
-import { Job } from 'bullmq'
-import { stat } from 'fs/promises'
-import { join, parse } from 'path'
+import type { Job } from 'bullmq'
 
 interface ConvertAudioJob {
   trackId: string
@@ -66,7 +66,7 @@ export class AudioProcessingConsumer extends WorkerHost {
   }
 
   private async ensureOutputDir(outputDir: string) {
-    const { mkdir } = await import('fs/promises')
+    const { mkdir } = await import('node:fs/promises')
     await mkdir(outputDir, { recursive: true })
   }
 }

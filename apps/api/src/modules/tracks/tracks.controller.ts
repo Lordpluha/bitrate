@@ -140,7 +140,7 @@ export class TracksController {
     @UploadedFiles()
     files: { audio?: Express.Multer.File[]; cover?: Express.Multer.File[] },
   ) {
-    const artist = req['artist'] as ArtistEntity
+    const artist = req.artist as ArtistEntity
     const audioFile = files?.audio?.[0]
     const coverFile = files?.cover?.[0]
 
@@ -211,7 +211,7 @@ export class TracksController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    const artist = req['user'] as UserEntity
+    const artist = req.user as UserEntity
     return this.tracksService.findLikedTracks(artist.id, {
       page,
       limit,

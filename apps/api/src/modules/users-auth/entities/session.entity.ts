@@ -1,6 +1,6 @@
-import { UserEntity } from '@modules/users'
+import type { UserEntity } from '@modules/users'
 import { ApiProperty } from '@nestjs/swagger'
-import { UserSession } from '@prisma/client'
+import type { UserSession } from '@prisma/client'
 
 export class UserSessionEntity implements UserSession {
   @ApiProperty()

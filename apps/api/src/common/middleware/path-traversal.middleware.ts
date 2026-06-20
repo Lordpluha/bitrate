@@ -1,9 +1,9 @@
-import { ForbiddenException, Injectable, NestMiddleware } from '@nestjs/common'
-import { NextFunction, Request, Response } from 'express'
+import { ForbiddenException, Injectable, type NestMiddleware } from '@nestjs/common'
+import type { NextFunction, Request, Response } from 'express'
 
 @Injectable()
 export class PathTraversalMiddleware implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: Request, _res: Response, next: NextFunction) {
     // Check for path traversal attempts in static file requests
     if (req.path.startsWith('/static')) {
       const suspiciousPatterns = [

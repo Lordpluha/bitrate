@@ -14,6 +14,7 @@ export class SeedService {
   constructor(
     private prisma: PrismaClient,
     private downloadService: DownloadResourcesService,
+    private faker: FakerService,
   ) {}
 
   private readonly logger = new Logger(SeedService.name, { timestamp: true })
@@ -264,7 +265,7 @@ export class SeedService {
     this.logger.log('👥 STEP 3: Creating users')
     this.logger.log('═══════════════════════════════════════')
 
-    const users = FakerService.generateUsers(count)
+    const users = this.faker.generateUsers(count)
     await this.prisma.user.createMany({ data: users, skipDuplicates: true })
     this.logger.log(`✅ Seeded ${count} users`)
   }
@@ -291,7 +292,7 @@ export class SeedService {
     }
 
     const userIds = users.map((u) => u.id)
-    const playlists = FakerService.generatePlaylists(userIds, playlistCount)
+    const playlists = this.faker.generatePlaylists(userIds, playlistCount)
 
     await this.prisma.playlist.createMany({ data: playlists, skipDuplicates: true })
     this.logger.log(`✅ Created ${playlistCount} playlists`)

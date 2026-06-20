@@ -33,7 +33,7 @@ describe('AlbumsController (int)', () => {
         canActivate: (ctx: {
           switchToHttp: () => { getRequest: () => Record<string, unknown> }
         }) => {
-          ctx.switchToHttp().getRequest()['artist'] = artist
+          ctx.switchToHttp().getRequest().artist = artist
           return true
         },
       })
