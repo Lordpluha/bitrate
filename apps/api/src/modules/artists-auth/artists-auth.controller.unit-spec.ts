@@ -3,6 +3,14 @@ import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixture
 import type { ArtistsService } from '@modules/artists/artists.service'
 import type { TokenService } from '@modules/tokens/token.service'
 import type { Response } from 'express'
+
+jest.mock('otplib', () => ({
+  generateSecret: jest.fn(),
+  generateURI: jest.fn(),
+  verify: jest.fn(),
+}))
+jest.mock('qrcode', () => ({ toDataURL: jest.fn() }))
+
 import type { ArtistOAuthService } from './artist-oauth.service'
 import type { ArtistTwoFactorService } from './artist-two-factor.service'
 import { AuthController } from './artists-auth.controller'

@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@spotify/ui-react'
-import type React from 'react'
+import type { FC } from 'react'
 import { useState } from 'react'
 
 interface Tab {
@@ -14,7 +14,7 @@ interface TabsProps {
   onTabChange?: (id: string) => void
 }
 
-export const Tabs: React.FC<TabsProps> = ({ tabs, onTabChange }) => {
+export const Tabs: FC<TabsProps> = ({ tabs, onTabChange }) => {
   const [activeTab, setActiveTab] = useState(tabs[0]?.id || '')
 
   return (

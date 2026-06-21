@@ -1,5 +1,5 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui-components/react'
-import type { ComponentProps } from 'react'
+import { type ComponentProps, isValidElement } from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -7,7 +7,20 @@ const TooltipProvider = TooltipPrimitive.Provider
 
 const Tooltip = TooltipPrimitive.Root
 
-const TooltipTrigger = TooltipPrimitive.Trigger
+const TooltipTrigger = ({
+  asChild = false,
+  children,
+  ...props
+}: ComponentProps<typeof TooltipPrimitive.Trigger> & { asChild?: boolean }) => {
+  if (asChild) {
+    if (!isValidElement<Record<string, unknown>>(children)) {
+      throw new Error('TooltipTrigger with asChild requires a single React element')
+    }
+    return <TooltipPrimitive.Trigger {...props} render={children} />
+  }
+
+  return <TooltipPrimitive.Trigger {...props}>{children}</TooltipPrimitive.Trigger>
+}
 
 const TooltipContent = ({
   ref,

@@ -7,7 +7,7 @@ import {
   PlusIcon,
   ShieldAlertIcon,
 } from 'lucide-react'
-import * as React from 'react'
+import { Fragment } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -353,7 +353,7 @@ export const WithGroup: Story = {
       <div className="flex w-full max-w-md flex-col gap-6">
         <ItemGroup>
           {people.map((person, index) => (
-            <React.Fragment key={person.username}>
+            <Fragment key={person.username}>
               <Item {...args}>
                 <ItemMedia>
                   <Avatar>
@@ -372,7 +372,7 @@ export const WithGroup: Story = {
                 </ItemActions>
               </Item>
               {index !== people.length - 1 && <ItemSeparator />}
-            </React.Fragment>
+            </Fragment>
           ))}
         </ItemGroup>
       </div>

@@ -289,7 +289,10 @@ describe('TracksService', () => {
       prisma.trackFile.upsert.mockResolvedValue({ id: 'tf-1' } as never)
       queue.add.mockResolvedValue({} as never)
 
+      prisma.track.findFirst.mockResolvedValue(track as never)
+
       const result = await service.update(
+        'artist-1',
         'track-1',
         { title: 'Updated' } as CreateTrackDto,
         audioFile,
@@ -309,7 +312,9 @@ describe('TracksService', () => {
       mockTransaction(prisma)
       prisma.track.update.mockResolvedValue(track as never)
 
-      await service.update('track-1', { title: 'Updated' } as never)
+      prisma.track.findFirst.mockResolvedValue(track as never)
+
+      await service.update('artist-1', 'track-1', { title: 'Updated' } as never)
 
       expect(queue.add).not.toHaveBeenCalled()
     })

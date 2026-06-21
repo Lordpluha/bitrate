@@ -1,3 +1,5 @@
+import { NS } from '@infra/cache/cache.constants'
+import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { UserEntity } from '@modules/users'
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
@@ -8,22 +10,28 @@ import { PlaylistEntity } from './entities'
 @Injectable()
 export class PlaylistsService {
   /** Creates a new instance. */
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cache: CacheService,
+  ) {}
 
   /** Runs the create operation. */
   async create(userId: UserEntity['id'], playlistDto: CreatePlaylistDto) {
-    return await this.prisma.playlist.create({
+    const playlist = await this.prisma.playlist.create({
       data: {
         userId,
         cover: '',
         ...playlistDto,
       },
     })
+    await this.cache.invalidate(NS.SEARCH)
+    return playlist
   }
 
   /** Runs the get all operation. */
   async getAll({ page = 1, limit = 10 }: { page?: number; limit?: number }) {
     return await this.prisma.playlist.findMany({
+      where: { isPublic: true },
       skip: (page - 1) * limit,
       take: limit,
       include: {
@@ -49,9 +57,7 @@ export class PlaylistsService {
   /** Runs the get by id populated operation. */
   async getByIdPopulated(id: PlaylistEntity['id']) {
     return await this.prisma.playlist.findUniqueOrThrow({
-      where: {
-        id,
-      },
+      where: { id, isPublic: true },
       include: {
         tracks: true,
         user: {
@@ -71,10 +77,9 @@ export class PlaylistsService {
     if (!playlist) throw new NotFoundException('Playlist not found')
     if (playlist.userId !== userId) throw new ForbiddenException('You do not own this playlist')
 
-    return await this.prisma.playlist.update({
-      where: { id },
-      data: updateDto,
-    })
+    const updated = await this.prisma.playlist.update({ where: { id }, data: updateDto })
+    await this.cache.invalidate(NS.SEARCH)
+    return updated
   }
 
   /** Runs the delete operation. */
@@ -83,7 +88,9 @@ export class PlaylistsService {
     if (!playlist) throw new NotFoundException('Playlist not found')
     if (playlist.userId !== userId) throw new ForbiddenException('You do not own this playlist')
 
-    return await this.prisma.playlist.delete({ where: { id } })
+    const deleted = await this.prisma.playlist.delete({ where: { id } })
+    await this.cache.invalidate(NS.SEARCH)
+    return deleted
   }
 
   /** Runs the like operation. */

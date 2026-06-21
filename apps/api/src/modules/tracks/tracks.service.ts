@@ -168,7 +168,9 @@ export class TracksService {
             where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
             take: limit,
           }),
-          this.prisma.track.count(),
+          this.prisma.track.count({
+            where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
+          }),
         ])
         return { data, meta: { total, page, limit, lastPage: Math.ceil(total / limit) } }
       },
@@ -475,18 +477,22 @@ export class TracksService {
     })
 
     this.logger.log(`Queued audio conversion for track ID: ${track.id} added`)
-    await this.cache.invalidate(NS.TRACKS)
+    await Promise.all([this.cache.invalidate(NS.TRACKS), this.cache.invalidate(NS.SEARCH)])
 
     return track
   }
 
   /** Runs the update operation. */
   async update(
+    artistId: ArtistEntity['id'],
     id: TrackEntity['id'],
     createTrackDto: CreateTrackDto,
     audioFile?: Express.Multer.File,
     coverFile?: Express.Multer.File,
   ) {
+    const existingTrack = await this.prisma.track.findFirst({ where: { id, artistId } })
+    if (!existingTrack) throw new NotFoundException('Track not found or does not belong to artist')
+
     const inputPath = audioFile
       ? this.configService.getOrThrow('storage').getTracksDir(audioFile.filename)
       : null
@@ -563,7 +569,7 @@ export class TracksService {
       })
     }
 
-    await this.cache.invalidate(NS.TRACKS)
+    await Promise.all([this.cache.invalidate(NS.TRACKS), this.cache.invalidate(NS.SEARCH)])
 
     return track
   }

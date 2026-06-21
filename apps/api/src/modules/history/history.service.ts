@@ -30,26 +30,28 @@ export class HistoryService {
   async getHistory(userId: UserEntity['id'], page = 1, limit = 20) {
     const skip = (page - 1) * limit
 
-    // One entry per unique track — most recent listen wins
-    const rows = await this.prisma.listeningHistory.findMany({
+    const latestTracks = await this.prisma.listeningHistory.groupBy({
+      by: ['trackId'],
       where: { userId },
-      orderBy: { listenedAt: 'desc' },
-      select: {
-        id: true,
-        listenedAt: true,
-        track: { select: TRACK_SELECT },
-      },
+      _max: { listenedAt: true },
+      orderBy: { _max: { listenedAt: 'desc' } },
       skip,
       take: limit,
     })
 
-    // Deduplicate: keep first occurrence of each trackId (most recent)
-    const seen = new Set<string>()
-    return rows.filter(({ track }) => {
-      if (seen.has(track.id)) return false
-      seen.add(track.id)
-      return true
-    })
+    return await Promise.all(
+      latestTracks.map(({ trackId }) =>
+        this.prisma.listeningHistory.findFirstOrThrow({
+          where: { userId, trackId },
+          orderBy: { listenedAt: 'desc' },
+          select: {
+            id: true,
+            listenedAt: true,
+            track: { select: TRACK_SELECT },
+          },
+        }),
+      ),
+    )
   }
 
   /** Runs the clear all operation. */

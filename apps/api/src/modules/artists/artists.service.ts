@@ -21,10 +21,12 @@ export class ArtistsService {
    * @returns The newly created artist (without password).
    */
   async register({ password, email, username }: CreateArtistDto) {
-    return await this.prisma.artist.create({
+    const created = await this.prisma.artist.create({
       data: { password, username, email },
       omit: { password: true },
     })
+    await Promise.all([this.cache.invalidate(NS.ARTISTS), this.cache.invalidate(NS.SEARCH)])
+    return created
   }
 
   /**
@@ -71,7 +73,7 @@ export class ArtistsService {
       data: artist,
       omit: { password: true, email: true },
     })
-    await this.cache.invalidate(NS.ARTISTS)
+    await Promise.all([this.cache.invalidate(NS.ARTISTS), this.cache.invalidate(NS.SEARCH)])
     return updated
   }
 
@@ -83,7 +85,7 @@ export class ArtistsService {
       where: { id },
       omit: { password: true, email: true },
     })
-    await this.cache.invalidate(NS.ARTISTS)
+    await Promise.all([this.cache.invalidate(NS.ARTISTS), this.cache.invalidate(NS.SEARCH)])
     return deleted
   }
 

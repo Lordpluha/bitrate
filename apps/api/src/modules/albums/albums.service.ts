@@ -46,7 +46,7 @@ export class AlbumsService {
     if (!artist) throw new NotFoundException('Artist not found')
 
     const album = await this.prisma.album.create({ data: { artistId: artist.id, ...createDto } })
-    await this.cache.invalidate(NS.ALBUMS)
+    await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
     return album
   }
 
@@ -56,7 +56,7 @@ export class AlbumsService {
     if (!album) throw new NotFoundException('Album not found or does not belong to the artist')
 
     const updated = await this.prisma.album.update({ where: { id }, data: updateDto })
-    await this.cache.invalidate(NS.ALBUMS)
+    await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
     return updated
   }
 
@@ -66,7 +66,7 @@ export class AlbumsService {
     if (!album) throw new NotFoundException('Album not found or does not belong to the artist')
 
     const deleted = await this.prisma.album.delete({ where: { id }, omit: { artistId: true } })
-    await this.cache.invalidate(NS.ALBUMS)
+    await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
     return deleted
   }
 

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { InputProvider, useInputContext } from './input-context'
+import { type InputContextValue, InputProvider, useInputContext } from './input-context'
 
 const Consumer = () => {
   const ctx = useInputContext()
@@ -29,9 +29,12 @@ describe('InputContext', () => {
   })
 
   it('exposes setters from the context', () => {
-    let setters: ReturnType<typeof useInputContext> = null
+    let setFocused: InputContextValue['setFocused'] | undefined
+    let setValue: InputContextValue['setValue'] | undefined
     const Grab = () => {
-      setters = useInputContext()
+      const context = useInputContext()
+      setFocused = context?.setFocused
+      setValue = context?.setValue
       return null
     }
     render(
@@ -39,7 +42,7 @@ describe('InputContext', () => {
         <Grab />
       </InputProvider>,
     )
-    expect(typeof setters?.setFocused).toBe('function')
-    expect(typeof setters?.setValue).toBe('function')
+    expect(typeof setFocused).toBe('function')
+    expect(typeof setValue).toBe('function')
   })
 })

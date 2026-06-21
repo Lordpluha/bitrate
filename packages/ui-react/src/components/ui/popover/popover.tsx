@@ -1,11 +1,24 @@
 import { Popover as PopoverPrimitive } from '@base-ui-components/react'
-import type { ComponentProps } from 'react'
+import { type ComponentProps, isValidElement } from 'react'
 
 import { cn } from '@/lib/utils'
 
 const Popover = PopoverPrimitive.Root
 
-const PopoverTrigger = PopoverPrimitive.Trigger
+const PopoverTrigger = ({
+  asChild = false,
+  children,
+  ...props
+}: ComponentProps<typeof PopoverPrimitive.Trigger> & { asChild?: boolean }) => {
+  if (asChild) {
+    if (!isValidElement<Record<string, unknown>>(children)) {
+      throw new Error('PopoverTrigger with asChild requires a single React element')
+    }
+    return <PopoverPrimitive.Trigger {...props} render={children} />
+  }
+
+  return <PopoverPrimitive.Trigger {...props}>{children}</PopoverPrimitive.Trigger>
+}
 
 const PopoverContent = ({
   ref,

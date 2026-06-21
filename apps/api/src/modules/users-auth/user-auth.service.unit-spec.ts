@@ -133,7 +133,8 @@ describe('UserAuthService', () => {
     it('should return new access token', async () => {
       const user = buildUser({ id: 'user-1', username: 'user' })
       jwt.verifyAsync.mockResolvedValue(createJwtPayload())
-      users.getByUsername.mockResolvedValue(user)
+      users.findById.mockResolvedValue(user)
+      prisma.userSession.updateMany.mockResolvedValue({ count: 1 })
       token.generateAccessToken.mockResolvedValue('new-access')
 
       const result = await service.refresh('refresh-token')
@@ -149,7 +150,7 @@ describe('UserAuthService', () => {
 
     it('should reject when user not found', async () => {
       jwt.verifyAsync.mockResolvedValue(createJwtPayload())
-      users.getByUsername.mockRejectedValue(new Error('User not found'))
+      users.findById.mockRejectedValue(new Error('User not found'))
 
       await expect(service.refresh('refresh-token')).rejects.toThrow('Invalid refresh token')
     })

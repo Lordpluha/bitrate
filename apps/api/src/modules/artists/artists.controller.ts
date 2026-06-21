@@ -45,8 +45,8 @@ export class ArtistsController {
   @Get('')
   async getAll(
     @Query('username') username?: ArtistEntity['username'],
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
   ) {
     return await this.artistsService.findAll({
       limit,

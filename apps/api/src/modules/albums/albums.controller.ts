@@ -42,8 +42,8 @@ export class AlbumsController {
   @GetAlbumsSwagger()
   @Get('')
   async getAllAlbums(
-    @Query('page', ParseIntPipe) page?: number,
-    @Query('limit', ParseIntPipe) limit?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('title') title?: AlbumEntity['title'],
   ) {
     return await this.albumsService.findAll({

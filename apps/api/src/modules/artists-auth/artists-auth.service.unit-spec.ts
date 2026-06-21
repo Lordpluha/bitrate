@@ -139,14 +139,14 @@ describe('ArtistsAuthService', () => {
 
     it('should throw UnauthorizedException when artist not found', async () => {
       jwtService.verifyAsync.mockResolvedValue({ sub: 'artist-1', username: 'artist' } as never)
-      artists.findByUsername.mockResolvedValue(null as never)
+      artists.findById.mockResolvedValue(null as never)
 
       await expect(service.refresh('refresh-token')).rejects.toThrow(UnauthorizedException)
     })
 
     it('should return new access_token on valid refresh', async () => {
       jwtService.verifyAsync.mockResolvedValue({ sub: 'artist-1', username: 'artist' } as never)
-      artists.findByUsername.mockResolvedValue(buildArtist() as never)
+      artists.findById.mockResolvedValue(buildArtist() as never)
       token.generateAccessToken.mockResolvedValue('new-access-token' as never)
       token.hashToken.mockReturnValue('hashed-token')
       prisma.artistSession.updateMany.mockResolvedValue({ count: 1 })

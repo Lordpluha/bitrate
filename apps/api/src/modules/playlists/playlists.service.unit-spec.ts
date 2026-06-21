@@ -1,5 +1,7 @@
+import type { CacheService } from '@infra/cache/cache.service'
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import {
   buildPlaylist,
   buildPlaylistWithTracks,
@@ -10,11 +12,14 @@ import { PlaylistsService } from './playlists.service'
 describe('PlaylistsService', () => {
   let service: PlaylistsService
   let prisma: PrismaMock
+  let cache: DeepMockProxy<CacheService>
 
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
-    service = new PlaylistsService(prisma)
+    cache = mockDeep<CacheService>()
+    mockReset(cache)
+    service = new PlaylistsService(prisma, cache)
   })
 
   it('create should create playlist with cover', async () => {
@@ -41,6 +46,7 @@ describe('PlaylistsService', () => {
     const result = await service.getAll({})
 
     expect(prisma.playlist.findMany).toHaveBeenCalledWith({
+      where: { isPublic: true },
       skip: 0,
       take: 10,
       include: {
@@ -62,6 +68,7 @@ describe('PlaylistsService', () => {
     const result = await service.getAll({ page: 2, limit: 5 })
 
     expect(prisma.playlist.findMany).toHaveBeenCalledWith({
+      where: { isPublic: true },
       skip: 5,
       take: 5,
       include: {
@@ -95,7 +102,7 @@ describe('PlaylistsService', () => {
     const result = await service.getByIdPopulated('playlist-1')
 
     expect(prisma.playlist.findUniqueOrThrow).toHaveBeenCalledWith({
-      where: { id: 'playlist-1' },
+      where: { id: 'playlist-1', isPublic: true },
       include: {
         tracks: true,
         user: {
@@ -113,15 +120,13 @@ describe('PlaylistsService', () => {
   it('update should update playlist with user', async () => {
     const updated = buildPlaylist({ title: 'Updated' })
     prisma.playlist.update.mockResolvedValue(updated)
+    prisma.playlist.findUnique.mockResolvedValue(buildPlaylist({ userId: 'user-1' }))
 
     const result = await service.update('user-1', 'playlist-1', { title: 'Updated' })
 
     expect(prisma.playlist.update).toHaveBeenCalledWith({
       where: { id: 'playlist-1' },
-      data: {
-        title: 'Updated',
-        userId: 'user-1',
-      },
+      data: { title: 'Updated' },
     })
     expect(result).toBe(updated)
   })
@@ -129,6 +134,7 @@ describe('PlaylistsService', () => {
   it('update should pass optional description', async () => {
     const updated = buildPlaylist({ title: 'Updated', description: 'desc' })
     prisma.playlist.update.mockResolvedValue(updated)
+    prisma.playlist.findUnique.mockResolvedValue(buildPlaylist({ userId: 'user-1' }))
 
     const result = await service.update('user-1', 'playlist-1', {
       title: 'Updated',
@@ -137,11 +143,7 @@ describe('PlaylistsService', () => {
 
     expect(prisma.playlist.update).toHaveBeenCalledWith({
       where: { id: 'playlist-1' },
-      data: {
-        title: 'Updated',
-        description: 'desc',
-        userId: 'user-1',
-      },
+      data: { title: 'Updated', description: 'desc' },
     })
     expect(result).toBe(updated)
   })
@@ -149,14 +151,12 @@ describe('PlaylistsService', () => {
   it('delete should delete playlist for user', async () => {
     const deleted = buildPlaylist()
     prisma.playlist.delete.mockResolvedValue(deleted)
+    prisma.playlist.findUnique.mockResolvedValue(buildPlaylist({ userId: 'user-1' }))
 
     const result = await service.delete('user-1', 'playlist-1')
 
     expect(prisma.playlist.delete).toHaveBeenCalledWith({
-      where: {
-        id: 'playlist-1',
-        userId: 'user-1',
-      },
+      where: { id: 'playlist-1' },
     })
     expect(result).toBe(deleted)
   })

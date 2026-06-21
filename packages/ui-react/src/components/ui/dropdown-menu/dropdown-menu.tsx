@@ -1,6 +1,6 @@
 import { Menu } from '@base-ui-components/react'
 import { Check, ChevronRight, Circle } from 'lucide-react'
-import type { ComponentProps } from 'react'
+import { type ComponentProps, isValidElement } from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -9,7 +9,20 @@ const POPUP_CLS =
 
 const DropdownMenu = Menu.Root
 
-const DropdownMenuTrigger = Menu.Trigger
+const DropdownMenuTrigger = ({
+  asChild = false,
+  children,
+  ...props
+}: ComponentProps<typeof Menu.Trigger> & { asChild?: boolean }) => {
+  if (asChild) {
+    if (!isValidElement<Record<string, unknown>>(children)) {
+      throw new Error('DropdownMenuTrigger with asChild requires a single React element')
+    }
+    return <Menu.Trigger {...props} render={children} />
+  }
+
+  return <Menu.Trigger {...props}>{children}</Menu.Trigger>
+}
 
 const DropdownMenuGroup = Menu.Group
 
@@ -56,11 +69,12 @@ const DropdownMenuContent = ({
   ref,
   className,
   sideOffset = 4,
+  align = 'center',
   ...props
 }: ComponentProps<typeof Menu.Popup> &
-  Pick<ComponentProps<typeof Menu.Positioner>, 'sideOffset'>) => (
+  Pick<ComponentProps<typeof Menu.Positioner>, 'sideOffset' | 'align'>) => (
   <Menu.Portal>
-    <Menu.Positioner sideOffset={sideOffset}>
+    <Menu.Positioner align={align} sideOffset={sideOffset}>
       <Menu.Popup
         ref={ref}
         className={cn(

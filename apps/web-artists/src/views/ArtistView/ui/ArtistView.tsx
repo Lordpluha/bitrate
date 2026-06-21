@@ -1,6 +1,6 @@
 import { ArtistHeader } from '@widgets/ArtistHeader'
 
-export const ArtistView: React.FC = () => {
+export const ArtistView = () => {
   return (
     <div>
       <ArtistHeader />

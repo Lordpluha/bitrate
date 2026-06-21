@@ -44,12 +44,12 @@ export class UsersController {
   @GetUsersSwagger()
   @Get('')
   async getAll(
-    @Query('limit', ParseIntPipe) limit?: number,
-    @Query('page', ParseIntPipe) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('username') username?: UserEntity['username'],
   ) {
     if (!username) {
-      return Promise.reject(new Error('User not found'))
+      throw new BadRequestException('Username query is required')
     }
     return await this.usersService.findAll({
       username,
@@ -93,6 +93,7 @@ export class UsersController {
   @Post('avatar')
   @UseInterceptors(
     FileInterceptor('avatar', {
+      limits: { fileSize: 5 * 1024 * 1024 },
       storage: diskStorage({
         destination: './storage/public/users/avatars',
         filename: (_req, file, cb) => {
@@ -109,7 +110,8 @@ export class UsersController {
       },
     }),
   )
-  async uploadAvatar(@Req() req: Request, @UploadedFile() file: Express.Multer.File) {
+  async uploadAvatar(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
+    if (!file) throw new BadRequestException('Avatar file is required')
     const user = req.user as UserEntity
     return await this.usersService.uploadAvatar(user.id, file.filename)
   }

@@ -55,7 +55,7 @@ export class SearchService {
 
   /** Runs the search operation. */
   async search(query: string, types: SearchType[] = ALL_TYPES, limit = 10) {
-    const key = `${types.sort().join(',')}:${limit}:${query}`
+    const key = `${[...types].sort().join(',')}:${limit}:${query}`
 
     return await this.cache.wrap(NS.SEARCH, key, TTL.MEDIUM, async () => {
       const results: Record<string, unknown[]> = {}

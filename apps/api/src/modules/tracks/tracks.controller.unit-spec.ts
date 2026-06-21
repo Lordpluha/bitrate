@@ -112,9 +112,11 @@ describe('TracksController', () => {
     const track = buildTrack()
     service.update.mockResolvedValue(track as never)
 
-    const result = await controller.putTrack('track-1', { title: 'Updated' } as never, {})
+    const req = { artist: { id: 'artist-1' } } as never
+    const result = await controller.putTrack(req, 'track-1', { title: 'Updated' } as never, {})
 
     expect(service.update).toHaveBeenCalledWith(
+      'artist-1',
       'track-1',
       { title: 'Updated' } as never,
       undefined,

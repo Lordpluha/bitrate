@@ -5,9 +5,9 @@ import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { Button, PlayIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
-import type React from 'react'
+import type { FC } from 'react'
 
-export const NextInQueue: React.FC = () => {
+export const NextInQueue: FC = () => {
   const playlist = useAppSelector(selectPlaylist)
   const currentTrack = useAppSelector(selectCurrentTrack)
   const dispatch = useAppDispatch()

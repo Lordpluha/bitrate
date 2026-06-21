@@ -1,6 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-import type { ComponentProps } from 'react'
-import * as React from 'react'
+import { type ChangeEvent, type ComponentProps, type FocusEvent, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useInputContext } from '../input-context'
 
@@ -35,22 +34,22 @@ export const Input = ({
 }: InputProps) => {
   const context = useInputContext()
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     context?.setFocused(true)
     onFocus?.(e)
   }
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     context?.setFocused(false)
     onBlur?.(e)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     context?.setValue(e.target.value.length > 0)
     onChange?.(e)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (value !== undefined && context?.setValue) {
       context.setValue(String(value).length > 0)
     }

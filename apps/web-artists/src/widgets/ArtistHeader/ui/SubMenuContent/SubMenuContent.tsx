@@ -3,7 +3,7 @@
 import { cn } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import { type FC, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import './submenu-animation.css'
@@ -46,7 +46,7 @@ const linkUnderlineClasses = cn(
   'hover:before:scale-x-100',
 )
 
-export const SubMenuContent: React.FC<SubMenuContentProps> = ({
+export const SubMenuContent: FC<SubMenuContentProps> = ({
   activeSubmenu,
   submenuData,
   type,
@@ -54,12 +54,12 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
   onMouseEnter,
   onMouseLeave,
 }) => {
-  const nodeRef = React.useRef(null)
-  const contentRef = React.useRef<HTMLDivElement>(null)
-  const [contentHeight, setContentHeight] = React.useState<number>(0)
+  const nodeRef = useRef(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [contentHeight, setContentHeight] = useState<number>(0)
   const isVisible = (activeSubmenu && submenuData) || isClosing
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!contentRef.current) return
 
     const updateHeight = () => {
@@ -133,7 +133,7 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
   )
 }
 
-const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = ({ data }) => {
+const FeaturesContent: FC<{ data: SubmenuGroup[] }> = ({ data }) => {
   return (
     <div className="container pb-10 pt-8 grid grid-cols-4 gap-8">
       {data.map((group) => (
@@ -163,14 +163,14 @@ const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = ({ data }) => {
   )
 }
 
-const ResourcesContent: React.FC<{ data: ResourceItem[] }> = ({ data }) => {
+const ResourcesContent: FC<{ data: ResourceItem[] }> = ({ data }) => {
   const newsId = data.find((d) => d.id === 'news')?.id ?? data[0]?.id ?? null
-  const [activeId, setActiveId] = React.useState<string | null>(newsId)
-  const [lastActiveId, setLastActiveId] = React.useState<string | null>(newsId)
+  const [activeId, setActiveId] = useState<string | null>(newsId)
+  const [lastActiveId, setLastActiveId] = useState<string | null>(newsId)
 
   const activeItem = data.find((d) => d.id === activeId) || data[0]
 
-  React.useEffect(() => {
+  useEffect(() => {
     data.forEach((d) => {
       const img = new window.Image()
       img.src = d.imageSrc

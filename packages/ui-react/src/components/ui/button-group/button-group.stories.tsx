@@ -9,7 +9,7 @@ import {
   PlusIcon,
   SearchIcon,
 } from 'lucide-react'
-import * as React from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
@@ -175,7 +175,7 @@ export const WithInput: Story = {
  */
 export const WithInputGroup: Story = {
   render: () => {
-    const [voiceEnabled, setVoiceEnabled] = React.useState(false)
+    const [voiceEnabled, setVoiceEnabled] = useState(false)
 
     return (
       <TooltipProvider>
@@ -249,7 +249,7 @@ export const WithDropdownMenu: Story = {
  */
 export const WithSelect: Story = {
   render: () => {
-    const [currency, setCurrency] = React.useState('$')
+    const [currency, setCurrency] = useState('$')
 
     const CURRENCIES = [
       { value: '$', label: 'US Dollar' },

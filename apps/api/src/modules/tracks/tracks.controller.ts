@@ -142,6 +142,7 @@ export class TracksController {
         { name: 'cover', maxCount: 1 },
       ],
       {
+        limits: { fileSize: 50 * 1024 * 1024 },
         storage: diskStorage({
           destination: (_req, file, cb) => {
             if (file.fieldname === 'audio') {
@@ -156,7 +157,7 @@ export class TracksController {
         }),
         fileFilter: (_req, file, cb) => {
           const audioTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
-          const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
+          const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp']
 
           if (file.fieldname === 'audio' && !audioTypes.includes(file.mimetype)) {
             return cb(new BadRequestException('Invalid audio file type'), false)
@@ -200,6 +201,7 @@ export class TracksController {
         { name: 'cover', maxCount: 1 },
       ],
       {
+        limits: { fileSize: 50 * 1024 * 1024 },
         storage: diskStorage({
           destination: (_req, file, cb) => {
             if (file.fieldname === 'audio') {
@@ -214,7 +216,7 @@ export class TracksController {
         }),
         fileFilter: (_req, file, cb) => {
           const audioTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
-          const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
+          const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp']
 
           if (file.fieldname === 'audio' && !audioTypes.includes(file.mimetype)) {
             return cb(new BadRequestException('Invalid audio file type'), false)
@@ -230,6 +232,7 @@ export class TracksController {
     ),
   )
   putTrack(
+    @Req() req: Request,
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto,
@@ -239,7 +242,8 @@ export class TracksController {
     const audioFile = files?.audio?.[0]
     const coverFile = files?.cover?.[0]
 
-    return this.tracksService.update(id, createTrackDto, audioFile, coverFile)
+    const artist = req.artist as ArtistEntity
+    return this.tracksService.update(artist.id, id, createTrackDto, audioFile, coverFile)
   }
 
   /** Runs the get liked tracks operation. */

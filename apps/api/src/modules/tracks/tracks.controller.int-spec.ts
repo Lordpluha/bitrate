@@ -179,6 +179,7 @@ describe('TracksController (int)', () => {
 
     expect(res.status).toBe(200)
     expect(service.update).toHaveBeenCalledWith(
+      'artist-1',
       'f47ac10b-58cc-4372-a567-0e02b2c3d479',
       { title: 'Updated Title' } as never,
       undefined,

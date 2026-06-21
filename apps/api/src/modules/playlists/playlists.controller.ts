@@ -8,6 +8,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Put,
@@ -43,7 +44,10 @@ export class PlaylistsController {
   /** Runs the get all operation. */
   @GetPlaylistsSwagger()
   @Get('')
-  async getAll(@Query('page') page?: number, @Query('limit') limit?: number) {
+  async getAll(
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
     return await this.playlistService.getAll({ limit, page })
   }
 

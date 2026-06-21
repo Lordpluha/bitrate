@@ -27,7 +27,7 @@ export const usePlaylist = (
         const tracks = (data as WithTracks<typeof data>).tracks.map(
           (track) => ({
             ...track,
-            audioUrl: `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${track.id}`,
+            audioUrl: `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '')}/api/v1/tracks/stream/${track.id}`,
           }),
         )
         return {

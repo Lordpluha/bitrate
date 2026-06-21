@@ -95,24 +95,22 @@ export class UserAuthService {
   async refresh(refresh_token: string) {
     try {
       const payload = await this.jwt.verifyAsync<JWTPayload>(refresh_token, {
-        secret: process.env.REFRESH_TOKEN_SECRET,
+        secret: process.env.JWT_SECRET,
       })
-      const user = await this.users.getByUsername(payload.username)
-      if (!user) {
-        throw new UnauthorizedException('Invalid refresh token')
-      }
-
+      const user = await this.users.findById(payload.sub)
       const access_token = await this.token.generateAccessToken(user.id, user.username)
 
-      await this.prisma.userSession.updateMany({
+      const updatedSessions = await this.prisma.userSession.updateMany({
         where: {
           userId: user.id,
           refresh_token: this.token.hashToken(refresh_token),
         },
-        data: {
-          access_token: this.token.hashToken(access_token),
-        },
+        data: { access_token: this.token.hashToken(access_token) },
       })
+
+      if (updatedSessions.count !== 1) {
+        throw new UnauthorizedException('Invalid refresh token')
+      }
 
       return { access_token }
     } catch {

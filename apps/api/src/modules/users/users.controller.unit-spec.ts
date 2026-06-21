@@ -16,9 +16,9 @@ describe('UsersController', () => {
     controller = new UsersController(service)
   })
 
-  it('getAll should reject when username missing', async () => {
+  it('getAll should reject invalid requests when username missing', async () => {
     await expect(controller.getAll(undefined, undefined, undefined)).rejects.toThrow(
-      'User not found',
+      'Username query is required',
     )
   })
 

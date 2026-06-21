@@ -5,10 +5,9 @@ import { useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { RollupIcon, SavedSongIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
-import type React from 'react'
-import { useState } from 'react'
+import { type FC, useState } from 'react'
 
-export const CurrentPlaylist: React.FC<{ onCollapse?: () => void }> = ({
+export const CurrentPlaylist: FC<{ onCollapse?: () => void }> = ({
   onCollapse,
 }) => {
   const currentTrack = useAppSelector(selectCurrentTrack)

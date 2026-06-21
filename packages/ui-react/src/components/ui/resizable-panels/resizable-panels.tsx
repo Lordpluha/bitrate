@@ -1,6 +1,6 @@
 'use client'
 
-import type { FC, ReactNode } from 'react'
+import type { CSSProperties, FC, ReactNode } from 'react'
 import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels'
 import { cn } from '@/lib/utils'
 
@@ -15,6 +15,7 @@ export interface ResizablePanelProps {
 export interface ResizableLayoutProps {
   direction?: 'horizontal' | 'vertical'
   className?: string
+  style?: CSSProperties
   children: ReactNode
 }
 
@@ -25,10 +26,11 @@ export interface ResizableHandleProps {
 export const ResizableLayout: FC<ResizableLayoutProps> = ({
   direction = 'horizontal',
   className,
+  style,
   children,
 }) => {
   return (
-    <PanelGroup orientation={direction} className={cn('h-full', className)}>
+    <PanelGroup orientation={direction} className={cn('h-full', className)} style={style}>
       {children}
     </PanelGroup>
   )

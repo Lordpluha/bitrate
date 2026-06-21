@@ -96,24 +96,23 @@ export class ArtistsAuthService {
   async refresh(refresh_token: string) {
     try {
       const payload = await this.jwtService.verifyAsync<JWTPayload>(refresh_token, {
-        secret: process.env.REFRESH_TOKEN_SECRET,
+        secret: process.env.JWT_SECRET,
       })
-      const artist = await this.artists.findByUsername(payload.username)
-      if (!artist) {
-        throw new UnauthorizedException('Invalid refresh token')
-      }
-
+      const artist = await this.artists.findById(payload.sub)
+      if (!artist) throw new UnauthorizedException('Invalid refresh token')
       const access_token = await this.token.generateAccessToken(artist.id, artist.username)
 
-      await this.prisma.artistSession.updateMany({
+      const updatedSessions = await this.prisma.artistSession.updateMany({
         where: {
           artistId: artist.id,
           refresh_token: this.token.hashToken(refresh_token),
         },
-        data: {
-          access_token: this.token.hashToken(access_token),
-        },
+        data: { access_token: this.token.hashToken(access_token) },
       })
+
+      if (updatedSessions.count !== 1) {
+        throw new UnauthorizedException('Invalid refresh token')
+      }
 
       return { access_token }
     } catch {

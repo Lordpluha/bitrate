@@ -6,12 +6,12 @@ import {
 } from '@entities/Player/store/PlayerSlice'
 import { useAppDispatch, useAppSelector, useAudioPlayer } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
-import { useEffect, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 import { PlayerActions } from './PlayerActions'
 import { PlayerControls } from './PlayerControls'
 import { TrackInfo } from './TrackInfo'
 
-export const Player: React.FC = () => {
+export const Player: FC = () => {
   const { currentTrack, isPlaying, volume, currentTime, duration } =
     useAppSelector(selectMusicPlayer)
   const dispatch = useAppDispatch()
