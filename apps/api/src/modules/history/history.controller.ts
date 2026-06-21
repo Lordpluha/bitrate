@@ -12,7 +12,13 @@ import {
   Query,
   Req,
 } from '@nestjs/common'
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
+import {
+  ClearHistorySwagger,
+  GetHistorySwagger,
+  RecordHistorySwagger,
+  RemoveTrackHistorySwagger,
+} from './decorators'
 import { HistoryService } from './history.service'
 
 /** Represents the history controller. */
@@ -23,19 +29,14 @@ export class HistoryController {
   constructor(private readonly historyService: HistoryService) {}
 
   /** Runs the record operation. */
-  @ApiOperation({ summary: 'Record a track listen' })
-  @ApiParam({ name: 'trackId', type: 'string', format: 'uuid' })
-  @ApiResponse({ status: 201, description: 'Recorded' })
+  @RecordHistorySwagger()
   @Post('tracks/:trackId')
   record(@Req() req: UserAuthRequest, @Param('trackId', ParseUUIDPipe) trackId: string) {
     return this.historyService.record(req.user.id, trackId)
   }
 
   /** Runs the get history operation. */
-  @ApiOperation({ summary: 'Get listening history (deduplicated, most recent first)' })
-  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
-  @ApiResponse({ status: 200, description: 'History entries with track info' })
+  @GetHistorySwagger()
   @Get('')
   getHistory(
     @Req() req: UserAuthRequest,
@@ -46,8 +47,7 @@ export class HistoryController {
   }
 
   /** Runs the clear all operation. */
-  @ApiOperation({ summary: 'Clear all listening history' })
-  @ApiResponse({ status: 204, description: 'History cleared' })
+  @ClearHistorySwagger()
   @HttpCode(204)
   @Delete('')
   clearAll(@Req() req: UserAuthRequest) {
@@ -55,9 +55,7 @@ export class HistoryController {
   }
 
   /** Runs the remove track operation. */
-  @ApiOperation({ summary: 'Remove a specific track from history' })
-  @ApiParam({ name: 'trackId', type: 'string', format: 'uuid' })
-  @ApiResponse({ status: 200, description: 'Track removed from history' })
+  @RemoveTrackHistorySwagger()
   @HttpCode(200)
   @Delete('tracks/:trackId')
   removeTrack(@Req() req: UserAuthRequest, @Param('trackId', ParseUUIDPipe) trackId: string) {
