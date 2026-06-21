@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the get track by id swagger operation. */
 export function GetTrackByIdSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get track by id' }),

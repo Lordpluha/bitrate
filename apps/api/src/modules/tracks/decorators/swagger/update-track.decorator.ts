@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the update track by id swagger operation. */
 export function UpdateTrackByIdSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Update track by id' }),

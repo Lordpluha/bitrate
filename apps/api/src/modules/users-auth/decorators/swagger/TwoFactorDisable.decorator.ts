@@ -3,6 +3,7 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger
 
 import { TwoFactorCodeDto } from '../../dtos'
 
+/** Runs the two factor disable swagger operation. */
 export function TwoFactorDisableSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Disable 2FA — requires current TOTP code to confirm' }),

@@ -17,8 +17,10 @@ import type { JWTPayload } from '../tokens'
 import type { RegistrationDto } from './dtos'
 import type { ArtistSessionEntity } from './entities'
 
+/** Represents the artists auth service. */
 @Injectable()
 export class ArtistsAuthService {
+  /** Creates a new instance. */
   constructor(
     private artists: ArtistsService,
     private artistsPrivate: ArtistsPrivateService,
@@ -28,6 +30,7 @@ export class ArtistsAuthService {
     private mail: MailService,
   ) {}
 
+  /** Runs the register artist operation. */
   async registerArtist(registrationDto: RegistrationDto) {
     const artist = await this.artists.findByEmail(registrationDto.email)
 
@@ -42,6 +45,7 @@ export class ArtistsAuthService {
     })
   }
 
+  /** Runs the login artist operation. */
   async loginArtist(email: ArtistEntity['email'], password: string) {
     const artist = await this.artistsPrivate.findByEmail(email)
     const passwordValid =
@@ -69,6 +73,7 @@ export class ArtistsAuthService {
     return { access_token, refresh_token }
   }
 
+  /** Runs the complete two factor login operation. */
   async completeTwoFactorLogin(artistId: string) {
     const artist = await this.artistsPrivate.findById(artistId)
     if (!artist) throw new UnauthorizedException('Artist not found')
@@ -87,6 +92,7 @@ export class ArtistsAuthService {
     return { access_token, refresh_token }
   }
 
+  /** Runs the refresh operation. */
   async refresh(refresh_token: string) {
     try {
       const payload = await this.jwtService.verifyAsync<JWTPayload>(refresh_token, {
@@ -115,6 +121,7 @@ export class ArtistsAuthService {
     }
   }
 
+  /** Runs the logout operation. */
   async logout(
     artistId: ArtistSession['artistId'],
     access_token: ArtistSessionEntity['access_token'],
@@ -132,6 +139,7 @@ export class ArtistsAuthService {
     })
   }
 
+  /** Runs the forgot password operation. */
   async forgotPassword(email: string) {
     const artist = await this.artistsPrivate.findByEmail(email)
     if (!artist) return
@@ -148,6 +156,7 @@ export class ArtistsAuthService {
     await this.mail.sendPasswordReset(artist.email, rawToken, artist.username)
   }
 
+  /** Runs the reset password operation. */
   async resetPassword(rawToken: string, newPassword: string) {
     const hashed = this.token.hashToken(rawToken)
     const reset = await this.prisma.artistPasswordReset.findUnique({ where: { token: hashed } })

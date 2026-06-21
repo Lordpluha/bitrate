@@ -2,6 +2,7 @@ import { CreateTrackDto } from '@modules/tracks/dtos/create-track.dto'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the post track swagger operation. */
 export function PostTrackSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Create track' }),

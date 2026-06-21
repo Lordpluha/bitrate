@@ -15,8 +15,10 @@ import { UsersService } from '../users/users.service'
 import type { RegistrationDto } from './dtos'
 import type { UserSessionEntity } from './entities'
 
+/** Represents the user auth service. */
 @Injectable()
 export class UserAuthService {
+  /** Creates a new instance. */
   constructor(
     private users: UsersService,
     private usersPrivate: UsersPrivateService,
@@ -26,6 +28,7 @@ export class UserAuthService {
     private mail: MailService,
   ) {}
 
+  /** Runs the register user operation. */
   async registerUser(registrationDto: RegistrationDto) {
     const user = await this.users.getByEmail(registrationDto.email)
 
@@ -43,6 +46,7 @@ export class UserAuthService {
     })
   }
 
+  /** Runs the login user operation. */
   async loginUser(email: string, password: string) {
     const user = await this.usersPrivate.getByEmail(email)
     const passwordValid =
@@ -70,6 +74,7 @@ export class UserAuthService {
     return { access_token, refresh_token }
   }
 
+  /** Runs the complete two factor login operation. */
   async completeTwoFactorLogin(userId: string) {
     const user = await this.usersPrivate.findById(userId)
     const access_token = await this.token.generateAccessToken(user.id, user.username)
@@ -86,6 +91,7 @@ export class UserAuthService {
     return { access_token, refresh_token }
   }
 
+  /** Runs the refresh operation. */
   async refresh(refresh_token: string) {
     try {
       const payload = await this.jwt.verifyAsync<JWTPayload>(refresh_token, {
@@ -114,6 +120,7 @@ export class UserAuthService {
     }
   }
 
+  /** Runs the logout operation. */
   async logout(
     userId: UserSessionEntity['userId'],
     access_token: UserSessionEntity['access_token'],
@@ -131,6 +138,7 @@ export class UserAuthService {
     })
   }
 
+  /** Runs the forgot password operation. */
   async forgotPassword(email: string) {
     const user = await this.usersPrivate.getByEmail(email)
     if (!user) return // don't reveal whether the email exists
@@ -147,6 +155,7 @@ export class UserAuthService {
     await this.mail.sendPasswordReset(user.email, rawToken, user.username)
   }
 
+  /** Runs the reset password operation. */
   async resetPassword(rawToken: string, newPassword: string) {
     const hashed = this.token.hashToken(rawToken)
     const reset = await this.prisma.userPasswordReset.findUnique({ where: { token: hashed } })

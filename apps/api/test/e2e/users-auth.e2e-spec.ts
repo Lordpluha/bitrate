@@ -3,7 +3,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/glo
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import { resetUsersDatabase } from '../helpers/db'
-import { closeE2eApp, createE2eApp } from './e2e-app'
+import { closeE2eApp, createE2eApp, getResponseCookies } from './e2e-app'
 
 const makeRunId = () => Math.random().toString(36).slice(2, 8)
 
@@ -40,7 +40,7 @@ describe('UsersAuth (e2e)', () => {
       .send({ email: creds.email, password: creds.password })
       .expect(201)
 
-    const cookies = loginRes.headers['set-cookie'] as unknown as string[]
+    const cookies = getResponseCookies(loginRes.headers['set-cookie'])
     expect(cookies).toBeDefined()
     if (!cookies) throw new Error('Auth cookies were not set')
 

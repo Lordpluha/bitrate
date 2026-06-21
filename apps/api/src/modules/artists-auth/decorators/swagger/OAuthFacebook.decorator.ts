@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the oauth facebook swagger operation. */
 export function OAuthFacebookSwagger() {
   return applyDecorators(
     ApiOperation({
@@ -15,6 +16,7 @@ export function OAuthFacebookSwagger() {
   )
 }
 
+/** Runs the oauth facebook callback swagger operation. */
 export function OAuthFacebookCallbackSwagger() {
   return applyDecorators(
     ApiOperation({

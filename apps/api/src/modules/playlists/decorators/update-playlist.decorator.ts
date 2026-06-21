@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the update playlist swagger operation. */
 export function UpdatePlaylistSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Update playlist by id' }),

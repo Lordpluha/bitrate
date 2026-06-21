@@ -42,6 +42,7 @@ import {
 import { ArtistSessionEntity } from './entities'
 import type { ArtistAuthRequest } from './types'
 
+/** Represents the auth controller. */
 @ApiExtraModels(ArtistSessionEntity)
 @ApiTags('Artists Auth')
 @Controller('artists/auth')
@@ -54,6 +55,7 @@ export class AuthController {
     private oauthService: ArtistOAuthService,
   ) {}
 
+  /** Runs the login operation. */
   @AuthLoginSwagger()
   @Post('login')
   async login(
@@ -67,6 +69,7 @@ export class AuthController {
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
   }
 
+  /** Runs the registration operation. */
   @AuthRegistrationSwagger()
   @Post('registration')
   async registration(
@@ -76,6 +79,7 @@ export class AuthController {
     await this.artistAuthService.registerArtist(registrationDto)
   }
 
+  /** Runs the logout operation. */
   @AuthLogoutSwagger()
   @ArtistAuth()
   @Post('logout')
@@ -85,6 +89,7 @@ export class AuthController {
     this.tokenService.clearAuthCookies(res)
   }
 
+  /** Runs the refresh operation. */
   @AuthRefreshSwagger()
   @ArtistAuth('refresh')
   @Post('refresh')
@@ -94,6 +99,7 @@ export class AuthController {
     this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
+  /** Runs the get me operation. */
   @AuthMeSwagger()
   @ArtistAuth()
   @Get('me')
@@ -101,6 +107,7 @@ export class AuthController {
     return await this.artistService.findById(req.artist.id)
   }
 
+  /** Runs the forgot password operation. */
   @AuthForgotPasswordSwagger()
   @HttpCode(200)
   @Post('forgot-password')
@@ -108,6 +115,7 @@ export class AuthController {
     await this.artistAuthService.forgotPassword(dto.email)
   }
 
+  /** Runs the reset password operation. */
   @AuthResetPasswordSwagger()
   @HttpCode(200)
   @Post('reset-password')
@@ -115,6 +123,7 @@ export class AuthController {
     await this.artistAuthService.resetPassword(dto.token, dto.password)
   }
 
+  /** Runs the two factor setup operation. */
   @TwoFactorSetupSwagger()
   @ArtistAuth()
   @Post('2fa/setup')
@@ -122,6 +131,7 @@ export class AuthController {
     return await this.twoFactorService.setupTwoFactor(req.artist.id)
   }
 
+  /** Runs the two factor enable operation. */
   @TwoFactorEnableSwagger()
   @ArtistAuth()
   @HttpCode(200)
@@ -133,6 +143,7 @@ export class AuthController {
     await this.twoFactorService.enableTwoFactor(req.artist.id, dto.code)
   }
 
+  /** Runs the two factor disable operation. */
   @TwoFactorDisableSwagger()
   @ArtistAuth()
   @HttpCode(200)
@@ -144,6 +155,7 @@ export class AuthController {
     await this.twoFactorService.disableTwoFactor(req.artist.id, dto.code)
   }
 
+  /** Runs the two factor verify login operation. */
   @TwoFactorVerifyLoginSwagger()
   @HttpCode(200)
   @Post('2fa/verify-login')
@@ -161,6 +173,7 @@ export class AuthController {
     this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
+  /** Runs the google auth operation. */
   @OAuthGoogleSwagger()
   @Get('oauth/google')
   googleAuth(@Res() res: Response) {
@@ -169,6 +182,7 @@ export class AuthController {
     return res.redirect(this.oauthService.getGoogleAuthUrl(state))
   }
 
+  /** Runs the google callback operation. */
   @OAuthGoogleCallbackSwagger()
   @Get('oauth/google/callback')
   async googleCallback(
@@ -185,6 +199,7 @@ export class AuthController {
     return this.handleOAuthResult(result, res)
   }
 
+  /** Runs the facebook auth operation. */
   @OAuthFacebookSwagger()
   @Get('oauth/facebook')
   facebookAuth(@Res() res: Response) {
@@ -193,6 +208,7 @@ export class AuthController {
     return res.redirect(this.oauthService.getFacebookAuthUrl(state))
   }
 
+  /** Runs the facebook callback operation. */
   @OAuthFacebookCallbackSwagger()
   @Get('oauth/facebook/callback')
   async facebookCallback(
@@ -209,6 +225,7 @@ export class AuthController {
     return this.handleOAuthResult(result, res)
   }
 
+  /** Runs the handle oauth result operation. */
   private handleOAuthResult(
     result:
       | { access_token: string; refresh_token: string }

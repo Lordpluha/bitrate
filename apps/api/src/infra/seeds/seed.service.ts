@@ -11,12 +11,14 @@ import { FakerService } from './faker.service'
  * Главный сервис для заполнения базы данных
  */
 export class SeedService {
+  /** Creates a new instance. */
   constructor(
     private prisma: PrismaClient,
     private downloadService: DownloadResourcesService,
     private faker: FakerService,
   ) {}
 
+  /** The logger value. */
   private readonly logger = new Logger(SeedService.name, { timestamp: true })
 
   /**
@@ -125,6 +127,7 @@ export class SeedService {
     return track
   }
 
+  /** Runs the sanitize username operation. */
   private sanitizeUsername(name: string): string {
     return name
       .toLowerCase()

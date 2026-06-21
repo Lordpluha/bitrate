@@ -15,12 +15,14 @@ import {
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { HistoryService } from './history.service'
 
+/** Represents the history controller. */
 @ApiTags('History')
 @UserAuth()
 @Controller('history')
 export class HistoryController {
   constructor(private readonly historyService: HistoryService) {}
 
+  /** Runs the record operation. */
   @ApiOperation({ summary: 'Record a track listen' })
   @ApiParam({ name: 'trackId', type: 'string', format: 'uuid' })
   @ApiResponse({ status: 201, description: 'Recorded' })
@@ -29,6 +31,7 @@ export class HistoryController {
     return this.historyService.record(req.user.id, trackId)
   }
 
+  /** Runs the get history operation. */
   @ApiOperation({ summary: 'Get listening history (deduplicated, most recent first)' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
@@ -42,6 +45,7 @@ export class HistoryController {
     return this.historyService.getHistory(req.user.id, page, limit)
   }
 
+  /** Runs the clear all operation. */
   @ApiOperation({ summary: 'Clear all listening history' })
   @ApiResponse({ status: 204, description: 'History cleared' })
   @HttpCode(204)
@@ -50,6 +54,7 @@ export class HistoryController {
     return this.historyService.clearAll(req.user.id)
   }
 
+  /** Runs the remove track operation. */
   @ApiOperation({ summary: 'Remove a specific track from history' })
   @ApiParam({ name: 'trackId', type: 'string', format: 'uuid' })
   @ApiResponse({ status: 200, description: 'Track removed from history' })

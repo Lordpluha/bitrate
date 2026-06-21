@@ -7,11 +7,15 @@ import { generateSecret, generateURI, verify } from 'otplib'
 import { toDataURL } from 'qrcode'
 import type { UserEntity } from '../users/entities'
 
+/** Describes the two fapending payload. */
 interface TwoFAPendingPayload {
+  /** The sub value. */
   sub: string
+  /** The twofa value. */
   twofa: boolean
 }
 
+/** The select two fafields value. */
 const selectTwoFAFields = {
   id: true,
   email: true,
@@ -19,14 +23,17 @@ const selectTwoFAFields = {
   twoFactorEnabled: true,
 } as const
 
+/** Represents the two factor service. */
 @Injectable()
 export class TwoFactorService {
+  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
     private readonly config: ConfigService<AppConfig>,
   ) {}
 
+  /** Runs the setup two factor operation. */
   async setupTwoFactor(userId: UserEntity['id']) {
     const user = await this.prisma.user.findUniqueOrThrow({
       where: { id: userId },
@@ -47,6 +54,7 @@ export class TwoFactorService {
     return { qrCodeDataUrl, manualCode: secret }
   }
 
+  /** Runs the enable two factor operation. */
   async enableTwoFactor(userId: UserEntity['id'], code: string) {
     const user = await this.prisma.user.findUniqueOrThrow({
       where: { id: userId },
@@ -62,6 +70,7 @@ export class TwoFactorService {
     await this.prisma.user.update({ where: { id: userId }, data: { twoFactorEnabled: true } })
   }
 
+  /** Runs the disable two factor operation. */
   async disableTwoFactor(userId: UserEntity['id'], code: string) {
     const user = await this.prisma.user.findUniqueOrThrow({
       where: { id: userId },
@@ -80,6 +89,7 @@ export class TwoFactorService {
     })
   }
 
+  /** Runs the verify login code operation. */
   async verifyLoginCode(pendingToken: string, code: string) {
     let payload: TwoFAPendingPayload
     try {

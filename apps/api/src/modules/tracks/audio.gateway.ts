@@ -18,66 +18,92 @@ import { z } from 'zod'
 import type { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
 import * as TracksServiceModule from './tracks.service'
 
+/** Describes the authenticated socket. */
 interface AuthenticatedSocket extends Socket {
+  /** The user id value. */
   userId?: string
 }
 
+/** Describes the playing session. */
 interface PlayingSession {
+  /** The track id value. */
   trackId: string
+  /** The current time value. */
   currentTime: number
+  /** The timestamp value. */
   timestamp: number
 }
 
+/** Describes the audio stream session. */
 interface AudioStreamSession {
+  /** The stream value. */
   stream: ReadStream
+  /** The track id value. */
   trackId: string
 }
 
+/** Describes the stream track payload. */
 interface StreamTrackPayload {
+  /** The track id value. */
   trackId: string
+  /** The bitrate value. */
   bitrate?: number
+  /** The format value. */
   format?: string
 }
 
+/** The audio chunk ack timeout ms value. */
 const AUDIO_CHUNK_ACK_TIMEOUT_MS = 10_000
 
+/** Represents the audio gateway. */
 @WebSocketGateway(websocketConfig)
 @UseGuards(WsUserAuthGuard)
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  /** The server value. */
   @WebSocketServer()
   server: Server
 
+  /** The logger value. */
   private readonly logger = new Logger(AudioGateway.name, { timestamp: true })
+  /** The user sessions value. */
   private userSessions = new Map<string, Set<string>>() // userId -> socketIds
+  /** The playing sessions value. */
   private playingSessions = new Map<string, PlayingSession>() // userId -> playing track info
+  /** The audio streams value. */
   private audioStreams = new Map<string, AudioStreamSession>() // socketId -> active audio stream
 
+  /** The track payload schema value. */
   private readonly trackPayloadSchema = z.object({
     trackId: z.uuidv7(),
     currentTime: z.number().min(0),
   })
 
+  /** The play payload schema value. */
   private readonly playPayloadSchema = this.trackPayloadSchema.extend({
     bitrate: z.number().int().min(1).max(1000).optional(),
     format: z.string().min(1).max(16).default('opus'),
   })
 
+  /** The update payload schema value. */
   private readonly updatePayloadSchema = this.trackPayloadSchema.extend({
     isPlaying: z.boolean(),
   })
 
+  /** The stream payload schema value. */
   private readonly streamPayloadSchema = z.object({
     trackId: z.uuidv7(),
     bitrate: z.number().int().min(1).max(1000).optional(),
     format: z.string().min(1).max(16).default('opus'),
   })
 
+  /** Creates a new instance. */
   constructor(
     @Inject(TracksServiceModule.TracksService)
     private tracksService: TracksServiceModule.TracksService,
     @Inject(WsUserAuthGuard) private wsAuthGuard: WsUserAuthGuard,
   ) {}
 
+  /** Runs the handle connection operation. */
   async handleConnection(client: AuthenticatedSocket) {
     try {
       await this.wsAuthGuard.canActivate(this.createWsContext(client))
@@ -115,6 +141,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  /** Runs the handle disconnect operation. */
   handleDisconnect(client: AuthenticatedSocket): void {
     this.stopAudioStream(client.id)
 
@@ -131,6 +158,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.log(`User ${client.userId} disconnected`)
   }
 
+  /** Runs the handle stream track operation. */
   @SubscribeMessage('streamTrack')
   async handleStreamTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -163,12 +191,14 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  /** Runs the handle stop track stream operation. */
   @SubscribeMessage('stopTrackStream')
   handleStopTrackStream(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
     const stopped = this.stopAudioStream(client.id)
     return { event: 'stopTrackStream', data: { success: true, stopped } }
   }
 
+  /** Runs the handle play track operation. */
   @SubscribeMessage('playTrack')
   async handlePlayTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -223,6 +253,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  /** Runs the handle pause track operation. */
   @SubscribeMessage('pauseTrack')
   handlePauseTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -266,6 +297,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  /** Runs the handle update streaming operation. */
   @SubscribeMessage('updateStreaming')
   async handleUpdateStreaming(
     @ConnectedSocket() client: AuthenticatedSocket,
@@ -322,6 +354,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  /** Runs the handle get current state operation. */
   @SubscribeMessage('getCurrentState')
   handleGetCurrentState(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
     if (!client.userId) {
@@ -343,6 +376,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return { event: 'currentState', data: { isPlaying: false } }
   }
 
+  /** Runs the start audio stream operation. */
   private async startAudioStream(client: AuthenticatedSocket, payload: StreamTrackPayload) {
     const audio = await this.tracksService.getTrackAudioStream(
       payload.trackId,
@@ -372,6 +406,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  /** Runs the pipe audio stream operation. */
   private async pipeAudioStream(client: AuthenticatedSocket, session: AudioStreamSession) {
     let sequence = 0
 
@@ -403,17 +438,20 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  /** Runs the calculate current time operation. */
   private calculateCurrentTime(session: PlayingSession): number {
     const elapsed = (Date.now() - session.timestamp) / 1000
     return session.currentTime + elapsed
   }
 
+  /** Runs the create ws context operation. */
   private createWsContext(client: AuthenticatedSocket) {
     const context = new ExecutionContextHost([client])
     context.setType('ws')
     return context
   }
 
+  /** Runs the stop audio stream operation. */
   private stopAudioStream(socketId: string) {
     const session = this.audioStreams.get(socketId)
     if (!session) return false
@@ -423,12 +461,14 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return true
   }
 
+  /** Runs the stop user audio streams operation. */
   private stopUserAudioStreams(userId: string) {
     for (const socketId of this.userSessions.get(userId) ?? []) {
       this.stopAudioStream(socketId)
     }
   }
 
+  /** Runs the emit to user operation. */
   emitToUser(userId: string, event: string, data: Record<string, unknown>): void {
     this.server.to(`user_${userId}`).emit(event, data)
   }

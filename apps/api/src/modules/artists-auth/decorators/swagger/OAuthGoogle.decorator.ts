@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the oauth google swagger operation. */
 export function OAuthGoogleSwagger() {
   return applyDecorators(
     ApiOperation({
@@ -15,6 +16,7 @@ export function OAuthGoogleSwagger() {
   )
 }
 
+/** Runs the oauth google callback swagger operation. */
 export function OAuthGoogleCallbackSwagger() {
   return applyDecorators(
     ApiOperation({

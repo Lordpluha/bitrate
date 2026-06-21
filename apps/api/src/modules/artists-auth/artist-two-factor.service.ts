@@ -7,11 +7,15 @@ import { generateSecret, generateURI, verify } from 'otplib'
 import { toDataURL } from 'qrcode'
 import type { ArtistEntity } from '../artists/entities'
 
+/** Describes the two fapending payload. */
 interface TwoFAPendingPayload {
+  /** The sub value. */
   sub: string
+  /** The twofa value. */
   twofa: boolean
 }
 
+/** The select two fafields value. */
 const selectTwoFAFields = {
   id: true,
   email: true,
@@ -19,14 +23,17 @@ const selectTwoFAFields = {
   twoFactorEnabled: true,
 } as const
 
+/** Represents the artist two factor service. */
 @Injectable()
 export class ArtistTwoFactorService {
+  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
     private readonly config: ConfigService<AppConfig>,
   ) {}
 
+  /** Runs the setup two factor operation. */
   async setupTwoFactor(artistId: ArtistEntity['id']) {
     const artist = await this.prisma.artist.findUniqueOrThrow({
       where: { id: artistId },
@@ -47,6 +54,7 @@ export class ArtistTwoFactorService {
     return { qrCodeDataUrl, manualCode: secret }
   }
 
+  /** Runs the enable two factor operation. */
   async enableTwoFactor(artistId: ArtistEntity['id'], code: string) {
     const artist = await this.prisma.artist.findUniqueOrThrow({
       where: { id: artistId },
@@ -62,6 +70,7 @@ export class ArtistTwoFactorService {
     await this.prisma.artist.update({ where: { id: artistId }, data: { twoFactorEnabled: true } })
   }
 
+  /** Runs the disable two factor operation. */
   async disableTwoFactor(artistId: ArtistEntity['id'], code: string) {
     const artist = await this.prisma.artist.findUniqueOrThrow({
       where: { id: artistId },
@@ -80,6 +89,7 @@ export class ArtistTwoFactorService {
     })
   }
 
+  /** Runs the verify login code operation. */
   async verifyLoginCode(pendingToken: string, code: string) {
     let payload: TwoFAPendingPayload
     try {

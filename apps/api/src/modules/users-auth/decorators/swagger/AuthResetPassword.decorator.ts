@@ -3,6 +3,7 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger
 
 import { ResetPasswordDto } from '../../dtos'
 
+/** Runs the auth reset password swagger operation. */
 export function AuthResetPasswordSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Reset password using a one-time token' }),

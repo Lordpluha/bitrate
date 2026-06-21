@@ -2,14 +2,17 @@ import { Controller, Get } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import * as Sentry from '@sentry/nestjs'
 
+/** Represents the app controller. */
 @ApiTags('Welcome')
 @Controller()
 export class AppController {
+  /** Runs the get welcome operation. */
   @Get()
   getWelcome(): string {
     return `Welcome to ${process.env.npm_package_name}!`
   }
 
+  /** Runs the get health operation. */
   @Get('health')
   getHealth() {
     return {
@@ -22,6 +25,7 @@ export class AppController {
     }
   }
 
+  /** Runs the get error operation. */
   @Get('/debug-sentry')
   getError() {
     // Send a log before throwing the error

@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the unlike album swagger operation. */
 export function UnlikeAlbumSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Unlike an album' }),

@@ -3,6 +3,7 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger
 
 import { LoginDto } from '../../dtos'
 
+/** Runs the auth login swagger operation. */
 export function AuthLoginSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Artist login' }),

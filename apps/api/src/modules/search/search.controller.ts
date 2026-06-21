@@ -2,11 +2,13 @@ import { Controller, Get, ParseIntPipe, Query } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { SearchService, type SearchType } from './search.service'
 
+/** Represents the search controller. */
 @ApiTags('Search')
 @Controller('search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
+  /** Runs the search operation. */
   @ApiOperation({ summary: 'Full-text search across tracks, artists, albums and playlists' })
   @ApiQuery({ name: 'q', type: String, description: 'Search query' })
   @ApiQuery({

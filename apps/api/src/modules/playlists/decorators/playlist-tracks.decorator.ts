@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the add tracks to playlist swagger operation. */
 export function AddTracksToPlaylistSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Add tracks to a playlist' }),
@@ -11,6 +12,7 @@ export function AddTracksToPlaylistSwagger() {
   )
 }
 
+/** Runs the remove track from playlist swagger operation. */
 export function RemoveTrackFromPlaylistSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Remove a track from a playlist' }),
@@ -22,6 +24,7 @@ export function RemoveTrackFromPlaylistSwagger() {
   )
 }
 
+/** Runs the get my playlists swagger operation. */
 export function GetMyPlaylistsSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get playlists owned by the current user' }),

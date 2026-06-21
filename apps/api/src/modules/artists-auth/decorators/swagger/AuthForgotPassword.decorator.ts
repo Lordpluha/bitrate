@@ -3,6 +3,7 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger
 
 import { ForgotPasswordDto } from '../../dtos'
 
+/** Runs the auth forgot password swagger operation. */
 export function AuthForgotPasswordSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Send artist password reset email' }),

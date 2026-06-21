@@ -15,6 +15,7 @@ import cookieParser from 'cookie-parser'
 import { envSchema } from '../../env.schema'
 import { AppController } from '../../src/app.controller'
 
+/** Represents the e2e test module. */
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -41,6 +42,7 @@ import { AppController } from '../../src/app.controller'
 })
 class E2eTestModule {}
 
+/** The create e2e app value. */
 export const createE2eApp = async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [E2eTestModule],
@@ -55,7 +57,16 @@ export const createE2eApp = async () => {
   return { app, prisma }
 }
 
+/** The close e2e app value. */
 export const closeE2eApp = async (app?: INestApplication) => {
   if (!app) return
   await app.close()
+}
+
+/** Returns the response cookies after validating the header value. */
+export const getResponseCookies = (value: unknown): string[] => {
+  if (typeof value === 'string') return [value]
+  if (Array.isArray(value) && value.every((cookie) => typeof cookie === 'string')) return value
+
+  throw new Error('Response did not include valid set-cookie headers')
 }

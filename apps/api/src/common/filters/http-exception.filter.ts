@@ -8,8 +8,10 @@ import {
 import { SentryExceptionCaptured } from '@sentry/nestjs'
 import type { Request, Response } from 'express'
 
+/** Represents the http exception filter. */
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
+  /** Runs the catch operation. */
   @SentryExceptionCaptured()
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp()

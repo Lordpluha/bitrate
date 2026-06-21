@@ -1,5 +1,6 @@
 import type { TrackEntity } from '../../entities'
 
+/** The build track value. */
 export const buildTrack = (overrides: Partial<TrackEntity> = {}): TrackEntity => ({
   id: 'track-1',
   title: 'Track title',
@@ -19,6 +20,7 @@ export const buildTrack = (overrides: Partial<TrackEntity> = {}): TrackEntity =>
   ...overrides,
 })
 
+/** The build audio file value. */
 export const buildAudioFile = (overrides: Partial<Express.Multer.File> = {}): Express.Multer.File =>
   ({
     fieldname: 'audio',

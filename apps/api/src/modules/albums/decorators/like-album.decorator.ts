@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the like album swagger operation. */
 export function LikeAlbumSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Like an album' }),

@@ -5,25 +5,41 @@ import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Inject, Logger } from '@nestjs/common'
 import type { Job } from 'bullmq'
 
+/** Describes the convert audio job. */
 interface ConvertAudioJob {
+  /** The track id value. */
   trackId: string
+  /** The artist id value. */
   artistId: string
+  /** The source file name value. */
   sourceFileName: string
+  /** The input path value. */
   inputPath: string
+  /** The output dir value. */
   outputDir: string
+  /** The format value. */
   format: string
+  /** The bitrates value. */
   bitrates: string[]
 }
 
+/** Describes the prepared variant. */
 interface PreparedVariant {
+  /** The bitrate value. */
   bitrate: number
+  /** The codec value. */
   codec: string | null
+  /** The output filename value. */
   outputFilename: string
+  /** The temporary audio path value. */
   temporaryAudioPath: string
+  /** The temporary hls path value. */
   temporaryHlsPath: string
+  /** The size value. */
   size: number
 }
 
+/** Represents the audio processing consumer. */
 @Processor('audio-processing', {
   concurrency: 2,
   lockDuration: 600_000,
@@ -31,6 +47,7 @@ interface PreparedVariant {
   maxStalledCount: 2,
 })
 export class AudioProcessingConsumer extends WorkerHost {
+  /** Creates a new instance. */
   constructor(
     @Inject(PrismaServiceModule.PrismaService)
     private readonly prisma: PrismaServiceModule.PrismaService,
@@ -38,8 +55,10 @@ export class AudioProcessingConsumer extends WorkerHost {
     super()
   }
 
+  /** The logger value. */
   private readonly logger = new Logger(AudioProcessingConsumer.name, { timestamp: true })
 
+  /** Runs the process operation. */
   async process(job: Job<ConvertAudioJob>) {
     if (job.name !== 'convert-audio') return
 
@@ -138,6 +157,7 @@ export class AudioProcessingConsumer extends WorkerHost {
     }
   }
 
+  /** Runs the on failed operation. */
   @OnWorkerEvent('failed')
   async onFailed(job: Job<ConvertAudioJob> | undefined, error: Error) {
     if (job?.name !== 'convert-audio') return
@@ -162,11 +182,13 @@ export class AudioProcessingConsumer extends WorkerHost {
     )
   }
 
+  /** Runs the on stalled operation. */
   @OnWorkerEvent('stalled')
   onStalled(jobId: string) {
     this.logger.warn(`Audio conversion job ${jobId} stalled and will be recovered by BullMQ`)
   }
 
+  /** Runs the prepare variants operation. */
   private async prepareVariants(job: Job<ConvertAudioJob>, temporaryRoot: string) {
     const { inputPath, format, bitrates } = job.data
     const { name: baseName } = parse(inputPath)
@@ -216,6 +238,7 @@ export class AudioProcessingConsumer extends WorkerHost {
     return prepared
   }
 
+  /** Runs the validate variant operation. */
   private async validateVariant(audioPath: string, hlsPath: string) {
     const audioStats = await stat(audioPath)
     if (audioStats.size <= 0) throw new Error(`Converted audio file is empty: ${audioPath}`)
@@ -228,6 +251,7 @@ export class AudioProcessingConsumer extends WorkerHost {
     }
   }
 
+  /** Runs the publish variants operation. */
   private async publishVariants(outputDir: string, variants: PreparedVariant[], jobId: string) {
     await mkdir(outputDir, { recursive: true })
 
@@ -259,6 +283,7 @@ export class AudioProcessingConsumer extends WorkerHost {
     }
   }
 
+  /** Runs the cleanup orphaned temporary dirs operation. */
   private async cleanupOrphanedTemporaryDirs(
     processingRoot: string,
     trackId: string,
@@ -276,6 +301,7 @@ export class AudioProcessingConsumer extends WorkerHost {
       if (!this.isMissingFileError(error)) throw error
     }
   }
+  /** Runs the mark attempt failed operation. */
   private async markAttemptFailed(job: Job<ConvertAudioJob>, message: string) {
     const track = await this.prisma.track.findUnique({ where: { id: job.data.trackId } })
     if (!track || track.audioUrl !== job.data.sourceFileName) return
@@ -286,6 +312,7 @@ export class AudioProcessingConsumer extends WorkerHost {
     })
   }
 
+  /** Runs the is missing file error operation. */
   private isMissingFileError(error: unknown): error is NodeJS.ErrnoException {
     return error instanceof Error && 'code' in error && error.code === 'ENOENT'
   }

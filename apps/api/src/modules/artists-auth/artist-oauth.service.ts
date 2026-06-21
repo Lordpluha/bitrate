@@ -10,24 +10,32 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { TokenService } from '../tokens/token.service'
 
+/** Describes the oauth profile. */
 interface OAuthProfile {
+  /** The id value. */
   id: string
+  /** The email value. */
   email: string
+  /** The name value. */
   name: string
 }
 
+/** Represents the artist oauth service. */
 @Injectable()
 export class ArtistOAuthService {
+  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     private readonly token: TokenService,
     private readonly config: ConfigService<AppConfig>,
   ) {}
 
+  /** Runs the generate state operation. */
   generateState(): string {
     return randomBytes(32).toString('hex')
   }
 
+  /** Runs the get google auth url operation. */
   getGoogleAuthUrl(state: string): string {
     const clientId = this.config.get('OAUTH_GOOGLE_CLIENT_ID')
     if (!clientId) throw new InternalServerErrorException('Google OAuth is not configured')
@@ -42,11 +50,13 @@ export class ArtistOAuthService {
     return `https://accounts.google.com/o/oauth2/v2/auth?${params}`
   }
 
+  /** Runs the handle google callback operation. */
   async handleGoogleCallback(code: string) {
     const profile = await this.exchangeGoogleCode(code)
     return this.findOrCreateArtistAndLogin('google', profile)
   }
 
+  /** Runs the get facebook auth url operation. */
   getFacebookAuthUrl(state: string): string {
     const appId = this.config.get('OAUTH_FACEBOOK_APP_ID')
     if (!appId) throw new InternalServerErrorException('Facebook OAuth is not configured')
@@ -60,16 +70,19 @@ export class ArtistOAuthService {
     return `https://www.facebook.com/v19.0/dialog/oauth?${params}`
   }
 
+  /** Runs the handle facebook callback operation. */
   async handleFacebookCallback(code: string) {
     const profile = await this.exchangeFacebookCode(code)
     return this.findOrCreateArtistAndLogin('facebook', profile)
   }
 
+  /** Runs the build redirect uri operation. */
   private buildRedirectUri(provider: 'google' | 'facebook'): string {
     const base = this.config.get('API_BASE_URL') ?? 'http://localhost:3000'
     return `${base}/artists/auth/oauth/${provider}/callback`
   }
 
+  /** Runs the exchange google code operation. */
   private async exchangeGoogleCode(code: string): Promise<OAuthProfile> {
     const clientId = this.config.get('OAUTH_GOOGLE_CLIENT_ID')!
     const clientSecret = this.config.get('OAUTH_GOOGLE_CLIENT_SECRET')!
@@ -108,6 +121,7 @@ export class ArtistOAuthService {
     return { id: profile.id, email: profile.email, name: profile.name }
   }
 
+  /** Runs the exchange facebook code operation. */
   private async exchangeFacebookCode(code: string): Promise<OAuthProfile> {
     const appId = this.config.get('OAUTH_FACEBOOK_APP_ID')!
     const appSecret = this.config.get('OAUTH_FACEBOOK_APP_SECRET')!
@@ -131,6 +145,7 @@ export class ArtistOAuthService {
     return { id: profile.id, email: profile.email, name: profile.name }
   }
 
+  /** Runs the find or create artist and login operation. */
   private async findOrCreateArtistAndLogin(provider: string, profile: OAuthProfile) {
     const existing = await this.prisma.artistOAuthAccount.findUnique({
       where: { provider_providerAccountId: { provider, providerAccountId: profile.id } },
@@ -163,6 +178,7 @@ export class ArtistOAuthService {
     return this.sessionOrPending(artist)
   }
 
+  /** Runs the session or pending operation. */
   private async sessionOrPending(artist: {
     id: string
     username: string
@@ -175,6 +191,7 @@ export class ArtistOAuthService {
     return this.createSession(artist)
   }
 
+  /** Runs the create session operation. */
   private async createSession(artist: { id: string; username: string }) {
     const access_token = await this.token.generateAccessToken(artist.id, artist.username)
     const refresh_token = await this.token.generateRefreshToken(artist.id, artist.username)
@@ -190,6 +207,7 @@ export class ArtistOAuthService {
     return { access_token, refresh_token }
   }
 
+  /** Runs the generate unique username operation. */
   private async generateUniqueUsername(name: string): Promise<string> {
     const base = name
       .toLowerCase()

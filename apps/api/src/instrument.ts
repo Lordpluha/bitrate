@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/nestjs'
 import { nodeProfilingIntegration } from '@sentry/profiling-node'
 
+/** The is prod value. */
 const isProd = process.env.NODE_ENV === 'production'
 
 Sentry.init({

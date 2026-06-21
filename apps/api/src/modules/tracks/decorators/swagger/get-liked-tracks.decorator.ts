@@ -2,6 +2,7 @@ import type { TrackEntity } from '@modules/tracks'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the tracks get liked swagger operation. */
 export function TracksGetLikedSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get liked user tracks with pagination' }),

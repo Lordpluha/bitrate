@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+/** The env schema value. */
 export const envSchema = z.object({
   NODE_ENV: z.enum(['local', 'development', 'production', 'test']).default('local'),
   PORT: z.coerce.number().default(3000),
@@ -44,4 +45,5 @@ export const envSchema = z.object({
   // POSTFIX_PASS: z.string(),
 })
 
+/** Defines the env type. */
 export type envType = z.infer<typeof envSchema>

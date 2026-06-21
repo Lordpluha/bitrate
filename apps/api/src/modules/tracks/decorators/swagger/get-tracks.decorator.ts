@@ -2,6 +2,7 @@ import type { TrackEntity } from '@modules/tracks'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the tracks get all swagger operation. */
 export function TracksGetAllSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get all tracks with pagination' }),

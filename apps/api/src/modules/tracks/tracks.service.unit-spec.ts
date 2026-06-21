@@ -1,3 +1,4 @@
+import type { CacheService } from '@infra/cache/cache.service'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
 import type { ConfigService } from '@nestjs/config'
@@ -18,6 +19,15 @@ const makeConfigMock = () =>
       getTracksDir: (filename?: string) => (filename ? `/storage/${filename}` : '/storage'),
     }),
   }) as unknown as jest.Mocked<ConfigService>
+
+const makeCacheMock = () =>
+  ({
+    get: jest.fn().mockResolvedValue(null as never),
+    set: jest.fn().mockResolvedValue(undefined as never),
+    del: jest.fn().mockResolvedValue(undefined as never),
+    invalidate: jest.fn().mockResolvedValue(undefined as never),
+    wrap: jest.fn().mockImplementation((...args: unknown[]) => (args[3] as () => unknown)()),
+  }) as unknown as CacheService
 
 jest.mock(
   'music-metadata',
@@ -53,7 +63,7 @@ describe('TracksService', () => {
     prisma = prismaMock
     queue = makeQueueMock()
     config = makeConfigMock()
-    service = new TracksService(prisma, queue, config)
+    service = new TracksService(prisma, queue, config, makeCacheMock())
   })
 
   describe('findAll', () => {

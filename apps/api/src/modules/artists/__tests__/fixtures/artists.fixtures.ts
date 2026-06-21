@@ -1,5 +1,6 @@
 import type { ArtistEntity } from '../../entities'
 
+/** The build artist value. */
 export const buildArtist = (overrides: Partial<ArtistEntity> = {}): ArtistEntity => ({
   id: 'artist-1',
   username: 'artist',

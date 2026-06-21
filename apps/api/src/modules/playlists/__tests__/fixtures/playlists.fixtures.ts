@@ -2,9 +2,12 @@ import type { UserEntity } from '@modules/users'
 import type { PlaylistEntity } from '../../entities'
 import type { PlaylistsService } from '../../playlists.service'
 
+/** Defines the find all result. */
 export type FindAllResult = Awaited<ReturnType<PlaylistsService['getAll']>>
+/** Defines the get by id result. */
 export type GetByIdResult = Awaited<ReturnType<PlaylistsService['getByIdPopulated']>>
 
+/** The build playlist value. */
 export const buildPlaylist = (overrides: Partial<PlaylistEntity> = {}): PlaylistEntity => ({
   id: 'playlist-1',
   title: 'My Playlist',
@@ -17,6 +20,7 @@ export const buildPlaylist = (overrides: Partial<PlaylistEntity> = {}): Playlist
   ...overrides,
 })
 
+/** The build user value. */
 export const buildUser = (overrides: Partial<UserEntity> = {}): UserEntity => ({
   id: 'user-1',
   username: 'user',
@@ -31,6 +35,7 @@ export const buildUser = (overrides: Partial<UserEntity> = {}): UserEntity => ({
   ...overrides,
 })
 
+/** The build playlist with user value. */
 export const buildPlaylistWithUser = (overrides: Partial<FindAllResult[number]> = {}) => ({
   ...buildPlaylist(),
   user: {
@@ -40,6 +45,7 @@ export const buildPlaylistWithUser = (overrides: Partial<FindAllResult[number]> 
   ...overrides,
 })
 
+/** The build playlist with tracks value. */
 export const buildPlaylistWithTracks = (overrides: Partial<GetByIdResult> = {}): GetByIdResult => ({
   ...buildPlaylist(),
   tracks: [],

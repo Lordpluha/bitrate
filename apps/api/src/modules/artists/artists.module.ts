@@ -1,3 +1,4 @@
+import { CacheModule } from '@infra/cache/cache.module'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { ArtistsPrivateService } from '@modules/artists/artists.private.service'
 import { TokensModule } from '@modules/tokens/tokens.module'
@@ -8,7 +9,7 @@ import { ArtistsService } from './artists.service'
 @Module({
   controllers: [ArtistsController],
   providers: [ArtistsService, ArtistsPrivateService],
-  imports: [PrismaModule, TokensModule],
+  imports: [PrismaModule, CacheModule, TokensModule],
   exports: [ArtistsService, ArtistsPrivateService],
 })
 export class ArtistsModule {}

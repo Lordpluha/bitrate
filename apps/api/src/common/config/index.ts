@@ -5,8 +5,10 @@ import { cookieConfig } from './cookie.config'
 import { mailConfig } from './mail.config'
 import { storageConfigFactory } from './storage.config'
 
+/** The app configs value. */
 export const appConfigs = [cookieConfig, storageConfigFactory, connectionsConfig, mailConfig]
 
+/** Defines the app config. */
 export type AppConfig = envType & {
   [cookieConfig.KEY]: ConfigType<typeof cookieConfig>
   [connectionsConfig.KEY]: ConfigType<typeof connectionsConfig>

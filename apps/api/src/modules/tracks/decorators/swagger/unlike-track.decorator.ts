@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the unlike track swagger operation. */
 export function UnlikeTrackSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Unlike a track' }),

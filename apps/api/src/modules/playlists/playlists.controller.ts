@@ -33,18 +33,21 @@ import { type UpdatePlaylistDto, UpdatePlaylistSchema } from './dtos/update-play
 import { PlaylistEntity } from './entities'
 import { PlaylistsService } from './playlists.service'
 
+/** Represents the playlists controller. */
 @ApiExtraModels(PlaylistEntity, TrackEntity)
 @ApiTags('Playlists')
 @Controller('playlists')
 export class PlaylistsController {
   constructor(private playlistService: PlaylistsService) {}
 
+  /** Runs the get all operation. */
   @GetPlaylistsSwagger()
   @Get('')
   async getAll(@Query('page') page?: number, @Query('limit') limit?: number) {
     return await this.playlistService.getAll({ limit, page })
   }
 
+  /** Runs the get mine operation. */
   @GetMyPlaylistsSwagger()
   @UserAuth()
   @Get('me')
@@ -52,12 +55,14 @@ export class PlaylistsController {
     return await this.playlistService.getMine(req.user.id)
   }
 
+  /** Runs the get by id operation. */
   @GetPlaylistByIdSwagger()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: PlaylistEntity['id']) {
     return await this.playlistService.getByIdPopulated(id)
   }
 
+  /** Runs the post operation. */
   @CreatePlaylistSwagger()
   @UserAuth()
   @Post('')
@@ -68,6 +73,7 @@ export class PlaylistsController {
     return await this.playlistService.create(req.user.id, playlistDto)
   }
 
+  /** Runs the update operation. */
   @UpdatePlaylistSwagger()
   @UserAuth()
   @Put(':id')
@@ -79,6 +85,7 @@ export class PlaylistsController {
     return await this.playlistService.update(req.user.id, id, updateDto)
   }
 
+  /** Runs the delete playlist operation. */
   @DeletePlaylistSwagger()
   @UserAuth()
   @HttpCode(200)
@@ -90,6 +97,7 @@ export class PlaylistsController {
     return await this.playlistService.delete(req.user.id, id)
   }
 
+  /** Runs the add tracks operation. */
   @AddTracksToPlaylistSwagger()
   @UserAuth()
   @Post(':id/tracks')
@@ -101,6 +109,7 @@ export class PlaylistsController {
     return await this.playlistService.addTracks(req.user.id, id, dto)
   }
 
+  /** Runs the remove track operation. */
   @RemoveTrackFromPlaylistSwagger()
   @UserAuth()
   @HttpCode(200)
@@ -113,6 +122,7 @@ export class PlaylistsController {
     return await this.playlistService.removeTrack(req.user.id, id, trackId)
   }
 
+  /** Runs the like playlist operation. */
   @LikePlaylistSwagger()
   @UserAuth()
   @Post(':id/like')
@@ -120,6 +130,7 @@ export class PlaylistsController {
     return this.playlistService.like(req.user.id, id)
   }
 
+  /** Runs the unlike playlist operation. */
   @UnlikePlaylistSwagger()
   @UserAuth()
   @HttpCode(200)

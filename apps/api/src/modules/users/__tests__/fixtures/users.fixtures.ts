@@ -1,5 +1,6 @@
 import type { UserEntity } from '../../entities'
 
+/** The build user value. */
 export const buildUser = (overrides: Partial<UserEntity> = {}): UserEntity => ({
   id: 'user-1',
   username: 'user',

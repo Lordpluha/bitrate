@@ -1,5 +1,6 @@
 import type { UserSessionEntity } from '../../entities'
 
+/** The build user session value. */
 export const buildUserSession = (
   overrides: Partial<UserSessionEntity> = {},
 ): UserSessionEntity => ({

@@ -3,12 +3,16 @@ import { WsException } from '@nestjs/websockets'
 import { Socket } from 'socket.io'
 import { TokenService } from '../tokens/token.service'
 
+/** Represents the ws user auth guard. */
 @Injectable()
 export class WsUserAuthGuard implements CanActivate {
+  /** The logger value. */
   private readonly logger = new Logger(WsUserAuthGuard.name, { timestamp: true })
 
+  /** Creates a new instance. */
   constructor(private tokenService: TokenService) {}
 
+  /** Runs the can activate operation. */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
       const client = context.switchToWs().getClient<
@@ -38,6 +42,7 @@ export class WsUserAuthGuard implements CanActivate {
       throw new WsException('Unauthorized')
     }
   }
+  /** Runs the extract token from client operation. */
   private extractTokenFromClient(client: Socket): string | null {
     // Проверяем ТОЛЬКО httpOnly cookies
     const cookieHeader = client.handshake.headers.cookie

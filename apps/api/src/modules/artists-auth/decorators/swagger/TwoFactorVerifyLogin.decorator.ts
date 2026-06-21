@@ -3,6 +3,7 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger
 
 import { TwoFactorVerifyLoginDto } from '../../dtos'
 
+/** Runs the two factor verify login swagger operation. */
 export function TwoFactorVerifyLoginSwagger() {
   return applyDecorators(
     ApiOperation({

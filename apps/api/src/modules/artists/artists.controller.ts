@@ -33,12 +33,14 @@ import type { UpdateArtistDto } from './dtos'
 import { UpdateArtistSchema } from './dtos'
 import { ArtistEntity, SafeArtistEntity } from './entities'
 
+/** Represents the artists controller. */
 @ApiTags('Artists')
 @ApiExtraModels(ArtistEntity, SafeArtistEntity)
 @Controller('artists')
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
+  /** Runs the get all operation. */
   @GetArtistsSwagger()
   @Get('')
   async getAll(
@@ -53,18 +55,21 @@ export class ArtistsController {
     })
   }
 
+  /** Runs the get by id operation. */
   @GetArtistByIdSwagger()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: ArtistEntity['id']) {
     return await this.artistsService.findById(id)
   }
 
+  /** Runs the get by username operation. */
   @GetArtistByUsernameSwagger()
   @Get('username/:username')
   getByUsername(@Param('username') username: ArtistEntity['username']) {
     return this.artistsService.findByUsername(username)
   }
 
+  /** Runs the update profile operation. */
   @UpdateArtistSwagger()
   @ArtistAuth()
   @Put(':id')
@@ -77,6 +82,7 @@ export class ArtistsController {
     return this.artistsService.update(id, artist, artistId)
   }
 
+  /** Runs the delete profile operation. */
   @DeleteArtistSwagger()
   @ArtistAuth()
   @Delete(':id')
@@ -85,6 +91,7 @@ export class ArtistsController {
     return this.artistsService.requestDelete(id, artistId)
   }
 
+  /** Runs the get following operation. */
   @GetFollowingSwagger()
   @UserAuth()
   @Get('me/following')
@@ -96,6 +103,7 @@ export class ArtistsController {
     return this.artistsService.getFollowing(req.user.id, page, limit)
   }
 
+  /** Runs the follow operation. */
   @FollowArtistSwagger()
   @UserAuth()
   @Post(':id/follow')
@@ -103,6 +111,7 @@ export class ArtistsController {
     return this.artistsService.follow(req.user.id, id)
   }
 
+  /** Runs the unfollow operation. */
   @UnfollowArtistSwagger()
   @UserAuth()
   @HttpCode(200)

@@ -2,6 +2,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import type { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
 
+/** The track select value. */
 const TRACK_SELECT = {
   id: true,
   title: true,
@@ -11,10 +12,13 @@ const TRACK_SELECT = {
   artist: { select: { id: true, username: true, avatar: true } },
 } as const
 
+/** Represents the history service. */
 @Injectable()
 export class HistoryService {
+  /** Creates a new instance. */
   constructor(private readonly prisma: PrismaService) {}
 
+  /** Runs the record operation. */
   async record(userId: UserEntity['id'], trackId: string) {
     return await this.prisma.listeningHistory.create({
       data: { userId, trackId },
@@ -22,6 +26,7 @@ export class HistoryService {
     })
   }
 
+  /** Runs the get history operation. */
   async getHistory(userId: UserEntity['id'], page = 1, limit = 20) {
     const skip = (page - 1) * limit
 
@@ -47,10 +52,12 @@ export class HistoryService {
     })
   }
 
+  /** Runs the clear all operation. */
   async clearAll(userId: UserEntity['id']) {
     await this.prisma.listeningHistory.deleteMany({ where: { userId } })
   }
 
+  /** Runs the remove track operation. */
   async removeTrack(userId: UserEntity['id'], trackId: string) {
     await this.prisma.listeningHistory.deleteMany({ where: { userId, trackId } })
   }

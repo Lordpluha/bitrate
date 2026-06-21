@@ -1,8 +1,18 @@
-import { beforeEach, describe, expect, it } from '@jest/globals'
+import type { CacheService } from '@infra/cache/cache.service'
+import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildAlbum, buildArtist } from './__tests__/fixtures/albums.fixtures'
 import { AlbumsService } from './albums.service'
+
+const makeCacheMock = () =>
+  ({
+    get: jest.fn().mockResolvedValue(null as never),
+    set: jest.fn().mockResolvedValue(undefined as never),
+    del: jest.fn().mockResolvedValue(undefined as never),
+    invalidate: jest.fn().mockResolvedValue(undefined as never),
+    wrap: jest.fn().mockImplementation((...args: unknown[]) => (args[3] as () => unknown)()),
+  }) as unknown as CacheService
 
 type AlbumModel = Awaited<ReturnType<PrismaMock['album']['create']>>
 type AlbumWithTracks = AlbumModel & { tracks: unknown[] }
@@ -20,7 +30,7 @@ describe('AlbumsService', () => {
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
-    service = new AlbumsService(prisma)
+    service = new AlbumsService(prisma, makeCacheMock())
   })
 
   it('findAll should use pagination and title filter', async () => {

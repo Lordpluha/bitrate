@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the like playlist swagger operation. */
 export function LikePlaylistSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Like a playlist' }),

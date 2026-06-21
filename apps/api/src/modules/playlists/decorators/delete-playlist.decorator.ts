@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the delete playlist swagger operation. */
 export function DeletePlaylistSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Delete a playlist' }),

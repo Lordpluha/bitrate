@@ -31,12 +31,14 @@ import {
 import { CreateAlbumDto, CreateAlbumSchema, UpdateAlbumDto, UpdateAlbumSchema } from './dtos'
 import { AlbumEntity } from './entities'
 
+/** Represents the albums controller. */
 @ApiExtraModels(AlbumEntity)
 @ApiTags('Albums')
 @Controller('albums')
 export class AlbumsController {
   constructor(private albumsService: AlbumsService) {}
 
+  /** Runs the get all albums operation. */
   @GetAlbumsSwagger()
   @Get('')
   async getAllAlbums(
@@ -51,12 +53,14 @@ export class AlbumsController {
     })
   }
 
+  /** Runs the get by id operation. */
   @GetAlbumByIdSwagger()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: AlbumEntity['id']) {
     return await this.albumsService.getById(id)
   }
 
+  /** Runs the create album operation. */
   @CreateAlbumSwagger()
   @ArtistAuth()
   @Post('')
@@ -68,6 +72,7 @@ export class AlbumsController {
     return await this.albumsService.create(artistId, createDto)
   }
 
+  /** Runs the update album operation. */
   @UpdateAlbumByIdSwagger()
   @ArtistAuth()
   @Put(':id')
@@ -80,6 +85,7 @@ export class AlbumsController {
     return await this.albumsService.update(artistId, id, updateDto)
   }
 
+  /** Runs the delete album operation. */
   @DeleteAlbumSwagger()
   @ArtistAuth()
   @Delete(':id')
@@ -91,6 +97,7 @@ export class AlbumsController {
     return await this.albumsService.delete(artistId, id)
   }
 
+  /** Runs the like album operation. */
   @LikeAlbumSwagger()
   @UserAuth()
   @Post(':id/like')
@@ -98,6 +105,7 @@ export class AlbumsController {
     return this.albumsService.like(req.user.id, id)
   }
 
+  /** Runs the unlike album operation. */
   @UnlikeAlbumSwagger()
   @UserAuth()
   @HttpCode(200)

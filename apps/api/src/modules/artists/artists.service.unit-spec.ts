@@ -1,8 +1,18 @@
-import { beforeEach, describe, expect, it } from '@jest/globals'
+import type { CacheService } from '@infra/cache/cache.service'
+import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { UnauthorizedException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtist } from './__tests__/fixtures/artists.fixtures'
 import { ArtistsService } from './artists.service'
+
+const makeCacheMock = () =>
+  ({
+    get: jest.fn().mockResolvedValue(null as never),
+    set: jest.fn().mockResolvedValue(undefined as never),
+    del: jest.fn().mockResolvedValue(undefined as never),
+    invalidate: jest.fn().mockResolvedValue(undefined as never),
+    wrap: jest.fn().mockImplementation((...args: unknown[]) => (args[3] as () => unknown)()),
+  }) as unknown as CacheService
 
 describe('ArtistsService', () => {
   let service: ArtistsService
@@ -11,7 +21,7 @@ describe('ArtistsService', () => {
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
-    service = new ArtistsService(prisma)
+    service = new ArtistsService(prisma, makeCacheMock())
   })
 
   it('register should create artist omitting password', async () => {

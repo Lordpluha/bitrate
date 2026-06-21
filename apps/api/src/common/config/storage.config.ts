@@ -1,6 +1,7 @@
 import { join } from 'node:path'
 import { registerAs } from '@nestjs/config'
 
+/** The storage config factory value. */
 export const storageConfigFactory = registerAs('storage', () => ({
   publicPath: join(process.cwd(), 'storage', 'public'),
   privatePath: join(process.cwd(), 'storage', 'private'),

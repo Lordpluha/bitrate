@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the two factor setup swagger operation. */
 export function TwoFactorSetupSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Start 2FA enrollment — returns QR code and manual secret' }),

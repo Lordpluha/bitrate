@@ -42,12 +42,14 @@ import { type CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
 import { TrackEntity } from './entities'
 import { TracksService } from './tracks.service'
 
+/** Represents the tracks controller. */
 @ApiExtraModels(TrackEntity)
 @ApiTags('Tracks')
 @Controller('tracks')
 export class TracksController {
   constructor(private tracksService: TracksService) {}
 
+  /** Runs the get all operation. */
   @TracksGetAllSwagger()
   @Get('')
   getAll(
@@ -62,6 +64,7 @@ export class TracksController {
     })
   }
 
+  /** Runs the get hls master playlist operation. */
   @UserAuth()
   @Get('stream/:id/hls/master.m3u8')
   async getHlsMasterPlaylist(
@@ -76,6 +79,7 @@ export class TracksController {
     return res.send(playlist)
   }
 
+  /** Runs the get hls asset operation. */
   @UserAuth()
   @Get('stream/:id/hls/:bitrate/:asset')
   async getHlsAsset(
@@ -95,6 +99,7 @@ export class TracksController {
     return data.stream.pipe(res)
   }
 
+  /** Runs the stream track operation. */
   @StreamTrackSwagger()
   @UserAuth()
   @Get('stream/:id')
@@ -126,6 +131,7 @@ export class TracksController {
     return streamData.stream.pipe(res)
   }
 
+  /** Runs the post track operation. */
   @PostTrackSwagger()
   @ArtistAuth()
   @Post('')
@@ -183,6 +189,7 @@ export class TracksController {
     return this.tracksService.create(artist.id, createTrackDto, audioFile, coverFile)
   }
 
+  /** Runs the put track operation. */
   @UpdateTrackByIdSwagger()
   @ArtistAuth()
   @Put(':id')
@@ -235,6 +242,7 @@ export class TracksController {
     return this.tracksService.update(id, createTrackDto, audioFile, coverFile)
   }
 
+  /** Runs the get liked tracks operation. */
   @TracksGetLikedSwagger()
   @UserAuth()
   @Get('liked')
@@ -250,12 +258,14 @@ export class TracksController {
     })
   }
 
+  /** Runs the get by id operation. */
   @GetTrackByIdSwagger()
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
     return this.tracksService.findTrackById(id)
   }
 
+  /** Runs the like track operation. */
   @LikeTrackSwagger()
   @UserAuth()
   @Post(':id/like')
@@ -263,6 +273,7 @@ export class TracksController {
     return this.tracksService.like(req.user.id, id)
   }
 
+  /** Runs the unlike track operation. */
   @UnlikeTrackSwagger()
   @UserAuth()
   @HttpCode(200)

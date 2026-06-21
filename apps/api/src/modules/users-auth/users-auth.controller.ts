@@ -43,6 +43,7 @@ import type { UserAuthRequest } from './types'
 import { UserAuthService } from './user-auth.service'
 import { UserAuth } from './users-auth.guard'
 
+/** Represents the users auth controller. */
 @ApiExtraModels(UserSessionEntity)
 @ApiTags('Users Auth')
 @Controller('auth')
@@ -55,6 +56,7 @@ export class UsersAuthController {
     private tokenService: TokenService,
   ) {}
 
+  /** Runs the login operation. */
   @AuthLoginSwagger()
   @Post('login')
   async login(
@@ -68,6 +70,7 @@ export class UsersAuthController {
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
   }
 
+  /** Runs the registration operation. */
   @AuthRegistrationSwagger()
   @Post('registration')
   async registration(
@@ -77,6 +80,7 @@ export class UsersAuthController {
     await this.authService.registerUser(registrationDto)
   }
 
+  /** Runs the logout operation. */
   @AuthLogoutSwagger()
   @UserAuth()
   @Post('logout')
@@ -87,6 +91,7 @@ export class UsersAuthController {
     this.tokenService.clearAuthCookies(res)
   }
 
+  /** Runs the refresh operation. */
   @AuthRefreshSwagger()
   @UserAuth('refresh')
   @Post('refresh')
@@ -96,6 +101,7 @@ export class UsersAuthController {
     this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
+  /** Runs the get me operation. */
   @AuthMeSwagger()
   @UserAuth()
   @Get('me')
@@ -104,6 +110,7 @@ export class UsersAuthController {
     return await this.userService.findById(user.id)
   }
 
+  /** Runs the forgot password operation. */
   @AuthForgotPasswordSwagger()
   @HttpCode(200)
   @Post('forgot-password')
@@ -111,6 +118,7 @@ export class UsersAuthController {
     await this.authService.forgotPassword(dto.email)
   }
 
+  /** Runs the reset password operation. */
   @AuthResetPasswordSwagger()
   @HttpCode(200)
   @Post('reset-password')
@@ -118,6 +126,7 @@ export class UsersAuthController {
     await this.authService.resetPassword(dto.token, dto.password)
   }
 
+  /** Runs the two factor setup operation. */
   @TwoFactorSetupSwagger()
   @UserAuth()
   @Post('2fa/setup')
@@ -125,6 +134,7 @@ export class UsersAuthController {
     return await this.twoFactorService.setupTwoFactor(req.user.id)
   }
 
+  /** Runs the two factor enable operation. */
   @TwoFactorEnableSwagger()
   @UserAuth()
   @HttpCode(200)
@@ -136,6 +146,7 @@ export class UsersAuthController {
     await this.twoFactorService.enableTwoFactor(req.user.id, dto.code)
   }
 
+  /** Runs the two factor disable operation. */
   @TwoFactorDisableSwagger()
   @UserAuth()
   @HttpCode(200)
@@ -147,6 +158,7 @@ export class UsersAuthController {
     await this.twoFactorService.disableTwoFactor(req.user.id, dto.code)
   }
 
+  /** Runs the two factor verify login operation. */
   @TwoFactorVerifyLoginSwagger()
   @HttpCode(200)
   @Post('2fa/verify-login')
@@ -159,6 +171,7 @@ export class UsersAuthController {
     this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
+  /** Runs the google auth operation. */
   @OAuthGoogleSwagger()
   @Get('oauth/google')
   googleAuth(@Res() res: Response) {
@@ -167,6 +180,7 @@ export class UsersAuthController {
     return res.redirect(this.oauthService.getGoogleAuthUrl(state))
   }
 
+  /** Runs the google callback operation. */
   @OAuthGoogleCallbackSwagger()
   @Get('oauth/google/callback')
   async googleCallback(
@@ -183,6 +197,7 @@ export class UsersAuthController {
     return this.handleOAuthResult(result, res)
   }
 
+  /** Runs the facebook auth operation. */
   @OAuthFacebookSwagger()
   @Get('oauth/facebook')
   facebookAuth(@Res() res: Response) {
@@ -191,6 +206,7 @@ export class UsersAuthController {
     return res.redirect(this.oauthService.getFacebookAuthUrl(state))
   }
 
+  /** Runs the facebook callback operation. */
   @OAuthFacebookCallbackSwagger()
   @Get('oauth/facebook/callback')
   async facebookCallback(
@@ -207,6 +223,7 @@ export class UsersAuthController {
     return this.handleOAuthResult(result, res)
   }
 
+  /** Runs the handle oauth result operation. */
   private handleOAuthResult(
     result:
       | { access_token: string; refresh_token: string }

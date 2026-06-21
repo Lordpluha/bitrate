@@ -1,6 +1,8 @@
 import { createReadStream, promises as fs } from 'node:fs'
 import { extname } from 'node:path'
 import type { AppConfig } from '@common/config'
+import { NS, TTL } from '@infra/cache/cache.constants'
+import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { ArtistEntity } from '@modules/artists'
 import type { UserEntity } from '@modules/users'
@@ -13,18 +15,27 @@ import { parseFile } from 'music-metadata'
 import type { CreateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
 
+/** Supported output bitrates for HLS transcoding (kbps). */
 const TARGET_AUDIO_BITRATES = [128, 192, 320] as const
 
+/** Handles track CRUD, audio streaming, and queuing of audio-conversion jobs. */
 @Injectable()
 export class TracksService {
+  /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
     @InjectQueue('audio-processing') private readonly audioQueue: Queue,
     private readonly configService: ConfigService<AppConfig>,
+    private readonly cache: CacheService,
   ) {}
 
+  /** The logger value. */
   private readonly logger = new Logger(TracksService.name, { timestamp: true })
 
+  /**
+   * Adds an audio-conversion job to the BullMQ queue and marks the track FAILED on enqueue error.
+   * @param params Job parameters including track/artist IDs, file paths, and target bitrates.
+   */
   private async enqueueAudioConversion({
     trackId,
     artistId,
@@ -71,6 +82,11 @@ export class TracksService {
     }
   }
 
+  /**
+   * Reads audio metadata from the file at `filePath`.
+   * @param filePath Absolute path to the audio file.
+   * @returns Bitrate (kbps), duration (s), codec, and container, or safe defaults on error.
+   */
   private async inspectAudioFile(filePath: string) {
     try {
       const metadata = await parseFile(filePath)
@@ -97,6 +113,11 @@ export class TracksService {
     }
   }
 
+  /**
+   * Returns the list of target bitrate strings derived from the source bitrate.
+   * @param sourceBitrate Source bitrate in kbps; 0 or negative means all presets are used.
+   * @returns Array of bitrate strings such as `['128k', '192k']`.
+   */
   private getTargetBitrates(sourceBitrate: number) {
     if (sourceBitrate <= 0) {
       return TARGET_AUDIO_BITRATES.map((bitrate) => `${bitrate}k`)
@@ -110,6 +131,7 @@ export class TracksService {
     return [`${sourceBitrate}k`]
   }
 
+  /** Runs the get content type operation. */
   private getContentType(fileName: string) {
     const extension = extname(fileName).replace('.', '').toLowerCase()
     switch (extension) {
@@ -128,40 +150,32 @@ export class TracksService {
     }
   }
 
+  /** Runs the find all operation. */
   async findAll({
     page = 1,
     limit = 10,
     title,
   }: { page?: number; limit?: number } & Partial<TrackEntity>) {
-    const skip = (page - 1) * limit
-
-    const [data, total] = await this.prisma.$transaction([
-      this.prisma.track.findMany({
-        skip,
-        where: title
-          ? {
-              title: {
-                contains: title,
-                mode: 'insensitive',
-              },
-            }
-          : undefined,
-        take: limit,
-      }),
-      this.prisma.track.count(),
-    ])
-
-    return {
-      data,
-      meta: {
-        total,
-        page,
-        limit,
-        lastPage: Math.ceil(total / limit),
+    return await this.cache.wrap(
+      NS.TRACKS,
+      `list:${page}:${limit}:${title ?? ''}`,
+      TTL.SHORT,
+      async () => {
+        const skip = (page - 1) * limit
+        const [data, total] = await this.prisma.$transaction([
+          this.prisma.track.findMany({
+            skip,
+            where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
+            take: limit,
+          }),
+          this.prisma.track.count(),
+        ])
+        return { data, meta: { total, page, limit, lastPage: Math.ceil(total / limit) } }
       },
-    }
+    )
   }
 
+  /** Runs the like operation. */
   async like(userId: UserEntity['id'], trackId: TrackEntity['id']) {
     return await this.prisma.track.update({
       where: { id: trackId },
@@ -169,6 +183,7 @@ export class TracksService {
     })
   }
 
+  /** Runs the unlike operation. */
   async unlike(userId: UserEntity['id'], trackId: TrackEntity['id']) {
     return await this.prisma.track.update({
       where: { id: trackId },
@@ -176,6 +191,7 @@ export class TracksService {
     })
   }
 
+  /** Runs the find liked tracks operation. */
   async findLikedTracks(
     userId: UserEntity['id'],
     { page = 1, limit = 10 }: { page?: number; limit?: number },
@@ -193,14 +209,14 @@ export class TracksService {
     })
   }
 
+  /** Runs the find track by id operation. */
   async findTrackById(id: TrackEntity['id']) {
-    return await this.prisma.track.findUnique({
-      where: {
-        id,
-      },
-    })
+    return await this.cache.wrap(NS.TRACKS, `id:${id}`, TTL.LONG, () =>
+      this.prisma.track.findUnique({ where: { id } }),
+    )
   }
 
+  /** Runs the select track file operation. */
   private async selectTrackFile(
     id: TrackEntity['id'],
     preferredBitrate?: number,
@@ -230,6 +246,7 @@ export class TracksService {
     return selectedFile
   }
 
+  /** Runs the get track audio stream operation. */
   async getTrackAudioStream(
     id: TrackEntity['id'],
     preferredBitrate?: number,
@@ -254,6 +271,7 @@ export class TracksService {
     }
   }
 
+  /** Runs the get track stream operation. */
   async getTrackStream(
     id: TrackEntity['id'],
     range?: string,
@@ -311,6 +329,7 @@ export class TracksService {
     }
   }
 
+  /** Runs the get hls master playlist operation. */
   async getHlsMasterPlaylist(id: TrackEntity['id']) {
     const track = await this.prisma.track.findUnique({ where: { id } })
     if (!track) throw new NotFoundException('Track not found')
@@ -348,6 +367,7 @@ export class TracksService {
     return `${lines.join('\n')}\n`
   }
 
+  /** Runs the get hls asset operation. */
   async getHlsAsset(id: TrackEntity['id'], bitrate: number, asset: string) {
     if (!/^(index\.m3u8|init\.mp4|segment_\d{5}\.m4s)$/.test(asset)) {
       throw new NotFoundException('HLS asset not found')
@@ -383,24 +403,19 @@ export class TracksService {
     }
   }
 
+  /** Runs the find tracks by artist id operation. */
   async findTracksByArtistId(artistId: Artist['id']) {
-    return await this.prisma.track.findMany({
-      where: {
-        artistId,
-      },
-    })
+    return await this.cache.wrap(NS.TRACKS, `artist:${artistId}`, TTL.SHORT, () =>
+      this.prisma.track.findMany({ where: { artistId } }),
+    )
   }
 
+  /** Runs the find tracks by artist name operation. */
   async findTracksByArtistName(artistUsername: Artist['username']) {
-    return await this.prisma.track.findMany({
-      where: {
-        artist: {
-          username: artistUsername,
-        },
-      },
-    })
+    return await this.prisma.track.findMany({ where: { artist: { username: artistUsername } } })
   }
 
+  /** Runs the create operation. */
   async create(
     artistId: ArtistEntity['id'],
     createTrackDto: CreateTrackDto,
@@ -460,10 +475,12 @@ export class TracksService {
     })
 
     this.logger.log(`Queued audio conversion for track ID: ${track.id} added`)
+    await this.cache.invalidate(NS.TRACKS)
 
     return track
   }
 
+  /** Runs the update operation. */
   async update(
     id: TrackEntity['id'],
     createTrackDto: CreateTrackDto,
@@ -545,6 +562,8 @@ export class TracksService {
         bitrates: this.getTargetBitrates(metadata.bitrate),
       })
     }
+
+    await this.cache.invalidate(NS.TRACKS)
 
     return track
   }

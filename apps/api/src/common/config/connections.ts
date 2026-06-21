@@ -55,6 +55,7 @@ export const websocketConfig: GatewayMetadata = {
   },
 }
 
+/** The connections config value. */
 export const connectionsConfig = registerAs('connections', () => ({
   http: httpConfig,
   ws: websocketConfig,

@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the stream track swagger operation. */
 export function StreamTrackSwagger() {
   return applyDecorators(
     ApiOperation({

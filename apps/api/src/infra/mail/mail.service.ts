@@ -4,11 +4,15 @@ import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import * as nodemailer from 'nodemailer'
 
+/** Represents the mail service. */
 @Injectable()
 export class MailService {
+  /** The logger value. */
   private readonly logger = new Logger(MailService.name)
+  /** The transporter value. */
   private readonly transporter: nodemailer.Transporter | null
 
+  /** Creates a new instance. */
   constructor(private readonly config: ConfigService<AppConfig>) {
     const mail = config.get('mail')
     if (mail?.host && mail?.user && mail?.pass) {
@@ -29,6 +33,7 @@ export class MailService {
     }
   }
 
+  /** Runs the send password reset operation. */
   async sendPasswordReset(to: string, token: string, username: string) {
     const resetUrl = `${process.env.WEB_HOST}/reset-password?token=${encodeURIComponent(token)}`
 

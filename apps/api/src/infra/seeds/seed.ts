@@ -9,13 +9,19 @@ import { DownloadResourcesService } from './download-resources.service'
 import { FakerService } from './faker.service'
 import { SeedService } from './seed.service'
 
+/** The pool value. */
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+/** The adapter value. */
 const adapter = new PrismaPg(pool)
+/** The prisma value. */
 const prisma = new PrismaClient({ adapter })
 
 // Подготовка директорий для хранения файлов
+/** The storage base value. */
 const STORAGE_BASE = process.cwd()
+/** The tracks dir value. */
 const TRACKS_DIR = join(STORAGE_BASE, config.storagePaths.tracks)
+/** The covers dir value. */
 const COVERS_DIR = join(STORAGE_BASE, config.storagePaths.covers)
 
 console.log('📁 Storage directories:')

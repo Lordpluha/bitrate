@@ -1,8 +1,10 @@
 import { faker } from '@faker-js/faker'
 import { Injectable } from '@nestjs/common'
 
+/** Represents the faker service. */
 @Injectable()
 export class FakerService {
+  /** Runs the generate users operation. */
   generateUsers(count: number) {
     const users: Array<{
       username: string
@@ -71,6 +73,7 @@ export class FakerService {
     return users
   }
 
+  /** Runs the generate playlists operation. */
   generatePlaylists(userIds: string[], count: number) {
     const playlistTitles = [
       'My Favorites',

@@ -10,6 +10,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 
 import './instrument'
 
+/** Runs the bootstrap operation. */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get<ConfigService<AppConfig>>(ConfigService)

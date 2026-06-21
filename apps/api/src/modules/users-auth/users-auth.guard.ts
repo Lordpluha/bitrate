@@ -16,7 +16,9 @@ import type { JWTPayload } from '../tokens'
 import { TokenService } from '../tokens/token.service'
 import { UNAUTHORIZED_ERRORS } from './errors/unauthorized.errors'
 
+/** Defines the token requirement. */
 export type TokenRequirement = 'access' | 'refresh'
+/** The token requirement value. */
 export const TOKEN_REQUIREMENT = 'tokenRequirement'
 
 /**
@@ -52,14 +54,17 @@ export function UserAuth(tokenRequirement: TokenRequirement = 'access') {
   )
 }
 
+/** Represents the user auth guard. */
 @Injectable()
 export class UserAuthGuard implements CanActivate {
+  /** Creates a new instance. */
   constructor(
     private prisma: PrismaService,
     private reflector: Reflector,
     private tokenService: TokenService,
   ) {}
 
+  /** Runs the can activate operation. */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const tokenReq = this.reflector.getAllAndOverride<TokenRequirement>(TOKEN_REQUIREMENT, [
       context.getHandler(),
@@ -123,6 +128,7 @@ export class UserAuthGuard implements CanActivate {
     return true
   }
 
+  /** Runs the extract token from cookie operation. */
   private extractTokenFromCookie(request: Request) {
     const access_token_name = process.env.ACCESS_TOKEN_NAME!
     const refresh_token_name = process.env.REFRESH_TOKEN_NAME!
