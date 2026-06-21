@@ -4,468 +4,171 @@ sidebar_position: 3
 
 # Authentication
 
-Complete guide for implementing authentication in API endpoints.
+В проекте два независимых auth-потока: для пользователей и для артистов. Оба используют одинаковые механизмы.
 
-## 🔐 Overview
+## Механизм
 
-The API uses **JWT (JSON Web Tokens)** for authentication with access and refresh token pattern.
+- **JWT** в **HttpOnly cookies** (не в заголовках)
+- Два токена: `access_token` (5 мин) и `refresh_token` (30 дней)
+- Сессии хранятся в PostgreSQL (`UserSession`, `ArtistSession`)
+- Инвалидация через удаление сессии из БД
 
-## 🏗️ Authentication Flow
+## Эндпоинты пользователей
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API
-    participant DB
-    participant Redis
+| Метод | Маршрут | Описание |
+|---|---|---|
+| POST | `/api/v1/users/auth/register` | Регистрация |
+| POST | `/api/v1/users/auth/login` | Вход |
+| POST | `/api/v1/users/auth/refresh` | Обновить access token |
+| POST | `/api/v1/users/auth/logout` | Выход (удаляет сессию) |
+| GET | `/api/v1/users/auth/me` | Текущий пользователь |
+| POST | `/api/v1/users/auth/2fa/enable` | Включить 2FA |
+| POST | `/api/v1/users/auth/2fa/verify` | Верифицировать TOTP |
+| POST | `/api/v1/users/auth/2fa/disable` | Отключить 2FA |
+| GET | `/api/v1/users/auth/oauth/:provider` | OAuth редирект |
+| GET | `/api/v1/users/auth/oauth/:provider/callback` | OAuth callback |
+| POST | `/api/v1/users/auth/password/forgot` | Запросить сброс пароля |
+| POST | `/api/v1/users/auth/password/reset` | Сбросить пароль по токену |
 
-    Client->>API: POST /auth/register
-    API->>DB: Create user
-    DB-->>API: User created
-    API->>Redis: Create session
-    API-->>Client: Access + Refresh tokens
+## Эндпоинты артистов
 
-    Client->>API: POST /auth/login
-    API->>DB: Verify credentials
-    DB-->>API: User found
-    API->>Redis: Create session
-    API-->>Client: Access + Refresh tokens
+Аналогичны пользовательским, но по пути `/api/v1/artists/auth/*`.
 
-    Client->>API: GET /tracks (with access token)
-    API->>Redis: Validate token
-    API-->>Client: Protected resource
+## Регистрация и вход
 
-    Client->>API: POST /auth/refresh (with refresh token)
-    API->>Redis: Verify refresh token
-    API-->>Client: New access token
-```
+```http
+POST /api/v1/users/auth/register
+Content-Type: application/json
 
-## 🔑 Token Structure
-
-### Access Token
-
-```typescript
 {
-  sub: 'user-uuid',
-  email: 'user@example.com',
-  iat: 1234567890,
-  exp: 1234568790  // 15 minutes
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "SecurePass123"
 }
 ```
 
-### Refresh Token
+Ответ устанавливает `access_token` и `refresh_token` в HttpOnly cookies.
 
-```typescript
+```http
+POST /api/v1/users/auth/login
+Content-Type: application/json
+
 {
-  sub: 'user-uuid',
-  sessionId: 'session-uuid',
-  iat: 1234567890,
-  exp: 1235172690  // 7 days
+  "email": "john@example.com",
+  "password": "SecurePass123"
 }
 ```
 
-## 🛠️ Implementation
+## Refresh
 
-### Auth Module
-
-```typescript
-// src/modules/auth/auth.module.ts
-@Module({
-  imports: [
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '15m' }
-    }),
-    UsersModule
-  ],
-  controllers: [AuthController],
-  providers: [AuthService, TokenService]
-})
-export class AuthModule {}
+```http
+POST /api/v1/users/auth/refresh
 ```
 
-### Auth Service
+Читает `refresh_token` из cookie, выдаёт новый `access_token`. Старый refresh-токен инвалидируется (rotation).
 
-```typescript
-// src/modules/auth/auth.service.ts
-@Injectable()
-export class AuthService {
-  async register(dto: RegistrationDto) {
-    // Hash password
-    const passwordHash = await bcrypt.hash(dto.password, 10)
+## Защищённые маршруты
 
-    // Create user
-    const user = await this.prisma.user.create({
-      data: {
-        email: dto.email,
-        passwordHash,
-        displayName: dto.displayName
-      }
-    })
+Куки отправляются браузером автоматически. Для API-клиентов (Swagger, мобильное приложение):
 
-    // Generate tokens
-    const tokens = await this.tokenService.generateTokens(user)
+```http
+GET /api/v1/users/me
+Cookie: access_token=eyJhbGciOiJIUzI1NiIs...
+```
 
-    return { user, ...tokens }
-  }
+## OAuth 2.0
 
-  async login(dto: LoginDto) {
-    // Find user
-    const user = await this.prisma.user.findUnique({
-      where: { email: dto.email }
-    })
+Поддерживаемые провайдеры: **Google**, **Facebook**.
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials')
-    }
+```
+# 1. Редирект на провайдера
+GET /api/v1/users/auth/oauth/google
 
-    // Verify password
-    const isValid = await bcrypt.compare(dto.password, user.passwordHash)
+# 2. Провайдер редиректит обратно
+GET /api/v1/users/auth/oauth/google/callback?code=...
 
-    if (!isValid) {
-      throw new UnauthorizedException('Invalid credentials')
-    }
+# 3. API устанавливает cookies и редиректит на WEB_HOST
+```
 
-    // Generate tokens
-    const tokens = await this.tokenService.generateTokens(user)
+Переменные окружения:
 
-    return tokens
-  }
+```env
+OAUTH_GOOGLE_CLIENT_ID=
+OAUTH_GOOGLE_CLIENT_SECRET=
+OAUTH_FACEBOOK_APP_ID=
+OAUTH_FACEBOOK_APP_SECRET=
+API_BASE_URL=http://localhost:3000
+```
+
+## Двухфакторная аутентификация (2FA)
+
+Реализована через TOTP (RFC 6238) — совместима с Google Authenticator, Authy и др.
+
+**Включение:**
+
+```http
+POST /api/v1/users/auth/2fa/enable
+```
+
+Ответ содержит QR-код (base64 PNG) и `otpauth://` URI для ручного ввода.
+
+**Верификация:**
+
+```http
+POST /api/v1/users/auth/2fa/verify
+Content-Type: application/json
+
+{ "code": "123456" }
+```
+
+При входе с включённой 2FA сервер возвращает `requiresTwoFactor: true` — клиент должен запросить TOTP-код и отправить его повторно.
+
+**Отключение:**
+
+```http
+POST /api/v1/users/auth/2fa/disable
+Content-Type: application/json
+
+{ "code": "123456" }
+```
+
+## Сброс пароля
+
+```http
+# 1. Запрос письма
+POST /api/v1/users/auth/password/forgot
+Content-Type: application/json
+
+{ "email": "john@example.com" }
+```
+
+Если SMTP не настроен, токен логируется в консоль (dev-режим).
+
+```http
+# 2. Сброс по токену из письма
+POST /api/v1/users/auth/password/reset
+Content-Type: application/json
+
+{
+  "token": "reset-token-from-email",
+  "password": "NewSecurePass123"
 }
 ```
 
-### Token Service
+## Использование в NestJS контроллерах
 
 ```typescript
-// src/modules/auth/token.service.ts
-@Injectable()
-export class TokenService {
-  constructor(
-    private jwtService: JwtService,
-    private prisma: PrismaService
-  ) {}
-
-  async generateTokens(user: User) {
-    // Create session
-    const session = await this.prisma.session.create({
-      data: {
-        userId: user.id,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-      }
-    })
-
-    // Access token
-    const accessToken = this.jwtService.sign({
-      sub: user.id,
-      email: user.email
-    })
-
-    // Refresh token
-    const refreshToken = this.jwtService.sign(
-      {
-        sub: user.id,
-        sessionId: session.id
-      },
-      {
-        secret: process.env.JWT_REFRESH_SECRET,
-        expiresIn: '7d'
-      }
-    )
-
-    return { accessToken, refreshToken }
-  }
-
-  async refreshTokens(refreshToken: string) {
-    try {
-      // Verify refresh token
-      const payload = this.jwtService.verify(refreshToken, {
-        secret: process.env.JWT_REFRESH_SECRET
-      })
-
-      // Check session
-      const session = await this.prisma.session.findUnique({
-        where: { id: payload.sessionId },
-        include: { user: true }
-      })
-
-      if (!session || session.expiresAt < new Date()) {
-        throw new UnauthorizedException('Invalid session')
-      }
-
-      // Generate new access token
-      const accessToken = this.jwtService.sign({
-        sub: session.user.id,
-        email: session.user.email
-      })
-
-      return { accessToken }
-    } catch (error) {
-      throw new UnauthorizedException('Invalid refresh token')
-    }
-  }
-}
-```
-
-## 🛡️ Auth Guard
-
-```typescript
-// src/common/guards/auth.guard.ts
-@Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(
-    private jwtService: JwtService,
-    private prisma: PrismaService
-  ) {}
-
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest()
-
-    // Extract token
-    const token = this.extractToken(request)
-
-    if (!token) {
-      throw new UnauthorizedException('No token provided')
-    }
-
-    try {
-      // Verify token
-      const payload = await this.jwtService.verifyAsync(token)
-
-      // Fetch user
-      const user = await this.prisma.user.findUnique({
-        where: { id: payload.sub }
-      })
-
-      if (!user) {
-        throw new UnauthorizedException('User not found')
-      }
-
-      // Attach user to request
-      request.user = user
-
-      return true
-    } catch (error) {
-      throw new UnauthorizedException('Invalid token')
-    }
-  }
-
-  private extractToken(request: Request): string | null {
-    const [type, token] = request.headers.authorization?.split(' ') ?? []
-    return type === 'Bearer' ? token : null
-  }
-}
-```
-
-## 📌 Using Guards
-
-### Controller Level
-
-```typescript
-@Controller('tracks')
-@UseGuards(AuthGuard)
-export class TracksController {
-  @Get()
-  findAll(@CurrentUser() user: User) {
-    return this.tracksService.findByUser(user.id)
-  }
-}
-```
-
-### Route Level
-
-```typescript
-@Controller('tracks')
-export class TracksController {
-  @Get()
-  @UseGuards(AuthGuard)
-  findAll() {
-    // Protected
-  }
-
-  @Get('public')
-  findPublic() {
-    // Public
-  }
-}
-```
-
-### Global Guard
-
-```typescript
-// main.ts
-app.useGlobalGuards(new AuthGuard())
-```
-
-## 🎯 Custom Decorators
-
-### CurrentUser
-
-```typescript
-// src/common/decorators/current-user.decorator.ts
-export const CurrentUser = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest()
-    return request.user
-  }
-)
-
-// Usage
+// Только для пользователей
+@UserAuth()
 @Get('me')
-getProfile(@CurrentUser() user: User) {
-  return user
-}
-```
-
-### Public
-
-```typescript
-// src/common/decorators/public.decorator.ts
-export const IS_PUBLIC_KEY = 'isPublic'
-export const Public = () => SetMetadata(IS_PUBLIC_KEY, true)
-
-// Modified AuthGuard
-canActivate(context: ExecutionContext) {
-  const isPublic = this.reflector.getAllAndOverride<boolean>(
-    IS_PUBLIC_KEY,
-    [context.getHandler(), context.getClass()]
-  )
-
-  if (isPublic) {
-    return true
-  }
-
-  // ... normal auth logic
+getMe(@Req() req: UserAuthRequest) {
+  return req.user // UserEntity
 }
 
-// Usage
-@Public()
-@Get('public')
-getPublic() {
-  return 'Public data'
+// Только для артистов
+@ArtistAuth()
+@Post('tracks')
+uploadTrack(@Req() req: ArtistAuthRequest) {
+  return req.artist // ArtistEntity
 }
 ```
-
-## 🔒 Password Security
-
-### Hashing
-
-```typescript
-import * as bcrypt from 'bcrypt'
-
-// Hash password
-const hash = await bcrypt.hash(password, 10)
-
-// Verify password
-const isValid = await bcrypt.compare(password, hash)
-```
-
-### Password Requirements
-
-```typescript
-// src/modules/auth/dto/registration.dto.ts
-export class RegistrationDto {
-  @IsEmail()
-  email: string
-
-  @IsString()
-  @MinLength(8)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
-    message: 'Password must contain uppercase, lowercase, and number'
-  })
-  password: string
-
-  @IsString()
-  @MinLength(2)
-  displayName: string
-}
-```
-
-## 📝 Session Management
-
-### Database Schema
-
-```prisma
-model Session {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId])
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-}
-```
-
-### Logout
-
-```typescript
-async logout(userId: string, sessionId: string) {
-  await this.prisma.session.delete({
-    where: { id: sessionId, userId }
-  })
-}
-
-// Logout all devices
-async logoutAll(userId: string) {
-  await this.prisma.session.deleteMany({
-    where: { userId }
-  })
-}
-```
-
-## 🌐 CORS Configuration
-
-```typescript
-// main.ts
-app.enableCors({
-  origin: process.env.CORS_ORIGIN.split(','),
-  credentials: true,
-  allowedHeaders: ['Authorization', 'Content-Type'],
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-})
-```
-
-## 🧪 Testing
-
-```typescript
-describe('AuthService', () => {
-  it('should register a user', async () => {
-    const dto = {
-      email: 'test@example.com',
-      password: 'Password123',
-      displayName: 'Test User'
-    }
-
-    const result = await service.register(dto)
-
-    expect(result.user).toBeDefined()
-    expect(result.accessToken).toBeDefined()
-    expect(result.refreshToken).toBeDefined()
-  })
-
-  it('should login with valid credentials', async () => {
-    const dto = {
-      email: 'test@example.com',
-      password: 'Password123'
-    }
-
-    const result = await service.login(dto)
-
-    expect(result.accessToken).toBeDefined()
-  })
-
-  it('should throw on invalid credentials', async () => {
-    const dto = {
-      email: 'test@example.com',
-      password: 'WrongPassword'
-    }
-
-    await expect(service.login(dto)).rejects.toThrow(
-      UnauthorizedException
-    )
-  })
-})
-```
-
----
-
-**Related:**
-- [API Overview](/docs/applications/api/overview)

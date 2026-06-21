@@ -7,6 +7,7 @@ Full-stack Spotify clone — Turborepo + pnpm monorepo with web, mobile, desktop
 - **[Full docs site](apps/docs/)** — Docusaurus 3 site with guides, architecture, API reference
 - **[Architecture](apps/docs/docs/getting-started/architecture.md)** — system design, data flow, DB schema
 - **[Setup Guide](apps/docs/docs/getting-started/setup.md)** — detailed local setup instructions
+- **[Roadmap](apps/docs/docs/guides/roadmap.md)** — milestones, current progress, future plans
 - **[Contributing](CONTRIBUTING.md)** — git workflow, commit conventions, PR process
 - **[CI/CD](.github/workflows/README.md)** — GitHub Actions workflow map
 
