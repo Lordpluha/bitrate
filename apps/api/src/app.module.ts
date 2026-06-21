@@ -3,7 +3,9 @@ import { PrismaModule } from '@infra/prisma/prisma.module'
 import { AlbumsModule } from '@modules/albums/albums.module'
 import { ArtistsModule } from '@modules/artists/artists.module'
 import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
+import { HistoryModule } from '@modules/history/history.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
+import { SearchModule } from '@modules/search/search.module'
 import { TracksModule } from '@modules/tracks/tracks.module'
 import { UsersModule } from '@modules/users/users.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
@@ -11,6 +13,7 @@ import { BullModule } from '@nestjs/bullmq'
 import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { ServeStaticModule } from '@nestjs/serve-static'
+import { SentryModule } from '@sentry/nestjs/setup'
 import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
 import { PathTraversalMiddleware } from './common'
@@ -18,6 +21,7 @@ import { appConfigs } from './common/config'
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.local', '.env.production', '.env.development'],
@@ -60,6 +64,8 @@ import { appConfigs } from './common/config'
     PlaylistsModule,
     AlbumsModule,
     ArtistsAuthModule,
+    SearchModule,
+    HistoryModule,
   ],
   controllers: [AppController],
 })

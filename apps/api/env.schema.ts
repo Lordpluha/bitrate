@@ -33,7 +33,7 @@ export const envSchema = z.object({
   REDIS_PORT: z.coerce.number().default(6379),
 
   // Sentry
-  // SENTRY_DSN: z.string().url().optional(),
+  SENTRY_DSN: z.string().url().optional(),
 
   // CDN
   // CDN_URL: z.string().url().optional(),

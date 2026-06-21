@@ -11,19 +11,24 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   Req,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
+  AddTracksToPlaylistSwagger,
   CreatePlaylistSwagger,
+  DeletePlaylistSwagger,
+  GetMyPlaylistsSwagger,
   GetPlaylistByIdSwagger,
   GetPlaylistsSwagger,
   LikePlaylistSwagger,
+  RemoveTrackFromPlaylistSwagger,
   UnlikePlaylistSwagger,
   UpdatePlaylistSwagger,
 } from './decorators'
-import { type CreatePlaylistDto, CreatePlaylistSchema } from './dtos/create-playlist.dto'
+import { AddTracksDto, AddTracksSchema, type CreatePlaylistDto, CreatePlaylistSchema } from './dtos'
 import { type UpdatePlaylistDto, UpdatePlaylistSchema } from './dtos/update-playlist.dto'
 import { PlaylistEntity } from './entities'
 import { PlaylistsService } from './playlists.service'
@@ -36,11 +41,15 @@ export class PlaylistsController {
 
   @GetPlaylistsSwagger()
   @Get('')
-  async getAll(@Param('page') page?: number, @Param('limit') limit?: number) {
-    return await this.playlistService.getAll({
-      limit,
-      page,
-    })
+  async getAll(@Query('page') page?: number, @Query('limit') limit?: number) {
+    return await this.playlistService.getAll({ limit, page })
+  }
+
+  @GetMyPlaylistsSwagger()
+  @UserAuth()
+  @Get('me')
+  async getMine(@Req() req: UserAuthRequest) {
+    return await this.playlistService.getMine(req.user.id)
   }
 
   @GetPlaylistByIdSwagger()
@@ -54,11 +63,9 @@ export class PlaylistsController {
   @Post('')
   async post(
     @Req() req: UserAuthRequest,
-    @Body(new ZodValidationPipe(CreatePlaylistSchema))
-    playlistDto: CreatePlaylistDto,
+    @Body(new ZodValidationPipe(CreatePlaylistSchema)) playlistDto: CreatePlaylistDto,
   ) {
-    const user = req.user
-    return await this.playlistService.create(user.id, playlistDto)
+    return await this.playlistService.create(req.user.id, playlistDto)
   }
 
   @UpdatePlaylistSwagger()
@@ -67,11 +74,43 @@ export class PlaylistsController {
   async update(
     @Req() req: UserAuthRequest,
     @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
-    @Body(new ZodValidationPipe(UpdatePlaylistSchema))
-    updateDto: UpdatePlaylistDto,
+    @Body(new ZodValidationPipe(UpdatePlaylistSchema)) updateDto: UpdatePlaylistDto,
   ) {
-    const user = req.user
-    return await this.playlistService.update(user.id, id, updateDto)
+    return await this.playlistService.update(req.user.id, id, updateDto)
+  }
+
+  @DeletePlaylistSwagger()
+  @UserAuth()
+  @HttpCode(200)
+  @Delete(':id')
+  async deletePlaylist(
+    @Req() req: UserAuthRequest,
+    @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
+  ) {
+    return await this.playlistService.delete(req.user.id, id)
+  }
+
+  @AddTracksToPlaylistSwagger()
+  @UserAuth()
+  @Post(':id/tracks')
+  async addTracks(
+    @Req() req: UserAuthRequest,
+    @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
+    @Body(new ZodValidationPipe(AddTracksSchema)) dto: AddTracksDto,
+  ) {
+    return await this.playlistService.addTracks(req.user.id, id, dto)
+  }
+
+  @RemoveTrackFromPlaylistSwagger()
+  @UserAuth()
+  @HttpCode(200)
+  @Delete(':id/tracks/:trackId')
+  async removeTrack(
+    @Req() req: UserAuthRequest,
+    @Param('id', ParseUUIDPipe) id: PlaylistEntity['id'],
+    @Param('trackId', ParseUUIDPipe) trackId: string,
+  ) {
+    return await this.playlistService.removeTrack(req.user.id, id, trackId)
   }
 
   @LikePlaylistSwagger()

@@ -8,6 +8,8 @@ import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 
+import './instrument'
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get<ConfigService<AppConfig>>(ConfigService)

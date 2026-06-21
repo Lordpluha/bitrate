@@ -216,6 +216,24 @@ CREATE TABLE "_UserLikedPlaylists" (
     CONSTRAINT "_UserLikedPlaylists_AB_pkey" PRIMARY KEY ("A","B")
 );
 
+-- CreateTable
+CREATE TABLE "_UserFollowedArtists" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL,
+
+    CONSTRAINT "_UserFollowedArtists_AB_pkey" PRIMARY KEY ("A","B")
+);
+
+-- CreateTable
+CREATE TABLE "ListeningHistory" (
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "trackId" UUID NOT NULL,
+    "listenedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "ListeningHistory_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
@@ -351,6 +369,27 @@ CREATE INDEX "_PlaylistToTrack_B_index" ON "_PlaylistToTrack"("B");
 -- CreateIndex
 CREATE INDEX "_UserLikedPlaylists_B_index" ON "_UserLikedPlaylists"("B");
 
+-- CreateIndex
+CREATE INDEX "_UserFollowedArtists_B_index" ON "_UserFollowedArtists"("B");
+
+-- CreateIndex
+CREATE INDEX "ListeningHistory_userId_listenedAt_idx" ON "ListeningHistory"("userId", "listenedAt" DESC);
+
+-- CreateIndex
+CREATE INDEX "ListeningHistory_trackId_idx" ON "ListeningHistory"("trackId");
+
+-- CreateIndex
+CREATE INDEX "idx_track_fts" ON "Track" USING GIN (to_tsvector('english', "title"));
+
+-- CreateIndex
+CREATE INDEX "idx_artist_fts" ON "Artist" USING GIN (to_tsvector('english', "username"));
+
+-- CreateIndex
+CREATE INDEX "idx_album_fts" ON "Album" USING GIN (to_tsvector('english', "title"));
+
+-- CreateIndex
+CREATE INDEX "idx_playlist_fts" ON "Playlist" USING GIN (to_tsvector('english', "title")) WHERE "isPublic" = true;
+
 -- AddForeignKey
 ALTER TABLE "UserOAuthAccount" ADD CONSTRAINT "UserOAuthAccount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -416,3 +455,15 @@ ALTER TABLE "_UserLikedPlaylists" ADD CONSTRAINT "_UserLikedPlaylists_A_fkey" FO
 
 -- AddForeignKey
 ALTER TABLE "_UserLikedPlaylists" ADD CONSTRAINT "_UserLikedPlaylists_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserFollowedArtists" ADD CONSTRAINT "_UserFollowedArtists_A_fkey" FOREIGN KEY ("A") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserFollowedArtists" ADD CONSTRAINT "_UserFollowedArtists_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ListeningHistory" ADD CONSTRAINT "ListeningHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ListeningHistory" ADD CONSTRAINT "ListeningHistory_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE CASCADE;

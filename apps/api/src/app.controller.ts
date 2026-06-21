@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import * as Sentry from '@sentry/nestjs'
 
 @ApiTags('Welcome')
 @Controller()
@@ -19,5 +20,16 @@ export class AppController {
       timestamp: new Date().toISOString(),
       uptimeSeconds: Math.round(process.uptime()),
     }
+  }
+
+  @Get('/debug-sentry')
+  getError() {
+    // Send a log before throwing the error
+    Sentry.logger.info('User triggered test error', {
+      action: 'test_error_endpoint',
+    })
+    // Send a test metric before throwing the error
+    Sentry.metrics.count('test_counter', 1)
+    throw new Error('My first Sentry error!')
   }
 }

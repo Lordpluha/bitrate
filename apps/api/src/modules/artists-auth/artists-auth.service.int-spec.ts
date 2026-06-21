@@ -1,3 +1,4 @@
+import { MailService } from '@infra/mail/mail.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
@@ -57,6 +58,7 @@ describe('ArtistsAuthService (int)', () => {
         { provide: JwtService, useValue: jwtMock },
         { provide: PrismaService, useValue: prismaMock },
         { provide: TokenService, useValue: tokenMock },
+        { provide: MailService, useValue: { sendPasswordReset: jest.fn() } },
       ],
     }).compile()
 
@@ -104,7 +106,7 @@ describe('ArtistsAuthService (int)', () => {
     tokenMock.generateRefreshToken.mockResolvedValue('rt' as never)
     prismaMock.artistSession.create.mockResolvedValue(buildArtistSession() as never)
 
-    const result = await service.loginArtist(artist.email, artist.password)
+    const result = await service.loginArtist(artist.email, artist.password!)
 
     expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
   })

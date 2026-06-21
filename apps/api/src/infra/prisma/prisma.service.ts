@@ -78,7 +78,15 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.trackFile
   }
 
+  get listeningHistory() {
+    return this.prisma.listeningHistory
+  }
+
   get $transaction() {
     return this.prisma.$transaction.bind(this.prisma)
+  }
+
+  queryRaw<T>(sql: Parameters<PrismaClient['$queryRaw']>[0]): Promise<T> {
+    return this.prisma.$queryRaw<T>(sql as never)
   }
 }

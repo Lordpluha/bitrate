@@ -1,5 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import type { UserEntity } from '@modules/users'
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import type { CreateArtistDto, UpdateArtistDto } from './dtos'
 import type { ArtistEntity } from './entities'
 
@@ -102,6 +103,40 @@ export class ArtistsService {
         password: true,
         email: true,
       },
+    })
+  }
+
+  async follow(userId: UserEntity['id'], artistId: ArtistEntity['id']) {
+    const artist = await this.prisma.artist.findUnique({ where: { id: artistId } })
+    if (!artist) throw new NotFoundException('Artist not found')
+
+    return await this.prisma.artist.update({
+      where: { id: artistId },
+      data: { followers: { connect: { id: userId } } },
+      omit: { password: true, email: true },
+      include: { _count: { select: { followers: true } } },
+    })
+  }
+
+  async unfollow(userId: UserEntity['id'], artistId: ArtistEntity['id']) {
+    const artist = await this.prisma.artist.findUnique({ where: { id: artistId } })
+    if (!artist) throw new NotFoundException('Artist not found')
+
+    return await this.prisma.artist.update({
+      where: { id: artistId },
+      data: { followers: { disconnect: { id: userId } } },
+      omit: { password: true, email: true },
+      include: { _count: { select: { followers: true } } },
+    })
+  }
+
+  async getFollowing(userId: UserEntity['id'], page = 1, limit = 20) {
+    return await this.prisma.artist.findMany({
+      where: { followers: { some: { id: userId } } },
+      omit: { password: true, email: true },
+      include: { _count: { select: { followers: true } } },
+      skip: (page - 1) * limit,
+      take: limit,
     })
   }
 }

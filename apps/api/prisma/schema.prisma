@@ -24,10 +24,12 @@ model User {
   passwordResets UserPasswordReset[]
   oauthAccounts  UserOAuthAccount[]
   playlists      Playlist[]
-  likedTracks    Track[]             @relation("UserLikedTracks")
-  likedArtists   Artist[]            @relation("UserLikedArtists")
-  likedAlbums    Album[]             @relation("UserLikedAlbums")
-  likedPlaylists Playlist[]          @relation("UserLikedPlaylists")
+  likedTracks      Track[]   @relation("UserLikedTracks")
+  likedArtists     Artist[]  @relation("UserLikedArtists")
+  followedArtists  Artist[]  @relation("UserFollowedArtists")
+  likedAlbums       Album[]            @relation("UserLikedAlbums")
+  likedPlaylists    Playlist[]         @relation("UserLikedPlaylists")
+  listeningHistory  ListeningHistory[]
 
   @@index([email])
   @@index([username])
@@ -118,10 +120,11 @@ model Track {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  audioFiles TrackFile[]
-  albums     Album[]
-  playlists  Playlist[]
-  likedBy    User[]      @relation("UserLikedTracks")
+  audioFiles       TrackFile[]
+  albums           Album[]
+  playlists        Playlist[]
+  likedBy          User[]             @relation("UserLikedTracks")
+  listeningHistory ListeningHistory[]
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
@@ -171,7 +174,8 @@ model Artist {
   oauthAccounts  ArtistOAuthAccount[]
   passwordResets ArtistPasswordReset[]
 
-  likedBy User[] @relation("UserLikedArtists")
+  likedBy     User[] @relation("UserLikedArtists")
+  followers   User[] @relation("UserFollowedArtists")
 
   @@index([email])
   @@index([username])
@@ -246,4 +250,17 @@ model Playlist {
 
   @@index([userId])
   @@index([isPublic])
+}
+
+model ListeningHistory {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String   @db.Uuid
+  trackId    String   @db.Uuid
+  listenedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@index([userId, listenedAt(sort: Desc)])
+  @@index([trackId])
 }

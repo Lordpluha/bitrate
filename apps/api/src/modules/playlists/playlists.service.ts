@@ -1,7 +1,7 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { UserEntity } from '@modules/users'
-import { Injectable } from '@nestjs/common'
-import { CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
+import { AddTracksDto, CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
 import { PlaylistEntity } from './entities'
 
 @Injectable()
@@ -60,24 +60,22 @@ export class PlaylistsService {
   }
 
   async update(userId: UserEntity['id'], id: PlaylistEntity['id'], updateDto: UpdatePlaylistDto) {
+    const playlist = await this.prisma.playlist.findUnique({ where: { id } })
+    if (!playlist) throw new NotFoundException('Playlist not found')
+    if (playlist.userId !== userId) throw new ForbiddenException('You do not own this playlist')
+
     return await this.prisma.playlist.update({
-      where: {
-        id,
-      },
-      data: {
-        ...updateDto,
-        userId,
-      },
+      where: { id },
+      data: updateDto,
     })
   }
 
   async delete(userId: UserEntity['id'], id: PlaylistEntity['id']) {
-    return await this.prisma.playlist.delete({
-      where: {
-        id,
-        userId,
-      },
-    })
+    const playlist = await this.prisma.playlist.findUnique({ where: { id } })
+    if (!playlist) throw new NotFoundException('Playlist not found')
+    if (playlist.userId !== userId) throw new ForbiddenException('You do not own this playlist')
+
+    return await this.prisma.playlist.delete({ where: { id } })
   }
 
   async like(userId: UserEntity['id'], playlistId: PlaylistEntity['id']) {
@@ -91,6 +89,39 @@ export class PlaylistsService {
     return await this.prisma.playlist.update({
       where: { id: playlistId },
       data: { likedBy: { disconnect: { id: userId } } },
+    })
+  }
+
+  async getMine(userId: UserEntity['id']) {
+    return await this.prisma.playlist.findMany({
+      where: { userId },
+      include: {
+        tracks: { select: { id: true, title: true, cover: true } },
+        _count: { select: { tracks: true } },
+      },
+      orderBy: { updatedAt: 'desc' },
+    })
+  }
+
+  async addTracks(userId: UserEntity['id'], id: PlaylistEntity['id'], dto: AddTracksDto) {
+    const playlist = await this.prisma.playlist.findFirst({ where: { id, userId } })
+    if (!playlist) throw new NotFoundException('Playlist not found or not owned by user')
+
+    return await this.prisma.playlist.update({
+      where: { id },
+      data: { tracks: { connect: dto.trackIds.map((trackId) => ({ id: trackId })) } },
+      include: { tracks: true },
+    })
+  }
+
+  async removeTrack(userId: UserEntity['id'], id: PlaylistEntity['id'], trackId: string) {
+    const playlist = await this.prisma.playlist.findFirst({ where: { id, userId } })
+    if (!playlist) throw new NotFoundException('Playlist not found or not owned by user')
+
+    return await this.prisma.playlist.update({
+      where: { id },
+      data: { tracks: { disconnect: { id: trackId } } },
+      include: { tracks: true },
     })
   }
 }

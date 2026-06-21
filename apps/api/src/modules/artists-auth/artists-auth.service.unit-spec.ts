@@ -1,3 +1,4 @@
+import type { MailService } from '@infra/mail/mail.service'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
 import type { ArtistsPrivateService } from '@modules/artists/artists.private.service'
@@ -36,6 +37,11 @@ const makeTokenServiceMock = () =>
     verifyPassword: jest.fn(),
   }) as unknown as jest.Mocked<TokenService>
 
+const makeMailServiceMock = () =>
+  ({
+    sendPasswordReset: jest.fn(),
+  }) as unknown as jest.Mocked<MailService>
+
 describe('ArtistsAuthService', () => {
   let service: ArtistsAuthService
   let artists: jest.Mocked<ArtistsService>
@@ -43,6 +49,7 @@ describe('ArtistsAuthService', () => {
   let jwtService: jest.Mocked<JwtService>
   let prisma: PrismaMock
   let token: jest.Mocked<TokenService>
+  let mail: jest.Mocked<MailService>
 
   beforeEach(() => {
     resetPrismaMock()
@@ -51,7 +58,8 @@ describe('ArtistsAuthService', () => {
     artistsPrivate = makeArtistsPrivateServiceMock()
     jwtService = makeJwtServiceMock()
     token = makeTokenServiceMock()
-    service = new ArtistsAuthService(artists, artistsPrivate, jwtService, prisma, token)
+    mail = makeMailServiceMock()
+    service = new ArtistsAuthService(artists, artistsPrivate, jwtService, prisma, token, mail)
   })
 
   describe('registerArtist', () => {
@@ -106,7 +114,7 @@ describe('ArtistsAuthService', () => {
     })
 
     it('should return tokens on successful login', async () => {
-      const artist = buildArtist()
+      const artist = buildArtist({ password: 'hashed-password' })
       artistsPrivate.findByEmail.mockResolvedValue(artist as never)
       token.verifyPassword.mockResolvedValue(true as never)
       token.generateAccessToken.mockResolvedValue('access-token' as never)
@@ -115,9 +123,9 @@ describe('ArtistsAuthService', () => {
       const session = buildArtistSession()
       prisma.artistSession.create.mockResolvedValue(session)
 
-      const result = await service.loginArtist(artist.email, artist.password)
+      const result = await service.loginArtist(artist.email, artist.password!)
 
-      expect(token.verifyPassword).toHaveBeenCalledWith(artist.password, artist.password)
+      expect(token.verifyPassword).toHaveBeenCalledWith(artist.password!, artist.password!)
       expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
     })
   })

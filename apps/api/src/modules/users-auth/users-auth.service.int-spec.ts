@@ -102,7 +102,7 @@ describe('UserAuthService (int)', () => {
     tokenMock.generateRefreshToken.mockResolvedValue('rt' as never)
     prismaMock.userSession.create.mockResolvedValue(buildUserSession() as never)
 
-    const result = await service.loginUser(user.email, user.password)
+    const result = await service.loginUser(user.email, user.password!)
 
     expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
   })

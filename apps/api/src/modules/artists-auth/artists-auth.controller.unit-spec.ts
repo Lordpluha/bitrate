@@ -3,6 +3,8 @@ import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixture
 import type { ArtistsService } from '@modules/artists/artists.service'
 import type { TokenService } from '@modules/tokens/token.service'
 import type { Response } from 'express'
+import type { ArtistOAuthService } from './artist-oauth.service'
+import type { ArtistTwoFactorService } from './artist-two-factor.service'
 import { AuthController } from './artists-auth.controller'
 import type { ArtistsAuthService } from './artists-auth.service'
 
@@ -25,6 +27,20 @@ const makeTokenServiceMock = () =>
     clearAuthCookies: jest.fn(),
   }) as unknown as jest.Mocked<TokenService>
 
+const makeTwoFactorServiceMock = () =>
+  ({
+    setupTwoFactor: jest.fn(),
+    enableTwoFactor: jest.fn(),
+    disableTwoFactor: jest.fn(),
+    verifyLoginCode: jest.fn(),
+  }) as unknown as jest.Mocked<ArtistTwoFactorService>
+
+const makeOAuthServiceMock = () =>
+  ({
+    handleGoogleCallback: jest.fn(),
+    handleFacebookCallback: jest.fn(),
+  }) as unknown as jest.Mocked<ArtistOAuthService>
+
 const makeResponse = () =>
   ({
     cookie: jest.fn(),
@@ -43,7 +59,13 @@ describe('AuthController (artists)', () => {
     authService = makeAuthServiceMock()
     artistsService = makeArtistsServiceMock()
     tokenService = makeTokenServiceMock()
-    controller = new AuthController(authService, artistsService, tokenService)
+    controller = new AuthController(
+      authService,
+      artistsService,
+      tokenService,
+      makeTwoFactorServiceMock(),
+      makeOAuthServiceMock(),
+    )
   })
 
   it('login should call loginArtist and setAuthCookies', async () => {

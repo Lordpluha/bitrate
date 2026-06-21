@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
+import type { Request } from 'express'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
 import { UsersController } from './users.controller'
@@ -59,9 +60,7 @@ describe('UsersController', () => {
     const updated = buildUser({ username: 'updated' })
     service.updateById.mockResolvedValue(updated)
 
-    const req = { user: buildUser({ id: 'user-1' }) } as Request & {
-      user: ReturnType<typeof buildUser>
-    }
+    const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
     const dto = { username: 'updated', email: 'updated@example.com' }
 
     const result = await controller.putById(req, dto)
@@ -74,9 +73,7 @@ describe('UsersController', () => {
     const updated = buildUser({ avatar: '/static/users/avatars/avatar.png' })
     service.uploadAvatar.mockResolvedValue(updated)
 
-    const req = { user: buildUser({ id: 'user-1' }) } as Request & {
-      user: ReturnType<typeof buildUser>
-    }
+    const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
     const file = { filename: 'avatar.png' } as Express.Multer.File
 
     const result = await controller.uploadAvatar(req, file)
