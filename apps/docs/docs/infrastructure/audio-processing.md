@@ -103,7 +103,7 @@ GET /api/v1/tracks/stream/:id/hls/:bitrate/index.m3u8
 GET /api/v1/tracks/stream/:id/hls/:bitrate/segment_00000.m4s
 ```
 
-Подробнее о стриминге на клиенте: [Audio Streaming](../audio-streaming)
+Подробнее о стриминге на клиенте: [Audio Streaming](../applications/audio-streaming)
 
 ## Конвертация
 
