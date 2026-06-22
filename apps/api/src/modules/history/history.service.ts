@@ -28,7 +28,8 @@ export class HistoryService {
 
   /** Runs the get history operation. */
   async getHistory(userId: UserEntity['id'], page = 1, limit = 20) {
-    const skip = (page - 1) * limit
+    const safeLimit = Math.min(limit, 100)
+    const skip = (page - 1) * safeLimit
 
     const latestTracks = await this.prisma.listeningHistory.groupBy({
       by: ['trackId'],
@@ -36,22 +37,21 @@ export class HistoryService {
       _max: { listenedAt: true },
       orderBy: { _max: { listenedAt: 'desc' } },
       skip,
-      take: limit,
+      take: safeLimit,
     })
 
-    return await Promise.all(
-      latestTracks.map(({ trackId }) =>
-        this.prisma.listeningHistory.findFirstOrThrow({
-          where: { userId, trackId },
-          orderBy: { listenedAt: 'desc' },
-          select: {
-            id: true,
-            listenedAt: true,
-            track: { select: TRACK_SELECT },
-          },
-        }),
-      ),
-    )
+    const trackIds = latestTracks.map(({ trackId }) => trackId)
+    if (trackIds.length === 0) return []
+
+    const entries = await this.prisma.listeningHistory.findMany({
+      where: { userId, trackId: { in: trackIds } },
+      orderBy: { listenedAt: 'desc' },
+      distinct: ['trackId'],
+      select: { id: true, listenedAt: true, trackId: true, track: { select: TRACK_SELECT } },
+    })
+
+    const byTrackId = new Map(entries.map((e) => [e.trackId, e]))
+    return trackIds.map((id) => byTrackId.get(id)!).filter(Boolean)
   }
 
   /** Runs the clear all operation. */

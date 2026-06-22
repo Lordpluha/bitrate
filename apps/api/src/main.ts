@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
+import helmet from 'helmet'
 
 import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'
@@ -15,6 +16,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get<ConfigService<AppConfig>>(ConfigService)
 
+  app.use(helmet())
   app.use(cookieParser())
   app.useGlobalFilters(new HttpExceptionFilter())
 

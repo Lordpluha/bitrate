@@ -1,4 +1,7 @@
+import { randomUUID } from 'node:crypto'
+import { open, unlink } from 'node:fs/promises'
 import { extname } from 'node:path'
+import { isAllowedImageBuffer } from '@common/utils/prisma'
 import { SafeUserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
@@ -97,8 +100,7 @@ export class UsersController {
       storage: diskStorage({
         destination: './storage/public/users/avatars',
         filename: (_req, file, cb) => {
-          const uniqueName = `${Date.now()}${extname(file.originalname)}`
-          cb(null, uniqueName)
+          cb(null, `${randomUUID()}${extname(file.originalname)}`)
         },
       }),
       fileFilter: (_req, file, cb) => {
@@ -112,6 +114,19 @@ export class UsersController {
   )
   async uploadAvatar(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
     if (!file) throw new BadRequestException('Avatar file is required')
+
+    const buf = Buffer.alloc(12)
+    const fd = await open(file.path, 'r')
+    try {
+      await fd.read(buf, 0, 12, 0)
+    } finally {
+      await fd.close()
+    }
+    if (!isAllowedImageBuffer(buf)) {
+      await unlink(file.path)
+      throw new BadRequestException('Invalid file content')
+    }
+
     const user = req.user as UserEntity
     return await this.usersService.uploadAvatar(user.id, file.filename)
   }

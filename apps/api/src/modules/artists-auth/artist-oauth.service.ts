@@ -166,7 +166,7 @@ export class ArtistOAuthService {
     const artist = await this.prisma.artist.create({
       data: {
         email: profile.email,
-        username: await this.generateUniqueUsername(profile.name),
+        username: this.generateUniqueUsername(profile.name),
         password: null,
       },
     })
@@ -193,8 +193,12 @@ export class ArtistOAuthService {
 
   /** Runs the create session operation. */
   private async createSession(artist: { id: string; username: string }) {
-    const access_token = await this.token.generateAccessToken(artist.id, artist.username)
-    const refresh_token = await this.token.generateRefreshToken(artist.id, artist.username)
+    const access_token = await this.token.generateAccessToken(artist.id, artist.username, 'artist')
+    const refresh_token = await this.token.generateRefreshToken(
+      artist.id,
+      artist.username,
+      'artist',
+    )
 
     await this.prisma.artistSession.create({
       data: {
@@ -208,16 +212,11 @@ export class ArtistOAuthService {
   }
 
   /** Runs the generate unique username operation. */
-  private async generateUniqueUsername(name: string): Promise<string> {
+  private generateUniqueUsername(name: string): string {
     const base = name
       .toLowerCase()
       .replace(/[^a-z0-9]/g, '_')
       .slice(0, 20)
-    let username = base
-    let i = 1
-    while (await this.prisma.artist.findFirst({ where: { username } })) {
-      username = `${base}_${i++}`
-    }
-    return username
+    return `${base}_${randomBytes(4).toString('hex')}`
   }
 }

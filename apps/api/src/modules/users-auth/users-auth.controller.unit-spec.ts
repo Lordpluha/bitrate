@@ -197,8 +197,9 @@ describe('UsersAuthController', () => {
         refresh_token: 'rt',
       })
       const res = createResponse()
+      const req = { cookies: {} } as Request
 
-      await controller.twoFactorVerifyLogin({ pendingToken: 'pending', code: '000000' }, res)
+      await controller.twoFactorVerifyLogin({ pendingToken: 'pending', code: '000000' }, req, res)
 
       expect(twoFactorService.verifyLoginCode).toHaveBeenCalledWith('pending', '000000')
       expect(authService.completeTwoFactorLogin).toHaveBeenCalledWith(user.id)

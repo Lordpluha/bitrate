@@ -60,8 +60,8 @@ export class UserAuthService {
       return { requires2fa: true as const, pendingToken }
     }
 
-    const access_token = await this.token.generateAccessToken(user.id, user.username)
-    const refresh_token = await this.token.generateRefreshToken(user.id, user.username)
+    const access_token = await this.token.generateAccessToken(user.id, user.username, 'user')
+    const refresh_token = await this.token.generateRefreshToken(user.id, user.username, 'user')
 
     await this.prisma.userSession.create({
       data: {
@@ -77,8 +77,8 @@ export class UserAuthService {
   /** Runs the complete two factor login operation. */
   async completeTwoFactorLogin(userId: string) {
     const user = await this.usersPrivate.findById(userId)
-    const access_token = await this.token.generateAccessToken(user.id, user.username)
-    const refresh_token = await this.token.generateRefreshToken(user.id, user.username)
+    const access_token = await this.token.generateAccessToken(user.id, user.username, 'user')
+    const refresh_token = await this.token.generateRefreshToken(user.id, user.username, 'user')
 
     await this.prisma.userSession.create({
       data: {
@@ -98,7 +98,7 @@ export class UserAuthService {
         secret: process.env.JWT_SECRET,
       })
       const user = await this.users.findById(payload.sub)
-      const access_token = await this.token.generateAccessToken(user.id, user.username)
+      const access_token = await this.token.generateAccessToken(user.id, user.username, 'user')
 
       const updatedSessions = await this.prisma.userSession.updateMany({
         where: {

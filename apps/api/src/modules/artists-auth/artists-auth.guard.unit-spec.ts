@@ -12,6 +12,7 @@ const makeTokenServiceMock = () =>
   ({
     verifyToken: jest.fn(),
     hashToken: jest.fn().mockReturnValue('hashed-token'),
+    getTokenName: jest.fn((type: string) => (type === 'access' ? 'access_token' : 'refresh_token')),
   }) as unknown as jest.Mocked<TokenService>
 
 const makeReflectorMock = (requirement: string) =>
@@ -73,25 +74,33 @@ describe('ArtistAuthGuard', () => {
     process.env.REFRESH_TOKEN_NAME = 'refresh_token'
     reflector = makeReflectorMock('access')
     guard = new ArtistAuthGuard(prisma, reflector, tokenService)
-    tokenService.verifyToken.mockResolvedValue({ sub: 'artist-1', username: 'artist' } as never)
+    tokenService.verifyToken.mockResolvedValue({
+      sub: 'artist-1',
+      username: 'artist',
+      type: 'artist',
+    } as never)
     prisma.artist.findUnique.mockResolvedValue(null)
 
     await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
-      UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN,
+      UNAUTHORIZED_ERRORS.USER_NOT_FOUND,
     )
   })
 
-  it('should throw INVALID_OR_EXPIRED_TOKEN when session not found', async () => {
+  it('should throw SESSION_NOT_FOUND when session not found', async () => {
     process.env.ACCESS_TOKEN_NAME = 'access_token'
     process.env.REFRESH_TOKEN_NAME = 'refresh_token'
     reflector = makeReflectorMock('access')
     guard = new ArtistAuthGuard(prisma, reflector, tokenService)
-    tokenService.verifyToken.mockResolvedValue({ sub: 'artist-1', username: 'artist' } as never)
+    tokenService.verifyToken.mockResolvedValue({
+      sub: 'artist-1',
+      username: 'artist',
+      type: 'artist',
+    } as never)
     prisma.artist.findUnique.mockResolvedValue(buildArtist() as never)
     prisma.artistSession.findFirst.mockResolvedValue(null)
 
     await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
-      UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN,
+      UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND,
     )
   })
 
@@ -103,7 +112,11 @@ describe('ArtistAuthGuard', () => {
 
     const artist = buildArtist()
     const session = buildArtistSession()
-    tokenService.verifyToken.mockResolvedValue({ sub: 'artist-1', username: 'artist' } as never)
+    tokenService.verifyToken.mockResolvedValue({
+      sub: 'artist-1',
+      username: 'artist',
+      type: 'artist',
+    } as never)
     prisma.artist.findUnique.mockResolvedValue(artist as never)
     prisma.artistSession.findFirst.mockResolvedValue(session as never)
 

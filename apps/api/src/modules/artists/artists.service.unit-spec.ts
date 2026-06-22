@@ -1,6 +1,6 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { UnauthorizedException } from '@nestjs/common'
+import { ForbiddenException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtist } from './__tests__/fixtures/artists.fixtures'
 import { ArtistsService } from './artists.service'
@@ -84,8 +84,8 @@ describe('ArtistsService', () => {
     expect(result).toBe(artist)
   })
 
-  it('update should throw UnauthorizedException when id differs from currentArtistId', async () => {
-    await expect(service.update('artist-1', {}, 'other-id')).rejects.toThrow(UnauthorizedException)
+  it('update should throw ForbiddenException when id differs from currentArtistId', async () => {
+    await expect(service.update('artist-1', {}, 'other-id')).rejects.toThrow(ForbiddenException)
   })
 
   it('update should update artist when authorized', async () => {
@@ -102,10 +102,8 @@ describe('ArtistsService', () => {
     expect(result).toBe(updated)
   })
 
-  it('requestDelete should throw UnauthorizedException when id differs from currentArtistId', async () => {
-    await expect(service.requestDelete('artist-1', 'other-id')).rejects.toThrow(
-      UnauthorizedException,
-    )
+  it('requestDelete should throw ForbiddenException when id differs from currentArtistId', async () => {
+    await expect(service.requestDelete('artist-1', 'other-id')).rejects.toThrow(ForbiddenException)
   })
 
   it('requestDelete should delete artist when authorized', async () => {

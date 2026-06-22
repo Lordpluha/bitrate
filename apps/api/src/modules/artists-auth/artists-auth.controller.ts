@@ -2,6 +2,7 @@ import { ArtistsService } from '@modules/artists/artists.service'
 import { TokenService } from '@modules/tokens/token.service'
 import { Body, Controller, Delete, Get, HttpCode, Post, Query, Req, Res } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
+import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { ArtistOAuthService } from './artist-oauth.service'
@@ -57,6 +58,7 @@ export class AuthController {
 
   /** Runs the login operation. */
   @AuthLoginSwagger()
+  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @Post('login')
   async login(
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
@@ -109,6 +111,7 @@ export class AuthController {
 
   /** Runs the forgot password operation. */
   @AuthForgotPasswordSwagger()
+  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('forgot-password')
   async forgotPassword(@Body(new ZodValidationPipe(ForgotPasswordSchema)) dto: ForgotPasswordDto) {
@@ -117,6 +120,7 @@ export class AuthController {
 
   /** Runs the reset password operation. */
   @AuthResetPasswordSwagger()
+  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('reset-password')
   async resetPassword(@Body(new ZodValidationPipe(ResetPasswordSchema)) dto: ResetPasswordDto) {
@@ -157,6 +161,7 @@ export class AuthController {
 
   /** Runs the two factor verify login operation. */
   @TwoFactorVerifyLoginSwagger()
+  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('2fa/verify-login')
   async twoFactorVerifyLogin(

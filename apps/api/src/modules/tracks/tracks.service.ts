@@ -1,6 +1,7 @@
 import { createReadStream, promises as fs } from 'node:fs'
 import { extname } from 'node:path'
 import type { AppConfig } from '@common/config'
+import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -161,36 +162,50 @@ export class TracksService {
       `list:${page}:${limit}:${title ?? ''}`,
       TTL.SHORT,
       async () => {
-        const skip = (page - 1) * limit
+        const safeLimit = Math.min(limit, 100)
+        const skip = (page - 1) * safeLimit
         const [data, total] = await this.prisma.$transaction([
           this.prisma.track.findMany({
             skip,
             where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
-            take: limit,
+            take: safeLimit,
           }),
           this.prisma.track.count({
             where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
           }),
         ])
-        return { data, meta: { total, page, limit, lastPage: Math.ceil(total / limit) } }
+        return {
+          data,
+          meta: { total, page, limit: safeLimit, lastPage: Math.ceil(total / safeLimit) },
+        }
       },
     )
   }
 
   /** Runs the like operation. */
   async like(userId: UserEntity['id'], trackId: TrackEntity['id']) {
-    return await this.prisma.track.update({
-      where: { id: trackId },
-      data: { likedBy: { connect: { id: userId } } },
-    })
+    try {
+      return await this.prisma.track.update({
+        where: { id: trackId },
+        data: { likedBy: { connect: { id: userId } } },
+      })
+    } catch (error: unknown) {
+      if (isPrismaP2025(error)) throw new NotFoundException('Track not found')
+      throw error
+    }
   }
 
   /** Runs the unlike operation. */
   async unlike(userId: UserEntity['id'], trackId: TrackEntity['id']) {
-    return await this.prisma.track.update({
-      where: { id: trackId },
-      data: { likedBy: { disconnect: { id: userId } } },
-    })
+    try {
+      return await this.prisma.track.update({
+        where: { id: trackId },
+        data: { likedBy: { disconnect: { id: userId } } },
+      })
+    } catch (error: unknown) {
+      if (isPrismaP2025(error)) throw new NotFoundException('Track not found')
+      throw error
+    }
   }
 
   /** Runs the find liked tracks operation. */
@@ -198,6 +213,7 @@ export class TracksService {
     userId: UserEntity['id'],
     { page = 1, limit = 10 }: { page?: number; limit?: number },
   ) {
+    const safeLimit = Math.min(limit, 100)
     return await this.prisma.track.findMany({
       where: {
         likedBy: {
@@ -206,8 +222,8 @@ export class TracksService {
           },
         },
       },
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: (page - 1) * safeLimit,
+      take: safeLimit,
     })
   }
 

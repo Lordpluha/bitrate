@@ -45,6 +45,10 @@ describe('UserAuthGuard', () => {
     mockReset(reflector)
     mockReset(tokenService)
 
+    tokenService.getTokenName.mockImplementation((type) =>
+      type === 'access' ? 'access_token' : 'refresh_token',
+    )
+
     guard = new UserAuthGuard(prisma, reflector, tokenService)
   })
 
@@ -92,7 +96,7 @@ describe('UserAuthGuard', () => {
       refresh_token: 'refresh-token',
     }
 
-    tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user' })
+    tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
     prisma.user.findUnique.mockResolvedValue(buildUser({ id: 'user-1' }))
     prisma.userSession.findFirst.mockResolvedValue(
       buildUserSession({
@@ -105,7 +109,7 @@ describe('UserAuthGuard', () => {
     const result = await guard.canActivate(createHttpContext(req))
 
     expect(result).toBe(true)
-    expect(tokenService.verifyToken).toHaveBeenCalledTimes(2)
+    expect(tokenService.verifyToken).toHaveBeenCalledTimes(1)
     expect(req.user).toBeDefined()
     expect(req.access_token).toBe('access-token')
     expect(req.refresh_token).toBe('refresh-token')
@@ -119,11 +123,11 @@ describe('UserAuthGuard', () => {
       access_token: 'access-token',
     }
 
-    tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user' })
+    tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
     prisma.user.findUnique.mockResolvedValue(null)
 
     await expect(guard.canActivate(createHttpContext(req))).rejects.toThrow(
-      UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN,
+      UNAUTHORIZED_ERRORS.USER_NOT_FOUND,
     )
   })
 

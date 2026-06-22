@@ -16,7 +16,7 @@ describe('TokenService', () => {
     ['JWT_SECRET', 'super-secret'],
     ['ACCESS_TOKEN_NAME', 'access_token'],
     ['REFRESH_TOKEN_NAME', 'refresh_token'],
-    ['cookie', { httpOnly: true, sameSite: 'lax', secure: false }],
+    ['cookie', { httpOnly: true, sameSite: 'lax', secure: false, path: '/' }],
   ])
 
   beforeEach(() => {
@@ -35,10 +35,10 @@ describe('TokenService', () => {
   it('generateAccessToken should sign with access expiry', async () => {
     jwtService.signAsync.mockResolvedValue('access-token')
 
-    const result = await service.generateAccessToken('user-1', 'alice')
+    const result = await service.generateAccessToken('user-1', 'alice', 'user')
 
     expect(jwtService.signAsync).toHaveBeenCalledWith(
-      { username: 'alice' },
+      { username: 'alice', type: 'user' },
       {
         subject: 'user-1',
         expiresIn: '5m',
@@ -51,10 +51,10 @@ describe('TokenService', () => {
   it('generateRefreshToken should sign with refresh expiry', async () => {
     jwtService.signAsync.mockResolvedValue('refresh-token')
 
-    const result = await service.generateRefreshToken('user-1', 'alice')
+    const result = await service.generateRefreshToken('user-1', 'alice', 'user')
 
     expect(jwtService.signAsync).toHaveBeenCalledWith(
-      { username: 'alice' },
+      { username: 'alice', type: 'user' },
       {
         subject: 'user-1',
         expiresIn: '30d',
@@ -86,11 +86,15 @@ describe('TokenService', () => {
       httpOnly: true,
       sameSite: 'lax',
       secure: false,
+      path: '/',
+      maxAge: 300_000,
     })
     expect(res.cookie).toHaveBeenCalledWith('refresh_token', 'refresh-token', {
       httpOnly: true,
       sameSite: 'lax',
       secure: false,
+      path: '/',
+      maxAge: 2_592_000_000,
     })
   })
 

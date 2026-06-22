@@ -111,8 +111,8 @@ describe('UserAuthService', () => {
       const result = await service.loginUser(user.email, 'correct-pass')
 
       expect(token.verifyPassword).toHaveBeenCalledWith('correct-pass', 'hash')
-      expect(token.generateAccessToken).toHaveBeenCalledWith(user.id, user.username)
-      expect(token.generateRefreshToken).toHaveBeenCalledWith(user.id, user.username)
+      expect(token.generateAccessToken).toHaveBeenCalledWith(user.id, user.username, 'user')
+      expect(token.generateRefreshToken).toHaveBeenCalledWith(user.id, user.username, 'user')
       expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
     })
 
@@ -264,7 +264,7 @@ describe('UserAuthService', () => {
 
       const result = await service.completeTwoFactorLogin(user.id)
 
-      expect(token.generateAccessToken).toHaveBeenCalledWith(user.id, user.username)
+      expect(token.generateAccessToken).toHaveBeenCalledWith(user.id, user.username, 'user')
       expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
     })
   })

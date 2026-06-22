@@ -2,7 +2,7 @@ import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { UserEntity } from '@modules/users'
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import type { CreateArtistDto, UpdateArtistDto } from './dtos'
 import type { ArtistEntity } from './entities'
 
@@ -39,14 +39,15 @@ export class ArtistsService {
     limit = 10,
     username,
   }: { page?: number; limit?: number } & Partial<Pick<ArtistEntity, 'username'>>) {
+    const safeLimit = Math.min(limit, 100)
     return await this.cache.wrap(
       NS.ARTISTS,
-      `list:${page}:${limit}:${username ?? ''}`,
+      `list:${page}:${safeLimit}:${username ?? ''}`,
       TTL.SHORT,
       () =>
         this.prisma.artist.findMany({
-          skip: (page - 1) * limit,
-          take: limit,
+          skip: (page - 1) * safeLimit,
+          take: safeLimit,
           where: username ? { username: { contains: username, mode: 'insensitive' } } : undefined,
           omit: { password: true, email: true },
         }),
@@ -66,7 +67,7 @@ export class ArtistsService {
     artist: UpdateArtistDto,
     currentArtistId: ArtistEntity['id'],
   ) {
-    if (id !== currentArtistId) throw new UnauthorizedException('Unauthorized')
+    if (id !== currentArtistId) throw new ForbiddenException('Forbidden')
 
     const updated = await this.prisma.artist.update({
       where: { id },
@@ -79,7 +80,7 @@ export class ArtistsService {
 
   /** Runs the request delete operation. */
   async requestDelete(id: ArtistEntity['id'], currentArtistId: ArtistEntity['id']) {
-    if (id !== currentArtistId) throw new UnauthorizedException('Unauthorized')
+    if (id !== currentArtistId) throw new ForbiddenException('Forbidden')
 
     const deleted = await this.prisma.artist.delete({
       where: { id },
@@ -129,12 +130,13 @@ export class ArtistsService {
 
   /** Runs the get following operation. */
   async getFollowing(userId: UserEntity['id'], page = 1, limit = 20) {
+    const safeLimit = Math.min(limit, 100)
     return await this.prisma.artist.findMany({
       where: { followers: { some: { id: userId } } },
       omit: { password: true, email: true },
       include: { _count: { select: { followers: true } } },
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: (page - 1) * safeLimit,
+      take: safeLimit,
     })
   }
 }

@@ -8,13 +8,11 @@ import type { GatewayMetadata } from '@nestjs/websockets'
 const getAllowedOrigins = (): CorsOptions['origin'] => {
   const baseOrigins = [
     /^http:\/\/localhost(:\d+)?$/, // Any localhost with optional port
-    'file://', // For local HTML files
-    'null', // For file:// origin in some browsers
   ]
 
   const webHost = process.env.WEB_HOST || 'http://localhost:3001'
 
-  return [webHost, ...baseOrigins, /^file:\/\//]
+  return [webHost, ...baseOrigins]
 }
 
 /**

@@ -59,8 +59,12 @@ export class ArtistsAuthService {
       return { requires2fa: true as const, pendingToken }
     }
 
-    const access_token = await this.token.generateAccessToken(artist.id, artist.username)
-    const refresh_token = await this.token.generateRefreshToken(artist.id, artist.username)
+    const access_token = await this.token.generateAccessToken(artist.id, artist.username, 'artist')
+    const refresh_token = await this.token.generateRefreshToken(
+      artist.id,
+      artist.username,
+      'artist',
+    )
 
     await this.prisma.artistSession.create({
       data: {
@@ -78,8 +82,12 @@ export class ArtistsAuthService {
     const artist = await this.artistsPrivate.findById(artistId)
     if (!artist) throw new UnauthorizedException('Artist not found')
 
-    const access_token = await this.token.generateAccessToken(artist.id, artist.username)
-    const refresh_token = await this.token.generateRefreshToken(artist.id, artist.username)
+    const access_token = await this.token.generateAccessToken(artist.id, artist.username, 'artist')
+    const refresh_token = await this.token.generateRefreshToken(
+      artist.id,
+      artist.username,
+      'artist',
+    )
 
     await this.prisma.artistSession.create({
       data: {
@@ -100,7 +108,11 @@ export class ArtistsAuthService {
       })
       const artist = await this.artists.findById(payload.sub)
       if (!artist) throw new UnauthorizedException('Invalid refresh token')
-      const access_token = await this.token.generateAccessToken(artist.id, artist.username)
+      const access_token = await this.token.generateAccessToken(
+        artist.id,
+        artist.username,
+        'artist',
+      )
 
       const updatedSessions = await this.prisma.artistSession.updateMany({
         where: {

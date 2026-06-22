@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
 import { Response } from 'express'
-import { type StringValue } from 'ms'
+import ms, { type StringValue } from 'ms'
 import { JWTPayload } from '../tokens'
 
 /** Represents the token service. */
@@ -27,9 +27,13 @@ export class TokenService {
   }
 
   /** Runs the generate access token operation. */
-  async generateAccessToken(entityId: string, username: string): Promise<string> {
+  async generateAccessToken(
+    entityId: string,
+    username: string,
+    type: JWTPayload['type'],
+  ): Promise<string> {
     return await this.jwtService.signAsync(
-      { username },
+      { username, type },
       {
         subject: entityId,
         expiresIn: this.accessTokenExpiry,
@@ -39,9 +43,13 @@ export class TokenService {
   }
 
   /** Runs the generate refresh token operation. */
-  async generateRefreshToken(entityId: string, username: string): Promise<string> {
+  async generateRefreshToken(
+    entityId: string,
+    username: string,
+    type: JWTPayload['type'],
+  ): Promise<string> {
     return await this.jwtService.signAsync(
-      { username },
+      { username, type },
       {
         subject: entityId,
         expiresIn: this.refreshTokenExpiry,
@@ -67,16 +75,29 @@ export class TokenService {
 
   /** Runs the set auth cookies operation. */
   setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
-    const cookieConfig = this.configService.getOrThrow('cookie')
+    const base = this.configService.getOrThrow('cookie')
 
-    res.cookie(this.configService.getOrThrow('ACCESS_TOKEN_NAME'), accessToken, cookieConfig)
-    res.cookie(this.configService.getOrThrow('REFRESH_TOKEN_NAME'), refreshToken, cookieConfig)
+    res.cookie(this.configService.getOrThrow('ACCESS_TOKEN_NAME'), accessToken, {
+      ...base,
+      maxAge: ms(this.accessTokenExpiry),
+    })
+    res.cookie(this.configService.getOrThrow('REFRESH_TOKEN_NAME'), refreshToken, {
+      ...base,
+      maxAge: ms(this.refreshTokenExpiry),
+    })
   }
 
   /** Runs the clear auth cookies operation. */
   clearAuthCookies(res: Response) {
     res.clearCookie(this.configService.getOrThrow('ACCESS_TOKEN_NAME'))
     res.clearCookie(this.configService.getOrThrow('REFRESH_TOKEN_NAME'))
+  }
+
+  /** Returns the cookie name for access or refresh token. */
+  getTokenName(type: 'access' | 'refresh'): string {
+    return type === 'access'
+      ? this.configService.getOrThrow('ACCESS_TOKEN_NAME')
+      : this.configService.getOrThrow('REFRESH_TOKEN_NAME')
   }
 
   /** Runs the hash token operation. */

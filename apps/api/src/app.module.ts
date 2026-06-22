@@ -11,8 +11,9 @@ import { UsersModule } from '@modules/users/users.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { BullModule } from '@nestjs/bullmq'
 import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ServeStaticModule } from '@nestjs/serve-static'
+import { ThrottlerModule } from '@nestjs/throttler'
 import { SentryModule } from '@sentry/nestjs/setup'
 import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
@@ -50,11 +51,18 @@ import { appConfigs } from './common/config'
         },
       },
     }),
-    BullModule.forRoot({
-      connection: {
-        host: process.env.REDIS_HOST,
-        port: Number(process.env.REDIS_PORT),
-      },
+    ThrottlerModule.forRoot([
+      { name: 'auth', ttl: 60_000, limit: 10 },
+      { name: 'default', ttl: 60_000, limit: 100 },
+    ]),
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        connection: {
+          host: config.getOrThrow('REDIS_HOST'),
+          port: config.getOrThrow('REDIS_PORT'),
+        },
+      }),
     }),
     PrismaModule,
     UsersAuthModule,

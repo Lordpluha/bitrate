@@ -58,10 +58,10 @@ describe('TokenService (int)', () => {
   it('generateAccessToken should call jwtService.signAsync with correct args', async () => {
     jwtService.signAsync.mockResolvedValue('access-token' as never)
 
-    const result = await service.generateAccessToken('user-1', 'user')
+    const result = await service.generateAccessToken('user-1', 'user', 'user')
 
     expect(jwtService.signAsync).toHaveBeenCalledWith(
-      { username: 'user' },
+      { username: 'user', type: 'user' },
       { subject: 'user-1', expiresIn: '15m', secret: 'test-secret' },
     )
     expect(result).toBe('access-token')
@@ -70,10 +70,10 @@ describe('TokenService (int)', () => {
   it('generateRefreshToken should call jwtService.signAsync with refresh expiry', async () => {
     jwtService.signAsync.mockResolvedValue('refresh-token' as never)
 
-    const result = await service.generateRefreshToken('user-1', 'user')
+    const result = await service.generateRefreshToken('user-1', 'user', 'user')
 
     expect(jwtService.signAsync).toHaveBeenCalledWith(
-      { username: 'user' },
+      { username: 'user', type: 'user' },
       { subject: 'user-1', expiresIn: '7d', secret: 'test-secret' },
     )
     expect(result).toBe('refresh-token')

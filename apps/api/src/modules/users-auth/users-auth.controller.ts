@@ -2,6 +2,7 @@ import { UserEntity } from '@modules/users'
 import { UsersService } from '@modules/users/users.service'
 import { Body, Controller, Delete, Get, HttpCode, Post, Query, Req, Res } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
+import { Throttle } from '@nestjs/throttler'
 import { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { TokenService } from '../tokens/token.service'
@@ -58,6 +59,7 @@ export class UsersAuthController {
 
   /** Runs the login operation. */
   @AuthLoginSwagger()
+  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @Post('login')
   async login(
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
@@ -112,6 +114,7 @@ export class UsersAuthController {
 
   /** Runs the forgot password operation. */
   @AuthForgotPasswordSwagger()
+  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('forgot-password')
   async forgotPassword(@Body(new ZodValidationPipe(ForgotPasswordSchema)) dto: ForgotPasswordDto) {
@@ -120,6 +123,7 @@ export class UsersAuthController {
 
   /** Runs the reset password operation. */
   @AuthResetPasswordSwagger()
+  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('reset-password')
   async resetPassword(@Body(new ZodValidationPipe(ResetPasswordSchema)) dto: ResetPasswordDto) {
@@ -160,14 +164,18 @@ export class UsersAuthController {
 
   /** Runs the two factor verify login operation. */
   @TwoFactorVerifyLoginSwagger()
+  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('2fa/verify-login')
   async twoFactorVerifyLogin(
     @Body(new ZodValidationPipe(TwoFactorVerifyLoginSchema)) dto: TwoFactorVerifyLoginDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const user = await this.twoFactorService.verifyLoginCode(dto.pendingToken, dto.code)
+    const pendingToken = req.cookies?.pending_2fa_token ?? dto.pendingToken
+    const user = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.authService.completeTwoFactorLogin(user.id)
+    res.clearCookie('pending_2fa_token')
     this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
@@ -231,9 +239,12 @@ export class UsersAuthController {
     res: Response,
   ) {
     if ('requires2fa' in result) {
-      return res.redirect(
-        `${process.env.WEB_HOST!}/login/2fa?pending_token=${encodeURIComponent(result.pendingToken)}`,
-      )
+      res.cookie('pending_2fa_token', result.pendingToken, {
+        httpOnly: true,
+        sameSite: 'lax',
+        maxAge: 10 * 60 * 1000,
+      })
+      return res.redirect(`${process.env.WEB_HOST!}/login/2fa`)
     }
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
     return res.redirect(process.env.WEB_HOST!)

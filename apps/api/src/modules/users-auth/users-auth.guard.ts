@@ -3,8 +3,10 @@ import {
   applyDecorators,
   type CanActivate,
   type ExecutionContext,
+  HttpException,
   HttpStatus,
   Injectable,
+  Logger,
   SetMetadata,
   UnauthorizedException,
   UseGuards,
@@ -57,6 +59,8 @@ export function UserAuth(tokenRequirement: TokenRequirement = 'access') {
 /** Represents the user auth guard. */
 @Injectable()
 export class UserAuthGuard implements CanActivate {
+  private readonly logger = new Logger(UserAuthGuard.name)
+
   /** Creates a new instance. */
   constructor(
     private prisma: PrismaService,
@@ -72,10 +76,8 @@ export class UserAuthGuard implements CanActivate {
     ])
 
     const request = context.switchToHttp().getRequest<Request>()
-    // Extract tokens ONLY from httpOnly cookies
     const { access_token, refresh_token } = this.extractTokenFromCookie(request)
 
-    // 1) проверяем наличие нужных токенов
     switch (tokenReq) {
       case 'access':
         if (!access_token)
@@ -90,25 +92,15 @@ export class UserAuthGuard implements CanActivate {
     }
 
     try {
-      // 2) верификация
-      let payload: JWTPayload
-      if (access_token && 'access' === tokenReq) {
-        payload = await this.tokenService.verifyToken(access_token)
-      } else {
-        payload = await this.tokenService.verifyToken(refresh_token!)
-      }
+      const token = tokenReq === 'access' ? access_token! : refresh_token!
+      const payload: JWTPayload = await this.tokenService.verifyToken(token)
 
-      if (refresh_token) {
-        await this.tokenService.verifyToken(refresh_token)
-      }
+      if (payload.type !== 'user')
+        throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 
-      // 3) получаем юзера
-      const user = await this.prisma.user.findUnique({
-        where: { id: payload.sub },
-      })
+      const user = await this.prisma.user.findUnique({ where: { id: payload.sub } })
       if (!user) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 
-      // 4) ищем сессию по хешам токенов
       const session = await this.prisma.userSession.findFirst({
         where: {
           ...(access_token && { access_token: this.tokenService.hashToken(access_token) }),
@@ -119,9 +111,11 @@ export class UserAuthGuard implements CanActivate {
       if (!session) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND)
 
       request.user = user
-      if (access_token) request[process.env.ACCESS_TOKEN_NAME!] = access_token
-      if (refresh_token) request[process.env.REFRESH_TOKEN_NAME!] = refresh_token
-    } catch {
+      if (access_token) request[this.tokenService.getTokenName('access')] = access_token
+      if (refresh_token) request[this.tokenService.getTokenName('refresh')] = refresh_token
+    } catch (error) {
+      if (error instanceof HttpException) throw error
+      this.logger.error('Unexpected error in UserAuthGuard', error)
       throw new UnauthorizedException(UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN)
     }
 
@@ -130,10 +124,12 @@ export class UserAuthGuard implements CanActivate {
 
   /** Runs the extract token from cookie operation. */
   private extractTokenFromCookie(request: Request) {
-    const access_token_name = process.env.ACCESS_TOKEN_NAME!
-    const refresh_token_name = process.env.REFRESH_TOKEN_NAME!
-    const access_token = request.cookies?.[access_token_name] as string | undefined
-    const refresh_token = request.cookies?.[refresh_token_name] as string | undefined
+    const access_token = request.cookies?.[this.tokenService.getTokenName('access')] as
+      | string
+      | undefined
+    const refresh_token = request.cookies?.[this.tokenService.getTokenName('refresh')] as
+      | string
+      | undefined
     return { access_token, refresh_token }
   }
 }

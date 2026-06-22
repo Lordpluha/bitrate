@@ -1,9 +1,25 @@
-import { beforeEach, describe, expect, it } from '@jest/globals'
+import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import type { Request } from 'express'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
 import { UsersController } from './users.controller'
 import type { UsersService } from './users.service'
+
+jest.mock('node:fs/promises', () => ({
+  open: jest.fn().mockResolvedValue({
+    read: jest.fn().mockImplementation((buf: unknown) => {
+      const b = buf as Buffer
+      // PNG magic bytes
+      b[0] = 0x89
+      b[1] = 0x50
+      b[2] = 0x4e
+      b[3] = 0x47
+      return Promise.resolve()
+    }),
+    close: jest.fn().mockResolvedValue(null as never),
+  } as never),
+  unlink: jest.fn().mockResolvedValue(null as never),
+}))
 
 describe('UsersController', () => {
   let controller: UsersController
@@ -61,7 +77,7 @@ describe('UsersController', () => {
     service.updateById.mockResolvedValue(updated)
 
     const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
-    const dto = { username: 'updated', email: 'updated@example.com' }
+    const dto = { username: 'updated' }
 
     const result = await controller.putById(req, dto)
 
@@ -74,7 +90,7 @@ describe('UsersController', () => {
     service.uploadAvatar.mockResolvedValue(updated)
 
     const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
-    const file = { filename: 'avatar.png' } as Express.Multer.File
+    const file = { filename: 'avatar.png', path: '/tmp/avatar.png' } as Express.Multer.File
 
     const result = await controller.uploadAvatar(req, file)
 

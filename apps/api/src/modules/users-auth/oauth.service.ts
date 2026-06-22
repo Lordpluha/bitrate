@@ -170,7 +170,7 @@ export class OAuthService {
       (await this.prisma.user.create({
         data: {
           email: profile.email,
-          username: await this.generateUniqueUsername(profile.name),
+          username: this.generateUniqueUsername(profile.name),
           password: null,
           avatar: null,
           description: null,
@@ -200,8 +200,8 @@ export class OAuthService {
 
   /** Runs the create session operation. */
   private async createSession(user: { id: string; username: string }) {
-    const access_token = await this.token.generateAccessToken(user.id, user.username)
-    const refresh_token = await this.token.generateRefreshToken(user.id, user.username)
+    const access_token = await this.token.generateAccessToken(user.id, user.username, 'user')
+    const refresh_token = await this.token.generateRefreshToken(user.id, user.username, 'user')
 
     await this.prisma.userSession.create({
       data: {
@@ -215,16 +215,11 @@ export class OAuthService {
   }
 
   /** Runs the generate unique username operation. */
-  private async generateUniqueUsername(name: string): Promise<string> {
+  private generateUniqueUsername(name: string): string {
     const base = name
       .toLowerCase()
       .replace(/[^a-z0-9]/g, '_')
       .slice(0, 20)
-    let username = base
-    let i = 1
-    while (await this.prisma.user.findFirst({ where: { username } })) {
-      username = `${base}_${i++}`
-    }
-    return username
+    return `${base}_${randomBytes(4).toString('hex')}`
   }
 }

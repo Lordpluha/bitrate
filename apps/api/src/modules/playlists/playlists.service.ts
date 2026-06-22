@@ -1,3 +1,4 @@
+import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -30,10 +31,11 @@ export class PlaylistsService {
 
   /** Runs the get all operation. */
   async getAll({ page = 1, limit = 10 }: { page?: number; limit?: number }) {
+    const safeLimit = Math.min(limit, 100)
     return await this.prisma.playlist.findMany({
       where: { isPublic: true },
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: (page - 1) * safeLimit,
+      take: safeLimit,
       include: {
         user: {
           select: {
@@ -95,18 +97,28 @@ export class PlaylistsService {
 
   /** Runs the like operation. */
   async like(userId: UserEntity['id'], playlistId: PlaylistEntity['id']) {
-    return await this.prisma.playlist.update({
-      where: { id: playlistId },
-      data: { likedBy: { connect: { id: userId } } },
-    })
+    try {
+      return await this.prisma.playlist.update({
+        where: { id: playlistId },
+        data: { likedBy: { connect: { id: userId } } },
+      })
+    } catch (error: unknown) {
+      if (isPrismaP2025(error)) throw new NotFoundException('Playlist not found')
+      throw error
+    }
   }
 
   /** Runs the unlike operation. */
   async unlike(userId: UserEntity['id'], playlistId: PlaylistEntity['id']) {
-    return await this.prisma.playlist.update({
-      where: { id: playlistId },
-      data: { likedBy: { disconnect: { id: userId } } },
-    })
+    try {
+      return await this.prisma.playlist.update({
+        where: { id: playlistId },
+        data: { likedBy: { disconnect: { id: userId } } },
+      })
+    } catch (error: unknown) {
+      if (isPrismaP2025(error)) throw new NotFoundException('Playlist not found')
+      throw error
+    }
   }
 
   /** Runs the get mine operation. */

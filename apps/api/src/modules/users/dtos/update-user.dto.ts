@@ -4,7 +4,6 @@ import { z } from 'zod'
 /** The update user schema value. */
 export const UpdateUserSchema = z.object({
   username: z.string().min(3, { message: 'Username must be at least 3 characters long' }),
-  email: z.string().email({ message: 'Invalid email format' }),
   description: z
     .string()
     .max(500, { message: 'Description must not exceed 500 characters' })
@@ -19,13 +18,6 @@ export class UpdateUserDto implements z.infer<typeof UpdateUserSchema> {
     example: 'john_doe',
   })
   username: string
-
-  /** The email value. */
-  @ApiProperty({
-    description: 'Email of the user',
-    example: 'example@gmail.com',
-  })
-  email: string
 
   /** The description value. */
   @ApiProperty({

@@ -1,3 +1,4 @@
+import type { PrismaService } from '@infra/prisma/prisma.service'
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import type { ExecutionContext } from '@nestjs/common'
 import { WsException } from '@nestjs/websockets'
@@ -16,13 +17,16 @@ const createWsContext = (client: Socket): ExecutionContext =>
 describe('WsUserAuthGuard', () => {
   let guard: WsUserAuthGuard
   let tokenService: DeepMockProxy<TokenService>
+  let prisma: DeepMockProxy<PrismaService>
 
   beforeEach(() => {
     process.env.ACCESS_TOKEN_NAME = 'access_token'
     tokenService = mockDeep<TokenService>()
+    prisma = mockDeep<PrismaService>()
     mockReset(tokenService)
+    mockReset(prisma)
 
-    guard = new WsUserAuthGuard(tokenService)
+    guard = new WsUserAuthGuard(tokenService, prisma)
   })
 
   it('should reject when token missing', async () => {
@@ -42,7 +46,16 @@ describe('WsUserAuthGuard', () => {
   })
 
   it('should allow when token valid', async () => {
-    tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user' })
+    tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
+    tokenService.hashToken.mockReturnValue('hashed-token')
+    prisma.userSession.findFirst.mockResolvedValue({
+      id: 'session-1',
+      userId: 'user-1',
+      access_token: 'hashed-token',
+      refresh_token: 'hashed-refresh',
+      createdAt: new Date(),
+      expiresAt: null,
+    })
 
     const client = {
       handshake: {
@@ -66,6 +79,22 @@ describe('WsUserAuthGuard', () => {
       handshake: {
         headers: {
           cookie: 'access_token=bad-token',
+        },
+      },
+    } as Socket
+
+    await expect(guard.canActivate(createWsContext(client))).rejects.toThrow('Unauthorized')
+  })
+
+  it('should reject when session not found', async () => {
+    tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
+    tokenService.hashToken.mockReturnValue('hashed-token')
+    prisma.userSession.findFirst.mockResolvedValue(null)
+
+    const client = {
+      handshake: {
+        headers: {
+          cookie: 'access_token=access-token',
         },
       },
     } as Socket

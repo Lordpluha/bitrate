@@ -1,3 +1,4 @@
+import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -23,13 +24,18 @@ export class AlbumsService {
     limit = 10,
     title,
   }: { page?: number; limit?: number } & Partial<AlbumEntity>) {
-    return await this.cache.wrap(NS.ALBUMS, `list:${page}:${limit}:${title ?? ''}`, TTL.SHORT, () =>
-      this.prisma.album.findMany({
-        skip: (page - 1) * limit,
-        take: limit,
-        where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
-        include: { tracks: true },
-      }),
+    const safeLimit = Math.min(limit, 100)
+    return await this.cache.wrap(
+      NS.ALBUMS,
+      `list:${page}:${safeLimit}:${title ?? ''}`,
+      TTL.SHORT,
+      () =>
+        this.prisma.album.findMany({
+          skip: (page - 1) * safeLimit,
+          take: safeLimit,
+          where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
+          include: { tracks: true },
+        }),
     )
   }
 
@@ -72,17 +78,27 @@ export class AlbumsService {
 
   /** Runs the like operation. */
   async like(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
-    return await this.prisma.album.update({
-      where: { id: albumId },
-      data: { likedBy: { connect: { id: userId } } },
-    })
+    try {
+      return await this.prisma.album.update({
+        where: { id: albumId },
+        data: { likedBy: { connect: { id: userId } } },
+      })
+    } catch (error: unknown) {
+      if (isPrismaP2025(error)) throw new NotFoundException('Album not found')
+      throw error
+    }
   }
 
   /** Runs the unlike operation. */
   async unlike(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
-    return await this.prisma.album.update({
-      where: { id: albumId },
-      data: { likedBy: { disconnect: { id: userId } } },
-    })
+    try {
+      return await this.prisma.album.update({
+        where: { id: albumId },
+        data: { likedBy: { disconnect: { id: userId } } },
+      })
+    } catch (error: unknown) {
+      if (isPrismaP2025(error)) throw new NotFoundException('Album not found')
+      throw error
+    }
   }
 }

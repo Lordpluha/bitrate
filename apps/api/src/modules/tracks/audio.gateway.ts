@@ -119,7 +119,9 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.userSessions.set(client.userId, socketIds)
       this.logger.log(`User ${client.userId} connected with socket ${client.id}`)
 
-      void client.join(`user_${client.userId}`)
+      Promise.resolve(client.join(`user_${client.userId}`)).catch((err: unknown) => {
+        this.logger.error('Failed to join user room', err)
+      })
 
       const currentSession = this.playingSessions.get(client.userId)
       client.emit(
