@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { open, unlink } from 'node:fs/promises'
 import { extname } from 'node:path'
-import { isAllowedImageBuffer } from '@common/utils/prisma'
+import { isAllowedImageBuffer } from '@common/utils/image'
 import { SafeUserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {

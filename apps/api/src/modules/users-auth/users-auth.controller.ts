@@ -67,7 +67,14 @@ export class UsersAuthController {
   ) {
     const result = await this.authService.loginUser(loginDto.email, loginDto.password)
     if ('requires2fa' in result) {
-      return { requires2fa: true, pendingToken: result.pendingToken }
+      res.cookie('pending_2fa_token', result.pendingToken, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+        maxAge: 10 * 60 * 1000,
+      })
+      return { requires2fa: true }
     }
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
   }
@@ -175,7 +182,7 @@ export class UsersAuthController {
     const pendingToken = req.cookies?.pending_2fa_token ?? dto.pendingToken
     const user = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.authService.completeTwoFactorLogin(user.id)
-    res.clearCookie('pending_2fa_token')
+    res.clearCookie('pending_2fa_token', { path: '/' })
     this.tokenService.setAuthCookies(res, access_token, refresh_token)
   }
 
@@ -184,7 +191,7 @@ export class UsersAuthController {
   @Get('oauth/google')
   googleAuth(@Res() res: Response) {
     const state = this.oauthService.generateState()
-    res.cookie('oauth_state', state, { httpOnly: true, sameSite: 'lax', maxAge: 5 * 60 * 1000 })
+    res.cookie('oauth_state', state, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 5 * 60 * 1000 })
     return res.redirect(this.oauthService.getGoogleAuthUrl(state))
   }
 
@@ -210,7 +217,7 @@ export class UsersAuthController {
   @Get('oauth/facebook')
   facebookAuth(@Res() res: Response) {
     const state = this.oauthService.generateState()
-    res.cookie('oauth_state', state, { httpOnly: true, sameSite: 'lax', maxAge: 5 * 60 * 1000 })
+    res.cookie('oauth_state', state, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 5 * 60 * 1000 })
     return res.redirect(this.oauthService.getFacebookAuthUrl(state))
   }
 
@@ -242,6 +249,8 @@ export class UsersAuthController {
       res.cookie('pending_2fa_token', result.pendingToken, {
         httpOnly: true,
         sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
         maxAge: 10 * 60 * 1000,
       })
       return res.redirect(`${process.env.WEB_HOST!}/login/2fa`)

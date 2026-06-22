@@ -7,6 +7,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { TokenService } from '../tokens/token.service'
 
@@ -165,18 +166,26 @@ export class OAuthService {
       )
     }
 
-    const user =
-      existingUser ??
-      (await this.prisma.user.create({
-        data: {
-          email: profile.email,
-          username: this.generateUniqueUsername(profile.name),
-          password: null,
-          avatar: null,
-          description: null,
-          updatedAt: new Date(),
-        },
-      }))
+    let user = existingUser
+    if (!user) {
+      try {
+        user = await this.prisma.user.create({
+          data: {
+            email: profile.email,
+            username: this.generateUniqueUsername(profile.name),
+            password: null,
+            avatar: null,
+            description: null,
+            updatedAt: new Date(),
+          },
+        })
+      } catch (err) {
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+          throw new ConflictException('Failed to generate a unique username, please try again')
+        }
+        throw err
+      }
+    }
 
     await this.prisma.userOAuthAccount.create({
       data: { userId: user.id, provider, providerAccountId: profile.id },

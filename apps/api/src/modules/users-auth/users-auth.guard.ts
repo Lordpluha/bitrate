@@ -95,6 +95,10 @@ export class UserAuthGuard implements CanActivate {
       const token = tokenReq === 'access' ? access_token! : refresh_token!
       const payload: JWTPayload = await this.tokenService.verifyToken(token)
 
+      if (tokenReq === 'access' && refresh_token) {
+        await this.tokenService.verifyToken(refresh_token)
+      }
+
       if (payload.type !== 'user')
         throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 

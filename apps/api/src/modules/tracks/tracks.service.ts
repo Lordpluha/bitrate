@@ -157,12 +157,12 @@ export class TracksService {
     limit = 10,
     title,
   }: { page?: number; limit?: number } & Partial<TrackEntity>) {
+    const safeLimit = Math.min(limit, 100)
     return await this.cache.wrap(
       NS.TRACKS,
-      `list:${page}:${limit}:${title ?? ''}`,
+      `list:${page}:${safeLimit}:${title ?? ''}`,
       TTL.SHORT,
       async () => {
-        const safeLimit = Math.min(limit, 100)
         const skip = (page - 1) * safeLimit
         const [data, total] = await this.prisma.$transaction([
           this.prisma.track.findMany({

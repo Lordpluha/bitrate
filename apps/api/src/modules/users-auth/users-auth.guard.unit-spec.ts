@@ -109,7 +109,7 @@ describe('UserAuthGuard', () => {
     const result = await guard.canActivate(createHttpContext(req))
 
     expect(result).toBe(true)
-    expect(tokenService.verifyToken).toHaveBeenCalledTimes(1)
+    expect(tokenService.verifyToken).toHaveBeenCalledTimes(2)
     expect(req.user).toBeDefined()
     expect(req.access_token).toBe('access-token')
     expect(req.refresh_token).toBe('refresh-token')

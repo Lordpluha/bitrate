@@ -63,7 +63,7 @@ describe('UsersAuthController', () => {
       expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'access-token', 'refresh-token')
     })
 
-    it('should return requires2fa flag when 2FA is enabled', async () => {
+    it('should return requires2fa flag and set pending cookie when 2FA is enabled', async () => {
       authService.loginUser.mockResolvedValue({ requires2fa: true, pendingToken: 'pending-token' })
       const res = createResponse()
 
@@ -73,7 +73,8 @@ describe('UsersAuthController', () => {
       )
 
       expect(tokenService.setAuthCookies).not.toHaveBeenCalled()
-      expect(result).toEqual({ requires2fa: true, pendingToken: 'pending-token' })
+      expect((res.cookie as unknown as jest.Mock).mock.calls[0]).toEqual(['pending_2fa_token', 'pending-token', expect.objectContaining({ httpOnly: true })])
+      expect(result).toEqual({ requires2fa: true })
     })
   })
 

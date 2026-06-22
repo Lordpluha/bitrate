@@ -1,3 +1,4 @@
+import ms, { type StringValue } from 'ms'
 import { z } from 'zod'
 
 /** The env schema value. */
@@ -8,8 +9,8 @@ export const envSchema = z.object({
 
   // Auth
   JWT_SECRET: z.string().min(10),
-  JWT_ACCESS_EXPIRES_IN: z.string().default('5m'),
-  JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
+  JWT_ACCESS_EXPIRES_IN: z.string().default('5m').refine((v) => ms(v as StringValue) !== undefined, { message: 'Must be a valid time string (e.g. "15m", "7d")' }),
+  JWT_REFRESH_EXPIRES_IN: z.string().default('30d').refine((v) => ms(v as StringValue) !== undefined, { message: 'Must be a valid time string (e.g. "15m", "7d")' }),
 
   ACCESS_TOKEN_NAME: z.string().min(1).default('access_token'),
   REFRESH_TOKEN_NAME: z.string().min(1).default('refresh_token'),

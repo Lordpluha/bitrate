@@ -8,6 +8,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { Prisma } from '@prisma/client'
 import { TokenService } from '../tokens/token.service'
 
 /** Describes the oauth profile. */
@@ -163,13 +164,21 @@ export class ArtistOAuthService {
       )
     }
 
-    const artist = await this.prisma.artist.create({
-      data: {
-        email: profile.email,
-        username: this.generateUniqueUsername(profile.name),
-        password: null,
-      },
-    })
+    let artist: Awaited<ReturnType<typeof this.prisma.artist.create>>
+    try {
+      artist = await this.prisma.artist.create({
+        data: {
+          email: profile.email,
+          username: this.generateUniqueUsername(profile.name),
+          password: null,
+        },
+      })
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        throw new ConflictException('Failed to generate a unique username, please try again')
+      }
+      throw err
+    }
 
     await this.prisma.artistOAuthAccount.create({
       data: { artistId: artist.id, provider, providerAccountId: profile.id },

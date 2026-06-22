@@ -16,7 +16,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get<ConfigService<AppConfig>>(ConfigService)
 
-  app.use(helmet())
+  app.use(helmet({ contentSecurityPolicy: false }))
   app.use(cookieParser())
   app.useGlobalFilters(new HttpExceptionFilter())
 
