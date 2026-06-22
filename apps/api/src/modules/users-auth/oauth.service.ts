@@ -7,8 +7,8 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
+import { Prisma } from '@prisma/client'
 import { TokenService } from '../tokens/token.service'
 
 /** Describes the oauth profile. */

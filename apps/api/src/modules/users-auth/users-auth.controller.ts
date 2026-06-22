@@ -191,7 +191,13 @@ export class UsersAuthController {
   @Get('oauth/google')
   googleAuth(@Res() res: Response) {
     const state = this.oauthService.generateState()
-    res.cookie('oauth_state', state, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 5 * 60 * 1000 })
+    res.cookie('oauth_state', state, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge: 5 * 60 * 1000,
+    })
     return res.redirect(this.oauthService.getGoogleAuthUrl(state))
   }
 
@@ -217,7 +223,13 @@ export class UsersAuthController {
   @Get('oauth/facebook')
   facebookAuth(@Res() res: Response) {
     const state = this.oauthService.generateState()
-    res.cookie('oauth_state', state, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 5 * 60 * 1000 })
+    res.cookie('oauth_state', state, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge: 5 * 60 * 1000,
+    })
     return res.redirect(this.oauthService.getFacebookAuthUrl(state))
   }
 

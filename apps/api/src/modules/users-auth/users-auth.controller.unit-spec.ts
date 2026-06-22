@@ -73,7 +73,11 @@ describe('UsersAuthController', () => {
       )
 
       expect(tokenService.setAuthCookies).not.toHaveBeenCalled()
-      expect((res.cookie as unknown as jest.Mock).mock.calls[0]).toEqual(['pending_2fa_token', 'pending-token', expect.objectContaining({ httpOnly: true })])
+      expect((res.cookie as unknown as jest.Mock).mock.calls[0]).toEqual([
+        'pending_2fa_token',
+        'pending-token',
+        expect.objectContaining({ httpOnly: true }),
+      ])
       expect(result).toEqual({ requires2fa: true })
     })
   })
