@@ -1,3 +1,4 @@
+import { CacheModule } from '@infra/cache/cache.module'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
@@ -13,6 +14,7 @@ import { TracksService } from './tracks.service'
   controllers: [TracksController],
   imports: [
     PrismaModule,
+    CacheModule,
     UsersAuthModule,
     TokensModule,
     BullModule.registerQueue({ name: 'audio-processing' }),

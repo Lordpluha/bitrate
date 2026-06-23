@@ -1,7 +1,7 @@
 import { cn } from '@spotify/ui-react'
 import { Heart, PictureInPicture2 } from 'lucide-react'
 import Image from 'next/image'
-import type React from 'react'
+import type { FC } from 'react'
 
 interface TrackInfoProps {
   title: string
@@ -12,7 +12,7 @@ interface TrackInfoProps {
   onPictureInPicture?: () => void
 }
 
-export const TrackInfo: React.FC<TrackInfoProps> = ({
+export const TrackInfo: FC<TrackInfoProps> = ({
   title,
   artist,
   coverUrl,

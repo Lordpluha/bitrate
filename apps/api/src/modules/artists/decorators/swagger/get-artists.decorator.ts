@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the get artists swagger operation. */
 export function GetArtistsSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get all artists with pagination' }),

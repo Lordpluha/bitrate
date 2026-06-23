@@ -1,7 +1,7 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": "../src",
-  "testRegex": ".*\\.spec\\.ts$",
+  "testRegex": ".*\\.unit-spec\\.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
@@ -12,7 +12,9 @@
     "!**/app.module.ts",
     "!**/app.controller.ts",
     "!**/app.service.ts",
-    "!**/**/*.int-spec.ts"
+    "!**/**/*.int-spec.ts",
+    "!**/**/*.unit-spec.ts",
+    "!**/**/*.spec.ts"
   ],
   "coverageDirectory": "../coverage",
   "testEnvironment": "node",

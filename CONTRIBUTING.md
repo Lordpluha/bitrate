@@ -65,7 +65,7 @@ LEFTHOOK=0 git push
 Completely disables all lefthook hooks (build, linting, commit checks).
 
 **Recommendations:**
-- Web developers should use `pnpm push:web` to save time
+- Web developers should use `WEB_ONLY=true git push` to save time
 - Run a full build **before important PRs or releases**
 - Use `LEFTHOOK=0` **only for hotfixes** or urgent documentation changes
 

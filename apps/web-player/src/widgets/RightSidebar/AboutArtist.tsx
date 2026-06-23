@@ -5,9 +5,9 @@ import { useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { Typography } from '@spotify/ui-react'
 import Image from 'next/image'
-import type React from 'react'
+import type { FC } from 'react'
 
-export const AboutArtist: React.FC = () => {
+export const AboutArtist: FC = () => {
   const currentTrack = useAppSelector(selectCurrentTrack)
   const { data: artist, isLoading } = useArtist(currentTrack?.artistId)
 

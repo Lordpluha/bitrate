@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, it } from '@jest/globals'
-import { INestApplication } from '@nestjs/common'
+import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import { closeE2eApp, createE2eApp } from './e2e-app'
 

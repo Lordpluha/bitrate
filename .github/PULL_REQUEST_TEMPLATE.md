@@ -57,7 +57,7 @@
 <!-- Which parts of the application are affected? -->
 - [ ] 🌐 **Web App** (Next.js frontend)
 - [ ] 📱 **Mobile App** (React Native)
-- [ ] 🖥️ **Desktop App** (Electron)
+- [ ] 🖥️ **Desktop App** (Tauri 2)
 - [ ] 🔧 **API** (NestJS backend)
 - [ ] 🎨 **UI Kit** (Shared components)
 - [ ] 📊 **Database** (Prisma schema)

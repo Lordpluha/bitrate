@@ -111,5 +111,5 @@
 ## 🔗 Связанные документы
 
 - [README.md](../../README.md) - Основная документация (включая Docker setup)
-- [WORKFLOWS.md](../WORKFLOWS.md) - CI/CD pipelines
+- [CI/CD Workflows](../workflows/README.md) - CI/CD pipelines
 - [Contributing Guidelines](../../CONTRIBUTING.md) - Как контрибьютить

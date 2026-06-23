@@ -19,7 +19,7 @@ import {
   Star,
   StarIcon,
 } from 'lucide-react'
-import * as React from 'react'
+import { useState } from 'react'
 
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group'
 import {
@@ -142,8 +142,8 @@ export const WithText: Story = {
  */
 export const WithButtons: Story = {
   render: (args) => {
-    const [isCopied, setIsCopied] = React.useState(false)
-    const [isFavorite, setIsFavorite] = React.useState(false)
+    const [isCopied, setIsCopied] = useState(false)
+    const [isFavorite, setIsFavorite] = useState(false)
 
     const copyToClipboard = (text: string) => {
       navigator.clipboard.writeText(text)

@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the get users swagger operation. */
 export function GetUsersSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get all users with filters and pagination' }),

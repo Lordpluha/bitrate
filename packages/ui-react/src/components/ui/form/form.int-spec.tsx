@@ -44,6 +44,6 @@ describe('Form integration', () => {
     await userEvent.type(screen.getByRole('textbox'), 'Ada')
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }))
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
-    expect(onSubmit.mock.calls[0][0]).toMatchObject({ name: 'Ada' })
+    expect(onSubmit.mock.calls[0]?.[0]).toMatchObject({ name: 'Ada' })
   })
 })

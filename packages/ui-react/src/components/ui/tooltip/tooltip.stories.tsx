@@ -13,7 +13,7 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     side: {
-      options: ['top', 'bottom', 'left', 'right'],
+      options: ['left', 'right', 'bottom', 'top', 'inline-end', 'inline-start'],
       control: {
         type: 'radio',
       },

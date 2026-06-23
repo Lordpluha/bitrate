@@ -1,10 +1,11 @@
 import { render } from '@testing-library/react'
+import type { ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { describe, expect, it } from 'vitest'
 import { Input } from '../input'
 import { Form, FormControl, FormField, FormItem, FormLabel } from './form'
 
-const Harness = ({ children }: { children: React.ReactNode }) => {
+const Harness = ({ children }: { children: ReactNode }) => {
   const methods = useForm({ defaultValues: { name: '' } })
   return <Form {...methods}>{children}</Form>
 }

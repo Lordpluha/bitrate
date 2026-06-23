@@ -1,3 +1,7 @@
+import { randomUUID } from 'node:crypto'
+import { open, unlink } from 'node:fs/promises'
+import { extname } from 'node:path'
+import { isAllowedImageBuffer } from '@common/utils/image'
 import { SafeUserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
@@ -17,9 +21,9 @@ import {
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
+import type { Request } from 'express'
 import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { extname } from 'path'
 import * as z from 'zod'
 import {
   GetUserByUsernameSwagger,
@@ -32,21 +36,23 @@ import { UpdateUserDto, UpdateUserSchema } from './dtos'
 import { UserEntity } from './entities'
 import { UsersService } from './users.service'
 
+/** Represents the users controller. */
 @ApiExtraModels(UserEntity, SafeUserEntity)
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  /** Runs the get all operation. */
   @GetUsersSwagger()
   @Get('')
   async getAll(
-    @Query('limit', ParseIntPipe) limit?: number,
-    @Query('page', ParseIntPipe) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('username') username?: UserEntity['username'],
   ) {
     if (!username) {
-      return Promise.reject(new Error('User not found'))
+      throw new BadRequestException('Username query is required')
     }
     return await this.usersService.findAll({
       username,
@@ -55,6 +61,7 @@ export class UsersController {
     })
   }
 
+  /** Runs the get by username operation. */
   @GetUserByUsernameSwagger()
   @Get('username/:username')
   async getByUsername(
@@ -64,12 +71,14 @@ export class UsersController {
     return await this.usersService.getByUsername(username)
   }
 
+  /** Runs the get by id operation. */
   @GetUserSwagger()
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: UserEntity['id']) {
     return await this.usersService.findById(id)
   }
 
+  /** Runs the put by id operation. */
   @PutUserSwagger()
   @UserAuth()
   @Put('')
@@ -77,23 +86,24 @@ export class UsersController {
     @Req() req: Request,
     @Body(new ZodValidationPipe(UpdateUserSchema)) userData: UpdateUserDto,
   ) {
-    const user = req['user'] as UserEntity
+    const user = req.user as UserEntity
     return await this.usersService.updateById(user.id, userData)
   }
 
+  /** Runs the upload avatar operation. */
   @UploadAvatarSwagger()
   @UserAuth()
   @Post('avatar')
   @UseInterceptors(
     FileInterceptor('avatar', {
+      limits: { fileSize: 5 * 1024 * 1024 },
       storage: diskStorage({
         destination: './storage/public/users/avatars',
-        filename: (req, file, cb) => {
-          const uniqueName = `${Date.now()}${extname(file.originalname)}`
-          cb(null, uniqueName)
+        filename: (_req, file, cb) => {
+          cb(null, `${randomUUID()}${extname(file.originalname)}`)
         },
       }),
-      fileFilter: (req, file, cb) => {
+      fileFilter: (_req, file, cb) => {
         const allowed = ['image/png', 'image/jpeg', 'image/webp']
         if (!allowed.includes(file.mimetype)) {
           return cb(new BadRequestException('Invalid file type'), false)
@@ -102,8 +112,22 @@ export class UsersController {
       },
     }),
   )
-  async uploadAvatar(@Req() req: Request, @UploadedFile() file: Express.Multer.File) {
-    const user = req['user'] as UserEntity
+  async uploadAvatar(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
+    if (!file) throw new BadRequestException('Avatar file is required')
+
+    const buf = Buffer.alloc(12)
+    const fd = await open(file.path, 'r')
+    try {
+      await fd.read(buf, 0, 12, 0)
+    } finally {
+      await fd.close()
+    }
+    if (!isAllowedImageBuffer(buf)) {
+      await unlink(file.path)
+      throw new BadRequestException('Invalid file content')
+    }
+
+    const user = req.user as UserEntity
     return await this.usersService.uploadAvatar(user.id, file.filename)
   }
 }

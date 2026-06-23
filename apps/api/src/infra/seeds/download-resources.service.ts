@@ -11,11 +11,15 @@ import config from './config'
  * Сервис для скачивания ресурсов
  */
 export class DownloadResourcesService {
+  /** The tracks dir value. */
   private tracksDir: string
+  /** The covers dir value. */
   private coversDir: string
 
+  /** The logger value. */
   private readonly logger = new Logger(DownloadResourcesService.name, { timestamp: true })
 
+  /** Creates a new instance. */
   constructor(storageBase: string) {
     this.tracksDir = path.join(storageBase, config.storagePaths.tracks)
     this.coversDir = path.join(storageBase, config.storagePaths.covers)
@@ -51,9 +55,7 @@ export class DownloadResourcesService {
         throw new Error('Response body is null')
       }
 
-      const nodeStream = Readable.fromWeb(
-        response.body as unknown as import('stream/web').ReadableStream,
-      )
+      const nodeStream = Readable.from(response.body)
       const fileStream = createWriteStream(filepath)
 
       await pipeline(nodeStream, fileStream)

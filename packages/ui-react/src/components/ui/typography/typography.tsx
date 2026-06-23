@@ -1,6 +1,7 @@
-import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import type { ElementType, HTMLAttributes, PropsWithChildren } from 'react'
+
+import { Slot } from '@/lib/slot'
 
 /**
  * Нужно будет сделать нормальные размеры текстов в tailwind

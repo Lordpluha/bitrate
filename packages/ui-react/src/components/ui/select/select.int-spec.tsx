@@ -36,6 +36,6 @@ describe('Select integration', () => {
     await userEvent.click(screen.getByRole('combobox'))
     const option = await screen.findByText('Option B')
     await userEvent.click(option)
-    await waitFor(() => expect(onValueChange).toHaveBeenCalledWith('b'))
+    await waitFor(() => expect(onValueChange).toHaveBeenCalledWith('b', expect.anything()))
   })
 })

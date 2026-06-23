@@ -4,7 +4,7 @@ import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
 import { cn, PlayIcon } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import type React from 'react'
+import type { FC } from 'react'
 
 interface MusicCardLgProps {
   id: string
@@ -14,7 +14,7 @@ interface MusicCardLgProps {
   isArtist?: boolean
 }
 
-export const MusicCardLg: React.FC<MusicCardLgProps> = ({
+export const MusicCardLg: FC<MusicCardLgProps> = ({
   id,
   name,
   description,

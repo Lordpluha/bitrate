@@ -9,7 +9,15 @@ import {
   SkipBack,
   SkipForward,
 } from 'lucide-react'
-import React, { useCallback, useRef, useState } from 'react'
+import {
+  type FC,
+  type KeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 interface PlayerControlsProps {
   isPlaying: boolean
@@ -25,7 +33,7 @@ interface PlayerControlsProps {
   onRepeatToggle?: () => void
 }
 
-export const PlayerControls: React.FC<PlayerControlsProps> = ({
+export const PlayerControls: FC<PlayerControlsProps> = ({
   isPlaying,
   currentTime,
   duration,
@@ -50,7 +58,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   }
 
   const calculateTime = useCallback(
-    (e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
+    (e: MouseEvent | ReactMouseEvent<HTMLDivElement>) => {
       if (!progressBarRef.current || !duration) return null
 
       const rect = progressBarRef.current.getBoundingClientRect()
@@ -61,7 +69,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     [duration],
   )
 
-  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleProgressClick = (e: ReactMouseEvent<HTMLDivElement>) => {
     if (isDragging) return
     const newTime = calculateTime(e)
     if (newTime !== null) {
@@ -69,7 +77,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     }
   }
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
     setIsDragging(true)
     const newTime = calculateTime(e)
     if (newTime !== null) {
@@ -96,7 +104,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     setSeekTime(null)
   }, [isDragging, seekTime, onSeek])
 
-  const handleProgressKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleProgressKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!duration) return
 
     const current = seekTime !== null ? seekTime : currentTime
@@ -113,7 +121,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove)
       document.addEventListener('mouseup', handleMouseUp)

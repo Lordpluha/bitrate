@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the get playlists swagger operation. */
 export function GetPlaylistsSwagger() {
   return applyDecorators(
     ApiConsumes('application/json'),

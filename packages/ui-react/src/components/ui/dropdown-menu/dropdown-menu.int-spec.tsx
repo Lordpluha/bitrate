@@ -31,7 +31,7 @@ describe('DropdownMenu integration', () => {
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
-            onSelect={() => {
+            onClick={() => {
               selected = true
             }}
           >

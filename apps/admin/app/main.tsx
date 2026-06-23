@@ -1,5 +1,5 @@
 import { KottsterApp } from '@kottster/react'
-import React from 'react'
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import '@kottster/react/dist/style.css'
 
@@ -9,7 +9,7 @@ const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Root element not found')
 
 ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
+  <StrictMode>
     <KottsterApp pageEntries={pageEntries} />
-  </React.StrictMode>,
+  </StrictMode>,
 )

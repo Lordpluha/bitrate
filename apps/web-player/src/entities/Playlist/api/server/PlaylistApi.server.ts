@@ -13,7 +13,7 @@ class PlaylistServerApiClass extends ServerApi {
     })
     const resultDataTracks = data?.tracks?.map((track) => ({
       ...track,
-      audioUrl: `${process.env.API_URL}api/v1/tracks/stream/${track.id}`,
+      audioUrl: `${process.env.API_URL?.replace(/\/$/, '')}/api/v1/tracks/stream/${track.id}`,
     }))
     return {
       data: {

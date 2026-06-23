@@ -5,9 +5,9 @@ import { useAppSelector } from '@shared/hooks'
 import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
 import { SavedSongIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
-import type React from 'react'
+import type { FC } from 'react'
 
-export const CurrentPlaylist: React.FC = () => {
+export const CurrentPlaylist: FC = () => {
   const currentTrack = useAppSelector(selectCurrentTrack)
 
   if (!currentTrack) {

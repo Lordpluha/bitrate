@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector, useAudioPlayer } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { useLikedTracks } from '@shared/hooks/useLikedTracks'
 import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { FloatingPlayerWindow } from './FloatingPlayerWindow'
 import { MiniPlayer } from './MiniPlayer'
 import { NowPlayingView } from './NowPlayingView'
@@ -17,7 +17,7 @@ import { PlayerActions } from './PlayerActions'
 import { PlayerControls } from './PlayerControls'
 import { TrackInfo } from './TrackInfo'
 
-export const Player: React.FC = () => {
+export const Player: FC = () => {
   const { currentTrack, isPlaying, volume, currentTime, duration } =
     useAppSelector(selectMusicPlayer)
   const currentPlaylistName = useAppSelector(selectCurrentPlaylistName)
@@ -32,21 +32,18 @@ export const Player: React.FC = () => {
     () => new Set(likedTracks?.map((track) => track.id) ?? []),
     [likedTracks],
   )
-  const isCurrentTrackLiked = currentTrack
-    ? likedTrackIds.has(currentTrack.id)
-    : false
+  const isCurrentTrackLiked = currentTrack ? likedTrackIds.has(currentTrack.id) : false
 
   const {
-    audioRef,
+    activeSlot,
+    bindAudioElement,
     togglePlayPause,
     onSeek,
     changeTrack,
     handleLoadedMetadata,
     handleTimeUpdate,
     handleEnded,
-    handleVolumeChange,
     handleSeeked,
-    handleProgress,
   } = useAudioPlayer()
 
   useEffect(() => {
@@ -57,10 +54,6 @@ export const Player: React.FC = () => {
       setIsExpanded(false)
     }
   }, [currentTrack])
-
-  useEffect(() => {
-    handleVolumeChange()
-  }, [handleVolumeChange])
 
   const coverUrl = getStaticMediaUrl(
     currentTrack?.cover,
@@ -85,10 +78,7 @@ export const Player: React.FC = () => {
 
     type DocumentPictureInPictureWindow = Window & {
       documentPictureInPicture?: {
-        requestWindow: (options?: {
-          width?: number
-          height?: number
-        }) => Promise<Window>
+        requestWindow: (options?: { width?: number; height?: number }) => Promise<Window>
       }
     }
 
@@ -116,18 +106,19 @@ export const Player: React.FC = () => {
 
   return (
     <>
-      <audio
-        autoPlay={isPlaying}
-        onEnded={handleEnded}
-        onLoadedMetadata={handleLoadedMetadata}
-        onProgress={handleProgress}
-        onSeeked={handleSeeked}
-        onTimeUpdate={handleTimeUpdate}
-        preload="none"
-        ref={audioRef}
-      >
-        <track kind="captions" />
-      </audio>
+      {([0, 1] as const).map((slot) => (
+        // biome-ignore lint/a11y/useMediaCaption: audio-only playback has no caption track
+        <audio
+          data-active={activeSlot === slot}
+          key={slot}
+          onEnded={() => handleEnded(slot)}
+          onLoadedMetadata={() => handleLoadedMetadata(slot)}
+          onSeeked={handleSeeked}
+          onTimeUpdate={() => handleTimeUpdate(slot)}
+          preload="auto"
+          ref={(element) => bindAudioElement(slot, element)}
+        />
+      ))}
 
       <FloatingPlayerWindow
         artist={artistName}
@@ -161,7 +152,6 @@ export const Player: React.FC = () => {
         volume={volume}
       />
 
-      {/* Мини-плеер — только на <=1024 */}
       <MiniPlayer
         artist={artistName}
         coverUrl={coverUrl}
@@ -176,7 +166,6 @@ export const Player: React.FC = () => {
         title={currentTrack.title || 'Unknown'}
       />
 
-      {/* Полный плеер — только на >=1025 */}
       <div
         className={`fixed bottom-0 left-0 right-0 h-22.5 bg-background border-t border-border px-4 hidden [@media(min-width:1025px)]:flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${
           isVisible ? 'translate-y-0' : 'translate-y-full'

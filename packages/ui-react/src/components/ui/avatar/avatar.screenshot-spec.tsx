@@ -11,7 +11,7 @@ describe('Avatar screenshots', () => {
           <AvatarFallback>AB</AvatarFallback>
         </Avatar>
         <Avatar>
-          <AvatarFallback delayMs={0}>?</AvatarFallback>
+          <AvatarFallback delay={0}>?</AvatarFallback>
         </Avatar>
       </div>,
     )

@@ -22,7 +22,7 @@ import {
 } from '@spotify/ui-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import type React from 'react'
+import type { FC } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { type LoginFormData, loginSchema } from '../../Login/validation'
 import { Modal } from './Modal'
@@ -33,7 +33,7 @@ interface LoginModalProps {
   onSwitchToSignUp?: () => void
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({
+export const LoginModal: FC<LoginModalProps> = ({
   isOpen,
   onOpenChange,
   onSwitchToSignUp,

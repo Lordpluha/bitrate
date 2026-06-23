@@ -1,41 +1,78 @@
-# Website
+# @spotify/docs
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+Docusaurus 3 documentation site for the Spotify Clone monorepo.
 
-## Installation
+## Stack
 
-```bash
-yarn
-```
+- **Docusaurus 3.10** — static site generator
+- **Mermaid** — diagrams in Markdown (`@docusaurus/theme-mermaid`)
+- **MDX** — interactive docs with React components
+- **Port:** 3003
 
-## Local Development
-
-```bash
-yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Build
+## Getting Started
 
 ```bash
-yarn build
+# From repo root
+pnpm install
+
+# Start dev server (http://localhost:3003)
+pnpm --filter @spotify/docs start
+
+# Build static output
+pnpm --filter @spotify/docs build
+
+# Serve built output locally
+pnpm --filter @spotify/docs serve
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+Or inside `apps/docs/`:
+
+```bash
+pnpm start
+pnpm build
+pnpm serve
+```
+
+## Structure
+
+```
+docs/                 — documentation pages (Markdown / MDX)
+  guides/             — developer guides (roadmap, setup, etc.)
+  applications/       — per-app documentation
+    api/
+    web-player/
+    mobile/
+    desktop/
+blog/                 — blog posts
+src/
+  css/                — custom CSS
+  pages/              — custom React pages
+static/               — static assets (images, files)
+docusaurus.config.ts  — site configuration
+sidebars.ts           — sidebar structure
+```
+
+## Adding Documentation
+
+Create a `.md` or `.mdx` file in `docs/`. Docusaurus picks it up automatically based on the sidebar config in `sidebars.ts`.
+
+For Mermaid diagrams, use fenced code blocks:
+
+```markdown
+```mermaid
+graph TD
+  A --> B
+```
+```
 
 ## Deployment
 
-Using SSH:
-
 ```bash
-USE_SSH=true yarn deploy
+# Using SSH
+USE_SSH=true pnpm run deploy
+
+# Using GitHub token
+GIT_USER=<username> pnpm run deploy
 ```
 
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+Deployment pushes to the `gh-pages` branch.
