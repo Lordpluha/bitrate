@@ -4,8 +4,8 @@ import type { CSSProperties, FC, ReactNode, Ref } from 'react'
 import {
   Panel,
   Group as PanelGroup,
-  Separator as PanelResizeHandle,
   type PanelImperativeHandle,
+  Separator as PanelResizeHandle,
   type PanelSize,
   usePanelRef,
 } from 'react-resizable-panels'
@@ -50,7 +50,11 @@ export const ResizableLayout: FC<ResizableLayoutProps> = ({
   children,
 }) => {
   return (
-    <PanelGroup orientation={orientation ?? direction} className={cn('h-full', className)} style={style}>
+    <PanelGroup
+      orientation={orientation ?? direction}
+      className={cn('h-full', className)}
+      style={style}
+    >
       {children}
     </PanelGroup>
   )
@@ -99,5 +103,5 @@ export const ResizableHandle: FC<ResizableHandleProps> = ({ disabled, className 
   )
 }
 
-export { usePanelRef }
 export type { PanelImperativeHandle, PanelSize }
+export { usePanelRef }

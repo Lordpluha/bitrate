@@ -67,7 +67,10 @@ const getBufferedAhead = (element: HTMLAudioElement) => {
   const { buffered, currentTime } = element
 
   for (let index = 0; index < buffered.length; index += 1) {
-    if (buffered.start(index) <= currentTime && buffered.end(index) >= currentTime) {
+    if (
+      buffered.start(index) <= currentTime &&
+      buffered.end(index) >= currentTime
+    ) {
       return buffered.end(index) - currentTime
     }
   }
@@ -127,7 +130,9 @@ export const useAudioPlayer = () => {
   const activeSlotRef = useRef<0 | 1>(0)
   const isSeekingRef = useRef(false)
   const pendingPlayRef = useRef(false)
-  const pendingPrefetchRef = useRef<{ slot: 0 | 1; track: TrackEntity } | null>(null)
+  const pendingPrefetchRef = useRef<{ slot: 0 | 1; track: TrackEntity } | null>(
+    null,
+  )
   const recoveryAttemptsRef = useRef<Record<string, number>>({})
   const [activeSlot, setActiveSlot] = useState<0 | 1>(0)
 
@@ -469,7 +474,11 @@ export const useAudioPlayer = () => {
       const element = slotsRef.current[index].element
       if (!element) return
 
-      if (isPlaying && pendingPlayRef.current && !shouldDelayInitialPlayback(element)) {
+      if (
+        isPlaying &&
+        pendingPlayRef.current &&
+        !shouldDelayInitialPlayback(element)
+      ) {
         pendingPlayRef.current = false
         void element.play().catch(() => undefined)
       } else if (isPlaying && element.paused && !pendingPlayRef.current) {

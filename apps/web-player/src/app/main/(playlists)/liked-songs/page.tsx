@@ -1,5 +1,5 @@
-import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { TrackServerApi } from '@entities/Track/api/server'
+import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { LikedSongsPlaylist } from '@views/Playlist/ui/LikedSongsPlaylist'
 import { notFound } from 'next/navigation'
 

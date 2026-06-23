@@ -32,7 +32,9 @@ export const Player: FC = () => {
     () => new Set(likedTracks?.map((track) => track.id) ?? []),
     [likedTracks],
   )
-  const isCurrentTrackLiked = currentTrack ? likedTrackIds.has(currentTrack.id) : false
+  const isCurrentTrackLiked = currentTrack
+    ? likedTrackIds.has(currentTrack.id)
+    : false
 
   const {
     activeSlot,
@@ -80,7 +82,10 @@ export const Player: FC = () => {
 
     type DocumentPictureInPictureWindow = Window & {
       documentPictureInPicture?: {
-        requestWindow: (options?: { width?: number; height?: number }) => Promise<Window>
+        requestWindow: (options?: {
+          width?: number
+          height?: number
+        }) => Promise<Window>
       }
     }
 
