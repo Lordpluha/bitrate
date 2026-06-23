@@ -1,14 +1,15 @@
 import { cn, SwitchLanguagesIcon } from '@spotify/ui-react'
 
-export const SwitchLanguagesLogo = () => {
+export const SwitchLanguagesLogo = ({ className, ...rest }: { className?: string }) => {
   return (
     <SwitchLanguagesIcon
+      width={20}
+      height={20}
+      {...rest}
       className={cn(
         'text-text fill-text cursor-pointer',
-        'transform hover:scale-110 transition duration-300 ease-in-out',
+        className
       )}
-      height={20}
-      width={20}
     />
   )
 }

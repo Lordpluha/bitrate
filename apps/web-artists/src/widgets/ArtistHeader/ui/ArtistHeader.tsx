@@ -1,55 +1,46 @@
 'use client'
 
-import { ArtistLogo } from '@shared/ui'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import links from '../config/nav-links.json'
 import { AuthButtons } from './AuthButtons/AuthButtons'
+import { BurgerMenu } from './BurgerMenu/BurgerMenu'
 import { NavLinks } from './NavLink/NavLink'
 import { SubMenuContent } from './SubMenuContent/SubMenuContent'
-import { SwitchLanguagesButton } from './SwitchLanguagesButton/SwitchLanguagesButton'
+import { useState, useCallback, useRef, useEffect, useMemo, type ReactNode } from 'react'
+import { ArtistLogo, SwitchLanguagesButton } from '@shared/ui'
+import { cn } from '@spotify/ui-react'
 
-interface LinkItem {
-  title: string
-  href: string
-  submenu?: Array<{
-    title: string
-    sections?: Array<{
-      title: string
-      href: string
-    }>
-  }>
-  resources?: Array<{
-    id: string
-    title: string
-    description: string
-    imageSrc: string
-    href: string
-  }>
+
+import { SubmenuProvider } from '../model/SubmenuContext'
+import links from '../config/nav-links.json'
+
+interface ArtistHeaderProps {
+  children?: ReactNode
 }
 
-export const ArtistHeader = () => {
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
-  const [isClosing, setIsClosing] = useState(false)
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+export const ArtistHeader = ({ children }: ArtistHeaderProps) => {
 
-  const typedLinks = links as LinkItem[]
-  const activeLink = typedLinks.find((link) => link.title === activeSubmenu)
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const submenuData = activeLink?.submenu || activeLink?.resources || null
-  const submenuType = activeLink?.submenu ? 'features' : 'resources'
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const activeLink = links.find((link) => link.title === activeSubmenu);
+
+  const submenuData = activeLink?.submenu || activeLink?.resources || null;
+  const submenuType = activeLink?.submenu ? 'features' : 'resources';
 
   const clearTimer = useCallback(() => {
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
-      timeoutRef.current = null
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
   }, [])
 
   const handleSetActiveSubmenu = useCallback(
     (value: string | null) => {
-      clearTimer()
-      setIsClosing(false)
-      setActiveSubmenu(value)
+      clearTimer();
+      setIsClosing(false);
+      setActiveSubmenu(value);
     },
     [clearTimer],
   )
@@ -57,28 +48,41 @@ export const ArtistHeader = () => {
   const handleCloseSubmenu = useCallback(() => {
     if (!activeSubmenu || isClosing) return
 
-    clearTimer()
-    setIsClosing(true)
+    clearTimer();
+    setIsClosing(true);
     timeoutRef.current = setTimeout(() => {
-      setActiveSubmenu(null)
-      setIsClosing(false)
+      setActiveSubmenu(null);
+      setIsClosing(false);
     }, 300)
   }, [activeSubmenu, isClosing, clearTimer])
 
   const handleMenuEnter = useCallback(() => {
-    clearTimer()
-    setIsClosing(false)
+    clearTimer();
+    setIsClosing(false);
   }, [clearTimer])
 
   useEffect(() => {
-    return () => clearTimer()
+    return () => clearTimer();
   }, [clearTimer])
 
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 10)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, []);
+
+  const headerIsDark = useMemo(() => {
+    return Boolean(isScrolled || (activeSubmenu && submenuData) || isClosing);
+  }, [isScrolled, activeSubmenu, submenuData, isClosing]);
+
   return (
-    <>
-      {/** biome-ignore lint/a11y/noStaticElementInteractions: header hover state controls submenu visibility */}
+    <SubmenuProvider activeSubmenu={activeSubmenu} isClosing={isClosing}>
       <header
-        className="fixed top-0 left-0 right-0 bg-black z-1052"
+        className={
+          cn("fixed top-0 left-0 right-0 w-full z-1052",
+            'transition-[background-color] duration-800 ease-out',
+            headerIsDark ? 'bg-black' : 'bg-black/0')}
         onMouseEnter={handleMenuEnter}
         onMouseLeave={handleCloseSubmenu}
       >
@@ -86,15 +90,20 @@ export const ArtistHeader = () => {
           <ArtistLogo />
 
           <NavLinks
+            className='hidden lg:flex'
             activeSubmenu={activeSubmenu}
             closeSubmenu={handleCloseSubmenu}
             setActiveSubmenu={handleSetActiveSubmenu}
           />
 
-          <section className="flex items-center gap-2">
-            <SwitchLanguagesButton />
+          <section className="hidden lg:flex items-center gap-2">
+            <SwitchLanguagesButton className=' transform hover:scale-110 transition duration-300 ease-in-out'/>
             <AuthButtons />
           </section>
+
+          <div className='lg:hidden'>
+            <BurgerMenu />
+          </div>
         </div>
       </header>
 
@@ -106,6 +115,8 @@ export const ArtistHeader = () => {
         submenuData={submenuData}
         type={submenuType as 'features' | 'resources'}
       />
-    </>
+
+      {children}
+    </SubmenuProvider>
   )
 }

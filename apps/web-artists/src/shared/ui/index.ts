@@ -1,2 +1,3 @@
 export * from './ArtistLogo'
-export * from './SwitchLanguagesLogo'
+export * from './SwitchLanguages/SwitchLanguagesLogo/SwitchLanguagesLogo'
+export * from './SwitchLanguages/SwitchLanguagesButton/SwitchLanguagesButton'

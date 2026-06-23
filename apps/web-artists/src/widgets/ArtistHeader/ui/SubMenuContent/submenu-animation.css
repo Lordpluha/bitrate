@@ -7,8 +7,8 @@
   opacity: 1;
   transform: translateY(0);
   transition:
-    opacity 400ms ease-out,
-    transform 400ms ease-out;
+    opacity 300ms ease-out,
+    transform 300ms ease-out;
 }
 
 .submenu-fade-exit {
@@ -37,4 +37,26 @@
 
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out forwards;
+}
+
+.link-underline { 
+  position: relative; 
+  display: inline-block;
+}
+
+.link-underline::before {
+  position: absolute;
+  content: "";
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-white);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+}
+
+.link-underline:hover::before {
+  transform: scaleX(1);
 }
