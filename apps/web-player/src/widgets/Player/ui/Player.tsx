@@ -42,6 +42,8 @@ export const Player: FC = () => {
     changeTrack,
     handleLoadedMetadata,
     handleTimeUpdate,
+    handleProgress,
+    handleCanPlay,
     handleEnded,
     handleSeeked,
   } = useAudioPlayer()
@@ -111,8 +113,10 @@ export const Player: FC = () => {
         <audio
           data-active={activeSlot === slot}
           key={slot}
+          onCanPlay={() => handleCanPlay(slot)}
           onEnded={() => handleEnded(slot)}
           onLoadedMetadata={() => handleLoadedMetadata(slot)}
+          onProgress={() => handleProgress(slot)}
           onSeeked={handleSeeked}
           onTimeUpdate={() => handleTimeUpdate(slot)}
           preload="auto"

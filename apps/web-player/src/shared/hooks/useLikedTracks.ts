@@ -21,8 +21,9 @@ export const useLikedTracks = (
       },
     },
     {
-      select(data) {
-        const result = data.map((track) => ({
+      select(data: unknown) {
+        const tracks = Array.isArray(data) ? (data as TrackEntity[]) : []
+        const result = tracks.map((track) => ({
           ...track,
           audioUrl: getApiUrl(`/api/v1/tracks/stream/${track.id}`),
         }))

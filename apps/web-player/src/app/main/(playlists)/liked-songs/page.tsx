@@ -1,3 +1,4 @@
+import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { TrackServerApi } from '@entities/Track/api/server'
 import { LikedSongsPlaylist } from '@views/Playlist/ui/LikedSongsPlaylist'
 import { notFound } from 'next/navigation'
@@ -9,5 +10,5 @@ export default async function LikedSongsPage() {
 
   if (!resp.data) notFound()
 
-  return <LikedSongsPlaylist tracks={resp.data} />
+  return <LikedSongsPlaylist tracks={resp.data as TrackEntity[]} />
 }

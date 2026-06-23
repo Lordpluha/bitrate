@@ -17,14 +17,42 @@ import Hls from 'hls.js'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from './index'
 
-const ACTIVE_BUFFER_SECONDS = 30
-const PREFETCH_BUFFER_SECONDS = 20
+const ACTIVE_BUFFER_SECONDS = 10
+const PREFETCH_BUFFER_SECONDS = 10
+const PREFETCH_AFTER_BUFFER_SECONDS = 8
+const PREFETCH_REMAINING_SECONDS = 45
+const SLOW_NETWORK_START_BUFFER_SECONDS = 3
+const SLOW_NETWORK_PREFETCH_BUFFER_SECONDS = 8
+const SLOW_NETWORK_PREFETCH_REMAINING_SECONDS = 30
 const POSITION_STORAGE_PREFIX = 'spotify-player-position:'
 
 type PlayerSlot = {
   element: HTMLAudioElement | null
   hls: Hls | null
   trackId: string | null
+}
+
+type NetworkConnection = {
+  effectiveType?: 'slow-2g' | '2g' | '3g' | '4g'
+  saveData?: boolean
+}
+
+const getNetworkConnection = () => {
+  if (typeof navigator === 'undefined') return null
+  return (
+    (navigator as Navigator & { connection?: NetworkConnection }).connection ??
+    null
+  )
+}
+
+const isSlowNetwork = () => {
+  const connection = getNetworkConnection()
+  return (
+    connection?.saveData === true ||
+    connection?.effectiveType === 'slow-2g' ||
+    connection?.effectiveType === '2g' ||
+    connection?.effectiveType === '3g'
+  )
 }
 
 const getApiUrl = () => {
@@ -35,8 +63,42 @@ const getApiUrl = () => {
 const getHlsUrl = (trackId: string) =>
   `${getApiUrl()}api/v1/tracks/stream/${trackId}/hls/master.m3u8`
 
-const getProgressiveUrl = (trackId: string) =>
-  `${getApiUrl()}api/v1/tracks/stream/${trackId}?format=opus`
+const getBufferedAhead = (element: HTMLAudioElement) => {
+  const { buffered, currentTime } = element
+
+  for (let index = 0; index < buffered.length; index += 1) {
+    if (buffered.start(index) <= currentTime && buffered.end(index) >= currentTime) {
+      return buffered.end(index) - currentTime
+    }
+  }
+
+  return 0
+}
+
+const shouldDelayInitialPlayback = (element: HTMLAudioElement) =>
+  isSlowNetwork() &&
+  element.currentTime < 1 &&
+  getBufferedAhead(element) < SLOW_NETWORK_START_BUFFER_SECONDS
+
+const shouldPrefetchNextTrack = (element: HTMLAudioElement) => {
+  const bufferedAhead = getBufferedAhead(element)
+  const duration = element.duration
+  const remaining = duration - element.currentTime
+
+  if (!Number.isFinite(duration)) return false
+
+  if (!isSlowNetwork()) {
+    return (
+      remaining <= PREFETCH_REMAINING_SECONDS &&
+      (bufferedAhead >= PREFETCH_AFTER_BUFFER_SECONDS || element.paused)
+    )
+  }
+
+  return (
+    remaining <= SLOW_NETWORK_PREFETCH_REMAINING_SECONDS &&
+    bufferedAhead >= SLOW_NETWORK_PREFETCH_BUFFER_SECONDS
+  )
+}
 
 const getNextTrack = (
   currentTrack: TrackEntity | null,
@@ -64,6 +126,8 @@ export const useAudioPlayer = () => {
   ])
   const activeSlotRef = useRef<0 | 1>(0)
   const isSeekingRef = useRef(false)
+  const pendingPlayRef = useRef(false)
+  const pendingPrefetchRef = useRef<{ slot: 0 | 1; track: TrackEntity } | null>(null)
   const recoveryAttemptsRef = useRef<Record<string, number>>({})
   const [activeSlot, setActiveSlot] = useState<0 | 1>(0)
 
@@ -112,25 +176,18 @@ export const useAudioPlayer = () => {
       element.crossOrigin = 'use-credentials'
       element.volume = volume
       const url = getHlsUrl(track.id)
-      const applyProgressiveFallback = () => {
-        const resumeAt = element.currentTime
+
+      const stopHlsPlayback = () => {
         slot.hls?.destroy()
         slot.hls = null
-        element.src = getProgressiveUrl(track.id)
-        element.addEventListener(
-          'loadedmetadata',
-          () => {
-            if (resumeAt > 0 && resumeAt < element.duration) {
-              element.currentTime = resumeAt
-            } else if (!isPrefetch) {
-              restorePosition(element, track.id)
-            }
-            if (!isPrefetch && isPlaying)
-              void element.play().catch(() => undefined)
-          },
-          { once: true },
-        )
+        pendingPlayRef.current = false
+        element.pause()
+        element.removeAttribute('src')
         element.load()
+
+        if (!isPrefetch) {
+          dispatch(pause())
+        }
       }
 
       if (Hls.isSupported()) {
@@ -142,8 +199,10 @@ export const useAudioPlayer = () => {
           maxBufferLength: isPrefetch
             ? PREFETCH_BUFFER_SECONDS
             : ACTIVE_BUFFER_SECONDS,
-          maxMaxBufferLength: isPrefetch ? PREFETCH_BUFFER_SECONDS : 60,
-          startFragPrefetch: true,
+          maxMaxBufferLength: isPrefetch
+            ? PREFETCH_BUFFER_SECONDS
+            : ACTIVE_BUFFER_SECONDS,
+          startFragPrefetch: false,
           xhrSetup: (xhr) => {
             xhr.withCredentials = true
           },
@@ -156,6 +215,21 @@ export const useAudioPlayer = () => {
         })
         hls.on(Hls.Events.ERROR, (_event, data) => {
           if (!data.fatal || slot.hls !== hls) return
+
+          if (
+            data.details === Hls.ErrorDetails.MANIFEST_LOAD_ERROR ||
+            data.details === Hls.ErrorDetails.MANIFEST_LOAD_TIMEOUT ||
+            data.details === Hls.ErrorDetails.MANIFEST_PARSING_ERROR ||
+            data.details === Hls.ErrorDetails.FRAG_LOAD_ERROR ||
+            data.details === Hls.ErrorDetails.FRAG_LOAD_TIMEOUT
+          ) {
+            sessionStorage.setItem(
+              `${POSITION_STORAGE_PREFIX}${track.id}`,
+              String(element.currentTime),
+            )
+            stopHlsPlayback()
+            return
+          }
 
           const attempts = recoveryAttemptsRef.current[track.id] ?? 0
           recoveryAttemptsRef.current[track.id] = attempts + 1
@@ -173,16 +247,16 @@ export const useAudioPlayer = () => {
             `${POSITION_STORAGE_PREFIX}${track.id}`,
             String(element.currentTime),
           )
-          applyProgressiveFallback()
+          stopHlsPlayback()
         })
       } else if (element.canPlayType('application/vnd.apple.mpegurl')) {
         element.src = url
-        element.addEventListener('error', applyProgressiveFallback, {
+        element.addEventListener('error', stopHlsPlayback, {
           once: true,
         })
         element.load()
       } else {
-        applyProgressiveFallback()
+        stopHlsPlayback()
       }
 
       if (!isPrefetch) {
@@ -193,7 +267,7 @@ export const useAudioPlayer = () => {
         )
       }
     },
-    [destroySlot, isPlaying, restorePosition, volume],
+    [destroySlot, dispatch, restorePosition, volume],
   )
 
   const bindAudioElement = useCallback(
@@ -222,13 +296,41 @@ export const useAudioPlayer = () => {
     [volume],
   )
 
+  const prefetchTrackWhenBuffered = useCallback(
+    (index: 0 | 1, track: TrackEntity) => {
+      const standby = slotsRef.current[index]
+      if (standby.trackId === track.id) {
+        pendingPrefetchRef.current = null
+        return
+      }
+
+      const activeElement = getActiveElement()
+      if (!activeElement) {
+        pendingPrefetchRef.current = { slot: index, track }
+        return
+      }
+
+      if (shouldPrefetchNextTrack(activeElement)) {
+        pendingPrefetchRef.current = null
+        attachTrack(index, track, true)
+        return
+      }
+
+      pendingPrefetchRef.current = { slot: index, track }
+    },
+    [attachTrack, getActiveElement],
+  )
+
   useEffect(() => {
     if (!currentTrack) {
+      pendingPlayRef.current = false
+      pendingPrefetchRef.current = null
       destroySlot(0)
       destroySlot(1)
       return
     }
 
+    pendingPrefetchRef.current = null
     const activeIndex = activeSlotRef.current
     const standbyIndex = activeIndex === 0 ? 1 : 0
     const active = slotsRef.current[activeIndex]
@@ -237,7 +339,9 @@ export const useAudioPlayer = () => {
     if (standby.trackId === currentTrack.id) {
       switchToSlot(standbyIndex)
       if (nextTrack && nextTrack.id !== currentTrack.id) {
-        attachTrack(activeIndex, nextTrack, true)
+        prefetchTrackWhenBuffered(activeIndex, nextTrack)
+      } else {
+        destroySlot(activeIndex)
       }
       return
     }
@@ -247,9 +351,18 @@ export const useAudioPlayer = () => {
     }
 
     if (nextTrack && nextTrack.id !== currentTrack.id) {
-      attachTrack(standbyIndex, nextTrack, true)
+      prefetchTrackWhenBuffered(standbyIndex, nextTrack)
+    } else {
+      destroySlot(standbyIndex)
     }
-  }, [attachTrack, currentTrack, destroySlot, nextTrack, switchToSlot])
+  }, [
+    attachTrack,
+    currentTrack,
+    destroySlot,
+    nextTrack,
+    prefetchTrackWhenBuffered,
+    switchToSlot,
+  ])
 
   useEffect(() => {
     for (const slot of slotsRef.current) {
@@ -263,8 +376,14 @@ export const useAudioPlayer = () => {
     if (slotsRef.current[activeSlot].trackId !== currentTrack.id) return
 
     if (isPlaying) {
+      if (shouldDelayInitialPlayback(active)) {
+        pendingPlayRef.current = true
+        return
+      }
+      pendingPlayRef.current = false
       void active.play().catch(() => undefined)
     } else {
+      pendingPlayRef.current = false
       active.pause()
     }
   }, [activeSlot, currentTrack, getActiveElement, isPlaying])
@@ -342,6 +461,45 @@ export const useAudioPlayer = () => {
     [currentTrack, dispatch],
   )
 
+  const handleProgress = useCallback(
+    (index: 0 | 1) => {
+      if (index !== activeSlotRef.current) return
+
+      const pending = pendingPrefetchRef.current
+      const element = slotsRef.current[index].element
+      if (!element) return
+
+      if (isPlaying && pendingPlayRef.current && !shouldDelayInitialPlayback(element)) {
+        pendingPlayRef.current = false
+        void element.play().catch(() => undefined)
+      } else if (isPlaying && element.paused && !pendingPlayRef.current) {
+        void element.play().catch(() => undefined)
+      }
+
+      if (!pending) return
+
+      if (shouldPrefetchNextTrack(element)) {
+        pendingPrefetchRef.current = null
+        attachTrack(pending.slot, pending.track, true)
+      }
+    },
+    [attachTrack, isPlaying],
+  )
+
+  const handleCanPlay = useCallback(
+    (index: 0 | 1) => {
+      if (index !== activeSlotRef.current) return
+
+      const element = slotsRef.current[index].element
+      if (!element || !isPlaying || !pendingPlayRef.current) return
+      if (shouldDelayInitialPlayback(element)) return
+
+      pendingPlayRef.current = false
+      void element.play().catch(() => undefined)
+    },
+    [isPlaying],
+  )
+
   const handleEnded = useCallback(
     (index: 0 | 1) => {
       if (index !== activeSlotRef.current) return
@@ -377,6 +535,8 @@ export const useAudioPlayer = () => {
     changeTrack: changeTrackHandler,
     handleLoadedMetadata,
     handleTimeUpdate,
+    handleProgress,
+    handleCanPlay,
     handleEnded,
     handleSeeked,
   }
