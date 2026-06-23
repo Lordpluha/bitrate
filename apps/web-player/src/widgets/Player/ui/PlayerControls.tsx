@@ -140,26 +140,33 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         </button>
 
         <button
-          onClick={onPrevious}
           className="p-1 text-text-subdued hover:text-text hover:scale-110 transition-all"
+          onClick={onPrevious}
+          type="button"
         >
           <SkipBack size={20} />
         </button>
 
         <button
-          onClick={onPlayPause}
           className="w-8 h-8 rounded-full bg-text hover:scale-105 transition-transform flex items-center justify-center"
+          onClick={onPlayPause}
+          type="button"
         >
           {isPlaying ? (
-            <Pause size={20} className="text-background" fill="currentColor" />
+            <Pause className="text-background" fill="currentColor" size={20} />
           ) : (
-            <Play size={20} className="text-background ml-0.5" fill="currentColor" />
+            <Play
+              className="text-background ml-0.5"
+              fill="currentColor"
+              size={20}
+            />
           )}
         </button>
 
         <button
-          onClick={onNext}
           className="p-1 text-text-subdued hover:text-text hover:scale-110 transition-all"
+          onClick={onNext}
+          type="button"
         >
           <SkipForward size={20} />
         </button>
@@ -181,9 +188,10 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           {formatTime(seekTime !== null ? seekTime : currentTime)}
         </span>
         <div
-          ref={progressBarRef}
+          aria-valuemax={duration || 0}
+          aria-valuemin={0}
+          aria-valuenow={seekTime !== null ? seekTime : currentTime}
           className="flex-1 h-1 bg-border rounded-full cursor-pointer group relative"
-          onMouseDown={handleMouseDown}
           onClick={handleProgressClick}
           onKeyDown={handleProgressKeyDown}
           onMouseDown={handleMouseDown}

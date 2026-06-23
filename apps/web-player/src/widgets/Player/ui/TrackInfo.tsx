@@ -9,6 +9,7 @@ interface TrackInfoProps {
   coverUrl?: string
   isLiked: boolean
   onLikeToggle?: () => void
+  onPictureInPicture?: () => void
 }
 
 export const TrackInfo: React.FC<TrackInfoProps> = ({
@@ -17,6 +18,7 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
   coverUrl,
   isLiked,
   onLikeToggle,
+  onPictureInPicture,
 }) => {
   return (
     <div className="flex items-center gap-3 min-w-45 w-[50%]">
@@ -25,6 +27,7 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
         className="w-14 h-14 rounded object-cover"
         height={56}
         src={coverUrl || '/images/default-playlist.jpg'}
+        unoptimized
         width={56}
       />
       <div className="min-w-8">
@@ -51,12 +54,14 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
           />
         </button>
         <button
+          aria-label="Open floating player"
           className="p-2 hover:scale-110 transition-transform"
+          onClick={onPictureInPicture}
           type="button"
         >
           <PictureInPicture2
-            size={16}
             className="text-text-subdued hover:text-text"
+            size={16}
           />
         </button>
       </div>

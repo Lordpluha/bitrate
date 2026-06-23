@@ -1,7 +1,15 @@
 'use client'
 
-import { CirclePlus, MonitorSpeaker, Pause, Play } from 'lucide-react'
 import { useImageColor } from '@shared/hooks/useImageColor'
+import {
+  CheckCircle2,
+  CirclePlus,
+  MonitorSpeaker,
+  Pause,
+  Play,
+  SkipForward,
+} from 'lucide-react'
+import Image from 'next/image'
 
 interface MiniPlayerProps {
   title: string
@@ -9,8 +17,12 @@ interface MiniPlayerProps {
   coverUrl: string
   isPlaying: boolean
   isVisible: boolean
+  isLiked?: boolean
+  currentTime: number
+  duration: number
   onPlayPause: () => void
   onExpand: () => void
+  onNext: () => void
 }
 
 export const MiniPlayer: React.FC<MiniPlayerProps> = ({
@@ -19,85 +31,112 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
   coverUrl,
   isPlaying,
   isVisible,
+  isLiked = false,
+  currentTime,
+  duration,
   onPlayPause,
   onExpand,
+  onNext,
 }) => {
-  const safeSrc = '/images/drive-cover-big.jpg'
+  const progress =
+    duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0
 
-  const [r, g, b] = useImageColor(safeSrc)
+  const [r, g, b] = useImageColor(coverUrl)
 
   return (
     <div
-      className={`fixed bottom-16 left-0 right-0 z-50 hidden max-[1024px]:block transition-transform duration-300 ease-in-out ${
+      className={`fixed bottom-16 left-2 right-2 z-50 hidden max-[1024px]:block transition-transform duration-300 ease-in-out ${
         isVisible ? 'translate-y-0' : 'translate-y-full'
       }`}
     >
-      {/* thin progress bar at top */}
-      <div className="h-0.5 w-full bg-white/10">
-        <div className="h-full w-1/3 bg-white/40" />
-      </div>
-
       <div
-        className="flex items-center gap-3 px-4 py-3 border-t border-white/10"
+        className="relative overflow-hidden rounded-md border border-white/10 shadow-2xl"
         style={{
           background: `linear-gradient(105deg,
-            rgb(${Math.min(r * 1.4, 200)}, ${Math.min(g * 1.4, 200)}, ${Math.min(b * 1.4, 200)}) 0%,
+            rgb(${Math.min(r * 1.35, 210)}, ${Math.min(g * 1.35, 210)}, ${Math.min(b * 1.35, 210)}) 0%,
             rgb(${r}, ${g}, ${b}) 50%,
-            rgb(${Math.round(r * 0.6)}, ${Math.round(g * 0.6)}, ${Math.round(b * 0.6)}) 100%)`,
+            rgb(${Math.round(r * 0.45)}, ${Math.round(g * 0.45)}, ${Math.round(b * 0.45)}) 100%)`,
         }}
       >
-        {/* cover — tapping opens NowPlayingView */}
-        <button
-          type="button"
-          onClick={onExpand}
-          className="shrink-0"
-          aria-label="Open now playing"
-        >
-          {/* biome-ignore lint/performance/noImgElement: mini player cover */}
-          <img
-            src={safeSrc}
-            alt={title}
-            className="w-12 h-12 rounded object-cover"
+        <div className="h-0.5 w-full bg-white/10">
+          <div
+            className="h-full bg-white/65"
+            style={{ width: `${progress}%` }}
           />
-        </button>
+        </div>
 
-        {/* track info — tapping also opens */}
-        <button
-          type="button"
-          onClick={onExpand}
-          className="flex-1 min-w-0 text-left"
-          aria-label="Open now playing"
-        >
-          <p className="text-text text-sm font-semibold truncate leading-tight">{title}</p>
-          <p className="text-text-subdued text-xs truncate mt-0.5">{artist}</p>
-        </button>
+        <div className="flex items-center gap-3 px-3 py-2.5 min-[520px]:px-4 min-[520px]:py-3">
+          <button
+            aria-label="Open now playing"
+            className="shrink-0"
+            onClick={onExpand}
+            type="button"
+          >
+            <Image
+              alt={title}
+              className="w-11 h-11 min-[520px]:w-12 min-[520px]:h-12 rounded object-cover"
+              height={48}
+              src={coverUrl}
+              unoptimized
+              width={48}
+            />
+          </button>
 
-        {/* actions */}
-        <div className="flex items-center gap-1 shrink-0">
           <button
+            aria-label="Open now playing"
+            className="flex-1 min-w-0 text-left"
+            onClick={onExpand}
             type="button"
-            className="p-2 text-text-subdued hover:text-text transition-colors"
-            aria-label="Connect to a device"
           >
-            <MonitorSpeaker size={22} />
+            <p className="text-white text-sm font-semibold truncate leading-tight">
+              {title}
+            </p>
+            <p className="text-white/65 text-xs truncate mt-0.5">{artist}</p>
           </button>
-          <button
-            type="button"
-            className="p-2 text-text-subdued hover:text-text transition-colors"
-            aria-label="Add to library"
-          >
-            <CirclePlus size={22} />
-          </button>
-          <button
-            type="button"
-            onClick={onPlayPause}
-            className="p-2 text-text hover:scale-110 transition-transform"
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-          >
-            {isPlaying
-              ? <Pause size={26} fill="currentColor" strokeWidth={0} />
-              : <Play size={26} fill="currentColor" strokeWidth={0} />}
-          </button>
+
+          <div className="flex items-center gap-0.5 shrink-0">
+            <button
+              aria-label={isLiked ? 'Saved to library' : 'Add to library'}
+              className="hidden min-[520px]:block p-2 text-white/70 hover:text-white transition-colors"
+              type="button"
+            >
+              {isLiked ? (
+                <CheckCircle2
+                  className="text-green-500 fill-green-500"
+                  size={22}
+                />
+              ) : (
+                <CirclePlus size={22} />
+              )}
+            </button>
+            <button
+              aria-label="Connect to a device"
+              className="hidden min-[620px]:block p-2 text-white/70 hover:text-white transition-colors"
+              type="button"
+            >
+              <MonitorSpeaker size={22} />
+            </button>
+            <button
+              aria-label={isPlaying ? 'Pause' : 'Play'}
+              className="p-2 text-white hover:scale-110 transition-transform"
+              onClick={onPlayPause}
+              type="button"
+            >
+              {isPlaying ? (
+                <Pause fill="currentColor" size={26} strokeWidth={0} />
+              ) : (
+                <Play fill="currentColor" size={26} strokeWidth={0} />
+              )}
+            </button>
+            <button
+              aria-label="Next track"
+              className="p-2 text-white/85 hover:text-white transition-colors"
+              onClick={onNext}
+              type="button"
+            >
+              <SkipForward fill="currentColor" size={22} strokeWidth={0} />
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { setCurrentPlaylistName, setPlaylistTracks } from '@entities/Player'
 import type { PlaylistServerApi } from '@entities/Playlist/api/server/PlaylistApi.server'
 import { fallbackPlaylistCover } from '@shared/constants'
 import { useAppDispatch } from '@shared/hooks'
+import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
 import { useEffect } from 'react'
 import { TracksList } from '../../../entities/Track/ui/TracksList'
 import { getPlaylistDuration } from '../utils/getPlaylistDuration'
@@ -21,12 +22,18 @@ export const PlaylistPage = ({ playlist }: PlaylistPageProps) => {
     dispatch(setCurrentPlaylistName(playlist?.title || 'Playlist'))
   }, [dispatch, playlist])
 
+  const coverUrl = getStaticMediaUrl(
+    playlist?.cover,
+    'playlists/covers',
+    fallbackPlaylistCover,
+  )
+
   return (
     <>
       <PlaylistHeader
         author={playlist?.user?.username || 'Unknown'}
         duration={getPlaylistDuration(playlist?.tracks || [])}
-        imageUrl={playlist?.cover || fallbackPlaylistCover}
+        imageUrl={coverUrl}
         title={playlist?.title || 'Playlist'}
         tracksCount={playlist?.tracks?.length || 0}
         type="Playlist"

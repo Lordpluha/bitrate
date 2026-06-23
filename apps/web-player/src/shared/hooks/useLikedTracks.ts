@@ -2,6 +2,7 @@
 
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { useQuery } from '@shared/api/client'
+import { getApiUrl } from '@shared/utils/mediaUrl'
 
 export const useLikedTracks = (
   page = 1,
@@ -23,7 +24,7 @@ export const useLikedTracks = (
       select(data) {
         const result = data.map((track) => ({
           ...track,
-          audioUrl: `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${track.id}`,
+          audioUrl: getApiUrl(`/api/v1/tracks/stream/${track.id}`),
         }))
 
         onSuccess?.(result)

@@ -1,5 +1,6 @@
 'use client'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 
 interface MusicItem {
@@ -37,13 +38,21 @@ export const MusicCardSm = ({ item }: MusicCardSmProps) => {
     setImageError(true)
   }
 
+  const href =
+    item.id === 'liked-songs'
+      ? '/main/liked-songs'
+      : `/main/playlist/${item.id}`
+
   return (
-    <div className="group flex items-center gap-3 p-2 rounded-md hover:bg-surface cursor-pointer transition-all duration-150">
-      <div className="w-12 h-12 rounded-md flex-shrink-0 overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-150">
+    <Link
+      className="group flex items-center gap-3 p-2 rounded-md hover:bg-surface cursor-pointer transition-all duration-150"
+      href={href}
+    >
+      <div className="w-12 h-12 relative rounded-md flex-shrink-0 overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-150">
         {!imageError ? (
           <Image
             alt={item.title}
-            className="object-cover"
+            className="object-cover relative"
             fill
             onError={handleImageError}
             sizes="48px"
@@ -71,6 +80,6 @@ export const MusicCardSm = ({ item }: MusicCardSmProps) => {
           {item.tracksCount && ` • ${item.tracksCount} songs`}
         </p>
       </div>
-    </div>
+    </Link>
   )
 }

@@ -1,6 +1,8 @@
 'use client'
 
 import { useQuery } from '@shared/api/client'
+import { fallbackPlaylistCover } from '@shared/constants'
+import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
 import { MusicCardSm } from './MusicCardSm'
 
 interface MusicItem {
@@ -57,7 +59,11 @@ export const LibraryMusic = () => {
           title: playlist.title,
           username: playlistWithUser.user?.username ?? 'Unknown Artist',
           type: 'playlist',
-          cover: playlist.cover || '/images/default-playlist.jpg',
+          cover: getStaticMediaUrl(
+            playlist.cover,
+            'playlists/covers',
+            fallbackPlaylistCover,
+          ),
           tracksCount: 0,
         })
       }

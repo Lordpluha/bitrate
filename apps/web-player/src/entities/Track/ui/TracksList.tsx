@@ -10,11 +10,11 @@ interface TracksListProps {
 export const TracksList = ({ tracks }: TracksListProps) => {
   return (
     <div className="px-6 py-4 max-[1024px]:px-3 max-[1024px]:py-3">
-      <div className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden">
+      <div className="grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_64px] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden">
         <div>#</div>
-        <div>TITLE</div>
-        <div>ALBUM</div>
-        <div>DATE ADDED</div>
+        <div>Title</div>
+        <div>Album</div>
+        <div>Date added</div>
         <div className="flex justify-end">
           <Clock size={16} />
         </div>

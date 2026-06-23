@@ -1,4 +1,6 @@
 'use client'
+import { fallbackPlaylistCover } from '@shared/constants'
+import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
 import { cn, PlayIcon } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -20,6 +22,12 @@ export const MusicCardLg: React.FC<MusicCardLgProps> = ({
   isArtist,
 }) => {
   const href = isArtist ? `/main/artist/${id}` : `/main/playlist/${id}`
+  const fallbackImage = isArtist
+    ? '/images/default-artist.jpg'
+    : fallbackPlaylistCover
+  const imageSrc = isArtist
+    ? getStaticMediaUrl(imageUrl, 'artists/avatars', fallbackImage)
+    : getStaticMediaUrl(imageUrl, 'playlists/covers', fallbackImage)
 
   return (
     <Link
@@ -35,12 +43,7 @@ export const MusicCardLg: React.FC<MusicCardLgProps> = ({
           )}
           fill
           sizes="180px"
-          src={
-            imageUrl ||
-            (isArtist
-              ? '/images/default-artist.jpg'
-              : '/images/default-playlist.jpg')
-          }
+          src={imageSrc}
           unoptimized
         />
         <div className="absolute bottom-2 right-2 flex items-center justify-center opacity-0 group-hover/card:opacity-100 translate-y-2 group-hover/card:translate-y-0 transition-all duration-200">

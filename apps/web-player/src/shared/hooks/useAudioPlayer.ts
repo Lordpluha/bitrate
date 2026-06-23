@@ -11,6 +11,7 @@ import {
   setProgress,
   togglePlay,
 } from '@entities/Player'
+import { getApiUrl } from '@shared/utils/mediaUrl'
 import { useCallback, useEffect, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from './index'
 
@@ -23,10 +24,8 @@ export const useAudioPlayer = () => {
   const currentTrack = useAppSelector(selectCurrentTrack)
 
   // Get track URL
-  const trackUrl = currentTrack?.audioUrl
-    ? currentTrack.audioUrl.startsWith('http')
-      ? currentTrack.audioUrl
-      : `${process.env.NEXT_PUBLIC_API_URL}api/v1/tracks/stream/${currentTrack.id}`
+  const trackUrl = currentTrack
+    ? getApiUrl(`/api/v1/tracks/stream/${currentTrack.id}`)
     : null
 
   // Progressive streaming setup
@@ -49,6 +48,19 @@ export const useAudioPlayer = () => {
       setupProgressiveStreaming(trackUrl)
     }
   }, [trackUrl, setupProgressiveStreaming])
+
+  useEffect(() => {
+    if (!audioRef.current || !trackUrl) return
+
+    if (isPlaying) {
+      void audioRef.current.play().catch((error) => {
+        console.error('Audio playback failed:', error)
+      })
+      return
+    }
+
+    audioRef.current.pause()
+  }, [isPlaying, trackUrl])
 
   const togglePlayPause = useCallback(() => {
     if (audioRef.current) {

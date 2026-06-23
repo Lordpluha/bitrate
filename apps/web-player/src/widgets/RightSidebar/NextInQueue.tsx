@@ -3,6 +3,7 @@
 import { play, selectCurrentTrack, selectPlaylist } from '@entities/Player'
 import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
+import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
 import { Button, PlayIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
 import type React from 'react'
@@ -34,9 +35,11 @@ export const NextInQueue: React.FC = () => {
     return null
   }
 
-  const coverUrl = nextTrack.cover?.startsWith('http')
-    ? nextTrack.cover
-    : `${process.env.NEXT_PUBLIC_API_URL}${nextTrack.cover}`
+  const coverUrl = getStaticMediaUrl(
+    nextTrack.cover,
+    'tracks/covers',
+    '/images/default-track-cover.jpg',
+  )
 
   return (
     <div className="bg-surface rounded-lg p-0 overflow-hidden mt-4">
@@ -49,15 +52,16 @@ export const NextInQueue: React.FC = () => {
           Next in queue
         </Typography>
         <Button
-          variant="link"
           className="text-text-subdued text-xs font-medium hover:underline p-0"
+          variant="link"
         >
           Open queue
         </Button>
       </div>
-      <div
+      <button
+        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-surface cursor-pointer transition-colors group text-left"
         onClick={() => dispatch(play(nextTrack))}
-        className="px-4 py-3 flex items-center gap-3 hover:bg-surface cursor-pointer transition-colors group"
+        type="button"
       >
         <div className="relative w-12 h-12 shrink-0">
           <Image
@@ -66,6 +70,7 @@ export const NextInQueue: React.FC = () => {
             fill
             sizes="48px"
             src={coverUrl}
+            unoptimized
           />
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
             <PlayIcon className="w-5 h-5 text-white" />
@@ -81,13 +86,13 @@ export const NextInQueue: React.FC = () => {
           </Typography>
           <Typography
             as="p"
-            size="body"
             className="text-text-subdued text-xs truncate"
+            size="body"
           >
             {artistName}
           </Typography>
         </div>
-      </div>
+      </button>
     </div>
   )
 }

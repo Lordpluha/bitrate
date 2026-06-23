@@ -2,6 +2,7 @@
 
 import { selectCurrentTrack } from '@entities/Player'
 import { useAppSelector } from '@shared/hooks'
+import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
 import { SavedSongIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
 import type React from 'react'
@@ -13,9 +14,11 @@ export const CurrentPlaylist: React.FC = () => {
     return null
   }
 
-  const coverUrl = currentTrack.cover?.startsWith('http')
-    ? currentTrack.cover
-    : `${process.env.NEXT_PUBLIC_API_URL}${currentTrack.cover}`
+  const coverUrl = getStaticMediaUrl(
+    currentTrack.cover,
+    'tracks/covers',
+    '/images/default-track-cover.jpg',
+  )
 
   return (
     <div>
