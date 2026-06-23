@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prebuild": "prisma generate",
     "build": "nest build",
     "format": "pnpm exec biome format --write",
     "start": "nest start",

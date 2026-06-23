@@ -167,11 +167,17 @@ export class TracksService {
         const [data, total] = await this.prisma.$transaction([
           this.prisma.track.findMany({
             skip,
-            where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
+            where: {
+              processingStatus: 'READY',
+              ...(title ? { title: { contains: title, mode: 'insensitive' } } : {}),
+            },
             take: safeLimit,
           }),
           this.prisma.track.count({
-            where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
+            where: {
+              processingStatus: 'READY',
+              ...(title ? { title: { contains: title, mode: 'insensitive' } } : {}),
+            },
           }),
         ])
         return {
@@ -216,11 +222,8 @@ export class TracksService {
     const safeLimit = Math.min(limit, 100)
     return await this.prisma.track.findMany({
       where: {
-        likedBy: {
-          some: {
-            id: userId,
-          },
-        },
+        processingStatus: 'READY',
+        likedBy: { some: { id: userId } },
       },
       skip: (page - 1) * safeLimit,
       take: safeLimit,
@@ -230,7 +233,7 @@ export class TracksService {
   /** Runs the find track by id operation. */
   async findTrackById(id: TrackEntity['id']) {
     return await this.cache.wrap(NS.TRACKS, `id:${id}`, TTL.LONG, () =>
-      this.prisma.track.findUnique({ where: { id } }),
+      this.prisma.track.findFirst({ where: { id, processingStatus: 'READY' } }),
     )
   }
 
@@ -242,6 +245,7 @@ export class TracksService {
   ) {
     const track = await this.prisma.track.findUnique({ where: { id } })
     if (!track) throw new NotFoundException('Track not found')
+    if (track.processingStatus !== 'READY') throw new NotFoundException('Track is not available yet')
 
     const audioFiles = await this.prisma.trackFile.findMany({
       where: { trackId: id },
@@ -424,13 +428,15 @@ export class TracksService {
   /** Runs the find tracks by artist id operation. */
   async findTracksByArtistId(artistId: Artist['id']) {
     return await this.cache.wrap(NS.TRACKS, `artist:${artistId}`, TTL.SHORT, () =>
-      this.prisma.track.findMany({ where: { artistId } }),
+      this.prisma.track.findMany({ where: { artistId, processingStatus: 'READY' } }),
     )
   }
 
   /** Runs the find tracks by artist name operation. */
   async findTracksByArtistName(artistUsername: Artist['username']) {
-    return await this.prisma.track.findMany({ where: { artist: { username: artistUsername } } })
+    return await this.prisma.track.findMany({
+      where: { processingStatus: 'READY', artist: { username: artistUsername } },
+    })
   }
 
   /** Runs the create operation. */

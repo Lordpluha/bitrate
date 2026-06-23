@@ -34,7 +34,7 @@ export class AlbumsService {
           skip: (page - 1) * safeLimit,
           take: safeLimit,
           where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
-          include: { tracks: true },
+          include: { tracks: { where: { processingStatus: 'READY' } } },
         }),
     )
   }
@@ -42,7 +42,10 @@ export class AlbumsService {
   /** Runs the get by id operation. */
   async getById(id: AlbumEntity['id']) {
     return await this.cache.wrap(NS.ALBUMS, `id:${id}`, TTL.LONG, () =>
-      this.prisma.album.findFirst({ where: { id }, include: { tracks: true } }),
+      this.prisma.album.findFirst({
+        where: { id },
+        include: { tracks: { where: { processingStatus: 'READY' } } },
+      }),
     )
   }
 
