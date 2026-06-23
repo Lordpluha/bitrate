@@ -245,7 +245,8 @@ export class TracksService {
   ) {
     const track = await this.prisma.track.findUnique({ where: { id } })
     if (!track) throw new NotFoundException('Track not found')
-    if (track.processingStatus !== 'READY') throw new NotFoundException('Track is not available yet')
+    if (track.processingStatus !== 'READY')
+      throw new NotFoundException('Track is not available yet')
 
     const audioFiles = await this.prisma.trackFile.findMany({
       where: { trackId: id },

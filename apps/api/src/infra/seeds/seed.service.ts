@@ -1,8 +1,10 @@
+import { join } from 'node:path'
 import { faker } from '@faker-js/faker'
 import { Logger } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import type { Artist as NCSArtist, Song as NCSSong } from '@spotify/ncs-parser'
 import * as ncs from '@spotify/ncs-parser'
+import type { Queue } from 'bullmq'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
 import { FakerService } from './faker.service'
@@ -16,6 +18,8 @@ export class SeedService {
     private prisma: PrismaClient,
     private downloadService: DownloadResourcesService,
     private faker: FakerService,
+    private audioQueue: Queue,
+    private tracksDir: string,
   ) {}
 
   /** The logger value. */
@@ -43,7 +47,7 @@ export class SeedService {
   }
 
   /**
-   * Создаёт трек с файлами
+   * Создаёт трек и ставит задачу конвертации в очередь
    */
   private async createTrack(ncsSong: NCSSong, artistId: string) {
     // Проверяем дубликаты
@@ -57,20 +61,14 @@ export class SeedService {
     }
 
     // Скачиваем ресурсы
-    const {
-      audioFilename,
-      coverFilename,
-      instrumentalFilename,
-      audioSize,
-      instrumentalSize,
-      duration,
-    } = await this.downloadService.downloadTrackResources(ncsSong)
+    const { audioFilename, coverFilename, duration } =
+      await this.downloadService.downloadTrackResources(ncsSong)
 
     if (!audioFilename) {
       throw new Error('No audio URL available for track')
     }
 
-    // Создаём трек
+    // Создаём трек со статусом PROCESSING (consumer переведёт в READY)
     const track = await this.prisma.track.create({
       data: {
         title: ncsSong.name,
@@ -83,46 +81,27 @@ export class SeedService {
       },
     })
 
-    // Создаём TrackFiles для different версий
-    const trackFiles: Array<{
-      trackId: string
-      format: string
-      bitrate: number
-      codec: string
-      url: string
-      size: number | undefined
-    }> = []
-
-    // Regular версия
-    if (audioFilename && !audioFilename.startsWith('http')) {
-      trackFiles.push({
+    // Ставим задачу конвертации в очередь — consumer создаст TrackFile записи
+    const inputPath = join(this.tracksDir, audioFilename)
+    await this.audioQueue.add(
+      'convert-audio',
+      {
         trackId: track.id,
-        format: config.fileFormat.audio,
-        bitrate: config.fileFormat.bitrate,
-        codec: config.fileFormat.codec,
-        url: audioFilename,
-        size: audioSize,
-      })
-    }
-
-    // Instrumental версия
-    if (instrumentalFilename) {
-      trackFiles.push({
-        trackId: track.id,
-        format: config.fileFormat.audio,
-        bitrate: config.fileFormat.bitrate,
-        codec: config.fileFormat.codec,
-        url: instrumentalFilename,
-        size: instrumentalSize,
-      })
-    }
-
-    if (trackFiles.length > 0) {
-      await this.prisma.trackFile.createMany({
-        data: trackFiles,
-        skipDuplicates: true,
-      })
-    }
+        artistId,
+        sourceFileName: audioFilename,
+        inputPath,
+        outputDir: this.tracksDir,
+        format: 'opus',
+        bitrates: ['128k', '192k', '320k'],
+      },
+      {
+        jobId: `convert-audio-${track.id}-${audioFilename}`,
+        attempts: 5,
+        backoff: { type: 'exponential', delay: 5_000 },
+        removeOnComplete: { age: 3_600, count: 1_000 },
+        removeOnFail: { age: 604_800, count: 5_000 },
+      },
+    )
 
     return track
   }

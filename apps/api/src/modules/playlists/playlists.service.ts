@@ -3,7 +3,12 @@ import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { UserEntity } from '@modules/users'
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { AddTracksDto, CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
 import { PlaylistEntity } from './entities'
 
@@ -126,7 +131,10 @@ export class PlaylistsService {
     return await this.prisma.playlist.findMany({
       where: { userId },
       include: {
-        tracks: { where: { processingStatus: 'READY' }, select: { id: true, title: true, cover: true } },
+        tracks: {
+          where: { processingStatus: 'READY' },
+          select: { id: true, title: true, cover: true },
+        },
         _count: { select: { tracks: true } },
       },
       orderBy: { updatedAt: 'desc' },

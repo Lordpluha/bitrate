@@ -95,7 +95,7 @@ describe('TracksService', () => {
       const result = await service.findLikedTracks('user-1', { page: 1, limit: 10 })
 
       expect(prisma.track.findMany).toHaveBeenCalledWith({
-        where: { likedBy: { some: { id: 'user-1' } } },
+        where: { processingStatus: 'READY', likedBy: { some: { id: 'user-1' } } },
         skip: 0,
         take: 10,
       })
@@ -106,11 +106,13 @@ describe('TracksService', () => {
   describe('findTrackById', () => {
     it('should return track by id', async () => {
       const track = buildTrack()
-      prisma.track.findUnique.mockResolvedValue(track as never)
+      prisma.track.findFirst.mockResolvedValue(track as never)
 
       const result = await service.findTrackById('track-1')
 
-      expect(prisma.track.findUnique).toHaveBeenCalledWith({ where: { id: 'track-1' } })
+      expect(prisma.track.findFirst).toHaveBeenCalledWith({
+        where: { id: 'track-1', processingStatus: 'READY' },
+      })
       expect(result).toBe(track)
     })
   })
@@ -182,7 +184,9 @@ describe('TracksService', () => {
 
       const result = await service.findTracksByArtistId('artist-1')
 
-      expect(prisma.track.findMany).toHaveBeenCalledWith({ where: { artistId: 'artist-1' } })
+      expect(prisma.track.findMany).toHaveBeenCalledWith({
+        where: { artistId: 'artist-1', processingStatus: 'READY' },
+      })
       expect(result).toBe(tracks)
     })
   })
@@ -195,7 +199,7 @@ describe('TracksService', () => {
       const result = await service.findTracksByArtistName('artist')
 
       expect(prisma.track.findMany).toHaveBeenCalledWith({
-        where: { artist: { username: 'artist' } },
+        where: { processingStatus: 'READY', artist: { username: 'artist' } },
       })
       expect(result).toBe(tracks)
     })
