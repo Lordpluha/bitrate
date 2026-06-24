@@ -12,7 +12,9 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests',
+  testDir: './src',
+  testMatch: '**/__snapshots__/*.spec.ts',
+  snapshotPathTemplate: 'src/{testFileDir}/../__screenshot__/{arg}-{projectName}-{platform}{ext}',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

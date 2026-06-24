@@ -52,13 +52,7 @@
     "docker:desktop:logs": "docker-compose -f infra/docker-compose.preprod.yaml logs -f desktop",
     "docker:mobile:dev": "docker-compose -f infra/docker-compose.preprod.yaml --profile mobile up -d",
     "docker:mobile:logs": "docker-compose -f infra/docker-compose.preprod.yaml logs -f mobile",
-    "docker:mobile:qr": "docker-compose -f infra/docker-compose.preprod.yaml logs mobile | grep 'exp://'",
-    "test:firefox":"playwright test --config=playwright.config.ts --project=firefox",
-    "test:webkit":"playwright test --config=playwright.config.ts --project=webkit",
-    "test:chromium":"playwright test --config=playwright.config.ts --project=chromium",
-    "test:all":"playwright test --config=playwright.config.ts --project=chromium --project=firefox",
-    "test:ui":"playwright test --config=playwright.config.ts --ui",
-    "test:e2e":"playwright test --config=playwright.config.ts --project=chromium"
+    "docker:mobile:qr": "docker-compose -f infra/docker-compose.preprod.yaml logs mobile | grep 'exp://'"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
