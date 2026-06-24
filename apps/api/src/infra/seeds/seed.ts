@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import 'dotenv/config'
 import { existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
+import { Queue } from 'bullmq'
 import { Pool } from 'pg'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
@@ -15,6 +16,14 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 const adapter = new PrismaPg(pool)
 /** The prisma value. */
 const prisma = new PrismaClient({ adapter })
+
+/** Audio processing queue. */
+const audioQueue = new Queue('audio-processing', {
+  connection: {
+    host: process.env.REDIS_HOST ?? 'localhost',
+    port: Number(process.env.REDIS_PORT ?? 6379),
+  },
+})
 
 // Подготовка директорий для хранения файлов
 /** The storage base value. */
@@ -46,7 +55,7 @@ async function main() {
 
     // Создаём сервисы
     const downloadService = new DownloadResourcesService(STORAGE_BASE)
-    const seedService = new SeedService(prisma, downloadService, new FakerService())
+    const seedService = new SeedService(prisma, downloadService, new FakerService(), audioQueue, TRACKS_DIR)
 
     // Шаг 1: Очистка базы данных (опционально)
     if (config.clearBeforeImport) {
@@ -76,6 +85,7 @@ async function main() {
     console.error('\n❌ Fatal error during seeding:', error)
     throw error
   } finally {
+    await audioQueue.close()
     await prisma.$disconnect()
     await pool.end()
   }
