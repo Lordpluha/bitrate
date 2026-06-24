@@ -104,7 +104,7 @@ describe('PlaylistsService', () => {
     expect(prisma.playlist.findUniqueOrThrow).toHaveBeenCalledWith({
       where: { id: 'playlist-1', isPublic: true },
       include: {
-        tracks: true,
+        tracks: { where: { processingStatus: 'READY' } },
         user: {
           select: {
             avatar: true,

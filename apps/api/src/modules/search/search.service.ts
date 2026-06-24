@@ -89,8 +89,11 @@ export class SearchService {
       SELECT id, title, cover, "artistId",
              ts_rank(to_tsvector('english', title), plainto_tsquery('english', ${query})) AS rank
       FROM "Track"
-      WHERE to_tsvector('english', title) @@ plainto_tsquery('english', ${query})
-         OR title ILIKE ${like}
+      WHERE "processingStatus" = 'READY'
+        AND (
+          to_tsvector('english', title) @@ plainto_tsquery('english', ${query})
+          OR title ILIKE ${like}
+        )
       ORDER BY rank DESC LIMIT ${limit}
     `)
   }

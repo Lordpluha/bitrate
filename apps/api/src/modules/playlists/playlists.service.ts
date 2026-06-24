@@ -3,7 +3,12 @@ import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { UserEntity } from '@modules/users'
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { AddTracksDto, CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
 import { PlaylistEntity } from './entities'
 
@@ -61,7 +66,7 @@ export class PlaylistsService {
     return await this.prisma.playlist.findUniqueOrThrow({
       where: { id, isPublic: true },
       include: {
-        tracks: true,
+        tracks: { where: { processingStatus: 'READY' } },
         user: {
           select: {
             avatar: true,
@@ -126,7 +131,10 @@ export class PlaylistsService {
     return await this.prisma.playlist.findMany({
       where: { userId },
       include: {
-        tracks: { select: { id: true, title: true, cover: true } },
+        tracks: {
+          where: { processingStatus: 'READY' },
+          select: { id: true, title: true, cover: true },
+        },
         _count: { select: { tracks: true } },
       },
       orderBy: { updatedAt: 'desc' },
@@ -138,10 +146,17 @@ export class PlaylistsService {
     const playlist = await this.prisma.playlist.findFirst({ where: { id, userId } })
     if (!playlist) throw new NotFoundException('Playlist not found or not owned by user')
 
+    const readyCount = await this.prisma.track.count({
+      where: { id: { in: dto.trackIds }, processingStatus: 'READY' },
+    })
+    if (readyCount !== dto.trackIds.length) {
+      throw new BadRequestException('Some tracks are not available yet')
+    }
+
     return await this.prisma.playlist.update({
       where: { id },
       data: { tracks: { connect: dto.trackIds.map((trackId) => ({ id: trackId })) } },
-      include: { tracks: true },
+      include: { tracks: { where: { processingStatus: 'READY' } } },
     })
   }
 
@@ -153,7 +168,7 @@ export class PlaylistsService {
     return await this.prisma.playlist.update({
       where: { id },
       data: { tracks: { disconnect: { id: trackId } } },
-      include: { tracks: true },
+      include: { tracks: { where: { processingStatus: 'READY' } } },
     })
   }
 }

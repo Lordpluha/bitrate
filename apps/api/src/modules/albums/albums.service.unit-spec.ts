@@ -43,7 +43,7 @@ describe('AlbumsService', () => {
       skip: 5,
       take: 5,
       where: { title: { contains: 'rock', mode: 'insensitive' } },
-      include: { tracks: true },
+      include: { tracks: { where: { processingStatus: 'READY' } } },
     })
     expect(result).toBe(albums)
   })
@@ -58,7 +58,7 @@ describe('AlbumsService', () => {
       skip: 0,
       take: 10,
       where: { title: { contains: 'RoCk', mode: 'insensitive' } },
-      include: { tracks: true },
+      include: { tracks: { where: { processingStatus: 'READY' } } },
     })
     expect(result).toBe(albums)
   })
@@ -73,7 +73,7 @@ describe('AlbumsService', () => {
       skip: 0,
       take: 10,
       where: undefined,
-      include: { tracks: true },
+      include: { tracks: { where: { processingStatus: 'READY' } } },
     })
     expect(result).toBe(albums)
   })
@@ -88,7 +88,7 @@ describe('AlbumsService', () => {
       skip: 0,
       take: 10,
       where: undefined,
-      include: { tracks: true },
+      include: { tracks: { where: { processingStatus: 'READY' } } },
     })
     expect(result).toBe(albums)
   })
@@ -101,7 +101,7 @@ describe('AlbumsService', () => {
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
       where: { id: 'album-1' },
-      include: { tracks: true },
+      include: { tracks: { where: { processingStatus: 'READY' } } },
     })
     expect(result).toBe(album)
   })
@@ -113,7 +113,7 @@ describe('AlbumsService', () => {
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
       where: { id: 'album-unknown' },
-      include: { tracks: true },
+      include: { tracks: { where: { processingStatus: 'READY' } } },
     })
     expect(result).toBeNull()
   })
