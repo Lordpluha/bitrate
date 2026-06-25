@@ -49,6 +49,6 @@ test('visual regression with video pause', async ({ page }) => {
     threshold: 0.1,
     maxDiffPixels: 1000,
     mask: [page.locator('[aria-roledescription="slide"]')],
-    timeout: 60000,
+    timeout: 30000,
   })
 })

@@ -13,9 +13,9 @@ import { defineConfig, devices } from '@playwright/test'
  */
 export default defineConfig({
   testDir: './src',
-  testMatch: '**/__snapshots__/*.spec.ts',
+  testMatch: '*.screenshot-spec.ts',
   snapshotPathTemplate:
-    'src/{testFileDir}/../__screenshot__/{arg}-{projectName}-{platform}{ext}',
+    'src/{testFileDir}/__screenshot__/{arg}-{projectName}-{platform}{ext}',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
