@@ -21,6 +21,21 @@ on:
         required: false
         default: false
         type: boolean
+      run-tests:
+        description: Run web-player typecheck and Vitest
+        required: false
+        default: true
+        type: boolean
+      run-e2e:
+        description: Run Playwright E2E
+        required: false
+        default: false
+        type: boolean
+      run-screenshot:
+        description: Run Playwright route screenshot regression
+        required: false
+        default: false
+        type: boolean
       cache-to-registry:
         description: Export build cache to GHCR registry
         required: false
@@ -46,12 +61,32 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js and pnpm
-        if: ${{ inputs.run-biome }}
+        if: ${{ inputs.run-biome || inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
         uses: ./.github/actions/setup-node-pnpm
 
       - name: Run Biome check
         if: ${{ inputs.run-biome }}
         run: pnpm exec biome ci apps/web-player packages/ui-react packages/contracts
+
+      - name: Run web-player typecheck
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @spotify/web-player check-types
+
+      - name: Run web-player unit and integration tests
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @spotify/web-player test
+
+      - name: Install Playwright Chromium
+        if: ${{ inputs.run-e2e || inputs.run-screenshot }}
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Run web-player E2E tests
+        if: ${{ inputs.run-e2e }}
+        run: pnpm --filter @spotify/web-player test:e2e
+
+      - name: Run web-player screenshot tests
+        if: ${{ inputs.run-screenshot }}
+        run: pnpm --filter @spotify/web-player test:screenshot
 
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker

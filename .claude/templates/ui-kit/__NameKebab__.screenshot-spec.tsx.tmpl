@@ -1,0 +1,16 @@
+import { render } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+import { page } from 'vitest/browser'
+
+import { __NamePascal__ } from './__NameKebab__'
+
+describe('__NamePascal__ screenshots', () => {
+  it('default state', async () => {
+    render(
+      <div data-testid="subject">
+        <__NamePascal__ />
+      </div>,
+    )
+    await expect(page.getByTestId('subject')).toMatchScreenshot()
+  })
+})

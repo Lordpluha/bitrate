@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Testing
 
-Описание организации тестов в API-приложении.
+Описание тестовых слоёв API и общего React UI-пакета.
 
 ## Три уровня тестов
 
@@ -95,3 +95,54 @@ pnpm --filter @spotify/api test:cov
 ```
 
 Отчёт генерируется в `apps/api/coverage/`.
+
+## UI React: Vitest + Playwright
+
+`packages/ui-react` использует четыре проекта из
+`packages/ui-react/vitest.config.ts`:
+
+| Проект | Суффикс | Среда | Назначение |
+|---|---|---|---|
+| Unit | `*.unit-spec.tsx` | jsdom | Изолированное поведение компонента |
+| Integration | `*.int-spec.tsx` | jsdom | Пользовательские взаимодействия и композиция |
+| Snapshot | `*.snapshot-spec.tsx` | jsdom | DOM-снимки |
+| Screenshot | `*.screenshot-spec.tsx` | Chromium | Визуальная регрессия через Vitest Browser и Playwright |
+
+Все тесты располагаются рядом с компонентом:
+
+```text
+src/components/ui/button/
+├── button.tsx
+├── button.unit-spec.tsx
+├── button.int-spec.tsx
+├── button.snapshot-spec.tsx
+└── button.screenshot-spec.tsx
+```
+
+Команды:
+
+```bash
+pnpm --filter @spotify/ui-react test
+pnpm --filter @spotify/ui-react test:unit
+pnpm --filter @spotify/ui-react test:int
+pnpm --filter @spotify/ui-react test:snapshot
+pnpm --filter @spotify/ui-react test:snapshot:update
+pnpm --filter @spotify/ui-react test:screenshot
+pnpm --filter @spotify/ui-react test:screenshot:update
+pnpm --filter @spotify/ui-react test:cov
+```
+
+В `ui-react` Playwright используется как browser provider для screenshot-тестов; отдельные
+E2E-сценарии приложения принадлежат `web-player`.
+
+## Web player: Vitest + Playwright
+
+| Тип | Расположение | Команда |
+|---|---|---|
+| Unit | `src/**/*.unit-spec.ts(x)` | `pnpm --filter @spotify/web-player test:unit` |
+| Integration | `tests/integration/**/*.int-spec.ts(x)` | `pnpm --filter @spotify/web-player test:int` |
+| E2E | `tests/e2e/**/*.e2e-spec.ts` | `pnpm --filter @spotify/web-player test:e2e` |
+| Screenshot | `tests/screenshots/**/*.screenshot-spec.ts` | `pnpm --filter @spotify/web-player test:screenshot` |
+
+Playwright автоматически запускает Next.js dev server на `http://localhost:3001`, если
+`BASE_URL` не указывает на уже развёрнутое окружение.

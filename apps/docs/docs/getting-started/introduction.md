@@ -94,7 +94,7 @@ pnpm --filter @spotify/desktop tauri dev  # Desktop app
 - **WebSockets** - Real-time synchronization
 
 ### Frontend
-- **Next.js 15** - React framework with App Router
+- **Next.js** - React framework with App Router
 - **React 19** - UI library
 - **Tailwind CSS v4** - Utility-first CSS (Rust-based)
 - **TypeScript** - Type safety across the stack
