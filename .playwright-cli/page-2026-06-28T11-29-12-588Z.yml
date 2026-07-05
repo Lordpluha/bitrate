@@ -1,0 +1,116 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "Spotify Home" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+        - navigation [ref=e12]:
+          - list [ref=e13]:
+            - link "Premium" [ref=e14] [cursor=pointer]:
+              - /url: "#premium"
+            - link "Support" [ref=e15] [cursor=pointer]:
+              - /url: "#support"
+            - link "Download" [ref=e16] [cursor=pointer]:
+              - /url: "#download"
+            - generic [ref=e17]:
+              - button [ref=e18]:
+                - img [ref=e19]
+              - button [ref=e21]:
+                - img [ref=e22]
+            - generic [ref=e28]:
+              - link "Login" [ref=e29] [cursor=pointer]:
+                - /url: /auth/login
+              - link "Register" [ref=e30] [cursor=pointer]:
+                - /url: /auth/registration
+    - main [ref=e31]:
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - img [ref=e36]
+          - heading "Login to your account" [level=5] [ref=e38]
+          - paragraph [ref=e39]: Welcome back! Please sign in to continue.
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - text: Email Address
+            - textbox "Email Address" [ref=e42]
+          - generic [ref=e43]:
+            - text: Password
+            - generic [ref=e44]:
+              - textbox "Password" [ref=e45]
+              - button [ref=e46]:
+                - img [ref=e47]
+          - link "Forgot password?" [ref=e50] [cursor=pointer]:
+            - /url: /auth/forgot-password
+          - generic [ref=e51]:
+            - button "Log in" [ref=e52] [cursor=pointer]
+            - generic [ref=e54]: or
+            - button "Continue with Google" [ref=e55] [cursor=pointer]:
+              - img [ref=e56]
+              - paragraph [ref=e61]: Continue with Google
+            - paragraph [ref=e62]:
+              - text: Don't have an account?
+              - link "Sign up." [ref=e63] [cursor=pointer]:
+                - /url: /auth/registration
+    - contentinfo [ref=e64]:
+      - generic [ref=e67]:
+        - link "Spotify Home" [ref=e69] [cursor=pointer]:
+          - /url: /
+          - img [ref=e70]
+        - generic [ref=e75]:
+          - list [ref=e77]:
+            - listitem [ref=e78]:
+              - link "Company" [ref=e79] [cursor=pointer]:
+                - /url: "#company"
+            - listitem [ref=e80]:
+              - link "About" [ref=e81] [cursor=pointer]:
+                - /url: "#about"
+            - listitem [ref=e82]:
+              - link "Jobs" [ref=e83] [cursor=pointer]:
+                - /url: "#jobs"
+            - listitem [ref=e84]:
+              - link "For the record" [ref=e85] [cursor=pointer]:
+                - /url: "#for-the-record"
+          - list [ref=e87]:
+            - listitem [ref=e88]:
+              - link "Company" [ref=e89] [cursor=pointer]:
+                - /url: "#company"
+            - listitem [ref=e90]:
+              - link "For Artists" [ref=e91] [cursor=pointer]:
+                - /url: "#for-artists"
+            - listitem [ref=e92]:
+              - link "Developers" [ref=e93] [cursor=pointer]:
+                - /url: "#developers"
+            - listitem [ref=e94]:
+              - link "Advertising" [ref=e95] [cursor=pointer]:
+                - /url: "#advertising"
+            - listitem [ref=e96]:
+              - link "Investors" [ref=e97] [cursor=pointer]:
+                - /url: "#investors"
+            - listitem [ref=e98]:
+              - link "Vendors" [ref=e99] [cursor=pointer]:
+                - /url: "#vendors"
+          - list [ref=e101]:
+            - listitem [ref=e102]:
+              - link "Company" [ref=e103] [cursor=pointer]:
+                - /url: "#company"
+            - listitem [ref=e104]:
+              - link "Support" [ref=e105] [cursor=pointer]:
+                - /url: "#support"
+            - listitem [ref=e106]:
+              - link "Web Player" [ref=e107] [cursor=pointer]:
+                - /url: "#web-player"
+            - listitem [ref=e108]:
+              - link "Free Mobile App" [ref=e109] [cursor=pointer]:
+                - /url: "#free-mobile-app"
+        - generic [ref=e110]:
+          - link [ref=e111] [cursor=pointer]:
+            - /url: "#instagram"
+            - img [ref=e112]
+          - link [ref=e115] [cursor=pointer]:
+            - /url: "#twitter"
+            - img [ref=e116]
+          - link [ref=e118] [cursor=pointer]:
+            - /url: "#facebook"
+            - img [ref=e119]

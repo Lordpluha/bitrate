@@ -2,7 +2,7 @@
 
 import { selectCurrentTrack } from '@entities/Player'
 import { useAppSelector } from '@shared/hooks'
-import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
+import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { SavedSongIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
 import type { FC } from 'react'
@@ -14,11 +14,7 @@ export const CurrentPlaylist: FC = () => {
     return null
   }
 
-  const coverUrl = getStaticMediaUrl(
-    currentTrack.cover,
-    'tracks/covers',
-    '/images/default-track-cover.jpg',
-  )
+  const coverUrl = getTrackCoverUrl(currentTrack.cover)
 
   return (
     <div>

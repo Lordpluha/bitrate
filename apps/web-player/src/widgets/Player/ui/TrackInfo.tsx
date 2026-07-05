@@ -1,3 +1,4 @@
+import { fallbackTrackCover } from '@shared/constants'
 import { cn } from '@spotify/ui-react'
 import { Heart, PictureInPicture2 } from 'lucide-react'
 import Image from 'next/image'
@@ -26,7 +27,7 @@ export const TrackInfo: FC<TrackInfoProps> = ({
         alt={title}
         className="w-14 h-14 rounded object-cover"
         height={56}
-        src={coverUrl || '/images/default-playlist.jpg'}
+        src={coverUrl || fallbackTrackCover}
         unoptimized
         width={56}
       />

@@ -23,6 +23,7 @@ interface MiniPlayerProps {
   onPlayPause: () => void
   onExpand: () => void
   onNext: () => void
+  onLikeToggle?: () => void
 }
 
 export const MiniPlayer: React.FC<MiniPlayerProps> = ({
@@ -37,6 +38,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
   onPlayPause,
   onExpand,
   onNext,
+  onLikeToggle,
 }) => {
   const progress =
     duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0
@@ -98,6 +100,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
             <button
               aria-label={isLiked ? 'Saved to library' : 'Add to library'}
               className="hidden min-[520px]:block p-2 text-white/70 hover:text-white transition-colors"
+              onClick={onLikeToggle}
               type="button"
             >
               {isLiked ? (

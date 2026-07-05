@@ -4,8 +4,9 @@ import { useAuth } from '@shared/hooks'
 import { Typography } from '@spotify/ui-react'
 import { Footer } from './Footer'
 import { LikedPlaylist } from './LikedPlaylist'
-import { PopularArtists } from './PopularArtists'
+import { NewAlbums } from './NewAlbums'
 import { PopularPlaylists } from './PopularPlaylists'
+import { RecentlyPlayed } from './RecentlyPlayed'
 import { Tabs } from './Tabs'
 
 const tabs = [
@@ -27,13 +28,14 @@ export const MainPanel = () => {
           {isAuthenticated && user ? (
             <div className="min-w-[280px] mb-8">
               <p className="text-text-subdued text-xs">Made For</p>
-              <Typography as="h5" size="heading5" className="text-text">
+              <Typography as="h5" className="text-text" size="heading5">
                 {user.username || 'User'}
               </Typography>
             </div>
           ) : null}
           <PopularPlaylists />
-          <PopularArtists />
+          <NewAlbums />
+          <RecentlyPlayed />
           <Footer />
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { play, selectCurrentTrack, selectPlaylist } from '@entities/Player'
 import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
-import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
+import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { Button, PlayIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
 import type { FC } from 'react'
@@ -35,11 +35,7 @@ export const NextInQueue: FC = () => {
     return null
   }
 
-  const coverUrl = getStaticMediaUrl(
-    nextTrack.cover,
-    'tracks/covers',
-    '/images/default-track-cover.jpg',
-  )
+  const coverUrl = getTrackCoverUrl(nextTrack.cover)
 
   return (
     <div className="bg-surface rounded-lg p-0 overflow-hidden mt-4">

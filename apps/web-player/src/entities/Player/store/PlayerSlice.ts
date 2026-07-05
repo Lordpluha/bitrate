@@ -59,6 +59,19 @@ const musicPlayerSlice = createSlice({
     setCurrentPlaylistName: create.reducer<string | null>((state, action) => {
       state.currentPlaylistName = action.payload
     }),
+    restorePlayerSession: create.reducer<Partial<MusicPlayerState>>(
+      (state, action) => {
+        state.currentTrack = action.payload.currentTrack ?? null
+        state.playlist = action.payload.playlist ?? []
+        state.currentPlaylistName = action.payload.currentPlaylistName ?? null
+        state.currentTime = action.payload.currentTime ?? 0
+        state.duration =
+          action.payload.duration ?? action.payload.currentTrack?.duration ?? 0
+        state.volume = action.payload.volume ?? state.volume
+        state.progress = action.payload.progress ?? 0
+        state.isPlaying = false
+      },
+    ),
     changeTrack: create.reducer<'next' | 'prev'>((state, action) => {
       if (!state.currentTrack || state.playlist.length === 0) return
 
@@ -106,6 +119,7 @@ export const {
   setVolume,
   setPlaylistTracks,
   setCurrentPlaylistName,
+  restorePlayerSession,
   changeTrack,
 } = musicPlayerSlice.actions
 

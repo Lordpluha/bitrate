@@ -1,14 +1,18 @@
 'use client'
 
 import {
+  restorePlayerSession,
   selectCurrentPlaylistName,
   selectMusicPlayer,
   setVolume,
 } from '@entities/Player/store/PlayerSlice'
+import { useLikeTrack, useUnlikeTrack } from '@entities/Track/api/client'
+import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
+import { showApiSuccessToast } from '@shared/api/feedback'
 import { useAppDispatch, useAppSelector, useAudioPlayer } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { useLikedTracks } from '@shared/hooks/useLikedTracks'
-import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
+import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { FloatingPlayerWindow } from './FloatingPlayerWindow'
 import { MiniPlayer } from './MiniPlayer'
@@ -17,9 +21,28 @@ import { PlayerActions } from './PlayerActions'
 import { PlayerControls } from './PlayerControls'
 import { TrackInfo } from './TrackInfo'
 
+const PLAYER_SESSION_STORAGE_KEY = 'spotify:last-player-session'
+
+type PersistedPlayerSession = {
+  currentPlaylistName: string | null
+  currentTime: number
+  currentTrack: TrackEntity
+  duration: number
+  playlist: TrackEntity[]
+  progress: number
+  volume: number
+}
+
 export const Player: FC = () => {
-  const { currentTrack, isPlaying, volume, currentTime, duration } =
-    useAppSelector(selectMusicPlayer)
+  const {
+    currentTrack,
+    isPlaying,
+    volume,
+    currentTime,
+    duration,
+    playlist,
+    progress,
+  } = useAppSelector(selectMusicPlayer)
   const currentPlaylistName = useAppSelector(selectCurrentPlaylistName)
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
@@ -27,6 +50,8 @@ export const Player: FC = () => {
   const [floatingWindow, setFloatingWindow] = useState<Window | null>(null)
   const { data: artist } = useArtist(currentTrack?.artistId)
   const { data: likedTracks } = useLikedTracks()
+  const likeTrack = useLikeTrack()
+  const unlikeTrack = useUnlikeTrack()
   const artistName = artist?.username || 'Unknown Artist'
   const likedTrackIds = useMemo(
     () => new Set(likedTracks?.map((track) => track.id) ?? []),
@@ -35,6 +60,7 @@ export const Player: FC = () => {
   const isCurrentTrackLiked = currentTrack
     ? likedTrackIds.has(currentTrack.id)
     : false
+  const isLikePending = likeTrack.isPending || unlikeTrack.isPending
 
   const {
     activeSlot,
@@ -51,6 +77,49 @@ export const Player: FC = () => {
   } = useAudioPlayer()
 
   useEffect(() => {
+    if (currentTrack || typeof window === 'undefined') return
+
+    try {
+      const rawSession = window.localStorage.getItem(PLAYER_SESSION_STORAGE_KEY)
+      if (!rawSession) return
+
+      const session = JSON.parse(rawSession) as PersistedPlayerSession
+      if (!session.currentTrack?.id) return
+
+      dispatch(restorePlayerSession(session))
+    } catch {
+      window.localStorage.removeItem(PLAYER_SESSION_STORAGE_KEY)
+    }
+  }, [currentTrack, dispatch])
+
+  useEffect(() => {
+    if (!currentTrack || typeof window === 'undefined') return
+
+    const session: PersistedPlayerSession = {
+      currentPlaylistName,
+      currentTime,
+      currentTrack,
+      duration,
+      playlist,
+      progress,
+      volume,
+    }
+
+    window.localStorage.setItem(
+      PLAYER_SESSION_STORAGE_KEY,
+      JSON.stringify(session),
+    )
+  }, [
+    currentPlaylistName,
+    currentTime,
+    currentTrack,
+    duration,
+    playlist,
+    progress,
+    volume,
+  ])
+
+  useEffect(() => {
     if (currentTrack) {
       setIsVisible(true)
     } else {
@@ -59,11 +128,32 @@ export const Player: FC = () => {
     }
   }, [currentTrack])
 
-  const coverUrl = getStaticMediaUrl(
-    currentTrack?.cover,
-    'tracks/covers',
-    '/images/drive-cover-big.jpg',
-  )
+  const coverUrl = getTrackCoverUrl(currentTrack?.cover)
+
+  const handleLikeToggle = useCallback(async () => {
+    if (!currentTrack || isLikePending) return
+
+    if (isCurrentTrackLiked) {
+      await unlikeTrack.mutateAsync({
+        params: {
+          path: {
+            id: currentTrack.id,
+          },
+        },
+      })
+      showApiSuccessToast('Removed from Liked Songs')
+      return
+    }
+
+    await likeTrack.mutateAsync({
+      params: {
+        path: {
+          id: currentTrack.id,
+        },
+      },
+    })
+    showApiSuccessToast('Added to Liked Songs')
+  }, [currentTrack, isCurrentTrackLiked, isLikePending, likeTrack, unlikeTrack])
 
   const closeFloatingPlayer = useCallback(() => {
     if (floatingWindow && !floatingWindow.closed) {
@@ -100,7 +190,6 @@ export const Player: FC = () => {
     if (!nextWindow) return
 
     nextWindow.document.title = `${currentTrack.title} - Spotify`
-    nextWindow.document.body.style.margin = '0'
     nextWindow.addEventListener('pagehide', () => setFloatingWindow(null), {
       once: true,
     })
@@ -138,6 +227,8 @@ export const Player: FC = () => {
         onClose={closeFloatingPlayer}
         onNext={() => changeTrack('next')}
         onPlayPause={togglePlayPause}
+        onPrevious={() => changeTrack('prev')}
+        onSeek={onSeek}
         targetWindow={floatingWindow}
         title={currentTrack.title || 'Unknown'}
       />
@@ -151,6 +242,7 @@ export const Player: FC = () => {
         isOpen={isExpanded}
         isPlaying={isPlaying}
         onClose={() => setIsExpanded(false)}
+        onLikeToggle={() => void handleLikeToggle()}
         onNext={() => changeTrack('next')}
         onPlayPause={togglePlayPause}
         onPrevious={() => changeTrack('prev')}
@@ -170,6 +262,7 @@ export const Player: FC = () => {
         isPlaying={isPlaying}
         isVisible={isVisible}
         onExpand={() => setIsExpanded(true)}
+        onLikeToggle={() => void handleLikeToggle()}
         onNext={() => changeTrack('next')}
         onPlayPause={togglePlayPause}
         title={currentTrack.title || 'Unknown'}
@@ -185,6 +278,7 @@ export const Player: FC = () => {
             artist={artistName}
             coverUrl={coverUrl}
             isLiked={isCurrentTrackLiked}
+            onLikeToggle={() => void handleLikeToggle()}
             onPictureInPicture={openFloatingPlayer}
             title={currentTrack.title || 'Unknown'}
           />

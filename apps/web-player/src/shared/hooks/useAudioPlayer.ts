@@ -103,6 +103,32 @@ const shouldPrefetchNextTrack = (element: HTMLAudioElement) => {
   )
 }
 
+const getLowestHlsLevelIndex = (hls: Hls) => {
+  if (hls.levels.length === 0) return -1
+
+  return hls.levels.reduce((lowestLevelIndex, level, levelIndex) => {
+    const lowestLevel = hls.levels[lowestLevelIndex]
+    if (!lowestLevel) return levelIndex
+
+    return level.bitrate < lowestLevel.bitrate ? levelIndex : lowestLevelIndex
+  }, 0)
+}
+
+const applyNetworkAwareHlsQuality = (hls: Hls) => {
+  if (!isSlowNetwork()) {
+    hls.autoLevelCapping = -1
+    hls.currentLevel = -1
+    return
+  }
+
+  const lowestLevelIndex = getLowestHlsLevelIndex(hls)
+  if (lowestLevelIndex === -1) return
+
+  hls.autoLevelCapping = lowestLevelIndex
+  hls.currentLevel = lowestLevelIndex
+  hls.nextLevel = lowestLevelIndex
+}
+
 const getNextTrack = (
   currentTrack: TrackEntity | null,
   playlist: TrackEntity[],
@@ -217,6 +243,7 @@ export const useAudioPlayer = () => {
         hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url))
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           recoveryAttemptsRef.current[track.id] = 0
+          applyNetworkAwareHlsQuality(hls)
         })
         hls.on(Hls.Events.ERROR, (_event, data) => {
           if (!data.fatal || slot.hls !== hls) return

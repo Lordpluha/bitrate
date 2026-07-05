@@ -1,23 +1,21 @@
 'use client'
 
+import { FloatingAuthField, OAuthButtons } from '@features/Auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api/client'
+import { showApiErrorToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
 import { SocialsAuthDivider } from '@shared/ui'
 import {
   Button,
   Form,
-  FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
-  GoogleIcon,
   Input,
   LogoIcon,
   PasswordInput,
   Typography,
-  toast,
 } from '@spotify/ui-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -32,7 +30,10 @@ export const RegistrationForm = () => {
       router.push(ROUTES.auth.login)
     },
     onError: (error) => {
-      toast.error(`Registration error:, ${JSON.stringify(error)}`)
+      showApiErrorToast(error, 'Unable to create account. Please try again.')
+    },
+    meta: {
+      suppressErrorToast: true,
     },
   })
 
@@ -90,15 +91,10 @@ export const RegistrationForm = () => {
             control={form.control}
             name="fullName"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xl font-normal">Full Name</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Full name"
-                    variant="contrast"
-                    {...field}
-                  />
-                </FormControl>
+              <FormItem className="pt-2">
+                <FloatingAuthField label="Full Name">
+                  <Input placeholder="" variant="contrast" {...field} />
+                </FloatingAuthField>
                 <FormMessage />
               </FormItem>
             )}
@@ -108,17 +104,10 @@ export const RegistrationForm = () => {
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xl font-normal">
-                  Email Address
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Email Address"
-                    variant="contrast"
-                    {...field}
-                  />
-                </FormControl>
+              <FormItem className="pt-2">
+                <FloatingAuthField label="Email Address">
+                  <Input placeholder="" variant="contrast" {...field} />
+                </FloatingAuthField>
                 <FormMessage />
               </FormItem>
             )}
@@ -128,15 +117,10 @@ export const RegistrationForm = () => {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xl font-normal">Password</FormLabel>
-                <FormControl>
-                  <PasswordInput
-                    placeholder="Password"
-                    variant="contrast"
-                    {...field}
-                  />
-                </FormControl>
+              <FormItem className="pt-2">
+                <FloatingAuthField label="Password">
+                  <PasswordInput placeholder="" variant="contrast" {...field} />
+                </FloatingAuthField>
                 <FormMessage />
               </FormItem>
             )}
@@ -146,17 +130,10 @@ export const RegistrationForm = () => {
             control={form.control}
             name="confirmPassword"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-xl font-normal">
-                  Confirm Password
-                </FormLabel>
-                <FormControl>
-                  <PasswordInput
-                    placeholder="Confirm Password"
-                    variant="contrast"
-                    {...field}
-                  />
-                </FormControl>
+              <FormItem className="pt-2">
+                <FloatingAuthField label="Confirm Password">
+                  <PasswordInput placeholder="" variant="contrast" {...field} />
+                </FloatingAuthField>
                 <FormMessage />
               </FormItem>
             )}
@@ -167,12 +144,7 @@ export const RegistrationForm = () => {
               Register
             </Button>
             <SocialsAuthDivider />
-            <Button variant="contrast">
-              <GoogleIcon className="mr-2" height={20} width={20} />
-              <Typography as="p" size={'body'}>
-                Continue with Google
-              </Typography>
-            </Button>
+            <OAuthButtons />
             <p className="text-lg text-center">
               Already have an account?{' '}
               <Link className="font-bold" href={ROUTES.auth.login}>

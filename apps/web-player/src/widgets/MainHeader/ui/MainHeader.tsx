@@ -46,7 +46,10 @@ export const MainHeader = () => {
               >
                 <MembersIcon />
               </Link>
-              <ProfileButton username={user.username || 'User'} />
+              <ProfileButton
+                avatar={user.avatar}
+                username={user.username || 'User'}
+              />
               <ThemeSwitcher />
             </>
           ) : (

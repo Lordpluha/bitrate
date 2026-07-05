@@ -1,4 +1,5 @@
 'use client'
+import { ROUTES } from '@shared/routes'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -13,6 +14,7 @@ interface MusicItem {
 }
 
 interface MusicCardSmProps {
+  isCollapsed?: boolean
   item: MusicItem
 }
 
@@ -31,7 +33,10 @@ const getTypeColor = (type: MusicItem['type']) => {
   }
 }
 
-export const MusicCardSm = ({ item }: MusicCardSmProps) => {
+export const MusicCardSm = ({
+  isCollapsed = false,
+  item,
+}: MusicCardSmProps) => {
   const [imageError, setImageError] = useState(false)
 
   const handleImageError = () => {
@@ -39,9 +44,40 @@ export const MusicCardSm = ({ item }: MusicCardSmProps) => {
   }
 
   const href =
-    item.id === 'liked-songs'
-      ? '/main/liked-songs'
-      : `/main/playlist/${item.id}`
+    item.id === 'liked-songs' ? ROUTES.likedSongs : ROUTES.playlist(item.id)
+
+  if (isCollapsed) {
+    return (
+      <Link
+        aria-label={item.title}
+        className="group flex h-14 w-14 items-center justify-center rounded-md hover:bg-surface"
+        href={href}
+        title={item.title}
+      >
+        <div className="relative h-14 w-14 overflow-hidden rounded-md shadow-md transition-all duration-150 group-hover:shadow-lg">
+          {!imageError ? (
+            <Image
+              alt={item.title}
+              className="object-cover"
+              fill
+              onError={handleImageError}
+              sizes="56px"
+              src={item.cover}
+              unoptimized
+            />
+          ) : (
+            <div
+              className={`flex h-full w-full items-center justify-center bg-linear-to-br ${getTypeColor(item.type)}`}
+            >
+              <span className="text-white text-xs font-bold drop-shadow-sm">
+                {item.title.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
+        </div>
+      </Link>
+    )
+  }
 
   return (
     <Link

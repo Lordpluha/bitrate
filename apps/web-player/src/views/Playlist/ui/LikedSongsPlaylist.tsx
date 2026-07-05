@@ -1,9 +1,10 @@
 'use client'
 
 import { setCurrentPlaylistName, setPlaylistTracks } from '@entities/Player'
+import { useLikedTracks } from '@entities/Track/api/client'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { useAppDispatch } from '@shared/hooks'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { TracksList } from '../../../entities/Track/ui/TracksList'
 import { getPlaylistDuration } from '../utils/getPlaylistDuration'
 import { PlaylistHeader } from './PlaylistHeader'
@@ -14,24 +15,32 @@ export type LikedSongsPlaylistProps = {
 
 export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
   const dispatch = useAppDispatch()
+  const { data: likedTracks } = useLikedTracks(1, 100, undefined, {
+    initialData: tracks,
+  })
+  const currentTracks = likedTracks ?? tracks
+  const likedTrackIds = useMemo(
+    () => currentTracks.map((track) => track.id),
+    [currentTracks],
+  )
 
   useEffect(() => {
-    dispatch(setPlaylistTracks(tracks))
+    dispatch(setPlaylistTracks(currentTracks))
     dispatch(setCurrentPlaylistName('Liked Songs'))
-  }, [dispatch, tracks])
+  }, [currentTracks, dispatch])
 
   return (
     <>
       <PlaylistHeader
         author="Your Library"
-        duration={getPlaylistDuration(tracks)}
+        duration={getPlaylistDuration(currentTracks)}
         imageUrl="/images/liked-songs.jpg"
         title="Liked Songs"
-        tracksCount={tracks?.length || 0}
+        tracksCount={currentTracks?.length || 0}
         type="Playlist"
       />
-      {tracks && tracks.length > 0 ? (
-        <TracksList tracks={tracks} />
+      {currentTracks && currentTracks.length > 0 ? (
+        <TracksList likedTrackIds={likedTrackIds} tracks={currentTracks} />
       ) : (
         <div className="text-white p-8">No liked tracks yet</div>
       )}

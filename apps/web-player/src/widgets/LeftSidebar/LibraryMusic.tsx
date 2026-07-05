@@ -2,7 +2,9 @@
 
 import { useQuery } from '@shared/api/client'
 import { fallbackPlaylistCover } from '@shared/constants'
-import { getStaticMediaUrl } from '@shared/utils/mediaUrl'
+import { ROUTES } from '@shared/routes'
+import { MusicCardLg } from '@shared/ui'
+import { getPlaylistCoverUrl } from '@shared/utils/mediaUrl'
 import { MusicCardSm } from './MusicCardSm'
 
 interface MusicItem {
@@ -36,7 +38,15 @@ const loadingItemKeys = [
   'loading-10',
 ]
 
-export const LibraryMusic = () => {
+type LibraryMusicProps = {
+  isCollapsed?: boolean
+  isExpanded?: boolean
+}
+
+export const LibraryMusic = ({
+  isCollapsed = false,
+  isExpanded = false,
+}: LibraryMusicProps) => {
   const { data: playlists, isLoading } = useQuery('get', '/api/v1/playlists', {
     params: {
       query: {
@@ -59,11 +69,7 @@ export const LibraryMusic = () => {
           title: playlist.title,
           username: playlistWithUser.user?.username ?? 'Unknown Artist',
           type: 'playlist',
-          cover: getStaticMediaUrl(
-            playlist.cover,
-            'playlists/covers',
-            fallbackPlaylistCover,
-          ),
+          cover: getPlaylistCoverUrl(playlist.cover || fallbackPlaylistCover),
           tracksCount: 0,
         })
       }
@@ -74,14 +80,36 @@ export const LibraryMusic = () => {
     return (
       <div className="mt-4 flex-1 overflow-hidden">
         <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
-          <div className="space-y-0.5 pb-4">
+          <div
+            className={
+              isExpanded
+                ? 'grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 pb-4'
+                : isCollapsed
+                  ? 'flex flex-col items-center gap-3 pb-4'
+                  : 'space-y-0.5 pb-4'
+            }
+          >
             {loadingItemKeys.map((loadingKey) => (
               <div
-                className="flex items-center gap-3 p-2 rounded-md"
+                className={
+                  isExpanded
+                    ? 'rounded-lg p-3'
+                    : isCollapsed
+                      ? 'h-14 w-14 rounded-md'
+                      : 'flex items-center gap-3 p-2 rounded-md'
+                }
                 key={loadingKey}
               >
-                <div className="w-12 h-12 bg-gray-600 rounded-md animate-pulse" />
-                <div className="flex-1">
+                <div
+                  className={
+                    isExpanded
+                      ? 'aspect-square w-full rounded-md bg-gray-600 animate-pulse'
+                      : isCollapsed
+                        ? 'h-14 w-14 rounded-md bg-gray-600 animate-pulse'
+                        : 'w-12 h-12 bg-gray-600 rounded-md animate-pulse'
+                  }
+                />
+                <div className={isExpanded ? 'mt-3' : 'flex-1'}>
                   <div className="h-4 bg-gray-600 rounded animate-pulse mb-1" />
                   <div className="h-3 bg-gray-700 rounded animate-pulse w-2/3" />
                 </div>
@@ -96,10 +124,37 @@ export const LibraryMusic = () => {
   return (
     <div className="mt-4 flex-1 overflow-hidden">
       <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
-        <div className="space-y-0.5 pb-4">
-          {musicItems.map((item) => (
-            <MusicCardSm item={item} key={item.id} />
-          ))}
+        <div
+          className={
+            isExpanded
+              ? 'grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 pb-4'
+              : isCollapsed
+                ? 'flex flex-col items-center gap-3 pb-4'
+                : 'space-y-0.5 pb-4'
+          }
+        >
+          {musicItems.map((item) =>
+            isExpanded ? (
+              <MusicCardLg
+                description={`${item.type.slice(0, 1).toUpperCase()}${item.type.slice(1)} • ${item.username}`}
+                href={
+                  item.id === 'liked-songs'
+                    ? ROUTES.likedSongs
+                    : ROUTES.playlist(item.id)
+                }
+                id={item.id}
+                imageUrl={item.cover}
+                key={item.id}
+                name={item.title}
+              />
+            ) : (
+              <MusicCardSm
+                isCollapsed={isCollapsed}
+                item={item}
+                key={item.id}
+              />
+            ),
+          )}
         </div>
       </div>
     </div>

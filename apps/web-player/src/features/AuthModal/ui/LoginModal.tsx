@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api/client'
+import { showApiErrorToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
 import { SocialsAuthDivider } from '@shared/ui'
 import {
@@ -18,7 +19,6 @@ import {
   LogoIcon,
   PasswordInput,
   Typography,
-  toast,
 } from '@spotify/ui-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -48,7 +48,10 @@ export const LoginModal: FC<LoginModalProps> = ({
         void router.push('/main')
       },
       onError: (error) => {
-        toast.error(`Login error: ${JSON.stringify(error)}`)
+        showApiErrorToast(error, 'Unable to log in. Please try again.')
+      },
+      meta: {
+        suppressErrorToast: true,
       },
     },
   )

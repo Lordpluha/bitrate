@@ -26,6 +26,7 @@ interface NowPlayingViewProps {
   onSeek: (time: number) => void
   onNext: () => void
   onPrevious: () => void
+  onLikeToggle?: () => void
   volume: number
   onVolumeChange: (volume: number) => void
   playlistTitle?: string
@@ -45,6 +46,7 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
   onSeek,
   onNext,
   onPrevious,
+  onLikeToggle,
   volume,
   onVolumeChange,
   playlistTitle = 'Playlist',
@@ -132,6 +134,7 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
               <button
                 aria-label={isLiked ? 'Saved to library' : 'Like'}
                 className="ml-4 p-2 text-white/50 hover:text-white transition-colors shrink-0"
+                onClick={onLikeToggle}
                 type="button"
               >
                 {isLiked ? (
@@ -170,6 +173,7 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
                 artist={artist}
                 coverUrl={coverUrl}
                 isLiked={isLiked}
+                onLikeToggle={onLikeToggle}
                 title={title}
               />
             </div>
