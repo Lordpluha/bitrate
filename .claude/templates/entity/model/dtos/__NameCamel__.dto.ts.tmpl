@@ -1,0 +1,7 @@
+import type { __NamePascal__ } from '@/__Layer__/__NameKebab__/model/schemas/__NameCamel__.schema'
+
+export type Create__NamePascal__Input = Omit<__NamePascal__, 'id'>
+
+export type Update__NamePascal__Input = {
+  id: __NamePascal__['id']
+} & Partial<Create__NamePascal__Input>

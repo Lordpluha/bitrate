@@ -1,0 +1,21 @@
+{
+  "enabledPlugins": {},
+  "permissions": {
+    "deny": [
+      "Read(./node_modules/**)",
+      "Read(./dist/**)",
+      "Read(./build/**)",
+      "Read(./coverage/**)",
+      "Read(./.next/**)",
+      "Read(./.turbo/**)",
+      "Read(./.claude/worktrees/**)",
+      "Read(./apps/mobile/.expo/**)",
+      "Read(./apps/desktop/src-tauri/target/**)",
+      "Read(./packages/**/dist/**)",
+      "Read(./**/coverage/**)",
+      "Read(./**/.next/**)",
+      "Read(./.env)",
+      "Read(./.env.*)"
+    ]
+  }
+}

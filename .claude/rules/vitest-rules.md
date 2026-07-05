@@ -1,0 +1,1 @@
+../../.agents/rules/vitest-rules.md

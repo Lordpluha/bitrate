@@ -9,6 +9,10 @@ Full-stack Spotify clone — Turborepo + pnpm monorepo with web, mobile, desktop
 - **[Setup Guide](apps/docs/docs/getting-started/setup.md)** — detailed local setup instructions
 - **[Roadmap](apps/docs/docs/guides/roadmap.md)** — milestones, current progress, future plans
 - **[Contributing](CONTRIBUTING.md)** — git workflow, commit conventions, PR process
+- **[Code style](CODE_STYLE.md)** — stable entry point for enforced conventions
+- **[Architecture decisions](apps/docs/docs/architecture/)** — why the repository uses its core patterns
+- **[Design system](apps/docs/docs/brand/)** — tokens and WCAG baseline
+- **[Agent layer](.claude/README.md)** — repository-owned AI workflows
 - **[CI/CD](.github/workflows/README.md)** — GitHub Actions workflow map
 
 ### Useful links
@@ -74,8 +78,8 @@ pnpm dev
 ### Backend
 NestJS 11 · PostgreSQL 16 (Prisma) · Redis · BullMQ · Socket.io · JWT + OAuth · Swagger · Prometheus + Grafana
 
-### Web (Next.js 15 + Feature-Sliced Design)
-Next.js 15 · React 19 · TailwindCSS v4 · Zustand · TanStack Query · openapi-fetch
+### Web (Next.js App Router + Feature-Sliced Design)
+Next.js · React 19 · TailwindCSS v4 · Zustand target architecture · TanStack Query · openapi-fetch
 
 ### Mobile
 React Native · Expo SDK 54 · expo-router · EAS Build
@@ -88,6 +92,70 @@ Tauri 2 · React · Vite
 
 ### Infrastructure
 Turborepo · pnpm workspaces · Biome · Lefthook · Changesets · GitHub Actions (20+ workflows) · Docker Compose
+
+---
+
+## 🧪 Verification
+
+```bash
+pnpm lint
+pnpm check-types
+pnpm build
+pnpm knip
+```
+
+Package test surfaces:
+
+```bash
+# API — Jest
+pnpm --filter @spotify/api test
+pnpm --filter @spotify/api test:int
+pnpm --filter @spotify/api test:e2e
+
+# Shared UI — Vitest + Playwright-backed browser screenshots
+pnpm --filter @spotify/ui-react test
+pnpm --filter @spotify/ui-react test:screenshot
+
+# Web player — Vitest + standalone Playwright
+pnpm --filter @spotify/web-player test
+pnpm --filter @spotify/web-player test:e2e
+pnpm --filter @spotify/web-player test:screenshot
+
+# Token generator — node:test
+pnpm --filter @spotify/tokens-generator test
+```
+
+See the [testing guide](apps/docs/docs/guides/testing.md) for placement and runner details.
+
+---
+
+## 🏗️ Architecture contracts
+
+- Web-player imports follow `app → views → widgets → features → entities → shared`.
+- Next.js route files are framework adapters; full screens live in `views/`.
+- API contracts flow from NestJS Swagger into `@spotify/contracts`.
+- Server state uses TanStack Query; new client state targets per-slice Zustand stores.
+- Shared React primitives and design tokens live in `@spotify/ui-react` and
+  `@spotify/tokens`.
+- User-facing web UI targets WCAG 2.2 AA.
+
+See [`apps/docs/docs/architecture`](apps/docs/docs/architecture/) for the decisions and [`AGENTS.md`](AGENTS.md)
+for the working rules.
+
+---
+
+## 🤖 Agent workflow
+
+The repository includes project-specific `/sp-*` commands for planning, implementation,
+debugging, reviewing, scaffolding, and test authoring. They all read the same conventions
+from `AGENTS.md` and `.claude/`.
+
+```text
+/sp-planner → /sp-developer → test author → /sp-review
+```
+
+Use `/sp-test` for API Jest, `/sp-vitest` for `ui-react` DOM tests, and `/sp-playwright`
+for `ui-react` browser screenshots.
 
 ---
 

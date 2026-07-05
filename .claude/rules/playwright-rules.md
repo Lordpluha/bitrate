@@ -1,0 +1,1 @@
+../../.agents/rules/playwright-rules.md

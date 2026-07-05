@@ -22,7 +22,7 @@ Current workflow map for .github/workflows.
 
 ### Web Player
 - web_player.yml — Web Player pipeline entry workflow.
-- web_player_reusable.yml — reusable implementation for Web Player jobs.
+- web_player_reusable.yml — Biome, typecheck, Vitest, Playwright E2E, and Docker build.
 
 ### Web Artists
 - web_artists.yml — Web Artists pipeline entry workflow.
@@ -38,8 +38,9 @@ Current workflow map for .github/workflows.
 - desktop_native_reusable.yml / desktop_docker_reusable.yml — reusable Desktop blocks.
 
 ### UI React / Visual Tests
-- ui_react.yml — UI React visual tests entry workflow.
-- ui_react_reusable.yml — reusable orchestration for UI React visual checks.
+- ui_react.yml — UI React test entry workflow.
+- ui_react_reusable.yml — Biome plus unit, integration, snapshot, and Chromium screenshot
+  projects.
 
 ### Integration Tests (Docker Compose)
 - web-integration-test.yml — integration tests for PR and push (develop/master) + workflow_dispatch.

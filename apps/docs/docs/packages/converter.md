@@ -65,6 +65,8 @@ await convertImage({
 
 ## Использование в API
 
-`AudioProcessor` (BullMQ воркер) использует `@spotify/converter` для конвертации загруженных треков в Opus с разными битрейтами (128 / 192 / 320 kbps) и последующей HLS-сегментацией.
+`AudioProcessor` (BullMQ воркер) использует `@spotify/converter` для создания progressive
+Opus fallback и единого multi-bitrate HLS-пакета AAC/fMP4. HLS-варианты кодируются совместно,
+чтобы границы сегментов совпадали при адаптивном переключении.
 
 Подробнее: [Audio Processing Pipeline](../infrastructure/audio-processing)

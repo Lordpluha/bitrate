@@ -53,7 +53,7 @@ apps/web/src/
 
 ## 🎨 Tech Stack
 
-- **Next.js 15** - React framework with App Router
+- **Next.js** - React framework with App Router
 - **React 19** - UI library
 - **TypeScript** - Type safety
 - **Tailwind CSS v4** - Utility-first CSS

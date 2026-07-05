@@ -11,6 +11,8 @@ Thank you for your interest in the project! We welcome any contribution — whet
 - [Code Style](#code-style)
 - [Pull Request Process](#pull-request-process)
 - [Testing](#testing)
+- [Agent Workflow](#agent-workflow)
+- [Architecture and UX](#architecture-and-ux)
 
 ---
 
@@ -96,7 +98,7 @@ This command launches an interactive commit wizard with prompts.
 **Examples:**
 
 ```bash
-feat(web): add playlist page
+feat(web-player): add playlist page
 fix(api): fix memory leak in auth middleware
 docs(readme): update installation instructions
 refactor(mobile): optimize track list rendering
@@ -121,15 +123,16 @@ refactor(mobile): optimize track list rendering
 ### Scopes (optional)
 
 Scope indicates the part of the project:
-- `web` - Web application (Next.js)
+- `web-player` - Web application (Next.js)
 - `mobile` - Mobile application (React Native)
 - `api` - Backend API (NestJS)
 - `admin` - Admin panel
 - `desktop` - Desktop application (Tauri)
 - `docs` - Documentation
 - `contracts` - API contracts
-- `ui` - UI components
-- `infra` - Infrastructure (Docker, CI/CD)
+- `ui-react` - Shared UI component library
+- `tokens` - Design tokens
+- `ci` - CI/CD configuration
 
 ### Breaking Changes
 
@@ -176,6 +179,9 @@ chore/upgrade-dependencies
 
 The project uses **Biome** for linting and code formatting.
 
+[`CODE_STYLE.md`](CODE_STYLE.md) is the stable entry point. The complete rules live in
+[`AGENTS.md`](AGENTS.md) and [`.claude/rules/`](.claude/rules/).
+
 ### Automatic formatting
 
 ```bash
@@ -186,9 +192,10 @@ pnpm lint
 pnpm format
 ```
 
-### Pre-commit hook
+### Git hooks
 
-On commit, `lint-staged` is automatically triggered, which formats changed files.
+Lefthook validates commits and performs the configured pre-push build. Do not rely on hooks
+as the only verification; run the relevant package checks before opening a PR.
 
 ### Main rules
 
@@ -212,17 +219,24 @@ On commit, `lint-staged` is automatically triggered, which formats changed files
    pnpm dev  # Run the project locally
    ```
 
-2. **Run tests:**
+2. **Run relevant tests:**
    ```bash
-   pnpm test  # If there are tests for your change
+   pnpm --filter @spotify/api test
+   pnpm --filter @spotify/ui-react test
    ```
 
-3. **Check linting:**
+3. **Check linting and types:**
    ```bash
    pnpm lint
+   pnpm check-types
    ```
 
-4. **Run a full build:**
+4. **Check unused code when exports/dependencies changed:**
+   ```bash
+   pnpm knip
+   ```
+
+5. **Run a full build:**
    ```bash
    git push  # Runs pre-push hook with build
    ```
@@ -231,7 +245,7 @@ On commit, `lint-staged` is automatically triggered, which formats changed files
 
 1. **Title** should be descriptive:
    ```
-   feat(web): add playlist page
+   feat(web-player): add playlist page
    ```
 
 2. **Description** should contain:
@@ -260,19 +274,26 @@ On commit, `lint-staged` is automatically triggered, which formats changed files
 ### Running tests
 
 ```bash
-# Unit tests (all)
-pnpm test
-
 # API tests
 pnpm --filter @spotify/api test        # unit
-pnpm --filter @spotify/api test:int    # integration (needs DB)
+pnpm --filter @spotify/api test:int    # integration (no real DB needed — uses prismaMock)
 pnpm --filter @spotify/api test:e2e    # E2E
 
-# Web player E2E (Playwright)
-pnpm --filter @spotify/web-player test:e2e
+# Shared UI tests
+pnpm --filter @spotify/ui-react test
+pnpm --filter @spotify/ui-react test:unit
+pnpm --filter @spotify/ui-react test:int
+pnpm --filter @spotify/ui-react test:snapshot
+pnpm --filter @spotify/ui-react test:screenshot
 
-# Mobile
-pnpm --filter @spotify/mobile test
+# Web player tests
+pnpm --filter @spotify/web-player test:unit
+pnpm --filter @spotify/web-player test:int
+pnpm --filter @spotify/web-player test:e2e
+pnpm --filter @spotify/web-player test:screenshot
+
+# Token generator
+pnpm --filter @spotify/tokens-generator test
 ```
 
 ### Test coverage
@@ -282,6 +303,44 @@ Try to cover with tests:
 - Utility functions
 - API endpoints
 - UI components (integration tests)
+
+Test files follow the runner owned by their package. See
+[`apps/docs/docs/guides/testing.md`](apps/docs/docs/guides/testing.md).
+
+---
+
+## 🤖 Agent Workflow
+
+The optional repository agent layer lives under [`.claude/`](.claude/). Project agents use
+the same rules as human contributors:
+
+| Intent | Command |
+|---|---|
+| Plan non-trivial work | `/sp-planner "<task>"` |
+| Implement web-player/shared UI or NestJS API work | `/sp-developer "<task>"` |
+| Reproduce and fix a bug | `/sp-debug "<symptom>"` |
+| Write API Jest coverage | `/sp-test "<scenario>" [--int]` |
+| Write `ui-react` Vitest coverage | `/sp-vitest "<scenario>" [--int\|--snapshot]` |
+| Write a browser screenshot | `/sp-playwright "<component state>"` |
+| Review before PR | `/sp-review` |
+
+Agents do not commit, push, open PRs, or create releases unless explicitly asked.
+
+---
+
+## 🏗️ Architecture and UX
+
+- Architecture decisions: [`apps/docs/docs/architecture/`](apps/docs/docs/architecture/)
+- Design specifications: [`apps/docs/docs/specs/`](apps/docs/docs/specs/)
+- Persistent implementation plans: [`apps/docs/docs/plans/`](apps/docs/docs/plans/)
+- Design token contract: [`apps/docs/docs/brand/tokens.md`](apps/docs/docs/brand/tokens.md)
+- Accessibility baseline: [`apps/docs/docs/brand/a11y.md`](apps/docs/docs/brand/a11y.md)
+- Working conventions: [`AGENTS.md`](AGENTS.md)
+
+New durable architectural choices should get an ADR. Cross-cutting designs may start as a
+spec and then an implementation plan. New visual values should enter
+`packages/tokens/tokens.json`, not component literals. User-facing web changes must preserve
+the WCAG 2.2 AA baseline.
 
 ---
 

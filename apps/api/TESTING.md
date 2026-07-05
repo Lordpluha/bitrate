@@ -2,6 +2,8 @@
 
 This document describes how tests are organized in the API app and how to run them.
 
+> **For AI agents:** see `.claude/skills/jest-stack/SKILL.md` for code patterns (unit/integration/E2E examples, guard override, fixtures, `createE2eApp` helper).
+
 ## Test layers
 
 ### Unit tests (module-level, mocked)
