@@ -9,6 +9,7 @@ import {
   selectVolume,
   setCurrentTime,
   setDuration,
+  setIsPlaying,
   setProgress,
   togglePlay,
 } from '@entities/Player'
@@ -536,6 +537,18 @@ export const useAudioPlayer = () => {
     [isPlaying],
   )
 
+  const handlePlaybackStateChange = useCallback(
+    (index: 0 | 1, nextIsPlaying: boolean) => {
+      if (index !== activeSlotRef.current) return
+
+      const slot = slotsRef.current[index]
+      if (!currentTrack || slot.trackId !== currentTrack.id) return
+
+      dispatch(setIsPlaying(nextIsPlaying))
+    },
+    [currentTrack, dispatch],
+  )
+
   const handleEnded = useCallback(
     (index: 0 | 1) => {
       if (index !== activeSlotRef.current) return
@@ -573,6 +586,7 @@ export const useAudioPlayer = () => {
     handleTimeUpdate,
     handleProgress,
     handleCanPlay,
+    handlePlaybackStateChange,
     handleEnded,
     handleSeeked,
   }

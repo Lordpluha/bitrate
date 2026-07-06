@@ -12,6 +12,10 @@ type UseTracksParams = {
   title?: string
 }
 
+type UseTracksOptions = {
+  enabled?: boolean
+}
+
 type UseLikedTracksOptions = {
   enabled?: boolean
   initialData?: TrackEntity[]
@@ -26,11 +30,25 @@ const withPlayableUrl = (track: TrackEntity): TrackEntity => ({
 const isLikedTracksQuery = (queryKey: readonly unknown[]) =>
   JSON.stringify(queryKey).includes('/api/v1/tracks/liked')
 
-export const useTracks = ({
-  page = 1,
-  limit = 100,
-  title,
-}: UseTracksParams = {}) =>
+const normalizeTracksResponse = (data: unknown) => {
+  if (Array.isArray(data)) return data as TrackEntity[]
+
+  if (
+    typeof data === 'object' &&
+    data !== null &&
+    'data' in data &&
+    Array.isArray(data.data)
+  ) {
+    return data.data as TrackEntity[]
+  }
+
+  return []
+}
+
+export const useTracks = (
+  { page = 1, limit = 100, title }: UseTracksParams = {},
+  options: UseTracksOptions = {},
+) =>
   useQuery(
     'get',
     '/api/v1/tracks',
@@ -43,7 +61,11 @@ export const useTracks = ({
         },
       },
     },
-    {},
+    {
+      enabled: options.enabled ?? true,
+      select: (data: unknown) =>
+        normalizeTracksResponse(data).map(withPlayableUrl),
+    },
   )
 
 export const useTrack = (trackId?: string) =>
@@ -86,11 +108,7 @@ export const useLikedTracks = (
       retry: false,
       staleTime: options.staleTime ?? 30_000,
       select(data: unknown) {
-        if (!Array.isArray(data)) {
-          return undefined
-        }
-
-        const tracks = data as TrackEntity[]
+        const tracks = normalizeTracksResponse(data)
         const result = tracks.map(withPlayableUrl)
 
         onSuccess?.(result)

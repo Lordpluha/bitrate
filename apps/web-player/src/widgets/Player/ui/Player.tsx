@@ -4,6 +4,8 @@ import {
   restorePlayerSession,
   selectCurrentPlaylistName,
   selectMusicPlayer,
+  setPlaylistTracks,
+  setShuffleEnabled,
   setVolume,
 } from '@entities/Player/store/PlayerSlice'
 import { useLikeTrack, useUnlikeTrack } from '@entities/Track/api/client'
@@ -40,6 +42,7 @@ export const Player: FC = () => {
     volume,
     currentTime,
     duration,
+    isShuffled,
     playlist,
     progress,
   } = useAppSelector(selectMusicPlayer)
@@ -72,6 +75,7 @@ export const Player: FC = () => {
     handleTimeUpdate,
     handleProgress,
     handleCanPlay,
+    handlePlaybackStateChange,
     handleEnded,
     handleSeeked,
   } = useAudioPlayer()
@@ -155,6 +159,35 @@ export const Player: FC = () => {
     showApiSuccessToast('Added to Liked Songs')
   }, [currentTrack, isCurrentTrackLiked, isLikePending, likeTrack, unlikeTrack])
 
+  const handleShuffleToggle = useCallback(() => {
+    if (!currentTrack) return
+
+    if (playlist.length < 2) {
+      dispatch(setShuffleEnabled(!isShuffled))
+      return
+    }
+
+    if (isShuffled) {
+      dispatch(setShuffleEnabled(false))
+      return
+    }
+
+    const remainingTracks = playlist.filter(
+      (track) => track.id !== currentTrack.id,
+    )
+    const shuffledTracks = [...remainingTracks]
+
+    for (let index = shuffledTracks.length - 1; index > 0; index -= 1) {
+      const randomIndex = Math.floor(Math.random() * (index + 1))
+      const current = shuffledTracks[index]
+      shuffledTracks[index] = shuffledTracks[randomIndex] as TrackEntity
+      shuffledTracks[randomIndex] = current as TrackEntity
+    }
+
+    dispatch(setPlaylistTracks([currentTrack, ...shuffledTracks]))
+    dispatch(setShuffleEnabled(true))
+  }, [currentTrack, dispatch, isShuffled, playlist])
+
   const closeFloatingPlayer = useCallback(() => {
     if (floatingWindow && !floatingWindow.closed) {
       floatingWindow.close()
@@ -210,6 +243,8 @@ export const Player: FC = () => {
           onCanPlay={() => handleCanPlay(slot)}
           onEnded={() => handleEnded(slot)}
           onLoadedMetadata={() => handleLoadedMetadata(slot)}
+          onPause={() => handlePlaybackStateChange(slot, false)}
+          onPlay={() => handlePlaybackStateChange(slot, true)}
           onProgress={() => handleProgress(slot)}
           onSeeked={handleSeeked}
           onTimeUpdate={() => handleTimeUpdate(slot)}
@@ -289,10 +324,12 @@ export const Player: FC = () => {
             currentTime={currentTime}
             duration={duration}
             isPlaying={isPlaying}
+            isShuffled={isShuffled}
             onNext={() => changeTrack('next')}
             onPlayPause={togglePlayPause}
             onPrevious={() => changeTrack('prev')}
             onSeek={onSeek}
+            onShuffleToggle={handleShuffleToggle}
           />
         </div>
 

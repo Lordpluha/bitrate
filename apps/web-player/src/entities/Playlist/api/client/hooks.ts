@@ -48,6 +48,9 @@ const withPlayableTrackUrls = <T extends { tracks?: TrackEntity[] }>(
     })) ?? [],
 })
 
+const isPlaylistQuery = (queryKey: readonly unknown[]) =>
+  JSON.stringify(queryKey).includes('/api/v1/playlists')
+
 export const usePlaylists = (page = 1, limit = 20) =>
   useQuery(
     'get',
@@ -117,6 +120,9 @@ export const useCreatePlaylist = () => {
         queryClient.invalidateQueries({
           queryKey: apiQueryKeys.playlists.mine,
         }),
+        queryClient.invalidateQueries({
+          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
+        }),
       ])
     },
   })
@@ -156,6 +162,9 @@ export const useUpdatePlaylist = () => {
         queryClient.invalidateQueries({
           queryKey: apiQueryKeys.playlists.detail(variables.playlistId),
         }),
+        queryClient.invalidateQueries({
+          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
+        }),
       ])
     },
   })
@@ -186,6 +195,9 @@ export const useDeletePlaylist = () => {
         queryClient.removeQueries({
           queryKey: apiQueryKeys.playlists.detail(playlistId),
         }),
+        queryClient.invalidateQueries({
+          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
+        }),
       ])
     },
   })
@@ -203,6 +215,9 @@ export const useAddTracksToPlaylist = () => {
         }),
         queryClient.invalidateQueries({
           queryKey: apiQueryKeys.playlists.detail(variables.params.path.id),
+        }),
+        queryClient.invalidateQueries({
+          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
         }),
       ])
     },
@@ -227,6 +242,9 @@ export const useRemoveTrackFromPlaylist = () => {
           queryClient.invalidateQueries({
             queryKey: apiQueryKeys.playlists.detail(variables.params.path.id),
           }),
+          queryClient.invalidateQueries({
+            predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
+          }),
         ])
       },
     },
@@ -241,7 +259,13 @@ export const useLikePlaylist = () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: apiQueryKeys.playlists.all }),
         queryClient.invalidateQueries({
+          queryKey: apiQueryKeys.playlists.mine,
+        }),
+        queryClient.invalidateQueries({
           queryKey: apiQueryKeys.playlists.detail(variables.params.path.id),
+        }),
+        queryClient.invalidateQueries({
+          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
         }),
       ])
     },
@@ -256,7 +280,13 @@ export const useUnlikePlaylist = () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: apiQueryKeys.playlists.all }),
         queryClient.invalidateQueries({
+          queryKey: apiQueryKeys.playlists.mine,
+        }),
+        queryClient.invalidateQueries({
           queryKey: apiQueryKeys.playlists.detail(variables.params.path.id),
+        }),
+        queryClient.invalidateQueries({
+          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
         }),
       ])
     },

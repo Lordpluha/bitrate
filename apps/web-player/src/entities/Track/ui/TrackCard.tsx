@@ -1,6 +1,6 @@
 'use client'
 
-import { play } from '@entities/Player'
+import { play, togglePlay } from '@entities/Player'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { formatDuration } from '@shared/utils/apiHelpers'
@@ -18,6 +18,7 @@ interface TrackCardProps {
   onRemoveTrack?: (trackId: string) => void
   isLiked?: boolean
   removable?: boolean
+  viewMode?: 'compact' | 'list'
 }
 
 export const TrackCard = ({
@@ -26,6 +27,7 @@ export const TrackCard = ({
   onRemoveTrack,
   removable = false,
   track,
+  viewMode = 'list',
 }: TrackCardProps) => {
   const dispatch = useAppDispatch()
   const currentTrack = useAppSelector((state) => state.musicPlayer.currentTrack)
@@ -34,12 +36,29 @@ export const TrackCard = ({
   const coverUrl = getTrackCoverUrl(track.cover)
 
   const handlePlayTrack = (track: TrackEntity) => {
+    if (isCurrentTrack) {
+      dispatch(togglePlay())
+      return
+    }
+
     dispatch(play(track))
   }
 
   return (
-    <div className="w-full text-left rounded hover:bg-surface group grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_88px] items-center gap-4 px-4 py-2 max-[1024px]:block max-[1024px]:px-3">
-      <div className="text-sm items-center justify-center flex relative max-[1024px]:hidden">
+    <div
+      className={cn(
+        'w-full text-left rounded hover:bg-surface group grid items-center gap-4 px-4 py-2 max-[1024px]:block max-[1024px]:px-3',
+        viewMode === 'compact'
+          ? 'grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_112px]'
+          : 'grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_112px]',
+      )}
+    >
+      <button
+        aria-label={`${isCurrentTrack && isPlaying ? 'Pause' : 'Play'} ${track.title}`}
+        className="relative flex items-center justify-center text-sm max-[1024px]:hidden"
+        onClick={() => handlePlayTrack(track)}
+        type="button"
+      >
         {/* Non-current track: number → play icon on hover */}
         {!isCurrentTrack && (
           <>
@@ -77,14 +96,19 @@ export const TrackCard = ({
             />
           </>
         )}
-      </div>
+      </button>
 
       <button
         className="min-w-0 flex items-center gap-3 text-left max-[1024px]:gap-3"
         onClick={() => handlePlayTrack(track)}
         type="button"
       >
-        <div className="relative w-10 h-10 shrink-0 rounded overflow-hidden hidden max-[1024px]:block">
+        <div
+          className={cn(
+            'relative h-10 w-10 shrink-0 overflow-hidden rounded',
+            viewMode === 'list' ? 'block' : 'hidden max-[1024px]:block',
+          )}
+        >
           <Image
             alt={track.title}
             className="w-full h-full object-cover"
@@ -110,19 +134,28 @@ export const TrackCard = ({
         </div>
       </button>
 
+      {viewMode === 'compact' && (
+        <div className="text-sm text-text-subdued truncate max-[1024px]:hidden">
+          {track.artistId}
+        </div>
+      )}
       <div className="text-sm text-text-subdued truncate max-[1024px]:hidden">
         Unknown Album
       </div>
       <div className="text-sm text-text-subdued max-[1024px]:hidden">
         {track.createdAt ? DateUtils.formatDate(track.createdAt) : 'Unknown'}
       </div>
-      <div className="flex items-center justify-end gap-2 text-sm text-text-subdued max-[1024px]:hidden">
-        <LikeTrackButton
-          initialLiked={isLiked}
-          trackId={track.id}
-          trackTitle={track.title}
-        />
-        <span>{formatDuration(track.duration ?? 0)}</span>
+      <div className="grid grid-cols-[24px_44px_24px] items-center justify-end gap-2 text-sm text-text-subdued max-[1024px]:hidden">
+        <div className="flex justify-center">
+          <LikeTrackButton
+            initialLiked={isLiked}
+            trackId={track.id}
+            trackTitle={track.title}
+          />
+        </div>
+        <span className="text-right">
+          {formatDuration(track.duration ?? 0)}
+        </span>
         {removable && (
           <button
             aria-label={`Remove ${track.title} from playlist`}

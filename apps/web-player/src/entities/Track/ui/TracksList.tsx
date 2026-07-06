@@ -10,6 +10,7 @@ interface TracksListProps {
   tracks: TrackEntity[]
   onRemoveTrack?: (trackId: string) => void
   removable?: boolean
+  viewMode?: 'compact' | 'list'
 }
 
 export const TracksList = ({
@@ -17,6 +18,7 @@ export const TracksList = ({
   onRemoveTrack,
   removable = false,
   tracks,
+  viewMode = 'list',
 }: TracksListProps) => {
   const shouldLoadLikedTracks = !providedLikedTrackIds
   const { data: likedTracks } = useLikedTracks(1, 100, undefined, {
@@ -32,9 +34,16 @@ export const TracksList = ({
 
   return (
     <div className="px-6 py-4 max-[1024px]:px-3 max-[1024px]:py-3">
-      <div className="grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_88px] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden">
+      <div
+        className={
+          viewMode === 'compact'
+            ? 'grid grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_112px] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden'
+            : 'grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_112px] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden'
+        }
+      >
         <div>#</div>
         <div>Title</div>
+        {viewMode === 'compact' && <div>Artist</div>}
         <div>Album</div>
         <div>Date added</div>
         <div className="flex justify-end">
@@ -51,6 +60,7 @@ export const TracksList = ({
             onRemoveTrack={onRemoveTrack}
             removable={removable}
             track={track}
+            viewMode={viewMode}
           />
         ))}
       </div>

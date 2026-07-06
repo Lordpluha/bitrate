@@ -1,10 +1,16 @@
 'use client'
 
-import { useQuery } from '@shared/api/client'
+import {
+  type SavedPlaylistLibraryItem,
+  savedPlaylistsChangedEvent,
+  savedPlaylistsStorageKey,
+  useMyPlaylists,
+} from '@entities/Playlist'
 import { fallbackPlaylistCover } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
 import { MusicCardLg } from '@shared/ui'
 import { getPlaylistCoverUrl } from '@shared/utils/mediaUrl'
+import { useEffect, useState } from 'react'
 import { MusicCardSm } from './MusicCardSm'
 
 interface MusicItem {
@@ -47,34 +53,80 @@ export const LibraryMusic = ({
   isCollapsed = false,
   isExpanded = false,
 }: LibraryMusicProps) => {
-  const { data: playlists, isLoading } = useQuery('get', '/api/v1/playlists', {
-    params: {
-      query: {
-        page: 1,
-        limit: 20,
-      },
-    },
-  })
+  const { data: playlists, isLoading } = useMyPlaylists()
+  const [savedPlaylists, setSavedPlaylists] = useState<
+    SavedPlaylistLibraryItem[]
+  >([])
+
+  useEffect(() => {
+    const readSavedPlaylists = () => {
+      const rawValue = window.localStorage.getItem(savedPlaylistsStorageKey)
+      if (!rawValue) {
+        setSavedPlaylists([])
+        return
+      }
+
+      try {
+        const parsedValue = JSON.parse(rawValue)
+        setSavedPlaylists(
+          Array.isArray(parsedValue)
+            ? (parsedValue as SavedPlaylistLibraryItem[])
+            : [],
+        )
+      } catch {
+        setSavedPlaylists([])
+      }
+    }
+
+    readSavedPlaylists()
+    window.addEventListener(savedPlaylistsChangedEvent, readSavedPlaylists)
+    window.addEventListener('storage', readSavedPlaylists)
+
+    return () => {
+      window.removeEventListener(savedPlaylistsChangedEvent, readSavedPlaylists)
+      window.removeEventListener('storage', readSavedPlaylists)
+    }
+  }, [])
 
   const musicItems = [likedSongsItem]
-  if (Array.isArray(playlists)) {
-    playlists.forEach((playlist) => {
-      if (playlist) {
-        const playlistWithUser = playlist as {
-          user?: { username?: string }
-        }
+  const playlistItems = Array.isArray(playlists)
+    ? (playlists as unknown as Array<{
+        cover?: string | null
+        id: string
+        title: string
+        tracks?: unknown[]
+        user?: { username?: string }
+      }>)
+    : []
 
+  if (playlistItems.length > 0) {
+    playlistItems.forEach((playlist) => {
+      if (playlist) {
         musicItems.push({
           id: playlist.id,
           title: playlist.title,
-          username: playlistWithUser.user?.username ?? 'Unknown Artist',
+          username: playlist.user?.username ?? 'Unknown Artist',
           type: 'playlist',
           cover: getPlaylistCoverUrl(playlist.cover || fallbackPlaylistCover),
-          tracksCount: 0,
+          tracksCount: playlist.tracks?.length ?? 0,
         })
       }
     })
   }
+
+  const existingPlaylistIds = new Set(musicItems.map((item) => item.id))
+  savedPlaylists.forEach((playlist) => {
+    if (existingPlaylistIds.has(playlist.id)) return
+
+    musicItems.push({
+      id: playlist.id,
+      title: playlist.title,
+      username: playlist.username,
+      type: 'playlist',
+      cover: playlist.cover || getPlaylistCoverUrl(null),
+      tracksCount: playlist.tracksCount ?? 0,
+    })
+  })
 
   if (isLoading) {
     return (

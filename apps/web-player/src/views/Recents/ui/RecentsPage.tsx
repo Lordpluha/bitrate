@@ -1,0 +1,151 @@
+'use client'
+
+import {
+  type ListeningHistoryEntry,
+  useListeningHistory,
+} from '@entities/History'
+import { play } from '@entities/Player'
+import type { TrackEntity } from '@entities/Track'
+import { useAppDispatch } from '@shared/hooks'
+import { ROUTES } from '@shared/routes'
+import {
+  getApiUrl,
+  getPlaylistCoverUrl,
+  getTrackCoverUrl,
+} from '@shared/utils/mediaUrl'
+import { ChevronDown, MoreHorizontal } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+
+const dayFormatter = new Intl.DateTimeFormat('en-US', {
+  day: 'numeric',
+  month: 'short',
+  weekday: 'short',
+})
+
+const getDayLabel = (value: string) => {
+  const date = new Date(value)
+  const today = new Date()
+  const yesterday = new Date()
+  yesterday.setDate(today.getDate() - 1)
+
+  if (date.toDateString() === today.toDateString()) return 'Today'
+  if (date.toDateString() === yesterday.toDateString()) return 'Yesterday'
+
+  return dayFormatter.format(date)
+}
+
+export const RecentsPage = () => {
+  const dispatch = useAppDispatch()
+  const { data: history, isPending } = useListeningHistory({
+    page: 1,
+    limit: 50,
+  })
+  const groups = (history ?? []).reduce<
+    Record<string, ListeningHistoryEntry[]>
+  >((acc, entry) => {
+    const label = getDayLabel(entry.listenedAt)
+    acc[label] = [...(acc[label] ?? []), entry]
+    return acc
+  }, {})
+
+  const playTrack = (track: TrackEntity) => {
+    dispatch(
+      play({
+        ...track,
+        audioUrl: getApiUrl(`/api/v1/tracks/stream/${track.id}`),
+      }),
+    )
+  }
+
+  return (
+    <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
+      <div className="mx-auto w-full max-w-220 px-10 py-10 max-[900px]:px-5">
+        <h1 className="mb-14 text-4xl font-black text-text">Recents</h1>
+
+        {isPending ? (
+          <p className="text-text-subdued">Loading recents...</p>
+        ) : Object.keys(groups).length === 0 ? (
+          <div className="rounded-md bg-surface p-6 text-text-subdued">
+            No recent listening activity yet.
+          </div>
+        ) : (
+          <div className="grid gap-9">
+            {Object.entries(groups).map(([label, entries]) => (
+              <section key={label}>
+                <h2 className="mb-4 text-2xl font-bold text-text">{label}</h2>
+                <div className="grid gap-2">
+                  {entries?.map((entry) => (
+                    <div
+                      className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-1 py-1 transition-colors hover:bg-white/10"
+                      key={entry.id}
+                    >
+                      <button
+                        className="contents text-left"
+                        onClick={() => playTrack(entry.track as TrackEntity)}
+                        type="button"
+                      >
+                        <Image
+                          alt={entry.track.title}
+                          className="h-16 w-16 rounded object-cover"
+                          height={64}
+                          src={getTrackCoverUrl(entry.track.cover)}
+                          unoptimized
+                          width={64}
+                        />
+                        <span className="min-w-0">
+                          <span className="block truncate text-base text-text">
+                            {entry.track.title}
+                          </span>
+                          <span className="block truncate text-sm text-text-subdued">
+                            {entry.track.artist?.username ??
+                              entry.track.artistId}
+                          </span>
+                        </span>
+                      </button>
+                      <button
+                        aria-label={`More actions for ${entry.track.title}`}
+                        className="p-2 text-text-subdued transition-colors hover:text-text"
+                        type="button"
+                      >
+                        <ChevronDown size={20} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+
+            <section>
+              <h2 className="mb-4 text-2xl font-bold text-text">Earlier</h2>
+              <div className="grid gap-2">
+                <Link
+                  className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-1 py-1 transition-colors hover:bg-white/10"
+                  href={ROUTES.likedSongs}
+                >
+                  <Image
+                    alt="Liked Songs"
+                    className="h-16 w-16 rounded object-cover"
+                    height={64}
+                    src={getPlaylistCoverUrl(null)}
+                    unoptimized
+                    width={64}
+                  />
+                  <span className="min-w-0">
+                    <span className="block truncate text-base text-text">
+                      Liked Songs
+                    </span>
+                    <span className="block truncate text-sm text-text-subdued">
+                      Playlist
+                    </span>
+                  </span>
+                  <MoreHorizontal className="text-text-subdued" size={20} />
+                </Link>
+              </div>
+            </section>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

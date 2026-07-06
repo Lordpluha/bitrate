@@ -10,6 +10,7 @@ export interface MusicPlayerState {
   isPlaying: boolean
   currentTime: number
   duration: number
+  isShuffled: boolean
   volume: number
   progress: number
 }
@@ -21,6 +22,7 @@ const initialState: MusicPlayerState = {
   isPlaying: false,
   currentTime: 0,
   duration: 0,
+  isShuffled: false,
   volume: 0.5,
   progress: 0,
 }
@@ -37,6 +39,9 @@ const musicPlayerSlice = createSlice({
     }),
     pause: create.reducer((state) => {
       state.isPlaying = false
+    }),
+    setIsPlaying: create.reducer<boolean>((state, action) => {
+      state.isPlaying = action.payload
     }),
     togglePlay: create.reducer((state) => {
       state.isPlaying = !state.isPlaying
@@ -58,6 +63,21 @@ const musicPlayerSlice = createSlice({
     }),
     setCurrentPlaylistName: create.reducer<string | null>((state, action) => {
       state.currentPlaylistName = action.payload
+    }),
+    setShuffleEnabled: create.reducer<boolean>((state, action) => {
+      state.isShuffled = action.payload
+    }),
+    playPlaylist: create.reducer<{
+      currentPlaylistName: string | null
+      startTrack: TrackEntity
+      tracks: TrackEntity[]
+    }>((state, action) => {
+      state.playlist = action.payload.tracks
+      state.currentPlaylistName = action.payload.currentPlaylistName
+      state.currentTrack = action.payload.startTrack
+      state.isPlaying = true
+      state.currentTime = 0
+      state.duration = action.payload.startTrack.duration || 0
     }),
     restorePlayerSession: create.reducer<Partial<MusicPlayerState>>(
       (state, action) => {
@@ -103,6 +123,7 @@ const musicPlayerSlice = createSlice({
     selectIsPlaying: (state) => state.isPlaying,
     selectCurrentTime: (state) => state.currentTime,
     selectDuration: (state) => state.duration,
+    selectIsShuffled: (state) => state.isShuffled,
     selectVolume: (state) => state.volume,
     selectProgress: (state) => state.progress,
   },
@@ -111,7 +132,9 @@ const musicPlayerSlice = createSlice({
 // Actions
 export const {
   play,
+  playPlaylist,
   pause,
+  setIsPlaying,
   togglePlay,
   setCurrentTime,
   setDuration,
@@ -119,6 +142,7 @@ export const {
   setVolume,
   setPlaylistTracks,
   setCurrentPlaylistName,
+  setShuffleEnabled,
   restorePlayerSession,
   changeTrack,
 } = musicPlayerSlice.actions
@@ -130,6 +154,7 @@ export const {
   selectCurrentTime,
   selectCurrentTrack,
   selectDuration,
+  selectIsShuffled,
   selectIsPlaying,
   selectMusicPlayer,
   selectPlaylist,
