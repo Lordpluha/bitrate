@@ -1,9 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-  "globalEnv": [
-    "NEXT_PUBLIC_API_URL",
-    "REFRESH_TOKEN_NAME"
-  ],
+  "globalEnv": ["NEXT_PUBLIC_API_URL", "REFRESH_TOKEN_NAME"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
