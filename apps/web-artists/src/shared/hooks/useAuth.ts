@@ -2,7 +2,6 @@
 
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { ROUTES } from '@shared/routes/routes'
-import type { ApiSchemas } from '@spotify/contracts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePathname, useRouter } from 'next/navigation'
 

@@ -26,7 +26,6 @@ export const AuthButtons = ({
       )}
     >
       <button
-      type="button"
         className={cn(
           'text-sm text-center text-text font-bold',
           'py-1 px-4',
@@ -35,6 +34,7 @@ export const AuthButtons = ({
           isBurger && 'text-base w-full py-3 px-12 align-middle',
         )}
         onClick={() => logout()}
+        type="button"
       >
         Log out
       </button>
