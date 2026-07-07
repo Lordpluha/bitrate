@@ -47,8 +47,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl:
-            'https://github.com/Lordpluha/spotify-clone/tree/develop/apps/docs/',
+          editUrl: 'https://github.com/Lordpluha/spotify-clone/tree/develop/apps/docs/',
         },
         blog: {
           showReadingTime: true,
@@ -56,8 +55,7 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          editUrl:
-            'https://github.com/Lordpluha/spotify-clone/tree/develop/apps/docs/',
+          editUrl: 'https://github.com/Lordpluha/spotify-clone/tree/develop/apps/docs/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
