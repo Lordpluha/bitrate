@@ -1,6 +1,17 @@
 import { ArtistsService } from '@modules/artists/artists.service'
 import { TokenService } from '@modules/tokens/token.service'
-import { Body, Controller, Delete, Get, HttpCode, Post, Query, Req, Res } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+  Req,
+  Res,
+} from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
@@ -86,6 +97,17 @@ export class AuthController {
     registrationDto: RegistrationDto,
   ) {
     await this.artistAuthService.registerArtist(registrationDto)
+  }
+
+  /** Checks whether an artist email is already registered. */
+  @Get('email-availability')
+  async emailAvailability(@Query('email') email: string) {
+    if (!email) {
+      throw new BadRequestException('Email is required')
+    }
+
+    const artist = await this.artistService.findByEmail(email.trim().toLowerCase())
+    return { available: !artist }
   }
 
   /** Runs the logout operation. */

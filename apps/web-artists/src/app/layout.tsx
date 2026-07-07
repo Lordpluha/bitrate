@@ -1,13 +1,15 @@
+import { QueryClientProvider } from '@shared/api/reactQueryClient'
+import { AuthProvider } from '@shared/hooks'
 import type { Metadata } from 'next'
-import type { ReactNode } from 'react'
 import { League_Spartan } from 'next/font/google'
+import type { ReactNode } from 'react'
 
 import './global.css'
 
-const leagueSpartan = League_Spartan ({
+const leagueSpartan = League_Spartan({
   variable: '--font-league-spartan',
   subsets: ['latin'],
-  weight: '400'
+  weight: '400',
 })
 
 export const metadata: Metadata = {
@@ -24,7 +26,11 @@ export default function RootLayout({
 
   return (
     <html data-scroll-behavior="smooth" lang={lang}>
-      <body className={`${leagueSpartan.variable} antialiased`}>{children}</body>
+      <body className={`${leagueSpartan.variable} antialiased`}>
+        <QueryClientProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </QueryClientProvider>
+      </body>
     </html>
   )
 }
