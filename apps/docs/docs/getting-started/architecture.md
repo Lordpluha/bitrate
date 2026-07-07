@@ -12,7 +12,7 @@ Understanding the architecture of Spotify Clone — a modern Turborepo monorepo.
 spotify-clone/
 ├── apps/              # Applications
 │   ├── api/          # Backend API (NestJS)
-│   ├── web-player/   # Web app (Next.js 15, Feature-Sliced Design)
+│   ├── web-player/   # Web app (Next.js App Router, Feature-Sliced Design)
 │   ├── web-artists/  # Artists web app (Next.js)
 │   ├── mobile/       # Mobile app (React Native + Expo)
 │   ├── desktop/      # Desktop app (Tauri 2 + React)

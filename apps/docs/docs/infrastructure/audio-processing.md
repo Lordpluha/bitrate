@@ -19,11 +19,11 @@ POST /api/v1/tracks
         ↓
 AudioProcessor worker (BullMQ)
         ↓
-FFmpeg конвертирует в Opus: 128 / 192 / 320 kbps
+FFmpeg конвертирует progressive fallback в Opus: 128 / 192 / 320 kbps
         ↓
-HLS сегментация (10-секундные .m4s сегменты)
+Один FFmpeg-процесс создаёт AAC HLS с выровненными 4-секундными .m4s сегментами
         ↓
-Файлы сохраняются в storage/public/tracks/:trackId/
+Файлы загружаются в S3-compatible object storage
         ↓
 TrackFile записи создаются в БД
         ↓
@@ -75,19 +75,22 @@ const TARGET_AUDIO_BITRATES = [128, 192, 320] // kbps
 ## Структура файлов
 
 ```
-storage/public/tracks/:trackId/
+tracks/:trackId/
+├── audio/
+│   ├── 128k.opus
+│   ├── 192k.opus
+│   └── 320k.opus
 ├── hls/
 │   ├── master.m3u8         # Master playlist
 │   ├── 128/
 │   │   ├── index.m3u8
-│   │   ├── init.mp4
+│   │   ├── init_0.mp4
 │   │   ├── segment_00000.m4s
 │   │   └── segment_00001.m4s
 │   ├── 192/
 │   │   └── ...
 │   └── 320/
 │       └── ...
-└── original/               # Исходный файл (временно)
 ```
 
 ## HLS стриминг
