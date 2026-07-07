@@ -1,6 +1,6 @@
-import { Suspense } from 'react'
-import { Spinner } from '@spotify/ui-react'
 import { ResetPasswordForm } from '@features/reset-password/ui/ResetPasswordForm'
+import { Spinner } from '@spotify/ui-react'
+import { Suspense } from 'react'
 
 export default function ResetPasswordPage() {
   return (
