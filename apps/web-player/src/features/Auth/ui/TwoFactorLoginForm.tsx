@@ -4,7 +4,7 @@ import { clientFetchClient } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
-import { Button, Input, LogoIcon, Typography } from '@spotify/ui-react'
+import { Button, Input, LogoIcon, Typography, toast } from '@spotify/ui-react'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 
@@ -37,6 +37,8 @@ export const TwoFactorLoginForm = () => {
       ensureOkResponse(response, 'Invalid or expired 2FA code')
       showApiSuccessToast('Logged in')
       router.push(ROUTES.main)
+    } catch {
+      toast.error('Invalid or expired 2FA code')
     } finally {
       setIsSubmitting(false)
     }

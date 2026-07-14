@@ -5,6 +5,7 @@ import { useMutation, useQuery } from '@shared/api/client'
 import { apiQueryKeys } from '@shared/api/queryKeys'
 import { getApiUrl } from '@shared/utils/mediaUrl'
 import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
 
 type UseTracksParams = {
   page?: number
@@ -89,8 +90,8 @@ export const useLikedTracks = (
   limit = 100,
   onSuccess?: (data: TrackEntity[]) => void,
   options: UseLikedTracksOptions = {},
-) =>
-  useQuery(
+) => {
+  const query = useQuery(
     'get',
     '/api/v1/tracks/liked',
     {
@@ -109,14 +110,17 @@ export const useLikedTracks = (
       staleTime: options.staleTime ?? 30_000,
       select(data: unknown) {
         const tracks = normalizeTracksResponse(data)
-        const result = tracks.map(withPlayableUrl)
-
-        onSuccess?.(result)
-
-        return result
+        return tracks.map(withPlayableUrl)
       },
     },
   )
+
+  useEffect(() => {
+    if (query.data) onSuccess?.(query.data)
+  }, [onSuccess, query.data])
+
+  return query
+}
 
 export const useLikeTrack = () => {
   const queryClient = useQueryClient()

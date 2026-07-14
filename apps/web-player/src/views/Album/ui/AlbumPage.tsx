@@ -1,9 +1,10 @@
 'use client'
 
 import { useAlbum, useLikeAlbum, useUnlikeAlbum } from '@entities/Album'
-import type { TrackEntity } from '@entities/Track'
-import { TracksList } from '@entities/Track'
+import { playPlaylist, selectMusicPlayer } from '@entities/Player'
+import { type TrackEntity, TracksList, useLikedTracks } from '@entities/Track'
 import { showApiSuccessToast } from '@shared/api/feedback'
+import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { useImageColor } from '@shared/hooks/useImageColor'
 import { BackButton } from '@shared/ui/BackButton'
 import { DateUtils } from '@shared/utils/DateUtils'
@@ -12,7 +13,7 @@ import { TimeUtils } from '@shared/utils/TimeUtils'
 import type { ApiSchemas } from '@spotify/contracts'
 import { ArrowLeft, CheckCircle, Heart } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 type AlbumWithTracks = ApiSchemas['AlbumEntity'] & {
   tracks?: TrackEntity[]
@@ -22,12 +23,22 @@ const getAlbumDuration = (tracks: TrackEntity[]) =>
   tracks.reduce((duration, track) => duration + (track.duration ?? 0), 0)
 
 export const AlbumPage = ({ albumId }: { albumId: string }) => {
+  const dispatch = useAppDispatch()
+  const musicPlayer = useAppSelector(selectMusicPlayer)
   const { data, isError, isPending } = useAlbum(albumId)
+  const { data: likedTracks } = useLikedTracks(1, 1000, undefined, {
+    staleTime: 5 * 60_000,
+  })
   const likeAlbum = useLikeAlbum()
   const unlikeAlbum = useUnlikeAlbum()
   const [isLiked, setIsLiked] = useState(false)
   const album = data as AlbumWithTracks | undefined
   const tracks = album?.tracks ?? []
+  const albumPlaybackId = `album:${albumId}`
+  const likedTrackIds = useMemo(
+    () => new Set((likedTracks ?? []).map((track) => track.id)),
+    [likedTracks],
+  )
   const coverUrl = getAlbumCoverUrl(album?.cover)
   const [r, g, b] = useImageColor(coverUrl)
 
@@ -149,7 +160,25 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
       {tracks.length === 0 ? (
         <div className="p-8 text-text-subdued">No tracks in this album</div>
       ) : (
-        <TracksList tracks={tracks} />
+        <TracksList
+          activeTrackIndex={musicPlayer.currentTrackIndex}
+          isPlaybackContextActive={
+            musicPlayer.currentPlaylistId === albumPlaybackId
+          }
+          likedTrackIds={likedTrackIds}
+          onPlayTrack={(track, index) =>
+            dispatch(
+              playPlaylist({
+                currentPlaylistId: albumPlaybackId,
+                currentPlaylistName: album.title,
+                startTrack: track,
+                startTrackIndex: index,
+                tracks,
+              }),
+            )
+          }
+          tracks={tracks}
+        />
       )}
     </div>
   )

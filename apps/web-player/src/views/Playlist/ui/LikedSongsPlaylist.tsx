@@ -1,11 +1,9 @@
 'use client'
 
-import { setCurrentPlaylistName, setPlaylistTracks } from '@entities/Player'
-import { useLikedTracks } from '@entities/Track/api/client'
-import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { useAppDispatch } from '@shared/hooks'
-import { useEffect, useMemo } from 'react'
-import { TracksList } from '../../../entities/Track/ui/TracksList'
+import { playPlaylist, selectMusicPlayer } from '@entities/Player'
+import { type TrackEntity, TracksList, useLikedTracks } from '@entities/Track'
+import { useAppDispatch, useAppSelector } from '@shared/hooks'
+import { useMemo } from 'react'
 import { getPlaylistDuration } from '../utils/getPlaylistDuration'
 import { PlaylistHeader } from './PlaylistHeader'
 
@@ -15,19 +13,16 @@ export type LikedSongsPlaylistProps = {
 
 export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
   const dispatch = useAppDispatch()
+  const musicPlayer = useAppSelector(selectMusicPlayer)
   const { data: likedTracks } = useLikedTracks(1, 100, undefined, {
     initialData: tracks,
   })
   const currentTracks = likedTracks ?? tracks
+  const likedSongsPlaybackId = 'liked-songs'
   const likedTrackIds = useMemo(
     () => currentTracks.map((track) => track.id),
     [currentTracks],
   )
-
-  useEffect(() => {
-    dispatch(setPlaylistTracks(currentTracks))
-    dispatch(setCurrentPlaylistName('Liked Songs'))
-  }, [currentTracks, dispatch])
 
   return (
     <>
@@ -40,7 +35,25 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
         type="Playlist"
       />
       {currentTracks && currentTracks.length > 0 ? (
-        <TracksList likedTrackIds={likedTrackIds} tracks={currentTracks} />
+        <TracksList
+          activeTrackIndex={musicPlayer.currentTrackIndex}
+          isPlaybackContextActive={
+            musicPlayer.currentPlaylistId === likedSongsPlaybackId
+          }
+          likedTrackIds={likedTrackIds}
+          onPlayTrack={(track, index) =>
+            dispatch(
+              playPlaylist({
+                currentPlaylistId: likedSongsPlaybackId,
+                currentPlaylistName: 'Liked Songs',
+                startTrack: track,
+                startTrackIndex: index,
+                tracks: currentTracks,
+              }),
+            )
+          }
+          tracks={currentTracks}
+        />
       ) : (
         <div className="text-white p-8">No liked tracks yet</div>
       )}

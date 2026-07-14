@@ -1,16 +1,19 @@
 'use client'
 
+import { selectMusicPlayer } from '@entities/Player'
 import {
+  getSavedPlaylistsStorageKey,
   type SavedPlaylistLibraryItem,
   savedPlaylistsChangedEvent,
-  savedPlaylistsStorageKey,
   useMyPlaylists,
 } from '@entities/Playlist'
 import { fallbackPlaylistCover } from '@shared/constants'
+import { useAppSelector, useAuth } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
 import { MusicCardLg } from '@shared/ui'
 import { getPlaylistCoverUrl } from '@shared/utils/mediaUrl'
-import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 import { MusicCardSm } from './MusicCardSm'
 
 interface MusicItem {
@@ -20,6 +23,14 @@ interface MusicItem {
   type: 'playlist' | 'album' | 'single' | 'podcast'
   cover: string
   tracksCount?: number
+}
+
+type PlaylistLibrarySourceItem = {
+  cover?: string | null
+  id: string
+  title: string
+  tracks?: unknown[]
+  user?: { username?: string }
 }
 
 const likedSongsItem: MusicItem = {
@@ -53,10 +64,17 @@ export const LibraryMusic = ({
   isCollapsed = false,
   isExpanded = false,
 }: LibraryMusicProps) => {
+  const { user } = useAuth()
+  const musicPlayer = useAppSelector(selectMusicPlayer)
+  const pathname = usePathname()
   const { data: playlists, isLoading } = useMyPlaylists()
   const [savedPlaylists, setSavedPlaylists] = useState<
     SavedPlaylistLibraryItem[]
   >([])
+  const savedPlaylistsStorageKey = useMemo(
+    () => getSavedPlaylistsStorageKey(user?.id),
+    [user?.id],
+  )
 
   useEffect(() => {
     const readSavedPlaylists = () => {
@@ -86,19 +104,16 @@ export const LibraryMusic = ({
       window.removeEventListener(savedPlaylistsChangedEvent, readSavedPlaylists)
       window.removeEventListener('storage', readSavedPlaylists)
     }
-  }, [])
+  }, [savedPlaylistsStorageKey])
 
   const musicItems = [likedSongsItem]
-  const playlistItems = Array.isArray(playlists)
-    ? (playlists as unknown as Array<{
-        cover?: string | null
-        id: string
-        title: string
-        tracks?: unknown[]
-        user?: { username?: string }
-      }>)
-    : []
-
+  const playlistItems = useMemo(
+    () =>
+      Array.isArray(playlists)
+        ? (playlists as PlaylistLibrarySourceItem[])
+        : [],
+    [playlists],
+  )
   if (playlistItems.length > 0) {
     playlistItems.forEach((playlist) => {
       if (playlist) {
@@ -201,7 +216,16 @@ export const LibraryMusic = ({
               />
             ) : (
               <MusicCardSm
+                isActive={
+                  item.id === 'liked-songs'
+                    ? pathname === ROUTES.likedSongs
+                    : pathname === ROUTES.playlist(item.id)
+                }
                 isCollapsed={isCollapsed}
+                isPlaying={
+                  musicPlayer.isPlaying &&
+                  musicPlayer.currentPlaylistId === item.id
+                }
                 item={item}
                 key={item.id}
               />

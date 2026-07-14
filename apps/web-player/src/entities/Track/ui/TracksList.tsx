@@ -1,35 +1,36 @@
 'use client'
-import { useLikedTracks } from '@entities/Track/api/client'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { Clock } from 'lucide-react'
 import { useMemo } from 'react'
 import { TrackCard } from './TrackCard'
 
 interface TracksListProps {
+  activeTrackIndex?: number
   likedTrackIds?: Iterable<string>
   tracks: TrackEntity[]
+  isPlaybackContextActive?: boolean
+  onPlayTrack?: (track: TrackEntity, index: number) => void
   onRemoveTrack?: (trackId: string) => void
   removable?: boolean
   viewMode?: 'compact' | 'list'
 }
 
 export const TracksList = ({
+  activeTrackIndex,
   likedTrackIds: providedLikedTrackIds,
+  isPlaybackContextActive = true,
+  onPlayTrack,
   onRemoveTrack,
   removable = false,
   tracks,
   viewMode = 'list',
 }: TracksListProps) => {
-  const shouldLoadLikedTracks = !providedLikedTrackIds
-  const { data: likedTracks } = useLikedTracks(1, 100, undefined, {
-    enabled: shouldLoadLikedTracks,
-  })
   const likedTrackIds = useMemo(
     () =>
       providedLikedTrackIds
         ? new Set(providedLikedTrackIds)
-        : new Set((likedTracks ?? []).map((track) => track.id)),
-    [likedTracks, providedLikedTrackIds],
+        : new Set<string>(),
+    [providedLikedTrackIds],
   )
 
   return (
@@ -56,7 +57,12 @@ export const TracksList = ({
           <TrackCard
             index={index}
             isLiked={likedTrackIds.has(track.id)}
+            isPlaybackContextActive={isPlaybackContextActive}
+            isPlaybackIndexActive={
+              activeTrackIndex === undefined || activeTrackIndex === index
+            }
             key={track.id}
+            onPlayTrack={onPlayTrack}
             onRemoveTrack={onRemoveTrack}
             removable={removable}
             track={track}

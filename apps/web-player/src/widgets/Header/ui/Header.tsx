@@ -36,7 +36,7 @@ export const Header = () => {
         <nav className="flex items-center gap-16">
           <ul
             className={cn(
-              'flex items-center gap-16 transition-allduration-300',
+              'flex items-center gap-16 transition-all duration-300',
               'max-lg:fixed max-lg:top-0 max-lg:right-0 max-lg:bottom-0 max-lg:h-screen max-lg:w-full max-lg:z-10 max-lg:!bg-background ',
               'max-lg:bg-[color:var(--color-bg)] max-lg:flex-col max-lg:justify-center',
               isNav ? 'max-lg:left-0' : 'max-lg:left-[-100%]',

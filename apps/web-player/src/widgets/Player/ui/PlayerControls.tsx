@@ -137,10 +137,12 @@ export const PlayerControls: FC<PlayerControlsProps> = ({
     <div className="flex-1 flex flex-col items-center gap-2 max-w-180.5">
       <div className="flex items-center gap-4">
         <button
+          aria-label={isShuffled ? 'Disable shuffle' : 'Enable shuffle'}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
             isShuffled ? 'text-green-500' : 'text-text-subdued',
           )}
+          disabled={!onShuffleToggle}
           onClick={onShuffleToggle}
           type="button"
         >
@@ -180,10 +182,12 @@ export const PlayerControls: FC<PlayerControlsProps> = ({
         </button>
 
         <button
+          aria-label={repeatMode !== 'off' ? 'Disable repeat' : 'Enable repeat'}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
             repeatMode !== 'off' ? 'text-green-500' : 'text-text-subdued',
           )}
+          disabled={!onRepeatToggle}
           onClick={onRepeatToggle}
           type="button"
         >
@@ -196,6 +200,7 @@ export const PlayerControls: FC<PlayerControlsProps> = ({
           {formatTime(seekTime !== null ? seekTime : currentTime)}
         </span>
         <div
+          aria-label="Seek playback"
           aria-valuemax={duration || 0}
           aria-valuemin={0}
           aria-valuenow={seekTime !== null ? seekTime : currentTime}

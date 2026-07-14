@@ -51,16 +51,16 @@ describe('PlaylistsController', () => {
     const playlist = buildPlaylistWithTracks()
     service.getByIdPopulated.mockResolvedValue(playlist)
 
-    const result = await controller.getById('playlist-1')
+    const result = await controller.getById({}, 'playlist-1')
 
-    expect(service.getByIdPopulated).toHaveBeenCalledWith('playlist-1')
+    expect(service.getByIdPopulated).toHaveBeenCalledWith('playlist-1', undefined)
     expect(result).toBe(playlist)
   })
 
   it('getById should propagate service errors', async () => {
     service.getByIdPopulated.mockRejectedValue(new Error('boom'))
 
-    await expect(controller.getById('playlist-1')).rejects.toThrow('boom')
+    await expect(controller.getById({}, 'playlist-1')).rejects.toThrow('boom')
   })
 
   it('post should use user from request', async () => {

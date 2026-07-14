@@ -5,6 +5,7 @@ import {
   useUnlikePlaylist,
 } from '@entities/Playlist/api/client'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
+import { useAuth } from '@shared/hooks'
 import { cn } from '@spotify/ui-react'
 import { Check, CirclePlus } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
@@ -26,9 +27,15 @@ export const LikePlaylistButton = ({
   playlistTitle = 'playlist',
   tracksCount = 0,
 }: LikePlaylistButtonProps) => {
+  const { user } = useAuth()
+  const userStorageScope = user?.id ?? 'anonymous'
   const storageKey = useMemo(
-    () => `spotify:web-player:liked-playlist:${playlistId}`,
-    [playlistId],
+    () => `spotify:web-player:liked-playlist:${userStorageScope}:${playlistId}`,
+    [playlistId, userStorageScope],
+  )
+  const savedPlaylistsStorageKey = useMemo(
+    () => getSavedPlaylistsStorageKey(userStorageScope),
+    [userStorageScope],
   )
   const [isLiked, setIsLiked] = useState(initialLiked)
   const likePlaylist = useLikePlaylist()
@@ -65,7 +72,7 @@ export const LikePlaylistButton = ({
         })
         setIsLiked(false)
         window.localStorage.setItem(storageKey, 'false')
-        removeSavedPlaylistFromLibrary(playlistId)
+        removeSavedPlaylistFromLibrary(savedPlaylistsStorageKey, playlistId)
         showApiSuccessToast('Removed from Your Library')
         return
       }
@@ -79,7 +86,7 @@ export const LikePlaylistButton = ({
       })
       setIsLiked(true)
       window.localStorage.setItem(storageKey, 'true')
-      savePlaylistToLibrary({
+      savePlaylistToLibrary(savedPlaylistsStorageKey, {
         cover,
         id: playlistId,
         title: playlistTitle,
@@ -126,13 +133,16 @@ export type SavedPlaylistLibraryItem = {
   username: string
 }
 
-export const savedPlaylistsStorageKey = 'spotify:web-player:saved-playlists'
+const savedPlaylistsStoragePrefix = 'spotify:web-player:saved-playlists'
+
+export const getSavedPlaylistsStorageKey = (userId: string | undefined) =>
+  `${savedPlaylistsStoragePrefix}:${userId ?? 'anonymous'}`
 
 export const savedPlaylistsChangedEvent =
   'spotify:web-player:saved-playlists-changed'
 
-const getSavedPlaylists = () => {
-  const rawValue = window.localStorage.getItem(savedPlaylistsStorageKey)
+const getSavedPlaylists = (storageKey: string) => {
+  const rawValue = window.localStorage.getItem(storageKey)
   if (!rawValue) return []
 
   try {
@@ -146,28 +156,28 @@ const getSavedPlaylists = () => {
   }
 }
 
-const savePlaylistToLibrary = (playlist: SavedPlaylistLibraryItem) => {
-  const currentPlaylists = getSavedPlaylists()
+const savePlaylistToLibrary = (
+  storageKey: string,
+  playlist: SavedPlaylistLibraryItem,
+) => {
+  const currentPlaylists = getSavedPlaylists(storageKey)
   const nextPlaylists = [
     playlist,
     ...currentPlaylists.filter((item) => item.id !== playlist.id),
   ]
 
-  window.localStorage.setItem(
-    savedPlaylistsStorageKey,
-    JSON.stringify(nextPlaylists),
-  )
+  window.localStorage.setItem(storageKey, JSON.stringify(nextPlaylists))
   window.dispatchEvent(new Event(savedPlaylistsChangedEvent))
 }
 
-const removeSavedPlaylistFromLibrary = (playlistId: string) => {
-  const nextPlaylists = getSavedPlaylists().filter(
+const removeSavedPlaylistFromLibrary = (
+  storageKey: string,
+  playlistId: string,
+) => {
+  const nextPlaylists = getSavedPlaylists(storageKey).filter(
     (playlist) => playlist.id !== playlistId,
   )
 
-  window.localStorage.setItem(
-    savedPlaylistsStorageKey,
-    JSON.stringify(nextPlaylists),
-  )
+  window.localStorage.setItem(storageKey, JSON.stringify(nextPlaylists))
   window.dispatchEvent(new Event(savedPlaylistsChangedEvent))
 }

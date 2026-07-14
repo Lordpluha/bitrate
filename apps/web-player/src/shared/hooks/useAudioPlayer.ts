@@ -3,7 +3,9 @@
 import {
   changeTrack,
   pause,
+  selectCurrentPlaylistId,
   selectCurrentTrack,
+  selectCurrentTrackIndex,
   selectIsPlaying,
   selectPlaylist,
   selectVolume,
@@ -11,9 +13,9 @@ import {
   setDuration,
   setIsPlaying,
   setProgress,
-  togglePlay,
 } from '@entities/Player'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
+import { showApiErrorToast } from '@shared/api/feedback'
 import Hls from 'hls.js'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from './index'
@@ -30,6 +32,7 @@ const POSITION_STORAGE_PREFIX = 'spotify-player-position:'
 type PlayerSlot = {
   element: HTMLAudioElement | null
   hls: Hls | null
+  playbackKey: string | null
   trackId: string | null
 }
 
@@ -63,6 +66,9 @@ const getApiUrl = () => {
 
 const getHlsUrl = (trackId: string) =>
   `${getApiUrl()}api/v1/tracks/stream/${trackId}/hls/master.m3u8`
+
+const getPlaybackKey = (trackId: string, playlistId: string | null) =>
+  `${playlistId ?? 'track'}:${trackId}`
 
 const getBufferedAhead = (element: HTMLAudioElement) => {
   const { buffered, currentTime } = element
@@ -132,34 +138,36 @@ const applyNetworkAwareHlsQuality = (hls: Hls) => {
 
 const getNextTrack = (
   currentTrack: TrackEntity | null,
+  currentTrackIndex: number,
   playlist: TrackEntity[],
 ) => {
   if (!currentTrack || playlist.length < 2) return null
-  const currentIndex = playlist.findIndex(
-    (track) => track.id === currentTrack.id,
-  )
-  if (currentIndex === -1) return null
-  return playlist[(currentIndex + 1) % playlist.length] ?? null
+  if (currentTrackIndex < 0 || currentTrackIndex >= playlist.length) return null
+  return playlist[(currentTrackIndex + 1) % playlist.length] ?? null
 }
 
 export const useAudioPlayer = () => {
   const dispatch = useAppDispatch()
   const currentTrack = useAppSelector(selectCurrentTrack)
+  const currentTrackIndex = useAppSelector(selectCurrentTrackIndex)
+  const currentPlaylistId = useAppSelector(selectCurrentPlaylistId)
   const playlist = useAppSelector(selectPlaylist)
   const isPlaying = useAppSelector(selectIsPlaying)
   const volume = useAppSelector(selectVolume)
-  const nextTrack = getNextTrack(currentTrack, playlist)
+  const nextTrack = getNextTrack(currentTrack, currentTrackIndex, playlist)
 
   const slotsRef = useRef<[PlayerSlot, PlayerSlot]>([
-    { element: null, hls: null, trackId: null },
-    { element: null, hls: null, trackId: null },
+    { element: null, hls: null, playbackKey: null, trackId: null },
+    { element: null, hls: null, playbackKey: null, trackId: null },
   ])
   const activeSlotRef = useRef<0 | 1>(0)
   const isSeekingRef = useRef(false)
   const pendingPlayRef = useRef(false)
-  const pendingPrefetchRef = useRef<{ slot: 0 | 1; track: TrackEntity } | null>(
-    null,
-  )
+  const pendingPrefetchRef = useRef<{
+    playbackKey: string
+    slot: 0 | 1
+    track: TrackEntity
+  } | null>(null)
   const recoveryAttemptsRef = useRef<Record<string, number>>({})
   const [activeSlot, setActiveSlot] = useState<0 | 1>(0)
 
@@ -172,6 +180,7 @@ export const useAudioPlayer = () => {
     const slot = slotsRef.current[index]
     slot.hls?.destroy()
     slot.hls = null
+    slot.playbackKey = null
     slot.trackId = null
     if (slot.element) {
       slot.element.pause()
@@ -181,9 +190,9 @@ export const useAudioPlayer = () => {
   }, [])
 
   const restorePosition = useCallback(
-    (element: HTMLAudioElement, trackId: string) => {
+    (element: HTMLAudioElement, playbackKey: string) => {
       const savedPosition = Number(
-        sessionStorage.getItem(`${POSITION_STORAGE_PREFIX}${trackId}`),
+        sessionStorage.getItem(`${POSITION_STORAGE_PREFIX}${playbackKey}`),
       )
       if (
         Number.isFinite(savedPosition) &&
@@ -197,12 +206,18 @@ export const useAudioPlayer = () => {
   )
 
   const attachTrack = useCallback(
-    (index: 0 | 1, track: TrackEntity, isPrefetch: boolean) => {
+    (
+      index: 0 | 1,
+      track: TrackEntity,
+      playbackKey: string,
+      isPrefetch: boolean,
+    ) => {
       const slot = slotsRef.current[index]
       const element = slot.element
-      if (!element || slot.trackId === track.id) return
+      if (!element || slot.playbackKey === playbackKey) return
 
       destroySlot(index)
+      slot.playbackKey = playbackKey
       slot.trackId = track.id
       element.preload = 'auto'
       element.crossOrigin = 'use-credentials'
@@ -219,6 +234,9 @@ export const useAudioPlayer = () => {
 
         if (!isPrefetch) {
           dispatch(pause())
+          showApiErrorToast(
+            new Error('Unable to play this track. Please try again.'),
+          )
         }
       }
 
@@ -257,7 +275,7 @@ export const useAudioPlayer = () => {
             data.details === Hls.ErrorDetails.FRAG_LOAD_TIMEOUT
           ) {
             sessionStorage.setItem(
-              `${POSITION_STORAGE_PREFIX}${track.id}`,
+              `${POSITION_STORAGE_PREFIX}${playbackKey}`,
               String(element.currentTime),
             )
             stopHlsPlayback()
@@ -277,7 +295,7 @@ export const useAudioPlayer = () => {
           }
 
           sessionStorage.setItem(
-            `${POSITION_STORAGE_PREFIX}${track.id}`,
+            `${POSITION_STORAGE_PREFIX}${playbackKey}`,
             String(element.currentTime),
           )
           stopHlsPlayback()
@@ -295,7 +313,11 @@ export const useAudioPlayer = () => {
       if (!isPrefetch) {
         element.addEventListener(
           'loadedmetadata',
-          () => restorePosition(element, track.id),
+          () => {
+            if (slot.playbackKey === playbackKey) {
+              restorePosition(element, playbackKey)
+            }
+          },
           { once: true },
         )
       }
@@ -330,26 +352,26 @@ export const useAudioPlayer = () => {
   )
 
   const prefetchTrackWhenBuffered = useCallback(
-    (index: 0 | 1, track: TrackEntity) => {
+    (index: 0 | 1, track: TrackEntity, playbackKey: string) => {
       const standby = slotsRef.current[index]
-      if (standby.trackId === track.id) {
+      if (standby.playbackKey === playbackKey) {
         pendingPrefetchRef.current = null
         return
       }
 
       const activeElement = getActiveElement()
       if (!activeElement) {
-        pendingPrefetchRef.current = { slot: index, track }
+        pendingPrefetchRef.current = { playbackKey, slot: index, track }
         return
       }
 
       if (shouldPrefetchNextTrack(activeElement)) {
         pendingPrefetchRef.current = null
-        attachTrack(index, track, true)
+        attachTrack(index, track, playbackKey, true)
         return
       }
 
-      pendingPrefetchRef.current = { slot: index, track }
+      pendingPrefetchRef.current = { playbackKey, slot: index, track }
     },
     [attachTrack, getActiveElement],
   )
@@ -368,28 +390,41 @@ export const useAudioPlayer = () => {
     const standbyIndex = activeIndex === 0 ? 1 : 0
     const active = slotsRef.current[activeIndex]
     const standby = slotsRef.current[standbyIndex]
+    const currentPlaybackKey = getPlaybackKey(
+      currentTrack.id,
+      currentPlaylistId,
+    )
 
-    if (standby.trackId === currentTrack.id) {
+    if (standby.playbackKey === currentPlaybackKey) {
       switchToSlot(standbyIndex)
       if (nextTrack && nextTrack.id !== currentTrack.id) {
-        prefetchTrackWhenBuffered(activeIndex, nextTrack)
+        prefetchTrackWhenBuffered(
+          activeIndex,
+          nextTrack,
+          getPlaybackKey(nextTrack.id, currentPlaylistId),
+        )
       } else {
         destroySlot(activeIndex)
       }
       return
     }
 
-    if (active.trackId !== currentTrack.id) {
-      attachTrack(activeIndex, currentTrack, false)
+    if (active.playbackKey !== currentPlaybackKey) {
+      attachTrack(activeIndex, currentTrack, currentPlaybackKey, false)
     }
 
     if (nextTrack && nextTrack.id !== currentTrack.id) {
-      prefetchTrackWhenBuffered(standbyIndex, nextTrack)
+      prefetchTrackWhenBuffered(
+        standbyIndex,
+        nextTrack,
+        getPlaybackKey(nextTrack.id, currentPlaylistId),
+      )
     } else {
       destroySlot(standbyIndex)
     }
   }, [
     attachTrack,
+    currentPlaylistId,
     currentTrack,
     destroySlot,
     nextTrack,
@@ -406,7 +441,11 @@ export const useAudioPlayer = () => {
   useEffect(() => {
     const active = getActiveElement()
     if (!active || !currentTrack) return
-    if (slotsRef.current[activeSlot].trackId !== currentTrack.id) return
+    const currentPlaybackKey = getPlaybackKey(
+      currentTrack.id,
+      currentPlaylistId,
+    )
+    if (slotsRef.current[activeSlot].playbackKey !== currentPlaybackKey) return
 
     if (isPlaying) {
       if (shouldDelayInitialPlayback(active)) {
@@ -419,7 +458,7 @@ export const useAudioPlayer = () => {
       pendingPlayRef.current = false
       active.pause()
     }
-  }, [activeSlot, currentTrack, getActiveElement, isPlaying])
+  }, [activeSlot, currentPlaylistId, currentTrack, getActiveElement, isPlaying])
 
   useEffect(
     () => () => {
@@ -433,9 +472,12 @@ export const useAudioPlayer = () => {
     const active = getActiveElement()
     if (!active) return
 
-    if (isPlaying) active.pause()
-    else void active.play()
-    dispatch(togglePlay())
+    if (isPlaying) {
+      active.pause()
+      return
+    }
+
+    void active.play().catch(() => dispatch(setIsPlaying(false)))
   }, [dispatch, getActiveElement, isPlaying])
 
   const onSeek = useCallback(
@@ -445,15 +487,16 @@ export const useAudioPlayer = () => {
         isSeekingRef.current = true
         active.currentTime = time
         if (currentTrack) {
+          const playbackKey = getPlaybackKey(currentTrack.id, currentPlaylistId)
           sessionStorage.setItem(
-            `${POSITION_STORAGE_PREFIX}${currentTrack.id}`,
+            `${POSITION_STORAGE_PREFIX}${playbackKey}`,
             String(time),
           )
         }
       }
       dispatch(setCurrentTime(time))
     },
-    [currentTrack, dispatch, getActiveElement],
+    [currentPlaylistId, currentTrack, dispatch, getActiveElement],
   )
 
   const changeTrackHandler = useCallback(
@@ -485,13 +528,14 @@ export const useAudioPlayer = () => {
         dispatch(setProgress((currentTime / duration) * 100))
       }
       if (currentTrack) {
+        const playbackKey = getPlaybackKey(currentTrack.id, currentPlaylistId)
         sessionStorage.setItem(
-          `${POSITION_STORAGE_PREFIX}${currentTrack.id}`,
+          `${POSITION_STORAGE_PREFIX}${playbackKey}`,
           String(currentTime),
         )
       }
     },
-    [currentTrack, dispatch],
+    [currentPlaylistId, currentTrack, dispatch],
   )
 
   const handleProgress = useCallback(
@@ -517,7 +561,7 @@ export const useAudioPlayer = () => {
 
       if (shouldPrefetchNextTrack(element)) {
         pendingPrefetchRef.current = null
-        attachTrack(pending.slot, pending.track, true)
+        attachTrack(pending.slot, pending.track, pending.playbackKey, true)
       }
     },
     [attachTrack, isPlaying],
@@ -542,11 +586,14 @@ export const useAudioPlayer = () => {
       if (index !== activeSlotRef.current) return
 
       const slot = slotsRef.current[index]
-      if (!currentTrack || slot.trackId !== currentTrack.id) return
+      const currentPlaybackKey = currentTrack
+        ? getPlaybackKey(currentTrack.id, currentPlaylistId)
+        : null
+      if (!currentTrack || slot.playbackKey !== currentPlaybackKey) return
 
       dispatch(setIsPlaying(nextIsPlaying))
     },
-    [currentTrack, dispatch],
+    [currentPlaylistId, currentTrack, dispatch],
   )
 
   const handleEnded = useCallback(
@@ -559,17 +606,20 @@ export const useAudioPlayer = () => {
 
       const standbyIndex = index === 0 ? 1 : 0
       const standby = slotsRef.current[standbyIndex]
-      if (standby.trackId === nextTrack.id && standby.element) {
+      if (
+        standby.playbackKey ===
+          getPlaybackKey(nextTrack.id, currentPlaylistId) &&
+        standby.element
+      ) {
         switchToSlot(standbyIndex)
       }
       if (currentTrack) {
-        sessionStorage.removeItem(
-          `${POSITION_STORAGE_PREFIX}${currentTrack.id}`,
-        )
+        const playbackKey = getPlaybackKey(currentTrack.id, currentPlaylistId)
+        sessionStorage.removeItem(`${POSITION_STORAGE_PREFIX}${playbackKey}`)
       }
       dispatch(changeTrack('next'))
     },
-    [currentTrack, dispatch, nextTrack, switchToSlot],
+    [currentPlaylistId, currentTrack, dispatch, nextTrack, switchToSlot],
   )
 
   const handleSeeked = useCallback(() => {

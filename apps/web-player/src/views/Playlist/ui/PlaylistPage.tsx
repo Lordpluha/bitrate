@@ -1,9 +1,8 @@
 'use client'
 
 import {
-  play,
+  playPlaylist,
   selectMusicPlayer,
-  setCurrentPlaylistName,
   setPlaylistTracks,
   setShuffleEnabled,
   togglePlay,
@@ -16,7 +15,12 @@ import {
   useUpdatePlaylist,
 } from '@entities/Playlist'
 import type { PlaylistServerApi } from '@entities/Playlist/api/server/PlaylistApi.server'
-import { type TrackEntity, useTracks } from '@entities/Track'
+import {
+  type TrackEntity,
+  TracksList,
+  useLikedTracks,
+  useTracks,
+} from '@entities/Track'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { useAppDispatch, useAppSelector, useAuth } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
@@ -52,7 +56,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import { TracksList } from '../../../entities/Track/ui/TracksList'
 import { getPlaylistDuration } from '../utils/getPlaylistDuration'
 import { PlaylistHeader } from './PlaylistHeader'
 
@@ -69,6 +72,9 @@ export const PlaylistPage = ({ playlist }: PlaylistPageProps) => {
   const deletePlaylist = useDeletePlaylist()
   const removeTrack = useRemoveTrackFromPlaylist()
   const addTracks = useAddTracksToPlaylist()
+  const { data: likedTracks } = useLikedTracks(1, 1000, undefined, {
+    staleTime: 5 * 60_000,
+  })
   const [isEditing, setIsEditing] = useState(false)
   const [isMoreOpen, setIsMoreOpen] = useState(false)
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false)
@@ -83,11 +89,6 @@ export const PlaylistPage = ({ playlist }: PlaylistPageProps) => {
     () => ((playlist?.tracks ?? []) as TrackEntity[]).filter(Boolean),
     [playlist?.tracks],
   )
-
-  useEffect(() => {
-    dispatch(setPlaylistTracks(tracks))
-    dispatch(setCurrentPlaylistName(playlist?.title || 'Playlist'))
-  }, [dispatch, playlist?.title, tracks])
 
   useEffect(() => {
     setTitle(playlist?.title ?? '')
@@ -125,14 +126,12 @@ export const PlaylistPage = ({ playlist }: PlaylistPageProps) => {
     () => new Set(tracks.map((track) => track.id)),
     [tracks],
   )
-  const playlistTrackIds = useMemo(
-    () => new Set(tracks.map((track) => track.id)),
-    [tracks],
+  const likedTrackIds = useMemo(
+    () => new Set((likedTracks ?? []).map((track) => track.id)),
+    [likedTracks],
   )
   const isCurrentPlaylistActive = Boolean(
-    musicPlayer.currentTrack &&
-      playlistTrackIds.has(musicPlayer.currentTrack.id) &&
-      musicPlayer.playlist.some((track) => playlistTrackIds.has(track.id)),
+    playlistId && musicPlayer.currentPlaylistId === playlistId,
   )
   const isCurrentPlaylistPlaying =
     isCurrentPlaylistActive && musicPlayer.isPlaying
@@ -213,10 +212,17 @@ export const PlaylistPage = ({ playlist }: PlaylistPageProps) => {
   const startPlaylist = (
     startTrack: TrackEntity,
     nextTracks: TrackEntity[],
+    startTrackIndex: number,
   ) => {
-    dispatch(setPlaylistTracks(nextTracks))
-    dispatch(setCurrentPlaylistName(playlist?.title || 'Playlist'))
-    dispatch(play(startTrack))
+    dispatch(
+      playPlaylist({
+        currentPlaylistId: playlistId ?? null,
+        currentPlaylistName: playlist?.title || 'Playlist',
+        startTrack,
+        startTrackIndex,
+        tracks: nextTracks,
+      }),
+    )
   }
 
   const shuffleTracks = (sourceTracks: TrackEntity[]) => {
@@ -241,7 +247,7 @@ export const PlaylistPage = ({ playlist }: PlaylistPageProps) => {
       return
     }
 
-    startPlaylist(firstTrack, tracks)
+    startPlaylist(firstTrack, tracks, 0)
   }
 
   const handleShufflePlaylist = () => {
@@ -266,7 +272,7 @@ export const PlaylistPage = ({ playlist }: PlaylistPageProps) => {
     if (!startTrack) return
 
     dispatch(setShuffleEnabled(true))
-    startPlaylist(startTrack, nextTracks)
+    startPlaylist(startTrack, nextTracks, 0)
   }
 
   const handleCopyLink = async () => {
@@ -444,6 +450,10 @@ export const PlaylistPage = ({ playlist }: PlaylistPageProps) => {
       )}
       {tracks.length > 0 && (
         <TracksList
+          activeTrackIndex={musicPlayer.currentTrackIndex}
+          isPlaybackContextActive={isCurrentPlaylistActive}
+          likedTrackIds={likedTrackIds}
+          onPlayTrack={(track, index) => startPlaylist(track, tracks, index)}
           onRemoveTrack={isOwner ? handleRemoveTrack : undefined}
           removable={isOwner}
           tracks={tracks}
@@ -480,7 +490,7 @@ type TrackViewMenuProps = {
 }
 
 const TrackViewMenu = ({ onChange, value }: TrackViewMenuProps) => (
-  <div className="absolute right-0 top-[calc(100%+10px)] z-40 w-40 rounded-md bg-[#282828] p-1 text-sm text-text shadow-2xl">
+  <div className="absolute right-0 top-[calc(100%+10px)] z-[80] w-40 rounded-md bg-surface p-1 text-sm text-text shadow-2xl">
     <div className="px-3 py-2 text-xs font-bold text-text-subdued">View as</div>
     <TrackViewMenuItem
       active={value === 'compact'}
@@ -527,7 +537,7 @@ const PlaylistMoreMenu = ({
   onDelete,
   onEdit,
 }: PlaylistMoreMenuProps) => (
-  <div className="absolute left-0 top-[calc(100%+8px)] z-40 w-66 rounded-md bg-[#282828] p-1 text-sm text-text shadow-2xl">
+  <div className="absolute left-0 top-[calc(100%+8px)] z-[80] w-66 rounded-md bg-surface p-1 text-sm text-text shadow-2xl">
     <PlaylistMenuItem disabled icon={<List size={17} />} label="Add to queue" />
     <PlaylistMenuItem
       disabled={!canEdit}
@@ -623,12 +633,10 @@ const PlaylistTrackFinder = ({
     { limit: 5, title: normalizedQuery },
     { enabled: shouldSearch },
   )
+  const normalizedTracks = Array.isArray(tracks) ? tracks : []
   const suggestedTracks = useMemo(
-    () =>
-      (tracks as TrackEntity[]).filter(
-        (track) => !existingTrackIds.has(track.id),
-      ),
-    [existingTrackIds, tracks],
+    () => normalizedTracks.filter((track) => !existingTrackIds.has(track.id)),
+    [existingTrackIds, normalizedTracks],
   )
 
   if (!isVisible) return null

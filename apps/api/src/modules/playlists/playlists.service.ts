@@ -62,9 +62,12 @@ export class PlaylistsService {
   }
 
   /** Runs the get by id populated operation. */
-  async getByIdPopulated(id: PlaylistEntity['id']) {
-    return await this.prisma.playlist.findUniqueOrThrow({
-      where: { id, isPublic: true },
+  async getByIdPopulated(id: PlaylistEntity['id'], userId?: UserEntity['id']) {
+    const playlist = await this.prisma.playlist.findFirst({
+      where: {
+        id,
+        ...(userId ? { OR: [{ isPublic: true }, { userId }] } : { isPublic: true }),
+      },
       include: {
         tracks: { where: { processingStatus: 'READY' } },
         user: {
@@ -76,6 +79,10 @@ export class PlaylistsService {
         },
       },
     })
+
+    if (!playlist) throw new NotFoundException('Playlist not found')
+
+    return playlist
   }
 
   /** Runs the update operation. */

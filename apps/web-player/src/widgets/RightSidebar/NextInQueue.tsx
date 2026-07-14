@@ -1,6 +1,6 @@
 'use client'
 
-import { play, selectCurrentTrack, selectPlaylist } from '@entities/Player'
+import { changeTrack, selectMusicPlayer } from '@entities/Player'
 import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
@@ -9,18 +9,13 @@ import Image from 'next/image'
 import type { FC } from 'react'
 
 export const NextInQueue: FC = () => {
-  const playlist = useAppSelector(selectPlaylist)
-  const currentTrack = useAppSelector(selectCurrentTrack)
+  const { currentTrack, currentTrackIndex, playlist } =
+    useAppSelector(selectMusicPlayer)
   const dispatch = useAppDispatch()
 
-  const currentIndex =
-    currentTrack && playlist.length > 0
-      ? playlist.findIndex((track) => track.id === currentTrack.id)
-      : -1
-
   const nextTrack =
-    currentIndex >= 0 && currentIndex < playlist.length - 1
-      ? playlist[currentIndex + 1]
+    currentTrackIndex >= 0 && currentTrackIndex < playlist.length - 1
+      ? playlist[currentTrackIndex + 1]
       : null
 
   // Хук должен вызываться всегда, до условных return
@@ -56,7 +51,7 @@ export const NextInQueue: FC = () => {
       </div>
       <button
         className="w-full px-4 py-3 flex items-center gap-3 hover:bg-surface cursor-pointer transition-colors group text-left"
-        onClick={() => dispatch(play(nextTrack))}
+        onClick={() => dispatch(changeTrack('next'))}
         type="button"
       >
         <div className="relative w-12 h-12 shrink-0">

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
+import { OptionalUserAuthGuard, UserAuthGuard } from '@modules/users-auth/users-auth.guard'
 import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
@@ -41,6 +41,15 @@ describe('PlaylistsController (int)', () => {
           return true
         },
       })
+      .overrideGuard(OptionalUserAuthGuard)
+      .useValue({
+        canActivate: (ctx: {
+          switchToHttp: () => { getRequest: () => Record<string, unknown> }
+        }) => {
+          ctx.switchToHttp().getRequest().user = user
+          return true
+        },
+      })
       .compile()
 
     app = module.createNestApplication()
@@ -73,7 +82,10 @@ describe('PlaylistsController (int)', () => {
     )
 
     expect(res.status).toBe(200)
-    expect(service.getByIdPopulated).toHaveBeenCalledWith('f47ac10b-58cc-4372-a567-0e02b2c3d479')
+    expect(service.getByIdPopulated).toHaveBeenCalledWith(
+      'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+      user.id,
+    )
   })
 
   it('GET /playlists/:id with invalid UUID should return 400', async () => {

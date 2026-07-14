@@ -15,8 +15,11 @@ import { WaveAnimated } from './WaveAnimated'
 interface TrackCardProps {
   track: TrackEntity
   index: number
+  onPlayTrack?: (track: TrackEntity, index: number) => void
   onRemoveTrack?: (trackId: string) => void
   isLiked?: boolean
+  isPlaybackContextActive?: boolean
+  isPlaybackIndexActive?: boolean
   removable?: boolean
   viewMode?: 'compact' | 'list'
 }
@@ -24,6 +27,9 @@ interface TrackCardProps {
 export const TrackCard = ({
   index,
   isLiked = false,
+  isPlaybackContextActive = true,
+  isPlaybackIndexActive = true,
+  onPlayTrack,
   onRemoveTrack,
   removable = false,
   track,
@@ -32,12 +38,20 @@ export const TrackCard = ({
   const dispatch = useAppDispatch()
   const currentTrack = useAppSelector((state) => state.musicPlayer.currentTrack)
   const isPlaying = useAppSelector((state) => state.musicPlayer.isPlaying)
-  const isCurrentTrack = currentTrack?.id === track.id
+  const isCurrentTrack =
+    isPlaybackContextActive &&
+    isPlaybackIndexActive &&
+    currentTrack?.id === track.id
   const coverUrl = getTrackCoverUrl(track.cover)
 
   const handlePlayTrack = (track: TrackEntity) => {
     if (isCurrentTrack) {
       dispatch(togglePlay())
+      return
+    }
+
+    if (onPlayTrack) {
+      onPlayTrack(track, index)
       return
     }
 

@@ -7,12 +7,20 @@ import { OAuthService } from './oauth.service'
 import { TwoFactorService } from './two-factor.service'
 import { UserAuthService } from './user-auth.service'
 import { UsersAuthController } from './users-auth.controller'
+import { OptionalUserAuthGuard, UserAuthGuard } from './users-auth.guard'
 import { WsUserAuthGuard } from './users-auth.ws.guard'
 
 @Module({
   imports: [PrismaModule, forwardRef(() => UsersModule), TokensModule, MailModule],
   controllers: [UsersAuthController],
-  providers: [UserAuthService, OAuthService, TwoFactorService, WsUserAuthGuard],
-  exports: [UserAuthService, WsUserAuthGuard],
+  providers: [
+    UserAuthService,
+    OAuthService,
+    TwoFactorService,
+    UserAuthGuard,
+    OptionalUserAuthGuard,
+    WsUserAuthGuard,
+  ],
+  exports: [UserAuthService, UserAuthGuard, OptionalUserAuthGuard, WsUserAuthGuard],
 })
 export class UsersAuthModule {}

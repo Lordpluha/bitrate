@@ -15,7 +15,14 @@ import { useAppDispatch, useAppSelector, useAudioPlayer } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { useLikedTracks } from '@shared/hooks/useLikedTracks'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  type FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { FloatingPlayerWindow } from './FloatingPlayerWindow'
 import { MiniPlayer } from './MiniPlayer'
 import { NowPlayingView } from './NowPlayingView'
@@ -24,11 +31,14 @@ import { PlayerControls } from './PlayerControls'
 import { TrackInfo } from './TrackInfo'
 
 const PLAYER_SESSION_STORAGE_KEY = 'spotify:last-player-session'
+const PLAYER_SESSION_PERSIST_INTERVAL_MS = 5000
 
 type PersistedPlayerSession = {
+  currentPlaylistId: string | null
   currentPlaylistName: string | null
   currentTime: number
   currentTrack: TrackEntity
+  currentTrackIndex: number
   duration: number
   playlist: TrackEntity[]
   progress: number
@@ -38,7 +48,9 @@ type PersistedPlayerSession = {
 export const Player: FC = () => {
   const {
     currentTrack,
+    currentPlaylistId,
     isPlaying,
+    currentTrackIndex,
     volume,
     currentTime,
     duration,
@@ -51,6 +63,9 @@ export const Player: FC = () => {
   const [isVisible, setIsVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [floatingWindow, setFloatingWindow] = useState<Window | null>(null)
+  const lastPersistedAtRef = useRef(0)
+  const lastPersistedTrackIdRef = useRef<string | null>(null)
+  const originalPlaylistRef = useRef<TrackEntity[]>([])
   const { data: artist } = useArtist(currentTrack?.artistId)
   const { data: likedTracks } = useLikedTracks()
   const likeTrack = useLikeTrack()
@@ -98,11 +113,22 @@ export const Player: FC = () => {
 
   useEffect(() => {
     if (!currentTrack || typeof window === 'undefined') return
+    const now = Date.now()
+    const hasTrackChanged = lastPersistedTrackIdRef.current !== currentTrack.id
+
+    if (
+      !hasTrackChanged &&
+      now - lastPersistedAtRef.current < PLAYER_SESSION_PERSIST_INTERVAL_MS
+    ) {
+      return
+    }
 
     const session: PersistedPlayerSession = {
+      currentPlaylistId,
       currentPlaylistName,
       currentTime,
       currentTrack,
+      currentTrackIndex,
       duration,
       playlist,
       progress,
@@ -113,10 +139,14 @@ export const Player: FC = () => {
       PLAYER_SESSION_STORAGE_KEY,
       JSON.stringify(session),
     )
+    lastPersistedAtRef.current = now
+    lastPersistedTrackIdRef.current = currentTrack.id
   }, [
     currentPlaylistName,
+    currentPlaylistId,
     currentTime,
     currentTrack,
+    currentTrackIndex,
     duration,
     playlist,
     progress,
@@ -131,6 +161,12 @@ export const Player: FC = () => {
       setIsExpanded(false)
     }
   }, [currentTrack])
+
+  useEffect(() => {
+    if (!isShuffled) {
+      originalPlaylistRef.current = playlist
+    }
+  }, [isShuffled, playlist])
 
   const coverUrl = getTrackCoverUrl(currentTrack?.cover)
 
@@ -168,10 +204,15 @@ export const Player: FC = () => {
     }
 
     if (isShuffled) {
+      const originalPlaylist = originalPlaylistRef.current
+      if (originalPlaylist.length > 0) {
+        dispatch(setPlaylistTracks(originalPlaylist))
+      }
       dispatch(setShuffleEnabled(false))
       return
     }
 
+    originalPlaylistRef.current = playlist
     const remainingTracks = playlist.filter(
       (track) => track.id !== currentTrack.id,
     )

@@ -63,11 +63,22 @@ export const usePlaylists = (page = 1, limit = 20) =>
         },
       },
     },
-    {},
+    {
+      retry: false,
+      staleTime: 60_000,
+    },
   )
 
 export const useMyPlaylists = () =>
-  useQuery('get', '/api/v1/playlists/me', {}, {})
+  useQuery(
+    'get',
+    '/api/v1/playlists/me',
+    {},
+    {
+      retry: false,
+      staleTime: 60_000,
+    },
+  )
 
 export const usePlaylist = (
   playlistId: string,

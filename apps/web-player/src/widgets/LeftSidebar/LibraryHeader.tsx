@@ -151,7 +151,7 @@ export const LibraryHeader = ({
           </button>
           {isCreateMenuOpen && (
             <div
-              className="fixed z-40 w-82 rounded-md bg-[#282828] p-2 shadow-2xl"
+              className="fixed z-40 w-82 rounded-md bg-surface p-2 shadow-2xl"
               style={{
                 left: createMenuPosition.left,
                 top: createMenuPosition.top,
@@ -169,7 +169,7 @@ export const LibraryHeader = ({
                 icon={<Disc3 size={24} />}
                 title="Blend"
               />
-              <div className="mx-3 my-2 border-t border-[#3e3e3e]" />
+              <div className="mx-3 my-2 border-t border-white/15" />
               <CreateMenuItem
                 description="Organize your playlists"
                 disabled
