@@ -5,6 +5,10 @@ export const ROUTES = {
     twoFactorLogin: '/auth/login/2fa',
     registration: '/auth/registration',
     forgotPassword: '/auth/forgot-password',
+    resetPassword: (token?: string) =>
+      token
+        ? `/auth/reset-password?token=${encodeURIComponent(token)}`
+        : '/auth/reset-password',
   },
   main: '/main',
   likedSongs: '/main/liked-songs',

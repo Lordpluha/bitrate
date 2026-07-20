@@ -24,48 +24,27 @@ type HeaderSuggestion = {
   type: 'media' | 'query'
 }
 
-const recentSearches = [
-  {
-    title: 'Drive',
-    subtitle: 'Playlist • Grant Combe',
-    image: '/images/drive-cover.jpg',
-  },
-  {
-    title: 'Nightcall',
-    subtitle: 'Song • Kavinsky',
-    image: '/images/drive-cover-big.jpg',
-  },
-  {
-    title: 'Bleach Soundtracks',
-    subtitle: 'Playlist • T karolina',
-    image: '/images/default-playlist.jpg',
-  },
-  {
-    title: 'WHAT CAN I SAY',
-    subtitle: 'Album • 7vvch',
-    image: '/images/what-can-i-say.jpg',
-  },
-  {
-    title: 'Liked Songs',
-    subtitle: 'Playlist',
-    image: '/images/liked-songs.jpg',
-  },
-  {
-    title: 'Michael Jackson',
-    subtitle: 'Artist',
-    image: '/images/michael-jackson-1.jpg',
-  },
-  {
-    title: 'Pop Mix',
-    subtitle: 'Playlist',
-    image: '/images/spotify-music-1.png',
-  },
-  {
-    title: 'Daily Mix',
-    subtitle: 'Playlist',
-    image: '/images/spotify-music-2.png',
-  },
-]
+type RecentSearch = Omit<HeaderSuggestion, 'type'>
+
+const recentSearchesStorageKey = 'spotify:web-player:recent-searches'
+const recentSearchesLimit = 8
+
+const isOptionalString = (value: unknown) =>
+  value === undefined || typeof value === 'string'
+
+const isRecentSearch = (value: unknown): value is RecentSearch => {
+  if (typeof value !== 'object' || value === null) return false
+
+  const search = value as Record<string, unknown>
+
+  return (
+    typeof search.title === 'string' &&
+    typeof search.subtitle === 'string' &&
+    isOptionalString(search.href) &&
+    isOptionalString(search.image) &&
+    isOptionalString(search.query)
+  )
+}
 
 const searchTypes: WebPlayerSearchType[] = ['tracks', 'albums', 'playlists']
 
@@ -111,13 +90,15 @@ export const HeaderSearch = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [query, setQuery] = useState(searchParams.get('q') ?? '')
+  const [debouncedQuery, setDebouncedQuery] = useState(query.trim())
   const [isFocused, setIsFocused] = useState(false)
+  const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([])
   const trimmedQuery = query.trim()
   const shouldShowRecentSearches = isFocused && trimmedQuery.length === 0
   const shouldShowSuggestions = isFocused && trimmedQuery.length > 0
   const { data: searchData } = useSearch({
     limit: 4,
-    query: trimmedQuery,
+    query: debouncedQuery,
     types: searchTypes,
   })
 
@@ -125,21 +106,72 @@ export const HeaderSearch = () => {
     setQuery(searchParams.get('q') ?? '')
   }, [searchParams])
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setIsFocused(false)
-    router.push(ROUTES.search(query.trim()))
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedQuery(trimmedQuery)
+    }, 300)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [trimmedQuery])
+
+  useEffect(() => {
+    const storedValue = window.localStorage.getItem(recentSearchesStorageKey)
+    if (!storedValue) return
+
+    try {
+      const parsedValue = JSON.parse(storedValue)
+      if (Array.isArray(parsedValue)) {
+        setRecentSearches(
+          parsedValue.filter(isRecentSearch).slice(0, recentSearchesLimit),
+        )
+      }
+    } catch {
+      window.localStorage.removeItem(recentSearchesStorageKey)
+    }
+  }, [])
+
+  const rememberSearch = (search: RecentSearch) => {
+    setRecentSearches((currentSearches) => {
+      const nextSearches = [
+        search,
+        ...currentSearches.filter(
+          (item) =>
+            item.title !== search.title || item.subtitle !== search.subtitle,
+        ),
+      ].slice(0, recentSearchesLimit)
+
+      window.localStorage.setItem(
+        recentSearchesStorageKey,
+        JSON.stringify(nextSearches),
+      )
+      return nextSearches
+    })
   }
 
-  const handleRecentSearchClick = (title: string) => {
-    setQuery(title)
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!trimmedQuery) return
+    rememberSearch({
+      query: trimmedQuery,
+      subtitle: 'Search',
+      title: trimmedQuery,
+    })
     setIsFocused(false)
-    router.push(ROUTES.search(title))
+    router.push(ROUTES.search(trimmedQuery))
+  }
+
+  const handleRecentSearchClick = (search: RecentSearch) => {
+    const nextQuery = search.query ?? search.title
+    setQuery(nextQuery)
+    rememberSearch(search)
+    setIsFocused(false)
+    router.push(search.href ?? ROUTES.search(nextQuery))
   }
 
   const handleSuggestionClick = (suggestion: HeaderSuggestion) => {
     const nextQuery = suggestion.query ?? suggestion.title
     setQuery(nextQuery)
+    rememberSearch(suggestion)
     setIsFocused(false)
     router.push(suggestion.href ?? ROUTES.search(nextQuery))
   }
@@ -172,28 +204,31 @@ export const HeaderSearch = () => {
       href: ROUTES.searchCategory(category.title),
       type: 'media',
     }))
-  const mediaSuggestions: HeaderSuggestion[] = [
-    ...(searchData?.tracks ?? []).slice(0, 3).map((track) => ({
-      image: getTrackCoverUrl(track.cover),
-      subtitle: `Song • ${track.artistId || 'Unknown artist'}`,
-      title: track.title,
-      type: 'media' as const,
-    })),
-    ...(searchData?.playlists ?? []).slice(0, 3).map((playlist) => ({
-      href: ROUTES.playlist(playlist.id),
-      image: getPlaylistCoverUrl(playlist.cover),
-      subtitle: 'Playlist',
-      title: playlist.title,
-      type: 'media' as const,
-    })),
-    ...(searchData?.albums ?? []).slice(0, 2).map((album) => ({
-      href: ROUTES.album(album.id),
-      image: getAlbumCoverUrl(album.cover),
-      subtitle: 'Album',
-      title: album.title,
-      type: 'media' as const,
-    })),
-  ]
+  const mediaSuggestions: HeaderSuggestion[] =
+    debouncedQuery === trimmedQuery
+      ? [
+          ...(searchData?.tracks ?? []).slice(0, 3).map((track) => ({
+            image: getTrackCoverUrl(track.cover),
+            subtitle: `Song • ${track.artistId || 'Unknown artist'}`,
+            title: track.title,
+            type: 'media' as const,
+          })),
+          ...(searchData?.playlists ?? []).slice(0, 3).map((playlist) => ({
+            href: ROUTES.playlist(playlist.id),
+            image: getPlaylistCoverUrl(playlist.cover),
+            subtitle: 'Playlist',
+            title: playlist.title,
+            type: 'media' as const,
+          })),
+          ...(searchData?.albums ?? []).slice(0, 2).map((album) => ({
+            href: ROUTES.album(album.id),
+            image: getAlbumCoverUrl(album.cover),
+            subtitle: 'Album',
+            title: album.title,
+            type: 'media' as const,
+          })),
+        ]
+      : []
   const suggestions = [
     ...querySuggestions,
     ...categoryMatches,
@@ -225,32 +260,38 @@ export const HeaderSearch = () => {
         <ReviewIcon className="text-text-subdued" height={20} width={20} />
       </button>
       {shouldShowRecentSearches && (
-        <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 max-h-[70vh] overflow-y-auto rounded-md bg-[#282828] p-3 shadow-2xl custom-scrollbar">
-          <div className="px-1 pb-2 text-sm font-bold text-white">
+        <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 max-h-[70vh] overflow-y-auto rounded-md bg-surface p-3 shadow-2xl custom-scrollbar">
+          <div className="px-1 pb-2 text-sm font-bold text-text">
             Recent searches
           </div>
           <div className="space-y-1">
             {recentSearches.map((item) => (
               <button
-                className="grid w-full grid-cols-[44px_minmax(0,1fr)] items-center gap-3 rounded px-1 py-1.5 text-left transition-colors hover:bg-white/10"
+                className="grid w-full grid-cols-[44px_minmax(0,1fr)] items-center gap-3 rounded px-1 py-1.5 text-left transition-colors hover:bg-surface-hover"
                 key={`${item.title}-${item.subtitle}`}
-                onClick={() => handleRecentSearchClick(item.title)}
+                onClick={() => handleRecentSearchClick(item)}
                 onMouseDown={(event) => event.preventDefault()}
                 type="button"
               >
-                <Image
-                  alt={item.title}
-                  className="size-11 rounded object-cover"
-                  height={44}
-                  src={item.image}
-                  unoptimized
-                  width={44}
-                />
+                {item.image ? (
+                  <Image
+                    alt={item.title}
+                    className="size-11 rounded object-cover"
+                    height={44}
+                    src={item.image}
+                    unoptimized
+                    width={44}
+                  />
+                ) : (
+                  <span className="flex size-11 items-center justify-center rounded-full text-text-subdued">
+                    <SearchIcon height={26} width={26} />
+                  </span>
+                )}
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-medium text-white">
+                  <span className="block truncate text-sm font-medium text-text">
                     {item.title}
                   </span>
-                  <span className="block truncate text-xs text-white/60">
+                  <span className="block truncate text-xs text-text-subdued">
                     {item.subtitle}
                   </span>
                 </span>
@@ -260,11 +301,11 @@ export const HeaderSearch = () => {
         </div>
       )}
       {shouldShowSuggestions && (
-        <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 max-h-[70vh] overflow-y-auto rounded-md bg-[#282828] p-3 shadow-2xl custom-scrollbar">
+        <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 max-h-[70vh] overflow-y-auto rounded-md bg-surface p-3 shadow-2xl custom-scrollbar">
           <div className="space-y-1">
             {suggestions.map((item) => (
               <button
-                className="grid w-full grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-3 rounded px-1 py-1.5 text-left transition-colors hover:bg-white/10"
+                className="grid w-full grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-3 rounded px-1 py-1.5 text-left transition-colors hover:bg-surface-hover"
                 key={`${item.type}-${item.title}-${item.subtitle}`}
                 onClick={() => handleSuggestionClick(item)}
                 onMouseDown={(event) => event.preventDefault()}

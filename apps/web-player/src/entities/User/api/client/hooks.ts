@@ -1,6 +1,11 @@
 'use client'
 
-import { clientFetchClient, useMutation, useQuery } from '@shared/api/client'
+import {
+  clientFetchClient,
+  fetchWithAuthRefresh,
+  useMutation,
+  useQuery,
+} from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
 import { getApiUrl } from '@shared/utils/mediaUrl'
@@ -88,11 +93,13 @@ export const useUploadUserAvatar = () => {
       const formData = new FormData()
       formData.append('avatar', avatar)
 
-      const response = await fetch(getApiUrl('/api/v1/users/avatar'), {
-        body: formData,
-        credentials: 'include',
-        method: 'POST',
-      })
+      const response = await fetchWithAuthRefresh(
+        getApiUrl('/api/v1/users/avatar'),
+        {
+          body: formData,
+          method: 'POST',
+        },
+      )
 
       ensureOkResponse(response, 'Failed to upload avatar')
 

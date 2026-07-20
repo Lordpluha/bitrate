@@ -20,9 +20,14 @@ class PlaylistServerApiClass extends ServerApi {
       }
     }
 
+    const apiBaseUrl = process.env.API_URL?.replace(/\/$/, '')
+    if (!apiBaseUrl) {
+      throw new Error('API_URL is required to build playlist media URLs')
+    }
+
     const resultDataTracks = data?.tracks?.map((track) => ({
       ...track,
-      audioUrl: `${process.env.API_URL?.replace(/\/$/, '')}/api/v1/tracks/stream/${track.id}`,
+      audioUrl: `${apiBaseUrl}/api/v1/tracks/stream/${track.id}`,
     }))
     return {
       data: {

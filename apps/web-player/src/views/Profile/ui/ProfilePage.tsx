@@ -2,6 +2,7 @@
 
 import { useListeningHistory } from '@entities/History'
 import { play } from '@entities/Player'
+import { useMyPlaylists } from '@entities/Playlist'
 import { type TrackEntity, useLikedTracks } from '@entities/Track'
 import { useAppDispatch, useAuth } from '@shared/hooks'
 import { useArtists } from '@shared/hooks/useArtists'
@@ -10,6 +11,7 @@ import { formatDuration } from '@shared/utils/apiHelpers'
 import {
   getApiUrl,
   getArtistAvatarUrl,
+  getPlaylistCoverUrl,
   getTrackCoverUrl,
   getUserAvatarUrl,
 } from '@shared/utils/mediaUrl'
@@ -43,6 +45,8 @@ export const ProfilePage = () => {
   const { data: artistsData, isPending: isArtistsPending } = useArtists(1, 8)
   const { data: historyData } = useListeningHistory({ page: 1, limit: 20 })
   const { data: likedTracks } = useLikedTracks(1, 8)
+  const { data: myPlaylistsData, isPending: arePlaylistsPending } =
+    useMyPlaylists()
 
   const artists = Array.isArray(artistsData) ? artistsData.slice(0, 5) : []
   const topTracksSource: ProfileTrack[] =
@@ -50,7 +54,7 @@ export const ProfilePage = () => {
       ? historyData.map((entry) => entry.track as ProfileTrack)
       : ((likedTracks ?? []) as ProfileTrack[])
   const topTracks = getUniqueTracks(topTracksSource).slice(0, 5)
-  const followingArtist = artists[0]
+  const myPlaylists = (myPlaylistsData ?? []).slice(0, 6)
   const avatarUrl = user?.avatar ? getUserAvatarUrl(user.avatar) : null
 
   const playTrack = (track: TrackEntity) => {
@@ -82,9 +86,9 @@ export const ProfilePage = () => {
 
   return (
     <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
-      <section className="bg-gradient-to-b from-[#555] via-[#3d3d3d] to-[#242424] px-6 pb-7 pt-10">
+      <section className="bg-gradient-to-b from-surface-hover via-surface to-background-tinted px-6 pb-7 pt-10">
         <div className="flex min-w-0 items-end gap-6">
-          <div className="flex h-58 w-58 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#282828] shadow-2xl max-[900px]:h-36 max-[900px]:w-36">
+          <div className="flex h-58 w-58 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface shadow-2xl max-[900px]:h-36 max-[900px]:w-36">
             {avatarUrl ? (
               <Image
                 alt={user.username}
@@ -104,9 +108,11 @@ export const ProfilePage = () => {
             <h1 className="truncate text-7xl font-black tracking-normal text-text max-[1100px]:text-5xl">
               {user.username}
             </h1>
-            <p className="mt-5 text-sm text-text">
-              • {followingArtist ? '1 Following' : '0 Following'}
-            </p>
+            {user.description && (
+              <p className="mt-5 max-w-150 text-sm text-text-subdued">
+                {user.description}
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -130,8 +136,8 @@ export const ProfilePage = () => {
         </div>
 
         <ProfileSection
-          subtitle="Only visible to you"
-          title="Top artists this month"
+          subtitle="Artists currently available in the catalog"
+          title="Artists to explore"
         >
           <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-5">
             {isArtistsPending ? (
@@ -166,7 +172,7 @@ export const ProfilePage = () => {
           className="mt-12"
           showAllHref={ROUTES.recents}
           subtitle="Only visible to you"
-          title="Top tracks this month"
+          title="Recently played"
         >
           <div className="space-y-1">
             {topTracks.length === 0 ? (
@@ -210,24 +216,36 @@ export const ProfilePage = () => {
           </div>
         </ProfileSection>
 
-        <ProfileSection className="mt-14" title="Following">
-          {followingArtist ? (
-            <div className="block w-48 rounded-md p-3 transition-colors hover:bg-white/10">
-              <Image
-                alt={followingArtist.username}
-                className="aspect-square w-full rounded-full object-cover shadow-xl"
-                height={190}
-                src={getArtistAvatarUrl(followingArtist.avatar)}
-                unoptimized
-                width={190}
-              />
-              <h3 className="mt-4 truncate text-base text-text">
-                {followingArtist.username}
-              </h3>
-              <p className="text-sm text-text-subdued">Artist</p>
-            </div>
+        <ProfileSection className="mt-14" title="Your playlists">
+          {arePlaylistsPending ? (
+            <p className="text-text-subdued">Loading playlists...</p>
+          ) : myPlaylists.length === 0 ? (
+            <p className="text-text-subdued">No playlists created yet.</p>
           ) : (
-            <p className="text-text-subdued">No following yet.</p>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-5">
+              {myPlaylists.map((playlist) => (
+                <Link
+                  className="min-w-0 rounded-md p-2 transition-colors hover:bg-white/10"
+                  href={ROUTES.playlist(playlist.id)}
+                  key={playlist.id}
+                >
+                  <Image
+                    alt={playlist.title}
+                    className="aspect-square w-full rounded object-cover shadow-xl"
+                    height={180}
+                    src={getPlaylistCoverUrl(playlist.cover)}
+                    unoptimized
+                    width={180}
+                  />
+                  <h3 className="mt-4 truncate text-base text-text">
+                    {playlist.title}
+                  </h3>
+                  <p className="truncate text-sm text-text-subdued">
+                    {playlist.isPublic ? 'Public playlist' : 'Private playlist'}
+                  </p>
+                </Link>
+              ))}
+            </div>
           )}
         </ProfileSection>
 

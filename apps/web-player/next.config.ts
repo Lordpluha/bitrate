@@ -4,6 +4,11 @@ const apiBaseUrl =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? 'http://localhost:3000'
 
 const nextConfig = {
+  experimental: {
+    staleTimes: {
+      dynamic: 60,
+    },
+  },
   pageExtensions: ['ts', 'tsx', 'mdx'],
   poweredByHeader: false,
   transpilePackages: ['@spotify/ui-react'],

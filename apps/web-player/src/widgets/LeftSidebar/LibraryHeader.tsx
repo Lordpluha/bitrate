@@ -31,6 +31,7 @@ export const LibraryHeader = ({
   const router = useRouter()
   const createButtonRef = useRef<HTMLButtonElement>(null)
   const createMenuRef = useRef<HTMLDivElement>(null)
+  const isCreatingPlaylistRef = useRef(false)
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false)
   const [createMenuPosition, setCreateMenuPosition] = useState({
     left: 0,
@@ -40,11 +41,19 @@ export const LibraryHeader = ({
   const createPlaylist = useCreatePlaylist()
 
   const nextPlaylistTitle = useMemo(() => {
-    const playlistsCount = Array.isArray(myPlaylists)
-      ? (myPlaylists as unknown[]).length
-      : 0
+    const highestGeneratedNumber = (myPlaylists ?? []).reduce(
+      (highestNumber, playlist) => {
+        const match = /^My Playlist #(\d+)$/.exec(playlist.title.trim())
+        const playlistNumber = Number(match?.[1] ?? 0)
 
-    return `My Playlist #${playlistsCount + 1}`
+        return Number.isSafeInteger(playlistNumber)
+          ? Math.max(highestNumber, playlistNumber)
+          : highestNumber
+      },
+      0,
+    )
+
+    return `My Playlist #${highestGeneratedNumber + 1}`
   }, [myPlaylists])
 
   useEffect(() => {
@@ -65,6 +74,10 @@ export const LibraryHeader = ({
   }, [])
 
   const handleCreatePlaylist = async () => {
+    if (isCreatingPlaylistRef.current) return
+
+    isCreatingPlaylistRef.current = true
+
     try {
       const playlist = await createPlaylist.mutateAsync({
         isPublic: true,
@@ -76,6 +89,8 @@ export const LibraryHeader = ({
       router.push(ROUTES.playlist(playlist.id))
     } catch (error) {
       showApiErrorToast(error, 'Failed to create playlist')
+    } finally {
+      isCreatingPlaylistRef.current = false
     }
   }
 
@@ -151,7 +166,7 @@ export const LibraryHeader = ({
           </button>
           {isCreateMenuOpen && (
             <div
-              className="fixed z-40 w-82 rounded-md bg-surface p-2 shadow-2xl"
+              className="fixed z-40 w-82 rounded-md bg-popover p-2 shadow-2xl"
               style={{
                 left: createMenuPosition.left,
                 top: createMenuPosition.top,

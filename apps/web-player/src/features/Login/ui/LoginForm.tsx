@@ -1,6 +1,10 @@
 'use client'
 
-import { FloatingAuthField, OAuthButtons } from '@features/Auth'
+import {
+  FloatingAuthField,
+  OAuthButtons,
+  useAuthenticatedRedirect,
+} from '@features/Auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast } from '@shared/api/feedback'
@@ -26,6 +30,7 @@ import { useForm } from 'react-hook-form'
 import { type LoginFormData, loginSchema } from '../validation'
 
 export const LoginForm = () => {
+  useAuthenticatedRedirect()
   const router = useRouter()
   const searchParams = useSearchParams()
   const { mutate } = useMutation('post', '/api/v1/auth/login', {

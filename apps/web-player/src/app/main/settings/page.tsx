@@ -1,5 +1,6 @@
-import { SettingsPage } from '@views/Settings'
+import { ROUTES } from '@shared/routes'
+import { redirect } from 'next/navigation'
 
 export default function SettingsRoute() {
-  return <SettingsPage />
+  redirect(ROUTES.settings)
 }

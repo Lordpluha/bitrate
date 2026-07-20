@@ -1,8 +1,7 @@
 'use client'
 
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { useMutation, useQuery } from '@shared/api/client'
-import { apiQueryKeys } from '@shared/api/queryKeys'
+import { queryOptions, useMutation, useQuery } from '@shared/api/client'
 import { getApiUrl } from '@shared/utils/mediaUrl'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
@@ -28,11 +27,24 @@ const withPlayableUrl = (track: TrackEntity): TrackEntity => ({
   audioUrl: getApiUrl(`/api/v1/tracks/stream/${track.id}`),
 })
 
-const isLikedTracksQuery = (queryKey: readonly unknown[]) =>
-  JSON.stringify(queryKey).includes('/api/v1/tracks/liked')
+const likedTracksQueryKey = queryOptions('get', '/api/v1/tracks/liked', {
+  params: { query: { page: 1, limit: 100 } },
+}).queryKey
+
+const trackDetailQueryKey = (trackId: string) =>
+  queryOptions('get', '/api/v1/tracks/{id}', {
+    params: { path: { id: trackId } },
+  }).queryKey
+
+const isTrackEntity = (value: unknown): value is TrackEntity => {
+  if (typeof value !== 'object' || value === null) return false
+
+  const track = value as Record<string, unknown>
+  return typeof track.id === 'string' && typeof track.title === 'string'
+}
 
 const normalizeTracksResponse = (data: unknown) => {
-  if (Array.isArray(data)) return data as TrackEntity[]
+  if (Array.isArray(data)) return data.filter(isTrackEntity)
 
   if (
     typeof data === 'object' &&
@@ -40,7 +52,7 @@ const normalizeTracksResponse = (data: unknown) => {
     'data' in data &&
     Array.isArray(data.data)
   ) {
-    return data.data as TrackEntity[]
+    return data.data.filter(isTrackEntity)
   }
 
   return []
@@ -97,8 +109,8 @@ export const useLikedTracks = (
     {
       params: {
         query: {
-          page,
-          limit,
+          page: 1,
+          limit: 100,
         },
       },
     },
@@ -109,8 +121,9 @@ export const useLikedTracks = (
       retry: false,
       staleTime: options.staleTime ?? 30_000,
       select(data: unknown) {
-        const tracks = normalizeTracksResponse(data)
-        return tracks.map(withPlayableUrl)
+        const tracks = normalizeTracksResponse(data).map(withPlayableUrl)
+        const start = Math.max(page - 1, 0) * limit
+        return tracks.slice(start, start + limit)
       },
     },
   )
@@ -128,13 +141,9 @@ export const useLikeTrack = () => {
   return useMutation('post', '/api/v1/tracks/{id}/like', {
     onSuccess: async (_data, variables) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['tracks'] }),
-        queryClient.invalidateQueries({ queryKey: ['tracks', 'liked'] }),
+        queryClient.invalidateQueries({ queryKey: likedTracksQueryKey }),
         queryClient.invalidateQueries({
-          predicate: ({ queryKey }) => isLikedTracksQuery(queryKey),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.tracks.detail(variables.params.path.id),
+          queryKey: trackDetailQueryKey(variables.params.path.id),
         }),
       ])
     },
@@ -147,13 +156,9 @@ export const useUnlikeTrack = () => {
   return useMutation('delete', '/api/v1/tracks/{id}/like', {
     onSuccess: async (_data, variables) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['tracks'] }),
-        queryClient.invalidateQueries({ queryKey: ['tracks', 'liked'] }),
+        queryClient.invalidateQueries({ queryKey: likedTracksQueryKey }),
         queryClient.invalidateQueries({
-          predicate: ({ queryKey }) => isLikedTracksQuery(queryKey),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.tracks.detail(variables.params.path.id),
+          queryKey: trackDetailQueryKey(variables.params.path.id),
         }),
       ])
     },

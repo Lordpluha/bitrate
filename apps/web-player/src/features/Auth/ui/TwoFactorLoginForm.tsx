@@ -57,11 +57,22 @@ export const TwoFactorLoginForm = () => {
       </div>
 
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <label
+          className="grid gap-2 text-sm font-semibold"
+          htmlFor="two-factor-code"
+        >
+          Authentication code
+        </label>
         <Input
+          autoComplete="one-time-code"
+          id="two-factor-code"
           inputMode="numeric"
           maxLength={6}
+          name="two-factor-code"
           onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))}
+          pattern="[0-9]{6}"
           placeholder="123456"
+          required
           value={code}
           variant="contrast"
         />

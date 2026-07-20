@@ -1,6 +1,7 @@
 'use client'
 
 import { useAppSelector, useMediaQuery } from '@shared/hooks'
+import { ROUTES } from '@shared/routes'
 import { cn } from '@spotify/ui-react'
 import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
@@ -23,6 +24,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
     gridTemplateColumns,
     handleCollapseRightSidebar,
     handleExpandRightSidebar,
+    handleLeftResizeKeyDown,
+    handleRightResizeKeyDown,
     handleStartLeftResize,
     handleStartRightResize,
     handleToggleLibraryCollapsed,
@@ -54,11 +57,11 @@ export default function MainLayout({ children }: PropsWithChildren) {
             <button
               className={cn(
                 'flex flex-col items-center justify-center gap-1 text-xs transition-colors',
-                pathname === '/main'
+                pathname === ROUTES.main
                   ? 'text-white'
                   : 'text-white/60 hover:text-white/90',
               )}
-              onClick={() => router.push('/main')}
+              onClick={() => router.push(ROUTES.main)}
               type="button"
             >
               <House size={18} />
@@ -68,11 +71,11 @@ export default function MainLayout({ children }: PropsWithChildren) {
             <button
               className={cn(
                 'flex flex-col items-center justify-center gap-1 text-xs transition-colors',
-                pathname.startsWith('/main/search')
+                pathname.startsWith(ROUTES.search())
                   ? 'text-white'
                   : 'text-white/60 hover:text-white/90',
               )}
-              onClick={() => router.push('/main/search')}
+              onClick={() => router.push(ROUTES.search())}
               type="button"
             >
               <Search size={18} />
@@ -82,11 +85,11 @@ export default function MainLayout({ children }: PropsWithChildren) {
             <button
               className={cn(
                 'flex flex-col items-center justify-center gap-1 text-xs transition-colors',
-                pathname.startsWith('/main/library')
+                pathname.startsWith(ROUTES.library)
                   ? 'text-white'
                   : 'text-white/60 hover:text-white/90',
               )}
-              onClick={() => router.push('/main/library')}
+              onClick={() => router.push(ROUTES.library)}
               type="button"
             >
               <Library size={18} />
@@ -95,7 +98,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
 
             <button
               className="flex flex-col items-center justify-center gap-1 text-xs text-white/60 hover:text-white/90 transition-colors"
-              onClick={() => router.push('/main/library?create=playlist')}
+              onClick={() => router.push(ROUTES.createPlaylist)}
               type="button"
             >
               <Plus size={18} />
@@ -140,7 +143,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
             aria-valuemax={leftResizeLimits.max}
             aria-valuemin={leftResizeLimits.min}
             aria-valuenow={Math.round(leftResizeLimits.value)}
-            className="relative h-full w-full cursor-col-resize border-0 bg-transparent before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 active:before:bg-[var(--color-spotify-green)]"
+            className="relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-[var(--color-spotify-green)]"
+            onKeyDown={handleLeftResizeKeyDown}
             onPointerDown={handleStartLeftResize}
             tabIndex={0}
           />
@@ -155,10 +159,11 @@ export default function MainLayout({ children }: PropsWithChildren) {
               aria-valuemin={rightResizeLimits.min}
               aria-valuenow={Math.round(rightResizeLimits.value)}
               className={cn(
-                'relative h-full w-full cursor-col-resize border-0 bg-transparent before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 active:before:bg-[var(--color-spotify-green)]',
+                'relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-[var(--color-spotify-green)]',
                 isRightSidebarCollapsed &&
                   'cursor-default hover:bg-transparent',
               )}
+              onKeyDown={handleRightResizeKeyDown}
               onPointerDown={handleStartRightResize}
               tabIndex={0}
             />

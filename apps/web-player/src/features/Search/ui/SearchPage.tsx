@@ -1,8 +1,9 @@
 'use client'
 
 import { useAlbums } from '@entities/Album'
-import { usePlaylists } from '@entities/Playlist/api/client'
+import { usePlaylists } from '@entities/Playlist'
 import { type TrackEntity, useTracks } from '@entities/Track'
+import { type SafeUser, useUsers } from '@entities/User'
 import {
   useSearch,
   type WebPlayerSearchType,
@@ -13,6 +14,7 @@ import {
   getAlbumCoverUrl,
   getPlaylistCoverUrl,
   getTrackCoverUrl,
+  getUserAvatarUrl,
 } from '@shared/utils/mediaUrl'
 import {
   Carousel,
@@ -224,13 +226,24 @@ export const SearchPage = () => {
     query,
     types: searchTypes,
   })
+  const { data: usersData, isFetching: areUsersFetching } = useUsers({
+    limit: 4,
+    username: query,
+  })
 
   const tracks = data?.tracks ?? []
   const albums = data?.albums ?? []
   const playlists = data?.playlists ?? []
+  const usersResponse = usersData as unknown
+  const users = Array.isArray(usersResponse)
+    ? (usersResponse as SafeUser[])
+    : []
   const hasQuery = query.length > 0
   const hasResults =
-    tracks.length > 0 || albums.length > 0 || playlists.length > 0
+    tracks.length > 0 ||
+    albums.length > 0 ||
+    playlists.length > 0 ||
+    users.length > 0
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
@@ -240,7 +253,7 @@ export const SearchPage = () => {
         <div className="px-6 py-14">
           <div className="mx-auto w-full max-w-[1200px]">
             {hasQuery ? (
-              isFetching ? (
+              isFetching || areUsersFetching ? (
                 <div className="text-text-subdued">Searching...</div>
               ) : !hasResults ? (
                 <div>
@@ -258,6 +271,7 @@ export const SearchPage = () => {
                   playlists={playlists}
                   query={query}
                   tracks={tracks}
+                  users={users}
                 />
               )
             ) : (
@@ -485,6 +499,7 @@ const SearchResults = ({
   playlists,
   query,
   tracks,
+  users,
 }: {
   albums: Array<{
     cover?: string | null
@@ -503,6 +518,7 @@ const SearchResults = ({
     id: string
     title: string
   }>
+  users: SafeUser[]
 }) => {
   const categoryMatch = getSearchCategoryMatch(query)
   const playlistItems: MediaCardItem[] = playlists
@@ -533,6 +549,13 @@ const SearchResults = ({
       kind: 'Album',
       subtitle: 'Album',
       title: album.title,
+    })),
+    ...users.slice(0, 4).map((user) => ({
+      href: ROUTES.user(user.id),
+      image: getUserAvatarUrl(user.avatar),
+      kind: 'Profile',
+      subtitle: 'Profile',
+      title: user.username,
     })),
   ]
 

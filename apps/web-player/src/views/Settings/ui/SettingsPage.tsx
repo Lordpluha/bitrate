@@ -439,14 +439,24 @@ export const SettingsPage = () => {
                     Manual code: <strong>{twoFactorSetup.manualCode}</strong>
                   </div>
                 )}
+                <label
+                  className="grid gap-2 text-sm text-text"
+                  htmlFor="enable-two-factor-code"
+                >
+                  Authentication code
+                </label>
                 <input
+                  autoComplete="one-time-code"
                   className="h-10 rounded bg-surface px-3 text-sm text-text outline-none focus:ring-2 focus:ring-white/25"
+                  id="enable-two-factor-code"
                   inputMode="numeric"
                   maxLength={6}
+                  name="enable-two-factor-code"
                   onChange={(event) =>
                     setTwoFactorCode(event.target.value.replace(/\D/g, ''))
                   }
-                  placeholder="Enter 6-digit code"
+                  pattern="[0-9]{6}"
+                  required
                   value={twoFactorCode}
                 />
                 <button
@@ -461,19 +471,29 @@ export const SettingsPage = () => {
 
             {user?.twoFactorEnabled && (
               <form
-                className="flex max-w-160 flex-wrap gap-3"
+                className="grid max-w-160 gap-3"
                 onSubmit={handleDisableTwoFactor}
               >
+                <label
+                  className="text-sm text-text"
+                  htmlFor="disable-two-factor-code"
+                >
+                  Current authentication code
+                </label>
                 <input
+                  autoComplete="one-time-code"
                   className="h-10 rounded bg-surface px-3 text-sm text-text outline-none focus:ring-2 focus:ring-white/25"
+                  id="disable-two-factor-code"
                   inputMode="numeric"
                   maxLength={6}
+                  name="disable-two-factor-code"
                   onChange={(event) =>
                     setDisableTwoFactorCode(
                       event.target.value.replace(/\D/g, ''),
                     )
                   }
-                  placeholder="Current 2FA code"
+                  pattern="[0-9]{6}"
+                  required
                   value={disableTwoFactorCode}
                 />
                 <button

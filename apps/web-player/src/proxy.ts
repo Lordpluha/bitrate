@@ -14,6 +14,8 @@ export function proxy(request: NextRequest) {
     ROUTES.auth.login,
     ROUTES.auth.twoFactorLogin,
     ROUTES.auth.registration,
+    ROUTES.auth.forgotPassword,
+    ROUTES.auth.resetPassword(),
   ]
 
   // Определяем публичные маршруты (доступны без токена)

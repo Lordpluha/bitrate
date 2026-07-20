@@ -1,22 +1,23 @@
 'use client'
 
-import type { TrackEntity } from '@entities/Track'
 import {
   clientFetchClient,
+  queryOptions,
   useMutation as useOpenApiMutation,
   useQuery,
 } from '@shared/api/client'
-import { ensureOkResponse } from '@shared/api/errors'
-import { apiQueryKeys } from '@shared/api/queryKeys'
+import { ApiRequestError, ensureOkResponse } from '@shared/api/errors'
 import { getApiUrl } from '@shared/utils/mediaUrl'
 import type { ApiSchemas } from '@spotify/contracts'
 import {
   useQueryClient,
   useMutation as useTanStackMutation,
+  useQuery as useTanStackQuery,
 } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
 export type PlaylistEntity = ApiSchemas['PlaylistEntity']
+type TrackEntity = ApiSchemas['TrackEntity']
 export type PlaylistWithTracks = PlaylistEntity & {
   tracks: TrackEntity[]
   user?: {
@@ -37,6 +38,16 @@ export type UpdatePlaylistPayload = {
   description?: string
 }
 
+const isPlaylistEntity = (value: unknown): value is PlaylistEntity => {
+  if (typeof value !== 'object' || value === null) return false
+
+  const playlist = value as Record<string, unknown>
+  return typeof playlist.id === 'string' && typeof playlist.title === 'string'
+}
+
+const normalizePlaylistsResponse = (data: unknown): PlaylistEntity[] =>
+  Array.isArray(data) ? data.filter(isPlaylistEntity) : []
+
 const withPlayableTrackUrls = <T extends { tracks?: TrackEntity[] }>(
   playlist: T,
 ) => ({
@@ -48,8 +59,30 @@ const withPlayableTrackUrls = <T extends { tracks?: TrackEntity[] }>(
     })) ?? [],
 })
 
-const isPlaylistQuery = (queryKey: readonly unknown[]) =>
-  JSON.stringify(queryKey).includes('/api/v1/playlists')
+const playlistQueryKeys = {
+  lists: ['get', '/api/v1/playlists'] as const,
+  mine: () => queryOptions('get', '/api/v1/playlists/me', {}).queryKey,
+  detail: (playlistId: string) =>
+    queryOptions('get', '/api/v1/playlists/{id}', {
+      params: { path: { id: playlistId } },
+    }).queryKey,
+}
+
+const invalidatePlaylistLists = (
+  queryClient: ReturnType<typeof useQueryClient>,
+) => queryClient.invalidateQueries({ queryKey: playlistQueryKeys.lists })
+
+const invalidateMyPlaylists = (
+  queryClient: ReturnType<typeof useQueryClient>,
+) => queryClient.invalidateQueries({ queryKey: playlistQueryKeys.mine() })
+
+const invalidatePlaylistDetail = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  playlistId: string,
+) =>
+  queryClient.invalidateQueries({
+    queryKey: playlistQueryKeys.detail(playlistId),
+  })
 
 export const usePlaylists = (page = 1, limit = 20) =>
   useQuery(
@@ -76,6 +109,7 @@ export const useMyPlaylists = () =>
     {},
     {
       retry: false,
+      select: normalizePlaylistsResponse,
       staleTime: 60_000,
     },
   )
@@ -84,21 +118,33 @@ export const usePlaylist = (
   playlistId: string,
   onSuccess?: (playlist: PlaylistWithTracks) => void,
 ) => {
-  const query = useQuery(
-    'get',
-    '/api/v1/playlists/{id}',
-    {
-      params: {
-        path: {
-          id: playlistId,
+  const query = useTanStackQuery({
+    enabled: Boolean(playlistId),
+    gcTime: 10 * 60_000,
+    meta: {
+      suppressErrorToast: true,
+    },
+    queryFn: async () => {
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/playlists/{id}',
+        {
+          params: {
+            path: { id: playlistId },
+          },
         },
-      },
+      )
+
+      ensureOkResponse(response, 'Failed to load playlist')
+
+      if (!data) {
+        throw new ApiRequestError('Playlist response is empty', 502)
+      }
+
+      return withPlayableTrackUrls(data as PlaylistWithTracks)
     },
-    {
-      enabled: !!playlistId,
-      select: (data) => withPlayableTrackUrls(data as PlaylistWithTracks),
-    },
-  )
+    queryKey: playlistQueryKeys.detail(playlistId),
+    staleTime: 60_000,
+  })
 
   useEffect(() => {
     if (query.data) onSuccess?.(query.data)
@@ -125,15 +171,8 @@ export const useCreatePlaylist = () => {
     },
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.all,
-        }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.mine,
-        }),
-        queryClient.invalidateQueries({
-          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
-        }),
+        invalidatePlaylistLists(queryClient),
+        invalidateMyPlaylists(queryClient),
       ])
     },
   })
@@ -166,16 +205,9 @@ export const useUpdatePlaylist = () => {
     },
     onSuccess: async (_data, variables) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.playlists.all }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.mine,
-        }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.detail(variables.playlistId),
-        }),
-        queryClient.invalidateQueries({
-          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
-        }),
+        invalidatePlaylistLists(queryClient),
+        invalidateMyPlaylists(queryClient),
+        invalidatePlaylistDetail(queryClient, variables.playlistId),
       ])
     },
   })
@@ -199,15 +231,10 @@ export const useDeletePlaylist = () => {
     },
     onSuccess: async (_data, playlistId) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.playlists.all }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.mine,
-        }),
+        invalidatePlaylistLists(queryClient),
+        invalidateMyPlaylists(queryClient),
         queryClient.removeQueries({
-          queryKey: apiQueryKeys.playlists.detail(playlistId),
-        }),
-        queryClient.invalidateQueries({
-          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
+          queryKey: playlistQueryKeys.detail(playlistId),
         }),
       ])
     },
@@ -220,16 +247,8 @@ export const useAddTracksToPlaylist = () => {
   return useOpenApiMutation('post', '/api/v1/playlists/{id}/tracks', {
     onSuccess: async (_data, variables) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.playlists.all }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.mine,
-        }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.detail(variables.params.path.id),
-        }),
-        queryClient.invalidateQueries({
-          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
-        }),
+        invalidateMyPlaylists(queryClient),
+        invalidatePlaylistDetail(queryClient, variables.params.path.id),
       ])
     },
   })
@@ -244,18 +263,8 @@ export const useRemoveTrackFromPlaylist = () => {
     {
       onSuccess: async (_data, variables) => {
         await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: apiQueryKeys.playlists.all,
-          }),
-          queryClient.invalidateQueries({
-            queryKey: apiQueryKeys.playlists.mine,
-          }),
-          queryClient.invalidateQueries({
-            queryKey: apiQueryKeys.playlists.detail(variables.params.path.id),
-          }),
-          queryClient.invalidateQueries({
-            predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
-          }),
+          invalidateMyPlaylists(queryClient),
+          invalidatePlaylistDetail(queryClient, variables.params.path.id),
         ])
       },
     },
@@ -267,18 +276,7 @@ export const useLikePlaylist = () => {
 
   return useOpenApiMutation('post', '/api/v1/playlists/{id}/like', {
     onSuccess: async (_data, variables) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.playlists.all }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.mine,
-        }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.detail(variables.params.path.id),
-        }),
-        queryClient.invalidateQueries({
-          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
-        }),
-      ])
+      await invalidatePlaylistDetail(queryClient, variables.params.path.id)
     },
   })
 }
@@ -288,18 +286,7 @@ export const useUnlikePlaylist = () => {
 
   return useOpenApiMutation('delete', '/api/v1/playlists/{id}/like', {
     onSuccess: async (_data, variables) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: apiQueryKeys.playlists.all }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.mine,
-        }),
-        queryClient.invalidateQueries({
-          queryKey: apiQueryKeys.playlists.detail(variables.params.path.id),
-        }),
-        queryClient.invalidateQueries({
-          predicate: ({ queryKey }) => isPlaylistQuery(queryKey),
-        }),
-      ])
+      await invalidatePlaylistDetail(queryClient, variables.params.path.id)
     },
   })
 }
