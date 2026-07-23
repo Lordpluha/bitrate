@@ -17,8 +17,12 @@ export const shuffleTracks = (sourceTracks: TrackEntity[]) => {
   for (let index = shuffledTracks.length - 1; index > 0; index -= 1) {
     const randomIndex = Math.floor(Math.random() * (index + 1))
     const currentTrack = shuffledTracks[index]
-    shuffledTracks[index] = shuffledTracks[randomIndex] as TrackEntity
-    shuffledTracks[randomIndex] = currentTrack as TrackEntity
+    const randomTrack = shuffledTracks[randomIndex]
+
+    if (!currentTrack || !randomTrack) continue
+
+    shuffledTracks[index] = randomTrack
+    shuffledTracks[randomIndex] = currentTrack
   }
 
   return shuffledTracks

@@ -221,8 +221,12 @@ export const Player: FC = () => {
     for (let index = shuffledTracks.length - 1; index > 0; index -= 1) {
       const randomIndex = Math.floor(Math.random() * (index + 1))
       const current = shuffledTracks[index]
-      shuffledTracks[index] = shuffledTracks[randomIndex] as TrackEntity
-      shuffledTracks[randomIndex] = current as TrackEntity
+      const randomTrack = shuffledTracks[randomIndex]
+
+      if (!current || !randomTrack) continue
+
+      shuffledTracks[index] = randomTrack
+      shuffledTracks[randomIndex] = current
     }
 
     dispatch(setPlaylistTracks([currentTrack, ...shuffledTracks]))

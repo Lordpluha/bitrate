@@ -5,14 +5,11 @@ import {
   useListeningHistory,
 } from '@entities/History'
 import { play } from '@entities/Player'
-import type { TrackEntity } from '@entities/Track'
+import { getTrackById } from '@entities/Track'
+import { showApiErrorToast } from '@shared/api/feedback'
 import { useAppDispatch } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
-import {
-  getApiUrl,
-  getPlaylistCoverUrl,
-  getTrackCoverUrl,
-} from '@shared/utils/mediaUrl'
+import { getPlaylistCoverUrl, getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { ChevronDown, MoreHorizontal } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -49,13 +46,12 @@ export const RecentsPage = () => {
     return acc
   }, {})
 
-  const playTrack = (track: TrackEntity) => {
-    dispatch(
-      play({
-        ...track,
-        audioUrl: getApiUrl(`/api/v1/tracks/stream/${track.id}`),
-      }),
-    )
+  const playTrack = async (trackId: string) => {
+    try {
+      dispatch(play(await getTrackById(trackId)))
+    } catch (error) {
+      showApiErrorToast(error, 'Unable to play this track.')
+    }
   }
 
   return (
@@ -82,7 +78,7 @@ export const RecentsPage = () => {
                     >
                       <button
                         className="contents text-left"
-                        onClick={() => playTrack(entry.track as TrackEntity)}
+                        onClick={() => void playTrack(entry.track.id)}
                         type="button"
                       >
                         <Image

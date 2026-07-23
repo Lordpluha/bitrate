@@ -1,9 +1,12 @@
 'use client'
 
+import {
+  albumResponseSchema,
+  albumsResponseSchema,
+} from '@entities/Album/api/client/albumResponse.schema'
 import { clientFetchClient, useMutation } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
-import type { ApiSchemas } from '@spotify/contracts'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 type UseAlbumsParams = {
@@ -32,7 +35,7 @@ export const useAlbums = ({
 
       ensureOkResponse(response, 'Failed to fetch albums')
 
-      return (Array.isArray(data) ? data : []) as ApiSchemas['AlbumEntity'][]
+      return albumsResponseSchema.parse(data)
     },
   })
 
@@ -51,7 +54,7 @@ export const useAlbum = (albumId?: string) =>
 
       ensureOkResponse(response, 'Failed to fetch album')
 
-      return data as unknown as ApiSchemas['AlbumEntity']
+      return albumResponseSchema.parse(data)
     },
     enabled: !!albumId,
   })

@@ -15,6 +15,10 @@ import {
   useMutation as useTanStackMutation,
   useQuery as useTanStackQuery,
 } from '@tanstack/react-query'
+import {
+  safeUserResponseSchema,
+  safeUsersResponseSchema,
+} from './userResponse.schema'
 
 export type SafeUser = ApiSchemas['SafeUserEntity']
 export type UpdateUserPayload = ApiSchemas['UpdateUserDto']
@@ -37,6 +41,7 @@ export const useUsers = ({ username, page = 1, limit = 10 }: UseUsersParams) =>
     },
     {
       enabled: username.trim().length > 0,
+      select: (data) => safeUsersResponseSchema.parse(data),
     },
   )
 
@@ -69,7 +74,7 @@ export const useUserById = (userId?: string) =>
 
       ensureOkResponse(response, 'Failed to fetch user')
 
-      return data as unknown as SafeUser
+      return safeUserResponseSchema.parse(data)
     },
     enabled: !!userId,
   })
@@ -103,7 +108,7 @@ export const useUploadUserAvatar = () => {
 
       ensureOkResponse(response, 'Failed to upload avatar')
 
-      return (await response.json()) as SafeUser
+      return safeUserResponseSchema.parse(await response.json())
     },
     onSuccess: async (user) => {
       queryClient.setQueryData(apiQueryKeys.auth.me, user)

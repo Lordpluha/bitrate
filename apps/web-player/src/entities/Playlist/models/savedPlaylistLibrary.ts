@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export type SavedPlaylistLibraryItem = {
   cover?: string
   id: string
@@ -14,16 +16,23 @@ export const savedPlaylistsChangedEvent =
 export const getSavedPlaylistsStorageKey = (userId: string | undefined) =>
   `${savedPlaylistsStoragePrefix}:${userId ?? 'anonymous'}`
 
-const getSavedPlaylists = (storageKey: string) => {
+const savedPlaylistLibraryItemSchema = z.object({
+  cover: z.string().optional(),
+  id: z.string(),
+  title: z.string(),
+  tracksCount: z.number().optional(),
+  username: z.string(),
+})
+
+const savedPlaylistsSchema = z.array(savedPlaylistLibraryItemSchema)
+
+export const getSavedPlaylists = (storageKey: string) => {
   const rawValue = window.localStorage.getItem(storageKey)
   if (!rawValue) return []
 
   try {
-    const parsedValue = JSON.parse(rawValue)
-
-    return Array.isArray(parsedValue)
-      ? (parsedValue as SavedPlaylistLibraryItem[])
-      : []
+    const result = savedPlaylistsSchema.safeParse(JSON.parse(rawValue))
+    return result.success ? result.data : []
   } catch {
     return []
   }

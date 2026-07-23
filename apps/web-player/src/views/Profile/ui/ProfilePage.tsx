@@ -3,14 +3,12 @@
 import { useListeningHistory } from '@/entities/History'
 import { play } from '@/entities/Player'
 import { useMyPlaylists } from '@/entities/Playlist'
-import { type TrackEntity, useLikedTracks } from '@/entities/Track'
+import { getTrackById, useLikedTracks } from '@/entities/Track'
+import { showApiErrorToast } from '@/shared/api/feedback'
 import { useAppDispatch, useAuth } from '@/shared/hooks'
 import { useArtists } from '@/shared/hooks/useArtists'
-import { getApiUrl, getUserAvatarUrl } from '@/shared/utils/mediaUrl'
-import type {
-  ProfileArtist,
-  ProfileTrack,
-} from '@/views/Profile/model/profile.types'
+import { getUserAvatarUrl } from '@/shared/utils/mediaUrl'
+import type { ProfileTrack } from '@/views/Profile/model/profile.types'
 import { getUniqueTracks } from '@/views/Profile/model/profile.utils'
 import { ProfileActions } from '@/views/Profile/ui/ProfileActions'
 import { ProfileArtistsSection } from '@/views/Profile/ui/ProfileArtistsSection'
@@ -28,23 +26,20 @@ export const ProfilePage = () => {
   const { data: myPlaylistsData, isPending: arePlaylistsPending } =
     useMyPlaylists()
 
-  const artists = Array.isArray(artistsData)
-    ? (artistsData as ProfileArtist[]).slice(0, 5)
-    : []
+  const artists = (artistsData ?? []).slice(0, 5)
   const trackSource: ProfileTrack[] =
     historyData && historyData.length > 0
-      ? historyData.map((entry) => entry.track as ProfileTrack)
-      : ((likedTracks ?? []) as ProfileTrack[])
+      ? historyData.map((entry) => entry.track)
+      : (likedTracks ?? [])
   const topTracks = getUniqueTracks(trackSource).slice(0, 5)
   const myPlaylists = (myPlaylistsData ?? []).slice(0, 6)
 
-  const playTrack = (track: TrackEntity) => {
-    dispatch(
-      play({
-        ...track,
-        audioUrl: getApiUrl(`/api/v1/tracks/stream/${track.id}`),
-      }),
-    )
+  const playTrack = async (track: ProfileTrack) => {
+    try {
+      dispatch(play(await getTrackById(track.id)))
+    } catch (error) {
+      showApiErrorToast(error, 'Unable to play this track.')
+    }
   }
 
   if (isLoading) {
@@ -76,7 +71,10 @@ export const ProfilePage = () => {
       <section className="bg-gradient-to-b from-black/30 to-background-secondary px-6 py-7">
         <ProfileActions />
         <ProfileArtistsSection artists={artists} isPending={isArtistsPending} />
-        <ProfileTracksSection onPlayTrack={playTrack} tracks={topTracks} />
+        <ProfileTracksSection
+          onPlayTrack={(track) => void playTrack(track)}
+          tracks={topTracks}
+        />
         <ProfilePlaylistsSection
           isPending={arePlaylistsPending}
           playlists={myPlaylists}

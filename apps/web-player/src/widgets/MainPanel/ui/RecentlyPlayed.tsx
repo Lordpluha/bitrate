@@ -2,9 +2,10 @@
 
 import { useListeningHistory } from '@entities/History'
 import { play } from '@entities/Player'
-import type { TrackEntity } from '@entities/Track'
+import { getTrackById } from '@entities/Track'
+import { showApiErrorToast } from '@shared/api/feedback'
 import { useAppDispatch } from '@shared/hooks'
-import { getApiUrl, getTrackCoverUrl } from '@shared/utils/mediaUrl'
+import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import Image from 'next/image'
 
 export const RecentlyPlayed = () => {
@@ -14,6 +15,14 @@ export const RecentlyPlayed = () => {
     limit: 6,
   })
   const recentTracks = history ?? []
+
+  const playHistoryTrack = async (trackId: string) => {
+    try {
+      dispatch(play(await getTrackById(trackId)))
+    } catch (error) {
+      showApiErrorToast(error, 'Unable to play this track.')
+    }
+  }
 
   if (isPending || recentTracks.length === 0) return null
 
@@ -27,16 +36,7 @@ export const RecentlyPlayed = () => {
           <button
             className="grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-md p-2 text-left transition-colors hover:bg-surface"
             key={entry.id}
-            onClick={() =>
-              dispatch(
-                play({
-                  ...entry.track,
-                  audioUrl: getApiUrl(
-                    `/api/v1/tracks/stream/${entry.track.id}`,
-                  ),
-                } as unknown as TrackEntity),
-              )
-            }
+            onClick={() => void playHistoryTrack(entry.track.id)}
             type="button"
           >
             <Image

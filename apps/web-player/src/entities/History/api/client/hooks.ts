@@ -3,26 +3,10 @@
 import { clientFetchClient } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
-import type { ApiSchemas } from '@spotify/contracts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { listeningHistoryResponseSchema } from './historyResponse.schema'
 
-type Track = Pick<
-  ApiSchemas['TrackEntity'],
-  'id' | 'title' | 'cover' | 'duration' | 'artistId'
->
-
-export type ListeningHistoryEntry = {
-  id: string
-  listenedAt: string
-  trackId: string
-  track: Track & {
-    artist?: {
-      id: string
-      username: string
-      avatar: string | null
-    }
-  }
-}
+export type { ListeningHistoryEntry } from './historyResponse.schema'
 
 type UseHistoryParams = {
   page?: number
@@ -47,7 +31,7 @@ export const useListeningHistory = ({
 
       ensureOkResponse(response, 'Failed to fetch listening history')
 
-      return (Array.isArray(data) ? data : []) as ListeningHistoryEntry[]
+      return listeningHistoryResponseSchema.parse(data)
     },
   })
 

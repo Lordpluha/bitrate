@@ -1,7 +1,6 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import type { SafeUser } from '@/entities/User'
 import { useUsers } from '@/entities/User'
 import { useSearch } from '@/features/Search/api/client'
 import {
@@ -32,10 +31,7 @@ export const SearchPage = () => {
   const tracks = data?.tracks ?? []
   const albums = data?.albums ?? []
   const playlists = data?.playlists ?? []
-  const usersResponse = usersData as unknown
-  const users = Array.isArray(usersResponse)
-    ? (usersResponse as SafeUser[])
-    : []
+  const users = usersData ?? []
   const hasQuery = query.length > 0
 
   if (category && !hasQuery) {

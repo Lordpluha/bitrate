@@ -24,16 +24,15 @@ export default function MainLayout({ children }: PropsWithChildren) {
     gridTemplateColumns,
     handleCollapseRightSidebar,
     handleExpandRightSidebar,
-    handleLeftResizeKeyDown,
-    handleRightResizeKeyDown,
-    handleStartLeftResize,
-    handleStartRightResize,
     handleToggleLibraryCollapsed,
     handleToggleLibraryExpanded,
     isLibraryCollapsed,
     isLibraryExpanded,
+    isResizing,
     isRightSidebarCollapsed,
+    leftResizeHandleProps,
     leftResizeLimits,
+    rightResizeHandleProps,
     rightResizeLimits,
     shellRef,
   } = useMainShellResize({ hasRightSidebar })
@@ -122,7 +121,10 @@ export default function MainLayout({ children }: PropsWithChildren) {
         )}
       >
         <div
-          className="grid h-full w-full overflow-hidden"
+          className={cn(
+            'grid h-full w-full overflow-hidden',
+            isResizing && 'cursor-col-resize select-none',
+          )}
           ref={shellRef}
           style={{ gridTemplateColumns }}
         >
@@ -144,9 +146,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
             aria-valuemin={leftResizeLimits.min}
             aria-valuenow={Math.round(leftResizeLimits.value)}
             className="relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-[var(--color-spotify-green)]"
-            onKeyDown={handleLeftResizeKeyDown}
-            onPointerDown={handleStartLeftResize}
             tabIndex={0}
+            {...leftResizeHandleProps}
           />
 
           <main className="min-w-0 overflow-hidden">{children}</main>
@@ -163,9 +164,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
                 isRightSidebarCollapsed &&
                   'cursor-default hover:bg-transparent',
               )}
-              onKeyDown={handleRightResizeKeyDown}
-              onPointerDown={handleStartRightResize}
               tabIndex={0}
+              {...rightResizeHandleProps}
             />
           )}
 

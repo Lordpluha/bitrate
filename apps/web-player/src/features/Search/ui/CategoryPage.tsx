@@ -1,6 +1,6 @@
 import { useAlbums } from '@/entities/Album'
 import { usePlaylists } from '@/entities/Playlist'
-import { type TrackEntity, useTracks } from '@/entities/Track'
+import { useTracks } from '@/entities/Track'
 import {
   browseCategories,
   browseImages,
@@ -35,7 +35,7 @@ export const CategoryPage = ({ category }: CategoryPageProps) => {
   const { data: tracksData } = useTracks({ limit: 12 })
   const categoryMatches = mockCategoryRows[category.title] ?? []
   const playlists = Array.isArray(playlistsData) ? playlistsData : []
-  const tracks = Array.isArray(tracksData) ? (tracksData as TrackEntity[]) : []
+  const tracks = tracksData ?? []
 
   const playlistItems: MediaCardItem[] = playlists
     .slice(0, 8)

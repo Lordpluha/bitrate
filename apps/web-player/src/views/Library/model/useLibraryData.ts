@@ -6,9 +6,7 @@ import { useListeningHistory } from '@/entities/History'
 import { useMyPlaylists } from '@/entities/Playlist'
 import { useLikedTracks } from '@/entities/Track'
 import type {
-  LibraryAlbum,
   LibraryData,
-  LibraryPlaylist,
   LibrarySection,
   SortMode,
 } from '@/views/Library/model/library.types'
@@ -40,9 +38,7 @@ export const useLibraryData = ({
   })
 
   const playlists = useMemo(() => {
-    const items = Array.isArray(myPlaylists)
-      ? (myPlaylists as LibraryPlaylist[])
-      : []
+    const items = myPlaylists ?? []
 
     return items
       .filter((playlist) => includesQuery(playlist.title, query))
@@ -74,7 +70,7 @@ export const useLibraryData = ({
   )
 
   const albumItems = useMemo(() => {
-    const items = Array.isArray(albums) ? (albums as LibraryAlbum[]) : []
+    const items = albums ?? []
 
     return items
       .filter((album) => includesQuery(album.title, query))

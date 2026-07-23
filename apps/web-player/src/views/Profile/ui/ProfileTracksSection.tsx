@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import type { TrackEntity } from '@/entities/Track'
 import { ROUTES } from '@/shared/routes'
 import { formatDuration } from '@/shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
@@ -8,7 +7,7 @@ import { getTrackArtistName } from '@/views/Profile/model/profile.utils'
 import { ProfileSection } from '@/views/Profile/ui/ProfileSection'
 
 type ProfileTracksSectionProps = {
-  onPlayTrack: (track: TrackEntity) => void
+  onPlayTrack: (track: ProfileTrack) => void
   tracks: ProfileTrack[]
 }
 

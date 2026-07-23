@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import type { PlaylistWithTracks } from '@/entities/Playlist'
-import { type TrackEntity, TracksList, useLikedTracks } from '@/entities/Track'
+import { TracksList, useLikedTracks } from '@/entities/Track'
 import { useAuth } from '@/shared/hooks'
 import type { TrackViewMode } from '@/views/Playlist/model/playlist.types'
 import { getPlaylistCover } from '@/views/Playlist/model/playlist.utils'
@@ -25,10 +25,7 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
   })
   const [isEditing, setIsEditing] = useState(false)
   const [trackViewMode, setTrackViewMode] = useState<TrackViewMode>('list')
-  const tracks = useMemo(
-    () => ((playlist.tracks ?? []) as TrackEntity[]).filter(Boolean),
-    [playlist.tracks],
-  )
+  const tracks = playlist.tracks ?? []
   const likedTrackIds = useMemo(
     () => new Set((likedTracks ?? []).map((track) => track.id)),
     [likedTracks],

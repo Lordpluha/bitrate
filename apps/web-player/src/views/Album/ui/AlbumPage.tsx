@@ -10,14 +10,9 @@ import { BackButton } from '@shared/ui/BackButton'
 import { DateUtils } from '@shared/utils/DateUtils'
 import { getAlbumCoverUrl } from '@shared/utils/mediaUrl'
 import { TimeUtils } from '@shared/utils/TimeUtils'
-import type { ApiSchemas } from '@spotify/contracts'
 import { ArrowLeft, CheckCircle, Heart } from 'lucide-react'
 import Image from 'next/image'
 import { useMemo, useState } from 'react'
-
-type AlbumWithTracks = ApiSchemas['AlbumEntity'] & {
-  tracks?: TrackEntity[]
-}
 
 const getAlbumDuration = (tracks: TrackEntity[]) =>
   tracks.reduce((duration, track) => duration + (track.duration ?? 0), 0)
@@ -32,7 +27,7 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
   const likeAlbum = useLikeAlbum()
   const unlikeAlbum = useUnlikeAlbum()
   const [isLiked, setIsLiked] = useState(false)
-  const album = data as AlbumWithTracks | undefined
+  const album = data
   const tracks = album?.tracks ?? []
   const albumPlaybackId = `album:${albumId}`
   const likedTrackIds = useMemo(

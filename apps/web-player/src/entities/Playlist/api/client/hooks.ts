@@ -1,5 +1,6 @@
 'use client'
 
+import { playlistsResponseSchema } from '@entities/Playlist/api/client/playlistResponse.schema'
 import {
   clientFetchClient,
   queryOptions,
@@ -38,15 +39,8 @@ export type UpdatePlaylistPayload = {
   description?: string
 }
 
-const isPlaylistEntity = (value: unknown): value is PlaylistEntity => {
-  if (typeof value !== 'object' || value === null) return false
-
-  const playlist = value as Record<string, unknown>
-  return typeof playlist.id === 'string' && typeof playlist.title === 'string'
-}
-
-const normalizePlaylistsResponse = (data: unknown): PlaylistEntity[] =>
-  Array.isArray(data) ? data.filter(isPlaylistEntity) : []
+const normalizePlaylistsResponse = (data: unknown) =>
+  playlistsResponseSchema.parse(data)
 
 const withPlayableTrackUrls = <T extends { tracks?: TrackEntity[] }>(
   playlist: T,
@@ -140,7 +134,7 @@ export const usePlaylist = (
         throw new ApiRequestError('Playlist response is empty', 502)
       }
 
-      return withPlayableTrackUrls(data as PlaylistWithTracks)
+      return withPlayableTrackUrls(data)
     },
     queryKey: playlistQueryKeys.detail(playlistId),
     staleTime: 60_000,
@@ -167,7 +161,11 @@ export const useCreatePlaylist = () => {
 
       ensureOkResponse(response, 'Failed to create playlist')
 
-      return data as PlaylistEntity
+      if (!data) {
+        throw new ApiRequestError('Create playlist response is empty', 502)
+      }
+
+      return data
     },
     onSuccess: async () => {
       await Promise.all([
@@ -201,7 +199,11 @@ export const useUpdatePlaylist = () => {
 
       ensureOkResponse(response, 'Failed to update playlist')
 
-      return data as PlaylistEntity
+      if (!data) {
+        throw new ApiRequestError('Update playlist response is empty', 502)
+      }
+
+      return data
     },
     onSuccess: async (_data, variables) => {
       await Promise.all([

@@ -1,7 +1,17 @@
 'use client'
 
+import {
+  trackResponseSchema,
+  tracksResponseSchema,
+} from '@entities/Track/api/trackResponse.schema'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { queryOptions, useMutation, useQuery } from '@shared/api/client'
+import {
+  clientFetchClient,
+  queryOptions,
+  useMutation,
+  useQuery,
+} from '@shared/api/client'
+import { ensureOkResponse } from '@shared/api/errors'
 import { getApiUrl } from '@shared/utils/mediaUrl'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
@@ -36,26 +46,20 @@ const trackDetailQueryKey = (trackId: string) =>
     params: { path: { id: trackId } },
   }).queryKey
 
-const isTrackEntity = (value: unknown): value is TrackEntity => {
-  if (typeof value !== 'object' || value === null) return false
+const normalizeTracksResponse = (data: unknown) =>
+  tracksResponseSchema.parse(data)
 
-  const track = value as Record<string, unknown>
-  return typeof track.id === 'string' && typeof track.title === 'string'
-}
+export const getTrackById = async (trackId: string) => {
+  const { data, response } = await clientFetchClient.GET(
+    '/api/v1/tracks/{id}',
+    {
+      params: { path: { id: trackId } },
+    },
+  )
 
-const normalizeTracksResponse = (data: unknown) => {
-  if (Array.isArray(data)) return data.filter(isTrackEntity)
+  ensureOkResponse(response, 'Failed to fetch track')
 
-  if (
-    typeof data === 'object' &&
-    data !== null &&
-    'data' in data &&
-    Array.isArray(data.data)
-  ) {
-    return data.data.filter(isTrackEntity)
-  }
-
-  return []
+  return withPlayableUrl(trackResponseSchema.parse(data))
 }
 
 export const useTracks = (
@@ -93,7 +97,7 @@ export const useTrack = (trackId?: string) =>
     {
       enabled: !!trackId,
       select: (track) =>
-        track ? withPlayableUrl(track as TrackEntity) : track,
+        track ? withPlayableUrl(trackResponseSchema.parse(track)) : track,
     },
   )
 

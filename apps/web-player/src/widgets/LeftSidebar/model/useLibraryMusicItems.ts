@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
+  getSavedPlaylists,
   getSavedPlaylistsStorageKey,
   type SavedPlaylistLibraryItem,
   savedPlaylistsChangedEvent,
@@ -8,10 +9,7 @@ import {
 import { fallbackPlaylistCover } from '@/shared/constants'
 import { useAuth } from '@/shared/hooks'
 import { getPlaylistCoverUrl } from '@/shared/utils/mediaUrl'
-import type {
-  LibraryMusicItem,
-  PlaylistLibrarySourceItem,
-} from '@/widgets/LeftSidebar/model/library.types'
+import type { LibraryMusicItem } from '@/widgets/LeftSidebar/model/library.types'
 
 const likedSongsItem: LibraryMusicItem = {
   cover: '/images/liked-songs.jpg',
@@ -35,19 +33,7 @@ export const useLibraryMusicItems = () => {
 
   useEffect(() => {
     const readSavedPlaylists = () => {
-      const rawValue = window.localStorage.getItem(storageKey)
-      if (!rawValue) {
-        setSavedPlaylists([])
-        return
-      }
-      try {
-        const value = JSON.parse(rawValue)
-        setSavedPlaylists(
-          Array.isArray(value) ? (value as SavedPlaylistLibraryItem[]) : [],
-        )
-      } catch {
-        setSavedPlaylists([])
-      }
+      setSavedPlaylists(getSavedPlaylists(storageKey))
     }
 
     readSavedPlaylists()
@@ -61,9 +47,7 @@ export const useLibraryMusicItems = () => {
 
   const items = useMemo(() => {
     const result: LibraryMusicItem[] = [likedSongsItem]
-    const playlistItems = Array.isArray(playlists)
-      ? (playlists as PlaylistLibrarySourceItem[])
-      : []
+    const playlistItems = playlists ?? []
 
     playlistItems.forEach((playlist) => {
       result.push({
