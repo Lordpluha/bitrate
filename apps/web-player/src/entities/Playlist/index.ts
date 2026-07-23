@@ -12,4 +12,5 @@ export {
   useUpdatePlaylist,
 } from './api/client'
 export * from './hooks'
+export * from './models/savedPlaylistLibrary'
 export * from './ui/LikePlaylistButton'

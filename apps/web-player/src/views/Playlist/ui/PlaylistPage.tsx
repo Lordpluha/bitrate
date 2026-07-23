@@ -427,11 +427,13 @@ const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
               </button>
               {playlistId && (
                 <LikePlaylistButton
-                  cover={coverUrl}
-                  ownerName={playlist?.user?.username || 'Unknown Artist'}
-                  playlistId={playlistId}
-                  playlistTitle={playlist?.title || 'playlist'}
-                  tracksCount={tracks.length}
+                  playlist={{
+                    cover: coverUrl,
+                    id: playlistId,
+                    ownerName: playlist?.user?.username || 'Unknown Artist',
+                    title: playlist?.title || 'playlist',
+                    tracksCount: tracks.length,
+                  }}
                 />
               )}
               <button
