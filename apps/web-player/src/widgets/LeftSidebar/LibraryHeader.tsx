@@ -1,19 +1,9 @@
 'use client'
 
-import { useCreatePlaylist, useMyPlaylists } from '@entities/Playlist'
-import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
-import { ROUTES } from '@shared/routes'
 import { PlusIcon, Typography } from '@spotify/ui-react'
-import {
-  Disc3,
-  Folder,
-  Maximize2,
-  Music2,
-  PanelLeftClose,
-  PanelLeftOpen,
-} from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { Maximize2, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import { CreatePlaylistMenu } from '@/widgets/LeftSidebar/CreatePlaylistMenu'
+import { useCreateLibraryPlaylist } from '@/widgets/LeftSidebar/model/useCreateLibraryPlaylist'
 
 type LibraryHeaderProps = {
   isCollapsed?: boolean
@@ -28,84 +18,7 @@ export const LibraryHeader = ({
   onToggleCollapsed,
   onToggleExpanded,
 }: LibraryHeaderProps) => {
-  const router = useRouter()
-  const createButtonRef = useRef<HTMLButtonElement>(null)
-  const createMenuRef = useRef<HTMLDivElement>(null)
-  const isCreatingPlaylistRef = useRef(false)
-  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false)
-  const [createMenuPosition, setCreateMenuPosition] = useState({
-    left: 0,
-    top: 0,
-  })
-  const { data: myPlaylists } = useMyPlaylists()
-  const createPlaylist = useCreatePlaylist()
-
-  const nextPlaylistTitle = useMemo(() => {
-    const highestGeneratedNumber = (myPlaylists ?? []).reduce(
-      (highestNumber, playlist) => {
-        const match = /^My Playlist #(\d+)$/.exec(playlist.title.trim())
-        const playlistNumber = Number(match?.[1] ?? 0)
-
-        return Number.isSafeInteger(playlistNumber)
-          ? Math.max(highestNumber, playlistNumber)
-          : highestNumber
-      },
-      0,
-    )
-
-    return `My Playlist #${highestGeneratedNumber + 1}`
-  }, [myPlaylists])
-
-  useEffect(() => {
-    const handlePointerDown = (event: PointerEvent) => {
-      if (
-        !createMenuRef.current ||
-        createMenuRef.current.contains(event.target as Node)
-      ) {
-        return
-      }
-
-      setIsCreateMenuOpen(false)
-    }
-
-    document.addEventListener('pointerdown', handlePointerDown)
-
-    return () => document.removeEventListener('pointerdown', handlePointerDown)
-  }, [])
-
-  const handleCreatePlaylist = async () => {
-    if (isCreatingPlaylistRef.current) return
-
-    isCreatingPlaylistRef.current = true
-
-    try {
-      const playlist = await createPlaylist.mutateAsync({
-        isPublic: true,
-        title: nextPlaylistTitle,
-      })
-
-      setIsCreateMenuOpen(false)
-      showApiSuccessToast('Added to Your Library.')
-      router.push(ROUTES.playlist(playlist.id))
-    } catch (error) {
-      showApiErrorToast(error, 'Failed to create playlist')
-    } finally {
-      isCreatingPlaylistRef.current = false
-    }
-  }
-
-  const handleToggleCreateMenu = () => {
-    const rect = createButtonRef.current?.getBoundingClientRect()
-
-    if (rect) {
-      setCreateMenuPosition({
-        left: rect.left,
-        top: rect.bottom + 8,
-      })
-    }
-
-    setIsCreateMenuOpen((value) => !value)
-  }
+  const playlist = useCreateLibraryPlaylist()
 
   if (isCollapsed) {
     return (
@@ -122,8 +35,8 @@ export const LibraryHeader = ({
         <button
           aria-label="Create playlist"
           className="rounded-full bg-surface p-3 text-text transition-colors hover:bg-surface-hover"
-          disabled={createPlaylist.isPending}
-          onClick={handleCreatePlaylist}
+          disabled={playlist.isPending}
+          onClick={playlist.create}
           title="Create"
           type="button"
         >
@@ -134,7 +47,7 @@ export const LibraryHeader = ({
   }
 
   return (
-    <div className="group/header flex gap-2 justify-between items-center">
+    <div className="group/header flex items-center justify-between gap-2">
       <div className="flex min-w-0 items-center">
         <div className="w-0 overflow-hidden opacity-0 transition-[width,opacity] duration-200 ease-out group-hover/header:w-8 group-hover/header:opacity-100">
           <button
@@ -151,49 +64,11 @@ export const LibraryHeader = ({
           Your Library
         </Typography>
       </div>
-      <div className="flex gap-2 items-center">
-        <div className="relative" ref={createMenuRef}>
-          <button
-            aria-expanded={isCreateMenuOpen}
-            className="px-4 py-2 rounded-full duration-200 flex items-center gap-2 bg-surface hover:opacity-70 disabled:opacity-60"
-            disabled={createPlaylist.isPending}
-            onClick={handleToggleCreateMenu}
-            ref={createButtonRef}
-            type="button"
-          >
-            <PlusIcon />
-            <span className="font-bold">Create</span>
-          </button>
-          {isCreateMenuOpen && (
-            <div
-              className="fixed z-40 w-82 rounded-md bg-popover p-2 shadow-2xl"
-              style={{
-                left: createMenuPosition.left,
-                top: createMenuPosition.top,
-              }}
-            >
-              <CreateMenuItem
-                description="Create a playlist with songs or episodes"
-                icon={<Music2 size={24} />}
-                onClick={handleCreatePlaylist}
-                title="Playlist"
-              />
-              <CreateMenuItem
-                description="Combine your friends' tastes into a playlist"
-                disabled
-                icon={<Disc3 size={24} />}
-                title="Blend"
-              />
-              <div className="mx-3 my-2 border-t border-white/15" />
-              <CreateMenuItem
-                description="Organize your playlists"
-                disabled
-                icon={<Folder size={24} />}
-                title="Folder"
-              />
-            </div>
-          )}
-        </div>
+      <div className="flex items-center gap-2">
+        <CreatePlaylistMenu
+          isPending={playlist.isPending}
+          onCreate={playlist.create}
+        />
         <button
           aria-label={
             isExpanded ? 'Collapse Your Library' : 'Expand Your Library'
@@ -209,36 +84,3 @@ export const LibraryHeader = ({
     </div>
   )
 }
-
-type CreateMenuItemProps = {
-  description: string
-  disabled?: boolean
-  icon: ReactNode
-  onClick?: () => void
-  title: string
-}
-
-const CreateMenuItem = ({
-  description,
-  disabled = false,
-  icon,
-  onClick,
-  title,
-}: CreateMenuItemProps) => (
-  <button
-    className="grid w-full grid-cols-[48px_minmax(0,1fr)] items-center gap-3 rounded-md px-3 py-2 text-left transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-55"
-    disabled={disabled}
-    onClick={onClick}
-    type="button"
-  >
-    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-text-subdued">
-      {icon}
-    </span>
-    <span className="min-w-0">
-      <span className="block font-bold text-text">{title}</span>
-      <span className="block truncate text-sm text-text-subdued">
-        {description}
-      </span>
-    </span>
-  </button>
-)
