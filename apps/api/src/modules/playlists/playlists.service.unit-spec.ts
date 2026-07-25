@@ -97,12 +97,37 @@ describe('PlaylistsService', () => {
 
   it('getByIdPopulated should include tracks', async () => {
     const playlist = buildPlaylistWithTracks()
-    prisma.playlist.findUniqueOrThrow.mockResolvedValue(playlist)
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
 
     const result = await service.getByIdPopulated('playlist-1')
 
-    expect(prisma.playlist.findUniqueOrThrow).toHaveBeenCalledWith({
+    expect(prisma.playlist.findFirst).toHaveBeenCalledWith({
       where: { id: 'playlist-1', isPublic: true },
+      include: {
+        tracks: { where: { processingStatus: 'READY' } },
+        user: {
+          select: {
+            avatar: true,
+            id: true,
+            username: true,
+          },
+        },
+      },
+    })
+    expect(result).toBe(playlist)
+  })
+
+  it('getByIdPopulated should allow owner private playlists', async () => {
+    const playlist = buildPlaylistWithTracks({ isPublic: false })
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
+
+    const result = await service.getByIdPopulated('playlist-1', 'user-1')
+
+    expect(prisma.playlist.findFirst).toHaveBeenCalledWith({
+      where: {
+        id: 'playlist-1',
+        OR: [{ isPublic: true }, { userId: 'user-1' }],
+      },
       include: {
         tracks: { where: { processingStatus: 'READY' } },
         user: {

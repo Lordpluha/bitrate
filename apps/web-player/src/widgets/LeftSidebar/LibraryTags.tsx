@@ -36,10 +36,10 @@ export const LibraryTags = () => {
             <CarouselItem className="px-1 basis-auto" key={tag}>
               <button
                 className={cn(
-                  'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap',
+                  'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap text-text',
                   selectedTags.includes(tag)
-                    ? 'bg-white text-black'
-                    : 'bg-gray-900/85 text-white hover:bg-opacity-80',
+                    ? 'bg-white'
+                    : 'bg-surface hover:bg-surface-hover',
                 )}
                 onClick={() => toggleTag(tag)}
                 type="button"

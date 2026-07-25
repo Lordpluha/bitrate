@@ -13,11 +13,13 @@ import type { ChangeEvent, FC } from 'react'
 interface PlayerActionsProps {
   volume: number
   onVolumeChange: (volume: number) => void
+  onExpand?: () => void
 }
 
 export const PlayerActions: FC<PlayerActionsProps> = ({
   volume,
   onVolumeChange,
+  onExpand,
 }) => {
   const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
     onVolumeChange(Number(e.target.value))
@@ -28,33 +30,23 @@ export const PlayerActions: FC<PlayerActionsProps> = ({
   }
 
   return (
-    <div className="flex items-center gap-2 min-w-45 justify-end">
-      <button
-        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
-        type="button"
-      >
+    <div className="flex items-center gap-2 min-w-[180px] justify-end">
+      <button className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all">
         <Mic2 size={16} />
       </button>
-      <button
-        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
-        type="button"
-      >
+      <button className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all">
         <ListMusic size={16} />
       </button>
-      <button
-        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
-        type="button"
-      >
+      <button className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all">
         <MonitorSpeaker size={16} />
       </button>
       <button
-        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
         onClick={toggleMute}
-        type="button"
+        className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all"
       >
         {volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </button>
-      <div className="w-24 relative h-1 bg-gray-600 rounded-full group">
+      <div className="w-24 relative h-1 bg-surface rounded-full group">
         <div
           className="absolute top-0 left-0 h-full bg-green-500 rounded-full transition-all"
           style={{
@@ -72,8 +64,10 @@ export const PlayerActions: FC<PlayerActionsProps> = ({
         />
       </div>
       <button
-        className="p-2 text-gray-400 hover:text-white hover:scale-110 transition-all"
+        onClick={onExpand}
+        className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all"
         type="button"
+        aria-label="Open full player"
       >
         <Maximize2 size={16} />
       </button>

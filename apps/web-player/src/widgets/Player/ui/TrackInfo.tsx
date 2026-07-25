@@ -1,3 +1,4 @@
+import { fallbackTrackCover } from '@shared/constants'
 import { cn } from '@spotify/ui-react'
 import { Heart, PictureInPicture2 } from 'lucide-react'
 import Image from 'next/image'
@@ -9,6 +10,7 @@ interface TrackInfoProps {
   coverUrl?: string
   isLiked: boolean
   onLikeToggle?: () => void
+  onPictureInPicture?: () => void
 }
 
 export const TrackInfo: FC<TrackInfoProps> = ({
@@ -17,6 +19,7 @@ export const TrackInfo: FC<TrackInfoProps> = ({
   coverUrl,
   isLiked,
   onLikeToggle,
+  onPictureInPicture,
 }) => {
   return (
     <div className="flex items-center gap-3 min-w-45 w-[50%]">
@@ -24,14 +27,15 @@ export const TrackInfo: FC<TrackInfoProps> = ({
         alt={title}
         className="w-14 h-14 rounded object-cover"
         height={56}
-        src={coverUrl || '/images/default-playlist.jpg'}
+        src={coverUrl || fallbackTrackCover}
+        unoptimized
         width={56}
       />
       <div className="min-w-8">
-        <div className="text-sm font-medium text-white truncate hover:underline cursor-pointer">
+        <div className="text-sm font-medium text-text truncate hover:underline cursor-pointer">
           {title}
         </div>
-        <div className="text-xs text-gray-400 truncate hover:underline hover:text-white cursor-pointer">
+        <div className="text-xs text-text-subdued truncate hover:underline hover:text-text cursor-pointer">
           {artist}
         </div>
       </div>
@@ -45,17 +49,19 @@ export const TrackInfo: FC<TrackInfoProps> = ({
             className={cn(
               isLiked
                 ? 'fill-green-500 text-green-500'
-                : 'text-gray-400 hover:text-white',
+                : 'text-text-subdued hover:text-text',
             )}
             size={16}
           />
         </button>
         <button
+          aria-label="Open floating player"
           className="p-2 hover:scale-110 transition-transform"
+          onClick={onPictureInPicture}
           type="button"
         >
           <PictureInPicture2
-            className="text-gray-400 hover:text-white"
+            className="text-text-subdued hover:text-text"
             size={16}
           />
         </button>

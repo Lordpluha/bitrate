@@ -1,9 +1,25 @@
 import type { NextConfig } from 'next'
 
+const apiBaseUrl =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? 'http://localhost:3000'
+
 const nextConfig = {
+  experimental: {
+    staleTimes: {
+      dynamic: 60,
+    },
+  },
   pageExtensions: ['ts', 'tsx', 'mdx'],
   poweredByHeader: false,
   transpilePackages: ['@spotify/ui-react'],
+  async rewrites() {
+    return [
+      {
+        source: '/api-media/:path*',
+        destination: `${apiBaseUrl}/:path*`,
+      },
+    ]
+  },
   // For debug
   // swcMinify: false,
   // reactStrictMode: false,
@@ -20,6 +36,16 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'picsum.photos',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '3000',
       },
     ],
   },

@@ -56,6 +56,11 @@ export function UserAuth(tokenRequirement: TokenRequirement = 'access') {
   )
 }
 
+/** Allows public access while attaching the authenticated user when cookies are valid. */
+export function OptionalUserAuth() {
+  return applyDecorators(UseGuards(OptionalUserAuthGuard))
+}
+
 /** Represents the user auth guard. */
 @Injectable()
 export class UserAuthGuard implements CanActivate {
@@ -121,6 +126,64 @@ export class UserAuthGuard implements CanActivate {
       if (error instanceof HttpException) throw error
       this.logger.error('Unexpected error in UserAuthGuard', error)
       throw new UnauthorizedException(UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN)
+    }
+
+    return true
+  }
+
+  /** Runs the extract token from cookie operation. */
+  private extractTokenFromCookie(request: Request) {
+    const access_token = request.cookies?.[this.tokenService.getTokenName('access')] as
+      | string
+      | undefined
+    const refresh_token = request.cookies?.[this.tokenService.getTokenName('refresh')] as
+      | string
+      | undefined
+    return { access_token, refresh_token }
+  }
+}
+
+/** Represents the optional user auth guard. */
+@Injectable()
+export class OptionalUserAuthGuard implements CanActivate {
+  /** Creates a new instance. */
+  constructor(
+    private prisma: PrismaService,
+    private tokenService: TokenService,
+  ) {}
+
+  /** Runs the can activate operation. */
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest<Request>()
+    const { access_token, refresh_token } = this.extractTokenFromCookie(request)
+    const tokenCandidates = [
+      { token: access_token, tokenName: 'access_token' },
+      { token: refresh_token, tokenName: 'refresh_token' },
+    ] as const
+
+    for (const { token, tokenName } of tokenCandidates) {
+      if (!token) continue
+
+      try {
+        const payload: JWTPayload = await this.tokenService.verifyToken(token)
+        if (payload.type !== 'user') continue
+
+        const user = await this.prisma.user.findUnique({ where: { id: payload.sub } })
+        if (!user) continue
+
+        const session = await this.prisma.userSession.findFirst({
+          where: {
+            [tokenName]: this.tokenService.hashToken(token),
+            userId: payload.sub,
+          },
+        })
+        if (!session) continue
+
+        request.user = user
+        return true
+      } catch {
+        // Try the next available token candidate.
+      }
     }
 
     return true

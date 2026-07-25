@@ -41,6 +41,39 @@ async function refreshToken(): Promise<boolean> {
   return refreshPromise
 }
 
+const redirectToLogin = () => {
+  if (typeof window === 'undefined') return
+  if (!window.location.pathname.startsWith('/auth/')) {
+    window.location.href = ROUTES.auth.login
+  }
+}
+
+/** Runs a raw request through the same refresh-and-retry flow as the OpenAPI client. */
+export async function fetchWithAuthRefresh(
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+) {
+  const request = () =>
+    fetch(input, {
+      ...init,
+      credentials: init.credentials ?? 'include',
+    })
+
+  let response = await request()
+  if (response.status !== 401) return response
+
+  const requestUrl = input instanceof Request ? input.url : input.toString()
+  if (requestUrl.includes('/auth/')) return response
+
+  if (await refreshToken()) {
+    response = await request()
+    return response
+  }
+
+  redirectToLogin()
+  return response
+}
+
 // Middleware для автоматического refresh при 401
 const authRefreshMiddleware: Middleware = {
   onRequest({ request }) {
@@ -73,15 +106,7 @@ const authRefreshMiddleware: Middleware = {
       }
 
       // Refresh не удался - очищаем cookies и редиректим на логин
-      if (typeof window !== 'undefined') {
-        // Редиректим на логин ТОЛЬКО если мы еще не на странице авторизации
-        const currentPath = window.location.pathname
-        const isOnAuthPage = currentPath.startsWith('/auth/')
-
-        if (!isOnAuthPage) {
-          window.location.href = ROUTES.auth.login
-        }
-      }
+      redirectToLogin()
       return response
     }
 

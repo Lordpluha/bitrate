@@ -1,6 +1,8 @@
 'use client'
 
+import { ThemeSwitcher } from '@features/SwitchTheme'
 import { useAuth } from '@shared/hooks'
+import { ROUTES } from '@shared/routes'
 import { Logo } from '@shared/ui'
 import { MembersIcon, NotificationIcon } from '@spotify/ui-react'
 import Link from 'next/link'
@@ -18,7 +20,7 @@ export const MainHeader = () => {
   return (
     <header className="sticky top-0 left-0 right-0 z-50 transition-colors duration-300">
       <div className="w-full px-5 py-2 flex justify-between items-center relative">
-        <Logo />
+        <Logo href={ROUTES.main} />
 
         <div className="flex max-xl:hidden items-center space-x-4">
           <HomeBtn />
@@ -44,8 +46,11 @@ export const MainHeader = () => {
               >
                 <MembersIcon />
               </Link>
-              <ProfileButton username={user.username || 'User'} />
-              {/* пока оставляем */}
+              <ProfileButton
+                avatar={user.avatar}
+                username={user.username || 'User'}
+              />
+              <ThemeSwitcher />
             </>
           ) : (
             <>

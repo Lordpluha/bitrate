@@ -4,7 +4,11 @@
 @source "../";
 @source "../../node_modules/@spotify/ui-react/src";
 
+/* Touch-device variant — replaces JS useIsTouchDevice */
+@custom-variant touch (@media (hover: none) and (pointer: coarse));
+
 @theme {
+
   /* Breakpoints */
   --breakpoint-xs: 480px;
   --breakpoint-sm: 650px;

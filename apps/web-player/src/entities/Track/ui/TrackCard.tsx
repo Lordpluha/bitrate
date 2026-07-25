@@ -1,69 +1,189 @@
 'use client'
 
-import { play } from '@entities/Player'
+import { play, togglePlay } from '@entities/Player'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { DateUtils } from '@shared/utils/DateUtils'
-import { cn, WaveIcon } from '@spotify/ui-react'
-import { Pause, Play } from 'lucide-react'
+import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
+import { cn } from '@spotify/ui-react'
+import { Pause, Play, X } from 'lucide-react'
+import Image from 'next/image'
+import { LikeTrackButton } from './LikeTrackButton'
+import { WaveAnimated } from './WaveAnimated'
 
 interface TrackCardProps {
   track: TrackEntity
   index: number
+  onPlayTrack?: (track: TrackEntity, index: number) => void
+  onRemoveTrack?: (trackId: string) => void
+  isLiked?: boolean
+  isPlaybackContextActive?: boolean
+  isPlaybackIndexActive?: boolean
+  removable?: boolean
+  viewMode?: 'compact' | 'list'
 }
 
-export const TrackCard = ({ track, index }: TrackCardProps) => {
+export const TrackCard = ({
+  index,
+  isLiked = false,
+  isPlaybackContextActive = true,
+  isPlaybackIndexActive = true,
+  onPlayTrack,
+  onRemoveTrack,
+  removable = false,
+  track,
+  viewMode = 'list',
+}: TrackCardProps) => {
   const dispatch = useAppDispatch()
   const currentTrack = useAppSelector((state) => state.musicPlayer.currentTrack)
   const isPlaying = useAppSelector((state) => state.musicPlayer.isPlaying)
-  const isCurrentTrack = currentTrack?.id === track.id
-
-  const showPlayIcon = !isCurrentTrack
-  const showPauseIcon = isCurrentTrack && isPlaying
-  const showWaveIcon = isCurrentTrack && isPlaying
-  const showGreenNumber = isCurrentTrack && !isPlaying
-  const showNumber =
-    !showPlayIcon && !showPauseIcon && !showWaveIcon && !showGreenNumber
+  const isCurrentTrack =
+    isPlaybackContextActive &&
+    isPlaybackIndexActive &&
+    currentTrack?.id === track.id
+  const coverUrl = getTrackCoverUrl(track.cover)
 
   const handlePlayTrack = (track: TrackEntity) => {
+    if (isCurrentTrack) {
+      dispatch(togglePlay())
+      return
+    }
+
+    if (onPlayTrack) {
+      onPlayTrack(track, index)
+      return
+    }
+
     dispatch(play(track))
   }
 
   return (
-    <button
-      className="grid grid-cols-[16px_4fr_3fr_3fr_1fr] gap-4 px-4 py-2 rounded hover:bg-white/10 group items-center w-full text-left"
-      onClick={() => handlePlayTrack(track)}
-      type="button"
+    <div
+      className={cn(
+        'w-full text-left rounded hover:bg-surface group grid items-center gap-4 px-4 py-2 max-[1024px]:block max-[1024px]:px-3',
+        viewMode === 'compact'
+          ? 'grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_112px]'
+          : 'grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_112px]',
+      )}
     >
-      <div className="text-sm items-center justify-center flex">
-        {showNumber && <span className="text-gray-400">{index + 1}</span>}
-        {showGreenNumber && <span className="text-green-500">{index + 1}</span>}
-        {showPlayIcon && <Play className="text-white" fill="white" size={14} />}
-        {showPauseIcon && (
-          <Pause className="text-white" fill="white" size={14} />
+      <button
+        aria-label={`${isCurrentTrack && isPlaying ? 'Pause' : 'Play'} ${track.title}`}
+        className="relative flex items-center justify-center text-sm max-[1024px]:hidden"
+        onClick={() => handlePlayTrack(track)}
+        type="button"
+      >
+        {/* Non-current track: number → play icon on hover */}
+        {!isCurrentTrack && (
+          <>
+            <span className="text-text-subdued group-hover:hidden">
+              {index + 1}
+            </span>
+            <Play
+              className="text-text hidden group-hover:block"
+              fill="currentColor"
+              size={14}
+            />
+          </>
         )}
-        {showWaveIcon && <WaveIcon />}
-      </div>
-      <div>
+        {/* Current track + playing: wave → pause on hover */}
+        {isCurrentTrack && isPlaying && (
+          <>
+            <WaveAnimated className="group-hover:hidden" />
+            <Pause
+              className="text-text hidden group-hover:block"
+              fill="currentColor"
+              size={14}
+            />
+          </>
+        )}
+        {/* Current track + paused: green number → play on hover */}
+        {isCurrentTrack && !isPlaying && (
+          <>
+            <span className="text-green-500 group-hover:hidden">
+              {index + 1}
+            </span>
+            <Play
+              className="text-green-500 hidden group-hover:block"
+              fill="currentColor"
+              size={14}
+            />
+          </>
+        )}
+      </button>
+
+      <button
+        className="min-w-0 flex items-center gap-3 text-left max-[1024px]:gap-3"
+        onClick={() => handlePlayTrack(track)}
+        type="button"
+      >
         <div
           className={cn(
-            'font-medium',
-            isCurrentTrack ? 'text-green-500' : 'text-white',
-            !isCurrentTrack && 'group-hover:underline',
+            'relative h-10 w-10 shrink-0 overflow-hidden rounded',
+            viewMode === 'list' ? 'block' : 'hidden max-[1024px]:block',
           )}
         >
-          {track.title}
+          <Image
+            alt={track.title}
+            className="w-full h-full object-cover"
+            height={40}
+            src={coverUrl}
+            unoptimized
+            width={40}
+          />
         </div>
-        <div className="text-sm text-gray-400">{track.artistId}</div>
+        <div className="min-w-0">
+          <div
+            className={cn(
+              'font-medium truncate',
+              isCurrentTrack ? 'text-green-500' : 'text-text',
+              !isCurrentTrack && 'group-hover:underline',
+            )}
+          >
+            {track.title}
+          </div>
+          <div className="text-sm text-text-subdued truncate max-[1024px]:text-xs">
+            {track.artistId}
+          </div>
+        </div>
+      </button>
+
+      {viewMode === 'compact' && (
+        <div className="text-sm text-text-subdued truncate max-[1024px]:hidden">
+          {track.artistId}
+        </div>
+      )}
+      <div className="text-sm text-text-subdued truncate max-[1024px]:hidden">
+        Unknown Album
       </div>
-      <div className="text-sm text-gray-400">Unknown Album</div>
-      <div className="text-sm text-gray-400">
+      <div className="text-sm text-text-subdued max-[1024px]:hidden">
         {track.createdAt ? DateUtils.formatDate(track.createdAt) : 'Unknown'}
       </div>
-      <div className="text-sm text-gray-400 text-right">
-        {formatDuration(track.duration ?? 0)}
+      <div className="grid grid-cols-[24px_44px_24px] items-center justify-end gap-2 text-sm text-text-subdued max-[1024px]:hidden">
+        <div className="flex justify-center">
+          <LikeTrackButton
+            initialLiked={isLiked}
+            trackId={track.id}
+            trackTitle={track.title}
+          />
+        </div>
+        <span className="text-right">
+          {formatDuration(track.duration ?? 0)}
+        </span>
+        {removable && (
+          <button
+            aria-label={`Remove ${track.title} from playlist`}
+            className="rounded-full p-1 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100"
+            onClick={(event) => {
+              event.stopPropagation()
+              onRemoveTrack?.(track.id)
+            }}
+            type="button"
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
-    </button>
+    </div>
   )
 }

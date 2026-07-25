@@ -3,6 +3,7 @@
 import { selectCurrentPlaylistName, selectCurrentTrack } from '@entities/Player'
 import { useAppSelector } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
+import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { RollupIcon, SavedSongIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
 import { type FC, useState } from 'react'
@@ -20,9 +21,7 @@ export const CurrentPlaylist: FC<{ onCollapse?: () => void }> = ({
     return null
   }
 
-  const coverUrl = currentTrack.cover?.startsWith('http')
-    ? currentTrack.cover
-    : `${process.env.NEXT_PUBLIC_API_URL}${currentTrack.cover}`
+  const coverUrl = getTrackCoverUrl(currentTrack.cover)
 
   return (
     <div>
@@ -30,7 +29,7 @@ export const CurrentPlaylist: FC<{ onCollapse?: () => void }> = ({
         {onCollapse && (
           <button
             aria-label="Collapse sidebar"
-            className="w-0 opacity-0 group-hover/sidebar:w-auto group-hover/sidebar:opacity-100 transition-all duration-200 overflow-hidden p-1 hover:bg-gray-700/50 rounded mr-2"
+            className="w-0 opacity-0 group-hover/sidebar:w-auto group-hover/sidebar:opacity-100 touch:w-auto touch:opacity-100 transition-all duration-200 overflow-hidden p-1 hover:bg-surface rounded mr-2"
             onClick={onCollapse}
             onMouseEnter={() => setIsIconHovered(true)}
             onMouseLeave={() => setIsIconHovered(false)}
@@ -55,6 +54,7 @@ export const CurrentPlaylist: FC<{ onCollapse?: () => void }> = ({
             fill
             sizes="320px"
             src={coverUrl}
+            unoptimized
           />
         </div>
         <div className="w-full">

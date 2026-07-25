@@ -77,8 +77,10 @@ describe('PlaylistsService (int)', () => {
 
     expect(prismaMock.playlist.findFirst).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { id: 'playlist-1' },
-        include: expect.objectContaining({ tracks: true }),
+        where: { id: 'playlist-1', isPublic: true },
+        include: expect.objectContaining({
+          tracks: { where: { processingStatus: 'READY' } },
+        }),
       }),
     )
     expect(result).toEqual(playlist)
