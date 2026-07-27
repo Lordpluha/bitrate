@@ -54,9 +54,9 @@ export const useLibraryMusicItems = () => {
         cover: getPlaylistCoverUrl(playlist.cover || fallbackPlaylistCover),
         id: playlist.id,
         title: playlist.title,
-        tracksCount: playlist.tracks?.length ?? 0,
+        tracksCount: playlist._count.tracks,
         type: 'playlist',
-        username: playlist.user?.username ?? 'Unknown Artist',
+        username: user?.username ?? 'Playlist',
       })
     })
 
@@ -73,7 +73,7 @@ export const useLibraryMusicItems = () => {
       })
     })
     return result
-  }, [playlists, savedPlaylists])
+  }, [playlists, savedPlaylists, user?.username])
 
   return { isLoading, items }
 }

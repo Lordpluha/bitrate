@@ -3,7 +3,7 @@ import type { TrackEntity } from '@/entities/Track'
 export type TrackViewMode = 'compact' | 'list'
 
 export type PlaylistPlayback = {
-  currentTrackIndex: number
+  currentTrackId?: string
   handlePlayPlaylist: () => void
   handleShufflePlaylist: () => void
   isActive: boolean

@@ -156,7 +156,7 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
         <div className="p-8 text-text-subdued">No tracks in this album</div>
       ) : (
         <TracksList
-          activeTrackIndex={musicPlayer.currentTrackIndex}
+          activeTrackId={musicPlayer.currentTrack?.id}
           isPlaybackContextActive={
             musicPlayer.currentPlaylistId === albumPlaybackId
           }

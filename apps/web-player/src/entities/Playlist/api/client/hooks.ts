@@ -1,6 +1,6 @@
 'use client'
 
-import { playlistsResponseSchema } from '@entities/Playlist/api/client/playlistResponse.schema'
+import { libraryPlaylistsResponseSchema } from '@entities/Playlist/api/client/playlistResponse.schema'
 import {
   clientFetchClient,
   queryOptions,
@@ -40,7 +40,7 @@ export type UpdatePlaylistPayload = {
 }
 
 const normalizePlaylistsResponse = (data: unknown) =>
-  playlistsResponseSchema.parse(data)
+  libraryPlaylistsResponseSchema.parse(data)
 
 const withPlayableTrackUrls = <T extends { tracks?: TrackEntity[] }>(
   playlist: T,

@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { TrackCard } from './TrackCard'
 
 interface TracksListProps {
-  activeTrackIndex?: number
+  activeTrackId?: string
   likedTrackIds?: Iterable<string>
   tracks: TrackEntity[]
   isPlaybackContextActive?: boolean
@@ -16,7 +16,7 @@ interface TracksListProps {
 }
 
 export const TracksList = ({
-  activeTrackIndex,
+  activeTrackId,
   likedTrackIds: providedLikedTrackIds,
   isPlaybackContextActive = true,
   onPlayTrack,
@@ -58,8 +58,8 @@ export const TracksList = ({
             index={index}
             isLiked={likedTrackIds.has(track.id)}
             isPlaybackContextActive={isPlaybackContextActive}
-            isPlaybackIndexActive={
-              activeTrackIndex === undefined || activeTrackIndex === index
+            isPlaybackTrackActive={
+              activeTrackId === undefined || activeTrackId === track.id
             }
             key={track.id}
             onPlayTrack={onPlayTrack}

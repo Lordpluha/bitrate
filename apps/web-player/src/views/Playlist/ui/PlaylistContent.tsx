@@ -77,7 +77,7 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
       />
       {tracks.length > 0 && (
         <TracksList
-          activeTrackIndex={playback.currentTrackIndex}
+          activeTrackId={playback.currentTrackId}
           isPlaybackContextActive={playback.isActive}
           likedTrackIds={likedTrackIds}
           onPlayTrack={playback.playTrack}

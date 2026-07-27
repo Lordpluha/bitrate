@@ -36,7 +36,7 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
       />
       {currentTracks && currentTracks.length > 0 ? (
         <TracksList
-          activeTrackIndex={musicPlayer.currentTrackIndex}
+          activeTrackId={musicPlayer.currentTrack?.id}
           isPlaybackContextActive={
             musicPlayer.currentPlaylistId === likedSongsPlaybackId
           }

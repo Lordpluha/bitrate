@@ -19,7 +19,7 @@ interface TrackCardProps {
   onRemoveTrack?: (trackId: string) => void
   isLiked?: boolean
   isPlaybackContextActive?: boolean
-  isPlaybackIndexActive?: boolean
+  isPlaybackTrackActive?: boolean
   removable?: boolean
   viewMode?: 'compact' | 'list'
 }
@@ -28,7 +28,7 @@ export const TrackCard = ({
   index,
   isLiked = false,
   isPlaybackContextActive = true,
-  isPlaybackIndexActive = true,
+  isPlaybackTrackActive = true,
   onPlayTrack,
   onRemoveTrack,
   removable = false,
@@ -40,7 +40,7 @@ export const TrackCard = ({
   const isPlaying = useAppSelector((state) => state.musicPlayer.isPlaying)
   const isCurrentTrack =
     isPlaybackContextActive &&
-    isPlaybackIndexActive &&
+    isPlaybackTrackActive &&
     currentTrack?.id === track.id
   const coverUrl = getTrackCoverUrl(track.cover)
 

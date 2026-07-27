@@ -25,7 +25,7 @@ const playlistUserResponseSchema = z.object({
 })
 
 export const playlistResponseSchema = z.object({
-  cover: z.string(),
+  cover: z.string().nullable(),
   createdAt: z.string(),
   description: z.string().nullable(),
   id: z.string(),
@@ -43,4 +43,19 @@ export const playlistWithRelationsResponseSchema =
 
 export const playlistsResponseSchema = z.array(
   playlistWithRelationsResponseSchema,
+)
+
+const libraryPlaylistTrackResponseSchema = z.object({
+  cover: z.string().nullable(),
+  id: z.string(),
+  title: z.string(),
+})
+
+export const libraryPlaylistsResponseSchema = z.array(
+  playlistResponseSchema.extend({
+    _count: z.object({
+      tracks: z.number(),
+    }),
+    tracks: z.array(libraryPlaylistTrackResponseSchema).default([]),
+  }),
 )
