@@ -28,6 +28,7 @@ import {
   AuthRefreshSwagger,
   AuthRegistrationSwagger,
   AuthResetPasswordSwagger,
+  EmailAvailabilitySwagger,
   OAuthFacebookCallbackSwagger,
   OAuthFacebookSwagger,
   OAuthGoogleCallbackSwagger,
@@ -100,6 +101,8 @@ export class AuthController {
   }
 
   /** Checks whether an artist email is already registered. */
+  @EmailAvailabilitySwagger()
+  @Throttle({ auth: { limit: 20, ttl: 60_000 } })
   @Get('email-availability')
   async emailAvailability(@Query('email') email: string) {
     if (!email) {

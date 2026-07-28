@@ -1,4 +1,4 @@
-import { cn, ArrowrightIcon } from '@spotify/ui-react'
+import { ArrowrightIcon, cn } from '@spotify/ui-react'
 import Link from 'next/link'
 import links from '../../config/nav-links.json'
 
@@ -49,8 +49,8 @@ export const NavLinks = ({
   const isMobile = variant === 'mobile'
 
   const handleMouseEnter = (link: LinkItem) => {
-    if (isMobile) return;
-    
+    if (isMobile) return
+
     if (link.submenu || link.resources) {
       if (activeSubmenu !== link.title) {
         setActiveSubmenu?.(link.title)
@@ -74,53 +74,58 @@ export const NavLinks = ({
   }
 
   return (
-    <nav className={cn(
-      'flex items-center',
-      isMobile ? 'flex-col gap-4' : 'flex-row gap-8',
-      className
-    )}>
+    <nav
+      className={cn(
+        'flex items-center',
+        isMobile ? 'flex-col gap-4' : 'flex-row gap-8',
+        className,
+      )}
+    >
       {typedLinks.map((link) => {
-          const isActive = activeSubmenu === link.title
-          const hasSubmenu = Boolean(link.submenu || link.resources)
-          
-          const linkClassName = cn(
-            'text-white font-bold',
-            !isMobile && 'link-underline',
-            !isMobile && isActive && 'before:scale-x-100',
-            isMobile && 'text-6xl w-full text-left hover:opacity-70 transition-opacity',
-            isMobile && 'max-sm:text-4xl',
-            isMobile && hasSubmenu && 'flex items-center justify-between'
-          )
+        const isActive = activeSubmenu === link.title
+        const hasSubmenu = Boolean(link.submenu || link.resources)
 
-          if (link.href && !hasSubmenu) {
-            return (
-              <Link
-                key={link.title}
-                href={link.href}
-                className={linkClassName}
-                onMouseEnter={() => handleMouseEnter(link)}
-                onClick={() => handleClick(link)}
-              >
-                {link.title}
-              </Link>
-            )
-          }
+        const linkClassName = cn(
+          'text-white font-bold',
+          !isMobile && 'link-underline',
+          !isMobile && isActive && 'before:scale-x-100',
+          isMobile &&
+            'text-6xl w-full text-left hover:opacity-70 transition-opacity',
+          isMobile && 'max-sm:text-4xl',
+          isMobile && hasSubmenu && 'flex items-center justify-between',
+        )
 
+        if (link.href && !hasSubmenu) {
           return (
-            <button
+            <Link
               className={linkClassName}
-              type='button'
+              href={link.href}
               key={link.title}
-              onMouseEnter={() => handleMouseEnter(link)}
               onClick={() => handleClick(link)}
+              onFocus={() => handleMouseEnter(link)}
+              onMouseEnter={() => handleMouseEnter(link)}
             >
               {link.title}
-              {isMobile && hasSubmenu && (
-                <ArrowrightIcon className="w-7 h-7 shrink-0" />
-              )}
-            </button>
+            </Link>
           )
-        })}
+        }
+
+        return (
+          <button
+            className={linkClassName}
+            key={link.title}
+            onClick={() => handleClick(link)}
+            onFocus={() => handleMouseEnter(link)}
+            onMouseEnter={() => handleMouseEnter(link)}
+            type="button"
+          >
+            {link.title}
+            {isMobile && hasSubmenu && (
+              <ArrowrightIcon className="w-7 h-7 shrink-0" />
+            )}
+          </button>
+        )
+      })}
     </nav>
   )
 }

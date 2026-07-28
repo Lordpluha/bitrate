@@ -5,10 +5,18 @@ import { NextResponse } from 'next/server'
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  const token = request.cookies.get('access_token')
+  const accessToken = request.cookies.get('access_token')
+  const refreshToken = request.cookies.get('refresh_token')
+  const hasRecoverableSession = Boolean(accessToken || refreshToken)
 
   // Определяем auth маршруты (недоступны с токеном)
-  const authRoutes = [ROUTES.auth.login, ROUTES.auth.registration]
+  const authRoutes = [
+    ROUTES.auth.login,
+    ROUTES.auth.twoFactorLogin,
+    ROUTES.auth.registration,
+    ROUTES.auth.forgotPassword,
+    ROUTES.auth.resetPassword(),
+  ]
 
   // Определяем публичные маршруты (доступны без токена)
   const publicRoutes = [...authRoutes, ROUTES.landing]
@@ -17,7 +25,7 @@ export function proxy(request: NextRequest) {
   // const isAuthRoute = authRoutes.some((route) => pathname === route)
 
   // Если пользователь НЕ авторизован
-  if (!token) {
+  if (!hasRecoverableSession) {
     // Если пытается попасть на защищенную страницу (включая /main) - редиректим на логин
     if (!isPublicRoute) {
       return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
@@ -27,7 +35,7 @@ export function proxy(request: NextRequest) {
   }
 
   // Если пользователь авторизован
-  if (token) {
+  if (hasRecoverableSession) {
     // Если находится на auth страницах - редиректим на главную
     // ОТКЛЮЧЕНО: создает цикл редиректов когда токен истек
     // if (isAuthRoute) {

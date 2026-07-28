@@ -1,10 +1,13 @@
+import type { INestApplicationContext } from '@nestjs/common'
+import { NestFactory } from '@nestjs/core'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 import 'dotenv/config'
 import { existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
-import { Queue } from 'bullmq'
 import { Pool } from 'pg'
+import { AppModule } from '../../app.module'
+import { TracksService } from '../../modules/tracks/tracks.service'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
 import { FakerService } from './faker.service'
@@ -16,14 +19,6 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 const adapter = new PrismaPg(pool)
 /** The prisma value. */
 const prisma = new PrismaClient({ adapter })
-
-/** Audio processing queue. */
-const audioQueue = new Queue('audio-processing', {
-  connection: {
-    host: process.env.REDIS_HOST ?? 'localhost',
-    port: Number(process.env.REDIS_PORT ?? 6379),
-  },
-})
 
 // Подготовка директорий для хранения файлов
 /** The storage base value. */
@@ -49,13 +44,24 @@ if (!existsSync(COVERS_DIR)) {
  * Главная функция для запуска всех seed процессов
  */
 async function main() {
+  let app: INestApplicationContext | undefined
+
   try {
     console.log('🌱 Starting database seeding...')
     console.log('📡 NCS Import + Faker Data Generation\n')
 
-    // Создаём сервисы
+    // Создаём NestJS application context для доступа к сервисам
+    console.log('🔧 Initializing NestJS application context...')
+    app = await NestFactory.createApplicationContext(AppModule, {
+      logger: ['error', 'warn', 'log'],
+    })
+
+    // Получаем необходимые сервисы через DI
+    const tracksService = app.get(TracksService)
+
+    // Создаём сервисы для импорта
     const downloadService = new DownloadResourcesService(STORAGE_BASE)
-    const seedService = new SeedService(prisma, downloadService, new FakerService(), audioQueue, TRACKS_DIR)
+    const seedService = new SeedService(prisma, downloadService, new FakerService(), tracksService)
 
     // Шаг 1: Очистка базы данных (опционально)
     if (config.clearBeforeImport) {
@@ -85,7 +91,9 @@ async function main() {
     console.error('\n❌ Fatal error during seeding:', error)
     throw error
   } finally {
-    await audioQueue.close()
+    if (app) {
+      await app.close()
+    }
     await prisma.$disconnect()
     await pool.end()
   }

@@ -37,11 +37,14 @@ export const useVideoSlidePlayback = ({
   const isCenteredSlide = centeredSlideIndex === slideIndex
   const isCenteredPlaying = isCenteredSlide && isActivated && !isPaused
   const shouldHidePoster = isActivated && !isPaused
-  const isAwaitingPlaybackStart = isPaused && (isCenterPlayRequested || (isLgUp ? isHovered : isCenteredSlide))
-  const shouldShowLoader = hasVideo
-    && isActivated
-    && !isManuallyPaused
-    && (isVideoLoading || isAwaitingPlaybackStart)
+  const isAwaitingPlaybackStart =
+    isPaused &&
+    (isCenterPlayRequested || (isLgUp ? isHovered : isCenteredSlide))
+  const shouldShowLoader =
+    hasVideo &&
+    isActivated &&
+    !isManuallyPaused &&
+    (isVideoLoading || isAwaitingPlaybackStart)
 
   const activateVideo = useCallback(() => {
     setIsVideoLoading(!isVideoReady)
@@ -63,43 +66,61 @@ export const useVideoSlidePlayback = ({
     setIsPaused(true)
   }, [])
 
-  const resetPlaybackState = useCallback(({ deactivate, resetLoading }: { deactivate: boolean; resetLoading: boolean }) => {
-    if (resetLoading) {
-      setIsVideoLoading(false)
-    }
+  const resetPlaybackState = useCallback(
+    ({
+      deactivate,
+      resetLoading,
+    }: {
+      deactivate: boolean
+      resetLoading: boolean
+    }) => {
+      if (resetLoading) {
+        setIsVideoLoading(false)
+      }
 
-    if (deactivate) {
-      setIsActivated(false)
-    }
+      if (deactivate) {
+        setIsActivated(false)
+      }
 
-    clearCenterRequestAndManualPause()
-    pauseVideo()
-  }, [clearCenterRequestAndManualPause, pauseVideo])
+      clearCenterRequestAndManualPause()
+      pauseVideo()
+    },
+    [clearCenterRequestAndManualPause, pauseVideo],
+  )
 
-  const playVideo = useCallback(({ clearCenterRequest, clearCenterRequestOnFail }: { clearCenterRequest: boolean; clearCenterRequestOnFail: boolean }) => {
-    const video = videoRef.current
-    if (!video) return false
+  const playVideo = useCallback(
+    ({
+      clearCenterRequest,
+      clearCenterRequestOnFail,
+    }: {
+      clearCenterRequest: boolean
+      clearCenterRequestOnFail: boolean
+    }) => {
+      const video = videoRef.current
+      if (!video) return false
 
-    video.muted = isMuted
-    const playPromise = video.play()
-    if (playPromise) {
-      void playPromise.catch(() => {
-        setIsPaused(true)
+      video.muted = isMuted
+      const playPromise = video.play()
+      if (playPromise) {
+        void playPromise.catch(() => {
+          setIsPaused(true)
 
-        if (clearCenterRequestOnFail) {
-          setIsCenterPlayRequested(false)
-        }
-      })
-    }
+          if (clearCenterRequestOnFail) {
+            setIsCenterPlayRequested(false)
+          }
+        })
+      }
 
-    setIsPaused(false)
+      setIsPaused(false)
 
-    if (clearCenterRequest) {
-      setIsCenterPlayRequested(false)
-    }
+      if (clearCenterRequest) {
+        setIsCenterPlayRequested(false)
+      }
 
-    return true
-  }, [isMuted])
+      return true
+    },
+    [isMuted],
+  )
 
   useEffect(() => {
     if (centeredSlideIndex !== slideIndex) {
@@ -123,11 +144,22 @@ export const useVideoSlidePlayback = ({
     if (!isActivated || isCarouselScrolling) return
     if (isManuallyPaused) return
 
-    const canAutoPlay = isLgUp ? (isHovered || isCenterPlayRequested) : isCenteredSlide
+    const canAutoPlay = isLgUp
+      ? isHovered || isCenterPlayRequested
+      : isCenteredSlide
     if (!canAutoPlay) return
 
     playVideo({ clearCenterRequest: true, clearCenterRequestOnFail: true })
-  }, [isActivated, isCarouselScrolling, isCenteredSlide, isCenterPlayRequested, isHovered, isLgUp, isManuallyPaused, playVideo])
+  }, [
+    isActivated,
+    isCarouselScrolling,
+    isCenteredSlide,
+    isCenterPlayRequested,
+    isHovered,
+    isLgUp,
+    isManuallyPaused,
+    playVideo,
+  ])
 
   useEffect(() => {
     if (isLgUp) return
@@ -157,7 +189,15 @@ export const useVideoSlidePlayback = ({
     }
 
     playVideo({ clearCenterRequest: false, clearCenterRequestOnFail: false })
-  }, [isLgUp, isDragging, clearCenterRequestAndManualPause, hasVideo, isActivated, activateVideo, playVideo])
+  }, [
+    isLgUp,
+    isDragging,
+    clearCenterRequestAndManualPause,
+    hasVideo,
+    isActivated,
+    activateVideo,
+    playVideo,
+  ])
 
   const handleMouseLeave = useCallback(() => {
     if (!isLgUp) return
@@ -225,7 +265,18 @@ export const useVideoSlidePlayback = ({
       setIsPaused(false)
       setIsManuallyPaused(false)
     }
-  }, [isDragging, hasVideo, isLgUp, toggleMuted, canHover, clearCenterRequestAndManualPause, onRequestCenter, slideIndex, isActivated, activateVideo])
+  }, [
+    isDragging,
+    hasVideo,
+    isLgUp,
+    toggleMuted,
+    canHover,
+    clearCenterRequestAndManualPause,
+    onRequestCenter,
+    slideIndex,
+    isActivated,
+    activateVideo,
+  ])
 
   return {
     videoRef,

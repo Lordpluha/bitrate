@@ -1,92 +1,191 @@
 'use client'
 
-import { useAppSelector } from '@shared/hooks'
-import {
-  ResizableHandle,
-  ResizableLayout as ResizableLayoutShadCN,
-  ResizablePanel,
-  RollupIcon,
-} from '@spotify/ui-react'
+import { useAppSelector, useMediaQuery } from '@shared/hooks'
+import { ROUTES } from '@shared/routes'
+import { cn } from '@spotify/ui-react'
 import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
 import { Player } from '@widgets/Player'
 import { RightSidebar } from '@widgets/RightSidebar'
+import { ChevronLeft, House, Library, Plus, Search } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
 import type { PropsWithChildren } from 'react'
-import { useEffect, useState } from 'react'
+import { useMainShellResize } from './useMainShellResize'
 
 export default function MainLayout({ children }: PropsWithChildren) {
   const { currentTrack } = useAppSelector((state) => state.musicPlayer)
   const hasPlayer = !!currentTrack
-  const [isRightSidebarCollapsed, setIsRightSidebarCollapsed] = useState(true)
+  const isDesktop = useMediaQuery('(min-width: 1280px)')
+  const isMobile = useMediaQuery('(max-width: 1024px)')
+  const pathname = usePathname()
+  const router = useRouter()
+  const hasRightSidebar = hasPlayer && isDesktop
+  const {
+    gridTemplateColumns,
+    handleCollapseRightSidebar,
+    handleExpandRightSidebar,
+    handleToggleLibraryCollapsed,
+    handleToggleLibraryExpanded,
+    isLibraryCollapsed,
+    isLibraryExpanded,
+    isResizing,
+    isRightSidebarCollapsed,
+    leftResizeHandleProps,
+    leftResizeLimits,
+    rightResizeHandleProps,
+    rightResizeLimits,
+    shellRef,
+  } = useMainShellResize({ hasRightSidebar })
 
-  // Auto-expand sidebar when player becomes active
-  useEffect(() => {
-    if (hasPlayer && isRightSidebarCollapsed) {
-      setIsRightSidebarCollapsed(false)
-    }
-  }, [hasPlayer, isRightSidebarCollapsed])
+  if (isMobile) {
+    return (
+      <div className="h-dvh bg-background text-text overflow-hidden">
+        <MainHeader />
+
+        <div
+          className={cn(
+            'h-[calc(100dvh-64px)] overflow-y-auto custom-scrollbar',
+            hasPlayer ? 'pb-40' : 'pb-20',
+          )}
+        >
+          {children}
+        </div>
+
+        <nav className="fixed left-0 right-0 bottom-0 z-45 h-16 border-t border-white/10 bg-black/90 backdrop-blur-md">
+          <div className="h-full grid grid-cols-4 px-2">
+            <button
+              className={cn(
+                'flex flex-col items-center justify-center gap-1 text-xs transition-colors',
+                pathname === ROUTES.main
+                  ? 'text-white'
+                  : 'text-white/60 hover:text-white/90',
+              )}
+              onClick={() => router.push(ROUTES.main)}
+              type="button"
+            >
+              <House size={18} />
+              <span>Главная</span>
+            </button>
+
+            <button
+              className={cn(
+                'flex flex-col items-center justify-center gap-1 text-xs transition-colors',
+                pathname.startsWith(ROUTES.search())
+                  ? 'text-white'
+                  : 'text-white/60 hover:text-white/90',
+              )}
+              onClick={() => router.push(ROUTES.search())}
+              type="button"
+            >
+              <Search size={18} />
+              <span>Поиск</span>
+            </button>
+
+            <button
+              className={cn(
+                'flex flex-col items-center justify-center gap-1 text-xs transition-colors',
+                pathname.startsWith(ROUTES.library)
+                  ? 'text-white'
+                  : 'text-white/60 hover:text-white/90',
+              )}
+              onClick={() => router.push(ROUTES.library)}
+              type="button"
+            >
+              <Library size={18} />
+              <span>Your Library</span>
+            </button>
+
+            <button
+              className="flex flex-col items-center justify-center gap-1 text-xs text-white/60 hover:text-white/90 transition-colors"
+              onClick={() => router.push(ROUTES.createPlaylist)}
+              type="button"
+            >
+              <Plus size={18} />
+              <span>Создать</span>
+            </button>
+          </div>
+        </nav>
+
+        <Player />
+      </div>
+    )
+  }
 
   return (
     <div className="h-screen bg-background text-text">
       <MainHeader />
       <div
-        className="transition-all duration-300 ease-in-out"
-        style={{
-          height: hasPlayer
-            ? 'calc(100vh - 64px - 90px)'
-            : 'calc(100vh - 64px)',
-        }}
+        className={cn(
+          'transition-all duration-300 ease-in-out',
+          hasPlayer ? 'h-[calc(100vh-64px-90px)]' : 'h-[calc(100vh-64px)]',
+        )}
       >
-        <div className="h-full">
-          <ResizableLayoutShadCN className="h-full" direction="horizontal">
-            <ResizablePanel
-              className="overflow-hidden rounded-lg bg-bg-secondary m-1.5"
-              defaultSize={20}
-              maxSize={30}
-              minSize={15}
-            >
-              <LeftSidebar />
-            </ResizablePanel>
+        <div
+          className={cn(
+            'grid h-full w-full overflow-hidden',
+            isResizing && 'cursor-col-resize select-none',
+          )}
+          ref={shellRef}
+          style={{ gridTemplateColumns }}
+        >
+          <aside className="min-w-0 overflow-hidden rounded-lg bg-background-secondary m-1.5">
+            <div className="h-full overflow-hidden">
+              <LeftSidebar
+                isCollapsed={isLibraryCollapsed}
+                isExpanded={isLibraryExpanded}
+                onToggleCollapsed={handleToggleLibraryCollapsed}
+                onToggleExpanded={handleToggleLibraryExpanded}
+              />
+            </div>
+          </aside>
 
-            <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
+          <hr
+            aria-label="Resize library"
+            aria-orientation="vertical"
+            aria-valuemax={leftResizeLimits.max}
+            aria-valuemin={leftResizeLimits.min}
+            aria-valuenow={Math.round(leftResizeLimits.value)}
+            className="relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-[var(--color-spotify-green)]"
+            tabIndex={0}
+            {...leftResizeHandleProps}
+          />
 
-            <ResizablePanel
-              className="overflow-hidden rounded-lg bg-background-secondary m-1.5 relative"
-              defaultSize={60}
-              minSize={40}
-            >
-              {children}
-            </ResizablePanel>
+          <main className="min-w-0 overflow-hidden">{children}</main>
 
-            <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
+          {hasRightSidebar && (
+            <hr
+              aria-label="Resize now playing"
+              aria-orientation="vertical"
+              aria-valuemax={rightResizeLimits.max}
+              aria-valuemin={rightResizeLimits.min}
+              aria-valuenow={Math.round(rightResizeLimits.value)}
+              className={cn(
+                'relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-[var(--color-spotify-green)]',
+                isRightSidebarCollapsed &&
+                  'cursor-default hover:bg-transparent',
+              )}
+              tabIndex={0}
+              {...rightResizeHandleProps}
+            />
+          )}
 
-            {!isRightSidebarCollapsed && (
-              <>
-                <ResizableHandle className="w-0 bg-white/10 transition-all duration-200 ease cursor-col-resize relative hover:w-[6px] hover:bg-[var(--color-spotify-green-hover)] active:bg-[var(--color-spotify-green)]" />
-
-                <ResizablePanel
-                  className="overflow-hidden rounded-lg bg-background-secondary m-1.5"
-                  defaultSize={20}
-                  maxSize={30}
-                  minSize={15}
+          {hasRightSidebar && (
+            <aside className="relative min-w-0 overflow-hidden rounded-lg bg-background-secondary m-1.5">
+              <div className="h-full overflow-hidden">
+                <RightSidebar onCollapse={handleCollapseRightSidebar} />
+              </div>
+              {isRightSidebarCollapsed && (
+                <button
+                  aria-label="Expand sidebar"
+                  className="absolute inset-0 z-10 flex items-center justify-center rounded-lg cursor-pointer bg-background-secondary opacity-100 hover:opacity-80 transition-opacity duration-300 ease-in-out"
+                  onClick={handleExpandRightSidebar}
+                  type="button"
                 >
-                  <RightSidebar
-                    onCollapse={() => setIsRightSidebarCollapsed(true)}
-                  />
-                </ResizablePanel>
-              </>
-            )}
-            {isRightSidebarCollapsed && hasPlayer && (
-              <button
-                aria-label="Expand sidebar"
-                className="fixed right-4 top-20 z-50 p-2 rounded-lg bg-background-secondary hover:bg-gray-700/50 transition-colors"
-                onClick={() => setIsRightSidebarCollapsed(false)}
-                type="button"
-              >
-                <RollupIcon height={16} primaryColor={'#b3b3b3'} width={16} />
-              </button>
-            )}
-          </ResizableLayoutShadCN>
+                  <ChevronLeft className="text-gray-300 w-5 h-5 transition-transform duration-300 hover:scale-110" />
+                </button>
+              )}
+            </aside>
+          )}
         </div>
       </div>
       <Player />

@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 
 const AUTH_EXEMPT_PATHS = [
   '/api',
@@ -19,7 +19,8 @@ function isExempt(pathname: string) {
     if (p.endsWith('/') && pathname.startsWith(p)) return true
     if (pathname.startsWith(p)) return true
   }
-  if (pathname.match(/\.(png|jpg|jpeg|svg|css|js|map|ico|webmanifest)$/)) return true
+  if (pathname.match(/\.(png|jpg|jpeg|svg|css|js|map|ico|webmanifest)$/))
+    return true
   return false
 }
 

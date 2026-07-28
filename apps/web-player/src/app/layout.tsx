@@ -1,14 +1,21 @@
 import { ThemeScript } from '@shared/utils'
 import type { Metadata } from 'next'
-import { Source_Sans_3 } from 'next/font/google'
+import { Kanit, Poppins } from 'next/font/google'
 import type { PropsWithChildren } from 'react'
 import { Provider } from './_provider'
 
 import './global.css'
 
-const sourceSans = Source_Sans_3({
+const poppins = Poppins({
   variable: '--font-source-sans',
   subsets: ['latin', 'latin-ext'],
+  weight: ['300', '400', '500', '600', '700'],
+})
+
+const kanit = Kanit({
+  variable: '--font-kanit',
+  subsets: ['latin', 'latin-ext'],
+  weight: ['300', '400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -50,7 +57,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <head>
         <ThemeScript />
       </head>
-      <body className={`${sourceSans.variable}`}>
+      <body className={`${poppins.variable} ${kanit.variable}`}>
         <Provider>{children}</Provider>
       </body>
     </html>

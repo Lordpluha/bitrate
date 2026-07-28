@@ -1,7 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
 import type { CarouselApi } from '@spotify/ui-react'
+import { useEffect, useRef, useState } from 'react'
 
-export const useCarouselSync = (carouselApi: CarouselApi | null, isLgUp: boolean | null) => {
+export const useCarouselSync = (
+  carouselApi: CarouselApi | null,
+  isLgUp: boolean | null,
+) => {
   const [isCarouselScrolling, setIsCarouselScrolling] = useState(false)
   const [currentVideoIndex, setCurrentVideoIndex] = useState(1)
   const [centeredSlideIndex, setCenteredSlideIndex] = useState(0)

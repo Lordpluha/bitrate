@@ -23,13 +23,20 @@ const PopoverTrigger = ({
 const PopoverContent = ({
   ref,
   className,
+  positionerClassName,
   align = 'center',
   sideOffset = 4,
   ...props
 }: ComponentProps<typeof PopoverPrimitive.Popup> &
-  Pick<ComponentProps<typeof PopoverPrimitive.Positioner>, 'sideOffset' | 'align'>) => (
+  Pick<ComponentProps<typeof PopoverPrimitive.Positioner>, 'sideOffset' | 'align'> & {
+    positionerClassName?: string
+  }) => (
   <PopoverPrimitive.Portal>
-    <PopoverPrimitive.Positioner align={align} sideOffset={sideOffset}>
+    <PopoverPrimitive.Positioner
+      align={align}
+      className={positionerClassName}
+      sideOffset={sideOffset}
+    >
       <PopoverPrimitive.Popup
         ref={ref}
         className={cn(

@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Menu, X } from 'lucide-react'
-import { cn } from '@spotify/ui-react'
 import { ArtistLogo } from '@shared/ui'
-import { NavLinks } from '../NavLink/NavLink'
-import { AuthButtons } from '../AuthButtons/AuthButtons'
+import { cn } from '@spotify/ui-react'
+import { Menu, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { SwitchLanguagesButton } from '../../../../shared/ui/SwitchLanguages/SwitchLanguagesButton/SwitchLanguagesButton'
-import { MobileSubMenu } from './MobileSubMenu'
 import links from '../../config/nav-links.json'
+import { AuthButtons } from '../AuthButtons/AuthButtons'
+import { NavLinks } from '../NavLink/NavLink'
+import { MobileSubMenu } from './MobileSubMenu'
 
 export const BurgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -42,9 +42,10 @@ export const BurgerMenu = () => {
   return (
     <>
       <button
-        onClick={toggleMenu}
-        className=" text-white hover:opacity-70 transition-opacity relative"
         aria-label="Toggle menu"
+        className=" text-white hover:opacity-70 transition-opacity relative"
+        onClick={toggleMenu}
+        type="button"
       >
         <div className="w-8 h-8 flex items-center justify-center">
           {isOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
@@ -52,9 +53,11 @@ export const BurgerMenu = () => {
       </button>
 
       {isOpen && (
-        <div
+        <button
+          aria-label="Close menu"
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={closeMenu}
+          type="button"
         />
       )}
 
@@ -64,12 +67,13 @@ export const BurgerMenu = () => {
           isOpen ? 'translate-x-0' : 'translate-x-full',
         )}
       >
-        <div className={cn("p-6 h-full flex flex-col", 'max-sm:p-4')}>
+        <div className={cn('p-6 h-full flex flex-col', 'max-sm:p-4')}>
           <div className="flex justify-between items-center mb-8">
             <ArtistLogo />
             <button
-              onClick={closeMenu}
               className="text-white hover:opacity-70 transition-opacity"
+              onClick={closeMenu}
+              type="button"
             >
               <div className="w-8 h-8 flex items-center justify-center">
                 <X className="w-8 h-8" />
@@ -80,16 +84,16 @@ export const BurgerMenu = () => {
           <div className="flex flex-col gap-4 h-full justify-between">
             <div className="pb-6">
               <div className="flex flex-col mb-6">
-                <NavLinks 
-                  variant="mobile" 
+                <NavLinks
                   onLinkClick={closeMenu}
                   onSubmenuClick={handleSubmenuOpen}
+                  variant="mobile"
                 />
               </div>
-              <div className='flex items-center gap-2'>
+              <div className="flex items-center gap-2">
                 <SwitchLanguagesButton />
                 <span>
-                  <p className='text-white text-base font-bold'>English</p>
+                  <p className="text-white text-base font-bold">English</p>
                 </span>
               </div>
             </div>
@@ -100,12 +104,12 @@ export const BurgerMenu = () => {
       </div>
 
       <MobileSubMenu
-        isOpen={!!activeSubmenu}
-        title={activeSubmenu || ''}
         data={submenuData}
-        type={submenuType as 'features' | 'resources'}
+        isOpen={!!activeSubmenu}
         onClose={handleSubmenuClose}
         onFullClose={closeMenu}
+        title={activeSubmenu || ''}
+        type={submenuType as 'features' | 'resources'}
       />
     </>
   )

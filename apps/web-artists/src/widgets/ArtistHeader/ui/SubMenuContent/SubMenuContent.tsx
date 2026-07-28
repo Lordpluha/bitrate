@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState, useRef, useCallback, memo, useMemo } from 'react'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { cn } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import type React from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import './submenu-animation.css'
 
@@ -49,10 +49,10 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
   onMouseEnter,
   onMouseLeave,
 }) => {
-  const nodeRef = useRef<HTMLDivElement | null>(null);
-  const [contentHeight, setContentHeight] = useState<number>(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const isVisible = (activeSubmenu && submenuData) || isClosing;
+  const nodeRef = useRef<HTMLDivElement | null>(null)
+  const [contentHeight, setContentHeight] = useState<number>(0)
+  const [_isTransitioning, setIsTransitioning] = useState(false)
+  const isVisible = (activeSubmenu && submenuData) || isClosing
 
   const updateHeight = useCallback((immediate = false) => {
     if (!nodeRef.current) {
@@ -105,7 +105,7 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
       return
     }
     updateHeight(true)
-  }, [isVisible, submenuData, updateHeight])
+  }, [isVisible, updateHeight])
 
   return (
     <div
@@ -127,14 +127,14 @@ export const SubMenuContent: React.FC<SubMenuContentProps> = ({
     >
       <SwitchTransition mode="out-in">
         <CSSTransition
+          classNames="submenu-fade"
           key={type}
           nodeRef={nodeRef}
-          timeout={300}
-          classNames="submenu-fade"
-          onExiting={handleExiting}
-          onExited={handleExited}
-          onEntering={handleEntering}
           onEntered={handleEntered}
+          onEntering={handleEntering}
+          onExited={handleExited}
+          onExiting={handleExiting}
+          timeout={300}
         >
           <div ref={nodeRef}>
             {type === 'features' &&
@@ -159,12 +159,14 @@ const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = memo(({ data }) => {
     <div className="container pb-10 pt-8 grid grid-cols-4 gap-8">
       {data.map((group) => (
         <div key={group.title}>
-          <h4 className="text-base text-neutral-400 font-normal">{group.title}</h4>
+          <h4 className="text-base text-neutral-400 font-normal">
+            {group.title}
+          </h4>
 
           {group.sections && group.sections.length > 0 && (
             <ul className="mt-4 space-y-2">
               {group.sections.map((section, idx) => (
-                <li key={section.title} className={cn('mb-4 font-bold')}>
+                <li className={cn('mb-4 font-bold')} key={section.title}>
                   <Link
                     className={cn(
                       'link-underline text-white',
@@ -186,143 +188,152 @@ const FeaturesContent: React.FC<{ data: SubmenuGroup[] }> = memo(({ data }) => {
 
 FeaturesContent.displayName = 'FeaturesContent'
 
-const ResourcesContent: React.FC<{ data: ResourceGroup[] }> = memo(({ data }) => {
-  const allItems = useMemo(
-    () => data.flatMap((group) => group.sections || []),
-    [data]
-  )
-  
-  const newsId = useMemo(
-    () => allItems.find((d) => d.id === 'news')?.id ?? allItems[0]?.id ?? null,
-    [allItems]
-  )
-  
-  const [activeId, setActiveId] = useState<string | null>(newsId)
-  const [lastActiveId, setLastActiveId] = useState<string | null>(newsId)
+const ResourcesContent: React.FC<{ data: ResourceGroup[] }> = memo(
+  ({ data }) => {
+    const allItems = useMemo(
+      () => data.flatMap((group) => group.sections || []),
+      [data],
+    )
 
-  const activeItem = useMemo(
-    () => allItems.find((d) => d.id === activeId) || allItems[0],
-    [allItems, activeId]
-  )
+    const newsId = useMemo(
+      () =>
+        allItems.find((d) => d.id === 'news')?.id ?? allItems[0]?.id ?? null,
+      [allItems],
+    )
 
-  useEffect(() => {
-    allItems.forEach((d) => {
-      const img = new window.Image()
-      img.src = d.imageSrc
-    })
-  }, [allItems])
+    const [activeId, setActiveId] = useState<string | null>(newsId)
+    const [lastActiveId, setLastActiveId] = useState<string | null>(newsId)
 
-  const handleEnter = useCallback((id: string) => {
-    setActiveId(id)
-    setLastActiveId(id)
-    sessionStorage.setItem('resourcesActiveId', id)
-  }, [])
+    const activeItem = useMemo(
+      () => allItems.find((d) => d.id === activeId) || allItems[0],
+      [allItems, activeId],
+    )
 
-  const handleLeave = useCallback(() => {
-    setActiveId(lastActiveId)
-  }, [lastActiveId])
+    useEffect(() => {
+      allItems.forEach((d) => {
+        const img = new window.Image()
+        img.src = d.imageSrc
+      })
+    }, [allItems])
 
-  return (
-    <div className="container grid grid-cols-12 gap-x-6 py-8">
-      {data.map((group, groupIdx) => {
-        const sections = group.sections || []
-        const isFirstGroup = groupIdx === 0
-        
-        return (
-          <section
-            key={group.title}
-            className={cn('flex flex-col gap-4', {
-              'col-span-3': isFirstGroup,
-              'col-span-3 gap-2': !isFirstGroup,
-            })}
-          >
-            <h5 className="text-base text-neutral-400">{group.title}</h5>
-            {sections.map((item, idx) => {
-              const isLargeText = isFirstGroup
-              return isLargeText ? (
-                <h4 key={item.id} className="text-5xl text-neutral-400 font-bold">
-                  <Link
-                    href={item.href}
-                    onMouseEnter={() => handleEnter(item.id)}
-                    onMouseLeave={handleLeave}
-                    onFocus={() => handleEnter(item.id)}
-                    onBlur={handleLeave}
-                    className={cn(
-                      'link-underline',
-                      'transition-colors duration-300',
-                      {
-                        'text-white': activeId === item.id,
-                      },
-                    )}
-                  >
-                    {item.title}
-                  </Link>
-                </h4>
-              ) : (
-                <h5 key={item.id} className="text-2xl text-neutral-400 font-bold">
-                  <Link
-                    href={item.href}
-                    onMouseEnter={() => handleEnter(item.id)}
-                    onMouseLeave={handleLeave}
-                    onFocus={() => handleEnter(item.id)}
-                    onBlur={handleLeave}
-                    className={cn(
-                      'link-underline',
-                      'transition-colors duration-300',
-                      {
-                        'text-white': activeId === item.id,
-                      },
-                    )}
-                  >
-                    {item.title}
-                  </Link>
-                </h5>
-              )
-            })}
-          </section>
-        )
-      })}
+    const handleEnter = useCallback((id: string) => {
+      setActiveId(id)
+      setLastActiveId(id)
+      sessionStorage.setItem('resourcesActiveId', id)
+    }, [])
 
-      <div
-        className="col-span-6 row-span-2 relative rounded-lg overflow-hidden"
-        style={{ height: '420px' }}
-      >
-        {allItems.map((img) => {
-          const isActive = img.id === activeId
+    const handleLeave = useCallback(() => {
+      setActiveId(lastActiveId)
+    }, [lastActiveId])
+
+    return (
+      <div className="container grid grid-cols-12 gap-x-6 py-8">
+        {data.map((group, groupIdx) => {
+          const sections = group.sections || []
+          const isFirstGroup = groupIdx === 0
+
           return (
-            <div
-              aria-hidden={!isActive}
-              className={cn(
-                'absolute aspect-w-16 aspect-h-9 inset-0 transition-all duration-400 ease-in-out transform-gpu',
-                {
-                  'opacity-100 scale-100 z-20': isActive,
-                  'opacity-0 scale-98 z-10 pointer-events-none': !isActive,
-                },
-              )}
-              key={img.id}
+            <section
+              className={cn('flex flex-col gap-4', {
+                'col-span-3': isFirstGroup,
+                'col-span-3 gap-2': !isFirstGroup,
+              })}
+              key={group.title}
             >
-              <Image
-                alt={img.title}
-                className="object-cover"
-                fill
-                priority
-                src={img.imageSrc}
-              />
-            </div>
+              <h5 className="text-base text-neutral-400">{group.title}</h5>
+              {sections.map((item, _idx) => {
+                const isLargeText = isFirstGroup
+                return isLargeText ? (
+                  <h4
+                    className="text-5xl text-neutral-400 font-bold"
+                    key={item.id}
+                  >
+                    <Link
+                      className={cn(
+                        'link-underline',
+                        'transition-colors duration-300',
+                        {
+                          'text-white': activeId === item.id,
+                        },
+                      )}
+                      href={item.href}
+                      onBlur={handleLeave}
+                      onFocus={() => handleEnter(item.id)}
+                      onMouseEnter={() => handleEnter(item.id)}
+                      onMouseLeave={handleLeave}
+                    >
+                      {item.title}
+                    </Link>
+                  </h4>
+                ) : (
+                  <h5
+                    className="text-2xl text-neutral-400 font-bold"
+                    key={item.id}
+                  >
+                    <Link
+                      className={cn(
+                        'link-underline',
+                        'transition-colors duration-300',
+                        {
+                          'text-white': activeId === item.id,
+                        },
+                      )}
+                      href={item.href}
+                      onBlur={handleLeave}
+                      onFocus={() => handleEnter(item.id)}
+                      onMouseEnter={() => handleEnter(item.id)}
+                      onMouseLeave={handleLeave}
+                    >
+                      {item.title}
+                    </Link>
+                  </h5>
+                )
+              })}
+            </section>
           )
         })}
-      </div>
 
-      <div
-        className="col-span-4 flex items-end text-neutral-400 text-base relative overflow-hidden"
-        style={{ minHeight: '3rem' }}
-      >
-        <div className="animate-fade-in" key={activeId}>
-          <p aria-live="polite">{activeItem?.description || ''}</p>
+        <div
+          className="col-span-6 row-span-2 relative rounded-lg overflow-hidden"
+          style={{ height: '420px' }}
+        >
+          {allItems.map((img) => {
+            const isActive = img.id === activeId
+            return (
+              <div
+                aria-hidden={!isActive}
+                className={cn(
+                  'absolute aspect-w-16 aspect-h-9 inset-0 transition-all duration-400 ease-in-out transform-gpu',
+                  {
+                    'opacity-100 scale-100 z-20': isActive,
+                    'opacity-0 scale-98 z-10 pointer-events-none': !isActive,
+                  },
+                )}
+                key={img.id}
+              >
+                <Image
+                  alt={img.title}
+                  className="object-cover"
+                  fill
+                  priority
+                  src={img.imageSrc}
+                />
+              </div>
+            )
+          })}
+        </div>
+
+        <div
+          className="col-span-4 flex items-end text-neutral-400 text-base relative overflow-hidden"
+          style={{ minHeight: '3rem' }}
+        >
+          <div className="animate-fade-in" key={activeId}>
+            <p aria-live="polite">{activeItem?.description || ''}</p>
+          </div>
         </div>
       </div>
-    </div>
-  )
-})
+    )
+  },
+)
 
 ResourcesContent.displayName = 'ResourcesContent'
