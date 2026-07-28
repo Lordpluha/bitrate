@@ -1,4 +1,6 @@
+import { Readable } from 'node:stream'
 import type { CacheService } from '@infra/cache/cache.service'
+import type { StorageService } from '@infra/storage/storage.types'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
 import type { ConfigService } from '@nestjs/config'
@@ -29,6 +31,17 @@ const makeCacheMock = () =>
     wrap: jest.fn().mockImplementation((...args: unknown[]) => (args[3] as () => unknown)()),
   }) as unknown as CacheService
 
+const makeStorageMock = () =>
+  ({
+    exists: jest.fn().mockResolvedValue(true as never),
+    getObjectStream: jest.fn().mockResolvedValue({
+      stream: { pipe: jest.fn() },
+      contentLength: 2048,
+      contentType: 'audio/ogg',
+    } as never),
+    getPresignedUrl: jest.fn(),
+  }) as unknown as jest.Mocked<StorageService>
+
 jest.mock(
   'music-metadata',
   () => ({
@@ -57,13 +70,15 @@ describe('TracksService', () => {
   let prisma: PrismaMock
   let queue: jest.Mocked<Queue>
   let config: jest.Mocked<ConfigService>
+  let storage: jest.Mocked<StorageService>
 
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
     queue = makeQueueMock()
     config = makeConfigMock()
-    service = new TracksService(prisma, queue, config, makeCacheMock())
+    storage = makeStorageMock()
+    service = new TracksService(prisma, queue, config, makeCacheMock(), storage)
   })
 
   describe('findAll', () => {
@@ -131,6 +146,7 @@ describe('TracksService', () => {
       expect(result.bitrate).toBe(192)
       expect(result.format).toBe('opus')
       expect(result.contentType).toBe('audio/ogg')
+      expect(storage.getObjectStream).toHaveBeenCalledWith('track_192.opus')
     })
   })
 
@@ -158,22 +174,21 @@ describe('TracksService', () => {
           bitrate: 192,
         }),
       )
+      expect(storage.getObjectStream).toHaveBeenLastCalledWith('track_192.opus', 'bytes=100-999')
     })
   })
 
   describe('getHlsMasterPlaylist', () => {
-    it('should expose all ready HLS bitrate variants', async () => {
+    it('should return the generated HLS master playlist', async () => {
       prisma.track.findUnique.mockResolvedValue(buildTrack() as never)
-      prisma.trackFile.findMany.mockResolvedValue([
-        { bitrate: 128, format: 'opus', url: 'track_128.opus' },
-        { bitrate: 192, format: 'opus', url: 'track_192.opus' },
-      ] as never)
+      storage.getObjectStream.mockResolvedValue({
+        stream: Readable.from('#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=140800\n128/index.m3u8\n'),
+      } as never)
 
       const playlist = await service.getHlsMasterPlaylist('track-1')
 
       expect(playlist).toContain('128/index.m3u8')
-      expect(playlist).toContain('192/index.m3u8')
-      expect(playlist).toContain('CODECS="mp4a.40.2"')
+      expect(storage.getObjectStream).toHaveBeenCalledWith('tracks/track-1/hls/master.m3u8')
     })
   })
 

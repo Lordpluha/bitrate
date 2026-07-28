@@ -36,13 +36,13 @@ export function convertImage(options: ConvertImageOptions): Promise<ConvertImage
 export interface ConvertAudioToHlsOptions {
   input: string
   outputDir: string
-  bitrate: string
+  bitrates: string[]
   segmentDuration?: number
   timeoutMs?: number
 }
 
 export interface ConvertAudioToHlsResult {
-  playlist: string
+  masterPlaylist: string
   outputDir: string
 }
 

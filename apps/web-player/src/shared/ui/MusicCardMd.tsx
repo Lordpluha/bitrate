@@ -4,7 +4,6 @@ import { ROUTES } from '@shared/routes'
 import { getPlaylistCoverUrl } from '@shared/utils/mediaUrl'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { FC } from 'react'
 
 interface MusicCardMdProps {
   id: string
@@ -14,12 +13,12 @@ interface MusicCardMdProps {
   onClick?: (id: string) => void
 }
 
-export const MusicCardMd: FC<MusicCardMdProps> = ({
+export const MusicCardMd = ({
   id,
   name,
   description,
   imageUrl,
-}) => {
+}: MusicCardMdProps) => {
   const imageSrc = getPlaylistCoverUrl(imageUrl || fallbackPlaylistCover)
   const content = (
     <>

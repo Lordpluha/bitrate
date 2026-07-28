@@ -105,12 +105,22 @@ import { Button } from '@spotify/ui-react'
 ## Documentation ownership
 
 - Root onboarding: `README.md`, `CONTRIBUTING.md`, `CODE_STYLE.md`.
-- Working agent/human rules: `AGENTS.md` and `.claude/`.
+- Working agent/human rules: `CLAUDE.md` and `.claude/`.
 - Durable decisions: `apps/docs/docs/architecture/`.
 - Design/accessibility contracts: `apps/docs/docs/brand/`.
 - Published product/developer guides: `apps/docs/docs/`.
 
 Do not create a second contradictory source of truth; link to the canonical layer.
+
+**Link, don't restate.** `apps/docs/docs/applications/*/overview.md` and
+`apps/docs/docs/getting-started/architecture.md` are human onboarding pages — a short
+summary plus a link to the owning ADR or rule file. Do not reproduce a full FSD layer tree,
+module folder tree, or tech-stack list that a specific `.claude/rules/*.md` or
+`.claude/rules/*.md` file already owns; that tree drifts the moment the rule file changes,
+since no agent workflow reads `apps/docs/` while implementing (see
+[ADR-0011](../../apps/docs/docs/architecture/0011-retire-apps-web.md), a real incident this
+caused, and [ADR-0013](../../apps/docs/docs/architecture/0013-docs-sync.md)). Run
+`/sp-sync-docs` periodically to catch drift before it goes stale for months.
 
 ## Environment variables
 

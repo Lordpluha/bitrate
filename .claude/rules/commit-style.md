@@ -57,6 +57,41 @@ build(ci): add turbo caching to build workflow
 
 Past-tense, plain prose. One short paragraph explaining the non-obvious **why**. No formal sections, no tracker IDs in the body. Most commits need no body — the header is enough.
 
+## Changesets
+
+Every workspace member (`apps/*` and `packages/*`) is `"private": true` — nothing publishes
+to npm — but the repo still uses [Changesets](https://github.com/changesets/changesets) for
+per-workspace versioning and `CHANGELOG.md` generation (`.changeset/config.json`,
+`access: "restricted"`). Add a changeset whenever a change is user/behaviour-visible in an
+app or package, not for pure docs/rules/test-only/chore changes.
+
+`sp-developer` (and `/sp-implement` when working in-session) writes the file directly —
+`pnpm changeset`'s interactive wizard is for humans; an agent just writes the markdown:
+
+```markdown
+---
+'@spotify/web-player': minor
+'@spotify/api': patch
+---
+
+One paragraph, past tense, describing the user/consumer-visible change.
+```
+
+File: `.changeset/<short-kebab-slug>.md` (2-4 words, e.g. `bright-audio-streams.md` —
+matches the existing files' style). List every workspace whose behaviour changed, each with
+its own bump.
+
+**Bump-type rubric:**
+- `patch` — bug fix, internal refactor with no behaviour change, dependency bump with no
+  API change.
+- `minor` — new feature, new endpoint, new component, backward-compatible behaviour change.
+- `major` — breaking change (removed/renamed export, endpoint contract change, removed
+  prop). Rare in a repo where nothing is actually published; still record it so
+  `CHANGELOG.md` reflects the real severity.
+
+A change that touches multiple workspaces (e.g. a new API endpoint plus the UI that
+consumes it) gets one changeset file listing both, not two separate files.
+
 ## Branch naming
 
 `feat/`, `fix/`, `docs/`, `refactor/`, `chore/`, `test/`, `hotfix/` prefix followed by a short slug:
@@ -76,7 +111,7 @@ Before proposing a commit header:
 3. Use `test` for test-only behaviour, `docs` for documentation-only changes, and `chore`
    only when no user/package behaviour changes.
 4. Do not copy issue titles mechanically.
-5. If package behaviour changed, ensure the appropriate `.changeset/*.md` file exists.
+5. If any workspace's behaviour changed, ensure a changeset exists — see "Changesets" above.
 
 ## Mechanical enforcement
 

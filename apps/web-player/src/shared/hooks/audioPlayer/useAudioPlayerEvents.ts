@@ -1,14 +1,7 @@
 'use client'
 
 import { useCallback, useRef } from 'react'
-import {
-  changeTrack,
-  pause,
-  setCurrentTime,
-  setDuration,
-  setIsPlaying,
-  setProgress,
-} from '@/entities/Player'
+import { usePlayerStore } from '@/entities/Player'
 import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
 import type { SlotIndex } from '@/shared/hooks/audioPlayer/audioPlayer.types'
 import {
@@ -19,7 +12,6 @@ import {
   shouldPrefetchNextTrack,
 } from '@/shared/hooks/audioPlayer/audioPlayer.utils'
 import type { useAudioSlots } from '@/shared/hooks/audioPlayer/useAudioSlots'
-import { useAppDispatch } from '@/shared/hooks/useAppDispatch'
 
 type UseAudioPlayerEventsOptions = {
   currentPlaylistId: string | null
@@ -36,7 +28,12 @@ export const useAudioPlayerEvents = ({
   nextTrack,
   slots,
 }: UseAudioPlayerEventsOptions) => {
-  const dispatch = useAppDispatch()
+  const pause = usePlayerStore((state) => state.pause)
+  const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
+  const setCurrentTime = usePlayerStore((state) => state.setCurrentTime)
+  const setDuration = usePlayerStore((state) => state.setDuration)
+  const setProgress = usePlayerStore((state) => state.setProgress)
+  const changeTrack = usePlayerStore((state) => state.changeTrack)
   const isSeekingRef = useRef(false)
   const {
     activeSlotRef,
@@ -57,8 +54,8 @@ export const useAudioPlayerEvents = ({
       return
     }
 
-    void active.play().catch(() => dispatch(setIsPlaying(false)))
-  }, [dispatch, getActiveElement, isPlaying])
+    void active.play().catch(() => setIsPlaying(false))
+  }, [getActiveElement, isPlaying, setIsPlaying])
 
   const onSeek = useCallback(
     (time: number) => {
@@ -73,25 +70,25 @@ export const useAudioPlayerEvents = ({
           )
         }
       }
-      dispatch(setCurrentTime(time))
+      setCurrentTime(time)
     },
-    [currentPlaylistId, currentTrack, dispatch, getActiveElement],
+    [currentPlaylistId, currentTrack, getActiveElement, setCurrentTime],
   )
 
   const changeTrackHandler = useCallback(
     (direction: 'next' | 'prev') => {
-      dispatch(changeTrack(direction))
+      changeTrack(direction)
     },
-    [dispatch],
+    [changeTrack],
   )
 
   const handleLoadedMetadata = useCallback(
     (index: SlotIndex) => {
       if (index !== activeSlotRef.current) return
       const element = slotsRef.current[index].element
-      if (element) dispatch(setDuration(element.duration))
+      if (element) setDuration(element.duration)
     },
-    [activeSlotRef, dispatch, slotsRef],
+    [activeSlotRef, setDuration, slotsRef],
   )
 
   const handleTimeUpdate = useCallback(
@@ -102,9 +99,9 @@ export const useAudioPlayerEvents = ({
 
       const currentTime = element.currentTime
       const duration = element.duration
-      dispatch(setCurrentTime(currentTime))
+      setCurrentTime(currentTime)
       if (Number.isFinite(duration) && duration > 0) {
-        dispatch(setProgress((currentTime / duration) * 100))
+        setProgress((currentTime / duration) * 100)
       }
       if (currentTrack) {
         savePlaybackPosition(
@@ -113,7 +110,14 @@ export const useAudioPlayerEvents = ({
         )
       }
     },
-    [activeSlotRef, currentPlaylistId, currentTrack, dispatch, slotsRef],
+    [
+      activeSlotRef,
+      currentPlaylistId,
+      currentTrack,
+      setCurrentTime,
+      setProgress,
+      slotsRef,
+    ],
   )
 
   const handleProgress = useCallback(
@@ -176,16 +180,16 @@ export const useAudioPlayerEvents = ({
         : null
       if (!currentTrack || slot.playbackKey !== currentPlaybackKey) return
 
-      dispatch(setIsPlaying(nextIsPlaying))
+      setIsPlaying(nextIsPlaying)
     },
-    [activeSlotRef, currentPlaylistId, currentTrack, dispatch, slotsRef],
+    [activeSlotRef, currentPlaylistId, currentTrack, setIsPlaying, slotsRef],
   )
 
   const handleEnded = useCallback(
     (index: SlotIndex) => {
       if (index !== activeSlotRef.current) return
       if (!nextTrack) {
-        dispatch(pause())
+        pause()
         return
       }
 
@@ -203,14 +207,15 @@ export const useAudioPlayerEvents = ({
           getPlaybackKey(currentTrack.id, currentPlaylistId),
         )
       }
-      dispatch(changeTrack('next'))
+      changeTrack('next')
     },
     [
       activeSlotRef,
+      changeTrack,
       currentPlaylistId,
       currentTrack,
-      dispatch,
       nextTrack,
+      pause,
       slotsRef,
       switchToSlot,
     ],

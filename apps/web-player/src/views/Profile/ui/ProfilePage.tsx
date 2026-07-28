@@ -1,11 +1,11 @@
 'use client'
 
 import { useListeningHistory } from '@/entities/History'
-import { play } from '@/entities/Player'
+import { usePlayerStore } from '@/entities/Player'
 import { useMyPlaylists } from '@/entities/Playlist'
 import { getTrackById, useLikedTracks } from '@/entities/Track'
 import { showApiErrorToast } from '@/shared/api/feedback'
-import { useAppDispatch, useAuth } from '@/shared/hooks'
+import { useAuth } from '@/shared/hooks'
 import { useArtists } from '@/shared/hooks/useArtists'
 import { getUserAvatarUrl } from '@/shared/utils/mediaUrl'
 import type { ProfileTrack } from '@/views/Profile/model/profile.types'
@@ -18,7 +18,7 @@ import { ProfilePlaylistsSection } from '@/views/Profile/ui/ProfilePlaylistsSect
 import { ProfileTracksSection } from '@/views/Profile/ui/ProfileTracksSection'
 
 export const ProfilePage = () => {
-  const dispatch = useAppDispatch()
+  const play = usePlayerStore((state) => state.play)
   const { user, isLoading } = useAuth()
   const { data: artistsData, isPending: isArtistsPending } = useArtists(1, 8)
   const { data: historyData } = useListeningHistory({ page: 1, limit: 20 })
@@ -36,7 +36,7 @@ export const ProfilePage = () => {
 
   const playTrack = async (track: ProfileTrack) => {
     try {
-      dispatch(play(await getTrackById(track.id)))
+      play(await getTrackById(track.id))
     } catch (error) {
       showApiErrorToast(error, 'Unable to play this track.')
     }

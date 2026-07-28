@@ -2,7 +2,6 @@ import { fallbackTrackCover } from '@shared/constants'
 import { cn } from '@spotify/ui-react'
 import { Heart, PictureInPicture2 } from 'lucide-react'
 import Image from 'next/image'
-import type { FC } from 'react'
 
 interface TrackInfoProps {
   title: string
@@ -13,14 +12,14 @@ interface TrackInfoProps {
   onPictureInPicture?: () => void
 }
 
-export const TrackInfo: FC<TrackInfoProps> = ({
+export const TrackInfo = ({
   title,
   artist,
   coverUrl,
   isLiked,
   onLikeToggle,
   onPictureInPicture,
-}) => {
+}: TrackInfoProps) => {
   return (
     <div className="flex items-center gap-3 min-w-45 w-[50%]">
       <Image

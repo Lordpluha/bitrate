@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalPassThroughEnv": ["SKIP_GRAPHIFY_INSTALL"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

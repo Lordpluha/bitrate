@@ -17,19 +17,19 @@ import {
 import { Check, ExternalLink } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { FC, HTMLAttributes, ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 
 interface ProfileButtonProps extends HTMLAttributes<HTMLDivElement> {
   avatar?: string | null
   username: string
 }
 
-export const ProfileButton: FC<ProfileButtonProps> = ({
+export const ProfileButton = ({
   avatar,
   className,
   username,
   ...etcDivProps
-}) => {
+}: ProfileButtonProps) => {
   const firstLetter = username.charAt(0).toUpperCase()
   const backgroundColor = generateColor(username)
   const avatarUrl = avatar ? getUserAvatarUrl(avatar) : null

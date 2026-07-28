@@ -1,7 +1,6 @@
 'use client'
 
-import { selectCurrentTrack } from '@entities/Player'
-import { useAppSelector } from '@shared/hooks'
+import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
 import { useArtist } from '@shared/hooks/useArtist'
 import {
   getArtistAvatarUrl,
@@ -9,10 +8,9 @@ import {
 } from '@shared/utils/mediaUrl'
 import { Typography } from '@spotify/ui-react'
 import Image from 'next/image'
-import type { FC } from 'react'
 
-export const AboutArtist: FC = () => {
-  const currentTrack = useAppSelector(selectCurrentTrack)
+export const AboutArtist = () => {
+  const currentTrack = usePlayerStore(selectCurrentTrack)
   const { data: artist, isLoading } = useArtist(currentTrack?.artistId)
 
   if (!currentTrack?.artistId) {

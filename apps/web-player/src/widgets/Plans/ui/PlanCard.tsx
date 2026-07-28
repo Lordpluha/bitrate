@@ -1,7 +1,6 @@
 import { ROUTES } from '@shared/routes'
 import { cn, Typography } from '@spotify/ui-react'
 import Link from 'next/link'
-import type { FC } from 'react'
 
 import type plansConfig from '../config/plans.json'
 
@@ -9,13 +8,13 @@ import { PlansList } from './PlanFeaturesList'
 
 export type PlanCardProps = (typeof plansConfig)[number]
 
-export const PlanCard: FC<PlanCardProps> = ({
+export const PlanCard = ({
   accounts,
   features,
   highlight,
   name,
   price,
-}) => {
+}: PlanCardProps) => {
   return (
     <div
       className={cn(

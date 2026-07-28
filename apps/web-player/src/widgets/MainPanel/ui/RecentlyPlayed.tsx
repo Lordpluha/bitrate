@@ -1,15 +1,14 @@
 'use client'
 
 import { useListeningHistory } from '@entities/History'
-import { play } from '@entities/Player'
+import { usePlayerStore } from '@entities/Player'
 import { getTrackById } from '@entities/Track'
 import { showApiErrorToast } from '@shared/api/feedback'
-import { useAppDispatch } from '@shared/hooks'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import Image from 'next/image'
 
 export const RecentlyPlayed = () => {
-  const dispatch = useAppDispatch()
+  const play = usePlayerStore((state) => state.play)
   const { data: history, isPending } = useListeningHistory({
     page: 1,
     limit: 6,
@@ -18,7 +17,7 @@ export const RecentlyPlayed = () => {
 
   const playHistoryTrack = async (trackId: string) => {
     try {
-      dispatch(play(await getTrackById(trackId)))
+      play(await getTrackById(trackId))
     } catch (error) {
       showApiErrorToast(error, 'Unable to play this track.')
     }

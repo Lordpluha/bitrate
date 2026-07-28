@@ -32,7 +32,7 @@ interface NowPlayingViewProps {
   playlistTitle?: string
 }
 
-export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
+export const NowPlayingView = ({
   isOpen,
   onClose,
   title,
@@ -50,7 +50,7 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
   volume,
   onVolumeChange,
   playlistTitle = 'Playlist',
-}) => {
+}: NowPlayingViewProps) => {
   const [r, g, b] = useImageColor(coverUrl)
 
   useEffect(() => {

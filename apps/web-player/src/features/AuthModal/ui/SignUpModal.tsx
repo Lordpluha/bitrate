@@ -23,7 +23,7 @@ import {
 } from '@spotify/ui-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import type { ComponentProps, FC } from 'react'
+import type { ComponentProps } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import {
   type RegistrationFormData,
@@ -35,10 +35,10 @@ interface SignUpModalProps extends ComponentProps<typeof Modal> {
   onSwitchToLogin?: () => void
 }
 
-export const SignUpModal: FC<SignUpModalProps> = ({
+export const SignUpModal = ({
   onSwitchToLogin,
   ...modalProps
-}) => {
+}: SignUpModalProps) => {
   const router = useRouter()
 
   const { mutate: registerMutate, isPending: isRegistering } = useMutation(

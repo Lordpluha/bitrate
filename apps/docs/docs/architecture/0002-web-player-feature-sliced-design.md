@@ -19,7 +19,7 @@ app → views → widgets → features → entities → shared
 
 Imports flow downward only. Cross-slice imports at the same layer are forbidden.
 Consumers use a slice's `index.ts` public API. New feature/entity slices are created from
-`.claude/templates/` by `sp-develop` through the `fsd-scaffold` skill.
+`.claude/templates/` by `implement` through the `fsd-scaffold` skill.
 
 The current tree contains some legacy naming. New code follows the canonical shape;
 migrations are incremental and must not create a second competing convention.

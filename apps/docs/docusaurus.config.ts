@@ -119,8 +119,8 @@ const config: Config = {
           title: 'Applications',
           items: [
             {
-              label: 'Web App',
-              to: '/docs/applications/web/overview',
+              label: 'Web Player',
+              to: '/docs/applications/web-player/overview',
             },
             {
               label: 'Mobile App',

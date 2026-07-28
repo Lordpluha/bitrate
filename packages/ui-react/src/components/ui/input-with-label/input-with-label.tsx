@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useId } from 'react'
+import { useId } from 'react'
 import { DynamicLabel, type DynamicLabelProps } from '../dynamic-label'
 import { Input, type InputProps } from '../input'
 import { InputProvider } from '../input-context'
@@ -10,12 +10,7 @@ export interface InputWithLabelProps extends InputProps {
   labelProps?: Omit<DynamicLabelProps, 'children' | 'htmlFor'>
 }
 
-export const InputWithLabel: FC<InputWithLabelProps> = ({
-  label,
-  labelProps,
-  id,
-  ...inputProps
-}) => {
+export const InputWithLabel = ({ label, labelProps, id, ...inputProps }: InputWithLabelProps) => {
   const generatedId = useId()
   const inputId = id || generatedId
 

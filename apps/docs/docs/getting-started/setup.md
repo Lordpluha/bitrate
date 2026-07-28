@@ -438,7 +438,7 @@ pnpm turbo build --force
 
 - **[Architecture](/docs/getting-started/architecture)** — Understand the system design
 - **[Backend Guide](/docs/applications/api/overview)** — Deep dive into the API
-- **[Web Guide](/docs/applications/web/overview)** — Frontend development
+- **[Web Player Guide](/docs/applications/web-player/overview)** — Frontend development
 - **[CLI Tools](/docs/packages/cli-tools)** — Custom build utilities
 
 ---

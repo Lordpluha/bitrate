@@ -1,8 +1,7 @@
 'use client'
 
-import { playPlaylist, selectMusicPlayer } from '@entities/Player'
+import { selectMusicPlayer, usePlayerStore } from '@entities/Player'
 import { type TrackEntity, TracksList, useLikedTracks } from '@entities/Track'
-import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { useMemo } from 'react'
 import { getPlaylistDuration } from '../utils/getPlaylistDuration'
 import { PlaylistHeader } from './PlaylistHeader'
@@ -12,8 +11,8 @@ export type LikedSongsPlaylistProps = {
 }
 
 export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
-  const dispatch = useAppDispatch()
-  const musicPlayer = useAppSelector(selectMusicPlayer)
+  const musicPlayer = usePlayerStore(selectMusicPlayer)
+  const playPlaylist = usePlayerStore((state) => state.playPlaylist)
   const { data: likedTracks } = useLikedTracks(1, 100, undefined, {
     initialData: tracks,
   })
@@ -42,15 +41,13 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
           }
           likedTrackIds={likedTrackIds}
           onPlayTrack={(track, index) =>
-            dispatch(
-              playPlaylist({
-                currentPlaylistId: likedSongsPlaybackId,
-                currentPlaylistName: 'Liked Songs',
-                startTrack: track,
-                startTrackIndex: index,
-                tracks: currentTracks,
-              }),
-            )
+            playPlaylist({
+              currentPlaylistId: likedSongsPlaybackId,
+              currentPlaylistName: 'Liked Songs',
+              startTrack: track,
+              startTrackIndex: index,
+              tracks: currentTracks,
+            })
           }
           tracks={currentTracks}
         />

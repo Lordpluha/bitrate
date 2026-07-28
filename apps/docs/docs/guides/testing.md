@@ -140,9 +140,9 @@ E2E-сценарии приложения принадлежат `web-player`.
 | Тип | Расположение | Команда |
 |---|---|---|
 | Unit | `src/**/*.unit-spec.ts(x)` | `pnpm --filter @spotify/web-player test:unit` |
-| Integration | `tests/integration/**/*.int-spec.ts(x)` | `pnpm --filter @spotify/web-player test:int` |
+| Integration | `src/**/*.int-spec.ts(x)` | `pnpm --filter @spotify/web-player test:int` |
 | E2E | `tests/e2e/**/*.e2e-spec.ts` | `pnpm --filter @spotify/web-player test:e2e` |
-| Screenshot | `tests/screenshots/**/*.screenshot-spec.ts` | `pnpm --filter @spotify/web-player test:screenshot` |
+| Screenshot | `src/**/*.screenshot-spec.ts` | `pnpm --filter @spotify/web-player test:screenshot` |
 
 Playwright автоматически запускает Next.js dev server на `http://localhost:3001`, если
 `BASE_URL` не указывает на уже развёрнутое окружение.

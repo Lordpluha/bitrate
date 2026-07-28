@@ -1,7 +1,7 @@
 import { Logo } from '@shared/ui'
 import { Facebook, Inst, Twit } from '@spotify/ui-react'
 import Link from 'next/link'
-import type { FC, HTMLAttributes } from 'react'
+import type { HTMLAttributes } from 'react'
 
 import footerLinks from '../config/footer-links.json'
 
@@ -24,7 +24,7 @@ const iconMap = {
   FacebookIcon: Facebook,
 }
 
-export const Footer: FC<FooterProps> = (props) => {
+export const Footer = (props: FooterProps) => {
   const columns: FooterColumn[] = footerLinks.columns
   const socials: SocialLink[] = footerLinks.socials
 

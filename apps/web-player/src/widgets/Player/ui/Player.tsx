@@ -1,28 +1,18 @@
 'use client'
 
 import {
-  restorePlayerSession,
   selectCurrentPlaylistName,
   selectMusicPlayer,
-  setPlaylistTracks,
-  setShuffleEnabled,
-  setVolume,
-} from '@entities/Player/store/PlayerSlice'
+  usePlayerStore,
+} from '@entities/Player'
 import { useLikeTrack, useUnlikeTrack } from '@entities/Track/api/client'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { showApiSuccessToast } from '@shared/api/feedback'
-import { useAppDispatch, useAppSelector, useAudioPlayer } from '@shared/hooks'
+import { useAudioPlayer } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { useLikedTracks } from '@shared/hooks/useLikedTracks'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import {
-  type FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FloatingPlayerWindow } from './FloatingPlayerWindow'
 import { MiniPlayer } from './MiniPlayer'
 import { NowPlayingView } from './NowPlayingView'
@@ -45,7 +35,7 @@ type PersistedPlayerSession = {
   volume: number
 }
 
-export const Player: FC = () => {
+export const Player = () => {
   const {
     currentTrack,
     currentPlaylistId,
@@ -57,9 +47,14 @@ export const Player: FC = () => {
     isShuffled,
     playlist,
     progress,
-  } = useAppSelector(selectMusicPlayer)
-  const currentPlaylistName = useAppSelector(selectCurrentPlaylistName)
-  const dispatch = useAppDispatch()
+  } = usePlayerStore(selectMusicPlayer)
+  const currentPlaylistName = usePlayerStore(selectCurrentPlaylistName)
+  const restorePlayerSession = usePlayerStore(
+    (state) => state.restorePlayerSession,
+  )
+  const setPlaylistTracks = usePlayerStore((state) => state.setPlaylistTracks)
+  const setShuffleEnabled = usePlayerStore((state) => state.setShuffleEnabled)
+  const setVolume = usePlayerStore((state) => state.setVolume)
   const [isVisible, setIsVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [floatingWindow, setFloatingWindow] = useState<Window | null>(null)
@@ -105,11 +100,11 @@ export const Player: FC = () => {
       const session = JSON.parse(rawSession) as PersistedPlayerSession
       if (!session.currentTrack?.id) return
 
-      dispatch(restorePlayerSession(session))
+      restorePlayerSession(session)
     } catch {
       window.localStorage.removeItem(PLAYER_SESSION_STORAGE_KEY)
     }
-  }, [currentTrack, dispatch])
+  }, [currentTrack, restorePlayerSession])
 
   useEffect(() => {
     if (!currentTrack || typeof window === 'undefined') return
@@ -199,16 +194,16 @@ export const Player: FC = () => {
     if (!currentTrack) return
 
     if (playlist.length < 2) {
-      dispatch(setShuffleEnabled(!isShuffled))
+      setShuffleEnabled(!isShuffled)
       return
     }
 
     if (isShuffled) {
       const originalPlaylist = originalPlaylistRef.current
       if (originalPlaylist.length > 0) {
-        dispatch(setPlaylistTracks(originalPlaylist))
+        setPlaylistTracks(originalPlaylist)
       }
-      dispatch(setShuffleEnabled(false))
+      setShuffleEnabled(false)
       return
     }
 
@@ -229,9 +224,9 @@ export const Player: FC = () => {
       shuffledTracks[randomIndex] = current
     }
 
-    dispatch(setPlaylistTracks([currentTrack, ...shuffledTracks]))
-    dispatch(setShuffleEnabled(true))
-  }, [currentTrack, dispatch, isShuffled, playlist])
+    setPlaylistTracks([currentTrack, ...shuffledTracks])
+    setShuffleEnabled(true)
+  }, [currentTrack, isShuffled, playlist, setPlaylistTracks, setShuffleEnabled])
 
   const closeFloatingPlayer = useCallback(() => {
     if (floatingWindow && !floatingWindow.closed) {
@@ -281,7 +276,7 @@ export const Player: FC = () => {
   return (
     <>
       {([0, 1] as const).map((slot) => (
-        // biome-ignore lint/a11y/useMediaCaption: audio-only playback has no caption track
+        // biome-ignore lint/a11y/useMediaCaption: this element plays audio-only music
         <audio
           data-active={activeSlot === slot}
           key={slot}
@@ -327,7 +322,7 @@ export const Player: FC = () => {
         onPlayPause={togglePlayPause}
         onPrevious={() => changeTrack('prev')}
         onSeek={onSeek}
-        onVolumeChange={(vol) => dispatch(setVolume(vol))}
+        onVolumeChange={setVolume}
         playlistTitle={currentPlaylistName || 'Playlist'}
         title={currentTrack.title || 'Unknown'}
         volume={volume}
@@ -381,7 +376,7 @@ export const Player: FC = () => {
         <div className="w-[35%] flex justify-end">
           <PlayerActions
             onExpand={() => setIsExpanded(true)}
-            onVolumeChange={(vol) => dispatch(setVolume(vol))}
+            onVolumeChange={setVolume}
             volume={volume}
           />
         </div>

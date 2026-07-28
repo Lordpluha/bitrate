@@ -1,8 +1,7 @@
 # Code style
 
-The canonical conventions for this monorepo live in [`AGENTS.md`](./AGENTS.md). Claude
-Code receives the same rules through [`CLAUDE.md`](./CLAUDE.md) and the deeper references
-under [`.claude/rules/`](./.claude/rules/).
+The canonical conventions for this monorepo live in [`CLAUDE.md`](./CLAUDE.md) and the
+deeper references under [`.claude/rules/`](./.claude/rules/).
 
 This file is the stable human-facing entry point.
 
@@ -28,4 +27,4 @@ Do not weaken TypeScript, lint, test, or architecture settings to make a change 
   spacing, radii, or shadows.
 - Comments are short factual TSDoc. Tracker metadata belongs in issues and commits.
 
-When this file and a deeper project rule disagree, `AGENTS.md` and `.claude/rules/` win.
+When this file and a deeper project rule disagree, `CLAUDE.md` and `.claude/rules/` win.

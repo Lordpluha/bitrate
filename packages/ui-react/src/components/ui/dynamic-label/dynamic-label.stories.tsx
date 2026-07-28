@@ -1,11 +1,11 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
-import type { ChangeEvent, FC, FocusEvent } from 'react'
+import type { ChangeEvent, FocusEvent } from 'react'
 import { Input, type InputProps } from '../input'
 import { InputProvider, useInputContext } from '../input-context'
 import { PasswordInput, type PasswordInputProps } from '../password-input'
 import { DynamicLabel } from './dynamic-label'
 
-const InputWithContext: FC<InputProps> = ({ className, type, variant, ...props }) => {
+const InputWithContext = ({ className, type, variant, ...props }: InputProps) => {
   const context = useInputContext()
   if (!context) throw new Error('InputWithContext must be used within InputProvider')
   const { setFocused, setValue } = context
@@ -39,7 +39,7 @@ const InputWithContext: FC<InputProps> = ({ className, type, variant, ...props }
   )
 }
 
-const PasswordInputWithContext: FC<PasswordInputProps> = ({ className, ...props }) => {
+const PasswordInputWithContext = ({ className, ...props }: PasswordInputProps) => {
   const context = useInputContext()
   if (!context) throw new Error('PasswordInputWithContext must be used within InputProvider')
   const { setFocused, setValue } = context

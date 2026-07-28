@@ -68,42 +68,22 @@ TypeScript is used throughout the entire stack:
 
 #### Backend (NestJS)
 
-```
-apps/api/src/
-├── modules/          # Feature modules (auth, users, tracks, playlists…)
-│   └── <feature>/
-│       ├── <feature>.controller.ts
-│       ├── <feature>.service.ts
-│       └── <feature>.module.ts
-├── common/           # Shared utilities (decorators, guards, filters)
-└── infra/            # Infrastructure (database, config)
-```
-
-Path aliases: `@modules/`, `@infra/`
-
-**Three test tiers:**
-- `*.spec.ts` — Unit (mocked Prisma + services)
-- `*.int-spec.ts` — Integration (real Prisma + test DB, in-process)
-- `test/e2e/**/*.e2e-spec.ts` — E2E (HTTP against running API)
+Each feature lives in its own module under `apps/api/src/modules/<feature>/`
+(controller/service/module plus decorators, DTOs, entities, errors), with
+`apps/api/src/common/` and `apps/api/src/infra/` for cross-cutting utilities and
+infrastructure. Path aliases: `@modules/`, `@infra/`, `@common/`, `@test/`. Three Jest test
+tiers (`.unit-spec.ts`, `.int-spec.ts`, `test/e2e/**/*.e2e-spec.ts`). Full module anatomy,
+the Swagger-decorator rule, and test conventions: `api-rules` (`.claude/rules/api-rules.md`)
+and the `jest` skill.
 
 #### Frontend (Feature-Sliced Design)
 
-```
-apps/web-player/src/
-├── app/              # Next.js App Router pages & layouts
-├── views/            # Full-page view compositions
-├── widgets/          # Self-contained page sections (Header, Player, LeftSidebar…)
-├── features/         # User interactions (Album, Playlist, AuthModal…)
-├── entities/         # Domain objects (Track, User, Player…)
-└── shared/           # Cross-cutting utilities
-    ├── api/          # openapi-fetch client + openapi-react-query wrapper
-    ├── hooks/
-    ├── store/
-    ├── ui/
-    ├── routes/
-    ├── constants/
-    └── validation/
-```
+`apps/web-player/src/` is organized in FSD layers (`app → views → widgets → features →
+entities → shared`), each importing only from the layers below it. Full layer anatomy, the
+cross-layer import permission matrix, and the public-API barrel rule:
+`.claude/rules/fsd-web-player.md`; the API client, state management, and component
+conventions built on top of it: `web-player-rules`
+(`.claude/rules/web-player-rules.md`).
 
 **API client** (`src/shared/api/client/`):
 - `fetchClient.ts` — `openapi-fetch` with automatic JWT refresh middleware

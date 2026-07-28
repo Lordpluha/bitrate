@@ -87,7 +87,7 @@ A primitive used by two or more unrelated slices belongs one layer lower. Ask: "
 
 ## Adding a new slice
 
-When `sp-develop` creates a new `feature`, `entity`, `widget`, or `view`, it applies the
+When `implement` creates a new `feature`, `entity`, `widget`, or `view`, it applies the
 `fsd-scaffold` skill and copies the canonical `.claude/templates/` tree. Do not hand-roll a
 new feature/entity/widget/view tree.
 
@@ -97,3 +97,11 @@ does not invent an OpenAPI endpoint.
 ## Enforcing FSD
 
 Biome's `noRestrictedImports` rules enforce layer boundaries. Run `pnpm lint` — any violation appears as an error. Fix before committing.
+
+## Related rules and skills
+
+- `web-player-rules` — the API client, state management, component, and routing
+  conventions built on top of this layer structure.
+- `fsd-scaffold` skill — the exact file trees to generate for a new slice; this file only
+  covers what's allowed, not what to generate.
+- `project-conventions` — the cross-cutting rules this file specializes.

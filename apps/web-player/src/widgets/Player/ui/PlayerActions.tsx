@@ -8,7 +8,7 @@ import {
   Volume2,
   VolumeX,
 } from 'lucide-react'
-import type { ChangeEvent, FC } from 'react'
+import type { ChangeEvent } from 'react'
 
 interface PlayerActionsProps {
   volume: number
@@ -16,11 +16,11 @@ interface PlayerActionsProps {
   onExpand?: () => void
 }
 
-export const PlayerActions: FC<PlayerActionsProps> = ({
+export const PlayerActions = ({
   volume,
   onVolumeChange,
   onExpand,
-}) => {
+}: PlayerActionsProps) => {
   const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
     onVolumeChange(Number(e.target.value))
   }

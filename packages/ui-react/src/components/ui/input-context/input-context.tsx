@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  createContext,
-  type FC,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 
 export interface InputContextValue {
   isFocused: boolean
@@ -24,7 +16,9 @@ export const useInputContext = () => {
   return context
 }
 
-export const InputProvider: FC<{ children?: ReactNode }> = ({ children }) => {
+type InputProviderProps = { children?: ReactNode }
+
+export const InputProvider = ({ children }: InputProviderProps) => {
   const [isFocused, setFocused] = useState(false)
   const [hasValue, setValue] = useState(false)
 

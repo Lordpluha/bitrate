@@ -1,5 +1,7 @@
 import type { AppConfig } from '@common/config'
+import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { getQueueToken } from '@nestjs/bullmq'
 import { NotFoundException } from '@nestjs/common'
@@ -22,9 +24,13 @@ const makeConfigMock = () =>
     }),
   }) as unknown as jest.Mocked<ConfigService<AppConfig>>
 
-jest.mock('music-metadata', () => ({
-  parseFile: jest.fn().mockResolvedValue({ format: { duration: 100, bitrate: 128000 } } as never),
-}))
+jest.mock(
+  'music-metadata',
+  () => ({
+    parseFile: jest.fn().mockResolvedValue({ format: { duration: 100, bitrate: 128000 } } as never),
+  }),
+  { virtual: true },
+)
 
 jest.mock('node:fs', () => ({
   createReadStream: jest.fn().mockReturnValue({ pipe: jest.fn() }),
@@ -48,16 +54,31 @@ describe('TracksService (int)', () => {
         TracksService,
         { provide: PrismaService, useValue: prismaMock },
         { provide: getQueueToken('audio-processing'), useValue: queueMock },
+        { provide: ConfigService, useValue: configMock },
+        {
+          provide: CacheService,
+          useValue: {
+            wrap: jest
+              .fn()
+              .mockImplementation((...args: unknown[]) => (args[3] as () => unknown)()),
+            invalidate: jest.fn(),
+          },
+        },
+        {
+          provide: STORAGE_SERVICE,
+          useValue: {
+            getObjectStream: jest.fn(),
+            exists: jest.fn(),
+            getPresignedUrl: jest.fn(),
+          },
+        },
       ],
-    })
-      .overrideProvider(ConfigService)
-      .useValue(configMock)
-      .compile()
+    }).compile()
 
     service = module.get(TracksService)
   })
 
-  afterAll(() => module.close())
+  afterAll(() => module?.close())
 
   beforeEach(() => {
     resetPrismaMock()
@@ -83,7 +104,7 @@ describe('TracksService (int)', () => {
 
   it('findTrackById should return track from DB', async () => {
     const track = buildTrack()
-    prismaMock.track.findUnique.mockResolvedValue(track as never)
+    prismaMock.track.findFirst.mockResolvedValue(track as never)
 
     const result = await service.findTrackById('track-1')
 
@@ -109,7 +130,11 @@ describe('TracksService (int)', () => {
 
     const result = await service.create('artist-1', { title: 'Track' } as never, audioFile)
 
-    expect(queueMock.add).toHaveBeenCalledWith('convert-audio', expect.any(Object))
+    expect(queueMock.add).toHaveBeenCalledWith(
+      'convert-audio',
+      expect.any(Object),
+      expect.objectContaining({ attempts: 5 }),
+    )
     expect(result).toEqual(track)
   })
 })

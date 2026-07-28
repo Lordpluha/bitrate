@@ -1,8 +1,11 @@
 'use client'
 
-import { play, togglePlay } from '@entities/Player'
+import {
+  selectCurrentTrack,
+  selectIsPlaying,
+  usePlayerStore,
+} from '@entities/Player'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { DateUtils } from '@shared/utils/DateUtils'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
@@ -35,9 +38,10 @@ export const TrackCard = ({
   track,
   viewMode = 'list',
 }: TrackCardProps) => {
-  const dispatch = useAppDispatch()
-  const currentTrack = useAppSelector((state) => state.musicPlayer.currentTrack)
-  const isPlaying = useAppSelector((state) => state.musicPlayer.isPlaying)
+  const currentTrack = usePlayerStore(selectCurrentTrack)
+  const isPlaying = usePlayerStore(selectIsPlaying)
+  const play = usePlayerStore((state) => state.play)
+  const togglePlay = usePlayerStore((state) => state.togglePlay)
   const isCurrentTrack =
     isPlaybackContextActive &&
     isPlaybackIndexActive &&
@@ -46,7 +50,7 @@ export const TrackCard = ({
 
   const handlePlayTrack = (track: TrackEntity) => {
     if (isCurrentTrack) {
-      dispatch(togglePlay())
+      togglePlay()
       return
     }
 
@@ -55,7 +59,7 @@ export const TrackCard = ({
       return
     }
 
-    dispatch(play(track))
+    play(track)
   }
 
   return (

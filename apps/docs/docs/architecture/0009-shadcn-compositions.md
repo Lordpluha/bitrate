@@ -23,7 +23,7 @@ exports, icon pipeline, tests, or compatibility requirements unchanged.
 ## Consequences
 
 The registry is an input, not an authority. Local compatibility may intentionally override
-generic shadcn advice and must be documented in `.claude/rules/shadcn-rules.md`.
+generic shadcn advice and must be documented in the `ui-react-rules` skill.
 
 ## Alternatives considered
 

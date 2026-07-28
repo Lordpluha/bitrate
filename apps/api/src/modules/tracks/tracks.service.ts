@@ -1,14 +1,16 @@
-import { createReadStream, promises as fs } from 'node:fs'
 import { extname } from 'node:path'
+import { text } from 'node:stream/consumers'
 import type { AppConfig } from '@common/config'
 import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
+import type { StorageService } from '@infra/storage/storage.types'
 import type { ArtistEntity } from '@modules/artists'
 import type { UserEntity } from '@modules/users'
 import { InjectQueue } from '@nestjs/bullmq'
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { Artist } from '@prisma/client'
 import type { Queue } from 'bullmq'
@@ -16,8 +18,18 @@ import { parseFile } from 'music-metadata'
 import type { CreateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
 
-/** Supported output bitrates for HLS transcoding (kbps). */
+/** Supported output bitrates for transcoding (kbps). */
 const TARGET_AUDIO_BITRATES = [128, 192, 320] as const
+
+/**
+ * Storage key helpers — single source of truth for all path derivations.
+ * TrackFile.url stores: tracks/{trackId}/audio/{bitrate}k.opus
+ */
+const storageKey = {
+  hlsMaster: (trackId: string) => `tracks/${trackId}/hls/master.m3u8`,
+  hlsAsset: (trackId: string, bitrate: number, asset: string) =>
+    `tracks/${trackId}/hls/${bitrate}/${asset}`,
+}
 
 /** Handles track CRUD, audio streaming, and queuing of audio-conversion jobs. */
 @Injectable()
@@ -28,6 +40,7 @@ export class TracksService {
     @InjectQueue('audio-processing') private readonly audioQueue: Queue,
     private readonly configService: ConfigService<AppConfig>,
     private readonly cache: CacheService,
+    @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
   ) {}
 
   /** The logger value. */
@@ -35,7 +48,6 @@ export class TracksService {
 
   /**
    * Adds an audio-conversion job to the BullMQ queue and marks the track FAILED on enqueue error.
-   * @param params Job parameters including track/artist IDs, file paths, and target bitrates.
    */
   private async enqueueAudioConversion({
     trackId,
@@ -83,11 +95,7 @@ export class TracksService {
     }
   }
 
-  /**
-   * Reads audio metadata from the file at `filePath`.
-   * @param filePath Absolute path to the audio file.
-   * @returns Bitrate (kbps), duration (s), codec, and container, or safe defaults on error.
-   */
+  /** Reads audio metadata from the file at `filePath`. */
   private async inspectAudioFile(filePath: string) {
     try {
       const metadata = await parseFile(filePath)
@@ -114,11 +122,7 @@ export class TracksService {
     }
   }
 
-  /**
-   * Returns the list of target bitrate strings derived from the source bitrate.
-   * @param sourceBitrate Source bitrate in kbps; 0 or negative means all presets are used.
-   * @returns Array of bitrate strings such as `['128k', '192k']`.
-   */
+  /** Returns the list of target bitrate strings derived from the source bitrate. */
   private getTargetBitrates(sourceBitrate: number) {
     if (sourceBitrate <= 0) {
       return TARGET_AUDIO_BITRATES.map((bitrate) => `${bitrate}k`)
@@ -132,14 +136,13 @@ export class TracksService {
     return [`${sourceBitrate}k`]
   }
 
-  /** Runs the get content type operation. */
+  /** Returns a MIME type for a given filename extension. */
   private getContentType(fileName: string) {
     const extension = extname(fileName).replace('.', '').toLowerCase()
     switch (extension) {
       case 'mp3':
         return 'audio/mpeg'
       case 'ogg':
-        return 'audio/ogg'
       case 'opus':
         return 'audio/ogg'
       case 'wav':
@@ -150,6 +153,189 @@ export class TracksService {
         return 'application/octet-stream'
     }
   }
+
+  /** Resolves and validates a TrackFile, throwing NotFoundException on missing/unavailable tracks. */
+  private async selectTrackFile(
+    id: TrackEntity['id'],
+    preferredBitrate?: number,
+    preferredFormat = 'opus',
+  ) {
+    const track = await this.prisma.track.findUnique({ where: { id } })
+    if (!track) throw new NotFoundException('Track not found')
+    if (track.processingStatus !== 'READY')
+      throw new NotFoundException('Track is not available yet')
+
+    const audioFiles = await this.prisma.trackFile.findMany({
+      where: { trackId: id },
+      orderBy: { bitrate: 'asc' },
+    })
+    if (audioFiles.length === 0) throw new NotFoundException('Audio file not found')
+
+    const preferredFiles = audioFiles.filter(
+      (file) => file.format === preferredFormat && file.bitrate > 0,
+    )
+    const candidates =
+      preferredFiles.length > 0 ? preferredFiles : audioFiles.filter((file) => file.bitrate > 0)
+    const availableFiles = candidates.length > 0 ? candidates : audioFiles
+    const selectedFile = preferredBitrate
+      ? ([...availableFiles].reverse().find((file) => file.bitrate <= preferredBitrate) ??
+        availableFiles[0])
+      : availableFiles.at(-1)
+
+    if (!selectedFile) throw new NotFoundException('Audio file not found')
+    return selectedFile
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // Public streaming methods
+  // ────────────────────────────────────────────────────────────
+
+  /** Returns a progressive storage stream for the legacy WebSocket audio transport. */
+  async getTrackAudioStream(
+    id: TrackEntity['id'],
+    preferredBitrate?: number,
+    preferredFormat = 'opus',
+  ) {
+    const selectedFile = await this.selectTrackFile(id, preferredBitrate, preferredFormat)
+    const { stream, contentLength, contentType } = await this.storage.getObjectStream(
+      selectedFile.url,
+    )
+
+    return {
+      stream,
+      trackId: id,
+      bitrate: selectedFile.bitrate,
+      format: selectedFile.format,
+      codec: selectedFile.codec,
+      contentType: contentType ?? this.getContentType(selectedFile.url),
+      size: contentLength ?? selectedFile.size,
+    }
+  }
+
+  /**
+   * Streams a progressive audio file from storage with HTTP Range support.
+   * Returns a presigned redirect URL for the full file, or proxies a range request.
+   */
+  async getTrackStream(
+    id: TrackEntity['id'],
+    range?: string,
+    preferredBitrate?: number,
+    preferredFormat = 'opus',
+  ) {
+    const selectedFile = await this.selectTrackFile(id, preferredBitrate, preferredFormat)
+    const { stream, contentLength, contentType } = await this.storage.getObjectStream(
+      selectedFile.url,
+    )
+
+    const mimeType = contentType ?? this.getContentType(selectedFile.url)
+
+    if (!range) {
+      return {
+        stream,
+        contentType: mimeType,
+        contentLength: contentLength ?? 0,
+        fileSize: contentLength ?? 0,
+        start: 0,
+        end: (contentLength ?? 1) - 1,
+        isPartial: false,
+        bitrate: selectedFile.bitrate,
+        format: selectedFile.format,
+      }
+    }
+
+    // For range requests, fetch the full object and return with range metadata.
+    // Both storage drivers support byte-range natively — re-fetch with Range header.
+    const match = /^bytes=(\d*)-(\d*)$/.exec(range)
+    if (!(match && (match[1] || match[2]))) {
+      throw new BadRequestException('Invalid Range header')
+    }
+
+    const fileSize = contentLength ?? 0
+    let start = match[1] ? Number.parseInt(match[1], 10) : 0
+    let end = match[1] && match[2] ? Number.parseInt(match[2], 10) : fileSize - 1
+
+    if (!match[1] && match[2]) {
+      const suffixLength = Number.parseInt(match[2], 10)
+      start = Math.max(0, fileSize - suffixLength)
+      end = fileSize - 1
+    }
+
+    end = Math.min(end, fileSize - 1)
+
+    if (Number.isNaN(start) || Number.isNaN(end) || start > end || start >= fileSize) {
+      throw new BadRequestException('Invalid Range header')
+    }
+
+    const ranged = await this.storage.getObjectStream(selectedFile.url, `bytes=${start}-${end}`)
+    return {
+      stream: ranged.stream,
+      contentType: mimeType,
+      contentLength: end - start + 1,
+      fileSize,
+      start,
+      end,
+      isPartial: true,
+      bitrate: selectedFile.bitrate,
+      format: selectedFile.format,
+    }
+  }
+
+  /** Returns a presigned storage URL for direct progressive audio download (no proxy). */
+  async getTrackStreamUrl(
+    id: TrackEntity['id'],
+    preferredBitrate?: number,
+    preferredFormat = 'opus',
+  ) {
+    const selectedFile = await this.selectTrackFile(id, preferredBitrate, preferredFormat)
+    return this.storage.getPresignedUrl(selectedFile.url, 3_600)
+  }
+
+  /** Returns the FFmpeg-generated HLS master playlist from storage. */
+  async getHlsMasterPlaylist(id: TrackEntity['id']) {
+    const track = await this.prisma.track.findUnique({ where: { id } })
+    if (!track) throw new NotFoundException('Track not found')
+    if (track.processingStatus !== 'READY') {
+      throw new NotFoundException('HLS stream is not ready')
+    }
+
+    try {
+      const { stream } = await this.storage.getObjectStream(storageKey.hlsMaster(id))
+      return await text(stream)
+    } catch {
+      throw new NotFoundException('HLS stream is not ready')
+    }
+  }
+
+  /** Proxies an HLS asset (playlist or segment) from storage. */
+  async getHlsAsset(id: TrackEntity['id'], bitrate: number, asset: string) {
+    if (!/^(index\.m3u8|init_\d+\.mp4|segment_\d{5}\.m4s)$/.test(asset)) {
+      throw new NotFoundException('HLS asset not found')
+    }
+
+    const file = await this.prisma.trackFile.findUnique({
+      where: { trackId_format_bitrate: { trackId: id, format: 'opus', bitrate } },
+    })
+    if (!file) throw new NotFoundException('HLS quality not found')
+
+    const key = storageKey.hlsAsset(id, bitrate, asset)
+
+    try {
+      const { stream, contentLength } = await this.storage.getObjectStream(key)
+      const contentType = asset.endsWith('.m3u8')
+        ? 'application/vnd.apple.mpegurl'
+        : asset.endsWith('.mp4')
+          ? 'video/mp4'
+          : 'video/iso.segment'
+
+      return { stream, contentType, contentLength, immutable: !asset.endsWith('.m3u8') }
+    } catch {
+      throw new NotFoundException('HLS asset not found')
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // Track CRUD
+  // ────────────────────────────────────────────────────────────
 
   /** Runs the find all operation. */
   async findAll({
@@ -237,195 +423,6 @@ export class TracksService {
     )
   }
 
-  /** Runs the select track file operation. */
-  private async selectTrackFile(
-    id: TrackEntity['id'],
-    preferredBitrate?: number,
-    preferredFormat = 'opus',
-  ) {
-    const track = await this.prisma.track.findUnique({ where: { id } })
-    if (!track) throw new NotFoundException('Track not found')
-    if (track.processingStatus !== 'READY')
-      throw new NotFoundException('Track is not available yet')
-
-    const audioFiles = await this.prisma.trackFile.findMany({
-      where: { trackId: id },
-      orderBy: { bitrate: 'asc' },
-    })
-    if (audioFiles.length === 0) throw new NotFoundException('Audio file not found')
-
-    const preferredFiles = audioFiles.filter(
-      (file) => file.format === preferredFormat && file.bitrate > 0,
-    )
-    const candidates =
-      preferredFiles.length > 0 ? preferredFiles : audioFiles.filter((file) => file.bitrate > 0)
-    const availableFiles = candidates.length > 0 ? candidates : audioFiles
-    const selectedFile = preferredBitrate
-      ? ([...availableFiles].reverse().find((file) => file.bitrate <= preferredBitrate) ??
-        availableFiles[0])
-      : availableFiles.at(-1)
-
-    if (!selectedFile) throw new NotFoundException('Audio file not found')
-    return selectedFile
-  }
-
-  /** Runs the get track audio stream operation. */
-  async getTrackAudioStream(
-    id: TrackEntity['id'],
-    preferredBitrate?: number,
-    preferredFormat = 'opus',
-  ) {
-    const selectedFile = await this.selectTrackFile(id, preferredBitrate, preferredFormat)
-    const filePath = this.configService.getOrThrow('storage').getTracksDir(selectedFile.url)
-
-    try {
-      const fileStat = await fs.stat(filePath)
-      return {
-        stream: createReadStream(filePath),
-        trackId: id,
-        bitrate: selectedFile.bitrate,
-        format: selectedFile.format,
-        codec: selectedFile.codec,
-        contentType: this.getContentType(selectedFile.url),
-        size: fileStat.size,
-      }
-    } catch {
-      throw new NotFoundException('Audio file not found')
-    }
-  }
-
-  /** Runs the get track stream operation. */
-  async getTrackStream(
-    id: TrackEntity['id'],
-    range?: string,
-    preferredBitrate?: number,
-    preferredFormat = 'opus',
-  ) {
-    const selectedFile = await this.selectTrackFile(id, preferredBitrate, preferredFormat)
-    const filePath = this.configService.getOrThrow('storage').getTracksDir(selectedFile.url)
-
-    let stat: Awaited<ReturnType<typeof fs.stat>>
-    try {
-      stat = await fs.stat(filePath)
-    } catch {
-      throw new NotFoundException('Audio file not found')
-    }
-
-    const fileSize = stat.size
-    let start = 0
-    let end = fileSize - 1
-
-    if (range) {
-      const match = /^bytes=(\d*)-(\d*)$/.exec(range)
-      if (!(match && (match[1] || match[2]))) {
-        throw new BadRequestException('Invalid Range header')
-      }
-
-      if (match[1]) {
-        start = Number.parseInt(match[1], 10)
-      } else {
-        const suffixLength = Number.parseInt(match[2] ?? '', 10)
-        if (!Number.isFinite(suffixLength) || suffixLength <= 0) {
-          throw new BadRequestException('Invalid Range header')
-        }
-        start = Math.max(0, fileSize - suffixLength)
-      }
-
-      end = match[1] && match[2] ? Number.parseInt(match[2], 10) : fileSize - 1
-      end = Math.min(end, fileSize - 1)
-
-      if (Number.isNaN(start) || Number.isNaN(end) || start > end || start >= fileSize) {
-        throw new BadRequestException('Invalid Range header')
-      }
-    }
-
-    return {
-      stream: createReadStream(filePath, { start, end }),
-      contentType: this.getContentType(selectedFile.url),
-      contentLength: end - start + 1,
-      fileSize,
-      start,
-      end,
-      isPartial: Boolean(range),
-      bitrate: selectedFile.bitrate,
-      format: selectedFile.format,
-    }
-  }
-
-  /** Runs the get hls master playlist operation. */
-  async getHlsMasterPlaylist(id: TrackEntity['id']) {
-    const track = await this.prisma.track.findUnique({ where: { id } })
-    if (!track) throw new NotFoundException('Track not found')
-
-    const files = await this.prisma.trackFile.findMany({
-      where: { trackId: id, format: 'opus', bitrate: { gt: 0 } },
-      orderBy: { bitrate: 'asc' },
-    })
-
-    const variants: number[] = []
-    for (const file of files) {
-      const playlistPath = this.configService
-        .getOrThrow('storage')
-        .getTracksDir(`${file.url}.hls/index.m3u8`)
-      try {
-        await fs.access(playlistPath)
-        variants.push(file.bitrate)
-      } catch {
-        // Conversion may still be running; omit incomplete variants.
-      }
-    }
-
-    if (variants.length === 0) {
-      throw new NotFoundException('HLS stream is not ready')
-    }
-
-    const lines = ['#EXTM3U', '#EXT-X-VERSION:7', '#EXT-X-INDEPENDENT-SEGMENTS']
-    for (const bitrate of variants) {
-      lines.push(
-        `#EXT-X-STREAM-INF:BANDWIDTH=${bitrate * 1000},AVERAGE-BANDWIDTH=${bitrate * 1000},CODECS="mp4a.40.2"`,
-        `${bitrate}/index.m3u8`,
-      )
-    }
-
-    return `${lines.join('\n')}\n`
-  }
-
-  /** Runs the get hls asset operation. */
-  async getHlsAsset(id: TrackEntity['id'], bitrate: number, asset: string) {
-    if (!/^(index\.m3u8|init\.mp4|segment_\d{5}\.m4s)$/.test(asset)) {
-      throw new NotFoundException('HLS asset not found')
-    }
-
-    const file = await this.prisma.trackFile.findUnique({
-      where: {
-        trackId_format_bitrate: { trackId: id, format: 'opus', bitrate },
-      },
-    })
-    if (!file) throw new NotFoundException('HLS quality not found')
-
-    const assetPath = this.configService
-      .getOrThrow('storage')
-      .getTracksDir(`${file.url}.hls/${asset}`)
-
-    try {
-      const stat = await fs.stat(assetPath)
-      const contentType = asset.endsWith('.m3u8')
-        ? 'application/vnd.apple.mpegurl'
-        : asset.endsWith('.mp4')
-          ? 'video/mp4'
-          : 'video/iso.segment'
-
-      return {
-        stream: createReadStream(assetPath),
-        contentType,
-        contentLength: stat.size,
-        immutable: !asset.endsWith('.m3u8'),
-      }
-    } catch {
-      throw new NotFoundException('HLS asset not found')
-    }
-  }
-
   /** Runs the find tracks by artist id operation. */
   async findTracksByArtistId(artistId: Artist['id']) {
     return await this.cache.wrap(NS.TRACKS, `artist:${artistId}`, TTL.SHORT, () =>
@@ -499,7 +496,7 @@ export class TracksService {
       bitrates: this.getTargetBitrates(metadata.bitrate),
     })
 
-    this.logger.log(`Queued audio conversion for track ID: ${track.id} added`)
+    this.logger.log(`Queued audio conversion for track ID: ${track.id}`)
     await Promise.all([this.cache.invalidate(NS.TRACKS), this.cache.invalidate(NS.SEARCH)])
 
     return track
@@ -538,9 +535,7 @@ export class TracksService {
 
     const track = await this.prisma.$transaction(async (tx) => {
       const updated = await tx.track.update({
-        where: {
-          id,
-        },
+        where: { id },
         data: {
           title: createTrackDto.title,
           cover: coverFile?.filename ?? undefined,
@@ -563,11 +558,7 @@ export class TracksService {
               bitrate: metadata?.bitrate ?? 0,
             },
           },
-          update: {
-            codec,
-            url: audioFile.filename,
-            size: audioFile.size,
-          },
+          update: { codec, url: audioFile.filename, size: audioFile.size },
           create: {
             trackId: updated.id,
             format,

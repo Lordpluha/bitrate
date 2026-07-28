@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { pause } from '@/entities/Player'
+import { usePlayerStore } from '@/entities/Player'
 import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
 import { showApiErrorToast } from '@/shared/api/feedback'
 import { attachHlsSource } from '@/shared/hooks/audioPlayer/attachHlsSource'
@@ -14,7 +14,6 @@ import {
   restorePlaybackPosition,
   shouldPrefetchNextTrack,
 } from '@/shared/hooks/audioPlayer/audioPlayer.utils'
-import { useAppDispatch } from '@/shared/hooks/useAppDispatch'
 
 type UseAudioSlotsOptions = {
   volume: number
@@ -28,7 +27,7 @@ const emptySlot = (): PlayerSlot => ({
 })
 
 export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
-  const dispatch = useAppDispatch()
+  const pause = usePlayerStore((state) => state.pause)
   const slotsRef = useRef<[PlayerSlot, PlayerSlot]>([emptySlot(), emptySlot()])
   const activeSlotRef = useRef<SlotIndex>(0)
   const pendingPlayRef = useRef(false)
@@ -82,7 +81,7 @@ export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
         element.load()
 
         if (!isPrefetch) {
-          dispatch(pause())
+          pause()
           showApiErrorToast(
             new Error('Unable to play this track. Please try again.'),
           )
@@ -111,7 +110,7 @@ export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
         )
       }
     },
-    [destroySlot, dispatch, volume],
+    [destroySlot, pause, volume],
   )
 
   const bindAudioElement = useCallback(

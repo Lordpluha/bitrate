@@ -1,6 +1,6 @@
 # Styling conventions — web-player
 
-Tailwind v4 + `@spotify/ui-react` design tokens + CVA + `cn()`. Read before writing any styled markup, any new component, or anything that sets `className`. For the token pipeline, see `AGENTS.md` § "Design token pipeline".
+Tailwind v4 + `@spotify/ui-react` design tokens + CVA + `cn()`. Read before writing any styled markup, any new component, or anything that sets `className`. For the token pipeline, see `.claude/rules/monorepo.md` § "Asset generation pipelines".
 
 ## Stack at a glance
 

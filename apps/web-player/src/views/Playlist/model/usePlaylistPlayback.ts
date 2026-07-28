@@ -1,14 +1,7 @@
 'use client'
 
-import {
-  playPlaylist,
-  selectMusicPlayer,
-  setPlaylistTracks,
-  setShuffleEnabled,
-  togglePlay,
-} from '@/entities/Player'
+import { selectMusicPlayer, usePlayerStore } from '@/entities/Player'
 import type { TrackEntity } from '@/entities/Track'
-import { useAppDispatch, useAppSelector } from '@/shared/hooks'
 import type { PlaylistPlayback } from '@/views/Playlist/model/playlist.types'
 import { shuffleTracks } from '@/views/Playlist/model/playlist.utils'
 
@@ -23,8 +16,11 @@ export const usePlaylistPlayback = ({
   playlistTitle,
   tracks,
 }: UsePlaylistPlaybackOptions): PlaylistPlayback => {
-  const dispatch = useAppDispatch()
-  const musicPlayer = useAppSelector(selectMusicPlayer)
+  const musicPlayer = usePlayerStore(selectMusicPlayer)
+  const playPlaylist = usePlayerStore((state) => state.playPlaylist)
+  const togglePlay = usePlayerStore((state) => state.togglePlay)
+  const setPlaylistTracks = usePlayerStore((state) => state.setPlaylistTracks)
+  const setShuffleEnabled = usePlayerStore((state) => state.setShuffleEnabled)
   const isActive = musicPlayer.currentPlaylistId === playlistId
 
   const startPlaylist = (
@@ -32,15 +28,13 @@ export const usePlaylistPlayback = ({
     nextTracks: TrackEntity[],
     startTrackIndex: number,
   ) => {
-    dispatch(
-      playPlaylist({
-        currentPlaylistId: playlistId,
-        currentPlaylistName: playlistTitle,
-        startTrack,
-        startTrackIndex,
-        tracks: nextTracks,
-      }),
-    )
+    playPlaylist({
+      currentPlaylistId: playlistId,
+      currentPlaylistName: playlistTitle,
+      startTrack,
+      startTrackIndex,
+      tracks: nextTracks,
+    })
   }
 
   const handlePlayPlaylist = () => {
@@ -48,7 +42,7 @@ export const usePlaylistPlayback = ({
     if (!firstTrack) return
 
     if (isActive) {
-      dispatch(togglePlay())
+      togglePlay()
       return
     }
 
@@ -59,8 +53,8 @@ export const usePlaylistPlayback = ({
     if (tracks.length === 0) return
 
     if (isActive && musicPlayer.isShuffled) {
-      dispatch(setShuffleEnabled(false))
-      dispatch(setPlaylistTracks(tracks))
+      setShuffleEnabled(false)
+      setPlaylistTracks(tracks)
       return
     }
 
@@ -75,7 +69,7 @@ export const usePlaylistPlayback = ({
     const startTrack = activeTrack ?? nextTracks[0]
     if (!startTrack) return
 
-    dispatch(setShuffleEnabled(true))
+    setShuffleEnabled(true)
     startPlaylist(startTrack, nextTracks, 0)
   }
 
