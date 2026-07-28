@@ -4,6 +4,5 @@ export * from './useHorizontalResize'
 export * from './useImageColor'
 export * from './usePersistedState'
 export * from './useProgressiveAudioStreaming'
-export * from './useWindowWidth'
-
 export * from './useTracks'
+export * from './useWindowWidth'

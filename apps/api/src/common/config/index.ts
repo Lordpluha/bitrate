@@ -7,7 +7,13 @@ import { s3Config } from './s3.config'
 import { storageConfigFactory } from './storage.config'
 
 /** The app configs value. */
-export const appConfigs = [cookieConfig, storageConfigFactory, connectionsConfig, mailConfig, s3Config]
+export const appConfigs = [
+  cookieConfig,
+  storageConfigFactory,
+  connectionsConfig,
+  mailConfig,
+  s3Config,
+]
 
 /** Defines the app config. */
 export type AppConfig = envType & {
