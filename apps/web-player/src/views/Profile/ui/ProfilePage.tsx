@@ -68,7 +68,7 @@ export const ProfilePage = () => {
         username={user.username}
       />
 
-      <section className="bg-gradient-to-b from-black/30 to-background-secondary px-6 py-7">
+      <section className="bg-gradient-to-b from-black/30 to-background-secondary px-4 py-6 sm:px-6 sm:py-7">
         <ProfileActions />
         <ProfileArtistsSection artists={artists} isPending={isArtistsPending} />
         <ProfileTracksSection

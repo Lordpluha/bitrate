@@ -38,7 +38,7 @@ const bottomLinks = [
 
 export const ProfileFooter = () => (
   <footer className="mt-28 border-t border-white/10 pb-8 pt-12">
-    <div className="grid grid-cols-4 gap-8 max-[900px]:grid-cols-2">
+    <div className="grid grid-cols-4 gap-8 max-[900px]:grid-cols-2 max-[480px]:grid-cols-1">
       {footerColumns.map((column) => (
         <div key={column.title}>
           <h3 className="mb-3 text-sm font-bold text-text">{column.title}</h3>

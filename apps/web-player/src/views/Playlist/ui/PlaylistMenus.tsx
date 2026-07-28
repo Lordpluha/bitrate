@@ -20,7 +20,7 @@ type TrackViewMenuProps = {
 }
 
 export const TrackViewMenu = ({ onChange, value }: TrackViewMenuProps) => (
-  <div className="absolute right-0 top-[calc(100%+10px)] z-[80] w-40 rounded-md bg-popover p-1 text-sm text-text shadow-2xl">
+  <div className="absolute right-0 top-[calc(100%+10px)] z-[80] w-40 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl">
     <div className="px-3 py-2 text-xs font-bold text-text-subdued">View as</div>
     {(['compact', 'list'] as const).map((viewMode) => (
       <button
@@ -78,7 +78,7 @@ export const PlaylistMoreMenu = ({
   onDelete,
   onEdit,
 }: PlaylistMoreMenuProps) => (
-  <div className="absolute left-0 top-[calc(100%+8px)] z-[80] w-66 rounded-md bg-popover p-1 text-sm text-text shadow-2xl">
+  <div className="absolute left-0 top-[calc(100%+8px)] z-[80] w-66 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl">
     <PlaylistMenuItem disabled icon={<List size={17} />} label="Add to queue" />
     <PlaylistMenuItem
       disabled={!canEdit}

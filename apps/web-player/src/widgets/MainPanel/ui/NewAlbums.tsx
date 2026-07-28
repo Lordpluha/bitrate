@@ -19,7 +19,7 @@ export const NewAlbums = () => {
       {albums?.length === 0 ? (
         <div className="p-4 text-gray-400">No albums found</div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,150px),1fr))] gap-4">
           {albums?.map((album) => (
             <Link
               className="rounded-lg p-3 transition-colors hover:bg-gray-700/50"

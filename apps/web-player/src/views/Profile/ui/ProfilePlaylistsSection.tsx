@@ -20,7 +20,7 @@ export const ProfilePlaylistsSection = ({
     ) : playlists.length === 0 ? (
       <p className="text-text-subdued">No playlists created yet.</p>
     ) : (
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-5">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,140px),1fr))] gap-4 sm:gap-5">
         {playlists.map((playlist) => (
           <Link
             className="min-w-0 rounded-md p-2 transition-colors hover:bg-white/10"

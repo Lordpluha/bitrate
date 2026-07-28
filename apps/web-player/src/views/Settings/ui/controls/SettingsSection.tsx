@@ -23,7 +23,7 @@ export const SettingsRow = ({
   description,
   label,
 }: SettingsRowProps) => (
-  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5 max-[700px]:grid-cols-1">
+  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5 max-[700px]:grid-cols-1 max-[700px]:gap-3">
     <div className="min-w-0">
       <p className="text-sm text-text-subdued">{label}</p>
       {description && (
@@ -32,6 +32,8 @@ export const SettingsRow = ({
         </p>
       )}
     </div>
-    {children}
+    <div className="max-[700px]:flex max-[700px]:w-full max-[700px]:justify-end">
+      {children}
+    </div>
   </div>
 )

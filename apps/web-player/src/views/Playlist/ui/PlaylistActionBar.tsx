@@ -83,13 +83,13 @@ export const PlaylistActionBar = ({
   }
 
   return (
-    <div className="flex items-center justify-between bg-gradient-to-b from-black/25 to-background px-6 py-5">
-      <div className="flex items-center gap-4 text-text-subdued">
+    <div className="flex items-center justify-between gap-4 bg-gradient-to-b from-black/25 to-background px-4 py-4 sm:px-6 sm:py-5">
+      <div className="flex min-w-0 flex-wrap items-center gap-3 text-text-subdued sm:gap-4">
         {details.tracksCount > 0 && (
           <>
             <button
               aria-label={`${playback.isPlaying ? 'Pause' : 'Play'} ${details.title}`}
-              className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-black transition-transform hover:scale-105"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500 text-black transition-transform hover:scale-105 sm:h-14 sm:w-14"
               onClick={playback.handlePlayPlaylist}
               type="button"
             >
@@ -109,7 +109,7 @@ export const PlaylistActionBar = ({
               onClick={playback.handleShufflePlaylist}
               type="button"
             >
-              <Shuffle size={30} />
+              <Shuffle className="h-7 w-7 sm:h-7.5 sm:w-7.5" />
             </button>
             <LikePlaylistButton
               playlist={{
@@ -122,25 +122,25 @@ export const PlaylistActionBar = ({
             />
             <button
               aria-label="Download playlist"
-              className="transition-colors hover:text-text"
+              className="transition-colors hover:text-text max-[480px]:hidden"
               type="button"
             >
-              <Download size={30} />
+              <Download className="h-7 w-7 sm:h-7.5 sm:w-7.5" />
             </button>
           </>
         )}
         {details.isOwner && (
           <button
             aria-label="Invite collaborators"
-            className="transition-colors hover:text-text"
+            className="transition-colors hover:text-text max-[480px]:hidden"
             type="button"
           >
-            <UserPlus size={32} />
+            <UserPlus className="h-7 w-7 sm:h-8 sm:w-8" />
           </button>
         )}
         {details.tracksCount > 0 && (
           <button
-            className="rounded-full border border-white/40 px-4 py-1.5 text-sm font-bold text-text transition-colors hover:border-white"
+            className="rounded-full border border-white/40 px-4 py-1.5 text-sm font-bold text-text transition-colors hover:border-white max-[640px]:hidden"
             type="button"
           >
             Mix
@@ -154,7 +154,7 @@ export const PlaylistActionBar = ({
             onClick={() => setIsMoreOpen((value) => !value)}
             type="button"
           >
-            <MoreHorizontal size={30} />
+            <MoreHorizontal className="h-7 w-7 sm:h-7.5 sm:w-7.5" />
           </button>
           {isMoreOpen && (
             <PlaylistMoreMenu
@@ -173,11 +173,11 @@ export const PlaylistActionBar = ({
         <button
           aria-expanded={isViewMenuOpen}
           aria-label="Change track list view"
-          className="flex items-center gap-2 text-sm capitalize text-text-subdued transition-colors hover:text-text"
+          className="flex items-center gap-1.5 text-sm capitalize text-text-subdued transition-colors hover:text-text"
           onClick={() => setIsViewMenuOpen((value) => !value)}
           type="button"
         >
-          {view.value}
+          <span className="max-[480px]:sr-only">{view.value}</span>
           <List size={18} />
         </button>
         {isViewMenuOpen && (

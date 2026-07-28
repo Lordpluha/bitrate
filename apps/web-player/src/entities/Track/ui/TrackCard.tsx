@@ -61,7 +61,7 @@ export const TrackCard = ({
   return (
     <div
       className={cn(
-        'w-full text-left rounded hover:bg-surface group grid items-center gap-4 px-4 py-2 max-[1024px]:block max-[1024px]:px-3',
+        'group grid w-full items-center gap-4 rounded px-4 py-2 text-left hover:bg-surface max-[1024px]:grid-cols-[minmax(0,1fr)_auto] max-[1024px]:gap-2 max-[1024px]:px-2',
         viewMode === 'compact'
           ? 'grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_112px]'
           : 'grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_112px]',
@@ -113,7 +113,7 @@ export const TrackCard = ({
       </button>
 
       <button
-        className="min-w-0 flex items-center gap-3 text-left max-[1024px]:gap-3"
+        className="flex min-w-0 items-center gap-3 text-left"
         onClick={() => handlePlayTrack(track)}
         type="button"
       >
@@ -182,6 +182,28 @@ export const TrackCard = ({
           >
             <X size={16} />
           </button>
+        )}
+      </div>
+
+      <div className="hidden shrink-0 grid-cols-[24px_auto] items-center justify-end gap-2 text-xs text-text-subdued max-[1024px]:grid">
+        <LikeTrackButton
+          initialLiked={isLiked}
+          trackId={track.id}
+          trackTitle={track.title}
+        />
+        {removable ? (
+          <button
+            aria-label={`Remove ${track.title} from playlist`}
+            className="rounded-full p-2 transition-colors hover:bg-white/10 hover:text-text"
+            onClick={() => onRemoveTrack?.(track.id)}
+            type="button"
+          >
+            <X size={18} />
+          </button>
+        ) : (
+          <span className="min-w-8 text-right">
+            {formatDuration(track.duration ?? 0)}
+          </span>
         )}
       </div>
     </div>

@@ -81,15 +81,15 @@ export const CategoryPage = ({ category }: CategoryPageProps) => {
         background: `linear-gradient(180deg, ${category.color} 0px, ${category.color} 160px, ${category.color}cc 260px, rgba(18,18,18,0.96) 390px, #121212 520px)`,
       }}
     >
-      <section className="flex min-h-[300px] items-end px-6 pb-10 pt-24">
+      <section className="flex min-h-56 items-end px-4 pb-8 pt-20 sm:min-h-64 sm:px-6 sm:pb-10 sm:pt-24 lg:min-h-75">
         <div className="mx-auto w-full max-w-[1160px]">
-          <h1 className="text-6xl font-black tracking-normal text-white md:text-7xl">
+          <h1 className="text-4xl font-black tracking-normal text-white sm:text-5xl lg:text-7xl">
             {category.title}
           </h1>
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-[1160px] space-y-10 px-6 py-8">
+      <div className="mx-auto w-full max-w-[1160px] space-y-8 px-4 py-6 sm:space-y-10 sm:px-6 sm:py-8">
         <MediaRow
           items={categoryGrid}
           title={category.title === 'Podcasts' ? 'Categories' : 'Browse all'}

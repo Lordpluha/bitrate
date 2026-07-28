@@ -16,7 +16,7 @@ export const ProfileArtistsSection = ({
     subtitle="Artists currently available in the catalog"
     title="Artists to explore"
   >
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-5">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,140px),1fr))] gap-4 sm:gap-5">
       {isPending ? (
         <p className="text-text-subdued">Loading artists...</p>
       ) : artists.length === 0 ? (

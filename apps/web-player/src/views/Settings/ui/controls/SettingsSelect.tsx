@@ -21,7 +21,10 @@ export const SettingsSelect = ({
 
   return (
     <fieldset
-      className={cn('relative z-10 border-0 p-0', widthClassName)}
+      className={cn(
+        'relative z-10 border-0 p-0 max-[700px]:w-full max-[700px]:min-w-0',
+        widthClassName,
+      )}
       onBlur={(event) => {
         const nextFocus = event.relatedTarget
         if (

@@ -46,7 +46,7 @@ export const PlaylistEditForm = ({
   if (!isOpen) return null
 
   return (
-    <div className="border-b border-white/10 px-6 py-4">
+    <div className="border-b border-white/10 px-4 py-4 sm:px-6">
       <form className="grid max-w-160 gap-3" onSubmit={handleSubmit}>
         <input
           className="h-10 rounded-md bg-surface px-3 text-sm text-text outline-none focus:ring-2 focus:ring-white/30"

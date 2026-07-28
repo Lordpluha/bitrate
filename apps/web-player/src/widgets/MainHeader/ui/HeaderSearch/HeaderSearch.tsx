@@ -1,16 +1,23 @@
 'use client'
 
-import { Input, ReviewIcon, SearchIcon } from '@spotify/ui-react'
+import { cn, Input, ReviewIcon, SearchIcon } from '@spotify/ui-react'
 import { HeaderSearchDropdown } from '@/widgets/MainHeader/ui/HeaderSearch/HeaderSearchDropdown'
 import { useHeaderSearch } from '@/widgets/MainHeader/ui/HeaderSearch/model/useHeaderSearch'
 
-export const HeaderSearch = () => {
+type HeaderSearchProps = {
+  className?: string
+}
+
+export const HeaderSearch = ({ className }: HeaderSearchProps) => {
   const search = useHeaderSearch()
   const showRecent = search.isFocused && search.trimmedQuery.length === 0
   const showSuggestions = search.isFocused && search.trimmedQuery.length > 0
 
   return (
-    <form className="relative w-100" onSubmit={search.submit}>
+    <form
+      className={cn('relative w-full xl:w-100', className)}
+      onSubmit={search.submit}
+    >
       <SearchIcon
         className="absolute left-4 top-1/2 z-10 -translate-y-1/2 transform text-text-subdued"
         height={20}

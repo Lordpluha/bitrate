@@ -56,8 +56,10 @@ export const RecentsPage = () => {
 
   return (
     <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
-      <div className="mx-auto w-full max-w-220 px-10 py-10 max-[900px]:px-5">
-        <h1 className="mb-14 text-4xl font-black text-text">Recents</h1>
+      <div className="mx-auto w-full max-w-220 px-4 py-6 sm:px-5 sm:py-10 lg:px-10">
+        <h1 className="mb-8 text-3xl font-black text-text sm:mb-14 sm:text-4xl">
+          Recents
+        </h1>
 
         {isPending ? (
           <p className="text-text-subdued">Loading recents...</p>
@@ -73,7 +75,7 @@ export const RecentsPage = () => {
                 <div className="grid gap-2">
                   {entries?.map((entry) => (
                     <div
-                      className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-1 py-1 transition-colors hover:bg-white/10"
+                      className="grid grid-cols-[52px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-1 py-1 transition-colors hover:bg-white/10 sm:grid-cols-[64px_minmax(0,1fr)_auto]"
                       key={entry.id}
                     >
                       <button
@@ -83,7 +85,7 @@ export const RecentsPage = () => {
                       >
                         <Image
                           alt={entry.track.title}
-                          className="h-16 w-16 rounded object-cover"
+                          className="h-13 w-13 rounded object-cover sm:h-16 sm:w-16"
                           height={64}
                           src={getTrackCoverUrl(entry.track.cover)}
                           unoptimized
@@ -116,12 +118,12 @@ export const RecentsPage = () => {
               <h2 className="mb-4 text-2xl font-bold text-text">Earlier</h2>
               <div className="grid gap-2">
                 <Link
-                  className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-1 py-1 transition-colors hover:bg-white/10"
+                  className="grid grid-cols-[52px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-1 py-1 transition-colors hover:bg-white/10 sm:grid-cols-[64px_minmax(0,1fr)_auto]"
                   href={ROUTES.likedSongs}
                 >
                   <Image
                     alt="Liked Songs"
-                    className="h-16 w-16 rounded object-cover"
+                    className="h-13 w-13 rounded object-cover sm:h-16 sm:w-16"
                     height={64}
                     src={getPlaylistCoverUrl(null)}
                     unoptimized

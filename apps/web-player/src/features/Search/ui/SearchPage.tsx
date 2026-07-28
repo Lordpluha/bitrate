@@ -44,7 +44,7 @@ export const SearchPage = () => {
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="px-6 py-14">
+      <div className="px-4 py-6 sm:px-6 sm:py-10 xl:py-14">
         <div className="mx-auto w-full max-w-[1200px]">
           {hasQuery ? (
             <SearchQueryState

@@ -1,14 +1,7 @@
 'use client'
 
 import { cn } from '@spotify/ui-react'
-import {
-  Pause,
-  Play,
-  Repeat,
-  Shuffle,
-  SkipBack,
-  SkipForward,
-} from 'lucide-react'
+import { Pause, Play, Repeat, Shuffle } from 'lucide-react'
 import {
   type FC,
   type KeyboardEvent,
@@ -18,6 +11,8 @@ import {
   useRef,
   useState,
 } from 'react'
+import { usePlayerNavigationTracks } from '@/widgets/Player/model/usePlayerNavigationTracks'
+import { TrackNavigationButton } from '@/widgets/Player/ui/TrackNavigationButton'
 
 interface PlayerControlsProps {
   isPlaying: boolean
@@ -49,6 +44,7 @@ export const PlayerControls: FC<PlayerControlsProps> = ({
   const progressBarRef = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [seekTime, setSeekTime] = useState<number | null>(null)
+  const { nextTrack, previousTrack } = usePlayerNavigationTracks()
 
   const formatTime = (seconds: number) => {
     if (Number.isNaN(seconds) || !Number.isFinite(seconds)) return '0:00'
@@ -149,13 +145,11 @@ export const PlayerControls: FC<PlayerControlsProps> = ({
           <Shuffle size={16} />
         </button>
 
-        <button
-          className="p-1 text-text-subdued hover:text-text hover:scale-110 transition-all"
+        <TrackNavigationButton
+          direction="previous"
           onClick={onPrevious}
-          type="button"
-        >
-          <SkipBack size={20} />
-        </button>
+          track={previousTrack}
+        />
 
         <button
           className="w-8 h-8 rounded-full bg-text hover:scale-105 transition-transform flex items-center justify-center"
@@ -173,13 +167,11 @@ export const PlayerControls: FC<PlayerControlsProps> = ({
           )}
         </button>
 
-        <button
-          className="p-1 text-text-subdued hover:text-text hover:scale-110 transition-all"
+        <TrackNavigationButton
+          direction="next"
           onClick={onNext}
-          type="button"
-        >
-          <SkipForward size={20} />
-        </button>
+          track={nextTrack}
+        />
 
         <button
           aria-label={repeatMode !== 'off' ? 'Disable repeat' : 'Enable repeat'}

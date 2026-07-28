@@ -72,7 +72,7 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
   return (
     <div
       className={cn(
-        'fixed inset-0 z-60 overflow-y-auto transition-opacity duration-400 ease-out',
+        'fixed inset-0 z-[80] overflow-y-auto overscroll-contain transition-opacity duration-400 ease-out',
         isOpen
           ? 'opacity-100 visible'
           : 'opacity-0 invisible pointer-events-none',
@@ -83,11 +83,11 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
           rgb(${Math.min(r * 1.4, 220)}, ${Math.min(g * 1.4, 220)}, ${Math.min(b * 1.4, 220)}) 20%,
           rgb(${r}, ${g}, ${b}) 45%,
           rgb(${Math.round(r * 0.5)}, ${Math.round(g * 0.5)}, ${Math.round(b * 0.5)}) 65%,
-          #0f0f0f 85%,
-          #0a0a0a 100%)`,
+          var(--color-background) 85%,
+          var(--color-background) 100%)`,
       }}
     >
-      <div className="sticky top-0 z-20 flex items-center justify-between px-4 pt-4 pb-2 bg-linear-to-b from-black/35 to-transparent">
+      <div className="sticky top-0 z-20 flex min-h-14 items-center justify-between bg-linear-to-b from-black/35 to-transparent px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <p className="text-white/90 text-sm font-semibold truncate">
           {playlistTitle}
         </p>
@@ -112,21 +112,21 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
         </div>
       </div>
 
-      <section className="min-h-[calc(100dvh-82px)] flex flex-col">
-        <div className="flex-1 flex flex-col items-center justify-center px-6 pt-8 pb-28 max-[1024px]:pb-24 sm:max-[1024px]:pb-26">
+      <section className="flex min-h-[calc(100dvh-3.5rem)] flex-col">
+        <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-5 px-4 pb-28 pt-3 sm:px-6 sm:pb-30 sm:pt-5 [@media(orientation:landscape)_and_(max-height:600px)]:grid [@media(orientation:landscape)_and_(max-height:600px)]:grid-cols-2 [@media(orientation:landscape)_and_(max-height:600px)]:gap-6 [@media(orientation:landscape)_and_(max-height:600px)]:pb-24 [@media(orientation:landscape)_and_(max-height:600px)]:pt-1 xl:pb-32">
           <Image
             alt={title}
-            className="w-full max-w-122 aspect-square rounded-xl shadow-2xl object-cover"
+            className="aspect-square w-full max-w-[min(30.5rem,calc(100dvh-16rem))] rounded-md object-cover shadow-2xl sm:rounded-xl [@media(orientation:landscape)_and_(max-height:600px)]:w-[min(42vw,calc(100dvh-9rem))] [@media(orientation:landscape)_and_(max-height:600px)]:justify-self-end"
             height={488}
             src={coverUrl}
             unoptimized
             width={488}
           />
 
-          <div className="w-full max-w-122 mt-6">
-            <div className="flex items-center justify-between mb-5">
+          <div className="w-full max-w-122 [@media(orientation:landscape)_and_(max-height:600px)]:max-w-sm [@media(orientation:landscape)_and_(max-height:600px)]:justify-self-start">
+            <div className="flex items-center justify-between">
               <div className="min-w-0 flex-1">
-                <h2 className="text-white text-2xl font-bold truncate">
+                <h2 className="truncate text-xl font-bold text-white sm:text-2xl">
                   {title}
                 </h2>
                 <p className="text-white/60 mt-1 text-sm">{artist}</p>
@@ -151,7 +151,7 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
         </div>
       </section>
 
-      <section className="px-6 pb-28 max-[1024px]:pb-24 sm:max-[1024px]:pb-26 pt-10">
+      <section className="px-4 pb-24 pt-10 sm:px-6 sm:pb-26 xl:pb-28">
         <div className="mx-auto w-full max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-4">
@@ -165,9 +165,9 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
         </div>
       </section>
 
-      <div className="fixed bottom-0 left-0 right-0 z-30 w-full border-t border-white/10 bg-black/65 backdrop-blur-sm px-4 py-3">
+      <div className="fixed inset-x-0 bottom-0 z-30 w-full border-t border-white/10 bg-black/65 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-sm">
         <div className="mx-auto w-full max-w-7xl">
-          <div className="flex max-[1024px]:hidden items-center justify-between gap-4">
+          <div className="hidden items-center justify-between gap-4 xl:flex">
             <div className="w-[28%] min-w-0">
               <TrackInfo
                 artist={artist}
@@ -195,7 +195,7 @@ export const NowPlayingView: React.FC<NowPlayingViewProps> = ({
             </div>
           </div>
 
-          <div className="hidden max-[1024px]:block mx-auto w-full max-w-122">
+          <div className="mx-auto w-full max-w-122 xl:hidden">
             <PlayerControls
               currentTime={currentTime}
               duration={duration}

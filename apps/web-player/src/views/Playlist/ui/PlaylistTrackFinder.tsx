@@ -37,10 +37,10 @@ export const PlaylistTrackFinder = ({
   if (!isVisible) return null
 
   return (
-    <section className="px-6 pb-10 pt-6">
+    <section className="px-4 pb-10 pt-5 sm:px-6 sm:pt-6">
       <div className="border-t border-white/10 pt-6">
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <h2 className="text-2xl font-bold text-text">
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <h2 className="text-xl font-bold text-text sm:text-2xl">
             Let's find something for your playlist
           </h2>
           <button
@@ -49,7 +49,7 @@ export const PlaylistTrackFinder = ({
             onClick={() => setIsVisible(false)}
             type="button"
           >
-            <X size={30} />
+            <X className="h-6 w-6 sm:h-7.5 sm:w-7.5" />
           </button>
         </div>
         <label className="relative block max-w-100">
@@ -112,7 +112,7 @@ const TrackSearchResult = ({
   onAddTrack,
   track,
 }: TrackSearchResultProps) => (
-  <div className="grid grid-cols-[44px_minmax(0,1.8fr)_minmax(160px,1fr)_auto] items-center gap-3 rounded px-3 py-2 transition-colors hover:bg-white/10 max-[860px]:grid-cols-[44px_minmax(0,1fr)_auto]">
+  <div className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-2 rounded px-2 py-2 transition-colors hover:bg-white/10 sm:grid-cols-[44px_minmax(0,1fr)_auto] sm:gap-3 sm:px-3 min-[861px]:grid-cols-[44px_minmax(0,1.8fr)_minmax(160px,1fr)_auto]">
     <Image
       alt={track.title}
       className="h-10 w-10 rounded object-cover"
@@ -129,7 +129,7 @@ const TrackSearchResult = ({
       {track.title}
     </p>
     <button
-      className="rounded-full border border-white/50 px-4 py-1.5 text-sm font-bold text-text transition-colors hover:border-white disabled:cursor-not-allowed disabled:opacity-50"
+      className="rounded-full border border-white/50 px-3 py-1.5 text-sm font-bold text-text transition-colors hover:border-white disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
       disabled={addingTrackId === track.id}
       onClick={() => onAddTrack(track)}
       type="button"

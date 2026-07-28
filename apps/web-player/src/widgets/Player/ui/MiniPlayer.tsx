@@ -47,7 +47,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
 
   return (
     <div
-      className={`fixed bottom-16 left-2 right-2 z-50 hidden max-[1024px]:block transition-transform duration-300 ease-in-out ${
+      className={`fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] left-2 right-2 z-50 hidden max-xl:block transition-transform duration-300 ease-in-out ${
         isVisible ? 'translate-y-0' : 'translate-y-full'
       }`}
     >

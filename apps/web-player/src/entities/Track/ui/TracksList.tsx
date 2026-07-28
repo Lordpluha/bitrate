@@ -34,7 +34,7 @@ export const TracksList = ({
   )
 
   return (
-    <div className="px-6 py-4 max-[1024px]:px-3 max-[1024px]:py-3">
+    <div className="px-4 py-3 sm:px-6 sm:py-4 max-[1024px]:px-2">
       <div
         className={
           viewMode === 'compact'

@@ -1,7 +1,9 @@
+import { cn } from '@spotify/ui-react'
 import type { ReactNode } from 'react'
 
 type LibraryEmptyAwareProps = {
   children: ReactNode
+  className?: string
   isEmpty: boolean
 }
 
@@ -13,12 +15,18 @@ const LibraryEmptyState = () => (
 
 export const LibraryGridEmptyAware = ({
   children,
+  className,
   isEmpty,
 }: LibraryEmptyAwareProps) => {
   if (isEmpty) return <LibraryEmptyState />
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4">
+    <div
+      className={cn(
+        'grid grid-cols-1 gap-1 xl:grid-cols-[repeat(auto-fill,minmax(min(100%,150px),1fr))] xl:gap-4',
+        className,
+      )}
+    >
       {children}
     </div>
   )

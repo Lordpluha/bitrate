@@ -34,7 +34,7 @@ export const PlaylistHeader = ({
 
   return (
     <div
-      className="relative text-white h-85 p-6 max-[1024px]:h-auto max-[1024px]:px-4 max-[1024px]:py-5"
+      className="relative h-85 p-6 text-white max-[1024px]:h-auto max-[1024px]:px-4 max-[1024px]:py-5"
       style={{
         background: `linear-gradient(180deg, ${topColor} 0%, ${midColor} 42%, ${deepColor} 100%)`,
       }}
@@ -43,23 +43,23 @@ export const PlaylistHeader = ({
         <ArrowLeft className="text-white" size={20} />
       </BackButton>
 
-      <div className="h-full flex flex-row items-end gap-6 mt-0 max-[1024px]:mt-4 max-[1024px]:flex-col max-[1024px]:items-start max-[1024px]:gap-4">
+      <div className="mt-0 flex h-full flex-row items-end gap-6 max-[1024px]:mt-4 max-[1024px]:flex-col max-[1024px]:items-start max-[1024px]:gap-4 max-[640px]:items-center">
         <Image
           alt={title}
-          className="shadow-2xl rounded object-cover w-58 h-58 max-[1024px]:w-52 max-[1024px]:h-52"
+          className="h-58 w-58 rounded object-cover shadow-2xl max-[1024px]:h-52 max-[1024px]:w-52 max-[640px]:h-44 max-[640px]:w-44"
           height={232}
           src={imageUrl}
           unoptimized
           width={232}
         />
-        <div className="flex flex-col gap-2 pb-4 max-[1024px]:pb-0">
+        <div className="flex min-w-0 flex-col gap-2 pb-4 max-[1024px]:pb-0 max-[640px]:w-full max-[640px]:items-center max-[640px]:text-center">
           <span className="text-sm tracking-wide font-bold uppercase text-white/80 max-[1024px]:text-xs max-[1024px]:font-semibold">
             {type}
           </span>
-          <h1 className="text-6xl leading-tight font-bold max-[1024px]:text-4xl">
+          <h1 className="max-w-full break-words text-6xl font-bold leading-tight max-[1024px]:text-4xl max-[640px]:text-3xl">
             {title}
           </h1>
-          <div className="flex flex-wrap items-center gap-2 text-sm mt-1">
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-sm max-[640px]:justify-center">
             <span className="font-semibold">{author}</span>
             <span className="text-white/50">•</span>
             <span>{tracksCount} songs</span>

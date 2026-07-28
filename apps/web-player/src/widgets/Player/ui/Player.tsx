@@ -1,28 +1,19 @@
 'use client'
 
 import {
-  restorePlayerSession,
   selectCurrentPlaylistName,
   selectMusicPlayer,
-  setPlaylistTracks,
-  setShuffleEnabled,
   setVolume,
 } from '@entities/Player/store/PlayerSlice'
 import { useLikeTrack, useUnlikeTrack } from '@entities/Track/api/client'
-import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { showApiSuccessToast } from '@shared/api/feedback'
 import { useAppDispatch, useAppSelector, useAudioPlayer } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { useLikedTracks } from '@shared/hooks/useLikedTracks'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import {
-  type FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { usePlayerSessionPersistence } from '@/widgets/Player/model/usePlayerSessionPersistence'
+import { usePlaylistShuffle } from '@/widgets/Player/model/usePlaylistShuffle'
 import { FloatingPlayerWindow } from './FloatingPlayerWindow'
 import { MiniPlayer } from './MiniPlayer'
 import { NowPlayingView } from './NowPlayingView'
@@ -30,42 +21,25 @@ import { PlayerActions } from './PlayerActions'
 import { PlayerControls } from './PlayerControls'
 import { TrackInfo } from './TrackInfo'
 
-const PLAYER_SESSION_STORAGE_KEY = 'spotify:last-player-session'
-const PLAYER_SESSION_PERSIST_INTERVAL_MS = 5000
-
-type PersistedPlayerSession = {
-  currentPlaylistId: string | null
-  currentPlaylistName: string | null
-  currentTime: number
-  currentTrack: TrackEntity
-  currentTrackIndex: number
-  duration: number
-  playlist: TrackEntity[]
-  progress: number
-  volume: number
+interface PlayerProps {
+  isExpanded: boolean
+  onExpandedChange: (isExpanded: boolean) => void
 }
 
-export const Player: FC = () => {
+export const Player: FC<PlayerProps> = ({ isExpanded, onExpandedChange }) => {
+  const player = useAppSelector(selectMusicPlayer)
   const {
     currentTrack,
-    currentPlaylistId,
     isPlaying,
-    currentTrackIndex,
     volume,
     currentTime,
     duration,
     isShuffled,
     playlist,
-    progress,
-  } = useAppSelector(selectMusicPlayer)
+  } = player
   const currentPlaylistName = useAppSelector(selectCurrentPlaylistName)
   const dispatch = useAppDispatch()
-  const [isVisible, setIsVisible] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
   const [floatingWindow, setFloatingWindow] = useState<Window | null>(null)
-  const lastPersistedAtRef = useRef(0)
-  const lastPersistedTrackIdRef = useRef<string | null>(null)
-  const originalPlaylistRef = useRef<TrackEntity[]>([])
   const { data: artist } = useArtist(currentTrack?.artistId)
   const { data: likedTracks } = useLikedTracks()
   const likeTrack = useLikeTrack()
@@ -95,78 +69,19 @@ export const Player: FC = () => {
     handleSeeked,
   } = useAudioPlayer()
 
-  useEffect(() => {
-    if (currentTrack || typeof window === 'undefined') return
-
-    try {
-      const rawSession = window.localStorage.getItem(PLAYER_SESSION_STORAGE_KEY)
-      if (!rawSession) return
-
-      const session = JSON.parse(rawSession) as PersistedPlayerSession
-      if (!session.currentTrack?.id) return
-
-      dispatch(restorePlayerSession(session))
-    } catch {
-      window.localStorage.removeItem(PLAYER_SESSION_STORAGE_KEY)
-    }
-  }, [currentTrack, dispatch])
-
-  useEffect(() => {
-    if (!currentTrack || typeof window === 'undefined') return
-    const now = Date.now()
-    const hasTrackChanged = lastPersistedTrackIdRef.current !== currentTrack.id
-
-    if (
-      !hasTrackChanged &&
-      now - lastPersistedAtRef.current < PLAYER_SESSION_PERSIST_INTERVAL_MS
-    ) {
-      return
-    }
-
-    const session: PersistedPlayerSession = {
-      currentPlaylistId,
-      currentPlaylistName,
-      currentTime,
-      currentTrack,
-      currentTrackIndex,
-      duration,
-      playlist,
-      progress,
-      volume,
-    }
-
-    window.localStorage.setItem(
-      PLAYER_SESSION_STORAGE_KEY,
-      JSON.stringify(session),
-    )
-    lastPersistedAtRef.current = now
-    lastPersistedTrackIdRef.current = currentTrack.id
-  }, [
-    currentPlaylistName,
-    currentPlaylistId,
-    currentTime,
+  usePlayerSessionPersistence(player, currentPlaylistName)
+  const handleShuffleToggle = usePlaylistShuffle({
     currentTrack,
-    currentTrackIndex,
-    duration,
+    isShuffled,
     playlist,
-    progress,
-    volume,
-  ])
+  })
+  const isVisible = Boolean(currentTrack)
 
   useEffect(() => {
-    if (currentTrack) {
-      setIsVisible(true)
-    } else {
-      setIsVisible(false)
-      setIsExpanded(false)
+    if (!currentTrack) {
+      onExpandedChange(false)
     }
-  }, [currentTrack])
-
-  useEffect(() => {
-    if (!isShuffled) {
-      originalPlaylistRef.current = playlist
-    }
-  }, [isShuffled, playlist])
+  }, [currentTrack, onExpandedChange])
 
   const coverUrl = getTrackCoverUrl(currentTrack?.cover)
 
@@ -194,44 +109,6 @@ export const Player: FC = () => {
     })
     showApiSuccessToast('Added to Liked Songs')
   }, [currentTrack, isCurrentTrackLiked, isLikePending, likeTrack, unlikeTrack])
-
-  const handleShuffleToggle = useCallback(() => {
-    if (!currentTrack) return
-
-    if (playlist.length < 2) {
-      dispatch(setShuffleEnabled(!isShuffled))
-      return
-    }
-
-    if (isShuffled) {
-      const originalPlaylist = originalPlaylistRef.current
-      if (originalPlaylist.length > 0) {
-        dispatch(setPlaylistTracks(originalPlaylist))
-      }
-      dispatch(setShuffleEnabled(false))
-      return
-    }
-
-    originalPlaylistRef.current = playlist
-    const remainingTracks = playlist.filter(
-      (track) => track.id !== currentTrack.id,
-    )
-    const shuffledTracks = [...remainingTracks]
-
-    for (let index = shuffledTracks.length - 1; index > 0; index -= 1) {
-      const randomIndex = Math.floor(Math.random() * (index + 1))
-      const current = shuffledTracks[index]
-      const randomTrack = shuffledTracks[randomIndex]
-
-      if (!current || !randomTrack) continue
-
-      shuffledTracks[index] = randomTrack
-      shuffledTracks[randomIndex] = current
-    }
-
-    dispatch(setPlaylistTracks([currentTrack, ...shuffledTracks]))
-    dispatch(setShuffleEnabled(true))
-  }, [currentTrack, dispatch, isShuffled, playlist])
 
   const closeFloatingPlayer = useCallback(() => {
     if (floatingWindow && !floatingWindow.closed) {
@@ -321,7 +198,7 @@ export const Player: FC = () => {
         isLiked={isCurrentTrackLiked}
         isOpen={isExpanded}
         isPlaying={isPlaying}
-        onClose={() => setIsExpanded(false)}
+        onClose={() => onExpandedChange(false)}
         onLikeToggle={() => void handleLikeToggle()}
         onNext={() => changeTrack('next')}
         onPlayPause={togglePlayPause}
@@ -340,8 +217,8 @@ export const Player: FC = () => {
         duration={duration}
         isLiked={isCurrentTrackLiked}
         isPlaying={isPlaying}
-        isVisible={isVisible}
-        onExpand={() => setIsExpanded(true)}
+        isVisible={isVisible && !isExpanded}
+        onExpand={() => onExpandedChange(true)}
         onLikeToggle={() => void handleLikeToggle()}
         onNext={() => changeTrack('next')}
         onPlayPause={togglePlayPause}
@@ -349,7 +226,7 @@ export const Player: FC = () => {
       />
 
       <div
-        className={`fixed bottom-0 left-0 right-0 h-22.5 bg-background border-t border-border px-4 hidden [@media(min-width:1025px)]:flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${
+        className={`fixed bottom-0 left-0 right-0 h-22.5 bg-background border-t border-border px-4 hidden xl:flex items-center justify-between gap-4 z-50 transition-transform duration-300 ease-in-out ${
           isVisible ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
@@ -380,7 +257,7 @@ export const Player: FC = () => {
 
         <div className="w-[35%] flex justify-end">
           <PlayerActions
-            onExpand={() => setIsExpanded(true)}
+            onExpand={() => onExpandedChange(true)}
             onVolumeChange={(vol) => dispatch(setVolume(vol))}
             volume={volume}
           />

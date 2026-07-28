@@ -98,20 +98,20 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
           <ArrowLeft className="text-white" size={20} />
         </BackButton>
 
-        <div className="flex h-full flex-row items-end gap-6 pt-14 max-[1024px]:flex-col max-[1024px]:items-start max-[1024px]:gap-4 max-[1024px]:pt-4">
+        <div className="flex h-full flex-row items-end gap-6 pt-14 max-[1024px]:flex-col max-[1024px]:items-start max-[1024px]:gap-4 max-[1024px]:pt-4 max-[640px]:items-center">
           <Image
             alt={album.title}
-            className="h-58 w-58 rounded object-cover shadow-2xl max-[1024px]:h-52 max-[1024px]:w-52"
+            className="h-58 w-58 rounded object-cover shadow-2xl max-[1024px]:h-52 max-[1024px]:w-52 max-[640px]:h-44 max-[640px]:w-44"
             height={232}
             src={coverUrl}
             unoptimized
             width={232}
           />
-          <div className="flex flex-col gap-2 pb-4 max-[1024px]:pb-0">
+          <div className="flex min-w-0 flex-col gap-2 pb-4 max-[1024px]:pb-0 max-[640px]:w-full max-[640px]:items-center max-[640px]:text-center">
             <span className="text-sm font-bold uppercase tracking-wide text-white/80 max-[1024px]:text-xs">
               Album
             </span>
-            <h1 className="text-6xl font-bold leading-tight max-[1024px]:text-4xl">
+            <h1 className="max-w-full break-words text-6xl font-bold leading-tight max-[1024px]:text-4xl max-[640px]:text-3xl">
               {album.title}
             </h1>
             {album.description && (
@@ -119,7 +119,7 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
                 {album.description}
               </p>
             )}
-            <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
+            <div className="mt-1 flex flex-wrap items-center gap-2 text-sm max-[640px]:justify-center">
               <span className="font-semibold">{album.artistId}</span>
               {album.releaseDate && (
                 <>
@@ -136,7 +136,7 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
         </div>
       </section>
 
-      <section className="border-b border-white/10 px-6 py-4">
+      <section className="border-b border-white/10 px-4 py-4 sm:px-6">
         <button
           className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-text hover:bg-white/15 disabled:opacity-60"
           disabled={likeAlbum.isPending || unlikeAlbum.isPending}
@@ -153,7 +153,9 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
       </section>
 
       {tracks.length === 0 ? (
-        <div className="p-8 text-text-subdued">No tracks in this album</div>
+        <div className="p-4 text-text-subdued sm:p-8">
+          No tracks in this album
+        </div>
       ) : (
         <TracksList
           activeTrackId={musicPlayer.currentTrack?.id}

@@ -6,7 +6,7 @@ type PlaylistDetailPageProps = {
 
 export default async function PlaylistDetailPage({
   params,
-}: PlaylistDetailPageProps) {
+}: PageProps<PlaylistDetailPageProps>) {
   const { id } = await params
 
   return <PlaylistPage playlistId={id} />
