@@ -1,3 +1,5 @@
+import { RegistrationView } from '@views/RegistrationView'
+
 export default function RegistrationPage() {
-  return <div>RegistrationPage</div>
+  return <RegistrationView />
 }
