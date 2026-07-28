@@ -3,7 +3,6 @@
 import { cn } from '@spotify/ui-react'
 import { Pause, Play, Repeat, Shuffle } from 'lucide-react'
 import {
-  type FC,
   type KeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   useCallback,
@@ -28,7 +27,7 @@ interface PlayerControlsProps {
   onRepeatToggle?: () => void
 }
 
-export const PlayerControls: FC<PlayerControlsProps> = ({
+export const PlayerControls = ({
   isPlaying,
   currentTime,
   duration,
@@ -40,7 +39,7 @@ export const PlayerControls: FC<PlayerControlsProps> = ({
   repeatMode = 'off',
   onShuffleToggle,
   onRepeatToggle,
-}) => {
+}: PlayerControlsProps) => {
   const progressBarRef = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [seekTime, setSeekTime] = useState<number | null>(null)

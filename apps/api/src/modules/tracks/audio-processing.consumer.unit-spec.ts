@@ -1,5 +1,6 @@
 import { readdir, rm, stat } from 'node:fs/promises'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { convertAudio, convertAudioToHls } from '@spotify/converter'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
@@ -11,10 +12,14 @@ jest.mock('@spotify/converter', () => ({
   convertAudioToHls: jest.fn().mockResolvedValue(undefined as never),
 }))
 
+jest.mock('node:fs', () => ({
+  createReadStream: jest.fn().mockReturnValue({ pipe: jest.fn() }),
+}))
+
 jest.mock('node:fs/promises', () => ({
   access: jest.fn().mockResolvedValue(undefined as never),
   mkdir: jest.fn().mockResolvedValue(undefined as never),
-  readdir: jest.fn().mockResolvedValue(['index.m3u8', 'init.mp4', 'segment_00000.m4s'] as never),
+  readdir: jest.fn().mockResolvedValue(['index.m3u8', 'init_0.mp4', 'segment_00000.m4s'] as never),
   rename: jest.fn().mockResolvedValue(undefined as never),
   rm: jest.fn().mockResolvedValue(undefined as never),
   stat: jest.fn().mockResolvedValue({ size: 2048 } as never),
@@ -53,19 +58,28 @@ const jobData = {
 
 describe('AudioProcessingConsumer', () => {
   it('should expose runtime constructor metadata for Nest dependency injection', () => {
+    // The StorageService param is an interface, so it erases to Object at runtime —
+    // the actual injection token is asserted separately via self:paramtypes below.
     expect(Reflect.getMetadata('design:paramtypes', AudioProcessingConsumer)).toEqual([
       PrismaService,
+      Object,
     ])
+    expect(Reflect.getMetadata('self:paramtypes', AudioProcessingConsumer)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ index: 1, param: STORAGE_SERVICE })]),
+    )
   })
 
   let consumer: AudioProcessingConsumer
   let prisma: PrismaMock
+  const storage = {
+    upload: jest.fn().mockResolvedValue('key' as never),
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
     resetPrismaMock()
     prisma = prismaMock
-    consumer = new AudioProcessingConsumer(prisma)
+    consumer = new AudioProcessingConsumer(prisma, storage as never)
     prisma.track.findUnique.mockResolvedValue({ id: 'track-1', audioUrl: 'track.mp3' } as never)
     prisma.track.update.mockResolvedValue({ id: 'track-1' } as never)
     prisma.trackFile.upsert.mockResolvedValue({ id: 'tf-1' } as never)
@@ -75,7 +89,12 @@ describe('AudioProcessingConsumer', () => {
       }
       return []
     })
-    readdirMock.mockResolvedValue(['index.m3u8', 'init.mp4', 'segment_00000.m4s'] as never)
+    readdirMock.mockImplementation(((_path: never, options?: { withFileTypes?: boolean }) => {
+      if (options?.withFileTypes) {
+        return Promise.resolve([{ name: 'master.m3u8', isDirectory: () => false }]) as never
+      }
+      return Promise.resolve(['index.m3u8', 'init_0.mp4', 'segment_00000.m4s']) as never
+    }) as never)
     statMock.mockResolvedValue({ size: 2048 } as never)
     convertAudioMock.mockResolvedValue(undefined as never)
     convertAudioToHlsMock.mockResolvedValue(undefined as never)
@@ -102,7 +121,18 @@ describe('AudioProcessingConsumer', () => {
     await consumer.process(job)
 
     expect(convertAudioMock).toHaveBeenCalledTimes(2)
-    expect(convertAudioToHlsMock).toHaveBeenCalledTimes(2)
+    expect(convertAudioToHlsMock).toHaveBeenCalledTimes(1)
+    expect(convertAudioToHlsMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bitrates: ['128k', '192k'],
+        segmentDuration: 4,
+      }),
+    )
+    expect(storage.upload).toHaveBeenLastCalledWith(
+      'tracks/track-1/hls/master.m3u8',
+      expect.anything(),
+      'application/vnd.apple.mpegurl',
+    )
     expect(prisma.trackFile.upsert).toHaveBeenCalledTimes(2)
     expect(prisma.track.update).toHaveBeenCalledWith(
       expect.objectContaining({

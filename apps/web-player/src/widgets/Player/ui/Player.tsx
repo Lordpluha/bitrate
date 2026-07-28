@@ -3,11 +3,11 @@
 import {
   selectCurrentPlaylistName,
   selectMusicPlayer,
-  setVolume,
-} from '@entities/Player/store/PlayerSlice'
+  usePlayerStore,
+} from '@entities/Player'
 import { useLikeTrack, useUnlikeTrack } from '@entities/Track/api/client'
 import { showApiSuccessToast } from '@shared/api/feedback'
-import { useAppDispatch, useAppSelector, useAudioPlayer } from '@shared/hooks'
+import { useAudioPlayer } from '@shared/hooks'
 import { useArtist } from '@shared/hooks/useArtist'
 import { useLikedTracks } from '@shared/hooks/useLikedTracks'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
@@ -27,7 +27,7 @@ interface PlayerProps {
 }
 
 export const Player: FC<PlayerProps> = ({ isExpanded, onExpandedChange }) => {
-  const player = useAppSelector(selectMusicPlayer)
+  const player = usePlayerStore(selectMusicPlayer)
   const {
     currentTrack,
     isPlaying,
@@ -37,8 +37,8 @@ export const Player: FC<PlayerProps> = ({ isExpanded, onExpandedChange }) => {
     isShuffled,
     playlist,
   } = player
-  const currentPlaylistName = useAppSelector(selectCurrentPlaylistName)
-  const dispatch = useAppDispatch()
+  const currentPlaylistName = usePlayerStore(selectCurrentPlaylistName)
+  const setVolume = usePlayerStore((state) => state.setVolume)
   const [floatingWindow, setFloatingWindow] = useState<Window | null>(null)
   const { data: artist } = useArtist(currentTrack?.artistId)
   const { data: likedTracks } = useLikedTracks()
@@ -158,7 +158,7 @@ export const Player: FC<PlayerProps> = ({ isExpanded, onExpandedChange }) => {
   return (
     <>
       {([0, 1] as const).map((slot) => (
-        // biome-ignore lint/a11y/useMediaCaption: audio-only playback has no caption track
+        // biome-ignore lint/a11y/useMediaCaption: this element plays audio-only music
         <audio
           data-active={activeSlot === slot}
           key={slot}
@@ -204,7 +204,7 @@ export const Player: FC<PlayerProps> = ({ isExpanded, onExpandedChange }) => {
         onPlayPause={togglePlayPause}
         onPrevious={() => changeTrack('prev')}
         onSeek={onSeek}
-        onVolumeChange={(vol) => dispatch(setVolume(vol))}
+        onVolumeChange={setVolume}
         playlistTitle={currentPlaylistName || 'Playlist'}
         title={currentTrack.title || 'Unknown'}
         volume={volume}
@@ -258,7 +258,7 @@ export const Player: FC<PlayerProps> = ({ isExpanded, onExpandedChange }) => {
         <div className="w-[35%] flex justify-end">
           <PlayerActions
             onExpand={() => onExpandedChange(true)}
-            onVolumeChange={(vol) => dispatch(setVolume(vol))}
+            onVolumeChange={setVolume}
             volume={volume}
           />
         </div>

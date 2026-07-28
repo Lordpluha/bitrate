@@ -20,35 +20,41 @@ beforeEach(() => {
 })
 
 describe('convertAudioToHls', () => {
-  it('creates ten-second fragmented MP4 HLS segments', async () => {
+  it('creates aligned four-second multi-bitrate fragmented MP4 HLS variants', async () => {
     const result = await convertAudioToHls({
       input: '/music/track.mp3',
       outputDir: '/music/track.hls',
-      bitrate: '192k',
+      bitrates: ['128k', '192k'],
     })
 
     expect(fsMocks.mkdir).toHaveBeenCalledWith('/music/track.hls', { recursive: true })
+    expect(fsMocks.mkdir).toHaveBeenCalledWith('/music/track.hls/128', { recursive: true })
+    expect(fsMocks.mkdir).toHaveBeenCalledWith('/music/track.hls/192', { recursive: true })
     expect(execaMock).toHaveBeenCalledWith(
       '/fake/ffmpeg',
       expect.arrayContaining([
-        '-c:a',
+        '-c:a:0',
         'aac',
-        '-b:a',
+        '-b:a:1',
         '192k',
         '-hls_time',
-        '10',
+        '4',
         '-hls_segment_type',
         'fmp4',
+        '-var_stream_map',
+        'a:0,name:128 a:1,name:192',
+        '-master_pl_name',
+        'master.m3u8',
       ]),
     )
-    expect(result.playlist).toBe('/music/track.hls/index.m3u8')
+    expect(result.masterPlaylist).toBe('/music/track.hls/master.m3u8')
   })
 
   it('passes an FFmpeg timeout when requested', async () => {
     await convertAudioToHls({
       input: '/music/track.mp3',
       outputDir: '/music/track.hls',
-      bitrate: '192k',
+      bitrates: ['192k'],
       timeoutMs: 600_000,
     })
 
@@ -57,8 +63,8 @@ describe('convertAudioToHls', () => {
 
   it('rejects invalid bitrate syntax', async () => {
     await expect(
-      convertAudioToHls({ input: '/a.mp3', outputDir: '/hls', bitrate: '192' }),
-    ).rejects.toThrow('Bitrate must use')
+      convertAudioToHls({ input: '/a.mp3', outputDir: '/hls', bitrates: ['192'] }),
+    ).rejects.toThrow('Invalid bitrate format')
   })
 
   it('rejects invalid segment duration', async () => {
@@ -66,7 +72,7 @@ describe('convertAudioToHls', () => {
       convertAudioToHls({
         input: '/a.mp3',
         outputDir: '/hls',
-        bitrate: '128k',
+        bitrates: ['128k'],
         segmentDuration: 0,
       }),
     ).rejects.toThrow('Segment duration')

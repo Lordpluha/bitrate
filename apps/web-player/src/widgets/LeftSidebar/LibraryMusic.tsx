@@ -1,8 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { selectMusicPlayer } from '@/entities/Player'
-import { useAppSelector } from '@/shared/hooks'
+import { selectMusicPlayer, usePlayerStore } from '@/entities/Player'
 import { LibraryMusicList } from '@/widgets/LeftSidebar/LibraryMusicList'
 import { LibraryMusicSkeleton } from '@/widgets/LeftSidebar/LibraryMusicSkeleton'
 import { useLibraryMusicItems } from '@/widgets/LeftSidebar/model/useLibraryMusicItems'
@@ -16,7 +15,7 @@ export const LibraryMusic = ({
   isCollapsed = false,
   isExpanded = false,
 }: LibraryMusicProps) => {
-  const player = useAppSelector(selectMusicPlayer)
+  const player = usePlayerStore(selectMusicPlayer)
   const pathname = usePathname()
   const library = useLibraryMusicItems()
 

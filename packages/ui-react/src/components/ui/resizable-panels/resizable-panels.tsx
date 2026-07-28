@@ -1,6 +1,6 @@
 'use client'
 
-import type { CSSProperties, FC, ReactNode, Ref } from 'react'
+import type { CSSProperties, ReactNode, Ref } from 'react'
 import {
   Panel,
   Group as PanelGroup,
@@ -42,13 +42,13 @@ export interface ResizableHandleProps {
   className?: string
 }
 
-export const ResizableLayout: FC<ResizableLayoutProps> = ({
+export const ResizableLayout = ({
   direction = 'horizontal',
   orientation,
   className,
   style,
   children,
-}) => {
+}: ResizableLayoutProps) => {
   return (
     <PanelGroup
       orientation={orientation ?? direction}
@@ -60,7 +60,7 @@ export const ResizableLayout: FC<ResizableLayoutProps> = ({
   )
 }
 
-export const ResizablePanel: FC<ResizablePanelProps> = ({
+export const ResizablePanel = ({
   defaultSize = 50,
   minSize = 10,
   maxSize = 90,
@@ -72,7 +72,7 @@ export const ResizablePanel: FC<ResizablePanelProps> = ({
   className,
   style,
   children,
-}) => {
+}: ResizablePanelProps) => {
   return (
     <Panel
       collapsedSize={collapsedSize}
@@ -91,7 +91,7 @@ export const ResizablePanel: FC<ResizablePanelProps> = ({
   )
 }
 
-export const ResizableHandle: FC<ResizableHandleProps> = ({ disabled, className }) => {
+export const ResizableHandle = ({ disabled, className }: ResizableHandleProps) => {
   return (
     <PanelResizeHandle
       disabled={disabled}

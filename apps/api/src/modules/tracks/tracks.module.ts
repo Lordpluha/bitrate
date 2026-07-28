@@ -1,5 +1,6 @@
 import { CacheModule } from '@infra/cache/cache.module'
 import { PrismaModule } from '@infra/prisma/prisma.module'
+import { StorageModule } from '@infra/storage/storage.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { BullModule } from '@nestjs/bullmq'
@@ -17,6 +18,7 @@ import { TracksService } from './tracks.service'
     CacheModule,
     UsersAuthModule,
     TokensModule,
+    StorageModule,
     BullModule.registerQueue({ name: 'audio-processing' }),
   ],
   exports: [TracksService, AudioGateway],

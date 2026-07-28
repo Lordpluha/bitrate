@@ -2,7 +2,6 @@
 
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ThemeProvider } from '@shared/contexts'
-import { ReduxProvider } from '@shared/store/ReduxProvider'
 import { Toaster } from '@spotify/ui-react'
 import {
   MutationCache,
@@ -81,14 +80,12 @@ export const Provider = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(createQueryClient)
 
   return (
-    <ReduxProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <Toaster />
-          {children}
-        </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </ReduxProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <Toaster />
+        {children}
+      </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }

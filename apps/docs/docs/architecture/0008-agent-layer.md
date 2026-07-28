@@ -1,6 +1,9 @@
 # ADR-0008: Repository-owned AI agent layer
 
-Status: Accepted
+Status: Accepted — the command set is superseded by [ADR-0012](./0012-ticket-driven-agent-commands.md).
+The layer structure below (`AGENTS.md`/`.agents/`/`.claude/` split) is superseded by
+[ADR-0018](./0018-consolidate-agents-into-claude.md), which folded everything into
+`.claude/` alone.
 
 Date: 2026-06-24
 
@@ -21,8 +24,8 @@ test runners, generation pipelines, or Changesets workflow.
 - `.claude/agents/` owns coarse expensive isolated `--agent` workflows.
 - `.claude/commands/` provides token-budget commands that run in the current session by
   default.
-- Commands stay coarse: `/sp-test` selects Jest, Vitest, or Playwright from scope, and
-  `/sp-review` covers FSD, style/design-system, mechanical checks, and goal review.
+- The command set itself (which commands exist, what they do) is owned by
+  [ADR-0012](./0012-ticket-driven-agent-commands.md), not this ADR.
 - `.claude/templates/` is the canonical FSD scaffold source.
 - `.mcp.json` is empty by default; repository MCP servers are enabled only when the team
   deliberately wants them loaded for everyone.

@@ -1,7 +1,9 @@
 # Implementation plans
 
 Use this directory for approved, non-trivial implementation plans that must survive beyond
-one agent/session. Inline `/sp-planner` output remains sufficient for ordinary work.
+one agent/session. `sp-planner` (the heavy `--agent` planning specialist, dispatched by
+`/sp-implement --plan` or invoked directly) produces these; inline planning at the start of
+an ordinary `/sp-implement` run remains sufficient for small tasks.
 
 File name:
 

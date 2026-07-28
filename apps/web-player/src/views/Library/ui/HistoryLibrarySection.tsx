@@ -2,10 +2,9 @@
 
 import Image from 'next/image'
 import type { ListeningHistoryEntry } from '@/entities/History'
-import { play } from '@/entities/Player'
+import { usePlayerStore } from '@/entities/Player'
 import { getTrackById } from '@/entities/Track'
 import { showApiErrorToast } from '@/shared/api/feedback'
-import { useAppDispatch } from '@/shared/hooks'
 import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
 import { LibraryListEmptyAware } from '@/views/Library/ui/LibraryEmptyAware'
 
@@ -16,11 +15,11 @@ type HistoryLibrarySectionProps = {
 export const HistoryLibrarySection = ({
   history,
 }: HistoryLibrarySectionProps) => {
-  const dispatch = useAppDispatch()
+  const play = usePlayerStore((state) => state.play)
 
   const playHistoryTrack = async (trackId: string) => {
     try {
-      dispatch(play(await getTrackById(trackId)))
+      play(await getTrackById(trackId))
     } catch (error) {
       showApiErrorToast(error, 'Unable to play this track.')
     }

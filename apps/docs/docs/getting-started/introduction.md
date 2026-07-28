@@ -72,7 +72,7 @@ pnpm --filter @spotify/desktop tauri dev  # Desktop app
 
 ### Applications
 - **[Backend API](/docs/applications/api/overview)** - NestJS API documentation
-- **[Web Application](/docs/applications/web/overview)** - Next.js web app guide
+- **[Web Player](/docs/applications/web-player/overview)** - Next.js web app guide
 - **[Mobile App](/docs/applications/mobile/overview)** - React Native development
 - **[Desktop App](/docs/applications/desktop/overview)** - Tauri desktop application
 

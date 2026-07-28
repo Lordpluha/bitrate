@@ -1,5 +1,5 @@
-import type { SVGProps } from 'react'
 import type React from 'react'
+import type { SVGProps } from 'react'
 
 const barStyle = (delay: string): React.CSSProperties => ({
   animation: 'wave 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite',
@@ -12,19 +12,55 @@ export const WaveAnimated = ({
   ...props
 }: SVGProps<SVGSVGElement> & { color?: string }) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="18"
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
     height="18"
     viewBox="0 0 14 24"
-    fill="none"
-    aria-hidden="true"
-    focusable="false"
+    width="18"
+    xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <style>{'@keyframes wave{0%,100%{transform:scaleY(0.3)}25%{transform:scaleY(1)}75%{transform:scaleY(0.6)}}'}</style>
-    <rect width={2} height={18} x={1}    y={3} fill={color} rx={1} style={barStyle('0s')}    />
-    <rect width={2} height={22} x={4.5}  y={1} fill={color} rx={1} style={barStyle('0.25s')} />
-    <rect width={2} height={20} x={8}    y={2} fill={color} rx={1} style={barStyle('0.5s')}  />
-    <rect width={2} height={16} x={11.5} y={4} fill={color} rx={1} style={barStyle('0.15s')} />
+    <style>
+      {
+        '@keyframes wave{0%,100%{transform:scaleY(0.3)}25%{transform:scaleY(1)}75%{transform:scaleY(0.6)}}'
+      }
+    </style>
+    <rect
+      fill={color}
+      height={18}
+      rx={1}
+      style={barStyle('0s')}
+      width={2}
+      x={1}
+      y={3}
+    />
+    <rect
+      fill={color}
+      height={22}
+      rx={1}
+      style={barStyle('0.25s')}
+      width={2}
+      x={4.5}
+      y={1}
+    />
+    <rect
+      fill={color}
+      height={20}
+      rx={1}
+      style={barStyle('0.5s')}
+      width={2}
+      x={8}
+      y={2}
+    />
+    <rect
+      fill={color}
+      height={16}
+      rx={1}
+      style={barStyle('0.15s')}
+      width={2}
+      x={11.5}
+      y={4}
+    />
   </svg>
 )

@@ -26,6 +26,7 @@
     "check-types": "turbo run check-types",
     "format": "turbo run format",
     "prepare": "lefthook install || true",
+    "postinstall": "node scripts/setup-graphify.mjs && node scripts/setup-rtk.mjs",
     "commit": "cz",
     "changeset": "changeset",
     "changeset:version": "changeset version",

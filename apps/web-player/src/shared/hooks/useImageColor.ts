@@ -39,7 +39,10 @@ function extractDominantColor(img: HTMLImageElement): RGB {
 
     if (buckets.size === 0) return [20, 20, 20]
 
-    let bestR = 20, bestG = 20, bestB = 20, bestScore = 0
+    let bestR = 20,
+      bestG = 20,
+      bestB = 20,
+      bestScore = 0
 
     for (const bucket of buckets.values()) {
       const r = bucket.r / bucket.count
@@ -57,7 +60,11 @@ function extractDominantColor(img: HTMLImageElement): RGB {
       }
     }
 
-    return [Math.round(bestR * 0.5), Math.round(bestG * 0.5), Math.round(bestB * 0.5)]
+    return [
+      Math.round(bestR * 0.5),
+      Math.round(bestG * 0.5),
+      Math.round(bestB * 0.5),
+    ]
   } catch {
     return [20, 20, 20]
   }
@@ -92,20 +99,24 @@ export function useImageColor(src: string | undefined): RGB {
     let cancelled = false
 
     // Попытка 1: с crossOrigin (нужны CORS-заголовки на сервере)
-    tryLoad(src, true).then((rgb) => {
-      if (cancelled) return
-      // Если цвет извлечь не удалось (дефолтный) — пробуем без crossOrigin
-      // (изображение может быть в кэше браузера)
-      if (rgb[0] === 20 && rgb[1] === 20 && rgb[2] === 20) {
-        return tryLoad(src, false)
-      }
-      setColor(rgb)
-      return undefined
-    }).then((rgb) => {
-      if (rgb && !cancelled) setColor(rgb)
-    })
+    tryLoad(src, true)
+      .then((rgb) => {
+        if (cancelled) return
+        // Если цвет извлечь не удалось (дефолтный) — пробуем без crossOrigin
+        // (изображение может быть в кэше браузера)
+        if (rgb[0] === 20 && rgb[1] === 20 && rgb[2] === 20) {
+          return tryLoad(src, false)
+        }
+        setColor(rgb)
+        return undefined
+      })
+      .then((rgb) => {
+        if (rgb && !cancelled) setColor(rgb)
+      })
 
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [src])
 
   return color

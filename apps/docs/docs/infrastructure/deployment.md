@@ -215,14 +215,14 @@ az container create \
 
 ## 🎯 Serverless Deployment
 
-### Vercel (Web App)
+### Vercel (Web Player)
 
 ```bash
 # Install Vercel CLI
 npm i -g vercel
 
 # Deploy
-cd apps/web
+cd apps/web-player
 vercel --prod
 ```
 

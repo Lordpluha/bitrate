@@ -65,7 +65,7 @@ pnpm dev
 | API | http://localhost:3000 |
 | Swagger | http://localhost:3000/swagger |
 | Web Artists | http://localhost:3002 |
-| Admin | http://localhost:3002 |
+| Admin | http://localhost:5480 |
 | Storybook | http://localhost:6006 |
 | Docs | http://localhost:3003 |
 | Mobile (Metro) | http://localhost:8081 |
@@ -139,23 +139,26 @@ See the [testing guide](apps/docs/docs/guides/testing.md) for placement and runn
   `@spotify/tokens`.
 - User-facing web UI targets WCAG 2.2 AA.
 
-See [`apps/docs/docs/architecture`](apps/docs/docs/architecture/) for the decisions and [`AGENTS.md`](AGENTS.md)
+See [`apps/docs/docs/architecture`](apps/docs/docs/architecture/) for the decisions and [`CLAUDE.md`](CLAUDE.md)
 for the working rules.
 
 ---
 
 ## 🤖 Agent workflow
 
-The repository includes project-specific `/sp-*` commands for planning, implementation,
-debugging, reviewing, scaffolding, and test authoring. They all read the same conventions
-from `AGENTS.md` and `.claude/`.
+The repository includes a ticket-driven command set: `/sp-take-ticket`, `/sp-implement`,
+`/sp-sync-docs`. They all read the same conventions from `CLAUDE.md` and `.claude/`, and
+every command has access to any project or global skill.
 
 ```text
-/sp-planner → /sp-developer → test author → /sp-review
+/sp-take-ticket → /sp-implement → PR (confirmed)
 ```
 
-Use `/sp-test` for API Jest, `/sp-vitest` for `ui-react` DOM tests, and `/sp-playwright`
-for `ui-react` browser screenshots.
+`/sp-implement` reads `CLAUDE.md`'s exhaustive Rule Index first, then either does the work
+in-session or dispatches to a named specialist agent (`sp-planner`, `sp-developer`,
+`sp-debugger`, `sp-tester`, `sp-reviewer`) with `--agent`. Ticket/board state is queried
+live from GitHub (via `gh`/MCP), never mirrored to a file; `/sp-sync-docs` catches drift
+between `apps/docs/` and the rules/ADRs.
 
 ---
 

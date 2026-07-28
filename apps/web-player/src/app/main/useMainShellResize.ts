@@ -10,6 +10,7 @@ import {
   RIGHT_SIDEBAR_DEFAULT_SIZE,
   RIGHT_SIDEBAR_MAX_SIZE,
   RIGHT_SIDEBAR_MIN_SIZE,
+  RIGHT_SIDEBAR_MIN_VIEWPORT_WIDTH,
 } from '@/app/main/mainShellResize.constants'
 import {
   clamp,
@@ -17,15 +18,16 @@ import {
   getMainShellGridTemplate,
   getRightSidebarMaxSize,
 } from '@/app/main/mainShellResize.utils'
-import { useHorizontalResize } from '@/shared/hooks'
+import { useHorizontalResize, useWindowWidth } from '@/shared/hooks'
 
 interface UseMainShellResizeParams {
-  hasRightSidebar: boolean
+  hasPlayer: boolean
 }
 
-export const useMainShellResize = ({
-  hasRightSidebar,
-}: UseMainShellResizeParams) => {
+export const useMainShellResize = ({ hasPlayer }: UseMainShellResizeParams) => {
+  const windowWidth = useWindowWidth()
+  const hasRightSidebar =
+    hasPlayer && windowWidth >= RIGHT_SIDEBAR_MIN_VIEWPORT_WIDTH
   const [isLibraryExpanded, setIsLibraryExpanded] = useState(false)
   const [isLibraryCollapsed, setIsLibraryCollapsed] = useState(false)
   const [isRightSidebarCollapsed, setIsRightSidebarCollapsed] = useState(false)
@@ -142,6 +144,7 @@ export const useMainShellResize = ({
     handleExpandRightSidebar,
     handleToggleLibraryCollapsed,
     handleToggleLibraryExpanded,
+    hasRightSidebar,
     isLibraryCollapsed,
     isLibraryExpanded,
     isResizing: leftResize.isResizing || rightResize.isResizing,

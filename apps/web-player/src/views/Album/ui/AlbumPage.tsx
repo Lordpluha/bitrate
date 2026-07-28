@@ -1,10 +1,9 @@
 'use client'
 
 import { useAlbum, useLikeAlbum, useUnlikeAlbum } from '@entities/Album'
-import { playPlaylist, selectMusicPlayer } from '@entities/Player'
+import { selectMusicPlayer, usePlayerStore } from '@entities/Player'
 import { type TrackEntity, TracksList, useLikedTracks } from '@entities/Track'
 import { showApiSuccessToast } from '@shared/api/feedback'
-import { useAppDispatch, useAppSelector } from '@shared/hooks'
 import { useImageColor } from '@shared/hooks/useImageColor'
 import { BackButton } from '@shared/ui/BackButton'
 import { DateUtils } from '@shared/utils/DateUtils'
@@ -18,8 +17,8 @@ const getAlbumDuration = (tracks: TrackEntity[]) =>
   tracks.reduce((duration, track) => duration + (track.duration ?? 0), 0)
 
 export const AlbumPage = ({ albumId }: { albumId: string }) => {
-  const dispatch = useAppDispatch()
-  const musicPlayer = useAppSelector(selectMusicPlayer)
+  const musicPlayer = usePlayerStore(selectMusicPlayer)
+  const playPlaylist = usePlayerStore((state) => state.playPlaylist)
   const { data, isError, isPending } = useAlbum(albumId)
   const { data: likedTracks } = useLikedTracks(1, 1000, undefined, {
     staleTime: 5 * 60_000,
@@ -164,15 +163,13 @@ export const AlbumPage = ({ albumId }: { albumId: string }) => {
           }
           likedTrackIds={likedTrackIds}
           onPlayTrack={(track, index) =>
-            dispatch(
-              playPlaylist({
-                currentPlaylistId: albumPlaybackId,
-                currentPlaylistName: album.title,
-                startTrack: track,
-                startTrackIndex: index,
-                tracks,
-              }),
-            )
+            playPlaylist({
+              currentPlaylistId: albumPlaybackId,
+              currentPlaylistName: album.title,
+              startTrack: track,
+              startTrackIndex: index,
+              tracks,
+            })
           }
           tracks={tracks}
         />

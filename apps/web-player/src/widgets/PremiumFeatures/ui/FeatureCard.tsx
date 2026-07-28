@@ -5,7 +5,7 @@ import {
   PhoneIcon,
   Typography,
 } from '@spotify/ui-react'
-import type { FC, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 const iconMap = {
   CalendarIcon: CalendarIcon,
@@ -20,11 +20,7 @@ type FeatureCardProps = {
   description: ReactNode
 }
 
-export const FeatureCard: FC<FeatureCardProps> = ({
-  icon,
-  description,
-  title,
-}) => {
+export const FeatureCard = ({ icon, description, title }: FeatureCardProps) => {
   const IconComponent = iconMap[icon as keyof typeof iconMap]
 
   return (

@@ -1,19 +1,19 @@
 'use client'
 
 import { cn } from '@spotify/ui-react'
-import { type ComponentProps, type FC, useEffect } from 'react'
+import { type ComponentProps, useEffect } from 'react'
 
 interface ModalProps extends ComponentProps<'div'> {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export const Modal: FC<ModalProps> = ({
+export const Modal = ({
   isOpen,
   onOpenChange: toggleIsOpen,
   children,
   className,
-}) => {
+}: ModalProps) => {
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {

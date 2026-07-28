@@ -1,17 +1,15 @@
 'use client'
 
-import { changeTrack, selectMusicPlayer } from '@entities/Player'
-import { useAppDispatch, useAppSelector } from '@shared/hooks'
+import { selectMusicPlayer, usePlayerStore } from '@entities/Player'
 import { useArtist } from '@shared/hooks/useArtist'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { Button, PlayIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
-import type { FC } from 'react'
 
-export const NextInQueue: FC = () => {
+export const NextInQueue = () => {
   const { currentTrack, currentTrackIndex, playlist } =
-    useAppSelector(selectMusicPlayer)
-  const dispatch = useAppDispatch()
+    usePlayerStore(selectMusicPlayer)
+  const changeTrack = usePlayerStore((state) => state.changeTrack)
 
   const nextTrack =
     currentTrackIndex >= 0 && currentTrackIndex < playlist.length - 1
@@ -51,7 +49,7 @@ export const NextInQueue: FC = () => {
       </div>
       <button
         className="w-full px-4 py-3 flex items-center gap-3 hover:bg-surface cursor-pointer transition-colors group text-left"
-        onClick={() => dispatch(changeTrack('next'))}
+        onClick={() => changeTrack('next')}
         type="button"
       >
         <div className="relative w-12 h-12 shrink-0">

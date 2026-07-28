@@ -1,20 +1,14 @@
 'use client'
 
-import {
-  setPlaylistTracks,
-  setShuffleEnabled,
-} from '@entities/Player/store/PlayerSlice'
-import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { useAppDispatch } from '@shared/hooks'
+import { type PlayerState, usePlayerStore } from '@entities/Player'
 import { useCallback, useEffect, useRef } from 'react'
 
-type UsePlaylistShuffleOptions = {
-  currentTrack: TrackEntity | null
-  isShuffled: boolean
-  playlist: TrackEntity[]
-}
+type UsePlaylistShuffleOptions = Pick<
+  PlayerState,
+  'currentTrack' | 'isShuffled' | 'playlist'
+>
 
-const shuffleTracks = (tracks: TrackEntity[]) => {
+const shuffleTracks = (tracks: PlayerState['playlist']) => {
   const shuffledTracks = [...tracks]
 
   for (let index = shuffledTracks.length - 1; index > 0; index -= 1) {
@@ -36,8 +30,9 @@ export const usePlaylistShuffle = ({
   isShuffled,
   playlist,
 }: UsePlaylistShuffleOptions) => {
-  const dispatch = useAppDispatch()
-  const originalPlaylistRef = useRef<TrackEntity[]>([])
+  const setPlaylistTracks = usePlayerStore((state) => state.setPlaylistTracks)
+  const setShuffleEnabled = usePlayerStore((state) => state.setShuffleEnabled)
+  const originalPlaylistRef = useRef<PlayerState['playlist']>([])
 
   useEffect(() => {
     if (!isShuffled) {
@@ -49,15 +44,15 @@ export const usePlaylistShuffle = ({
     if (!currentTrack) return
 
     if (playlist.length < 2) {
-      dispatch(setShuffleEnabled(!isShuffled))
+      setShuffleEnabled(!isShuffled)
       return
     }
 
     if (isShuffled) {
       if (originalPlaylistRef.current.length > 0) {
-        dispatch(setPlaylistTracks(originalPlaylistRef.current))
+        setPlaylistTracks(originalPlaylistRef.current)
       }
-      dispatch(setShuffleEnabled(false))
+      setShuffleEnabled(false)
       return
     }
 
@@ -66,9 +61,7 @@ export const usePlaylistShuffle = ({
       (track) => track.id !== currentTrack.id,
     )
 
-    dispatch(
-      setPlaylistTracks([currentTrack, ...shuffleTracks(remainingTracks)]),
-    )
-    dispatch(setShuffleEnabled(true))
-  }, [currentTrack, dispatch, isShuffled, playlist])
+    setPlaylistTracks([currentTrack, ...shuffleTracks(remainingTracks)])
+    setShuffleEnabled(true)
+  }, [currentTrack, isShuffled, playlist, setPlaylistTracks, setShuffleEnabled])
 }

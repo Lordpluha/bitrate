@@ -1,4 +1,4 @@
-import type { ReadStream } from 'node:fs'
+import type { Readable } from 'node:stream'
 import { websocketConfig } from '@common/config/connections'
 import { WsUserAuthGuard } from '@modules/users-auth/users-auth.ws.guard'
 import { Inject, Logger, UseGuards } from '@nestjs/common'
@@ -37,7 +37,7 @@ interface PlayingSession {
 /** Describes the audio stream session. */
 interface AudioStreamSession {
   /** The stream value. */
-  stream: ReadStream
+  stream: Readable
   /** The track id value. */
   trackId: string
 }

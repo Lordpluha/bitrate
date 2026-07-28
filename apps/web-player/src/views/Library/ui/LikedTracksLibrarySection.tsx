@@ -1,9 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { play } from '@/entities/Player'
+import { usePlayerStore } from '@/entities/Player'
 import type { TrackEntity } from '@/entities/Track'
-import { useAppDispatch } from '@/shared/hooks'
 import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
 import { LibraryListEmptyAware } from '@/views/Library/ui/LibraryEmptyAware'
 
@@ -14,7 +13,7 @@ type LikedTracksLibrarySectionProps = {
 export const LikedTracksLibrarySection = ({
   tracks,
 }: LikedTracksLibrarySectionProps) => {
-  const dispatch = useAppDispatch()
+  const play = usePlayerStore((state) => state.play)
 
   return (
     <LibraryListEmptyAware isEmpty={tracks.length === 0}>
@@ -22,7 +21,7 @@ export const LikedTracksLibrarySection = ({
         <button
           className="grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 rounded-md p-2 text-left transition-colors hover:bg-surface"
           key={track.id}
-          onClick={() => dispatch(play(track))}
+          onClick={() => play(track)}
           type="button"
         >
           <Image

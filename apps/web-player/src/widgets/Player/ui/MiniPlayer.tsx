@@ -26,7 +26,7 @@ interface MiniPlayerProps {
   onLikeToggle?: () => void
 }
 
-export const MiniPlayer: React.FC<MiniPlayerProps> = ({
+export const MiniPlayer = ({
   title,
   artist,
   coverUrl,
@@ -39,7 +39,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
   onExpand,
   onNext,
   onLikeToggle,
-}) => {
+}: MiniPlayerProps) => {
   const progress =
     duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0
 

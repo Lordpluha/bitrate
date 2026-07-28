@@ -4,7 +4,6 @@ import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-reac
 import {
   type ComponentProps,
   createContext,
-  type FC,
   type KeyboardEvent,
   type ReactNode,
   useCallback,
@@ -255,9 +254,9 @@ export const CarouselNext = ({
   )
 }
 
-type CarouselComponentType = FC<
-  Omit<ComponentProps<'div'>, keyof CarouselProps> & CarouselProps
-> & {
+type CarouselComponentType = ((
+  props: Omit<ComponentProps<'div'>, keyof CarouselProps> & CarouselProps,
+) => ReactNode) & {
   Root: typeof CarouselComponent
   Content: typeof CarouselContent
   Item: typeof CarouselItem

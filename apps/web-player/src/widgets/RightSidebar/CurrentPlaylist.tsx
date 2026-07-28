@@ -1,18 +1,23 @@
 'use client'
 
-import { selectCurrentPlaylistName, selectCurrentTrack } from '@entities/Player'
-import { useAppSelector } from '@shared/hooks'
+import {
+  selectCurrentPlaylistName,
+  selectCurrentTrack,
+  usePlayerStore,
+} from '@entities/Player'
 import { useArtist } from '@shared/hooks/useArtist'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { RollupIcon, SavedSongIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
-import { type FC, useState } from 'react'
+import { useState } from 'react'
 
-export const CurrentPlaylist: FC<{ onCollapse?: () => void }> = ({
-  onCollapse,
-}) => {
-  const currentTrack = useAppSelector(selectCurrentTrack)
-  const playlistName = useAppSelector(selectCurrentPlaylistName)
+type CurrentPlaylistProps = {
+  onCollapse?: () => void
+}
+
+export const CurrentPlaylist = ({ onCollapse }: CurrentPlaylistProps) => {
+  const currentTrack = usePlayerStore(selectCurrentTrack)
+  const playlistName = usePlayerStore(selectCurrentPlaylistName)
   const { data: artist } = useArtist(currentTrack?.artistId)
   const artistName = artist?.username || 'Unknown Artist'
   const [isIconHovered, setIsIconHovered] = useState(false)

@@ -8,6 +8,7 @@ import {
   selectIsPlaying,
   selectPlaylist,
   selectVolume,
+  usePlayerStore,
 } from '@/entities/Player'
 import {
   getNextTrack,
@@ -16,15 +17,14 @@ import {
 } from '@/shared/hooks/audioPlayer/audioPlayer.utils'
 import { useAudioPlayerEvents } from '@/shared/hooks/audioPlayer/useAudioPlayerEvents'
 import { useAudioSlots } from '@/shared/hooks/audioPlayer/useAudioSlots'
-import { useAppSelector } from '@/shared/hooks/useAppSelector'
 
 export const useAudioPlayer = () => {
-  const currentTrack = useAppSelector(selectCurrentTrack)
-  const currentTrackIndex = useAppSelector(selectCurrentTrackIndex)
-  const currentPlaylistId = useAppSelector(selectCurrentPlaylistId)
-  const playlist = useAppSelector(selectPlaylist)
-  const isPlaying = useAppSelector(selectIsPlaying)
-  const volume = useAppSelector(selectVolume)
+  const currentTrack = usePlayerStore(selectCurrentTrack)
+  const currentTrackIndex = usePlayerStore(selectCurrentTrackIndex)
+  const currentPlaylistId = usePlayerStore(selectCurrentPlaylistId)
+  const playlist = usePlayerStore(selectPlaylist)
+  const isPlaying = usePlayerStore(selectIsPlaying)
+  const volume = usePlayerStore(selectVolume)
   const nextTrack = getNextTrack(currentTrack, currentTrackIndex, playlist)
   const slots = useAudioSlots({ volume })
   const {
@@ -77,7 +77,6 @@ export const useAudioPlayer = () => {
     if (active.playbackKey !== currentPlaybackKey) {
       attachTrack(activeIndex, currentTrack, currentPlaybackKey, false)
     }
-
     if (nextTrack && nextTrack.id !== currentTrack.id) {
       prefetchTrackWhenBuffered(
         standbyIndex,

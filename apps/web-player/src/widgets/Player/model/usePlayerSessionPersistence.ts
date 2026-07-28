@@ -1,33 +1,36 @@
 'use client'
 
 import {
-  type MusicPlayerState,
-  restorePlayerSession,
-} from '@entities/Player/store/PlayerSlice'
-import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { useAppDispatch } from '@shared/hooks'
+  type PlayerSnapshot,
+  type PlayerState,
+  usePlayerStore,
+} from '@entities/Player'
 import { useEffect, useRef } from 'react'
 
 const PLAYER_SESSION_STORAGE_KEY = 'spotify:last-player-session'
 const PLAYER_SESSION_PERSIST_INTERVAL_MS = 5000
 
-type PersistedPlayerSession = {
-  currentPlaylistId: string | null
-  currentPlaylistName: string | null
-  currentTime: number
-  currentTrack: TrackEntity
-  currentTrackIndex: number
-  duration: number
-  playlist: TrackEntity[]
-  progress: number
-  volume: number
+type PersistedPlayerSession = Pick<
+  PlayerSnapshot,
+  | 'currentPlaylistId'
+  | 'currentPlaylistName'
+  | 'currentTime'
+  | 'currentTrackIndex'
+  | 'duration'
+  | 'playlist'
+  | 'progress'
+  | 'volume'
+> & {
+  currentTrack: NonNullable<PlayerSnapshot['currentTrack']>
 }
 
 export const usePlayerSessionPersistence = (
-  player: MusicPlayerState,
+  player: PlayerState,
   currentPlaylistName: string | null,
 ) => {
-  const dispatch = useAppDispatch()
+  const restorePlayerSession = usePlayerStore(
+    (state) => state.restorePlayerSession,
+  )
   const lastPersistedAtRef = useRef(0)
   const lastPersistedTrackIdRef = useRef<string | null>(null)
 
@@ -41,11 +44,11 @@ export const usePlayerSessionPersistence = (
       const session = JSON.parse(rawSession) as PersistedPlayerSession
       if (!session.currentTrack?.id) return
 
-      dispatch(restorePlayerSession(session))
+      restorePlayerSession(session)
     } catch {
       window.localStorage.removeItem(PLAYER_SESSION_STORAGE_KEY)
     }
-  }, [dispatch, player.currentTrack])
+  }, [player.currentTrack, restorePlayerSession])
 
   useEffect(() => {
     const { currentTrack } = player

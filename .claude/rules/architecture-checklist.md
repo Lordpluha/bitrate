@@ -1,6 +1,10 @@
 # Architecture checklist
 
-Verification list walked by `/sp-review`. Each item states the rule, how to check it, and which file owns the full rationale.
+Verification list walked by `sp-reviewer` (the heavy `--agent` review specialist,
+auto-invoked by `sp-developer` on diffs over 100 lines/5 files, or dispatched by
+`/sp-implement --review`/`--agent`). `/sp-implement` self-checks against this list in-session
+for smaller diffs, and human reviewers use it before merging. Each item states the rule,
+how to check it, and which file owns the full rationale.
 
 ## FSD rules (web-player)
 
@@ -38,19 +42,19 @@ Check: `git diff --name-only | grep 'apps/web-player/src/\(features\|entities\|w
 
 **API-1 — Swagger decorators are in `decorators/` — never inline in controllers.**
 Check: grep for `@ApiOperation\|@ApiResponse\|@ApiParam\|@ApiBody\|@ApiQuery` directly in `*.controller.ts` files. Any match outside a decorator factory is a FAIL.
-→ `.claude/rules/nestjs-api.md` § "Swagger decorators"
+→ `.claude/rules/api-rules.md` § "Swagger decorator pattern"
 
 **API-2 — Controllers are thin — no Prisma, no business logic.**
 Check: grep for `this.prisma` or `PrismaService` in `*.controller.ts` files. Any match is a FAIL.
-→ `.claude/rules/nestjs-api.md` § "Controllers"
+→ `.claude/rules/api-rules.md` § "Controllers — thin by design"
 
 **API-3 — Cross-module imports go through the module's `index.ts` barrel.**
 Check: grep for `from '@modules/<name>/[^']+'` (three-segment paths) — any match outside the module itself is a FAIL.
-→ `.claude/rules/nestjs-api.md` § "Path aliases"
+→ `.claude/rules/api-rules.md` § "Path aliases (apps/api)"
 
 **API-4 — Errors thrown are NestJS HttpExceptions, not manual response objects.**
 Check: grep for `return { error:` or `return { message:` in service/controller files. Flag any non-exception error return.
-→ `.claude/rules/nestjs-api.md` § "Error handling"
+→ `.claude/rules/api-rules.md` § "Errors"
 
 ## TypeScript rules
 
@@ -130,11 +134,17 @@ Check: `git log --oneline -5` — headers must match `<type>(<scope>): <summary>
 
 **Quality-3 — No new unused files, exports, or dependencies.**
 Check: `pnpm knip`. Verify framework/generated false positives before suppressing them.
-→ `.claude/rules/biome-rules.md` § "`pnpm knip`"
+→ `.claude/rules/code-style.md` § "`pnpm knip`"
 
 **Quality-4 — Generated sources are regenerated, not hand-edited.**
 For token, icon, and OpenAPI contract changes, inspect the source and generated diff together.
-→ `AGENTS.md` § "Asset / contract generation pipelines"
+→ `.claude/rules/monorepo.md` § "Asset generation pipelines"
+
+**Quality-5 — A changeset exists for any user/behaviour-visible change.**
+Check: `git diff --name-only -- .changeset/` (or `ls .changeset/*.md`) has a new file when
+`apps/*`/`packages/*` behaviour changed. Not required for pure docs/rules/test-only/chore
+diffs.
+→ `.claude/rules/commit-style.md` § "Changesets"
 
 ## Code principles (web-player)
 
@@ -189,17 +199,17 @@ Check `@spotify/ui-react` exports and existing feature wrappers.
 Unit: `.unit-spec.tsx`; interaction/composition: `.int-spec.tsx`; DOM snapshot:
 `.snapshot-spec.tsx`; browser visual: `.screenshot-spec.tsx`.
 Check: inspect changed specs and `packages/ui-react/vitest.config.ts`.
-→ `.claude/rules/vitest-rules.md`
+→ the `vitest` skill
 
 **Test-2 — Component tests are co-located and assert observable behaviour.**
 Check: changed specs live beside their component; role/label queries are preferred;
 tests do not inspect private implementation state.
-→ `.claude/rules/vitest-rules.md`
+→ the `vitest` skill
 
 **Test-3 — Screenshot updates are intentional and bounded.**
 Check: screenshot specs render a deterministic subject and use
 `toMatchScreenshot()`; changed baselines correspond only to changed specs.
-→ `.claude/rules/playwright-rules.md`
+→ the `playwright` skill
 
 ## Mechanical pass commands
 

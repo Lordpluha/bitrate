@@ -4,10 +4,12 @@ Use this guide when working in Claude Code on this repository.
 
 ## Defaults
 
-- Stay in the current session for `/sp-*` commands.
+- Stay in the current session for `/sp-take-ticket`, `/sp-implement`, `/sp-sync-docs`.
 - Use a subagent only when the user passes `--agent` or explicitly asks for one.
-- Use Sonnet for normal coding. Use Opus only for difficult architecture, planning, or
-  debugging where the extra reasoning is worth the cost.
+- Each `/sp-implement` specialist has a fixed model, set in its own agent frontmatter — not
+  a per-invocation choice: `sp-planner` → Fable, `sp-developer` → Sonnet, `sp-debugger` /
+  `sp-reviewer` / `sp-tester` → Opus. In-session (no `--agent`) work runs on whatever model
+  the current Claude Code session is using.
 - Run `/clear` between unrelated tasks and `/compact` before continuing a long task.
 
 ## Scope First
@@ -15,7 +17,7 @@ Use this guide when working in Claude Code on this repository.
 Before reading broadly:
 
 1. Identify the app/package touched by the request.
-2. Use `AGENTS.md` only as a routing index.
+2. Use `CLAUDE.md`'s Rule Index only as a routing index.
 3. Read the smallest relevant rule set.
 4. Search with `rg` under narrow paths.
 5. Ask before expanding into unrelated apps/packages.
@@ -28,18 +30,16 @@ apps/web-player/src/features/AuthModal
 packages/ui-react/src/components/ui/button
 ```
 
-## Skills
+## Rules and skills
 
-Read rules first, skills only when they are real workflows or external/tool references:
+Every command has access to any skill under `.claude/skills/` — not a
+fixed subset. `CLAUDE.md`'s **Rule Index** table is the single, exhaustive scope→rule
+mapping — read it there, not duplicated here. Read skills only when they are real
+workflows or external/tool references (e.g. `fsd-scaffold` for a new slice, `graphify` for
+codebase orientation).
 
-- API work: `project-conventions` + `api-rules`.
-- Web-player work: `project-conventions` + `web-player-rules`.
-- API tests: `project-conventions` + `jest-rules` + `api-rules`.
-- Web/ui tests: `project-conventions` + `vitest-rules` or `playwright-rules`.
-- Shared UI primitives: `project-conventions` + `shadcn-rules`.
-- New FSD slice/component: rule set above + `fsd-scaffold` skill.
-
-Do not read every rule or skill at the start of a small task.
+Do not read every rule or skill at the start of a small task — the Rule Index exists so a
+cheap scan replaces reading everything.
 
 Do not read `.claude/templates/` unless the task is creating a new slice/component and the
 `fsd-scaffold` skill is active.
@@ -60,10 +60,15 @@ Run full monorepo checks only before a commit/PR or when the changed surface jus
 
 Keep entrypoints broad and let them detect scope:
 
-- `/sp-test` covers Jest, Vitest, Playwright, screenshots, and test selection.
-- `/sp-review` covers FSD, style/design-system, mechanical checks, and goal review.
-- `/sp-develop` writes code and may apply the `fsd-scaffold` skill internally for new
-  slices/components.
+- `/sp-take-ticket` finds and confirms a GitHub ticket, moves its board card, and checks out
+  a branch.
+- `/sp-implement` writes code in-session by default, or dispatches to a named `--agent`
+  specialist (`sp-planner`, `sp-developer`, `sp-debugger`, `sp-tester`, `sp-reviewer`) for
+  isolated work — none of the five have their own slash command. It may apply the
+  `fsd-scaffold` skill internally for new slices/components. It opens/updates the PR only
+  after confirmation.
+- Ticket/board state is never mirrored to a file — query it live via `gh`/MCP whenever
+  it's needed (see `.claude/rules/knowledge-base.md`).
 
 Do not add a new command only because a new tool exists. Add one only when the workflow is
 semantically different for humans.
@@ -83,4 +88,4 @@ semantically different for humans.
   default.
 - Prefer global or user-local MCP setup for occasional tools.
 - `skills-lock.json` tracks installed external skills only. Repository-owned rules and
-  skills under `.agents/` are versioned directly and do not need lock entries.
+  skills under `.claude/` are versioned directly and do not need lock entries.

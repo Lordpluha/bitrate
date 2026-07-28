@@ -1,14 +1,12 @@
 'use client'
 
-import { selectCurrentTrack } from '@entities/Player'
-import { useAppSelector } from '@shared/hooks'
+import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { SavedSongIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
-import type { FC } from 'react'
 
-export const CurrentPlaylist: FC = () => {
-  const currentTrack = useAppSelector(selectCurrentTrack)
+export const CurrentPlaylist = () => {
+  const currentTrack = usePlayerStore(selectCurrentTrack)
 
   if (!currentTrack) {
     return null

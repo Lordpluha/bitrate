@@ -180,7 +180,7 @@ chore/upgrade-dependencies
 The project uses **Biome** for linting and code formatting.
 
 [`CODE_STYLE.md`](CODE_STYLE.md) is the stable entry point. The complete rules live in
-[`AGENTS.md`](AGENTS.md) and [`.claude/rules/`](.claude/rules/).
+[`CLAUDE.md`](CLAUDE.md) and [`.claude/rules/`](.claude/rules/).
 
 ### Automatic formatting
 
@@ -316,15 +316,21 @@ the same rules as human contributors:
 
 | Intent | Command |
 |---|---|
-| Plan non-trivial work | `/sp-planner "<task>"` |
-| Implement web-player/shared UI or NestJS API work | `/sp-developer "<task>"` |
-| Reproduce and fix a bug | `/sp-debug "<symptom>"` |
-| Write API Jest coverage | `/sp-test "<scenario>" [--int]` |
-| Write `ui-react` Vitest coverage | `/sp-vitest "<scenario>" [--int\|--snapshot]` |
-| Write a browser screenshot | `/sp-playwright "<component state>"` |
-| Review before PR | `/sp-review` |
+| Pick up a GitHub ticket, move its board card, get a branch | `/sp-take-ticket "<issue>"` |
+| Implement web-player/shared UI or NestJS API work, then open/update the PR | `/sp-implement "<task>"` |
+| Find/fix drift between `apps/docs/` and the rules/ADRs (run periodically) | `/sp-sync-docs` |
 
-Agents do not commit, push, open PRs, or create releases unless explicitly asked.
+Ticket and board state aren't mirrored anywhere — `/sp-take-ticket` and `/sp-implement`
+query GitHub live (via `gh`/MCP) whenever they need it.
+
+`/sp-implement --agent` dispatches to a named specialist for isolated work — `sp-planner`
+(plan), `sp-developer` (code), `sp-debugger` (bug fix), `sp-tester` (test), `sp-reviewer`
+(review, also auto-invoked on large diffs). None of the five have their own slash command;
+`/sp-implement` is the single entrypoint that routes to them.
+
+Agents confirm before every mutating GitHub action (board card moves, issue comments,
+`git push`, PR create/edit) — a prior approval in a conversation does not carry over to a
+later action. Agents do not create releases unless explicitly asked.
 
 ---
 
@@ -335,7 +341,7 @@ Agents do not commit, push, open PRs, or create releases unless explicitly asked
 - Persistent implementation plans: [`apps/docs/docs/plans/`](apps/docs/docs/plans/)
 - Design token contract: [`apps/docs/docs/brand/tokens.md`](apps/docs/docs/brand/tokens.md)
 - Accessibility baseline: [`apps/docs/docs/brand/a11y.md`](apps/docs/docs/brand/a11y.md)
-- Working conventions: [`AGENTS.md`](AGENTS.md)
+- Working conventions: [`CLAUDE.md`](CLAUDE.md)
 
 New durable architectural choices should get an ADR. Cross-cutting designs may start as a
 spec and then an implementation plan. New visual values should enter

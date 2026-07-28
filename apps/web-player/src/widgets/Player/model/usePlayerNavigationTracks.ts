@@ -1,22 +1,22 @@
 'use client'
 
 import {
+  type PlayerState,
   selectCurrentTrack,
   selectCurrentTrackIndex,
   selectPlaylist,
+  usePlayerStore,
 } from '@/entities/Player'
-import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
-import { useAppSelector } from '@/shared/hooks'
 
 interface PlayerNavigationTracks {
-  nextTrack: TrackEntity | null
-  previousTrack: TrackEntity | null
+  nextTrack: PlayerState['currentTrack']
+  previousTrack: PlayerState['currentTrack']
 }
 
 export const usePlayerNavigationTracks = (): PlayerNavigationTracks => {
-  const currentTrack = useAppSelector(selectCurrentTrack)
-  const currentTrackIndex = useAppSelector(selectCurrentTrackIndex)
-  const playlist = useAppSelector(selectPlaylist)
+  const currentTrack = usePlayerStore(selectCurrentTrack)
+  const currentTrackIndex = usePlayerStore(selectCurrentTrackIndex)
+  const playlist = usePlayerStore(selectPlaylist)
 
   if (!currentTrack || playlist.length < 2) {
     return { nextTrack: null, previousTrack: null }

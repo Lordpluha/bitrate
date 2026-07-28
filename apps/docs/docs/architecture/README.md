@@ -1,7 +1,7 @@
 # Architecture decision records
 
 This directory records stable architectural decisions for the Spotify clone monorepo.
-ADRs explain why the repository uses a pattern; `AGENTS.md` and `.claude/rules/` explain
+ADRs explain why the repository uses a pattern; `CLAUDE.md` and `.claude/rules/` explain
 how to apply it day to day.
 
 | ADR | Decision |
@@ -16,6 +16,15 @@ how to apply it day to day.
 | [0008](./0008-agent-layer.md) | Repository-owned AI agent layer |
 | [0009](./0009-shadcn-compositions.md) | shadcn produces package-owned compositions |
 | [0010](./0010-next-routes-as-adapters.md) | App Router files stay thin; views own screens |
+| [0011](./0011-retire-apps-web.md) | Retire apps/web in favor of apps/web-player |
+| [0012](./0012-ticket-driven-agent-commands.md) | Ticket-driven agent commands, GitHub Projects, and Obsidian sync |
+| [0013](./0013-docs-sync.md) | apps/docs vs .claude — ownership boundary and drift detection |
+| [0014](./0014-obsidian-storage-scope.md) | What in obsidian/ is committed vs local-only |
+| [0015](./0015-graphify-obsidian-decoupled.md) | graphify and the obsidian/ vault are decoupled |
+| [0016](./0016-live-github-queries.md) | Retire the obsidian/ ticket/board mirror for live GitHub queries |
+| [0017](./0017-remove-obsidian-vault.md) | Remove the obsidian/ working-notes vault |
+| [0018](./0018-consolidate-agents-into-claude.md) | Consolidate `.agents/`/`AGENTS.md` into `.claude/` only |
+| [0019](./0019-remove-obsidian-export-convenience.md) | Remove the `graphify:obsidian` convenience wrapper |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.
