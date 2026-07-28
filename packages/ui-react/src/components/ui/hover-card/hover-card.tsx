@@ -14,19 +14,13 @@ const HoverCardTrigger = ({
 }) => {
   if (asChild) {
     if (!isValidElement<Record<string, unknown>>(children)) {
-      throw new Error(
-        'HoverCardTrigger with asChild requires a single React element',
-      )
+      throw new Error('HoverCardTrigger with asChild requires a single React element')
     }
 
     return <HoverCardPrimitive.Trigger {...props} render={children} />
   }
 
-  return (
-    <HoverCardPrimitive.Trigger {...props}>
-      {children}
-    </HoverCardPrimitive.Trigger>
-  )
+  return <HoverCardPrimitive.Trigger {...props}>{children}</HoverCardPrimitive.Trigger>
 }
 
 const HoverCardContent = ({
@@ -37,10 +31,7 @@ const HoverCardContent = ({
   sideOffset = 8,
   ...props
 }: ComponentProps<typeof HoverCardPrimitive.Popup> &
-  Pick<
-    ComponentProps<typeof HoverCardPrimitive.Positioner>,
-    'align' | 'side' | 'sideOffset'
-  >) => (
+  Pick<ComponentProps<typeof HoverCardPrimitive.Positioner>, 'align' | 'side' | 'sideOffset'>) => (
   <HoverCardPrimitive.Portal>
     <HoverCardPrimitive.Positioner
       align={align}
