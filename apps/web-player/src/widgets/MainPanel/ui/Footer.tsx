@@ -53,8 +53,8 @@ function Footer() {
               {section.links.map((link) => (
                 <li key={link}>
                   <Link
-                    href="#"
                     className="text-text-subdued hover:text-text text-sm transition-[0.3s]"
+                    href="#"
                   >
                     {link}
                   </Link>
@@ -66,22 +66,22 @@ function Footer() {
         <div className="flex justify-end mb-8">
           <div className="flex items-start space-x-4">
             <Link
-              href="#"
               className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
+              href="#"
             >
-              <FacebookIcon width={50} height={50} />
+              <FacebookIcon height={50} width={50} />
             </Link>
             <Link
-              href="#"
               className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
+              href="#"
             >
-              <TwitIcon width={50} height={50} />
+              <TwitIcon height={50} width={50} />
             </Link>
             <Link
-              href="#"
               className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
+              href="#"
             >
-              <InstIcon width={50} height={50} />
+              <InstIcon height={50} width={50} />
             </Link>
           </div>
         </div>
@@ -90,9 +90,9 @@ function Footer() {
         <div className="flex flex-wrap items-center space-x-6 text-xs text-text-subdued mb-4 md:mb-0">
           {bottomLinks.map((link) => (
             <Link
-              key={link}
-              href="#"
               className="hover:text-text transition-[0.3s]"
+              href="#"
+              key={link}
             >
               {link}
             </Link>
