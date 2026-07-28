@@ -1,3 +1,4 @@
+/** The unauthorized errors value. */
 export const UNAUTHORIZED_ERRORS = {
   ACCESS_TOKEN_REQUIRED: 'Access token required',
   REFRESH_TOKEN_REQUIRED: 'Refresh token required',
@@ -7,4 +8,5 @@ export const UNAUTHORIZED_ERRORS = {
   SESSION_NOT_FOUND: 'Session not found',
 } as const
 
+/** Defines the auth error type. */
 export type AuthErrorType = (typeof UNAUTHORIZED_ERRORS)[keyof typeof UNAUTHORIZED_ERRORS]

@@ -1,6 +1,14 @@
 'use client'
 
-import * as React from 'react'
+import {
+  createContext,
+  type FC,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 
 export interface InputContextValue {
   isFocused: boolean
@@ -9,26 +17,26 @@ export interface InputContextValue {
   setValue: (hasValue: boolean) => void
 }
 
-export const InputContext = React.createContext<InputContextValue | null>(null)
+export const InputContext = createContext<InputContextValue | null>(null)
 
 export const useInputContext = () => {
-  const context = React.useContext(InputContext)
+  const context = useContext(InputContext)
   return context
 }
 
-export const InputProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [isFocused, setFocused] = React.useState(false)
-  const [hasValue, setValue] = React.useState(false)
+export const InputProvider: FC<{ children?: ReactNode }> = ({ children }) => {
+  const [isFocused, setFocused] = useState(false)
+  const [hasValue, setValue] = useState(false)
 
-  const handleSetFocused = React.useCallback((focused: boolean) => {
+  const handleSetFocused = useCallback((focused: boolean) => {
     setFocused(focused)
   }, [])
 
-  const handleSetValue = React.useCallback((value: boolean) => {
+  const handleSetValue = useCallback((value: boolean) => {
     setValue(value)
   }, [])
 
-  const value = React.useMemo(
+  const value = useMemo(
     () => ({
       isFocused,
       hasValue,

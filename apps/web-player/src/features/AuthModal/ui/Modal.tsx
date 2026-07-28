@@ -1,14 +1,14 @@
 'use client'
 
 import { cn } from '@spotify/ui-react'
-import React, { type ComponentProps, useEffect } from 'react'
+import { type ComponentProps, type FC, useEffect } from 'react'
 
 interface ModalProps extends ComponentProps<'div'> {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export const Modal: React.FC<ModalProps> = ({
+export const Modal: FC<ModalProps> = ({
   isOpen,
   onOpenChange: toggleIsOpen,
   children,

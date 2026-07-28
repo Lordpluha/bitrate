@@ -1,5 +1,5 @@
-import * as TooltipPrimitive from '@radix-ui/react-tooltip'
-import * as React from 'react'
+import { Tooltip as TooltipPrimitive } from '@base-ui-components/react'
+import { type ComponentProps, isValidElement } from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -7,22 +7,42 @@ const TooltipProvider = TooltipPrimitive.Provider
 
 const Tooltip = TooltipPrimitive.Root
 
-const TooltipTrigger = TooltipPrimitive.Trigger
+const TooltipTrigger = ({
+  asChild = false,
+  children,
+  ...props
+}: ComponentProps<typeof TooltipPrimitive.Trigger> & { asChild?: boolean }) => {
+  if (asChild) {
+    if (!isValidElement<Record<string, unknown>>(children)) {
+      throw new Error('TooltipTrigger with asChild requires a single React element')
+    }
+    return <TooltipPrimitive.Trigger {...props} render={children} />
+  }
 
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
-  <TooltipPrimitive.Content
-    ref={ref}
-    sideOffset={sideOffset}
-    className={cn(
-      'z-50 overflow-hidden rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-950 shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin] dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
-      className,
-    )}
-    {...props}
-  />
-))
-TooltipContent.displayName = TooltipPrimitive.Content.displayName
+  return <TooltipPrimitive.Trigger {...props}>{children}</TooltipPrimitive.Trigger>
+}
+
+const TooltipContent = ({
+  ref,
+  className,
+  sideOffset = 4,
+  side = 'top',
+  ...props
+}: ComponentProps<typeof TooltipPrimitive.Popup> &
+  Pick<ComponentProps<typeof TooltipPrimitive.Positioner>, 'sideOffset' | 'side'>) => (
+  <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Positioner side={side} sideOffset={sideOffset}>
+      <TooltipPrimitive.Popup
+        ref={ref}
+        className={cn(
+          'z-50 overflow-hidden rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-950 shadow-md origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
+          className,
+        )}
+        {...props}
+      />
+    </TooltipPrimitive.Positioner>
+  </TooltipPrimitive.Portal>
+)
+TooltipContent.displayName = 'TooltipContent'
 
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger }

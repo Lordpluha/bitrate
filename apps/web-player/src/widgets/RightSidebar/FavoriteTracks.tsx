@@ -2,20 +2,19 @@
 
 import { selectCurrentTrack } from '@entities/Player'
 import { useAppSelector } from '@shared/hooks'
+import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { SavedSongIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
-import type React from 'react'
+import type { FC } from 'react'
 
-export const CurrentPlaylist: React.FC = () => {
+export const CurrentPlaylist: FC = () => {
   const currentTrack = useAppSelector(selectCurrentTrack)
 
   if (!currentTrack) {
     return null
   }
 
-  const coverUrl = currentTrack.cover?.startsWith('http')
-    ? currentTrack.cover
-    : `${process.env.NEXT_PUBLIC_API_URL}${currentTrack.cover}`
+  const coverUrl = getTrackCoverUrl(currentTrack.cover)
 
   return (
     <div>

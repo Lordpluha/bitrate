@@ -1,7 +1,7 @@
 'use client'
 
 import { cva, type VariantProps } from 'class-variance-authority'
-import type * as React from 'react'
+import type { FC, LabelHTMLAttributes, PropsWithChildren } from 'react'
 import { cn } from '@/lib/utils'
 import { useInputContext } from '../input-context'
 
@@ -48,12 +48,12 @@ const labelVariants = cva(
   },
 )
 
-export type DynamicLabelProps = React.PropsWithChildren<
-  React.LabelHTMLAttributes<HTMLLabelElement> &
+export type DynamicLabelProps = PropsWithChildren<
+  LabelHTMLAttributes<HTMLLabelElement> &
     Omit<VariantProps<typeof labelVariants>, 'state' | 'focused'>
 >
 
-export const DynamicLabel: React.FC<DynamicLabelProps> = ({
+export const DynamicLabel: FC<DynamicLabelProps> = ({
   variant = 'default',
   children,
   htmlFor,

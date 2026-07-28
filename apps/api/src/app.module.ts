@@ -1,16 +1,21 @@
+import { join } from 'node:path'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { AlbumsModule } from '@modules/albums/albums.module'
 import { ArtistsModule } from '@modules/artists/artists.module'
 import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
+import { HistoryModule } from '@modules/history/history.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
+import { SearchModule } from '@modules/search/search.module'
 import { TracksModule } from '@modules/tracks/tracks.module'
 import { UsersModule } from '@modules/users/users.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { BullModule } from '@nestjs/bullmq'
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { APP_GUARD } from '@nestjs/core'
 import { ServeStaticModule } from '@nestjs/serve-static'
-import { join } from 'path'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
+import { SentryModule } from '@sentry/nestjs/setup'
 import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
 import { PathTraversalMiddleware } from './common'
@@ -18,6 +23,7 @@ import { appConfigs } from './common/config'
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.local', '.env.production', '.env.development'],
@@ -46,11 +52,18 @@ import { appConfigs } from './common/config'
         },
       },
     }),
-    BullModule.forRoot({
-      connection: {
-        host: process.env.REDIS_HOST,
-        port: Number(process.env.REDIS_PORT),
-      },
+    ThrottlerModule.forRoot([
+      { name: 'auth', ttl: 60_000, limit: 10 },
+      { name: 'default', ttl: 60_000, limit: 100 },
+    ]),
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        connection: {
+          host: config.getOrThrow('REDIS_HOST'),
+          port: config.getOrThrow('REDIS_PORT'),
+        },
+      }),
     }),
     PrismaModule,
     UsersAuthModule,
@@ -60,8 +73,11 @@ import { appConfigs } from './common/config'
     PlaylistsModule,
     AlbumsModule,
     ArtistsAuthModule,
+    SearchModule,
+    HistoryModule,
   ],
   controllers: [AppController],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -1,25 +1,27 @@
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
-import type * as React from 'react'
+import type { ChangeEvent, FC, FocusEvent } from 'react'
 import { Input, type InputProps } from '../input'
 import { InputProvider, useInputContext } from '../input-context'
 import { PasswordInput, type PasswordInputProps } from '../password-input'
 import { DynamicLabel } from './dynamic-label'
 
-const InputWithContext: React.FC<InputProps> = ({ className, type, variant, ...props }) => {
-  const { setFocused, setValue } = useInputContext()
+const InputWithContext: FC<InputProps> = ({ className, type, variant, ...props }) => {
+  const context = useInputContext()
+  if (!context) throw new Error('InputWithContext must be used within InputProvider')
+  const { setFocused, setValue } = context
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     setFocused(true)
     props.onFocus?.(e)
   }
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     setFocused(false)
     setValue(!!e.target.value)
     props.onBlur?.(e)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(!!e.target.value)
     props.onChange?.(e)
   }
@@ -37,21 +39,23 @@ const InputWithContext: React.FC<InputProps> = ({ className, type, variant, ...p
   )
 }
 
-const PasswordInputWithContext: React.FC<PasswordInputProps> = ({ className, ...props }) => {
-  const { setFocused, setValue } = useInputContext()
+const PasswordInputWithContext: FC<PasswordInputProps> = ({ className, ...props }) => {
+  const context = useInputContext()
+  if (!context) throw new Error('PasswordInputWithContext must be used within InputProvider')
+  const { setFocused, setValue } = context
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     setFocused(true)
     props.onFocus?.(e)
   }
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     setFocused(false)
     setValue(!!e.target.value)
     props.onBlur?.(e)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(!!e.target.value)
     props.onChange?.(e)
   }

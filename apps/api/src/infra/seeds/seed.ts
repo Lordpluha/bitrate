@@ -1,3 +1,4 @@
+import type { INestApplicationContext } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
@@ -9,15 +10,22 @@ import { AppModule } from '../../app.module'
 import { TracksService } from '../../modules/tracks/tracks.service'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
+import { FakerService } from './faker.service'
 import { SeedService } from './seed.service'
 
+/** The pool value. */
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+/** The adapter value. */
 const adapter = new PrismaPg(pool)
+/** The prisma value. */
 const prisma = new PrismaClient({ adapter })
 
 // Подготовка директорий для хранения файлов
+/** The storage base value. */
 const STORAGE_BASE = process.cwd()
+/** The tracks dir value. */
 const TRACKS_DIR = join(STORAGE_BASE, config.storagePaths.tracks)
+/** The covers dir value. */
 const COVERS_DIR = join(STORAGE_BASE, config.storagePaths.covers)
 
 console.log('📁 Storage directories:')
@@ -36,7 +44,7 @@ if (!existsSync(COVERS_DIR)) {
  * Главная функция для запуска всех seed процессов
  */
 async function main() {
-  let app
+  let app: INestApplicationContext | undefined
 
   try {
     console.log('🌱 Starting database seeding...')
@@ -53,7 +61,7 @@ async function main() {
 
     // Создаём сервисы для импорта
     const downloadService = new DownloadResourcesService(STORAGE_BASE)
-    const seedService = new SeedService(prisma, downloadService, tracksService)
+    const seedService = new SeedService(prisma, downloadService, new FakerService(), tracksService)
 
     // Шаг 1: Очистка базы данных (опционально)
     if (config.clearBeforeImport) {

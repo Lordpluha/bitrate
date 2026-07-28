@@ -159,6 +159,16 @@
   },
   "overrides": [
     {
+      "includes": ["**/*.service.ts", "**/*.guard.ts", "**/*.controller.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useImportType": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "linter": {
         "rules": {

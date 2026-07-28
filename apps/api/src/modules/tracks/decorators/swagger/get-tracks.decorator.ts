@@ -1,7 +1,8 @@
-import { TrackEntity } from '@modules/tracks'
+import type { TrackEntity } from '@modules/tracks'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the tracks get all swagger operation. */
 export function TracksGetAllSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get all tracks with pagination' }),
@@ -47,6 +48,11 @@ export function TracksGetAllSwagger() {
               duration: 180,
               releaseDate: new Date('2023-10-01T12:00:00.000Z'),
               lyrics: null,
+              processingStatus: 'READY',
+              processingError: null,
+              processingAttempts: 1,
+              processingStartedAt: new Date(),
+              processingFinishedAt: new Date(),
             } as TrackEntity,
           ],
         },

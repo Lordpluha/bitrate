@@ -1,0 +1,11 @@
+import { render, screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
+import { __NamePascal__ } from './__NameKebab__'
+
+describe('__NamePascal__ integration', () => {
+  it('applies a caller-provided className alongside its own variants', () => {
+    render(<__NamePascal__ className="custom-class" />)
+    expect(screen.getByTestId('__NameKebab__')).toHaveClass('custom-class')
+  })
+})

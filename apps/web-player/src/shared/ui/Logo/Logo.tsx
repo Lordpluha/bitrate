@@ -5,14 +5,18 @@ import type { FC } from 'react'
 
 export type LogoProps = {
   color?: 'dark' | 'light'
+  href?: string
 }
 
-export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
+export const Logo: FC<LogoProps> = ({
+  color = 'dark',
+  href = ROUTES.landing,
+}) => {
   return (
     <Link
       aria-label="Spotify Home"
       className="transition-[0.3s] hover:opacity-70"
-      href={ROUTES.landing}
+      href={href}
     >
       <SpotifyLogo
         className={cn(

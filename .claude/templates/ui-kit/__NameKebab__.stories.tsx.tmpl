@@ -1,0 +1,20 @@
+import type { Meta, StoryObj } from '@storybook/react-vite'
+
+import { __NamePascal__ } from './__NameKebab__'
+
+const meta = {
+  title: 'ui/__NamePascal__',
+  component: __NamePascal__,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'centered',
+  },
+} satisfies Meta<typeof __NamePascal__>
+
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
+  args: {},
+}

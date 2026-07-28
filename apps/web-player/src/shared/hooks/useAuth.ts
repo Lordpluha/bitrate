@@ -1,13 +1,10 @@
 'use client'
 
 import { clientFetchClient } from '@shared/api/client'
+import { apiQueryKeys } from '@shared/api/queryKeys'
 import { ROUTES } from '@shared/routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePathname, useRouter } from 'next/navigation'
-
-const userQueryKeys = {
-  user: ['user'] as const,
-}
 
 export const useAuth = () => {
   const router = useRouter()
@@ -22,7 +19,7 @@ export const useAuth = () => {
     isLoading,
     isPending,
   } = useQuery({
-    queryKey: userQueryKeys.user,
+    queryKey: apiQueryKeys.auth.me,
     queryFn: async () => {
       const { data, response } = await clientFetchClient.GET('/api/v1/auth/me')
 
@@ -46,15 +43,16 @@ export const useAuth = () => {
   // Only consider unauthenticated if explicitly got 401/403 error
   const isAuthenticated = !!user
 
-  const { mutate } = useMutation({
+  const { mutate, isPending: isLogoutPending } = useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: userQueryKeys.user,
-      })
-      router.push(ROUTES.landing)
+      queryClient.clear()
+      router.replace(ROUTES.landing)
+      router.refresh()
     },
     mutationFn: async () => {
       const { response } = await clientFetchClient.POST('/api/v1/auth/logout')
+
+      if (response.status === 401 || response.status === 403) return
       if (!response.ok) throw new Error('Logout failed')
     },
   })
@@ -63,6 +61,7 @@ export const useAuth = () => {
     user,
     isAuthenticated,
     isLoading: isLoading || isPending,
+    isLogoutPending,
     logout: mutate,
   }
 }

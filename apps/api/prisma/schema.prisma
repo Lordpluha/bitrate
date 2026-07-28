@@ -7,25 +7,59 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid(7)) @db.Uuid
-  username String @unique
-  email    String @unique
-  password String
+  id       String  @id @default(uuid(7)) @db.Uuid
+  username String  @unique
+  email    String  @unique
+  password String?
 
   avatar      String?
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 
-  sessions    UserSession[]
-  playlists   Playlist[]
-  likedTracks Track[]    @relation("UserLikedTracks")
-  likedArtists Artist[]  @relation("UserLikedArtists")
-  likedAlbums  Album[]    @relation("UserLikedAlbums")
-  likedPlaylists Playlist[] @relation("UserLikedPlaylists")
+  twoFactorSecret  String?
+  twoFactorEnabled Boolean @default(false)
+
+  sessions       UserSession[]
+  passwordResets UserPasswordReset[]
+  oauthAccounts  UserOAuthAccount[]
+  playlists      Playlist[]
+  likedTracks      Track[]   @relation("UserLikedTracks")
+  likedArtists     Artist[]  @relation("UserLikedArtists")
+  followedArtists  Artist[]  @relation("UserFollowedArtists")
+  likedAlbums       Album[]            @relation("UserLikedAlbums")
+  likedPlaylists    Playlist[]         @relation("UserLikedPlaylists")
+  listeningHistory  ListeningHistory[]
 
   @@index([email])
   @@index([username])
+}
+
+model UserOAuthAccount {
+  id                String @id @default(uuid(7)) @db.Uuid
+  userId            String @db.Uuid
+  provider          String
+  providerAccountId String
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model UserPasswordReset {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
 }
 
 model UserSession {
@@ -46,7 +80,7 @@ model UserSession {
 
 model ArtistSession {
   id            String @id @default(uuid(7)) @db.Uuid
-  artistId        String @db.Uuid
+  artistId      String @db.Uuid
   access_token  String @unique
   refresh_token String @unique
 
@@ -60,6 +94,12 @@ model ArtistSession {
   @@index([refresh_token])
 }
 
+enum TrackProcessingStatus {
+  PROCESSING
+  READY
+  FAILED
+}
+
 model Track {
   id       String  @id @default(uuid(7)) @db.Uuid
   title    String
@@ -71,13 +111,20 @@ model Track {
   releaseDate DateTime?
   lyrics      String?   @db.Text
 
+  processingStatus     TrackProcessingStatus @default(PROCESSING)
+  processingError      String?               @db.Text
+  processingAttempts   Int                   @default(0)
+  processingStartedAt  DateTime?
+  processingFinishedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  audioFiles TrackFile[]
-  albums     Album[]
-  playlists  Playlist[]
-  likedBy    User[]      @relation("UserLikedTracks")
+  audioFiles       TrackFile[]
+  albums           Album[]
+  playlists        Playlist[]
+  likedBy          User[]             @relation("UserLikedTracks")
+  listeningHistory ListeningHistory[]
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
@@ -105,14 +152,17 @@ model TrackFile {
 }
 
 model Artist {
-  id       String @id @default(uuid(7)) @db.Uuid
-  username String @unique
-  email    String @unique
-  password String
+  id       String  @id @default(uuid(7)) @db.Uuid
+  username String  @unique
+  email    String  @unique
+  password String?
 
   bio             String? @db.Text
   avatar          String?
   backgroundImage String?
+
+  twoFactorSecret  String?
+  twoFactorEnabled Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -120,12 +170,42 @@ model Artist {
   tracks Track[]
   albums Album[]
 
-  sessions    ArtistSession[]
+  sessions       ArtistSession[]
+  oauthAccounts  ArtistOAuthAccount[]
+  passwordResets ArtistPasswordReset[]
 
-  likedBy    User[]      @relation("UserLikedArtists")
+  likedBy     User[] @relation("UserLikedArtists")
+  followers   User[] @relation("UserFollowedArtists")
 
   @@index([email])
   @@index([username])
+}
+
+model ArtistOAuthAccount {
+  id                String @id @default(uuid(7)) @db.Uuid
+  artistId          String @db.Uuid
+  provider          String
+  providerAccountId String
+
+  createdAt DateTime @default(now())
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([artistId])
+}
+
+model ArtistPasswordReset {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  artistId  String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([artistId])
 }
 
 model Album {
@@ -144,7 +224,7 @@ model Album {
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
-  likedBy    User[]      @relation("UserLikedAlbums")
+  likedBy User[] @relation("UserLikedAlbums")
 
   @@index([artistId])
   @@index([title])
@@ -164,10 +244,23 @@ model Playlist {
 
   tracks Track[]
 
-  likedBy    User[]      @relation("UserLikedPlaylists")
+  likedBy User[] @relation("UserLikedPlaylists")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([isPublic])
+}
+
+model ListeningHistory {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String   @db.Uuid
+  trackId    String   @db.Uuid
+  listenedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@index([userId, listenedAt(sort: Desc)])
+  @@index([trackId])
 }

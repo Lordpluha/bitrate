@@ -1,0 +1,18 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "../src",
+  "testEnvironment": "node",
+  "maxWorkers": 1,
+  "testMatch": ["<rootDir>/modules/**/*.int-spec.ts"],
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib)/)"],
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/$1",
+    "^@modules/(.*)$": "<rootDir>/modules/$1",
+    "^@infra/(.*)$": "<rootDir>/infra/$1",
+    "^@common/(.*)$": "<rootDir>/common/$1",
+    "^@test/(.*)$": "<rootDir>/../test/$1"
+  }
+}

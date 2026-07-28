@@ -2,6 +2,7 @@ import { UpdateUserDto } from '@modules/users'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the put user swagger operation. */
 export function PutUserSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Update user by id' }),

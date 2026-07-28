@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Source_Sans_3 } from 'next/font/google'
+import type { ReactNode } from 'react'
 
 import './global.css'
 
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) {
   const lang = 'en'
 

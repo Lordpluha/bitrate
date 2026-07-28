@@ -1,6 +1,5 @@
 'use client'
 
-import type { Root as LabelRoot } from '@radix-ui/react-label'
 import {
   type ComponentPropsWithoutRef,
   cloneElement,
@@ -84,7 +83,7 @@ export const FormItem = ({ className, ...props }: HTMLAttributes<HTMLDivElement>
   )
 }
 
-export const FormLabel = ({ className, ...props }: ComponentPropsWithoutRef<typeof LabelRoot>) => {
+export const FormLabel = ({ className, ...props }: ComponentPropsWithoutRef<'label'>) => {
   const { error, formItemId } = useFormField()
 
   return (

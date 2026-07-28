@@ -4,8 +4,8 @@ exports[`DropdownMenu snapshots > matches snapshot — closed trigger 1`] = `
 <button
   aria-expanded="false"
   aria-haspopup="menu"
-  data-state="closed"
-  id="radix-_r_0_"
+  id="base-ui-_r_4_"
+  tabindex="0"
   type="button"
 >
   Open menu
@@ -13,21 +13,56 @@ exports[`DropdownMenu snapshots > matches snapshot — closed trigger 1`] = `
 `;
 
 exports[`DropdownMenu snapshots > renders open state snapshot 1`] = `
-<div
-  aria-hidden="true"
-  data-aria-hidden="true"
->
+<div>
+  <span
+    data-base-ui-focus-guard=""
+    data-base-ui-inert=""
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
   <button
-    aria-controls="radix-_r_3_"
+    aria-controls="_r_8_"
     aria-expanded="true"
     aria-haspopup="menu"
-    data-radix-popper-align="center"
-    data-radix-popper-side="bottom"
-    data-state="open"
-    id="radix-_r_2_"
+    data-popup-open=""
+    data-pressed=""
+    id="base-ui-_r_a_"
+    tabindex="0"
     type="button"
   >
     Open
   </button>
+  <span
+    aria-hidden="true"
+    data-base-ui-inert=""
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px;"
+    tabindex="-1"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    data-type="outside"
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+  <span
+    aria-owns="_r_c_"
+    data-base-ui-inert=""
+    style="clip-path: inset(50%); position: fixed; top: 0px; left: 0px;"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    data-type="outside"
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
 </div>
 `;

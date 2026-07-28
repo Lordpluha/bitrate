@@ -1,13 +1,11 @@
 import { faker } from '@faker-js/faker'
+import { Injectable } from '@nestjs/common'
 
-/**
- * Сервис для генерации фейковых данных
- */
+/** Represents the faker service. */
+@Injectable()
 export class FakerService {
-  /**
-   * Генерирует данные пользователей
-   */
-  static generateUsers(count: number) {
+  /** Runs the generate users operation. */
+  generateUsers(count: number) {
     const users: Array<{
       username: string
       email: string
@@ -17,7 +15,6 @@ export class FakerService {
       updatedAt: Date
     }> = []
 
-    // Тестовый пользователь
     users.push({
       username: 'testuser',
       email: 'test@example.com',
@@ -76,10 +73,8 @@ export class FakerService {
     return users
   }
 
-  /**
-   * Генерирует данные плейлистов для пользователей
-   */
-  static generatePlaylists(userIds: string[], count: number) {
+  /** Runs the generate playlists operation. */
+  generatePlaylists(userIds: string[], count: number) {
     const playlistTitles = [
       'My Favorites',
       'Chill Vibes',

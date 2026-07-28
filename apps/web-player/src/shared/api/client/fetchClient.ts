@@ -6,6 +6,8 @@ import createClient, { type Middleware } from 'openapi-fetch'
 
 // Состояние refresh запроса для предотвращения гонки
 let refreshPromise: Promise<boolean> | null = null
+const retryRequests = new WeakMap<Request, Request>()
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '')
 
 async function refreshToken(): Promise<boolean> {
   // Если refresh уже выполняется, ждём его завершения
@@ -15,16 +17,13 @@ async function refreshToken(): Promise<boolean> {
 
   refreshPromise = (async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/refresh`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      const response = await fetch(`${apiBaseUrl}/api/v1/auth/refresh`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      )
+      })
 
       if (!response.ok) {
         return false
@@ -42,9 +41,48 @@ async function refreshToken(): Promise<boolean> {
   return refreshPromise
 }
 
+const redirectToLogin = () => {
+  if (typeof window === 'undefined') return
+  if (!window.location.pathname.startsWith('/auth/')) {
+    window.location.href = ROUTES.auth.login
+  }
+}
+
+/** Runs a raw request through the same refresh-and-retry flow as the OpenAPI client. */
+export async function fetchWithAuthRefresh(
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+) {
+  const request = () =>
+    fetch(input, {
+      ...init,
+      credentials: init.credentials ?? 'include',
+    })
+
+  let response = await request()
+  if (response.status !== 401) return response
+
+  const requestUrl = input instanceof Request ? input.url : input.toString()
+  if (requestUrl.includes('/auth/')) return response
+
+  if (await refreshToken()) {
+    response = await request()
+    return response
+  }
+
+  redirectToLogin()
+  return response
+}
+
 // Middleware для автоматического refresh при 401
 const authRefreshMiddleware: Middleware = {
+  onRequest({ request }) {
+    retryRequests.set(request, request.clone())
+    return request
+  },
   async onResponse({ request, response }) {
+    const retryRequest = retryRequests.get(request)
+    retryRequests.delete(request)
     // Проверяем на 401 ошибку
     if (response.status === 401) {
       // Не пытаемся refresh для auth endpoints, чтобы избежать бесконечных циклов
@@ -60,25 +98,15 @@ const authRefreshMiddleware: Middleware = {
       const refreshSuccess = await refreshToken()
 
       if (refreshSuccess) {
-        // Клонируем request для повторного использования
-        const clonedRequest = request.clone()
+        if (!retryRequest) return response
 
-        // Повторяем оригинальный запрос после успешного refresh
-        const retryResponse = await fetch(clonedRequest)
+        const retryResponse = await fetch(retryRequest)
 
         return retryResponse
       }
 
       // Refresh не удался - очищаем cookies и редиректим на логин
-      if (typeof window !== 'undefined') {
-        // Редиректим на логин ТОЛЬКО если мы еще не на странице авторизации
-        const currentPath = window.location.pathname
-        const isOnAuthPage = currentPath.startsWith('/auth/')
-
-        if (!isOnAuthPage) {
-          window.location.href = ROUTES.auth.login
-        }
-      }
+      redirectToLogin()
       return response
     }
 
@@ -87,7 +115,7 @@ const authRefreshMiddleware: Middleware = {
 }
 
 export const clientFetchClient = createClient<ApiPaths>({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL,
+  baseUrl: apiBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },

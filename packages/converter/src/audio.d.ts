@@ -5,6 +5,7 @@ export interface ConvertAudioOptions {
   quality?: number
   vbr?: boolean
   application?: 'audio' | 'voip' | 'lowdelay'
+  timeoutMs?: number
 }
 
 export interface ConvertAudioResult {

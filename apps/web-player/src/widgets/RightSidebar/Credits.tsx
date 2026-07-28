@@ -1,7 +1,7 @@
 import { Button, Typography } from '@spotify/ui-react'
-import type React from 'react'
+import type { FC } from 'react'
 
-export const Credits: React.FC = () => (
+export const Credits: FC = () => (
   <div className="bg-surface rounded-lg p-0 overflow-hidden mt-4">
     <div className="flex items-center justify-between px-4 pt-3 pb-1">
       <div className="text-text text-sm font-semibold">Credits</div>

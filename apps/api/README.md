@@ -9,7 +9,7 @@
 ## Project setup
 1. Install dependencies
 ```bash
-$ pnpm ci
+$ pnpm install
 ```
 
 2. Start your first migration (needs db to be started)

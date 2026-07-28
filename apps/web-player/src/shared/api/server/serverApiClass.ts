@@ -1,6 +1,7 @@
 import 'server-only'
 
 import type { ApiPaths } from '@spotify/contracts'
+import { cookies } from 'next/headers'
 import createClient from 'openapi-fetch'
 
 export const serverFetchClient = createClient<ApiPaths>({
@@ -9,6 +10,18 @@ export const serverFetchClient = createClient<ApiPaths>({
     'Content-Type': 'application/json',
   },
   credentials: 'include',
+})
+
+serverFetchClient.use({
+  async onRequest({ request }) {
+    const cookieHeader = (await cookies()).toString()
+
+    if (cookieHeader) {
+      request.headers.set('Cookie', cookieHeader)
+    }
+
+    return request
+  },
 })
 
 export class ServerApi {

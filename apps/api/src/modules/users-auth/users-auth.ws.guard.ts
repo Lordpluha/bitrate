@@ -1,14 +1,22 @@
+import { PrismaService } from '@infra/prisma/prisma.service'
 import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common'
 import { WsException } from '@nestjs/websockets'
 import { Socket } from 'socket.io'
 import { TokenService } from '../tokens/token.service'
 
+/** Represents the ws user auth guard. */
 @Injectable()
 export class WsUserAuthGuard implements CanActivate {
+  /** The logger value. */
   private readonly logger = new Logger(WsUserAuthGuard.name, { timestamp: true })
 
-  constructor(private tokenService: TokenService) {}
+  /** Creates a new instance. */
+  constructor(
+    private tokenService: TokenService,
+    private prisma: PrismaService,
+  ) {}
 
+  /** Runs the can activate operation. */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
       const client = context.switchToWs().getClient<
@@ -25,7 +33,21 @@ export class WsUserAuthGuard implements CanActivate {
 
       const payload = await this.tokenService.verifyToken(token)
 
-      // Добавляем данные пользователя в контекст
+      if (payload.type !== 'user') {
+        throw new WsException('Invalid token type')
+      }
+
+      const session = await this.prisma.userSession.findFirst({
+        where: {
+          userId: payload.sub,
+          access_token: this.tokenService.hashToken(token),
+        },
+      })
+
+      if (!session) {
+        throw new WsException('Session not found or revoked')
+      }
+
       client.userId = payload.sub
       client.username = payload.username
 
@@ -38,8 +60,9 @@ export class WsUserAuthGuard implements CanActivate {
       throw new WsException('Unauthorized')
     }
   }
+
+  /** Runs the extract token from client operation. */
   private extractTokenFromClient(client: Socket): string | null {
-    // Проверяем ТОЛЬКО httpOnly cookies
     const cookieHeader = client.handshake.headers.cookie
 
     if (!cookieHeader) {

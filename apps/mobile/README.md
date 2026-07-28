@@ -1,50 +1,87 @@
-# Welcome to your Expo app 👋
+# @spotify/mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+React Native + Expo mobile app for the Spotify Clone. Runs on Android, iOS, and web (via react-native-web).
 
-## Get started
+## Stack
 
-1. Install dependencies
+- **Expo SDK 54** + **React Native 0.81** + **React 19**
+- **expo-router** — file-based routing (`app/` directory)
+- **React Navigation** — bottom tabs + stack navigation
+- **react-native-reanimated 4** + **react-native-gesture-handler** — animations
+- **expo-image** — optimized image rendering
+- **EAS Build** — cloud builds for Android (APK/AAB) and iOS (IPA)
 
-   ```bash
-   npm install
-   ```
+## Requirements
 
-2. Start the app
+- Node.js >= 20
+- pnpm >= 10
+- For Android: Android Studio + JDK 17
+- For iOS (macOS only): Xcode + CocoaPods
+- For physical device: [Expo Go](https://expo.dev/go)
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Getting Started
 
 ```bash
-npm run reset-project
+# From repo root — installs all workspace deps
+pnpm install
+
+# Start Metro bundler
+pnpm --filter @spotify/mobile start
+
+# Android emulator
+pnpm --filter @spotify/mobile android
+
+# iOS simulator (macOS only)
+pnpm --filter @spotify/mobile ios
+
+# Web browser
+pnpm --filter @spotify/mobile web
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Or inside `apps/mobile/`:
 
-## Learn more
+```bash
+pnpm start
+pnpm android
+pnpm ios
+pnpm web
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Project Structure
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+app/                  — expo-router pages (file-based routing)
+  (tabs)/             — bottom tab screens
+  _layout.tsx         — root layout
+  modal.tsx           — modal screen
+assets/               — fonts, images, icons
+components/           — shared UI components
+constants/            — colors, config constants
+hooks/                — custom React hooks
+scripts/              — utility scripts
+```
 
-## Join the community
+## EAS Build
 
-Join our community of developers creating universal apps.
+Cloud builds via Expo Application Services:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+# Preview build (for testing)
+eas build --profile preview --platform all
+
+# Production build
+eas build --profile production --platform all
+```
+
+Config: `eas.json`.
+
+## Docker (Metro bundler only)
+
+For demos or tunneling without a local dev environment:
+
+```bash
+docker compose --profile mobile up -d mobile
+# Open http://localhost:19000 for the QR code
+```
+
+> Native execution is recommended for active development.

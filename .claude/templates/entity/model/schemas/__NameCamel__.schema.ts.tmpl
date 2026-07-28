@@ -1,0 +1,7 @@
+import { z } from 'zod'
+
+export const __NameCamel__Schema = z.object({
+  id: z.string(),
+})
+
+export type __NamePascal__ = z.infer<typeof __NameCamel__Schema>

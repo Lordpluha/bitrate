@@ -1,6 +1,7 @@
-import type { StoryObj, StrictMeta } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { PropsWithChildren } from 'react'
 
-import { Typography } from './typography'
+import { Typography, type TypographyProps } from './typography'
 
 /**
  * Polymorphic text component supporting h1–h6 heading levels, body paragraphs,
@@ -8,14 +9,13 @@ import { Typography } from './typography'
  */
 const meta = {
   title: 'ui/Typography',
-  component: Typography,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },
-} satisfies StrictMeta<typeof Typography>
+} satisfies Meta<PropsWithChildren<TypographyProps>>
 
 export default meta
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<PropsWithChildren<TypographyProps>>
 
 /** Heading level 1 — largest heading. */
 export const Heading1: Story = {

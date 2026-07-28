@@ -1,5 +1,7 @@
+import ms, { type StringValue } from 'ms'
 import { z } from 'zod'
 
+/** The env schema value. */
 export const envSchema = z.object({
   NODE_ENV: z.enum(['local', 'development', 'production', 'test']).default('local'),
   PORT: z.coerce.number().default(3000),
@@ -7,20 +9,33 @@ export const envSchema = z.object({
 
   // Auth
   JWT_SECRET: z.string().min(10),
-  JWT_ACCESS_EXPIRES_IN: z.string().default('5m'),
-  JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
+  JWT_ACCESS_EXPIRES_IN: z
+    .string()
+    .default('5m')
+    .refine((v) => ms(v as StringValue) !== undefined, {
+      message: 'Must be a valid time string (e.g. "15m", "7d")',
+    }),
+  JWT_REFRESH_EXPIRES_IN: z
+    .string()
+    .default('30d')
+    .refine((v) => ms(v as StringValue) !== undefined, {
+      message: 'Must be a valid time string (e.g. "15m", "7d")',
+    }),
 
   ACCESS_TOKEN_NAME: z.string().min(1).default('access_token'),
   REFRESH_TOKEN_NAME: z.string().min(1).default('refresh_token'),
-  // OAUTH_GOOGLE_CLIENT_ID: z.string(),
-  // OAUTH_GOOGLE_CLIENT_SECRET: z.string(),
+  OAUTH_GOOGLE_CLIENT_ID: z.string().optional(),
+  OAUTH_GOOGLE_CLIENT_SECRET: z.string().optional(),
+  OAUTH_FACEBOOK_APP_ID: z.string().optional(),
+  OAUTH_FACEBOOK_APP_SECRET: z.string().optional(),
+  API_BASE_URL: z.string().url().optional(),
 
-  // Mail
-  // SMTP_HOST: z.string(),
-  // SMTP_PORT: z.coerce.number().default(587),
-  // SMTP_USER: z.string(),
-  // SMTP_PASS: z.string(),
-  // EMAIL_FROM: z.string().email(),
+  // Mail (optional — if unset, password-reset emails are logged but not sent)
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  EMAIL_FROM: z.email().optional(),
 
   // Database
   DATABASE_URL: z.url(),
@@ -30,7 +45,7 @@ export const envSchema = z.object({
   REDIS_PORT: z.coerce.number().default(6379),
 
   // Sentry
-  // SENTRY_DSN: z.string().url().optional(),
+  SENTRY_DSN: z.string().url().optional(),
 
   // CDN
   // CDN_URL: z.string().url().optional(),
@@ -41,4 +56,5 @@ export const envSchema = z.object({
   // POSTFIX_PASS: z.string(),
 })
 
+/** Defines the env type. */
 export type envType = z.infer<typeof envSchema>

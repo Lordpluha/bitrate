@@ -9,7 +9,15 @@ import {
   SkipBack,
   SkipForward,
 } from 'lucide-react'
-import React, { useCallback, useRef, useState } from 'react'
+import {
+  type FC,
+  type KeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 interface PlayerControlsProps {
   isPlaying: boolean
@@ -25,7 +33,7 @@ interface PlayerControlsProps {
   onRepeatToggle?: () => void
 }
 
-export const PlayerControls: React.FC<PlayerControlsProps> = ({
+export const PlayerControls: FC<PlayerControlsProps> = ({
   isPlaying,
   currentTime,
   duration,
@@ -50,7 +58,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   }
 
   const calculateTime = useCallback(
-    (e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
+    (e: MouseEvent | ReactMouseEvent<HTMLDivElement>) => {
       if (!progressBarRef.current || !duration) return null
 
       const rect = progressBarRef.current.getBoundingClientRect()
@@ -61,7 +69,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     [duration],
   )
 
-  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleProgressClick = (e: ReactMouseEvent<HTMLDivElement>) => {
     if (isDragging) return
     const newTime = calculateTime(e)
     if (newTime !== null) {
@@ -69,7 +77,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     }
   }
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
     setIsDragging(true)
     const newTime = calculateTime(e)
     if (newTime !== null) {
@@ -96,7 +104,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     setSeekTime(null)
   }, [isDragging, seekTime, onSeek])
 
-  const handleProgressKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleProgressKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!duration) return
 
     const current = seekTime !== null ? seekTime : currentTime
@@ -113,7 +121,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove)
       document.addEventListener('mouseup', handleMouseUp)
@@ -129,10 +137,12 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     <div className="flex-1 flex flex-col items-center gap-2 max-w-180.5">
       <div className="flex items-center gap-4">
         <button
+          aria-label={isShuffled ? 'Disable shuffle' : 'Enable shuffle'}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            isShuffled ? 'text-green-500' : 'text-gray-400',
+            isShuffled ? 'text-green-500' : 'text-text-subdued',
           )}
+          disabled={!onShuffleToggle}
           onClick={onShuffleToggle}
           type="button"
         >
@@ -140,7 +150,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         </button>
 
         <button
-          className="p-1 text-gray-400 hover:text-white hover:scale-110 transition-all"
+          className="p-1 text-text-subdued hover:text-text hover:scale-110 transition-all"
           onClick={onPrevious}
           type="button"
         >
@@ -148,19 +158,23 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         </button>
 
         <button
-          className="w-8 h-8 rounded-full bg-white hover:scale-105 transition-transform flex items-center justify-center"
+          className="w-8 h-8 rounded-full bg-text hover:scale-105 transition-transform flex items-center justify-center"
           onClick={onPlayPause}
           type="button"
         >
           {isPlaying ? (
-            <Pause className="text-black" fill="black" size={20} />
+            <Pause className="text-background" fill="currentColor" size={20} />
           ) : (
-            <Play className="text-black ml-0.5" fill="black" size={20} />
+            <Play
+              className="text-background ml-0.5"
+              fill="currentColor"
+              size={20}
+            />
           )}
         </button>
 
         <button
-          className="p-1 text-gray-400 hover:text-white hover:scale-110 transition-all"
+          className="p-1 text-text-subdued hover:text-text hover:scale-110 transition-all"
           onClick={onNext}
           type="button"
         >
@@ -168,10 +182,12 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         </button>
 
         <button
+          aria-label={repeatMode !== 'off' ? 'Disable repeat' : 'Enable repeat'}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            repeatMode !== 'off' ? 'text-green-500' : 'text-gray-400',
+            repeatMode !== 'off' ? 'text-green-500' : 'text-text-subdued',
           )}
+          disabled={!onRepeatToggle}
           onClick={onRepeatToggle}
           type="button"
         >
@@ -180,18 +196,15 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       </div>
 
       <div className="flex items-center gap-2 w-full">
-        <span className="text-xs text-gray-400 min-w-10 text-right">
+        <span className="text-xs text-text-subdued min-w-[40px] text-right">
           {formatTime(seekTime !== null ? seekTime : currentTime)}
         </span>
         <div
-          aria-label="Seek track"
-          aria-valuemax={Math.max(0, duration)}
+          aria-label="Seek playback"
+          aria-valuemax={duration || 0}
           aria-valuemin={0}
-          aria-valuenow={Math.max(
-            0,
-            seekTime !== null ? seekTime : currentTime,
-          )}
-          className="flex-1 h-1 bg-gray-600 rounded-full cursor-pointer group relative"
+          aria-valuenow={seekTime !== null ? seekTime : currentTime}
+          className="flex-1 h-1 bg-border rounded-full cursor-pointer group relative"
           onClick={handleProgressClick}
           onKeyDown={handleProgressKeyDown}
           onMouseDown={handleMouseDown}
@@ -200,15 +213,15 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           tabIndex={0}
         >
           <div
-            className="absolute top-0 left-0 h-full bg-white group-hover:bg-green-500 rounded-full pointer-events-none transition-colors"
+            className="absolute top-0 left-0 h-full bg-text group-hover:bg-primary rounded-full pointer-events-none transition-colors"
             style={{
               width: `${duration && Number.isFinite(duration) ? ((seekTime !== null ? seekTime : currentTime) / duration) * 100 : 0}%`,
             }}
           >
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-text rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
-        <span className="text-xs text-gray-400 min-w-10">
+        <span className="text-xs text-text-subdued min-w-[40px]">
           {formatTime(duration)}
         </span>
       </div>

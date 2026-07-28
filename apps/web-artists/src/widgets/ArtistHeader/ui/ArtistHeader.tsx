@@ -1,7 +1,7 @@
 'use client'
 
 import { ArtistLogo } from '@shared/ui'
-import React from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import links from '../config/nav-links.json'
 import { AuthButtons } from './AuthButtons/AuthButtons'
 import { NavLinks } from './NavLink/NavLink'
@@ -28,9 +28,9 @@ interface LinkItem {
 }
 
 export const ArtistHeader = () => {
-  const [activeSubmenu, setActiveSubmenu] = React.useState<string | null>(null)
-  const [isClosing, setIsClosing] = React.useState(false)
-  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
+  const [isClosing, setIsClosing] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const typedLinks = links as LinkItem[]
   const activeLink = typedLinks.find((link) => link.title === activeSubmenu)
@@ -38,14 +38,14 @@ export const ArtistHeader = () => {
   const submenuData = activeLink?.submenu || activeLink?.resources || null
   const submenuType = activeLink?.submenu ? 'features' : 'resources'
 
-  const clearTimer = React.useCallback(() => {
+  const clearTimer = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
       timeoutRef.current = null
     }
   }, [])
 
-  const handleSetActiveSubmenu = React.useCallback(
+  const handleSetActiveSubmenu = useCallback(
     (value: string | null) => {
       clearTimer()
       setIsClosing(false)
@@ -54,7 +54,7 @@ export const ArtistHeader = () => {
     [clearTimer],
   )
 
-  const handleCloseSubmenu = React.useCallback(() => {
+  const handleCloseSubmenu = useCallback(() => {
     if (!activeSubmenu || isClosing) return
 
     clearTimer()
@@ -65,12 +65,12 @@ export const ArtistHeader = () => {
     }, 300)
   }, [activeSubmenu, isClosing, clearTimer])
 
-  const handleMenuEnter = React.useCallback(() => {
+  const handleMenuEnter = useCallback(() => {
     clearTimer()
     setIsClosing(false)
   }, [clearTimer])
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => clearTimer()
   }, [clearTimer])
 
