@@ -96,6 +96,14 @@ jobs:
         if: ${{ inputs.run-screenshot }}
         run: pnpm --filter @spotify/web-player test:screenshot
 
+      - name: Upload screenshot test failure artifacts
+        if: ${{ inputs.run-screenshot && failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-player-screenshot-diffs
+          path: apps/web-player/test-results/
+          retention-days: 7
+
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker
         with:
