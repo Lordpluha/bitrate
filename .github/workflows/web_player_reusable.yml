@@ -72,6 +72,10 @@ jobs:
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @spotify/ui-react run build
 
+      - name: Generate Next.js route types
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @spotify/web-player exec next typegen
+
       - name: Run web-player typecheck
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @spotify/web-player check-types
