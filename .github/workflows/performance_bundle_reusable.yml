@@ -38,9 +38,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           pattern: 'apps/web-player/.next/static/**/*.js'
           compression: gzip
-        env:
-          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          cwd: apps/web-player
+          install-script: "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @spotify/ui-react run build"
 
       - name: Restore repository state
         if: always()
