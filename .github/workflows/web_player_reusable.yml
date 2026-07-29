@@ -68,6 +68,10 @@ jobs:
         if: ${{ inputs.run-biome }}
         run: pnpm exec biome ci apps/web-player packages/ui-react packages/contracts
 
+      - name: Build ui-react
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @spotify/ui-react run build
+
       - name: Run web-player typecheck
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @spotify/web-player check-types
