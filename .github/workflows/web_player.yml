@@ -59,7 +59,7 @@ jobs:
       tags: |
         ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:develop
         ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:develop-${{ github.sha }}
-      timeout-minutes: 15
+      timeout-minutes: 30
       run-biome: true
       run-tests: true
       run-e2e: true

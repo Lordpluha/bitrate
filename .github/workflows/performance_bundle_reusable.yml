@@ -39,7 +39,7 @@ jobs:
           pattern: 'apps/web-player/.next/static/**/*.js'
           compression: gzip
           cwd: apps/web-player
-          install-script: "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @spotify/ui-react run build"
+          install-script: pnpm run ci:bundle-analysis-install
 
       - name: Restore repository state
         if: always()

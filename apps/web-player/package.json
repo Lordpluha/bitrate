@@ -17,7 +17,8 @@
     "test:int": "vitest run --config=tests/configs/vitest.config.ts --project=integration --passWithNoTests",
     "test:e2e": "playwright test --config=tests/configs/playwright.e2e.config.ts",
     "test:screenshot": "playwright test --config=tests/configs/playwright.screenshot.config.ts",
-    "test:screenshot:update": "playwright test --config=tests/configs/playwright.screenshot.config.ts --update-snapshots"
+    "test:screenshot:update": "playwright test --config=tests/configs/playwright.screenshot.config.ts --update-snapshots",
+    "ci:bundle-analysis-install": "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @spotify/ui-react run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
