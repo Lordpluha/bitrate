@@ -10,6 +10,7 @@ WORKDIR /app
 # Stage 2: Dependencies
 FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts ./scripts
 COPY apps/api/package.json ./apps/api/
 COPY packages/converter/package.json ./packages/converter/
 COPY packages/converter/bin ./packages/converter/bin
@@ -43,6 +44,7 @@ RUN pnpm --filter @spotify/api run build
 # Stage 5: Production Dependencies
 FROM base AS prod-dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts ./scripts
 COPY apps/api/package.json ./apps/api/
 COPY packages/converter/package.json ./packages/converter/
 COPY packages/converter/bin ./packages/converter/bin

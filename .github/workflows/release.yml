@@ -43,3 +43,5 @@ jobs:
           createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test

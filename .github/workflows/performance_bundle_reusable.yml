@@ -38,6 +38,9 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           pattern: 'apps/web-player/.next/static/**/*.js'
           compression: gzip
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
 
       - name: Restore repository state
         if: always()
