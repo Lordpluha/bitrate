@@ -1,4 +1,6 @@
 import Image from 'next/image'
+import Link from 'next/link'
+import { ROUTES } from '@/shared/routes'
 import { getArtistAvatarUrl } from '@/shared/utils/mediaUrl'
 import type { ProfileArtist } from '@/views/Profile/model/profile.types'
 import { ProfileSection } from '@/views/Profile/ui/ProfileSection'
@@ -12,10 +14,7 @@ export const ProfileArtistsSection = ({
   artists,
   isPending,
 }: ProfileArtistsSectionProps) => (
-  <ProfileSection
-    subtitle="Artists currently available in the catalog"
-    title="Artists to explore"
-  >
+  <ProfileSection subtitle="Only visible to you" title="Top artists this month">
     <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,140px),1fr))] gap-4 sm:gap-5">
       {isPending ? (
         <p className="text-text-subdued">Loading artists...</p>
@@ -23,8 +22,9 @@ export const ProfileArtistsSection = ({
         <p className="text-text-subdued">No artists yet.</p>
       ) : (
         artists.map((artist) => (
-          <div
-            className="min-w-0 rounded-md p-2 transition-colors hover:bg-white/10"
+          <Link
+            className="block min-w-0 rounded-md p-2 transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            href={ROUTES.artist(artist.id)}
             key={artist.id}
           >
             <Image
@@ -39,7 +39,7 @@ export const ProfileArtistsSection = ({
               {artist.username}
             </h3>
             <p className="text-sm text-text-subdued">Artist</p>
-          </div>
+          </Link>
         ))
       )}
     </div>

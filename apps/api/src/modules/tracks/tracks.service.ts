@@ -1,10 +1,15 @@
 import { extname } from 'node:path'
 import { text } from 'node:stream/consumers'
 import type { AppConfig } from '@common/config'
+import { normalizePagination } from '@common/pagination'
 import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import {
+  AUDIO_PROCESSING_JOB_OPTIONS,
+  AUDIO_PROCESSING_QUEUE,
+} from '@infra/queues/audio-processing.queue'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import type { ArtistEntity } from '@modules/artists'
@@ -37,7 +42,7 @@ export class TracksService {
   /** Creates a new instance. */
   constructor(
     private readonly prisma: PrismaService,
-    @InjectQueue('audio-processing') private readonly audioQueue: Queue,
+    @InjectQueue(AUDIO_PROCESSING_QUEUE) private readonly audioQueue: Queue,
     private readonly configService: ConfigService<AppConfig>,
     private readonly cache: CacheService,
     @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
@@ -74,13 +79,7 @@ export class TracksService {
           format: 'opus',
           bitrates,
         },
-        {
-          jobId: `convert-audio-${trackId}-${sourceFileName}`,
-          attempts: 5,
-          backoff: { type: 'exponential', delay: 5_000 },
-          removeOnComplete: { age: 3_600, count: 1_000 },
-          removeOnFail: { age: 604_800, count: 5_000 },
-        },
+        { ...AUDIO_PROCESSING_JOB_OPTIONS, jobId: `convert-audio-${trackId}-${sourceFileName}` },
       )
     } catch (error) {
       await this.prisma.track.update({
@@ -160,7 +159,7 @@ export class TracksService {
     preferredBitrate?: number,
     preferredFormat = 'opus',
   ) {
-    const track = await this.prisma.track.findUnique({ where: { id } })
+    const track = await this.prisma.track.findFirst({ where: { id, deletedAt: null } })
     if (!track) throw new NotFoundException('Track not found')
     if (track.processingStatus !== 'READY')
       throw new NotFoundException('Track is not available yet')
@@ -343,33 +342,26 @@ export class TracksService {
     limit = 10,
     title,
   }: { page?: number; limit?: number } & Partial<TrackEntity>) {
-    const safeLimit = Math.min(limit, 100)
+    const pagination = normalizePagination(page, limit)
     return await this.cache.wrap(
       NS.TRACKS,
-      `list:${page}:${safeLimit}:${title ?? ''}`,
+      `list:${pagination.page}:${pagination.limit}:${title ?? ''}`,
       TTL.SHORT,
       async () => {
-        const skip = (page - 1) * safeLimit
+        const where = {
+          processingStatus: 'READY' as const,
+          deletedAt: null,
+          ...(title ? { title: { contains: title, mode: 'insensitive' as const } } : {}),
+        }
         const [data, total] = await this.prisma.$transaction([
           this.prisma.track.findMany({
-            skip,
-            where: {
-              processingStatus: 'READY',
-              ...(title ? { title: { contains: title, mode: 'insensitive' } } : {}),
-            },
-            take: safeLimit,
+            skip: pagination.skip,
+            where,
+            take: pagination.limit,
           }),
-          this.prisma.track.count({
-            where: {
-              processingStatus: 'READY',
-              ...(title ? { title: { contains: title, mode: 'insensitive' } } : {}),
-            },
-          }),
+          this.prisma.track.count({ where }),
         ])
-        return {
-          data,
-          meta: { total, page, limit: safeLimit, lastPage: Math.ceil(total / safeLimit) },
-        }
+        return { data, total, page: pagination.page, limit: pagination.limit }
       },
     )
   }
@@ -377,10 +369,17 @@ export class TracksService {
   /** Runs the like operation. */
   async like(userId: UserEntity['id'], trackId: TrackEntity['id']) {
     try {
-      return await this.prisma.track.update({
-        where: { id: trackId },
-        data: { likedBy: { connect: { id: userId } } },
+      const track = await this.prisma.track.findFirst({
+        where: { id: trackId, processingStatus: 'READY', deletedAt: null },
       })
+      if (!track) throw new NotFoundException('Track not found')
+      await this.prisma.userLikedTrack.upsert({
+        where: { userId_trackId: { userId, trackId } },
+        update: {},
+        create: { userId, trackId },
+      })
+      await this.cache.invalidate(NS.TRACKS)
+      return track
     } catch (error: unknown) {
       if (isPrismaP2025(error)) throw new NotFoundException('Track not found')
       throw error
@@ -390,10 +389,13 @@ export class TracksService {
   /** Runs the unlike operation. */
   async unlike(userId: UserEntity['id'], trackId: TrackEntity['id']) {
     try {
-      return await this.prisma.track.update({
-        where: { id: trackId },
-        data: { likedBy: { disconnect: { id: userId } } },
+      const track = await this.prisma.track.findFirst({
+        where: { id: trackId, deletedAt: null },
       })
+      if (!track) throw new NotFoundException('Track not found')
+      await this.prisma.userLikedTrack.deleteMany({ where: { userId, trackId } })
+      await this.cache.invalidate(NS.TRACKS)
+      return track
     } catch (error: unknown) {
       if (isPrismaP2025(error)) throw new NotFoundException('Track not found')
       throw error
@@ -405,35 +407,52 @@ export class TracksService {
     userId: UserEntity['id'],
     { page = 1, limit = 10 }: { page?: number; limit?: number },
   ) {
-    const safeLimit = Math.min(limit, 100)
-    return await this.prisma.track.findMany({
-      where: {
-        processingStatus: 'READY',
-        likedBy: { some: { id: userId } },
-      },
-      skip: (page - 1) * safeLimit,
-      take: safeLimit,
-    })
+    const pagination = normalizePagination(page, limit)
+    const where = { userId, track: { processingStatus: 'READY' as const, deletedAt: null } }
+    const [likes, total] = await this.prisma.$transaction([
+      this.prisma.userLikedTrack.findMany({
+        where,
+        include: { track: true },
+        orderBy: { createdAt: 'desc' },
+        skip: pagination.skip,
+        take: pagination.limit,
+      }),
+      this.prisma.userLikedTrack.count({ where }),
+    ])
+    return {
+      data: likes.map(({ track, createdAt }) => ({ ...track, likedAt: createdAt })),
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+    }
   }
 
   /** Runs the find track by id operation. */
   async findTrackById(id: TrackEntity['id']) {
     return await this.cache.wrap(NS.TRACKS, `id:${id}`, TTL.LONG, () =>
-      this.prisma.track.findFirst({ where: { id, processingStatus: 'READY' } }),
+      this.prisma.track.findFirst({
+        where: { id, processingStatus: 'READY', deletedAt: null },
+      }),
     )
   }
 
   /** Runs the find tracks by artist id operation. */
   async findTracksByArtistId(artistId: Artist['id']) {
     return await this.cache.wrap(NS.TRACKS, `artist:${artistId}`, TTL.SHORT, () =>
-      this.prisma.track.findMany({ where: { artistId, processingStatus: 'READY' } }),
+      this.prisma.track.findMany({
+        where: { artistId, processingStatus: 'READY', deletedAt: null },
+      }),
     )
   }
 
   /** Runs the find tracks by artist name operation. */
   async findTracksByArtistName(artistUsername: Artist['username']) {
     return await this.prisma.track.findMany({
-      where: { processingStatus: 'READY', artist: { username: artistUsername } },
+      where: {
+        processingStatus: 'READY',
+        deletedAt: null,
+        artist: { username: artistUsername },
+      },
     })
   }
 

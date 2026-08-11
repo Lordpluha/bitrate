@@ -83,6 +83,16 @@ jobs:
     timeout-minutes: 25
     needs: api-build
 
+    env:
+      DATABASE_URL: postgresql://test:test@localhost:5432/test
+      SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      WEB_HOST: http://localhost:3001
+      JWT_SECRET: api-ci-secret-value
+      STORAGE_DRIVER: local
+      PORT: 3000
+
     services:
       postgres:
         image: postgres:16-alpine
@@ -119,7 +129,7 @@ jobs:
         run: pnpm --filter @spotify/api run db:gen
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
-          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
 
       - name: Create shadow database
         run: |
@@ -127,23 +137,30 @@ jobs:
           PGPASSWORD=test psql -h localhost -U test -d postgres -c "CREATE DATABASE test_shadow;"
 
       - name: Run migrations
-        run: pnpm --filter @spotify/api run db:migration:start
+        run: pnpm --filter @spotify/api run db:migration:deploy
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
 
       - name: Run unit tests
         run: pnpm --filter @spotify/api run test
-        continue-on-error: true
 
       - name: Run integration tests
         run: pnpm --filter @spotify/api run test:int
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/test
-        continue-on-error: true
 
       - name: Run e2e tests
         run: pnpm --filter @spotify/api run test:e2e
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/test
-        continue-on-error: true
+
+      - name: Verify generated API contracts
+        run: |
+          pnpm --filter @spotify/api run start > /tmp/spotify-api.log 2>&1 &
+          for i in {1..30}; do
+            curl --fail --silent http://localhost:3000/swagger/json > /dev/null && break
+            if [ "$i" = 30 ]; then
+              cat /tmp/spotify-api.log
+              exit 1
+            fi
+            sleep 1
+          done
+          pnpm --filter @spotify/contracts run gen:api
+          git diff --exit-code -- packages/contracts/src/api/v1.ts

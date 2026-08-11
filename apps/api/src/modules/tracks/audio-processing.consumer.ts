@@ -2,29 +2,16 @@ import { createReadStream } from 'node:fs'
 import { access, mkdir, readdir, rm, stat } from 'node:fs/promises'
 import { extname, join } from 'node:path'
 import * as PrismaServiceModule from '@infra/prisma/prisma.service'
+import {
+  AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
+  AUDIO_PROCESSING_QUEUE,
+  type ConvertAudioJob,
+} from '@infra/queues/audio-processing.queue'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
-import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
+import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Inject, Logger } from '@nestjs/common'
-import type { Job } from 'bullmq'
-
-/** Describes the convert audio job. */
-interface ConvertAudioJob {
-  /** The track id value. */
-  trackId: string
-  /** The artist id value. */
-  artistId: string
-  /** The source file name value. */
-  sourceFileName: string
-  /** The input path value. */
-  inputPath: string
-  /** The output dir value. */
-  outputDir: string
-  /** The format value. */
-  format: string
-  /** The bitrates value. */
-  bitrates: string[]
-}
+import type { Job, Queue } from 'bullmq'
 
 /** Describes a single prepared bitrate variant before S3 upload. */
 interface PreparedVariant {
@@ -54,7 +41,7 @@ function contentTypeFor(filePath: string): string {
 }
 
 /** Represents the audio processing consumer. */
-@Processor('audio-processing', {
+@Processor(AUDIO_PROCESSING_QUEUE, {
   concurrency: 2,
   lockDuration: 600_000,
   stalledInterval: 30_000,
@@ -67,6 +54,8 @@ export class AudioProcessingConsumer extends WorkerHost {
     private readonly prisma: PrismaServiceModule.PrismaService,
     @Inject(STORAGE_SERVICE)
     private readonly storage: StorageService,
+    @InjectQueue(AUDIO_PROCESSING_DEAD_LETTER_QUEUE)
+    private readonly deadLetterQueue: Queue<ConvertAudioJob>,
   ) {
     super()
   }
@@ -193,6 +182,11 @@ export class AudioProcessingConsumer extends WorkerHost {
         processingError: error.message,
         processingFinishedAt: new Date(),
       },
+    })
+    await this.deadLetterQueue.add('convert-audio-failed', job.data, {
+      jobId: `failed-${String(job.id)}-${job.attemptsMade}`,
+      removeOnComplete: 500,
+      removeOnFail: 1_000,
     })
     this.logger.error(
       `Audio conversion permanently failed for track ${job.data.trackId}`,

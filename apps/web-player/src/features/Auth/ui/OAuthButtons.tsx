@@ -1,129 +1,11 @@
 'use client'
 
-import { type ActiveOAuthProvider, getOAuthUrl } from '@features/Auth/api/oauth'
+import { getOAuthUrl } from '@features/Auth/api/oauth'
 import {
-  AppleIcon,
-  Button,
-  DiscordIcon,
-  FacebookIcon,
-  GithubIcon,
-  GoogleIcon,
-  InstagramIcon,
-  LinkedinIcon,
-  MicrosoftIcon,
-  RedditIcon,
-  TelegramIcon,
-  TiktokIcon,
-  TwitchIcon,
-  TwitterIcon,
-  Typography,
-} from '@spotify/ui-react'
-import type { SVGProps } from 'react'
-
-type SocialProvider = {
-  id: string
-  label: string
-  brandColor: string
-  textColor: string
-  activeProvider?: ActiveOAuthProvider
-  icon: (props: SVGProps<SVGSVGElement>) => React.JSX.Element
-}
-
-const socialProviders: SocialProvider[] = [
-  {
-    id: 'google',
-    label: 'Google',
-    brandColor: '#ffffff',
-    textColor: '#1f1f1f',
-    activeProvider: 'google',
-    icon: GoogleIcon,
-  },
-  {
-    id: 'facebook',
-    label: 'Facebook',
-    brandColor: '#1877f2',
-    textColor: '#ffffff',
-    activeProvider: 'facebook',
-    icon: FacebookIcon,
-  },
-  {
-    id: 'apple',
-    label: 'Apple',
-    brandColor: '#000000',
-    textColor: '#ffffff',
-    icon: AppleIcon,
-  },
-  {
-    id: 'discord',
-    label: 'Discord',
-    brandColor: '#5865f2',
-    textColor: '#ffffff',
-    icon: DiscordIcon,
-  },
-  {
-    id: 'github',
-    label: 'GitHub',
-    brandColor: '#24292f',
-    textColor: '#ffffff',
-    icon: GithubIcon,
-  },
-  {
-    id: 'microsoft',
-    label: 'Microsoft',
-    brandColor: '#ffffff',
-    textColor: '#1f1f1f',
-    icon: MicrosoftIcon,
-  },
-  {
-    id: 'x',
-    label: 'X',
-    brandColor: '#000000',
-    textColor: '#ffffff',
-    icon: TwitterIcon,
-  },
-  {
-    id: 'instagram',
-    label: 'Instagram',
-    brandColor: '#e1306c',
-    textColor: '#ffffff',
-    icon: InstagramIcon,
-  },
-  {
-    id: 'tiktok',
-    label: 'TikTok',
-    brandColor: '#010101',
-    textColor: '#ffffff',
-    icon: TiktokIcon,
-  },
-  {
-    id: 'twitch',
-    label: 'Twitch',
-    brandColor: '#9146ff',
-    textColor: '#ffffff',
-    icon: TwitchIcon,
-  },
-  {
-    id: 'linkedin',
-    label: 'LinkedIn',
-    brandColor: '#0a66c2',
-    textColor: '#ffffff',
-    icon: LinkedinIcon,
-  },
-  {
-    id: 'reddit',
-    label: 'Reddit',
-    brandColor: '#ff4500',
-    textColor: '#ffffff',
-    icon: RedditIcon,
-  },
-  {
-    id: 'telegram',
-    label: 'Telegram',
-    brandColor: '#26a5e4',
-    textColor: '#ffffff',
-    icon: TelegramIcon,
-  },
-]
+  type SocialProvider,
+  socialProviders,
+} from '@features/Auth/model/oauthProviders'
+import { Button, Typography } from '@spotify/ui-react'
 
 const SocialIcon = ({ provider }: { provider: SocialProvider }) => {
   const Icon = provider.icon
@@ -139,7 +21,7 @@ export const OAuthButtons = () => (
         backgroundColor: provider.brandColor,
         borderColor:
           provider.id === 'google' || provider.id === 'microsoft'
-            ? '#a7a7a7'
+            ? 'var(--color-text-subdued)'
             : provider.brandColor,
         color: provider.textColor,
       }

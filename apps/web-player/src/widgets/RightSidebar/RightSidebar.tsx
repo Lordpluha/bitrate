@@ -1,4 +1,5 @@
 import { AboutArtist } from './AboutArtist'
+import { Credits } from './Credits'
 import { CurrentPlaylist } from './CurrentPlaylist'
 import { NextInQueue } from './NextInQueue'
 
@@ -8,10 +9,10 @@ interface RightSidebarProps {
 
 export const RightSidebar = ({ onCollapse }: RightSidebarProps) => {
   return (
-    <div className="h-full py-4 px-6 overflow-y-auto overflow-x-hidden custom-scrollbar group/sidebar relative min-w-[260px]">
+    <div className="group/sidebar relative h-full min-w-65 overflow-x-hidden overflow-y-auto px-4 py-4 custom-scrollbar">
       <CurrentPlaylist onCollapse={onCollapse} />
       <AboutArtist />
-      {/* <Credits /> */}
+      <Credits />
       <NextInQueue />
     </div>
   )

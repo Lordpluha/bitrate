@@ -116,7 +116,10 @@ describe('AuthController (artists)', () => {
   })
 
   it('refresh should call service.refresh and setAuthCookies', async () => {
-    authService.refresh.mockResolvedValue({ access_token: 'new-at' } as never)
+    authService.refresh.mockResolvedValue({
+      access_token: 'new-at',
+      refresh_token: 'new-rt',
+    } as never)
     const res = makeResponse()
     const req = {
       refresh_token: 'rt',
@@ -125,7 +128,7 @@ describe('AuthController (artists)', () => {
     await controller.refresh(req, res)
 
     expect(authService.refresh).toHaveBeenCalledWith('rt')
-    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-at', 'rt')
+    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-at', 'new-rt')
   })
 
   it('getMe should return artist by id from request user', async () => {

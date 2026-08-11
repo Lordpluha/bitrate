@@ -6,8 +6,10 @@ import { getTrackById } from '@entities/Track'
 import { showApiErrorToast } from '@shared/api/feedback'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import Image from 'next/image'
+import { useI18n } from '@/shared/i18n'
 
 export const RecentlyPlayed = () => {
+  const { t } = useI18n()
   const play = usePlayerStore((state) => state.play)
   const { data: history, isPending } = useListeningHistory({
     page: 1,
@@ -28,7 +30,9 @@ export const RecentlyPlayed = () => {
   return (
     <section className="relative mt-8">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-text">Recently played</h2>
+        <h2 className="text-2xl font-bold text-text">
+          {t('main.recentlyPlayed')}
+        </h2>
       </div>
       <div className="space-y-1">
         {recentTracks.map((entry) => (

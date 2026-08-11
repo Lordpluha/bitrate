@@ -1,17 +1,17 @@
 'use client'
 
-import { useListeningHistory } from '@/entities/History'
+import { useTopArtists, useTopTracks } from '@/entities/Discovery'
 import { usePlayerStore } from '@/entities/Player'
 import { useMyPlaylists } from '@/entities/Playlist'
-import { getTrackById, useLikedTracks } from '@/entities/Track'
+import { getTrackById } from '@/entities/Track'
+import { useFollowedUsers } from '@/entities/User'
 import { showApiErrorToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
-import { useArtists } from '@/shared/hooks/useArtists'
 import { getUserAvatarUrl } from '@/shared/utils/mediaUrl'
 import type { ProfileTrack } from '@/views/Profile/model/profile.types'
-import { getUniqueTracks } from '@/views/Profile/model/profile.utils'
 import { ProfileActions } from '@/views/Profile/ui/ProfileActions'
 import { ProfileArtistsSection } from '@/views/Profile/ui/ProfileArtistsSection'
+import { ProfileFollowingUsersSection } from '@/views/Profile/ui/ProfileFollowingUsersSection'
 import { ProfileFooter } from '@/views/Profile/ui/ProfileFooter'
 import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
 import { ProfilePlaylistsSection } from '@/views/Profile/ui/ProfilePlaylistsSection'
@@ -20,18 +20,23 @@ import { ProfileTracksSection } from '@/views/Profile/ui/ProfileTracksSection'
 export const ProfilePage = () => {
   const play = usePlayerStore((state) => state.play)
   const { user, isLoading } = useAuth()
-  const { data: artistsData, isPending: isArtistsPending } = useArtists(1, 8)
-  const { data: historyData } = useListeningHistory({ page: 1, limit: 20 })
-  const { data: likedTracks } = useLikedTracks(1, 8)
+  const { data: artistsData, isPending: isArtistsPending } = useTopArtists(
+    'medium',
+    1,
+    5,
+  )
+  const { data: tracksData, isPending: areTracksPending } = useTopTracks(
+    'medium',
+    1,
+    5,
+  )
   const { data: myPlaylistsData, isPending: arePlaylistsPending } =
     useMyPlaylists()
+  const { data: followedUsers = [], isPending: areFollowedUsersPending } =
+    useFollowedUsers(!!user)
 
-  const artists = (artistsData ?? []).slice(0, 5)
-  const trackSource: ProfileTrack[] =
-    historyData && historyData.length > 0
-      ? historyData.map((entry) => entry.track)
-      : (likedTracks ?? [])
-  const topTracks = getUniqueTracks(trackSource).slice(0, 5)
+  const artists = artistsData?.data ?? []
+  const topTracks: ProfileTrack[] = tracksData?.data ?? []
   const myPlaylists = (myPlaylistsData ?? []).slice(0, 6)
 
   const playTrack = async (track: ProfileTrack) => {
@@ -72,12 +77,17 @@ export const ProfilePage = () => {
         <ProfileActions />
         <ProfileArtistsSection artists={artists} isPending={isArtistsPending} />
         <ProfileTracksSection
+          isPending={areTracksPending}
           onPlayTrack={(track) => void playTrack(track)}
           tracks={topTracks}
         />
         <ProfilePlaylistsSection
           isPending={arePlaylistsPending}
           playlists={myPlaylists}
+        />
+        <ProfileFollowingUsersSection
+          isPending={areFollowedUsersPending}
+          users={followedUsers}
         />
         <ProfileFooter />
       </section>

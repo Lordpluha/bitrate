@@ -1,7 +1,7 @@
 'use client'
 
 import { toast } from '@spotify/ui-react'
-import { ApiRequestError } from './errors'
+import { ApiRequestError, getApiErrorStatus } from './errors'
 
 const DEFAULT_ERROR_MESSAGE = 'Something went wrong. Please try again.'
 
@@ -65,7 +65,14 @@ export const showApiErrorToast = (
   error: unknown,
   fallback = DEFAULT_ERROR_MESSAGE,
 ) => {
-  toast.error(getApiErrorMessage(error, fallback))
+  const message = getApiErrorMessage(error, fallback)
+
+  if (getApiErrorStatus(error) === 429) {
+    toast.error(message, { id: 'api-rate-limit-error' })
+    return
+  }
+
+  toast.error(message)
 }
 
 export const showApiSuccessToast = (message: string) => {

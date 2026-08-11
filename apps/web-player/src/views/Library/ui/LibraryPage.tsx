@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useI18n } from '@/shared/i18n'
 import type { LibraryControls } from '@/views/Library/model/library.types'
 import { useLibraryData } from '@/views/Library/model/useLibraryData'
 import { AlbumLibrarySection } from '@/views/Library/ui/AlbumLibrarySection'
@@ -12,6 +13,7 @@ import { LikedTracksLibrarySection } from '@/views/Library/ui/LikedTracksLibrary
 import { PlaylistLibrarySection } from '@/views/Library/ui/PlaylistLibrarySection'
 
 export const LibraryPage = () => {
+  const { t } = useI18n()
   const searchParams = useSearchParams()
   const [controls, setControls] = useState<LibraryControls>({
     activeSection: 'playlists',
@@ -33,17 +35,17 @@ export const LibraryPage = () => {
     <div className="h-full overflow-y-auto px-4 py-5 custom-scrollbar sm:px-6">
       <div className="flex flex-col gap-4">
         <div className="max-xl:hidden">
-          <p className="text-sm text-text-subdued">Your Library</p>
+          <p className="text-sm text-text-subdued">{t('library.title')}</p>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h1 className="text-3xl font-bold text-text sm:text-4xl">
-              Library
+              {t('library.heading')}
             </h1>
             <button
               className="rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-black hover:bg-green-400 max-[420px]:w-full"
               onClick={() => setIsCreateOpen((value) => !value)}
               type="button"
             >
-              Create playlist
+              {t('library.createPlaylist')}
             </button>
           </div>
         </div>
@@ -63,7 +65,7 @@ export const LibraryPage = () => {
 
       <div className="mt-5 sm:mt-8">
         {library.isPending ? (
-          <div className="text-text-subdued">Loading library...</div>
+          <div className="text-text-subdued">{t('library.loading')}</div>
         ) : controls.activeSection === 'playlists' ? (
           <PlaylistLibrarySection
             playlists={library.playlists}

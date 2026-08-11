@@ -87,7 +87,7 @@ jobs:
           pnpm run start:prod &
           sleep 10
           for i in {1..30}; do
-            if curl -f http://localhost:3001/api > /dev/null 2>&1; then
+            if curl -f http://localhost:3001/api/v1 > /dev/null 2>&1; then
               echo "API server is ready"
               break
             fi
@@ -96,8 +96,12 @@ jobs:
           done
         env:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          REDIS_URL: redis://localhost:6379
-          JWT_SECRET: test_secret
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          WEB_HOST: http://localhost:3000
+          JWT_SECRET: performance_test_secret_at_least_32_characters
+          STORAGE_DRIVER: local
           PORT: 3001
 
       - name: Setup k6
@@ -112,7 +116,6 @@ jobs:
         run: pnpm --filter @spotify/performance-test run load:api
         env:
           API_URL: http://localhost:3001
-        continue-on-error: true
 
       - name: Upload results
         if: always()

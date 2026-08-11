@@ -8,7 +8,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -39,7 +41,7 @@ import { UsersService } from './users.service'
 /** Represents the users controller. */
 @ApiExtraModels(UserEntity, SafeUserEntity)
 @ApiTags('Users')
-@Controller('users')
+@Controller({ path: 'users', version: '1' })
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
@@ -129,5 +131,29 @@ export class UsersController {
 
     const user = req.user as UserEntity
     return await this.usersService.uploadAvatar(user.id, file.filename)
+  }
+
+  @UserAuth()
+  @HttpCode(204)
+  @Post(':id/follow')
+  follow(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.followUser((req.user as UserEntity).id, id)
+  }
+
+  @UserAuth()
+  @HttpCode(204)
+  @Delete(':id/follow')
+  unfollow(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.unfollowUser((req.user as UserEntity).id, id)
+  }
+
+  @UserAuth()
+  @Get('me/following')
+  following(
+    @Req() req: Request,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.usersService.getFollowing((req.user as UserEntity).id, page, limit)
   }
 }

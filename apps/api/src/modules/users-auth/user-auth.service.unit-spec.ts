@@ -60,6 +60,7 @@ describe('UserAuthService', () => {
     it('should create a new user', async () => {
       users.getByEmail.mockResolvedValue(null)
       token.hashPassword.mockResolvedValue('hashed')
+      users.create.mockResolvedValue(buildUser({ email: 'new@example.com', username: 'new-user' }))
 
       await service.registerUser({
         email: 'new@example.com',
@@ -130,16 +131,26 @@ describe('UserAuthService', () => {
   })
 
   describe('refresh', () => {
-    it('should return new access token', async () => {
+    it('should rotate access and refresh tokens', async () => {
       const user = buildUser({ id: 'user-1', username: 'user' })
       jwt.verifyAsync.mockResolvedValue(createJwtPayload())
       users.findById.mockResolvedValue(user)
       prisma.userSession.updateMany.mockResolvedValue({ count: 1 })
       token.generateAccessToken.mockResolvedValue('new-access')
+      token.generateRefreshToken.mockResolvedValue('new-refresh')
+      token.hashToken.mockReturnValue('hashed-token')
 
       const result = await service.refresh('refresh-token')
 
-      expect(result).toEqual({ access_token: 'new-access' })
+      expect(result).toEqual({ access_token: 'new-access', refresh_token: 'new-refresh' })
+      expect(prisma.userSession.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            access_token: 'hashed-token',
+            refresh_token: 'hashed-token',
+          }),
+        }),
+      )
     })
 
     it('should reject on invalid token', async () => {

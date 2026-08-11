@@ -1,5 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
 import { CreateArtistDto } from './dtos'
 import { ArtistEntity } from './entities'
 
@@ -57,7 +58,7 @@ export class ArtistsPrivateService {
   }
 
   /** Runs the update operation. */
-  async update(id: ArtistEntity['id'], artist: Partial<ArtistEntity>) {
+  async update(id: ArtistEntity['id'], artist: Prisma.ArtistUncheckedUpdateInput) {
     return await this.prisma.artist.update({
       where: { id },
       data: artist,

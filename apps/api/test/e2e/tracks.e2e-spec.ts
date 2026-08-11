@@ -31,7 +31,7 @@ describe('TracksController (e2e)', () => {
 
     expect(res.status).toBe(200)
     expect(res.body).toHaveProperty('data')
-    expect(res.body).toHaveProperty('meta')
+    expect(res.body).toMatchObject({ total: expect.any(Number), page: 1, limit: 10 })
     expect(Array.isArray(res.body.data)).toBe(true)
   })
 
@@ -68,6 +68,10 @@ describe('TracksController (e2e)', () => {
       username: `user_${runId}`,
     }
     await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)
+    await prisma.user.update({
+      where: { email: creds.email },
+      data: { emailVerifiedAt: new Date() },
+    })
     const loginRes = await request(app.getHttpServer())
       .post('/auth/login')
       .send({ email: creds.email, password: creds.password })
@@ -79,6 +83,11 @@ describe('TracksController (e2e)', () => {
       .set('Cookie', cookies)
       .expect(200)
 
-    expect(Array.isArray(res.body)).toBe(true)
+    expect(res.body).toMatchObject({
+      data: expect.any(Array),
+      total: expect.any(Number),
+      page: 1,
+      limit: 10,
+    })
   })
 })

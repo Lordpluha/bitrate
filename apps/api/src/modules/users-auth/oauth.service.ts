@@ -176,6 +176,7 @@ export class OAuthService {
             password: null,
             avatar: null,
             description: null,
+            emailVerifiedAt: new Date(),
             updatedAt: new Date(),
           },
         })

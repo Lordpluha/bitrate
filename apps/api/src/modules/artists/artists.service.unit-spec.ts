@@ -43,42 +43,45 @@ describe('ArtistsService', () => {
 
   it('findAll should use defaults when no params', async () => {
     const artists = [buildArtist()]
-    prisma.artist.findMany.mockResolvedValue(artists)
+    prisma.$transaction.mockResolvedValue([artists, 1] as never)
 
     const result = await service.findAll({})
 
     expect(prisma.artist.findMany).toHaveBeenCalledWith({
       skip: 0,
       take: 10,
-      where: undefined,
+      where: { deletedAt: null },
       omit: { password: true, email: true },
     })
-    expect(result).toBe(artists)
+    expect(result).toEqual({ data: artists, total: 1, page: 1, limit: 10 })
   })
 
   it('findAll should filter by username case-insensitively', async () => {
     const artists = [buildArtist()]
-    prisma.artist.findMany.mockResolvedValue(artists)
+    prisma.$transaction.mockResolvedValue([artists, 1] as never)
 
     const result = await service.findAll({ page: 2, limit: 5, username: 'art' })
 
     expect(prisma.artist.findMany).toHaveBeenCalledWith({
       skip: 5,
       take: 5,
-      where: { username: { contains: 'art', mode: 'insensitive' } },
+      where: {
+        deletedAt: null,
+        username: { contains: 'art', mode: 'insensitive' },
+      },
       omit: { password: true, email: true },
     })
-    expect(result).toBe(artists)
+    expect(result).toEqual({ data: artists, total: 1, page: 2, limit: 5 })
   })
 
-  it('findByUsername should call findUnique with omit', async () => {
+  it('findByUsername should ignore soft-deleted artists', async () => {
     const artist = buildArtist()
-    prisma.artist.findUnique.mockResolvedValue(artist)
+    prisma.artist.findFirst.mockResolvedValue(artist)
 
     const result = await service.findByUsername('artist')
 
-    expect(prisma.artist.findUnique).toHaveBeenCalledWith({
-      where: { username: 'artist' },
+    expect(prisma.artist.findFirst).toHaveBeenCalledWith({
+      where: { username: 'artist', deletedAt: null },
       omit: { password: true, email: true },
     })
     expect(result).toBe(artist)
@@ -106,40 +109,41 @@ describe('ArtistsService', () => {
     await expect(service.requestDelete('artist-1', 'other-id')).rejects.toThrow(ForbiddenException)
   })
 
-  it('requestDelete should delete artist when authorized', async () => {
+  it('requestDelete should soft-delete artist when authorized', async () => {
     const deleted = buildArtist()
-    prisma.artist.delete.mockResolvedValue(deleted)
+    prisma.artist.update.mockResolvedValue(deleted)
 
     const result = await service.requestDelete('artist-1', 'artist-1')
 
-    expect(prisma.artist.delete).toHaveBeenCalledWith({
+    expect(prisma.artist.update).toHaveBeenCalledWith({
       where: { id: 'artist-1' },
+      data: { deletedAt: expect.any(Date) },
       omit: { password: true, email: true },
     })
     expect(result).toBe(deleted)
   })
 
-  it('findByEmail should call findUnique omitting password', async () => {
+  it('findByEmail should ignore soft-deleted artists', async () => {
     const artist = buildArtist()
-    prisma.artist.findUnique.mockResolvedValue(artist)
+    prisma.artist.findFirst.mockResolvedValue(artist)
 
     const result = await service.findByEmail('artist@example.com')
 
-    expect(prisma.artist.findUnique).toHaveBeenCalledWith({
-      where: { email: 'artist@example.com' },
+    expect(prisma.artist.findFirst).toHaveBeenCalledWith({
+      where: { email: 'artist@example.com', deletedAt: null },
       omit: { password: true },
     })
     expect(result).toBe(artist)
   })
 
-  it('findById should call findUnique omitting password and email', async () => {
+  it('findById should ignore soft-deleted artists', async () => {
     const artist = buildArtist()
-    prisma.artist.findUnique.mockResolvedValue(artist)
+    prisma.artist.findFirst.mockResolvedValue(artist)
 
     const result = await service.findById('artist-1')
 
-    expect(prisma.artist.findUnique).toHaveBeenCalledWith({
-      where: { id: 'artist-1' },
+    expect(prisma.artist.findFirst).toHaveBeenCalledWith({
+      where: { id: 'artist-1', deletedAt: null },
       omit: { password: true, email: true },
     })
     expect(result).toBe(artist)

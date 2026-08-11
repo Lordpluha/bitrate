@@ -4,6 +4,7 @@ import { ROUTES } from '@shared/routes'
 import { cn } from '@spotify/ui-react'
 import { House, Library, Plus, Search, X } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
+import { useI18n } from '@/shared/i18n'
 import { MobileCreatePlaylistSheet } from '@/widgets/LeftSidebar'
 
 type MobileBottomNavigationProps = {
@@ -18,6 +19,7 @@ export const MobileBottomNavigation = ({
   isCreateOpen,
   onCreateOpenChange,
 }: MobileBottomNavigationProps) => {
+  const { t } = useI18n()
   const pathname = usePathname()
   const router = useRouter()
   const isHomeActive = pathname === ROUTES.main && !isCreateOpen
@@ -40,7 +42,7 @@ export const MobileBottomNavigation = ({
       />
 
       <nav
-        aria-label="Main navigation"
+        aria-label={t('nav.main')}
         className="fixed inset-x-0 bottom-0 z-[70] h-[calc(4rem+env(safe-area-inset-bottom))] border-t border-white/10 bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md"
       >
         <div className="grid h-full grid-cols-4 px-1">
@@ -53,12 +55,8 @@ export const MobileBottomNavigation = ({
             onClick={() => navigate(ROUTES.main)}
             type="button"
           >
-            <House
-              fill={isHomeActive ? 'currentColor' : 'none'}
-              size={22}
-              strokeWidth={isHomeActive ? 2.5 : 2}
-            />
-            <span className="truncate">Home</span>
+            <House size={22} strokeWidth={isHomeActive ? 3 : 2} />
+            <span className="truncate">{t('nav.home')}</span>
           </button>
 
           <button
@@ -71,7 +69,7 @@ export const MobileBottomNavigation = ({
             type="button"
           >
             <Search size={23} strokeWidth={isSearchActive ? 3 : 2} />
-            <span className="truncate">Search</span>
+            <span className="truncate">{t('nav.search')}</span>
           </button>
 
           <button
@@ -88,7 +86,7 @@ export const MobileBottomNavigation = ({
               size={22}
               strokeWidth={isLibraryActive ? 2.5 : 2}
             />
-            <span className="truncate">Library</span>
+            <span className="truncate">{t('nav.library')}</span>
           </button>
 
           <button
@@ -108,7 +106,7 @@ export const MobileBottomNavigation = ({
             >
               {isCreateOpen ? <X size={22} /> : <Plus size={24} />}
             </span>
-            <span className="truncate">Create</span>
+            <span className="truncate">{t('nav.create')}</span>
           </button>
         </div>
       </nav>

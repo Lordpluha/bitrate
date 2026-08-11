@@ -18,6 +18,11 @@ const CONTENT_TYPE_BY_EXTENSION: Record<string, string> = {
   '.m3u8': 'application/vnd.apple.mpegurl',
   '.mp4': 'video/mp4',
   '.m4s': 'video/iso.segment',
+  '.gif': 'image/gif',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
 }
 
 /** A concrete byte range resolved from an HTTP Range header. */
@@ -30,6 +35,12 @@ type ByteRange = { start: number; end: number }
  */
 @Injectable()
 export class LocalStorageService implements StorageService {
+  /** Verifies that the local object root can be accessed. */
+  async healthCheck(): Promise<boolean> {
+    await mkdir(this.root, { recursive: true })
+    await access(this.root)
+    return true
+  }
   /** The root value. */
   private readonly root: string
   /** The jwt secret value. */
@@ -99,7 +110,7 @@ export class LocalStorageService implements StorageService {
    */
   getPresignedUrl(key: string, expiresIn = 3600): Promise<string> {
     const token = createSignedStorageToken(key, expiresIn, this.jwtSecret)
-    return Promise.resolve(`${this.apiBaseUrl}/storage/objects/${encodeURIComponent(token)}`)
+    return Promise.resolve(`${this.apiBaseUrl}/api/v1/storage/objects/${encodeURIComponent(token)}`)
   }
 
   /** Returns a local file as a Readable stream, honoring an optional byte Range. */

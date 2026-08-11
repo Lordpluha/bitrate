@@ -1,35 +1,14 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@shared/api/client'
-import { showApiErrorToast } from '@shared/api/feedback'
+import { useSignUpModalForm } from '@features/AuthModal/model/useSignUpModalForm'
 import { ROUTES } from '@shared/routes'
 import { SocialsAuthDivider } from '@shared/ui'
-import {
-  Button,
-  DynamicLabel,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  GoogleIcon,
-  Input,
-  InputProvider,
-  LogoIcon,
-  PasswordInput,
-  Typography,
-  toast,
-} from '@spotify/ui-react'
+import { Button, Form } from '@spotify/ui-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import type { ComponentProps } from 'react'
-import { type SubmitHandler, useForm } from 'react-hook-form'
-import {
-  type RegistrationFormData,
-  registrationSchema,
-} from '../../Registration/validation'
+import { AuthModalGoogleButton, AuthModalHeader } from './AuthModalHeader'
 import { Modal } from './Modal'
+import { SignUpModalFields } from './SignUpModalFields'
 
 interface SignUpModalProps extends ComponentProps<typeof Modal> {
   onSwitchToLogin?: () => void
@@ -39,185 +18,25 @@ export const SignUpModal = ({
   onSwitchToLogin,
   ...modalProps
 }: SignUpModalProps) => {
-  const router = useRouter()
-
-  const { mutate: registerMutate, isPending: isRegistering } = useMutation(
-    'post',
-    '/api/v1/auth/registration',
-    {
-      onSuccess: () => {
-        toast.success('Registration successful! Please log in.')
-        if (onSwitchToLogin) {
-          onSwitchToLogin()
-        } else {
-          router.push(ROUTES.auth.login)
-        }
-      },
-      onError: (error) => {
-        showApiErrorToast(error, 'Unable to create account. Please try again.')
-      },
-      meta: {
-        suppressErrorToast: true,
-      },
-    },
-  )
-
-  const defaultValues: RegistrationFormData = {
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  }
-
-  const form = useForm<RegistrationFormData>({
-    resolver: zodResolver(registrationSchema),
-    mode: 'onChange',
-    defaultValues,
-    shouldFocusError: true,
-  })
-
-  const onSubmit: SubmitHandler<RegistrationFormData> = (data) => {
-    registerMutate({
-      body: {
-        email: data.email,
-        password: data.password,
-        username: data.fullName,
-      },
-    })
-  }
+  const { form, isRegistering, onSubmit } = useSignUpModalForm(onSwitchToLogin)
 
   return (
-    <Modal {...modalProps} className="max-w-125  w-full">
-      <div className="flex flex-col items-stretch justify-center gap-4 p-8 bg-contrast text-text-contrast rounded-lg">
-        <div className="flex flex-col items-center">
-          <LogoIcon height={64} width={64} />
-          <Typography
-            as="h5"
-            className="mt-2 text-center text-text-contrast"
-            size="heading5"
-          >
-            Sign Up
-          </Typography>
-          <Typography as="p" className="text-center text-grey-500" size="body">
-            Sign up to enjoy the feature of Revolutie
-          </Typography>
-        </div>
-
+    <Modal
+      {...modalProps}
+      ariaLabel="Create account"
+      className="w-full max-w-125"
+    >
+      <div className="flex flex-col items-stretch justify-center gap-4 rounded-lg bg-contrast p-8 text-text-contrast">
+        <AuthModalHeader
+          description="Sign up to enjoy the features of Spotify."
+          title="Sign Up"
+        />
         <Form {...form}>
           <form
             className="flex flex-col gap-4"
             onSubmit={form.handleSubmit(onSubmit)}
           >
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputProvider>
-                      <div className="relative">
-                        <DynamicLabel
-                          htmlFor="signup-fullname"
-                          variant="contrast"
-                        >
-                          Full Name
-                        </DynamicLabel>
-                        <Input
-                          id="signup-fullname"
-                          placeholder=""
-                          variant="contrast"
-                          {...field}
-                        />
-                      </div>
-                    </InputProvider>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputProvider>
-                      <div className="relative">
-                        <DynamicLabel htmlFor="signup-email" variant="contrast">
-                          Email Address
-                        </DynamicLabel>
-                        <Input
-                          id="signup-email"
-                          placeholder=""
-                          type="email"
-                          variant="contrast"
-                          {...field}
-                        />
-                      </div>
-                    </InputProvider>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputProvider>
-                      <div className="relative">
-                        <DynamicLabel
-                          htmlFor="signup-password"
-                          variant="contrast"
-                        >
-                          Password
-                        </DynamicLabel>
-                        <PasswordInput
-                          id="signup-password"
-                          placeholder=""
-                          variant="contrast"
-                          {...field}
-                        />
-                      </div>
-                    </InputProvider>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputProvider>
-                      <div className="relative">
-                        <DynamicLabel
-                          htmlFor="signup-confirm-password"
-                          variant="contrast"
-                        >
-                          Confirm Password
-                        </DynamicLabel>
-                        <PasswordInput
-                          id="signup-confirm-password"
-                          placeholder=""
-                          variant="contrast"
-                          {...field}
-                        />
-                      </div>
-                    </InputProvider>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            <SignUpModalFields control={form.control} />
             <div className="mt-2 flex flex-col items-stretch gap-4">
               <Button
                 aria-busy={isRegistering}
@@ -229,21 +48,13 @@ export const SignUpModal = ({
               >
                 Register
               </Button>
-
               <SocialsAuthDivider />
-
-              <Button type="button" variant="contrast">
-                <GoogleIcon className="mr-2" />
-                <Typography as="p" className="text-text-contrast" size="body">
-                  Continue with Google
-                </Typography>
-              </Button>
-
-              <p className="text-base text-center text-text-contrast">
+              <AuthModalGoogleButton />
+              <p className="text-center text-base text-text-contrast">
                 Already have an account?{' '}
                 {onSwitchToLogin ? (
                   <button
-                    className="font-bold text-green-500 hover:opacity-70 underline"
+                    className="font-bold text-green-500 underline hover:no-underline"
                     onClick={onSwitchToLogin}
                     type="button"
                   >
@@ -251,7 +62,7 @@ export const SignUpModal = ({
                   </button>
                 ) : (
                   <Link
-                    className="font-bold text-green-500 hover:opacity-70 underline"
+                    className="font-bold text-green-500 underline hover:no-underline"
                     href={ROUTES.auth.login}
                   >
                     Log in.

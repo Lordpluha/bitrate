@@ -61,4 +61,45 @@ export class MailService {
 
     this.logger.log(`Password reset email sent to ${to}`)
   }
+
+  /** Sends a user email-verification link. */
+  async sendEmailVerification(to: string, token: string, username: string) {
+    const verificationUrl = `${process.env.WEB_HOST}/verify-email?token=${encodeURIComponent(token)}`
+
+    if (!this.transporter) {
+      this.logger.warn('Email verification requested but SMTP is not configured; email not sent', {
+        to,
+      })
+      return
+    }
+
+    const from = this.config.getOrThrow('mail').from
+    await this.transporter.sendMail({
+      from,
+      to,
+      subject: 'Verify your email',
+      html: `
+        <h2>Hi, ${escapeHtml(username)}</h2>
+        <p>Confirm your email address to finish creating your account:</p>
+        <p><a href="${escapeHtml(verificationUrl)}">${escapeHtml(verificationUrl)}</a></p>
+        <p>This link expires in <strong>24 hours</strong>.</p>
+      `,
+    })
+  }
+
+  /** Sends an artist email-verification link. */
+  async sendArtistEmailVerification(to: string, token: string, username: string) {
+    const verificationUrl = `${process.env.WEB_HOST}/artist/verify-email?token=${encodeURIComponent(token)}`
+    if (!this.transporter) {
+      this.logger.warn('Artist email verification skipped because SMTP is not configured', { to })
+      return
+    }
+    const from = this.config.getOrThrow('mail').from
+    await this.transporter.sendMail({
+      from,
+      to,
+      subject: 'Verify your artist email',
+      html: `<h2>Hi, ${escapeHtml(username)}</h2><p><a href="${escapeHtml(verificationUrl)}">Verify your email</a></p><p>This link expires in 24 hours.</p>`,
+    })
+  }
 }

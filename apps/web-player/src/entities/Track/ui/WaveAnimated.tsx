@@ -1,3 +1,4 @@
+import { cn } from '@spotify/ui-react'
 import type React from 'react'
 import type { SVGProps } from 'react'
 
@@ -7,12 +8,13 @@ const barStyle = (delay: string): React.CSSProperties => ({
   animationDelay: delay,
 })
 
-export const WaveAnimated = ({
-  color = '#1db954',
-  ...props
-}: SVGProps<SVGSVGElement> & { color?: string }) => (
+export type WaveAnimatedProps = SVGProps<SVGSVGElement>
+
+/** Equaliser bars shown next to the playing track. Colour follows `currentColor`. */
+export const WaveAnimated = ({ className, ...props }: WaveAnimatedProps) => (
   <svg
     aria-hidden="true"
+    className={cn('text-green-500', className)}
     fill="none"
     focusable="false"
     height="18"
@@ -27,7 +29,7 @@ export const WaveAnimated = ({
       }
     </style>
     <rect
-      fill={color}
+      fill="currentColor"
       height={18}
       rx={1}
       style={barStyle('0s')}
@@ -36,7 +38,7 @@ export const WaveAnimated = ({
       y={3}
     />
     <rect
-      fill={color}
+      fill="currentColor"
       height={22}
       rx={1}
       style={barStyle('0.25s')}
@@ -45,7 +47,7 @@ export const WaveAnimated = ({
       y={1}
     />
     <rect
-      fill={color}
+      fill="currentColor"
       height={20}
       rx={1}
       style={barStyle('0.5s')}
@@ -54,7 +56,7 @@ export const WaveAnimated = ({
       y={2}
     />
     <rect
-      fill={color}
+      fill="currentColor"
       height={16}
       rx={1}
       style={barStyle('0.15s')}

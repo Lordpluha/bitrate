@@ -120,7 +120,7 @@ export const useProgressiveAudioStreaming = (
       isStreamingRef.current &&
       currentPositionRef.current < fileSizeRef.current
     ) {
-      // Check if we need more buffering
+      /** Check if we need more buffering. */
       const currentTime = audioElement.currentTime
       const buffered = audioElement.buffered
 
@@ -129,7 +129,7 @@ export const useProgressiveAudioStreaming = (
         bufferedEnd = buffered.end(buffered.length - 1)
       }
 
-      // If we have enough buffer ahead, wait
+      /** Enough buffered ahead — wait before fetching more. */
       if (bufferedEnd > currentTime + bufferAhead) {
         console.log(
           `Buffer sufficient: ${bufferedEnd.toFixed(1)}s buffered, current: ${currentTime.toFixed(1)}s`,
@@ -138,7 +138,7 @@ export const useProgressiveAudioStreaming = (
         continue
       }
 
-      // Fetch next chunk
+      /** Fetch next chunk. */
       const start = currentPositionRef.current
       const end = Math.min(start + chunkSize - 1, fileSizeRef.current - 1)
 
@@ -169,7 +169,7 @@ export const useProgressiveAudioStreaming = (
     try {
       console.log('Starting progressive streaming for:', trackUrl)
 
-      // Get file size first
+      /** Get file size first. */
       const headResponse = await fetch(trackUrl, {
         method: 'HEAD',
         credentials: 'include',
@@ -185,7 +185,7 @@ export const useProgressiveAudioStreaming = (
 
       console.log(`File size: ${fileSizeRef.current} bytes`)
 
-      // Create MediaSource
+      /** Create MediaSource. */
       if (!MediaSource.isTypeSupported('audio/mpeg')) {
         console.error('audio/mpeg is not supported')
         return
@@ -203,7 +203,7 @@ export const useProgressiveAudioStreaming = (
 
           currentPositionRef.current = 0
 
-          // Start streaming chunks
+          /** Start streaming chunks. */
           streamChunks()
         } catch (e) {
           console.error('Error setting up SourceBuffer:', e)
@@ -216,7 +216,7 @@ export const useProgressiveAudioStreaming = (
     }
   }, [audioElement, trackUrl, streamChunks])
 
-  // Cleanup on unmount or track change
+  /** Cleanup on unmount or track change. */
   useEffect(() => {
     return () => {
       stopStreaming()

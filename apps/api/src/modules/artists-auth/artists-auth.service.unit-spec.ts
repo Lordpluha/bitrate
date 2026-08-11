@@ -32,6 +32,8 @@ const makeTokenServiceMock = () =>
   ({
     generateAccessToken: jest.fn(),
     generateRefreshToken: jest.fn(),
+    generateTwoFAPendingToken: jest.fn(),
+    getRefreshTokenExpiresAt: jest.fn(),
     hashPassword: jest.fn(),
     hashToken: jest.fn(),
     verifyPassword: jest.fn(),
@@ -40,6 +42,7 @@ const makeTokenServiceMock = () =>
 const makeMailServiceMock = () =>
   ({
     sendPasswordReset: jest.fn(),
+    sendArtistEmailVerification: jest.fn(),
   }) as unknown as jest.Mocked<MailService>
 
 describe('ArtistsAuthService', () => {
@@ -78,7 +81,9 @@ describe('ArtistsAuthService', () => {
     it('should register artist if email is unique', async () => {
       artists.findByEmail.mockResolvedValue(null as never)
       token.hashPassword.mockResolvedValue('hashed-pass' as never)
-      artists.register.mockResolvedValue(undefined as never)
+      artists.register.mockResolvedValue(
+        buildArtist({ email: 'new@example.com', username: 'newartist' }) as never,
+      )
 
       await service.registerArtist({
         email: 'new@example.com',
@@ -144,16 +149,20 @@ describe('ArtistsAuthService', () => {
       await expect(service.refresh('refresh-token')).rejects.toThrow(UnauthorizedException)
     })
 
-    it('should return new access_token on valid refresh', async () => {
+    it('should rotate access and refresh tokens on valid refresh', async () => {
       jwtService.verifyAsync.mockResolvedValue({ sub: 'artist-1', username: 'artist' } as never)
       artists.findById.mockResolvedValue(buildArtist() as never)
       token.generateAccessToken.mockResolvedValue('new-access-token' as never)
+      token.generateRefreshToken.mockResolvedValue('new-refresh-token' as never)
       token.hashToken.mockReturnValue('hashed-token')
       prisma.artistSession.updateMany.mockResolvedValue({ count: 1 })
 
       const result = await service.refresh('refresh-token')
 
-      expect(result).toEqual({ access_token: 'new-access-token' })
+      expect(result).toEqual({
+        access_token: 'new-access-token',
+        refresh_token: 'new-refresh-token',
+      })
       expect(prisma.artistSession.updateMany).toHaveBeenCalled()
     })
   })

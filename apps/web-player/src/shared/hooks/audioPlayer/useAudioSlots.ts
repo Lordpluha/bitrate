@@ -93,6 +93,7 @@ export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
         isPrefetch,
         onFatalError: stopPlayback,
         playbackKey,
+        progressiveUrl: track.audioUrl,
         recoveryAttempts: recoveryAttemptsRef.current,
         slot,
         trackId: track.id,

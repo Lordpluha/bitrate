@@ -35,62 +35,86 @@ describe('AlbumsService', () => {
 
   it('findAll should use pagination and title filter', async () => {
     const albums = [buildAlbumWithTracks()]
-    prisma.album.findMany.mockResolvedValue(albums)
+    prisma.$transaction.mockResolvedValue([albums, 1] as never)
 
     const result = await service.findAll({ page: 2, limit: 5, title: 'rock' })
 
     expect(prisma.album.findMany).toHaveBeenCalledWith({
       skip: 5,
       take: 5,
-      where: { title: { contains: 'rock', mode: 'insensitive' } },
-      include: { tracks: { where: { processingStatus: 'READY' } } },
+      where: { deletedAt: null, title: { contains: 'rock', mode: 'insensitive' } },
+      include: {
+        tracks: {
+          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          include: { track: true },
+          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+        },
+      },
     })
-    expect(result).toBe(albums)
+    expect(result).toEqual({ data: albums, total: 1, page: 2, limit: 5 })
   })
 
   it('findAll should keep title filter case-insensitive', async () => {
     const albums = [buildAlbumWithTracks()]
-    prisma.album.findMany.mockResolvedValue(albums)
+    prisma.$transaction.mockResolvedValue([albums, 1] as never)
 
     const result = await service.findAll({ page: 1, limit: 10, title: 'RoCk' })
 
     expect(prisma.album.findMany).toHaveBeenCalledWith({
       skip: 0,
       take: 10,
-      where: { title: { contains: 'RoCk', mode: 'insensitive' } },
-      include: { tracks: { where: { processingStatus: 'READY' } } },
+      where: { deletedAt: null, title: { contains: 'RoCk', mode: 'insensitive' } },
+      include: {
+        tracks: {
+          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          include: { track: true },
+          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+        },
+      },
     })
-    expect(result).toBe(albums)
+    expect(result).toEqual({ data: albums, total: 1, page: 1, limit: 10 })
   })
 
   it('findAll should use defaults when params missing', async () => {
     const albums = [buildAlbumWithTracks()]
-    prisma.album.findMany.mockResolvedValue(albums)
+    prisma.$transaction.mockResolvedValue([albums, 1] as never)
 
     const result = await service.findAll({})
 
     expect(prisma.album.findMany).toHaveBeenCalledWith({
       skip: 0,
       take: 10,
-      where: undefined,
-      include: { tracks: { where: { processingStatus: 'READY' } } },
+      where: { deletedAt: null },
+      include: {
+        tracks: {
+          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          include: { track: true },
+          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+        },
+      },
     })
-    expect(result).toBe(albums)
+    expect(result).toEqual({ data: albums, total: 1, page: 1, limit: 10 })
   })
 
   it('findAll should ignore empty title filter', async () => {
     const albums = [buildAlbumWithTracks()]
-    prisma.album.findMany.mockResolvedValue(albums)
+    prisma.$transaction.mockResolvedValue([albums, 1] as never)
 
     const result = await service.findAll({ page: 1, limit: 10, title: '' })
 
     expect(prisma.album.findMany).toHaveBeenCalledWith({
       skip: 0,
       take: 10,
-      where: undefined,
-      include: { tracks: { where: { processingStatus: 'READY' } } },
+      where: { deletedAt: null },
+      include: {
+        tracks: {
+          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          include: { track: true },
+          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+        },
+      },
     })
-    expect(result).toBe(albums)
+    expect(result).toEqual({ data: albums, total: 1, page: 1, limit: 10 })
   })
 
   it('getById should include tracks', async () => {
@@ -100,10 +124,16 @@ describe('AlbumsService', () => {
     const result = await service.getById('album-1')
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
-      where: { id: 'album-1' },
-      include: { tracks: { where: { processingStatus: 'READY' } } },
+      where: { id: 'album-1', deletedAt: null },
+      include: {
+        tracks: {
+          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          include: { track: true },
+          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+        },
+      },
     })
-    expect(result).toBe(album)
+    expect(result).toEqual(album)
   })
 
   it('getById should return null when album not found', async () => {
@@ -112,8 +142,14 @@ describe('AlbumsService', () => {
     const result = await service.getById('album-unknown')
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
-      where: { id: 'album-unknown' },
-      include: { tracks: { where: { processingStatus: 'READY' } } },
+      where: { id: 'album-unknown', deletedAt: null },
+      include: {
+        tracks: {
+          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          include: { track: true },
+          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+        },
+      },
     })
     expect(result).toBeNull()
   })
@@ -198,7 +234,7 @@ describe('AlbumsService', () => {
     const result = await service.update('artist-1', 'album-1', { title: 'Updated' })
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
-      where: { id: 'album-1', artistId: 'artist-1' },
+      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
     })
     expect(prisma.album.update).toHaveBeenCalledWith({
       where: { id: 'album-1' },
@@ -232,45 +268,48 @@ describe('AlbumsService', () => {
     )
   })
 
-  it('delete should remove album', async () => {
+  it('delete should soft-delete album', async () => {
     prisma.album.findFirst.mockResolvedValue(buildAlbum())
     const deleted = buildAlbum()
-    prisma.album.delete.mockResolvedValue(deleted)
+    prisma.album.update.mockResolvedValue(deleted)
 
     const result = await service.delete('artist-1', 'album-1')
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
-      where: { id: 'album-1', artistId: 'artist-1' },
+      where: { id: 'album-1', artistId: 'artist-1', deletedAt: null },
     })
-    expect(prisma.album.delete).toHaveBeenCalledWith({
+    expect(prisma.album.update).toHaveBeenCalledWith({
       where: { id: 'album-1' },
+      data: { deletedAt: expect.any(Date) },
       omit: { artistId: true },
     })
     expect(result).toBe(deleted)
   })
 
-  it('like should connect user to album likedBy', async () => {
+  it('like should upsert an explicit album like', async () => {
     const album = buildAlbum()
-    prisma.album.update.mockResolvedValue(album)
+    prisma.album.findFirst.mockResolvedValue(album)
+    prisma.userLikedAlbum.upsert.mockResolvedValue({} as never)
 
     const result = await service.like('user-1', 'album-1')
 
-    expect(prisma.album.update).toHaveBeenCalledWith({
-      where: { id: 'album-1' },
-      data: { likedBy: { connect: { id: 'user-1' } } },
+    expect(prisma.userLikedAlbum.upsert).toHaveBeenCalledWith({
+      where: { userId_albumId: { userId: 'user-1', albumId: 'album-1' } },
+      update: {},
+      create: { userId: 'user-1', albumId: 'album-1' },
     })
     expect(result).toBe(album)
   })
 
-  it('unlike should disconnect user from album likedBy', async () => {
+  it('unlike should delete the explicit album like', async () => {
     const album = buildAlbum()
-    prisma.album.update.mockResolvedValue(album)
+    prisma.album.findFirst.mockResolvedValue(album)
+    prisma.userLikedAlbum.deleteMany.mockResolvedValue({ count: 1 })
 
     const result = await service.unlike('user-1', 'album-1')
 
-    expect(prisma.album.update).toHaveBeenCalledWith({
-      where: { id: 'album-1' },
-      data: { likedBy: { disconnect: { id: 'user-1' } } },
+    expect(prisma.userLikedAlbum.deleteMany).toHaveBeenCalledWith({
+      where: { userId: 'user-1', albumId: 'album-1' },
     })
     expect(result).toBe(album)
   })

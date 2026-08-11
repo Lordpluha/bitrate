@@ -2,6 +2,13 @@ import { ROUTES } from '@shared/routes'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
+/**
+ * Route guard for the web player.
+ * Visitors without any session cookie are sent to login; everyone else passes
+ * through. Signed-in users are intentionally *not* redirected away from the auth
+ * pages — doing so loops forever once the access token expires but the cookie
+ * is still present.
+ */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
@@ -9,40 +16,20 @@ export function proxy(request: NextRequest) {
   const refreshToken = request.cookies.get('refresh_token')
   const hasRecoverableSession = Boolean(accessToken || refreshToken)
 
-  // Определяем auth маршруты (недоступны с токеном)
-  const authRoutes = [
+  /** Auth screens plus the landing page are reachable without a session. */
+  const publicRoutes = [
     ROUTES.auth.login,
     ROUTES.auth.twoFactorLogin,
     ROUTES.auth.registration,
     ROUTES.auth.forgotPassword,
     ROUTES.auth.resetPassword(),
+    ROUTES.landing,
   ]
 
-  // Определяем публичные маршруты (доступны без токена)
-  const publicRoutes = [...authRoutes, ROUTES.landing]
-
   const isPublicRoute = publicRoutes.some((route) => pathname === route)
-  // const isAuthRoute = authRoutes.some((route) => pathname === route)
 
-  // Если пользователь НЕ авторизован
-  if (!hasRecoverableSession) {
-    // Если пытается попасть на защищенную страницу (включая /main) - редиректим на логин
-    if (!isPublicRoute) {
-      return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
-    }
-    // Если на публичной странице - пропускаем
-    return NextResponse.next()
-  }
-
-  // Если пользователь авторизован
-  if (hasRecoverableSession) {
-    // Если находится на auth страницах - редиректим на главную
-    // ОТКЛЮЧЕНО: создает цикл редиректов когда токен истек
-    // if (isAuthRoute) {
-    //   return NextResponse.redirect(new URL(ROUTES.main, request.url))
-    // }
-    // Если авторизован и на любой другой странице - пропускаем
-    return NextResponse.next()
+  if (!hasRecoverableSession && !isPublicRoute) {
+    return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
   }
 
   return NextResponse.next()

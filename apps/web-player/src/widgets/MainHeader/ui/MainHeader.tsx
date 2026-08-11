@@ -4,7 +4,7 @@ import { ThemeSwitcher } from '@features/SwitchTheme'
 import { useAuth } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
 import { Logo } from '@shared/ui'
-import { MembersIcon, NotificationIcon } from '@spotify/ui-react'
+import { MembersIcon } from '@spotify/ui-react'
 import Link from 'next/link'
 import { AuthButtons } from './AuthButtons'
 import { HeaderSearch } from './HeaderSearch'
@@ -12,6 +12,7 @@ import { HomeBtn } from './HomeBtn'
 import { InstallBtn } from './InstallBtn'
 import { MobileMainHeader } from './MobileMainHeader'
 import { NavLinks } from './NavLinks'
+import { NotificationsPopover } from './NotificationsPopover'
 import { ProfileButton } from './ProfileButton'
 
 type MainHeaderProps = {
@@ -39,12 +40,7 @@ export const MainHeader = ({ onCreate }: MainHeaderProps) => {
               <div className="h-8 w-8" />
             ) : isAuthenticated && user ? (
               <>
-                <Link
-                  className="transition-opacity duration-200 hover:opacity-70"
-                  href="#"
-                >
-                  <NotificationIcon />
-                </Link>
+                <NotificationsPopover />
                 <Link
                   className="transition-opacity duration-200 hover:opacity-70"
                   href="#"

@@ -34,7 +34,7 @@ import { AlbumEntity } from './entities'
 /** Represents the albums controller. */
 @ApiExtraModels(AlbumEntity)
 @ApiTags('Albums')
-@Controller('albums')
+@Controller({ path: 'albums', version: '1' })
 export class AlbumsController {
   constructor(private albumsService: AlbumsService) {}
 

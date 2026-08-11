@@ -1,5 +1,7 @@
+import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
 import type { UserEntity } from './entities'
 
 /** Represents the users service. */
@@ -59,24 +61,29 @@ export class UsersService {
     limit?: number
     page?: number
   }) {
-    return await this.prisma.user.findMany({
-      where: {
-        username,
-      },
-      skip: page ? (page - 1) * limit : undefined,
-      take: limit,
-      omit: {
-        password: true,
-        email: true,
-        twoFactorSecret: true,
-      },
-    })
+    const pagination = normalizePagination(page, limit)
+    const where = {
+      username: { contains: username, mode: 'insensitive' as const },
+      deletedAt: null,
+    }
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        where,
+        skip: pagination.skip,
+        take: pagination.limit,
+        omit: {
+          password: true,
+          email: true,
+          twoFactorSecret: true,
+        },
+      }),
+      this.prisma.user.count({ where }),
+    ])
+    return { data, total, page: pagination.page, limit: pagination.limit }
   }
 
   /** Runs the create operation. */
-  async create(
-    data: Omit<UserEntity, 'id' | 'createdAt' | 'twoFactorSecret' | 'twoFactorEnabled'>,
-  ) {
+  async create(data: Prisma.UserUncheckedCreateInput) {
     return await this.prisma.user.create({
       data,
       omit: {
@@ -106,5 +113,41 @@ export class UsersService {
       data: { avatar: avatarPath },
       omit: { password: true, email: true, twoFactorSecret: true },
     })
+  }
+
+  async followUser(followerId: string, followingId: string) {
+    if (followerId === followingId) throw new BadRequestException('You cannot follow yourself')
+    const user = await this.prisma.user.findFirst({ where: { id: followingId, deletedAt: null } })
+    if (!user) throw new NotFoundException('User not found')
+    await this.prisma.userFollow.upsert({
+      where: { followerId_followingId: { followerId, followingId } },
+      create: { followerId, followingId },
+      update: {},
+    })
+  }
+
+  async unfollowUser(followerId: string, followingId: string) {
+    await this.prisma.userFollow.deleteMany({ where: { followerId, followingId } })
+  }
+
+  async getFollowing(userId: string, page = 1, limit = 20) {
+    const pagination = normalizePagination(page, limit)
+    const where = { followerId: userId }
+    const [follows, total] = await this.prisma.$transaction([
+      this.prisma.userFollow.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: pagination.skip,
+        take: pagination.limit,
+        include: { following: { omit: { password: true, email: true, twoFactorSecret: true } } },
+      }),
+      this.prisma.userFollow.count({ where }),
+    ])
+    return {
+      data: follows.map(({ following, createdAt }) => ({ ...following, followedAt: createdAt })),
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+    }
   }
 }

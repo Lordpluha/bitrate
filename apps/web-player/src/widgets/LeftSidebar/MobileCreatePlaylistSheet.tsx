@@ -1,7 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react'
-import { useEffect } from 'react'
+import { useOverlayFocus } from '@/shared/hooks'
 import { CreatePlaylistActions } from '@/widgets/LeftSidebar/CreatePlaylistActions'
 import { useCreateLibraryPlaylist } from '@/widgets/LeftSidebar/model/useCreateLibraryPlaylist'
 
@@ -15,17 +15,10 @@ export const MobileCreatePlaylistSheet = ({
   onOpenChange,
 }: MobileCreatePlaylistSheetProps) => {
   const playlist = useCreateLibraryPlaylist()
-
-  useEffect(() => {
-    if (!isOpen) return
-
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onOpenChange(false)
-    }
-
-    window.addEventListener('keydown', closeOnEscape)
-    return () => window.removeEventListener('keydown', closeOnEscape)
-  }, [isOpen, onOpenChange])
+  const dialogRef = useOverlayFocus<HTMLDivElement>({
+    isOpen,
+    onClose: () => onOpenChange(false),
+  })
 
   if (!isOpen) return null
 
@@ -37,16 +30,19 @@ export const MobileCreatePlaylistSheet = ({
   return (
     <>
       <button
-        aria-label="Close create menu"
+        aria-hidden="true"
         className="fixed inset-0 z-[60] bg-black/75"
         onClick={() => onOpenChange(false)}
+        tabIndex={-1}
         type="button"
       />
       <div
         aria-label="Create"
         aria-modal="true"
         className="fixed inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-[65] max-h-[70dvh] overflow-y-auto rounded-xl border border-white/10 bg-popover p-3 shadow-2xl custom-scrollbar"
+        ref={dialogRef}
         role="dialog"
+        tabIndex={-1}
       >
         <div className="mb-1 flex items-center justify-between px-3 py-2">
           <h2 className="text-lg font-bold text-text">Create</h2>

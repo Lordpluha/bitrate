@@ -1,6 +1,7 @@
 'use client'
 
 import { cn, Input, ReviewIcon, SearchIcon } from '@spotify/ui-react'
+import { useI18n } from '@/shared/i18n'
 import { HeaderSearchDropdown } from '@/widgets/MainHeader/ui/HeaderSearch/HeaderSearchDropdown'
 import { useHeaderSearch } from '@/widgets/MainHeader/ui/HeaderSearch/model/useHeaderSearch'
 
@@ -9,6 +10,7 @@ type HeaderSearchProps = {
 }
 
 export const HeaderSearch = ({ className }: HeaderSearchProps) => {
+  const { t } = useI18n()
   const search = useHeaderSearch()
   const showRecent = search.isFocused && search.trimmedQuery.length === 0
   const showSuggestions = search.isFocused && search.trimmedQuery.length > 0
@@ -24,17 +26,17 @@ export const HeaderSearch = ({ className }: HeaderSearchProps) => {
         width={20}
       />
       <Input
-        className="pl-12"
+        className="bg-background-highlight pl-12"
         onBlur={() => search.setIsFocused(false)}
         onChange={(event) => search.setQuery(event.target.value)}
         onFocus={() => search.setIsFocused(true)}
-        placeholder="What do you want to play?"
+        placeholder={t('search.placeholder')}
         type="text"
         value={search.query}
         variant="search"
       />
       <button
-        aria-label="Open search page"
+        aria-label={t('nav.search')}
         className="absolute right-4 top-1/2 -translate-y-1/2 transform border-l-2 border-border pl-2 hover:opacity-80"
         type="submit"
       >

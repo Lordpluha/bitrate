@@ -16,7 +16,7 @@ import {
   Req,
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import { SkipThrottle } from '@nestjs/throttler'
+import { Throttle } from '@nestjs/throttler'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
   AddTracksToPlaylistSwagger,
@@ -38,13 +38,13 @@ import { PlaylistsService } from './playlists.service'
 /** Represents the playlists controller. */
 @ApiExtraModels(PlaylistEntity, TrackEntity)
 @ApiTags('Playlists')
-@Controller('playlists')
+@Controller({ path: 'playlists', version: '1' })
 export class PlaylistsController {
   constructor(private playlistService: PlaylistsService) {}
 
   /** Runs the get all operation. */
   @GetPlaylistsSwagger()
-  @SkipThrottle({ auth: true, default: true })
+  @Throttle({ default: { ttl: 60_000, limit: 240 } })
   @Get('')
   async getAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
@@ -55,16 +55,20 @@ export class PlaylistsController {
 
   /** Runs the get mine operation. */
   @GetMyPlaylistsSwagger()
-  @SkipThrottle({ auth: true, default: true })
+  @Throttle({ default: { ttl: 60_000, limit: 240 } })
   @UserAuth()
   @Get('me')
-  async getMine(@Req() req: UserAuthRequest) {
-    return await this.playlistService.getMine(req.user.id)
+  async getMine(
+    @Req() req: UserAuthRequest,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return await this.playlistService.getMine(req.user.id, { page, limit })
   }
 
   /** Runs the get by id operation. */
   @GetPlaylistByIdSwagger()
-  @SkipThrottle({ auth: true, default: true })
+  @Throttle({ default: { ttl: 60_000, limit: 240 } })
   @OptionalUserAuth()
   @Get(':id')
   async getById(

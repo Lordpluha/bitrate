@@ -21,6 +21,6 @@ import { WsUserAuthGuard } from './users-auth.ws.guard'
     OptionalUserAuthGuard,
     WsUserAuthGuard,
   ],
-  exports: [UserAuthService, UserAuthGuard, OptionalUserAuthGuard, WsUserAuthGuard],
+  exports: [TokensModule, UserAuthService, UserAuthGuard, OptionalUserAuthGuard, WsUserAuthGuard],
 })
 export class UsersAuthModule {}

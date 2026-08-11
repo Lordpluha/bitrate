@@ -1,12 +1,13 @@
 import { faker } from '@faker-js/faker'
 import { Logger } from '@nestjs/common'
-import { PrismaClient } from '@prisma/client'
+import { type Genre, PrismaClient } from '@prisma/client'
 import type { Artist as NCSArtist, Song as NCSSong } from '@spotify/ncs-parser'
 import * as ncs from '@spotify/ncs-parser'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
 import { FakerService } from './faker.service'
 import { createMulterFileFromPath } from './file-helper'
+import { SEED_GENRES, SEED_PASSWORD, SEED_PODCASTS, SEED_SEARCH_QUERIES } from './seed.data'
 
 // Интерфейс для TracksService без привязки к seed
 interface ITracksService {
@@ -16,6 +17,10 @@ interface ITracksService {
     audioFile: Express.Multer.File,
     coverFile?: Express.Multer.File,
   ): Promise<{ id: string }>
+}
+
+interface IPasswordHasher {
+  hashPassword(password: string): Promise<string>
 }
 
 /**
@@ -28,6 +33,7 @@ export class SeedService {
     private downloadService: DownloadResourcesService,
     private faker: FakerService,
     private tracksService: ITracksService,
+    private passwordHasher: IPasswordHasher,
   ) {}
 
   /** The logger value. */
@@ -46,10 +52,13 @@ export class SeedService {
       create: {
         username,
         email,
-        password: 'ncs-imported',
+        password: null,
         bio: `Artist imported from NoCopyrightSounds: ${ncsArtist.url}`,
         avatar: faker.image.avatar(),
         backgroundImage: faker.image.url({ width: 1920, height: 1080 }),
+        emailVerifiedAt: new Date(),
+        verified: faker.datatype.boolean({ probability: 0.35 }),
+        monthlyListeners: faker.number.int({ min: 10_000, max: 2_000_000 }),
       },
     })
   }
@@ -96,6 +105,7 @@ export class SeedService {
         duration,
       },
     })
+    await this.ensurePrimaryArtistCredit(track.id, artistId)
 
     // Если есть instrumental версия, создаём отдельный трек
     if (instrumentalFilePath) {
@@ -116,6 +126,7 @@ export class SeedService {
             duration,
           },
         })
+        await this.ensurePrimaryArtistCredit(instrumentalTrack.id, artistId)
 
         this.logger.log('  🎹 Created instrumental version')
       } catch (error) {
@@ -128,6 +139,14 @@ export class SeedService {
     return track
   }
 
+  private async ensurePrimaryArtistCredit(trackId: string, artistId: string) {
+    await this.prisma.trackArtist.upsert({
+      where: { trackId_artistId: { trackId, artistId } },
+      update: { isPrimary: true, position: 0 },
+      create: { trackId, artistId, isPrimary: true, position: 0 },
+    })
+  }
+
   /** Runs the sanitize username operation. */
   private sanitizeUsername(name: string): string {
     return name
@@ -135,6 +154,15 @@ export class SeedService {
       .replace(/[^a-z0-9_-]/g, '_')
       .replace(/_+/g, '_')
       .substring(0, 50)
+  }
+
+  private sample<T>(items: T[], min: number, max: number): T[] {
+    if (items.length === 0) return []
+    const count = Math.min(
+      items.length,
+      faker.number.int({ min: Math.min(min, items.length), max }),
+    )
+    return faker.helpers.arrayElements(items, count)
   }
 
   /**
@@ -209,17 +237,73 @@ export class SeedService {
     return { totalTracksImported, totalArtistsImported }
   }
 
+  /** Creates the genre catalogue and links it to imported tracks and artists. */
+  async createCatalogMetadata() {
+    this.logger.log('\n═══════════════════════════════════════')
+    this.logger.log('🏷️  STEP 2: Creating genres and credits')
+    this.logger.log('═══════════════════════════════════════')
+
+    const genres: Genre[] = []
+    for (const genre of SEED_GENRES) {
+      genres.push(
+        await this.prisma.genre.upsert({
+          where: { slug: genre.slug },
+          update: { name: genre.name, color: genre.color },
+          create: {
+            ...genre,
+            description: `Discover ${genre.name.toLowerCase()} tracks, artists and releases.`,
+            cover: faker.image.url({ width: 800, height: 800 }),
+          },
+        }),
+      )
+    }
+
+    const tracks = await this.prisma.track.findMany({ select: { id: true, artistId: true } })
+    const artistByTrackId = new Map(tracks.map((track) => [track.id, track.artistId]))
+    const trackGenres = tracks.flatMap((track) =>
+      faker.helpers
+        .arrayElements(genres, Math.min(genres.length, faker.number.int({ min: 1, max: 2 })))
+        .map((genre) => ({ trackId: track.id, genreId: genre.id })),
+    )
+
+    await this.prisma.trackGenre.createMany({ data: trackGenres, skipDuplicates: true })
+    await this.prisma.trackArtist.createMany({
+      data: tracks.map((track) => ({
+        trackId: track.id,
+        artistId: track.artistId,
+        position: 0,
+        isPrimary: true,
+      })),
+      skipDuplicates: true,
+    })
+
+    const artistGenres = [
+      ...new Map(
+        trackGenres.map((item) => {
+          const artistId = artistByTrackId.get(item.trackId)!
+          return [`${artistId}:${item.genreId}`, { artistId, genreId: item.genreId }]
+        }),
+      ).values(),
+    ]
+    await this.prisma.artistGenre.createMany({ data: artistGenres, skipDuplicates: true })
+
+    this.logger.log(`✅ Linked ${tracks.length} tracks to ${genres.length} genres`)
+  }
+
   /**
    * Создаёт альбомы для артистов (1 альбом = все треки артиста)
    */
   async createAlbumsForArtists() {
     this.logger.log('\n═══════════════════════════════════════')
-    this.logger.log('📀 STEP 2: Creating albums for artists')
+    this.logger.log('📀 STEP 3: Creating albums for artists')
     this.logger.log('═══════════════════════════════════════')
 
     const artists = await this.prisma.artist.findMany({
       include: {
-        tracks: { select: { id: true, releaseDate: true } },
+        tracks: {
+          orderBy: [{ releaseDate: 'asc' }, { createdAt: 'asc' }],
+          select: { id: true, releaseDate: true, cover: true },
+        },
       },
     })
 
@@ -239,18 +323,48 @@ export class SeedService {
           ? new Date(Math.min(...releaseDates.map((d) => d.getTime())))
           : new Date()
 
-      // Создаём один альбом со всеми треками артиста
-      const album = await this.prisma.album.create({
-        data: {
-          title: `${artist.username} - Complete Collection`,
-          cover: faker.image.url({ width: 1000, height: 1000 }),
-          artistId: artist.id,
-          releaseDate: albumReleaseDate,
-          description: `All tracks by ${artist.username}`,
-          tracks: {
-            connect: artist.tracks.map((track) => ({ id: track.id })),
+      const title = `${artist.username} - Complete Collection`
+      const existingAlbum = await this.prisma.album.findFirst({
+        where: { artistId: artist.id, title, deletedAt: null },
+      })
+      if (existingAlbum) continue
+
+      const album = await this.prisma.$transaction(async (tx) => {
+        const createdAlbum = await tx.album.create({
+          data: {
+            title,
+            cover:
+              artist.tracks.find((track) => track.cover)?.cover ??
+              faker.image.url({ width: 1000, height: 1000 }),
+            artistId: artist.id,
+            releaseDate: albumReleaseDate,
+            description: `All tracks by ${artist.username}`,
+            type: artist.tracks.length <= 3 ? 'EP' : 'ALBUM',
+            label: 'NoCopyrightSounds',
+            totalTracks: artist.tracks.length,
+            copyright: `© ${albumReleaseDate.getFullYear()} ${artist.username}`,
           },
-        },
+        })
+
+        await tx.albumTrack.createMany({
+          data: artist.tracks.map((track, index) => ({
+            albumId: createdAlbum.id,
+            trackId: track.id,
+            trackNumber: index + 1,
+            discNumber: 1,
+          })),
+        })
+
+        const genreIds = await tx.trackGenre.findMany({
+          where: { trackId: { in: artist.tracks.map((track) => track.id) } },
+          distinct: ['genreId'],
+          select: { genreId: true },
+        })
+        await tx.albumGenre.createMany({
+          data: genreIds.map(({ genreId }) => ({ albumId: createdAlbum.id, genreId })),
+          skipDuplicates: true,
+        })
+        return createdAlbum
       })
 
       albumsCreated++
@@ -266,12 +380,28 @@ export class SeedService {
    */
   async createUsers(count: number = 50) {
     this.logger.log('\n═══════════════════════════════════════')
-    this.logger.log('👥 STEP 3: Creating users')
+    this.logger.log('👥 STEP 4: Creating users')
     this.logger.log('═══════════════════════════════════════')
 
-    const users = this.faker.generateUsers(count)
+    const passwordHash = await this.passwordHasher.hashPassword(SEED_PASSWORD)
+    const users = this.faker.generateUsers(count, passwordHash)
     await this.prisma.user.createMany({ data: users, skipDuplicates: true })
-    this.logger.log(`✅ Seeded ${count} users`)
+
+    const createdUsers = await this.prisma.user.findMany({ select: { id: true } })
+    await this.prisma.userSettings.createMany({
+      data: createdUsers.map((user) => ({ userId: user.id })),
+      skipDuplicates: true,
+    })
+    await this.prisma.subscription.createMany({
+      data: createdUsers.map((user, index) => ({
+        userId: user.id,
+        plan: index % 8 === 0 ? 'PREMIUM_INDIVIDUAL' : 'FREE',
+        status: 'ACTIVE',
+      })),
+    })
+
+    this.logger.log(`✅ Seeded ${createdUsers.length} verified users with settings`)
+    this.logger.log(`🔐 Demo login: test@example.com / ${SEED_PASSWORD}`)
   }
 
   /**
@@ -279,7 +409,7 @@ export class SeedService {
    */
   async createPlaylistsForUsers(playlistCount: number = 100) {
     this.logger.log('\n═══════════════════════════════════════')
-    this.logger.log('🎵 STEP 4: Creating playlists')
+    this.logger.log('🎵 STEP 5: Creating playlists')
     this.logger.log('═══════════════════════════════════════')
 
     const users = await this.prisma.user.findMany({ select: { id: true } })
@@ -298,33 +428,29 @@ export class SeedService {
     const userIds = users.map((u) => u.id)
     const playlists = this.faker.generatePlaylists(userIds, playlistCount)
 
-    await this.prisma.playlist.createMany({ data: playlists, skipDuplicates: true })
-    this.logger.log(`✅ Created ${playlistCount} playlists`)
-
-    // Добавляем треки в плейлисты
-    this.logger.log('🔗 Adding tracks to playlists...')
-    const createdPlaylists = await this.prisma.playlist.findMany({ select: { id: true } })
-
     let totalTracksAdded = 0
 
-    for (const playlist of createdPlaylists) {
-      const tracksCount = faker.number.int({ min: 10, max: 50 })
-      const playlistTracks = faker.helpers.arrayElements(tracks, tracksCount)
-
-      for (const track of playlistTracks) {
-        try {
-          await this.prisma.playlist.update({
-            where: { id: playlist.id },
-            data: { tracks: { connect: { id: track.id } } },
-          })
-          totalTracksAdded++
-        } catch {
-          // Игнорируем дубликаты
-        }
-      }
+    for (const playlist of playlists) {
+      const trackCount = Math.min(tracks.length, faker.number.int({ min: 8, max: 24 }))
+      const selectedTracks = faker.helpers.arrayElements(tracks, trackCount)
+      await this.prisma.playlist.create({
+        data: {
+          ...playlist,
+          followersCount: playlist.isPublic ? faker.number.int({ min: 0, max: 50_000 }) : 0,
+          tracks: {
+            create: selectedTracks.map((track, position) => ({
+              trackId: track.id,
+              addedById: playlist.userId,
+              position,
+              addedAt: faker.date.recent({ days: 120 }),
+            })),
+          },
+        },
+      })
+      totalTracksAdded += selectedTracks.length
     }
 
-    this.logger.log(`✅ Added ${totalTracksAdded} track-playlist relations`)
+    this.logger.log(`✅ Created ${playlists.length} playlists with ${totalTracksAdded} tracks`)
   }
 
   /**
@@ -332,7 +458,7 @@ export class SeedService {
    */
   async createUserLikes() {
     this.logger.log('\n═══════════════════════════════════════')
-    this.logger.log('❤️  STEP 5: Adding user liked tracks')
+    this.logger.log('❤️  STEP 6: Creating user libraries and activity')
     this.logger.log('═══════════════════════════════════════')
 
     const users = await this.prisma.user.findMany({ select: { id: true } })
@@ -343,26 +469,132 @@ export class SeedService {
       return
     }
 
-    let totalLikes = 0
+    const artists = await this.prisma.artist.findMany({ select: { id: true } })
+    const albums = await this.prisma.album.findMany({ select: { id: true } })
+    const playlists = await this.prisma.playlist.findMany({
+      where: { isPublic: true },
+      select: { id: true, userId: true },
+    })
 
-    for (const user of users) {
-      const likesCount = faker.number.int({ min: 5, max: 50 })
-      const likedTracks = faker.helpers.arrayElements(tracks, likesCount)
+    const likedTracks = users.flatMap((user) =>
+      this.sample(tracks, 5, 20).map((track) => ({
+        userId: user.id,
+        trackId: track.id,
+        createdAt: faker.date.recent({ days: 180 }),
+      })),
+    )
+    const likedAlbums = users.flatMap((user) =>
+      this.sample(albums, 1, 5).map((album) => ({ userId: user.id, albumId: album.id })),
+    )
+    const followedArtists = users.flatMap((user) =>
+      this.sample(artists, 1, 5).map((artist) => ({ userId: user.id, artistId: artist.id })),
+    )
+    const likedPlaylists = users.flatMap((user) =>
+      this.sample(
+        playlists.filter((playlist) => playlist.userId !== user.id),
+        1,
+        5,
+      ).map((playlist) => ({ userId: user.id, playlistId: playlist.id })),
+    )
+    const history = users.flatMap((user) =>
+      this.sample(tracks, 8, 24).map((track) => ({
+        userId: user.id,
+        trackId: track.id,
+        listenedAt: faker.date.recent({ days: 60 }),
+      })),
+    )
 
-      for (const track of likedTracks) {
-        try {
-          await this.prisma.user.update({
-            where: { id: user.id },
-            data: { likedTracks: { connect: { id: track.id } } },
-          })
-          totalLikes++
-        } catch {
-          // Игнорируем дубликаты
-        }
-      }
+    await this.prisma.userLikedTrack.createMany({ data: likedTracks, skipDuplicates: true })
+    await this.prisma.userLikedAlbum.createMany({ data: likedAlbums, skipDuplicates: true })
+    await this.prisma.userLikedArtist.createMany({ data: followedArtists, skipDuplicates: true })
+    await this.prisma.userFollowedArtist.createMany({
+      data: followedArtists,
+      skipDuplicates: true,
+    })
+    await this.prisma.userLikedPlaylist.createMany({ data: likedPlaylists, skipDuplicates: true })
+    await this.prisma.listeningHistory.createMany({ data: history })
+    await this.prisma.searchHistory.createMany({
+      data: users.flatMap((user) =>
+        faker.helpers.arrayElements(SEED_SEARCH_QUERIES, 3).map((query) => ({
+          userId: user.id,
+          query,
+          searchedAt: faker.date.recent({ days: 30 }),
+        })),
+      ),
+    })
+    await this.prisma.notification.createMany({
+      data: users.flatMap((user) => [
+        {
+          userId: user.id,
+          type: 'NEW_RELEASE' as const,
+          title: 'New music is waiting for you',
+          body: 'Open your release feed to discover recently added tracks.',
+        },
+        {
+          userId: user.id,
+          type: 'SYSTEM' as const,
+          title: 'Welcome to Spotify Clone',
+          readAt: faker.datatype.boolean() ? new Date() : null,
+        },
+      ]),
+    })
+
+    this.logger.log(
+      `✅ Created ${likedTracks.length} track likes and ${history.length} history entries`,
+    )
+  }
+
+  /** Creates podcasts, episodes and saved episode relations for library screens. */
+  async createPodcasts() {
+    this.logger.log('\n═══════════════════════════════════════')
+    this.logger.log('🎙️  STEP 7: Creating podcasts and episodes')
+    this.logger.log('═══════════════════════════════════════')
+
+    const tracks = await this.prisma.track.findMany({
+      where: { deletedAt: null },
+      select: { audioUrl: true, cover: true, duration: true },
+      take: 24,
+    })
+    if (tracks.length === 0) {
+      this.logger.warn('⚠️ No tracks available for demo episode audio')
+      return
     }
 
-    this.logger.log(`✅ Created ${totalLikes} liked track relations`)
+    const episodeIds: string[] = []
+    for (const [podcastIndex, podcast] of SEED_PODCASTS.entries()) {
+      const createdPodcast = await this.prisma.podcast.create({
+        data: {
+          ...podcast,
+          cover:
+            tracks[podcastIndex % tracks.length]?.cover ??
+            faker.image.url({ width: 800, height: 800 }),
+          episodes: {
+            create: Array.from({ length: 4 }, (_, episodeIndex) => {
+              const source = tracks[(podcastIndex * 4 + episodeIndex) % tracks.length]!
+              return {
+                title: `${podcast.title}: Episode ${episodeIndex + 1}`,
+                description: faker.lorem.paragraph(),
+                audioUrl: source.audioUrl,
+                cover: source.cover,
+                duration: source.duration,
+                releaseDate: faker.date.recent({ days: 120 }),
+              }
+            }),
+          },
+        },
+        include: { episodes: { select: { id: true } } },
+      })
+      episodeIds.push(...createdPodcast.episodes.map((episode) => episode.id))
+    }
+
+    const users = await this.prisma.user.findMany({ select: { id: true } })
+    await this.prisma.userSavedEpisode.createMany({
+      data: users.flatMap((user) =>
+        this.sample(episodeIds, 1, 3).map((episodeId) => ({ userId: user.id, episodeId })),
+      ),
+      skipDuplicates: true,
+    })
+    this.logger.log(`✅ Created ${SEED_PODCASTS.length} podcasts and ${episodeIds.length} episodes`)
   }
 
   /**
@@ -370,13 +602,16 @@ export class SeedService {
    */
   async clearDatabase() {
     this.logger.log('🗑️  Clearing existing data...')
-    await this.prisma.playlist.deleteMany()
-    await this.prisma.userSession.deleteMany()
-    await this.prisma.artistSession.deleteMany()
-    await this.prisma.user.deleteMany()
-    await this.prisma.track.deleteMany()
-    await this.prisma.album.deleteMany()
-    await this.prisma.artist.deleteMany()
+    await this.prisma.$transaction([
+      this.prisma.auditLog.deleteMany(),
+      this.prisma.moderationReport.deleteMany(),
+      this.prisma.podcast.deleteMany(),
+      this.prisma.user.deleteMany(),
+      this.prisma.album.deleteMany(),
+      this.prisma.track.deleteMany(),
+      this.prisma.artist.deleteMany(),
+      this.prisma.genre.deleteMany(),
+    ])
     this.logger.log('✅ Database cleared\n')
   }
 
@@ -394,6 +629,10 @@ export class SeedService {
       albums: await this.prisma.album.count(),
       users: await this.prisma.user.count(),
       playlists: await this.prisma.playlist.count(),
+      genres: await this.prisma.genre.count(),
+      podcasts: await this.prisma.podcast.count(),
+      episodes: await this.prisma.episode.count(),
+      history: await this.prisma.listeningHistory.count(),
     }
 
     this.logger.log(
@@ -405,5 +644,8 @@ export class SeedService {
     this.logger.log(`📀 Albums:                 ${dbStats.albums}`)
     this.logger.log(`👥 Users (faker):          ${dbStats.users}`)
     this.logger.log(`🎵 Playlists (faker):      ${dbStats.playlists}`)
+    this.logger.log(`🏷️  Genres:                 ${dbStats.genres}`)
+    this.logger.log(`🎙️  Podcasts / episodes:    ${dbStats.podcasts} / ${dbStats.episodes}`)
+    this.logger.log(`🕘 Listening history:       ${dbStats.history}`)
   }
 }

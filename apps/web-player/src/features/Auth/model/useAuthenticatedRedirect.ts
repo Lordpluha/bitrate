@@ -20,7 +20,7 @@ export const useAuthenticatedRedirect = () => {
           router.replace(ROUTES.main)
         }
       } catch {
-        // Staying on the auth page is the expected fallback for a missing session.
+        /** Staying on the auth page is the expected fallback for a missing session. */
       }
     }
 

@@ -15,6 +15,10 @@ node_modules
 # Testing
 coverage
 .playwright-cli/
+**/playwright-report/
+**/test-results/
+**/blob-report/
+/output/playwright/
 
 # Turbo
 .turbo
@@ -51,3 +55,6 @@ FRONTEND_BACKLOG.md
 # graph.canvas). Fully regenerable, high-churn — regenerate with `graphify . --update`,
 # don't commit. See .claude/rules/knowledge-base.md for details.
 /graphify-out/
+
+# Локальные чек-листы (не коммитим)
+/.checklists/

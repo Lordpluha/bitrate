@@ -1,3 +1,4 @@
+import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
@@ -28,20 +29,29 @@ export class HistoryService {
 
   /** Runs the get history operation. */
   async getHistory(userId: UserEntity['id'], page = 1, limit = 20) {
-    const safeLimit = Math.min(limit, 100)
-    const skip = (page - 1) * safeLimit
+    const pagination = normalizePagination(page, limit)
 
-    const latestTracks = await this.prisma.listeningHistory.groupBy({
-      by: ['trackId'],
-      where: { userId },
-      _max: { listenedAt: true },
-      orderBy: { _max: { listenedAt: 'desc' } },
-      skip,
-      take: safeLimit,
-    })
+    const [latestTracks, allTrackGroups] = await this.prisma.$transaction([
+      this.prisma.listeningHistory.groupBy({
+        by: ['trackId'],
+        where: { userId },
+        _max: { listenedAt: true },
+        orderBy: { _max: { listenedAt: 'desc' } },
+        skip: pagination.skip,
+        take: pagination.limit,
+      }),
+      this.prisma.listeningHistory.groupBy({ by: ['trackId'], where: { userId } }),
+    ])
 
     const trackIds = latestTracks.map(({ trackId }) => trackId)
-    if (trackIds.length === 0) return []
+    if (trackIds.length === 0) {
+      return {
+        data: [],
+        total: allTrackGroups.length,
+        page: pagination.page,
+        limit: pagination.limit,
+      }
+    }
 
     const entries = await this.prisma.listeningHistory.findMany({
       where: { userId, trackId: { in: trackIds } },
@@ -51,7 +61,12 @@ export class HistoryService {
     })
 
     const byTrackId = new Map(entries.map((e) => [e.trackId, e]))
-    return trackIds.map((id) => byTrackId.get(id)!).filter(Boolean)
+    return {
+      data: trackIds.map((id) => byTrackId.get(id)!).filter(Boolean),
+      total: allTrackGroups.length,
+      page: pagination.page,
+      limit: pagination.limit,
+    }
   }
 
   /** Runs the clear all operation. */

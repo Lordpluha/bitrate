@@ -89,7 +89,7 @@ describe('TracksService', () => {
       const result = await service.findAll({ page: 1, limit: 10 })
 
       expect(prisma.$transaction).toHaveBeenCalled()
-      expect(result).toEqual({ data: tracks, meta: { total: 1, page: 1, limit: 10, lastPage: 1 } })
+      expect(result).toEqual({ data: tracks, total: 1, page: 1, limit: 10 })
     })
 
     it('should filter by title when provided', async () => {
@@ -104,17 +104,28 @@ describe('TracksService', () => {
 
   describe('findLikedTracks', () => {
     it('should query tracks liked by user', async () => {
-      const tracks = [buildTrack()]
-      prisma.track.findMany.mockResolvedValue(tracks as never)
+      const track = buildTrack()
+      const likedAt = new Date()
+      prisma.$transaction.mockResolvedValue([[{ track, createdAt: likedAt }], 1] as never)
 
       const result = await service.findLikedTracks('user-1', { page: 1, limit: 10 })
 
-      expect(prisma.track.findMany).toHaveBeenCalledWith({
-        where: { processingStatus: 'READY', likedBy: { some: { id: 'user-1' } } },
+      expect(prisma.userLikedTrack.findMany).toHaveBeenCalledWith({
+        where: {
+          userId: 'user-1',
+          track: { processingStatus: 'READY', deletedAt: null },
+        },
+        include: { track: true },
+        orderBy: { createdAt: 'desc' },
         skip: 0,
         take: 10,
       })
-      expect(result).toBe(tracks)
+      expect(result).toEqual({
+        data: [{ ...track, likedAt }],
+        total: 1,
+        page: 1,
+        limit: 10,
+      })
     })
   })
 
@@ -126,7 +137,7 @@ describe('TracksService', () => {
       const result = await service.findTrackById('track-1')
 
       expect(prisma.track.findFirst).toHaveBeenCalledWith({
-        where: { id: 'track-1', processingStatus: 'READY' },
+        where: { id: 'track-1', processingStatus: 'READY', deletedAt: null },
       })
       expect(result).toBe(track)
     })
@@ -134,7 +145,7 @@ describe('TracksService', () => {
 
   describe('getTrackAudioStream', () => {
     it('should choose the highest preferred format bitrate not exceeding the request', async () => {
-      prisma.track.findUnique.mockResolvedValue(buildTrack() as never)
+      prisma.track.findFirst.mockResolvedValue(buildTrack() as never)
       prisma.trackFile.findMany.mockResolvedValue([
         { bitrate: 128, format: 'opus', url: 'track_128.opus', codec: 'opus' },
         { bitrate: 192, format: 'opus', url: 'track_192.opus', codec: 'opus' },
@@ -158,7 +169,7 @@ describe('TracksService', () => {
     })
 
     it('should return the requested byte range without a ten-second cap', async () => {
-      prisma.track.findUnique.mockResolvedValue(buildTrack() as never)
+      prisma.track.findFirst.mockResolvedValue(buildTrack() as never)
       prisma.trackFile.findMany.mockResolvedValue([
         { bitrate: 192, format: 'opus', url: 'track_192.opus', codec: 'opus' },
       ] as never)
@@ -200,7 +211,7 @@ describe('TracksService', () => {
       const result = await service.findTracksByArtistId('artist-1')
 
       expect(prisma.track.findMany).toHaveBeenCalledWith({
-        where: { artistId: 'artist-1', processingStatus: 'READY' },
+        where: { artistId: 'artist-1', processingStatus: 'READY', deletedAt: null },
       })
       expect(result).toBe(tracks)
     })
@@ -214,7 +225,11 @@ describe('TracksService', () => {
       const result = await service.findTracksByArtistName('artist')
 
       expect(prisma.track.findMany).toHaveBeenCalledWith({
-        where: { processingStatus: 'READY', artist: { username: 'artist' } },
+        where: {
+          processingStatus: 'READY',
+          deletedAt: null,
+          artist: { username: 'artist' },
+        },
       })
       expect(result).toBe(tracks)
     })

@@ -40,7 +40,8 @@ describe('UsersController', () => {
 
   it('getAll should call service with pagination', async () => {
     const users = [buildUser()]
-    service.findAll.mockResolvedValue(users)
+    const response = { data: users, total: 1, page: 2, limit: 10 }
+    service.findAll.mockResolvedValue(response)
 
     const result = await controller.getAll(10, 2, 'user')
 
@@ -49,7 +50,7 @@ describe('UsersController', () => {
       page: 2,
       limit: 10,
     })
-    expect(result).toBe(users)
+    expect(result).toBe(response)
   })
 
   it('getByUsername should call service', async () => {

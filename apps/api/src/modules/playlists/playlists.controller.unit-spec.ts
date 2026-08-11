@@ -22,7 +22,12 @@ describe('PlaylistsController', () => {
   })
 
   it('getAll should pass pagination params', async () => {
-    const playlists: FindAllResult = [buildPlaylistWithUser()]
+    const playlists: FindAllResult = {
+      data: [buildPlaylistWithUser()],
+      total: 1,
+      page: 2,
+      limit: 5,
+    }
     service.getAll.mockResolvedValue(playlists)
 
     const result = await controller.getAll(2, 5)
@@ -35,7 +40,12 @@ describe('PlaylistsController', () => {
   })
 
   it('getAll should pass undefined for missing pagination params', async () => {
-    const playlists: FindAllResult = [buildPlaylistWithUser()]
+    const playlists: FindAllResult = {
+      data: [buildPlaylistWithUser()],
+      total: 1,
+      page: 1,
+      limit: 10,
+    }
     service.getAll.mockResolvedValue(playlists)
 
     const result = await controller.getAll(undefined, undefined)

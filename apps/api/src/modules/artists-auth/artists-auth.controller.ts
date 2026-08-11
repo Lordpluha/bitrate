@@ -1,3 +1,4 @@
+import { AUTH_ROUTE_THROTTLE } from '@common/config'
 import { ArtistsService } from '@modules/artists/artists.service'
 import { TokenService } from '@modules/tokens/token.service'
 import {
@@ -39,18 +40,22 @@ import {
   TwoFactorVerifyLoginSwagger,
 } from './decorators'
 import {
-  ForgotPasswordDto,
+  ArtistForgotPasswordDto,
   ForgotPasswordSchema,
   type LoginDto,
   LoginSchema,
   type RegistrationDto,
   RegistrationSchema,
+  ResendArtistEmailDto,
+  ResendArtistEmailSchema,
   ResetPasswordDto,
   ResetPasswordSchema,
   TwoFactorCodeDto,
   TwoFactorCodeSchema,
   TwoFactorVerifyLoginDto,
   TwoFactorVerifyLoginSchema,
+  VerifyArtistEmailDto,
+  VerifyArtistEmailSchema,
 } from './dtos'
 import { ArtistSessionEntity } from './entities'
 import type { ArtistAuthRequest } from './types'
@@ -58,7 +63,8 @@ import type { ArtistAuthRequest } from './types'
 /** Represents the auth controller. */
 @ApiExtraModels(ArtistSessionEntity)
 @ApiTags('Artists Auth')
-@Controller('artists/auth')
+@Throttle(AUTH_ROUTE_THROTTLE)
+@Controller({ path: 'artists/auth', version: '1' })
 export class AuthController {
   constructor(
     private artistAuthService: ArtistsAuthService,
@@ -70,7 +76,6 @@ export class AuthController {
 
   /** Runs the login operation. */
   @AuthLoginSwagger()
-  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @Post('login')
   async login(
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
@@ -102,7 +107,9 @@ export class AuthController {
 
   /** Checks whether an artist email is already registered. */
   @EmailAvailabilitySwagger()
-  @Throttle({ auth: { limit: 20, ttl: 60_000 } })
+  @Throttle({
+    default: { ...AUTH_ROUTE_THROTTLE.default, limit: 20 },
+  })
   @Get('email-availability')
   async emailAvailability(@Query('email') email: string) {
     if (!email) {
@@ -129,8 +136,8 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
-    const { access_token } = await this.artistAuthService.refresh(refresh_token)
-    this.tokenService.setAuthCookies(res, access_token, refresh_token)
+    const tokens = await this.artistAuthService.refresh(refresh_token)
+    this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
   }
 
   /** Runs the get me operation. */
@@ -143,20 +150,36 @@ export class AuthController {
 
   /** Runs the forgot password operation. */
   @AuthForgotPasswordSwagger()
-  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('forgot-password')
-  async forgotPassword(@Body(new ZodValidationPipe(ForgotPasswordSchema)) dto: ForgotPasswordDto) {
+  async forgotPassword(
+    @Body(new ZodValidationPipe(ForgotPasswordSchema)) dto: ArtistForgotPasswordDto,
+  ) {
     await this.artistAuthService.forgotPassword(dto.email)
   }
 
   /** Runs the reset password operation. */
   @AuthResetPasswordSwagger()
-  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('reset-password')
   async resetPassword(@Body(new ZodValidationPipe(ResetPasswordSchema)) dto: ResetPasswordDto) {
     await this.artistAuthService.resetPassword(dto.token, dto.password)
+  }
+
+  @HttpCode(200)
+  @Post('verify-email')
+  async verifyEmail(
+    @Body(new ZodValidationPipe(VerifyArtistEmailSchema)) dto: VerifyArtistEmailDto,
+  ) {
+    await this.artistAuthService.verifyEmail(dto.token)
+  }
+
+  @HttpCode(200)
+  @Post('verify-email/resend')
+  async resendEmail(
+    @Body(new ZodValidationPipe(ResendArtistEmailSchema)) dto: ResendArtistEmailDto,
+  ) {
+    await this.artistAuthService.resendEmailVerification(dto.email)
   }
 
   /** Runs the two factor setup operation. */
@@ -193,7 +216,6 @@ export class AuthController {
 
   /** Runs the two factor verify login operation. */
   @TwoFactorVerifyLoginSwagger()
-  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('2fa/verify-login')
   async twoFactorVerifyLogin(

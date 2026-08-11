@@ -34,6 +34,8 @@ export const useAudioPlayerEvents = ({
   const setDuration = usePlayerStore((state) => state.setDuration)
   const setProgress = usePlayerStore((state) => state.setProgress)
   const changeTrack = usePlayerStore((state) => state.changeTrack)
+  const advanceOnTrackEnd = usePlayerStore((state) => state.advanceOnTrackEnd)
+  const repeatMode = usePlayerStore((state) => state.repeatMode)
   const isSeekingRef = useRef(false)
   const {
     activeSlotRef,
@@ -188,6 +190,17 @@ export const useAudioPlayerEvents = ({
   const handleEnded = useCallback(
     (index: SlotIndex) => {
       if (index !== activeSlotRef.current) return
+
+      if (repeatMode === 'one') {
+        const active = getActiveElement()
+        if (active) {
+          active.currentTime = 0
+          void active.play().catch(() => setIsPlaying(false))
+        }
+        advanceOnTrackEnd()
+        return
+      }
+
       if (!nextTrack) {
         pause()
         return
@@ -211,11 +224,15 @@ export const useAudioPlayerEvents = ({
     },
     [
       activeSlotRef,
+      advanceOnTrackEnd,
       changeTrack,
       currentPlaylistId,
       currentTrack,
+      getActiveElement,
       nextTrack,
       pause,
+      repeatMode,
+      setIsPlaying,
       slotsRef,
       switchToSlot,
     ],

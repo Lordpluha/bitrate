@@ -18,7 +18,7 @@ describe('AlbumsController', () => {
   })
 
   it('getAllAlbums should pass pagination params', async () => {
-    const albums: FindAllResult = [buildAlbum()]
+    const albums: FindAllResult = { data: [buildAlbum()], total: 1, page: 2, limit: 5 }
     service.findAll.mockResolvedValue(albums)
 
     const result = await controller.getAllAlbums(2, 5, 'rock')
@@ -32,7 +32,7 @@ describe('AlbumsController', () => {
   })
 
   it('getAllAlbums should pass undefined for missing pagination params', async () => {
-    const albums: FindAllResult = [buildAlbum()]
+    const albums: FindAllResult = { data: [buildAlbum()], total: 1, page: 1, limit: 10 }
     service.findAll.mockResolvedValue(albums)
 
     const result = await controller.getAllAlbums(undefined, undefined, undefined)
@@ -46,7 +46,7 @@ describe('AlbumsController', () => {
   })
 
   it('getAllAlbums should pass pagination without title', async () => {
-    const albums: FindAllResult = [buildAlbum()]
+    const albums: FindAllResult = { data: [buildAlbum()], total: 1, page: 1, limit: 10 }
     service.findAll.mockResolvedValue(albums)
 
     const result = await controller.getAllAlbums(1, 10, undefined)

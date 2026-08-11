@@ -16,6 +16,7 @@ import {
   useQuery as useTanStackQuery,
 } from '@tanstack/react-query'
 import {
+  followedUsersResponseSchema,
   safeUserResponseSchema,
   safeUsersResponseSchema,
 } from './userResponse.schema'
@@ -78,6 +79,49 @@ export const useUserById = (userId?: string) =>
     },
     enabled: !!userId,
   })
+
+export const useFollowedUsers = (enabled = true) =>
+  useTanStackQuery({
+    queryKey: apiQueryKeys.users.following,
+    queryFn: async () => {
+      const { data, response } = await clientFetchClient.GET(
+        '/api/v1/users/me/following',
+        { params: { query: { limit: 100, page: 1 } } },
+      )
+
+      ensureOkResponse(response, 'Failed to fetch followed users')
+
+      return followedUsersResponseSchema.parse(data).data
+    },
+    enabled,
+    staleTime: 5 * 60_000,
+  })
+
+const useInvalidateFollowedUsers = () => {
+  const queryClient = useQueryClient()
+
+  return async () => {
+    await queryClient.invalidateQueries({
+      queryKey: apiQueryKeys.users.following,
+    })
+  }
+}
+
+export const useFollowUser = () => {
+  const invalidate = useInvalidateFollowedUsers()
+
+  return useMutation('post', '/api/v1/users/{id}/follow', {
+    onSuccess: invalidate,
+  })
+}
+
+export const useUnfollowUser = () => {
+  const invalidate = useInvalidateFollowedUsers()
+
+  return useMutation('delete', '/api/v1/users/{id}/follow', {
+    onSuccess: invalidate,
+  })
+}
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient()

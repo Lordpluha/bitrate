@@ -1,3 +1,4 @@
+import { normalizePagination } from '@common/pagination'
 import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
@@ -24,28 +25,68 @@ export class AlbumsService {
     limit = 10,
     title,
   }: { page?: number; limit?: number } & Partial<AlbumEntity>) {
-    const safeLimit = Math.min(limit, 100)
+    const pagination = normalizePagination(page, limit)
+    const where = {
+      deletedAt: null,
+      ...(title ? { title: { contains: title, mode: 'insensitive' as const } } : {}),
+    }
     return await this.cache.wrap(
       NS.ALBUMS,
-      `list:${page}:${safeLimit}:${title ?? ''}`,
+      `list:${pagination.page}:${pagination.limit}:${title ?? ''}`,
       TTL.SHORT,
-      () =>
-        this.prisma.album.findMany({
-          skip: (page - 1) * safeLimit,
-          take: safeLimit,
-          where: title ? { title: { contains: title, mode: 'insensitive' } } : undefined,
-          include: { tracks: { where: { processingStatus: 'READY' } } },
-        }),
+      async () => {
+        const [albums, total] = await this.prisma.$transaction([
+          this.prisma.album.findMany({
+            skip: pagination.skip,
+            take: pagination.limit,
+            where,
+            include: {
+              tracks: {
+                where: { track: { processingStatus: 'READY', deletedAt: null } },
+                include: { track: true },
+                orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+              },
+            },
+          }),
+          this.prisma.album.count({ where }),
+        ])
+        const data = albums.map((album) => ({
+          ...album,
+          tracks: album.tracks.map(({ track, ...membership }) => ({
+            ...track,
+            ...membership,
+          })),
+        }))
+        return { data, total, page: pagination.page, limit: pagination.limit }
+      },
     )
   }
 
   /** Runs the get by id operation. */
   async getById(id: AlbumEntity['id']) {
     return await this.cache.wrap(NS.ALBUMS, `id:${id}`, TTL.LONG, () =>
-      this.prisma.album.findFirst({
-        where: { id },
-        include: { tracks: { where: { processingStatus: 'READY' } } },
-      }),
+      this.prisma.album
+        .findFirst({
+          where: { id, deletedAt: null },
+          include: {
+            tracks: {
+              where: { track: { processingStatus: 'READY', deletedAt: null } },
+              include: { track: true },
+              orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+            },
+          },
+        })
+        .then((album) =>
+          album
+            ? {
+                ...album,
+                tracks: album.tracks.map(({ track, ...membership }) => ({
+                  ...track,
+                  ...membership,
+                })),
+              }
+            : null,
+        ),
     )
   }
 
@@ -61,7 +102,7 @@ export class AlbumsService {
 
   /** Runs the update operation. */
   async update(artistId: ArtistEntity['id'], id: AlbumEntity['id'], updateDto: UpdateAlbumDto) {
-    const album = await this.prisma.album.findFirst({ where: { id, artistId } })
+    const album = await this.prisma.album.findFirst({ where: { id, artistId, deletedAt: null } })
     if (!album) throw new NotFoundException('Album not found or does not belong to the artist')
 
     const updated = await this.prisma.album.update({ where: { id }, data: updateDto })
@@ -71,10 +112,14 @@ export class AlbumsService {
 
   /** Runs the delete operation. */
   async delete(artistId: ArtistEntity['id'], id: AlbumEntity['id']) {
-    const album = await this.prisma.album.findFirst({ where: { id, artistId } })
+    const album = await this.prisma.album.findFirst({ where: { id, artistId, deletedAt: null } })
     if (!album) throw new NotFoundException('Album not found or does not belong to the artist')
 
-    const deleted = await this.prisma.album.delete({ where: { id }, omit: { artistId: true } })
+    const deleted = await this.prisma.album.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+      omit: { artistId: true },
+    })
     await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
     return deleted
   }
@@ -82,10 +127,16 @@ export class AlbumsService {
   /** Runs the like operation. */
   async like(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
     try {
-      return await this.prisma.album.update({
-        where: { id: albumId },
-        data: { likedBy: { connect: { id: userId } } },
+      const album = await this.prisma.album.findFirst({
+        where: { id: albumId, deletedAt: null },
       })
+      if (!album) throw new NotFoundException('Album not found')
+      await this.prisma.userLikedAlbum.upsert({
+        where: { userId_albumId: { userId, albumId } },
+        update: {},
+        create: { userId, albumId },
+      })
+      return album
     } catch (error: unknown) {
       if (isPrismaP2025(error)) throw new NotFoundException('Album not found')
       throw error
@@ -95,10 +146,12 @@ export class AlbumsService {
   /** Runs the unlike operation. */
   async unlike(userId: UserEntity['id'], albumId: AlbumEntity['id']) {
     try {
-      return await this.prisma.album.update({
-        where: { id: albumId },
-        data: { likedBy: { disconnect: { id: userId } } },
+      const album = await this.prisma.album.findFirst({
+        where: { id: albumId, deletedAt: null },
       })
+      if (!album) throw new NotFoundException('Album not found')
+      await this.prisma.userLikedAlbum.deleteMany({ where: { userId, albumId } })
+      return album
     } catch (error: unknown) {
       if (isPrismaP2025(error)) throw new NotFoundException('Album not found')
       throw error

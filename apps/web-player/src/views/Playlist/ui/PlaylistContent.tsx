@@ -2,8 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import type { PlaylistWithTracks } from '@/entities/Playlist'
+import { selectCompactLibrary, useSettingsStore } from '@/entities/Settings'
 import { TracksList, useLikedTracks } from '@/entities/Track'
 import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
 import type { TrackViewMode } from '@/views/Playlist/model/playlist.types'
 import { getPlaylistCover } from '@/views/Playlist/model/playlist.utils'
 import { usePlaylistActions } from '@/views/Playlist/model/usePlaylistActions'
@@ -19,12 +21,16 @@ type PlaylistContentProps = {
 }
 
 export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
+  const { t } = useI18n()
   const { user } = useAuth()
   const { data: likedTracks } = useLikedTracks(1, 1000, undefined, {
     staleTime: 5 * 60_000,
   })
   const [isEditing, setIsEditing] = useState(false)
-  const [trackViewMode, setTrackViewMode] = useState<TrackViewMode>('list')
+  const compactLibrary = useSettingsStore(selectCompactLibrary)
+  const [trackViewMode, setTrackViewMode] = useState<TrackViewMode>(
+    compactLibrary ? 'compact' : 'list',
+  )
   const tracks = playlist.tracks ?? []
   const likedTrackIds = useMemo(
     () => new Set((likedTracks ?? []).map((track) => track.id)),
@@ -34,10 +40,10 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
     playlist.user?.id && user?.id && playlist.user.id === user.id,
   )
   const cover = getPlaylistCover(playlist.cover, tracks)
-  const ownerName = playlist.user?.username || 'Unknown'
+  const ownerName = playlist.user?.username || t('common.unknown')
   const playback = usePlaylistPlayback({
     playlistId: playlist.id,
-    playlistTitle: playlist.title || 'Playlist',
+    playlistTitle: playlist.title || t('common.playlist'),
     tracks,
   })
   const actions = usePlaylistActions({
@@ -52,16 +58,16 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
         author={ownerName}
         duration={getPlaylistDuration(tracks)}
         imageUrl={cover}
-        title={playlist.title || 'Playlist'}
+        title={playlist.title || t('common.playlist')}
         tracksCount={tracks.length}
-        type="Playlist"
+        type={t('common.playlist')}
       />
       <PlaylistActionBar
         details={{
           cover,
           id: playlist.id,
           isOwner,
-          ownerName: playlist.user?.username || 'Unknown Artist',
+          ownerName: playlist.user?.username || t('common.unknown'),
           title: playlist.title || 'playlist',
           tracksCount: tracks.length,
         }}
@@ -97,7 +103,7 @@ export const PlaylistContent = ({ playlist }: PlaylistContentProps) => {
       )}
       {!isOwner && tracks.length === 0 && (
         <div className="px-6 py-10 text-text-subdued">
-          No tracks in this playlist.
+          {t('playlist.noTracks')}
         </div>
       )}
     </>

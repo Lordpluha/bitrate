@@ -114,9 +114,12 @@ describe('UsersAuthController', () => {
   })
 
   describe('refresh', () => {
-    it('should set new access token', async () => {
+    it('should set rotated access and refresh tokens', async () => {
       process.env.REFRESH_TOKEN_NAME = 'refresh_token'
-      authService.refresh.mockResolvedValue({ access_token: 'new-access' })
+      authService.refresh.mockResolvedValue({
+        access_token: 'new-access',
+        refresh_token: 'new-refresh',
+      })
       const req = mockDeep<Request>()
       Object.assign(req, { refresh_token: 'refresh-token' })
       const res = createResponse()
@@ -124,7 +127,7 @@ describe('UsersAuthController', () => {
       await controller.refresh(req, res)
 
       expect(authService.refresh).toHaveBeenCalledWith('refresh-token')
-      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-access', 'refresh-token')
+      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-access', 'new-refresh')
     })
   })
 

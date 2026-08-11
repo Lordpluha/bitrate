@@ -6,6 +6,8 @@ import { mailConfig } from './mail.config'
 import { s3Config } from './s3.config'
 import { storageConfigFactory } from './storage.config'
 
+export { API_RATE_LIMITS, AUTH_ROUTE_THROTTLE } from './rate-limit.config'
+
 /** The app configs value. */
 export const appConfigs = [
   cookieConfig,

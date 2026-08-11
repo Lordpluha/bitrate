@@ -1,16 +1,29 @@
 import type { ReactNode } from 'react'
+import { useSettingsSearch } from '@/views/Settings/model/settingsSearchContext'
 
 type SettingsSectionProps = {
   children: ReactNode
+  searchTerms?: string[]
   title: string
 }
 
-export const SettingsSection = ({ children, title }: SettingsSectionProps) => (
-  <section>
-    <h2 className="mb-4 text-base font-bold text-text">{title}</h2>
-    <div className="grid gap-4">{children}</div>
-  </section>
-)
+export const SettingsSection = ({
+  children,
+  searchTerms = [],
+  title,
+}: SettingsSectionProps) => {
+  const query = useSettingsSearch()
+  const searchableText = [title, ...searchTerms].join(' ').toLocaleLowerCase()
+
+  if (query && !searchableText.includes(query)) return null
+
+  return (
+    <section>
+      <h2 className="mb-4 text-base font-bold text-text">{title}</h2>
+      <div className="grid gap-4">{children}</div>
+    </section>
+  )
+}
 
 type SettingsRowProps = {
   children: ReactNode

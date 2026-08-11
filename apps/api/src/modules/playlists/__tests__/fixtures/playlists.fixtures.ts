@@ -17,6 +17,9 @@ export const buildPlaylist = (overrides: Partial<PlaylistEntity> = {}): Playlist
   updatedAt: new Date(),
   userId: 'user-1',
   isPublic: true,
+  collaborative: false,
+  followersCount: 0,
+  deletedAt: null,
   ...overrides,
 })
 
@@ -32,11 +35,15 @@ export const buildUser = (overrides: Partial<UserEntity> = {}): UserEntity => ({
   updatedAt: new Date(),
   twoFactorSecret: null,
   twoFactorEnabled: false,
+  emailVerifiedAt: null,
+  failedLoginAttempts: 0,
+  lockedUntil: null,
+  deletedAt: null,
   ...overrides,
 })
 
 /** The build playlist with user value. */
-export const buildPlaylistWithUser = (overrides: Partial<FindAllResult[number]> = {}) => ({
+export const buildPlaylistWithUser = (overrides: Partial<FindAllResult['data'][number]> = {}) => ({
   ...buildPlaylist(),
   user: {
     id: 'user-1',

@@ -1,4 +1,3 @@
-import type { TrackEntity } from '@modules/tracks'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
@@ -47,7 +46,7 @@ export function TracksGetLikedSwagger() {
               processingAttempts: 1,
               processingStartedAt: new Date(),
               processingFinishedAt: new Date(),
-            } as TrackEntity,
+            },
           ],
         },
       },

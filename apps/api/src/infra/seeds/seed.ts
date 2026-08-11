@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import type { INestApplicationContext } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { PrismaPg } from '@prisma/adapter-pg'
@@ -7,6 +8,7 @@ import { existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { Pool } from 'pg'
 import { AppModule } from '../../app.module'
+import { TokenService } from '../../modules/tokens/token.service'
 import { TracksService } from '../../modules/tracks/tracks.service'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
@@ -49,6 +51,7 @@ async function main() {
   try {
     console.log('🌱 Starting database seeding...')
     console.log('📡 NCS Import + Faker Data Generation\n')
+    faker.seed(20260811)
 
     // Создаём NestJS application context для доступа к сервисам
     console.log('🔧 Initializing NestJS application context...')
@@ -58,10 +61,17 @@ async function main() {
 
     // Получаем необходимые сервисы через DI
     const tracksService = app.get(TracksService)
+    const tokenService = app.get(TokenService)
 
     // Создаём сервисы для импорта
     const downloadService = new DownloadResourcesService(STORAGE_BASE)
-    const seedService = new SeedService(prisma, downloadService, new FakerService(), tracksService)
+    const seedService = new SeedService(
+      prisma,
+      downloadService,
+      new FakerService(),
+      tracksService,
+      tokenService,
+    )
 
     // Шаг 1: Очистка базы данных (опционально)
     if (config.clearBeforeImport) {
@@ -71,19 +81,25 @@ async function main() {
     // Шаг 2: Импорт артистов и треков из NCS
     const stats = await seedService.importFromNCS()
 
-    // Шаг 3: Создание альбомов для артистов (1 альбом = все треки артиста)
+    // Шаг 3: Жанры и связи артистов с треками
+    await seedService.createCatalogMetadata()
+
+    // Шаг 4: Создание альбомов для артистов (1 альбом = все треки артиста)
     await seedService.createAlbumsForArtists()
 
-    // Шаг 4: Создание пользователей (faker)
+    // Шаг 5: Создание пользователей (faker)
     await seedService.createUsers(50)
 
-    // Шаг 5: Создание плейлистов с треками для пользователей
+    // Шаг 6: Создание плейлистов с треками для пользователей
     await seedService.createPlaylistsForUsers(100)
 
-    // Шаг 6: Добавление лайков для пользователей
+    // Шаг 7: Добавление библиотеки и истории пользователей
     await seedService.createUserLikes()
 
-    // Шаг 7: Финальная статистика
+    // Шаг 8: Создание подкастов и сохранённых эпизодов
+    await seedService.createPodcasts()
+
+    // Шаг 9: Финальная статистика
     await seedService.printStats(stats)
 
     console.log('\n✅ Database seeding completed successfully!')

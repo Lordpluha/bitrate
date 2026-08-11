@@ -9,6 +9,11 @@ import {
 } from './__tests__/fixtures/playlists.fixtures'
 import { PlaylistsService } from './playlists.service'
 
+const mockInteractiveTransaction = (prisma: PrismaMock) =>
+  prisma.$transaction.mockImplementation((callback: unknown) =>
+    (callback as (tx: PrismaMock) => unknown)(prisma),
+  )
+
 describe('PlaylistsService', () => {
   let service: PlaylistsService
   let prisma: PrismaMock
@@ -41,12 +46,12 @@ describe('PlaylistsService', () => {
 
   it('getAll should use pagination defaults', async () => {
     const playlists = [buildPlaylistWithUser()]
-    prisma.playlist.findMany.mockResolvedValue(playlists)
+    prisma.$transaction.mockResolvedValue([playlists, 1] as never)
 
     const result = await service.getAll({})
 
     expect(prisma.playlist.findMany).toHaveBeenCalledWith({
-      where: { isPublic: true },
+      where: { isPublic: true, deletedAt: null },
       skip: 0,
       take: 10,
       include: {
@@ -58,17 +63,17 @@ describe('PlaylistsService', () => {
         },
       },
     })
-    expect(result).toBe(playlists)
+    expect(result).toEqual({ data: playlists, total: 1, page: 1, limit: 10 })
   })
 
   it('getAll should use pagination params', async () => {
     const playlists = [buildPlaylistWithUser()]
-    prisma.playlist.findMany.mockResolvedValue(playlists)
+    prisma.$transaction.mockResolvedValue([playlists, 1] as never)
 
     const result = await service.getAll({ page: 2, limit: 5 })
 
     expect(prisma.playlist.findMany).toHaveBeenCalledWith({
-      where: { isPublic: true },
+      where: { isPublic: true, deletedAt: null },
       skip: 5,
       take: 5,
       include: {
@@ -80,19 +85,19 @@ describe('PlaylistsService', () => {
         },
       },
     })
-    expect(result).toBe(playlists)
+    expect(result).toEqual({ data: playlists, total: 1, page: 2, limit: 5 })
   })
 
   it('getById should call prisma', async () => {
     const playlist = buildPlaylist()
-    prisma.playlist.findUniqueOrThrow.mockResolvedValue(playlist)
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
 
     const result = await service.getById('playlist-1')
 
-    expect(prisma.playlist.findUniqueOrThrow).toHaveBeenCalledWith({
-      where: { id: 'playlist-1' },
+    expect(prisma.playlist.findFirst).toHaveBeenCalledWith({
+      where: { id: 'playlist-1', deletedAt: null },
     })
-    expect(result).toBe(playlist)
+    expect(result).toEqual(playlist)
   })
 
   it('getByIdPopulated should include tracks', async () => {
@@ -102,9 +107,13 @@ describe('PlaylistsService', () => {
     const result = await service.getByIdPopulated('playlist-1')
 
     expect(prisma.playlist.findFirst).toHaveBeenCalledWith({
-      where: { id: 'playlist-1', isPublic: true },
+      where: { id: 'playlist-1', deletedAt: null, isPublic: true },
       include: {
-        tracks: { where: { processingStatus: 'READY' } },
+        tracks: {
+          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          include: { track: true },
+          orderBy: { position: 'asc' },
+        },
         user: {
           select: {
             avatar: true,
@@ -114,7 +123,7 @@ describe('PlaylistsService', () => {
         },
       },
     })
-    expect(result).toBe(playlist)
+    expect(result).toEqual(playlist)
   })
 
   it('getByIdPopulated should allow owner private playlists', async () => {
@@ -126,10 +135,15 @@ describe('PlaylistsService', () => {
     expect(prisma.playlist.findFirst).toHaveBeenCalledWith({
       where: {
         id: 'playlist-1',
+        deletedAt: null,
         OR: [{ isPublic: true }, { userId: 'user-1' }],
       },
       include: {
-        tracks: { where: { processingStatus: 'READY' } },
+        tracks: {
+          where: { track: { processingStatus: 'READY', deletedAt: null } },
+          include: { track: true },
+          orderBy: { position: 'asc' },
+        },
         user: {
           select: {
             avatar: true,
@@ -139,13 +153,13 @@ describe('PlaylistsService', () => {
         },
       },
     })
-    expect(result).toBe(playlist)
+    expect(result).toEqual(playlist)
   })
 
   it('update should update playlist with user', async () => {
     const updated = buildPlaylist({ title: 'Updated' })
     prisma.playlist.update.mockResolvedValue(updated)
-    prisma.playlist.findUnique.mockResolvedValue(buildPlaylist({ userId: 'user-1' }))
+    prisma.playlist.findFirst.mockResolvedValue(buildPlaylist({ userId: 'user-1' }))
 
     const result = await service.update('user-1', 'playlist-1', { title: 'Updated' })
 
@@ -159,7 +173,7 @@ describe('PlaylistsService', () => {
   it('update should pass optional description', async () => {
     const updated = buildPlaylist({ title: 'Updated', description: 'desc' })
     prisma.playlist.update.mockResolvedValue(updated)
-    prisma.playlist.findUnique.mockResolvedValue(buildPlaylist({ userId: 'user-1' }))
+    prisma.playlist.findFirst.mockResolvedValue(buildPlaylist({ userId: 'user-1' }))
 
     const result = await service.update('user-1', 'playlist-1', {
       title: 'Updated',
@@ -175,39 +189,53 @@ describe('PlaylistsService', () => {
 
   it('delete should delete playlist for user', async () => {
     const deleted = buildPlaylist()
-    prisma.playlist.delete.mockResolvedValue(deleted)
-    prisma.playlist.findUnique.mockResolvedValue(buildPlaylist({ userId: 'user-1' }))
+    prisma.playlist.update.mockResolvedValue(deleted)
+    prisma.playlist.findFirst.mockResolvedValue(buildPlaylist({ userId: 'user-1' }))
 
     const result = await service.delete('user-1', 'playlist-1')
 
-    expect(prisma.playlist.delete).toHaveBeenCalledWith({
+    expect(prisma.playlist.update).toHaveBeenCalledWith({
       where: { id: 'playlist-1' },
+      data: { deletedAt: expect.any(Date) },
     })
     expect(result).toBe(deleted)
   })
 
-  it('like should connect user to playlist likedBy', async () => {
+  it('like should create an explicit playlist like', async () => {
     const playlist = buildPlaylist()
+    mockInteractiveTransaction(prisma)
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
+    prisma.userLikedPlaylist.findUnique.mockResolvedValue(null)
+    prisma.userLikedPlaylist.create.mockResolvedValue({} as never)
     prisma.playlist.update.mockResolvedValue(playlist)
 
     const result = await service.like('user-1', 'playlist-1')
 
+    expect(prisma.userLikedPlaylist.create).toHaveBeenCalledWith({
+      data: { userId: 'user-1', playlistId: 'playlist-1' },
+    })
     expect(prisma.playlist.update).toHaveBeenCalledWith({
       where: { id: 'playlist-1' },
-      data: { likedBy: { connect: { id: 'user-1' } } },
+      data: { followersCount: { increment: 1 } },
     })
     expect(result).toBe(playlist)
   })
 
-  it('unlike should disconnect user from playlist likedBy', async () => {
-    const playlist = buildPlaylist()
+  it('unlike should delete the explicit playlist like', async () => {
+    const playlist = buildPlaylist({ followersCount: 1 })
+    mockInteractiveTransaction(prisma)
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
+    prisma.userLikedPlaylist.deleteMany.mockResolvedValue({ count: 1 })
     prisma.playlist.update.mockResolvedValue(playlist)
 
     const result = await service.unlike('user-1', 'playlist-1')
 
+    expect(prisma.userLikedPlaylist.deleteMany).toHaveBeenCalledWith({
+      where: { userId: 'user-1', playlistId: 'playlist-1' },
+    })
     expect(prisma.playlist.update).toHaveBeenCalledWith({
       where: { id: 'playlist-1' },
-      data: { likedBy: { disconnect: { id: 'user-1' } } },
+      data: { followersCount: { decrement: 1 } },
     })
     expect(result).toBe(playlist)
   })

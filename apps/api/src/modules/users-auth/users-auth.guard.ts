@@ -23,6 +23,12 @@ export type TokenRequirement = 'access' | 'refresh'
 /** The token requirement value. */
 export const TOKEN_REQUIREMENT = 'tokenRequirement'
 
+function extractAuthCookies(request: Request, tokenService: TokenService) {
+  const accessToken = request.cookies?.[tokenService.getTokenName('access')] as string | undefined
+  const refreshToken = request.cookies?.[tokenService.getTokenName('refresh')] as string | undefined
+  return { accessToken, refreshToken }
+}
+
 /**
  * Metadata wrapper to control AuthGuard behavior.
  * @param tokenRequirement
@@ -81,7 +87,10 @@ export class UserAuthGuard implements CanActivate {
     ])
 
     const request = context.switchToHttp().getRequest<Request>()
-    const { access_token, refresh_token } = this.extractTokenFromCookie(request)
+    const { accessToken: access_token, refreshToken: refresh_token } = extractAuthCookies(
+      request,
+      this.tokenService,
+    )
 
     switch (tokenReq) {
       case 'access':
@@ -114,6 +123,7 @@ export class UserAuthGuard implements CanActivate {
         where: {
           ...(access_token && { access_token: this.tokenService.hashToken(access_token) }),
           ...(refresh_token && { refresh_token: this.tokenService.hashToken(refresh_token) }),
+          expiresAt: { gt: new Date() },
           userId: payload.sub,
         },
       })
@@ -130,22 +140,12 @@ export class UserAuthGuard implements CanActivate {
 
     return true
   }
-
-  /** Runs the extract token from cookie operation. */
-  private extractTokenFromCookie(request: Request) {
-    const access_token = request.cookies?.[this.tokenService.getTokenName('access')] as
-      | string
-      | undefined
-    const refresh_token = request.cookies?.[this.tokenService.getTokenName('refresh')] as
-      | string
-      | undefined
-    return { access_token, refresh_token }
-  }
 }
 
 /** Represents the optional user auth guard. */
 @Injectable()
 export class OptionalUserAuthGuard implements CanActivate {
+  private readonly logger = new Logger(OptionalUserAuthGuard.name)
   /** Creates a new instance. */
   constructor(
     private prisma: PrismaService,
@@ -155,48 +155,34 @@ export class OptionalUserAuthGuard implements CanActivate {
   /** Runs the can activate operation. */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>()
-    const { access_token, refresh_token } = this.extractTokenFromCookie(request)
-    const tokenCandidates = [
-      { token: access_token, tokenName: 'access_token' },
-      { token: refresh_token, tokenName: 'refresh_token' },
-    ] as const
+    const { accessToken: access_token, refreshToken: refresh_token } = extractAuthCookies(
+      request,
+      this.tokenService,
+    )
+    if (!access_token) return true
 
-    for (const { token, tokenName } of tokenCandidates) {
-      if (!token) continue
+    try {
+      const payload: JWTPayload = await this.tokenService.verifyToken(access_token)
+      if (payload.type !== 'user') return true
 
-      try {
-        const payload: JWTPayload = await this.tokenService.verifyToken(token)
-        if (payload.type !== 'user') continue
+      const user = await this.prisma.user.findUnique({ where: { id: payload.sub } })
+      if (!user) return true
 
-        const user = await this.prisma.user.findUnique({ where: { id: payload.sub } })
-        if (!user) continue
-
-        const session = await this.prisma.userSession.findFirst({
-          where: {
-            [tokenName]: this.tokenService.hashToken(token),
-            userId: payload.sub,
-          },
-        })
-        if (!session) continue
-
-        request.user = user
-        return true
-      } catch {
-        // Try the next available token candidate.
-      }
+      const session = await this.prisma.userSession.findFirst({
+        where: {
+          access_token: this.tokenService.hashToken(access_token),
+          ...(refresh_token && {
+            refresh_token: this.tokenService.hashToken(refresh_token),
+          }),
+          expiresAt: { gt: new Date() },
+          userId: payload.sub,
+        },
+      })
+      if (session) request.user = user
+    } catch (error) {
+      this.logger.debug('Optional authentication cookies are invalid', error)
     }
 
     return true
-  }
-
-  /** Runs the extract token from cookie operation. */
-  private extractTokenFromCookie(request: Request) {
-    const access_token = request.cookies?.[this.tokenService.getTokenName('access')] as
-      | string
-      | undefined
-    const refresh_token = request.cookies?.[this.tokenService.getTokenName('refresh')] as
-      | string
-      | undefined
-    return { access_token, refresh_token }
   }
 }

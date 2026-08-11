@@ -12,8 +12,10 @@ import {
   CustomNextIcon,
   CustomPrevIcon,
 } from '@spotify/ui-react'
+import { useI18n } from '@/shared/i18n'
 
 export const PopularPlaylists = () => {
+  const { t } = useI18n()
   const { data: playlists, isPending } = usePlaylists(1, 3)
 
   if (isPending) {
@@ -23,12 +25,14 @@ export const PopularPlaylists = () => {
   return (
     <div className="relative mt-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-text text-2xl font-bold">Popular playlists</h2>
+        <h2 className="text-text text-2xl font-bold">
+          {t('main.popularPlaylists')}
+        </h2>
         <button
           className="text-gray-400 hover:text-white text-sm font-medium"
           type="button"
         >
-          Show all
+          {t('common.showAll')}
         </button>
       </div>
       <div className="relative group">
@@ -43,9 +47,9 @@ export const PopularPlaylists = () => {
           />
           <CarouselContent className="flex">
             {isPending ? (
-              <div className="text-gray-400 p-4">Loading...</div>
+              <div className="text-gray-400 p-4">{t('common.loading')}</div>
             ) : playlists?.length === 0 ? (
-              <div className="text-gray-400 p-4">No playlists found</div>
+              <div className="text-gray-400 p-4">{t('main.noPlaylists')}</div>
             ) : (
               playlists?.map((playlist) => (
                 <CarouselItem className="basis-auto max-w-50" key={playlist.id}>

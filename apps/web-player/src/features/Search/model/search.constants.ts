@@ -3,6 +3,7 @@ import type { BrowseCategory } from '@/features/Search/model/types'
 
 export const searchTypes: WebPlayerSearchType[] = [
   'tracks',
+  'artists',
   'albums',
   'playlists',
 ]
@@ -19,30 +20,30 @@ export const browseImages = [
 ] as const
 
 const browseColors = [
-  '#dc148c',
-  '#006450',
-  '#8400e7',
-  '#777777',
-  '#1e3264',
-  '#608108',
-  '#477d95',
-  '#477d95',
-  '#006450',
-  '#e1338b',
-  '#8d67ab',
-  '#477d95',
-  '#e1338b',
-  '#af2896',
-  '#dc148c',
-  '#477d95',
-  '#b06239',
-  '#e03131',
-  '#777777',
-  '#8d67ab',
-  '#b06216',
-  '#b06216',
-  '#e03131',
-  '#3273dc',
+  'var(--color-browse-pink)',
+  'var(--color-browse-deep-green)',
+  'var(--color-browse-violet)',
+  'var(--color-browse-grey)',
+  'var(--color-browse-navy)',
+  'var(--color-browse-lime)',
+  'var(--color-browse-blue-grey)',
+  'var(--color-browse-blue-grey)',
+  'var(--color-browse-deep-green)',
+  'var(--color-browse-rose)',
+  'var(--color-browse-lilac)',
+  'var(--color-browse-blue-grey)',
+  'var(--color-browse-rose)',
+  'var(--color-browse-magenta)',
+  'var(--color-browse-pink)',
+  'var(--color-browse-blue-grey)',
+  'var(--color-browse-copper)',
+  'var(--color-browse-red)',
+  'var(--color-browse-grey)',
+  'var(--color-browse-lilac)',
+  'var(--color-browse-rust)',
+  'var(--color-browse-rust)',
+  'var(--color-browse-red)',
+  'var(--color-browse-blue)',
 ] as const
 
 const browseCategoryTitles = [
@@ -111,18 +112,18 @@ const browseCategoryTitles = [
 
 export const searchFilterTabs = [
   'All',
-  'Playlists',
   'Songs',
-  'Genres & Moods',
-  'Albums',
-  'Profiles',
   'Artists',
-  'Podcasts & Shows',
+  'Albums',
+  'Playlists',
+  'Profiles',
 ] as const
 
 export const browseCategories: BrowseCategory[] = browseCategoryTitles.map(
   (title, index) => ({
-    color: browseColors[index % browseColors.length] ?? '#477d95',
+    color:
+      browseColors[index % browseColors.length] ??
+      'var(--color-browse-blue-grey)',
     image: browseImages[index % browseImages.length] ?? browseImages[0],
     title,
   }),

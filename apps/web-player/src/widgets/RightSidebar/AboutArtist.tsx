@@ -1,13 +1,16 @@
 'use client'
 
+import { FollowArtistButton, useArtist } from '@entities/Artist'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
-import { useArtist } from '@shared/hooks/useArtist'
-import {
-  getArtistAvatarUrl,
-  getArtistBackgroundUrl,
-} from '@shared/utils/mediaUrl'
-import { Typography } from '@spotify/ui-react'
+import { ROUTES } from '@shared/routes'
+import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
+import { BadgeCheck } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
+import {
+  getNcsArtistBioPrefix,
+  parseNcsArtistBioLink,
+} from './model/ncsArtistBio'
 
 export const AboutArtist = () => {
   const currentTrack = usePlayerStore(selectCurrentTrack)
@@ -21,60 +24,78 @@ export const AboutArtist = () => {
     return null
   }
 
-  const avatarUrl = getArtistAvatarUrl(artist.avatar)
   const backgroundUrl = getArtistBackgroundUrl(
     artist.backgroundImage,
     artist.avatar,
   )
+  const ncsBioLink = artist.bio ? parseNcsArtistBioLink(artist.bio) : null
+  const ncsBioPrefix = getNcsArtistBioPrefix()
 
   return (
-    <div className="relative bg-surface rounded-lg overflow-hidden mt-4">
-      <div className="relative">
-        <Typography
-          as="h6"
-          className="text-text absolute top-4 left-4 z-10"
-          size="heading6"
-        >
-          About the artist
-        </Typography>
-        <div className="relative w-full aspect-square">
+    <div className="mt-4 overflow-hidden rounded-lg bg-surface">
+      <Link
+        aria-label={`Open ${artist.username} artist page`}
+        className="group block rounded-t-lg outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text"
+        href={ROUTES.artist(artist.id)}
+      >
+        <div className="relative aspect-[3/2] w-full overflow-hidden">
           <Image
-            alt={artist.username || 'Artist'}
-            className="object-cover"
+            alt=""
+            className="object-cover transition duration-300 group-hover:scale-[1.02] group-hover:brightness-90"
             fill
-            sizes="320px"
+            priority
+            sizes="(max-width: 1279px) 100vw, 320px"
             src={backgroundUrl}
             unoptimized
           />
+          <div className="absolute inset-0 bg-black/15 transition-colors group-hover:bg-black/25" />
+          <h2 className="absolute left-4 top-4 z-10 text-sm font-bold text-white drop-shadow-md">
+            About the artist
+          </h2>
         </div>
-      </div>
-      <div className="flex flex-col p-4">
-        <div className="flex items-center gap-3 mb-2">
-          <Image
-            alt={artist.username || 'Artist'}
-            className="w-12 h-12 rounded-full object-cover"
-            height={48}
-            src={avatarUrl}
-            unoptimized
-            width={48}
-          />
-          <Typography
-            as="h6"
-            className="text-text font-semibold text-base"
-            size="heading6"
-          >
+      </Link>
+
+      <div className="p-4">
+        <Link
+          className="group/name flex w-fit max-w-full items-center gap-1.5 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-text"
+          href={ROUTES.artist(artist.id)}
+        >
+          <span className="truncate text-sm font-bold text-text group-hover/name:underline">
             {artist.username || 'Unknown Artist'}
-          </Typography>
+          </span>
+          <BadgeCheck
+            aria-hidden="true"
+            className="shrink-0 fill-green-100 text-green-900"
+            size={16}
+          />
+        </Link>
+
+        <div className="mt-3 flex items-end justify-between gap-3">
+          <p className="line-clamp-3 min-w-0 text-xs leading-relaxed text-text-subdued">
+            {ncsBioLink ? (
+              <>
+                {ncsBioPrefix}{' '}
+                <a
+                  className="font-medium text-text underline decoration-text-subdued underline-offset-2 transition-colors hover:text-green-500 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
+                  href={ncsBioLink.href}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {ncsBioLink.path}
+                </a>
+              </>
+            ) : (
+              artist.bio || 'Artist profile'
+            )}
+          </p>
+
+          <FollowArtistButton
+            artistId={artist.id}
+            artistName={artist.username}
+            className="shrink-0"
+            size="sm"
+          />
         </div>
-        {artist.bio && (
-          <Typography
-            as="p"
-            className="text-grey-500 text-xs mt-2 line-clamp-3"
-            size="body"
-          >
-            {artist.bio}
-          </Typography>
-        )}
       </div>
     </div>
   )

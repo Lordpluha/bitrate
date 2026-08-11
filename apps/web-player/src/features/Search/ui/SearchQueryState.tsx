@@ -3,7 +3,10 @@ import type { WebPlayerSearchResults } from '@/features/Search/api/client'
 import { SearchResults } from '@/features/Search/ui/SearchResults'
 
 type SearchQueryStateProps = {
-  data: WebPlayerSearchResults
+  data: Pick<
+    WebPlayerSearchResults,
+    'albums' | 'artists' | 'playlists' | 'tracks'
+  >
   isFetching: boolean
   query: string
   users: SafeUser[]
@@ -16,10 +19,12 @@ export const SearchQueryState = ({
   users,
 }: SearchQueryStateProps) => {
   const albums = data.albums ?? []
+  const artists = data.artists ?? []
   const playlists = data.playlists ?? []
   const tracks = data.tracks ?? []
   const hasResults =
     tracks.length > 0 ||
+    artists.length > 0 ||
     albums.length > 0 ||
     playlists.length > 0 ||
     users.length > 0
@@ -45,6 +50,7 @@ export const SearchQueryState = ({
   return (
     <SearchResults
       albums={albums}
+      artists={artists}
       playlists={playlists}
       query={query}
       tracks={tracks}

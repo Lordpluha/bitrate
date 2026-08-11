@@ -110,6 +110,7 @@ export class ArtistAuthGuard implements CanActivate {
           ...(access_token && { access_token: this.tokenService.hashToken(access_token) }),
           ...(refresh_token && { refresh_token: this.tokenService.hashToken(refresh_token) }),
           artistId: payload.sub,
+          expiresAt: { gt: new Date() },
         },
       })
       if (!session) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.SESSION_NOT_FOUND)

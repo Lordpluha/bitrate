@@ -54,17 +54,20 @@ describe('UsersService', () => {
 
   it('findAll should use pagination', async () => {
     const users = [buildUser()]
-    prisma.user.findMany.mockResolvedValue(users)
+    prisma.$transaction.mockResolvedValue([users, 1] as never)
 
     const result = await service.findAll({ username: 'user', page: 2, limit: 5 })
 
     expect(prisma.user.findMany).toHaveBeenCalledWith({
-      where: { username: 'user' },
+      where: {
+        username: { contains: 'user', mode: 'insensitive' },
+        deletedAt: null,
+      },
       skip: 5,
       take: 5,
       omit: { password: true, email: true, twoFactorSecret: true },
     })
-    expect(result).toBe(users)
+    expect(result).toEqual({ data: users, total: 1, page: 2, limit: 5 })
   })
 
   it('create should omit password and twoFactorSecret in result', async () => {

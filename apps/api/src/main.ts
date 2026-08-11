@@ -16,7 +16,22 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get<ConfigService<AppConfig>>(ConfigService)
 
-  app.use(helmet({ contentSecurityPolicy: false }))
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          connectSrc: ["'self'", configService.getOrThrow('WEB_HOST')],
+          objectSrc: ["'none'"],
+          frameAncestors: ["'none'"],
+        },
+      },
+      crossOriginResourcePolicy: { policy: 'same-site' },
+    }),
+  )
   app.use(cookieParser())
   app.useGlobalFilters(new HttpExceptionFilter())
 
@@ -29,6 +44,7 @@ async function bootstrap() {
   })
 
   app.enableCors(configService.getOrThrow('connections').http)
+  app.enableShutdownHooks()
 
   const config = new DocumentBuilder()
     .setTitle(process.env.npm_package_name || 'API Documentation')
@@ -36,9 +52,15 @@ async function bootstrap() {
     .setVersion(process.env.npm_package_version ?? '1.0')
     .addServer(`http://localhost:${configService.getOrThrow('PORT')}`, 'Local server')
     .addServer('https://spotify-clone-api-jp5z.onrender.com/', 'Remote dev server')
-    // In progress
     .addOAuth2({
-      type: 'openIdConnect',
+      type: 'oauth2',
+      flows: {
+        authorizationCode: {
+          authorizationUrl: '/api/v1/auth/oauth/google',
+          tokenUrl: '/api/v1/auth/oauth/google/callback',
+          scopes: {},
+        },
+      },
     })
     .addCookieAuth(configService.getOrThrow('ACCESS_TOKEN_NAME'), {
       type: 'apiKey',

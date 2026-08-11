@@ -179,14 +179,14 @@ describe('LocalStorageService', () => {
     it('returns a signed URL whose token resolves back to the original key', async () => {
       const url = await service.getPresignedUrl('tracks/t1/audio/128k.opus', 3600)
 
-      expect(url).toMatch(/^http:\/\/localhost:3000\/storage\/objects\//)
-      const token = decodeURIComponent(url.split('/storage/objects/')[1] ?? '')
+      expect(url).toMatch(/^http:\/\/localhost:3000\/api\/v1\/storage\/objects\//)
+      const token = decodeURIComponent(url.split('/api/v1/storage/objects/')[1] ?? '')
       expect(verifySignedStorageToken(token, TEST_SECRET)).toBe('tracks/t1/audio/128k.opus')
     })
 
     it('rejects an expired token', async () => {
       const url = await service.getPresignedUrl('tracks/t1/audio/128k.opus', -1)
-      const token = decodeURIComponent(url.split('/storage/objects/')[1] ?? '')
+      const token = decodeURIComponent(url.split('/api/v1/storage/objects/')[1] ?? '')
 
       expect(verifySignedStorageToken(token, TEST_SECRET)).toBeNull()
     })

@@ -25,7 +25,7 @@ import {
 } from '@nestjs/common'
 import { FileFieldsInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
-import { SkipThrottle } from '@nestjs/throttler'
+import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -46,7 +46,7 @@ import { TracksService } from './tracks.service'
 /** Represents the tracks controller. */
 @ApiExtraModels(TrackEntity)
 @ApiTags('Tracks')
-@Controller('tracks')
+@Controller({ path: 'tracks', version: '1' })
 export class TracksController {
   constructor(private tracksService: TracksService) {}
 
@@ -67,7 +67,7 @@ export class TracksController {
 
   /** Runs the get hls master playlist operation. */
   @UserAuth()
-  @SkipThrottle({ auth: true, default: true })
+  @Throttle({ default: { ttl: 60_000, limit: 600 } })
   @Get('stream/:id/hls/master.m3u8')
   async getHlsMasterPlaylist(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
@@ -83,7 +83,7 @@ export class TracksController {
 
   /** Runs the get hls asset operation. */
   @UserAuth()
-  @SkipThrottle({ auth: true, default: true })
+  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
   @Get('stream/:id/hls/:bitrate/:asset')
   async getHlsAsset(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
@@ -105,7 +105,7 @@ export class TracksController {
   /** Runs the stream track operation. */
   @StreamTrackSwagger()
   @UserAuth()
-  @SkipThrottle({ auth: true, default: true })
+  @Throttle({ default: { ttl: 60_000, limit: 600 } })
   @Get('stream/:id')
   async streamTrack(
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],

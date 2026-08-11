@@ -169,6 +169,7 @@ export class ArtistOAuthService {
       artist = await this.prisma.artist.create({
         data: {
           email: profile.email,
+          emailVerifiedAt: new Date(),
           username: this.generateUniqueUsername(profile.name),
           password: null,
         },
@@ -214,6 +215,7 @@ export class ArtistOAuthService {
         access_token: this.token.hashToken(access_token),
         refresh_token: this.token.hashToken(refresh_token),
         artistId: artist.id,
+        expiresAt: this.token.getRefreshTokenExpiresAt(),
       },
     })
 

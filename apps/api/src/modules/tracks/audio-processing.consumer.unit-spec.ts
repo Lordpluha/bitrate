@@ -63,6 +63,7 @@ describe('AudioProcessingConsumer', () => {
     expect(Reflect.getMetadata('design:paramtypes', AudioProcessingConsumer)).toEqual([
       PrismaService,
       Object,
+      Function,
     ])
     expect(Reflect.getMetadata('self:paramtypes', AudioProcessingConsumer)).toEqual(
       expect.arrayContaining([expect.objectContaining({ index: 1, param: STORAGE_SERVICE })]),
@@ -74,12 +75,15 @@ describe('AudioProcessingConsumer', () => {
   const storage = {
     upload: jest.fn().mockResolvedValue('key' as never),
   }
+  const deadLetterQueue = {
+    add: jest.fn().mockResolvedValue(undefined as never),
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
     resetPrismaMock()
     prisma = prismaMock
-    consumer = new AudioProcessingConsumer(prisma, storage as never)
+    consumer = new AudioProcessingConsumer(prisma, storage as never, deadLetterQueue as never)
     prisma.track.findUnique.mockResolvedValue({ id: 'track-1', audioUrl: 'track.mp3' } as never)
     prisma.track.update.mockResolvedValue({ id: 'track-1' } as never)
     prisma.trackFile.upsert.mockResolvedValue({ id: 'tf-1' } as never)
@@ -156,6 +160,7 @@ describe('AudioProcessingConsumer', () => {
       where: { id: 'track-1' },
       data: { processingError: 'ffmpeg crashed' },
     })
+    expect(deadLetterQueue.add).not.toHaveBeenCalled()
     expect(rmMock).toHaveBeenLastCalledWith(
       expect.stringContaining('/storage/.processing/track-1-job-1-1'),
       { recursive: true, force: true },
@@ -177,6 +182,11 @@ describe('AudioProcessingConsumer', () => {
         processingError: 'permanent failure',
       }),
     })
+    expect(deadLetterQueue.add).toHaveBeenCalledWith(
+      'convert-audio-failed',
+      jobData,
+      expect.objectContaining({ jobId: 'failed-job-1-5' }),
+    )
   })
 
   it('does not mark a newer upload failed when an old job exhausts retries', async () => {

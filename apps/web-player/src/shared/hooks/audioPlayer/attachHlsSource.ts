@@ -13,6 +13,7 @@ type AttachHlsSourceOptions = {
   isPrefetch: boolean
   onFatalError: () => void
   playbackKey: string
+  progressiveUrl: string
   recoveryAttempts: Record<string, number>
   slot: PlayerSlot
   trackId: string
@@ -31,11 +32,45 @@ export const attachHlsSource = ({
   isPrefetch,
   onFatalError,
   playbackKey,
+  progressiveUrl,
   recoveryAttempts,
   slot,
   trackId,
 }: AttachHlsSourceOptions) => {
   const url = getHlsUrl(trackId)
+  const fallbackToProgressiveStream = () => {
+    if (slot.trackId !== trackId || slot.playbackKey !== playbackKey) return
+
+    const resumePosition = element.currentTime
+    savePlaybackPosition(playbackKey, resumePosition)
+    slot.hls?.destroy()
+    slot.hls = null
+    recoveryAttempts[trackId] = 0
+
+    element.addEventListener(
+      'loadedmetadata',
+      () => {
+        if (
+          slot.trackId === trackId &&
+          Number.isFinite(element.duration) &&
+          resumePosition > 0 &&
+          resumePosition < element.duration
+        ) {
+          element.currentTime = resumePosition
+        }
+      },
+      { once: true },
+    )
+    element.addEventListener(
+      'error',
+      () => {
+        if (slot.trackId === trackId) onFatalError()
+      },
+      { once: true },
+    )
+    element.src = progressiveUrl
+    element.load()
+  }
 
   if (Hls.isSupported()) {
     const hls = new Hls({
@@ -66,7 +101,7 @@ export const attachHlsSource = ({
 
       if (recoverableLoadErrors.has(data.details)) {
         savePlaybackPosition(playbackKey, element.currentTime)
-        onFatalError()
+        fallbackToProgressiveStream()
         return
       }
 
@@ -83,17 +118,19 @@ export const attachHlsSource = ({
       }
 
       savePlaybackPosition(playbackKey, element.currentTime)
-      onFatalError()
+      fallbackToProgressiveStream()
     })
     return
   }
 
   if (element.canPlayType('application/vnd.apple.mpegurl')) {
     element.src = url
-    element.addEventListener('error', onFatalError, { once: true })
+    element.addEventListener('error', fallbackToProgressiveStream, {
+      once: true,
+    })
     element.load()
     return
   }
 
-  onFatalError()
+  fallbackToProgressiveStream()
 }

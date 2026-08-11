@@ -1,6 +1,5 @@
+import links from '@widgets/Header/config/nav-links.json'
 import Link from 'next/link'
-
-import links from '../../config/nav-links.json'
 
 export const NavLinks = () => (
   <>

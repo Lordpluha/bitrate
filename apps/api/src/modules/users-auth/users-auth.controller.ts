@@ -1,6 +1,18 @@
+import { AUTH_ROUTE_THROTTLE } from '@common/config'
 import { UserEntity } from '@modules/users'
 import { UsersService } from '@modules/users/users.service'
-import { Body, Controller, Delete, Get, HttpCode, Post, Query, Req, Res } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+  Req,
+  Res,
+} from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import { Request, Response } from 'express'
@@ -24,18 +36,22 @@ import {
   TwoFactorVerifyLoginSwagger,
 } from './decorators'
 import {
-  ForgotPasswordDto,
   ForgotPasswordSchema,
   LoginDto,
   LoginSchema,
   RegistrationDto,
   RegistrationSchema,
+  ResendEmailVerificationDto,
+  ResendEmailVerificationSchema,
   ResetPasswordDto,
   ResetPasswordSchema,
   TwoFactorCodeDto,
   TwoFactorCodeSchema,
   TwoFactorVerifyLoginDto,
   TwoFactorVerifyLoginSchema,
+  UserForgotPasswordDto,
+  VerifyEmailDto,
+  VerifyEmailSchema,
 } from './dtos'
 import { UserSessionEntity } from './entities'
 import { OAuthService } from './oauth.service'
@@ -47,7 +63,8 @@ import { UserAuth } from './users-auth.guard'
 /** Represents the users auth controller. */
 @ApiExtraModels(UserSessionEntity)
 @ApiTags('Users Auth')
-@Controller('auth')
+@Throttle(AUTH_ROUTE_THROTTLE)
+@Controller({ path: 'auth', version: '1' })
 export class UsersAuthController {
   constructor(
     private authService: UserAuthService,
@@ -59,7 +76,6 @@ export class UsersAuthController {
 
   /** Runs the login operation. */
   @AuthLoginSwagger()
-  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @Post('login')
   async login(
     @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
@@ -106,8 +122,8 @@ export class UsersAuthController {
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refresh_token = req[process.env.REFRESH_TOKEN_NAME!] as string
-    const { access_token } = await this.authService.refresh(refresh_token)
-    this.tokenService.setAuthCookies(res, access_token, refresh_token)
+    const tokens = await this.authService.refresh(refresh_token)
+    this.tokenService.setAuthCookies(res, tokens.access_token, tokens.refresh_token)
   }
 
   /** Runs the get me operation. */
@@ -121,20 +137,59 @@ export class UsersAuthController {
 
   /** Runs the forgot password operation. */
   @AuthForgotPasswordSwagger()
-  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('forgot-password')
-  async forgotPassword(@Body(new ZodValidationPipe(ForgotPasswordSchema)) dto: ForgotPasswordDto) {
+  async forgotPassword(
+    @Body(new ZodValidationPipe(ForgotPasswordSchema)) dto: UserForgotPasswordDto,
+  ) {
     await this.authService.forgotPassword(dto.email)
   }
 
   /** Runs the reset password operation. */
   @AuthResetPasswordSwagger()
-  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('reset-password')
   async resetPassword(@Body(new ZodValidationPipe(ResetPasswordSchema)) dto: ResetPasswordDto) {
     await this.authService.resetPassword(dto.token, dto.password)
+  }
+
+  /** Confirms a newly registered user's email address. */
+  @HttpCode(200)
+  @Post('verify-email')
+  async verifyEmail(@Body(new ZodValidationPipe(VerifyEmailSchema)) dto: VerifyEmailDto) {
+    await this.authService.verifyEmail(dto.token)
+  }
+
+  /** Reissues a verification email without exposing account existence. */
+  @HttpCode(200)
+  @Post('verify-email/resend')
+  async resendEmailVerification(
+    @Body(new ZodValidationPipe(ResendEmailVerificationSchema)) dto: ResendEmailVerificationDto,
+  ) {
+    await this.authService.resendEmailVerification(dto.email)
+  }
+
+  /** Lists the current user's active sessions. */
+  @UserAuth()
+  @Get('sessions')
+  getSessions(@Req() req: UserAuthRequest) {
+    const accessToken = req[this.tokenService.getTokenName('access')] as string | undefined
+    return this.authService.getSessions(req.user.id, accessToken)
+  }
+
+  /** Revokes an individual session owned by the current user. */
+  @UserAuth()
+  @Delete('sessions/:id')
+  async revokeSession(@Req() req: UserAuthRequest, @Param('id') id: string) {
+    await this.authService.revokeSession(req.user.id, id)
+  }
+
+  /** Revokes every session except the current browser session. */
+  @UserAuth()
+  @Delete('sessions')
+  async revokeOtherSessions(@Req() req: UserAuthRequest) {
+    const accessToken = req[this.tokenService.getTokenName('access')] as string
+    await this.authService.revokeOtherSessions(req.user.id, accessToken)
   }
 
   /** Runs the two factor setup operation. */
@@ -171,7 +226,6 @@ export class UsersAuthController {
 
   /** Runs the two factor verify login operation. */
   @TwoFactorVerifyLoginSwagger()
-  @Throttle({ auth: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post('2fa/verify-login')
   async twoFactorVerifyLogin(

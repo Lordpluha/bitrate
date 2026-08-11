@@ -15,12 +15,66 @@
   --breakpoint-lg: 1025px;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
+
+  /* App-level tokens: the only place raw colour values are declared here. */
+  --color-scrollbar-thumb: oklch(0.44 0 0);
+  --color-scrollbar-thumb-hover: oklch(0.5 0 0);
+  --color-auth-gradient-green: oklch(0.51 0.14 152);
+  --color-auth-gradient-purple: oklch(0.36 0.19 305);
+  --color-auth-gradient-ink: oklch(0.19 0 0);
+  --color-auth-gradient-red: oklch(0.42 0.19 27);
+  --color-browse-pink: #dc148c;
+  --color-browse-deep-green: #006450;
+  --color-browse-violet: #8400e7;
+  --color-browse-grey: #777777;
+  --color-browse-navy: #1e3264;
+  --color-browse-lime: #608108;
+  --color-browse-blue-grey: #477d95;
+  --color-browse-rose: #e1338b;
+  --color-browse-lilac: #8d67ab;
+  --color-browse-magenta: #af2896;
+  --color-browse-copper: #b06239;
+  --color-browse-red: #e03131;
+  --color-browse-rust: #b06216;
+  --color-browse-blue: #3273dc;
+  --shadow-primary-glow: 0 6px 20px 1px
+    color-mix(in oklab, var(--color-primary) 30%, transparent);
 }
 
 @layer base {
   * {
     scroll-behavior: smooth;
     font-family: var(--font-source-sans);
+  }
+
+  :where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    [role="menuitem"],
+    [role="option"],
+    [role="tab"]
+  ):focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override scrolling utilities. */
+      scroll-behavior: auto !important;
+      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override animation utilities. */
+      animation-duration: 0.01ms !important;
+      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override animation utilities. */
+      animation-iteration-count: 1 !important;
+      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override transition utilities. */
+      transition-duration: 0.01ms !important;
+    }
   }
 
   /* Custom scrollbar styles */
@@ -34,21 +88,21 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #4a4a4a;
+    background: var(--color-scrollbar-thumb);
     background-clip: padding-box;
     border: 2px solid transparent;
     border-radius: 6px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #5a5a5a;
+    background: var(--color-scrollbar-thumb-hover);
     background-clip: padding-box;
     border: 2px solid transparent;
   }
 
   /* Firefox scrollbar */
   * {
-    scrollbar-color: #4a4a4a transparent;
+    scrollbar-color: var(--color-scrollbar-thumb) transparent;
     scrollbar-width: thin;
   }
 }
@@ -69,14 +123,14 @@
   .bg-auth-spotify {
     background-image: linear-gradient(
       30deg,
-      #0c7832,
-      #601e7a,
-      #121212,
-      #820c17,
-      #0c7832,
-      #601e7a,
-      #121212,
-      #820c17
+      var(--color-auth-gradient-green),
+      var(--color-auth-gradient-purple),
+      var(--color-auth-gradient-ink),
+      var(--color-auth-gradient-red),
+      var(--color-auth-gradient-green),
+      var(--color-auth-gradient-purple),
+      var(--color-auth-gradient-ink),
+      var(--color-auth-gradient-red)
     );
   }
 

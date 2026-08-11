@@ -22,7 +22,7 @@ export const resetTracksDatabase = async (prisma: PrismaService) => {
 /** The reset artists database value. */
 export const resetArtistsDatabase = async (prisma: PrismaService) => {
   await prisma.artistSession.deleteMany()
-  await prisma.artist.deleteMany()
   await prisma.album.deleteMany()
   await resetTracksDatabase(prisma)
+  await prisma.artist.deleteMany()
 }

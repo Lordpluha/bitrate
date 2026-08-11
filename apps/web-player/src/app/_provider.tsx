@@ -1,7 +1,11 @@
 'use client'
 
+import { useSettingsPersistence, useSettingsStore } from '@entities/Settings'
+import { shouldRetryApiQuery } from '@shared/api/errors'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ThemeProvider } from '@shared/contexts'
+import { I18nProvider } from '@shared/i18n'
+import { ServiceWorkerRegistration } from '@shared/ui/ServiceWorkerRegistration'
 import { Toaster } from '@spotify/ui-react'
 import {
   MutationCache,
@@ -26,29 +30,11 @@ const getFeedbackMeta = (meta: unknown): ApiFeedbackMeta => {
   return meta as ApiFeedbackMeta
 }
 
-const getErrorStatus = (error: unknown) => {
-  if (typeof error !== 'object' || error === null || !('status' in error)) {
-    return undefined
-  }
-
-  const { status } = error as { status?: unknown }
-
-  return typeof status === 'number' ? status : undefined
-}
-
 const createQueryClient = () =>
   new QueryClient({
     defaultOptions: {
       queries: {
-        retry: (failureCount, error) => {
-          const status = getErrorStatus(error)
-
-          if (status === 401 || status === 403 || status === 429) {
-            return false
-          }
-
-          return failureCount < 2
-        },
+        retry: shouldRetryApiQuery,
         refetchOnWindowFocus: false,
       },
     },
@@ -78,13 +64,18 @@ const createQueryClient = () =>
 
 export const Provider = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(createQueryClient)
+  const locale = useSettingsStore((state) => state.language)
+  useSettingsPersistence()
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <Toaster />
-        {children}
-      </ThemeProvider>
+      <I18nProvider locale={locale}>
+        <ThemeProvider>
+          <Toaster />
+          <ServiceWorkerRegistration />
+          {children}
+        </ThemeProvider>
+      </I18nProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )

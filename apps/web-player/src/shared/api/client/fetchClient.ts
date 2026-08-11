@@ -4,13 +4,13 @@ import { ROUTES } from '@shared/routes'
 import type { ApiPaths } from '@spotify/contracts'
 import createClient, { type Middleware } from 'openapi-fetch'
 
-// Состояние refresh запроса для предотвращения гонки
+/** Shared refresh state so concurrent 401s trigger only one refresh call. */
 let refreshPromise: Promise<boolean> | null = null
 const retryRequests = new WeakMap<Request, Request>()
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '')
 
 async function refreshToken(): Promise<boolean> {
-  // Если refresh уже выполняется, ждём его завершения
+  /** A refresh is already in flight — reuse its promise. */
   if (refreshPromise) {
     return refreshPromise
   }
@@ -74,7 +74,7 @@ export async function fetchWithAuthRefresh(
   return response
 }
 
-// Middleware для автоматического refresh при 401
+/** Middleware that transparently refreshes the session on a 401. */
 const authRefreshMiddleware: Middleware = {
   onRequest({ request }) {
     retryRequests.set(request, request.clone())
@@ -83,9 +83,9 @@ const authRefreshMiddleware: Middleware = {
   async onResponse({ request, response }) {
     const retryRequest = retryRequests.get(request)
     retryRequests.delete(request)
-    // Проверяем на 401 ошибку
+    /** Only 401 responses are recoverable by refreshing. */
     if (response.status === 401) {
-      // Не пытаемся refresh для auth endpoints, чтобы избежать бесконечных циклов
+      /** Auth endpoints are skipped, otherwise refresh would loop forever. */
       if (
         request.url.includes('/auth/refresh') ||
         request.url.includes('/auth/login') ||
@@ -94,7 +94,7 @@ const authRefreshMiddleware: Middleware = {
         return response
       }
 
-      // Пытаемся обновить токен
+      /** Try to renew the session before replaying the request. */
       const refreshSuccess = await refreshToken()
 
       if (refreshSuccess) {
@@ -105,7 +105,7 @@ const authRefreshMiddleware: Middleware = {
         return retryResponse
       }
 
-      // Refresh не удался - очищаем cookies и редиректим на логин
+      /** Refresh failed — clear cookies and send the user back to login. */
       redirectToLogin()
       return response
     }
@@ -122,5 +122,5 @@ export const clientFetchClient = createClient<ApiPaths>({
   credentials: 'include',
 })
 
-// Регистрируем middleware
+/** Registers the refresh middleware on the shared client. */
 clientFetchClient.use(authRefreshMiddleware)

@@ -42,4 +42,20 @@ export class UserEntity implements User {
   /** The two factor enabled value. */
   @ApiProperty()
   twoFactorEnabled: boolean
+
+  /** Email verification timestamp. */
+  @ApiProperty({ nullable: true })
+  emailVerifiedAt: Date | null
+
+  /** Consecutive failed login attempts. */
+  @ApiProperty()
+  failedLoginAttempts: number
+
+  /** Account lock expiration timestamp. */
+  @ApiProperty({ nullable: true })
+  lockedUntil: Date | null
+
+  /** Soft deletion timestamp. */
+  @ApiProperty({ nullable: true })
+  deletedAt: Date | null
 }

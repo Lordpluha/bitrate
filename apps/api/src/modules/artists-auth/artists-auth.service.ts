@@ -8,6 +8,8 @@ import { TokenService } from '@modules/tokens/token.service'
 import {
   BadRequestException,
   ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common'
@@ -20,6 +22,8 @@ import type { ArtistSessionEntity } from './entities'
 /** Represents the artists auth service. */
 @Injectable()
 export class ArtistsAuthService {
+  private static readonly MAX_LOGIN_ATTEMPTS = 5
+  private static readonly LOCK_DURATION_MS = 15 * 60 * 1000
   /** Creates a new instance. */
   constructor(
     private artists: ArtistsService,
@@ -38,20 +42,35 @@ export class ArtistsAuthService {
       throw new ConflictException('Artist with this email already exists')
     }
 
-    await this.artists.register({
+    const created = await this.artists.register({
       username: registrationDto.username,
       email: registrationDto.email,
       password: await this.token.hashPassword(registrationDto.password),
     })
+    await this.issueEmailVerification(created.id, created.email, created.username)
+    return { requiresEmailVerification: true as const }
   }
 
   /** Runs the login artist operation. */
   async loginArtist(email: ArtistEntity['email'], password: string) {
     const artist = await this.artistsPrivate.findByEmail(email)
+    if (artist?.lockedUntil && artist.lockedUntil > new Date()) {
+      throw new HttpException('Account is temporarily locked', HttpStatus.TOO_MANY_REQUESTS)
+    }
     const passwordValid =
       artist?.password && (await this.token.verifyPassword(password, artist.password))
     if (!passwordValid) {
+      if (artist) await this.recordFailedLogin(artist.id, artist.failedLoginAttempts)
       throw new UnauthorizedException({ message: 'Invalid credentials' })
+    }
+    if (!artist.emailVerifiedAt) {
+      throw new UnauthorizedException({ message: 'Email address is not verified' })
+    }
+    if (artist.failedLoginAttempts > 0 || artist.lockedUntil) {
+      await this.prisma.artist.update({
+        where: { id: artist.id },
+        data: { failedLoginAttempts: 0, lockedUntil: null },
+      })
     }
 
     if (artist.twoFactorEnabled) {
@@ -71,6 +90,7 @@ export class ArtistsAuthService {
         access_token: this.token.hashToken(access_token),
         refresh_token: this.token.hashToken(refresh_token),
         artistId: artist.id,
+        expiresAt: this.token.getRefreshTokenExpiresAt(),
       },
     })
 
@@ -94,6 +114,7 @@ export class ArtistsAuthService {
         access_token: this.token.hashToken(access_token),
         refresh_token: this.token.hashToken(refresh_token),
         artistId: artist.id,
+        expiresAt: this.token.getRefreshTokenExpiresAt(),
       },
     })
 
@@ -113,20 +134,29 @@ export class ArtistsAuthService {
         artist.username,
         'artist',
       )
+      const next_refresh_token = await this.token.generateRefreshToken(
+        artist.id,
+        artist.username,
+        'artist',
+      )
 
       const updatedSessions = await this.prisma.artistSession.updateMany({
         where: {
           artistId: artist.id,
           refresh_token: this.token.hashToken(refresh_token),
         },
-        data: { access_token: this.token.hashToken(access_token) },
+        data: {
+          access_token: this.token.hashToken(access_token),
+          refresh_token: this.token.hashToken(next_refresh_token),
+          expiresAt: this.token.getRefreshTokenExpiresAt(),
+        },
       })
 
       if (updatedSessions.count !== 1) {
         throw new UnauthorizedException('Invalid refresh token')
       }
 
-      return { access_token }
+      return { access_token, refresh_token: next_refresh_token }
     } catch {
       throw new UnauthorizedException('Invalid refresh token')
     }
@@ -186,5 +216,58 @@ export class ArtistsAuthService {
       this.prisma.artistPasswordReset.delete({ where: { token: hashed } }),
       this.prisma.artistSession.deleteMany({ where: { artistId: reset.artistId } }),
     ])
+  }
+
+  async verifyEmail(rawToken: string) {
+    const verification = await this.prisma.artistEmailVerification.findUnique({
+      where: { token: this.token.hashToken(rawToken) },
+    })
+    if (!verification || verification.expiresAt < new Date()) {
+      throw new BadRequestException('Invalid or expired verification token')
+    }
+    await this.prisma.$transaction([
+      this.prisma.artist.update({
+        where: { id: verification.artistId },
+        data: { emailVerifiedAt: new Date() },
+      }),
+      this.prisma.artistEmailVerification.deleteMany({
+        where: { artistId: verification.artistId },
+      }),
+    ])
+  }
+
+  async resendEmailVerification(email: string) {
+    const artist = await this.artistsPrivate.findByEmail(email)
+    if (!artist || artist.emailVerifiedAt) return
+    await this.issueEmailVerification(artist.id, artist.email, artist.username)
+  }
+
+  private async issueEmailVerification(artistId: string, email: string, username: string) {
+    const rawToken = randomBytes(32).toString('hex')
+    await this.prisma.$transaction([
+      this.prisma.artistEmailVerification.deleteMany({ where: { artistId } }),
+      this.prisma.artistEmailVerification.create({
+        data: {
+          artistId,
+          token: this.token.hashToken(rawToken),
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        },
+      }),
+    ])
+    await this.mail.sendArtistEmailVerification(email, rawToken, username)
+  }
+
+  private async recordFailedLogin(artistId: string, attempts: number) {
+    const nextAttempts = attempts + 1
+    await this.prisma.artist.update({
+      where: { id: artistId },
+      data: {
+        failedLoginAttempts: nextAttempts,
+        lockedUntil:
+          nextAttempts >= ArtistsAuthService.MAX_LOGIN_ATTEMPTS
+            ? new Date(Date.now() + ArtistsAuthService.LOCK_DURATION_MS)
+            : null,
+      },
+    })
   }
 }

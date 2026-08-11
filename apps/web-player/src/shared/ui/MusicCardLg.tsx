@@ -23,8 +23,7 @@ export const MusicCardLg = ({
   imageUrl,
   isArtist,
 }: MusicCardLgProps) => {
-  const href =
-    hrefProp ?? (isArtist ? `/main/artist/${id}` : ROUTES.playlist(id))
+  const href = hrefProp ?? (isArtist ? ROUTES.artist(id) : ROUTES.playlist(id))
   const fallbackImage = isArtist
     ? getArtistAvatarUrl(imageUrl)
     : fallbackPlaylistCover

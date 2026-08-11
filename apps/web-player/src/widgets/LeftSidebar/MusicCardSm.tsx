@@ -2,11 +2,11 @@
 import { ROUTES } from '@shared/routes'
 import { cn } from '@spotify/ui-react'
 import { Volume2 } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
-import { type MouseEvent, useState } from 'react'
+import type { MouseEvent } from 'react'
+import { LibraryItemCover } from './LibraryItemCover'
 
-interface MusicItem {
+export interface MusicItem {
   id: string
   title: string
   username: string
@@ -25,33 +25,12 @@ interface MusicCardSmProps {
 let lastSidebarNavigationAt = 0
 const sidebarNavigationCooldownMs = 450
 
-const getTypeColor = (type: MusicItem['type']) => {
-  switch (type) {
-    case 'playlist':
-      return 'from-green-500 to-blue-500'
-    case 'album':
-      return 'from-orange-500 to-red-500'
-    case 'single':
-      return 'from-purple-500 to-pink-500'
-    case 'podcast':
-      return 'from-blue-600 to-indigo-600'
-    default:
-      return 'from-gray-500 to-gray-700'
-  }
-}
-
 export const MusicCardSm = ({
   isActive = false,
   isCollapsed = false,
   isPlaying = false,
   item,
 }: MusicCardSmProps) => {
-  const [imageError, setImageError] = useState(false)
-
-  const handleImageError = () => {
-    setImageError(true)
-  }
-
   const href =
     item.id === 'liked-songs' ? ROUTES.likedSongs : ROUTES.playlist(item.id)
   const handleNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -81,32 +60,7 @@ export const MusicCardSm = ({
         prefetch={false}
         title={item.title}
       >
-        <div className="relative h-14 w-14 overflow-hidden rounded-md shadow-md transition-all duration-150 group-hover:shadow-lg">
-          {!imageError ? (
-            <Image
-              alt={item.title}
-              className="object-cover"
-              fill
-              onError={handleImageError}
-              sizes="56px"
-              src={item.cover}
-              unoptimized
-            />
-          ) : (
-            <div
-              className={`flex h-full w-full items-center justify-center bg-linear-to-br ${getTypeColor(item.type)}`}
-            >
-              <span className="text-white text-xs font-bold drop-shadow-sm">
-                {item.title.charAt(0).toUpperCase()}
-              </span>
-            </div>
-          )}
-          {isPlaying && (
-            <span className="absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-background/80 text-green-500">
-              <Volume2 size={12} />
-            </span>
-          )}
-        </div>
+        <LibraryItemCover collapsed isPlaying={isPlaying} item={item} />
       </Link>
     )
   }
@@ -121,27 +75,7 @@ export const MusicCardSm = ({
       onClick={handleNavigate}
       prefetch={false}
     >
-      <div className="w-12 h-12 relative rounded-md flex-shrink-0 overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-150">
-        {!imageError ? (
-          <Image
-            alt={item.title}
-            className="object-cover relative"
-            fill
-            onError={handleImageError}
-            sizes="48px"
-            src={item.cover}
-            unoptimized
-          />
-        ) : (
-          <div
-            className={`w-full h-full bg-linear-to-br ${getTypeColor(item.type)} flex items-center justify-center`}
-          >
-            <span className="text-white text-xs font-bold drop-shadow-sm">
-              {item.title.charAt(0).toUpperCase()}
-            </span>
-          </div>
-        )}
-      </div>
+      <LibraryItemCover isPlaying={isPlaying} item={item} />
 
       <div className="flex-1 min-w-0">
         <h3

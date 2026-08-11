@@ -1,99 +1,33 @@
 'use client'
 
 import {
+  AuthFormFooter,
+  AuthFormHeader,
   FloatingAuthField,
-  OAuthButtons,
   useAuthenticatedRedirect,
 } from '@features/Auth'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@shared/api/client'
-import { showApiErrorToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
-import { SocialsAuthDivider } from '@shared/ui'
 import {
-  Button,
   Form,
   FormField,
   FormItem,
   FormMessage,
   Input,
-  LogoIcon,
   PasswordInput,
-  Typography,
 } from '@spotify/ui-react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
-import type { SubmitHandler } from 'react-hook-form'
-import { useForm } from 'react-hook-form'
-
-import { type LoginFormData, loginSchema } from '../validation'
+import { useLoginForm } from '../model/useLoginForm'
 
 export const LoginForm = () => {
   useAuthenticatedRedirect()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { mutate } = useMutation('post', '/api/v1/auth/login', {
-    onSuccess: (data) => {
-      if (
-        data &&
-        typeof data === 'object' &&
-        'requires2fa' in data &&
-        data.requires2fa
-      ) {
-        router.push(ROUTES.auth.twoFactorLogin)
-        return
-      }
-
-      router.push(ROUTES.main)
-    },
-    onError: (error) => {
-      showApiErrorToast(error, 'Unable to log in. Please try again.')
-    },
-    meta: {
-      suppressErrorToast: true,
-    },
-  })
-
-  useEffect(() => {
-    const error = searchParams.get('error')
-    if (!error) return
-
-    const message =
-      error === 'oauth_state_mismatch'
-        ? 'OAuth session expired. Please try again.'
-        : 'OAuth login failed. Please try again.'
-
-    showApiErrorToast(new Error(message))
-  }, [searchParams])
-
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    mode: 'onChange',
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-    shouldFocusError: true,
-  })
-
-  const onSubmit: SubmitHandler<LoginFormData> = async (body) => {
-    await mutate({
-      body,
-    })
-  }
+  const { form, isSubmitting, onSubmit } = useLoginForm()
 
   return (
     <div className="flex flex-col items-stretch justify-center basis-[50%] gap-4 px-14 py-32 bg-contrast text-text-contrast overflow-hidden rounded-[10px_0_0_10px] max-xl:basis-full max-xl:rounded-[10px] max-lg:p-6 box-border">
-      <div className="flex flex-col items-center">
-        <LogoIcon height={64} width={64} />
-        <Typography as="h5" className="mt-2 text-center" size={'heading5'}>
-          Login to your account
-        </Typography>
-        <Typography as="p" className="text-center text-grey-500" size={'body'}>
-          Welcome back! Please sign in to continue.
-        </Typography>
-      </div>
+      <AuthFormHeader
+        description="Welcome back! Please sign in to continue."
+        title="Login to your account"
+      />
 
       <Form {...form}>
         <form
@@ -133,19 +67,13 @@ export const LoginForm = () => {
             Forgot password?
           </Link>
 
-          <div className="mt-4 flex flex-col items-stretch gap-4">
-            <Button className="rounded" type="submit" variant="primary">
-              Log in
-            </Button>
-            <SocialsAuthDivider />
-            <OAuthButtons />
-            <p className="text-lg text-center">
-              Don't have an account?{' '}
-              <Link className="font-bold" href={ROUTES.auth.registration}>
-                Sign up.
-              </Link>
-            </p>
-          </div>
+          <AuthFormFooter
+            alternateHref={ROUTES.auth.registration}
+            alternateLink="Sign up."
+            alternateText="Don't have an account?"
+            isSubmitting={isSubmitting}
+            submitLabel="Log in"
+          />
         </form>
       </Form>
     </div>

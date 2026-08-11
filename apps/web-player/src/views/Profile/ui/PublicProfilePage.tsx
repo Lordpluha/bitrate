@@ -1,7 +1,7 @@
 'use client'
 
 import { usePlaylists } from '@entities/Playlist'
-import { useUserById } from '@entities/User'
+import { FollowUserButton, useUserById } from '@entities/User'
 import { ROUTES } from '@shared/routes'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
 import { UserRound } from 'lucide-react'
@@ -68,6 +68,7 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
                 {user.description}
               </p>
             )}
+            <FollowUserButton userId={user.id} username={user.username} />
           </div>
         </div>
       </section>

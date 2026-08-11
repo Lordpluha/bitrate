@@ -1,19 +1,19 @@
 'use client'
 
+import { ArtistLink } from '@entities/Artist'
 import {
   selectCurrentTrack,
   selectIsPlaying,
   usePlayerStore,
 } from '@entities/Player'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
-import { formatDuration } from '@shared/utils/apiHelpers'
+import { useTrackContextMenuPosition } from '@entities/Track/models/useTrackContextMenuPosition'
 import { DateUtils } from '@shared/utils/DateUtils'
-import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { cn } from '@spotify/ui-react'
-import { Pause, Play, X } from 'lucide-react'
-import Image from 'next/image'
-import { LikeTrackButton } from './LikeTrackButton'
-import { WaveAnimated } from './WaveAnimated'
+import { TrackContextMenu } from './TrackContextMenu'
+import { TrackPlayIndicator } from './TrackPlayIndicator'
+import { TrackPrimaryInfo } from './TrackPrimaryInfo'
+import { TrackRowActions } from './TrackRowActions'
 
 interface TrackCardProps {
   track: TrackEntity
@@ -41,13 +41,13 @@ export const TrackCard = ({
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const isPlaying = usePlayerStore(selectIsPlaying)
   const play = usePlayerStore((state) => state.play)
+  const addToQueue = usePlayerStore((state) => state.addToQueue)
   const togglePlay = usePlayerStore((state) => state.togglePlay)
+  const contextMenu = useTrackContextMenuPosition()
   const isCurrentTrack =
     isPlaybackContextActive &&
     isPlaybackTrackActive &&
     currentTrack?.id === track.id
-  const coverUrl = getTrackCoverUrl(track.cover)
-
   const handlePlayTrack = (track: TrackEntity) => {
     if (isCurrentTrack) {
       togglePlay()
@@ -63,98 +63,35 @@ export const TrackCard = ({
   }
 
   return (
-    <div
+    <fieldset
+      aria-label={track.title}
       className={cn(
-        'group grid w-full items-center gap-4 rounded px-4 py-2 text-left hover:bg-surface max-[1024px]:grid-cols-[minmax(0,1fr)_auto] max-[1024px]:gap-2 max-[1024px]:px-2',
+        'group m-0 grid w-full min-w-0 border-0 items-center gap-4 rounded px-4 py-2 text-left hover:bg-surface focus-within:outline-2 focus-within:outline-offset-[-2px] focus-within:outline-white max-[1024px]:grid-cols-[minmax(0,1fr)_auto] max-[1024px]:gap-2 max-[1024px]:px-2',
         viewMode === 'compact'
-          ? 'grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_112px]'
-          : 'grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_112px]',
+          ? 'grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_140px]'
+          : 'grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_140px]',
       )}
+      onContextMenu={contextMenu.openFromPointer}
     >
-      <button
-        aria-label={`${isCurrentTrack && isPlaying ? 'Pause' : 'Play'} ${track.title}`}
-        className="relative flex items-center justify-center text-sm max-[1024px]:hidden"
+      <TrackPlayIndicator
+        index={index}
+        isCurrent={isCurrentTrack}
+        isPlaying={isPlaying}
         onClick={() => handlePlayTrack(track)}
-        type="button"
-      >
-        {/* Non-current track: number → play icon on hover */}
-        {!isCurrentTrack && (
-          <>
-            <span className="text-text-subdued group-hover:hidden">
-              {index + 1}
-            </span>
-            <Play
-              className="text-text hidden group-hover:block"
-              fill="currentColor"
-              size={14}
-            />
-          </>
-        )}
-        {/* Current track + playing: wave → pause on hover */}
-        {isCurrentTrack && isPlaying && (
-          <>
-            <WaveAnimated className="group-hover:hidden" />
-            <Pause
-              className="text-text hidden group-hover:block"
-              fill="currentColor"
-              size={14}
-            />
-          </>
-        )}
-        {/* Current track + paused: green number → play on hover */}
-        {isCurrentTrack && !isPlaying && (
-          <>
-            <span className="text-green-500 group-hover:hidden">
-              {index + 1}
-            </span>
-            <Play
-              className="text-green-500 hidden group-hover:block"
-              fill="currentColor"
-              size={14}
-            />
-          </>
-        )}
-      </button>
+        title={track.title}
+      />
 
-      <button
-        className="flex min-w-0 items-center gap-3 text-left"
+      <TrackPrimaryInfo
+        isCurrent={isCurrentTrack}
         onClick={() => handlePlayTrack(track)}
-        type="button"
-      >
-        <div
-          className={cn(
-            'relative h-10 w-10 shrink-0 overflow-hidden rounded',
-            viewMode === 'list' ? 'block' : 'hidden max-[1024px]:block',
-          )}
-        >
-          <Image
-            alt={track.title}
-            className="w-full h-full object-cover"
-            height={40}
-            src={coverUrl}
-            unoptimized
-            width={40}
-          />
-        </div>
-        <div className="min-w-0">
-          <div
-            className={cn(
-              'font-medium truncate',
-              isCurrentTrack ? 'text-green-500' : 'text-text',
-              !isCurrentTrack && 'group-hover:underline',
-            )}
-          >
-            {track.title}
-          </div>
-          <div className="text-sm text-text-subdued truncate max-[1024px]:text-xs">
-            {track.artistId}
-          </div>
-        </div>
-      </button>
+        onKeyDown={contextMenu.openFromKeyboard}
+        track={track}
+        viewMode={viewMode}
+      />
 
       {viewMode === 'compact' && (
         <div className="text-sm text-text-subdued truncate max-[1024px]:hidden">
-          {track.artistId}
+          <ArtistLink artistId={track.artistId} />
         </div>
       )}
       <div className="text-sm text-text-subdued truncate max-[1024px]:hidden">
@@ -163,53 +100,22 @@ export const TrackCard = ({
       <div className="text-sm text-text-subdued max-[1024px]:hidden">
         {track.createdAt ? DateUtils.formatDate(track.createdAt) : 'Unknown'}
       </div>
-      <div className="grid grid-cols-[24px_44px_24px] items-center justify-end gap-2 text-sm text-text-subdued max-[1024px]:hidden">
-        <div className="flex justify-center">
-          <LikeTrackButton
-            initialLiked={isLiked}
-            trackId={track.id}
-            trackTitle={track.title}
-          />
-        </div>
-        <span className="text-right">
-          {formatDuration(track.duration ?? 0)}
-        </span>
-        {removable && (
-          <button
-            aria-label={`Remove ${track.title} from playlist`}
-            className="rounded-full p-1 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100"
-            onClick={(event) => {
-              event.stopPropagation()
-              onRemoveTrack?.(track.id)
-            }}
-            type="button"
-          >
-            <X size={16} />
-          </button>
-        )}
-      </div>
-
-      <div className="hidden shrink-0 grid-cols-[24px_auto] items-center justify-end gap-2 text-xs text-text-subdued max-[1024px]:grid">
-        <LikeTrackButton
-          initialLiked={isLiked}
-          trackId={track.id}
-          trackTitle={track.title}
+      <TrackRowActions
+        isLiked={isLiked}
+        onRemove={() => onRemoveTrack?.(track.id)}
+        removable={removable}
+        track={track}
+      />
+      {contextMenu.position ? (
+        <TrackContextMenu
+          isPlaying={isCurrentTrack && isPlaying}
+          onAddToQueue={() => addToQueue(track)}
+          onClose={contextMenu.close}
+          onPlay={() => handlePlayTrack(track)}
+          onRemove={removable ? () => onRemoveTrack?.(track.id) : undefined}
+          position={contextMenu.position}
         />
-        {removable ? (
-          <button
-            aria-label={`Remove ${track.title} from playlist`}
-            className="rounded-full p-2 transition-colors hover:bg-white/10 hover:text-text"
-            onClick={() => onRemoveTrack?.(track.id)}
-            type="button"
-          >
-            <X size={18} />
-          </button>
-        ) : (
-          <span className="min-w-8 text-right">
-            {formatDuration(track.duration ?? 0)}
-          </span>
-        )}
-      </div>
-    </div>
+      ) : null}
+    </fieldset>
   )
 }

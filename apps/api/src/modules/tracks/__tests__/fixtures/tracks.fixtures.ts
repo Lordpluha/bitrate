@@ -17,6 +17,15 @@ export const buildTrack = (overrides: Partial<TrackEntity> = {}): TrackEntity =>
   processingAttempts: 1,
   processingStartedAt: null,
   processingFinishedAt: new Date(),
+  explicit: false,
+  popularity: 0,
+  playCount: 0,
+  isrc: null,
+  previewUrl: null,
+  trackNumber: null,
+  discNumber: 1,
+  language: null,
+  deletedAt: null,
   ...overrides,
 })
 

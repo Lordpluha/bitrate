@@ -47,11 +47,12 @@ describe('usePlayerStore', () => {
     expect(usePlayerStore.getState().isPlaying).toBe(false)
   })
 
-  it('cycles through playlist tracks in both directions', () => {
+  it('cycles through playlist tracks in both directions when repeat is all', () => {
     const first = createTrack({ id: 'first', title: 'First', duration: 120 })
     const second = createTrack({ id: 'second', title: 'Second', duration: 180 })
 
     usePlayerStore.getState().setPlaylistTracks([first, second])
+    usePlayerStore.getState().setRepeatMode('all')
     usePlayerStore.getState().play(first)
     usePlayerStore.getState().changeTrack('next')
 

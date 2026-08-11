@@ -1,29 +1,34 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { useMemo, useState } from 'react'
 import type { SafeUser } from '@/entities/User'
 import type {
   SearchAlbumResult,
+  SearchArtistResult,
   SearchPlaylistResult,
   SearchTrackResult,
 } from '@/features/Search/api/client'
+import {
+  buildSearchRows,
+  getAllTabRows,
+} from '@/features/Search/lib/buildSearchRows'
 import { getSearchCategoryMatch } from '@/features/Search/lib/getSearchCategoryMatch'
 import { searchFilterTabs } from '@/features/Search/model/search.constants'
-import type {
-  MediaCardItem,
-  SearchResultRow,
-} from '@/features/Search/model/types'
+import type { MediaCardItem } from '@/features/Search/model/types'
 import { MediaRow } from '@/features/Search/ui/MediaRow'
+import {
+  type SearchFilterTab,
+  SearchFilterTabs,
+} from '@/features/Search/ui/SearchFilterTabs'
 import { SearchResultList } from '@/features/Search/ui/SearchResultList'
 import { ROUTES } from '@/shared/routes'
-import {
-  getAlbumCoverUrl,
-  getPlaylistCoverUrl,
-  getTrackCoverUrl,
-  getUserAvatarUrl,
-} from '@/shared/utils/mediaUrl'
+import { getPlaylistCoverUrl } from '@/shared/utils/mediaUrl'
 
 type SearchResultsProps = {
   albums: SearchAlbumResult[]
+  artists: SearchArtistResult[]
   playlists: SearchPlaylistResult[]
   query: string
   tracks: SearchTrackResult[]
@@ -32,83 +37,65 @@ type SearchResultsProps = {
 
 export const SearchResults = ({
   albums,
+  artists,
   playlists,
   query,
   tracks,
   users,
 }: SearchResultsProps) => {
+  const [activeTab, setActiveTab] = useState<SearchFilterTab>('All')
   const categoryMatch = getSearchCategoryMatch(query)
+
+  const groups = useMemo(
+    () => buildSearchRows({ albums, artists, playlists, tracks, users }),
+    [albums, artists, playlists, tracks, users],
+  )
+
+  const availableTabs = useMemo(
+    () =>
+      searchFilterTabs.filter(
+        (tab) => tab === 'All' || (groups[tab]?.length ?? 0) > 0,
+      ),
+    [groups],
+  )
+
+  const rows =
+    activeTab === 'All' ? getAllTabRows(groups) : (groups[activeTab] ?? [])
+
   const playlistItems: MediaCardItem[] = playlists
     .slice(0, 12)
     .map((playlist) => ({
-      description: 'By Spotify',
+      description: 'Playlist',
       href: ROUTES.playlist(playlist.id),
       image: getPlaylistCoverUrl(playlist.cover),
       title: playlist.title,
     }))
-  const mixedRows: SearchResultRow[] = [
-    ...playlists.slice(0, 4).map((playlist) => ({
-      href: ROUTES.playlist(playlist.id),
-      image: getPlaylistCoverUrl(playlist.cover),
-      kind: 'Playlist',
-      subtitle: 'Playlist',
-      title: playlist.title,
-    })),
-    ...tracks.slice(0, 4).map((track) => ({
-      image: getTrackCoverUrl(track.cover),
-      kind: 'Song',
-      subtitle: track.artistId || 'Song',
-      title: track.title,
-    })),
-    ...albums.slice(0, 4).map((album) => ({
-      href: ROUTES.album(album.id),
-      image: getAlbumCoverUrl(album.cover),
-      kind: 'Album',
-      subtitle: 'Album',
-      title: album.title,
-    })),
-    ...users.slice(0, 4).map((user) => ({
-      href: ROUTES.user(user.id),
-      image: getUserAvatarUrl(user.avatar),
-      kind: 'Profile',
-      subtitle: 'Profile',
-      title: user.username,
-    })),
-  ]
+
+  const showsPlaylistRow = activeTab === 'All' && playlistItems.length > 0
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap gap-2">
-        {searchFilterTabs.map((tab) => (
-          <button
-            className={
-              tab === 'All'
-                ? 'rounded-full bg-white px-4 py-2 text-sm font-medium text-black'
-                : 'rounded-full bg-surface px-4 py-2 text-sm font-medium text-text hover:bg-surface-hover'
-            }
-            key={tab}
-            type="button"
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+      <SearchFilterTabs
+        activeTab={activeTab}
+        availableTabs={[...availableTabs]}
+        onTabChange={setActiveTab}
+      />
 
-      {categoryMatch ? (
+      {categoryMatch && activeTab === 'All' ? (
         <Link
           className="grid max-w-full grid-cols-[72px_minmax(0,1fr)] items-center gap-5 rounded-md bg-surface p-4 transition-colors hover:bg-surface-hover"
           href={ROUTES.searchCategory(categoryMatch.title)}
         >
           <Image
             alt={categoryMatch.title}
-            className="size-[72px] rounded-md object-cover shadow-lg shadow-black/25"
+            className="size-18 rounded-md object-cover shadow-lg shadow-black/25"
             height={72}
             src={categoryMatch.image}
             unoptimized
             width={72}
           />
           <span className="min-w-0">
-            <span className="block truncate text-3xl font-bold text-text">
+            <span className="block truncate text-2xl font-bold text-text sm:text-3xl">
               {categoryMatch.title}
             </span>
             <span className="mt-1 block text-sm text-text-subdued">Genre</span>
@@ -116,14 +103,20 @@ export const SearchResults = ({
         </Link>
       ) : null}
 
-      {playlistItems.length > 0 ? (
+      {showsPlaylistRow ? (
         <MediaRow
           items={playlistItems}
           title={`Jump in: ${categoryMatch?.title ?? query} playlists`}
         />
       ) : null}
 
-      {mixedRows.length > 0 ? <SearchResultList items={mixedRows} /> : null}
+      {rows.length > 0 ? (
+        <SearchResultList items={rows} />
+      ) : (
+        <p className="text-text-subdued">
+          No {activeTab.toLowerCase()} found for &quot;{query}&quot;.
+        </p>
+      )}
     </div>
   )
 }

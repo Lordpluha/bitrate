@@ -1,5 +1,7 @@
 import type { AppConfig } from '@common/config'
 import { S3Service } from '@infra/s3/s3.service'
+import { TokensModule } from '@modules/tokens/tokens.module'
+import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { LocalStorageService } from './local-storage.service'
@@ -12,6 +14,7 @@ import { StorageController } from './storage.controller'
  * to boot when the local driver is active (the default).
  */
 @Module({
+  imports: [UsersAuthModule, TokensModule],
   controllers: [StorageController],
   providers: [
     LocalStorageService,

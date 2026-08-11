@@ -3,6 +3,7 @@ import {
   DeleteObjectCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
+  HeadBucketCommand,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
@@ -40,6 +41,12 @@ export class S3Service implements StorageService {
       },
       forcePathStyle: s3.forcePathStyle,
     })
+  }
+
+  /** Verifies that the configured bucket is reachable. */
+  async healthCheck(): Promise<boolean> {
+    await this.client.send(new HeadBucketCommand({ Bucket: this.bucket }))
+    return true
   }
 
   /**
