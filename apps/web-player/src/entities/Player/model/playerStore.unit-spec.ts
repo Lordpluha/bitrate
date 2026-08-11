@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
+
 import { usePlayerStore } from './playerStore'
 
 type TestTrackInput = {
@@ -8,7 +10,7 @@ type TestTrackInput = {
   duration: number
 }
 
-const createTrack = ({ id, title, duration }: TestTrackInput) => ({
+const createTrack = ({ id, title, duration }: TestTrackInput): TrackEntity => ({
   id,
   title,
   duration,
@@ -24,6 +26,15 @@ const createTrack = ({ id, title, duration }: TestTrackInput) => ({
   processingAttempts: 0,
   processingStartedAt: null,
   processingFinishedAt: null,
+  explicit: false,
+  popularity: 0,
+  playCount: 0,
+  isrc: null,
+  previewUrl: null,
+  trackNumber: null,
+  discNumber: 1,
+  language: null,
+  deletedAt: null,
 })
 
 describe('usePlayerStore', () => {
