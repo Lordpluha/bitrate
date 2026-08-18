@@ -12,6 +12,7 @@ type LibraryItemCoverProps = {
 
 const typeGradient: Record<MusicItem['type'], string> = {
   album: 'from-orange-500 to-red-500',
+  artist: 'from-sky-500 to-cyan-500',
   playlist: 'from-green-500 to-blue-500',
   podcast: 'from-blue-600 to-indigo-600',
   single: 'from-purple-500 to-pink-500',

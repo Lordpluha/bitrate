@@ -1,16 +1,16 @@
 'use client'
-import { ROUTES } from '@shared/routes'
 import { cn } from '@spotify/ui-react'
 import { Volume2 } from 'lucide-react'
 import Link from 'next/link'
 import type { MouseEvent } from 'react'
 import { LibraryItemCover } from './LibraryItemCover'
+import { resolveLibraryHref } from './lib/resolveLibraryHref'
 
 export interface MusicItem {
   id: string
   title: string
   username: string
-  type: 'playlist' | 'album' | 'single' | 'podcast'
+  type: 'artist' | 'playlist' | 'album' | 'single' | 'podcast'
   cover: string
   tracksCount?: number
 }
@@ -31,8 +31,7 @@ export const MusicCardSm = ({
   isPlaying = false,
   item,
 }: MusicCardSmProps) => {
-  const href =
-    item.id === 'liked-songs' ? ROUTES.likedSongs : ROUTES.playlist(item.id)
+  const href = resolveLibraryHref(item)
   const handleNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
     const now = Date.now()
 

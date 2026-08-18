@@ -47,6 +47,25 @@
     font-family: var(--font-source-sans);
   }
 
+  /*
+   * Light theme type weight.
+   *
+   * Dark text on a light ground is rendered with subpixel antialiasing, which
+   * thickens every stroke: the same weight that reads as confident on the dark
+   * theme reads as heavy-handed here. Grayscale smoothing thins the strokes
+   * back, and the bold range steps down one notch so headings keep their
+   * hierarchy without turning into slabs. Both are scoped to the light theme —
+   * applying them to light-on-dark text would make it look washed out instead.
+   */
+  :root.light {
+    --font-weight-semibold: 500;
+    --font-weight-bold: 600;
+    --font-weight-extrabold: 700;
+    --font-weight-black: 800;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   :where(
     a,
     button,

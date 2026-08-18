@@ -7,7 +7,7 @@ export default function Loading() {
       <PlaylistHeader
         author="Your Library"
         duration={0}
-        imageUrl="/images/liked-songs.jpg"
+        imageUrl="/images/liked-songs.svg"
         title="Liked Songs"
         tracksCount={0}
         type="Playlist"

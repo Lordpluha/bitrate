@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { arrayOrPaginated } from '@/shared/api/paginated'
 
 const playlistTrackResponseSchema = z.object({
   artistId: z.string(),
@@ -41,7 +42,7 @@ export const playlistWithRelationsResponseSchema =
     user: playlistUserResponseSchema.optional(),
   })
 
-export const playlistsResponseSchema = z.array(
+export const playlistsResponseSchema = arrayOrPaginated(
   playlistWithRelationsResponseSchema,
 )
 
@@ -51,7 +52,7 @@ const libraryPlaylistTrackResponseSchema = z.object({
   title: z.string(),
 })
 
-export const libraryPlaylistsResponseSchema = z.array(
+export const libraryPlaylistsResponseSchema = arrayOrPaginated(
   playlistResponseSchema.extend({
     _count: z.object({
       tracks: z.number(),

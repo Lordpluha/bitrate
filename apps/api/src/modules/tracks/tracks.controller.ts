@@ -31,8 +31,10 @@ import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
   GetTrackByIdSwagger,
+  GetTrackManifestSwagger,
   LikeTrackSwagger,
   PostTrackSwagger,
+  StreamTrackRenditionSwagger,
   StreamTrackSwagger,
   TracksGetAllSwagger,
   TracksGetLikedSwagger,
@@ -40,15 +42,19 @@ import {
   UpdateTrackByIdSwagger,
 } from './decorators'
 import { type CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
-import { TrackEntity } from './entities'
+import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
+import { TrackPlaybackService } from './track-playback.service'
 import { TracksService } from './tracks.service'
 
 /** Represents the tracks controller. */
-@ApiExtraModels(TrackEntity)
+@ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity)
 @ApiTags('Tracks')
 @Controller({ path: 'tracks', version: '1' })
 export class TracksController {
-  constructor(private tracksService: TracksService) {}
+  constructor(
+    private tracksService: TracksService,
+    private trackPlaybackService: TrackPlaybackService,
+  ) {}
 
   /** Runs the get all operation. */
   @TracksGetAllSwagger()
@@ -271,6 +277,48 @@ export class TracksController {
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
     return this.tracksService.findTrackById(id)
+  }
+
+  /** Runs the get manifest operation. */
+  @GetTrackManifestSwagger()
+  @UserAuth()
+  @Get(':id/manifest')
+  getManifest(@Param('id', ParseUUIDPipe) id: TrackEntity['id']) {
+    return this.trackPlaybackService.getManifest(id)
+  }
+
+  /** Runs the stream rendition operation. */
+  @StreamTrackRenditionSwagger()
+  @UserAuth()
+  @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
+  @Get(':id/cmaf/:bitrate')
+  async streamRendition(
+    @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
+    @Param('bitrate', ParseIntPipe) bitrate: number,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const rendition = await this.trackPlaybackService.getRenditionStream(
+      id,
+      bitrate,
+      req.headers.range,
+    )
+
+    res.status(rendition.isPartial ? 206 : 200)
+    res.set({
+      'Content-Type': rendition.contentType,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': String(rendition.contentLength),
+      /** Rendition bytes never change, so they can be cached for a long time. */
+      'Cache-Control': 'private, max-age=31536000, immutable, no-transform',
+      ...(rendition.isPartial
+        ? {
+            'Content-Range': `bytes ${rendition.start}-${rendition.end}/${rendition.fileSize}`,
+          }
+        : {}),
+    })
+
+    return rendition.stream.pipe(res)
   }
 
   /** Runs the like track operation. */

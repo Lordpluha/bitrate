@@ -15,6 +15,8 @@ export type ArtistEntity = {
   bio: string | null
   avatar: string | null
   backgroundImage: string | null
+  monthlyListeners: number | null
+  verified: boolean
   createdAt?: string
   updatedAt?: string
 }

@@ -11,11 +11,12 @@ import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { AudioGateway } from './audio.gateway'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
+import { TrackPlaybackService } from './track-playback.service'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
 @Module({
-  providers: [TracksService, AudioGateway, AudioProcessingConsumer],
+  providers: [TracksService, TrackPlaybackService, AudioGateway, AudioProcessingConsumer],
   controllers: [TracksController],
   imports: [
     PrismaModule,
@@ -31,6 +32,6 @@ import { TracksService } from './tracks.service'
       },
     ),
   ],
-  exports: [TracksService, AudioGateway],
+  exports: [TracksService, TrackPlaybackService, AudioGateway],
 })
 export class TracksModule {}

@@ -2,8 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { usePlayerStore } from '@/entities/Player'
+import type { TrackManifest } from '@/entities/Player/model/manifest.types'
 import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
 import { showApiErrorToast } from '@/shared/api/feedback'
+import {
+  ACTIVE_BUFFER_SECONDS,
+  attachCmafSource,
+} from '@/shared/hooks/audioPlayer/attachCmafSource'
 import { attachHlsSource } from '@/shared/hooks/audioPlayer/attachHlsSource'
 import type {
   PendingPrefetch,
@@ -17,16 +22,26 @@ import {
 
 type UseAudioSlotsOptions = {
   volume: number
+  /**
+   * Resolves the byte-range manifest for a track, or null when the track has
+   * none. A track without a manifest keeps using the HLS/progressive path.
+   */
+  resolveManifest?: (trackId: string) => Promise<TrackManifest | null>
 }
 
 const emptySlot = (): PlayerSlot => ({
   element: null,
   hls: null,
+  loader: null,
+  currentBitrate: null,
   playbackKey: null,
   trackId: null,
 })
 
-export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
+export const useAudioSlots = ({
+  volume,
+  resolveManifest,
+}: UseAudioSlotsOptions) => {
   const pause = usePlayerStore((state) => state.pause)
   const slotsRef = useRef<[PlayerSlot, PlayerSlot]>([emptySlot(), emptySlot()])
   const activeSlotRef = useRef<SlotIndex>(0)
@@ -44,6 +59,9 @@ export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
     const slot = slotsRef.current[index]
     slot.hls?.destroy()
     slot.hls = null
+    slot.loader?.destroy()
+    slot.loader = null
+    slot.currentBitrate = null
     slot.playbackKey = null
     slot.trackId = null
 
@@ -75,12 +93,22 @@ export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
       const stopPlayback = () => {
         slot.hls?.destroy()
         slot.hls = null
+        slot.loader?.destroy()
+        slot.loader = null
+        slot.currentBitrate = null
         pendingPlayRef.current = false
         element.pause()
         element.removeAttribute('src')
         element.load()
 
-        if (!isPrefetch) {
+        /**
+         * `isPrefetch` reflects who attached this slot, not who it is now — a
+         * prefetched slot promoted to active by `switchToSlot` keeps the same
+         * closure. Checking `activeSlotRef` live is what makes a failure on the
+         * track the user is actually hearing surface a pause and a toast,
+         * instead of failing silently because it was "just a prefetch" once.
+         */
+        if (activeSlotRef.current === index) {
           pause()
           showApiErrorToast(
             new Error('Unable to play this track. Please try again.'),
@@ -88,16 +116,42 @@ export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
         }
       }
 
-      attachHlsSource({
-        element,
-        isPrefetch,
-        onFatalError: stopPlayback,
-        playbackKey,
-        progressiveUrl: track.audioUrl,
-        recoveryAttempts: recoveryAttemptsRef.current,
-        slot,
-        trackId: track.id,
-      })
+      const attachLegacySource = () =>
+        attachHlsSource({
+          element,
+          isPrefetch,
+          onFatalError: stopPlayback,
+          playbackKey,
+          progressiveUrl: track.audioUrl,
+          recoveryAttempts: recoveryAttemptsRef.current,
+          slot,
+          trackId: track.id,
+        })
+
+      if (resolveManifest) {
+        void resolveManifest(track.id)
+          .then((manifest) => {
+            /** A newer track claimed this slot while the manifest was loading. */
+            if (slot.playbackKey !== playbackKey) return
+
+            const attached =
+              manifest !== null &&
+              attachCmafSource({
+                element,
+                isPrefetch,
+                manifest,
+                onFatalError: stopPlayback,
+                playbackKey,
+                slot,
+                trackId: track.id,
+              })
+
+            if (!attached) attachLegacySource()
+          })
+          .catch(attachLegacySource)
+      } else {
+        attachLegacySource()
+      }
 
       if (!isPrefetch) {
         element.addEventListener(
@@ -111,7 +165,7 @@ export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
         )
       }
     },
-    [destroySlot, pause, volume],
+    [destroySlot, pause, resolveManifest, volume],
   )
 
   const bindAudioElement = useCallback(
@@ -132,6 +186,14 @@ export const useAudioSlots = ({ volume }: UseAudioSlotsOptions) => {
 
       activeSlotRef.current = index
       setActiveSlot(index)
+
+      /**
+       * A slot filled by prefetch carries a deliberately small buffer target
+       * and a "prefetch" label. Now that it is the track being listened to,
+       * promote both — otherwise the buffer stays shallow, the bitrate never
+       * climbs, and console tracing keeps calling the active track "prefetch".
+       */
+      slotsRef.current[index].loader?.promoteToActive(ACTIVE_BUFFER_SECONDS)
       nextElement.volume = volume
       nextElement.currentTime = 0
       void nextElement.play().catch(() => undefined)

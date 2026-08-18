@@ -42,10 +42,6 @@ export const en = {
   'settings.library.compact.description':
     'Track lists gain a separate artist column and tighter rows.',
   'settings.playback': 'Playback',
-  'settings.playback.download': 'Download the free app',
-  'settings.playback.promo': 'Fine-tune your sound with the Linux app',
-  'settings.playback.promo.description':
-    'Improve streaming quality, adjust the equalizer to best fit your speakers, and enjoy consistent volume across all your tracks.',
   'settings.privacy.activity': 'Listening activity and insights',
   'settings.privacy.activity.description':
     'People can see the music you are playing and compare listening activity.',
@@ -58,6 +54,11 @@ export const en = {
   'settings.privacy.profile': 'What others can see on your profile',
   'settings.profile': 'Profile details',
   'settings.profile.avatar': 'Avatar',
+  'settings.profile.avatar.hint': 'Drag an image here, or click to choose',
+  'settings.profile.avatar.drop': 'Drop the image to upload it',
+  'settings.profile.avatar.browse': 'Choose file',
+  'settings.profile.avatar.uploading': 'Uploading…',
+  'settings.profile.avatar.none': 'No file chosen',
   'settings.profile.description': 'Description',
   'settings.profile.description.placeholder': 'Tell people about yourself',
   'settings.profile.save': 'Save profile',

@@ -47,12 +47,18 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
   if (isPending) return <ArtistPageState variant="loading" />
   if (isError || !artist) return <ArtistPageState variant="error" />
 
+  /**
+   * Spotify leads with monthly listeners; the catalogue counts are the
+   * fallback for artists the API has no listener figure for yet.
+   */
   const statsLabel = content.isPending
     ? 'Loading catalogue…'
-    : [
-        pluralize(content.tracks.length, 'song'),
-        pluralize(content.albums.length, 'album'),
-      ].join(' · ')
+    : artist.monthlyListeners
+      ? `${artist.monthlyListeners.toLocaleString('en-US')} monthly listeners`
+      : [
+          pluralize(content.tracks.length, 'song'),
+          pluralize(content.albums.length, 'album'),
+        ].join(' · ')
   const compactHeaderColor = `rgb(${artistRed} ${artistGreen} ${artistBlue})`
   const handleScroll: UIEventHandler<HTMLDivElement> = (event) => {
     const heroHeight = heroRef.current?.offsetHeight ?? 360

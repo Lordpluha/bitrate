@@ -33,7 +33,7 @@ export const MainPanel = () => {
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar relative">
-      <div className="absolute top-0 left-0 right-0 h-80 bg-linear-to-b from-purple-800 to-transparent pointer-events-none z-0" />
+      <div className="absolute top-0 left-0 right-0 h-80 bg-linear-to-b from-hero-wash to-transparent pointer-events-none z-0" />
       <div className="relative z-10 px-4 py-4 sm:px-6">
         <Tabs
           onTabChange={(id) => setActiveTab(id as HomeTabId)}

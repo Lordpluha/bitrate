@@ -43,10 +43,6 @@ export const ru = {
   'settings.library.compact.description':
     'В списках треков появится отдельная колонка исполнителя и более плотные строки.',
   'settings.playback': 'Воспроизведение',
-  'settings.playback.download': 'Скачать бесплатное приложение',
-  'settings.playback.promo': 'Настройте звук в приложении для Linux',
-  'settings.playback.promo.description':
-    'Улучшайте качество стриминга, настраивайте эквалайзер и выравнивайте громкость треков.',
   'settings.privacy.activity': 'История прослушивания',
   'settings.privacy.activity.description':
     'Другие могут видеть, что вы слушаете, и сравнивать активность.',
@@ -60,6 +56,12 @@ export const ru = {
   'settings.privacy.profile': 'Что другие видят в вашем профиле',
   'settings.profile': 'Данные профиля',
   'settings.profile.avatar': 'Аватар',
+  'settings.profile.avatar.hint':
+    'Перетащите изображение сюда или нажмите, чтобы выбрать',
+  'settings.profile.avatar.drop': 'Отпустите изображение для загрузки',
+  'settings.profile.avatar.browse': 'Выбрать файл',
+  'settings.profile.avatar.uploading': 'Загрузка…',
+  'settings.profile.avatar.none': 'Файл не выбран',
   'settings.profile.description': 'Описание',
   'settings.profile.description.placeholder': 'Расскажите о себе',
   'settings.profile.save': 'Сохранить профиль',

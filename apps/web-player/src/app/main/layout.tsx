@@ -42,7 +42,10 @@ export default function MainLayout({ children }: PropsWithChildren) {
         className={cn(
           'h-[calc(100dvh-64px)] overflow-y-auto custom-scrollbar',
           hasPlayer ? 'pb-40' : 'pb-20',
-          'transition-all duration-300 ease-in-out xl:overflow-hidden xl:pb-0 xl:grid xl:w-full',
+          'xl:overflow-hidden xl:pb-0 xl:grid xl:w-full',
+          /* Animate only the collapse/expand buttons. During a drag the same
+             transition makes the sidebar chase the cursor 300ms behind it. */
+          !isResizing && 'transition-all duration-300 ease-in-out',
           hasPlayer
             ? 'xl:h-[calc(100vh-64px-90px)]'
             : 'xl:h-[calc(100vh-64px)]',

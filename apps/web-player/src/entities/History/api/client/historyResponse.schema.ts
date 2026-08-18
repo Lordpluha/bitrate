@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { arrayOrPaginated } from '@/shared/api/paginated'
 
 const historyArtistResponseSchema = z.object({
   avatar: z.string().nullable(),
@@ -22,7 +23,7 @@ export const listeningHistoryEntrySchema = z.object({
   trackId: z.string(),
 })
 
-export const listeningHistoryResponseSchema = z.array(
+export const listeningHistoryResponseSchema = arrayOrPaginated(
   listeningHistoryEntrySchema,
 )
 

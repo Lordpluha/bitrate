@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { arrayOrPaginated } from '@/shared/api/paginated'
 
 export const safeUserResponseSchema = z.object({
   avatar: z.string().nullable(),
@@ -15,7 +16,7 @@ export const safeUserResponseSchema = z.object({
   username: z.string(),
 })
 
-export const safeUsersResponseSchema = z.array(safeUserResponseSchema)
+export const safeUsersResponseSchema = arrayOrPaginated(safeUserResponseSchema)
 
 export const followedUsersResponseSchema = z.object({
   data: z.array(

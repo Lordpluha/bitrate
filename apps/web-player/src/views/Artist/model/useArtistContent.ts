@@ -9,7 +9,12 @@ export type UseArtistContentInput = {
   artistId: string
 }
 
-const CATALOGUE_PAGE_SIZE = 200
+/**
+ * The API caps `limit` at 100 and answers 400 above it. Asking for more made
+ * both catalogue requests fail, which is why the page showed "0 songs · 0
+ * albums" with the play button disabled.
+ */
+const CATALOGUE_PAGE_SIZE = 100
 
 /**
  * Collects an artist's tracks and albums.

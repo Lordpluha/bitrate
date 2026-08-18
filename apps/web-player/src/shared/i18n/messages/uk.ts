@@ -43,10 +43,6 @@ export const uk = {
   'settings.library.compact.description':
     'Списки треків матимуть окрему колонку виконавця та щільніші рядки.',
   'settings.playback': 'Відтворення',
-  'settings.playback.download': 'Завантажити безкоштовний застосунок',
-  'settings.playback.promo': 'Налаштуйте звучання в застосунку для Linux',
-  'settings.playback.promo.description':
-    'Покращуйте якість трансляції, налаштовуйте еквалайзер і вирівнюйте гучність треків.',
   'settings.privacy.activity': 'Активність прослуховування',
   'settings.privacy.activity.description':
     'Інші можуть бачити, що ви слухаєте, і порівнювати активність.',
@@ -60,6 +56,12 @@ export const uk = {
   'settings.privacy.profile': 'Що інші бачать у вашому профілі',
   'settings.profile': 'Дані профілю',
   'settings.profile.avatar': 'Аватар',
+  'settings.profile.avatar.hint':
+    'Перетягніть зображення сюди або натисніть, щоб обрати',
+  'settings.profile.avatar.drop': 'Відпустіть зображення для завантаження',
+  'settings.profile.avatar.browse': 'Обрати файл',
+  'settings.profile.avatar.uploading': 'Завантаження…',
+  'settings.profile.avatar.none': 'Файл не обрано',
   'settings.profile.description': 'Опис',
   'settings.profile.description.placeholder': 'Розкажіть про себе',
   'settings.profile.save': 'Зберегти профіль',

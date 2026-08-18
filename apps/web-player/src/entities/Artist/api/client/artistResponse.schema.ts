@@ -6,6 +6,8 @@ export const artistResponseSchema = z.object({
   bio: z.string().nullable().default(null),
   avatar: z.string().nullable().default(null),
   backgroundImage: z.string().nullable().default(null),
+  monthlyListeners: z.number().nullable().default(null),
+  verified: z.boolean().default(false),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 })

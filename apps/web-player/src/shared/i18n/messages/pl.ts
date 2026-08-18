@@ -42,10 +42,6 @@ export const pl = {
   'settings.library.compact.description':
     'Listy utworów otrzymają osobną kolumnę wykonawcy i ciaśniejsze wiersze.',
   'settings.playback': 'Odtwarzanie',
-  'settings.playback.download': 'Pobierz bezpłatną aplikację',
-  'settings.playback.promo': 'Dostosuj dźwięk w aplikacji dla systemu Linux',
-  'settings.playback.promo.description':
-    'Dostosuj jakość transmisji, korektor i głośność utworów.',
   'settings.privacy.activity': 'Aktywność słuchania',
   'settings.privacy.activity.description':
     'Inni mogą zobaczyć, czego słuchasz.',
@@ -59,6 +55,12 @@ export const pl = {
   'settings.privacy.profile': 'Co inni widzą w twoim profilu',
   'settings.profile': 'Dane profilu',
   'settings.profile.avatar': 'Awatar',
+  'settings.profile.avatar.hint':
+    'Przeciągnij obraz tutaj lub kliknij, aby wybrać',
+  'settings.profile.avatar.drop': 'Upuść obraz, aby go przesłać',
+  'settings.profile.avatar.browse': 'Wybierz plik',
+  'settings.profile.avatar.uploading': 'Przesyłanie…',
+  'settings.profile.avatar.none': 'Nie wybrano pliku',
   'settings.profile.description': 'Opis',
   'settings.profile.description.placeholder': 'Napisz coś o sobie',
   'settings.profile.save': 'Zapisz profil',

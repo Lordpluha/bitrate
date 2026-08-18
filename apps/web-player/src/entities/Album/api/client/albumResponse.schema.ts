@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { arrayOrPaginated } from '@/shared/api/paginated'
 
 const albumTrackResponseSchema = z.object({
   artistId: z.string(),
@@ -39,6 +40,6 @@ export const albumResponseSchema = z.object({
   updatedAt: z.string(),
 })
 
-export const albumsResponseSchema = z.array(albumResponseSchema)
+export const albumsResponseSchema = arrayOrPaginated(albumResponseSchema)
 
 export type AlbumResponse = z.infer<typeof albumResponseSchema>

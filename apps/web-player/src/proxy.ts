@@ -36,7 +36,16 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
+  /**
+   * Everything not matched here bypasses the guard.
+   *
+   * `webmanifest`, `txt` and `xml` matter as much as the image extensions: a
+   * browser fetches `/manifest.webmanifest` without credentials, so guarding it
+   * answers with a redirect to the login page, the browser fails to parse that
+   * as JSON, and the app silently stops being installable. Same for
+   * `/robots.txt` and `/sitemap.xml`, which crawlers request anonymously.
+   */
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|webmanifest|txt|xml)$).*)',
   ],
 }

@@ -17,6 +17,7 @@ import {
 } from '@/shared/hooks/audioPlayer/audioPlayer.utils'
 import { useAudioPlayerEvents } from '@/shared/hooks/audioPlayer/useAudioPlayerEvents'
 import { useAudioSlots } from '@/shared/hooks/audioPlayer/useAudioSlots'
+import { useManifestResolver } from '@/shared/hooks/audioPlayer/useManifestResolver'
 
 export const useAudioPlayer = () => {
   const currentTrack = usePlayerStore(selectCurrentTrack)
@@ -26,7 +27,8 @@ export const useAudioPlayer = () => {
   const isPlaying = usePlayerStore(selectIsPlaying)
   const volume = usePlayerStore(selectVolume)
   const nextTrack = getNextTrack(currentTrack, currentTrackIndex, playlist)
-  const slots = useAudioSlots({ volume })
+  const resolveManifest = useManifestResolver()
+  const slots = useAudioSlots({ resolveManifest, volume })
   const {
     activeSlot,
     activeSlotRef,

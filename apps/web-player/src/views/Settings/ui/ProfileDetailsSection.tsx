@@ -1,5 +1,6 @@
 import { useI18n } from '@/shared/i18n'
 import { useProfileSettings } from '@/views/Settings/model/useProfileSettings'
+import { AvatarUploadField } from '@/views/Settings/ui/AvatarUploadField'
 import { SettingsSection } from '@/views/Settings/ui/controls/SettingsSection'
 
 export const ProfileDetailsSection = () => {
@@ -38,18 +39,10 @@ export const ProfileDetailsSection = () => {
           {t('settings.profile.save')}
         </button>
       </form>
-      <label className="grid max-w-160 gap-2 text-sm text-text">
-        {t('settings.profile.avatar')}
-        <input
-          accept="image/png,image/jpeg,image/webp"
-          className="rounded bg-surface px-3 py-2 text-sm text-text"
-          disabled={profile.isAvatarPending}
-          onChange={(event) =>
-            profile.handleAvatarChange(event.target.files?.[0])
-          }
-          type="file"
-        />
-      </label>
+      <AvatarUploadField
+        isPending={profile.isAvatarPending}
+        onFileSelected={(file) => void profile.handleAvatarChange(file)}
+      />
     </SettingsSection>
   )
 }

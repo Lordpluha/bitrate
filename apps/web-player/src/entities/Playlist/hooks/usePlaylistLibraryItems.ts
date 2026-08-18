@@ -23,7 +23,7 @@ export type PlaylistLibraryItem = {
 }
 
 const likedSongsItem: PlaylistLibraryItem = {
-  cover: '/images/liked-songs.jpg',
+  cover: '/images/liked-songs.svg',
   id: 'liked-songs',
   title: 'Liked Songs',
   tracksCount: 0,

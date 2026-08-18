@@ -30,7 +30,7 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
       <PlaylistHeader
         author={t('library.title')}
         duration={getPlaylistDuration(currentTracks)}
-        imageUrl="/images/liked-songs.jpg"
+        imageUrl="/images/liked-songs.svg"
         title={t('library.likedSongs')}
         tracksCount={currentTracks?.length || 0}
         type={t('common.playlist')}
@@ -54,7 +54,7 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
           tracks={currentTracks}
         />
       ) : (
-        <div className="p-8 text-white">{t('playlist.likedEmpty')}</div>
+        <div className="p-8 text-text-subdued">{t('playlist.likedEmpty')}</div>
       )}
     </>
   )

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { BadRequestException } from '@nestjs/common'
 import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import type { TrackPlaybackService } from './track-playback.service'
 import { TracksController } from './tracks.controller'
 import type { TracksService } from './tracks.service'
 
@@ -20,13 +21,21 @@ const makeServiceMock = () =>
     unlike: jest.fn(),
   }) as unknown as jest.Mocked<TracksService>
 
+const makePlaybackServiceMock = () =>
+  ({
+    getManifest: jest.fn(),
+    getRenditionStream: jest.fn(),
+  }) as unknown as jest.Mocked<TrackPlaybackService>
+
 describe('TracksController', () => {
   let controller: TracksController
   let service: jest.Mocked<TracksService>
+  let playbackService: jest.Mocked<TrackPlaybackService>
 
   beforeEach(() => {
     service = makeServiceMock()
-    controller = new TracksController(service)
+    playbackService = makePlaybackServiceMock()
+    controller = new TracksController(service, playbackService)
   })
 
   it('getAll should delegate to service.findAll', () => {

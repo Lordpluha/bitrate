@@ -1,5 +1,6 @@
 'use client'
 
+import { useFollowedArtists } from '@/entities/Artist'
 import { useTopArtists, useTopTracks } from '@/entities/Discovery'
 import { usePlayerStore } from '@/entities/Player'
 import { useMyPlaylists } from '@/entities/Playlist'
@@ -34,6 +35,8 @@ export const ProfilePage = () => {
     useMyPlaylists()
   const { data: followedUsers = [], isPending: areFollowedUsersPending } =
     useFollowedUsers(!!user)
+  const { data: followedArtists = [], isPending: areFollowedArtistsPending } =
+    useFollowedArtists(!!user)
 
   const artists = artistsData?.data ?? []
   const topTracks: ProfileTrack[] = tracksData?.data ?? []
@@ -73,7 +76,7 @@ export const ProfilePage = () => {
         username={user.username}
       />
 
-      <section className="bg-gradient-to-b from-black/30 to-background-secondary px-4 py-6 sm:px-6 sm:py-7">
+      <section className="space-y-10 bg-gradient-to-b from-surface-hover via-surface to-background-secondary px-4 py-6 sm:px-6 sm:py-7">
         <ProfileActions />
         <ProfileArtistsSection artists={artists} isPending={isArtistsPending} />
         <ProfileTracksSection
@@ -84,6 +87,13 @@ export const ProfilePage = () => {
         <ProfilePlaylistsSection
           isPending={arePlaylistsPending}
           playlists={myPlaylists}
+        />
+        <ProfileArtistsSection
+          artists={followedArtists}
+          emptyMessage="You are not following any artists yet."
+          isPending={areFollowedArtistsPending}
+          subtitle="Artists you follow"
+          title="Following artists"
         />
         <ProfileFollowingUsersSection
           isPending={areFollowedUsersPending}

@@ -7,19 +7,25 @@ import { ProfileSection } from '@/views/Profile/ui/ProfileSection'
 
 type ProfileArtistsSectionProps = {
   artists: ProfileArtist[]
+  emptyMessage?: string
   isPending: boolean
+  subtitle?: string
+  title?: string
 }
 
 export const ProfileArtistsSection = ({
   artists,
+  emptyMessage = 'No artists yet.',
   isPending,
+  subtitle = 'Only visible to you',
+  title = 'Top artists this month',
 }: ProfileArtistsSectionProps) => (
-  <ProfileSection subtitle="Only visible to you" title="Top artists this month">
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,140px),1fr))] gap-4 sm:gap-5">
+  <ProfileSection subtitle={subtitle} title={title}>
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,150px),1fr))] gap-4 sm:gap-5">
       {isPending ? (
         <p className="text-text-subdued">Loading artists...</p>
       ) : artists.length === 0 ? (
-        <p className="text-text-subdued">No artists yet.</p>
+        <p className="text-text-subdued">{emptyMessage}</p>
       ) : (
         artists.map((artist) => (
           <Link

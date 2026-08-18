@@ -67,6 +67,7 @@ export const SearchResults = ({
     .map((playlist) => ({
       description: 'Playlist',
       href: ROUTES.playlist(playlist.id),
+      id: playlist.id,
       image: getPlaylistCoverUrl(playlist.cover),
       title: playlist.title,
     }))

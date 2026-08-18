@@ -156,6 +156,13 @@ model Track {
   processingStartedAt  DateTime?
   processingFinishedAt DateTime?
 
+  // 1 = legacy HLS pipeline, 2 = single-file CMAF + Range index (ADR-0020).
+  // Lets both pipelines coexist while the CMAF path is rolled out.
+  playbackVersion   Int  @default(1)
+  // Shared by every CMAF rendition of this track; null on legacy tracks.
+  fragmentTimescale Int?
+  durationTicks     Int?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -182,11 +189,19 @@ model Track {
 model TrackFile {
   id      String  @id @default(uuid(7)) @db.Uuid
   trackId String  @db.Uuid
-  format  String // "opus", "ogg", "mp3", "flac"
+  format  String // "opus", "ogg", "mp3", "flac", "cmaf"
   bitrate Int // 128, 192, 256, 320
-  codec   String? // "opus", "vorbis", "mp3"
+  codec   String? // "opus", "vorbis", "mp3", "mp4a.40.2"
   url     String
   size    Int? // File size in bytes
+
+  // Byte-range playback index. Set only on CMAF renditions (format = "cmaf").
+  // initRange covers ftyp+moov and is the MSE initialization segment; sidx is
+  // parsed at build time and never served. See ADR-0020.
+  initRangeStart Int?
+  initRangeEnd   Int?
+  // [[startTicks, durationTicks, offset, length], ...] — one entry per fragment.
+  fragments      Json?
 
   createdAt DateTime @default(now())
 

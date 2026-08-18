@@ -38,7 +38,7 @@ export const TrackNavigationButton = ({
         </button>
       </HoverCardTrigger>
       {track && (
-        <HoverCardContent className="hidden w-60 p-2.5 [@media(hover:hover)]:flex">
+        <HoverCardContent className="hidden w-60 items-center gap-3 p-2.5 [@media(hover:hover)]:flex">
           <Image
             alt=""
             className="size-12 shrink-0 rounded object-cover"

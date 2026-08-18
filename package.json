@@ -33,6 +33,7 @@
     "changeset:release": "changeset tag",
     "knip": "knip",
     "clean:dist": "rimraf --glob \"apps/*/dist\" \"packages/*/dist\"",
+    "clean:cache": "rimraf --glob \"apps/*/.next/dev/cache\" \"apps/*/.next/cache\" \".turbo/cache\"",
     "docker:dev": "docker-compose -f infra/docker-compose.preprod.yaml up -d",
     "docker:dev:build": "docker-compose -f infra/docker-compose.preprod.yaml up -d --build",
     "docker:down": "docker-compose -f infra/docker-compose.preprod.yaml down",

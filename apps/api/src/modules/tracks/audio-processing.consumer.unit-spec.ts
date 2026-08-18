@@ -2,7 +2,7 @@ import { readdir, rm, stat } from 'node:fs/promises'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { convertAudio, convertAudioToHls } from '@spotify/converter'
+import { convertAudio, convertAudioToCmaf, convertAudioToHls } from '@spotify/converter'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import type { Job } from 'bullmq'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
@@ -10,6 +10,7 @@ import { AudioProcessingConsumer } from './audio-processing.consumer'
 jest.mock('@spotify/converter', () => ({
   convertAudio: jest.fn().mockResolvedValue(undefined as never),
   convertAudioToHls: jest.fn().mockResolvedValue(undefined as never),
+  convertAudioToCmaf: jest.fn(),
 }))
 
 jest.mock('node:fs', () => ({
@@ -27,6 +28,24 @@ jest.mock('node:fs/promises', () => ({
 
 const convertAudioMock = convertAudio as jest.MockedFunction<typeof convertAudio>
 const convertAudioToHlsMock = convertAudioToHls as jest.MockedFunction<typeof convertAudioToHls>
+const convertAudioToCmafMock = convertAudioToCmaf as jest.MockedFunction<typeof convertAudioToCmaf>
+
+/** Mirrors what the CMAF converter returns for two aligned renditions. */
+const cmafResult = {
+  outputDir: '/storage/.processing/track-1-job-1-1/cmaf',
+  timescale: 48_000,
+  durationTicks: 2_880_000,
+  renditions: [128, 192].map((bitrate) => ({
+    bitrate,
+    path: `/tmp/cmaf/${bitrate}.m4a`,
+    size: bitrate * 7_000,
+    initRange: [0, 707] as [number, number],
+    fragments: [
+      { startTicks: 0, durationTicks: 195_584, offset: 929, length: 66_238 },
+      { startTicks: 195_584, durationTicks: 196_608, offset: 67_167, length: 66_419 },
+    ],
+  })),
+}
 const readdirMock = readdir as jest.MockedFunction<typeof readdir>
 const rmMock = rm as jest.MockedFunction<typeof rm>
 const statMock = stat as jest.MockedFunction<typeof stat>
@@ -102,6 +121,7 @@ describe('AudioProcessingConsumer', () => {
     statMock.mockResolvedValue({ size: 2048 } as never)
     convertAudioMock.mockResolvedValue(undefined as never)
     convertAudioToHlsMock.mockResolvedValue(undefined as never)
+    convertAudioToCmafMock.mockResolvedValue(cmafResult as never)
   })
 
   it('returns early when job name is not convert-audio', async () => {
@@ -137,7 +157,7 @@ describe('AudioProcessingConsumer', () => {
       expect.anything(),
       'application/vnd.apple.mpegurl',
     )
-    expect(prisma.trackFile.upsert).toHaveBeenCalledTimes(2)
+    expect(prisma.trackFile.upsert).toHaveBeenCalledTimes(4)
     expect(prisma.track.update).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ processingStatus: 'READY' }),
@@ -147,6 +167,62 @@ describe('AudioProcessingConsumer', () => {
     expect(rmMock).toHaveBeenCalledWith(
       expect.stringContaining('/storage/.processing/track-1-job-1-1'),
       { recursive: true, force: true },
+    )
+  })
+
+  it('encodes CMAF renditions once and stores their byte index', async () => {
+    await consumer.process(makeJob('convert-audio', jobData))
+
+    expect(convertAudioToCmafMock).toHaveBeenCalledTimes(1)
+    expect(convertAudioToCmafMock).toHaveBeenCalledWith(
+      expect.objectContaining({ bitrates: [128, 192] }),
+    )
+
+    const cmafUpsert = prisma.trackFile.upsert.mock.calls.find(
+      ([call]) => (call as { create?: { format?: string } }).create?.format === 'cmaf',
+    )
+
+    expect(cmafUpsert?.[0]).toMatchObject({
+      create: expect.objectContaining({
+        format: 'cmaf',
+        codec: 'mp4a.40.2',
+        initRangeStart: 0,
+        initRangeEnd: 707,
+        url: 'tracks/track-1/cmaf/128.m4a',
+        fragments: [
+          [0, 195_584, 929, 66_238],
+          [195_584, 196_608, 67_167, 66_419],
+        ],
+      }),
+    })
+  })
+
+  it('marks the track as playbackVersion 2 with its fragment timescale', async () => {
+    await consumer.process(makeJob('convert-audio', jobData))
+
+    expect(prisma.track.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          playbackVersion: 2,
+          fragmentTimescale: 48_000,
+          durationTicks: 2_880_000,
+        }),
+      }),
+    )
+  })
+
+  it('never marks a track ready when renditions are not spliceable', async () => {
+    convertAudioToCmafMock.mockRejectedValueOnce(
+      new Error('Rendition 192 fragment 3 is 195584:196607, expected 195584:196608') as never,
+    )
+    const job = makeJob('convert-audio', jobData)
+
+    await expect(consumer.process(job)).rejects.toThrow(/fragment 3/)
+
+    expect(prisma.track.update).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ processingStatus: 'READY' }),
+      }),
     )
   })
 

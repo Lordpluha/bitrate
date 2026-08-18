@@ -5,6 +5,12 @@ export type BrowseCategory = {
 }
 
 export type MediaCardItem = {
+  /**
+   * Stable entity id. Required because titles are not unique — a user can own
+   * several playlists called "My Playlist #1", and keying a list by title makes
+   * React drop the duplicates.
+   */
+  id: string
   description: string
   href?: string
   image: string

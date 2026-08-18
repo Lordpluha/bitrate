@@ -42,10 +42,6 @@ export const de = {
   'settings.library.compact.description':
     'Titellisten erhalten eine eigene Künstler-Spalte und kompaktere Zeilen.',
   'settings.playback': 'Wiedergabe',
-  'settings.playback.download': 'Kostenlose App herunterladen',
-  'settings.playback.promo': 'Optimiere deinen Sound mit der Linux-App',
-  'settings.playback.promo.description':
-    'Passe Streaming-Qualität, Equalizer und Lautstärke an.',
   'settings.privacy.activity': 'Höraktivität',
   'settings.privacy.activity.description': 'Andere können sehen, was du hörst.',
   'settings.privacy.activity.label':
@@ -58,6 +54,12 @@ export const de = {
   'settings.privacy.profile': 'Was andere in deinem Profil sehen',
   'settings.profile': 'Profildetails',
   'settings.profile.avatar': 'Avatar',
+  'settings.profile.avatar.hint':
+    'Bild hierher ziehen oder klicken zum Auswählen',
+  'settings.profile.avatar.drop': 'Bild loslassen, um es hochzuladen',
+  'settings.profile.avatar.browse': 'Datei auswählen',
+  'settings.profile.avatar.uploading': 'Wird hochgeladen…',
+  'settings.profile.avatar.none': 'Keine Datei ausgewählt',
   'settings.profile.description': 'Beschreibung',
   'settings.profile.description.placeholder': 'Erzähl etwas über dich',
   'settings.profile.save': 'Profil speichern',

@@ -15,6 +15,7 @@ import { useFloatingPlayerWindow } from './useFloatingPlayerWindow'
 import { usePlayerHotkeys } from './usePlayerHotkeys'
 import { usePlayerSessionPersistence } from './usePlayerSessionPersistence'
 import { usePlaylistShuffle } from './usePlaylistShuffle'
+import { useRecordListenedTrack } from './useRecordListenedTrack'
 
 type UsePlayerControllerInput = {
   isExpanded: boolean
@@ -43,6 +44,10 @@ export const usePlayerController = ({
   const isVisible = Boolean(currentTrack)
 
   usePlayerSessionPersistence(player, currentPlaylistName)
+  useRecordListenedTrack({
+    currentTime: player.currentTime,
+    trackId: currentTrack?.id,
+  })
   usePlayerHotkeys({
     currentTime: player.currentTime,
     duration: player.duration,

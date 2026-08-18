@@ -137,8 +137,10 @@ export class DownloadResourcesService {
         audioFilePath = previewPath
         audioSize = result.size
       } else {
-        // Fallback на оригинальный URL
-        this.logger.warn('    ⚠️  Using original preview URL as fallback')
+        // Внешняя ссылка намеренно НЕ подставляется: трек без локального файла
+        // не проходит дальше — createTrack бросит 'No audio URL available',
+        // и песня будет пропущена. Так в базу не попадают строки без аудио.
+        this.logger.warn('    ⚠️  Preview download failed — track will be skipped')
       }
     }
 
@@ -157,9 +159,10 @@ export class DownloadResourcesService {
       }
     }
 
-    // Примерная длительность трека (3-5 минут в секундах)
-    const duration = Math.floor(Math.random() * (300 - 180 + 1)) + 180
-
+    // Длительность намеренно не возвращается: её читает TracksService.create
+    // из самого аудиофайла. Раньше здесь стояло случайное число 180-300 с,
+    // которым сидер затирал уже посчитанное значение — треки расходились
+    // с реальностью на две с половиной минуты.
     return {
       audioFilePath,
       coverFilePath,
@@ -167,7 +170,6 @@ export class DownloadResourcesService {
       audioSize,
       coverSize,
       instrumentalSize,
-      duration,
     }
   }
 }

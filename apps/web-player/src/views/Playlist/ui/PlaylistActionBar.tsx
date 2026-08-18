@@ -42,7 +42,7 @@ export const PlaylistActionBar = ({
 
   return (
     <>
-      <div className="flex items-center justify-between gap-4 bg-gradient-to-b from-black/25 to-background px-4 py-4 sm:px-6 sm:py-5">
+      <div className="flex items-center justify-between gap-4 bg-gradient-to-b from-surface to-background px-4 py-4 sm:px-6 sm:py-5">
         <div className="flex min-w-0 flex-wrap items-center gap-3 text-text-subdued sm:gap-4">
           <PlaylistPrimaryActions details={details} playback={playback} />
           <div className="relative" ref={menus.moreMenuRef}>

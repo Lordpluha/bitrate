@@ -10,6 +10,23 @@ import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'
 import { AlbumEntity } from './entities'
 
+/** An `AlbumTrack` join row with its track loaded. */
+type AlbumTrackWithTrack = { track: Record<string, unknown>; id: string } & Record<string, unknown>
+
+/**
+ * Flattens an album membership row into the track it points at.
+ *
+ * The join row's own `id` is dropped deliberately: spreading it over the track
+ * replaced `track.id` with the `AlbumTrack` id, so the client sent a
+ * non-existent id to the playback endpoints and nothing on an album page could
+ * play. The remaining membership fields still win over the track's own, which
+ * is what gives an album its per-album `trackNumber`/`discNumber`.
+ */
+const flattenAlbumTrack = ({ track, id: _membershipId, ...membership }: AlbumTrackWithTrack) => ({
+  ...track,
+  ...membership,
+})
+
 /** Represents the albums service. */
 @Injectable()
 export class AlbumsService {
@@ -52,10 +69,7 @@ export class AlbumsService {
         ])
         const data = albums.map((album) => ({
           ...album,
-          tracks: album.tracks.map(({ track, ...membership }) => ({
-            ...track,
-            ...membership,
-          })),
+          tracks: album.tracks.map(flattenAlbumTrack),
         }))
         return { data, total, page: pagination.page, limit: pagination.limit }
       },
@@ -80,10 +94,7 @@ export class AlbumsService {
           album
             ? {
                 ...album,
-                tracks: album.tracks.map(({ track, ...membership }) => ({
-                  ...track,
-                  ...membership,
-                })),
+                tracks: album.tracks.map(flattenAlbumTrack),
               }
             : null,
         ),

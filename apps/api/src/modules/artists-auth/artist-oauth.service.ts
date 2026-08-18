@@ -22,6 +22,13 @@ interface OAuthProfile {
 }
 
 /** Represents the artist oauth service. */
+/**
+ * Every route is served under the global prefix and URI version set in
+ * `main.ts`. The redirect URI handed to the provider must include it, or the
+ * provider sends the user back to a path that does not exist.
+ */
+const API_PREFIX = '/api/v1'
+
 @Injectable()
 export class ArtistOAuthService {
   /** Creates a new instance. */
@@ -80,7 +87,7 @@ export class ArtistOAuthService {
   /** Runs the build redirect uri operation. */
   private buildRedirectUri(provider: 'google' | 'facebook'): string {
     const base = this.config.get('API_BASE_URL') ?? 'http://localhost:3000'
-    return `${base}/artists/auth/oauth/${provider}/callback`
+    return `${base}${API_PREFIX}/artists/auth/oauth/${provider}/callback`
   }
 
   /** Runs the exchange google code operation. */

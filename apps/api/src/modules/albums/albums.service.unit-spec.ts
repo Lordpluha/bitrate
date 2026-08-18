@@ -136,6 +136,28 @@ describe('AlbumsService', () => {
     expect(result).toEqual(album)
   })
 
+  it('getById should expose the track id, not the membership row id', async () => {
+    const album = buildAlbumWithTracks({
+      tracks: [
+        {
+          id: 'album-track-row-1',
+          albumId: 'album-1',
+          trackId: 'track-1',
+          trackNumber: 3,
+          discNumber: 1,
+          track: { id: 'track-1', title: 'Down 2 Wait', trackNumber: 99 },
+        },
+      ],
+    })
+    prisma.album.findFirst.mockResolvedValue(album)
+
+    const result = await service.getById('album-1')
+    const [track] = (result?.tracks ?? []) as { id: string; trackNumber: number }[]
+
+    expect(track?.id).toBe('track-1')
+    expect(track?.trackNumber).toBe(3)
+  })
+
   it('getById should return null when album not found', async () => {
     prisma.album.findFirst.mockResolvedValue(null)
 

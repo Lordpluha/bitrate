@@ -128,30 +128,3 @@ export const browseCategories: BrowseCategory[] = browseCategoryTitles.map(
     title,
   }),
 )
-
-export const mockCategoryRows: Record<string, string[]> = {
-  'Live Events': [
-    'Concerts near you',
-    'Electronic nights',
-    'Festival season',
-    'Indie stages',
-    'Pop live',
-  ],
-  Podcasts: [
-    'Comedy',
-    'Educational',
-    'True Crime',
-    'Sports',
-    'Stories',
-    'Music',
-    'Arts & Entertainment',
-  ],
-  Fitness: [
-    'Workout hits',
-    'Running',
-    'Yoga',
-    'Beast mode',
-    'Cardio',
-    'Morning energy',
-  ],
-}

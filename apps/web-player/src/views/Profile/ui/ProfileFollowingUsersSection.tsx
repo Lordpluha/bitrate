@@ -15,7 +15,7 @@ export const ProfileFollowingUsersSection = ({
   users,
 }: ProfileFollowingUsersSectionProps) => (
   <ProfileSection title="Following">
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,140px),1fr))] gap-4 sm:gap-5">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,150px),1fr))] gap-4 sm:gap-5">
       {isPending ? (
         <p className="text-text-subdued">Loading profiles...</p>
       ) : users.length === 0 ? (

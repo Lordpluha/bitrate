@@ -78,7 +78,7 @@ export class SeedService {
     }
 
     // Скачиваем ресурсы
-    const { audioFilePath, coverFilePath, instrumentalFilePath, duration } =
+    const { audioFilePath, coverFilePath, instrumentalFilePath } =
       await this.downloadService.downloadTrackResources(ncsSong)
 
     if (!audioFilePath) {
@@ -97,12 +97,12 @@ export class SeedService {
       coverFile,
     )
 
-    // Обновляем дополнительные поля, которые не поддерживаются в стандартном create
+    // Обновляем дополнительные поля, которые не поддерживаются в стандартном create.
+    // duration здесь не трогаем — create уже записал настоящую длительность файла.
     await this.prisma.track.update({
       where: { id: track.id },
       data: {
         releaseDate: ncsSong.date,
-        duration,
       },
     })
     await this.ensurePrimaryArtistCredit(track.id, artistId)
@@ -118,12 +118,13 @@ export class SeedService {
           coverFile,
         )
 
-        // Обновляем дополнительные поля для instrumental версии
+        // Обновляем дополнительные поля для instrumental версии.
+        // duration не трогаем: у instrumental своя длительность, и раньше сюда
+        // копировалось значение основного трека.
         await this.prisma.track.update({
           where: { id: instrumentalTrack.id },
           data: {
             releaseDate: ncsSong.date,
-            duration,
           },
         })
         await this.ensurePrimaryArtistCredit(instrumentalTrack.id, artistId)

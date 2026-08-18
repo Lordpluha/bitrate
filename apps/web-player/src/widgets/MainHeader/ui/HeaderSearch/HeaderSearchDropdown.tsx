@@ -16,7 +16,7 @@ export const HeaderSearchDropdown = ({
   onSelect,
   variant,
 }: HeaderSearchDropdownProps) => (
-  <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 max-h-[70vh] overflow-y-auto rounded-md bg-surface p-3 shadow-2xl custom-scrollbar">
+  <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 max-h-[70vh] overflow-y-auto rounded-md border border-border bg-background-tinted p-3 shadow-2xl custom-scrollbar">
     {variant === 'recent' && (
       <div className="px-1 pb-2 text-sm font-bold text-text">
         Recent searches

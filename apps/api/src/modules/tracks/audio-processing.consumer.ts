@@ -27,11 +27,36 @@ interface PreparedVariant {
   size: number
 }
 
+/** A CMAF rendition prepared for upload, with its byte-range index (ADR-0020). */
+interface PreparedCmafRendition {
+  bitrate: number
+  audioKey: string
+  temporaryPath: string
+  size: number
+  initRange: [number, number]
+  /** [startTicks, durationTicks, offset, length] per fragment. */
+  fragments: number[][]
+}
+
+/** Everything the manifest endpoint needs after a successful CMAF pass. */
+interface PreparedCmafPackage {
+  timescale: number
+  durationTicks: number
+  renditions: PreparedCmafRendition[]
+}
+
+/** Format discriminator for CMAF rows in TrackFile. */
+const CMAF_FORMAT = 'cmaf'
+
+/** The single audio codec produced by the CMAF pipeline. */
+const CMAF_CODEC = 'mp4a.40.2'
+
 /** CONTENT-TYPE map for file extensions. */
 const CONTENT_TYPES: Record<string, string> = {
   '.opus': 'audio/ogg',
   '.m3u8': 'application/vnd.apple.mpegurl',
   '.mp4': 'video/mp4',
+  '.m4a': 'audio/mp4',
   '.m4s': 'video/iso.segment',
 }
 
@@ -107,16 +132,21 @@ export class AudioProcessingConsumer extends WorkerHost {
       }
 
       // Phase 2: generate one aligned multi-bitrate HLS package.
+      // Superseded by the CMAF package below; kept until the CMAF path ships. See ADR-0020.
       const temporaryHlsPath = join(temporaryRoot, 'hls')
       await this.generateHls(job, temporaryHlsPath, bitrates)
       await this.validateHls(temporaryHlsPath, bitrates)
+      await job.updateProgress(92)
+
+      // Phase 3: encode the single-file CMAF renditions and build their byte index.
+      const cmafPackage = await this.generateCmaf(trackId, job, temporaryRoot, bitrates)
       await job.updateProgress(94)
 
-      // Phase 3: upload the progressive fallback and HLS package to storage.
-      await this.uploadToStorage(trackId, preparedVariants, temporaryHlsPath)
+      // Phase 4: upload the progressive fallback, HLS package and CMAF renditions.
+      await this.uploadToStorage(trackId, preparedVariants, temporaryHlsPath, cmafPackage)
       await job.updateProgress(98)
 
-      // Phase 4: persist TrackFile records + mark READY
+      // Phase 5: persist TrackFile records + mark READY
       await this.prisma.$transaction(async (tx) => {
         await tx.trackFile.deleteMany({
           where: {
@@ -141,12 +171,51 @@ export class AudioProcessingConsumer extends WorkerHost {
           })
         }
 
+        await tx.trackFile.deleteMany({
+          where: {
+            trackId,
+            format: CMAF_FORMAT,
+            bitrate: { notIn: cmafPackage.renditions.map((rendition) => rendition.bitrate) },
+          },
+        })
+
+        for (const rendition of cmafPackage.renditions) {
+          const payload = {
+            codec: CMAF_CODEC,
+            url: rendition.audioKey,
+            size: rendition.size,
+            initRangeStart: rendition.initRange[0],
+            initRangeEnd: rendition.initRange[1],
+            fragments: rendition.fragments,
+          }
+
+          await tx.trackFile.upsert({
+            where: {
+              trackId_format_bitrate: {
+                trackId,
+                format: CMAF_FORMAT,
+                bitrate: rendition.bitrate,
+              },
+            },
+            update: payload,
+            create: {
+              trackId,
+              format: CMAF_FORMAT,
+              bitrate: rendition.bitrate,
+              ...payload,
+            },
+          })
+        }
+
         await tx.track.update({
           where: { id: trackId },
           data: {
             processingStatus: 'READY',
             processingError: null,
             processingFinishedAt: new Date(),
+            playbackVersion: 2,
+            fragmentTimescale: cmafPackage.timescale,
+            durationTicks: cmafPackage.durationTicks,
           },
         })
       })
@@ -256,6 +325,54 @@ export class AudioProcessingConsumer extends WorkerHost {
     })
   }
 
+  /**
+   * Encodes one CMAF file per bitrate in a single FFmpeg run and reads back the
+   * byte index the player needs for Range playback. The converter fails the job
+   * when renditions do not share fragment boundaries, so an unspliceable track
+   * never reaches READY. See ADR-0020.
+   */
+  private async generateCmaf(
+    trackId: string,
+    job: Job<ConvertAudioJob>,
+    temporaryRoot: string,
+    bitrates: string[],
+  ): Promise<PreparedCmafPackage> {
+    const { convertAudioToCmaf } = await import('@spotify/converter')
+
+    const numericBitrates = bitrates.map((bitrate) => {
+      const value = Number(bitrate.replace(/k$/, ''))
+      if (!Number.isInteger(value) || value <= 0) {
+        throw new Error(`Invalid audio bitrate: ${bitrate}`)
+      }
+      return value
+    })
+
+    const result = await convertAudioToCmaf({
+      input: job.data.inputPath,
+      outputDir: join(temporaryRoot, CMAF_FORMAT),
+      bitrates: numericBitrates,
+      timeoutMs: 600_000,
+    })
+
+    return {
+      timescale: result.timescale,
+      durationTicks: result.durationTicks,
+      renditions: result.renditions.map((rendition) => ({
+        bitrate: rendition.bitrate,
+        audioKey: `tracks/${trackId}/cmaf/${rendition.bitrate}.m4a`,
+        temporaryPath: rendition.path,
+        size: rendition.size,
+        initRange: rendition.initRange,
+        fragments: rendition.fragments.map((fragment) => [
+          fragment.startTicks,
+          fragment.durationTicks,
+          fragment.offset,
+          fragment.length,
+        ]),
+      })),
+    }
+  }
+
   /** Validates that a progressive Opus variant is non-empty. */
   private async validateAudioVariant(audioPath: string) {
     const audioStats = await stat(audioPath)
@@ -279,18 +396,29 @@ export class AudioProcessingConsumer extends WorkerHost {
   }
 
   /**
-   * Uploads all progressive Opus files and the aligned HLS tree to configured storage.
+   * Uploads all progressive Opus files, the aligned HLS tree and the CMAF
+   * renditions to configured storage.
    * Storage key structure (identical on both the S3 and local drivers):
    *   tracks/{trackId}/audio/{bitrate}k.opus
    *   tracks/{trackId}/hls/master.m3u8
    *   tracks/{trackId}/hls/{bitrate}/{asset}
+   *   tracks/{trackId}/cmaf/{bitrate}.m4a
    */
   private async uploadToStorage(
     trackId: string,
     variants: PreparedVariant[],
     temporaryHlsPath: string,
+    cmafPackage: PreparedCmafPackage,
   ) {
     const uploads: Promise<void>[] = []
+
+    for (const rendition of cmafPackage.renditions) {
+      uploads.push(
+        this.storage
+          .upload(rendition.audioKey, createReadStream(rendition.temporaryPath), 'audio/mp4')
+          .then(() => undefined),
+      )
+    }
 
     for (const variant of variants) {
       // Progressive Opus file

@@ -1,4 +1,4 @@
-import { FacebookIcon, InstIcon, TwitIcon } from '@spotify/ui-react'
+import { Facebook, InstIcon, TwitIcon } from '@spotify/ui-react'
 import Link from 'next/link'
 
 const sections = [
@@ -69,7 +69,7 @@ function Footer() {
               className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
               href="#"
             >
-              <FacebookIcon height={50} width={50} />
+              <Facebook height={50} width={50} />
             </Link>
             <Link
               className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"

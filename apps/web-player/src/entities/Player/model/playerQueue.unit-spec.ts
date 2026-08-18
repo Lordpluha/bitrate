@@ -10,7 +10,11 @@ type TestTrackInput = {
   duration?: number
 }
 
-const createTrack = ({ id, title = id, duration = 100 }: TestTrackInput): TrackEntity => ({
+const createTrack = ({
+  id,
+  title = id,
+  duration = 100,
+}: TestTrackInput): TrackEntity => ({
   id,
   title,
   duration,
