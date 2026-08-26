@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto'
+import type { LoginResult } from '@common/auth.types'
 import type { AppConfig } from '@common/config'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
@@ -59,7 +60,7 @@ export class ArtistOAuthService {
   }
 
   /** Runs the handle google callback operation. */
-  async handleGoogleCallback(code: string) {
+  async handleGoogleCallback(code: string): Promise<LoginResult> {
     const profile = await this.exchangeGoogleCode(code)
     return this.findOrCreateArtistAndLogin('google', profile)
   }
@@ -79,7 +80,7 @@ export class ArtistOAuthService {
   }
 
   /** Runs the handle facebook callback operation. */
-  async handleFacebookCallback(code: string) {
+  async handleFacebookCallback(code: string): Promise<LoginResult> {
     const profile = await this.exchangeFacebookCode(code)
     return this.findOrCreateArtistAndLogin('facebook', profile)
   }

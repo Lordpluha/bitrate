@@ -8,11 +8,12 @@ import { ArtistOAuthService } from './artist-oauth.service'
 import { ArtistTwoFactorService } from './artist-two-factor.service'
 import { AuthController } from './artists-auth.controller'
 import { ArtistsAuthService } from './artists-auth.service'
+import { ArtistsOAuthController } from './artists-oauth.controller'
 
 @Module({
   imports: [PrismaModule, ArtistsModule, UsersModule, TokensModule, MailModule],
   providers: [ArtistsAuthService, ArtistTwoFactorService, ArtistOAuthService],
-  controllers: [AuthController],
+  controllers: [AuthController, ArtistsOAuthController],
   exports: [ArtistsAuthService, TokensModule],
 })
 export class ArtistsAuthModule {}

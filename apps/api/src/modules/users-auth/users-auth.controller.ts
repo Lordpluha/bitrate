@@ -1,4 +1,5 @@
-import { type AppConfig, AUTH_ROUTE_THROTTLE } from '@common/config'
+import { clearPendingTwoFactorCookie, setPendingTwoFactorCookie } from '@common/auth-cookies'
+import { AUTH_ROUTE_THROTTLE } from '@common/config'
 import { SelfUserEntity, UserEntity } from '@modules/users'
 import { UsersService } from '@modules/users/users.service'
 import {
@@ -10,11 +11,9 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Query,
   Req,
   Res,
 } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import { Request, Response } from 'express'
@@ -28,10 +27,6 @@ import {
   AuthRefreshSwagger,
   AuthRegistrationSwagger,
   AuthResetPasswordSwagger,
-  OAuthFacebookCallbackSwagger,
-  OAuthFacebookSwagger,
-  OAuthGoogleCallbackSwagger,
-  OAuthGoogleSwagger,
   TwoFactorDisableSwagger,
   TwoFactorEnableSwagger,
   TwoFactorSetupSwagger,
@@ -56,7 +51,6 @@ import {
   VerifyEmailSchema,
 } from './dtos'
 import { UserSessionEntity } from './entities'
-import { OAuthService } from './oauth.service'
 import { TwoFactorService } from './two-factor.service'
 import type { UserAuthRequest } from './types'
 import { UserAuthService } from './user-auth.service'
@@ -70,11 +64,9 @@ import { UserAuth } from './users-auth.guard'
 export class UsersAuthController {
   constructor(
     private authService: UserAuthService,
-    private oauthService: OAuthService,
     private twoFactorService: TwoFactorService,
     private userService: UsersService,
     private tokenService: TokenService,
-    private config: ConfigService<AppConfig>,
   ) {}
 
   /** Runs the login operation. */
@@ -86,13 +78,7 @@ export class UsersAuthController {
   ) {
     const result = await this.authService.loginUser(loginDto.email, loginDto.password)
     if ('requires2fa' in result) {
-      res.cookie('pending_2fa_token', result.pendingToken, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-        maxAge: 10 * 60 * 1000,
-      })
+      setPendingTwoFactorCookie(res, result.pendingToken)
       return { requires2fa: true }
     }
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
@@ -239,96 +225,7 @@ export class UsersAuthController {
     const pendingToken = req.cookies?.pending_2fa_token ?? dto.pendingToken
     const user = await this.twoFactorService.verifyLoginCode(pendingToken, dto.code)
     const { access_token, refresh_token } = await this.authService.completeTwoFactorLogin(user.id)
-    res.clearCookie('pending_2fa_token', { path: '/' })
+    clearPendingTwoFactorCookie(res)
     this.tokenService.setAuthCookies(res, access_token, refresh_token)
-  }
-
-  /** Runs the google auth operation. */
-  @OAuthGoogleSwagger()
-  @Get('oauth/google')
-  googleAuth(@Res() res: Response) {
-    const state = this.oauthService.generateState()
-    res.cookie('oauth_state', state, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-      maxAge: 5 * 60 * 1000,
-    })
-    return res.redirect(this.oauthService.getGoogleAuthUrl(state))
-  }
-
-  /** Runs the google callback operation. */
-  @OAuthGoogleCallbackSwagger()
-  @Get('oauth/google/callback')
-  async googleCallback(
-    @Query('code') code: string,
-    @Query('state') state: string,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
-    if (!state || state !== req.cookies?.oauth_state) {
-      return res.redirect(
-        `${this.config.getOrThrow('web').userHost}/login?error=oauth_state_mismatch`,
-      )
-    }
-    res.clearCookie('oauth_state')
-    const result = await this.oauthService.handleGoogleCallback(code)
-    return this.handleOAuthResult(result, res)
-  }
-
-  /** Runs the facebook auth operation. */
-  @OAuthFacebookSwagger()
-  @Get('oauth/facebook')
-  facebookAuth(@Res() res: Response) {
-    const state = this.oauthService.generateState()
-    res.cookie('oauth_state', state, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-      maxAge: 5 * 60 * 1000,
-    })
-    return res.redirect(this.oauthService.getFacebookAuthUrl(state))
-  }
-
-  /** Runs the facebook callback operation. */
-  @OAuthFacebookCallbackSwagger()
-  @Get('oauth/facebook/callback')
-  async facebookCallback(
-    @Query('code') code: string,
-    @Query('state') state: string,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
-    if (!state || state !== req.cookies?.oauth_state) {
-      return res.redirect(
-        `${this.config.getOrThrow('web').userHost}/login?error=oauth_state_mismatch`,
-      )
-    }
-    res.clearCookie('oauth_state')
-    const result = await this.oauthService.handleFacebookCallback(code)
-    return this.handleOAuthResult(result, res)
-  }
-
-  /** Runs the handle oauth result operation. */
-  private handleOAuthResult(
-    result:
-      | { access_token: string; refresh_token: string }
-      | { requires2fa: true; pendingToken: string },
-    res: Response,
-  ) {
-    if ('requires2fa' in result) {
-      res.cookie('pending_2fa_token', result.pendingToken, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-        maxAge: 10 * 60 * 1000,
-      })
-      return res.redirect(`${this.config.getOrThrow('web').userHost}/login/2fa`)
-    }
-    this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
-    return res.redirect(this.config.getOrThrow('web').userHost)
   }
 }

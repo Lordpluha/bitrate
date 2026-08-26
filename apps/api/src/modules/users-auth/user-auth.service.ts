@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto'
+import type { LoginResult } from '@common/auth.types'
 import { MailService } from '@infra/mail/mail.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { UsersPrivateService } from '@modules/users/users.private.service'
@@ -56,7 +57,7 @@ export class UserAuthService {
   }
 
   /** Runs the login user operation. */
-  async loginUser(email: string, password: string) {
+  async loginUser(email: string, password: string): Promise<LoginResult> {
     const user = await this.usersPrivate.getByEmail(email)
     if (user?.lockedUntil && user.lockedUntil > new Date()) {
       throw new HttpException('Account is temporarily locked', HttpStatus.TOO_MANY_REQUESTS)

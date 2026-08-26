@@ -11,6 +11,19 @@ import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'
 import { AlbumEntity } from './entities'
 
+/**
+ * Loads an album's playable tracks in running order.
+ *
+ * Shared by the list and detail queries so both always project the same shape.
+ */
+export const ALBUM_TRACKS_INCLUDE = {
+  tracks: {
+    where: { track: { processingStatus: 'READY', deletedAt: null } },
+    include: { track: true },
+    orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
+  },
+} satisfies Prisma.AlbumInclude
+
 /** An `AlbumTrack` join row with its track loaded. */
 type AlbumTrackWithTrack = Prisma.AlbumTrackGetPayload<{ include: { track: true } }>
 
@@ -61,13 +74,7 @@ export class AlbumsService {
             take: pagination.limit,
             where,
             orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
-            include: {
-              tracks: {
-                where: { track: { processingStatus: 'READY', deletedAt: null } },
-                include: { track: true },
-                orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-              },
-            },
+            include: ALBUM_TRACKS_INCLUDE,
           }),
           this.prisma.album.count({ where }),
         ])
@@ -86,13 +93,7 @@ export class AlbumsService {
       this.prisma.album
         .findFirst({
           where: { id, deletedAt: null },
-          include: {
-            tracks: {
-              where: { track: { processingStatus: 'READY', deletedAt: null } },
-              include: { track: true },
-              orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-            },
-          },
+          include: ALBUM_TRACKS_INCLUDE,
         })
         .then((album) =>
           album

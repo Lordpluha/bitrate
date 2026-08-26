@@ -1,6 +1,4 @@
-import type { AppConfig } from '@common/config'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import type { ConfigService } from '@nestjs/config'
 import type { Request, Response } from 'express'
 
 jest.mock('otplib', () => ({
@@ -14,7 +12,6 @@ import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import type { TokenService } from '../tokens/token.service'
 import { buildUser } from '../users/__tests__/fixtures/users.fixtures'
 import type { UsersService } from '../users/users.service'
-import type { OAuthService } from './oauth.service'
 import type { TwoFactorService } from './two-factor.service'
 import type { UserAuthService } from './user-auth.service'
 import { UsersAuthController } from './users-auth.controller'
@@ -24,39 +21,22 @@ const createResponse = (): DeepMockProxy<Response> => mockDeep<Response>()
 describe('UsersAuthController', () => {
   let controller: UsersAuthController
   let authService: DeepMockProxy<UserAuthService>
-  let oauthService: DeepMockProxy<OAuthService>
   let twoFactorService: DeepMockProxy<TwoFactorService>
   let usersService: DeepMockProxy<UsersService>
   let tokenService: DeepMockProxy<TokenService>
-  let config: DeepMockProxy<ConfigService<AppConfig>>
 
   beforeEach(() => {
     authService = mockDeep<UserAuthService>()
-    oauthService = mockDeep<OAuthService>()
     twoFactorService = mockDeep<TwoFactorService>()
     usersService = mockDeep<UsersService>()
     tokenService = mockDeep<TokenService>()
-    config = mockDeep<ConfigService<AppConfig>>()
 
     mockReset(authService)
-    mockReset(oauthService)
     mockReset(twoFactorService)
     mockReset(usersService)
     mockReset(tokenService)
-    mockReset(config)
-    config.getOrThrow.mockReturnValue({
-      userHost: 'https://users.example.com',
-      artistHost: 'https://artists.example.com',
-    } as never)
 
-    controller = new UsersAuthController(
-      authService,
-      oauthService,
-      twoFactorService,
-      usersService,
-      tokenService,
-      config,
-    )
+    controller = new UsersAuthController(authService, twoFactorService, usersService, tokenService)
   })
 
   describe('login', () => {

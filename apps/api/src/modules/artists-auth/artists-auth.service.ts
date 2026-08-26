@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto'
+import type { LoginResult } from '@common/auth.types'
 import { MailService } from '@infra/mail/mail.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { ArtistEntity } from '@modules/artists'
@@ -52,7 +53,7 @@ export class ArtistsAuthService {
   }
 
   /** Runs the login artist operation. */
-  async loginArtist(email: ArtistEntity['email'], password: string) {
+  async loginArtist(email: ArtistEntity['email'], password: string): Promise<LoginResult> {
     const artist = await this.artistsPrivate.findByEmail(email)
     if (artist?.lockedUntil && artist.lockedUntil > new Date()) {
       throw new HttpException('Account is temporarily locked', HttpStatus.TOO_MANY_REQUESTS)

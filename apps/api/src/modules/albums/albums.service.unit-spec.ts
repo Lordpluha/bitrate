@@ -1,18 +1,8 @@
-import type { CacheService } from '@infra/cache/cache.service'
-import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { beforeEach, describe, expect, it } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
-import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { makeCacheMock, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildAlbum, buildArtist } from './__tests__/fixtures/albums.fixtures'
-import { AlbumsService } from './albums.service'
-
-const makeCacheMock = () =>
-  ({
-    get: jest.fn().mockResolvedValue(null as never),
-    set: jest.fn().mockResolvedValue(undefined as never),
-    del: jest.fn().mockResolvedValue(undefined as never),
-    invalidate: jest.fn().mockResolvedValue(undefined as never),
-    wrap: jest.fn().mockImplementation((...args: unknown[]) => (args[3] as () => unknown)()),
-  }) as unknown as CacheService
+import { ALBUM_TRACKS_INCLUDE, AlbumsService } from './albums.service'
 
 type AlbumModel = Awaited<ReturnType<PrismaMock['album']['create']>>
 type AlbumWithTracks = AlbumModel & { tracks: unknown[] }
@@ -44,13 +34,7 @@ describe('AlbumsService', () => {
       skip: 5,
       take: 5,
       where: { deletedAt: null, title: { contains: 'rock', mode: 'insensitive' } },
-      include: {
-        tracks: {
-          where: { track: { processingStatus: 'READY', deletedAt: null } },
-          include: { track: true },
-          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-        },
-      },
+      include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual({ data: albums, total: 1, page: 2, limit: 5 })
   })
@@ -66,13 +50,7 @@ describe('AlbumsService', () => {
       skip: 0,
       take: 10,
       where: { deletedAt: null, title: { contains: 'RoCk', mode: 'insensitive' } },
-      include: {
-        tracks: {
-          where: { track: { processingStatus: 'READY', deletedAt: null } },
-          include: { track: true },
-          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-        },
-      },
+      include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual({ data: albums, total: 1, page: 1, limit: 10 })
   })
@@ -88,13 +66,7 @@ describe('AlbumsService', () => {
       skip: 0,
       take: 10,
       where: { deletedAt: null },
-      include: {
-        tracks: {
-          where: { track: { processingStatus: 'READY', deletedAt: null } },
-          include: { track: true },
-          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-        },
-      },
+      include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual({ data: albums, total: 1, page: 1, limit: 10 })
   })
@@ -110,13 +82,7 @@ describe('AlbumsService', () => {
       skip: 0,
       take: 10,
       where: { deletedAt: null },
-      include: {
-        tracks: {
-          where: { track: { processingStatus: 'READY', deletedAt: null } },
-          include: { track: true },
-          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-        },
-      },
+      include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual({ data: albums, total: 1, page: 1, limit: 10 })
   })
@@ -129,13 +95,7 @@ describe('AlbumsService', () => {
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
       where: { id: 'album-1', deletedAt: null },
-      include: {
-        tracks: {
-          where: { track: { processingStatus: 'READY', deletedAt: null } },
-          include: { track: true },
-          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-        },
-      },
+      include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toEqual(album)
   })
@@ -169,13 +129,7 @@ describe('AlbumsService', () => {
 
     expect(prisma.album.findFirst).toHaveBeenCalledWith({
       where: { id: 'album-unknown', deletedAt: null },
-      include: {
-        tracks: {
-          where: { track: { processingStatus: 'READY', deletedAt: null } },
-          include: { track: true },
-          orderBy: [{ discNumber: 'asc' }, { trackNumber: 'asc' }],
-        },
-      },
+      include: ALBUM_TRACKS_INCLUDE,
     })
     expect(result).toBeNull()
   })
