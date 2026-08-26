@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useVideoElement } from './useVideoElement'
 
 type UseVideoSlidePlaybackParams = {
   slideIndex: number
@@ -11,6 +12,12 @@ type UseVideoSlidePlaybackParams = {
   isLgUp: boolean
 }
 
+/**
+ * Decides when one carousel slide's video plays.
+ *
+ * On wide screens playback follows the pointer; on narrow ones it follows the
+ * centred slide. Element-level playback itself lives in `useVideoElement`.
+ */
 export const useVideoSlidePlayback = ({
   slideIndex,
   videoSrc,
@@ -21,19 +28,28 @@ export const useVideoSlidePlayback = ({
   canHover,
   isLgUp,
 }: UseVideoSlidePlaybackParams) => {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [isPaused, setIsPaused] = useState(true)
-  const [isMuted, setIsMuted] = useState(true)
-  const [isActivated, setIsActivated] = useState(false)
-  const [isVideoLoading, setIsVideoLoading] = useState(false)
-  const [isVideoReady, setIsVideoReady] = useState(false)
+  const hasVideo = Boolean(videoSrc)
+  const video = useVideoElement({ hasVideo })
+  const {
+    activateVideo,
+    clearCenterRequestAndManualPause,
+    isActivated,
+    isCenterPlayRequested,
+    isManuallyPaused,
+    isPaused,
+    isVideoLoading,
+    playVideo,
+    requestCenterPlay,
+    resetPlaybackState,
+    resumeIfPaused,
+    setIsCenterPlayRequested,
+    toggleMuted,
+  } = video
+
   const [isHovered, setIsHovered] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-  const [isCenterPlayRequested, setIsCenterPlayRequested] = useState(false)
-  const [isManuallyPaused, setIsManuallyPaused] = useState(false)
   const lastHandledCenterSignalRef = useRef(0)
 
-  const hasVideo = Boolean(videoSrc)
   const isCenteredSlide = centeredSlideIndex === slideIndex
   const isCenteredPlaying = isCenteredSlide && isActivated && !isPaused
   const shouldHidePoster = isActivated && !isPaused
@@ -46,99 +62,25 @@ export const useVideoSlidePlayback = ({
     !isManuallyPaused &&
     (isVideoLoading || isAwaitingPlaybackStart)
 
-  const activateVideo = useCallback(() => {
-    setIsVideoLoading(!isVideoReady)
-    setIsManuallyPaused(false)
-    setIsActivated(true)
-  }, [isVideoReady])
-
-  const clearCenterRequestAndManualPause = useCallback(() => {
-    setIsCenterPlayRequested(false)
-    setIsManuallyPaused(false)
-  }, [])
-
-  const pauseVideo = useCallback(() => {
-    const video = videoRef.current
-    if (video) {
-      video.pause()
-    }
-
-    setIsPaused(true)
-  }, [])
-
-  const resetPlaybackState = useCallback(
-    ({
-      deactivate,
-      resetLoading,
-    }: {
-      deactivate: boolean
-      resetLoading: boolean
-    }) => {
-      if (resetLoading) {
-        setIsVideoLoading(false)
-      }
-
-      if (deactivate) {
-        setIsActivated(false)
-      }
-
-      clearCenterRequestAndManualPause()
-      pauseVideo()
-    },
-    [clearCenterRequestAndManualPause, pauseVideo],
-  )
-
-  const playVideo = useCallback(
-    ({
-      clearCenterRequest,
-      clearCenterRequestOnFail,
-    }: {
-      clearCenterRequest: boolean
-      clearCenterRequestOnFail: boolean
-    }) => {
-      const video = videoRef.current
-      if (!video) return false
-
-      video.muted = isMuted
-      const playPromise = video.play()
-      if (playPromise) {
-        void playPromise.catch(() => {
-          setIsPaused(true)
-
-          if (clearCenterRequestOnFail) {
-            setIsCenterPlayRequested(false)
-          }
-        })
-      }
-
-      setIsPaused(false)
-
-      if (clearCenterRequest) {
-        setIsCenterPlayRequested(false)
-      }
-
-      return true
-    },
-    [isMuted],
-  )
-
   useEffect(() => {
     if (centeredSlideIndex !== slideIndex) {
       setIsCenterPlayRequested(false)
       return
     }
-
     if (centerPlaySignal === lastHandledCenterSignalRef.current) return
 
     lastHandledCenterSignalRef.current = centerPlaySignal
-
     if (!hasVideo) return
 
-    setIsCenterPlayRequested(true)
-    setIsManuallyPaused(false)
-    setIsActivated(true)
-    setIsVideoLoading(!isVideoReady)
-  }, [centeredSlideIndex, slideIndex, centerPlaySignal, hasVideo, isVideoReady])
+    requestCenterPlay()
+  }, [
+    centeredSlideIndex,
+    slideIndex,
+    centerPlaySignal,
+    hasVideo,
+    requestCenterPlay,
+    setIsCenterPlayRequested,
+  ])
 
   useEffect(() => {
     if (!isActivated || isCarouselScrolling) return
@@ -203,41 +145,8 @@ export const useVideoSlidePlayback = ({
     if (!isLgUp) return
 
     setIsHovered(false)
-
     resetPlaybackState({ deactivate: true, resetLoading: true })
   }, [isLgUp, resetPlaybackState])
-
-  const togglePlay = useCallback(() => {
-    const video = videoRef.current
-    if (!video) {
-      if (hasVideo) {
-        activateVideo()
-      }
-      return
-    }
-
-    if (video.paused) {
-      void video.play()
-      setIsPaused(false)
-      setIsManuallyPaused(false)
-      return
-    }
-
-    video.pause()
-    setIsPaused(true)
-    setIsManuallyPaused(true)
-  }, [hasVideo, activateVideo])
-
-  const toggleMuted = useCallback(() => {
-    const video = videoRef.current
-    if (!video) {
-      setIsMuted((prev) => !prev)
-      return
-    }
-
-    video.muted = !video.muted
-    setIsMuted(video.muted)
-  }, [])
 
   const handleCardTap = useCallback(() => {
     if (isDragging || !hasVideo) return
@@ -246,7 +155,6 @@ export const useVideoSlidePlayback = ({
       toggleMuted()
       return
     }
-
     if (canHover) return
 
     clearCenterRequestAndManualPause()
@@ -257,14 +165,7 @@ export const useVideoSlidePlayback = ({
       return
     }
 
-    const video = videoRef.current
-    if (!video) return
-
-    if (video.paused) {
-      void video.play()
-      setIsPaused(false)
-      setIsManuallyPaused(false)
-    }
+    resumeIfPaused()
   }, [
     isDragging,
     hasVideo,
@@ -276,16 +177,17 @@ export const useVideoSlidePlayback = ({
     slideIndex,
     isActivated,
     activateVideo,
+    resumeIfPaused,
   ])
 
   return {
-    videoRef,
+    videoRef: video.videoRef,
     hasVideo,
     isPaused,
-    isMuted,
+    isMuted: video.isMuted,
     isActivated,
     isVideoLoading,
-    isVideoReady,
+    isVideoReady: video.isVideoReady,
     isCenteredSlide,
     isCenteredPlaying,
     shouldHidePoster,
@@ -293,11 +195,11 @@ export const useVideoSlidePlayback = ({
     handleMouseEnter,
     handleMouseLeave,
     handleCardTap,
-    togglePlay,
+    togglePlay: video.togglePlay,
     toggleMuted,
     setIsDragging,
-    setIsVideoReady,
-    setIsVideoLoading,
-    setIsPaused,
+    setIsVideoReady: video.setIsVideoReady,
+    setIsVideoLoading: video.setIsVideoLoading,
+    setIsPaused: video.setIsPaused,
   }
 }
