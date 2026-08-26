@@ -6,8 +6,8 @@ import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
-import { TracksController } from './tracks.controller'
 import { TrackPlaybackService } from './track-playback.service'
+import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
 jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
