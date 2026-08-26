@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Disable pre-push build hook for release automation
+        run: rm -f .git/hooks/pre-push
+
       - name: Create Release PR or tag releases
         uses: changesets/action@v1
         with:

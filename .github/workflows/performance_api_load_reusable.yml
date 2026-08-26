@@ -51,7 +51,7 @@ jobs:
 
       - name: Create shadow database
         run: |
-          psql -h localhost -U spotify -c "CREATE DATABASE spotify_test_shadow;" || true
+          psql -h localhost -U spotify -d spotify_test -c "CREATE DATABASE spotify_test_shadow;" || true
         env:
           PGPASSWORD: spotify_password
 
@@ -70,6 +70,9 @@ jobs:
         run: |
           pnpm --filter @spotify/api run build
           ls -la apps/api/dist || echo "dist folder not found"
+        env:
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
       - name: Setup database
         run: |

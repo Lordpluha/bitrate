@@ -68,6 +68,14 @@ jobs:
         if: ${{ inputs.run-biome }}
         run: pnpm exec biome ci apps/web-player packages/ui-react packages/contracts
 
+      - name: Build ui-react
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @spotify/ui-react run build
+
+      - name: Generate Next.js route types
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @spotify/web-player exec next typegen
+
       - name: Run web-player typecheck
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @spotify/web-player check-types
@@ -87,6 +95,14 @@ jobs:
       - name: Run web-player screenshot tests
         if: ${{ inputs.run-screenshot }}
         run: pnpm --filter @spotify/web-player test:screenshot
+
+      - name: Upload screenshot test failure artifacts
+        if: ${{ inputs.run-screenshot && failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-player-screenshot-diffs
+          path: apps/web-player/test-results/
+          retention-days: 7
 
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker

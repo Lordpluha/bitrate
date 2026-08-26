@@ -42,6 +42,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           pattern: 'apps/web-player/.next/static/**/*.js'
           compression: gzip
+          cwd: apps/web-player
+          install-script: pnpm run ci:bundle-analysis-install
 
       - name: Restore repository state
         if: always()

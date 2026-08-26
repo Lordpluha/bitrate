@@ -8,6 +8,7 @@ WORKDIR /app
 # Stage 2: Dependencies
 FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts ./scripts
 COPY apps/admin/package.json ./apps/admin/
 COPY turbo.json ./
 RUN pnpm install --frozen-lockfile
@@ -28,6 +29,7 @@ RUN pnpm --filter @spotify/admin run build
 # Stage 5: Production Dependencies
 FROM base AS prod-dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts ./scripts
 COPY apps/admin/package.json ./apps/admin/
 RUN pnpm install --prod --frozen-lockfile
 
