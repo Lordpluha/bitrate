@@ -1,59 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-
-import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
-
+import {
+  first,
+  fourth,
+  second,
+  startPlaylist,
+  third,
+} from './__tests__/playerTracks.fixtures'
 import { usePlayerStore } from './playerStore'
 import { resolvePlaybackTransition } from './playerStore.utils'
-
-type TestTrackInput = {
-  id: string
-  title?: string
-  duration?: number
-}
-
-const createTrack = ({
-  id,
-  title = id,
-  duration = 100,
-}: TestTrackInput): TrackEntity => ({
-  id,
-  title,
-  duration,
-  artistId: 'artist-id',
-  audioUrl: `/audio/${id}.mp3`,
-  cover: '/cover.jpg',
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  releaseDate: null,
-  lyrics: null,
-  processingStatus: 'READY' as const,
-  processingError: null,
-  processingAttempts: 0,
-  processingStartedAt: null,
-  processingFinishedAt: null,
-  explicit: false,
-  popularity: 0,
-  playCount: 0,
-  isrc: null,
-  previewUrl: null,
-  trackNumber: null,
-  discNumber: 1,
-  language: null,
-  deletedAt: null,
-})
-
-const first = createTrack({ id: 'first' })
-const second = createTrack({ id: 'second' })
-const third = createTrack({ id: 'third' })
-const fourth = createTrack({ id: 'fourth' })
-
-const startPlaylist = () =>
-  usePlayerStore.getState().playPlaylist({
-    currentPlaylistId: 'playlist-1',
-    currentPlaylistName: 'Playlist',
-    startTrack: first,
-    tracks: [first, second],
-  })
 
 describe('player queue', () => {
   beforeEach(() => {
