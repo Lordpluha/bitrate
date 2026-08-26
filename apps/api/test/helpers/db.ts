@@ -26,3 +26,24 @@ export const resetArtistsDatabase = async (prisma: PrismaService) => {
   await resetTracksDatabase(prisma)
   await prisma.artist.deleteMany()
 }
+
+/**
+ * Marks an account's email as verified.
+ *
+ * Login refuses unverified accounts, so an end-to-end flow that registers and
+ * then signs in has to pass through verification the way a real user would.
+ */
+export const verifyUserEmail = async (prisma: PrismaService, email: string) => {
+  await prisma.user.updateMany({
+    where: { email },
+    data: { emailVerifiedAt: new Date() },
+  })
+}
+
+/** Marks an artist account's email as verified. */
+export const verifyArtistEmail = async (prisma: PrismaService, email: string) => {
+  await prisma.artist.updateMany({
+    where: { email },
+    data: { emailVerifiedAt: new Date() },
+  })
+}

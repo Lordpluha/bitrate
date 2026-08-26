@@ -2,7 +2,7 @@ import type { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
-import { resetDatabase } from '../helpers/db'
+import { resetDatabase, verifyUserEmail } from '../helpers/db'
 import { closeE2eApp, createE2eApp, getResponseCookies } from './e2e-app'
 
 const makeRunId = () => Math.random().toString(36).slice(2, 8)
@@ -14,6 +14,7 @@ const registerAndLogin = async (app: INestApplication, prisma: PrismaService, ru
     username: `search_${runId}`,
   }
   await request(app.getHttpServer()).post('/auth/registration').send(credentials).expect(201)
+  await verifyUserEmail(prisma, credentials.email)
   await prisma.user.update({
     where: { email: credentials.email },
     data: { emailVerifiedAt: new Date() },
