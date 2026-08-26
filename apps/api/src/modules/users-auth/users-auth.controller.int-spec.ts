@@ -23,6 +23,7 @@ const makeAuthServiceMock = () =>
 const makeUsersServiceMock = () =>
   ({
     findById: jest.fn(),
+    findSelfById: jest.fn(),
   }) as unknown as jest.Mocked<UsersService>
 
 const makeTokenServiceMock = () =>
@@ -79,7 +80,7 @@ describe('UsersAuthController (int)', () => {
     authService.registerUser.mockReset()
     authService.logout.mockReset()
     authService.refresh.mockReset()
-    usersService.findById.mockReset()
+    usersService.findSelfById.mockReset()
   })
 
   it('POST /auth/registration should return 201', async () => {
@@ -118,12 +119,12 @@ describe('UsersAuthController (int)', () => {
   })
 
   it('GET /auth/me should return 200 with user', async () => {
-    usersService.findById.mockResolvedValue(user as never)
+    usersService.findSelfById.mockResolvedValue(user as never)
 
     const res = await request(app.getHttpServer()).get('/auth/me')
 
     expect(res.status).toBe(200)
-    expect(usersService.findById).toHaveBeenCalledWith(user.id)
+    expect(usersService.findSelfById).toHaveBeenCalledWith(user.id)
   })
 
   it('POST /auth/refresh should return 201 and set new cookies', async () => {

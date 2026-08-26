@@ -1,5 +1,5 @@
 import { type AppConfig, AUTH_ROUTE_THROTTLE } from '@common/config'
-import { UserEntity } from '@modules/users'
+import { SelfUserEntity, UserEntity } from '@modules/users'
 import { UsersService } from '@modules/users/users.service'
 import {
   Body,
@@ -63,7 +63,7 @@ import { UserAuthService } from './user-auth.service'
 import { UserAuth } from './users-auth.guard'
 
 /** Represents the users auth controller. */
-@ApiExtraModels(UserSessionEntity)
+@ApiExtraModels(UserSessionEntity, SelfUserEntity)
 @ApiTags('Users Auth')
 @Throttle(AUTH_ROUTE_THROTTLE)
 @Controller({ path: 'auth', version: '1' })
@@ -135,7 +135,7 @@ export class UsersAuthController {
   @Get('me')
   async getMe(@Req() req: Request) {
     const user = req.user as UserEntity
-    return await this.userService.findById(user.id)
+    return await this.userService.findSelfById(user.id)
   }
 
   /** Runs the forgot password operation. */

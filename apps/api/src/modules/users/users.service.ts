@@ -3,7 +3,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { UserEntity } from './entities'
-import { PUBLIC_USER_SELECT } from './users.select'
+import { PUBLIC_USER_SELECT, SELF_USER_SELECT } from './users.select'
 
 /** Represents the users service. */
 @Injectable()
@@ -18,6 +18,19 @@ export class UsersService {
         id,
       },
       select: PUBLIC_USER_SELECT,
+    })
+  }
+
+  /**
+   * The signed-in account's own record.
+   *
+   * Separate from `findById` because settings need the address and two-factor
+   * state that the public projection deliberately withholds.
+   */
+  async findSelfById(id: UserEntity['id']) {
+    return await this.prisma.user.findUniqueOrThrow({
+      where: { id },
+      select: SELF_USER_SELECT,
     })
   }
 
