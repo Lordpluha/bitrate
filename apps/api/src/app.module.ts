@@ -1,8 +1,10 @@
 import { join } from 'node:path'
+import { REDIS_CLIENT } from '@infra/cache/cache.constants'
 import { CacheModule } from '@infra/cache/cache.module'
 import { AuditInterceptor } from '@infra/observability/audit.interceptor'
 import { MetricsInterceptor } from '@infra/observability/metrics.interceptor'
 import { MetricsService } from '@infra/observability/metrics.service'
+import { RedisThrottlerStorage } from '@infra/observability/redis-throttler.storage'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { StorageModule } from '@infra/storage/storage.module'
 import { AlbumsModule } from '@modules/albums/albums.module'
@@ -25,9 +27,10 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { SentryModule } from '@sentry/nestjs/setup'
+import type { Redis } from 'ioredis'
 import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
-import { PathTraversalMiddleware } from './common'
+import { PathTraversalMiddleware, RequestIdMiddleware } from './common'
 import { API_RATE_LIMITS, appConfigs } from './common/config'
 import { HttpCacheInterceptor } from './common/interceptors/http-cache.interceptor'
 
@@ -62,7 +65,14 @@ import { HttpCacheInterceptor } from './common/interceptors/http-cache.intercept
         },
       },
     }),
-    ThrottlerModule.forRoot(API_RATE_LIMITS),
+    ThrottlerModule.forRootAsync({
+      imports: [CacheModule],
+      inject: [REDIS_CLIENT],
+      useFactory: (redis: Redis) => ({
+        throttlers: API_RATE_LIMITS,
+        storage: new RedisThrottlerStorage(redis),
+      }),
+    }),
     BullModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -100,6 +110,6 @@ import { HttpCacheInterceptor } from './common/interceptors/http-cache.intercept
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(PathTraversalMiddleware).forRoutes('*path')
+    consumer.apply(RequestIdMiddleware, PathTraversalMiddleware).forRoutes('*path')
   }
 }

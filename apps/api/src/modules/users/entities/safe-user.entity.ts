@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import type { User } from '@prisma/client'
 
 /** Represents the safe user entity. */
-export class SafeUserEntity implements Omit<User, 'password' | 'twoFactorSecret'> {
+export class SafeUserEntity {
   /** The id value. */
   @ApiProperty()
   id: string
@@ -10,10 +9,6 @@ export class SafeUserEntity implements Omit<User, 'password' | 'twoFactorSecret'
   /** The username value. */
   @ApiProperty()
   username: string
-
-  /** The email value. */
-  @ApiProperty()
-  email: string
 
   /** The created at value. */
   @ApiProperty()
@@ -30,24 +25,4 @@ export class SafeUserEntity implements Omit<User, 'password' | 'twoFactorSecret'
   /** The updated at value. */
   @ApiProperty()
   updatedAt: Date
-
-  /** The two factor enabled value. */
-  @ApiProperty()
-  twoFactorEnabled: boolean
-
-  /** Email verification timestamp. */
-  @ApiProperty({ nullable: true })
-  emailVerifiedAt: Date | null
-
-  /** Consecutive failed login attempts. */
-  @ApiProperty()
-  failedLoginAttempts: number
-
-  /** Account lock expiration timestamp. */
-  @ApiProperty({ nullable: true })
-  lockedUntil: Date | null
-
-  /** Soft deletion timestamp. */
-  @ApiProperty({ nullable: true })
-  deletedAt: Date | null
 }

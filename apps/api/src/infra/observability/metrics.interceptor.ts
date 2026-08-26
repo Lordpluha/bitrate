@@ -6,6 +6,20 @@ import { finalize } from 'rxjs/operators'
 // biome-ignore lint/style/useImportType: Nest needs this class in emitted constructor metadata.
 import { MetricsService } from './metrics.service'
 
+const UNKNOWN_ROUTE = 'unknown'
+
+/** Returns only a registered route template, never a user-controlled request path. */
+export const resolveMetricRoute = (context: ExecutionContext, request: Request): string => {
+  const routePath = request.route?.path
+  if (typeof routePath === 'string' && routePath.length > 0 && routePath.length <= 256) {
+    return routePath
+  }
+
+  const controller = context.getClass()?.name
+  const handler = context.getHandler()?.name
+  return controller && handler ? `${controller}.${handler}` : UNKNOWN_ROUTE
+}
+
 @Injectable()
 export class MetricsInterceptor implements NestInterceptor {
   constructor(private readonly metrics: MetricsService) {}
@@ -16,10 +30,9 @@ export class MetricsInterceptor implements NestInterceptor {
     const response = context.switchToHttp().getResponse<Response>()
     return next.handle().pipe(
       finalize(() => {
-        const route = request.route?.path ?? request.path
         this.metrics.record(
           request.method,
-          route,
+          resolveMetricRoute(context, request),
           response.statusCode,
           performance.now() - startedAt,
         )

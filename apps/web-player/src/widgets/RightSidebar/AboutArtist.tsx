@@ -63,11 +63,13 @@ export const AboutArtist = () => {
           <span className="truncate text-sm font-bold text-text group-hover/name:underline">
             {artist.username || 'Unknown Artist'}
           </span>
-          <BadgeCheck
-            aria-hidden="true"
-            className="shrink-0 fill-green-100 text-green-900"
-            size={16}
-          />
+          {artist.verified ? (
+            <BadgeCheck
+              aria-hidden="true"
+              className="shrink-0 fill-green-100 text-green-900"
+              size={16}
+            />
+          ) : null}
         </Link>
 
         <div className="mt-3 flex items-end justify-between gap-3">

@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest'
 import type { TrackManifest } from '@/entities/Player/model/manifest.types'
 import {
   findFragmentIndexAt,
+  findFragmentIndexForSeek,
   getBufferedAhead,
+  isTimeRangeBuffered,
   resolveFragment,
   selectRendition,
   toRangeHeader,
@@ -59,7 +61,22 @@ const buildManifest = (): TrackManifest => {
 }
 
 const manifest = buildManifest()
-const rendition = manifest.renditions[0]!
+const rendition = manifest.renditions[0]
+if (!rendition) throw new Error('Missing rendition fixture')
+
+const ranges = (windows: [number, number][]): TimeRanges => {
+  const getWindow = (index: number) => {
+    const window = windows[index]
+    if (!window) throw new RangeError(`Missing buffered range ${index}`)
+    return window
+  }
+
+  return {
+    length: windows.length,
+    start: (index: number) => getWindow(index)[0],
+    end: (index: number) => getWindow(index)[1],
+  } as TimeRanges
+}
 
 describe('toRangeHeader', () => {
   it('emits an inclusive byte range', () => {
@@ -86,7 +103,8 @@ describe('resolveFragment', () => {
 
   it('produces a range whose length matches the manifest entry', () => {
     const resolved = resolveFragment({ manifest, rendition, index: 3 })
-    const [start, end] = resolved!.byteRange
+    if (!resolved) throw new Error('Missing resolved fragment fixture')
+    const [start, end] = resolved.byteRange
 
     expect(end - start + 1).toBe(66_000)
   })
@@ -147,6 +165,53 @@ describe('findFragmentIndexAt', () => {
   })
 })
 
+describe('findFragmentIndexForSeek', () => {
+  it('starts at the seek target when it is not buffered', () => {
+    expect(
+      findFragmentIndexForSeek({
+        buffered: ranges([[0, 10]]),
+        manifest,
+        rendition,
+        timeSeconds: 42,
+      }),
+    ).toBe(10)
+  })
+
+  it('skips fragments already retained in the target buffer', () => {
+    expect(
+      findFragmentIndexForSeek({
+        buffered: ranges([[0, 20.5]]),
+        manifest,
+        rendition,
+        timeSeconds: 5,
+      }),
+    ).toBe(5)
+  })
+
+  it('returns the end sentinel when the remaining track is fully buffered', () => {
+    expect(
+      findFragmentIndexForSeek({
+        buffered: ranges([[0, 60]]),
+        manifest,
+        rendition,
+        timeSeconds: 5,
+      }),
+    ).toBe(rendition.fragments.length)
+  })
+})
+
+describe('isTimeRangeBuffered', () => {
+  it('requires one retained range to cover the complete fragment', () => {
+    const buffered = ranges([
+      [0, 10],
+      [20, 30],
+    ])
+
+    expect(isTimeRangeBuffered(buffered, 2, 8)).toBe(true)
+    expect(isTimeRangeBuffered(buffered, 8, 22)).toBe(false)
+  })
+})
+
 describe('selectRendition', () => {
   it('returns the requested bitrate', () => {
     expect(selectRendition(manifest, 192)?.bitrate).toBe(192)
@@ -158,13 +223,6 @@ describe('selectRendition', () => {
 })
 
 describe('getBufferedAhead', () => {
-  const ranges = (windows: [number, number][]): TimeRanges =>
-    ({
-      length: windows.length,
-      start: (index: number) => windows[index]![0],
-      end: (index: number) => windows[index]![1],
-    }) as TimeRanges
-
   it('measures from the play head to the end of its range', () => {
     expect(getBufferedAhead(ranges([[0, 30]]), 10)).toBe(20)
   })

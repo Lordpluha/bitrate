@@ -4,22 +4,18 @@ import { type LoginFormData, loginSchema } from '@entities/User'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast } from '@shared/api/feedback'
-import { ROUTES } from '@shared/routes'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
+import { getLoginDestination } from '@/features/Auth/model/getLoginDestination'
 
 export const useLoginForm = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const mutation = useMutation('post', '/api/v1/auth/login', {
     onSuccess: (data) => {
-      const requires2fa =
-        data && typeof data === 'object' && 'requires2fa' in data
-          ? data.requires2fa
-          : false
-      router.push(requires2fa ? ROUTES.auth.twoFactorLogin : ROUTES.main)
+      router.push(getLoginDestination(data))
     },
     onError: (error) =>
       showApiErrorToast(error, 'Unable to log in. Please try again.'),

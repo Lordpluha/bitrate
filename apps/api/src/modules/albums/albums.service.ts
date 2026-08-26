@@ -6,12 +6,13 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { ArtistEntity } from '@modules/artists'
 import type { UserEntity } from '@modules/users'
 import { Injectable, NotFoundException } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
 import { CreateAlbumDto } from './dtos/create-album.dto'
 import { UpdateAlbumDto } from './dtos/update-album.dto'
 import { AlbumEntity } from './entities'
 
 /** An `AlbumTrack` join row with its track loaded. */
-type AlbumTrackWithTrack = { track: Record<string, unknown>; id: string } & Record<string, unknown>
+type AlbumTrackWithTrack = Prisma.AlbumTrackGetPayload<{ include: { track: true } }>
 
 /**
  * Flattens an album membership row into the track it points at.
@@ -41,15 +42,17 @@ export class AlbumsService {
     page = 1,
     limit = 10,
     title,
-  }: { page?: number; limit?: number } & Partial<AlbumEntity>) {
+    artistId,
+  }: { page?: number; limit?: number } & Pick<Partial<AlbumEntity>, 'artistId' | 'title'>) {
     const pagination = normalizePagination(page, limit)
     const where = {
       deletedAt: null,
+      ...(artistId ? { artistId } : {}),
       ...(title ? { title: { contains: title, mode: 'insensitive' as const } } : {}),
     }
     return await this.cache.wrap(
       NS.ALBUMS,
-      `list:${pagination.page}:${pagination.limit}:${title ?? ''}`,
+      `list:${pagination.page}:${pagination.limit}:${title ?? ''}:${artistId ?? ''}`,
       TTL.SHORT,
       async () => {
         const [albums, total] = await this.prisma.$transaction([
@@ -57,6 +60,7 @@ export class AlbumsService {
             skip: pagination.skip,
             take: pagination.limit,
             where,
+            orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
             include: {
               tracks: {
                 where: { track: { processingStatus: 'READY', deletedAt: null } },

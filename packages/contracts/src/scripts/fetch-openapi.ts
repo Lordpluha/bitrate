@@ -12,4 +12,7 @@ async function main() {
   console.log('✅ Generated src/api/v1.ts')
 }
 
-main().catch(console.error)
+main().catch((error: unknown) => {
+  console.error(error)
+  process.exitCode = 1
+})

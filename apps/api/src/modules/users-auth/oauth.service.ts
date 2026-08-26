@@ -225,6 +225,7 @@ export class OAuthService {
         access_token: this.token.hashToken(access_token),
         refresh_token: this.token.hashToken(refresh_token),
         userId: user.id,
+        expiresAt: this.token.getRefreshTokenExpiresAt(),
       },
     })
 

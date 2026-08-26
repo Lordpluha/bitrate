@@ -29,23 +29,37 @@ export const PlaybackProgress = ({
   onSeek,
 }: PlaybackProgressProps) => {
   const progressBarRef = useRef<HTMLDivElement>(null)
+  const activePointerIdRef = useRef<number | null>(null)
+  const seekTimeRef = useRef<number | null>(null)
   const [seekTime, setSeekTime] = useState<number | null>(null)
   const [activePointerId, setActivePointerId] = useState<number | null>(null)
-  const displayedTime = seekTime ?? currentTime
+  const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0
+  const rawDisplayedTime = seekTime ?? currentTime
+  const displayedTime = Number.isFinite(rawDisplayedTime)
+    ? Math.max(0, Math.min(safeDuration, rawDisplayedTime))
+    : 0
 
   const calculateTime = useCallback(
     (clientX: number) => {
       const rect = progressBarRef.current?.getBoundingClientRect()
-      if (!rect || !duration) return null
+      if (!rect || rect.width <= 0 || safeDuration === 0) return null
 
       const percentage = Math.max(
         0,
         Math.min(1, (clientX - rect.left) / rect.width),
       )
-      return percentage * duration
+      return percentage * safeDuration
     },
-    [duration],
+    [safeDuration],
   )
+
+  const clearPointer = useCallback((pointerId: number) => {
+    if (activePointerIdRef.current !== pointerId) return
+    activePointerIdRef.current = null
+    seekTimeRef.current = null
+    setActivePointerId(null)
+    setSeekTime(null)
+  }, [])
 
   useEffect(() => {
     if (activePointerId === null) return
@@ -53,46 +67,63 @@ export const PlaybackProgress = ({
     const handlePointerMove = (event: PointerEvent) => {
       if (event.pointerId !== activePointerId) return
       const time = calculateTime(event.clientX)
-      if (time !== null) setSeekTime(time)
+      if (time !== null) {
+        seekTimeRef.current = time
+        setSeekTime(time)
+      }
     }
-    const handlePointerEnd = (event: PointerEvent) => {
+    const handlePointerUp = (event: PointerEvent) => {
       if (event.pointerId !== activePointerId) return
-      const time = calculateTime(event.clientX) ?? seekTime
+      const time = calculateTime(event.clientX) ?? seekTimeRef.current
       if (time !== null) onSeek(time)
-      setActivePointerId(null)
-      setSeekTime(null)
+      clearPointer(event.pointerId)
+    }
+    const handlePointerCancel = (event: PointerEvent) => {
+      if (event.pointerId !== activePointerId) return
+      clearPointer(event.pointerId)
     }
 
     window.addEventListener('pointermove', handlePointerMove)
-    window.addEventListener('pointerup', handlePointerEnd, { once: true })
-    window.addEventListener('pointercancel', handlePointerEnd, { once: true })
+    window.addEventListener('pointerup', handlePointerUp)
+    window.addEventListener('pointercancel', handlePointerCancel)
 
     return () => {
       window.removeEventListener('pointermove', handlePointerMove)
-      window.removeEventListener('pointerup', handlePointerEnd)
-      window.removeEventListener('pointercancel', handlePointerEnd)
+      window.removeEventListener('pointerup', handlePointerUp)
+      window.removeEventListener('pointercancel', handlePointerCancel)
     }
-  }, [activePointerId, calculateTime, onSeek, seekTime])
+  }, [activePointerId, calculateTime, clearPointer, onSeek])
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    event.currentTarget.setPointerCapture(event.pointerId)
+    if (activePointerIdRef.current !== null) return
+    if (
+      event.isPrimary === false ||
+      (event.button !== undefined && event.button !== 0)
+    ) {
+      return
+    }
+    const time = calculateTime(event.clientX)
+    if (time === null) return
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+    activePointerIdRef.current = event.pointerId
+    seekTimeRef.current = time
     setActivePointerId(event.pointerId)
-    setSeekTime(calculateTime(event.clientX))
+    setSeekTime(time)
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (!duration) return
+    if (safeDuration === 0) return
 
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault()
       const direction = event.key === 'ArrowLeft' ? -1 : 1
-      onSeek(Math.max(0, Math.min(duration, displayedTime + direction * 5)))
+      onSeek(Math.max(0, Math.min(safeDuration, displayedTime + direction * 5)))
     }
   }
 
   const progress =
-    duration > 0 && Number.isFinite(duration)
-      ? Math.min(100, Math.max(0, (displayedTime / duration) * 100))
+    safeDuration > 0
+      ? Math.min(100, Math.max(0, (displayedTime / safeDuration) * 100))
       : 0
 
   return (
@@ -102,10 +133,10 @@ export const PlaybackProgress = ({
       </span>
       <div
         aria-label="Seek playback"
-        aria-valuemax={duration || 0}
+        aria-valuemax={safeDuration}
         aria-valuemin={0}
         aria-valuenow={displayedTime}
-        aria-valuetext={`${formatTime(displayedTime)} of ${formatTime(duration)}`}
+        aria-valuetext={`${formatTime(displayedTime)} of ${formatTime(safeDuration)}`}
         className="group relative h-1 flex-1 cursor-pointer touch-none rounded-full bg-border"
         onKeyDown={handleKeyDown}
         onPointerDown={handlePointerDown}
@@ -121,7 +152,7 @@ export const PlaybackProgress = ({
         </div>
       </div>
       <span className="min-w-10 text-xs tabular-nums text-text-subdued">
-        {formatTime(duration)}
+        {formatTime(safeDuration)}
       </span>
     </div>
   )

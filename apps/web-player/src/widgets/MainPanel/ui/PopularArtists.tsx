@@ -12,6 +12,7 @@ import {
   CustomPrevIcon,
 } from '@spotify/ui-react'
 import { useI18n } from '@/shared/i18n'
+import { getArtistAvatarUrl } from '@/shared/utils/mediaUrl'
 
 export const PopularArtists = () => {
   const { t } = useI18n()
@@ -22,7 +23,7 @@ export const PopularArtists = () => {
         id: artist.id,
         name: artist.username,
         description: t('common.artist'),
-        imageUrl: artist.avatar,
+        imageUrl: getArtistAvatarUrl(artist.avatar),
       }))
     : []
 
@@ -54,7 +55,7 @@ export const PopularArtists = () => {
                   <MusicCardLg
                     description={artist.description}
                     id={artist.id}
-                    imageUrl={artist.imageUrl || undefined}
+                    imageUrl={artist.imageUrl}
                     isArtist={true}
                     name={artist.name}
                   />

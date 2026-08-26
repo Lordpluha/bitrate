@@ -1,4 +1,4 @@
-import { AUTH_ROUTE_THROTTLE } from '@common/config'
+import { type AppConfig, AUTH_ROUTE_THROTTLE } from '@common/config'
 import { UserEntity } from '@modules/users'
 import { UsersService } from '@modules/users/users.service'
 import {
@@ -8,11 +8,13 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Post,
   Query,
   Req,
   Res,
 } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import { Request, Response } from 'express'
@@ -72,6 +74,7 @@ export class UsersAuthController {
     private twoFactorService: TwoFactorService,
     private userService: UsersService,
     private tokenService: TokenService,
+    private config: ConfigService<AppConfig>,
   ) {}
 
   /** Runs the login operation. */
@@ -180,7 +183,7 @@ export class UsersAuthController {
   /** Revokes an individual session owned by the current user. */
   @UserAuth()
   @Delete('sessions/:id')
-  async revokeSession(@Req() req: UserAuthRequest, @Param('id') id: string) {
+  async revokeSession(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
     await this.authService.revokeSession(req.user.id, id)
   }
 
@@ -265,7 +268,9 @@ export class UsersAuthController {
     @Res() res: Response,
   ) {
     if (!state || state !== req.cookies?.oauth_state) {
-      return res.redirect(`${process.env.WEB_HOST!}/login?error=oauth_state_mismatch`)
+      return res.redirect(
+        `${this.config.getOrThrow('web').userHost}/login?error=oauth_state_mismatch`,
+      )
     }
     res.clearCookie('oauth_state')
     const result = await this.oauthService.handleGoogleCallback(code)
@@ -297,7 +302,9 @@ export class UsersAuthController {
     @Res() res: Response,
   ) {
     if (!state || state !== req.cookies?.oauth_state) {
-      return res.redirect(`${process.env.WEB_HOST!}/login?error=oauth_state_mismatch`)
+      return res.redirect(
+        `${this.config.getOrThrow('web').userHost}/login?error=oauth_state_mismatch`,
+      )
     }
     res.clearCookie('oauth_state')
     const result = await this.oauthService.handleFacebookCallback(code)
@@ -319,9 +326,9 @@ export class UsersAuthController {
         path: '/',
         maxAge: 10 * 60 * 1000,
       })
-      return res.redirect(`${process.env.WEB_HOST!}/login/2fa`)
+      return res.redirect(`${this.config.getOrThrow('web').userHost}/login/2fa`)
     }
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
-    return res.redirect(process.env.WEB_HOST!)
+    return res.redirect(this.config.getOrThrow('web').userHost)
   }
 }

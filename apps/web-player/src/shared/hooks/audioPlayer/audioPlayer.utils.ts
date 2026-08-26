@@ -1,5 +1,4 @@
 import type Hls from 'hls.js'
-import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
 
 export const ACTIVE_BUFFER_SECONDS = 10
 export const PREFETCH_BUFFER_SECONDS = 10
@@ -110,19 +109,11 @@ const getApiUrl = () => {
 export const getHlsUrl = (trackId: string) =>
   `${getApiUrl()}api/v1/tracks/stream/${trackId}/hls/master.m3u8`
 
-export const getPlaybackKey = (trackId: string, playlistId: string | null) =>
-  `${playlistId ?? 'track'}:${trackId}`
-
-export const getNextTrack = (
-  currentTrack: TrackEntity | null,
-  currentTrackIndex: number,
-  playlist: TrackEntity[],
-) => {
-  if (!currentTrack || playlist.length < 2) return null
-  if (currentTrackIndex < 0 || currentTrackIndex >= playlist.length) return null
-
-  return playlist[(currentTrackIndex + 1) % playlist.length] ?? null
-}
+export const getPlaybackKey = (
+  trackId: string,
+  playlistId: string | null,
+  playbackSequence: number,
+) => `${playlistId ?? 'track'}:${trackId}:${playbackSequence}`
 
 export const savePlaybackPosition = (playbackKey: string, position: number) => {
   sessionStorage.setItem(

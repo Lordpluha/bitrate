@@ -2,11 +2,38 @@
 
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
+import { ZodError } from 'zod'
 import { trackManifestSchema } from '@/entities/Player/api/client'
 import type { TrackManifest } from '@/entities/Player/model/manifest.types'
 import { fetchWithAuthRefresh } from '@/shared/api/client'
+import { ApiRequestError, shouldRetryApiQuery } from '@/shared/api/errors'
 import { apiQueryKeys } from '@/shared/api/queryKeys'
 import { getApiUrl } from '@/shared/utils/mediaUrl'
+
+const MANIFEST_STALE_TIME_MS = 5 * 60 * 1000
+const MANIFEST_GC_TIME_MS = 30 * 60 * 1000
+
+export const shouldRetryTrackManifest = (
+  failureCount: number,
+  error: unknown,
+) =>
+  error instanceof ZodError ? false : shouldRetryApiQuery(failureCount, error)
+
+export const fetchTrackManifest = async (
+  trackId: string,
+): Promise<TrackManifest | null> => {
+  const response = await fetchWithAuthRefresh(
+    getApiUrl(`/api/v1/tracks/${trackId}/manifest`),
+  )
+
+  /** A missing manifest marks a legacy track; other failures remain retryable. */
+  if (response.status === 404) return null
+  if (!response.ok) {
+    throw new ApiRequestError('Failed to fetch track manifest', response.status)
+  }
+
+  return trackManifestSchema.parse(await response.json())
+}
 
 /**
  * Resolves a track's playback manifest through the React Query cache, so the
@@ -23,24 +50,10 @@ export const useManifestResolver = () => {
       try {
         return await queryClient.fetchQuery({
           queryKey: apiQueryKeys.tracks.manifest(trackId),
-          queryFn: async () => {
-            /**
-             * Same reasoning as the fragment fetch: retry once through a
-             * refresh before treating a 401 as "no manifest, use legacy HLS" —
-             * an expired token should not silently downgrade playback quality.
-             */
-            const response = await fetchWithAuthRefresh(
-              getApiUrl(`/api/v1/tracks/${trackId}/manifest`),
-            )
-
-            /** No manifest: a legacy track, not an error worth surfacing. */
-            if (!response.ok) return null
-
-            return trackManifestSchema.parse(await response.json())
-          },
-          staleTime: Number.POSITIVE_INFINITY,
-          gcTime: Number.POSITIVE_INFINITY,
-          retry: false,
+          queryFn: () => fetchTrackManifest(trackId),
+          staleTime: MANIFEST_STALE_TIME_MS,
+          gcTime: MANIFEST_GC_TIME_MS,
+          retry: shouldRetryTrackManifest,
         })
       } catch {
         return null

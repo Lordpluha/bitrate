@@ -1,4 +1,4 @@
-import { createReadStream, createWriteStream } from 'node:fs'
+import { constants, createReadStream, createWriteStream } from 'node:fs'
 import { access, mkdir, rm, stat } from 'node:fs/promises'
 import { dirname, extname, normalize, resolve, sep } from 'node:path'
 import type { Readable } from 'node:stream'
@@ -38,7 +38,7 @@ export class LocalStorageService implements StorageService {
   /** Verifies that the local object root can be accessed. */
   async healthCheck(): Promise<boolean> {
     await mkdir(this.root, { recursive: true })
-    await access(this.root)
+    await access(this.root, constants.R_OK | constants.W_OK)
     return true
   }
   /** The root value. */

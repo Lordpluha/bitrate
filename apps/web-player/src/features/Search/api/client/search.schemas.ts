@@ -31,8 +31,10 @@ export const searchResultTypeSchema = z
   )
 
 export const searchResultSchema = z.object({
+  artistId: z.string().nullable(),
   id: z.string(),
   image: z.string().nullable(),
+  ownerId: z.string().nullable(),
   rank: z.number(),
   subtitle: z.string().nullable(),
   title: z.string(),
@@ -52,9 +54,16 @@ export const searchResponseSchema = z.object({
     tracks: z.array(searchResultSchema).default([]),
   }),
   limit: z.number(),
+  limitPerType: z.number(),
   page: z.number(),
   topResult: searchResultSchema.nullable(),
   total: z.number(),
+  totals: z.object({
+    albums: z.number().default(0),
+    artists: z.number().default(0),
+    playlists: z.number().default(0),
+    tracks: z.number().default(0),
+  }),
 })
 
 export const searchHistoryItemSchema = z.object({

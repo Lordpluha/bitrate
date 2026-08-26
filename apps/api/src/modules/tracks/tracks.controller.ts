@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
-import { extname } from 'node:path'
+import { rm } from 'node:fs/promises'
+import { IMAGE_EXTENSION_BY_MIME } from '@common/utils/image'
 import type { ArtistEntity } from '@modules/artists'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { UserEntity } from '@modules/users'
@@ -43,8 +44,21 @@ import {
 } from './decorators'
 import { type CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
 import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
-import { TrackPlaybackService } from './track-playback.service'
+import { TrackPlaybackService, UnsatisfiableRangeError } from './track-playback.service'
 import { TracksService } from './tracks.service'
+
+const AUDIO_EXTENSION_BY_MIME: Record<string, string> = {
+  'audio/mpeg': '.mp3',
+  'audio/ogg': '.ogg',
+  'audio/wav': '.wav',
+  'audio/webm': '.webm',
+}
+
+/** Chooses a server-owned extension so a client filename cannot control response MIME. */
+function uploadExtension(file: Express.Multer.File): string {
+  if (file.fieldname === 'audio') return AUDIO_EXTENSION_BY_MIME[file.mimetype] ?? ''
+  return IMAGE_EXTENSION_BY_MIME[file.mimetype as keyof typeof IMAGE_EXTENSION_BY_MIME] ?? ''
+}
 
 /** Represents the tracks controller. */
 @ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity)
@@ -63,8 +77,10 @@ export class TracksController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('title') title?: TrackEntity['title'],
+    @Query('artistId', new ParseUUIDPipe({ optional: true })) artistId?: string,
   ) {
     return this.tracksService.findAll({
+      artistId,
       limit,
       page,
       title,
@@ -161,7 +177,7 @@ export class TracksController {
             return cb(null, './storage/public/tracks/covers')
           },
           filename: (_req, file, cb) => {
-            const uniqueName = `${randomUUID()}${extname(file.originalname)}`
+            const uniqueName = `${randomUUID()}${uploadExtension(file)}`
             cb(null, uniqueName)
           },
         }),
@@ -182,7 +198,7 @@ export class TracksController {
       },
     ),
   )
-  postTrack(
+  async postTrack(
     @Req() req: Request,
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto,
@@ -194,10 +210,11 @@ export class TracksController {
     const coverFile = files?.cover?.[0]
 
     if (!audioFile) {
+      if (coverFile) await rm(coverFile.path, { force: true })
       throw new BadRequestException('Audio file is required')
     }
 
-    return this.tracksService.create(artist.id, createTrackDto, audioFile, coverFile)
+    return await this.tracksService.create(artist.id, createTrackDto, audioFile, coverFile)
   }
 
   /** Runs the put track operation. */
@@ -220,7 +237,7 @@ export class TracksController {
             return cb(null, './storage/public/tracks/covers')
           },
           filename: (_req, file, cb) => {
-            const uniqueName = `${randomUUID()}${extname(file.originalname)}`
+            const uniqueName = `${randomUUID()}${uploadExtension(file)}`
             cb(null, uniqueName)
           },
         }),
@@ -298,11 +315,19 @@ export class TracksController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const rendition = await this.trackPlaybackService.getRenditionStream(
-      id,
-      bitrate,
-      req.headers.range,
-    )
+    let rendition: Awaited<ReturnType<TrackPlaybackService['getRenditionStream']>>
+    try {
+      rendition = await this.trackPlaybackService.getRenditionStream(id, bitrate, req.headers.range)
+    } catch (error) {
+      if (error instanceof UnsatisfiableRangeError) {
+        res.set({
+          'Accept-Ranges': 'bytes',
+          'Content-Range': `bytes */${error.fileSize}`,
+        })
+        return res.status(416).send()
+      }
+      throw error
+    }
 
     res.status(rendition.isPartial ? 206 : 200)
     res.set({

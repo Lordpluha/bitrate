@@ -110,6 +110,10 @@ jobs:
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache,mode=max
             type=gha,mode=max,scope=web-player
+          build-args: |
+            API_URL=${{ vars.API_URL || 'http://localhost:3000' }}
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://spotify-clone-web-olive.vercel.app' }}
           target: production
 
       - name: Build Web Player Docker image (GHA cache export only)
@@ -125,4 +129,8 @@ jobs:
             type=gha,scope=web-player
           cache-to: |
             type=gha,mode=max,scope=web-player
+          build-args: |
+            API_URL=${{ vars.API_URL || 'http://localhost:3000' }}
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://spotify-clone-web-olive.vercel.app' }}
           target: production

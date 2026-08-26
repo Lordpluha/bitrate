@@ -102,7 +102,9 @@ export class ArtistAuthGuard implements CanActivate {
       if (payload.type !== 'artist')
         throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 
-      const artist = await this.prisma.artist.findUnique({ where: { id: payload.sub } })
+      const artist = await this.prisma.artist.findFirst({
+        where: { id: payload.sub, deletedAt: null },
+      })
       if (!artist) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 
       const session = await this.prisma.artistSession.findFirst({

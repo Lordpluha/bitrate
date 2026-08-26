@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { assertAlignedRenditions, buildFragmentIndex, parseSidx, readBoxes } from './mp4-index.mjs'
+import {
+  assertAlignedRenditions,
+  buildFragmentIndex,
+  buildFragmentIndexFromFile,
+  parseSidx,
+  readBoxes,
+} from './mp4-index.mjs'
 
 /** Writes a box header plus payload. */
 const box = (type, payload = Buffer.alloc(0)) => {
@@ -121,6 +127,27 @@ describe('buildFragmentIndex', () => {
 
   it('rejects input that is not an MP4', () => {
     expect(() => buildFragmentIndex(Buffer.alloc(32))).toThrow(/not an MP4/)
+  })
+
+  it('rejects a box whose declared size escapes the file', () => {
+    const data = box('moov')
+    data.writeUInt32BE(4096, 0)
+
+    expect(() => buildFragmentIndex(data)).toThrow(/box size/)
+  })
+
+  it('builds the same index through bounded file-handle reads', async () => {
+    const data = buildFile({ entries: [[500, 4096]] })
+    const handle = {
+      read: async (target, offset, length, position) => {
+        data.copy(target, offset, position, position + length)
+        return { bytesRead: length }
+      },
+    }
+
+    await expect(buildFragmentIndexFromFile(handle, data.length)).resolves.toEqual(
+      buildFragmentIndex(data),
+    )
   })
 })
 

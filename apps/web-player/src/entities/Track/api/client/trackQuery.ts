@@ -7,6 +7,7 @@ import { queryOptions } from '@shared/api/client'
 import { getApiUrl } from '@shared/utils/mediaUrl'
 
 export type UseTracksParams = {
+  artistId?: string
   limit?: number
   page?: number
   title?: string
@@ -32,10 +33,6 @@ export const normalizeTrackResponse = (data: unknown) =>
 
 export const normalizeTracksResponse = (data: unknown) =>
   tracksResponseSchema.parse(data)
-
-export const likedTracksQueryKey = queryOptions('get', '/api/v1/tracks/liked', {
-  params: { query: { limit: 100, page: 1 } },
-}).queryKey
 
 export const trackDetailQueryKey = (trackId: string) =>
   queryOptions('get', '/api/v1/tracks/{id}', {

@@ -19,21 +19,22 @@ export const SearchPage = () => {
       item.slug.toLowerCase() === categoryTitle.toLowerCase() ||
       item.name.toLowerCase() === categoryTitle.toLowerCase(),
   )
-  const { data, isFetching } = useSearch({
+  const searchQuery = useSearch({
     limit: 8,
     query,
     types: searchTypes,
   })
-  const { data: usersData, isFetching: areUsersFetching } = useUsers({
+  const usersQuery = useUsers({
     limit: 4,
     username: query,
   })
 
+  const data = searchQuery.data
   const tracks = data?.tracks ?? []
   const artists = data?.artists ?? []
   const albums = data?.albums ?? []
   const playlists = data?.playlists ?? []
-  const users = usersData ?? []
+  const users = usersQuery.data ?? []
   const hasQuery = query.length > 0
 
   if (category && !hasQuery) {
@@ -51,7 +52,11 @@ export const SearchPage = () => {
           {hasQuery ? (
             <SearchQueryState
               data={{ albums, artists, playlists, tracks }}
-              isFetching={isFetching || areUsersFetching}
+              hasError={searchQuery.isError || usersQuery.isError}
+              isFetching={searchQuery.isFetching || usersQuery.isFetching}
+              onRetry={() => {
+                void Promise.all([searchQuery.refetch(), usersQuery.refetch()])
+              }}
               query={query}
               users={users}
             />

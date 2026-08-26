@@ -2,6 +2,20 @@
 
 import { useEffect } from 'react'
 
+type ServiceWorkerRegistrar = Pick<ServiceWorkerContainer, 'register'>
+
+export const registerServiceWorker = async (
+  serviceWorker: ServiceWorkerRegistrar,
+  reportError: (message: string, error: unknown) => void = console.warn,
+) => {
+  try {
+    return await serviceWorker.register('/sw.js')
+  } catch (error) {
+    reportError('Service worker registration failed.', error)
+    return null
+  }
+}
+
 export const ServiceWorkerRegistration = () => {
   useEffect(() => {
     if (
@@ -12,7 +26,7 @@ export const ServiceWorkerRegistration = () => {
     }
 
     const register = () => {
-      void navigator.serviceWorker.register('/sw.js')
+      void registerServiceWorker(navigator.serviceWorker)
     }
 
     if (document.readyState === 'complete') {

@@ -3,8 +3,9 @@
 import { cn } from '@spotify/ui-react'
 import { Menu } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from 'react'
-import { useAuth } from '@/shared/hooks'
+import { useId, useState } from 'react'
+import { useAuth } from '@/shared/hooks/useAuth'
+import { useI18n } from '@/shared/i18n'
 import { generateColor } from '@/shared/utils'
 import { getUserAvatarUrl } from '@/shared/utils/mediaUrl'
 import { BurgerMenuPanel } from './BurgerMenuPanel'
@@ -14,6 +15,8 @@ type BurgerMenuProps = {
 }
 
 export const BurgerMenu = ({ trigger = 'menu' }: BurgerMenuProps) => {
+  const { t } = useI18n()
+  const panelId = useId()
   const [isOpen, setIsOpen] = useState(false)
   const { isAuthenticated, isLogoutPending, logout, user } = useAuth()
   const username = user?.username || 'User'
@@ -24,9 +27,10 @@ export const BurgerMenu = ({ trigger = 'menu' }: BurgerMenuProps) => {
   return (
     <>
       <button
+        aria-controls={panelId}
         aria-expanded={isOpen}
         aria-haspopup="dialog"
-        aria-label={isOpen ? 'Close menu' : 'Open menu'}
+        aria-label={isOpen ? t('common.closeMenu') : t('common.openMenu')}
         className={cn(
           'text-text transition-opacity hover:opacity-80',
           trigger === 'avatar'
@@ -69,6 +73,7 @@ export const BurgerMenu = ({ trigger = 'menu' }: BurgerMenuProps) => {
         />
       )}
       <BurgerMenuPanel
+        id={panelId}
         isAuthenticated={isAuthenticated}
         isLogoutPending={isLogoutPending}
         isOpen={isOpen}

@@ -64,7 +64,9 @@ export const attachHlsSource = ({
     element.addEventListener(
       'error',
       () => {
-        if (slot.trackId === trackId) onFatalError()
+        if (slot.trackId === trackId && slot.playbackKey === playbackKey) {
+          onFatalError()
+        }
       },
       { once: true },
     )

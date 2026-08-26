@@ -1,4 +1,6 @@
+import type { AppConfig } from '@common/config'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import type { ConfigService } from '@nestjs/config'
 import type { Request, Response } from 'express'
 
 jest.mock('otplib', () => ({
@@ -26,6 +28,7 @@ describe('UsersAuthController', () => {
   let twoFactorService: DeepMockProxy<TwoFactorService>
   let usersService: DeepMockProxy<UsersService>
   let tokenService: DeepMockProxy<TokenService>
+  let config: DeepMockProxy<ConfigService<AppConfig>>
 
   beforeEach(() => {
     authService = mockDeep<UserAuthService>()
@@ -33,12 +36,18 @@ describe('UsersAuthController', () => {
     twoFactorService = mockDeep<TwoFactorService>()
     usersService = mockDeep<UsersService>()
     tokenService = mockDeep<TokenService>()
+    config = mockDeep<ConfigService<AppConfig>>()
 
     mockReset(authService)
     mockReset(oauthService)
     mockReset(twoFactorService)
     mockReset(usersService)
     mockReset(tokenService)
+    mockReset(config)
+    config.getOrThrow.mockReturnValue({
+      userHost: 'https://users.example.com',
+      artistHost: 'https://artists.example.com',
+    } as never)
 
     controller = new UsersAuthController(
       authService,
@@ -46,6 +55,7 @@ describe('UsersAuthController', () => {
       twoFactorService,
       usersService,
       tokenService,
+      config,
     )
   })
 

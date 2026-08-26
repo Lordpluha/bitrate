@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { open, unlink } from 'node:fs/promises'
-import { extname } from 'node:path'
-import { isAllowedImageBuffer } from '@common/utils/image'
+import { detectAllowedImageMime, IMAGE_EXTENSION_BY_MIME } from '@common/utils/image'
 import { SafeUserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
@@ -102,7 +101,9 @@ export class UsersController {
       storage: diskStorage({
         destination: './storage/public/users/avatars',
         filename: (_req, file, cb) => {
-          cb(null, `${randomUUID()}${extname(file.originalname)}`)
+          const extension =
+            IMAGE_EXTENSION_BY_MIME[file.mimetype as keyof typeof IMAGE_EXTENSION_BY_MIME]
+          cb(null, `${randomUUID()}${extension}`)
         },
       }),
       fileFilter: (_req, file, cb) => {
@@ -124,13 +125,18 @@ export class UsersController {
     } finally {
       await fd.close()
     }
-    if (!isAllowedImageBuffer(buf)) {
+    if (detectAllowedImageMime(buf) !== file.mimetype) {
       await unlink(file.path)
       throw new BadRequestException('Invalid file content')
     }
 
     const user = req.user as UserEntity
-    return await this.usersService.uploadAvatar(user.id, file.filename)
+    try {
+      return await this.usersService.uploadAvatar(user.id, file.filename)
+    } catch (error) {
+      await unlink(file.path)
+      throw error
+    }
   }
 
   @UserAuth()

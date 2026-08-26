@@ -2,9 +2,14 @@
 
 import {
   type PlayerState,
+  resolvePlaybackTransition,
+  selectCurrentQueueId,
   selectCurrentTrack,
   selectCurrentTrackIndex,
+  selectPlaybackSequence,
   selectPlaylist,
+  selectQueue,
+  selectRepeatMode,
   usePlayerStore,
 } from '@/entities/Player'
 
@@ -16,28 +21,26 @@ interface PlayerNavigationTracks {
 export const usePlayerNavigationTracks = (): PlayerNavigationTracks => {
   const currentTrack = usePlayerStore(selectCurrentTrack)
   const currentTrackIndex = usePlayerStore(selectCurrentTrackIndex)
+  const currentQueueId = usePlayerStore(selectCurrentQueueId)
+  const playbackSequence = usePlayerStore(selectPlaybackSequence)
   const playlist = usePlayerStore(selectPlaylist)
+  const queue = usePlayerStore(selectQueue)
+  const repeatMode = usePlayerStore(selectRepeatMode)
 
-  if (!currentTrack || playlist.length < 2) {
-    return { nextTrack: null, previousTrack: null }
+  const state = {
+    currentQueueId,
+    currentTrack,
+    currentTrackIndex,
+    playbackSequence,
+    playlist,
+    queue,
+    repeatMode,
   }
-
-  const activeIndex =
-    currentTrackIndex >= 0 &&
-    playlist[currentTrackIndex]?.id === currentTrack.id
-      ? currentTrackIndex
-      : playlist.findIndex((track) => track.id === currentTrack.id)
-
-  if (activeIndex < 0) {
-    return { nextTrack: null, previousTrack: null }
-  }
-
-  const previousIndex =
-    activeIndex === 0 ? playlist.length - 1 : activeIndex - 1
-  const nextIndex = (activeIndex + 1) % playlist.length
+  const next = resolvePlaybackTransition(state, 'next')
+  const previous = resolvePlaybackTransition(state, 'prev')
 
   return {
-    nextTrack: playlist[nextIndex] ?? null,
-    previousTrack: playlist[previousIndex] ?? null,
+    nextTrack: next?.kind === 'track' ? next.track : null,
+    previousTrack: previous?.kind === 'track' ? previous.track : null,
   }
 }

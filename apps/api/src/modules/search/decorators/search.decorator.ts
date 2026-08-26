@@ -17,8 +17,12 @@ export function SearchSwagger() {
       required: false,
       type: Number,
       example: 10,
-      description: 'Max results per type',
+      description: 'Maximum results in each requested type bucket',
     }),
-    ApiResponse({ status: 200, description: 'Search results grouped by type' }),
+    ApiResponse({
+      status: 200,
+      description:
+        'Results grouped and paginated independently per type; totals contains each bucket count',
+    }),
   )
 }

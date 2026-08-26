@@ -18,3 +18,10 @@ export const artistsResponseSchema = z
     z.object({ data: z.array(artistResponseSchema) }),
   ])
   .transform((value) => (Array.isArray(value) ? value : value.data))
+
+export const artistsPaginatedResponseSchema = z.object({
+  data: z.array(artistResponseSchema),
+  limit: z.number().int().positive(),
+  page: z.number().int().positive(),
+  total: z.number().int().nonnegative(),
+})

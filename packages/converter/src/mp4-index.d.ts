@@ -24,6 +24,18 @@ export function parseSidx(
 
 export function buildFragmentIndex(data: Uint8Array): FragmentIndex
 
+export function buildFragmentIndexFromFile(
+  handle: {
+    read(
+      buffer: Uint8Array,
+      offset: number,
+      length: number,
+      position: number,
+    ): Promise<{ bytesRead: number }>
+  },
+  fileSize: number,
+): Promise<FragmentIndex>
+
 export function assertAlignedRenditions(
   renditions: { bitrate: number; index: FragmentIndex }[],
 ): void

@@ -27,6 +27,7 @@ export class ArtistsPrivateService {
       where: {
         email,
         password,
+        deletedAt: null,
       },
     })
 
@@ -74,15 +75,15 @@ export class ArtistsPrivateService {
 
   /** Runs the find by id operation. */
   async findById(id: ArtistEntity['id']) {
-    return await this.prisma.artist.findUnique({
-      where: { id },
+    return await this.prisma.artist.findFirst({
+      where: { id, deletedAt: null },
     })
   }
 
   /** Runs the find by email operation. */
   async findByEmail(email: ArtistEntity['email']) {
-    return await this.prisma.artist.findUnique({
-      where: { email },
+    return await this.prisma.artist.findFirst({
+      where: { email, deletedAt: null },
     })
   }
 }

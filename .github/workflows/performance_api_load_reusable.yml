@@ -80,30 +80,6 @@ jobs:
           DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
           SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
 
-      - name: Start API server
-        run: |
-          cd apps/api
-          ls -la dist/ || echo "No dist folder"
-          pnpm run start:prod &
-          sleep 10
-          for i in {1..30}; do
-            if curl -f http://localhost:3001/api/v1 > /dev/null 2>&1; then
-              echo "API server is ready"
-              break
-            fi
-            echo "Waiting for API server... ($i/30)"
-            sleep 1
-          done
-        env:
-          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
-          REDIS_HOST: localhost
-          REDIS_PORT: 6379
-          WEB_HOST: http://localhost:3000
-          JWT_SECRET: performance_test_secret_at_least_32_characters
-          STORAGE_DRIVER: local
-          PORT: 3001
-
       - name: Setup k6
         run: |
           sudo gpg -k
@@ -113,16 +89,68 @@ jobs:
           sudo apt-get install k6
 
       - name: Run load tests
-        run: pnpm --filter @spotify/performance-test run load:api
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          api_log="${RUNNER_TEMP}/api-load-test.log"
+          pnpm --filter @spotify/api run start:prod >"${api_log}" 2>&1 &
+          api_pid=$!
+
+          cleanup() {
+            kill "${api_pid}" 2>/dev/null || true
+            wait "${api_pid}" 2>/dev/null || true
+          }
+          print_api_log() {
+            echo "--- API server log ---"
+            tail -n 200 "${api_log}" || true
+          }
+          trap cleanup EXIT
+          trap print_api_log ERR
+
+          ready=false
+          for i in {1..30}; do
+            if curl --fail --silent http://localhost:3001/api/v1/health/ready >/dev/null 2>&1; then
+              ready=true
+              echo "API readiness check passed"
+              break
+            fi
+            if ! kill -0 "${api_pid}" 2>/dev/null; then
+              echo "API process exited before becoming ready"
+              print_api_log
+              exit 1
+            fi
+            echo "Waiting for API readiness... (${i}/30)"
+            sleep 1
+          done
+
+          if [[ "${ready}" != "true" ]]; then
+            echo "API did not become ready after 30 attempts"
+            print_api_log
+            exit 1
+          fi
+
+          pnpm --filter @spotify/performance-test run load:api
         env:
           API_URL: http://localhost:3001
+          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
+          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          WEB_HOST: http://localhost:3000
+          JWT_SECRET: performance_test_secret_at_least_32_characters
+          STORAGE_DRIVER: local
+          NODE_ENV: test
+          PORT: 3001
 
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: k6-results
-          path: results.json
+          path: |
+            results.json
+            ${{ runner.temp }}/api-load-test.log
           if-no-files-found: ignore
 
       - name: Comment PR with results

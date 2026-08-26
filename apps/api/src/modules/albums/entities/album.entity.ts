@@ -12,8 +12,8 @@ export class AlbumEntity implements Album {
   title: string
 
   /** The cover value. */
-  @ApiProperty()
-  cover: string
+  @ApiProperty({ nullable: true })
+  cover: string | null
 
   /** The artist id value. */
   @ApiProperty()

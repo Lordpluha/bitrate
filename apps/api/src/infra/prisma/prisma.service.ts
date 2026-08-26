@@ -221,6 +221,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.$queryRaw<T>(sql as never)
   }
 
+  /** Runs a parameterized data-changing raw statement. */
+  executeRaw(sql: Parameters<PrismaClient['$executeRaw']>[0]): Promise<number> {
+    return this.prisma.$executeRaw(sql as never)
+  }
+
   /** Verifies that PostgreSQL accepts queries. */
   async ping(): Promise<boolean> {
     await this.prisma.$queryRaw`SELECT 1`

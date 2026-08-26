@@ -2,7 +2,23 @@ import { ApiProperty } from '@nestjs/swagger'
 import type { Artist, Prisma } from '@prisma/client'
 
 /** Represents the safe artist entity. */
-export class SafeArtistEntity implements Omit<Artist, 'password' | 'email' | 'twoFactorSecret'> {
+export class SafeArtistEntity
+  implements
+    Pick<
+      Artist,
+      | 'id'
+      | 'username'
+      | 'bio'
+      | 'avatar'
+      | 'backgroundImage'
+      | 'createdAt'
+      | 'updatedAt'
+      | 'verified'
+      | 'monthlyListeners'
+      | 'country'
+      | 'socials'
+    >
+{
   /** The id value. */
   @ApiProperty()
   id: string
@@ -23,10 +39,6 @@ export class SafeArtistEntity implements Omit<Artist, 'password' | 'email' | 'tw
   @ApiProperty()
   backgroundImage: string | null
 
-  /** The two factor enabled value. */
-  @ApiProperty()
-  twoFactorEnabled: boolean
-
   /** The created at value. */
   @ApiProperty()
   createdAt: Date
@@ -34,18 +46,6 @@ export class SafeArtistEntity implements Omit<Artist, 'password' | 'email' | 'tw
   /** The updated at value. */
   @ApiProperty()
   updatedAt: Date
-
-  /** Email verification timestamp. */
-  @ApiProperty({ nullable: true })
-  emailVerifiedAt: Date | null
-
-  /** Consecutive failed login attempts. */
-  @ApiProperty()
-  failedLoginAttempts: number
-
-  /** Account lock expiration timestamp. */
-  @ApiProperty({ nullable: true })
-  lockedUntil: Date | null
 
   /** Whether the artist profile is verified. */
   @ApiProperty()
@@ -62,8 +62,4 @@ export class SafeArtistEntity implements Omit<Artist, 'password' | 'email' | 'tw
   /** Social profile metadata. */
   @ApiProperty({ nullable: true, type: Object })
   socials: Prisma.JsonValue | null
-
-  /** Soft deletion timestamp. */
-  @ApiProperty({ nullable: true })
-  deletedAt: Date | null
 }

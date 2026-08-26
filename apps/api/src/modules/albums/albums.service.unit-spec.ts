@@ -40,6 +40,7 @@ describe('AlbumsService', () => {
     const result = await service.findAll({ page: 2, limit: 5, title: 'rock' })
 
     expect(prisma.album.findMany).toHaveBeenCalledWith({
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 5,
       take: 5,
       where: { deletedAt: null, title: { contains: 'rock', mode: 'insensitive' } },
@@ -61,6 +62,7 @@ describe('AlbumsService', () => {
     const result = await service.findAll({ page: 1, limit: 10, title: 'RoCk' })
 
     expect(prisma.album.findMany).toHaveBeenCalledWith({
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 0,
       take: 10,
       where: { deletedAt: null, title: { contains: 'RoCk', mode: 'insensitive' } },
@@ -82,6 +84,7 @@ describe('AlbumsService', () => {
     const result = await service.findAll({})
 
     expect(prisma.album.findMany).toHaveBeenCalledWith({
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 0,
       take: 10,
       where: { deletedAt: null },
@@ -103,6 +106,7 @@ describe('AlbumsService', () => {
     const result = await service.findAll({ page: 1, limit: 10, title: '' })
 
     expect(prisma.album.findMany).toHaveBeenCalledWith({
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 0,
       take: 10,
       where: { deletedAt: null },

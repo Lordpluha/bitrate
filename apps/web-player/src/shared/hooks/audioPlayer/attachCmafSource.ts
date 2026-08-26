@@ -60,21 +60,45 @@ export const attachCmafSource = ({
     targetBufferSeconds: isPrefetch
       ? PREFETCH_BUFFER_SECONDS
       : ACTIVE_BUFFER_SECONDS,
-    fetchRange: ({ bitrate, range, signal }) =>
-      fetchRenditionRange({ bitrate, range, signal, trackId }),
+    fetchRange: ({ bitrate, range, signal }) => {
+      const rendition = manifest.renditions.find(
+        (candidate) => candidate.bitrate === bitrate,
+      )
+      if (!rendition) {
+        return Promise.reject(
+          new Error(`Unknown rendition bitrate: ${bitrate}`),
+        )
+      }
+
+      return fetchRenditionRange({
+        bitrate,
+        expectedSize: rendition.size,
+        range,
+        signal,
+        trackId,
+      })
+    },
     onBitrateChange: (bitrate) => {
       slot.currentBitrate = bitrate
     },
     onError: (error) => {
       playerLog('error', `загрузчик упал: ${error.message}`, { trackId })
       /** A failed load must not leave the slot silently stuck. */
-      if (slot.playbackKey === playbackKey) onFatalError()
+      if (slot.loader === loader && slot.playbackKey === playbackKey) {
+        onFatalError()
+      }
     },
     onUnsupported: onFatalError,
   })
 
   slot.loader = loader
-  void loader.start()
+  void loader.start().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error)
+    playerLog('error', `загрузчик не запустился: ${message}`, { trackId })
+    if (slot.loader === loader && slot.playbackKey === playbackKey) {
+      onFatalError()
+    }
+  })
 
   return true
 }

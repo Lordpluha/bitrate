@@ -9,13 +9,13 @@ import { toast } from '@spotify/ui-react'
 import { useRouter } from 'next/navigation'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 
-export const useSignUpModalForm = (onSwitchToLogin?: () => void) => {
+export const useSignUpModalForm = (onSuccess?: () => void) => {
   const router = useRouter()
   const registration = useMutation('post', '/api/v1/auth/registration', {
-    onSuccess: () => {
-      toast.success('Registration successful! Please log in.')
-      if (onSwitchToLogin) onSwitchToLogin()
-      else router.push(ROUTES.auth.login)
+    onSuccess: (_data, variables) => {
+      toast.success('Registration successful! Check your email to continue.')
+      router.push(ROUTES.auth.verifyEmail(variables.body.email))
+      onSuccess?.()
     },
     onError: (error) => {
       showApiErrorToast(error, 'Unable to create account. Please try again.')

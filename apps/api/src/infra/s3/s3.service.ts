@@ -4,6 +4,7 @@ import {
   DeleteObjectsCommand,
   GetObjectCommand,
   HeadBucketCommand,
+  HeadObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
@@ -101,17 +102,13 @@ export class S3Service implements StorageService {
 
   /**
    * Returns S3 object metadata without downloading the body.
-   * Uses GetObject with a no-op range to get headers cheaply.
    */
   async getObjectMeta(key: string): Promise<StorageObjectMeta> {
     const response = await this.client.send(
-      new GetObjectCommand({ Bucket: this.bucket, Key: key, Range: 'bytes=0-0' }),
+      new HeadObjectCommand({ Bucket: this.bucket, Key: key }),
     )
-    response.Body?.transformToWebStream().cancel()
     return {
-      contentLength: response.ContentRange
-        ? Number(response.ContentRange.split('/')[1])
-        : response.ContentLength,
+      contentLength: response.ContentLength,
       contentType: response.ContentType,
     }
   }
@@ -165,12 +162,22 @@ export class S3Service implements StorageService {
    */
   async exists(key: string): Promise<boolean> {
     try {
-      await this.client.send(
-        new GetObjectCommand({ Bucket: this.bucket, Key: key, Range: 'bytes=0-0' }),
-      )
+      await this.client.send(new HeadObjectCommand({ Bucket: this.bucket, Key: key }))
       return true
-    } catch {
-      return false
+    } catch (error) {
+      if (this.isNotFoundError(error)) return false
+      throw error
     }
+  }
+
+  /** Distinguishes an absent key from authorization, transport, and service failures. */
+  private isNotFoundError(error: unknown): boolean {
+    if (!(error && typeof error === 'object')) return false
+    const candidate = error as { name?: string; $metadata?: { httpStatusCode?: number } }
+    return (
+      candidate.name === 'NotFound' ||
+      candidate.name === 'NoSuchKey' ||
+      candidate.$metadata?.httpStatusCode === 404
+    )
   }
 }

@@ -1,9 +1,13 @@
 import type { PrismaService } from '@infra/prisma/prisma.service'
 import type { StorageService } from '@infra/storage/storage.types'
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import { NotFoundException } from '@nestjs/common'
+import { NotFoundException, ServiceUnavailableException } from '@nestjs/common'
 import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
-import { resolveRange, TrackPlaybackService } from './track-playback.service'
+import {
+  resolveRange,
+  TrackPlaybackService,
+  UnsatisfiableRangeError,
+} from './track-playback.service'
 
 const FILE_SIZE = 1_000
 
@@ -66,8 +70,14 @@ describe('resolveRange', () => {
     ['items=0-10', 'unsupported unit'],
     ['bytes=-', 'empty range'],
     ['bytes=-0', 'zero-length suffix'],
-  ])('falls back to the whole object for %s (%s)', (header) => {
-    expect(resolveRange(header, FILE_SIZE).isPartial).toBe(false)
+  ])('rejects %s as unsatisfiable (%s)', (header) => {
+    expect(() => resolveRange(header, FILE_SIZE)).toThrow(UnsatisfiableRangeError)
+  })
+
+  it('rejects unsafe integer bounds instead of rounding them', () => {
+    expect(() => resolveRange('bytes=999999999999999999999-', FILE_SIZE)).toThrow(
+      UnsatisfiableRangeError,
+    )
   })
 })
 
@@ -95,7 +105,7 @@ describe('TrackPlaybackService', () => {
           size: 977_980,
           initRangeStart: 0,
           initRangeEnd: 707,
-          fragments: [[0, 195_584, 929, 66_238]],
+          fragments: [[0, 2_880_000, 929, 66_238]],
         },
         {
           bitrate: 320,
@@ -103,7 +113,7 @@ describe('TrackPlaybackService', () => {
           size: 2_101_902,
           initRangeStart: 0,
           initRangeEnd: 707,
-          fragments: [[0, 195_584, 929, 145_762]],
+          fragments: [[0, 2_880_000, 929, 145_762]],
         },
       ],
     }
@@ -127,6 +137,10 @@ describe('TrackPlaybackService', () => {
       prisma.track.findFirst.mockResolvedValue({
         ...trackWithRenditions,
         durationTicks: 195_584,
+        audioFiles: trackWithRenditions.audioFiles.map((file) => ({
+          ...file,
+          fragments: [[0, 195_584, file.fragments[0]?.[2], file.fragments[0]?.[3]]],
+        })),
       } as never)
 
       const manifest = await service.getManifest(trackId)
@@ -156,7 +170,39 @@ describe('TrackPlaybackService', () => {
         audioFiles: [{ ...trackWithRenditions.audioFiles[0], initRangeStart: null }],
       } as never)
 
-      await expect(service.getManifest(trackId)).rejects.toThrow(/incomplete/)
+      await expect(service.getManifest(trackId)).rejects.toThrow(ServiceUnavailableException)
+    })
+
+    it('rejects renditions whose fragment timelines are not aligned', async () => {
+      prisma.track.findFirst.mockResolvedValue({
+        ...trackWithRenditions,
+        audioFiles: [
+          trackWithRenditions.audioFiles[0],
+          {
+            ...trackWithRenditions.audioFiles[1],
+            fragments: [[1, 2_879_999, 929, 145_762]],
+          },
+        ],
+      } as never)
+
+      await expect(service.getManifest(trackId)).rejects.toThrow(ServiceUnavailableException)
+    })
+
+    it('only resolves manifests for ready, non-deleted CMAF tracks', async () => {
+      prisma.track.findFirst.mockResolvedValue(trackWithRenditions as never)
+
+      await service.getManifest(trackId)
+
+      expect(prisma.track.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            id: trackId,
+            deletedAt: null,
+            processingStatus: 'READY',
+            playbackVersion: 2,
+          }),
+        }),
+      )
     })
   })
 
@@ -171,7 +217,7 @@ describe('TrackPlaybackService', () => {
     })
 
     it('reads the file size from the database rather than probing storage', async () => {
-      prisma.trackFile.findUnique.mockResolvedValue(file as never)
+      prisma.trackFile.findFirst.mockResolvedValue(file as never)
 
       const result = await service.getRenditionStream(trackId, 192, 'bytes=929-100915')
 
@@ -181,7 +227,7 @@ describe('TrackPlaybackService', () => {
     })
 
     it('forwards the resolved window to storage as a Range', async () => {
-      prisma.trackFile.findUnique.mockResolvedValue(file as never)
+      prisma.trackFile.findFirst.mockResolvedValue(file as never)
 
       await service.getRenditionStream(trackId, 192, 'bytes=929-100915')
 
@@ -189,7 +235,7 @@ describe('TrackPlaybackService', () => {
     })
 
     it('serves audio/mp4 even when storage reports a generic type', async () => {
-      prisma.trackFile.findUnique.mockResolvedValue(file as never)
+      prisma.trackFile.findFirst.mockResolvedValue(file as never)
       storage.getObjectStream.mockResolvedValue({
         stream: {} as never,
         contentType: 'application/octet-stream',
@@ -201,7 +247,7 @@ describe('TrackPlaybackService', () => {
     })
 
     it('omits the Range when the whole object is requested', async () => {
-      prisma.trackFile.findUnique.mockResolvedValue(file as never)
+      prisma.trackFile.findFirst.mockResolvedValue(file as never)
 
       const result = await service.getRenditionStream(trackId, 192, undefined)
 
@@ -210,10 +256,24 @@ describe('TrackPlaybackService', () => {
     })
 
     it('reports a missing rendition', async () => {
-      prisma.trackFile.findUnique.mockResolvedValue(null as never)
+      prisma.trackFile.findFirst.mockResolvedValue(null as never)
 
       await expect(service.getRenditionStream(trackId, 192)).rejects.toThrow(
         /no 192k CMAF rendition/,
+      )
+    })
+
+    it('does not serve a rendition from a deleted, processing, or legacy track', async () => {
+      prisma.trackFile.findFirst.mockResolvedValue(file as never)
+
+      await service.getRenditionStream(trackId, 192)
+
+      expect(prisma.trackFile.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            track: { deletedAt: null, processingStatus: 'READY', playbackVersion: 2 },
+          }),
+        }),
       )
     })
   })

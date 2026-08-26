@@ -1,9 +1,14 @@
 export const apiQueryKeys = {
   albums: {
     all: ['albums'] as const,
+    artist: (artistId: string) => ['albums', 'artist', artistId] as const,
     detail: (albumId: string) => ['albums', 'detail', albumId] as const,
-    list: (params: { page?: number; limit?: number; title?: string }) =>
-      ['albums', 'list', params] as const,
+    list: (params: {
+      artistId?: string
+      page?: number
+      limit?: number
+      title?: string
+    }) => ['albums', 'list', params] as const,
   },
   artists: {
     all: ['artists'] as const,
@@ -62,6 +67,7 @@ export const apiQueryKeys = {
       ['podcasts', 'list', { page, limit, query }] as const,
     savedEpisodes: (page: number, limit: number) =>
       ['podcasts', 'saved-episodes', { page, limit }] as const,
+    savedEpisodesAll: ['podcasts', 'saved-episodes', 'all'] as const,
   },
   search: {
     all: ['search'] as const,
@@ -72,12 +78,18 @@ export const apiQueryKeys = {
   },
   tracks: {
     all: ['tracks'] as const,
+    artist: (artistId: string) => ['tracks', 'artist', artistId] as const,
     detail: (trackId: string) => ['tracks', 'detail', trackId] as const,
     liked: (params: { page?: number; limit?: number }) =>
       ['tracks', 'liked', params] as const,
+    likedAll: ['tracks', 'liked', 'all'] as const,
     manifest: (trackId: string) => ['tracks', 'manifest', trackId] as const,
-    list: (params: { page?: number; limit?: number; title?: string }) =>
-      ['tracks', 'list', params] as const,
+    list: (params: {
+      artistId?: string
+      page?: number
+      limit?: number
+      title?: string
+    }) => ['tracks', 'list', params] as const,
   },
   users: {
     all: ['users'] as const,

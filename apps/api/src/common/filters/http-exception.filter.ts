@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common'
 import { SentryExceptionCaptured } from '@sentry/nestjs'
 import type { Request, Response } from 'express'
+import { getRequestId } from '../http/request-context'
 
 /** Represents the http exception filter. */
 @Catch()
@@ -17,6 +18,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
     const request = ctx.getRequest<Request>()
+    const requestId = getRequestId(request)
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR
     let message = 'Internal server error'
@@ -78,6 +80,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           timestamp: new Date().toISOString(),
           path: request.url,
           method: request.method,
+          requestId,
           exception: exception instanceof Error ? exception.message : exception,
           stack: exception instanceof Error ? exception.stack : undefined,
         })
@@ -93,6 +96,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message,
       timestamp: new Date().toISOString(),
       path: request.url,
+      ...(requestId ? { requestId } : {}),
     })
   }
 }

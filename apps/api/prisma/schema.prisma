@@ -62,7 +62,6 @@ model UserEmailVerification {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@index([token])
 }
 
 model UserOAuthAccount {
@@ -88,7 +87,6 @@ model UserPasswordReset {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([token])
   @@index([userId])
 }
 
@@ -98,8 +96,8 @@ model UserSession {
   access_token  String @unique
   refresh_token String @unique
 
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -114,8 +112,8 @@ model ArtistSession {
   access_token  String @unique
   refresh_token String @unique
 
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
@@ -278,7 +276,6 @@ model ArtistPasswordReset {
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
-  @@index([token])
   @@index([artistId])
 }
 
@@ -292,7 +289,6 @@ model ArtistEmailVerification {
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
   @@index([artistId])
-  @@index([token])
 }
 
 enum AlbumType {

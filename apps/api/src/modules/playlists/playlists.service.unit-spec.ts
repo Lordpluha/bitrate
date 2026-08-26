@@ -1,5 +1,6 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import { beforeEach, describe, expect, it } from '@jest/globals'
+import { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import {
@@ -54,6 +55,7 @@ describe('PlaylistsService', () => {
       where: { isPublic: true, deletedAt: null },
       skip: 0,
       take: 10,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       include: {
         user: {
           select: {
@@ -76,6 +78,7 @@ describe('PlaylistsService', () => {
       where: { isPublic: true, deletedAt: null },
       skip: 5,
       take: 5,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       include: {
         user: {
           select: {
@@ -238,5 +241,43 @@ describe('PlaylistsService', () => {
       data: { followersCount: { decrement: 1 } },
     })
     expect(result).toBe(playlist)
+  })
+
+  it('serializes append positions and removes duplicate input track IDs', async () => {
+    const playlist = buildPlaylistWithTracks({ userId: 'user-1' })
+    mockInteractiveTransaction(prisma)
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
+    prisma.track.count.mockResolvedValue(2)
+    prisma.playlistTrack.findFirst.mockResolvedValue({ position: 3 } as never)
+    prisma.playlistTrack.createMany.mockResolvedValue({ count: 2 })
+    prisma.playlist.update.mockResolvedValue(playlist)
+
+    await service.addTracks('user-1', 'playlist-1', {
+      trackIds: [
+        '00000000-0000-0000-0000-000000000001',
+        '00000000-0000-0000-0000-000000000001',
+        '00000000-0000-0000-0000-000000000002',
+      ],
+    })
+
+    expect(prisma.$transaction).toHaveBeenCalledWith(expect.any(Function), {
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+    })
+    expect(prisma.playlistTrack.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          playlistId: 'playlist-1',
+          trackId: '00000000-0000-0000-0000-000000000001',
+          addedById: 'user-1',
+          position: 4,
+        },
+        {
+          playlistId: 'playlist-1',
+          trackId: '00000000-0000-0000-0000-000000000002',
+          addedById: 'user-1',
+          position: 5,
+        },
+      ],
+    })
   })
 })

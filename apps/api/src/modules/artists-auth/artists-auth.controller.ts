@@ -1,4 +1,4 @@
-import { AUTH_ROUTE_THROTTLE } from '@common/config'
+import { type AppConfig, AUTH_ROUTE_THROTTLE } from '@common/config'
 import { ArtistsService } from '@modules/artists/artists.service'
 import { TokenService } from '@modules/tokens/token.service'
 import {
@@ -13,6 +13,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
@@ -72,6 +73,7 @@ export class AuthController {
     private tokenService: TokenService,
     private twoFactorService: ArtistTwoFactorService,
     private oauthService: ArtistOAuthService,
+    private config: ConfigService<AppConfig>,
   ) {}
 
   /** Runs the login operation. */
@@ -257,7 +259,9 @@ export class AuthController {
     @Res() res: Response,
   ) {
     if (!state || state !== req.cookies?.oauth_state) {
-      return res.redirect(`${process.env.WEB_HOST!}/login?error=oauth_state_mismatch`)
+      return res.redirect(
+        `${this.config.getOrThrow('web').artistHost}/login?error=oauth_state_mismatch`,
+      )
     }
     res.clearCookie('oauth_state')
     const result = await this.oauthService.handleGoogleCallback(code)
@@ -289,7 +293,9 @@ export class AuthController {
     @Res() res: Response,
   ) {
     if (!state || state !== req.cookies?.oauth_state) {
-      return res.redirect(`${process.env.WEB_HOST!}/login?error=oauth_state_mismatch`)
+      return res.redirect(
+        `${this.config.getOrThrow('web').artistHost}/login?error=oauth_state_mismatch`,
+      )
     }
     res.clearCookie('oauth_state')
     const result = await this.oauthService.handleFacebookCallback(code)
@@ -307,11 +313,13 @@ export class AuthController {
       res.cookie('pending_2fa_token', result.pendingToken, {
         httpOnly: true,
         sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
         maxAge: 10 * 60 * 1000,
       })
-      return res.redirect(`${process.env.WEB_HOST!}/login/2fa`)
+      return res.redirect(`${this.config.getOrThrow('web').artistHost}/login/2fa`)
     }
     this.tokenService.setAuthCookies(res, result.access_token, result.refresh_token)
-    return res.redirect(process.env.WEB_HOST!)
+    return res.redirect(this.config.getOrThrow('web').artistHost)
   }
 }

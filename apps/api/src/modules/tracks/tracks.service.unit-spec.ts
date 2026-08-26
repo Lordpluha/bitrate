@@ -1,3 +1,4 @@
+import { open, rm } from 'node:fs/promises'
 import { Readable } from 'node:stream'
 import type { CacheService } from '@infra/cache/cache.service'
 import type { StorageService } from '@infra/storage/storage.types'
@@ -6,7 +7,8 @@ import { NotFoundException } from '@nestjs/common'
 import type { ConfigService } from '@nestjs/config'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import type { Queue } from 'bullmq'
-import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import { parseFile } from 'music-metadata'
+import { buildAudioFile, buildCoverFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import type { CreateTrackDto } from './dtos/create-track.dto'
 import { TracksService } from './tracks.service'
 
@@ -19,6 +21,8 @@ const makeConfigMock = () =>
   ({
     getOrThrow: jest.fn().mockReturnValue({
       getTracksDir: (filename?: string) => (filename ? `/storage/${filename}` : '/storage'),
+      getTracksCoversDir: (filename?: string) =>
+        filename ? `/storage/covers/${filename}` : '/storage/covers',
     }),
   }) as unknown as jest.Mocked<ConfigService>
 
@@ -60,6 +64,22 @@ jest.mock('node:fs', () => ({
   },
 }))
 
+jest.mock('node:fs/promises', () => ({
+  open: jest.fn().mockResolvedValue({
+    read: jest.fn().mockImplementation((buf: unknown) => {
+      const header = buf as Buffer
+      header.set([0x89, 0x50, 0x4e, 0x47])
+      return Promise.resolve()
+    }),
+    close: jest.fn().mockResolvedValue(undefined as never),
+  } as never),
+  rm: jest.fn().mockResolvedValue(undefined as never),
+}))
+
+const openMock = open as jest.MockedFunction<typeof open>
+const rmMock = rm as jest.MockedFunction<typeof rm>
+const parseFileMock = parseFile as jest.MockedFunction<typeof parseFile>
+
 const mockTransaction = (prisma: PrismaMock) =>
   prisma.$transaction.mockImplementation((fn: unknown) => {
     if (typeof fn === 'function') return (fn as (p: typeof prisma) => unknown)(prisma)
@@ -73,6 +93,7 @@ describe('TracksService', () => {
   let storage: jest.Mocked<StorageService>
 
   beforeEach(() => {
+    jest.clearAllMocks()
     resetPrismaMock()
     prisma = prismaMock
     queue = makeQueueMock()
@@ -191,7 +212,10 @@ describe('TracksService', () => {
 
   describe('getHlsMasterPlaylist', () => {
     it('should return the generated HLS master playlist', async () => {
-      prisma.track.findUnique.mockResolvedValue(buildTrack() as never)
+      prisma.track.findUnique.mockResolvedValue({
+        ...buildTrack(),
+        audioFiles: [{ url: 'tracks/track-1/audio/128k.opus' }],
+      } as never)
       storage.getObjectStream.mockResolvedValue({
         stream: Readable.from('#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=140800\n128/index.m3u8\n'),
       } as never)
@@ -200,6 +224,20 @@ describe('TracksService', () => {
 
       expect(playlist).toContain('128/index.m3u8')
       expect(storage.getObjectStream).toHaveBeenCalledWith('tracks/track-1/hls/master.m3u8')
+    })
+
+    it('reads HLS from the immutable generation associated with the published audio row', async () => {
+      prisma.track.findUnique.mockResolvedValue({
+        ...buildTrack(),
+        audioFiles: [{ url: 'tracks/track-1/generations/0123456789abcdef/audio/128k.opus' }],
+      } as never)
+      storage.getObjectStream.mockResolvedValue({ stream: Readable.from('#EXTM3U\n') } as never)
+
+      await service.getHlsMasterPlaylist('track-1')
+
+      expect(storage.getObjectStream).toHaveBeenCalledWith(
+        'tracks/track-1/generations/0123456789abcdef/hls/master.m3u8',
+      )
     })
   })
 
@@ -312,6 +350,46 @@ describe('TracksService', () => {
         expect.objectContaining({ data: expect.objectContaining({ cover: null }) }),
       )
     })
+
+    it('rejects spoofed cover content and removes every unowned upload', async () => {
+      const audioFile = buildAudioFile()
+      const coverFile = buildCoverFile({ originalname: 'payload.html', mimetype: 'image/png' })
+      openMock.mockResolvedValueOnce({
+        read: jest.fn().mockImplementation((buf: unknown) => {
+          ;(buf as Buffer).set(Buffer.from('<script>bad', 'ascii'))
+          return Promise.resolve()
+        }),
+        close: jest.fn().mockResolvedValue(undefined as never),
+      } as never)
+
+      await expect(
+        service.create(
+          'artist-1',
+          { title: 'Track title' } as CreateTrackDto,
+          audioFile,
+          coverFile,
+        ),
+      ).rejects.toThrow('Invalid cover file content')
+
+      expect(prisma.track.create).not.toHaveBeenCalled()
+      expect(rmMock).toHaveBeenCalledWith(audioFile.path, { force: true })
+      expect(rmMock).toHaveBeenCalledWith(coverFile.path, { force: true })
+    })
+
+    it('rejects a source bitrate below the converter minimum before creating a track', async () => {
+      const audioFile = buildAudioFile()
+      parseFileMock.mockResolvedValueOnce({
+        format: { duration: 100, bitrate: 31_000 },
+      } as never)
+
+      await expect(
+        service.create('artist-1', { title: 'Track title' } as CreateTrackDto, audioFile),
+      ).rejects.toThrow('Source audio bitrate must be at least 32 kbps')
+
+      expect(prisma.track.create).not.toHaveBeenCalled()
+      expect(queue.add).not.toHaveBeenCalled()
+      expect(rmMock).toHaveBeenCalledWith(audioFile.path, { force: true })
+    })
   })
 
   describe('update', () => {
@@ -351,6 +429,18 @@ describe('TracksService', () => {
       await service.update('artist-1', 'track-1', { title: 'Updated' } as never)
 
       expect(queue.add).not.toHaveBeenCalled()
+    })
+
+    it('removes an uploaded replacement when ownership validation fails', async () => {
+      const audioFile = buildAudioFile()
+      prisma.track.findFirst.mockResolvedValue(null)
+
+      await expect(
+        service.update('artist-2', 'track-1', { title: 'Updated' } as never, audioFile),
+      ).rejects.toThrow(NotFoundException)
+
+      expect(rmMock).toHaveBeenCalledWith(audioFile.path, { force: true })
+      expect(prisma.track.update).not.toHaveBeenCalled()
     })
   })
 })

@@ -12,7 +12,8 @@ dead WebSocket transport. The HLS cost is paid in full while its only real benef
 adaptive bitrate — is never used: `applyNetworkAwareHlsQuality()` clamps the level once
 at startup from `navigator.connection` and never revisits it.
 
-Three replacement variants were designed and compared in `shemas/player-veriants.drawio`.
+Three replacement variants were designed and compared in the
+[player variants source diagram](/architecture/player-variants.drawio).
 The decisive question turned out not to be "segments or whole file" but **who controls
 the buffer**. With a plain `<audio>` element the browser owns buffering, download speed
 can only be inferred from `buffered` growth, and switching quality means re-downloading a
@@ -89,7 +90,8 @@ browser-specific and hard-to-reproduce way.
 
 **Easier**
 
-- 3 storage objects per track instead of ~135; no playlists, no `hls.js` (~200 KB).
+- In the target state, 3 storage objects per track replace ~135 HLS objects and remove
+  `hls.js` (~200 KB) from the primary playback path.
 - Seeking is one Range request resolved through the index, on both the MSE and the native
   path.
 - Bandwidth is measured in real bytes and milliseconds, because the player issues the
@@ -112,8 +114,19 @@ browser-specific and hard-to-reproduce way.
   rendition gated on `isTypeSupported` remains possible later.
 - Adaptive bitrate on iPhone before iOS 17.1 — those devices get the native path.
 
-The HLS pipeline stays in place, unused, until the CMAF path is proven in production; it
-is then removed together with `AudioGateway` and `useProgressiveAudioStreaming`.
+### Transitional rollout state
+
+The current worker deliberately publishes generation-scoped progressive, HLS, and CMAF
+artifacts. CMAF is the primary path, while HLS/progressive remain an operational fallback
+for incompatible browsers and bounded CMAF failures. Consequently the current storage
+cost is higher than the three-object target described above.
+
+Remove the legacy variants only after production telemetry demonstrates that CMAF startup,
+Range retries, seeking, repeat, and bitrate switching meet the agreed success rate across
+the supported browser matrix. That removal must include the HLS encoder/upload path,
+legacy manifest endpoints, `hls.js`, `AudioGateway`, and the corresponding storage
+generations. Until then, generation cleanup must treat all three formats as one publication
+unit and must never delete the currently referenced generation.
 
 ## Alternatives considered
 

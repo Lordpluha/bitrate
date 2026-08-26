@@ -94,10 +94,13 @@ describe('UserAuthService', () => {
     it('should reject when password is invalid', async () => {
       usersPrivate.getByEmail.mockResolvedValue(buildUser({ password: 'hash' }))
       token.verifyPassword.mockResolvedValue(false)
+      prisma.executeRaw.mockResolvedValue(1)
 
       await expect(service.loginUser('user@example.com', 'bad-pass')).rejects.toThrow(
         'Invalid credentials',
       )
+      expect(prisma.executeRaw).toHaveBeenCalledTimes(1)
+      expect(prisma.user.update).not.toHaveBeenCalled()
     })
 
     it('should return access and refresh tokens when credentials valid', async () => {

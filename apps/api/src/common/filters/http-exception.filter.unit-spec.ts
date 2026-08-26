@@ -2,11 +2,11 @@ import { describe, expect, it, jest } from '@jest/globals'
 import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common'
 import { HttpExceptionFilter } from './http-exception.filter'
 
-const makeHost = (method = 'GET', url = '/test') => {
+const makeHost = (method = 'GET', url = '/test', requestId?: string) => {
   const json = jest.fn()
   const status = jest.fn().mockReturnValue({ json })
   const response = { status } as never
-  const request = { method, url } as never
+  const request = { method, url, requestId } as never
 
   return {
     switchToHttp: () => ({
@@ -31,6 +31,15 @@ describe('HttpExceptionFilter', () => {
     expect(host.json).toHaveBeenCalledWith(
       expect.objectContaining({ statusCode: 403, message: 'Forbidden' }),
     )
+  })
+
+  it('propagates the validated request ID in error responses', () => {
+    const requestId = '018f47a2-7b5d-7cc3-8d25-8aa38e5f4ea1'
+    const host = makeHost('GET', '/test', requestId)
+
+    filter.catch(new NotFoundException(), host as never)
+
+    expect(host.json).toHaveBeenCalledWith(expect.objectContaining({ requestId }))
   })
 
   it('should handle HttpException with object response', () => {

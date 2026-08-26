@@ -1,7 +1,9 @@
-import { extname } from 'node:path'
+import { open, rm } from 'node:fs/promises'
+import { basename, extname } from 'node:path'
 import { text } from 'node:stream/consumers'
 import type { AppConfig } from '@common/config'
 import { normalizePagination } from '@common/pagination'
+import { detectAllowedImageMime } from '@common/utils/image'
 import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
@@ -20,20 +22,25 @@ import { ConfigService } from '@nestjs/config'
 import type { Artist } from '@prisma/client'
 import type { Queue } from 'bullmq'
 import { parseFile } from 'music-metadata'
+import { getHlsRootFromAudioUrl } from './audio-storage-keys'
 import type { CreateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
 
 /** Supported output bitrates for transcoding (kbps). */
 const TARGET_AUDIO_BITRATES = [128, 192, 320] as const
 
+/** Covers are deliberately bounded independently from the larger audio upload. */
+const MAX_COVER_BYTES = 10 * 1024 * 1024
+
 /**
  * Storage key helpers — single source of truth for all path derivations.
  * TrackFile.url stores: tracks/{trackId}/audio/{bitrate}k.opus
  */
 const storageKey = {
-  hlsMaster: (trackId: string) => `tracks/${trackId}/hls/master.m3u8`,
-  hlsAsset: (trackId: string, bitrate: number, asset: string) =>
-    `tracks/${trackId}/hls/${bitrate}/${asset}`,
+  hlsMaster: (trackId: string, audioUrl: string) =>
+    `${getHlsRootFromAudioUrl(trackId, audioUrl)}/master.m3u8`,
+  hlsAsset: (trackId: string, audioUrl: string, bitrate: number, asset: string) =>
+    `${getHlsRootFromAudioUrl(trackId, audioUrl)}/${bitrate}/${asset}`,
 }
 
 /** Handles track CRUD, audio streaming, and queuing of audio-conversion jobs. */
@@ -117,7 +124,41 @@ export class TracksService {
           error instanceof Error ? error.message : 'Unknown error'
         }`,
       )
-      return { bitrate: 0, duration: null, codec: null, container: null }
+      throw new BadRequestException('Invalid or unreadable audio file')
+    }
+  }
+
+  /** Verifies that a cover's declared MIME matches its actual magic bytes. */
+  private async validateCoverFile(file: Express.Multer.File) {
+    if (file.size > MAX_COVER_BYTES) throw new BadRequestException('Cover file is too large')
+
+    const header = Buffer.alloc(12)
+    const handle = await open(file.path, 'r')
+    try {
+      await handle.read(header, 0, header.length, 0)
+    } finally {
+      await handle.close()
+    }
+
+    if (detectAllowedImageMime(header) !== file.mimetype) {
+      throw new BadRequestException('Invalid cover file content')
+    }
+  }
+
+  /** Removes files written by Multer before the database took ownership of them. */
+  private async cleanupUploadedFiles(files: Array<Express.Multer.File | undefined>) {
+    await Promise.all(files.flatMap((file) => (file ? [rm(file.path, { force: true })] : [])))
+  }
+
+  /** Deletes an old managed file without allowing a stored path to escape its configured root. */
+  private async removeReplacedFile(path: string, fileName: string | null) {
+    if (!(fileName && basename(fileName) === fileName)) return
+    try {
+      await rm(path, { force: true })
+    } catch (error) {
+      this.logger.warn(
+        `Unable to remove replaced media file ${fileName}: ${error instanceof Error ? error.message : 'unknown error'}`,
+      )
     }
   }
 
@@ -125,6 +166,10 @@ export class TracksService {
   private getTargetBitrates(sourceBitrate: number) {
     if (sourceBitrate <= 0) {
       return TARGET_AUDIO_BITRATES.map((bitrate) => `${bitrate}k`)
+    }
+
+    if (sourceBitrate < 32) {
+      throw new BadRequestException('Source audio bitrate must be at least 32 kbps')
     }
 
     const bitrates = TARGET_AUDIO_BITRATES.filter((bitrate) => bitrate <= sourceBitrate)
@@ -291,14 +336,19 @@ export class TracksService {
 
   /** Returns the FFmpeg-generated HLS master playlist from storage. */
   async getHlsMasterPlaylist(id: TrackEntity['id']) {
-    const track = await this.prisma.track.findUnique({ where: { id } })
+    const track = await this.prisma.track.findUnique({
+      where: { id },
+      include: { audioFiles: { where: { format: 'opus' }, take: 1 } },
+    })
     if (!track) throw new NotFoundException('Track not found')
     if (track.processingStatus !== 'READY') {
       throw new NotFoundException('HLS stream is not ready')
     }
 
     try {
-      const { stream } = await this.storage.getObjectStream(storageKey.hlsMaster(id))
+      const audioFile = track.audioFiles[0]
+      if (!audioFile) throw new NotFoundException('HLS stream is not ready')
+      const { stream } = await this.storage.getObjectStream(storageKey.hlsMaster(id, audioFile.url))
       return await text(stream)
     } catch {
       throw new NotFoundException('HLS stream is not ready')
@@ -316,7 +366,7 @@ export class TracksService {
     })
     if (!file) throw new NotFoundException('HLS quality not found')
 
-    const key = storageKey.hlsAsset(id, bitrate, asset)
+    const key = storageKey.hlsAsset(id, file.url, bitrate, asset)
 
     try {
       const { stream, contentLength } = await this.storage.getObjectStream(key)
@@ -341,16 +391,18 @@ export class TracksService {
     page = 1,
     limit = 10,
     title,
-  }: { page?: number; limit?: number } & Partial<TrackEntity>) {
+    artistId,
+  }: { page?: number; limit?: number } & Pick<Partial<TrackEntity>, 'artistId' | 'title'>) {
     const pagination = normalizePagination(page, limit)
     return await this.cache.wrap(
       NS.TRACKS,
-      `list:${pagination.page}:${pagination.limit}:${title ?? ''}`,
+      `list:${pagination.page}:${pagination.limit}:${title ?? ''}:${artistId ?? ''}`,
       TTL.SHORT,
       async () => {
         const where = {
           processingStatus: 'READY' as const,
           deletedAt: null,
+          ...(artistId ? { artistId } : {}),
           ...(title ? { title: { contains: title, mode: 'insensitive' as const } } : {}),
         }
         const [data, total] = await this.prisma.$transaction([
@@ -358,6 +410,7 @@ export class TracksService {
             skip: pagination.skip,
             where,
             take: pagination.limit,
+            orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
           }),
           this.prisma.track.count({ where }),
         ])
@@ -463,62 +516,72 @@ export class TracksService {
     audioFile: Express.Multer.File,
     coverFile?: Express.Multer.File,
   ) {
-    const inputPath = this.configService.getOrThrow('storage').getTracksDir(audioFile.filename)
-    const metadata = await this.inspectAudioFile(inputPath)
-    const formatFromMime: Record<string, { format: string; codec?: string | null }> = {
-      'audio/mpeg': { format: 'mp3', codec: 'mp3' },
-      'audio/ogg': { format: 'ogg', codec: null },
-      'audio/wav': { format: 'wav', codec: null },
-      'audio/webm': { format: 'webm', codec: null },
+    let persisted = false
+    try {
+      if (coverFile) await this.validateCoverFile(coverFile)
+
+      const inputPath = this.configService.getOrThrow('storage').getTracksDir(audioFile.filename)
+      const metadata = await this.inspectAudioFile(inputPath)
+      const targetBitrates = this.getTargetBitrates(metadata.bitrate)
+      const formatFromMime: Record<string, { format: string; codec?: string | null }> = {
+        'audio/mpeg': { format: 'mp3', codec: 'mp3' },
+        'audio/ogg': { format: 'ogg', codec: null },
+        'audio/wav': { format: 'wav', codec: null },
+        'audio/webm': { format: 'webm', codec: null },
+      }
+
+      const extension = extname(audioFile.filename).replace('.', '').toLowerCase()
+      const fromMime = formatFromMime[audioFile.mimetype]
+      const format = metadata.container ?? fromMime?.format ?? (extension || 'unknown')
+      const codec = metadata.codec ?? fromMime?.codec ?? null
+
+      const track = await this.prisma.$transaction(async (tx) => {
+        const created = await tx.track.create({
+          data: {
+            artistId,
+            title: createTrackDto.title,
+            audioUrl: audioFile.filename,
+            cover: coverFile?.filename ?? null,
+            duration: metadata.duration,
+            processingStatus: 'PROCESSING',
+            processingError: null,
+            processingAttempts: 0,
+            processingStartedAt: null,
+            processingFinishedAt: null,
+          },
+        })
+
+        await tx.trackFile.create({
+          data: {
+            trackId: created.id,
+            format,
+            bitrate: metadata.bitrate,
+            codec,
+            url: audioFile.filename,
+            size: audioFile.size,
+          },
+        })
+
+        return created
+      })
+      persisted = true
+
+      await this.enqueueAudioConversion({
+        trackId: track.id,
+        artistId,
+        sourceFileName: audioFile.filename,
+        inputPath,
+        bitrates: targetBitrates,
+      })
+
+      this.logger.log(`Queued audio conversion for track ID: ${track.id}`)
+      await Promise.all([this.cache.invalidate(NS.TRACKS), this.cache.invalidate(NS.SEARCH)])
+
+      return track
+    } catch (error) {
+      if (!persisted) await this.cleanupUploadedFiles([audioFile, coverFile])
+      throw error
     }
-
-    const extension = extname(audioFile.originalname).replace('.', '').toLowerCase()
-    const fromMime = formatFromMime[audioFile.mimetype]
-    const format = metadata.container ?? fromMime?.format ?? (extension || 'unknown')
-    const codec = metadata.codec ?? fromMime?.codec ?? null
-
-    const track = await this.prisma.$transaction(async (tx) => {
-      const created = await tx.track.create({
-        data: {
-          artistId,
-          title: createTrackDto.title,
-          audioUrl: audioFile.filename,
-          cover: coverFile?.filename ?? null,
-          duration: metadata.duration,
-          processingStatus: 'PROCESSING',
-          processingError: null,
-          processingAttempts: 0,
-          processingStartedAt: null,
-          processingFinishedAt: null,
-        },
-      })
-
-      await tx.trackFile.create({
-        data: {
-          trackId: created.id,
-          format,
-          bitrate: metadata.bitrate,
-          codec,
-          url: audioFile.filename,
-          size: audioFile.size,
-        },
-      })
-
-      return created
-    })
-
-    await this.enqueueAudioConversion({
-      trackId: track.id,
-      artistId,
-      sourceFileName: audioFile.filename,
-      inputPath,
-      bitrates: this.getTargetBitrates(metadata.bitrate),
-    })
-
-    this.logger.log(`Queued audio conversion for track ID: ${track.id}`)
-    await Promise.all([this.cache.invalidate(NS.TRACKS), this.cache.invalidate(NS.SEARCH)])
-
-    return track
   }
 
   /** Runs the update operation. */
@@ -529,81 +592,104 @@ export class TracksService {
     audioFile?: Express.Multer.File,
     coverFile?: Express.Multer.File,
   ) {
-    const existingTrack = await this.prisma.track.findFirst({ where: { id, artistId } })
-    if (!existingTrack) throw new NotFoundException('Track not found or does not belong to artist')
-
-    const inputPath = audioFile
-      ? this.configService.getOrThrow('storage').getTracksDir(audioFile.filename)
-      : null
-    const metadata = inputPath ? await this.inspectAudioFile(inputPath) : null
-    const formatFromMime: Record<string, { format: string; codec?: string | null }> = {
-      'audio/mpeg': { format: 'mp3', codec: 'mp3' },
-      'audio/ogg': { format: 'ogg', codec: null },
-      'audio/wav': { format: 'wav', codec: null },
-      'audio/webm': { format: 'webm', codec: null },
-    }
-
-    const extension = audioFile?.originalname
-      ? extname(audioFile.originalname).replace('.', '').toLowerCase()
-      : ''
-    const fromMime = audioFile ? formatFromMime[audioFile.mimetype] : undefined
-    const format = audioFile
-      ? (metadata?.container ?? fromMime?.format ?? (extension || 'unknown'))
-      : undefined
-    const codec = audioFile ? (metadata?.codec ?? fromMime?.codec ?? null) : undefined
-
-    const track = await this.prisma.$transaction(async (tx) => {
-      const updated = await tx.track.update({
-        where: { id },
-        data: {
-          title: createTrackDto.title,
-          cover: coverFile?.filename ?? undefined,
-          audioUrl: audioFile?.filename ?? undefined,
-          duration: metadata?.duration ?? undefined,
-          processingStatus: audioFile ? 'PROCESSING' : undefined,
-          processingError: audioFile ? null : undefined,
-          processingAttempts: audioFile ? 0 : undefined,
-          processingStartedAt: audioFile ? null : undefined,
-          processingFinishedAt: audioFile ? null : undefined,
-        },
+    let persisted = false
+    try {
+      const existingTrack = await this.prisma.track.findFirst({
+        where: { id, artistId, deletedAt: null },
       })
+      if (!existingTrack) {
+        throw new NotFoundException('Track not found or does not belong to artist')
+      }
+      if (coverFile) await this.validateCoverFile(coverFile)
 
-      if (audioFile && format) {
-        await tx.trackFile.upsert({
-          where: {
-            trackId_format_bitrate: {
+      const storageConfig = this.configService.getOrThrow('storage')
+      const inputPath = audioFile ? storageConfig.getTracksDir(audioFile.filename) : null
+      const metadata = inputPath ? await this.inspectAudioFile(inputPath) : null
+      const targetBitrates = metadata ? this.getTargetBitrates(metadata.bitrate) : null
+      const formatFromMime: Record<string, { format: string; codec?: string | null }> = {
+        'audio/mpeg': { format: 'mp3', codec: 'mp3' },
+        'audio/ogg': { format: 'ogg', codec: null },
+        'audio/wav': { format: 'wav', codec: null },
+        'audio/webm': { format: 'webm', codec: null },
+      }
+
+      const extension = audioFile ? extname(audioFile.filename).replace('.', '').toLowerCase() : ''
+      const fromMime = audioFile ? formatFromMime[audioFile.mimetype] : undefined
+      const format = audioFile
+        ? (metadata?.container ?? fromMime?.format ?? (extension || 'unknown'))
+        : undefined
+      const codec = audioFile ? (metadata?.codec ?? fromMime?.codec ?? null) : undefined
+
+      const track = await this.prisma.$transaction(async (tx) => {
+        const updated = await tx.track.update({
+          where: { id },
+          data: {
+            title: createTrackDto.title,
+            cover: coverFile?.filename ?? undefined,
+            audioUrl: audioFile?.filename ?? undefined,
+            duration: metadata?.duration ?? undefined,
+            processingStatus: audioFile ? 'PROCESSING' : undefined,
+            processingError: audioFile ? null : undefined,
+            processingAttempts: audioFile ? 0 : undefined,
+            processingStartedAt: audioFile ? null : undefined,
+            processingFinishedAt: audioFile ? null : undefined,
+          },
+        })
+
+        if (audioFile && format) {
+          await tx.trackFile.deleteMany({
+            where: { trackId: updated.id, url: existingTrack.audioUrl },
+          })
+          await tx.trackFile.upsert({
+            where: {
+              trackId_format_bitrate: {
+                trackId: updated.id,
+                format,
+                bitrate: metadata?.bitrate ?? 0,
+              },
+            },
+            update: { codec, url: audioFile.filename, size: audioFile.size },
+            create: {
               trackId: updated.id,
               format,
               bitrate: metadata?.bitrate ?? 0,
+              codec,
+              url: audioFile.filename,
+              size: audioFile.size,
             },
-          },
-          update: { codec, url: audioFile.filename, size: audioFile.size },
-          create: {
-            trackId: updated.id,
-            format,
-            bitrate: metadata?.bitrate ?? 0,
-            codec,
-            url: audioFile.filename,
-            size: audioFile.size,
-          },
+          })
+        }
+
+        return updated
+      })
+      persisted = true
+
+      if (audioFile && inputPath && metadata && targetBitrates) {
+        await this.removeReplacedFile(
+          storageConfig.getTracksDir(existingTrack.audioUrl),
+          existingTrack.audioUrl,
+        )
+        await this.enqueueAudioConversion({
+          trackId: track.id,
+          artistId: track.artistId,
+          sourceFileName: audioFile.filename,
+          inputPath,
+          bitrates: targetBitrates,
         })
       }
+      if (coverFile && existingTrack.cover !== coverFile.filename) {
+        await this.removeReplacedFile(
+          storageConfig.getTracksCoversDir(existingTrack.cover ?? ''),
+          existingTrack.cover,
+        )
+      }
 
-      return updated
-    })
+      await Promise.all([this.cache.invalidate(NS.TRACKS), this.cache.invalidate(NS.SEARCH)])
 
-    if (audioFile && inputPath && metadata) {
-      await this.enqueueAudioConversion({
-        trackId: track.id,
-        artistId: track.artistId,
-        sourceFileName: audioFile.filename,
-        inputPath,
-        bitrates: this.getTargetBitrates(metadata.bitrate),
-      })
+      return track
+    } catch (error) {
+      if (!persisted) await this.cleanupUploadedFiles([audioFile, coverFile])
+      throw error
     }
-
-    await Promise.all([this.cache.invalidate(NS.TRACKS), this.cache.invalidate(NS.SEARCH)])
-
-    return track
   }
 }

@@ -54,7 +54,7 @@ describe('WsUserAuthGuard', () => {
       access_token: 'hashed-token',
       refresh_token: 'hashed-refresh',
       createdAt: new Date(),
-      expiresAt: null,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     })
 
     const client = {

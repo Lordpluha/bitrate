@@ -10,6 +10,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { AddTracksDto, CreatePlaylistDto, UpdatePlaylistDto } from './dtos'
 import { PlaylistEntity } from './entities'
 
@@ -44,6 +45,7 @@ export class PlaylistsService {
         where,
         skip: pagination.skip,
         take: pagination.limit,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         include: {
           user: {
             select: {
@@ -233,23 +235,35 @@ export class PlaylistsService {
       throw new BadRequestException('Some tracks are not available yet')
     }
 
-    await this.prisma.$transaction(async (tx) => {
-      const lastTrack = await tx.playlistTrack.findFirst({
-        where: { playlistId: id },
-        orderBy: { position: 'desc' },
-        select: { position: true },
-      })
-      const firstPosition = (lastTrack?.position ?? -1) + 1
-      await tx.playlistTrack.createMany({
-        data: dto.trackIds.map((trackId, index) => ({
-          playlistId: id,
-          trackId,
-          addedById: userId,
-          position: firstPosition + index,
-        })),
-      })
-      await tx.playlist.update({ where: { id }, data: { updatedAt: new Date() } })
-    })
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      try {
+        await this.prisma.$transaction(
+          async (tx) => {
+            const lastTrack = await tx.playlistTrack.findFirst({
+              where: { playlistId: id },
+              orderBy: { position: 'desc' },
+              select: { position: true },
+            })
+            const firstPosition = (lastTrack?.position ?? -1) + 1
+            await tx.playlistTrack.createMany({
+              data: uniqueTrackIds.map((trackId, index) => ({
+                playlistId: id,
+                trackId,
+                addedById: userId,
+                position: firstPosition + index,
+              })),
+            })
+            await tx.playlist.update({ where: { id }, data: { updatedAt: new Date() } })
+          },
+          { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+        )
+        break
+      } catch (error) {
+        const code =
+          error && typeof error === 'object' && 'code' in error ? String(error.code) : undefined
+        if (attempt === 3 || (code !== 'P2002' && code !== 'P2034')) throw error
+      }
+    }
     await this.cache.invalidate(NS.SEARCH)
     return await this.getByIdPopulated(id, userId)
   }

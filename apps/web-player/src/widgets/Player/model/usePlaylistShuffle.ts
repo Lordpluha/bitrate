@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef } from 'react'
 
 type UsePlaylistShuffleOptions = Pick<
   PlayerState,
-  'currentTrack' | 'isShuffled' | 'playlist'
+  'currentQueueId' | 'currentTrack' | 'isShuffled' | 'playlist'
 >
 
 const shuffleTracks = (tracks: PlayerState['playlist']) => {
@@ -26,6 +26,7 @@ const shuffleTracks = (tracks: PlayerState['playlist']) => {
 }
 
 export const usePlaylistShuffle = ({
+  currentQueueId,
   currentTrack,
   isShuffled,
   playlist,
@@ -41,7 +42,8 @@ export const usePlaylistShuffle = ({
   }, [isShuffled, playlist])
 
   return useCallback(() => {
-    if (!currentTrack) return
+    if (!currentTrack || currentQueueId) return
+    if (!playlist.some((track) => track.id === currentTrack.id)) return
 
     if (playlist.length < 2) {
       setShuffleEnabled(!isShuffled)
@@ -63,5 +65,12 @@ export const usePlaylistShuffle = ({
 
     setPlaylistTracks([currentTrack, ...shuffleTracks(remainingTracks)])
     setShuffleEnabled(true)
-  }, [currentTrack, isShuffled, playlist, setPlaylistTracks, setShuffleEnabled])
+  }, [
+    currentQueueId,
+    currentTrack,
+    isShuffled,
+    playlist,
+    setPlaylistTracks,
+    setShuffleEnabled,
+  ])
 }

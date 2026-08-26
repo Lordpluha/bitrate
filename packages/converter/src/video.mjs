@@ -26,7 +26,7 @@ export async function convertVideo({
   // Validate input file exists
   try {
     await fs.access(input)
-  } catch (error) {
+  } catch {
     throw new Error(`Input file not found: ${input}`)
   }
 

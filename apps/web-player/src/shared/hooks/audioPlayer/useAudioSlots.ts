@@ -17,6 +17,7 @@ import type {
 } from '@/shared/hooks/audioPlayer/audioPlayer.types'
 import {
   restorePlaybackPosition,
+  savePlaybackPosition,
   shouldPrefetchNextTrack,
 } from '@/shared/hooks/audioPlayer/audioPlayer.utils'
 
@@ -91,6 +92,8 @@ export const useAudioSlots = ({
       element.volume = volume
 
       const stopPlayback = () => {
+        if (slot.playbackKey !== playbackKey) return
+
         slot.hls?.destroy()
         slot.hls = null
         slot.loader?.destroy()
@@ -128,6 +131,40 @@ export const useAudioSlots = ({
           trackId: track.id,
         })
 
+      const safelyAttachLegacySource = () => {
+        if (slot.playbackKey !== playbackKey) return
+
+        try {
+          attachLegacySource()
+        } catch {
+          stopPlayback()
+        }
+      }
+
+      let didFallbackFromCmaf = false
+      const fallbackFromCmaf = () => {
+        if (didFallbackFromCmaf || slot.playbackKey !== playbackKey) return
+        didFallbackFromCmaf = true
+
+        savePlaybackPosition(playbackKey, element.currentTime)
+        slot.loader?.destroy()
+        slot.loader = null
+        slot.currentBitrate = null
+        if (!isPrefetch && activeSlotRef.current === index) {
+          pendingPlayRef.current = true
+        }
+        element.addEventListener(
+          'loadedmetadata',
+          () => {
+            if (slot.playbackKey === playbackKey) {
+              restorePlaybackPosition(element, playbackKey)
+            }
+          },
+          { once: true },
+        )
+        safelyAttachLegacySource()
+      }
+
       if (resolveManifest) {
         void resolveManifest(track.id)
           .then((manifest) => {
@@ -140,17 +177,17 @@ export const useAudioSlots = ({
                 element,
                 isPrefetch,
                 manifest,
-                onFatalError: stopPlayback,
+                onFatalError: fallbackFromCmaf,
                 playbackKey,
                 slot,
                 trackId: track.id,
               })
 
-            if (!attached) attachLegacySource()
+            if (!attached) safelyAttachLegacySource()
           })
-          .catch(attachLegacySource)
+          .catch(safelyAttachLegacySource)
       } else {
-        attachLegacySource()
+        safelyAttachLegacySource()
       }
 
       if (!isPrefetch) {

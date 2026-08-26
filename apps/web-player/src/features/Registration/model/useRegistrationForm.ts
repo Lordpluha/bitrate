@@ -28,14 +28,19 @@ export const useRegistrationForm = () => {
   })
 
   const onSubmit = async (data: RegistrationFormData) => {
-    await mutation.mutateAsync({
-      body: {
-        email: data.email,
-        password: data.password,
-        username: data.fullName,
-      },
-    })
-    router.push(ROUTES.auth.verifyEmail(data.email))
+    try {
+      await mutation.mutateAsync({
+        body: {
+          email: data.email,
+          password: data.password,
+          username: data.fullName,
+        },
+      })
+      router.push(ROUTES.auth.verifyEmail(data.email))
+    } catch {
+      // The mutation-level handler owns user feedback. Contain mutateAsync's
+      // rejection so React Hook Form does not surface an unhandled promise.
+    }
   }
 
   return { form, isSubmitting: mutation.isPending, onSubmit }

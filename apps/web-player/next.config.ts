@@ -1,7 +1,15 @@
 import type { NextConfig } from 'next'
+import { parseWebEnv } from './env.schema'
 
+const environment = parseWebEnv({
+  enforceDeployment: Boolean(process.env.CI),
+  environment: process.env,
+})
 const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? 'http://localhost:3000'
+  (environment.API_URL ?? environment.NEXT_PUBLIC_API_URL)?.replace(
+    /\/$/,
+    '',
+  ) ?? 'http://localhost:3000'
 
 /**
  * Target memory ceiling for Turbopack, in bytes.

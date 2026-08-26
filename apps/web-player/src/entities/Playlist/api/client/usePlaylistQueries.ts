@@ -6,9 +6,12 @@ import { useQuery as useTanStackQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import type { PlaylistWithTracks } from './playlist.types'
 import { playlistQueryKeys, withPlayableTrackUrls } from './playlistQuery'
-import { libraryPlaylistsResponseSchema } from './playlistResponse.schema'
+import {
+  libraryPlaylistsResponseSchema,
+  normalizePlaylistsResponse,
+} from './playlistResponse.schema'
 
-const normalizePlaylistsResponse = (data: unknown) =>
+const normalizeLibraryPlaylistsResponse = (data: unknown) =>
   libraryPlaylistsResponseSchema.parse(data)
 
 export const usePlaylists = (page = 1, limit = 20) =>
@@ -16,7 +19,11 @@ export const usePlaylists = (page = 1, limit = 20) =>
     'get',
     '/api/v1/playlists',
     { params: { query: { page, limit } } },
-    { retry: false, staleTime: 60_000 },
+    {
+      retry: false,
+      select: normalizePlaylistsResponse,
+      staleTime: 60_000,
+    },
   )
 
 export const useMyPlaylists = () =>
@@ -26,7 +33,7 @@ export const useMyPlaylists = () =>
     {},
     {
       retry: false,
-      select: normalizePlaylistsResponse,
+      select: normalizeLibraryPlaylistsResponse,
       staleTime: 60_000,
     },
   )

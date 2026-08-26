@@ -3,6 +3,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { UserEntity } from './entities'
+import { PUBLIC_USER_SELECT } from './users.select'
 
 /** Represents the users service. */
 @Injectable()
@@ -16,11 +17,7 @@ export class UsersService {
       where: {
         id,
       },
-      omit: {
-        password: true,
-        email: true,
-        twoFactorSecret: true,
-      },
+      select: PUBLIC_USER_SELECT,
     })
   }
 
@@ -30,10 +27,7 @@ export class UsersService {
       where: {
         email,
       },
-      omit: {
-        password: true,
-        twoFactorSecret: true,
-      },
+      select: { id: true },
     })
   }
 
@@ -43,11 +37,7 @@ export class UsersService {
       where: {
         username,
       },
-      omit: {
-        password: true,
-        email: true,
-        twoFactorSecret: true,
-      },
+      select: PUBLIC_USER_SELECT,
     })
   }
 
@@ -71,11 +61,8 @@ export class UsersService {
         where,
         skip: pagination.skip,
         take: pagination.limit,
-        omit: {
-          password: true,
-          email: true,
-          twoFactorSecret: true,
-        },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        select: PUBLIC_USER_SELECT,
       }),
       this.prisma.user.count({ where }),
     ])
@@ -86,10 +73,7 @@ export class UsersService {
   async create(data: Prisma.UserUncheckedCreateInput) {
     return await this.prisma.user.create({
       data,
-      omit: {
-        password: true,
-        twoFactorSecret: true,
-      },
+      select: { id: true, email: true, username: true },
     })
   }
 
@@ -98,10 +82,7 @@ export class UsersService {
     return await this.prisma.user.update({
       where: { id },
       data: userData,
-      omit: {
-        password: true,
-        twoFactorSecret: true,
-      },
+      select: PUBLIC_USER_SELECT,
     })
   }
 
@@ -111,7 +92,7 @@ export class UsersService {
     return await this.prisma.user.update({
       where: { id: userId },
       data: { avatar: avatarPath },
-      omit: { password: true, email: true, twoFactorSecret: true },
+      select: PUBLIC_USER_SELECT,
     })
   }
 
@@ -139,7 +120,7 @@ export class UsersService {
         orderBy: { createdAt: 'desc' },
         skip: pagination.skip,
         take: pagination.limit,
-        include: { following: { omit: { password: true, email: true, twoFactorSecret: true } } },
+        include: { following: { select: PUBLIC_USER_SELECT } },
       }),
       this.prisma.userFollow.count({ where }),
     ])

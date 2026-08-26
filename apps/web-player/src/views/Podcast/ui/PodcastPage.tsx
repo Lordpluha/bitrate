@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { useMemo } from 'react'
 import {
   type Episode,
+  useAllSavedEpisodes,
   usePodcast,
-  useSavedEpisodes,
   useSaveEpisode,
   useUnsaveEpisode,
 } from '@/entities/Podcast'
@@ -83,11 +83,11 @@ const EpisodeRow = ({
 export const PodcastPage = ({ podcastId }: PodcastPageProps) => {
   const { isAuthenticated } = useAuth()
   const podcastQuery = usePodcast(podcastId, 1, 50)
-  const savedQuery = useSavedEpisodes(1, 100, isAuthenticated)
+  const savedQuery = useAllSavedEpisodes(isAuthenticated)
   const saveEpisode = useSaveEpisode()
   const unsaveEpisode = useUnsaveEpisode()
   const savedIds = useMemo(
-    () => new Set(savedQuery.data?.data.map((episode) => episode.id) ?? []),
+    () => new Set(savedQuery.data?.map((episode) => episode.id) ?? []),
     [savedQuery.data],
   )
 

@@ -47,3 +47,19 @@ export const buildAudioFile = (overrides: Partial<Express.Multer.File> = {}): Ex
     buffer: Buffer.from(''),
     ...overrides,
   }) as Express.Multer.File
+
+/** Builds a valid PNG cover upload fixture. */
+export const buildCoverFile = (overrides: Partial<Express.Multer.File> = {}): Express.Multer.File =>
+  ({
+    fieldname: 'cover',
+    originalname: 'cover.png',
+    encoding: '7bit',
+    mimetype: 'image/png',
+    size: 1024,
+    filename: 'unique-cover.png',
+    destination: './storage/public/tracks/covers',
+    path: './storage/public/tracks/covers/unique-cover.png',
+    stream: null as never,
+    buffer: Buffer.from(''),
+    ...overrides,
+  }) as Express.Multer.File

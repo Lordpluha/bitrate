@@ -20,7 +20,9 @@ jobs:
       - name: Build web app
         run: pnpm --filter @spotify/web-player run build
         env:
+          API_URL: http://localhost:3001
           NEXT_PUBLIC_API_URL: http://localhost:3001
+          NEXT_PUBLIC_SITE_URL: https://spotify-clone-web-olive.vercel.app
 
       - name: Start web app
         run: |
@@ -35,7 +37,9 @@ jobs:
             sleep 1
           done
         env:
+          API_URL: http://localhost:3001
           NEXT_PUBLIC_API_URL: http://localhost:3001
+          NEXT_PUBLIC_SITE_URL: https://spotify-clone-web-olive.vercel.app
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v10

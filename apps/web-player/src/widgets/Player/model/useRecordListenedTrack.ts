@@ -27,14 +27,19 @@ export const useRecordListenedTrack = ({
   currentTime,
   trackId,
 }: UseRecordListenedTrackInput) => {
-  const { mutate } = useRecordListeningHistory()
-  const recordedTrackIdRef = useRef<string | null>(null)
+  const { mutateAsync } = useRecordListeningHistory()
+  const pendingTrackIdsRef = useRef(new Set<string>())
+  const recordedTrackIdsRef = useRef(new Set<string>())
 
   useEffect(() => {
-    if (!trackId || recordedTrackIdRef.current === trackId) return
+    if (!trackId || recordedTrackIdsRef.current.has(trackId)) return
+    if (pendingTrackIdsRef.current.has(trackId)) return
     if (currentTime < LISTEN_THRESHOLD_SECONDS) return
 
-    recordedTrackIdRef.current = trackId
-    mutate(trackId)
-  }, [currentTime, mutate, trackId])
+    pendingTrackIdsRef.current.add(trackId)
+    void mutateAsync(trackId)
+      .then(() => recordedTrackIdsRef.current.add(trackId))
+      .catch(() => undefined)
+      .finally(() => pendingTrackIdsRef.current.delete(trackId))
+  }, [currentTime, mutateAsync, trackId])
 }

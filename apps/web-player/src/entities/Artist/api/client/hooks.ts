@@ -2,6 +2,7 @@
 
 import {
   artistResponseSchema,
+  artistsPaginatedResponseSchema,
   artistsResponseSchema,
 } from '@entities/Artist/api/client/artistResponse.schema'
 import { clientFetchClient, useMutation } from '@shared/api/client'
@@ -81,20 +82,37 @@ export const useRelatedArtists = (artistId?: string) =>
   })
 
 /** Artists the signed-in user follows. Returns an empty list when signed out. */
+const FOLLOWED_ARTISTS_PAGE_SIZE = 100
+
+const getFollowedArtistsPage = async (page: number) => {
+  const { data, response } = await clientFetchClient.GET(
+    '/api/v1/artists/me/following',
+    { params: { query: { limit: FOLLOWED_ARTISTS_PAGE_SIZE, page } } },
+  )
+
+  if (response.status === 401) {
+    return { data: [], limit: FOLLOWED_ARTISTS_PAGE_SIZE, page, total: 0 }
+  }
+  ensureOkResponse(response, 'Failed to fetch followed artists')
+  return artistsPaginatedResponseSchema.parse(data)
+}
+
+export const getAllFollowedArtists = async () => {
+  const firstPage = await getFollowedArtistsPage(1)
+  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
+  const remainingPages = await Promise.all(
+    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
+      getFollowedArtistsPage(index + 2),
+    ),
+  )
+
+  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
+}
+
 export const useFollowedArtists = (enabled = true) =>
   useQuery({
     queryKey: apiQueryKeys.artists.following,
-    queryFn: async () => {
-      const { data, response } = await clientFetchClient.GET(
-        '/api/v1/artists/me/following',
-        {},
-      )
-
-      if (response.status === 401) return []
-      ensureOkResponse(response, 'Failed to fetch followed artists')
-
-      return artistsResponseSchema.parse(data)
-    },
+    queryFn: getAllFollowedArtists,
     enabled,
     staleTime: ARTIST_STALE_TIME,
   })

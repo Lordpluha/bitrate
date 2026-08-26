@@ -93,6 +93,7 @@ describe('AudioProcessingConsumer', () => {
   let prisma: PrismaMock
   const storage = {
     upload: jest.fn().mockResolvedValue('key' as never),
+    deletePrefix: jest.fn().mockResolvedValue(undefined as never),
   }
   const deadLetterQueue = {
     add: jest.fn().mockResolvedValue(undefined as never),
@@ -105,6 +106,7 @@ describe('AudioProcessingConsumer', () => {
     consumer = new AudioProcessingConsumer(prisma, storage as never, deadLetterQueue as never)
     prisma.track.findUnique.mockResolvedValue({ id: 'track-1', audioUrl: 'track.mp3' } as never)
     prisma.track.update.mockResolvedValue({ id: 'track-1' } as never)
+    prisma.track.updateMany.mockResolvedValue({ count: 1 } as never)
     prisma.trackFile.upsert.mockResolvedValue({ id: 'tf-1' } as never)
     prisma.$transaction.mockImplementation(async (callback: unknown) => {
       if (typeof callback === 'function') {
@@ -136,7 +138,7 @@ describe('AudioProcessingConsumer', () => {
     await consumer.process(makeJob('convert-audio', jobData))
 
     expect(convertAudioMock).not.toHaveBeenCalled()
-    expect(prisma.track.update).not.toHaveBeenCalled()
+    expect(prisma.track.updateMany).not.toHaveBeenCalled()
   })
 
   it('prepares every variant, publishes it, and marks the track ready atomically', async () => {
@@ -153,12 +155,12 @@ describe('AudioProcessingConsumer', () => {
       }),
     )
     expect(storage.upload).toHaveBeenLastCalledWith(
-      'tracks/track-1/hls/master.m3u8',
+      expect.stringMatching(/^tracks\/track-1\/generations\/[a-f0-9]{16}\/hls\/master\.m3u8$/),
       expect.anything(),
       'application/vnd.apple.mpegurl',
     )
     expect(prisma.trackFile.upsert).toHaveBeenCalledTimes(4)
-    expect(prisma.track.update).toHaveBeenCalledWith(
+    expect(prisma.track.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ processingStatus: 'READY' }),
       }),
@@ -188,7 +190,7 @@ describe('AudioProcessingConsumer', () => {
         codec: 'mp4a.40.2',
         initRangeStart: 0,
         initRangeEnd: 707,
-        url: 'tracks/track-1/cmaf/128.m4a',
+        url: expect.stringMatching(/^tracks\/track-1\/generations\/[a-f0-9]{16}\/cmaf\/128\.m4a$/),
         fragments: [
           [0, 195_584, 929, 66_238],
           [195_584, 196_608, 67_167, 66_419],
@@ -200,7 +202,7 @@ describe('AudioProcessingConsumer', () => {
   it('marks the track as playbackVersion 2 with its fragment timescale', async () => {
     await consumer.process(makeJob('convert-audio', jobData))
 
-    expect(prisma.track.update).toHaveBeenCalledWith(
+    expect(prisma.track.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
           playbackVersion: 2,
@@ -219,7 +221,7 @@ describe('AudioProcessingConsumer', () => {
 
     await expect(consumer.process(job)).rejects.toThrow(/fragment 3/)
 
-    expect(prisma.track.update).not.toHaveBeenCalledWith(
+    expect(prisma.track.updateMany).not.toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ processingStatus: 'READY' }),
       }),
@@ -232,8 +234,8 @@ describe('AudioProcessingConsumer', () => {
 
     await expect(consumer.process(job)).rejects.toThrow('ffmpeg crashed')
 
-    expect(prisma.track.update).toHaveBeenCalledWith({
-      where: { id: 'track-1' },
+    expect(prisma.track.updateMany).toHaveBeenCalledWith({
+      where: { id: 'track-1', audioUrl: 'track.mp3' },
       data: { processingError: 'ffmpeg crashed' },
     })
     expect(deadLetterQueue.add).not.toHaveBeenCalled()
@@ -241,6 +243,36 @@ describe('AudioProcessingConsumer', () => {
       expect.stringContaining('/storage/.processing/track-1-job-1-1'),
       { recursive: true, force: true },
     )
+  })
+
+  it('removes uploaded immutable objects when a newer source wins before publish', async () => {
+    prisma.track.findUnique
+      .mockResolvedValueOnce({ id: 'track-1', audioUrl: 'track.mp3' } as never)
+      .mockResolvedValueOnce({ id: 'track-1', audioUrl: 'track.mp3' } as never)
+      .mockResolvedValueOnce({ id: 'track-1', audioUrl: 'new.mp3' } as never)
+
+    await consumer.process(makeJob('convert-audio', jobData))
+
+    expect(storage.deletePrefix).toHaveBeenCalledWith(
+      expect.stringMatching(/^tracks\/track-1\/generations\/[a-f0-9]{16}$/),
+    )
+    expect(prisma.trackFile.upsert).not.toHaveBeenCalled()
+    expect(prisma.track.updateMany).not.toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ processingStatus: 'READY' }) }),
+    )
+  })
+
+  it('uses a conditional publish so a source changed during the transaction cannot become ready', async () => {
+    prisma.track.updateMany
+      .mockResolvedValueOnce({ count: 1 } as never)
+      .mockResolvedValueOnce({ count: 0 } as never)
+
+    await consumer.process(makeJob('convert-audio', jobData))
+
+    expect(storage.deletePrefix).toHaveBeenCalledWith(
+      expect.stringMatching(/^tracks\/track-1\/generations\/[a-f0-9]{16}$/),
+    )
+    expect(deadLetterQueue.add).not.toHaveBeenCalled()
   })
 
   it('marks the current upload failed after all attempts are exhausted', async () => {
@@ -251,8 +283,8 @@ describe('AudioProcessingConsumer', () => {
 
     await consumer.onFailed(job as never, new Error('permanent failure'))
 
-    expect(prisma.track.update).toHaveBeenCalledWith({
-      where: { id: 'track-1' },
+    expect(prisma.track.updateMany).toHaveBeenCalledWith({
+      where: { id: 'track-1', audioUrl: 'track.mp3' },
       data: expect.objectContaining({
         processingStatus: 'FAILED',
         processingError: 'permanent failure',
@@ -263,10 +295,13 @@ describe('AudioProcessingConsumer', () => {
       jobData,
       expect.objectContaining({ jobId: 'failed-job-1-5' }),
     )
+    expect(storage.deletePrefix).toHaveBeenCalledWith(
+      expect.stringMatching(/^tracks\/track-1\/generations\/[a-f0-9]{16}$/),
+    )
   })
 
   it('does not mark a newer upload failed when an old job exhausts retries', async () => {
-    prisma.track.findUnique.mockResolvedValue({ id: 'track-1', audioUrl: 'new.mp3' } as never)
+    prisma.track.updateMany.mockResolvedValue({ count: 0 } as never)
     const job = makeJob('convert-audio', jobData, {
       attemptsMade: 5,
       opts: { attempts: 5 },
@@ -274,6 +309,7 @@ describe('AudioProcessingConsumer', () => {
 
     await consumer.onFailed(job as never, new Error('old upload failed'))
 
-    expect(prisma.track.update).not.toHaveBeenCalled()
+    expect(deadLetterQueue.add).not.toHaveBeenCalled()
+    expect(storage.deletePrefix).not.toHaveBeenCalled()
   })
 })

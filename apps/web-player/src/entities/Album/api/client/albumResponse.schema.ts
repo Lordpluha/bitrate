@@ -1,10 +1,14 @@
 import { z } from 'zod'
 import { arrayOrPaginated } from '@/shared/api/paginated'
+import { fallbackTrackCover } from '@/shared/constants'
 
 const albumTrackResponseSchema = z.object({
   artistId: z.string(),
   audioUrl: z.string(),
-  cover: z.string(),
+  cover: z
+    .string()
+    .nullable()
+    .transform((cover) => cover ?? fallbackTrackCover),
   createdAt: z.string(),
   deletedAt: z.string().nullable(),
   discNumber: z.number(),
@@ -30,7 +34,7 @@ const albumTrackResponseSchema = z.object({
 
 export const albumResponseSchema = z.object({
   artistId: z.string(),
-  cover: z.string(),
+  cover: z.string().nullable(),
   createdAt: z.string(),
   description: z.string().nullable(),
   id: z.string(),
@@ -41,5 +45,12 @@ export const albumResponseSchema = z.object({
 })
 
 export const albumsResponseSchema = arrayOrPaginated(albumResponseSchema)
+
+export const albumsPaginatedResponseSchema = z.object({
+  data: z.array(albumResponseSchema),
+  limit: z.number().int().positive(),
+  page: z.number().int().positive(),
+  total: z.number().int().nonnegative(),
+})
 
 export type AlbumResponse = z.infer<typeof albumResponseSchema>

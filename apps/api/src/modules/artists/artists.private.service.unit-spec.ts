@@ -40,7 +40,7 @@ describe('ArtistsPrivateService', () => {
     })
 
     expect(prisma.artist.findFirst).toHaveBeenCalledWith({
-      where: { email: 'artist@example.com', password: 'pass' },
+      where: { email: 'artist@example.com', password: 'pass', deletedAt: null },
     })
     expect(result).toBe(artist)
   })
@@ -103,24 +103,26 @@ describe('ArtistsPrivateService', () => {
     expect(result).toBe(deleted)
   })
 
-  it('findById should call findUnique without omit', async () => {
+  it('findById should exclude soft-deleted artists', async () => {
     const artist = buildArtist()
-    prisma.artist.findUnique.mockResolvedValue(artist)
+    prisma.artist.findFirst.mockResolvedValue(artist)
 
     const result = await service.findById('artist-1')
 
-    expect(prisma.artist.findUnique).toHaveBeenCalledWith({ where: { id: 'artist-1' } })
+    expect(prisma.artist.findFirst).toHaveBeenCalledWith({
+      where: { id: 'artist-1', deletedAt: null },
+    })
     expect(result).toBe(artist)
   })
 
-  it('findByEmail should call findUnique without omit', async () => {
+  it('findByEmail should exclude soft-deleted artists', async () => {
     const artist = buildArtist()
-    prisma.artist.findUnique.mockResolvedValue(artist)
+    prisma.artist.findFirst.mockResolvedValue(artist)
 
     const result = await service.findByEmail('artist@example.com')
 
-    expect(prisma.artist.findUnique).toHaveBeenCalledWith({
-      where: { email: 'artist@example.com' },
+    expect(prisma.artist.findFirst).toHaveBeenCalledWith({
+      where: { email: 'artist@example.com', deletedAt: null },
     })
     expect(result).toBe(artist)
   })

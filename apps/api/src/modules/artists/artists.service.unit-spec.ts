@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { ForbiddenException } from '@nestjs/common'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtist } from './__tests__/fixtures/artists.fixtures'
+import { PUBLIC_ARTIST_SELECT } from './artists.select'
 import { ArtistsService } from './artists.service'
 
 const makeCacheMock = () =>
@@ -36,7 +37,7 @@ describe('ArtistsService', () => {
 
     expect(prisma.artist.create).toHaveBeenCalledWith({
       data: { password: 'pass', username: 'artist', email: 'artist@example.com' },
-      omit: { password: true },
+      select: { id: true, email: true, username: true },
     })
     expect(result).toBe(created)
   })
@@ -48,10 +49,11 @@ describe('ArtistsService', () => {
     const result = await service.findAll({})
 
     expect(prisma.artist.findMany).toHaveBeenCalledWith({
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 0,
       take: 10,
       where: { deletedAt: null },
-      omit: { password: true, email: true },
+      select: PUBLIC_ARTIST_SELECT,
     })
     expect(result).toEqual({ data: artists, total: 1, page: 1, limit: 10 })
   })
@@ -63,13 +65,14 @@ describe('ArtistsService', () => {
     const result = await service.findAll({ page: 2, limit: 5, username: 'art' })
 
     expect(prisma.artist.findMany).toHaveBeenCalledWith({
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 5,
       take: 5,
       where: {
         deletedAt: null,
         username: { contains: 'art', mode: 'insensitive' },
       },
-      omit: { password: true, email: true },
+      select: PUBLIC_ARTIST_SELECT,
     })
     expect(result).toEqual({ data: artists, total: 1, page: 2, limit: 5 })
   })
@@ -82,7 +85,7 @@ describe('ArtistsService', () => {
 
     expect(prisma.artist.findFirst).toHaveBeenCalledWith({
       where: { username: 'artist', deletedAt: null },
-      omit: { password: true, email: true },
+      select: PUBLIC_ARTIST_SELECT,
     })
     expect(result).toBe(artist)
   })
@@ -100,7 +103,7 @@ describe('ArtistsService', () => {
     expect(prisma.artist.update).toHaveBeenCalledWith({
       where: { id: 'artist-1' },
       data: { username: 'updated' },
-      omit: { password: true, email: true },
+      select: PUBLIC_ARTIST_SELECT,
     })
     expect(result).toBe(updated)
   })
@@ -111,14 +114,17 @@ describe('ArtistsService', () => {
 
   it('requestDelete should soft-delete artist when authorized', async () => {
     const deleted = buildArtist()
-    prisma.artist.update.mockResolvedValue(deleted)
+    prisma.$transaction.mockResolvedValue([deleted, { count: 1 }] as never)
 
     const result = await service.requestDelete('artist-1', 'artist-1')
 
     expect(prisma.artist.update).toHaveBeenCalledWith({
       where: { id: 'artist-1' },
       data: { deletedAt: expect.any(Date) },
-      omit: { password: true, email: true },
+      select: PUBLIC_ARTIST_SELECT,
+    })
+    expect(prisma.artistSession.deleteMany).toHaveBeenCalledWith({
+      where: { artistId: 'artist-1' },
     })
     expect(result).toBe(deleted)
   })
@@ -131,7 +137,7 @@ describe('ArtistsService', () => {
 
     expect(prisma.artist.findFirst).toHaveBeenCalledWith({
       where: { email: 'artist@example.com', deletedAt: null },
-      omit: { password: true },
+      select: { id: true },
     })
     expect(result).toBe(artist)
   })
@@ -144,7 +150,7 @@ describe('ArtistsService', () => {
 
     expect(prisma.artist.findFirst).toHaveBeenCalledWith({
       where: { id: 'artist-1', deletedAt: null },
-      omit: { password: true, email: true },
+      select: PUBLIC_ARTIST_SELECT,
     })
     expect(result).toBe(artist)
   })

@@ -1,7 +1,9 @@
+import type { AppConfig } from '@common/config'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixtures'
 import type { ArtistsService } from '@modules/artists/artists.service'
 import type { TokenService } from '@modules/tokens/token.service'
+import type { ConfigService } from '@nestjs/config'
 import type { Response } from 'express'
 
 jest.mock('otplib', () => ({
@@ -49,10 +51,19 @@ const makeOAuthServiceMock = () =>
     handleFacebookCallback: jest.fn(),
   }) as unknown as jest.Mocked<ArtistOAuthService>
 
+const makeConfigMock = () =>
+  ({
+    getOrThrow: jest.fn().mockReturnValue({
+      userHost: 'https://users.example.com',
+      artistHost: 'https://artists.example.com',
+    }),
+  }) as unknown as jest.Mocked<ConfigService<AppConfig>>
+
 const makeResponse = () =>
   ({
     cookie: jest.fn(),
     clearCookie: jest.fn(),
+    redirect: jest.fn(),
   }) as unknown as Response
 
 describe('AuthController (artists)', () => {
@@ -60,6 +71,7 @@ describe('AuthController (artists)', () => {
   let authService: jest.Mocked<ArtistsAuthService>
   let artistsService: jest.Mocked<ArtistsService>
   let tokenService: jest.Mocked<TokenService>
+  let oauthService: jest.Mocked<ArtistOAuthService>
 
   beforeEach(() => {
     process.env.ACCESS_TOKEN_NAME = 'access_token'
@@ -67,12 +79,14 @@ describe('AuthController (artists)', () => {
     authService = makeAuthServiceMock()
     artistsService = makeArtistsServiceMock()
     tokenService = makeTokenServiceMock()
+    oauthService = makeOAuthServiceMock()
     controller = new AuthController(
       authService,
       artistsService,
       tokenService,
       makeTwoFactorServiceMock(),
-      makeOAuthServiceMock(),
+      oauthService,
+      makeConfigMock(),
     )
   })
 
@@ -140,5 +154,35 @@ describe('AuthController (artists)', () => {
 
     expect(artistsService.findById).toHaveBeenCalledWith('artist-1')
     expect(result).toBe(artist)
+  })
+
+  it('OAuth 2FA callback sets a site-wide secure cookie and redirects to artist frontend', async () => {
+    const previousNodeEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+    oauthService.handleGoogleCallback.mockResolvedValue({
+      requires2fa: true,
+      pendingToken: 'pending-token',
+    })
+    const res = makeResponse()
+
+    try {
+      await controller.googleCallback(
+        'code',
+        'state',
+        { cookies: { oauth_state: 'state' } } as never,
+        res,
+      )
+
+      expect(res.cookie).toHaveBeenCalledWith('pending_2fa_token', 'pending-token', {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: true,
+        path: '/',
+        maxAge: 10 * 60 * 1000,
+      })
+      expect(res.redirect).toHaveBeenCalledWith('https://artists.example.com/login/2fa')
+    } finally {
+      process.env.NODE_ENV = previousNodeEnv
+    }
   })
 })

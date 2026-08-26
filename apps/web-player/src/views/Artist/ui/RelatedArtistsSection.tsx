@@ -2,6 +2,7 @@
 
 import { useRelatedArtists } from '@entities/Artist'
 import { MusicCardLg } from '@shared/ui/MusicCardLg'
+import { getArtistAvatarUrl } from '@shared/utils/mediaUrl'
 
 type RelatedArtistsSectionProps = {
   artistId: string
@@ -23,7 +24,7 @@ export const RelatedArtistsSection = ({
           <MusicCardLg
             description="Artist"
             id={artist.id}
-            imageUrl={artist.avatar ?? undefined}
+            imageUrl={getArtistAvatarUrl(artist.avatar)}
             isArtist
             key={artist.id}
             name={artist.username}

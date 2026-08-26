@@ -2,6 +2,22 @@ import { ROUTES } from '@shared/routes'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
+const publicRoutes = [
+  ROUTES.auth.login,
+  ROUTES.auth.twoFactorLogin,
+  ROUTES.auth.registration,
+  ROUTES.auth.forgotPassword,
+  ROUTES.auth.resetPassword(),
+  ROUTES.auth.verifyEmail(),
+  ROUTES.landing,
+  '/login',
+  '/login/2fa',
+  '/offline',
+] as const
+
+export const isPublicRoute = (pathname: string) =>
+  publicRoutes.some((route) => pathname === route)
+
 /**
  * Route guard for the web player.
  * Visitors without any session cookie are sent to login; everyone else passes
@@ -16,19 +32,7 @@ export function proxy(request: NextRequest) {
   const refreshToken = request.cookies.get('refresh_token')
   const hasRecoverableSession = Boolean(accessToken || refreshToken)
 
-  /** Auth screens plus the landing page are reachable without a session. */
-  const publicRoutes = [
-    ROUTES.auth.login,
-    ROUTES.auth.twoFactorLogin,
-    ROUTES.auth.registration,
-    ROUTES.auth.forgotPassword,
-    ROUTES.auth.resetPassword(),
-    ROUTES.landing,
-  ]
-
-  const isPublicRoute = publicRoutes.some((route) => pathname === route)
-
-  if (!hasRecoverableSession && !isPublicRoute) {
+  if (!hasRecoverableSession && !isPublicRoute(pathname)) {
     return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
   }
 

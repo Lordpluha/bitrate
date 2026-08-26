@@ -16,8 +16,8 @@ export class TrackEntity implements Track {
   audioUrl: string
 
   /** The cover value. */
-  @ApiProperty()
-  cover: string
+  @ApiProperty({ nullable: true })
+  cover: string | null
 
   /** The created at value. */
   @ApiProperty()

@@ -3,13 +3,15 @@
 import { X } from 'lucide-react'
 import Link from 'next/link'
 import { ThemeSwitcher } from '@/features/SwitchTheme'
-import { useOverlayFocus } from '@/shared/hooks'
+import { useOverlayFocus } from '@/shared/hooks/useOverlayFocus'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import { AuthButtons } from '../AuthButtons'
 import { InstallBtn } from '../InstallBtn'
 import { NavLinks } from '../NavLinks'
 
 type BurgerMenuPanelProps = {
+  id: string
   isAuthenticated: boolean
   isLogoutPending: boolean
   isOpen: boolean
@@ -19,6 +21,7 @@ type BurgerMenuPanelProps = {
 }
 
 export const BurgerMenuPanel = ({
+  id,
   isAuthenticated,
   isLogoutPending,
   isOpen,
@@ -26,27 +29,33 @@ export const BurgerMenuPanel = ({
   onClose,
   username,
 }: BurgerMenuPanelProps) => {
+  const { t } = useI18n()
   const panelRef = useOverlayFocus<HTMLDivElement>({ isOpen, onClose })
 
   return (
     <div
       aria-hidden={!isOpen}
-      aria-label="Navigation menu"
-      aria-modal="true"
-      className={`fixed right-0 top-0 z-50 h-dvh w-full max-w-96 transform border-l border-border bg-background-secondary transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      aria-label={t('nav.main')}
+      aria-modal={isOpen}
+      className={`fixed right-0 top-0 z-50 h-dvh w-full max-w-96 transform border-l border-border bg-background-secondary transition-[transform,visibility] duration-300 ease-in-out ${isOpen ? 'visible translate-x-0' : 'invisible pointer-events-none translate-x-full'}`}
+      id={id}
+      inert={!isOpen}
       ref={panelRef}
       role="dialog"
+      tabIndex={-1}
     >
       <div className="h-full overflow-y-auto p-6 custom-scrollbar">
         <div className="mb-8 flex items-center justify-between">
           <div className="min-w-0">
-            <h2 className="text-lg font-semibold text-text">Menu</h2>
+            <h2 className="text-lg font-semibold text-text">
+              {t('common.menu')}
+            </h2>
             {username && (
               <p className="truncate text-sm text-text-subdued">{username}</p>
             )}
           </div>
           <button
-            aria-label="Close menu"
+            aria-label={t('common.closeMenu')}
             className="p-2 text-text transition-opacity hover:opacity-70"
             onClick={onClose}
             type="button"
@@ -59,17 +68,19 @@ export const BurgerMenuPanel = ({
             <>
               <nav className="grid border-b border-border pb-6">
                 <MenuLink href={ROUTES.profile} onClick={onClose}>
-                  Profile
+                  {t('common.profile')}
                 </MenuLink>
                 <MenuLink href={ROUTES.recents} onClick={onClose}>
-                  Recents
+                  {t('recents.title')}
                 </MenuLink>
                 <MenuLink href={ROUTES.settings} onClick={onClose}>
-                  Settings
+                  {t('settings.title')}
                 </MenuLink>
               </nav>
               <div className="flex items-center justify-between border-b border-border pb-6">
-                <span className="text-sm text-text-subdued">Theme</span>
+                <span className="text-sm text-text-subdued">
+                  {t('common.theme')}
+                </span>
                 <ThemeSwitcher />
               </div>
               <InstallBtn />
@@ -79,7 +90,7 @@ export const BurgerMenuPanel = ({
                 onClick={logout}
                 type="button"
               >
-                {isLogoutPending ? 'Logging out...' : 'Log out'}
+                {isLogoutPending ? t('common.loggingOut') : t('common.logOut')}
               </button>
             </>
           ) : (

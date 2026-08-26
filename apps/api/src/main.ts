@@ -1,20 +1,24 @@
 import { HttpStatus, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
+import type { NestExpressApplication } from '@nestjs/platform-express'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
 import helmet from 'helmet'
 
 import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'
+import { resolveTrustProxySetting } from './common/config/trusted-proxy.config'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 
 import './instrument'
 
 /** Runs the bootstrap operation. */
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule)
   const configService = app.get<ConfigService<AppConfig>>(ConfigService)
+  const { userHost, artistHost } = configService.getOrThrow('web')
+  app.set('trust proxy', resolveTrustProxySetting(configService.getOrThrow('TRUST_PROXY_HOPS')))
 
   app.use(
     helmet({
@@ -24,7 +28,7 @@ async function bootstrap() {
           scriptSrc: ["'self'", "'unsafe-inline'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           imgSrc: ["'self'", 'data:', 'https:'],
-          connectSrc: ["'self'", configService.getOrThrow('WEB_HOST')],
+          connectSrc: ["'self'", userHost, artistHost],
           objectSrc: ["'none'"],
           frameAncestors: ["'none'"],
         },

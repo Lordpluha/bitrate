@@ -1,9 +1,13 @@
 import { z } from 'zod'
+import { fallbackTrackCover } from '@/shared/constants'
 
 export const trackResponseSchema = z.object({
   artistId: z.string(),
   audioUrl: z.string(),
-  cover: z.string(),
+  cover: z
+    .string()
+    .nullable()
+    .transform((cover) => cover ?? fallbackTrackCover),
   createdAt: z.string(),
   duration: z.number().nullable(),
   deletedAt: z.string().nullable(),
@@ -33,3 +37,10 @@ export const tracksResponseSchema = z.union([
     .object({ data: z.array(trackResponseSchema) })
     .transform(({ data }) => data),
 ])
+
+export const tracksPaginatedResponseSchema = z.object({
+  data: z.array(trackResponseSchema),
+  limit: z.number().int().positive(),
+  page: z.number().int().positive(),
+  total: z.number().int().nonnegative(),
+})

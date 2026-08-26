@@ -42,6 +42,7 @@ const makeTokenServiceMock = () =>
 const makeMailServiceMock = () =>
   ({
     sendPasswordReset: jest.fn(),
+    sendArtistPasswordReset: jest.fn(),
     sendArtistEmailVerification: jest.fn(),
   }) as unknown as jest.Mocked<MailService>
 
@@ -112,10 +113,13 @@ describe('ArtistsAuthService', () => {
     it('should throw UnauthorizedException when password is wrong', async () => {
       artistsPrivate.findByEmail.mockResolvedValue(buildArtist({ password: 'hash' }) as never)
       token.verifyPassword.mockResolvedValue(false as never)
+      prisma.executeRaw.mockResolvedValue(1)
 
       await expect(service.loginArtist('artist@example.com', 'wrong')).rejects.toThrow(
         UnauthorizedException,
       )
+      expect(prisma.executeRaw).toHaveBeenCalledTimes(1)
+      expect(prisma.artist.update).not.toHaveBeenCalled()
     })
 
     it('should return tokens on successful login', async () => {
@@ -187,6 +191,24 @@ describe('ArtistsAuthService', () => {
       expect(prisma.artistSession.deleteMany).toHaveBeenCalledWith({
         where: { artistId: artist.id, access_token: 'hashed-token' },
       })
+    })
+  })
+
+  describe('forgotPassword', () => {
+    it('sends the reset link through the artist-specific mail flow', async () => {
+      const artist = buildArtist({ id: 'artist-1' })
+      artistsPrivate.findByEmail.mockResolvedValue(artist as never)
+      token.hashToken.mockReturnValue('hashed-token')
+      prisma.artistPasswordReset.create.mockResolvedValue({} as never)
+
+      await service.forgotPassword(artist.email)
+
+      expect(mail.sendArtistPasswordReset).toHaveBeenCalledWith(
+        artist.email,
+        expect.any(String),
+        artist.username,
+      )
+      expect(mail.sendPasswordReset).not.toHaveBeenCalled()
     })
   })
 })

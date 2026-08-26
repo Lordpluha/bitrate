@@ -43,6 +43,12 @@ export type FindFragmentInput = {
   timeSeconds: number
 }
 
+type FindSeekFragmentInput = FindFragmentInput & {
+  buffered: TimeRanges
+}
+
+const BUFFERED_TIME_TOLERANCE_SECONDS = 0.01
+
 /**
  * Finds the fragment containing a point in time via binary search over the index.
  * This is what makes seeking one request instead of a scan through the file.
@@ -82,6 +88,77 @@ export const findFragmentIndexAt = ({
 
   /** Past the end: clamp to the last fragment so playback finishes cleanly. */
   return Math.min(low, fragments.length - 1)
+}
+
+const getBufferedRangeEndAt = (buffered: TimeRanges, timeSeconds: number) => {
+  for (let index = 0; index < buffered.length; index += 1) {
+    if (
+      timeSeconds >= buffered.start(index) &&
+      timeSeconds <= buffered.end(index)
+    ) {
+      return buffered.end(index)
+    }
+  }
+
+  return null
+}
+
+/** True when one retained MSE range covers the complete fragment timeline. */
+export const isTimeRangeBuffered = (
+  buffered: TimeRanges,
+  startSeconds: number,
+  endSeconds: number,
+) => {
+  for (let index = 0; index < buffered.length; index += 1) {
+    if (
+      buffered.start(index) <= startSeconds + BUFFERED_TIME_TOLERANCE_SECONDS &&
+      buffered.end(index) >= endSeconds - BUFFERED_TIME_TOLERANCE_SECONDS
+    ) {
+      return true
+    }
+  }
+
+  return false
+}
+
+/**
+ * Returns the first fragment not already covered by the retained seek range.
+ * Seeking inside the buffer must not rewind the network head and append the
+ * same media timestamps again.
+ */
+export const findFragmentIndexForSeek = ({
+  buffered,
+  manifest,
+  rendition,
+  timeSeconds,
+}: FindSeekFragmentInput): number => {
+  const targetIndex = findFragmentIndexAt({
+    manifest,
+    rendition,
+    timeSeconds,
+  })
+  if (
+    targetIndex < 0 ||
+    getBufferedRangeEndAt(buffered, timeSeconds) === null
+  ) {
+    return targetIndex
+  }
+
+  for (
+    let index = targetIndex;
+    index < rendition.fragments.length;
+    index += 1
+  ) {
+    const fragment = resolveFragment({ index, manifest, rendition })
+    if (
+      !fragment ||
+      !isTimeRangeBuffered(buffered, fragment.startSeconds, fragment.endSeconds)
+    ) {
+      return index
+    }
+  }
+
+  return rendition.fragments.length
 }
 
 /** Picks the rendition for a bitrate, falling back to the lowest available one. */

@@ -7172,6 +7172,8 @@ export interface operations {
         limit?: number
         /** @description Search by track title */
         title?: string
+        /** @description Return tracks belonging to this artist */
+        artistId?: string
       }
       header?: never
       path?: never
@@ -9861,6 +9863,8 @@ export interface operations {
         page?: number
         limit?: number
         title?: unknown
+        /** @description Return albums belonging to this artist */
+        artistId?: string
       }
       header?: never
       path?: never

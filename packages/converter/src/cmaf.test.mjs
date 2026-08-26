@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const fsMocks = vi.hoisted(() => ({
   access: vi.fn(),
   mkdir: vi.fn(),
-  readFile: vi.fn(),
+  open: vi.fn(),
 }))
 const execaMock = vi.hoisted(() => vi.fn())
 
@@ -49,11 +49,21 @@ const fakeRendition = (fragmentSizes, durationTicks = 196608) => {
   ])
 }
 
+const fileHandle = (data, reportedSize = data.length) => ({
+  stat: vi.fn().mockResolvedValue({ size: reportedSize }),
+  read: vi.fn().mockImplementation(async (target, offset, length, position) => {
+    const available = Math.max(0, Math.min(length, data.length - position))
+    data.copy(target, offset, position, position + available)
+    return { bytesRead: available }
+  }),
+  close: vi.fn().mockResolvedValue(undefined),
+})
+
 beforeEach(() => {
   vi.clearAllMocks()
   fsMocks.access.mockResolvedValue(undefined)
   fsMocks.mkdir.mockResolvedValue(undefined)
-  fsMocks.readFile.mockResolvedValue(fakeRendition([1000, 1200]))
+  fsMocks.open.mockImplementation(async () => fileHandle(fakeRendition([1000, 1200])))
   execaMock.mockResolvedValue({})
 })
 
@@ -153,9 +163,9 @@ describe('convertAudioToCmaf', () => {
   })
 
   it('fails the job when renditions do not share fragment boundaries', async () => {
-    fsMocks.readFile
-      .mockResolvedValueOnce(fakeRendition([1000, 1200]))
-      .mockResolvedValueOnce(fakeRendition([1000, 1200, 900]))
+    fsMocks.open
+      .mockResolvedValueOnce(fileHandle(fakeRendition([1000, 1200])))
+      .mockResolvedValueOnce(fileHandle(fakeRendition([1000, 1200, 900])))
 
     await expect(
       convertAudioToCmaf({
@@ -175,6 +185,21 @@ describe('convertAudioToCmaf', () => {
     })
 
     expect(execaMock).toHaveBeenCalledWith('/fake/ffmpeg', expect.any(Array), { timeout: 600_000 })
+  })
+
+  it('indexes a multi-gigabyte rendition without reading the media payload into memory', async () => {
+    const handle = fileHandle(fakeRendition([1000, 1200]), 5 * 1024 * 1024 * 1024)
+    fsMocks.open.mockResolvedValueOnce(handle)
+
+    const result = await convertAudioToCmaf({
+      input: '/music/track.mp3',
+      outputDir: '/music/track.cmaf',
+      bitrates: [192],
+    })
+
+    expect(result.renditions[0].size).toBe(5 * 1024 * 1024 * 1024)
+    const requestedLengths = handle.read.mock.calls.map(([, , length]) => length)
+    expect(Math.max(...requestedLengths)).toBeLessThan(1024)
   })
 
   it.each([

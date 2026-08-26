@@ -161,11 +161,17 @@ export class ArtistOAuthService {
     })
 
     if (existing) {
+      if (existing.artist.deletedAt) {
+        throw new UnauthorizedException('Artist account is unavailable')
+      }
       return this.sessionOrPending(existing.artist)
     }
 
-    const existingArtist = await this.prisma.artist.findFirst({ where: { email: profile.email } })
+    const existingArtist = await this.prisma.artist.findUnique({ where: { email: profile.email } })
     if (existingArtist) {
+      if (existingArtist.deletedAt) {
+        throw new UnauthorizedException('Artist account is unavailable')
+      }
       throw new ConflictException(
         'An account with this email already exists. Log in to your existing account to link OAuth.',
       )

@@ -3,12 +3,10 @@
 import { useMemo } from 'react'
 import { useFollowedArtists } from '@/entities/Artist'
 import { usePlaylistLibraryItems } from '@/entities/Playlist'
-import { useSavedEpisodes } from '@/entities/Podcast'
+import { useAllSavedEpisodes } from '@/entities/Podcast'
 import { useAuth } from '@/shared/hooks'
-import {
-  getArtistAvatarUrl,
-  getPlaylistCoverUrl,
-} from '@/shared/utils/mediaUrl'
+import { getArtistAvatarUrl } from '@/shared/utils/mediaUrl'
+import { buildSavedPodcastLibraryItems } from '@/widgets/LeftSidebar/model/buildSavedPodcastLibraryItems'
 import type {
   LibraryItemType,
   LibraryMusicItem,
@@ -30,11 +28,8 @@ export const useLibraryItems = ({ selectedTypes }: UseLibraryItemsInput) => {
   const playlists = usePlaylistLibraryItems()
   const { data: artists = [], isLoading: areArtistsLoading } =
     useFollowedArtists(!!user)
-  const { data: episodes, isLoading: areEpisodesLoading } = useSavedEpisodes(
-    1,
-    20,
-    !!user,
-  )
+  const { data: episodes = [], isLoading: areEpisodesLoading } =
+    useAllSavedEpisodes(!!user)
 
   const items = useMemo(() => {
     const artistItems: LibraryMusicItem[] = artists.map((artist) => ({
@@ -46,16 +41,7 @@ export const useLibraryItems = ({ selectedTypes }: UseLibraryItemsInput) => {
       username: 'Artist',
     }))
 
-    const episodeItems: LibraryMusicItem[] = (episodes?.data ?? []).map(
-      (episode) => ({
-        cover: getPlaylistCoverUrl(episode.cover),
-        id: episode.id,
-        title: episode.title,
-        tracksCount: 0,
-        type: 'podcast',
-        username: episode.podcast.title,
-      }),
-    )
+    const episodeItems = buildSavedPodcastLibraryItems(episodes)
 
     const all: LibraryMusicItem[] = [
       ...playlists.items,

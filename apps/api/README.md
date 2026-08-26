@@ -80,5 +80,21 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
+## Development email verification
+
+Registration requires email verification. The preferred local/CI setup is a real test SMTP
+transport such as MailHog, configured through `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`,
+`SMTP_PASS`, and `EMAIL_FROM`.
+
+`task dev:up` starts MailHog automatically; delivered messages are visible at
+`http://localhost:8025`. For a natively running API, `task infra:up` exposes SMTP on port `1025`;
+set `SMTP_HOST=localhost`, `SMTP_PORT=1025`, and `EMAIL_FROM=no-reply@spotify.local`.
+
+For isolated local development only, set `DEV_MAIL_LOG_TOKENS=true`. When SMTP is unavailable,
+the API then prints the complete verification/reset URL; open that URL in the matching user or
+artist frontend to finish the flow. The flag is opt-in, defaults to `false`, and environment
+validation rejects it when `NODE_ENV=production`. CI/E2E must use an SMTP transport and must not
+depend on token logging.
+
 ## License
 Nest is [MIT licensed](https://github.com/Lordpluha/spotify-clone/LICENSE).

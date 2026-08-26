@@ -45,12 +45,16 @@ export type PlayerState = PlayerSnapshot & {
 export type PlayerSnapshot = {
   currentPlaylistId: string | null
   currentPlaylistName: string | null
+  /** Queue item currently playing; null means the track comes from its playlist context. */
+  currentQueueId: string | null
   currentTime: number
   currentTrack: PlayerTrack | null
   currentTrackIndex: number
   duration: number
   isPlaying: boolean
   isShuffled: boolean
+  /** Changes for every track transition, including queued copies of the same track. */
+  playbackSequence: number
   playlist: PlayerTrack[]
   progress: number
   queue: QueuedTrack[]

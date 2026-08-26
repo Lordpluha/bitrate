@@ -37,6 +37,7 @@ export const usePlayerController = ({
   const floatingPlayer = useFloatingPlayerWindow(currentTrack?.title)
   const audio = useAudioPlayer()
   const toggleShuffle = usePlaylistShuffle({
+    currentQueueId: player.currentQueueId,
     currentTrack,
     isShuffled: player.isShuffled,
     playlist,
@@ -55,6 +56,7 @@ export const usePlayerController = ({
     onNext: () => audio.changeTrack('next'),
     onPrevious: () => audio.changeTrack('prev'),
     onSeek: audio.onSeek,
+    onToggleShuffle: toggleShuffle,
     onTogglePlay: audio.togglePlayPause,
     volume: player.volume,
   })

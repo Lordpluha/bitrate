@@ -49,10 +49,12 @@ export type WebPlayerSearchResults = {
   albums: SearchAlbumResult[]
   artists: SearchArtistResult[]
   limit: number
+  limitPerType: number
   page: number
   playlists: SearchPlaylistResult[]
   topResult: SearchResult | null
   total: number
+  totals: Record<WebPlayerSearchType, number>
   tracks: SearchTrackResult[]
 }
 
@@ -69,11 +71,11 @@ const defaultWebPlayerSearchTypes: WebPlayerSearchType[] = [
   'playlists',
 ]
 
-const normalizeSearchResponse = (
+export const normalizeSearchResponse = (
   input: ReturnType<typeof searchResponseSchema.parse>,
 ): WebPlayerSearchResults => ({
   albums: input.data.albums.map((album) => ({
-    artistId: album.subtitle ?? '',
+    artistId: album.artistId ?? '',
     cover: album.image,
     id: album.id,
     rank: album.rank,
@@ -87,6 +89,7 @@ const normalizeSearchResponse = (
     username: artist.title,
   })),
   limit: input.limit,
+  limitPerType: input.limitPerType,
   page: input.page,
   playlists: input.data.playlists.map((playlist) => ({
     cover: playlist.image,
@@ -94,12 +97,13 @@ const normalizeSearchResponse = (
     isPublic: true,
     rank: playlist.rank,
     title: playlist.title,
-    userId: playlist.subtitle ?? '',
+    userId: playlist.ownerId ?? '',
   })),
   topResult: input.topResult,
   total: input.total,
+  totals: input.totals,
   tracks: input.data.tracks.map((track) => ({
-    artistId: track.subtitle ?? '',
+    artistId: track.artistId ?? '',
     cover: track.image,
     id: track.id,
     rank: track.rank,

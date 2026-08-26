@@ -14,11 +14,16 @@ type PersistedPlayerSession = Pick<
   PlayerSnapshot,
   | 'currentPlaylistId'
   | 'currentPlaylistName'
+  | 'currentQueueId'
   | 'currentTime'
   | 'currentTrackIndex'
   | 'duration'
+  | 'isShuffled'
+  | 'playbackSequence'
   | 'playlist'
   | 'progress'
+  | 'queue'
+  | 'repeatMode'
   | 'volume'
 > & {
   currentTrack: NonNullable<PlayerSnapshot['currentTrack']>
@@ -32,7 +37,7 @@ export const usePlayerSessionPersistence = (
     (state) => state.restorePlayerSession,
   )
   const lastPersistedAtRef = useRef(0)
-  const lastPersistedTrackIdRef = useRef<string | null>(null)
+  const lastPersistedPlaybackRef = useRef<string | null>(null)
 
   useEffect(() => {
     if (player.currentTrack) return
@@ -55,7 +60,8 @@ export const usePlayerSessionPersistence = (
     if (!currentTrack) return
 
     const now = Date.now()
-    const hasTrackChanged = lastPersistedTrackIdRef.current !== currentTrack.id
+    const playbackKey = `${currentTrack.id}:${player.playbackSequence}`
+    const hasTrackChanged = lastPersistedPlaybackRef.current !== playbackKey
 
     if (
       !hasTrackChanged &&
@@ -67,12 +73,17 @@ export const usePlayerSessionPersistence = (
     const session: PersistedPlayerSession = {
       currentPlaylistId: player.currentPlaylistId,
       currentPlaylistName,
+      currentQueueId: player.currentQueueId,
       currentTime: player.currentTime,
       currentTrack,
       currentTrackIndex: player.currentTrackIndex,
       duration: player.duration,
+      isShuffled: player.isShuffled,
+      playbackSequence: player.playbackSequence,
       playlist: player.playlist,
       progress: player.progress,
+      queue: player.queue,
+      repeatMode: player.repeatMode,
       volume: player.volume,
     }
 
@@ -81,6 +92,6 @@ export const usePlayerSessionPersistence = (
       JSON.stringify(session),
     )
     lastPersistedAtRef.current = now
-    lastPersistedTrackIdRef.current = currentTrack.id
+    lastPersistedPlaybackRef.current = playbackKey
   }, [currentPlaylistName, player])
 }

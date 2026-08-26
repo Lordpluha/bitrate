@@ -36,14 +36,16 @@ export const ArtistHero = ({ artist, statsLabel }: ArtistHeroProps) => {
         >
           {artist.username}
         </h1>
-        <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-white">
-          <BadgeCheck
-            aria-hidden="true"
-            className="fill-green-100 text-green-900"
-            size={22}
-          />
-          <span>Verified artist</span>
-        </div>
+        {artist.verified ? (
+          <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-white">
+            <BadgeCheck
+              aria-hidden="true"
+              className="fill-green-100 text-green-900"
+              size={22}
+            />
+            <span>Verified artist</span>
+          </div>
+        ) : null}
         <p className="mt-2 text-sm text-white/90">{statsLabel}</p>
       </div>
     </section>

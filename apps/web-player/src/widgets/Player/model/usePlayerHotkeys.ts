@@ -10,6 +10,7 @@ export type UsePlayerHotkeysInput = {
   onNext: () => void
   onPrevious: () => void
   onSeek: (time: number) => void
+  onToggleShuffle: () => void
   onTogglePlay: () => void
   volume: number
 }
@@ -17,15 +18,38 @@ export type UsePlayerHotkeysInput = {
 const SEEK_STEP_SECONDS = 5
 const VOLUME_STEP = 0.05
 
-/** True when the user is typing, so global shortcuts must not fire. */
-const isTypingTarget = (target: EventTarget | null) => {
-  if (!(target instanceof HTMLElement)) return false
+const INTERACTIVE_SELECTOR = [
+  'a[href]',
+  'button',
+  'input',
+  'select',
+  'summary',
+  'textarea',
+  'audio[controls]',
+  'video[controls]',
+  '[contenteditable]:not([contenteditable="false"])',
+  '[role="button"]',
+  '[role="checkbox"]',
+  '[role="combobox"]',
+  '[role="link"]',
+  '[role="listbox"]',
+  '[role="menuitem"]',
+  '[role="menuitemcheckbox"]',
+  '[role="menuitemradio"]',
+  '[role="option"]',
+  '[role="radio"]',
+  '[role="searchbox"]',
+  '[role="slider"]',
+  '[role="spinbutton"]',
+  '[role="switch"]',
+  '[role="tab"]',
+  '[role="textbox"]',
+  '[role="treeitem"]',
+].join(',')
 
-  return (
-    target.isContentEditable ||
-    ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)
-  )
-}
+/** Global playback shortcuts must never override a focused interactive control. */
+export const isPlayerHotkeyTarget = (target: EventTarget | null) =>
+  target instanceof Element && target.closest(INTERACTIVE_SELECTOR) !== null
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value))
@@ -42,18 +66,19 @@ export const usePlayerHotkeys = ({
   onNext,
   onPrevious,
   onSeek,
+  onToggleShuffle,
   onTogglePlay,
   volume,
 }: UsePlayerHotkeysInput) => {
   const setVolume = usePlayerStore((state) => state.setVolume)
-  const setShuffleEnabled = usePlayerStore((state) => state.setShuffleEnabled)
   const cycleRepeatMode = usePlayerStore((state) => state.cycleRepeatMode)
 
   useEffect(() => {
     if (!isEnabled) return
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isTypingTarget(event.target) || event.altKey) return
+      if (event.defaultPrevented || isPlayerHotkeyTarget(event.target)) return
+      if (event.altKey) return
 
       const withModifier = event.metaKey || event.ctrlKey
 
@@ -100,7 +125,7 @@ export const usePlayerHotkeys = ({
 
       if (event.code === 'KeyS') {
         event.preventDefault()
-        setShuffleEnabled(!usePlayerStore.getState().isShuffled)
+        onToggleShuffle()
         return
       }
 
@@ -121,8 +146,8 @@ export const usePlayerHotkeys = ({
     onNext,
     onPrevious,
     onSeek,
+    onToggleShuffle,
     onTogglePlay,
-    setShuffleEnabled,
     setVolume,
     volume,
   ])

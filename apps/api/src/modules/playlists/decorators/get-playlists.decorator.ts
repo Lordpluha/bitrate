@@ -1,5 +1,7 @@
+import { paginatedResponseSchema } from '@common/swagger'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
+import { PlaylistEntity } from '../entities'
 
 /** Runs the get playlists swagger operation. */
 export function GetPlaylistsSwagger() {
@@ -20,12 +22,7 @@ export function GetPlaylistsSwagger() {
     }),
     ApiResponse({
       status: HttpStatus.OK,
-      schema: {
-        type: 'array',
-        items: {
-          $ref: '#/components/schemas/PlaylistEntity',
-        },
-      },
+      schema: paginatedResponseSchema(PlaylistEntity),
     }),
   )
 }

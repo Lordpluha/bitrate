@@ -1,15 +1,16 @@
 'use client'
 
 import { useMutation } from '@shared/api/client'
+import { apiQueryKeys } from '@shared/api/queryKeys'
 import { useQueryClient } from '@tanstack/react-query'
-import { likedTracksQueryKey, trackDetailQueryKey } from './trackQuery'
+import { trackDetailQueryKey } from './trackQuery'
 
 const useInvalidateTrackLikes = () => {
   const queryClient = useQueryClient()
 
   return async (trackId: string) => {
     await Promise.all([
-      queryClient.invalidateQueries({ queryKey: likedTracksQueryKey }),
+      queryClient.invalidateQueries({ queryKey: apiQueryKeys.tracks.likedAll }),
       queryClient.invalidateQueries({ queryKey: trackDetailQueryKey(trackId) }),
     ])
   }

@@ -45,8 +45,10 @@ export class AlbumsController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('title') title?: AlbumEntity['title'],
+    @Query('artistId', new ParseUUIDPipe({ optional: true })) artistId?: string,
   ) {
     return await this.albumsService.findAll({
+      artistId,
       limit,
       page,
       title,

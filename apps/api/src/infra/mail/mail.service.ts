@@ -15,32 +15,52 @@ export class MailService {
   /** Creates a new instance. */
   constructor(private readonly config: ConfigService<AppConfig>) {
     const mail = config.get('mail')
-    if (mail?.host && mail?.user && mail?.pass) {
+    if (mail?.host) {
       this.transporter = nodemailer.createTransport({
         host: mail.host,
         port: mail.port,
         secure: mail.port === 465,
-        auth: { user: mail.user, pass: mail.pass },
+        ...(mail.user && mail.pass ? { auth: { user: mail.user, pass: mail.pass } } : {}),
       })
     } else {
-      if (process.env.NODE_ENV === 'production') {
+      if ((config.get('NODE_ENV') ?? process.env.NODE_ENV) === 'production') {
         throw new Error('SMTP is required in production but is not configured')
       }
       this.transporter = null
-      this.logger.warn(
-        'SMTP not configured — password-reset emails will be skipped in this environment',
-      )
+      this.logger.warn('SMTP not configured — transactional emails cannot be delivered')
     }
   }
 
   /** Runs the send password reset operation. */
-  async sendPasswordReset(to: string, token: string, username: string) {
-    const resetUrl = `${process.env.WEB_HOST}/reset-password?token=${encodeURIComponent(token)}`
+  sendPasswordReset(to: string, token: string, username: string) {
+    return this.sendPasswordResetForHost(
+      to,
+      token,
+      username,
+      this.config.getOrThrow('web').userHost,
+    )
+  }
+
+  /** Sends an artist password reset to the artist frontend. */
+  sendArtistPasswordReset(to: string, token: string, username: string) {
+    return this.sendPasswordResetForHost(
+      to,
+      token,
+      username,
+      this.config.getOrThrow('web').artistHost,
+    )
+  }
+
+  private async sendPasswordResetForHost(
+    to: string,
+    token: string,
+    username: string,
+    webHost: string,
+  ) {
+    const resetUrl = `${webHost}/reset-password?token=${encodeURIComponent(token)}`
 
     if (!this.transporter) {
-      this.logger.warn('Password reset requested but SMTP is not configured; email not sent', {
-        to,
-      })
+      this.handleUndelivered('Password reset', to, resetUrl)
       return
     }
 
@@ -64,12 +84,10 @@ export class MailService {
 
   /** Sends a user email-verification link. */
   async sendEmailVerification(to: string, token: string, username: string) {
-    const verificationUrl = `${process.env.WEB_HOST}/verify-email?token=${encodeURIComponent(token)}`
+    const verificationUrl = `${this.config.getOrThrow('web').userHost}/verify-email?token=${encodeURIComponent(token)}`
 
     if (!this.transporter) {
-      this.logger.warn('Email verification requested but SMTP is not configured; email not sent', {
-        to,
-      })
+      this.handleUndelivered('Email verification', to, verificationUrl)
       return
     }
 
@@ -89,9 +107,9 @@ export class MailService {
 
   /** Sends an artist email-verification link. */
   async sendArtistEmailVerification(to: string, token: string, username: string) {
-    const verificationUrl = `${process.env.WEB_HOST}/artist/verify-email?token=${encodeURIComponent(token)}`
+    const verificationUrl = `${this.config.getOrThrow('web').artistHost}/verify-email?token=${encodeURIComponent(token)}`
     if (!this.transporter) {
-      this.logger.warn('Artist email verification skipped because SMTP is not configured', { to })
+      this.handleUndelivered('Artist email verification', to, verificationUrl)
       return
     }
     const from = this.config.getOrThrow('mail').from
@@ -101,5 +119,14 @@ export class MailService {
       subject: 'Verify your artist email',
       html: `<h2>Hi, ${escapeHtml(username)}</h2><p><a href="${escapeHtml(verificationUrl)}">Verify your email</a></p><p>This link expires in 24 hours.</p>`,
     })
+  }
+
+  private handleUndelivered(kind: string, to: string, url: string) {
+    if (this.config.get('mail')?.logTokens) {
+      this.logger.warn(`[DEV MAIL] ${kind} for ${to}: ${url}`)
+      return
+    }
+
+    this.logger.warn(`${kind} requested but SMTP is not configured; email not sent`, { to })
   }
 }

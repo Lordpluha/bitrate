@@ -16,15 +16,19 @@ interface SignUpModalProps extends ComponentProps<typeof Modal> {
 
 export const SignUpModal = ({
   onSwitchToLogin,
+  onOpenChange,
   ...modalProps
 }: SignUpModalProps) => {
-  const { form, isRegistering, onSubmit } = useSignUpModalForm(onSwitchToLogin)
+  const { form, isRegistering, onSubmit } = useSignUpModalForm(() =>
+    onOpenChange(false),
+  )
 
   return (
     <Modal
       {...modalProps}
       ariaLabel="Create account"
       className="w-full max-w-125"
+      onOpenChange={onOpenChange}
     >
       <div className="flex flex-col items-stretch justify-center gap-4 rounded-lg bg-contrast p-8 text-text-contrast">
         <AuthModalHeader

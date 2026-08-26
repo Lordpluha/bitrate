@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useRef } from 'react'
-import { usePlayerStore } from '@/entities/Player'
+import { type PlaybackTransition, usePlayerStore } from '@/entities/Player'
 import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
 import type { SlotIndex } from '@/shared/hooks/audioPlayer/audioPlayer.types'
 import {
@@ -17,7 +17,8 @@ type UseAudioPlayerEventsOptions = {
   currentPlaylistId: string | null
   currentTrack: TrackEntity | null
   isPlaying: boolean
-  nextTrack: TrackEntity | null
+  nextTransition: PlaybackTransition | null
+  playbackSequence: number
   slots: ReturnType<typeof useAudioSlots>
 }
 
@@ -25,7 +26,8 @@ export const useAudioPlayerEvents = ({
   currentPlaylistId,
   currentTrack,
   isPlaying,
-  nextTrack,
+  nextTransition,
+  playbackSequence,
   slots,
 }: UseAudioPlayerEventsOptions) => {
   const pause = usePlayerStore((state) => state.pause)
@@ -35,7 +37,6 @@ export const useAudioPlayerEvents = ({
   const setProgress = usePlayerStore((state) => state.setProgress)
   const changeTrack = usePlayerStore((state) => state.changeTrack)
   const advanceOnTrackEnd = usePlayerStore((state) => state.advanceOnTrackEnd)
-  const repeatMode = usePlayerStore((state) => state.repeatMode)
   const isSeekingRef = useRef(false)
   const {
     activeSlotRef,
@@ -67,14 +68,24 @@ export const useAudioPlayerEvents = ({
         active.currentTime = time
         if (currentTrack) {
           savePlaybackPosition(
-            getPlaybackKey(currentTrack.id, currentPlaylistId),
+            getPlaybackKey(
+              currentTrack.id,
+              currentPlaylistId,
+              playbackSequence,
+            ),
             time,
           )
         }
       }
       setCurrentTime(time)
     },
-    [currentPlaylistId, currentTrack, getActiveElement, setCurrentTime],
+    [
+      currentPlaylistId,
+      currentTrack,
+      getActiveElement,
+      playbackSequence,
+      setCurrentTime,
+    ],
   )
 
   const changeTrackHandler = useCallback(
@@ -107,7 +118,7 @@ export const useAudioPlayerEvents = ({
       }
       if (currentTrack) {
         savePlaybackPosition(
-          getPlaybackKey(currentTrack.id, currentPlaylistId),
+          getPlaybackKey(currentTrack.id, currentPlaylistId, playbackSequence),
           currentTime,
         )
       }
@@ -116,6 +127,7 @@ export const useAudioPlayerEvents = ({
       activeSlotRef,
       currentPlaylistId,
       currentTrack,
+      playbackSequence,
       setCurrentTime,
       setProgress,
       slotsRef,
@@ -178,60 +190,87 @@ export const useAudioPlayerEvents = ({
 
       const slot = slotsRef.current[index]
       const currentPlaybackKey = currentTrack
-        ? getPlaybackKey(currentTrack.id, currentPlaylistId)
+        ? getPlaybackKey(currentTrack.id, currentPlaylistId, playbackSequence)
         : null
       if (!currentTrack || slot.playbackKey !== currentPlaybackKey) return
 
       setIsPlaying(nextIsPlaying)
     },
-    [activeSlotRef, currentPlaylistId, currentTrack, setIsPlaying, slotsRef],
+    [
+      activeSlotRef,
+      currentPlaylistId,
+      currentTrack,
+      playbackSequence,
+      setIsPlaying,
+      slotsRef,
+    ],
   )
 
   const handleEnded = useCallback(
     (index: SlotIndex) => {
       if (index !== activeSlotRef.current) return
 
-      if (repeatMode === 'one') {
+      if (nextTransition?.kind === 'restart') {
+        if (currentTrack) {
+          removePlaybackPosition(
+            getPlaybackKey(
+              currentTrack.id,
+              currentPlaylistId,
+              playbackSequence,
+            ),
+          )
+        }
+        advanceOnTrackEnd()
         const active = getActiveElement()
         if (active) {
           active.currentTime = 0
           void active.play().catch(() => setIsPlaying(false))
         }
-        advanceOnTrackEnd()
         return
       }
 
-      if (!nextTrack) {
+      if (!nextTransition) {
         pause()
         return
       }
 
-      const standbyIndex = index === 0 ? 1 : 0
-      const standby = slotsRef.current[standbyIndex]
-      if (
-        standby.playbackKey ===
-          getPlaybackKey(nextTrack.id, currentPlaylistId) &&
-        standby.element
-      ) {
-        switchToSlot(standbyIndex)
-      }
       if (currentTrack) {
         removePlaybackPosition(
-          getPlaybackKey(currentTrack.id, currentPlaylistId),
+          getPlaybackKey(currentTrack.id, currentPlaylistId, playbackSequence),
         )
       }
-      changeTrack('next')
+
+      /** Commit first, then promote only the slot prepared for that transition. */
+      advanceOnTrackEnd()
+      if (nextTransition.kind === 'stop') return
+
+      const standbyIndex = index === 0 ? 1 : 0
+      const standby = slotsRef.current[standbyIndex]
+      const nextPlaybackKey = getPlaybackKey(
+        nextTransition.track.id,
+        currentPlaylistId,
+        nextTransition.playbackSequence,
+      )
+      const committed = usePlayerStore.getState()
+      if (
+        committed.currentTrack?.id !== nextTransition.track.id ||
+        committed.playbackSequence !== nextTransition.playbackSequence
+      ) {
+        return
+      }
+      if (standby.playbackKey === nextPlaybackKey && standby.element) {
+        switchToSlot(standbyIndex)
+      }
     },
     [
       activeSlotRef,
       advanceOnTrackEnd,
-      changeTrack,
       currentPlaylistId,
       currentTrack,
       getActiveElement,
-      nextTrack,
+      nextTransition,
       pause,
-      repeatMode,
+      playbackSequence,
       setIsPlaying,
       slotsRef,
       switchToSlot,

@@ -1,3 +1,13 @@
+-- This migration replaces relationship tables and must never leave the schema
+-- half-contracted if a late backfill/index/permission step fails.
+BEGIN;
+SET LOCAL lock_timeout = '10s';
+SET LOCAL statement_timeout = '15min';
+
+-- Fail before taking destructive locks when the deployment role cannot install
+-- the extension required by the indexes created below.
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- CreateEnum
 CREATE TYPE "AlbumType" AS ENUM ('ALBUM', 'SINGLE', 'EP', 'COMPILATION');
 
@@ -89,6 +99,20 @@ ADD COLUMN     "socials" JSONB,
 ADD COLUMN     "verified" BOOLEAN NOT NULL DEFAULT false;
 
 UPDATE "Artist" SET "emailVerifiedAt" = CURRENT_TIMESTAMP WHERE "emailVerifiedAt" IS NULL;
+
+-- Sessions created before persisted expiry was enforced used NULL. Backfill them
+-- with the documented default refresh-token lifetime; JWT verification still
+-- rejects any token whose embedded expiry is earlier than this timestamp.
+UPDATE "UserSession"
+SET "expiresAt" = "createdAt" + INTERVAL '30 days'
+WHERE "expiresAt" IS NULL;
+
+UPDATE "ArtistSession"
+SET "expiresAt" = "createdAt" + INTERVAL '30 days'
+WHERE "expiresAt" IS NULL;
+
+ALTER TABLE "UserSession" ALTER COLUMN "expiresAt" SET NOT NULL;
+ALTER TABLE "ArtistSession" ALTER COLUMN "expiresAt" SET NOT NULL;
 
 -- AlterTable
 ALTER TABLE "Album" ADD COLUMN     "copyright" TEXT,
@@ -428,16 +452,10 @@ CREATE UNIQUE INDEX "UserEmailVerification_token_key" ON "UserEmailVerification"
 CREATE INDEX "UserEmailVerification_userId_idx" ON "UserEmailVerification"("userId");
 
 -- CreateIndex
-CREATE INDEX "UserEmailVerification_token_idx" ON "UserEmailVerification"("token");
-
--- CreateIndex
 CREATE UNIQUE INDEX "ArtistEmailVerification_token_key" ON "ArtistEmailVerification"("token");
 
 -- CreateIndex
 CREATE INDEX "ArtistEmailVerification_artistId_idx" ON "ArtistEmailVerification"("artistId");
-
--- CreateIndex
-CREATE INDEX "ArtistEmailVerification_token_idx" ON "ArtistEmailVerification"("token");
 
 -- CreateIndex
 CREATE INDEX "PlaylistTrack_playlistId_addedAt_idx" ON "PlaylistTrack"("playlistId", "addedAt" DESC);
@@ -525,6 +543,9 @@ CREATE INDEX "Notification_userId_readAt_idx" ON "Notification"("userId", "readA
 
 -- CreateIndex
 CREATE INDEX "PlayerDevice_userId_lastSeenAt_idx" ON "PlayerDevice"("userId", "lastSeenAt" DESC);
+
+-- Enforce the invariant even when multiple API replicas activate devices concurrently.
+CREATE UNIQUE INDEX "PlayerDevice_one_active_per_user_idx" ON "PlayerDevice"("userId") WHERE "isActive" = true;
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PlayerState_userId_key" ON "PlayerState"("userId");
@@ -777,13 +798,37 @@ SET "followersCount" = (
   WHERE liked."playlistId" = playlist."id"
 );
 
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE INDEX "Track_title_trgm_idx" ON "Track" USING GIN ("title" gin_trgm_ops);
 CREATE INDEX "Artist_username_trgm_idx" ON "Artist" USING GIN ("username" gin_trgm_ops);
 CREATE INDEX "Album_title_trgm_idx" ON "Album" USING GIN ("title" gin_trgm_ops);
 CREATE INDEX "Playlist_title_trgm_idx" ON "Playlist" USING GIN ("title" gin_trgm_ops);
 
 -- Remove the implicit join tables only after the backfill succeeds.
+DO $$
+BEGIN
+  IF (SELECT COUNT(*) FROM "_PlaylistToTrack") <> (SELECT COUNT(*) FROM "PlaylistTrack") THEN
+    RAISE EXCEPTION 'PlaylistTrack backfill row-count mismatch';
+  END IF;
+  IF (SELECT COUNT(*) FROM "_AlbumToTrack") <> (SELECT COUNT(*) FROM "AlbumTrack") THEN
+    RAISE EXCEPTION 'AlbumTrack backfill row-count mismatch';
+  END IF;
+  IF (SELECT COUNT(*) FROM "_UserLikedTracks") <> (SELECT COUNT(*) FROM "UserLikedTrack") THEN
+    RAISE EXCEPTION 'UserLikedTrack backfill row-count mismatch';
+  END IF;
+  IF (SELECT COUNT(*) FROM "_UserLikedAlbums") <> (SELECT COUNT(*) FROM "UserLikedAlbum") THEN
+    RAISE EXCEPTION 'UserLikedAlbum backfill row-count mismatch';
+  END IF;
+  IF (SELECT COUNT(*) FROM "_UserLikedPlaylists") <> (SELECT COUNT(*) FROM "UserLikedPlaylist") THEN
+    RAISE EXCEPTION 'UserLikedPlaylist backfill row-count mismatch';
+  END IF;
+  IF (SELECT COUNT(*) FROM "_UserLikedArtists") <> (SELECT COUNT(*) FROM "UserLikedArtist") THEN
+    RAISE EXCEPTION 'UserLikedArtist backfill row-count mismatch';
+  END IF;
+  IF (SELECT COUNT(*) FROM "_UserFollowedArtists") <> (SELECT COUNT(*) FROM "UserFollowedArtist") THEN
+    RAISE EXCEPTION 'UserFollowedArtist backfill row-count mismatch';
+  END IF;
+END $$;
+
 DROP TABLE "_UserLikedTracks";
 DROP TABLE "_UserLikedArtists";
 DROP TABLE "_UserFollowedArtists";
@@ -791,3 +836,5 @@ DROP TABLE "_AlbumToTrack";
 DROP TABLE "_UserLikedAlbums";
 DROP TABLE "_PlaylistToTrack";
 DROP TABLE "_UserLikedPlaylists";
+
+COMMIT;

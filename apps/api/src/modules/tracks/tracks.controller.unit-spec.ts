@@ -91,10 +91,10 @@ describe('TracksController', () => {
     expect(result).toBe('piped')
   })
 
-  it('postTrack should throw BadRequestException when audio file is missing', () => {
+  it('postTrack should throw BadRequestException when audio file is missing', async () => {
     const req = { artist: { id: 'artist-1' } } as never
 
-    expect(() => controller.postTrack(req, { title: 'T' } as never, {})).toThrow(
+    await expect(controller.postTrack(req, { title: 'T' } as never, {})).rejects.toThrow(
       BadRequestException,
     )
   })

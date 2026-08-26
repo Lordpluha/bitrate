@@ -2,6 +2,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { type FormEvent, useEffect, useState } from 'react'
 import { useSearchHistory } from '@/features/Search'
 import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import type {
   HeaderSuggestion,
@@ -12,6 +13,7 @@ import { useSearchSuggestions } from '@/widgets/MainHeader/ui/HeaderSearch/model
 
 export const useHeaderSearch = () => {
   const { isAuthenticated } = useAuth()
+  const { t } = useI18n()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [query, setQuery] = useState(searchParams.get('q') ?? '')
@@ -26,7 +28,7 @@ export const useHeaderSearch = () => {
     ...localRecentSearches,
     ...(serverHistory?.data.map((item) => ({
       query: item.query,
-      subtitle: 'Search',
+      subtitle: t('common.search'),
       title: item.query,
     })) ?? []),
   ]
@@ -57,7 +59,7 @@ export const useHeaderSearch = () => {
     if (!trimmedQuery) return
     rememberSearch({
       query: trimmedQuery,
-      subtitle: 'Search',
+      subtitle: t('common.search'),
       title: trimmedQuery,
     })
     setIsFocused(false)

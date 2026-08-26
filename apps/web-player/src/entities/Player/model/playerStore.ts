@@ -10,6 +10,10 @@ export type {
   PlayPlaylistInput,
   RepeatMode,
 } from './playerStore.types'
+export {
+  type PlaybackTransition,
+  resolvePlaybackTransition,
+} from './playerStore.utils'
 
 export const usePlayerStore = createPersistedStore<PlayerState>({
   initializer: createPlayerState,
@@ -27,10 +31,13 @@ export const selectCurrentPlaylistId = (state: PlayerState) =>
   state.currentPlaylistId
 export const selectCurrentPlaylistName = (state: PlayerState) =>
   state.currentPlaylistName
+export const selectCurrentQueueId = (state: PlayerState) => state.currentQueueId
 export const selectIsPlaying = (state: PlayerState) => state.isPlaying
 export const selectCurrentTime = (state: PlayerState) => state.currentTime
 export const selectDuration = (state: PlayerState) => state.duration
 export const selectIsShuffled = (state: PlayerState) => state.isShuffled
+export const selectPlaybackSequence = (state: PlayerState) =>
+  state.playbackSequence
 export const selectRepeatMode = (state: PlayerState) => state.repeatMode
 export const selectQueue = (state: PlayerState) => state.queue
 export const selectVolume = (state: PlayerState) => state.volume

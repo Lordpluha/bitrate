@@ -18,10 +18,15 @@ class FakeSourceBuffer extends EventTarget {
 
   constructor(windows: [number, number][] = []) {
     super()
+    const getWindow = (index: number) => {
+      const window = windows[index]
+      if (!window) throw new RangeError(`Missing buffered range ${index}`)
+      return window
+    }
     this.buffered = {
       length: windows.length,
-      start: (index: number) => windows[index]![0],
-      end: (index: number) => windows[index]![1],
+      start: (index: number) => getWindow(index)[0],
+      end: (index: number) => getWindow(index)[1],
     } as TimeRanges
   }
 

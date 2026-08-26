@@ -19,7 +19,7 @@ export type ManifestRendition = {
 }
 
 export type TrackManifest = {
-  version: number
+  version: 1
   timescale: number
   durationTicks: number
   durationMs: number

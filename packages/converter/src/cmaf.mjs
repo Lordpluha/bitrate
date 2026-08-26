@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import { join } from 'node:path'
 import { execa } from 'execa'
 import ffmpegPath from 'ffmpeg-static'
-import { assertAlignedRenditions, buildFragmentIndex } from './mp4-index.mjs'
+import { assertAlignedRenditions, buildFragmentIndexFromFile } from './mp4-index.mjs'
 
 /** AAC-LC always encodes 1024 samples per frame. */
 const AAC_FRAME_SAMPLES = 1024
@@ -122,9 +122,14 @@ export async function convertAudioToCmaf({
   const renditions = []
 
   for (const { bitrate, path } of outputs) {
-    const data = await fs.readFile(path)
-    const index = buildFragmentIndex(data)
-    renditions.push({ bitrate, path, size: data.length, index })
+    const handle = await fs.open(path, 'r')
+    try {
+      const stats = await handle.stat()
+      const index = await buildFragmentIndexFromFile(handle, stats.size)
+      renditions.push({ bitrate, path, size: stats.size, index })
+    } finally {
+      await handle.close()
+    }
   }
 
   assertAlignedRenditions(renditions)

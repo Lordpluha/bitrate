@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
 
 import { usePlayerStore } from './playerStore'
+import { resolvePlaybackTransition } from './playerStore.utils'
 
 type TestTrackInput = {
   id: string
@@ -44,6 +45,7 @@ const createTrack = ({
 const first = createTrack({ id: 'first' })
 const second = createTrack({ id: 'second' })
 const third = createTrack({ id: 'third' })
+const fourth = createTrack({ id: 'fourth' })
 
 const startPlaylist = () =>
   usePlayerStore.getState().playPlaylist({
@@ -86,6 +88,116 @@ describe('player queue', () => {
 
     expect(usePlayerStore.getState().currentTrack?.id).toBe('third')
     expect(usePlayerStore.getState().queue).toEqual([])
+    expect(usePlayerStore.getState().currentTrackIndex).toBe(0)
+
+    usePlayerStore.getState().changeTrack('next')
+
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('second')
+    expect(usePlayerStore.getState().currentTrackIndex).toBe(1)
+  })
+
+  it('drains multiple queued tracks before resuming the playlist', () => {
+    startPlaylist()
+    usePlayerStore.getState().addToQueue(third)
+    usePlayerStore.getState().addToQueue(fourth)
+
+    usePlayerStore.getState().advanceOnTrackEnd()
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('third')
+
+    usePlayerStore.getState().advanceOnTrackEnd()
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('fourth')
+
+    usePlayerStore.getState().advanceOnTrackEnd()
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('second')
+    expect(usePlayerStore.getState().currentQueueId).toBeNull()
+  })
+
+  it('keeps the interrupted playlist cursor when the context is reordered', () => {
+    startPlaylist()
+    usePlayerStore.getState().addToQueue(third)
+    usePlayerStore.getState().changeTrack('next')
+
+    usePlayerStore.getState().setPlaylistTracks([second, first, fourth])
+    usePlayerStore.getState().changeTrack('next')
+
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('fourth')
+    expect(usePlayerStore.getState().currentTrackIndex).toBe(2)
+  })
+
+  it('resumes a persisted queue and then its interrupted playlist', () => {
+    usePlayerStore.getState().restorePlayerSession({
+      currentPlaylistId: 'playlist-1',
+      currentPlaylistName: 'Playlist',
+      currentQueueId: 'current-queue-item',
+      currentTrack: third,
+      currentTrackIndex: 0,
+      playbackSequence: 7,
+      playlist: [first, second],
+      queue: [{ queueId: 'next-queue-item', track: fourth }],
+    })
+
+    usePlayerStore.getState().advanceOnTrackEnd()
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('fourth')
+    expect(usePlayerStore.getState().playbackSequence).toBe(8)
+
+    usePlayerStore.getState().advanceOnTrackEnd()
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('second')
+    expect(usePlayerStore.getState().currentQueueId).toBeNull()
+  })
+
+  it('plays a queue after a standalone track', () => {
+    usePlayerStore.getState().play(first)
+    usePlayerStore.getState().addToQueue(third)
+
+    usePlayerStore.getState().advanceOnTrackEnd()
+
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('third')
+    expect(usePlayerStore.getState().isPlaying).toBe(true)
+  })
+
+  it('keeps queued copies of the same track as distinct playback instances', () => {
+    startPlaylist()
+    const initialSequence = usePlayerStore.getState().playbackSequence
+    usePlayerStore.getState().addToQueue(first)
+
+    const transition = resolvePlaybackTransition(
+      usePlayerStore.getState(),
+      'next',
+      'ended',
+    )
+    expect(transition).toMatchObject({
+      kind: 'track',
+      playbackSequence: initialSequence + 1,
+      track: first,
+    })
+
+    usePlayerStore.getState().advanceOnTrackEnd()
+
+    expect(usePlayerStore.getState()).toMatchObject({
+      currentTrack: first,
+      currentTrackIndex: 0,
+      playbackSequence: initialSequence + 1,
+    })
+  })
+
+  it('uses the same queued candidate for preview and committed transition', () => {
+    startPlaylist()
+    usePlayerStore.getState().addToQueue(third)
+    const candidate = resolvePlaybackTransition(
+      usePlayerStore.getState(),
+      'next',
+      'ended',
+    )
+
+    usePlayerStore.getState().advanceOnTrackEnd()
+
+    expect(candidate?.kind).toBe('track')
+    if (candidate?.kind !== 'track') return
+    expect(usePlayerStore.getState()).toMatchObject({
+      currentTrack: candidate.track,
+      currentTrackIndex: candidate.currentTrackIndex,
+      playbackSequence: candidate.playbackSequence,
+    })
   })
 
   it('removes a queued track by its queue id', () => {
@@ -152,6 +264,15 @@ describe('repeat mode', () => {
     expect(usePlayerStore.getState().isPlaying).toBe(false)
   })
 
+  it('resolves stop instead of wrapping prefetch at the end with repeat off', () => {
+    startPlaylist()
+    usePlayerStore.getState().changeTrack('next')
+
+    expect(
+      resolvePlaybackTransition(usePlayerStore.getState(), 'next', 'ended'),
+    ).toEqual({ kind: 'stop' })
+  })
+
   it('wraps to the first track when repeat is all', () => {
     startPlaylist()
     usePlayerStore.getState().setRepeatMode('all')
@@ -173,5 +294,19 @@ describe('repeat mode', () => {
     expect(usePlayerStore.getState().currentTrack?.id).toBe('first')
     expect(usePlayerStore.getState().currentTime).toBe(0)
     expect(usePlayerStore.getState().isPlaying).toBe(true)
+  })
+
+  it('keeps the queue for repeat-one endings but honors manual next', () => {
+    startPlaylist()
+    usePlayerStore.getState().addToQueue(third)
+    usePlayerStore.getState().setRepeatMode('one')
+
+    usePlayerStore.getState().advanceOnTrackEnd()
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('first')
+    expect(usePlayerStore.getState().queue).toHaveLength(1)
+
+    usePlayerStore.getState().changeTrack('next')
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('third')
+    expect(usePlayerStore.getState().queue).toHaveLength(0)
   })
 })

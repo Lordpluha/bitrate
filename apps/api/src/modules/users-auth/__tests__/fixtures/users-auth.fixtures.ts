@@ -9,6 +9,6 @@ export const buildUserSession = (
   access_token: 'access-token',
   refresh_token: 'refresh-token',
   createdAt: new Date(),
-  expiresAt: null,
+  expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   ...overrides,
 })

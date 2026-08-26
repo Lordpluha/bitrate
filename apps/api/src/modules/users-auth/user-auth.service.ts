@@ -11,6 +11,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { Prisma } from '@prisma/client'
 import type { JWTPayload } from '../tokens'
 import { TokenService } from '../tokens/token.service'
 import { UsersService } from '../users/users.service'
@@ -64,7 +65,7 @@ export class UserAuthService {
     const passwordValid =
       user?.password && (await this.token.verifyPassword(password, user.password))
     if (!passwordValid) {
-      if (user) await this.recordFailedLogin(user.id, user.failedLoginAttempts)
+      if (user) await this.recordFailedLogin(user.id)
       throw new UnauthorizedException({ message: 'Invalid credentials' })
     }
 
@@ -237,7 +238,7 @@ export class UserAuthService {
   async getSessions(userId: string, currentAccessToken?: string) {
     const currentHash = currentAccessToken ? this.token.hashToken(currentAccessToken) : null
     const sessions = await this.prisma.userSession.findMany({
-      where: { userId, OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] },
+      where: { userId, expiresAt: { gt: new Date() } },
       orderBy: { createdAt: 'desc' },
       select: { id: true, createdAt: true, expiresAt: true, access_token: true },
     })
@@ -275,17 +276,18 @@ export class UserAuthService {
     await this.mail.sendEmailVerification(email, rawToken, username)
   }
 
-  private async recordFailedLogin(userId: string, attempts: number) {
-    const nextAttempts = attempts + 1
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        failedLoginAttempts: nextAttempts,
-        lockedUntil:
-          nextAttempts >= UserAuthService.MAX_LOGIN_ATTEMPTS
-            ? new Date(Date.now() + UserAuthService.LOCK_DURATION_MS)
-            : null,
-      },
-    })
+  private async recordFailedLogin(userId: string) {
+    const lockedUntil = new Date(Date.now() + UserAuthService.LOCK_DURATION_MS)
+    await this.prisma.executeRaw(Prisma.sql`
+      UPDATE "User"
+      SET
+        "failedLoginAttempts" = "failedLoginAttempts" + 1,
+        "lockedUntil" = CASE
+          WHEN "failedLoginAttempts" + 1 >= ${UserAuthService.MAX_LOGIN_ATTEMPTS}
+          THEN ${lockedUntil}
+          ELSE NULL
+        END
+      WHERE "id" = ${userId}::uuid
+    `)
   }
 }

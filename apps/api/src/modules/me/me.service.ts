@@ -1,6 +1,7 @@
 import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import type { UpdatePlayerDto, UpdateQueueDto, UpdateSettingsDto, UpsertDeviceDto } from './dtos'
 
 const DEFAULT_SETTINGS = {
@@ -108,19 +109,41 @@ export class MeService {
   }
 
   async upsertDevice(userId: string, dto: UpsertDeviceDto) {
-    if (dto.isActive)
-      await this.prisma.playerDevice.updateMany({ where: { userId }, data: { isActive: false } })
-    if (!dto.id) {
-      return this.prisma.playerDevice.create({
-        data: { userId, name: dto.name, type: dto.type, isActive: dto.isActive },
+    const device = dto.id
+      ? await this.prisma.playerDevice.findFirst({ where: { id: dto.id, userId } })
+      : null
+    if (dto.id && !device) throw new NotFoundException('Player device not found')
+
+    const persist = async (tx: Prisma.TransactionClient) => {
+      if (dto.isActive) {
+        await tx.playerDevice.updateMany({ where: { userId }, data: { isActive: false } })
+      }
+      if (!device) {
+        return tx.playerDevice.create({
+          data: { userId, name: dto.name, type: dto.type, isActive: dto.isActive },
+        })
+      }
+      return tx.playerDevice.update({
+        where: { id: device.id },
+        data: { name: dto.name, type: dto.type, isActive: dto.isActive, lastSeenAt: new Date() },
       })
     }
-    const device = await this.prisma.playerDevice.findFirst({ where: { id: dto.id, userId } })
-    if (!device) throw new NotFoundException('Player device not found')
-    return this.prisma.playerDevice.update({
-      where: { id: device.id },
-      data: { name: dto.name, type: dto.type, isActive: dto.isActive, lastSeenAt: new Date() },
-    })
+
+    if (!dto.isActive) return persist(this.prisma as never)
+
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      try {
+        return await this.prisma.$transaction(persist, {
+          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        })
+      } catch (error) {
+        const code =
+          error && typeof error === 'object' && 'code' in error ? String(error.code) : undefined
+        if (attempt === 3 || (code !== 'P2002' && code !== 'P2034')) throw error
+      }
+    }
+
+    throw new Error('Unable to activate player device')
   }
 
   async removeDevice(userId: string, deviceId: string) {

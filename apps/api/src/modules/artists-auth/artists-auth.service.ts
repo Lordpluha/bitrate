@@ -14,7 +14,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import type { ArtistSession } from '@prisma/client'
+import { type ArtistSession, Prisma } from '@prisma/client'
 import type { JWTPayload } from '../tokens'
 import type { RegistrationDto } from './dtos'
 import type { ArtistSessionEntity } from './entities'
@@ -60,7 +60,7 @@ export class ArtistsAuthService {
     const passwordValid =
       artist?.password && (await this.token.verifyPassword(password, artist.password))
     if (!passwordValid) {
-      if (artist) await this.recordFailedLogin(artist.id, artist.failedLoginAttempts)
+      if (artist) await this.recordFailedLogin(artist.id)
       throw new UnauthorizedException({ message: 'Invalid credentials' })
     }
     if (!artist.emailVerifiedAt) {
@@ -194,7 +194,7 @@ export class ArtistsAuthService {
       data: { artistId: artist.id, token: this.token.hashToken(rawToken), expiresAt },
     })
 
-    await this.mail.sendPasswordReset(artist.email, rawToken, artist.username)
+    await this.mail.sendArtistPasswordReset(artist.email, rawToken, artist.username)
   }
 
   /** Runs the reset password operation. */
@@ -257,17 +257,18 @@ export class ArtistsAuthService {
     await this.mail.sendArtistEmailVerification(email, rawToken, username)
   }
 
-  private async recordFailedLogin(artistId: string, attempts: number) {
-    const nextAttempts = attempts + 1
-    await this.prisma.artist.update({
-      where: { id: artistId },
-      data: {
-        failedLoginAttempts: nextAttempts,
-        lockedUntil:
-          nextAttempts >= ArtistsAuthService.MAX_LOGIN_ATTEMPTS
-            ? new Date(Date.now() + ArtistsAuthService.LOCK_DURATION_MS)
-            : null,
-      },
-    })
+  private async recordFailedLogin(artistId: string) {
+    const lockedUntil = new Date(Date.now() + ArtistsAuthService.LOCK_DURATION_MS)
+    await this.prisma.executeRaw(Prisma.sql`
+      UPDATE "Artist"
+      SET
+        "failedLoginAttempts" = "failedLoginAttempts" + 1,
+        "lockedUntil" = CASE
+          WHEN "failedLoginAttempts" + 1 >= ${ArtistsAuthService.MAX_LOGIN_ATTEMPTS}
+          THEN ${lockedUntil}
+          ELSE NULL
+        END
+      WHERE "id" = ${artistId}::uuid
+    `)
   }
 }

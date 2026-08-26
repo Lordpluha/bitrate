@@ -79,7 +79,7 @@ describe('ArtistAuthGuard', () => {
       username: 'artist',
       type: 'artist',
     } as never)
-    prisma.artist.findUnique.mockResolvedValue(null)
+    prisma.artist.findFirst.mockResolvedValue(null)
 
     await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
       UNAUTHORIZED_ERRORS.USER_NOT_FOUND,
@@ -96,7 +96,7 @@ describe('ArtistAuthGuard', () => {
       username: 'artist',
       type: 'artist',
     } as never)
-    prisma.artist.findUnique.mockResolvedValue(buildArtist() as never)
+    prisma.artist.findFirst.mockResolvedValue(buildArtist() as never)
     prisma.artistSession.findFirst.mockResolvedValue(null)
 
     await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
@@ -117,7 +117,7 @@ describe('ArtistAuthGuard', () => {
       username: 'artist',
       type: 'artist',
     } as never)
-    prisma.artist.findUnique.mockResolvedValue(artist as never)
+    prisma.artist.findFirst.mockResolvedValue(artist as never)
     prisma.artistSession.findFirst.mockResolvedValue(session as never)
 
     const req: Record<string, unknown> = { cookies: { access_token: 'at' } }
@@ -131,5 +131,8 @@ describe('ArtistAuthGuard', () => {
 
     expect(result).toBe(true)
     expect(req.artist).toBe(artist)
+    expect(prisma.artist.findFirst).toHaveBeenCalledWith({
+      where: { id: 'artist-1', deletedAt: null },
+    })
   })
 })
