@@ -99,7 +99,7 @@ describe('TracksService (int)', () => {
     const result = await service.findAll({ page: 1, limit: 10 })
 
     expect(prismaMock.$transaction).toHaveBeenCalled()
-    expect(result).toEqual({ data: tracks, meta: { total: 1, page: 1, limit: 10, lastPage: 1 } })
+    expect(result).toEqual({ data: tracks, total: 1, page: 1, limit: 10 })
   })
 
   it('findTrackById should return track from DB', async () => {

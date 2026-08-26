@@ -39,12 +39,12 @@ describe('TokenService (int)', () => {
       providers: [
         TokenService,
         { provide: JwtService, useValue: jwtService },
-        { provide: 'ConfigService', useValue: configService },
+        // Registered under the class token: Nest injects by class, so a string
+        // key here left the dependency unresolved and `overrideProvider` had
+        // nothing to replace.
+        { provide: ConfigService, useValue: configService },
       ],
-    })
-      .overrideProvider(ConfigService)
-      .useValue(configService)
-      .compile()
+    }).compile()
 
     service = module.get(TokenService)
   })

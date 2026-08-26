@@ -34,6 +34,10 @@ const makeTokenServiceMock = () =>
   ({
     generateAccessToken: jest.fn(),
     generateRefreshToken: jest.fn(),
+    hashPassword: jest.fn(),
+    verifyPassword: jest.fn(),
+    hashToken: jest.fn(),
+    getRefreshTokenExpiresAt: jest.fn(() => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
   }) as unknown as jest.Mocked<TokenService>
 
 describe('ArtistsAuthService (int)', () => {
@@ -93,6 +97,7 @@ describe('ArtistsAuthService (int)', () => {
 
   it('loginArtist should throw UnauthorizedException when password is wrong', async () => {
     artistsPrivateMock.findByEmail.mockResolvedValue(buildArtist({ password: 'correct' }) as never)
+    tokenMock.verifyPassword.mockResolvedValue(false as never)
 
     await expect(service.loginArtist('a@example.com', 'wrong')).rejects.toThrow(
       UnauthorizedException,
@@ -102,13 +107,14 @@ describe('ArtistsAuthService (int)', () => {
   it('loginArtist should return tokens on valid credentials', async () => {
     const artist = buildArtist()
     artistsPrivateMock.findByEmail.mockResolvedValue(artist as never)
+    tokenMock.verifyPassword.mockResolvedValue(true as never)
     tokenMock.generateAccessToken.mockResolvedValue('at' as never)
     tokenMock.generateRefreshToken.mockResolvedValue('rt' as never)
     prismaMock.artistSession.create.mockResolvedValue(buildArtistSession() as never)
 
     const result = await service.loginArtist(artist.email, artist.password!)
 
-    expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
+    expect(result).toEqual({ access_token: 'at', refresh_token: 'rt' })
   })
 
   it('refresh should throw UnauthorizedException on invalid token', async () => {

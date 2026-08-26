@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { ArtistAuthGuard } from '@modules/artists-auth/artists-auth.guard'
+import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
 import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
@@ -28,6 +29,15 @@ describe('ArtistsController (int)', () => {
       controllers: [ArtistsController],
       providers: [{ provide: ArtistsService, useValue: service }],
     })
+      .overrideGuard(UserAuthGuard)
+      .useValue({
+        canActivate: (ctx: {
+          switchToHttp: () => { getRequest: () => Record<string, unknown> }
+        }) => {
+          ctx.switchToHttp().getRequest().user = { id: 'user-1', username: 'user' }
+          return true
+        },
+      })
       .overrideGuard(ArtistAuthGuard)
       .useValue({
         canActivate: (ctx: {

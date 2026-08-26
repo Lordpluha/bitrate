@@ -6,6 +6,9 @@ import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { UserAuthService } from './user-auth.service'
+import { ConfigService } from '@nestjs/config'
+import { OAuthService } from './oauth.service'
+import { TwoFactorService } from './two-factor.service'
 import { UsersAuthController } from './users-auth.controller'
 import { UserAuthGuard } from './users-auth.guard'
 
@@ -46,6 +49,9 @@ describe('UsersAuthController (int)', () => {
         { provide: UserAuthService, useValue: authService },
         { provide: UsersService, useValue: usersService },
         { provide: TokenService, useValue: tokenService },
+        { provide: OAuthService, useValue: {} },
+        { provide: TwoFactorService, useValue: {} },
+        { provide: ConfigService, useValue: { get: jest.fn() } },
       ],
     })
       .overrideGuard(UserAuthGuard)

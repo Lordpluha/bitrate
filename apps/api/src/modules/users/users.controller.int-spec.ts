@@ -104,18 +104,26 @@ describe('UsersController (int)', () => {
     expect(service.findAll).toHaveBeenCalledWith({ username: 'user', limit: 10, page: 1 })
   })
 
-  it('GET /users without username should return 500', async () => {
+  it('GET /users without username should return 400', async () => {
     const res = await request(app.getHttpServer()).get('/users').query({ limit: 10, page: 1 })
 
-    expect(res.status).toBe(500)
+    // A missing required query parameter is a client error; this used to fall
+    // through as an unhandled 500.
+    expect(res.status).toBe(400)
   })
 
   it('POST /users/avatar should call uploadAvatar and return 201', async () => {
     service.uploadAvatar.mockResolvedValue(user as never)
 
+    // A real PNG signature: the handler compares the file's magic bytes against
+    // the declared content type, so a placeholder string is rejected as spoofed.
+    const pngBytes = Buffer.from([
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
+    ])
+
     const res = await request(app.getHttpServer())
       .post('/users/avatar')
-      .attach('avatar', Buffer.from('fake-image'), {
+      .attach('avatar', pngBytes, {
         filename: 'test.png',
         contentType: 'image/png',
       })

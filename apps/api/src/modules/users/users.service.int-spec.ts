@@ -3,6 +3,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/glo
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
+import { PUBLIC_USER_SELECT } from './users.select'
 import { UsersService } from './users.service'
 
 describe('UsersService (int)', () => {
@@ -25,7 +26,7 @@ describe('UsersService (int)', () => {
     expect(service).toBeDefined()
   })
 
-  it('findById should call findUniqueOrThrow with omit', async () => {
+  it('findById should project only public fields', async () => {
     const user = buildUser()
     prismaMock.user.findUniqueOrThrow.mockResolvedValue(user as never)
 
@@ -33,12 +34,12 @@ describe('UsersService (int)', () => {
 
     expect(prismaMock.user.findUniqueOrThrow).toHaveBeenCalledWith({
       where: { id: 'user-1' },
-      omit: { password: true, email: true },
+      select: PUBLIC_USER_SELECT,
     })
     expect(result).toEqual(user)
   })
 
-  it('getByEmail should call findFirst with omit password only', async () => {
+  it('getByEmail should look up the id only', async () => {
     const user = buildUser()
     prismaMock.user.findFirst.mockResolvedValue(user as never)
 
@@ -46,12 +47,12 @@ describe('UsersService (int)', () => {
 
     expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
       where: { email: 'user@example.com' },
-      omit: { password: true },
+      select: { id: true },
     })
     expect(result).toEqual(user)
   })
 
-  it('getByUsername should call findFirst with omit password and email', async () => {
+  it('getByUsername should project only public fields', async () => {
     const user = buildUser()
     prismaMock.user.findFirst.mockResolvedValue(user as never)
 
@@ -59,20 +60,25 @@ describe('UsersService (int)', () => {
 
     expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
       where: { username: 'user' },
-      omit: { password: true, email: true },
+      select: PUBLIC_USER_SELECT,
     })
     expect(result).toEqual(user)
   })
 
   it('findAll should query with pagination and username filter', async () => {
     const users = [buildUser()]
-    prismaMock.user.findMany.mockResolvedValue(users as never)
+    prismaMock.$transaction.mockResolvedValue([users, 1] as never)
 
     const result = await service.findAll({ username: 'user', page: 1, limit: 10 })
 
     expect(prismaMock.user.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { username: 'user' }, skip: 0, take: 10 }),
+      expect.objectContaining({
+        where: { username: { contains: 'user', mode: 'insensitive' }, deletedAt: null },
+        skip: 0,
+        take: 10,
+        select: PUBLIC_USER_SELECT,
+      }),
     )
-    expect(result).toEqual(users)
+    expect(result).toEqual({ data: users, total: 1, page: 1, limit: 10 })
   })
 })

@@ -1,3 +1,4 @@
+import { MailService } from '@infra/mail/mail.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { TokenService } from '@modules/tokens/token.service'
@@ -33,6 +34,10 @@ const makeTokenServiceMock = () =>
   ({
     generateAccessToken: jest.fn(),
     generateRefreshToken: jest.fn(),
+    hashPassword: jest.fn(),
+    verifyPassword: jest.fn(),
+    hashToken: jest.fn(),
+    getRefreshTokenExpiresAt: jest.fn(() => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
   }) as unknown as jest.Mocked<TokenService>
 
 describe('UserAuthService (int)', () => {
@@ -57,6 +62,10 @@ describe('UserAuthService (int)', () => {
         { provide: JwtService, useValue: jwtMock },
         { provide: PrismaService, useValue: prismaMock },
         { provide: TokenService, useValue: tokenMock },
+        {
+          provide: MailService,
+          useValue: { sendVerificationEmail: jest.fn(), sendPasswordResetEmail: jest.fn() },
+        },
       ],
     }).compile()
 
@@ -91,6 +100,7 @@ describe('UserAuthService (int)', () => {
 
   it('loginUser should throw UnauthorizedException when password is wrong', async () => {
     usersPrivateMock.getByEmail.mockResolvedValue(buildUser({ password: 'correct' }) as never)
+    tokenMock.verifyPassword.mockResolvedValue(false as never)
 
     await expect(service.loginUser('u@example.com', 'wrong')).rejects.toThrow(UnauthorizedException)
   })
@@ -98,13 +108,14 @@ describe('UserAuthService (int)', () => {
   it('loginUser should return tokens on valid credentials', async () => {
     const user = buildUser()
     usersPrivateMock.getByEmail.mockResolvedValue(user as never)
+    tokenMock.verifyPassword.mockResolvedValue(true as never)
     tokenMock.generateAccessToken.mockResolvedValue('at' as never)
     tokenMock.generateRefreshToken.mockResolvedValue('rt' as never)
     prismaMock.userSession.create.mockResolvedValue(buildUserSession() as never)
 
     const result = await service.loginUser(user.email, user.password!)
 
-    expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
+    expect(result).toEqual({ access_token: 'at', refresh_token: 'rt' })
   })
 
   it('refresh should throw UnauthorizedException on invalid token', async () => {
