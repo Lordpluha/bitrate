@@ -7,6 +7,8 @@ import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { TrackPlaybackService } from './track-playback.service'
+import { TrackStreamingService } from './track-streaming.service'
+import { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
@@ -16,13 +18,23 @@ const makeServiceMock = () =>
   ({
     findAll: jest.fn(),
     findTrackById: jest.fn(),
-    getTrackStream: jest.fn(),
-    getHlsMasterPlaylist: jest.fn(),
-    getHlsAsset: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
     findLikedTracks: jest.fn(),
   }) as unknown as jest.Mocked<TracksService>
+
+const makeUploadMock = () =>
+  ({
+    create: jest.fn(),
+    update: jest.fn(),
+  }) as unknown as jest.Mocked<TrackUploadService>
+
+const makeStreamingMock = () =>
+  ({
+    getTrackStream: jest.fn(),
+    getTrackAudioStream: jest.fn(),
+    getTrackStreamUrl: jest.fn(),
+    getHlsMasterPlaylist: jest.fn(),
+    getHlsAsset: jest.fn(),
+  }) as unknown as jest.Mocked<TrackStreamingService>
 
 const makePlaybackMock = () =>
   ({
@@ -33,14 +45,20 @@ const makePlaybackMock = () =>
 describe('TracksController (int)', () => {
   let app: INestApplication
   let service: jest.Mocked<TracksService>
+  let uploadService: jest.Mocked<TrackUploadService>
+  let streamingService: jest.Mocked<TrackStreamingService>
 
   beforeAll(async () => {
     service = makeServiceMock()
+    uploadService = makeUploadMock()
+    streamingService = makeStreamingMock()
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TracksController],
       providers: [
         { provide: TracksService, useValue: service },
+        { provide: TrackUploadService, useValue: uploadService },
+        { provide: TrackStreamingService, useValue: streamingService },
         { provide: TrackPlaybackService, useValue: makePlaybackMock() },
       ],
     })
@@ -73,9 +91,9 @@ describe('TracksController (int)', () => {
   beforeEach(() => {
     service.findAll.mockReset()
     service.findTrackById.mockReset()
-    service.getTrackStream.mockReset()
-    service.create.mockReset()
-    service.update.mockReset()
+    streamingService.getTrackStream.mockReset()
+    uploadService.create.mockReset()
+    uploadService.update.mockReset()
     service.findLikedTracks.mockReset()
   })
 
@@ -124,7 +142,7 @@ describe('TracksController (int)', () => {
         this.push(null)
       },
     })
-    service.getTrackStream.mockResolvedValue({
+    streamingService.getTrackStream.mockResolvedValue({
       stream: mockStream,
       contentType: 'audio/mpeg',
       contentLength: 0,
@@ -139,7 +157,7 @@ describe('TracksController (int)', () => {
     )
 
     expect(res.status).toBe(200)
-    expect(service.getTrackStream).toHaveBeenCalledWith(
+    expect(streamingService.getTrackStream).toHaveBeenCalledWith(
       'f47ac10b-58cc-4372-a567-0e02b2c3d479',
       undefined,
       undefined,
@@ -156,7 +174,7 @@ describe('TracksController (int)', () => {
         this.push(null)
       },
     })
-    service.getTrackStream.mockResolvedValue({
+    streamingService.getTrackStream.mockResolvedValue({
       stream: mockStream,
       contentType: 'audio/mpeg',
       contentLength: 512,
@@ -171,7 +189,7 @@ describe('TracksController (int)', () => {
       .set('Range', 'bytes=0-511')
 
     expect(res.status).toBe(206)
-    expect(service.getTrackStream).toHaveBeenCalledWith(
+    expect(streamingService.getTrackStream).toHaveBeenCalledWith(
       'f47ac10b-58cc-4372-a567-0e02b2c3d479',
       'bytes=0-511',
       undefined,
@@ -180,15 +198,15 @@ describe('TracksController (int)', () => {
     expect(res.headers['content-range']).toBe('bytes 0-511/2048')
   })
 
-  it('PUT /tracks/:id should call service.update and return 200', async () => {
-    service.update.mockResolvedValue(buildTrack() as never)
+  it('PUT /tracks/:id should call uploadService.update and return 200', async () => {
+    uploadService.update.mockResolvedValue(buildTrack() as never)
 
     const res = await request(app.getHttpServer())
       .put('/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479')
       .field('title', 'Updated Title')
 
     expect(res.status).toBe(200)
-    expect(service.update).toHaveBeenCalledWith(
+    expect(uploadService.update).toHaveBeenCalledWith(
       'artist-1',
       'f47ac10b-58cc-4372-a567-0e02b2c3d479',
       { title: 'Updated Title' } as never,

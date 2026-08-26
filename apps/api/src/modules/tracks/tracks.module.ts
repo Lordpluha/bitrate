@@ -12,11 +12,20 @@ import { Module } from '@nestjs/common'
 import { AudioGateway } from './audio.gateway'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
 import { TrackPlaybackService } from './track-playback.service'
+import { TrackStreamingService } from './track-streaming.service'
+import { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import { TracksService } from './tracks.service'
 
 @Module({
-  providers: [TracksService, TrackPlaybackService, AudioGateway, AudioProcessingConsumer],
+  providers: [
+    TracksService,
+    TrackUploadService,
+    TrackStreamingService,
+    TrackPlaybackService,
+    AudioGateway,
+    AudioProcessingConsumer,
+  ],
   controllers: [TracksController],
   imports: [
     PrismaModule,
@@ -32,6 +41,12 @@ import { TracksService } from './tracks.service'
       },
     ),
   ],
-  exports: [TracksService, TrackPlaybackService, AudioGateway],
+  exports: [
+    TracksService,
+    TrackUploadService,
+    TrackStreamingService,
+    TrackPlaybackService,
+    AudioGateway,
+  ],
 })
 export class TracksModule {}

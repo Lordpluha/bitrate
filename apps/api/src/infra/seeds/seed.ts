@@ -9,7 +9,7 @@ import { join } from 'node:path'
 import { Pool } from 'pg'
 import { AppModule } from '../../app.module'
 import { TokenService } from '../../modules/tokens/token.service'
-import { TracksService } from '../../modules/tracks/tracks.service'
+import { TrackUploadService } from '../../modules/tracks/track-upload.service'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
 import { FakerService } from './faker.service'
@@ -60,7 +60,7 @@ async function main() {
     })
 
     // Получаем необходимые сервисы через DI
-    const tracksService = app.get(TracksService)
+    const trackUploadService = app.get(TrackUploadService)
     const tokenService = app.get(TokenService)
 
     // Создаём сервисы для импорта
@@ -69,7 +69,7 @@ async function main() {
       prisma,
       downloadService,
       new FakerService(),
-      tracksService,
+      trackUploadService,
       tokenService,
     )
 

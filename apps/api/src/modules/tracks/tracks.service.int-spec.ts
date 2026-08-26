@@ -10,6 +10,8 @@ import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import type { Queue } from 'bullmq'
 import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import { TrackStreamingService } from './track-streaming.service'
+import { TrackUploadService } from './track-upload.service'
 import { TracksService } from './tracks.service'
 
 const makeQueueMock = () =>
@@ -41,6 +43,8 @@ jest.mock('node:fs', () => ({
 
 describe('TracksService (int)', () => {
   let service: TracksService
+  let uploadService: TrackUploadService
+  let streamingService: TrackStreamingService
   let module: TestingModule
   let queueMock: jest.Mocked<Queue>
   let configMock: jest.Mocked<ConfigService<AppConfig>>
@@ -52,6 +56,8 @@ describe('TracksService (int)', () => {
     module = await Test.createTestingModule({
       providers: [
         TracksService,
+        TrackUploadService,
+        TrackStreamingService,
         { provide: PrismaService, useValue: prismaMock },
         { provide: getQueueToken('audio-processing'), useValue: queueMock },
         { provide: ConfigService, useValue: configMock },
@@ -76,6 +82,8 @@ describe('TracksService (int)', () => {
     }).compile()
 
     service = module.get(TracksService)
+    uploadService = module.get(TrackUploadService)
+    streamingService = module.get(TrackStreamingService)
   })
 
   afterAll(() => module?.close())
@@ -90,6 +98,8 @@ describe('TracksService (int)', () => {
 
   it('should be defined via DI', () => {
     expect(service).toBeDefined()
+    expect(uploadService).toBeDefined()
+    expect(streamingService).toBeDefined()
   })
 
   it('findAll should return paginated data', async () => {
@@ -112,9 +122,9 @@ describe('TracksService (int)', () => {
   })
 
   it('getTrackStream should throw NotFoundException when track not found', async () => {
-    prismaMock.track.findUnique.mockResolvedValue(null)
+    prismaMock.track.findFirst.mockResolvedValue(null)
 
-    await expect(service.getTrackStream('nonexistent')).rejects.toThrow(NotFoundException)
+    await expect(streamingService.getTrackStream('nonexistent')).rejects.toThrow(NotFoundException)
   })
 
   it('create should call prisma in transaction and enqueue job', async () => {
@@ -128,7 +138,7 @@ describe('TracksService (int)', () => {
     prismaMock.trackFile.create.mockResolvedValue({ id: 'tf-1' } as never)
     queueMock.add.mockResolvedValue({} as never)
 
-    const result = await service.create('artist-1', { title: 'Track' } as never, audioFile)
+    const result = await uploadService.create('artist-1', { title: 'Track' } as never, audioFile)
 
     expect(queueMock.add).toHaveBeenCalledWith(
       'convert-audio',

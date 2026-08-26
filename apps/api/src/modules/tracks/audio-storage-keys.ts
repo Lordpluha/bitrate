@@ -31,3 +31,18 @@ export function getHlsRootFromAudioUrl(trackId: string, audioUrl: string): strin
 
   return `tracks/${trackId}/hls`
 }
+
+/** Builds the object key of the FFmpeg-generated HLS master playlist. */
+export function getHlsMasterKey(trackId: string, audioUrl: string): string {
+  return `${getHlsRootFromAudioUrl(trackId, audioUrl)}/master.m3u8`
+}
+
+/** Builds the object key of one HLS artifact inside a bitrate ladder rung. */
+export function getHlsAssetKey(
+  trackId: string,
+  audioUrl: string,
+  bitrate: number,
+  asset: string,
+): string {
+  return `${getHlsRootFromAudioUrl(trackId, audioUrl)}/${bitrate}/${asset}`
+}

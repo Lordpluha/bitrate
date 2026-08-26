@@ -16,6 +16,7 @@ import {
 import type { Server, Socket } from 'socket.io'
 import { z } from 'zod'
 import type { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
+import { TrackStreamingService } from './track-streaming.service'
 import * as TracksServiceModule from './tracks.service'
 
 /** Describes the authenticated socket. */
@@ -100,6 +101,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     @Inject(TracksServiceModule.TracksService)
     private tracksService: TracksServiceModule.TracksService,
+    @Inject(TrackStreamingService) private trackStreamingService: TrackStreamingService,
     @Inject(WsUserAuthGuard) private wsAuthGuard: WsUserAuthGuard,
   ) {}
 
@@ -380,7 +382,7 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   /** Runs the start audio stream operation. */
   private async startAudioStream(client: AuthenticatedSocket, payload: StreamTrackPayload) {
-    const audio = await this.tracksService.getTrackAudioStream(
+    const audio = await this.trackStreamingService.getTrackAudioStream(
       payload.trackId,
       payload.bitrate,
       payload.format,

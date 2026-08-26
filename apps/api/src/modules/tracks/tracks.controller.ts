@@ -1,6 +1,4 @@
-import { randomUUID } from 'node:crypto'
 import { rm } from 'node:fs/promises'
-import { IMAGE_EXTENSION_BY_MIME } from '@common/utils/image'
 import type { ArtistEntity } from '@modules/artists'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { UserEntity } from '@modules/users'
@@ -22,13 +20,10 @@ import {
   Req,
   Res,
   UploadedFiles,
-  UseInterceptors,
 } from '@nestjs/common'
-import { FileFieldsInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
-import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
   GetTrackByIdSwagger,
@@ -45,20 +40,16 @@ import {
 import { type CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
 import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
 import { TrackPlaybackService, UnsatisfiableRangeError } from './track-playback.service'
+import { TrackStreamingService } from './track-streaming.service'
+import { TrackFilesInterceptor } from './track-upload.interceptor'
+import { TrackUploadService } from './track-upload.service'
 import { TracksService } from './tracks.service'
 
-const AUDIO_EXTENSION_BY_MIME: Record<string, string> = {
-  'audio/mpeg': '.mp3',
-  'audio/ogg': '.ogg',
-  'audio/wav': '.wav',
-  'audio/webm': '.webm',
-}
+/** The multipart parts accepted when creating or updating a track. */
+type TrackUploadFiles = { audio?: Express.Multer.File[]; cover?: Express.Multer.File[] }
 
-/** Chooses a server-owned extension so a client filename cannot control response MIME. */
-function uploadExtension(file: Express.Multer.File): string {
-  if (file.fieldname === 'audio') return AUDIO_EXTENSION_BY_MIME[file.mimetype] ?? ''
-  return IMAGE_EXTENSION_BY_MIME[file.mimetype as keyof typeof IMAGE_EXTENSION_BY_MIME] ?? ''
-}
+/** Rendition bytes never change, so they can be cached for a long time. */
+const IMMUTABLE_CACHE_CONTROL = 'private, max-age=31536000, immutable, no-transform'
 
 /** Represents the tracks controller. */
 @ApiExtraModels(TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity)
@@ -67,6 +58,8 @@ function uploadExtension(file: Express.Multer.File): string {
 export class TracksController {
   constructor(
     private tracksService: TracksService,
+    private trackUploadService: TrackUploadService,
+    private trackStreamingService: TrackStreamingService,
     private trackPlaybackService: TrackPlaybackService,
   ) {}
 
@@ -79,12 +72,7 @@ export class TracksController {
     @Query('title') title?: TrackEntity['title'],
     @Query('artistId', new ParseUUIDPipe({ optional: true })) artistId?: string,
   ) {
-    return this.tracksService.findAll({
-      artistId,
-      limit,
-      page,
-      title,
-    })
+    return this.tracksService.findAll({ artistId, limit, page, title })
   }
 
   /** Runs the get hls master playlist operation. */
@@ -95,7 +83,7 @@ export class TracksController {
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Res() res: Response,
   ) {
-    const playlist = await this.tracksService.getHlsMasterPlaylist(id)
+    const playlist = await this.trackStreamingService.getHlsMasterPlaylist(id)
     res.set({
       'Content-Type': 'application/vnd.apple.mpegurl',
       'Cache-Control': 'private, max-age=5, no-transform',
@@ -113,12 +101,12 @@ export class TracksController {
     @Param('asset') asset: string,
     @Res() res: Response,
   ) {
-    const data = await this.tracksService.getHlsAsset(id, bitrate, asset)
+    const data = await this.trackStreamingService.getHlsAsset(id, bitrate, asset)
     res.set({
       'Content-Type': data.contentType,
       'Content-Length': data.contentLength,
       'Cache-Control': data.immutable
-        ? 'private, max-age=31536000, immutable, no-transform'
+        ? IMMUTABLE_CACHE_CONTROL
         : 'private, max-age=30, no-transform',
     })
     return data.stream.pipe(res)
@@ -136,8 +124,12 @@ export class TracksController {
     @Query('bitrate', new ParseIntPipe({ optional: true })) bitrate?: number,
     @Query('format') format?: string,
   ) {
-    const range = req.headers.range
-    const streamData = await this.tracksService.getTrackStream(id, range, bitrate, format)
+    const streamData = await this.trackStreamingService.getTrackStream(
+      id,
+      req.headers.range,
+      bitrate,
+      format,
+    )
 
     res.status(streamData.isPartial ? 206 : 200)
     res.set({
@@ -148,9 +140,7 @@ export class TracksController {
       'X-Audio-Bitrate': streamData.bitrate,
       'X-Audio-Format': streamData.format,
       ...(streamData.isPartial
-        ? {
-            'Content-Range': `bytes ${streamData.start}-${streamData.end}/${streamData.fileSize}`,
-          }
+        ? { 'Content-Range': `bytes ${streamData.start}-${streamData.end}/${streamData.fileSize}` }
         : {}),
     })
 
@@ -161,49 +151,12 @@ export class TracksController {
   @PostTrackSwagger()
   @ArtistAuth()
   @Post('')
-  @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        { name: 'audio', maxCount: 1 },
-        { name: 'cover', maxCount: 1 },
-      ],
-      {
-        limits: { fileSize: 50 * 1024 * 1024 },
-        storage: diskStorage({
-          destination: (_req, file, cb) => {
-            if (file.fieldname === 'audio') {
-              return cb(null, './storage/private/tracks')
-            }
-            return cb(null, './storage/public/tracks/covers')
-          },
-          filename: (_req, file, cb) => {
-            const uniqueName = `${randomUUID()}${uploadExtension(file)}`
-            cb(null, uniqueName)
-          },
-        }),
-        fileFilter: (_req, file, cb) => {
-          const audioTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
-          const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp']
-
-          if (file.fieldname === 'audio' && !audioTypes.includes(file.mimetype)) {
-            return cb(new BadRequestException('Invalid audio file type'), false)
-          }
-
-          if (file.fieldname === 'cover' && !coverTypes.includes(file.mimetype)) {
-            return cb(new BadRequestException('Invalid cover file type'), false)
-          }
-
-          cb(null, true)
-        },
-      },
-    ),
-  )
+  @TrackFilesInterceptor()
   async postTrack(
     @Req() req: Request,
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto,
-    @UploadedFiles()
-    files: { audio?: Express.Multer.File[]; cover?: Express.Multer.File[] },
+    @UploadedFiles() files: TrackUploadFiles,
   ) {
     const artist = req.artist as ArtistEntity
     const audioFile = files?.audio?.[0]
@@ -214,63 +167,29 @@ export class TracksController {
       throw new BadRequestException('Audio file is required')
     }
 
-    return await this.tracksService.create(artist.id, createTrackDto, audioFile, coverFile)
+    return await this.trackUploadService.create(artist.id, createTrackDto, audioFile, coverFile)
   }
 
   /** Runs the put track operation. */
   @UpdateTrackByIdSwagger()
   @ArtistAuth()
   @Put(':id')
-  @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        { name: 'audio', maxCount: 1 },
-        { name: 'cover', maxCount: 1 },
-      ],
-      {
-        limits: { fileSize: 50 * 1024 * 1024 },
-        storage: diskStorage({
-          destination: (_req, file, cb) => {
-            if (file.fieldname === 'audio') {
-              return cb(null, './storage/private/tracks')
-            }
-            return cb(null, './storage/public/tracks/covers')
-          },
-          filename: (_req, file, cb) => {
-            const uniqueName = `${randomUUID()}${uploadExtension(file)}`
-            cb(null, uniqueName)
-          },
-        }),
-        fileFilter: (_req, file, cb) => {
-          const audioTypes = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
-          const coverTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp']
-
-          if (file.fieldname === 'audio' && !audioTypes.includes(file.mimetype)) {
-            return cb(new BadRequestException('Invalid audio file type'), false)
-          }
-
-          if (file.fieldname === 'cover' && !coverTypes.includes(file.mimetype)) {
-            return cb(new BadRequestException('Invalid cover file type'), false)
-          }
-
-          cb(null, true)
-        },
-      },
-    ),
-  )
+  @TrackFilesInterceptor()
   putTrack(
     @Req() req: Request,
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
     @Body(new ZodValidationPipe(CreateTrackSchema))
     createTrackDto: CreateTrackDto,
-    @UploadedFiles()
-    files: { audio?: Express.Multer.File[]; cover?: Express.Multer.File[] },
+    @UploadedFiles() files: TrackUploadFiles,
   ) {
-    const audioFile = files?.audio?.[0]
-    const coverFile = files?.cover?.[0]
-
     const artist = req.artist as ArtistEntity
-    return this.tracksService.update(artist.id, id, createTrackDto, audioFile, coverFile)
+    return this.trackUploadService.update(
+      artist.id,
+      id,
+      createTrackDto,
+      files?.audio?.[0],
+      files?.cover?.[0],
+    )
   }
 
   /** Runs the get liked tracks operation. */
@@ -283,10 +202,7 @@ export class TracksController {
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     const artist = req.user as UserEntity
-    return this.tracksService.findLikedTracks(artist.id, {
-      page,
-      limit,
-    })
+    return this.tracksService.findLikedTracks(artist.id, { page, limit })
   }
 
   /** Runs the get by id operation. */
@@ -320,10 +236,7 @@ export class TracksController {
       rendition = await this.trackPlaybackService.getRenditionStream(id, bitrate, req.headers.range)
     } catch (error) {
       if (error instanceof UnsatisfiableRangeError) {
-        res.set({
-          'Accept-Ranges': 'bytes',
-          'Content-Range': `bytes */${error.fileSize}`,
-        })
+        res.set({ 'Accept-Ranges': 'bytes', 'Content-Range': `bytes */${error.fileSize}` })
         return res.status(416).send()
       }
       throw error
@@ -334,12 +247,9 @@ export class TracksController {
       'Content-Type': rendition.contentType,
       'Accept-Ranges': 'bytes',
       'Content-Length': String(rendition.contentLength),
-      /** Rendition bytes never change, so they can be cached for a long time. */
-      'Cache-Control': 'private, max-age=31536000, immutable, no-transform',
+      'Cache-Control': IMMUTABLE_CACHE_CONTROL,
       ...(rendition.isPartial
-        ? {
-            'Content-Range': `bytes ${rendition.start}-${rendition.end}/${rendition.fileSize}`,
-          }
+        ? { 'Content-Range': `bytes ${rendition.start}-${rendition.end}/${rendition.fileSize}` }
         : {}),
     })
 
