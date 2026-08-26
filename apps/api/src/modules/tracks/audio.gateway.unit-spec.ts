@@ -204,9 +204,9 @@ describe('AudioGateway', () => {
   describe('handlePauseTrack', () => {
     const validTrackId = '01234567-89ab-7def-8123-456789abcdef'
 
-    it('should return error when client has no userId', () => {
+    it('should return error when client has no userId', async () => {
       const client = makeSocket(undefined)
-      const result = gateway.handlePauseTrack(client as never, {
+      const result = await gateway.handlePauseTrack(client as never, {
         trackId: validTrackId,
         currentTime: 0,
       })
@@ -245,7 +245,7 @@ describe('AudioGateway', () => {
       await gateway.handleStreamTrack(firstClient as never, { trackId: validTrackId })
       await gateway.handleStreamTrack(secondClient as never, { trackId: validTrackId })
 
-      const result = gateway.handlePauseTrack(firstClient as never, {
+      const result = await gateway.handlePauseTrack(firstClient as never, {
         trackId: validTrackId,
         currentTime: 30,
       })
