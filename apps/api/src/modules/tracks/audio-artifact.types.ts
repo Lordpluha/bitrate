@@ -22,7 +22,7 @@ export interface PreparedVariant {
 }
 
 /** A CMAF rendition prepared for upload, with its byte-range index (ADR-0020). */
-export interface PreparedCmafRendition {
+interface PreparedCmafRendition {
   bitrate: number
   audioKey: string
   temporaryPath: string

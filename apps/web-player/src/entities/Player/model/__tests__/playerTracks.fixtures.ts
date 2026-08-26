@@ -9,7 +9,7 @@ type TestTrackInput = {
 }
 
 /** Builds a fully populated ready track, so queue tests only state what matters. */
-export const createTrack = ({
+const createTrack = ({
   id,
   title = id,
   duration = 100,

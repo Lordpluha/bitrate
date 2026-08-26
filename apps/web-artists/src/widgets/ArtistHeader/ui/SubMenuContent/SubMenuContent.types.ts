@@ -1,4 +1,4 @@
-export interface Section {
+interface Section {
   title: string
   href: string
 }
@@ -8,7 +8,7 @@ export interface SubmenuGroup {
   sections?: Section[]
 }
 
-export interface ResourceItem {
+interface ResourceItem {
   id: string
   title: string
   description: string

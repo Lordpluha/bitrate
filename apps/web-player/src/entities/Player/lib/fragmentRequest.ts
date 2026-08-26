@@ -39,7 +39,7 @@ const getErrorStatus = (error: unknown) => {
 }
 
 /** Network faults and 408/429/5xx are worth another attempt; 4xx are not. */
-export const isRetryableRequestError = (error: unknown) => {
+const isRetryableRequestError = (error: unknown) => {
   const status = getErrorStatus(error)
   return status === null || status === 408 || status === 429 || status >= 500
 }
@@ -49,7 +49,7 @@ export const isRetryableRequestError = (error: unknown) => {
  *
  * @returns `false` when the wait was aborted, so the caller stops retrying.
  */
-export const waitForRetry = (delayMs: number, signal: AbortSignal) =>
+const waitForRetry = (delayMs: number, signal: AbortSignal) =>
   new Promise<boolean>((resolve) => {
     if (signal.aborted) {
       resolve(false)

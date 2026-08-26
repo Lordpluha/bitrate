@@ -91,7 +91,7 @@ export class FakeMediaSource extends EventTarget {
  * with `noUncheckedIndexedAccess`, so indexing yields `T | undefined` and
  * spreading it would widen every field to optional.
  */
-export const baseRendition: ManifestRendition = {
+const baseRendition: ManifestRendition = {
   bitrate: 128,
   codec: 'mp4a.40.2',
   fragments: [[0, 48_000, 2, 2]],

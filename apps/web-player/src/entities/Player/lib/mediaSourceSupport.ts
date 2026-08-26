@@ -1,7 +1,7 @@
 import type { TrackManifest } from '@/entities/Player/model/manifest.types'
 
 /** The MSE MIME string for one rendition codec. */
-export const mimeFor = (codec: string) => `audio/mp4; codecs="${codec}"`
+const mimeFor = (codec: string) => `audio/mp4; codecs="${codec}"`
 
 /**
  * Resolves once the MediaSource is open, or rejects if it closes or times out.

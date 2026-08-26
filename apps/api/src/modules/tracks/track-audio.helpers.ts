@@ -2,7 +2,7 @@ import { extname } from 'node:path'
 import { BadRequestException } from '@nestjs/common'
 
 /** Supported output bitrates for transcoding (kbps). */
-export const TARGET_AUDIO_BITRATES = [128, 192, 320] as const
+const TARGET_AUDIO_BITRATES = [128, 192, 320] as const
 
 /** Covers are deliberately bounded independently from the larger audio upload. */
 export const MAX_COVER_BYTES = 10 * 1024 * 1024

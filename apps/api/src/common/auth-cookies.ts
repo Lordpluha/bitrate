@@ -1,7 +1,7 @@
 import type { CookieOptions, Response } from 'express'
 
 /** Holds the half-finished login while the user fetches their 2FA code. */
-export const PENDING_2FA_COOKIE = 'pending_2fa_token'
+const PENDING_2FA_COOKIE = 'pending_2fa_token'
 
 /** Ties an OAuth redirect back to the browser that started it. */
 export const OAUTH_STATE_COOKIE = 'oauth_state'

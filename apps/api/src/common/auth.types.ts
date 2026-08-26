@@ -1,11 +1,11 @@
 /** A completed sign-in: the token pair a session is built from. */
-export type AuthTokenPair = {
+type AuthTokenPair = {
   access_token: string
   refresh_token: string
 }
 
 /** A sign-in held back until the account answers its second factor. */
-export type PendingTwoFactorLogin = {
+type PendingTwoFactorLogin = {
   requires2fa: true
   pendingToken: string
 }
