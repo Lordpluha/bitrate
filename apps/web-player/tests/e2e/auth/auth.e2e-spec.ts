@@ -9,8 +9,11 @@ test.describe('authentication pages', () => {
     await page.getByRole('button', { name: 'Log in' }).click()
 
     await expect(page.getByText('Invalid email address')).toBeVisible()
+    // Login accepts six characters on purpose, while registration demands
+    // eight: an account created under an older policy must still be able to
+    // sign in rather than be rejected by the form before the server sees it.
     await expect(
-      page.getByText('Password must be at least 8 characters'),
+      page.getByText('Password must be at least 6 characters'),
     ).toBeVisible()
   })
 

@@ -2,7 +2,7 @@ import type { NextConfig } from 'next'
 import { parseWebEnv } from './env.schema'
 
 const environment = parseWebEnv({
-  enforceDeployment: Boolean(process.env.CI),
+  enforceDeployment: Boolean(process.env.ENFORCE_DEPLOY_ENV),
   environment: process.env,
 })
 const apiBaseUrl =

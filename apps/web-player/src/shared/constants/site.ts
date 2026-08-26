@@ -39,14 +39,13 @@ export const resolveSiteUrl = (
  * Which rule set `getSiteUrl` applies.
  *
  * `next build` runs with `NODE_ENV=production` even for a local smoke build or
- * a container image that receives its origin at deploy time, so production mode
- * alone cannot mean "this artifact is being published". The pipelines that do
- * publish it supply `NEXT_PUBLIC_SITE_URL` (see
- * `.github/workflows/web_player_reusable.yml`), so their environment is what
- * turns the deployment rules on.
+ * an E2E run, so production mode alone cannot mean "this artifact is being
+ * published". The Dockerfile that builds the deployable image sets
+ * `ENFORCE_DEPLOY_ENV` alongside the real origin, and that is what turns the
+ * deployment rules on.
  */
 const siteUrlRuleSet = () =>
-  process.env.CI ? process.env.NODE_ENV : 'development'
+  process.env.ENFORCE_DEPLOY_ENV ? process.env.NODE_ENV : 'development'
 
 /** Public origin of the web player, used for canonical URLs and the sitemap. */
 export const getSiteUrl = () =>

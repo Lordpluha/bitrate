@@ -84,9 +84,10 @@ type ParseWebEnvInput = {
    * `next build` runs with `NODE_ENV=production` even for a local smoke build
    * or a container image that is handed its configuration at deploy time, so
    * production mode alone cannot stand in for "this artifact is being
-   * deployed". The pipelines that publish the app supply these values (see
-   * `.github/workflows/web_player_reusable.yml`) and switch this on; a developer
-   * machine with no `.env` still compiles.
+   * deployed". The Dockerfile that produces the deployable image sets
+   * `ENFORCE_DEPLOY_ENV` alongside the real URLs; lint, typecheck and E2E runs
+   * legitimately have none, and a developer machine with no `.env` still
+   * compiles.
    */
   enforceDeployment?: boolean
 }

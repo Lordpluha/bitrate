@@ -42,6 +42,10 @@ ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 ENV API_URL=${API_URL}
 ENV NODE_ENV=production
+# This image is the deployable artifact, so the deployment URLs above are
+# demanded here rather than on every `next build`: lint, typecheck and E2E runs
+# legitimately have no canonical origin to give.
+ENV ENFORCE_DEPLOY_ENV=1
 
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /pnpm/store /pnpm/store
