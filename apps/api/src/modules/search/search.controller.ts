@@ -12,9 +12,8 @@ import {
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { SearchSwagger } from './decorators'
-import { SearchService, type SearchType } from './search.service'
-
-const ALLOWED_TYPES: SearchType[] = ['tracks', 'artists', 'albums', 'playlists']
+import { SearchService } from './search.service'
+import { ALL_SEARCH_TYPES, type SearchType } from './search.types'
 
 @ApiTags('Search')
 @Controller({ path: 'search', version: '1' })
@@ -36,8 +35,8 @@ export class SearchController {
   ) {
     if (!query?.trim()) throw new BadRequestException('Search query is required')
     const pagination = normalizePagination(page, limit ?? 10)
-    const requestedTypes = types ? (Array.isArray(types) ? types : [types]) : ALLOWED_TYPES
-    if (requestedTypes.some((type) => !ALLOWED_TYPES.includes(type as SearchType))) {
+    const requestedTypes = types ? (Array.isArray(types) ? types : [types]) : ALL_SEARCH_TYPES
+    if (requestedTypes.some((type) => !ALL_SEARCH_TYPES.includes(type as SearchType))) {
       throw new BadRequestException('Invalid search type')
     }
 

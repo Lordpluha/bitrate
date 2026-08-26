@@ -5,6 +5,7 @@ import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { mockDeep } from 'jest-mock-extended'
 import { DiscoveryService } from './discovery.service'
+import { PersonalTopService } from './personal-top.service'
 
 describe('DiscoveryService public artist projections', () => {
   let service: DiscoveryService
@@ -15,7 +16,7 @@ describe('DiscoveryService public artist projections', () => {
     prisma = prismaMock
     const cache = mockDeep<CacheService>()
     cache.wrap.mockImplementation((_namespace, _key, _ttl, loader) => loader())
-    service = new DiscoveryService(prisma, cache)
+    service = new DiscoveryService(prisma, cache, new PersonalTopService(prisma))
   })
 
   afterEach(() => {
@@ -57,41 +58,6 @@ describe('DiscoveryService public artist projections', () => {
     await service.getRelatedArtists('artist-1', limit)
 
     expect(prisma.artist.findMany).toHaveBeenCalledWith(expect.objectContaining({ take: limit }))
-  })
-
-  it('returns the total matching ready tracks rather than the current page length', async () => {
-    prisma.queryRaw
-      .mockResolvedValueOnce([{ trackId: 'track-2', plays: 7n }] as never)
-      .mockResolvedValueOnce([{ total: 41n }] as never)
-    prisma.track.findMany.mockResolvedValue([
-      { id: 'track-2', title: 'Track', artist: { id: 'artist-1' } },
-    ] as never)
-
-    const result = await service.getTopTracks('user-1', 'medium', 3, 20)
-
-    expect(result).toMatchObject({ total: 41, page: 3, limit: 20 })
-    expect(result.data).toHaveLength(1)
-    const rawSql = prisma.queryRaw.mock.calls
-      .map(([query]) => (query as Prisma.Sql).strings.join(' '))
-      .join(' ')
-    expect(rawSql).toContain('t."deletedAt" IS NULL')
-    expect(rawSql).toContain('t."processingStatus" = \'READY\'')
-  })
-
-  it('counts only playable tracks belonging to non-deleted artists', async () => {
-    prisma.queryRaw
-      .mockResolvedValueOnce([{ artistId: 'artist-1', plays: 9n }] as never)
-      .mockResolvedValueOnce([{ total: 27n }] as never)
-    prisma.artist.findMany.mockResolvedValue([{ id: 'artist-1', username: 'Artist' }] as never)
-
-    const result = await service.getTopArtists('user-1', 'long', 2, 10)
-
-    expect(result).toMatchObject({ total: 27, page: 2, limit: 10 })
-    const rawSql = prisma.queryRaw.mock.calls
-      .map(([query]) => (query as Prisma.Sql).strings.join(' '))
-      .join(' ')
-    expect(rawSql).toContain('a."deletedAt" IS NULL')
-    expect(rawSql).toContain('t."processingStatus" = \'READY\'')
   })
 
   it('ranks viral charts from recent deduplicated listening history', async () => {

@@ -12,11 +12,15 @@ import {
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { DiscoveryService } from './discovery.service'
+import { PersonalTopService, type TimeRange } from './personal-top.service'
 
 @ApiTags('Discovery')
 @Controller({ version: '1' })
 export class DiscoveryController {
-  constructor(private readonly discovery: DiscoveryService) {}
+  constructor(
+    private readonly discovery: DiscoveryService,
+    private readonly personalTop: PersonalTopService,
+  ) {}
 
   @Get('browse/categories')
   categories(
@@ -71,12 +75,7 @@ export class DiscoveryController {
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     this.validateRange(range)
-    return this.discovery.getTopTracks(
-      req.user.id,
-      range as 'short' | 'medium' | 'long',
-      page,
-      limit,
-    )
+    return this.personalTop.getTopTracks(req.user.id, range as TimeRange, page, limit)
   }
 
   @UserAuth()
@@ -88,12 +87,7 @@ export class DiscoveryController {
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     this.validateRange(range)
-    return this.discovery.getTopArtists(
-      req.user.id,
-      range as 'short' | 'medium' | 'long',
-      page,
-      limit,
-    )
+    return this.personalTop.getTopArtists(req.user.id, range as TimeRange, page, limit)
   }
 
   private validateRange(range: string) {

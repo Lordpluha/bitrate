@@ -5,15 +5,16 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { PUBLIC_ARTIST_SELECT } from '@modules/artists/artists.select'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
+import { PersonalTopService } from './personal-top.service'
 
 type ChartScope = 'global' | 'viral' | 'country'
-type TimeRange = 'short' | 'medium' | 'long'
 
 @Injectable()
 export class DiscoveryService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
+    private readonly personalTop: PersonalTopService,
   ) {}
 
   getCategories(page = 1, limit = 20) {
@@ -97,7 +98,7 @@ export class DiscoveryService {
             _count: { select: { tracks: true } },
           },
         }),
-        userId ? this.getTopTracks(userId, 'short', 1, 12) : Promise.resolve(null),
+        userId ? this.personalTop.getTopTracks(userId, 'short', 1, 12) : Promise.resolve(null),
       ])
 
       return {
@@ -200,102 +201,6 @@ export class DiscoveryService {
     })
   }
 
-  async getTopTracks(userId: string, range: TimeRange, page = 1, limit = 20) {
-    const pagination = normalizePagination(page, limit)
-    const since = this.rangeStart(range)
-    const [rows, countRows] = await Promise.all([
-      this.prisma.queryRaw<Array<{ trackId: string; plays: bigint }>>(Prisma.sql`
-        SELECT h."trackId", COUNT(*)::bigint AS plays
-        FROM "ListeningHistory" h
-        JOIN "Track" t ON t.id = h."trackId"
-        WHERE h."userId" = ${userId}::uuid
-          AND h."listenedAt" >= ${since}
-          AND t."deletedAt" IS NULL
-          AND t."processingStatus" = 'READY'
-        GROUP BY h."trackId" ORDER BY plays DESC, h."trackId" ASC
-        LIMIT ${pagination.limit} OFFSET ${pagination.skip}
-      `),
-      this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
-        SELECT COUNT(*)::bigint AS total
-        FROM (
-          SELECT h."trackId"
-          FROM "ListeningHistory" h
-          JOIN "Track" t ON t.id = h."trackId"
-          WHERE h."userId" = ${userId}::uuid
-            AND h."listenedAt" >= ${since}
-            AND t."deletedAt" IS NULL
-            AND t."processingStatus" = 'READY'
-          GROUP BY h."trackId"
-        ) ranked_tracks
-      `),
-    ])
-    const ids = rows.map(({ trackId }) => trackId)
-    const tracks = await this.prisma.track.findMany({
-      where: { id: { in: ids }, deletedAt: null },
-      include: { artist: { select: { id: true, username: true, avatar: true } } },
-    })
-    const byId = new Map(tracks.map((track) => [track.id, track]))
-    return {
-      data: rows.flatMap(({ trackId, plays }) => {
-        const track = byId.get(trackId)
-        return track ? [{ ...track, plays: Number(plays) }] : []
-      }),
-      total: Number(countRows[0]?.total ?? 0n),
-      page: pagination.page,
-      limit: pagination.limit,
-    }
-  }
-
-  async getTopArtists(userId: string, range: TimeRange, page = 1, limit = 20) {
-    const pagination = normalizePagination(page, limit)
-    const since = this.rangeStart(range)
-    const [rows, countRows] = await Promise.all([
-      this.prisma.queryRaw<Array<{ artistId: string; plays: bigint }>>(Prisma.sql`
-        SELECT t."artistId", COUNT(*)::bigint AS plays
-        FROM "ListeningHistory" h
-        JOIN "Track" t ON t.id = h."trackId"
-        JOIN "Artist" a ON a.id = t."artistId"
-        WHERE h."userId" = ${userId}::uuid
-          AND h."listenedAt" >= ${since}
-          AND t."deletedAt" IS NULL
-          AND t."processingStatus" = 'READY'
-          AND a."deletedAt" IS NULL
-        GROUP BY t."artistId" ORDER BY plays DESC, t."artistId" ASC
-        LIMIT ${pagination.limit} OFFSET ${pagination.skip}
-      `),
-      this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
-        SELECT COUNT(*)::bigint AS total
-        FROM (
-          SELECT t."artistId"
-          FROM "ListeningHistory" h
-          JOIN "Track" t ON t.id = h."trackId"
-          JOIN "Artist" a ON a.id = t."artistId"
-          WHERE h."userId" = ${userId}::uuid
-            AND h."listenedAt" >= ${since}
-            AND t."deletedAt" IS NULL
-            AND t."processingStatus" = 'READY'
-            AND a."deletedAt" IS NULL
-          GROUP BY t."artistId"
-        ) ranked_artists
-      `),
-    ])
-    const ids = rows.map(({ artistId }) => artistId)
-    const artists = await this.prisma.artist.findMany({
-      where: { id: { in: ids }, deletedAt: null },
-      select: PUBLIC_ARTIST_SELECT,
-    })
-    const byId = new Map(artists.map((artist) => [artist.id, artist]))
-    return {
-      data: rows.flatMap(({ artistId, plays }) => {
-        const artist = byId.get(artistId)
-        return artist ? [{ ...artist, plays: Number(plays) }] : []
-      }),
-      total: Number(countRows[0]?.total ?? 0n),
-      page: pagination.page,
-      limit: pagination.limit,
-    }
-  }
-
   private async getPreferredGenreIds(userId: string) {
     const rows = await this.prisma.queryRaw<Array<{ genreId: string }>>(Prisma.sql`
       SELECT tg."genreId"
@@ -305,11 +210,6 @@ export class DiscoveryService {
       GROUP BY tg."genreId" ORDER BY COUNT(*) DESC LIMIT 5
     `)
     return rows.map(({ genreId }) => genreId)
-  }
-
-  private rangeStart(range: TimeRange) {
-    const days = range === 'short' ? 28 : range === 'medium' ? 180 : 3650
-    return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
   }
 
   private chartRangeStart(scope: ChartScope) {
