@@ -33,6 +33,40 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/health/live': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Returns a dependency-free liveness signal. */
+    get: operations['AppController_getLiveness_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/health/ready': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Returns a bounded, topology-free dependency readiness signal. */
+    get: operations['AppController_getReadiness_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/debug-sentry': {
     parameters: {
       query?: never
@@ -374,7 +408,7 @@ export interface paths {
      * Runs the google auth operation.
      * @description Sets an oauth_state cookie and redirects to the Google consent screen. Not usable from Swagger UI.
      */
-    get: operations['UsersAuthController_googleAuth_v1']
+    get: operations['UsersOAuthController_googleAuth_v1']
     put?: never
     post?: never
     delete?: never
@@ -392,9 +426,9 @@ export interface paths {
     }
     /**
      * Runs the google callback operation.
-     * @description Handled by Google after user consents. On success sets auth cookies and redirects to WEB_HOST. On 2FA required, redirects to /login/2fa with a pending token.
+     * @description Handled by Google after user consents. On success sets auth cookies and redirects to USER_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token.
      */
-    get: operations['UsersAuthController_googleCallback_v1']
+    get: operations['UsersOAuthController_googleCallback_v1']
     put?: never
     post?: never
     delete?: never
@@ -414,7 +448,7 @@ export interface paths {
      * Runs the facebook auth operation.
      * @description Sets an oauth_state cookie and redirects to the Facebook consent screen. Not usable from Swagger UI.
      */
-    get: operations['UsersAuthController_facebookAuth_v1']
+    get: operations['UsersOAuthController_facebookAuth_v1']
     put?: never
     post?: never
     delete?: never
@@ -432,9 +466,9 @@ export interface paths {
     }
     /**
      * Runs the facebook callback operation.
-     * @description Handled by Facebook after user consents. On success sets auth cookies and redirects to WEB_HOST. On 2FA required, redirects to /login/2fa with a pending token.
+     * @description Handled by Facebook after user consents. On success sets auth cookies and redirects to USER_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token.
      */
-    get: operations['UsersAuthController_facebookCallback_v1']
+    get: operations['UsersOAuthController_facebookCallback_v1']
     put?: never
     post?: never
     delete?: never
@@ -731,6 +765,46 @@ export interface paths {
     }
     /** Runs the get liked tracks operation. */
     get: operations['TracksController_getLikedTracks_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/tracks/{id}/manifest': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the get manifest operation.
+     * @description Returns the fragment index every CMAF rendition is addressed by. Immutable for a given track, so it can be cached indefinitely. See ADR-0020.
+     */
+    get: operations['TracksController_getManifest_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/tracks/{id}/cmaf/{bitrate}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the stream rendition operation.
+     * @description Serves the rendition file, honoring an inclusive `bytes=` Range. The player asks for one fragment at a time using offsets from the manifest.
+     */
+    get: operations['TracksController_streamRendition_v1']
     put?: never
     post?: never
     delete?: never
@@ -1171,7 +1245,7 @@ export interface paths {
      * Runs the google auth operation.
      * @description Sets an oauth_state cookie and redirects to the Google consent screen. Not usable from Swagger UI.
      */
-    get: operations['AuthController_googleAuth_v1']
+    get: operations['ArtistsOAuthController_googleAuth_v1']
     put?: never
     post?: never
     delete?: never
@@ -1189,9 +1263,9 @@ export interface paths {
     }
     /**
      * Runs the google callback operation.
-     * @description Handled by Google after artist consents. On success sets auth cookies and redirects to WEB_HOST. On 2FA required, redirects to /login/2fa with a pending token.
+     * @description Handled by Google after artist consents. On success sets auth cookies and redirects to ARTIST_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token.
      */
-    get: operations['AuthController_googleCallback_v1']
+    get: operations['ArtistsOAuthController_googleCallback_v1']
     put?: never
     post?: never
     delete?: never
@@ -1211,7 +1285,7 @@ export interface paths {
      * Runs the facebook auth operation.
      * @description Sets an oauth_state cookie and redirects to the Facebook consent screen. Not usable from Swagger UI.
      */
-    get: operations['AuthController_facebookAuth_v1']
+    get: operations['ArtistsOAuthController_facebookAuth_v1']
     put?: never
     post?: never
     delete?: never
@@ -1229,9 +1303,9 @@ export interface paths {
     }
     /**
      * Runs the facebook callback operation.
-     * @description Handled by Facebook after artist consents. On success sets auth cookies and redirects to WEB_HOST. On 2FA required, redirects to /login/2fa with a pending token.
+     * @description Handled by Facebook after artist consents. On success sets auth cookies and redirects to ARTIST_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token.
      */
-    get: operations['AuthController_facebookCallback_v1']
+    get: operations['ArtistsOAuthController_facebookCallback_v1']
     put?: never
     post?: never
     delete?: never
@@ -1667,7 +1741,36 @@ export interface components {
        * Format: date-time
        * @description The expires at value.
        */
-      expiresAt: string | null
+      expiresAt: string
+    }
+    SelfUserEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The username value. */
+      username: string
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /** @description The description value. */
+      description: string | null
+      /** @description The avatar value. */
+      avatar: string | null
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description The email value. */
+      email: string
+      /**
+       * Format: date-time
+       * @description When the address was confirmed, or null while it is still unverified.
+       */
+      emailVerifiedAt: string | null
+      /** @description Whether two-factor authentication is switched on. */
+      twoFactorEnabled: boolean
     }
     LoginDto: {
       /**
@@ -1793,8 +1896,6 @@ export interface components {
       id: string
       /** @description The username value. */
       username: string
-      /** @description The email value. */
-      email: string
       /**
        * Format: date-time
        * @description The created at value.
@@ -1809,25 +1910,6 @@ export interface components {
        * @description The updated at value.
        */
       updatedAt: string
-      /** @description The two factor enabled value. */
-      twoFactorEnabled: boolean
-      /**
-       * Format: date-time
-       * @description Email verification timestamp.
-       */
-      emailVerifiedAt: string | null
-      /** @description Consecutive failed login attempts. */
-      failedLoginAttempts: number
-      /**
-       * Format: date-time
-       * @description Account lock expiration timestamp.
-       */
-      lockedUntil: string | null
-      /**
-       * Format: date-time
-       * @description Soft deletion timestamp.
-       */
-      deletedAt: string | null
     }
     UpdateUserDto: {
       /**
@@ -1914,8 +1996,6 @@ export interface components {
       avatar: string | null
       /** @description The background image value. */
       backgroundImage: string | null
-      /** @description The two factor enabled value. */
-      twoFactorEnabled: boolean
       /**
        * Format: date-time
        * @description The created at value.
@@ -1926,18 +2006,6 @@ export interface components {
        * @description The updated at value.
        */
       updatedAt: string
-      /**
-       * Format: date-time
-       * @description Email verification timestamp.
-       */
-      emailVerifiedAt: string | null
-      /** @description Consecutive failed login attempts. */
-      failedLoginAttempts: number
-      /**
-       * Format: date-time
-       * @description Account lock expiration timestamp.
-       */
-      lockedUntil: string | null
       /** @description Whether the artist profile is verified. */
       verified: boolean
       /** @description Cached monthly listener count. */
@@ -1946,11 +2014,6 @@ export interface components {
       country: string | null
       /** @description Social profile metadata. */
       socials: Record<string, never> | null
-      /**
-       * Format: date-time
-       * @description Soft deletion timestamp.
-       */
-      deletedAt: string | null
     }
     Function: Record<string, never>
     TrackEntity: {
@@ -1961,7 +2024,7 @@ export interface components {
       /** @description The audio url value. */
       audioUrl: string
       /** @description The cover value. */
-      cover: string
+      cover: string | null
       /**
        * Format: date-time
        * @description The created at value.
@@ -2002,6 +2065,12 @@ export interface components {
        * @description The processing finished at value.
        */
       processingFinishedAt: string | null
+      /** @description 1 = legacy HLS pipeline, 2 = single-file CMAF + Range index (ADR-0020). */
+      playbackVersion: number
+      /** @description Fragment timescale shared by every CMAF rendition; null on legacy tracks. */
+      fragmentTimescale: number | null
+      /** @description Track duration in fragment ticks; null on legacy tracks. */
+      durationTicks: number | null
       /** @description Whether the track contains explicit content. */
       explicit: boolean
       /** @description Popularity score used by discovery and charts. */
@@ -2023,6 +2092,76 @@ export interface components {
        * @description Soft deletion timestamp.
        */
       deletedAt: string | null
+    }
+    TrackManifestRenditionEntity: {
+      /**
+       * @description Bitrate in kbps.
+       * @example 192
+       */
+      bitrate: number
+      /**
+       * @description RFC 6381 codec string for `MediaSource.isTypeSupported`.
+       * @example mp4a.40.2
+       */
+      codec: string
+      /**
+       * @description Total file size in bytes.
+       * @example 1456523
+       */
+      size: number
+      /**
+       * @description Inclusive byte range of the MSE initialization segment (`ftyp`+`moov`).
+       *     The `sidx` index is parsed server-side and deliberately excluded.
+       * @example [
+       *       0,
+       *       707
+       *     ]
+       */
+      initRange: number[]
+      /**
+       * @description One entry per fragment: `[startTicks, durationTicks, offset, length]`.
+       *     Offsets and lengths are absolute byte positions in the rendition file;
+       *     a Range request uses `bytes=offset-(offset+length-1)`.
+       * @example [
+       *       [
+       *         0,
+       *         195584,
+       *         929,
+       *         98987
+       *       ],
+       *       [
+       *         195584,
+       *         196608,
+       *         99916,
+       *         99228
+       *       ]
+       *     ]
+       */
+      fragments: number[][]
+    }
+    TrackManifestEntity: {
+      /**
+       * @description Manifest schema version; bumped when fragment semantics change.
+       * @example 1
+       */
+      version: number
+      /**
+       * @description Ticks per second shared by every rendition.
+       * @example 48000
+       */
+      timescale: number
+      /**
+       * @description Track duration in ticks.
+       * @example 2880000
+       */
+      durationTicks: number
+      /**
+       * @description Track duration in milliseconds, derived from `durationTicks`.
+       * @example 60000
+       */
+      durationMs: number
+      /** @description Renditions ordered from the lowest bitrate to the highest. */
+      renditions: components['schemas']['TrackManifestRenditionEntity'][]
     }
     CreateTrackDto: {
       /** @description Track title */
@@ -2081,7 +2220,7 @@ export interface components {
       /** @description The title value. */
       title: string
       /** @description The cover value. */
-      cover: string
+      cover: string | null
       /** @description The artist id value. */
       artistId: string
       /** @description The description value. */
@@ -2148,7 +2287,7 @@ export interface components {
        * Format: date-time
        * @description The expires at value.
        */
-      expiresAt: string | null
+      expiresAt: string
     }
     ArtistForgotPasswordDto: {
       /**
@@ -2404,6 +2543,194 @@ export interface operations {
       }
     }
   }
+  AppController_getLiveness_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AppController_getReadiness_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   AppController_getError_v1: {
     parameters: {
       query?: never
@@ -2501,7 +2828,9 @@ export interface operations {
   AppController_getMetrics_v1: {
     parameters: {
       query?: never
-      header?: never
+      header: {
+        authorization: string
+      }
       path?: never
       cookie?: never
     }
@@ -3361,13 +3690,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Successfully logged out */
+      /** @description The signed-in account, including its own email and two-factor state */
       200: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['SafeUserEntity']
+          'application/json': components['schemas']['SelfUserEntity']
         }
       }
       /** @description Unauthorized */
@@ -4799,7 +5128,7 @@ export interface operations {
       }
     }
   }
-  UsersAuthController_googleAuth_v1: {
+  UsersOAuthController_googleAuth_v1: {
     parameters: {
       query?: never
       header?: never
@@ -4900,7 +5229,7 @@ export interface operations {
       }
     }
   }
-  UsersAuthController_googleCallback_v1: {
+  UsersOAuthController_googleCallback_v1: {
     parameters: {
       query: {
         /** @description Authorization code from Google */
@@ -5010,7 +5339,7 @@ export interface operations {
       }
     }
   }
-  UsersAuthController_facebookAuth_v1: {
+  UsersOAuthController_facebookAuth_v1: {
     parameters: {
       query?: never
       header?: never
@@ -5111,7 +5440,7 @@ export interface operations {
       }
     }
   }
-  UsersAuthController_facebookCallback_v1: {
+  UsersOAuthController_facebookCallback_v1: {
     parameters: {
       query: {
         /** @description Authorization code from Facebook */
@@ -5224,19 +5553,15 @@ export interface operations {
   UsersController_getAll_v1: {
     parameters: {
       query?: {
-        username?: unknown
-        page?: unknown
-        limit?: unknown
+        /** @description Number of users to return per page */
+        limit?: number
+        /** @description Page number for pagination */
+        page?: number
+        /** @description Filter users by username */
+        username?: string
       }
       header?: never
-      path: {
-        /** @description Number of users to return per page */
-        limit: number
-        /** @description Page number for pagination */
-        page: number
-        /** @description Filter users by username */
-        username: string
-      }
+      path?: never
       cookie?: never
     }
     requestBody?: never
@@ -5247,7 +5572,12 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['SafeUserEntity'][]
+          'application/json': {
+            data: components['schemas']['SafeUserEntity'][]
+            total: number
+            page: number
+            limit: number
+          }
         }
       }
       /** @description Method not allowed */
@@ -6211,7 +6541,12 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['SafeArtistEntity'][]
+          'application/json': {
+            data: components['schemas']['SafeArtistEntity'][]
+            total: number
+            page: number
+            limit: number
+          }
         }
       }
       /** @description Method not allowed */
@@ -6650,7 +6985,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }
@@ -7022,9 +7359,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -7157,9 +7492,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -7170,10 +7503,10 @@ export interface operations {
         page?: number
         /** @description Items per page */
         limit?: number
-        /** @description Search by track title */
-        title?: string
         /** @description Return tracks belonging to this artist */
         artistId?: string
+        /** @description Search by track title */
+        title?: string
       }
       header?: never
       path?: never
@@ -7186,33 +7519,12 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          /**
-           * @example [
-           *       {
-           *         "artist": "123",
-           *         "title": "Track Title",
-           *         "id": "1",
-           *         "likedBy": [],
-           *         "album": "Album Name",
-           *         "albumId": "album123",
-           *         "artistId": "artist123",
-           *         "cover": "https://example.com/cover.jpg",
-           *         "audioUrl": "",
-           *         "userId": "",
-           *         "createdAt": "2026-08-11T05:46:45.268Z",
-           *         "updatedAt": "2026-08-11T05:46:45.268Z",
-           *         "duration": 180,
-           *         "releaseDate": "2023-10-01T12:00:00.000Z",
-           *         "lyrics": null,
-           *         "processingStatus": "READY",
-           *         "processingError": null,
-           *         "processingAttempts": 1,
-           *         "processingStartedAt": "2026-08-11T05:46:45.268Z",
-           *         "processingFinishedAt": "2026-08-11T05:46:45.268Z"
-           *       }
-           *     ]
-           */
-          'application/json': unknown
+          'application/json': {
+            data: components['schemas']['TrackEntity'][]
+            total: number
+            page: number
+            limit: number
+          }
         }
       }
       /** @description Method not allowed */
@@ -7427,9 +7739,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>
-        }
+        content?: never
       }
     }
   }
@@ -8125,16 +8435,16 @@ export interface operations {
            *         "cover": "https://example.com/cover.jpg",
            *         "audioUrl": "",
            *         "userId": "",
-           *         "createdAt": "2026-08-11T05:46:45.270Z",
-           *         "updatedAt": "2026-08-11T05:46:45.270Z",
+           *         "createdAt": "2026-01-01T00:00:00.000Z",
+           *         "updatedAt": "2026-01-01T00:00:00.000Z",
            *         "duration": 180,
            *         "releaseDate": "2023-10-01T12:00:00.000Z",
            *         "lyrics": null,
            *         "processingStatus": "READY",
            *         "processingError": null,
            *         "processingAttempts": 1,
-           *         "processingStartedAt": "2026-08-11T05:46:45.270Z",
-           *         "processingFinishedAt": "2026-08-11T05:46:45.270Z"
+           *         "processingStartedAt": "2026-01-01T00:00:00.000Z",
+           *         "processingFinishedAt": "2026-01-01T00:00:00.000Z"
            *       }
            *     ]
            */
@@ -8165,6 +8475,293 @@ export interface operations {
             error?: string
           }
         }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TracksController_getManifest_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Track ID */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TrackManifestEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'User not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Track not found or has no CMAF renditions */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  TracksController_streamRendition_v1: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description Inclusive byte window, e.g. `bytes=929-100915` */
+        Range?: string
+      }
+      path: {
+        /** @description Rendition kbps */
+        bitrate: number
+        /** @description Track ID */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Whole rendition file */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Requested byte range */
+      206: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'User not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Rendition not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -8543,7 +9140,12 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['PlaylistEntity'][]
+          'application/json': {
+            data: components['schemas']['PlaylistEntity'][]
+            total: number
+            page: number
+            limit: number
+          }
         }
       }
       /** @description Method not allowed */
@@ -9862,9 +10464,9 @@ export interface operations {
       query?: {
         page?: number
         limit?: number
-        title?: unknown
         /** @description Return albums belonging to this artist */
         artistId?: string
+        title?: string
       }
       header?: never
       path?: never
@@ -9872,6 +10474,19 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            data: components['schemas']['AlbumEntity'][]
+            total: number
+            page: number
+            limit: number
+          }
+        }
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -9953,9 +10568,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': components['schemas']['AlbumEntity'][]
-        }
+        content?: never
       }
     }
   }
@@ -12441,7 +13054,7 @@ export interface operations {
       }
     }
   }
-  AuthController_googleAuth_v1: {
+  ArtistsOAuthController_googleAuth_v1: {
     parameters: {
       query?: never
       header?: never
@@ -12542,7 +13155,7 @@ export interface operations {
       }
     }
   }
-  AuthController_googleCallback_v1: {
+  ArtistsOAuthController_googleCallback_v1: {
     parameters: {
       query: {
         /** @description Authorization code from Google */
@@ -12648,7 +13261,7 @@ export interface operations {
       }
     }
   }
-  AuthController_facebookAuth_v1: {
+  ArtistsOAuthController_facebookAuth_v1: {
     parameters: {
       query?: never
       header?: never
@@ -12749,7 +13362,7 @@ export interface operations {
       }
     }
   }
-  AuthController_facebookCallback_v1: {
+  ArtistsOAuthController_facebookCallback_v1: {
     parameters: {
       query: {
         /** @description Authorization code from Facebook */
@@ -12861,7 +13474,7 @@ export interface operations {
         /** @description Search query */
         q: string
         page?: number
-        /** @description Max results per type */
+        /** @description Maximum results in each requested type bucket */
         limit?: number
         year?: number
         genre?: string
@@ -12875,7 +13488,7 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Search results grouped by type */
+      /** @description Results grouped and paginated independently per type; totals contains each bucket count */
       200: {
         headers: {
           [name: string]: unknown
@@ -14103,9 +14716,7 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': Record<string, never>[]
-        }
+        content?: never
       }
     }
   }
@@ -15305,7 +15916,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }
@@ -16593,7 +17206,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }
