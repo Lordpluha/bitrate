@@ -8,7 +8,8 @@ violations=()
 while IFS= read -r -d '' file; do
   [[ -f "$file" ]] || continue
 
-  size=$(stat -c '%s' -- "$file")
+  # `stat -c` is GNU-only; BSD/macOS needs `-f`. Keep the script runnable outside CI.
+  size=$(stat -c '%s' -- "$file" 2>/dev/null || stat -f '%z' -- "$file")
   if [[ "$file" == output/playwright/* || "$file" == pencil/* ]]; then
     violations+=("$file: generated output directory is forbidden")
   fi

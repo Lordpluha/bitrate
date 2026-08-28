@@ -5,6 +5,9 @@ on:
     branches: [master, develop]
     paths:
       - 'docker-compose*.yaml'
+      - 'infra/docker-compose*.yaml'
+      - 'infra/nginx/**'
+      - '.env.example'
       - 'apps/api/**'
       - 'apps/web-player/**'
       - 'apps/web-artists/**'
@@ -16,6 +19,9 @@ on:
     branches: [develop, master]
     paths:
       - 'docker-compose*.yaml'
+      - 'infra/docker-compose*.yaml'
+      - 'infra/nginx/**'
+      - '.env.example'
       - 'apps/api/**'
       - 'apps/web-player/**'
       - 'apps/web-artists/**'
