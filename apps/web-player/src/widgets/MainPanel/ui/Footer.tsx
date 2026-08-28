@@ -1,4 +1,4 @@
-import { FacebookIcon, InstIcon, TwitIcon } from '@spotify/ui-react'
+import { Facebook, InstIcon, TwitIcon } from '@spotify/ui-react'
 import Link from 'next/link'
 
 const sections = [
@@ -42,8 +42,8 @@ const bottomLinks = [
 
 function Footer() {
   return (
-    <footer className="mt-16 pt-16 pb-8">
-      <div className="grid grid-cols-5 gap-8 mb-8">
+    <footer className="mt-12 pb-8 pt-12 sm:mt-16 sm:pt-16">
+      <div className="mb-8 grid grid-cols-2 gap-8 lg:grid-cols-4 xl:grid-cols-5 max-[420px]:grid-cols-1">
         {sections.map((section) => (
           <div key={section.title}>
             <h3 className="text-text font-semibold text-base mb-4">
@@ -63,13 +63,13 @@ function Footer() {
             </ul>
           </div>
         ))}
-        <div className="flex justify-end mb-8">
+        <div className="mb-8 flex justify-start lg:col-span-4 xl:col-span-1 xl:justify-end">
           <div className="flex items-start space-x-4">
             <Link
               className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
               href="#"
             >
-              <FacebookIcon height={50} width={50} />
+              <Facebook height={50} width={50} />
             </Link>
             <Link
               className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
@@ -86,8 +86,8 @@ function Footer() {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-center justify-between pt-8 border-t border-border">
-        <div className="flex flex-wrap items-center space-x-6 text-xs text-text-subdued mb-4 md:mb-0">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8">
+        <div className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-text-subdued md:mb-0">
           {bottomLinks.map((link) => (
             <Link
               className="hover:text-text transition-[0.3s]"

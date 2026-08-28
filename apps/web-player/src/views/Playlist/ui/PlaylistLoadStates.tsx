@@ -56,7 +56,11 @@ export const PlaylistLoadError = ({
   const canRetry = status !== 401 && status !== 403 && status !== 404
 
   return (
-    <div className="flex min-h-96 flex-col items-center justify-center gap-3 px-6 text-center">
+    <div
+      aria-live="assertive"
+      className="flex min-h-96 flex-col items-center justify-center gap-3 px-6 text-center"
+      role="alert"
+    >
       <h1 className="text-3xl font-bold text-text">{content.title}</h1>
       <p className="max-w-110 text-sm text-text-subdued">
         {content.description}

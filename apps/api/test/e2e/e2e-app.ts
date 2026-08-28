@@ -1,9 +1,14 @@
 import { appConfigs } from '@common/config'
+import { CacheModule } from '@infra/cache/cache.module'
+import { MetricsService } from '@infra/observability/metrics.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { StorageModule } from '@infra/storage/storage.module'
 import { AlbumsModule } from '@modules/albums/albums.module'
 import { ArtistsModule } from '@modules/artists/artists.module'
 import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
+import { HistoryModule } from '@modules/history/history.module'
 import { PlaylistsModule } from '@modules/playlists/playlists.module'
+import { SearchModule } from '@modules/search/search.module'
 import { TracksModule } from '@modules/tracks/tracks.module'
 import { UsersModule } from '@modules/users/users.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
@@ -37,8 +42,13 @@ import { AppController } from '../../src/app.controller'
     ArtistsAuthModule,
     PlaylistsModule,
     TracksModule,
+    SearchModule,
+    HistoryModule,
+    CacheModule,
+    StorageModule,
   ],
   controllers: [AppController],
+  providers: [MetricsService],
 })
 class E2eTestModule {}
 

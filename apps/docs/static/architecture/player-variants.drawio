@@ -1,0 +1,821 @@
+<mxfile host="65bd71144e">
+    <diagram id="variant-a-current" name="A — Текущая (HLS)">
+        <mxGraphModel dx="0" dy="11" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2250" pageHeight="1950" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="a-title" value="ВАРИАНТ A — ТЕКУЩАЯ РЕАЛИЗАЦИЯ (HLS + прогрессивный fallback + мёртвый WS-транспорт)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#B85450;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1400" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-legend" value="&lt;b&gt;Легенда:&lt;/b&gt;&amp;nbsp; синий — бэкенд&amp;nbsp; · &amp;nbsp;зелёный — фронтенд&amp;nbsp; · &amp;nbsp;красный — проблема&amp;nbsp; · &amp;nbsp;серый пунктир — мёртвый код" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1500" y="30" width="700" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-g1" value="① BACKEND — загрузка и обработка трека" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="100" width="1300" height="410" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-g2" value="② STORAGE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="550" width="380" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-g3" value="③ РАЗДАЧА — четыре параллельных канала, из них работает один" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="550" width="880" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-g4" value="④ FRONTEND — web-player" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="1400" y="100" width="760" height="930" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-g5" value="⑤ ПРОБЛЕМЫ ТЕКУЩЕЙ РЕАЛИЗАЦИИ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#B85450;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#B85450;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1070" width="2120" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-n1" value="Artist&lt;br&gt;(студия)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="170" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-n2" value="&lt;b&gt;POST /api/v1/tracks&lt;/b&gt;&lt;br&gt;multer diskStorage&lt;br&gt;оригинал → ./storage/private/tracks&lt;br&gt;лимит 50 МБ, фильтр по MIME" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="160" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-n3" value="&lt;b&gt;TracksService.create()&lt;/b&gt;&lt;br&gt;music-metadata: bitrate / duration / codec&lt;br&gt;в одной транзакции:&lt;br&gt;Track(processingStatus = PROCESSING)&lt;br&gt;+ TrackFile(оригинал)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="155" width="290" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-n4" value="&lt;b&gt;BullMQ: audio-processing&lt;/b&gt;&lt;br&gt;jobId = convert-audio-{trackId}-{file}&lt;br&gt;attempts 5, exponential backoff&lt;br&gt;при ошибке enqueue → FAILED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="155" width="250" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-n5" value="&lt;b&gt;AudioProcessingConsumer&lt;/b&gt; — concurrency 2, lockDuration 10 мин, защита от stale-job (сверка track.audioUrl). Четыре фазы:" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0c4de;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="280" width="1080" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-n6" value="&lt;b&gt;Phase 1&lt;/b&gt;&lt;br&gt;ffmpeg: оригинал → Opus&lt;br&gt;128k / 192k / 320k&lt;br&gt;(прогрессивные файлы)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="340" width="250" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-n7" value="&lt;b&gt;Phase 2 — ВТОРОЙ прогон ffmpeg&lt;/b&gt;&lt;br&gt;оригинал → HLS (fMP4, сегменты 4 с)&lt;br&gt;master.m3u8 + index.m3u8 на битрейт&lt;br&gt;+ validateHls()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="340" width="260" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-n8" value="&lt;b&gt;Phase 3&lt;/b&gt;&lt;br&gt;upload → Storage (S3 / local)&lt;br&gt;прогрессивные Opus + всё HLS-дерево&lt;br&gt;рекурсивно по директориям" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="790" y="340" width="250" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-n9" value="&lt;b&gt;Phase 4&lt;/b&gt;&lt;br&gt;TrackFile upsert по битрейтам&lt;br&gt;processingStatus = READY&lt;br&gt;(в транзакции)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="340" width="240" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-note1" value="⚠ Оригинал декодируется дважды: Phase 1 и Phase 2 — независимые прогоны ffmpeg с одного и того же исходника." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;size=14;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="445" width="560" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-store" value="Storage&lt;br&gt;(S3 driver / local driver)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="605" width="310" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-keys" value="&lt;b&gt;Ключи:&lt;/b&gt;&lt;br&gt;tracks/{id}/audio/{bitrate}k.opus&lt;br&gt;tracks/{id}/hls/master.m3u8&lt;br&gt;tracks/{id}/hls/{bitrate}/index.m3u8&lt;br&gt;tracks/{id}/hls/{bitrate}/segment_NNNNN.m4s&lt;br&gt;tracks/{id}/hls/{bitrate}/init_N.mp4" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff5e6;strokeColor=#d79b00;fontSize=10;align=left;spacingLeft=8;verticalAlign=top;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="690" width="310" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-d1" value="&lt;b&gt;GET /tracks/stream/:id/hls/master.m3u8&lt;/b&gt;&lt;br&gt;UserAuth + SkipThrottle&lt;br&gt;⚠ плейлист буферизуется в память через text(stream), а не отдаётся стримом" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="605" width="430" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-d2" value="&lt;b&gt;GET /tracks/stream/:id/hls/:bitrate/:asset&lt;/b&gt;&lt;br&gt;⚠ каждый 4-секундный сегмент проксируется через Node" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="685" width="430" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-d3" value="&lt;b&gt;GET /tracks/stream/:id&lt;/b&gt; — прогрессивный, HTTP Range&lt;br&gt;⚠ сначала открывает ВЕСЬ объект ради contentLength,&lt;br&gt;потом второй запрос с Range. Первый стрим не закрывается." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="760" width="430" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-d4" value="&lt;b&gt;TracksService.getTrackStreamUrl()&lt;/b&gt; — presigned URL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontColor=#808080;dashed=1;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="850" width="430" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-d5" value="&lt;b&gt;AudioGateway (WebSocket, 477 строк)&lt;/b&gt;&lt;br&gt;streamTrack / playTrack / pauseTrack / updateStreaming&lt;br&gt;аудио бинарными чанками через emitWithAck (таймаут 10 с)&lt;br&gt;playingSessions и audioStreams — in-memory Map" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontColor=#808080;dashed=1;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="915" width="430" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-b1" value="◄ единственный реально&lt;br&gt;используемый путь" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontStyle=1;fontColor=#82B366;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="615" width="380" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-b2" value="◄ только как fallback при фатальной&lt;br&gt;ошибке HLS. На альбомах ведёт в никуда." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontStyle=1;fontColor=#B85450;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="775" width="380" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-b3" value="◄ мёртвый код: метод есть, эндпоинта нет" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontStyle=1;fontColor=#808080;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="855" width="380" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-b4" value="◄ мёртвый код: socket.io-client&lt;br&gt;на фронте отсутствует вообще" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontStyle=1;fontColor=#808080;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="930" width="380" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f1" value="&lt;b&gt;widgets/Player/ui/Player.tsx&lt;/b&gt;&lt;br&gt;рендерит 2 audio-элемента (слоты)&lt;br&gt;+ MiniPlayer / NowPlayingView / FloatingPlayerWindow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="160" width="330" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f2" value="&lt;b&gt;shared/hooks/useAudioPlayer.ts&lt;/b&gt;&lt;br&gt;оркестрация слотов, 2 useEffect" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="260" width="330" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f3" value="&lt;b&gt;audioPlayer/useAudioSlots.ts&lt;/b&gt;&lt;br&gt;два audio-элемента: активный + standby&lt;br&gt;префетч следующего трека, switchToSlot()&lt;br&gt;→ смена трека почти без разрыва" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="345" width="330" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f4" value="&lt;b&gt;audioPlayer/attachHlsSource.ts + hls.js&lt;/b&gt;&lt;br&gt;манифест → сегменты → MSE&lt;br&gt;буфер 10 с, до 3 попыток recoverMediaError&lt;br&gt;при фатальной ошибке → progressive fallback" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="460" width="330" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f5" value="&lt;b&gt;audioPlayer/audioPlayer.utils.ts&lt;/b&gt;&lt;br&gt;getBufferedAhead(), isSlowNetwork()&lt;br&gt;⚠ applyNetworkAwareHlsQuality() вручную&lt;br&gt;зажимает уровень → ABR из hls.js не работает" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="575" width="330" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f6" value="&lt;b&gt;audioPlayer/useAudioPlayerEvents.ts&lt;/b&gt;&lt;br&gt;timeupdate / progress / ended / canplay → store" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="690" width="330" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f7" value="&lt;b&gt;entities/Player/model/playerStore.ts&lt;/b&gt; (Zustand)&lt;br&gt;currentTrack, playlist, currentTrackIndex,&lt;br&gt;isPlaying, currentTime, duration, progress,&lt;br&gt;volume, isShuffled&lt;br&gt;&lt;i&gt;нет: repeatMode, queue, quality&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="160" width="340" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f8" value="&lt;b&gt;⚠ Персист — 3 несогласованных механизма&lt;/b&gt;&lt;br&gt;1. createPersistedStore вызван БЕЗ persist-опций&lt;br&gt;→ стор фактически не персистится&lt;br&gt;2. usePlayerSessionPersistence → localStorage&lt;br&gt;(ручной throttle 5 с)&lt;br&gt;3. sessionStorage: позиции по playbackKey" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="290" width="340" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f9" value="&lt;b&gt;⚠ usePlaylistShuffle.ts&lt;/b&gt;&lt;br&gt;мутирует сам playlist, а оригинальный порядок&lt;br&gt;держит в useRef внутри компонента →&lt;br&gt;теряется при размонтировании Player" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="455" width="340" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f10" value="&lt;b&gt;useProgressiveAudioStreaming.ts&lt;/b&gt; (231 строка)&lt;br&gt;экспортируется из shared/hooks/index.ts,&lt;br&gt;не вызывается нигде" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontColor=#808080;dashed=1;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="560" width="340" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-f11" value="&lt;b&gt;⚠ Нарушение FSD&lt;/b&gt;&lt;br&gt;shared/hooks/audioPlayer/* импортирует&lt;br&gt;@/entities/Player и @/entities/Track&lt;br&gt;→ shared тянет вверх на entities" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="650" width="340" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p1" value="&lt;b&gt;1. Двойное кодирование&lt;/b&gt;&lt;br&gt;Оригинал декодируется ffmpeg дважды:&lt;br&gt;Phase 1 (Opus) и Phase 2 (HLS) — независимые прогоны." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1130" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p2" value="&lt;b&gt;2. Сегменты идут через Node&lt;/b&gt;&lt;br&gt;Каждый 4-секундный сегмент проксируется API.&lt;br&gt;Весь трафик через сервер, edge-кэш не задействован." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="1130" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p3" value="&lt;b&gt;3. Range — 2 запроса в storage&lt;/b&gt;&lt;br&gt;getTrackStream() открывает ВЕСЬ объект ради&lt;br&gt;contentLength, потом второй с Range.&lt;br&gt;Первый стрим не закрывается — утечка дескрипторов." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="730" y="1130" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p4" value="&lt;b&gt;4. ABR из HLS не используется&lt;/b&gt;&lt;br&gt;applyNetworkAwareHlsQuality() вручную зажимает&lt;br&gt;уровень при 2g/3g/saveData → главное преимущество&lt;br&gt;HLS обходится стороной. Платим за то, чем не пользуемся." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="1130" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p5" value="&lt;b&gt;5. Мёртвый код ~700 строк&lt;/b&gt;&lt;br&gt;AudioGateway (477) + useProgressiveAudioStreaming (231)&lt;br&gt;+ getTrackStreamUrl() без эндпоинта." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1390" y="1130" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p6" value="&lt;b&gt;6. История прослушиваний не пишется&lt;/b&gt;&lt;br&gt;useRecordListeningHistory() не вызывается нигде.&lt;br&gt;Recents / Library / Profile читают историю,&lt;br&gt;которая никогда не наполняется." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1720" y="1130" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p7" value="&lt;b&gt;7. Repeat мёртв&lt;/b&gt;&lt;br&gt;onRepeatToggle не передаётся из Player.tsx&lt;br&gt;→ кнопка всегда disabled.&lt;br&gt;В сторе нет repeatMode вообще." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1245" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p8" value="&lt;b&gt;8. Нет очереди (Up Next)&lt;/b&gt;&lt;br&gt;playlist в сторе — это контекст воспроизведения,&lt;br&gt;а не очередь: нельзя добавить трек «следующим»,&lt;br&gt;посмотреть или переупорядочить очередь." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="1245" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p9" value="&lt;b&gt;9. Нет MediaSession API&lt;/b&gt;&lt;br&gt;Не работает управление с наушников, локскрина&lt;br&gt;и медиаклавиш. В шторке ОС нет обложки и названия.&lt;br&gt;Из шорткатов — только Escape в NowPlayingView." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="730" y="1245" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p10" value="&lt;b&gt;10. audioUrl для альбомов сломан&lt;/b&gt;&lt;br&gt;Хуки Track и Playlist подменяют audioUrl на stream-URL,&lt;br&gt;а Album — нет: AlbumPage кладёт треки как есть.&lt;br&gt;В audioUrl лежит сырое имя файла → fallback ведёт в никуда." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="1245" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p11" value="&lt;b&gt;11. Shuffle мутирует playlist&lt;/b&gt;&lt;br&gt;Перезаписывает сам массив, оригинал живёт в useRef&lt;br&gt;внутри компонента. От перемешанного массива зависят&lt;br&gt;currentTrackIndex, префетч и prev/next." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1390" y="1245" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-p12" value="&lt;b&gt;12. Персист разъезжается&lt;/b&gt;&lt;br&gt;Три механизма пишут состояние в разные хранилища&lt;br&gt;в разные моменты. При закрытии вкладки&lt;br&gt;восстановленное состояние может не совпадать." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1720" y="1245" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="a-n1" target="a-n2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="a-n2" target="a-n3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="a-n3" target="a-n4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="1" source="a-n4" target="a-n5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="a-n6" target="a-n7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="a-n7" target="a-n8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="a-n8" target="a-n9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e8" value="загрузка объектов" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="a-n8" target="a-store" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e9" value="чтение" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="a-store" target="a-d1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e10" value="HLS-манифест + сегменты" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="a-d2" target="a-f4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e11" value="fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;dashed=1;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="a-d3" target="a-f4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="a-f1" target="a-f2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="a-f2" target="a-f3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="a-f3" target="a-f4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="a-f4" target="a-f5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="a-f5" target="a-f6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-e17" value="синхронизация состояния" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="a-f6" target="a-f7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-simple-title" value="ТО ЖЕ САМОЕ ПРОСТЫМИ СЛОВАМИ — как плеер работает сейчас" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1440" width="1600" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-simple-g" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF7FC;strokeColor=#9673A6;dashed=0;arcSize=4;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1490" width="2120" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-sp1" value="&lt;b&gt;1. Артист загружает трек&lt;/b&gt;&lt;br&gt;&lt;br&gt;Сервер берёт присланный файл и делает из него три копии разного качества: похуже, среднюю и хорошую." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1550" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-sp2" value="&lt;b&gt;2. Каждая копия режется на кусочки&lt;/b&gt;&lt;br&gt;&lt;br&gt;Кусочки по 4 секунды. Плюс сервер пишет отдельную опись: какой кусочек, какого качества и где лежит. Вот это и называется HLS." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="1550" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-sp3" value="&lt;b&gt;3. Плеер собирает трек обратно&lt;/b&gt;&lt;br&gt;&lt;br&gt;Браузер сам так не умеет, поэтому мы подключили отдельную библиотеку. Она читает опись, качает кусочки по очереди и склеивает их в звук прямо во время проигрывания." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="910" y="1550" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-sp4" value="&lt;b&gt;4. Все кусочки идут через наш сервер&lt;/b&gt;&lt;br&gt;&lt;br&gt;Ни один не отдаётся напрямую из хранилища. На песню в три минуты это примерно 45 отдельных запросов вместо одного." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="1330" y="1550" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-sp5" value="&lt;b&gt;5. Рядом лежат ещё два способа&lt;/b&gt;&lt;br&gt;&lt;br&gt;Простой — один цельный файл, на случай если сложный сломается. И третий, через постоянное соединение — им вообще никто не пользуется, он просто лежит в коде." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="1750" y="1550" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-sp-note1" value="&lt;b&gt;Аналогия.&lt;/b&gt; Это как отправить читателю книгу не одной посылкой, а разложить её по страницам в 45 конвертов, приложить опись «страница 12 — в конверте номер 12» — и заставить читателя всё это самому сшивать. Для двухчасового фильма такое оправдано. Для песни на три минуты — нет." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=middle;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1740" width="1030" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-sp-note2" value="&lt;b&gt;В чём главный подвох.&lt;/b&gt; Всю эту сложность терпят ради одного — возможности менять качество прямо посреди трека, когда интернет просел. Но мы этой возможностью не пользуемся: в нашем коде качество жёстко выбирается один раз при старте и дальше не меняется. То есть платим полную цену за то, чего не получаем." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=middle;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="1130" y="1740" width="1010" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-se1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="a-sp1" target="a-sp2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-se2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="a-sp2" target="a-sp3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-se3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="a-sp3" target="a-sp4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a-se4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="a-sp4" target="a-sp5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="variant-b-progressive" name="B — Progressive + свой ABR">
+        <mxGraphModel dx="1250" dy="693" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2250" pageHeight="2400" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="b-title" value="ВАРИАНТ B — PROGRESSIVE RANGE + СОБСТВЕННЫЙ АДАПТИВНЫЙ АЛГОРИТМ (буфер + EWMA, dual-slot swap)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#4D8B47;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1500" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-legend" value="&lt;b&gt;Легенда:&lt;/b&gt;&amp;nbsp; синий — без изменений&amp;nbsp; · &amp;nbsp;ярко-зелёный — новое / изменённое&amp;nbsp; · &amp;nbsp;оранжевый — ядро адаптивного алгоритма&amp;nbsp; · &amp;nbsp;зачёркнуто — удаляем" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1560" y="30" width="640" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-g1" value="① BACKEND — обработка (упрощённая: один прогон ffmpeg, без HLS)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="100" width="1300" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-g2" value="② STORAGE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="550" width="380" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-g3" value="③ РАЗДАЧА — один канал доставки + метаданные качества" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="550" width="880" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-g4" value="④ FRONTEND — аудио-движок в entities/Player (FSD-фикс)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="1400" y="100" width="760" height="790" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-g5" value="⑤ КАК РАБОТАЕТ СМЕНА КАЧЕСТВА — dual-slot swap (тот же механизм, что уже есть для смены трека)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#D79B00;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#B8860B;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="930" width="1300" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-g6" value="⑥ ИТОГ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#82B366;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#4D8B47;" parent="1" vertex="1">
+                    <mxGeometry x="1400" y="930" width="760" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-n1" value="Artist&lt;br&gt;(студия)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="170" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-n2" value="&lt;b&gt;POST /api/v1/tracks&lt;/b&gt;&lt;br&gt;без изменений&lt;br&gt;multer diskStorage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="160" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-n3" value="&lt;b&gt;TracksService.create()&lt;/b&gt;&lt;br&gt;без изменений&lt;br&gt;music-metadata → Track(PROCESSING)&lt;br&gt;+ TrackFile(оригинал)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="155" width="290" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-n4" value="&lt;b&gt;BullMQ: audio-processing&lt;/b&gt;&lt;br&gt;без изменений&lt;br&gt;attempts 5, exponential backoff" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="155" width="250" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-n5" value="&lt;b&gt;AudioProcessingConsumer&lt;/b&gt; — три фазы вместо четырёх:" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="280" width="1080" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-n6" value="&lt;b&gt;Phase 1 — ОДИН прогон ffmpeg&lt;/b&gt;&lt;br&gt;оригинал декодируется один раз, на выходе через -map&lt;br&gt;сразу три файла: Opus 128k / 192k / 320k&lt;br&gt;+ validateAudioVariant() на каждый" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="340" width="400" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-n7" value="&lt;b&gt;Phase 2 — upload → Storage&lt;/b&gt;&lt;br&gt;только tracks/{id}/audio/{bitrate}k.opus&lt;br&gt;плоская структура, без рекурсии по директориям" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="660" y="340" width="310" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-n8" value="&lt;b&gt;Phase 3 — TrackFile upsert + READY&lt;/b&gt;&lt;br&gt;пишем bitrate, codec, url и &lt;b&gt;size&lt;/b&gt;&lt;br&gt;(size нужен клиенту, чтобы считать throughput&lt;br&gt;и не спрашивать длину файла отдельно)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="990" y="340" width="310" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-note1" value="&lt;s&gt;УДАЛЯЕМ: generateHls() · validateHls() · загрузка HLS-дерева · storageKey.hlsMaster / hlsAsset&lt;/s&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;fontColor=#B85450;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="445" width="520" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-note2" value="Старые HLS-объекты в storage остаются орфанами — чистятся отдельным одноразовым скриптом, на работу плеера не влияют." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;size=14;" parent="1" vertex="1">
+                    <mxGeometry x="780" y="445" width="520" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-store" value="Storage&lt;br&gt;(S3 driver / local driver)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="605" width="310" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-keys" value="&lt;b&gt;Ключи — всё, что осталось:&lt;/b&gt;&lt;br&gt;tracks/{id}/audio/128k.opus&lt;br&gt;tracks/{id}/audio/192k.opus&lt;br&gt;tracks/{id}/audio/320k.opus" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff5e6;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="690" width="310" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-d1" value="&lt;b&gt;GET /api/v1/tracks/:id/stream?bitrate=320&lt;/b&gt;&lt;br&gt;UserAuth · поддержка HTTP Range · Accept-Ranges: bytes&lt;br&gt;&lt;b&gt;Фикс (правка 8):&lt;/b&gt; размер берём из TrackFile.size в БД —&lt;br&gt;он уже записан на этапе обработки. В хранилище идёт&lt;br&gt;ОДИН ranged-GET за байтами. Никаких stat/HEAD и висящих стримов.&lt;br&gt;Отдаём 206 Partial Content, браузер сам буферизует." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="605" width="440" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-d2" value="&lt;b&gt;GET /api/v1/tracks/:id/qualities&lt;/b&gt; — НОВЫЙ&lt;br&gt;возвращает [{ bitrate, size, codec }] из TrackFile&lt;br&gt;клиент заранее знает, между чем переключаться&lt;br&gt;и сколько весит каждый вариант" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="720" width="440" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-d3" value="&lt;b&gt;presigned URL / CDN&lt;/b&gt; — опционально, следующим шагом&lt;br&gt;getTrackStreamUrl() уже написан. Отдаём подписанную&lt;br&gt;ссылку вместо проксирования → трафик мимо Node,&lt;br&gt;Range обслуживает сам S3/CDN." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f2e6;strokeColor=#82b366;dashed=1;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="950" y="605" width="370" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-d4" value="&lt;b&gt;POST /api/v1/history/tracks/:id&lt;/b&gt; — подключаем&lt;br&gt;эндпоинт уже есть, клиент его не вызывает.&lt;br&gt;Триггер: 30 с прослушивания или 50 % длительности.&lt;br&gt;Валидация порога на бэке, идемпотентность по окну." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="950" y="720" width="370" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-f1" value="&lt;b&gt;widgets/Player/ui/Player.tsx&lt;/b&gt;&lt;br&gt;рендерит 2 audio-слота + представления&lt;br&gt;(остаётся в widgets — это UI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="160" width="330" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-f2" value="&lt;b&gt;entities/Player/model/useAudioPlayer.ts&lt;/b&gt;&lt;br&gt;переехал из shared/hooks → FSD-нарушение снято&lt;br&gt;(зависимость от entities стала внутрислайсовой)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="250" width="330" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-f3" value="&lt;b&gt;entities/Player/model/useAudioSlots.ts&lt;/b&gt;&lt;br&gt;активный слот + standby, как и было.&lt;br&gt;&lt;b&gt;Расширяем:&lt;/b&gt; swap теперь не только между треками,&lt;br&gt;но и между битрейтами одного трека — swapQuality()&lt;br&gt;attachTrack() ставит src напрямую, без hls.js&lt;br&gt;&lt;b&gt;Приоритет слота (правка 5):&lt;/b&gt; swap качества важнее&lt;br&gt;префетча следующего трека. Префетч отменяется&lt;br&gt;и возобновляется после завершения swap-а." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="340" width="330" height="108" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-f4" value="&lt;b&gt;entities/Player/lib/getStreamUrl.ts&lt;/b&gt; — НОВЫЙ&lt;br&gt;URL выводится из trackId + bitrate — единственный&lt;br&gt;источник правды. audioUrl больше не хранится&lt;br&gt;в модели трека → баг с альбомами невозможен." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="450" width="330" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-f5" value="&lt;b&gt;entities/Player/model/useAudioPlayerEvents.ts&lt;/b&gt;&lt;br&gt;timeupdate / progress / ended / canplay → store&lt;br&gt;+ repeatMode в handleEnded" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="550" width="330" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-f6" value="&lt;b&gt;entities/Player/model/useMediaSession.ts&lt;/b&gt; — НОВЫЙ&lt;br&gt;navigator.mediaSession.metadata + action handlers&lt;br&gt;play / pause / nexttrack / previoustrack / seekto&lt;br&gt;→ наушники, локскрин, медиаклавиши" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="635" width="330" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-a1" value="&lt;b&gt;useAdaptiveBitrate.ts — ЯДРО ВАРИАНТА B&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc99;strokeColor=#d79b00;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="160" width="340" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-a2" value="&lt;b&gt;ВХОД — что меряем на каждом тике (~1 с):&lt;/b&gt;&lt;br&gt;• bufferedAhead — сколько секунд аудио уже&lt;br&gt;&amp;nbsp;&amp;nbsp;накачано впереди currentTime (функция уже есть)&lt;br&gt;• &lt;b&gt;скорость роста буфера&lt;/b&gt; (правка 4): байты недоступны —&lt;br&gt;&amp;nbsp;&amp;nbsp;у audio-элемента нет события «скачано N байт».&lt;br&gt;&amp;nbsp;&amp;nbsp;EWMA считаем по приросту buffered, не по throughput&lt;br&gt;• stallCount — сколько раз буфер иссякал (waiting)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="220" width="340" height="128" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-a3" value="&lt;b&gt;ПРАВИЛА РЕШЕНИЯ:&lt;/b&gt;&lt;br&gt;• буфер падает N тиков подряд → битрейт вниз&lt;br&gt;• буфер стабильно ≥ X секунд в течение T секунд&lt;br&gt;&amp;nbsp;&amp;nbsp;→ пробуем битрейт вверх&lt;br&gt;• stall (буфер иссяк) → сразу вниз на минимум&lt;br&gt;• гистерезис: вниз резко, вверх осторожно&lt;br&gt;&amp;nbsp;&amp;nbsp;→ защита от «дребезга» качества туда-сюда&lt;br&gt;• cooldown между swap-ами, чтобы не дёргать сеть" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="350" width="340" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-a4" value="&lt;b&gt;ВЫХОД:&lt;/b&gt; targetBitrate → swapQuality(bitrate)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc99;strokeColor=#d79b00;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="505" width="340" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-a5" value="&lt;b&gt;playerStore (Zustand) — расширяем:&lt;/b&gt;&lt;br&gt;sourceOrder / playOrder / userQueue — очередь&lt;br&gt;отделена от контекста, shuffle перестаёт мутировать&lt;br&gt;repeatMode: off | all | one&lt;br&gt;quality: { auto: boolean, current: number }" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="565" width="340" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-a6" value="&lt;b&gt;persist({ partialize })&lt;/b&gt; — один механизм вместо трёх&lt;br&gt;volume, repeatMode, quality, context, currentTrackId, currentTime" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="690" width="340" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-s1" value="&lt;b&gt;1.&lt;/b&gt; Слот A играет 320k&lt;br&gt;currentTime = 42.3 с&lt;br&gt;буфер впереди: 12 с" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="990" width="230" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-s2" value="&lt;b&gt;2.&lt;/b&gt; useAdaptiveBitrate:&lt;br&gt;буфер тает 3 тика подряд&lt;br&gt;(12 → 9 → 6 с), EWMA-скорость&lt;br&gt;ниже нужной для 320k" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="990" width="250" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-s3" value="&lt;b&gt;3.&lt;/b&gt; swapQuality(192k):&lt;br&gt;standby-слот B грузит&lt;br&gt;192k-файл Range-запросом&lt;br&gt;с позиции ~42.3 с" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="990" width="250" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-s4" value="&lt;b&gt;4.&lt;/b&gt; Ждём canplay&lt;br&gt;и буфер ≥ 3 с в слоте B.&lt;br&gt;A всё это время играет." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="860" y="990" width="200" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-s5" value="&lt;b&gt;5.&lt;/b&gt; switchToSlot(B)&lt;br&gt;B.play(), A.pause()&lt;br&gt;→ переход без щелчка&lt;br&gt;и без паузы" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1080" y="990" width="230" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-snote1" value="Это ровно тот же механизм, который уже работает для бесшовной смены трека (switchToSlot + префетч в standby). Мы просто переиспользуем его для смены битрейта — новой инфраструктуры не требуется." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;size=14;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1105" width="600" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-snote2" value="Цена: swap занимает доли секунды на догруз, и трафик частично дублируется. Но происходит он редко — при реальном изменении сети или по кнопке пользователя, а не каждые 4 секунды, как решение о сегменте в HLS." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;size=14;" parent="1" vertex="1">
+                    <mxGeometry x="690" y="1105" width="620" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r1" value="&lt;b&gt;ЧТО ЗАКРЫВАЕТСЯ&lt;/b&gt;&lt;br&gt;&lt;br&gt;✔ hls.js, MSE, манифесты, сегменты — не нужны&lt;br&gt;✔ один прогон ffmpeg вместо двух&lt;br&gt;✔ сегменты не проксируются через Node&lt;br&gt;✔ Range — один запрос в storage, без утечки&lt;br&gt;✔ адаптивность своя: буфер + EWMA + гистерезис&lt;br&gt;✔ FSD: движок переезжает в entities/Player&lt;br&gt;✔ один механизм персиста вместо трёх&lt;br&gt;✔ audioUrl выводится из trackId — баг с альбомами уходит&lt;br&gt;✔ очередь, repeatMode, MediaSession, история&lt;br&gt;✔ минус ~700 строк мёртвого кода&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;(AudioGateway, useProgressiveAudioStreaming)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="990" width="350" height="245" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r2" value="&lt;b&gt;ЧЕМ ПЛАТИМ / НА ЧТО СМОТРЕТЬ&lt;/b&gt;&lt;br&gt;&lt;br&gt;• смена качества = swap целого файла,&lt;br&gt;&amp;nbsp;&amp;nbsp;а не продолжение того же потока&lt;br&gt;• при swap нужен догруз с текущей позиции&lt;br&gt;&amp;nbsp;&amp;nbsp;→ трафик частично дублируется&lt;br&gt;• нет sub-second переключения качества,&lt;br&gt;&amp;nbsp;&amp;nbsp;как в честном ABR — для аудио не критично&lt;br&gt;• storage обязан поддерживать byte-range&lt;br&gt;&amp;nbsp;&amp;nbsp;(S3 — да, локальный драйвер — проверить)&lt;br&gt;• пороги алгоритма (N, X, T, cooldown)&lt;br&gt;&amp;nbsp;&amp;nbsp;придётся подбирать эмпирически" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=10;verticalAlign=top;spacingTop=8;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="1800" y="990" width="330" height="245" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="b-n1" target="b-n2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="b-n2" target="b-n3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="b-n3" target="b-n4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="1" source="b-n4" target="b-n5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4d8b47;endArrow=blockThin;endFill=1;" parent="1" source="b-n6" target="b-n7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4d8b47;endArrow=blockThin;endFill=1;" parent="1" source="b-n7" target="b-n8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e7" value="загрузка объектов" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="b-n7" target="b-store" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e8" value="ranged read" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="b-store" target="b-d1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e9" value="206 Partial Content" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4d8b47;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="b-d1" target="b-f3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e10" value="список качеств" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4d8b47;dashed=1;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="b-d2" target="b-a1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="b-f1" target="b-f2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="b-f2" target="b-f3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e13" value="URL(trackId, bitrate)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="b-f4" target="b-f3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="b-f3" target="b-f5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e15" value="метрики буфера" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="b-f5" target="b-a2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;" parent="1" source="b-a2" target="b-a3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;" parent="1" source="b-a3" target="b-a4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e18" value="swapQuality()" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;fontStyle=1;" parent="1" source="b-a4" target="b-f3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e19" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;" parent="1" source="b-s1" target="b-s2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e20" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;" parent="1" source="b-s2" target="b-s3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;" parent="1" source="b-s3" target="b-s4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-e22" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;" parent="1" source="b-s4" target="b-s5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-simple-title" value="ТО ЖЕ САМОЕ ПРОСТЫМИ СЛОВАМИ — как плеер будет работать" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#4D8B47;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1300" width="1600" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-simple-g" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F6FBF5;strokeColor=#82B366;dashed=0;arcSize=4;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1340" width="2120" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-sp1" value="&lt;b&gt;1. Сервер делает три обычных файла&lt;/b&gt;&lt;br&gt;&lt;br&gt;Те же три качества, что и раньше: похуже, среднее, хорошее. Но никакой нарезки на кусочки и никакой описи — просто три готовых файла." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1400" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-sp2" value="&lt;b&gt;2. Плеер просто включает один файл&lt;/b&gt;&lt;br&gt;&lt;br&gt;Как любое аудио в интернете. Браузер сам качает музыку наперёд с запасом и сам умеет перематывать. Никаких дополнительных библиотек не нужно." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="1400" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-sp3" value="&lt;b&gt;3. Плеер всё время следит за запасом&lt;/b&gt;&lt;br&gt;&lt;br&gt;Раз в секунду проверяет: сколько секунд музыки уже скачано вперёд? Если играем быстрее, чем качается, — запас тает, значит интернет просел." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="910" y="1400" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-sp4" value="&lt;b&gt;4. Запас тает — берём файл попроще&lt;/b&gt;&lt;br&gt;&lt;br&gt;В фоне подгружаем то же самое место трека, но в качестве пониже. Если интернет восстановился и запас снова полный — так же тихо возвращаем хорошее качество." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="1330" y="1400" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-sp5" value="&lt;b&gt;5. Переключение никто не слышит&lt;/b&gt;&lt;br&gt;&lt;br&gt;Потому что плееров всегда два: один звучит, второй молча готовится. Когда второй готов — меняем их местами. Ни паузы, ни щелчка. Этот приём у нас уже работает при смене трека." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="1750" y="1400" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-sp-note1" value="&lt;b&gt;Аналогия.&lt;/b&gt; Как бак с водой. Мы не разбираем насос и не считаем скорость в трубах — просто смотрим на уровень в баке. Уровень падает — значит наливается медленнее, чем расходуется, пора переходить на экономный режим. Уровень держится полным — можно позволить себе больше." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=middle;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1590" width="1030" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-sp-note2" value="&lt;b&gt;Что почувствует слушатель.&lt;/b&gt; Ничего — и в этом весь смысл. Музыка не заикается на плохом интернете, качество подстраивается само, переключение неслышно. Разница в том, что мы перестаём тащить за собой сложную машинерию ради функции, которой всё равно не пользовались." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#d5e8d4;strokeColor=#4d8b47;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=middle;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="1130" y="1590" width="1010" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-se1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4d8b47;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="b-sp1" target="b-sp2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-se2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4d8b47;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="b-sp2" target="b-sp3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-se3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4d8b47;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="b-sp3" target="b-sp4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-se4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#4d8b47;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="b-sp4" target="b-sp5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-risk-title" value="⑦ ЧЕСТНАЯ КРИТИКА ВАРИАНТА B — где он слабее HLS и что с этим делать" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#B85450;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1780" width="1600" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-risk-g" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#B85450;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1830" width="2120" height="470" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p1" value="&lt;b&gt;1. Браузер сам решает, сколько качать вперёд&lt;/b&gt;&lt;br&gt;Сейчас размер буфера задан явно (maxBufferLength = 10 с). С обычным audio-элементом этого рычага нет: короткий трек браузер может утянуть целиком, и «секунд накачано вперёд» перестаёт быть сигналом.&lt;br&gt;&lt;i&gt;→ Частично самолимитируется: на быстрой сети понижать и не надо. Худший случай — сеть просела ПОСЛЕ жадной закачки: трафик уже потрачен. Стартовать консервативно.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1890" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p2" value="&lt;b&gt;2. Перемотка в Ogg/Opus — дорогая&lt;/b&gt;&lt;br&gt;В контейнере Ogg нет индекса. Чтобы прыгнуть на 42-ю секунду, браузер ищет позицию бинарным поиском по файлу — несколько Range-запросов. Бьёт и по swap-у, и по обычной перемотке: против посегментной перемотки HLS это регрессия.&lt;br&gt;&lt;i&gt;→ Паковать Opus в WebM (там есть Cues) либо перейти на fMP4/AAC. Решается сменой контейнера, не архитектуры — но решить надо до внедрения. (ЕСЛИ НЕТ ИНДЕКСАЦИИ МЫ МОЖЕМ ДЕЛАТЬ В БАЗЕ НАПРЯМУЮ)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="1890" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p3" value="&lt;b&gt;3. Swap тянет вторую копию тогда, когда сети плохо&lt;/b&gt;&lt;br&gt;Буфер тает → мы параллельно качаем второй файл → тает ещё быстрее. Порочный круг, которого у HLS нет: там переключение происходит на границе сегмента, и старый поток просто прекращается.&lt;br&gt;&lt;i&gt;→ Реагировать РАНО, пока буфера ещё много, а не на грани обрыва. Плюс жёсткий cooldown между swap-ами.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="770" y="1890" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p4" value="&lt;b&gt;4. Скорость в байтах напрямую не измерить&lt;/b&gt;&lt;br&gt;У audio-элемента нет коллбэка «скачано N байт» — доступны только buffered-диапазоны и progress. Значит EWMA считаем не по байтам в секунду, а по приросту буфера: грубее, и вырождается, когда браузер скачал всё разом.&lt;br&gt;&lt;i&gt;→ Поправить формулировку алгоритма в блоке ④: сигнал — скорость роста буфера, а не throughput.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1120" y="1890" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p5" value="&lt;b&gt;5. Конфликт за standby-слот&lt;/b&gt;&lt;br&gt;Слот один, а претендентов два: префетч следующего трека и swap качества текущего. В схеме ④ политики приоритета нет — это дыра в моём же дизайне.&lt;br&gt;&lt;i&gt;→ Задать правило явно: swap качества важнее префетча; префетч следующего трека возобновляется после завершения swap-а.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1470" y="1890" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p6" value="&lt;b&gt;6. Качели качества&lt;/b&gt;&lt;br&gt;Каждый swap — полная догрузка нового файла с позиции, а частичные Range-ответы браузер кэширует хуже целых. Плохо настроенный гистерезис даст «вниз-вверх-вниз» с перекачкой на каждом шаге.&lt;br&gt;&lt;i&gt;→ Асимметричные пороги (вниз резко, вверх только после долгой стабильности) и обязательный cooldown.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1820" y="1890" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p7" value="&lt;b&gt;7. Один канал доставки — единая точка отказа&lt;/b&gt;&lt;br&gt;Сейчас есть HLS плюс прогрессивный fallback. После рефакторинга останется один путь: лёг stream-эндпоинт — играть нечего.&lt;br&gt;&lt;i&gt;→ Не критично (у обоих путей всё равно одно хранилище), но мониторинг этого эндпоинта становится обязательным, а не желательным.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="2055" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p8" value="&lt;b&gt;8. stat/HEAD в хранилище — лишний запрос&lt;/b&gt;&lt;br&gt;В блоке ③ я написал «размер берём через stat/HEAD». Но размер уже лежит в TrackFile.size, записанный на этапе обработки — ходить за ним в storage не нужно.&lt;br&gt;&lt;i&gt;→ Брать size из БД, в хранилище обращаться только за самими байтами. Правка в моей же схеме.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="2055" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p9" value="&lt;b&gt;9. Длинный контент играется плохо&lt;/b&gt;&lt;br&gt;Для DJ-миксов и подкастов на час один цельный файл — это долгий первый отклик, дорогая перемотка и невозможность сменить качество без перекачки большого куска.&lt;br&gt;&lt;i&gt;→ Если такой контент появится в продукте, для него придётся вернуть сегментацию. Решение сознательно сужает будущее.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="770" y="2055" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p10" value="&lt;b&gt;10. Мобильный Safari и preload&lt;/b&gt;&lt;br&gt;iOS игнорирует preload=auto, ограничивает число одновременных аудиоэлементов и требует жест пользователя. Схема с двумя слотами там уже на грани, swap добавляет третий сценарий.&lt;br&gt;&lt;i&gt;→ Проверить на реальном iOS до внедрения; предусмотреть режим без swap-а на мобильных.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1120" y="2055" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p11" value="&lt;b&gt;11. Пороги подбираем вслепую&lt;/b&gt;&lt;br&gt;N тиков, X секунд буфера, T секунд стабильности, cooldown — всё эмпирика. Телеметрии по обрывам у нас нет, значит крутить будем на глаз и по ощущениям.&lt;br&gt;&lt;i&gt;→ Сначала логирование: обрывы, swap-ы, итоговый битрейт по сессии. Пороги настраивать уже по данным.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1470" y="2055" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-p12" value="&lt;b&gt;12. presigned/CDN плохо дружит с долгой сессией&lt;/b&gt;&lt;br&gt;Подписанная ссылка живёт час, а вкладка может играть дольше; при каждом swap-е нужен свежий URL. Плюс ссылка утекает — её можно просто переслать.&lt;br&gt;&lt;i&gt;→ Обновлять URL до истечения, короткий TTL, привязка к сессии. Либо оставить проксирование для приватного контента.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1820" y="2055" width="330" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="b-r-verdict" value="&lt;b&gt;ВЫВОД.&lt;/b&gt;&amp;nbsp; Ни один пункт не отменяет вариант B, но честно: пункты &lt;b&gt;1, 2 и 3&lt;/b&gt; — это цена, которую в HLS платить не надо, и они красные не для красоты. &lt;b&gt;Пункт 2 обязателен к решению ДО внедрения&lt;/b&gt; (сменой контейнера на WebM или fMP4), иначе перемотка станет заметно хуже, чем сейчас. Пункты 1 и 3 лечатся настройкой алгоритма: реагировать рано и стартовать консервативно. Остальные — рабочие задачи, а не блокеры. Пункты 4, 5 и 8 — правки в самой схеме варианта B выше, их надо внести, а не просто держать в голове." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=12;spacingRight=10;verticalAlign=middle;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="2215" width="2080" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="_EoIJB5fhrgHnWbo2-pk-4" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;Пункты 1 и 3 в паре — самое неприятное. Мы теряем контроль над буфером и при этом хотим тянуть второй файл именно в момент просадки. Вместе они означают: реагировать надо рано, пока буфера много, и стартовать консервативно — иначе алгоритм будет срабатывать поздно и делать хуже. Это не блокер, но это меняет настройку: «буфер тает 3 тика подряд» из моей схемы, скорее всего, слишком поздний триггер.&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;Хочешь — внесу правки 4, 5 и 8 прямо в блоки ③/④ на схеме, чтобы они не расходились с критикой? И могу отдельно посмотреть, что реально пишет convertAudio в @spotify/converter — от этого зависит, насколько дёшево сменить контейнер на WebM.&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=default;imageVerticalAlign=top;imageAlign=left;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="2330" width="2100" height="190" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="variant-c-cmaf" name="C — Single-file CMAF + Range + MSE">
+        <mxGraphModel dx="1080" dy="468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2250" pageHeight="2350" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="c-title" value="ВАРИАНТ C — ОДИН ФАЙЛ НА БИТРЕЙТ (CMAF/fMP4) + RANGE ПО ИНДЕКСУ + MSE + СВОЙ ABR" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#1F6FB2;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1500" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-idea" value="&lt;b&gt;Идея:&lt;/b&gt; спор «сегменты или цельный файл» был не про то. Главный вопрос — кто управляет буфером. Держим ОДИН файл на битрейт, но куски вырезаем сами Range-запросами по индексу и отдаём в MSE." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1560" y="25" width="640" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-g1" value="① BACKEND — одна дорожка на битрейт, один прогон ffmpeg" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="100" width="1300" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-g2" value="② STORAGE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="550" width="380" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-g3" value="③ РАЗДАЧА — индекс отдельно, байты отдельно" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="550" width="880" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-g4" value="④ FRONTEND — свой загрузчик вместо hls.js" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9673A6;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#6C3483;" parent="1" vertex="1">
+                    <mxGeometry x="1400" y="100" width="760" height="790" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-g5" value="⑤ СМЕНА КАЧЕСТВА — просто следующий кусок из другой дорожки" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#D79B00;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#B8860B;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="930" width="1300" height="290" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-g6" value="⑥ ИТОГ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#82B366;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#4D8B47;" parent="1" vertex="1">
+                    <mxGeometry x="1400" y="930" width="760" height="290" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-g7" value="⑦ САМОАНАЛИЗ ВАРИАНТА C — нашёл проблему, тут же исправил в дизайне" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1F6FB2;dashed=1;dashPattern=8 8;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontSize=15;fontStyle=1;fontColor=#1F6FB2;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1270" width="2120" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-n1" value="Artist&lt;br&gt;(студия)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="170" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-n2" value="&lt;b&gt;POST /api/v1/tracks&lt;/b&gt;&lt;br&gt;без изменений" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="160" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-n3" value="&lt;b&gt;TracksService.create()&lt;/b&gt;&lt;br&gt;без изменений&lt;br&gt;Track(PROCESSING) + TrackFile(оригинал)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="155" width="290" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-n4" value="&lt;b&gt;BullMQ: audio-processing&lt;/b&gt;&lt;br&gt;без изменений" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="155" width="250" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-n5" value="&lt;b&gt;AudioProcessingConsumer&lt;/b&gt; — три фазы:" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="280" width="1080" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-n6" value="&lt;b&gt;Phase 1 — ОДИН прогон ffmpeg&lt;/b&gt;&lt;br&gt;оригинал → N рендиций AAC-LC в &lt;b&gt;fragmented MP4&lt;/b&gt; (CMAF).&lt;br&gt;Общие -ar 48000 -ac 2 и общий -frag_duration → границы&lt;br&gt;фрагментов совпадают между рендициями.&lt;br&gt;&lt;b&gt;Каждая рендиция = ОДИН файл&lt;/b&gt;, а не набор сегментов." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="340" width="420" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-n7" value="&lt;b&gt;Phase 2 — построение индекса&lt;/b&gt;&lt;br&gt;из таблицы фрагментов (sidx) получаем карту&lt;br&gt;время → байты: [[мс, смещение, длина], ...]&lt;br&gt;~45 записей и ~1 КБ на трёхминутный трек.&lt;br&gt;Пишем в TrackFile — это и есть наш «манифест»." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="340" width="310" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-n8" value="&lt;b&gt;Phase 3 — upload + READY&lt;/b&gt;&lt;br&gt;три объекта в хранилище вместо ~135.&lt;br&gt;Индекс и size — в БД, не в хранилище.&lt;br&gt;Проверка на сборке: таблицы фрагментов&lt;br&gt;у всех рендиций совпадают по времени." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1010" y="340" width="300" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-note1" value="&lt;b&gt;Побочный эффект, который чинится сам собой.&lt;/b&gt; Сейчас прогрессивный путь пишет Opus/Ogg, а HLS — AAC/fMP4: один трек существует в двух кодеках, и падение с HLS на прогрессив меняет кодек прямо во время воспроизведения. В варианте C дорожка одна — эта развилка исчезает. Плюс fMP4-энкодер с нужными флагами у нас уже написан в convertAudioToHls: надо убрать HLS-муксер, а не писать кодирование с нуля." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=10;spacingRight=8;verticalAlign=middle;size=16;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="445" width="1070" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-store" value="Storage&lt;br&gt;(S3 driver / local driver)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="605" width="310" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-keys" value="&lt;b&gt;Три объекта на трек — и всё:&lt;/b&gt;&lt;br&gt;tracks/{id}/audio/128.m4a&lt;br&gt;tracks/{id}/audio/192.m4a&lt;br&gt;tracks/{id}/audio/320.m4a&lt;br&gt;&lt;i&gt;индекс фрагментов лежит в БД&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff5e6;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="690" width="310" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-d1" value="&lt;b&gt;GET /api/v1/tracks/:id/manifest&lt;/b&gt;&lt;br&gt;{ duration, renditions: [{ bitrate, codec, initRange, fragments }] }&lt;br&gt;Один маленький JSON на трек вместо master.m3u8 плюс N&lt;br&gt;плейлистов. Неизменяемый → кэшируется навсегда,&lt;br&gt;можно отдавать вместе с данными трека одним ответом." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="605" width="430" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-d2" value="&lt;b&gt;GET /api/v1/tracks/:id/audio/:bitrate&lt;/b&gt; + Range&lt;br&gt;просто отдаём байты. Размер — из TrackFile.size,&lt;br&gt;в хранилище ОДИН ranged-GET.&lt;br&gt;&lt;b&gt;Один и тот же URL&lt;/b&gt; обслуживает и загрузчик MSE,&lt;br&gt;и нативный fallback — дублировать ассеты не нужно." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="720" width="430" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-d3" value="&lt;b&gt;presigned / CDN&lt;/b&gt; — теперь без оговорок&lt;br&gt;Каждый запрос делаем мы сами, значит можем обновить&lt;br&gt;подпись между фрагментами незаметно для слушателя.&lt;br&gt;Объект один, Range-ответы CDN кэширует хорошо." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="950" y="605" width="370" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-d4" value="&lt;b&gt;POST /api/v1/history/tracks/:id&lt;/b&gt;&lt;br&gt;эндпоинт уже есть, клиент его не вызывает.&lt;br&gt;Триггер: 30 с прослушивания или 50 % длительности,&lt;br&gt;порог валидируется на бэке." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="950" y="720" width="370" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-f1" value="&lt;b&gt;widgets/Player/ui/Player.tsx&lt;/b&gt;&lt;br&gt;рендерит audio-элемент, к которому&lt;br&gt;подключается MediaSource" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="160" width="330" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-f2" value="&lt;b&gt;entities/Player/model/useAudioPlayer.ts&lt;/b&gt;&lt;br&gt;оркестрация; переехал из shared → FSD-фикс" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="245" width="330" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-f3" value="&lt;b&gt;entities/Player/lib/streamLoader.ts — ЯДРО, ~250 строк&lt;/b&gt;&lt;br&gt;MediaSource + один SourceBuffer&lt;br&gt;(audio/mp4; codecs=mp4a.40.2)&lt;br&gt;1. init-фрагмент качаем один раз, appendBuffer&lt;br&gt;2. цикл: пока bufferedAhead меньше цели —&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;берём следующий фрагмент Range-запросом по индексу&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;и добавляем в буфер&lt;br&gt;&lt;b&gt;Цель буфера задаём МЫ&lt;/b&gt; — рычаг вернулся.&lt;br&gt;Одна очередь append-ов, без параллельных вызовов." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="330" width="330" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-f4" value="&lt;b&gt;seek и выгрузка буфера&lt;/b&gt;&lt;br&gt;перемотка: время → байты по индексу, ОДИН запрос&lt;br&gt;(никакого бинарного поиска по файлу, как в Ogg)&lt;br&gt;память: remove(0, currentTime − 30) — держим окно" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="485" width="330" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-f5" value="&lt;b&gt;fallback без MSE&lt;/b&gt; (iPhone до iOS 17.1)&lt;br&gt;тот же самый файл ставится в audio-элемент нативно.&lt;br&gt;Воспроизведение работает, перемотка точная —&lt;br&gt;в fMP4 есть индекс. Пропадает только адаптивность:&lt;br&gt;битрейт выбирается один раз на старте." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="585" width="330" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-f6" value="&lt;b&gt;useMediaSession.ts&lt;/b&gt;&lt;br&gt;наушники, локскрин, медиаклавиши" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="695" width="330" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-a1" value="&lt;b&gt;useAdaptiveBitrate — теперь на честных данных&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc99;strokeColor=#d79b00;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="160" width="340" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-a2" value="&lt;b&gt;ВХОД:&lt;/b&gt;&lt;br&gt;• &lt;b&gt;реальные байты и миллисекунды каждого запроса&lt;/b&gt; —&lt;br&gt;&amp;nbsp;&amp;nbsp;запрос делаем мы, значит скорость известна точно.&lt;br&gt;&amp;nbsp;&amp;nbsp;EWMA считаем по throughput, а не по косвенным признакам&lt;br&gt;• bufferedAhead — и он под нашим контролем&lt;br&gt;• число обрывов буфера" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="220" width="340" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-a3" value="&lt;b&gt;ПРАВИЛА:&lt;/b&gt;&lt;br&gt;• скорость ниже, чем нужно текущей рендиции&lt;br&gt;&amp;nbsp;&amp;nbsp;с запасом → следующий фрагмент берём ниже&lt;br&gt;• стабильно выше в течение T секунд → пробуем выше&lt;br&gt;• обрыв буфера → сразу минимальная рендиция&lt;br&gt;• асимметрия: вниз резко, вверх осторожно&lt;br&gt;• cooldown между сменами&lt;br&gt;&lt;i&gt;Решение стоит один фрагмент, поэтому ошибиться&lt;br&gt;не страшно — исправимся на следующем.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="360" width="340" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-a4" value="&lt;b&gt;ВЫХОД:&lt;/b&gt; из какой дорожки взять СЛЕДУЮЩИЙ фрагмент&lt;br&gt;(не «переключить поток» — просто откуда качать дальше)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc99;strokeColor=#d79b00;fontSize=11;fontStyle=0;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="515" width="340" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-a5" value="&lt;b&gt;playerStore (Zustand)&lt;/b&gt;&lt;br&gt;sourceOrder / playOrder / userQueue — очередь отделена&lt;br&gt;от контекста; repeatMode; quality { auto, current }&lt;br&gt;persist({ partialize }) — один механизм вместо трёх" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="585" width="340" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-a6" value="&lt;b&gt;Бонус:&lt;/b&gt; standby-слот освободился — он больше не нужен&lt;br&gt;для качества. Уходит целиком на бесшовный переход&lt;br&gt;между треками, ради чего и задумывался." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1790" y="690" width="340" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-s1" value="&lt;b&gt;1.&lt;/b&gt; Играем 320k.&lt;br&gt;Буфер держим ровно такой,&lt;br&gt;какой задали сами —&lt;br&gt;например 30 секунд вперёд." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="985" width="230" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-s2" value="&lt;b&gt;2.&lt;/b&gt; Каждый кусок качаем мы,&lt;br&gt;поэтому точно знаем: сколько&lt;br&gt;байт и за сколько миллисекунд.&lt;br&gt;Скорость — не догадка." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="985" width="250" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-s3" value="&lt;b&gt;3.&lt;/b&gt; Скорость просела.&lt;br&gt;Решение: следующий фрагмент&lt;br&gt;берём из дорожки 192k.&lt;br&gt;Больше ничего не меняем." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="985" width="250" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-s4" value="&lt;b&gt;4.&lt;/b&gt; Кусок 192k дописывается&lt;br&gt;в тот же буфер сразу за куском&lt;br&gt;320k. Границы совпадают,&lt;br&gt;кодек и частота те же." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9fc5e8;strokeColor=#1f6fb2;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="860" y="985" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-s5" value="&lt;b&gt;5.&lt;/b&gt; Ничего не перекачивается&lt;br&gt;и ничего не переключается.&lt;br&gt;Накачанное 320k доигрывает,&lt;br&gt;дальше идёт 192k. Разрыва нет&lt;br&gt;физически — это один буфер." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1100" y="985" width="210" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-snote" value="&lt;b&gt;Чем это отличается от варианта B.&lt;/b&gt; Там смена качества означала скачать второй файл заново с текущей позиции — то есть нагрузить сеть ровно тогда, когда ей плохо. Здесь мы просто берём следующий кусок из другой дорожки: дублирующего трафика ноль, второго audio-элемента не нужно, паузы нет по построению.&amp;nbsp; &lt;b&gt;Чем от варианта A.&lt;/b&gt; Это ровно то, что делает HLS — но без плейлистов и без сотни файлов-сегментов: дорожка это один объект, а куски вырезаются Range-запросами по индексу." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=12;spacingRight=10;verticalAlign=middle;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1105" width="1240" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-r1" value="&lt;b&gt;ЗАКРЫВАЕТ ИЗ КРИТИКИ ВАРИАНТА B&lt;/b&gt;&lt;br&gt;✔ 1. Буфер под нашим контролем — сколько задали, столько и качаем&lt;br&gt;✔ 2. Перемотка точная: индекс даёт время→байты, один запрос&lt;br&gt;✔ 3. Смена качества не дублирует трафик — переключение на следующем куске&lt;br&gt;✔ 4. Скорость меряем честно в байтах: запрос наш&lt;br&gt;✔ 5. Слот больше не нужен под качество — конфликт исчез&lt;br&gt;✔ 6. Качели дёшевы: ошибка стоит один фрагмент&lt;br&gt;✔ 8. Индекс и размер в БД — в хранилище только за байтами&lt;br&gt;✔ 9. Длинный контент работает: фрагменты плюс индекс&lt;br&gt;✔ 12. Подпись CDN обновляем между кусками&lt;br&gt;&lt;b&gt;И из варианта A:&lt;/b&gt; нет плейлистов, нет hls.js, 3 объекта вместо ~135" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#4d8b47;fontSize=11;align=left;spacingLeft=10;spacingRight=8;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="985" width="380" height="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-r2" value="&lt;b&gt;ЧЕСТНАЯ ЦЕНА&lt;/b&gt;&lt;br&gt;&lt;br&gt;• свой загрузчик ~250 строк&lt;br&gt;&amp;nbsp;&amp;nbsp;(вместо hls.js на ~200 КБ)&lt;br&gt;• MSE обязателен → на iPhone&lt;br&gt;&amp;nbsp;&amp;nbsp;до iOS 17.1 деградация&lt;br&gt;&amp;nbsp;&amp;nbsp;на нативный путь без ABR&lt;br&gt;• AAC-LC вместо Opus&lt;br&gt;&amp;nbsp;&amp;nbsp;(так уже в нашем HLS-энкодере)&lt;br&gt;• индекс надо построить и хранить&lt;br&gt;&lt;br&gt;Ни один пункт не блокер." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=10;spacingRight=8;verticalAlign=top;spacingTop=8;size=16;" parent="1" vertex="1">
+                    <mxGeometry x="1830" y="985" width="300" height="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sa1" value="&lt;b&gt;Нашёл: iPhone до iOS 17.1 не умеет MSE&lt;/b&gt;&lt;br&gt;MediaSource на iPhone появился только с ManagedMediaSource. На старых устройствах загрузчик просто не запустится.&lt;br&gt;&lt;i&gt;→ Исправлено: тот же самый файл играется нативно через audio-элемент. Ни одного дополнительного ассета кодировать не надо — в этом вся соль однофайловой схемы. Перемотка там тоже точная, потому что индекс лежит внутри fMP4. Теряется только адаптивность.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1330" width="500" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sa2" value="&lt;b&gt;Нашёл: свой загрузчик — новая поверхность для багов&lt;/b&gt;&lt;br&gt;Гонки на флаге updating, переполнение буфера, добавление данных после закрытия потока — классические грабли MSE.&lt;br&gt;&lt;i&gt;→ Исправлено: одна последовательная очередь добавлений, никаких параллельных вызовов; окно буфера с выгрузкой позади позиции; любая ошибка MSE ведёт к деградации на нативный путь, а не к тишине. Плюс это ровно то место, которое надо закрыть тестами в первую очередь.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="1330" width="500" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sa3" value="&lt;b&gt;Нашёл: разъедутся границы фрагментов — сломается склейка&lt;/b&gt;&lt;br&gt;Если рендиции кодировать по отдельности, ffmpeg может расставить границы по-разному, и кусок из другой дорожки не встанет в буфер.&lt;br&gt;&lt;i&gt;→ Исправлено: все рендиции кодируются ОДНИМ вызовом ffmpeg с общим -frag_duration, плюс проверка на этапе сборки, что таблицы фрагментов совпадают по времени. Ровно так уже устроен наш convertAudioToHls — переносим готовое.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1130" y="1330" width="500" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sa4" value="&lt;b&gt;Нашёл: разная конфигурация AAC ломает буфер&lt;/b&gt;&lt;br&gt;Если у рендиций отличается частота дискретизации или число каналов, SourceBuffer откажется принимать кусок из другой дорожки.&lt;br&gt;&lt;i&gt;→ Исправлено: принудительные -ar 48000 -ac 2 на всех рендициях. Это уже стоит в текущем HLS-энкодере, просто фиксируем как обязательное требование и проверяем на сборке.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1660" y="1330" width="490" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sa5" value="&lt;b&gt;Нашёл: AAC при 128k слабее Opus&lt;/b&gt;&lt;br&gt;Opus эффективнее на низких битрейтах, а MSE в Safari его не тянет — приходится брать AAC.&lt;br&gt;&lt;i&gt;→ Исправлено частично и осознанно: на 192 и 320 разница неощутима, а 128 нужен только на плохой сети, где важнее непрерывность. Если понадобится — добавим Opus второй дорожкой для браузеров, которые её тянут, по проверке isTypeSupported. Сейчас одна дорожка проще и honest-default.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1500" width="500" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sa6" value="&lt;b&gt;Нашёл: на длинных треках растёт память&lt;/b&gt;&lt;br&gt;Час музыки в буфере — это десятки мегабайт в памяти вкладки.&lt;br&gt;&lt;i&gt;→ Исправлено: держим скользящее окно — примерно 30 секунд позади позиции и целевой запас впереди, остальное выгружаем. Для миксов и подкастов это обязательно, и именно этой возможности не было в варианте B, где буфером распоряжался браузер.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="1500" width="500" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sa7" value="&lt;b&gt;Нашёл: подписанная ссылка истекает посреди трека&lt;/b&gt;&lt;br&gt;Ссылка на час, а вкладка может играть дольше.&lt;br&gt;&lt;i&gt;→ Исправлено, и здесь стало проще, а не сложнее: каждый запрос за куском делаем мы сами, значит перед истечением просто берём свежую подпись и продолжаем со следующего фрагмента. Слушатель ничего не замечает. С обычным audio-элементом такой возможности не было в принципе.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1130" y="1500" width="500" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sa8" value="&lt;b&gt;Нашёл: индекс — лишний сетевой запрос&lt;/b&gt;&lt;br&gt;Ещё один round-trip перед первым звуком.&lt;br&gt;&lt;i&gt;→ Исправлено: индекс отдаётся вместе с данными трека одним ответом, а не отдельно. Он неизменяемый, поэтому кэшируется навсегда. Размер порядка килобайта на трёхминутный трек — дешевле, чем master.m3u8 плюс три плейлиста, которые качает текущая схема.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=10;align=left;spacingLeft=8;spacingRight=6;verticalAlign=top;spacingTop=6;" parent="1" vertex="1">
+                    <mxGeometry x="1660" y="1500" width="490" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-verdict" value="&lt;b&gt;ЧЕСТНЫЙ ВЫВОД.&lt;/b&gt;&amp;nbsp; Стриминга без компромиссов не существует — бывает решение, у которого не осталось &lt;i&gt;нерешённых&lt;/i&gt; проблем для наших условий. Разница между C и B принципиальная: в B половину проблем лечили настройкой порогов и надеждой, в C они закрыты по построению — буфер наш, потому что запросы наши. Осталось ровно три компромисса, и все они осознанные: адаптивность не работает на iPhone до iOS 17.1 (но звук и перемотка работают на том же файле), ~250 строк своего загрузчика вместо чужой библиотеки, и AAC вместо Opus. &lt;b&gt;Проверить до старта:&lt;/b&gt; поддержку MSE на целевых устройствах и то, что ffmpeg действительно даёт совпадающие границы фрагментов у всех рендиций — обе вещи проверяются за час и обе критичны для схемы." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#d5e8d4;strokeColor=#4d8b47;fontSize=12;align=left;spacingLeft=12;spacingRight=10;verticalAlign=middle;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1670" width="2080" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="c-n1" target="c-n2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="c-n2" target="c-n3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;" parent="1" source="c-n3" target="c-n4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="1" source="c-n4" target="c-n5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f6fb2;endArrow=blockThin;endFill=1;" parent="1" source="c-n6" target="c-n7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f6fb2;endArrow=blockThin;endFill=1;" parent="1" source="c-n7" target="c-n8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e7" value="три объекта" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="c-n8" target="c-store" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e8" value="range" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="c-store" target="c-d2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e9" value="индекс" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f6fb2;dashed=1;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="c-d1" target="c-f3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e10" value="куски по байтам" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f6fb2;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="c-d2" target="c-f3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="c-f1" target="c-f2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=blockThin;endFill=1;" parent="1" source="c-f2" target="c-f3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f6fb2;endArrow=blockThin;endFill=1;" parent="1" source="c-f3" target="c-f4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e14" value="нет MSE" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;dashed=1;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="c-f3" target="c-f5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e15" value="байты и время каждого запроса" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;" parent="1" source="c-f3" target="c-a2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;" parent="1" source="c-a2" target="c-a3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;" parent="1" source="c-a3" target="c-a4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e18" value="откуда следующий кусок" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;fontSize=10;fontStyle=1;" parent="1" source="c-a4" target="c-f3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e19" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="c-s1" target="c-s2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e20" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="c-s2" target="c-s3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="c-s3" target="c-s4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-e22" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="c-s4" target="c-s5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-simple-title" value="ТО ЖЕ САМОЕ ПРОСТЫМИ СЛОВАМИ — как это работает" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#1F6FB2;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1790" width="1600" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-simple-g" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F9FD;strokeColor=#1F6FB2;dashed=0;arcSize=4;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1830" width="2120" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sp1" value="&lt;b&gt;1. Сервер делает три готовых файла&lt;/b&gt;&lt;br&gt;&lt;br&gt;Как и в прошлом варианте: похуже, средний, хороший. Но в таком формате, у которого внутри есть оглавление." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1890" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sp2" value="&lt;b&gt;2. К файлу прилагается оглавление&lt;/b&gt;&lt;br&gt;&lt;br&gt;Маленькая табличка: «сорок вторая секунда начинается вот с этого места файла». Весит меньше килобайта на песню." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="1890" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sp3" value="&lt;b&gt;3. Плеер просит куски сам&lt;/b&gt;&lt;br&gt;&lt;br&gt;Не отдаёт файл браузеру целиком, а смотрит в оглавление и просит: «дай кусок с сороковой по сорок четвёртую секунду». И так дальше, по мере надобности." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e0f0;strokeColor=#1f6fb2;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="910" y="1890" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sp4" value="&lt;b&gt;4. Поэтому он всё про сеть знает&lt;/b&gt;&lt;br&gt;&lt;br&gt;Раз запрос делал он сам — он видел, сколько байт пришло и за сколько времени. Скорость известна точно, а не на глаз. И запас он держит ровно такой, какой мы велели." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="1330" y="1890" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sp5" value="&lt;b&gt;5. Качество меняется одним куском&lt;/b&gt;&lt;br&gt;&lt;br&gt;Сеть просела — следующий кусок берём из файла попроще и кладём в ту же очередь. Уже скачанное не выбрасывается, заново ничего не качается, паузы нет." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddad;strokeColor=#4d8b47;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=top;spacingTop=10;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="1750" y="1890" width="390" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sp-note1" value="&lt;b&gt;Аналогия.&lt;/b&gt; Представь одну и ту же книгу в трёх изданиях: подробном, среднем и сокращённом. В начале каждого — оглавление с номерами страниц. Ты не тащишь книгу целиком: смотришь оглавление и просишь принести конкретные страницы. Устал — следующие страницы просишь уже из сокращённого издания и продолжаешь с того же места. Перечитывать прочитанное не нужно." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FFF2CC;strokeColor=#d6b656;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=middle;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="2080" width="1030" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-sp-note2" value="&lt;b&gt;Чем отличается от двух других вариантов.&lt;/b&gt; Сейчас книга заранее разрезана на 45 брошюр и лежит на складе кучей — много файлов и отдельная опись к ним. В варианте B книга цельная, но без оглавления: чтобы найти сорок вторую секунду, приходится листать наугад, а сменить издание можно только взяв новый экземпляр и начав качать его заново. Здесь книга цельная и с оглавлением.&lt;br&gt;&lt;b&gt;Плата:&lt;/b&gt; плеер должен уметь работать с кусками сам. Очень старые iPhone так не умеют — для них включается простой режим: файл целиком, без подстройки качества." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#d5e8d4;strokeColor=#4d8b47;fontSize=13;align=left;spacingLeft=12;spacingRight=10;verticalAlign=middle;size=18;" parent="1" vertex="1">
+                    <mxGeometry x="1130" y="2080" width="1010" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-se1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f6fb2;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="c-sp1" target="c-sp2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-se2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f6fb2;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="c-sp2" target="c-sp3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-se3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f6fb2;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="c-sp3" target="c-sp4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="c-se4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f6fb2;endArrow=blockThin;endFill=1;strokeWidth=2;" parent="1" source="c-sp4" target="c-sp5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

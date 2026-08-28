@@ -26,6 +26,7 @@
     "db:migration:reset": "prisma migrate reset --force",
     "test:db:migration:reset": "cross-env DATABASE_URL=postgresql://admin:admin@localhost:5433/spotify_test SHADOW_DATABASE_URL=postgresql://admin:admin@localhost:5433/spotify_test_shadow prisma migrate reset --force",
     "db:migration:start": "prisma migrate dev --name init",
+    "db:migration:deploy": "prisma migrate deploy",
     "db:gen": "prisma generate",
     "db:gen:prod": "prisma generate",
     "db:ui": "prisma studio",

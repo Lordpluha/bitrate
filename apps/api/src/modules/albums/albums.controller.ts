@@ -34,7 +34,7 @@ import { AlbumEntity } from './entities'
 /** Represents the albums controller. */
 @ApiExtraModels(AlbumEntity)
 @ApiTags('Albums')
-@Controller('albums')
+@Controller({ path: 'albums', version: '1' })
 export class AlbumsController {
   constructor(private albumsService: AlbumsService) {}
 
@@ -45,8 +45,10 @@ export class AlbumsController {
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('title') title?: AlbumEntity['title'],
+    @Query('artistId', new ParseUUIDPipe({ optional: true })) artistId?: string,
   ) {
     return await this.albumsService.findAll({
+      artistId,
       limit,
       page,
       title,

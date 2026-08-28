@@ -3,8 +3,11 @@ import { TokenService } from '@modules/tokens/token.service'
 import { buildUser } from '@modules/users/__tests__/fixtures/users.fixtures'
 import { UsersService } from '@modules/users/users.service'
 import type { INestApplication } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
+import { OAuthService } from './oauth.service'
+import { TwoFactorService } from './two-factor.service'
 import { UserAuthService } from './user-auth.service'
 import { UsersAuthController } from './users-auth.controller'
 import { UserAuthGuard } from './users-auth.guard'
@@ -20,6 +23,7 @@ const makeAuthServiceMock = () =>
 const makeUsersServiceMock = () =>
   ({
     findById: jest.fn(),
+    findSelfById: jest.fn(),
   }) as unknown as jest.Mocked<UsersService>
 
 const makeTokenServiceMock = () =>
@@ -46,6 +50,9 @@ describe('UsersAuthController (int)', () => {
         { provide: UserAuthService, useValue: authService },
         { provide: UsersService, useValue: usersService },
         { provide: TokenService, useValue: tokenService },
+        { provide: OAuthService, useValue: {} },
+        { provide: TwoFactorService, useValue: {} },
+        { provide: ConfigService, useValue: { get: jest.fn() } },
       ],
     })
       .overrideGuard(UserAuthGuard)
@@ -73,7 +80,7 @@ describe('UsersAuthController (int)', () => {
     authService.registerUser.mockReset()
     authService.logout.mockReset()
     authService.refresh.mockReset()
-    usersService.findById.mockReset()
+    usersService.findSelfById.mockReset()
   })
 
   it('POST /auth/registration should return 201', async () => {
@@ -112,12 +119,12 @@ describe('UsersAuthController (int)', () => {
   })
 
   it('GET /auth/me should return 200 with user', async () => {
-    usersService.findById.mockResolvedValue(user as never)
+    usersService.findSelfById.mockResolvedValue(user as never)
 
     const res = await request(app.getHttpServer()).get('/auth/me')
 
     expect(res.status).toBe(200)
-    expect(usersService.findById).toHaveBeenCalledWith(user.id)
+    expect(usersService.findSelfById).toHaveBeenCalledWith(user.id)
   })
 
   it('POST /auth/refresh should return 201 and set new cookies', async () => {

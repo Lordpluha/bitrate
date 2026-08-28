@@ -1,6 +1,6 @@
-import { ROUTES } from '@/shared/routes'
 import { MusicCardLg } from '@/shared/ui'
 import { LibraryMusicContainer } from '@/widgets/LeftSidebar/LibraryMusicSkeleton'
+import { resolveLibraryHref } from '@/widgets/LeftSidebar/lib/resolveLibraryHref'
 import { MusicCardSm } from '@/widgets/LeftSidebar/MusicCardSm'
 import type { LibraryMusicItem } from '@/widgets/LeftSidebar/model/library.types'
 
@@ -24,8 +24,7 @@ export const LibraryMusicList = ({
 }: LibraryMusicListProps) => (
   <LibraryMusicContainer isCollapsed={isCollapsed} isExpanded={isExpanded}>
     {items.map((item) => {
-      const href =
-        item.id === 'liked-songs' ? ROUTES.likedSongs : ROUTES.playlist(item.id)
+      const href = resolveLibraryHref(item)
 
       return isExpanded ? (
         <MusicCardLg

@@ -7,7 +7,7 @@ export const ForgotPasswordSchema = z.object({
 })
 
 /** Represents the forgot password dto. */
-export class ForgotPasswordDto {
+export class ArtistForgotPasswordDto {
   /** The email value. */
   @ApiProperty({ example: 'artist@example.com' })
   email: string

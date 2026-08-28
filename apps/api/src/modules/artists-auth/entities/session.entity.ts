@@ -26,5 +26,5 @@ export class ArtistSessionEntity implements ArtistSession {
 
   /** The expires at value. */
   @ApiProperty()
-  expiresAt: Date | null
+  expiresAt: Date
 }

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
+import { PUBLIC_USER_SELECT } from './users.select'
 import { UsersService } from './users.service'
 
 describe('UsersService', () => {
@@ -21,7 +22,7 @@ describe('UsersService', () => {
 
     expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledWith({
       where: { id: 'user-1' },
-      omit: { password: true, email: true, twoFactorSecret: true },
+      select: PUBLIC_USER_SELECT,
     })
     expect(result).toBe(user)
   })
@@ -34,7 +35,7 @@ describe('UsersService', () => {
 
     expect(prisma.user.findFirst).toHaveBeenCalledWith({
       where: { email: 'user@example.com' },
-      omit: { password: true, twoFactorSecret: true },
+      select: { id: true },
     })
     expect(result).toBe(user)
   })
@@ -47,24 +48,28 @@ describe('UsersService', () => {
 
     expect(prisma.user.findFirst).toHaveBeenCalledWith({
       where: { username: 'user' },
-      omit: { password: true, email: true, twoFactorSecret: true },
+      select: PUBLIC_USER_SELECT,
     })
     expect(result).toBe(user)
   })
 
   it('findAll should use pagination', async () => {
     const users = [buildUser()]
-    prisma.user.findMany.mockResolvedValue(users)
+    prisma.$transaction.mockResolvedValue([users, 1] as never)
 
     const result = await service.findAll({ username: 'user', page: 2, limit: 5 })
 
     expect(prisma.user.findMany).toHaveBeenCalledWith({
-      where: { username: 'user' },
+      where: {
+        username: { contains: 'user', mode: 'insensitive' },
+        deletedAt: null,
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       skip: 5,
       take: 5,
-      omit: { password: true, email: true, twoFactorSecret: true },
+      select: PUBLIC_USER_SELECT,
     })
-    expect(result).toBe(users)
+    expect(result).toEqual({ data: users, total: 1, page: 2, limit: 5 })
   })
 
   it('create should omit password and twoFactorSecret in result', async () => {
@@ -89,7 +94,7 @@ describe('UsersService', () => {
         description: null,
         updatedAt: created.updatedAt,
       },
-      omit: { password: true, twoFactorSecret: true },
+      select: { id: true, email: true, username: true },
     })
     expect(result).toBe(created)
   })
@@ -103,7 +108,7 @@ describe('UsersService', () => {
     expect(prisma.user.update).toHaveBeenCalledWith({
       where: { id: 'user-1' },
       data: { username: 'updated' },
-      omit: { password: true, twoFactorSecret: true },
+      select: PUBLIC_USER_SELECT,
     })
     expect(result).toBe(updated)
   })
@@ -117,7 +122,7 @@ describe('UsersService', () => {
     expect(prisma.user.update).toHaveBeenCalledWith({
       where: { id: 'user-1' },
       data: { avatar: '/static/users/avatars/avatar.png' },
-      omit: { password: true, email: true, twoFactorSecret: true },
+      select: PUBLIC_USER_SELECT,
     })
     expect(result).toBe(updated)
   })

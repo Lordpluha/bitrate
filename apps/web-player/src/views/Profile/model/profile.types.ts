@@ -1,15 +1,25 @@
 import type { ApiSchemas } from '@spotify/contracts'
-import type { PlaylistEntity } from '@/entities/Playlist'
 
-export type ProfileArtist = ApiSchemas['SafeArtistEntity']
+export type ProfileArtist = {
+  avatar: string | null
+  id: string
+  username: string
+}
 
-export type ProfilePlaylist = PlaylistEntity
+export type ProfilePlaylist = {
+  cover: string | null
+  id: string
+  isPublic: boolean
+  title: string
+}
 
 export type ProfileTrack = Pick<
   ApiSchemas['TrackEntity'],
-  'artistId' | 'cover' | 'duration' | 'id' | 'title'
+  'artistId' | 'id' | 'title'
 > & {
   artist?: {
     username?: string | null
   }
+  cover: string | null
+  duration?: number | null
 }

@@ -22,7 +22,7 @@ export function OAuthGoogleCallbackSwagger() {
     ApiOperation({
       summary: 'Google OAuth callback for artists',
       description:
-        'Handled by Google after artist consents. On success sets auth cookies and redirects to WEB_HOST. On 2FA required, redirects to /login/2fa with a pending token.',
+        'Handled by Google after artist consents. On success sets auth cookies and redirects to ARTIST_WEB_HOST (or legacy WEB_HOST). On 2FA required, redirects to /login/2fa with a pending token.',
     }),
     ApiQuery({
       name: 'code',

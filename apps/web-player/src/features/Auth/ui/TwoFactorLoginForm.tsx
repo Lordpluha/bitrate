@@ -8,6 +8,13 @@ import { Button, Input, LogoIcon, Typography, toast } from '@spotify/ui-react'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 
+/**
+ * The API contract still requires a body token, while the real pending token is
+ * supplied by the backend through the HTTP-only pending_2fa_token cookie.
+ */
+const HTTP_ONLY_PENDING_TOKEN_PLACEHOLDER =
+  'pending-token-from-http-only-cookie'
+
 export const TwoFactorLoginForm = () => {
   const router = useRouter()
   const [code, setCode] = useState('')
@@ -29,7 +36,7 @@ export const TwoFactorLoginForm = () => {
         {
           body: {
             code: nextCode,
-            pendingToken: 'cookie',
+            pendingToken: HTTP_ONLY_PENDING_TOKEN_PLACEHOLDER,
           },
         },
       )

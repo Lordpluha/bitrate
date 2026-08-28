@@ -1,14 +1,12 @@
 'use client'
 
-import {
-  ListMusic,
-  Maximize2,
-  Mic2,
-  MonitorSpeaker,
-  Volume2,
-  VolumeX,
-} from 'lucide-react'
+import { ROUTES } from '@shared/routes'
+import { ListMusic, Maximize2, Mic2, Volume2, VolumeX } from 'lucide-react'
+import Link from 'next/link'
 import type { ChangeEvent } from 'react'
+
+const iconButtonClassName =
+  'p-2 text-text-subdued hover:text-text hover:scale-110 transition-all'
 
 interface PlayerActionsProps {
   volume: number
@@ -30,27 +28,24 @@ export const PlayerActions = ({
   }
 
   return (
-    <div className="flex items-center gap-2 min-w-[180px] justify-end">
-      <button
-        className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all"
-        type="button"
+    <div className="flex items-center gap-2 min-w-45 justify-end">
+      <Link
+        aria-label="Open lyrics"
+        className={iconButtonClassName}
+        href={ROUTES.lyrics}
       >
         <Mic2 size={16} />
-      </button>
-      <button
-        className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all"
-        type="button"
+      </Link>
+      <Link
+        aria-label="Open queue"
+        className={iconButtonClassName}
+        href={ROUTES.queue}
       >
         <ListMusic size={16} />
-      </button>
+      </Link>
       <button
-        className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all"
-        type="button"
-      >
-        <MonitorSpeaker size={16} />
-      </button>
-      <button
-        className="p-2 text-text-subdued hover:text-text hover:scale-110 transition-all"
+        aria-label={volume === 0 ? 'Unmute' : 'Mute'}
+        className={iconButtonClassName}
         onClick={toggleMute}
         type="button"
       >

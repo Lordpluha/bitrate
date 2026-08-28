@@ -3,6 +3,7 @@
 import { selectMusicPlayer, usePlayerStore } from '@entities/Player'
 import { type TrackEntity, TracksList, useLikedTracks } from '@entities/Track'
 import { useMemo } from 'react'
+import { useI18n } from '@/shared/i18n'
 import { getPlaylistDuration } from '../utils/getPlaylistDuration'
 import { PlaylistHeader } from './PlaylistHeader'
 
@@ -11,6 +12,7 @@ export type LikedSongsPlaylistProps = {
 }
 
 export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
+  const { t } = useI18n()
   const musicPlayer = usePlayerStore(selectMusicPlayer)
   const playPlaylist = usePlayerStore((state) => state.playPlaylist)
   const { data: likedTracks } = useLikedTracks(1, 100, undefined, {
@@ -26,16 +28,16 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
   return (
     <>
       <PlaylistHeader
-        author="Your Library"
+        author={t('library.title')}
         duration={getPlaylistDuration(currentTracks)}
-        imageUrl="/images/liked-songs.jpg"
-        title="Liked Songs"
+        imageUrl="/images/liked-songs.svg"
+        title={t('library.likedSongs')}
         tracksCount={currentTracks?.length || 0}
-        type="Playlist"
+        type={t('common.playlist')}
       />
       {currentTracks && currentTracks.length > 0 ? (
         <TracksList
-          activeTrackIndex={musicPlayer.currentTrackIndex}
+          activeTrackId={musicPlayer.currentTrack?.id}
           isPlaybackContextActive={
             musicPlayer.currentPlaylistId === likedSongsPlaybackId
           }
@@ -43,7 +45,7 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
           onPlayTrack={(track, index) =>
             playPlaylist({
               currentPlaylistId: likedSongsPlaybackId,
-              currentPlaylistName: 'Liked Songs',
+              currentPlaylistName: t('library.likedSongs'),
               startTrack: track,
               startTrackIndex: index,
               tracks: currentTracks,
@@ -52,7 +54,7 @@ export const LikedSongsPlaylist = ({ tracks }: LikedSongsPlaylistProps) => {
           tracks={currentTracks}
         />
       ) : (
-        <div className="text-white p-8">No liked tracks yet</div>
+        <div className="p-8 text-text-subdued">{t('playlist.likedEmpty')}</div>
       )}
     </>
   )

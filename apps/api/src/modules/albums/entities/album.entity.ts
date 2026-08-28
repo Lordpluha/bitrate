@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import type { Album } from '@prisma/client'
+import type { Album, AlbumType } from '@prisma/client'
 
 /** Represents the album entity. */
 export class AlbumEntity implements Album {
@@ -12,8 +12,8 @@ export class AlbumEntity implements Album {
   title: string
 
   /** The cover value. */
-  @ApiProperty()
-  cover: string
+  @ApiProperty({ nullable: true })
+  cover: string | null
 
   /** The artist id value. */
   @ApiProperty()
@@ -34,4 +34,24 @@ export class AlbumEntity implements Album {
   /** The release date value. */
   @ApiProperty()
   releaseDate: Date | null
+
+  /** The release kind. */
+  @ApiProperty({ enum: ['ALBUM', 'SINGLE', 'EP', 'COMPILATION'] })
+  type: AlbumType
+
+  /** The record label. */
+  @ApiProperty({ nullable: true })
+  label: string | null
+
+  /** Cached number of tracks. */
+  @ApiProperty()
+  totalTracks: number
+
+  /** Copyright information. */
+  @ApiProperty({ nullable: true })
+  copyright: string | null
+
+  /** Soft deletion timestamp. */
+  @ApiProperty({ nullable: true })
+  deletedAt: Date | null
 }

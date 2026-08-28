@@ -1,39 +1,77 @@
+import { cn } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ROUTES } from '@/shared/routes'
-import { getPlaylistCoverUrl } from '@/shared/utils/mediaUrl'
-import type { LibraryPlaylist } from '@/views/Library/model/library.types'
+import type {
+  LibraryPlaylist,
+  LibraryViewMode,
+} from '@/views/Library/model/library.types'
 import { LibraryGridEmptyAware } from '@/views/Library/ui/LibraryEmptyAware'
 
 type PlaylistLibrarySectionProps = {
   playlists: LibraryPlaylist[]
+  viewMode: LibraryViewMode
 }
 
 export const PlaylistLibrarySection = ({
   playlists,
+  viewMode,
 }: PlaylistLibrarySectionProps) => (
-  <LibraryGridEmptyAware isEmpty={playlists.length === 0}>
-    {playlists.map((playlist) => (
-      <Link
-        className="rounded-lg p-3 transition-colors hover:bg-surface"
-        href={ROUTES.playlist(playlist.id)}
-        key={playlist.id}
-      >
-        <Image
-          alt={playlist.title}
-          className="aspect-square w-full rounded-md object-cover"
-          height={180}
-          src={getPlaylistCoverUrl(playlist.cover)}
-          unoptimized
-          width={180}
-        />
-        <h2 className="mt-3 truncate text-sm font-medium text-text">
-          {playlist.title}
-        </h2>
-        <p className="truncate text-xs text-text-subdued">
-          {playlist.tracks?.length ?? 0} tracks
-        </p>
-      </Link>
-    ))}
+  <LibraryGridEmptyAware
+    className={cn(
+      viewMode === 'grid' && 'grid-cols-2 gap-3',
+      'xl:grid-cols-[repeat(auto-fill,minmax(min(100%,150px),1fr))] xl:gap-4',
+    )}
+    isEmpty={playlists.length === 0}
+  >
+    {playlists.map((playlist) => {
+      const isLikedSongs = playlist.id === 'liked-songs'
+      const href = isLikedSongs
+        ? ROUTES.likedSongs
+        : ROUTES.playlist(playlist.id)
+
+      return (
+        <Link
+          className={cn(
+            'min-w-0 rounded-lg transition-colors hover:bg-surface',
+            viewMode === 'list'
+              ? 'flex items-center gap-3 px-1 py-2'
+              : 'block p-2',
+            'xl:block xl:p-3',
+          )}
+          href={href}
+          key={playlist.id}
+        >
+          <Image
+            alt={playlist.title}
+            className={cn(
+              'shrink-0 rounded-sm object-cover',
+              viewMode === 'list' ? 'size-16' : 'aspect-square w-full',
+              'xl:aspect-square xl:h-auto xl:w-full',
+            )}
+            height={180}
+            src={playlist.cover}
+            unoptimized
+            width={180}
+          />
+          <span className="min-w-0">
+            <span
+              className={cn(
+                'block truncate text-base font-medium xl:mt-3 xl:text-sm',
+                isLikedSongs ? 'text-success' : 'text-text',
+              )}
+            >
+              {playlist.title}
+            </span>
+            <span className="block truncate text-sm text-text-subdued xl:text-xs">
+              Playlist • {playlist.username}
+              {playlist.tracksCount > 0
+                ? ` • ${playlist.tracksCount} tracks`
+                : ''}
+            </span>
+          </span>
+        </Link>
+      )
+    })}
   </LibraryGridEmptyAware>
 )

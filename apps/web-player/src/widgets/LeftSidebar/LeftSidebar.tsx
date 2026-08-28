@@ -1,3 +1,7 @@
+'use client'
+
+import { useState } from 'react'
+import type { LibraryItemType } from '@/widgets/LeftSidebar/model/library.types'
 import { LibraryControls } from './LibraryControls'
 import { LibraryHeader } from './LibraryHeader'
 import { LibraryMusic } from './LibraryMusic'
@@ -16,6 +20,15 @@ export const LeftSidebar = ({
   onToggleCollapsed,
   onToggleExpanded,
 }: LeftSidebarProps) => {
+  const [selectedTypes, setSelectedTypes] = useState<LibraryItemType[]>([])
+
+  const toggleType = (type: LibraryItemType) =>
+    setSelectedTypes((previous) =>
+      previous.includes(type)
+        ? previous.filter((value) => value !== type)
+        : [...previous, type],
+    )
+
   return (
     <div
       className={
@@ -30,9 +43,15 @@ export const LeftSidebar = ({
         onToggleCollapsed={onToggleCollapsed}
         onToggleExpanded={onToggleExpanded}
       />
-      {!isCollapsed && <LibraryTags />}
+      {!isCollapsed && (
+        <LibraryTags onToggle={toggleType} selectedTypes={selectedTypes} />
+      )}
       {!isCollapsed && <LibraryControls />}
-      <LibraryMusic isCollapsed={isCollapsed} isExpanded={isExpanded} />
+      <LibraryMusic
+        isCollapsed={isCollapsed}
+        isExpanded={isExpanded}
+        selectedTypes={selectedTypes}
+      />
     </div>
   )
 }

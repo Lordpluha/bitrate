@@ -34,4 +34,16 @@ export class PlaylistEntity implements Playlist {
   /** The is public value. */
   @ApiProperty()
   isPublic: boolean
+
+  /** Whether collaborators may modify the playlist. */
+  @ApiProperty()
+  collaborative: boolean
+
+  /** Cached number of users following the playlist. */
+  @ApiProperty()
+  followersCount: number
+
+  /** Soft deletion timestamp. */
+  @ApiProperty({ nullable: true })
+  deletedAt: Date | null
 }

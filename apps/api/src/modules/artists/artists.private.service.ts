@@ -1,5 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
 import { CreateArtistDto } from './dtos'
 import { ArtistEntity } from './entities'
 
@@ -26,6 +27,7 @@ export class ArtistsPrivateService {
       where: {
         email,
         password,
+        deletedAt: null,
       },
     })
 
@@ -57,7 +59,7 @@ export class ArtistsPrivateService {
   }
 
   /** Runs the update operation. */
-  async update(id: ArtistEntity['id'], artist: Partial<ArtistEntity>) {
+  async update(id: ArtistEntity['id'], artist: Prisma.ArtistUncheckedUpdateInput) {
     return await this.prisma.artist.update({
       where: { id },
       data: artist,
@@ -73,15 +75,15 @@ export class ArtistsPrivateService {
 
   /** Runs the find by id operation. */
   async findById(id: ArtistEntity['id']) {
-    return await this.prisma.artist.findUnique({
-      where: { id },
+    return await this.prisma.artist.findFirst({
+      where: { id, deletedAt: null },
     })
   }
 
   /** Runs the find by email operation. */
   async findByEmail(email: ArtistEntity['email']) {
-    return await this.prisma.artist.findUnique({
-      where: { email },
+    return await this.prisma.artist.findFirst({
+      where: { email, deletedAt: null },
     })
   }
 }

@@ -17,6 +17,12 @@ export class CacheService implements OnApplicationShutdown {
     await this.redis.quit().catch(() => this.redis.disconnect())
   }
 
+  /** Verifies that Redis accepts commands. */
+  async ping(): Promise<boolean> {
+    if (this.redis.status === 'wait') await this.redis.connect()
+    return (await this.redis.ping()) === 'PONG'
+  }
+
   // Reads from cache if hit; on miss calls fn(), writes result, returns it.
   // If Redis is down, falls back to fn() silently.
   /** Runs the wrap operation. */

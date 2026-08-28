@@ -1,9 +1,14 @@
 import { z } from 'zod'
+import { arrayOrPaginated } from '@/shared/api/paginated'
+import { fallbackTrackCover } from '@/shared/constants'
 
 const playlistTrackResponseSchema = z.object({
   artistId: z.string(),
   audioUrl: z.string(),
-  cover: z.string(),
+  cover: z
+    .string()
+    .nullable()
+    .transform((cover) => cover ?? fallbackTrackCover),
   createdAt: z.string(),
   duration: z.number().nullable(),
   id: z.string(),
@@ -25,7 +30,7 @@ const playlistUserResponseSchema = z.object({
 })
 
 export const playlistResponseSchema = z.object({
-  cover: z.string(),
+  cover: z.string().nullable(),
   createdAt: z.string(),
   description: z.string().nullable(),
   id: z.string(),
@@ -41,6 +46,24 @@ export const playlistWithRelationsResponseSchema =
     user: playlistUserResponseSchema.optional(),
   })
 
-export const playlistsResponseSchema = z.array(
+export const playlistsResponseSchema = arrayOrPaginated(
   playlistWithRelationsResponseSchema,
+)
+
+export const normalizePlaylistsResponse = (data: unknown) =>
+  playlistsResponseSchema.parse(data)
+
+const libraryPlaylistTrackResponseSchema = z.object({
+  cover: z.string().nullable(),
+  id: z.string(),
+  title: z.string(),
+})
+
+export const libraryPlaylistsResponseSchema = arrayOrPaginated(
+  playlistResponseSchema.extend({
+    _count: z.object({
+      tracks: z.number(),
+    }),
+    tracks: z.array(libraryPlaylistTrackResponseSchema).default([]),
+  }),
 )

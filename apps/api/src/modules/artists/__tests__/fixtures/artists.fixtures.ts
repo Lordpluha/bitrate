@@ -13,5 +13,13 @@ export const buildArtist = (overrides: Partial<ArtistEntity> = {}): ArtistEntity
   twoFactorEnabled: false,
   createdAt: new Date(),
   updatedAt: new Date(),
+  emailVerifiedAt: new Date(),
+  failedLoginAttempts: 0,
+  lockedUntil: null,
+  verified: false,
+  monthlyListeners: 0,
+  country: null,
+  socials: null,
+  deletedAt: null,
   ...overrides,
 })

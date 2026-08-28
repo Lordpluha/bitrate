@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
+
 import { usePlayerStore } from './playerStore'
 
 type TestTrackInput = {
@@ -8,7 +10,7 @@ type TestTrackInput = {
   duration: number
 }
 
-const createTrack = ({ id, title, duration }: TestTrackInput) => ({
+const createTrack = ({ id, title, duration }: TestTrackInput): TrackEntity => ({
   id,
   title,
   duration,
@@ -24,6 +26,18 @@ const createTrack = ({ id, title, duration }: TestTrackInput) => ({
   processingAttempts: 0,
   processingStartedAt: null,
   processingFinishedAt: null,
+  explicit: false,
+  popularity: 0,
+  playCount: 0,
+  isrc: null,
+  previewUrl: null,
+  trackNumber: null,
+  discNumber: 1,
+  language: null,
+  deletedAt: null,
+  playbackVersion: 1,
+  fragmentTimescale: null,
+  durationTicks: null,
 })
 
 describe('usePlayerStore', () => {
@@ -47,11 +61,12 @@ describe('usePlayerStore', () => {
     expect(usePlayerStore.getState().isPlaying).toBe(false)
   })
 
-  it('cycles through playlist tracks in both directions', () => {
+  it('cycles through playlist tracks in both directions when repeat is all', () => {
     const first = createTrack({ id: 'first', title: 'First', duration: 120 })
     const second = createTrack({ id: 'second', title: 'Second', duration: 180 })
 
     usePlayerStore.getState().setPlaylistTracks([first, second])
+    usePlayerStore.getState().setRepeatMode('all')
     usePlayerStore.getState().play(first)
     usePlayerStore.getState().changeTrack('next')
 

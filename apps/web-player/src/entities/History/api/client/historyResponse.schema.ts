@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { arrayOrPaginated } from '@/shared/api/paginated'
+import { fallbackTrackCover } from '@/shared/constants'
 
 const historyArtistResponseSchema = z.object({
   avatar: z.string().nullable(),
@@ -9,7 +11,10 @@ const historyArtistResponseSchema = z.object({
 const historyTrackResponseSchema = z.object({
   artist: historyArtistResponseSchema.optional(),
   artistId: z.string(),
-  cover: z.string(),
+  cover: z
+    .string()
+    .nullable()
+    .transform((cover) => cover ?? fallbackTrackCover),
   duration: z.number().nullable(),
   id: z.string(),
   title: z.string(),
@@ -22,7 +27,7 @@ export const listeningHistoryEntrySchema = z.object({
   trackId: z.string(),
 })
 
-export const listeningHistoryResponseSchema = z.array(
+export const listeningHistoryResponseSchema = arrayOrPaginated(
   listeningHistoryEntrySchema,
 )
 

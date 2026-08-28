@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { ArtistAuthGuard } from '@modules/artists-auth/artists-auth.guard'
+import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
 import type { INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
@@ -28,6 +29,15 @@ describe('AlbumsController (int)', () => {
       controllers: [AlbumsController],
       providers: [{ provide: AlbumsService, useValue: service }],
     })
+      .overrideGuard(UserAuthGuard)
+      .useValue({
+        canActivate: (ctx: {
+          switchToHttp: () => { getRequest: () => Record<string, unknown> }
+        }) => {
+          ctx.switchToHttp().getRequest().user = { id: 'user-1', username: 'user' }
+          return true
+        },
+      })
       .overrideGuard(ArtistAuthGuard)
       .useValue({
         canActivate: (ctx: {
@@ -84,9 +94,7 @@ describe('AlbumsController (int)', () => {
     const album = buildAlbum()
     service.create.mockResolvedValue(album as never)
 
-    const res = await request(app.getHttpServer())
-      .post('/albums')
-      .send({ title: 'New Album', description: null })
+    const res = await request(app.getHttpServer()).post('/albums').send({ title: 'New Album' })
 
     expect(res.status).toBe(201)
     expect(service.create).toHaveBeenCalledWith(

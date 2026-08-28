@@ -1,5 +1,8 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { type FormEvent, useEffect, useState } from 'react'
+import { useSearchHistory } from '@/features/Search'
+import { useAuth } from '@/shared/hooks'
+import { useI18n } from '@/shared/i18n'
 import { ROUTES } from '@/shared/routes'
 import type {
   HeaderSuggestion,
@@ -9,14 +12,35 @@ import { useRecentSearches } from '@/widgets/MainHeader/ui/HeaderSearch/model/us
 import { useSearchSuggestions } from '@/widgets/MainHeader/ui/HeaderSearch/model/useSearchSuggestions'
 
 export const useHeaderSearch = () => {
+  const { isAuthenticated } = useAuth()
+  const { t } = useI18n()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [query, setQuery] = useState(searchParams.get('q') ?? '')
   const [debouncedQuery, setDebouncedQuery] = useState(query.trim())
   const [isFocused, setIsFocused] = useState(false)
-  const { recentSearches, rememberSearch } = useRecentSearches()
+  const { recentSearches: localRecentSearches, rememberSearch } =
+    useRecentSearches()
+  const { data: serverHistory } = useSearchHistory(1, 8, isAuthenticated)
   const trimmedQuery = query.trim()
   const suggestions = useSearchSuggestions(trimmedQuery, debouncedQuery)
+  const recentSearches = [
+    ...localRecentSearches,
+    ...(serverHistory?.data.map((item) => ({
+      query: item.query,
+      subtitle: t('common.search'),
+      title: item.query,
+    })) ?? []),
+  ]
+    .filter(
+      (item, index, items) =>
+        items.findIndex(
+          (candidate) =>
+            candidate.title.toLocaleLowerCase() ===
+            item.title.toLocaleLowerCase(),
+        ) === index,
+    )
+    .slice(0, 8)
 
   useEffect(() => {
     setQuery(searchParams.get('q') ?? '')
@@ -35,7 +59,7 @@ export const useHeaderSearch = () => {
     if (!trimmedQuery) return
     rememberSearch({
       query: trimmedQuery,
-      subtitle: 'Search',
+      subtitle: t('common.search'),
       title: trimmedQuery,
     })
     setIsFocused(false)

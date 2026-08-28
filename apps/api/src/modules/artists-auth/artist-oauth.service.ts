@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto'
+import type { LoginResult } from '@common/auth.types'
 import type { AppConfig } from '@common/config'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
@@ -22,6 +23,13 @@ interface OAuthProfile {
 }
 
 /** Represents the artist oauth service. */
+/**
+ * Every route is served under the global prefix and URI version set in
+ * `main.ts`. The redirect URI handed to the provider must include it, or the
+ * provider sends the user back to a path that does not exist.
+ */
+const API_PREFIX = '/api/v1'
+
 @Injectable()
 export class ArtistOAuthService {
   /** Creates a new instance. */
@@ -52,7 +60,7 @@ export class ArtistOAuthService {
   }
 
   /** Runs the handle google callback operation. */
-  async handleGoogleCallback(code: string) {
+  async handleGoogleCallback(code: string): Promise<LoginResult> {
     const profile = await this.exchangeGoogleCode(code)
     return this.findOrCreateArtistAndLogin('google', profile)
   }
@@ -72,7 +80,7 @@ export class ArtistOAuthService {
   }
 
   /** Runs the handle facebook callback operation. */
-  async handleFacebookCallback(code: string) {
+  async handleFacebookCallback(code: string): Promise<LoginResult> {
     const profile = await this.exchangeFacebookCode(code)
     return this.findOrCreateArtistAndLogin('facebook', profile)
   }
@@ -80,7 +88,7 @@ export class ArtistOAuthService {
   /** Runs the build redirect uri operation. */
   private buildRedirectUri(provider: 'google' | 'facebook'): string {
     const base = this.config.get('API_BASE_URL') ?? 'http://localhost:3000'
-    return `${base}/artists/auth/oauth/${provider}/callback`
+    return `${base}${API_PREFIX}/artists/auth/oauth/${provider}/callback`
   }
 
   /** Runs the exchange google code operation. */
@@ -154,11 +162,17 @@ export class ArtistOAuthService {
     })
 
     if (existing) {
+      if (existing.artist.deletedAt) {
+        throw new UnauthorizedException('Artist account is unavailable')
+      }
       return this.sessionOrPending(existing.artist)
     }
 
-    const existingArtist = await this.prisma.artist.findFirst({ where: { email: profile.email } })
+    const existingArtist = await this.prisma.artist.findUnique({ where: { email: profile.email } })
     if (existingArtist) {
+      if (existingArtist.deletedAt) {
+        throw new UnauthorizedException('Artist account is unavailable')
+      }
       throw new ConflictException(
         'An account with this email already exists. Log in to your existing account to link OAuth.',
       )
@@ -169,6 +183,7 @@ export class ArtistOAuthService {
       artist = await this.prisma.artist.create({
         data: {
           email: profile.email,
+          emailVerifiedAt: new Date(),
           username: this.generateUniqueUsername(profile.name),
           password: null,
         },
@@ -214,6 +229,7 @@ export class ArtistOAuthService {
         access_token: this.token.hashToken(access_token),
         refresh_token: this.token.hashToken(refresh_token),
         artistId: artist.id,
+        expiresAt: this.token.getRefreshTokenExpiresAt(),
       },
     })
 

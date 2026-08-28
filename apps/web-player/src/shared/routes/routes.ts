@@ -9,6 +9,10 @@ export const ROUTES = {
       token
         ? `/auth/reset-password?token=${encodeURIComponent(token)}`
         : '/auth/reset-password',
+    verifyEmail: (email?: string) =>
+      email
+        ? `/verify-email?email=${encodeURIComponent(email)}`
+        : '/verify-email',
   },
   main: '/main',
   likedSongs: '/main/liked-songs',
@@ -17,8 +21,12 @@ export const ROUTES = {
   profile: '/main/profile',
   recents: '/main/recents',
   settings: '/main/preferences',
+  queue: '/main/queue',
+  lyrics: '/main/lyrics',
   playlist: (id: string) => `/main/playlist/${id}`,
   album: (id: string) => `/main/album/${id}`,
+  artist: (id: string) => `/main/artist/${id}`,
+  podcast: (id: string) => `/main/podcast/${id}`,
   user: (id: string) => `/main/user/${id}`,
   searchCategory: (category: string) =>
     `/main/search?category=${encodeURIComponent(category)}`,

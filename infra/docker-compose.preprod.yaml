@@ -40,6 +40,17 @@ services:
     networks:
       - spotify-network
 
+  # Local SMTP capture. No real email leaves the development stack.
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: spotify-mailhog
+    restart: unless-stopped
+    ports:
+      - "${MAILHOG_SMTP_PORT:-1025}:1025"
+      - "${MAILHOG_UI_PORT:-8025}:8025"
+    networks:
+      - spotify-network
+
   # Backend API (NestJS)
   api:
     build:
@@ -56,6 +67,9 @@ services:
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
       WEB_HOST: ${WEB_HOST:-http://localhost:3001}
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+      EMAIL_FROM: no-reply@spotify.local
       JWT_SECRET: ${JWT_SECRET:-change_me_in_production_secret}
       PORT: 3000
     ports:
@@ -72,6 +86,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      mailhog:
+        condition: service_started
     networks:
       - spotify-network
     command: pnpm --filter @spotify/api run start:dev
@@ -87,6 +103,8 @@ services:
     environment:
       NODE_ENV: development
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3001}
+      API_URL: ${API_URL:-http://api:3000}
       PORT: 3001
     ports:
       - "${WEB_PORT:-3001}:3001"

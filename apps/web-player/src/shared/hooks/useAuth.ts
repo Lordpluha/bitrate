@@ -11,9 +11,14 @@ export const useAuth = () => {
   const queryClient = useQueryClient()
   const pathname = usePathname()
 
-  // Не запрашиваем данные пользователя на страницах авторизации
+  /** Auth screens must not fetch the current user. */
   const isAuthPage = pathname?.startsWith('/auth/')
 
+  /**
+   * Never queries on auth pages, never retries a 401 (the middleware owns
+   * that), and otherwise relies entirely on the cache until an explicit
+   * invalidation.
+   */
   const {
     data: user,
     isLoading,
@@ -23,24 +28,23 @@ export const useAuth = () => {
     queryFn: async () => {
       const { data, response } = await clientFetchClient.GET('/api/v1/auth/me')
 
-      // Если ответ не OK и это не 401 (401 обрабатывается middleware)
+      /** Non-401 failures are real errors; 401 is handled by the middleware. */
       if (!response.ok && response.status !== 401) {
         throw new Error('Failed to fetch user')
       }
 
       return data
     },
-    enabled: !isAuthPage, // Отключаем запрос на страницах авторизации
-    retry: false, // Не делаем retry - middleware сам обработает 401
-    staleTime: Infinity, // Data never becomes stale - only refetch manually
-    gcTime: Infinity, // Keep in cache forever until manual invalidation
-    refetchOnWindowFocus: false, // Don't refetch on window focus
-    refetchOnMount: false, // Don't refetch on every mount - use cache
-    refetchOnReconnect: false, // Don't refetch on reconnect
+    enabled: !isAuthPage,
+    retry: false,
+    staleTime: Infinity,
+    gcTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   })
 
-  // User is authenticated if we have user data (even if it's from cache)
-  // Only consider unauthenticated if explicitly got 401/403 error
+  /** Cached user data still counts as authenticated; only an explicit 401/403 signs the user out. */
   const isAuthenticated = !!user
 
   const { mutate, isPending: isLogoutPending } = useMutation({

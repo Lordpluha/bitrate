@@ -1,116 +1,109 @@
-import { useAlbums } from '@/entities/Album'
-import { usePlaylists } from '@/entities/Playlist'
-import { useTracks } from '@/entities/Track'
+'use client'
+
 import {
-  browseCategories,
-  browseImages,
-  mockCategoryRows,
-} from '@/features/Search/model/search.constants'
+  type BrowseCategoryResponse,
+  useCategoryPlaylists,
+  useCharts,
+  useRecommendationsFeed,
+} from '@/entities/Discovery'
 import {
-  buildMockArtistMixes,
-  buildMockCharts,
-  buildMockDailyMixes,
-  buildMockMixes,
-  getMockDescription,
-} from '@/features/Search/model/search.mocks'
-import type {
-  BrowseCategory,
-  MediaCardItem,
-} from '@/features/Search/model/types'
+  mapDiscoveryFeedItem,
+  mapDiscoveryPlaylist,
+  mapDiscoveryTrack,
+} from '@/features/Search/lib/mapDiscoveryFeed'
 import { MediaRow } from '@/features/Search/ui/MediaRow'
-import { ROUTES } from '@/shared/routes'
-import {
-  getAlbumCoverUrl,
-  getPlaylistCoverUrl,
-  getTrackCoverUrl,
-} from '@/shared/utils/mediaUrl'
+import { ErrorState } from '@/shared/ui/ErrorState'
 
 type CategoryPageProps = {
-  category: BrowseCategory
+  category: BrowseCategoryResponse
 }
 
-export const CategoryPage = ({ category }: CategoryPageProps) => {
-  const { data: albums = [] } = useAlbums({ limit: 12 })
-  const { data: playlistsData } = usePlaylists(1, 12)
-  const { data: tracksData } = useTracks({ limit: 12 })
-  const categoryMatches = mockCategoryRows[category.title] ?? []
-  const playlists = Array.isArray(playlistsData) ? playlistsData : []
-  const tracks = tracksData ?? []
+const CATEGORY_SECTION_SKELETON_IDS = [
+  'category-section-skeleton-1',
+  'category-section-skeleton-2',
+  'category-section-skeleton-3',
+] as const
 
-  const playlistItems: MediaCardItem[] = playlists
-    .slice(0, 8)
-    .map((playlist) => ({
-      description: playlist.description || 'Playlist',
-      href: ROUTES.playlist(playlist.id),
-      image: getPlaylistCoverUrl(playlist.cover),
-      title: playlist.title,
-    }))
-  const albumItems: MediaCardItem[] = albums.slice(0, 8).map((album) => ({
-    description: 'Album',
-    href: ROUTES.album(album.id),
-    image: getAlbumCoverUrl(album.cover),
-    title: album.title,
+export const CategoryPage = ({ category }: CategoryPageProps) => {
+  const playlistsQuery = useCategoryPlaylists(category.slug, 1, 20)
+  const chartsQuery = useCharts('global', 1, 20)
+  const feedQuery = useRecommendationsFeed()
+
+  if (
+    playlistsQuery.isPending ||
+    chartsQuery.isPending ||
+    feedQuery.isPending
+  ) {
+    return (
+      <div
+        aria-label={`Loading ${category.name}`}
+        className="min-h-full animate-pulse bg-background-secondary"
+        role="status"
+      >
+        <div className="h-72 bg-surface" />
+        <div className="mx-auto max-w-290 space-y-10 px-6 py-8">
+          {CATEGORY_SECTION_SKELETON_IDS.map((skeletonId) => (
+            <div className="h-56 rounded-lg bg-surface" key={skeletonId} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (playlistsQuery.isError || chartsQuery.isError || feedQuery.isError) {
+    return (
+      <ErrorState
+        description="This category could not be loaded from the server."
+        onRetry={() => {
+          void Promise.all([
+            playlistsQuery.refetch(),
+            chartsQuery.refetch(),
+            feedQuery.refetch(),
+          ])
+        }}
+        title={`${category.name} is unavailable`}
+      />
+    )
+  }
+
+  const playlistItems = playlistsQuery.data.data.map(mapDiscoveryPlaylist)
+  const chartItems = chartsQuery.data.data.map(mapDiscoveryTrack)
+  const feedSections = feedQuery.data.sections.map((section) => ({
+    ...section,
+    items: section.items.map((item) => mapDiscoveryFeedItem(section.id, item)),
   }))
-  const trackItems: MediaCardItem[] = tracks.slice(0, 8).map((track) => ({
-    description: track.artistId || 'Track',
-    image: getTrackCoverUrl(track.cover),
-    title: track.title,
-  }))
-  const mockItems: MediaCardItem[] = categoryMatches.map((title, index) => ({
-    description: getMockDescription(category.title, title),
-    image: browseImages[index % browseImages.length] ?? browseImages[0],
-    title,
-  }))
-  const categoryGrid =
-    mockItems.length > 0
-      ? mockItems
-      : browseCategories
-          .filter((item) => item.title !== category.title)
-          .slice(0, 12)
-          .map((item) => ({
-            description: 'Browse category',
-            href: ROUTES.searchCategory(item.title),
-            image: item.image,
-            title: item.title,
-          }))
+  const color = category.color ?? 'var(--color-surface)'
 
   return (
     <div
       className="min-h-full bg-background-secondary"
       style={{
-        background: `linear-gradient(180deg, ${category.color} 0px, ${category.color} 160px, ${category.color}cc 260px, rgba(18,18,18,0.96) 390px, #121212 520px)`,
+        background: `linear-gradient(180deg, ${color} 0px, color-mix(in oklab, ${color} 72%, var(--color-background-secondary)) 260px, var(--color-background-secondary) 520px)`,
       }}
     >
-      <section className="flex min-h-[300px] items-end px-6 pb-10 pt-24">
-        <div className="mx-auto w-full max-w-[1160px]">
-          <h1 className="text-6xl font-black tracking-normal text-white md:text-7xl">
-            {category.title}
+      <section className="flex min-h-56 items-end px-4 pb-8 pt-20 sm:min-h-64 sm:px-6 sm:pb-10 sm:pt-24 lg:min-h-75">
+        <div className="mx-auto w-full max-w-290">
+          <h1 className="text-4xl font-black tracking-normal text-white sm:text-5xl lg:text-7xl">
+            {category.name}
           </h1>
+          {category.description ? (
+            <p className="mt-3 max-w-160 text-sm text-white/75 sm:text-base">
+              {category.description}
+            </p>
+          ) : null}
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-[1160px] space-y-10 px-6 py-8">
-        <MediaRow
-          items={categoryGrid}
-          title={category.title === 'Podcasts' ? 'Categories' : 'Browse all'}
-        />
-        <MediaRow items={albumItems} title="Discover new music" />
-        <MediaRow items={playlistItems} title="Playlists from our editors" />
-        <MediaRow items={trackItems} title="Hand-picked new releases" />
-        <MediaRow
-          items={buildMockMixes(category.title)}
-          title="Uniquely yours"
-        />
-        <MediaRow items={buildMockCharts()} title="Featured Charts" />
-        <MediaRow
-          items={buildMockDailyMixes(category.title)}
-          title="Your Daily Mixes"
-        />
-        <MediaRow
-          items={playlistItems}
-          title={`Popular ${category.title} playlists`}
-        />
-        <MediaRow items={buildMockArtistMixes()} title="Your Artist Mixes" />
+      <div className="mx-auto w-full max-w-290 space-y-8 px-4 py-6 sm:space-y-10 sm:px-6 sm:py-8">
+        <MediaRow items={playlistItems} title={`Popular ${category.name}`} />
+        {feedSections.map((section) => (
+          <MediaRow
+            items={section.items}
+            key={section.id}
+            title={section.title}
+          />
+        ))}
+        <MediaRow items={chartItems} title="Featured charts" />
       </div>
     </div>
   )

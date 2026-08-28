@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { ROUTES } from '@/shared/routes'
 import { formatDuration } from '@/shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@/shared/utils/mediaUrl'
 import type { ProfileTrack } from '@/views/Profile/model/profile.types'
@@ -7,22 +6,25 @@ import { getTrackArtistName } from '@/views/Profile/model/profile.utils'
 import { ProfileSection } from '@/views/Profile/ui/ProfileSection'
 
 type ProfileTracksSectionProps = {
+  isPending: boolean
   onPlayTrack: (track: ProfileTrack) => void
   tracks: ProfileTrack[]
 }
 
 export const ProfileTracksSection = ({
+  isPending,
   onPlayTrack,
   tracks,
 }: ProfileTracksSectionProps) => (
   <ProfileSection
     className="mt-12"
-    showAllHref={ROUTES.recents}
     subtitle="Only visible to you"
-    title="Recently played"
+    title="Top tracks this month"
   >
     <div className="space-y-1">
-      {tracks.length === 0 ? (
+      {isPending ? (
+        <p className="text-text-subdued">Loading top tracks...</p>
+      ) : tracks.length === 0 ? (
         <p className="text-text-subdued">No tracks yet.</p>
       ) : (
         tracks.slice(0, 4).map((track, index) => (

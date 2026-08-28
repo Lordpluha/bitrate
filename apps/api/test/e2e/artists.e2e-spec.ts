@@ -1,8 +1,8 @@
-import type { PrismaService } from '@infra/prisma/prisma.service'
+import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
-import { resetArtistsDatabase } from '../helpers/db'
+import { resetArtistsDatabase, verifyArtistEmail } from '../helpers/db'
 import { closeE2eApp, createE2eApp, getResponseCookies } from './e2e-app'
 
 const makeRunId = () => Math.random().toString(36).slice(2, 8)
@@ -14,6 +14,7 @@ const registerAndLogin = async (app: INestApplication, runId: string) => {
     username: `artist_${runId}`,
   }
   await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(201)
+  await verifyArtistEmail(app.get(PrismaService), creds.email)
   const res = await request(app.getHttpServer())
     .post('/artists/auth/login')
     .send({ email: creds.email, password: creds.password })
@@ -43,7 +44,7 @@ describe('ArtistsController (e2e)', () => {
     const res = await request(app.getHttpServer()).get('/artists').query({ page: 1, limit: 10 })
 
     expect(res.status).toBe(200)
-    expect(Array.isArray(res.body)).toBe(true)
+    expect(Array.isArray(res.body.data)).toBe(true)
   })
 
   it('GET /artists/:id with invalid UUID should return 400', async () => {
@@ -106,7 +107,9 @@ describe('ArtistsController (e2e)', () => {
       .get(`/artists/${byUsernameRes.body.id}`)
       .expect(200)
 
-    expect(getRes.body).toBeNull()
+    // A soft-deleted artist is no longer found, and a null service result
+    // reaches the client as an empty body rather than a literal null.
+    expect(getRes.body).toEqual({})
   })
 
   it('DELETE /artists/:id should return 401 without auth', async () => {

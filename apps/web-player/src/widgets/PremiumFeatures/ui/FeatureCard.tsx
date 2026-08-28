@@ -25,10 +25,10 @@ export const FeatureCard = ({ icon, description, title }: FeatureCardProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center text-center">
-      <div className="w-[124px] h-[124px] mb-4 flex flex-col items-center justify-center bg-bgSecondary rounded-full shadow-[0_6px_20px_1px_#1ed7604d]">
+      <div className="w-[124px] h-[124px] mb-4 flex flex-col items-center justify-center bg-bgSecondary rounded-full shadow-primary-glow">
         {IconComponent && (
           <IconComponent
-            className="text-green-500 fill-green-500"
+            className="text-primary fill-primary"
             height={48}
             width={48}
           />

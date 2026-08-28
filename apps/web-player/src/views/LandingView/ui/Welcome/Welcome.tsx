@@ -24,13 +24,9 @@ export const Welcome = () => {
         className="relative flex-1 p-20 pt-40 rounded-3xl mt-2 flex flex-col items-center border-green-500 border-solid border-2 overflow-hidden"
         style={{
           background:
-            'linear-gradient(150deg, #0d2616 0%, var(--color-secondary) 99.04%)',
+            'linear-gradient(150deg, color-mix(in oklab, var(--color-primary) 18%, var(--color-background)) 0%, var(--color-secondary) 99.04%)',
         }}
       >
-        {/* <SpotifyCurvesIcon
-          className='w-full h-full absolute top-0 bottom-0 left-0 right-0 z-[1] object-contain'
-          color='#107032'
-        /> */}
         <img
           alt=""
           aria-hidden="true"

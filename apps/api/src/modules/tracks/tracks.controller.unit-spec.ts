@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { BadRequestException } from '@nestjs/common'
 import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import type { TrackPlaybackService } from './track-playback.service'
+import type { TrackStreamingService } from './track-streaming.service'
+import type { TrackUploadService } from './track-upload.service'
 import { TracksController } from './tracks.controller'
 import type { TracksService } from './tracks.service'
 
@@ -10,23 +13,45 @@ const makeServiceMock = () =>
   ({
     findAll: jest.fn(),
     findTrackById: jest.fn(),
-    getTrackStream: jest.fn(),
-    getHlsMasterPlaylist: jest.fn(),
-    getHlsAsset: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
     findLikedTracks: jest.fn(),
     like: jest.fn(),
     unlike: jest.fn(),
   }) as unknown as jest.Mocked<TracksService>
 
+const makeUploadServiceMock = () =>
+  ({
+    create: jest.fn(),
+    update: jest.fn(),
+  }) as unknown as jest.Mocked<TrackUploadService>
+
+const makeStreamingServiceMock = () =>
+  ({
+    getTrackStream: jest.fn(),
+    getTrackAudioStream: jest.fn(),
+    getTrackStreamUrl: jest.fn(),
+    getHlsMasterPlaylist: jest.fn(),
+    getHlsAsset: jest.fn(),
+  }) as unknown as jest.Mocked<TrackStreamingService>
+
+const makePlaybackServiceMock = () =>
+  ({
+    getManifest: jest.fn(),
+    getRenditionStream: jest.fn(),
+  }) as unknown as jest.Mocked<TrackPlaybackService>
+
 describe('TracksController', () => {
   let controller: TracksController
   let service: jest.Mocked<TracksService>
+  let uploadService: jest.Mocked<TrackUploadService>
+  let streamingService: jest.Mocked<TrackStreamingService>
+  let playbackService: jest.Mocked<TrackPlaybackService>
 
   beforeEach(() => {
     service = makeServiceMock()
-    controller = new TracksController(service)
+    uploadService = makeUploadServiceMock()
+    streamingService = makeStreamingServiceMock()
+    playbackService = makePlaybackServiceMock()
+    controller = new TracksController(service, uploadService, streamingService, playbackService)
   })
 
   it('getAll should delegate to service.findAll', () => {
@@ -50,7 +75,7 @@ describe('TracksController', () => {
   })
 
   it('getHlsMasterPlaylist should return the generated playlist', async () => {
-    service.getHlsMasterPlaylist.mockResolvedValue('#EXTM3U\n' as never)
+    streamingService.getHlsMasterPlaylist.mockResolvedValue('#EXTM3U\n' as never)
     const res = {
       set: jest.fn(),
       send: jest.fn().mockReturnValue('sent'),
@@ -58,7 +83,7 @@ describe('TracksController', () => {
 
     const result = await controller.getHlsMasterPlaylist('track-1', res as never)
 
-    expect(service.getHlsMasterPlaylist).toHaveBeenCalledWith('track-1')
+    expect(streamingService.getHlsMasterPlaylist).toHaveBeenCalledWith('track-1')
     expect(res.set).toHaveBeenCalledWith(
       expect.objectContaining({ 'Content-Type': 'application/vnd.apple.mpegurl' }),
     )
@@ -67,7 +92,7 @@ describe('TracksController', () => {
 
   it('getHlsAsset should pipe an authenticated segment response', async () => {
     const stream = { pipe: jest.fn().mockReturnValue('piped') }
-    service.getHlsAsset.mockResolvedValue({
+    streamingService.getHlsAsset.mockResolvedValue({
       stream,
       contentType: 'video/iso.segment',
       contentLength: 1024,
@@ -77,29 +102,68 @@ describe('TracksController', () => {
 
     const result = await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
 
-    expect(service.getHlsAsset).toHaveBeenCalledWith('track-1', 192, 'segment_00000.m4s')
+    expect(streamingService.getHlsAsset).toHaveBeenCalledWith('track-1', 192, 'segment_00000.m4s')
+    expect(res.set).toHaveBeenCalledWith(expect.objectContaining({ 'Content-Length': 1024 }))
     expect(stream.pipe).toHaveBeenCalledWith(res)
     expect(result).toBe('piped')
   })
 
-  it('postTrack should throw BadRequestException when audio file is missing', () => {
+  it('getHlsAsset should omit Content-Length when the asset length is unknown', async () => {
+    const stream = { pipe: jest.fn().mockReturnValue('piped') }
+    streamingService.getHlsAsset.mockResolvedValue({
+      stream,
+      contentType: 'video/iso.segment',
+      contentLength: undefined,
+      immutable: true,
+    } as never)
+    const res = { set: jest.fn() }
+
+    await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
+
+    const [headers] = res.set.mock.calls[0] as [Record<string, unknown>]
+    expect(headers).not.toHaveProperty('Content-Length')
+  })
+
+  it('streamTrack should omit Content-Length when the length is unknown', async () => {
+    const stream = { pipe: jest.fn().mockReturnValue('piped') }
+    streamingService.getTrackStream.mockResolvedValue({
+      stream,
+      contentType: 'audio/mpeg',
+      contentLength: undefined,
+      fileSize: undefined,
+      start: 0,
+      end: undefined,
+      isPartial: false,
+      bitrate: 192,
+      format: 'opus',
+    } as never)
+    const req = { headers: {} } as never
+    const res = { status: jest.fn().mockReturnThis(), set: jest.fn() }
+
+    await controller.streamTrack('track-1', req, res as never, undefined, 'opus')
+
+    const [headers] = res.set.mock.calls[0] as [Record<string, unknown>]
+    expect(headers).not.toHaveProperty('Content-Length')
+  })
+
+  it('postTrack should throw BadRequestException when audio file is missing', async () => {
     const req = { artist: { id: 'artist-1' } } as never
 
-    expect(() => controller.postTrack(req, { title: 'T' } as never, {})).toThrow(
+    await expect(controller.postTrack(req, { title: 'T' } as never, {})).rejects.toThrow(
       BadRequestException,
     )
   })
 
-  it('postTrack should call service.create when audio file is present', async () => {
+  it('postTrack should call uploadService.create when audio file is present', async () => {
     const track = buildTrack()
-    service.create.mockResolvedValue(track as never)
+    uploadService.create.mockResolvedValue(track as never)
     const req = { artist: { id: 'artist-1' } } as never
     const audioFile = buildAudioFile()
     const files = { audio: [audioFile] }
 
     const result = await controller.postTrack(req, { title: 'T' } as never, files)
 
-    expect(service.create).toHaveBeenCalledWith(
+    expect(uploadService.create).toHaveBeenCalledWith(
       'artist-1',
       { title: 'T' } as never,
       audioFile,
@@ -108,14 +172,14 @@ describe('TracksController', () => {
     expect(result).toBe(track)
   })
 
-  it('putTrack should call service.update', async () => {
+  it('putTrack should call uploadService.update', async () => {
     const track = buildTrack()
-    service.update.mockResolvedValue(track as never)
+    uploadService.update.mockResolvedValue(track as never)
 
     const req = { artist: { id: 'artist-1' } } as never
     const result = await controller.putTrack(req, 'track-1', { title: 'Updated' } as never, {})
 
-    expect(service.update).toHaveBeenCalledWith(
+    expect(uploadService.update).toHaveBeenCalledWith(
       'artist-1',
       'track-1',
       { title: 'Updated' } as never,

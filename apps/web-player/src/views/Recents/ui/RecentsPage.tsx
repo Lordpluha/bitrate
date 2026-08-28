@@ -1,49 +1,34 @@
 'use client'
 
 import {
-  type ListeningHistoryEntry,
+  useClearListeningHistory,
   useListeningHistory,
+  useRemoveListeningHistoryTrack,
 } from '@entities/History'
 import { usePlayerStore } from '@entities/Player'
 import { getTrackById } from '@entities/Track'
 import { showApiErrorToast } from '@shared/api/feedback'
-import { ROUTES } from '@shared/routes'
-import { getPlaylistCoverUrl, getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { ChevronDown, MoreHorizontal } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-
-const dayFormatter = new Intl.DateTimeFormat('en-US', {
-  day: 'numeric',
-  month: 'short',
-  weekday: 'short',
-})
-
-const getDayLabel = (value: string) => {
-  const date = new Date(value)
-  const today = new Date()
-  const yesterday = new Date()
-  yesterday.setDate(today.getDate() - 1)
-
-  if (date.toDateString() === today.toDateString()) return 'Today'
-  if (date.toDateString() === yesterday.toDateString()) return 'Yesterday'
-
-  return dayFormatter.format(date)
-}
+import { useMemo } from 'react'
+import { useI18n } from '@/shared/i18n'
+import { groupListeningHistory } from '@/views/Recents/model/groupListeningHistory'
+import { EarlierHistoryLink } from '@/views/Recents/ui/EarlierHistoryLink'
+import { HistoryEntryRow } from '@/views/Recents/ui/HistoryEntryRow'
 
 export const RecentsPage = () => {
+  const { locale, t } = useI18n()
   const play = usePlayerStore((state) => state.play)
+  const removeTrack = useRemoveListeningHistoryTrack()
+  const clearHistory = useClearListeningHistory()
   const { data: history, isPending } = useListeningHistory({
     page: 1,
     limit: 50,
   })
-  const groups = (history ?? []).reduce<
-    Record<string, ListeningHistoryEntry[]>
-  >((acc, entry) => {
-    const label = getDayLabel(entry.listenedAt)
-    acc[label] = [...(acc[label] ?? []), entry]
-    return acc
-  }, {})
+  const groups = useMemo(() => {
+    return groupListeningHistory(history ?? [], locale, {
+      today: t('recents.today'),
+      yesterday: t('recents.yesterday'),
+    })
+  }, [history, locale, t])
 
   const playTrack = async (trackId: string) => {
     try {
@@ -53,91 +38,68 @@ export const RecentsPage = () => {
     }
   }
 
+  const removeHistoryTrack = async (trackId: string) => {
+    try {
+      await removeTrack.mutateAsync(trackId)
+    } catch (error) {
+      showApiErrorToast(error, 'Unable to remove this track from history.')
+    }
+  }
+
+  const clearListeningHistory = async () => {
+    try {
+      await clearHistory.mutateAsync()
+    } catch (error) {
+      showApiErrorToast(error, 'Unable to clear listening history.')
+    }
+  }
+
   return (
     <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
-      <div className="mx-auto w-full max-w-220 px-10 py-10 max-[900px]:px-5">
-        <h1 className="mb-14 text-4xl font-black text-text">Recents</h1>
+      <div className="mx-auto w-full max-w-220 px-4 py-6 sm:px-5 sm:py-10 lg:px-10">
+        <div className="mb-8 flex items-center justify-between gap-4 sm:mb-14">
+          <h1 className="text-3xl font-black text-text sm:text-4xl">
+            {t('recents.title')}
+          </h1>
+          {(history?.length ?? 0) > 0 ? (
+            <button
+              className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-text transition-colors hover:border-text hover:bg-surface disabled:opacity-50"
+              disabled={clearHistory.isPending}
+              onClick={() => void clearListeningHistory()}
+              type="button"
+            >
+              {t('recents.clear')}
+            </button>
+          ) : null}
+        </div>
 
         {isPending ? (
-          <p className="text-text-subdued">Loading recents...</p>
+          <p aria-live="polite" className="text-text-subdued">
+            {t('recents.loading')}
+          </p>
         ) : Object.keys(groups).length === 0 ? (
           <div className="rounded-md bg-surface p-6 text-text-subdued">
-            No recent listening activity yet.
+            {t('recents.empty')}
           </div>
         ) : (
           <div className="grid gap-9">
             {Object.entries(groups).map(([label, entries]) => (
               <section key={label}>
                 <h2 className="mb-4 text-2xl font-bold text-text">{label}</h2>
-                <div className="grid gap-2">
-                  {entries?.map((entry) => (
-                    <div
-                      className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-1 py-1 transition-colors hover:bg-white/10"
+                <ul className="grid gap-2">
+                  {entries.map((entry) => (
+                    <HistoryEntryRow
+                      entry={entry}
+                      isRemoving={removeTrack.isPending}
                       key={entry.id}
-                    >
-                      <button
-                        className="contents text-left"
-                        onClick={() => void playTrack(entry.track.id)}
-                        type="button"
-                      >
-                        <Image
-                          alt={entry.track.title}
-                          className="h-16 w-16 rounded object-cover"
-                          height={64}
-                          src={getTrackCoverUrl(entry.track.cover)}
-                          unoptimized
-                          width={64}
-                        />
-                        <span className="min-w-0">
-                          <span className="block truncate text-base text-text">
-                            {entry.track.title}
-                          </span>
-                          <span className="block truncate text-sm text-text-subdued">
-                            {entry.track.artist?.username ??
-                              entry.track.artistId}
-                          </span>
-                        </span>
-                      </button>
-                      <button
-                        aria-label={`More actions for ${entry.track.title}`}
-                        className="p-2 text-text-subdued transition-colors hover:text-text"
-                        type="button"
-                      >
-                        <ChevronDown size={20} />
-                      </button>
-                    </div>
+                      onPlay={(trackId) => void playTrack(trackId)}
+                      onRemove={(trackId) => void removeHistoryTrack(trackId)}
+                    />
                   ))}
-                </div>
+                </ul>
               </section>
             ))}
-
-            <section>
-              <h2 className="mb-4 text-2xl font-bold text-text">Earlier</h2>
-              <div className="grid gap-2">
-                <Link
-                  className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-1 py-1 transition-colors hover:bg-white/10"
-                  href={ROUTES.likedSongs}
-                >
-                  <Image
-                    alt="Liked Songs"
-                    className="h-16 w-16 rounded object-cover"
-                    height={64}
-                    src={getPlaylistCoverUrl(null)}
-                    unoptimized
-                    width={64}
-                  />
-                  <span className="min-w-0">
-                    <span className="block truncate text-base text-text">
-                      Liked Songs
-                    </span>
-                    <span className="block truncate text-sm text-text-subdued">
-                      Playlist
-                    </span>
-                  </span>
-                  <MoreHorizontal className="text-text-subdued" size={20} />
-                </Link>
-              </div>
-            </section>
+            <EarlierHistoryLink />
           </div>
         )}
       </div>

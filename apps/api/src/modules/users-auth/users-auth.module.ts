@@ -9,10 +9,11 @@ import { UserAuthService } from './user-auth.service'
 import { UsersAuthController } from './users-auth.controller'
 import { OptionalUserAuthGuard, UserAuthGuard } from './users-auth.guard'
 import { WsUserAuthGuard } from './users-auth.ws.guard'
+import { UsersOAuthController } from './users-oauth.controller'
 
 @Module({
   imports: [PrismaModule, forwardRef(() => UsersModule), TokensModule, MailModule],
-  controllers: [UsersAuthController],
+  controllers: [UsersAuthController, UsersOAuthController],
   providers: [
     UserAuthService,
     OAuthService,
@@ -21,6 +22,6 @@ import { WsUserAuthGuard } from './users-auth.ws.guard'
     OptionalUserAuthGuard,
     WsUserAuthGuard,
   ],
-  exports: [UserAuthService, UserAuthGuard, OptionalUserAuthGuard, WsUserAuthGuard],
+  exports: [TokensModule, UserAuthService, UserAuthGuard, OptionalUserAuthGuard, WsUserAuthGuard],
 })
 export class UsersAuthModule {}

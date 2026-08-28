@@ -1,7 +1,7 @@
 'use client'
 
 import { usePlaylists } from '@entities/Playlist'
-import { useUserById } from '@entities/User'
+import { FollowUserButton, useUserById } from '@entities/User'
 import { ROUTES } from '@shared/routes'
 import { getPlaylistCoverUrl, getUserAvatarUrl } from '@shared/utils/mediaUrl'
 import { UserRound } from 'lucide-react'
@@ -42,8 +42,8 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
 
   return (
     <div className="h-full overflow-y-auto rounded-lg bg-background-secondary custom-scrollbar">
-      <section className="bg-gradient-to-b from-surface-hover via-surface to-background-tinted px-8 pb-8 pt-12">
-        <div className="flex items-end gap-6 max-[700px]:items-center">
+      <section className="bg-gradient-to-b from-surface-hover via-surface to-background-tinted px-4 pb-7 pt-8 sm:px-8 sm:pb-8 sm:pt-12">
+        <div className="flex items-end gap-6 max-[700px]:flex-col max-[700px]:items-start max-[700px]:gap-4">
           <div className="flex size-52 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface shadow-2xl max-[700px]:size-32">
             {user.avatar ? (
               <Image
@@ -58,9 +58,9 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
               <UserRound className="text-text-subdued" size={76} />
             )}
           </div>
-          <div className="min-w-0 pb-3">
+          <div className="min-w-0 w-full pb-3">
             <p className="text-sm text-text-subdued">Profile</p>
-            <h1 className="truncate text-6xl font-black text-text max-[900px]:text-4xl">
+            <h1 className="break-words text-6xl font-black text-text max-[900px]:text-4xl">
               {user.username}
             </h1>
             {user.description && (
@@ -68,11 +68,12 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
                 {user.description}
               </p>
             )}
+            <FollowUserButton userId={user.id} username={user.username} />
           </div>
         </div>
       </section>
 
-      <section className="px-8 py-10">
+      <section className="px-4 py-8 sm:px-8 sm:py-10">
         <h2 className="mb-5 text-2xl font-bold text-text">Public playlists</h2>
         {playlistsQuery.isPending ? (
           <p className="text-text-subdued">Loading playlists...</p>
@@ -83,7 +84,7 @@ export const PublicProfilePage = ({ userId }: PublicProfilePageProps) => {
         ) : playlists.length === 0 ? (
           <p className="text-text-subdued">No public playlists yet.</p>
         ) : (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-5">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,150px),1fr))] gap-5">
             {playlists.map((playlist) => (
               <Link
                 className="min-w-0 rounded-md p-3 transition-colors hover:bg-surface"

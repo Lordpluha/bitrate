@@ -1,9 +1,12 @@
+import { unlink } from 'node:fs/promises'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import type { Request } from 'express'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
 import { UsersController } from './users.controller'
 import type { UsersService } from './users.service'
+
+const unlinkMock = unlink as jest.MockedFunction<typeof unlink>
 
 jest.mock('node:fs/promises', () => ({
   open: jest.fn().mockResolvedValue({
@@ -40,7 +43,8 @@ describe('UsersController', () => {
 
   it('getAll should call service with pagination', async () => {
     const users = [buildUser()]
-    service.findAll.mockResolvedValue(users)
+    const response = { data: users, total: 1, page: 2, limit: 10 }
+    service.findAll.mockResolvedValue(response)
 
     const result = await controller.getAll(10, 2, 'user')
 
@@ -49,7 +53,7 @@ describe('UsersController', () => {
       page: 2,
       limit: 10,
     })
-    expect(result).toBe(users)
+    expect(result).toBe(response)
   })
 
   it('getByUsername should call service', async () => {
@@ -90,11 +94,29 @@ describe('UsersController', () => {
     service.uploadAvatar.mockResolvedValue(updated)
 
     const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
-    const file = { filename: 'avatar.png', path: '/tmp/avatar.png' } as Express.Multer.File
+    const file = {
+      filename: 'avatar.png',
+      path: '/tmp/avatar.png',
+      mimetype: 'image/png',
+    } as Express.Multer.File
 
     const result = await controller.uploadAvatar(req, file)
 
     expect(service.uploadAvatar).toHaveBeenCalledWith('user-1', 'avatar.png')
     expect(result).toBe(updated)
+  })
+
+  it('removes a validated avatar when persisting it fails', async () => {
+    service.uploadAvatar.mockRejectedValue(new Error('database unavailable'))
+    const req = { user: buildUser({ id: 'user-1' }) } as unknown as Request
+    const file = {
+      filename: 'avatar.png',
+      path: '/tmp/avatar.png',
+      mimetype: 'image/png',
+    } as Express.Multer.File
+
+    await expect(controller.uploadAvatar(req, file)).rejects.toThrow('database unavailable')
+
+    expect(unlinkMock).toHaveBeenCalledWith(file.path)
   })
 })

@@ -3,8 +3,11 @@ import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixture
 import { ArtistsService } from '@modules/artists/artists.service'
 import { TokenService } from '@modules/tokens/token.service'
 import type { INestApplication } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
+import { ArtistOAuthService } from './artist-oauth.service'
+import { ArtistTwoFactorService } from './artist-two-factor.service'
 import { AuthController } from './artists-auth.controller'
 import { ArtistAuthGuard } from './artists-auth.guard'
 import { ArtistsAuthService } from './artists-auth.service'
@@ -46,6 +49,9 @@ describe('AuthController artists (int)', () => {
         { provide: ArtistsAuthService, useValue: authService },
         { provide: ArtistsService, useValue: artistsService },
         { provide: TokenService, useValue: tokenService },
+        { provide: ArtistOAuthService, useValue: {} },
+        { provide: ArtistTwoFactorService, useValue: {} },
+        { provide: ConfigService, useValue: { get: jest.fn() } },
       ],
     })
       .overrideGuard(ArtistAuthGuard)

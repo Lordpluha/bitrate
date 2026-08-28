@@ -99,7 +99,7 @@ describe('PlaylistsController (int)', () => {
 
     const res = await request(app.getHttpServer())
       .post('/playlists')
-      .send({ title: 'My Playlist', isPublic: true, description: null })
+      .send({ title: 'My Playlist', isPublic: true })
 
     expect(res.status).toBe(201)
     expect(service.create).toHaveBeenCalledWith(

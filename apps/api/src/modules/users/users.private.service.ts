@@ -1,5 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
 import { UserEntity } from './entities'
 
 /** Represents the users private service. */
@@ -55,9 +56,7 @@ export class UsersPrivateService {
   }
 
   /** Runs the create operation. */
-  async create(
-    data: Omit<UserEntity, 'id' | 'createdAt' | 'twoFactorSecret' | 'twoFactorEnabled'>,
-  ) {
+  async create(data: Prisma.UserUncheckedCreateInput) {
     return await this.prisma.user.create({
       data,
     })

@@ -1,12 +1,10 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
+import { useBrowseCategories } from '@/entities/Discovery'
 import { useUsers } from '@/entities/User'
 import { useSearch } from '@/features/Search/api/client'
-import {
-  browseCategories,
-  searchTypes,
-} from '@/features/Search/model/search.constants'
+import { searchTypes } from '@/features/Search/model/search.constants'
 import { BrowseCategoryGrid } from '@/features/Search/ui/BrowseCategoryGrid'
 import { CategoryPage } from '@/features/Search/ui/CategoryPage'
 import { SearchQueryState } from '@/features/Search/ui/SearchQueryState'
@@ -15,23 +13,28 @@ export const SearchPage = () => {
   const searchParams = useSearchParams()
   const query = searchParams.get('q')?.trim() ?? ''
   const categoryTitle = searchParams.get('category')?.trim() ?? ''
-  const category = browseCategories.find(
-    (item) => item.title.toLowerCase() === categoryTitle.toLowerCase(),
+  const { data: categoryData } = useBrowseCategories()
+  const category = categoryData?.data.find(
+    (item) =>
+      item.slug.toLowerCase() === categoryTitle.toLowerCase() ||
+      item.name.toLowerCase() === categoryTitle.toLowerCase(),
   )
-  const { data, isFetching } = useSearch({
+  const searchQuery = useSearch({
     limit: 8,
     query,
     types: searchTypes,
   })
-  const { data: usersData, isFetching: areUsersFetching } = useUsers({
+  const usersQuery = useUsers({
     limit: 4,
     username: query,
   })
 
+  const data = searchQuery.data
   const tracks = data?.tracks ?? []
+  const artists = data?.artists ?? []
   const albums = data?.albums ?? []
   const playlists = data?.playlists ?? []
-  const users = usersData ?? []
+  const users = usersQuery.data ?? []
   const hasQuery = query.length > 0
 
   if (category && !hasQuery) {
@@ -44,12 +47,16 @@ export const SearchPage = () => {
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="px-6 py-14">
-        <div className="mx-auto w-full max-w-[1200px]">
+      <div className="px-4 py-6 sm:px-6 sm:py-10 xl:py-14">
+        <div className="mx-auto w-full max-w-300">
           {hasQuery ? (
             <SearchQueryState
-              data={{ albums, playlists, tracks }}
-              isFetching={isFetching || areUsersFetching}
+              data={{ albums, artists, playlists, tracks }}
+              hasError={searchQuery.isError || usersQuery.isError}
+              isFetching={searchQuery.isFetching || usersQuery.isFetching}
+              onRetry={() => {
+                void Promise.all([searchQuery.refetch(), usersQuery.refetch()])
+              }}
               query={query}
               users={users}
             />

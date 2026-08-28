@@ -36,7 +36,7 @@ import { ArtistEntity, SafeArtistEntity } from './entities'
 /** Represents the artists controller. */
 @ApiTags('Artists')
 @ApiExtraModels(ArtistEntity, SafeArtistEntity)
-@Controller('artists')
+@Controller({ path: 'artists', version: '1' })
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 

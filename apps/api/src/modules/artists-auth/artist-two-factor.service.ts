@@ -102,10 +102,11 @@ export class ArtistTwoFactorService {
 
     if (!payload.twofa) throw new UnauthorizedException('Invalid token type')
 
-    const artist = await this.prisma.artist.findUniqueOrThrow({
-      where: { id: payload.sub },
+    const artist = await this.prisma.artist.findFirst({
+      where: { id: payload.sub, deletedAt: null },
       select: selectTwoFAFields,
     })
+    if (!artist) throw new UnauthorizedException('Artist account is unavailable')
     if (!(artist.twoFactorEnabled && artist.twoFactorSecret)) {
       throw new BadRequestException('2FA is not enabled for this account')
     }

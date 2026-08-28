@@ -1,17 +1,18 @@
 'use client'
 
-import { useListeningHistory } from '@/entities/History'
+import { useFollowedArtists } from '@/entities/Artist'
+import { useTopArtists, useTopTracks } from '@/entities/Discovery'
 import { usePlayerStore } from '@/entities/Player'
 import { useMyPlaylists } from '@/entities/Playlist'
-import { getTrackById, useLikedTracks } from '@/entities/Track'
+import { getTrackById } from '@/entities/Track'
+import { useFollowedUsers } from '@/entities/User'
 import { showApiErrorToast } from '@/shared/api/feedback'
 import { useAuth } from '@/shared/hooks'
-import { useArtists } from '@/shared/hooks/useArtists'
 import { getUserAvatarUrl } from '@/shared/utils/mediaUrl'
 import type { ProfileTrack } from '@/views/Profile/model/profile.types'
-import { getUniqueTracks } from '@/views/Profile/model/profile.utils'
 import { ProfileActions } from '@/views/Profile/ui/ProfileActions'
 import { ProfileArtistsSection } from '@/views/Profile/ui/ProfileArtistsSection'
+import { ProfileFollowingUsersSection } from '@/views/Profile/ui/ProfileFollowingUsersSection'
 import { ProfileFooter } from '@/views/Profile/ui/ProfileFooter'
 import { ProfileHeader } from '@/views/Profile/ui/ProfileHeader'
 import { ProfilePlaylistsSection } from '@/views/Profile/ui/ProfilePlaylistsSection'
@@ -20,18 +21,25 @@ import { ProfileTracksSection } from '@/views/Profile/ui/ProfileTracksSection'
 export const ProfilePage = () => {
   const play = usePlayerStore((state) => state.play)
   const { user, isLoading } = useAuth()
-  const { data: artistsData, isPending: isArtistsPending } = useArtists(1, 8)
-  const { data: historyData } = useListeningHistory({ page: 1, limit: 20 })
-  const { data: likedTracks } = useLikedTracks(1, 8)
+  const { data: artistsData, isPending: isArtistsPending } = useTopArtists(
+    'medium',
+    1,
+    5,
+  )
+  const { data: tracksData, isPending: areTracksPending } = useTopTracks(
+    'medium',
+    1,
+    5,
+  )
   const { data: myPlaylistsData, isPending: arePlaylistsPending } =
     useMyPlaylists()
+  const { data: followedUsers = [], isPending: areFollowedUsersPending } =
+    useFollowedUsers(!!user)
+  const { data: followedArtists = [], isPending: areFollowedArtistsPending } =
+    useFollowedArtists(!!user)
 
-  const artists = (artistsData ?? []).slice(0, 5)
-  const trackSource: ProfileTrack[] =
-    historyData && historyData.length > 0
-      ? historyData.map((entry) => entry.track)
-      : (likedTracks ?? [])
-  const topTracks = getUniqueTracks(trackSource).slice(0, 5)
+  const artists = artistsData?.data ?? []
+  const topTracks: ProfileTrack[] = tracksData?.data ?? []
   const myPlaylists = (myPlaylistsData ?? []).slice(0, 6)
 
   const playTrack = async (track: ProfileTrack) => {
@@ -68,16 +76,28 @@ export const ProfilePage = () => {
         username={user.username}
       />
 
-      <section className="bg-gradient-to-b from-black/30 to-background-secondary px-6 py-7">
+      <section className="space-y-10 bg-gradient-to-b from-surface-hover via-surface to-background-secondary px-4 py-6 sm:px-6 sm:py-7">
         <ProfileActions />
         <ProfileArtistsSection artists={artists} isPending={isArtistsPending} />
         <ProfileTracksSection
+          isPending={areTracksPending}
           onPlayTrack={(track) => void playTrack(track)}
           tracks={topTracks}
         />
         <ProfilePlaylistsSection
           isPending={arePlaylistsPending}
           playlists={myPlaylists}
+        />
+        <ProfileArtistsSection
+          artists={followedArtists}
+          emptyMessage="You are not following any artists yet."
+          isPending={areFollowedArtistsPending}
+          subtitle="Artists you follow"
+          title="Following artists"
+        />
+        <ProfileFollowingUsersSection
+          isPending={areFollowedUsersPending}
+          users={followedUsers}
         />
         <ProfileFooter />
       </section>

@@ -1,14 +1,36 @@
 import { z } from 'zod'
+import { arrayOrPaginated } from '@/shared/api/paginated'
 
-export const safeUserResponseSchema = z.object({
+export const publicUserResponseSchema = z.object({
   avatar: z.string().nullable(),
   createdAt: z.string(),
   description: z.string().nullable(),
-  email: z.string(),
   id: z.string(),
-  twoFactorEnabled: z.boolean(),
   updatedAt: z.string(),
   username: z.string(),
 })
 
-export const safeUsersResponseSchema = z.array(safeUserResponseSchema)
+export const publicUsersResponseSchema = arrayOrPaginated(
+  publicUserResponseSchema,
+)
+
+export const followedUsersResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      avatar: z.string().nullable(),
+      description: z.string().nullable(),
+      followedAt: z.string(),
+      id: z.string(),
+      username: z.string(),
+    }),
+  ),
+  limit: z.number(),
+  page: z.number(),
+  total: z.number(),
+})
+
+export type FollowedUser = z.infer<
+  typeof followedUsersResponseSchema
+>['data'][number]
+
+export type PublicUser = z.infer<typeof publicUserResponseSchema>

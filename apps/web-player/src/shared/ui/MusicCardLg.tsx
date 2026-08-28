@@ -1,7 +1,6 @@
 'use client'
-import { fallbackPlaylistCover } from '@shared/constants'
+import { fallbackArtistImage, fallbackPlaylistCover } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
-import { getArtistAvatarUrl, getPlaylistCoverUrl } from '@shared/utils/mediaUrl'
 import { cn, PlayIcon } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,6 +14,12 @@ interface MusicCardLgProps {
   isArtist?: boolean
 }
 
+export const resolveMusicCardImage = (
+  imageUrl: string | undefined,
+  isArtist: boolean | undefined,
+) =>
+  imageUrl?.trim() || (isArtist ? fallbackArtistImage : fallbackPlaylistCover)
+
 export const MusicCardLg = ({
   id,
   name,
@@ -23,12 +28,8 @@ export const MusicCardLg = ({
   imageUrl,
   isArtist,
 }: MusicCardLgProps) => {
-  const href =
-    hrefProp ?? (isArtist ? `/main/artist/${id}` : ROUTES.playlist(id))
-  const fallbackImage = isArtist
-    ? getArtistAvatarUrl(imageUrl)
-    : fallbackPlaylistCover
-  const imageSrc = isArtist ? fallbackImage : getPlaylistCoverUrl(imageUrl)
+  const href = hrefProp ?? (isArtist ? ROUTES.artist(id) : ROUTES.playlist(id))
+  const imageSrc = resolveMusicCardImage(imageUrl, isArtist)
 
   return (
     <Link

@@ -20,6 +20,9 @@ export type StorageObjectMeta = {
  * (STORAGE_DRIVER=local) — both preserve identical Range and HLS-asset behavior.
  */
 export interface StorageService {
+  /** Verifies that the selected storage backend is reachable. */
+  healthCheck(): Promise<boolean>
+
   /** Uploads a buffer or readable stream under `key`, returning the stored key. */
   upload(key: string, body: Buffer | Readable, contentType: string): Promise<string>
 

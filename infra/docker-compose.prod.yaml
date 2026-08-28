@@ -52,6 +52,8 @@ services:
       REDIS_PORT: ${REDIS_PORT:-6379}
       JWT_SECRET: ${JWT_SECRET}
       PORT: 3000
+      # Production exposes the API only through the single nginx hop above.
+      TRUST_PROXY_HOPS: 1
     volumes:
       - ../apps/api/uploads:/app/apps/api/uploads
       - ../apps/api/public:/app/apps/api/public
@@ -76,11 +78,15 @@ services:
       target: production
       args:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+        - API_URL=${API_URL:-http://api:3000}
     container_name: spotify-web-player-prod
     restart: always
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+      API_URL: ${API_URL:-http://api:3000}
     depends_on:
       - api
     networks:

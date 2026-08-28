@@ -1,4 +1,7 @@
-import { useState } from 'react'
+'use client'
+
+import { useSettingsStore } from '@entities/Settings'
+import { useI18n } from '@/shared/i18n'
 import {
   SettingsRow,
   SettingsSection,
@@ -6,38 +9,45 @@ import {
 import { SettingsSwitch } from '@/views/Settings/ui/controls/SettingsSwitch'
 
 export const PrivacySettingsSections = () => {
-  const [listeningActivity, setListeningActivity] = useState(false)
-  const [followers, setFollowers] = useState(true)
-  const [profilePlaylists, setProfilePlaylists] = useState(false)
+  const { t } = useI18n()
+  const listeningActivity = useSettingsStore((state) => state.listeningActivity)
+  const followers = useSettingsStore((state) => state.followersVisible)
+  const profilePlaylists = useSettingsStore(
+    (state) => state.profilePlaylistsVisible,
+  )
+  const toggleSetting = useSettingsStore((state) => state.toggleSetting)
 
   return (
     <>
-      <SettingsSection title="Listening activity and insights">
+      <SettingsSection title={t('settings.privacy.activity')}>
         <SettingsRow
-          description="People on Spotify can see the music you’re playing, stats on how your tastes compare and ask to Jam."
-          label="Listening activity on desktop and mobile"
+          description={t('settings.privacy.activity.description')}
+          label={t('settings.privacy.activity.label')}
         >
           <SettingsSwitch
+            ariaLabel={t('settings.privacy.activity.label')}
             checked={listeningActivity}
-            onChange={() => setListeningActivity((value) => !value)}
+            onChange={() => toggleSetting('listeningActivity')}
           />
         </SettingsRow>
       </SettingsSection>
 
-      <SettingsSection title="What others can see on your profile">
+      <SettingsSection title={t('settings.privacy.profile')}>
         <SettingsRow
-          description="On your profile, people can see who's following you and who you’re following."
-          label="Followers and following"
+          description={t('settings.privacy.followers.description')}
+          label={t('settings.privacy.followers')}
         >
           <SettingsSwitch
+            ariaLabel={t('settings.privacy.followers')}
             checked={followers}
-            onChange={() => setFollowers((value) => !value)}
+            onChange={() => toggleSetting('followersVisible')}
           />
         </SettingsRow>
-        <SettingsRow label="People can see the playlists you’ve added to your profile.">
+        <SettingsRow label={t('settings.privacy.playlists')}>
           <SettingsSwitch
+            ariaLabel={t('settings.privacy.playlists')}
             checked={profilePlaylists}
-            onChange={() => setProfilePlaylists((value) => !value)}
+            onChange={() => toggleSetting('profilePlaylistsVisible')}
           />
         </SettingsRow>
       </SettingsSection>

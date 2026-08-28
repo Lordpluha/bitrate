@@ -49,3 +49,11 @@ export interface ConvertAudioToHlsResult {
 export function convertAudioToHls(
   options: ConvertAudioToHlsOptions,
 ): Promise<ConvertAudioToHlsResult>
+
+export type {
+  CmafFragment,
+  CmafRendition,
+  ConvertAudioToCmafOptions,
+  ConvertAudioToCmafResult,
+} from './cmaf'
+export { convertAudioToCmaf } from './cmaf'

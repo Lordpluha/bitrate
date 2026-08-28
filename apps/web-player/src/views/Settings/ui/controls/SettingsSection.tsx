@@ -1,16 +1,29 @@
 import type { ReactNode } from 'react'
+import { useSettingsSearch } from '@/views/Settings/model/settingsSearchContext'
 
 type SettingsSectionProps = {
   children: ReactNode
+  searchTerms?: string[]
   title: string
 }
 
-export const SettingsSection = ({ children, title }: SettingsSectionProps) => (
-  <section>
-    <h2 className="mb-4 text-base font-bold text-text">{title}</h2>
-    <div className="grid gap-4">{children}</div>
-  </section>
-)
+export const SettingsSection = ({
+  children,
+  searchTerms = [],
+  title,
+}: SettingsSectionProps) => {
+  const query = useSettingsSearch()
+  const searchableText = [title, ...searchTerms].join(' ').toLocaleLowerCase()
+
+  if (query && !searchableText.includes(query)) return null
+
+  return (
+    <section>
+      <h2 className="mb-4 text-base font-bold text-text">{title}</h2>
+      <div className="grid gap-4">{children}</div>
+    </section>
+  )
+}
 
 type SettingsRowProps = {
   children: ReactNode
@@ -23,7 +36,7 @@ export const SettingsRow = ({
   description,
   label,
 }: SettingsRowProps) => (
-  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5 max-[700px]:grid-cols-1">
+  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5 max-[700px]:grid-cols-1 max-[700px]:gap-3">
     <div className="min-w-0">
       <p className="text-sm text-text-subdued">{label}</p>
       {description && (
@@ -32,6 +45,8 @@ export const SettingsRow = ({
         </p>
       )}
     </div>
-    {children}
+    <div className="max-[700px]:flex max-[700px]:w-full max-[700px]:justify-end">
+      {children}
+    </div>
   </div>
 )

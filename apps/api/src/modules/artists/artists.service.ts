@@ -1,8 +1,10 @@
+import { normalizePagination } from '@common/pagination'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { UserEntity } from '@modules/users'
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
+import { PUBLIC_ARTIST_SELECT } from './artists.select'
 import type { CreateArtistDto, UpdateArtistDto } from './dtos'
 import type { ArtistEntity } from './entities'
 
@@ -23,7 +25,7 @@ export class ArtistsService {
   async register({ password, email, username }: CreateArtistDto) {
     const created = await this.prisma.artist.create({
       data: { password, username, email },
-      omit: { password: true },
+      select: { id: true, email: true, username: true },
     })
     await Promise.all([this.cache.invalidate(NS.ARTISTS), this.cache.invalidate(NS.SEARCH)])
     return created
@@ -39,25 +41,38 @@ export class ArtistsService {
     limit = 10,
     username,
   }: { page?: number; limit?: number } & Partial<Pick<ArtistEntity, 'username'>>) {
-    const safeLimit = Math.min(limit, 100)
+    const pagination = normalizePagination(page, limit)
+    const where = {
+      deletedAt: null,
+      ...(username ? { username: { contains: username, mode: 'insensitive' as const } } : {}),
+    }
     return await this.cache.wrap(
       NS.ARTISTS,
-      `list:${page}:${safeLimit}:${username ?? ''}`,
+      `public:v2:list:${pagination.page}:${pagination.limit}:${username ?? ''}`,
       TTL.SHORT,
-      () =>
-        this.prisma.artist.findMany({
-          skip: (page - 1) * safeLimit,
-          take: safeLimit,
-          where: username ? { username: { contains: username, mode: 'insensitive' } } : undefined,
-          omit: { password: true, email: true },
-        }),
+      async () => {
+        const [data, total] = await this.prisma.$transaction([
+          this.prisma.artist.findMany({
+            skip: pagination.skip,
+            take: pagination.limit,
+            where,
+            orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+            select: PUBLIC_ARTIST_SELECT,
+          }),
+          this.prisma.artist.count({ where }),
+        ])
+        return { data, total, page: pagination.page, limit: pagination.limit }
+      },
     )
   }
 
   /** Runs the find by username operation. */
   async findByUsername(username: ArtistEntity['username']) {
-    return await this.cache.wrap(NS.ARTISTS, `username:${username}`, TTL.LONG, () =>
-      this.prisma.artist.findUnique({ where: { username }, omit: { password: true, email: true } }),
+    return await this.cache.wrap(NS.ARTISTS, `public:v2:username:${username}`, TTL.LONG, () =>
+      this.prisma.artist.findFirst({
+        where: { username, deletedAt: null },
+        select: PUBLIC_ARTIST_SELECT,
+      }),
     )
   }
 
@@ -72,7 +87,7 @@ export class ArtistsService {
     const updated = await this.prisma.artist.update({
       where: { id },
       data: artist,
-      omit: { password: true, email: true },
+      select: PUBLIC_ARTIST_SELECT,
     })
     await Promise.all([this.cache.invalidate(NS.ARTISTS), this.cache.invalidate(NS.SEARCH)])
     return updated
@@ -82,61 +97,102 @@ export class ArtistsService {
   async requestDelete(id: ArtistEntity['id'], currentArtistId: ArtistEntity['id']) {
     if (id !== currentArtistId) throw new ForbiddenException('Forbidden')
 
-    const deleted = await this.prisma.artist.delete({
-      where: { id },
-      omit: { password: true, email: true },
-    })
+    const [deleted] = await this.prisma.$transaction([
+      this.prisma.artist.update({
+        where: { id },
+        data: { deletedAt: new Date() },
+        select: PUBLIC_ARTIST_SELECT,
+      }),
+      this.prisma.artistSession.deleteMany({ where: { artistId: id } }),
+    ])
     await Promise.all([this.cache.invalidate(NS.ARTISTS), this.cache.invalidate(NS.SEARCH)])
     return deleted
   }
 
   /** Runs the find by email operation. */
   async findByEmail(email: ArtistEntity['email']) {
-    return await this.prisma.artist.findUnique({ where: { email }, omit: { password: true } })
+    return await this.prisma.artist.findFirst({
+      where: { email, deletedAt: null },
+      select: { id: true },
+    })
   }
 
   /** Runs the find by id operation. */
   async findById(id: ArtistEntity['id']) {
-    return await this.cache.wrap(NS.ARTISTS, `id:${id}`, TTL.LONG, () =>
-      this.prisma.artist.findUnique({ where: { id }, omit: { password: true, email: true } }),
+    return await this.cache.wrap(NS.ARTISTS, `public:v2:id:${id}`, TTL.LONG, () =>
+      this.prisma.artist.findFirst({
+        where: { id, deletedAt: null },
+        select: PUBLIC_ARTIST_SELECT,
+      }),
     )
   }
 
   /** Runs the follow operation. */
   async follow(userId: UserEntity['id'], artistId: ArtistEntity['id']) {
-    const artist = await this.prisma.artist.findUnique({ where: { id: artistId } })
+    const artist = await this.prisma.artist.findFirst({
+      where: { id: artistId, deletedAt: null },
+      select: { id: true },
+    })
     if (!artist) throw new NotFoundException('Artist not found')
 
-    return await this.prisma.artist.update({
+    await this.prisma.userFollowedArtist.upsert({
+      where: { userId_artistId: { userId, artistId } },
+      update: {},
+      create: { userId, artistId },
+    })
+    return await this.prisma.artist.findUniqueOrThrow({
       where: { id: artistId },
-      data: { followers: { connect: { id: userId } } },
-      omit: { password: true, email: true },
-      include: { _count: { select: { followers: true } } },
+      select: {
+        ...PUBLIC_ARTIST_SELECT,
+        _count: { select: { followers: true } },
+      },
     })
   }
 
   /** Runs the unfollow operation. */
   async unfollow(userId: UserEntity['id'], artistId: ArtistEntity['id']) {
-    const artist = await this.prisma.artist.findUnique({ where: { id: artistId } })
+    const artist = await this.prisma.artist.findFirst({
+      where: { id: artistId, deletedAt: null },
+      select: { id: true },
+    })
     if (!artist) throw new NotFoundException('Artist not found')
 
-    return await this.prisma.artist.update({
+    await this.prisma.userFollowedArtist.deleteMany({ where: { userId, artistId } })
+    return await this.prisma.artist.findUniqueOrThrow({
       where: { id: artistId },
-      data: { followers: { disconnect: { id: userId } } },
-      omit: { password: true, email: true },
-      include: { _count: { select: { followers: true } } },
+      select: {
+        ...PUBLIC_ARTIST_SELECT,
+        _count: { select: { followers: true } },
+      },
     })
   }
 
   /** Runs the get following operation. */
   async getFollowing(userId: UserEntity['id'], page = 1, limit = 20) {
-    const safeLimit = Math.min(limit, 100)
-    return await this.prisma.artist.findMany({
-      where: { followers: { some: { id: userId } } },
-      omit: { password: true, email: true },
-      include: { _count: { select: { followers: true } } },
-      skip: (page - 1) * safeLimit,
-      take: safeLimit,
-    })
+    const pagination = normalizePagination(page, limit)
+    const where = { userId, artist: { deletedAt: null } }
+    const [follows, total] = await this.prisma.$transaction([
+      this.prisma.userFollowedArtist.findMany({
+        where,
+        include: {
+          artist: {
+            select: {
+              ...PUBLIC_ARTIST_SELECT,
+              _count: { select: { followers: true } },
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip: pagination.skip,
+        take: pagination.limit,
+      }),
+      this.prisma.userFollowedArtist.count({ where }),
+    ])
+    return {
+      data: follows.map(({ artist, createdAt }) => ({ ...artist, followedAt: createdAt })),
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+    }
   }
 }

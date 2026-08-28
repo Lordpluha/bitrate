@@ -1,4 +1,9 @@
-import { useState } from 'react'
+'use client'
+
+import { useSettingsStore } from '@entities/Settings'
+import { useUpdateMeSettings } from '@/entities/Me'
+import { showApiErrorToast } from '@/shared/api/feedback'
+import { useI18n } from '@/shared/i18n'
 import {
   SettingsRow,
   SettingsSection,
@@ -6,33 +11,62 @@ import {
 import { SettingsSwitch } from '@/views/Settings/ui/controls/SettingsSwitch'
 
 export const LibraryDisplaySettings = () => {
-  const [compactLibrary, setCompactLibrary] = useState(false)
-  const [nowPlayingPanel, setNowPlayingPanel] = useState(true)
+  const { t } = useI18n()
+  const compactLibrary = useSettingsStore((state) => state.compactLibrary)
+  const nowPlayingPanel = useSettingsStore((state) => state.nowPlayingPanel)
+  const toggleSetting = useSettingsStore((state) => state.toggleSetting)
+  const updateSettings = useUpdateMeSettings()
+
+  const updateBooleanSetting = (
+    localKey: 'compactLibrary' | 'nowPlayingPanel',
+    serverKey: 'compactLibrary' | 'showNowPlaying',
+    currentValue: boolean,
+  ) => {
+    toggleSetting(localKey)
+    updateSettings.mutate(
+      { [serverKey]: !currentValue },
+      {
+        onError: (error) => {
+          toggleSetting(localKey)
+          showApiErrorToast(error, 'Unable to save this preference.')
+        },
+      },
+    )
+  }
 
   return (
     <>
-      <SettingsSection title="Your Library">
-        <SettingsRow label="Use compact library layout">
+      <SettingsSection title={t('settings.library')}>
+        <SettingsRow
+          description={t('settings.library.compact.description')}
+          label={t('settings.library.compact')}
+        >
           <SettingsSwitch
+            ariaLabel={t('settings.library.compact')}
             checked={compactLibrary}
-            onChange={() => setCompactLibrary((value) => !value)}
+            onChange={() =>
+              updateBooleanSetting(
+                'compactLibrary',
+                'compactLibrary',
+                compactLibrary,
+              )
+            }
           />
-        </SettingsRow>
-        <SettingsRow label="Import music from other apps">
-          <button
-            className="rounded-full border border-white/40 px-5 py-2 text-sm font-bold text-text transition-colors hover:border-white"
-            type="button"
-          >
-            Import library
-          </button>
         </SettingsRow>
       </SettingsSection>
 
-      <SettingsSection title="Display">
-        <SettingsRow label="Show the now-playing panel on click of play">
+      <SettingsSection title={t('settings.display')}>
+        <SettingsRow label={t('settings.display.nowPlaying')}>
           <SettingsSwitch
+            ariaLabel={t('settings.display.nowPlaying')}
             checked={nowPlayingPanel}
-            onChange={() => setNowPlayingPanel((value) => !value)}
+            onChange={() =>
+              updateBooleanSetting(
+                'nowPlayingPanel',
+                'showNowPlaying',
+                nowPlayingPanel,
+              )
+            }
           />
         </SettingsRow>
       </SettingsSection>

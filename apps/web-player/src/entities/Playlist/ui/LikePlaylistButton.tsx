@@ -27,7 +27,7 @@ export const LikePlaylistButton = ({
       aria-label={`${isLiked ? 'Remove' : 'Save'} ${playlistTitle}`}
       className={cn(
         'rounded-full p-1 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60',
-        isLiked ? 'text-green-500' : 'text-text-subdued hover:text-text',
+        isLiked ? 'text-primary' : 'text-text-subdued hover:text-text',
       )}
       disabled={isPending}
       onClick={(event) => {
@@ -38,7 +38,7 @@ export const LikePlaylistButton = ({
       type="button"
     >
       {isLiked ? (
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-black">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-black">
           <Check size={20} strokeWidth={3} />
         </span>
       ) : (

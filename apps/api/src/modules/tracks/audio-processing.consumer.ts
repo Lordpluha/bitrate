@@ -1,60 +1,27 @@
-import { createReadStream } from 'node:fs'
-import { access, mkdir, readdir, rm, stat } from 'node:fs/promises'
-import { extname, join } from 'node:path'
+import { mkdir, readdir, rm } from 'node:fs/promises'
+import { join } from 'node:path'
 import * as PrismaServiceModule from '@infra/prisma/prisma.service'
+import {
+  AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
+  AUDIO_PROCESSING_QUEUE,
+  type ConvertAudioJob,
+} from '@infra/queues/audio-processing.queue'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
-import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
+import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Inject, Logger } from '@nestjs/common'
-import type { Job } from 'bullmq'
+import type { Job, Queue } from 'bullmq'
+import { StaleAudioJobError } from './audio-artifact.types'
+import { uploadArtifacts } from './audio-artifact-storage'
+import { generateCmaf, generateHls, prepareVariants, validateHls } from './audio-encoding'
+import { getAudioGenerationRoot } from './audio-storage-keys'
+import { publishTrackFiles } from './audio-track-publication'
 
-/** Describes the convert audio job. */
-interface ConvertAudioJob {
-  /** The track id value. */
-  trackId: string
-  /** The artist id value. */
-  artistId: string
-  /** The source file name value. */
-  sourceFileName: string
-  /** The input path value. */
-  inputPath: string
-  /** The output dir value. */
-  outputDir: string
-  /** The format value. */
-  format: string
-  /** The bitrates value. */
-  bitrates: string[]
-}
-
-/** Describes a single prepared bitrate variant before S3 upload. */
-interface PreparedVariant {
-  /** Bitrate in kbps. */
-  bitrate: number
-  /** Opus codec identifier. */
-  codec: string | null
-  /** S3 key for the progressive audio file. */
-  audioKey: string
-  /** Absolute local path to the converted Opus file. */
-  temporaryAudioPath: string
-  /** File size of the converted Opus file in bytes. */
-  size: number
-}
-
-/** CONTENT-TYPE map for file extensions. */
-const CONTENT_TYPES: Record<string, string> = {
-  '.opus': 'audio/ogg',
-  '.m3u8': 'application/vnd.apple.mpegurl',
-  '.mp4': 'video/mp4',
-  '.m4s': 'video/iso.segment',
-}
-
-/** Returns the MIME type for a file based on its extension. */
-function contentTypeFor(filePath: string): string {
-  return CONTENT_TYPES[extname(filePath).toLowerCase()] ?? 'application/octet-stream'
-}
+/** Progress checkpoints reported once encoding has finished. */
+const PROGRESS = { hlsReady: 92, cmafReady: 94, uploaded: 98, done: 100 } as const
 
 /** Represents the audio processing consumer. */
-@Processor('audio-processing', {
+@Processor(AUDIO_PROCESSING_QUEUE, {
   concurrency: 2,
   lockDuration: 600_000,
   stalledInterval: 30_000,
@@ -67,6 +34,8 @@ export class AudioProcessingConsumer extends WorkerHost {
     private readonly prisma: PrismaServiceModule.PrismaService,
     @Inject(STORAGE_SERVICE)
     private readonly storage: StorageService,
+    @InjectQueue(AUDIO_PROCESSING_DEAD_LETTER_QUEUE)
+    private readonly deadLetterQueue: Queue<ConvertAudioJob>,
   ) {
     super()
   }
@@ -74,20 +43,24 @@ export class AudioProcessingConsumer extends WorkerHost {
   /** The logger value. */
   private readonly logger = new Logger(AudioProcessingConsumer.name, { timestamp: true })
 
-  /** Runs the process operation. */
-  async process(job: Job<ConvertAudioJob>) {
-    if (job.name !== 'convert-audio') return
-
-    const { trackId, sourceFileName, outputDir, format, bitrates } = job.data
+  /**
+   * Claims one conversion job for this worker.
+   *
+   * The claim is a conditional write rather than a read: it succeeds only while
+   * this job's source is still the track's source, so a superseded job stops
+   * before spending any CPU.
+   */
+  private async claimJob(job: Job<ConvertAudioJob>) {
+    const { trackId, sourceFileName } = job.data
     const track = await this.prisma.track.findUnique({ where: { id: trackId } })
 
     if (!track || track.audioUrl !== sourceFileName) {
       this.logger.warn(`Skipping stale audio conversion job ${job.id} for track ${trackId}`)
-      return
+      return false
     }
 
-    await this.prisma.track.update({
-      where: { id: trackId },
+    const started = await this.prisma.track.updateMany({
+      where: { id: trackId, audioUrl: sourceFileName },
       data: {
         processingStatus: 'PROCESSING',
         processingError: null,
@@ -97,6 +70,23 @@ export class AudioProcessingConsumer extends WorkerHost {
       },
     })
 
+    if (started.count === 1) return true
+    this.logger.warn(`Skipping superseded audio conversion job ${job.id} for track ${trackId}`)
+    return false
+  }
+
+  /** Reports whether this job's source is still the track's current source. */
+  private async isStillCurrent(job: Job<ConvertAudioJob>) {
+    const track = await this.prisma.track.findUnique({ where: { id: job.data.trackId } })
+    return Boolean(track && track.audioUrl === job.data.sourceFileName)
+  }
+
+  /** Runs the process operation. */
+  async process(job: Job<ConvertAudioJob>) {
+    if (job.name !== 'convert-audio') return
+    if (!(await this.claimJob(job))) return
+
+    const { trackId, sourceFileName, outputDir, format, bitrates } = job.data
     const processingRoot = join(outputDir, '.processing')
     const temporaryRoot = join(
       processingRoot,
@@ -108,67 +98,68 @@ export class AudioProcessingConsumer extends WorkerHost {
     await mkdir(temporaryRoot, { recursive: true })
 
     try {
-      // Phase 1: encode progressive Opus variants.
-      const preparedVariants = await this.prepareVariants(job, temporaryRoot)
-
-      const currentTrack = await this.prisma.track.findUnique({ where: { id: trackId } })
-      if (!currentTrack || currentTrack.audioUrl !== sourceFileName) {
+      /** Phase 1: encode progressive Opus variants. */
+      const variants = await prepareVariants(job, temporaryRoot)
+      if (!(await this.isStillCurrent(job))) {
         this.logger.warn(`Discarding stale conversion result from job ${job.id}`)
         return
       }
 
-      // Phase 2: generate one aligned multi-bitrate HLS package.
+      /**
+       * Phase 2: generate one aligned multi-bitrate HLS package.
+       * Superseded by the CMAF package below; kept until the CMAF path ships. See ADR-0020.
+       */
       const temporaryHlsPath = join(temporaryRoot, 'hls')
-      await this.generateHls(job, temporaryHlsPath, bitrates)
-      await this.validateHls(temporaryHlsPath, bitrates)
-      await job.updateProgress(94)
+      await generateHls(job, temporaryHlsPath, bitrates)
+      await validateHls(temporaryHlsPath, bitrates)
+      await job.updateProgress(PROGRESS.hlsReady)
 
-      // Phase 3: upload the progressive fallback and HLS package to storage.
-      await this.uploadToStorage(trackId, preparedVariants, temporaryHlsPath)
-      await job.updateProgress(98)
+      /** Phase 3: encode the single-file CMAF renditions and build their byte index. */
+      const generationRoot = getAudioGenerationRoot(trackId, sourceFileName)
+      const cmafPackage = await generateCmaf(generationRoot, job, temporaryRoot, bitrates)
+      await job.updateProgress(PROGRESS.cmafReady)
 
-      // Phase 4: persist TrackFile records + mark READY
-      await this.prisma.$transaction(async (tx) => {
-        await tx.trackFile.deleteMany({
-          where: {
-            trackId,
-            format,
-            bitrate: { notIn: preparedVariants.map((v) => v.bitrate) },
-          },
-        })
+      /** Phase 4: upload the progressive fallback, HLS package and CMAF renditions. */
+      await uploadArtifacts({
+        storage: this.storage,
+        generationRoot,
+        variants,
+        temporaryHlsPath,
+        cmafPackage,
+      })
+      await job.updateProgress(PROGRESS.uploaded)
 
-        for (const variant of preparedVariants) {
-          await tx.trackFile.upsert({
-            where: { trackId_format_bitrate: { trackId, format, bitrate: variant.bitrate } },
-            update: { codec: variant.codec, url: variant.audioKey, size: variant.size },
-            create: {
-              trackId,
-              format,
-              bitrate: variant.bitrate,
-              codec: variant.codec,
-              url: variant.audioKey,
-              size: variant.size,
-            },
-          })
-        }
+      if (!(await this.isStillCurrent(job))) {
+        await this.storage.deletePrefix(generationRoot)
+        this.logger.warn(`Removed stale uploaded generation from job ${job.id}`)
+        return
+      }
 
-        await tx.track.update({
-          where: { id: trackId },
-          data: {
-            processingStatus: 'READY',
-            processingError: null,
-            processingFinishedAt: new Date(),
-          },
-        })
+      /** Phase 5: persist TrackFile records + mark READY. */
+      await publishTrackFiles({
+        prisma: this.prisma,
+        trackId,
+        sourceFileName,
+        format,
+        variants,
+        cmafPackage,
       })
 
-      await job.updateProgress(100)
+      await job.updateProgress(PROGRESS.done)
       this.logger.log(
         `Audio conversion + storage upload completed for track ${trackId}, job ${job.id}`,
       )
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown conversion error'
-      await this.markAttemptFailed(job, message)
+      if (error instanceof StaleAudioJobError) {
+        await this.storage.deletePrefix(getAudioGenerationRoot(trackId, sourceFileName))
+        this.logger.warn(`Discarded superseded audio generation from job ${job.id}`)
+        return
+      }
+
+      await this.markAttemptFailed(
+        job,
+        error instanceof Error ? error.message : 'Unknown conversion error',
+      )
       throw error
     } finally {
       await rm(temporaryRoot, { recursive: true, force: true })
@@ -183,16 +174,31 @@ export class AudioProcessingConsumer extends WorkerHost {
     const maxAttempts = job.opts.attempts ?? 1
     if (job.attemptsMade < maxAttempts) return
 
-    const track = await this.prisma.track.findUnique({ where: { id: job.data.trackId } })
-    if (!track || track.audioUrl !== job.data.sourceFileName) return
-
-    await this.prisma.track.update({
-      where: { id: job.data.trackId },
+    const failed = await this.prisma.track.updateMany({
+      where: { id: job.data.trackId, audioUrl: job.data.sourceFileName },
       data: {
         processingStatus: 'FAILED',
         processingError: error.message,
         processingFinishedAt: new Date(),
       },
+    })
+    if (failed.count !== 1) return
+
+    try {
+      await this.storage.deletePrefix(
+        getAudioGenerationRoot(job.data.trackId, job.data.sourceFileName),
+      )
+    } catch (cleanupError) {
+      this.logger.error(
+        `Unable to clean failed audio generation for track ${job.data.trackId}`,
+        cleanupError instanceof Error ? cleanupError.stack : undefined,
+      )
+    }
+
+    await this.deadLetterQueue.add('convert-audio-failed', job.data, {
+      jobId: `failed-${String(job.id)}-${job.attemptsMade}`,
+      removeOnComplete: 500,
+      removeOnFail: 1_000,
     })
     this.logger.error(
       `Audio conversion permanently failed for track ${job.data.trackId}`,
@@ -206,144 +212,7 @@ export class AudioProcessingConsumer extends WorkerHost {
     this.logger.warn(`Audio conversion job ${jobId} stalled and will be recovered by BullMQ`)
   }
 
-  /** Encodes progressive Opus fallback files for every requested bitrate. */
-  private async prepareVariants(job: Job<ConvertAudioJob>, temporaryRoot: string) {
-    const { trackId, inputPath, format, bitrates } = job.data
-    const prepared: PreparedVariant[] = []
-    const { convertAudio } = await import('@spotify/converter')
-
-    for (const [index, bitrate] of bitrates.entries()) {
-      const bitrateValue = Number(bitrate.replace('k', ''))
-      if (!Number.isFinite(bitrateValue) || bitrateValue <= 0) {
-        throw new Error(`Invalid audio bitrate: ${bitrate}`)
-      }
-
-      const outputFilename = `audio_${bitrate}.${format}`
-      const temporaryAudioPath = join(temporaryRoot, outputFilename)
-      const audioKey = `tracks/${trackId}/audio/${bitrate}.${format}`
-
-      await convertAudio({
-        input: inputPath,
-        output: temporaryAudioPath,
-        bitrate,
-        vbr: false,
-        quality: 10,
-        application: 'audio',
-        timeoutMs: 600_000,
-      })
-      await this.validateAudioVariant(temporaryAudioPath)
-      const fileStat = await stat(temporaryAudioPath)
-      prepared.push({
-        bitrate: bitrateValue,
-        codec: format === 'opus' ? 'opus' : null,
-        audioKey,
-        temporaryAudioPath,
-        size: fileStat.size,
-      })
-      await job.updateProgress(Math.round(((index + 1) / bitrates.length) * 90))
-    }
-
-    return prepared
-  }
-
-  /** Generates a multi-bitrate HLS package from the original source file. */
-  private async generateHls(
-    job: Job<ConvertAudioJob>,
-    temporaryHlsPath: string,
-    bitrates: string[],
-  ) {
-    const { convertAudioToHls } = await import('@spotify/converter')
-    await convertAudioToHls({
-      input: job.data.inputPath,
-      outputDir: temporaryHlsPath,
-      bitrates,
-      segmentDuration: 4,
-      timeoutMs: 600_000,
-    })
-  }
-
-  /** Validates that a progressive Opus variant is non-empty. */
-  private async validateAudioVariant(audioPath: string) {
-    const audioStats = await stat(audioPath)
-    if (audioStats.size <= 0) throw new Error(`Converted audio file is empty: ${audioPath}`)
-  }
-
-  /** Validates the master playlist and every bitrate rendition. */
-  private async validateHls(hlsPath: string, bitrates: string[]) {
-    await access(join(hlsPath, 'master.m3u8'))
-    for (const bitrate of bitrates) {
-      const variantPath = join(hlsPath, bitrate.replace(/k$/, ''))
-      await access(join(variantPath, 'index.m3u8'))
-      const assets = await readdir(variantPath)
-      if (!assets.some((asset) => /^init_\d+\.mp4$/.test(asset))) {
-        throw new Error(`HLS playlist has no initialization segment: ${variantPath}`)
-      }
-      if (!assets.some((asset) => /^segment_\d{5}\.m4s$/.test(asset))) {
-        throw new Error(`HLS playlist has no media segments: ${variantPath}`)
-      }
-    }
-  }
-
-  /**
-   * Uploads all progressive Opus files and the aligned HLS tree to configured storage.
-   * Storage key structure (identical on both the S3 and local drivers):
-   *   tracks/{trackId}/audio/{bitrate}k.opus
-   *   tracks/{trackId}/hls/master.m3u8
-   *   tracks/{trackId}/hls/{bitrate}/{asset}
-   */
-  private async uploadToStorage(
-    trackId: string,
-    variants: PreparedVariant[],
-    temporaryHlsPath: string,
-  ) {
-    const uploads: Promise<void>[] = []
-
-    for (const variant of variants) {
-      // Progressive Opus file
-      uploads.push(
-        this.storage
-          .upload(variant.audioKey, createReadStream(variant.temporaryAudioPath), 'audio/ogg')
-          .then(() => undefined),
-      )
-    }
-
-    const hlsEntries = await readdir(temporaryHlsPath, { withFileTypes: true })
-    for (const entry of hlsEntries) {
-      if (!entry.isDirectory()) continue
-      uploads.push(
-        this.uploadDirectory(
-          join(temporaryHlsPath, entry.name),
-          `tracks/${trackId}/hls/${entry.name}`,
-        ),
-      )
-    }
-
-    await Promise.all(uploads)
-    await this.storage.upload(
-      `tracks/${trackId}/hls/master.m3u8`,
-      createReadStream(join(temporaryHlsPath, 'master.m3u8')),
-      'application/vnd.apple.mpegurl',
-    )
-    this.logger.log(`Uploaded all audio assets for track ${trackId} to storage`)
-  }
-
-  /** Recursively uploads all files in a local directory to a storage key prefix. */
-  private async uploadDirectory(localDir: string, keyPrefix: string): Promise<void> {
-    const entries = await readdir(localDir, { withFileTypes: true })
-    await Promise.all(
-      entries.map(async (entry) => {
-        const localPath = join(localDir, entry.name)
-        if (entry.isDirectory()) {
-          await this.uploadDirectory(localPath, `${keyPrefix}/${entry.name}`)
-        } else {
-          const key = `${keyPrefix}/${entry.name}`
-          await this.storage.upload(key, createReadStream(localPath), contentTypeFor(localPath))
-        }
-      }),
-    )
-  }
-
-  /** Runs the cleanup orphaned temporary dirs operation. */
+  /** Removes temporary directories left behind by earlier attempts of this job. */
   private async cleanupOrphanedTemporaryDirs(
     processingRoot: string,
     trackId: string,
@@ -362,13 +231,17 @@ export class AudioProcessingConsumer extends WorkerHost {
     }
   }
 
-  /** Runs the mark attempt failed operation. */
+  /**
+   * Records why one attempt failed, but only while this job's source is still
+   * the track's source.
+   *
+   * The match is part of the write rather than a preceding read: a newer upload
+   * can replace `audioUrl` between a read and an update, and a read-then-write
+   * would then stamp the stale error onto the newer source.
+   */
   private async markAttemptFailed(job: Job<ConvertAudioJob>, message: string) {
-    const track = await this.prisma.track.findUnique({ where: { id: job.data.trackId } })
-    if (!track || track.audioUrl !== job.data.sourceFileName) return
-
-    await this.prisma.track.update({
-      where: { id: job.data.trackId },
+    await this.prisma.track.updateMany({
+      where: { id: job.data.trackId, audioUrl: job.data.sourceFileName },
       data: { processingError: message },
     })
   }

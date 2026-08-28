@@ -1,5 +1,7 @@
+import { cn } from '@spotify/ui-react'
 import {
   Check,
+  Flag,
   FolderInput,
   List,
   Lock,
@@ -11,8 +13,9 @@ import {
   UserPlus,
   UserRoundPlus,
 } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { Z_INDEX_CLASS } from '@/shared/constants'
 import type { TrackViewMode } from '@/views/Playlist/model/playlist.types'
+import { PlaylistMenuItem } from './PlaylistMenuItem'
 
 type TrackViewMenuProps = {
   onChange: (viewMode: TrackViewMode) => void
@@ -20,15 +23,25 @@ type TrackViewMenuProps = {
 }
 
 export const TrackViewMenu = ({ onChange, value }: TrackViewMenuProps) => (
-  <div className="absolute right-0 top-[calc(100%+10px)] z-[80] w-40 rounded-md bg-popover p-1 text-sm text-text shadow-2xl">
+  <div
+    aria-label="Track list view"
+    className={cn(
+      Z_INDEX_CLASS.dropdownMenu,
+      'absolute right-0 top-[calc(100%+10px)] w-40 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl',
+    )}
+    role="menu"
+  >
     <div className="px-3 py-2 text-xs font-bold text-text-subdued">View as</div>
     {(['compact', 'list'] as const).map((viewMode) => (
       <button
-        className={`flex w-full items-center justify-between rounded-sm px-3 py-2 text-left capitalize transition-colors hover:bg-white/10 ${
-          value === viewMode ? 'text-green-500' : 'text-text'
-        }`}
+        aria-checked={value === viewMode}
+        className={cn(
+          'flex w-full items-center justify-between rounded-sm px-3 py-2 text-left capitalize transition-colors hover:bg-white/10',
+          value === viewMode ? 'text-primary' : 'text-text',
+        )}
         key={viewMode}
         onClick={() => onChange(viewMode)}
+        role="menuitemradio"
         type="button"
       >
         <span className="flex items-center gap-3">
@@ -46,39 +59,24 @@ type PlaylistMoreMenuProps = {
   onCopyLink: () => void
   onDelete: () => void
   onEdit: () => void
+  onReport: () => void
 }
-
-type PlaylistMenuItemProps = {
-  disabled?: boolean
-  icon: ReactNode
-  label: string
-  onClick?: () => void
-}
-
-const PlaylistMenuItem = ({
-  disabled = false,
-  icon,
-  label,
-  onClick,
-}: PlaylistMenuItemProps) => (
-  <button
-    className="flex w-full items-center gap-3 rounded-sm px-3 py-2 text-left text-text-subdued transition-colors hover:bg-white/10 hover:text-text disabled:cursor-not-allowed disabled:opacity-45"
-    disabled={disabled}
-    onClick={onClick}
-    type="button"
-  >
-    {icon}
-    <span>{label}</span>
-  </button>
-)
 
 export const PlaylistMoreMenu = ({
   canEdit,
   onCopyLink,
   onDelete,
   onEdit,
+  onReport,
 }: PlaylistMoreMenuProps) => (
-  <div className="absolute left-0 top-[calc(100%+8px)] z-[80] w-66 rounded-md bg-popover p-1 text-sm text-text shadow-2xl">
+  <div
+    aria-label="Playlist actions"
+    className={cn(
+      Z_INDEX_CLASS.dropdownMenu,
+      'absolute left-0 top-[calc(100%+8px)] w-66 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl',
+    )}
+    role="menu"
+  >
     <PlaylistMenuItem disabled icon={<List size={17} />} label="Add to queue" />
     <PlaylistMenuItem
       disabled={!canEdit}
@@ -119,6 +117,13 @@ export const PlaylistMoreMenu = ({
       label="Share"
       onClick={onCopyLink}
     />
+    {!canEdit && (
+      <PlaylistMenuItem
+        icon={<Flag size={17} />}
+        label="Report"
+        onClick={onReport}
+      />
+    )}
     <div className="mx-2 my-1 border-t border-white/10" />
     <PlaylistMenuItem
       disabled

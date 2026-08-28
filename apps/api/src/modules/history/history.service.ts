@@ -1,6 +1,8 @@
+import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { UserEntity } from '@modules/users'
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 
 /** The track select value. */
 const TRACK_SELECT = {
@@ -28,30 +30,59 @@ export class HistoryService {
 
   /** Runs the get history operation. */
   async getHistory(userId: UserEntity['id'], page = 1, limit = 20) {
-    const safeLimit = Math.min(limit, 100)
-    const skip = (page - 1) * safeLimit
+    const pagination = normalizePagination(page, limit)
 
-    const latestTracks = await this.prisma.listeningHistory.groupBy({
-      by: ['trackId'],
-      where: { userId },
-      _max: { listenedAt: true },
-      orderBy: { _max: { listenedAt: 'desc' } },
-      skip,
-      take: safeLimit,
-    })
+    const historyWhere = {
+      userId,
+      track: { processingStatus: 'READY' as const, deletedAt: null },
+    }
+    const [latestTracks, countRows] = await Promise.all([
+      this.prisma.listeningHistory.groupBy({
+        by: ['trackId'],
+        where: historyWhere,
+        _max: { listenedAt: true },
+        orderBy: [{ _max: { listenedAt: 'desc' } }, { trackId: 'asc' }],
+        skip: pagination.skip,
+        take: pagination.limit,
+      }),
+      this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
+        SELECT COUNT(DISTINCT h."trackId")::bigint AS total
+        FROM "ListeningHistory" h
+        JOIN "Track" t ON t.id = h."trackId"
+        WHERE h."userId" = ${userId}::uuid
+          AND t."processingStatus" = 'READY'
+          AND t."deletedAt" IS NULL
+      `),
+    ])
+    const total = Number(countRows[0]?.total ?? 0n)
 
     const trackIds = latestTracks.map(({ trackId }) => trackId)
-    if (trackIds.length === 0) return []
+    if (trackIds.length === 0) {
+      return {
+        data: [],
+        total,
+        page: pagination.page,
+        limit: pagination.limit,
+      }
+    }
 
     const entries = await this.prisma.listeningHistory.findMany({
-      where: { userId, trackId: { in: trackIds } },
+      where: { ...historyWhere, trackId: { in: trackIds } },
       orderBy: { listenedAt: 'desc' },
       distinct: ['trackId'],
       select: { id: true, listenedAt: true, trackId: true, track: { select: TRACK_SELECT } },
     })
 
     const byTrackId = new Map(entries.map((e) => [e.trackId, e]))
-    return trackIds.map((id) => byTrackId.get(id)!).filter(Boolean)
+    return {
+      data: trackIds.flatMap((id) => {
+        const entry = byTrackId.get(id)
+        return entry ? [entry] : []
+      }),
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+    }
   }
 
   /** Runs the clear all operation. */

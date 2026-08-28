@@ -1,12 +1,23 @@
 import ms, { type StringValue } from 'ms'
 import { z } from 'zod'
 
+const booleanFromEnv = z.preprocess((value) => {
+  if (value === 'true') return true
+  if (value === 'false') return false
+  return value
+}, z.boolean())
+
 /** The env schema value. */
 export const envSchema = z
   .object({
     NODE_ENV: z.enum(['local', 'development', 'production', 'test']).default('local'),
     PORT: z.coerce.number().default(3000),
+    TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(0),
+    HEALTH_CHECK_TIMEOUT_MS: z.coerce.number().int().min(100).max(10_000).default(2_000),
+    METRICS_TOKEN: z.string().min(32).optional(),
     WEB_HOST: z.url(),
+    USER_WEB_HOST: z.url().optional(),
+    ARTIST_WEB_HOST: z.url().optional(),
 
     // Storage driver — selects which StorageService implementation is bound at boot
     STORAGE_DRIVER: z.enum(['s3', 'local']).default('local'),
@@ -40,6 +51,7 @@ export const envSchema = z
     SMTP_USER: z.string().optional(),
     SMTP_PASS: z.string().optional(),
     EMAIL_FROM: z.email().optional(),
+    DEV_MAIL_LOG_TOKENS: booleanFromEnv.default(false),
 
     // Database
     DATABASE_URL: z.url(),
@@ -69,6 +81,29 @@ export const envSchema = z
     // POSTFIX_PASS: z.string(),
   })
   .superRefine((env, ctx) => {
+    if (env.NODE_ENV === 'production' && env.DEV_MAIL_LOG_TOKENS) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['DEV_MAIL_LOG_TOKENS'],
+        message: 'DEV_MAIL_LOG_TOKENS must be disabled in production',
+      })
+    }
+
+    if (Boolean(env.SMTP_USER) !== Boolean(env.SMTP_PASS)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['SMTP_USER'],
+        message: 'SMTP_USER and SMTP_PASS must be configured together',
+      })
+    }
+    if (env.SMTP_HOST && !env.EMAIL_FROM) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['EMAIL_FROM'],
+        message: 'EMAIL_FROM is required when SMTP_HOST is configured',
+      })
+    }
+
     if (env.STORAGE_DRIVER !== 's3') return
 
     const requiredForS3 = ['S3_ENDPOINT', 'S3_BUCKET', 'S3_ACCESS_KEY', 'S3_SECRET_KEY'] as const

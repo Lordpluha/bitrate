@@ -55,6 +55,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.userOAuthAccount
   }
 
+  /** Gets user email verification records. */
+  get userEmailVerification() {
+    return this.prisma.userEmailVerification
+  }
+
   /** Gets the artist session. */
   get artistSession() {
     return this.prisma.artistSession
@@ -68,6 +73,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   /** Gets the artist password reset. */
   get artistPasswordReset() {
     return this.prisma.artistPasswordReset
+  }
+
+  /** Gets artist email verification records. */
+  get artistEmailVerification() {
+    return this.prisma.artistEmailVerification
   }
 
   /** Gets the track. */
@@ -100,6 +110,107 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.listeningHistory
   }
 
+  /** Gets explicit playlist memberships. */
+  get playlistTrack() {
+    return this.prisma.playlistTrack
+  }
+  /** Gets explicit album memberships. */
+  get albumTrack() {
+    return this.prisma.albumTrack
+  }
+  /** Gets liked track records. */
+  get userLikedTrack() {
+    return this.prisma.userLikedTrack
+  }
+  /** Gets liked album records. */
+  get userLikedAlbum() {
+    return this.prisma.userLikedAlbum
+  }
+  /** Gets liked playlist records. */
+  get userLikedPlaylist() {
+    return this.prisma.userLikedPlaylist
+  }
+  /** Gets liked artist records. */
+  get userLikedArtist() {
+    return this.prisma.userLikedArtist
+  }
+  /** Gets followed artist records. */
+  get userFollowedArtist() {
+    return this.prisma.userFollowedArtist
+  }
+  /** Gets user follow records. */
+  get userFollow() {
+    return this.prisma.userFollow
+  }
+  /** Gets track artist credits. */
+  get trackArtist() {
+    return this.prisma.trackArtist
+  }
+  /** Gets genres. */
+  get genre() {
+    return this.prisma.genre
+  }
+  /** Gets track genre records. */
+  get trackGenre() {
+    return this.prisma.trackGenre
+  }
+  /** Gets album genre records. */
+  get albumGenre() {
+    return this.prisma.albumGenre
+  }
+  /** Gets artist genre records. */
+  get artistGenre() {
+    return this.prisma.artistGenre
+  }
+  /** Gets user settings. */
+  get userSettings() {
+    return this.prisma.userSettings
+  }
+  /** Gets search history records. */
+  get searchHistory() {
+    return this.prisma.searchHistory
+  }
+  /** Gets notifications. */
+  get notification() {
+    return this.prisma.notification
+  }
+  /** Gets player devices. */
+  get playerDevice() {
+    return this.prisma.playerDevice
+  }
+  /** Gets persisted player state. */
+  get playerState() {
+    return this.prisma.playerState
+  }
+  /** Gets player queue entries. */
+  get playerQueueItem() {
+    return this.prisma.playerQueueItem
+  }
+  /** Gets subscriptions. */
+  get subscription() {
+    return this.prisma.subscription
+  }
+  /** Gets podcasts. */
+  get podcast() {
+    return this.prisma.podcast
+  }
+  /** Gets podcast episodes. */
+  get episode() {
+    return this.prisma.episode
+  }
+  /** Gets saved episode records. */
+  get userSavedEpisode() {
+    return this.prisma.userSavedEpisode
+  }
+  /** Gets moderation reports. */
+  get moderationReport() {
+    return this.prisma.moderationReport
+  }
+  /** Gets audit records. */
+  get auditLog() {
+    return this.prisma.auditLog
+  }
+
   /** Gets the $transaction. */
   get $transaction() {
     return this.prisma.$transaction.bind(this.prisma)
@@ -108,5 +219,16 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   /** Runs the query raw operation. */
   queryRaw<T>(sql: Parameters<PrismaClient['$queryRaw']>[0]): Promise<T> {
     return this.prisma.$queryRaw<T>(sql as never)
+  }
+
+  /** Runs a parameterized data-changing raw statement. */
+  executeRaw(sql: Parameters<PrismaClient['$executeRaw']>[0]): Promise<number> {
+    return this.prisma.$executeRaw(sql as never)
+  }
+
+  /** Verifies that PostgreSQL accepts queries. */
+  async ping(): Promise<boolean> {
+    await this.prisma.$queryRaw`SELECT 1`
+    return true
   }
 }

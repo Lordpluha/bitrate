@@ -25,6 +25,7 @@ how to apply it day to day.
 | [0017](./0017-remove-obsidian-vault.md) | Remove the obsidian/ working-notes vault |
 | [0018](./0018-consolidate-agents-into-claude.md) | Consolidate `.agents/`/`AGENTS.md` into `.claude/` only |
 | [0019](./0019-remove-obsidian-export-convenience.md) | Remove the `graphify:obsidian` convenience wrapper |
+| [0020](./0020-cmaf-range-mse-playback.md) | Single-file CMAF + Range index + MSE for audio playback |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

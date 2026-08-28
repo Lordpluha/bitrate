@@ -2,6 +2,29 @@ import { ROUTES } from '@shared/routes'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
+const publicRoutes = [
+  ROUTES.auth.login,
+  ROUTES.auth.twoFactorLogin,
+  ROUTES.auth.registration,
+  ROUTES.auth.forgotPassword,
+  ROUTES.auth.resetPassword(),
+  ROUTES.auth.verifyEmail(),
+  ROUTES.landing,
+  '/login',
+  '/login/2fa',
+  '/offline',
+] as const
+
+export const isPublicRoute = (pathname: string) =>
+  publicRoutes.some((route) => pathname === route)
+
+/**
+ * Route guard for the web player.
+ * Visitors without any session cookie are sent to login; everyone else passes
+ * through. Signed-in users are intentionally *not* redirected away from the auth
+ * pages — doing so loops forever once the access token expires but the cookie
+ * is still present.
+ */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
@@ -9,47 +32,24 @@ export function proxy(request: NextRequest) {
   const refreshToken = request.cookies.get('refresh_token')
   const hasRecoverableSession = Boolean(accessToken || refreshToken)
 
-  // Определяем auth маршруты (недоступны с токеном)
-  const authRoutes = [
-    ROUTES.auth.login,
-    ROUTES.auth.twoFactorLogin,
-    ROUTES.auth.registration,
-    ROUTES.auth.forgotPassword,
-    ROUTES.auth.resetPassword(),
-  ]
-
-  // Определяем публичные маршруты (доступны без токена)
-  const publicRoutes = [...authRoutes, ROUTES.landing]
-
-  const isPublicRoute = publicRoutes.some((route) => pathname === route)
-  // const isAuthRoute = authRoutes.some((route) => pathname === route)
-
-  // Если пользователь НЕ авторизован
-  if (!hasRecoverableSession) {
-    // Если пытается попасть на защищенную страницу (включая /main) - редиректим на логин
-    if (!isPublicRoute) {
-      return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
-    }
-    // Если на публичной странице - пропускаем
-    return NextResponse.next()
-  }
-
-  // Если пользователь авторизован
-  if (hasRecoverableSession) {
-    // Если находится на auth страницах - редиректим на главную
-    // ОТКЛЮЧЕНО: создает цикл редиректов когда токен истек
-    // if (isAuthRoute) {
-    //   return NextResponse.redirect(new URL(ROUTES.main, request.url))
-    // }
-    // Если авторизован и на любой другой странице - пропускаем
-    return NextResponse.next()
+  if (!hasRecoverableSession && !isPublicRoute(pathname)) {
+    return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
   }
 
   return NextResponse.next()
 }
 
 export const config = {
+  /**
+   * Everything not matched here bypasses the guard.
+   *
+   * `webmanifest`, `txt` and `xml` matter as much as the image extensions: a
+   * browser fetches `/manifest.webmanifest` without credentials, so guarding it
+   * answers with a redirect to the login page, the browser fails to parse that
+   * as JSON, and the app silently stops being installable. Same for
+   * `/robots.txt` and `/sitemap.xml`, which crawlers request anonymously.
+   */
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|webmanifest|txt|xml)$).*)',
   ],
 }

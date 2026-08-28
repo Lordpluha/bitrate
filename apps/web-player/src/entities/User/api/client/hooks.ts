@@ -16,12 +16,22 @@ import {
   useQuery as useTanStackQuery,
 } from '@tanstack/react-query'
 import {
-  safeUserResponseSchema,
-  safeUsersResponseSchema,
+  followedUsersResponseSchema,
+  type PublicUser,
+  publicUserResponseSchema,
+  publicUsersResponseSchema,
 } from './userResponse.schema'
 
-export type SafeUser = ApiSchemas['SafeUserEntity']
+export type SafeUser = PublicUser
 export type UpdateUserPayload = ApiSchemas['UpdateUserDto']
+
+export const mergePublicUserIntoAuthUser = (
+  current: unknown,
+  update: PublicUser,
+) =>
+  typeof current === 'object' && current !== null
+    ? { ...current, ...update }
+    : current
 
 type UseUsersParams = {
   username: string
@@ -36,12 +46,11 @@ export const useUsers = ({ username, page = 1, limit = 10 }: UseUsersParams) =>
     {
       params: {
         query: { username, page, limit },
-        path: { username, page, limit },
       },
     },
     {
       enabled: username.trim().length > 0,
-      select: (data) => safeUsersResponseSchema.parse(data),
+      select: (data) => publicUsersResponseSchema.parse(data),
     },
   )
 
@@ -56,6 +65,7 @@ export const useUserByUsername = (username?: string) =>
     },
     {
       enabled: !!username,
+      select: (data) => publicUserResponseSchema.parse(data),
     },
   )
 
@@ -74,18 +84,83 @@ export const useUserById = (userId?: string) =>
 
       ensureOkResponse(response, 'Failed to fetch user')
 
-      return safeUserResponseSchema.parse(data)
+      return publicUserResponseSchema.parse(data)
     },
     enabled: !!userId,
   })
+
+export const useFollowedUsers = (enabled = true) =>
+  useTanStackQuery({
+    queryKey: apiQueryKeys.users.following,
+    queryFn: getAllFollowedUsers,
+    enabled,
+    staleTime: 5 * 60_000,
+  })
+
+const FOLLOWED_USERS_PAGE_SIZE = 100
+
+const getFollowedUsersPage = async (page: number) => {
+  const { data, response } = await clientFetchClient.GET(
+    '/api/v1/users/me/following',
+    {
+      params: { query: { limit: FOLLOWED_USERS_PAGE_SIZE, page } },
+    },
+  )
+  ensureOkResponse(response, 'Failed to fetch followed users')
+  return followedUsersResponseSchema.parse(data)
+}
+
+export const getAllFollowedUsers = async () => {
+  const firstPage = await getFollowedUsersPage(1)
+  const pageCount = Math.ceil(firstPage.total / firstPage.limit)
+  const remainingPages = await Promise.all(
+    Array.from({ length: Math.max(pageCount - 1, 0) }, (_, index) =>
+      getFollowedUsersPage(index + 2),
+    ),
+  )
+
+  return [firstPage, ...remainingPages].flatMap(({ data }) => data)
+}
+
+const useInvalidateFollowedUsers = () => {
+  const queryClient = useQueryClient()
+
+  return async () => {
+    await queryClient.invalidateQueries({
+      queryKey: apiQueryKeys.users.following,
+    })
+  }
+}
+
+export const useFollowUser = () => {
+  const invalidate = useInvalidateFollowedUsers()
+
+  return useMutation('post', '/api/v1/users/{id}/follow', {
+    onSuccess: invalidate,
+  })
+}
+
+export const useUnfollowUser = () => {
+  const invalidate = useInvalidateFollowedUsers()
+
+  return useMutation('delete', '/api/v1/users/{id}/follow', {
+    onSuccess: invalidate,
+  })
+}
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient()
 
   return useMutation('put', '/api/v1/users', {
     onSuccess: async (user) => {
-      queryClient.setQueryData(apiQueryKeys.auth.me, user)
-      await queryClient.invalidateQueries({ queryKey: apiQueryKeys.users.all })
+      const publicUser = publicUserResponseSchema.parse(user)
+      queryClient.setQueryData(apiQueryKeys.auth.me, (current: unknown) =>
+        mergePublicUserIntoAuthUser(current, publicUser),
+      )
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: apiQueryKeys.auth.me }),
+        queryClient.invalidateQueries({ queryKey: apiQueryKeys.users.all }),
+      ])
     },
   })
 }
@@ -108,11 +183,16 @@ export const useUploadUserAvatar = () => {
 
       ensureOkResponse(response, 'Failed to upload avatar')
 
-      return safeUserResponseSchema.parse(await response.json())
+      return publicUserResponseSchema.parse(await response.json())
     },
     onSuccess: async (user) => {
-      queryClient.setQueryData(apiQueryKeys.auth.me, user)
-      await queryClient.invalidateQueries({ queryKey: apiQueryKeys.users.all })
+      queryClient.setQueryData(apiQueryKeys.auth.me, (current: unknown) =>
+        mergePublicUserIntoAuthUser(current, user),
+      )
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: apiQueryKeys.auth.me }),
+        queryClient.invalidateQueries({ queryKey: apiQueryKeys.users.all }),
+      ])
     },
   })
 }

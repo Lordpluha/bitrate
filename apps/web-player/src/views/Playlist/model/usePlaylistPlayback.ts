@@ -74,7 +74,7 @@ export const usePlaylistPlayback = ({
   }
 
   return {
-    currentTrackIndex: musicPlayer.currentTrackIndex,
+    currentTrackId: musicPlayer.currentTrack?.id,
     handlePlayPlaylist,
     handleShufflePlaylist,
     isActive,

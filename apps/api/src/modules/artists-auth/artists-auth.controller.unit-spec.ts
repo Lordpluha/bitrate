@@ -11,7 +11,6 @@ jest.mock('otplib', () => ({
 }))
 jest.mock('qrcode', () => ({ toDataURL: jest.fn() }))
 
-import type { ArtistOAuthService } from './artist-oauth.service'
 import type { ArtistTwoFactorService } from './artist-two-factor.service'
 import { AuthController } from './artists-auth.controller'
 import type { ArtistsAuthService } from './artists-auth.service'
@@ -43,16 +42,11 @@ const makeTwoFactorServiceMock = () =>
     verifyLoginCode: jest.fn(),
   }) as unknown as jest.Mocked<ArtistTwoFactorService>
 
-const makeOAuthServiceMock = () =>
-  ({
-    handleGoogleCallback: jest.fn(),
-    handleFacebookCallback: jest.fn(),
-  }) as unknown as jest.Mocked<ArtistOAuthService>
-
 const makeResponse = () =>
   ({
     cookie: jest.fn(),
     clearCookie: jest.fn(),
+    redirect: jest.fn(),
   }) as unknown as Response
 
 describe('AuthController (artists)', () => {
@@ -72,7 +66,6 @@ describe('AuthController (artists)', () => {
       artistsService,
       tokenService,
       makeTwoFactorServiceMock(),
-      makeOAuthServiceMock(),
     )
   })
 
@@ -116,7 +109,10 @@ describe('AuthController (artists)', () => {
   })
 
   it('refresh should call service.refresh and setAuthCookies', async () => {
-    authService.refresh.mockResolvedValue({ access_token: 'new-at' } as never)
+    authService.refresh.mockResolvedValue({
+      access_token: 'new-at',
+      refresh_token: 'new-rt',
+    } as never)
     const res = makeResponse()
     const req = {
       refresh_token: 'rt',
@@ -125,7 +121,7 @@ describe('AuthController (artists)', () => {
     await controller.refresh(req, res)
 
     expect(authService.refresh).toHaveBeenCalledWith('rt')
-    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-at', 'rt')
+    expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-at', 'new-rt')
   })
 
   it('getMe should return artist by id from request user', async () => {

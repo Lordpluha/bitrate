@@ -105,6 +105,11 @@ export class TokenService {
     return createHash('sha256').update(token).digest('hex')
   }
 
+  /** Returns the expiry date used for persisted refresh-token sessions. */
+  getRefreshTokenExpiresAt(): Date {
+    return new Date(Date.now() + ms(this.refreshTokenExpiry))
+  }
+
   /** Runs the hash password operation. */
   async hashPassword(password: string): Promise<string> {
     return await argon2.hash(password, { type: argon2.argon2id })

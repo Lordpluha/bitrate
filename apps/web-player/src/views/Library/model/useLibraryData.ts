@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { useAlbums } from '@/entities/Album'
 import { useListeningHistory } from '@/entities/History'
-import { useMyPlaylists } from '@/entities/Playlist'
+import { usePlaylistLibraryItems } from '@/entities/Playlist'
 import { useLikedTracks } from '@/entities/Track'
 import type {
   LibraryData,
@@ -26,7 +26,8 @@ export const useLibraryData = ({
   query,
   sortMode,
 }: UseLibraryDataOptions): LibraryData => {
-  const { data: myPlaylists, isPending: isPlaylistsPending } = useMyPlaylists()
+  const { items: libraryPlaylists, isLoading: isPlaylistsPending } =
+    usePlaylistLibraryItems()
   const { data: likedTracks, isPending: isLikedPending } = useLikedTracks()
   const { data: albums, isPending: isAlbumsPending } = useAlbums({
     page: 1,
@@ -38,20 +39,21 @@ export const useLibraryData = ({
   })
 
   const playlists = useMemo(() => {
-    const items = myPlaylists ?? []
-
-    return items
+    return libraryPlaylists
       .filter((playlist) => includesQuery(playlist.title, query))
-      .sort((first, second) =>
-        compareByTitleOrDate(
+      .sort((first, second) => {
+        if (first.id === 'liked-songs') return -1
+        if (second.id === 'liked-songs') return 1
+
+        return compareByTitleOrDate(
           first.title,
           second.title,
           first.createdAt,
           second.createdAt,
           sortMode,
-        ),
-      )
-  }, [myPlaylists, query, sortMode])
+        )
+      })
+  }, [libraryPlaylists, query, sortMode])
 
   const tracks = useMemo(
     () =>

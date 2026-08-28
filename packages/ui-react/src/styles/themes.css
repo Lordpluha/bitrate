@@ -3,6 +3,8 @@
 @import "./layout.css";
 @import "./animations.css";
 
+@custom-variant light (&:is(.light *));
+
 /**
  * Semantic Theme Tokens
  * These tokens reference the palette and provide semantic meaning.
@@ -13,8 +15,6 @@
  */
 @theme {
   --color-background: #0a0a0a;
-  --color-surface: rgba(255, 255, 255, 0.1);
-  --color-surface-hover: rgba(255, 255, 255, 0.15);
   --color-background-elevated: #121212;
   --color-background-tinted: #1a1a1a;
   --color-background-secondary: #121212;
@@ -56,6 +56,9 @@
   --color-ring: var(--color-green-500);
   --color-card: #121212;
   --color-card-foreground: var(--color-white);
+  --color-surface: rgba(255, 255, 255, 0.1);
+  --color-surface-hover: rgba(255, 255, 255, 0.15);
+  --color-surface-active: rgba(255, 255, 255, 0.2);
   --color-popover: #1a1a1a;
   --color-popover-foreground: var(--color-white);
   --color-chart-1: var(--color-green-500);
@@ -63,36 +66,35 @@
   --color-chart-3: var(--color-purple-500);
   --color-chart-4: var(--color-orange-500);
   --color-chart-5: var(--color-red-500);
+  --color-hero-wash: var(--color-purple-800);
 }
 
 /**
  * Light Theme
  */
 :root.light {
-  --color-background: #ffffff;
-  --color-surface: rgba(0, 0, 0, 0.06);
-  --color-surface-hover: rgba(0, 0, 0, 0.1);
-  --color-background-elevated: var(--color-neutral-50);
-  --color-background-tinted: var(--color-neutral-100);
-  --color-background-secondary: #f7f7f7;
-  --color-bg-secondary: #f7f7f7;
-  --color-background-highlight: var(--color-neutral-200);
-  --color-background-pressed: var(--color-neutral-200);
-  --color-foreground: var(--color-black);
-  --color-foreground-secondary: var(--color-neutral-800);
-  --color-text: var(--color-black);
-  --color-text-secondary: var(--color-neutral-700);
-  --color-text-subdued: var(--color-neutral-600);
-  --color-text-muted: var(--color-neutral-500);
+  --color-background: #eff1f4;
+  --color-background-elevated: #ffffff;
+  --color-background-tinted: #f5f7f9;
+  --color-background-secondary: #ffffff;
+  --color-bg-secondary: #ffffff;
+  --color-background-highlight: #e7eaee;
+  --color-background-pressed: #dfe3e8;
+  --color-foreground: #2a3038;
+  --color-foreground-secondary: #414b58;
+  --color-text: #2a3038;
+  --color-text-secondary: #4a5462;
+  --color-text-subdued: #5f6a78;
+  --color-text-muted: #6b7480;
   --color-text-contrast: #ffffff;
-  --color-contrast: #000000;
+  --color-contrast: #2a3038;
   --color-primary: var(--color-green-600);
   --color-primary-hover: var(--color-green-700);
   --color-primary-active: var(--color-green-800);
   --color-primary-foreground: var(--color-white);
-  --color-secondary: var(--color-neutral-200);
-  --color-secondary-hover: var(--color-neutral-300);
-  --color-secondary-foreground: var(--color-black);
+  --color-secondary: #e7eaee;
+  --color-secondary-hover: #dde1e7;
+  --color-secondary-foreground: #2a3038;
   --color-accent: var(--color-green-600);
   --color-accent-foreground: var(--color-white);
   --color-success: var(--color-green-600);
@@ -105,19 +107,23 @@
   --color-info-foreground: var(--color-white);
   --color-destructive: var(--color-red-600);
   --color-destructive-foreground: var(--color-white);
-  --color-muted: var(--color-neutral-100);
-  --color-muted-foreground: var(--color-neutral-600);
-  --color-border: var(--color-neutral-300);
-  --color-border-subtle: var(--color-neutral-200);
-  --color-input: var(--color-neutral-300);
+  --color-muted: #f5f7f9;
+  --color-muted-foreground: #5f6a78;
+  --color-border: #dde1e7;
+  --color-border-subtle: #e8ebef;
+  --color-input: #d7dce3;
   --color-ring: var(--color-green-600);
-  --color-card: var(--color-white);
-  --color-card-foreground: var(--color-black);
-  --color-popover: var(--color-white);
-  --color-popover-foreground: var(--color-black);
+  --color-card: #ffffff;
+  --color-card-foreground: #2a3038;
+  --color-surface: rgba(18, 22, 28, 0.05);
+  --color-surface-hover: rgba(18, 22, 28, 0.08);
+  --color-surface-active: rgba(18, 22, 28, 0.12);
+  --color-popover: #ffffff;
+  --color-popover-foreground: #2a3038;
   --color-chart-1: var(--color-green-600);
   --color-chart-2: var(--color-blue-600);
   --color-chart-3: var(--color-purple-600);
   --color-chart-4: var(--color-orange-600);
   --color-chart-5: var(--color-red-600);
+  --color-hero-wash: #ddd6f3;
 }

@@ -1,5 +1,7 @@
+import { paginatedResponseSchema } from '@common/swagger'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
+import { SafeArtistEntity } from '../../entities'
 
 /** Runs the get artists swagger operation. */
 export function GetArtistsSwagger() {
@@ -28,12 +30,7 @@ export function GetArtistsSwagger() {
     ApiConsumes('application/json'),
     ApiResponse({
       status: HttpStatus.OK,
-      schema: {
-        type: 'array',
-        items: {
-          $ref: '#/components/schemas/SafeArtistEntity',
-        },
-      },
+      schema: paginatedResponseSchema(SafeArtistEntity),
     }),
   )
 }

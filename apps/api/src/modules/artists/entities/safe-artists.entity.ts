@@ -1,8 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger'
-import type { Artist } from '@prisma/client'
+import type { Artist, Prisma } from '@prisma/client'
 
 /** Represents the safe artist entity. */
-export class SafeArtistEntity implements Omit<Artist, 'password' | 'email' | 'twoFactorSecret'> {
+export class SafeArtistEntity
+  implements
+    Pick<
+      Artist,
+      | 'id'
+      | 'username'
+      | 'bio'
+      | 'avatar'
+      | 'backgroundImage'
+      | 'createdAt'
+      | 'updatedAt'
+      | 'verified'
+      | 'monthlyListeners'
+      | 'country'
+      | 'socials'
+    >
+{
   /** The id value. */
   @ApiProperty()
   id: string
@@ -23,10 +39,6 @@ export class SafeArtistEntity implements Omit<Artist, 'password' | 'email' | 'tw
   @ApiProperty()
   backgroundImage: string | null
 
-  /** The two factor enabled value. */
-  @ApiProperty()
-  twoFactorEnabled: boolean
-
   /** The created at value. */
   @ApiProperty()
   createdAt: Date
@@ -34,4 +46,20 @@ export class SafeArtistEntity implements Omit<Artist, 'password' | 'email' | 'tw
   /** The updated at value. */
   @ApiProperty()
   updatedAt: Date
+
+  /** Whether the artist profile is verified. */
+  @ApiProperty()
+  verified: boolean
+
+  /** Cached monthly listener count. */
+  @ApiProperty()
+  monthlyListeners: number
+
+  /** Artist country code. */
+  @ApiProperty({ nullable: true })
+  country: string | null
+
+  /** Social profile metadata. */
+  @ApiProperty({ nullable: true, type: Object })
+  socials: Prisma.JsonValue | null
 }

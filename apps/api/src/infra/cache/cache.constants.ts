@@ -14,4 +14,7 @@ export const NS = {
   ARTISTS: 'artists',
   ALBUMS: 'albums',
   SEARCH: 'search',
+  BROWSE: 'browse',
+  RECOMMENDATIONS: 'recommendations',
+  CHARTS: 'charts',
 } as const

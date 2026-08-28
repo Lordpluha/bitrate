@@ -14,5 +14,6 @@
     "^@infra/(.*)$": "<rootDir>/infra/$1",
     "^@common/(.*)$": "<rootDir>/common/$1",
     "^@test/(.*)$": "<rootDir>/../test/$1"
-  }
+  },
+  "setupFiles": ["<rootDir>/../test/jest-int.setup.ts"]
 }

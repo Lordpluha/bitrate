@@ -16,6 +16,9 @@ jobs:
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
 
+      - name: Reject generated and oversized repository artifacts
+        run: pnpm check:artifacts
+
       - name: Run pnpm audit
         run: pnpm audit --audit-level=high
         continue-on-error: true

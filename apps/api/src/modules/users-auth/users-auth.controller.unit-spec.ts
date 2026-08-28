@@ -12,7 +12,6 @@ import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
 import type { TokenService } from '../tokens/token.service'
 import { buildUser } from '../users/__tests__/fixtures/users.fixtures'
 import type { UsersService } from '../users/users.service'
-import type { OAuthService } from './oauth.service'
 import type { TwoFactorService } from './two-factor.service'
 import type { UserAuthService } from './user-auth.service'
 import { UsersAuthController } from './users-auth.controller'
@@ -22,31 +21,22 @@ const createResponse = (): DeepMockProxy<Response> => mockDeep<Response>()
 describe('UsersAuthController', () => {
   let controller: UsersAuthController
   let authService: DeepMockProxy<UserAuthService>
-  let oauthService: DeepMockProxy<OAuthService>
   let twoFactorService: DeepMockProxy<TwoFactorService>
   let usersService: DeepMockProxy<UsersService>
   let tokenService: DeepMockProxy<TokenService>
 
   beforeEach(() => {
     authService = mockDeep<UserAuthService>()
-    oauthService = mockDeep<OAuthService>()
     twoFactorService = mockDeep<TwoFactorService>()
     usersService = mockDeep<UsersService>()
     tokenService = mockDeep<TokenService>()
 
     mockReset(authService)
-    mockReset(oauthService)
     mockReset(twoFactorService)
     mockReset(usersService)
     mockReset(tokenService)
 
-    controller = new UsersAuthController(
-      authService,
-      oauthService,
-      twoFactorService,
-      usersService,
-      tokenService,
-    )
+    controller = new UsersAuthController(authService, twoFactorService, usersService, tokenService)
   })
 
   describe('login', () => {
@@ -114,9 +104,12 @@ describe('UsersAuthController', () => {
   })
 
   describe('refresh', () => {
-    it('should set new access token', async () => {
+    it('should set rotated access and refresh tokens', async () => {
       process.env.REFRESH_TOKEN_NAME = 'refresh_token'
-      authService.refresh.mockResolvedValue({ access_token: 'new-access' })
+      authService.refresh.mockResolvedValue({
+        access_token: 'new-access',
+        refresh_token: 'new-refresh',
+      })
       const req = mockDeep<Request>()
       Object.assign(req, { refresh_token: 'refresh-token' })
       const res = createResponse()
@@ -124,20 +117,20 @@ describe('UsersAuthController', () => {
       await controller.refresh(req, res)
 
       expect(authService.refresh).toHaveBeenCalledWith('refresh-token')
-      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-access', 'refresh-token')
+      expect(tokenService.setAuthCookies).toHaveBeenCalledWith(res, 'new-access', 'new-refresh')
     })
   })
 
   describe('getMe', () => {
     it('should return user by id', async () => {
       const user = buildUser({ id: 'user-1' })
-      usersService.findById.mockResolvedValue(user)
+      usersService.findSelfById.mockResolvedValue(user)
       const req = mockDeep<Request>()
       Object.assign(req, { user })
 
       const result = await controller.getMe(req)
 
-      expect(usersService.findById).toHaveBeenCalledWith('user-1')
+      expect(usersService.findSelfById).toHaveBeenCalledWith('user-1')
       expect(result).toBe(user)
     })
   })

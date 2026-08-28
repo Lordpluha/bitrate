@@ -26,5 +26,5 @@ export class UserSessionEntity implements UserSession {
 
   /** The expires at value. */
   @ApiProperty()
-  expiresAt: Date | null
+  expiresAt: Date
 }

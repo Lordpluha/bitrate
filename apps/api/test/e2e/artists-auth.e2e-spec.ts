@@ -2,7 +2,7 @@ import type { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
-import { resetArtistsDatabase } from '../helpers/db'
+import { resetArtistsDatabase, verifyArtistEmail } from '../helpers/db'
 import { closeE2eApp, createE2eApp } from './e2e-app'
 
 const makeRunId = () => Math.random().toString(36).slice(2, 8)
@@ -34,6 +34,7 @@ describe('ArtistsAuth (e2e)', () => {
     }
 
     await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(201)
+    await verifyArtistEmail(prisma, creds.email)
 
     const loginRes = await request(app.getHttpServer())
       .post('/artists/auth/login')
@@ -66,13 +67,14 @@ describe('ArtistsAuth (e2e)', () => {
     }
 
     await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(201)
+    await verifyArtistEmail(prisma, creds.email)
     await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(409)
   })
 
   it('POST /artists/auth/login should reject invalid credentials', async () => {
     await request(app.getHttpServer())
       .post('/artists/auth/login')
-      .send({ email: 'notfound@example.com', password: 'wrong' })
+      .send({ email: 'notfound@example.com', password: 'wrong-password' })
       .expect(401)
   })
 
@@ -89,6 +91,7 @@ describe('ArtistsAuth (e2e)', () => {
     }
 
     await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(201)
+    await verifyArtistEmail(prisma, creds.email)
 
     const loginRes = await request(app.getHttpServer())
       .post('/artists/auth/login')

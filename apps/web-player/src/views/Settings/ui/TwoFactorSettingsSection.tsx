@@ -1,18 +1,20 @@
+import { useI18n } from '@/shared/i18n'
 import { useTwoFactorSettings } from '@/views/Settings/model/useTwoFactorSettings'
 import { SettingsSection } from '@/views/Settings/ui/controls/SettingsSection'
 
 const sanitizeCode = (value: string) => value.replace(/\D/g, '')
 
 export const TwoFactorSettingsSection = () => {
+  const { t } = useI18n()
   const twoFactor = useTwoFactorSettings()
 
   return (
-    <SettingsSection title="Two-factor authentication">
+    <SettingsSection title={t('settings.twoFactor')}>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="text-sm text-text-subdued">
           {twoFactor.isEnabled
-            ? '2FA is enabled for this account.'
-            : 'Protect your account with an authenticator app.'}
+            ? t('settings.twoFactor.enabled')
+            : t('settings.twoFactor.setupDescription')}
         </p>
         {!twoFactor.isEnabled && !twoFactor.setup && (
           <button
@@ -21,7 +23,7 @@ export const TwoFactorSettingsSection = () => {
             onClick={twoFactor.startSetup}
             type="button"
           >
-            Set up 2FA
+            {t('settings.twoFactor.setup')}
           </button>
         )}
       </div>
@@ -30,14 +32,16 @@ export const TwoFactorSettingsSection = () => {
         <form className="grid max-w-160 gap-3" onSubmit={twoFactor.enable}>
           {twoFactor.setup.manualCode && (
             <div className="rounded bg-surface p-3 text-sm text-text">
-              Manual code: <strong>{twoFactor.setup.manualCode}</strong>
+              {t('settings.twoFactor.manualCode', {
+                code: twoFactor.setup.manualCode,
+              })}
             </div>
           )}
           <label
             className="grid gap-2 text-sm text-text"
             htmlFor="enable-two-factor-code"
           >
-            Authentication code
+            {t('settings.twoFactor.code')}
           </label>
           <input
             autoComplete="one-time-code"
@@ -54,11 +58,11 @@ export const TwoFactorSettingsSection = () => {
             value={twoFactor.enableCode}
           />
           <button
-            className="w-fit rounded-full bg-green-500 px-5 py-2 text-sm font-bold text-black hover:bg-green-400 disabled:opacity-60"
+            className="w-fit rounded-full bg-primary px-5 py-2 text-sm font-bold text-black hover:bg-primary-hover disabled:opacity-60"
             disabled={twoFactor.isPending}
             type="submit"
           >
-            Enable 2FA
+            {t('settings.twoFactor.enable')}
           </button>
         </form>
       )}
@@ -69,7 +73,7 @@ export const TwoFactorSettingsSection = () => {
             className="text-sm text-text"
             htmlFor="disable-two-factor-code"
           >
-            Current authentication code
+            {t('settings.twoFactor.currentCode')}
           </label>
           <input
             autoComplete="one-time-code"
@@ -86,11 +90,11 @@ export const TwoFactorSettingsSection = () => {
             value={twoFactor.disableCode}
           />
           <button
-            className="rounded-full bg-red-500/15 px-5 py-2 text-sm font-bold text-red-200 hover:bg-red-500/25 disabled:opacity-60"
+            className="rounded-full bg-destructive/15 px-5 py-2 text-sm font-bold text-destructive hover:bg-destructive/25 disabled:opacity-60"
             disabled={twoFactor.isPending}
             type="submit"
           >
-            Disable 2FA
+            {t('settings.twoFactor.disable')}
           </button>
         </form>
       )}

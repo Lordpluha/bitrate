@@ -98,12 +98,11 @@ export function useImageColor(src: string | undefined): RGB {
     if (!src) return
     let cancelled = false
 
-    // Попытка 1: с crossOrigin (нужны CORS-заголовки на сервере)
+    /** First attempt uses crossOrigin, which needs CORS headers on the server. */
     tryLoad(src, true)
       .then((rgb) => {
         if (cancelled) return
-        // Если цвет извлечь не удалось (дефолтный) — пробуем без crossOrigin
-        // (изображение может быть в кэше браузера)
+        /** Fall back to a non-CORS load: the image may already be cached. */
         if (rgb[0] === 20 && rgb[1] === 20 && rgb[2] === 20) {
           return tryLoad(src, false)
         }

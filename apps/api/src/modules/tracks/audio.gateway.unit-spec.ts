@@ -4,6 +4,7 @@ import { WsUserAuthGuard } from '@modules/users-auth/users-auth.ws.guard'
 import type { Server } from 'socket.io'
 import { buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { AudioGateway } from './audio.gateway'
+import { TrackStreamingService } from './track-streaming.service'
 import { TracksService } from './tracks.service'
 
 jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
@@ -11,8 +12,12 @@ jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
 const makeTracksServiceMock = () =>
   ({
     findTrackById: jest.fn(),
-    getTrackAudioStream: jest.fn(),
   }) as unknown as jest.Mocked<TracksService>
+
+const makeStreamingServiceMock = () =>
+  ({
+    getTrackAudioStream: jest.fn(),
+  }) as unknown as jest.Mocked<TrackStreamingService>
 
 const makeWsGuardMock = () =>
   ({
@@ -43,18 +48,21 @@ describe('AudioGateway', () => {
   it('should expose runtime constructor metadata for Nest dependency injection', () => {
     expect(Reflect.getMetadata('design:paramtypes', AudioGateway)).toEqual([
       TracksService,
+      TrackStreamingService,
       WsUserAuthGuard,
     ])
   })
 
   let gateway: AudioGateway
   let tracksService: jest.Mocked<TracksService>
+  let streamingService: jest.Mocked<TrackStreamingService>
   let wsGuard: jest.Mocked<WsUserAuthGuard>
 
   beforeEach(() => {
     tracksService = makeTracksServiceMock()
+    streamingService = makeStreamingServiceMock()
     wsGuard = makeWsGuardMock()
-    gateway = new AudioGateway(tracksService, wsGuard)
+    gateway = new AudioGateway(tracksService, streamingService, wsGuard)
     gateway.server = makeServerMock() as never
   })
 
@@ -103,7 +111,7 @@ describe('AudioGateway', () => {
 
     it('should stream the closest available quality as binary chunks', async () => {
       const stream = Readable.from([Buffer.from('audio')])
-      tracksService.getTrackAudioStream.mockResolvedValue({
+      streamingService.getTrackAudioStream.mockResolvedValue({
         stream,
         trackId: validTrackId,
         bitrate: 192,
@@ -172,7 +180,7 @@ describe('AudioGateway', () => {
     it('should emit trackPlaying and return success on valid play', async () => {
       const track = buildTrack({ id: validTrackId })
       tracksService.findTrackById.mockResolvedValue(track as never)
-      tracksService.getTrackAudioStream.mockResolvedValue({
+      streamingService.getTrackAudioStream.mockResolvedValue({
         stream: Readable.from([]),
         trackId: validTrackId,
         bitrate: 192,
@@ -196,9 +204,9 @@ describe('AudioGateway', () => {
   describe('handlePauseTrack', () => {
     const validTrackId = '01234567-89ab-7def-8123-456789abcdef'
 
-    it('should return error when client has no userId', () => {
+    it('should return error when client has no userId', async () => {
       const client = makeSocket(undefined)
-      const result = gateway.handlePauseTrack(client as never, {
+      const result = await gateway.handlePauseTrack(client as never, {
         trackId: validTrackId,
         currentTime: 0,
       })
@@ -215,7 +223,7 @@ describe('AudioGateway', () => {
 
       const firstStream = new PassThrough()
       const secondStream = new PassThrough()
-      tracksService.getTrackAudioStream
+      streamingService.getTrackAudioStream
         .mockResolvedValueOnce({
           stream: firstStream,
           trackId: validTrackId,
@@ -237,7 +245,7 @@ describe('AudioGateway', () => {
       await gateway.handleStreamTrack(firstClient as never, { trackId: validTrackId })
       await gateway.handleStreamTrack(secondClient as never, { trackId: validTrackId })
 
-      const result = gateway.handlePauseTrack(firstClient as never, {
+      const result = await gateway.handlePauseTrack(firstClient as never, {
         trackId: validTrackId,
         currentTime: 30,
       })

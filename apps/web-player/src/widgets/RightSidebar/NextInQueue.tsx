@@ -1,84 +1,83 @@
 'use client'
 
-import { selectMusicPlayer, usePlayerStore } from '@entities/Player'
-import { useArtist } from '@shared/hooks/useArtist'
+import { ArtistName } from '@entities/Artist'
+import {
+  selectMusicPlayer,
+  selectQueue,
+  usePlayerStore,
+} from '@entities/Player'
+import { ROUTES } from '@shared/routes'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { Button, PlayIcon, Typography } from '@spotify/ui-react'
+import { PlayIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export const NextInQueue = () => {
   const { currentTrack, currentTrackIndex, playlist } =
     usePlayerStore(selectMusicPlayer)
+  const queue = usePlayerStore(selectQueue)
   const changeTrack = usePlayerStore((state) => state.changeTrack)
 
+  /** The user queue wins over the playing context, matching `changeTrack`. */
   const nextTrack =
-    currentTrackIndex >= 0 && currentTrackIndex < playlist.length - 1
+    queue[0]?.track ??
+    (currentTrackIndex >= 0 && currentTrackIndex < playlist.length - 1
       ? playlist[currentTrackIndex + 1]
-      : null
+      : null)
 
-  // Хук должен вызываться всегда, до условных return
-  const { data: artist } = useArtist(nextTrack?.artistId)
-  const artistName = artist?.username || 'Unknown Artist'
-
-  if (!currentTrack || playlist.length === 0) {
+  if (!currentTrack || !nextTrack) {
     return null
   }
-
-  if (!nextTrack) {
-    return null
-  }
-
-  const coverUrl = getTrackCoverUrl(nextTrack.cover)
 
   return (
-    <div className="bg-surface rounded-lg p-0 overflow-hidden mt-4">
-      <div className="flex items-center justify-between px-4 pt-3 pb-1">
+    <div className="mt-4 overflow-hidden rounded-lg bg-surface p-0">
+      <div className="flex items-center justify-between px-4 pb-1 pt-3">
         <Typography
           as="p"
-          className="text-text text-sm font-semibold"
+          className="text-sm font-semibold text-text"
           size="body"
         >
           Next in queue
         </Typography>
-        <Button
-          className="text-text-subdued text-xs font-medium hover:underline p-0"
-          variant="link"
+        <Link
+          className="p-0 text-xs font-medium text-text-subdued hover:underline"
+          href={ROUTES.queue}
         >
           Open queue
-        </Button>
+        </Link>
       </div>
       <button
-        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-surface cursor-pointer transition-colors group text-left"
+        className="group flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"
         onClick={() => changeTrack('next')}
         type="button"
       >
-        <div className="relative w-12 h-12 shrink-0">
+        <div className="relative size-12 shrink-0">
           <Image
             alt={nextTrack.title}
             className="rounded-md object-cover"
             fill
             sizes="48px"
-            src={coverUrl}
+            src={getTrackCoverUrl(nextTrack.cover)}
             unoptimized
           />
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
-            <PlayIcon className="w-5 h-5 text-white" />
+          <div className="absolute inset-0 flex items-center justify-center rounded-md bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+            <PlayIcon className="size-5 text-white" />
           </div>
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <Typography
             as="p"
-            className="text-text text-sm truncate group-hover:text-green-500 transition-colors"
+            className="truncate text-sm text-text transition-colors group-hover:text-primary"
             size="body"
           >
             {nextTrack.title}
           </Typography>
           <Typography
             as="p"
-            className="text-text-subdued text-xs truncate"
+            className="truncate text-xs text-text-subdued"
             size="body"
           >
-            {artistName}
+            <ArtistName artistId={nextTrack.artistId} />
           </Typography>
         </div>
       </button>

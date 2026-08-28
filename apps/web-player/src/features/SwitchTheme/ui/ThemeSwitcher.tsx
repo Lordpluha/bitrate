@@ -19,7 +19,7 @@ export const ThemeSwitcher = () => {
         <button
           className={cn(
             'w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300',
-            themeContext?.theme === th ? 'bg-green-500' : 'bg-background',
+            themeContext?.theme === th ? 'bg-primary' : 'bg-background',
           )}
           key={th}
           onClick={() => themeContext?.setTheme(th)}

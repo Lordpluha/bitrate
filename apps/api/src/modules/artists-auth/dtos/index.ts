@@ -1,3 +1,4 @@
+export * from './email-verification.dto'
 export * from './forgot-password.dto'
 export * from './login.dto'
 export * from './registration.dto'

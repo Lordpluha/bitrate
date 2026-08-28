@@ -1,11 +1,13 @@
 'use client'
+import { selectCompactLibrary, useSettingsStore } from '@entities/Settings'
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { Clock } from 'lucide-react'
 import { useMemo } from 'react'
+import { useI18n } from '@/shared/i18n'
 import { TrackCard } from './TrackCard'
 
 interface TracksListProps {
-  activeTrackIndex?: number
+  activeTrackId?: string
   likedTrackIds?: Iterable<string>
   tracks: TrackEntity[]
   isPlaybackContextActive?: boolean
@@ -16,15 +18,18 @@ interface TracksListProps {
 }
 
 export const TracksList = ({
-  activeTrackIndex,
+  activeTrackId,
   likedTrackIds: providedLikedTrackIds,
   isPlaybackContextActive = true,
   onPlayTrack,
   onRemoveTrack,
   removable = false,
   tracks,
-  viewMode = 'list',
+  viewMode: viewModeProp,
 }: TracksListProps) => {
+  const { t } = useI18n()
+  const compactLibrary = useSettingsStore(selectCompactLibrary)
+  const viewMode = viewModeProp ?? (compactLibrary ? 'compact' : 'list')
   const likedTrackIds = useMemo(
     () =>
       providedLikedTrackIds
@@ -34,19 +39,19 @@ export const TracksList = ({
   )
 
   return (
-    <div className="px-6 py-4 max-[1024px]:px-3 max-[1024px]:py-3">
+    <div className="px-4 py-3 sm:px-6 sm:py-4 max-[1024px]:px-2">
       <div
         className={
           viewMode === 'compact'
-            ? 'grid grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_112px] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden'
-            : 'grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_112px] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden'
+            ? 'grid grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_140px] gap-4 px-4 py-2 border-b border-border text-sm text-text-subdued mb-2 max-[1024px]:hidden'
+            : 'grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_140px] gap-4 px-4 py-2 border-b border-border text-sm text-text-subdued mb-2 max-[1024px]:hidden'
         }
       >
         <div>#</div>
-        <div>Title</div>
-        {viewMode === 'compact' && <div>Artist</div>}
-        <div>Album</div>
-        <div>Date added</div>
+        <div>{t('tracks.title')}</div>
+        {viewMode === 'compact' && <div>{t('tracks.artist')}</div>}
+        <div>{t('tracks.album')}</div>
+        <div>{t('tracks.dateAdded')}</div>
         <div className="flex justify-end">
           <Clock size={16} />
         </div>
@@ -58,8 +63,8 @@ export const TracksList = ({
             index={index}
             isLiked={likedTrackIds.has(track.id)}
             isPlaybackContextActive={isPlaybackContextActive}
-            isPlaybackIndexActive={
-              activeTrackIndex === undefined || activeTrackIndex === index
+            isPlaybackTrackActive={
+              activeTrackId === undefined || activeTrackId === track.id
             }
             key={track.id}
             onPlayTrack={onPlayTrack}

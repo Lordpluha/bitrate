@@ -1,5 +1,8 @@
+'use client'
+
+import { useSettingsStore } from '@entities/Settings'
 import { Info } from 'lucide-react'
-import { useState } from 'react'
+import { useI18n } from '@/shared/i18n'
 import {
   SettingsRow,
   SettingsSection,
@@ -7,41 +10,46 @@ import {
 import { SettingsSwitch } from '@/views/Settings/ui/controls/SettingsSwitch'
 
 export const VideoSettingsSection = () => {
-  const [musicVideos, setMusicVideos] = useState(true)
-  const [canvas, setCanvas] = useState(true)
-  const [otherVideos, setOtherVideos] = useState(true)
+  const { t } = useI18n()
+  const musicVideos = useSettingsStore((state) => state.musicVideos)
+  const canvas = useSettingsStore((state) => state.canvas)
+  const otherVideos = useSettingsStore((state) => state.otherVideos)
+  const toggleSetting = useSettingsStore((state) => state.toggleSetting)
 
   return (
-    <SettingsSection title="Videos and Canvas">
+    <SettingsSection title={t('settings.video')}>
       <div className="mb-3 flex items-center gap-2 text-xs font-bold text-text">
         <Info size={16} />
-        It may take some time for your experience to update.
+        {t('settings.video.info')}
       </div>
       <SettingsRow
-        description="When off, music videos and live performances play as audio-only."
-        label="Music videos"
+        description={t('settings.video.music.description')}
+        label={t('settings.video.music')}
       >
         <SettingsSwitch
+          ariaLabel={t('settings.video.music')}
           checked={musicVideos}
-          onChange={() => setMusicVideos((value) => !value)}
+          onChange={() => toggleSetting('musicVideos')}
         />
       </SettingsRow>
       <SettingsRow
-        description="Short, looping visuals when a song is playing."
-        label="Canvas"
+        description={t('settings.video.canvas.description')}
+        label={t('settings.video.canvas')}
       >
         <SettingsSwitch
+          ariaLabel={t('settings.video.canvas')}
           checked={canvas}
-          onChange={() => setCanvas((value) => !value)}
+          onChange={() => toggleSetting('canvas')}
         />
       </SettingsRow>
       <SettingsRow
-        description="Vertically scrolling videos, video podcasts, and videos from creators and authors."
-        label="Other videos"
+        description={t('settings.video.other.description')}
+        label={t('settings.video.other')}
       >
         <SettingsSwitch
+          ariaLabel={t('settings.video.other')}
           checked={otherVideos}
-          onChange={() => setOtherVideos((value) => !value)}
+          onChange={() => toggleSetting('otherVideos')}
         />
       </SettingsRow>
     </SettingsSection>
