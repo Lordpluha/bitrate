@@ -6,7 +6,6 @@ import {
   getTargetBitrates,
   isAllowedHlsAsset,
   parseRangeHeader,
-  resolveAudioFormat,
   selectPreferredTrackFile,
 } from './track-audio.helpers'
 
@@ -25,47 +24,6 @@ describe('getTargetBitrates', () => {
 
   it('rejects a source below the converter minimum', () => {
     expect(() => getTargetBitrates(31)).toThrow(BadRequestException)
-  })
-})
-
-describe('resolveAudioFormat', () => {
-  it('prefers probed metadata over the declared MIME type', () => {
-    expect(
-      resolveAudioFormat({
-        fileName: 'a.mp3',
-        mimetype: 'audio/mpeg',
-        container: 'ogg',
-        codec: 'opus',
-      }),
-    ).toEqual({ format: 'ogg', codec: 'opus' })
-  })
-
-  it('falls back to the MIME type when metadata is empty', () => {
-    expect(
-      resolveAudioFormat({
-        fileName: 'a.bin',
-        mimetype: 'audio/mpeg',
-        container: null,
-        codec: null,
-      }),
-    ).toEqual({ format: 'mp3', codec: 'mp3' })
-  })
-
-  it('falls back to the file extension for an unrecognised MIME type', () => {
-    expect(
-      resolveAudioFormat({
-        fileName: 'a.flac',
-        mimetype: 'audio/flac',
-        container: null,
-        codec: null,
-      }),
-    ).toEqual({ format: 'flac', codec: null })
-  })
-
-  it('reports an unknown format when nothing identifies the file', () => {
-    expect(
-      resolveAudioFormat({ fileName: 'a', mimetype: 'audio/flac', container: null, codec: null }),
-    ).toEqual({ format: 'unknown', codec: null })
   })
 })
 

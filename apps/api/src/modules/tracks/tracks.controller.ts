@@ -12,6 +12,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseEnumPipe,
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
@@ -39,6 +40,7 @@ import {
 } from './decorators'
 import { type CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
 import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
+import { type AudioStreamFormat, SUPPORTED_AUDIO_STREAM_FORMATS } from './track-audio.helpers'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
 import { TrackStreamingService } from './track-streaming.service'
@@ -105,7 +107,7 @@ export class TracksController {
     const data = await this.trackStreamingService.getHlsAsset(id, bitrate, asset)
     res.set({
       'Content-Type': data.contentType,
-      'Content-Length': data.contentLength,
+      ...(data.contentLength === undefined ? {} : { 'Content-Length': data.contentLength }),
       'Cache-Control': data.immutable
         ? IMMUTABLE_CACHE_CONTROL
         : 'private, max-age=30, no-transform',
@@ -123,7 +125,8 @@ export class TracksController {
     @Req() req: Request,
     @Res() res: Response,
     @Query('bitrate', new ParseIntPipe({ optional: true })) bitrate?: number,
-    @Query('format') format?: string,
+    @Query('format', new ParseEnumPipe(SUPPORTED_AUDIO_STREAM_FORMATS, { optional: true }))
+    format?: AudioStreamFormat,
   ) {
     const streamData = await this.trackStreamingService.getTrackStream(
       id,
@@ -136,7 +139,9 @@ export class TracksController {
     res.set({
       'Content-Type': streamData.contentType,
       'Accept-Ranges': 'bytes',
-      'Content-Length': streamData.contentLength,
+      ...(streamData.contentLength === undefined
+        ? {}
+        : { 'Content-Length': streamData.contentLength }),
       'Cache-Control': 'private, max-age=3600, no-transform',
       'X-Audio-Bitrate': streamData.bitrate,
       'X-Audio-Format': streamData.format,

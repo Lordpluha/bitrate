@@ -103,8 +103,47 @@ describe('TracksController', () => {
     const result = await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
 
     expect(streamingService.getHlsAsset).toHaveBeenCalledWith('track-1', 192, 'segment_00000.m4s')
+    expect(res.set).toHaveBeenCalledWith(expect.objectContaining({ 'Content-Length': 1024 }))
     expect(stream.pipe).toHaveBeenCalledWith(res)
     expect(result).toBe('piped')
+  })
+
+  it('getHlsAsset should omit Content-Length when the asset length is unknown', async () => {
+    const stream = { pipe: jest.fn().mockReturnValue('piped') }
+    streamingService.getHlsAsset.mockResolvedValue({
+      stream,
+      contentType: 'video/iso.segment',
+      contentLength: undefined,
+      immutable: true,
+    } as never)
+    const res = { set: jest.fn() }
+
+    await controller.getHlsAsset('track-1', 192, 'segment_00000.m4s', res as never)
+
+    const [headers] = res.set.mock.calls[0] as [Record<string, unknown>]
+    expect(headers).not.toHaveProperty('Content-Length')
+  })
+
+  it('streamTrack should omit Content-Length when the length is unknown', async () => {
+    const stream = { pipe: jest.fn().mockReturnValue('piped') }
+    streamingService.getTrackStream.mockResolvedValue({
+      stream,
+      contentType: 'audio/mpeg',
+      contentLength: undefined,
+      fileSize: undefined,
+      start: 0,
+      end: undefined,
+      isPartial: false,
+      bitrate: 192,
+      format: 'opus',
+    } as never)
+    const req = { headers: {} } as never
+    const res = { status: jest.fn().mockReturnThis(), set: jest.fn() }
+
+    await controller.streamTrack('track-1', req, res as never, undefined, 'opus')
+
+    const [headers] = res.set.mock.calls[0] as [Record<string, unknown>]
+    expect(headers).not.toHaveProperty('Content-Length')
   })
 
   it('postTrack should throw BadRequestException when audio file is missing', async () => {

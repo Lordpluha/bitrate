@@ -1,6 +1,12 @@
 import { normalizePagination } from '@common/pagination'
+import { isPrismaP2002 } from '@common/utils/prisma'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import type { UpdatePlayerDto, UpdateQueueDto, UpdateSettingsDto, UpsertDeviceDto } from './dtos'
 
@@ -139,7 +145,11 @@ export class MeService {
       } catch (error) {
         const code =
           error && typeof error === 'object' && 'code' in error ? String(error.code) : undefined
-        if (attempt === 3 || (code !== 'P2002' && code !== 'P2034')) throw error
+        if (code !== 'P2002' && code !== 'P2034') throw error
+        if (attempt === 3) {
+          if (isPrismaP2002(error)) throw new ConflictException('Device is already active')
+          throw error
+        }
       }
     }
 

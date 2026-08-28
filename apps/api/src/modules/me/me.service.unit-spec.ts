@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import { NotFoundException } from '@nestjs/common'
+import { ConflictException, NotFoundException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { MeService } from './me.service'
@@ -57,5 +57,26 @@ describe('MeService device activation', () => {
     expect(prisma.playerDevice.updateMany.mock.invocationCallOrder[0]).toBeLessThan(
       prisma.playerDevice.update.mock.invocationCallOrder[0] ?? Number.POSITIVE_INFINITY,
     )
+  })
+
+  it('returns 409 after exhausting retries on a unique-constraint race', async () => {
+    const device = { id: 'device-1', userId: 'user-1' }
+    prisma.playerDevice.findFirst.mockResolvedValue(device as never)
+    prisma.$transaction.mockRejectedValue(
+      new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: 'test',
+      }) as never,
+    )
+
+    await expect(
+      service.upsertDevice('user-1', {
+        id: '00000000-0000-0000-0000-000000000001',
+        name: 'Browser',
+        type: 'web',
+        isActive: true,
+      }),
+    ).rejects.toThrow(ConflictException)
+    expect(prisma.$transaction).toHaveBeenCalledTimes(3)
   })
 })

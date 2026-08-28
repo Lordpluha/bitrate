@@ -59,12 +59,10 @@ describe('TrackUploadService', () => {
   })
 
   describe('create', () => {
-    it('should create track in transaction and enqueue conversion job', async () => {
+    it('should create track and enqueue conversion job', async () => {
       const track = buildTrack()
       const audioFile = buildAudioFile()
-      mockTransaction(prisma)
       prisma.track.create.mockResolvedValue(track as never)
-      prisma.trackFile.create.mockResolvedValue({ id: 'tf-1' } as never)
       queue.add.mockResolvedValue({} as never)
 
       const result = await service.create(
@@ -74,11 +72,6 @@ describe('TrackUploadService', () => {
       )
 
       expect(prisma.track.create).toHaveBeenCalled()
-      expect(prisma.trackFile.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({ bitrate: 128 }),
-        }),
-      )
       expect(queue.add).toHaveBeenCalledWith(
         'convert-audio',
         expect.objectContaining({
@@ -94,12 +87,21 @@ describe('TrackUploadService', () => {
       expect(result).toBe(track)
     })
 
+    it('does not persist a TrackFile row for the raw upload', async () => {
+      const track = buildTrack()
+      const audioFile = buildAudioFile()
+      prisma.track.create.mockResolvedValue(track as never)
+      queue.add.mockResolvedValue({} as never)
+
+      await service.create('artist-1', { title: 'Track title' } as CreateTrackDto, audioFile)
+
+      expect(prisma.trackFile.create).not.toHaveBeenCalled()
+    })
+
     it('should mark the track failed when the queue cannot accept the job', async () => {
       const track = buildTrack()
       const audioFile = buildAudioFile()
-      mockTransaction(prisma)
       prisma.track.create.mockResolvedValue(track as never)
-      prisma.trackFile.create.mockResolvedValue({ id: 'tf-1' } as never)
       prisma.track.update.mockResolvedValue(track as never)
       queue.add.mockRejectedValue(new Error('Redis unavailable') as never)
 
@@ -119,9 +121,7 @@ describe('TrackUploadService', () => {
     it('should set cover to null when no cover file provided', async () => {
       const track = buildTrack()
       const audioFile = buildAudioFile()
-      mockTransaction(prisma)
       prisma.track.create.mockResolvedValue(track as never)
-      prisma.trackFile.create.mockResolvedValue({ id: 'tf-1' } as never)
       queue.add.mockResolvedValue({} as never)
 
       await service.create(
@@ -183,7 +183,7 @@ describe('TrackUploadService', () => {
       const audioFile = buildAudioFile()
       mockTransaction(prisma)
       prisma.track.update.mockResolvedValue(track as never)
-      prisma.trackFile.upsert.mockResolvedValue({ id: 'tf-1' } as never)
+      prisma.trackFile.deleteMany.mockResolvedValue({ count: 1 } as never)
       queue.add.mockResolvedValue({} as never)
 
       prisma.track.findFirst.mockResolvedValue(track as never)
@@ -196,6 +196,10 @@ describe('TrackUploadService', () => {
       )
 
       expect(prisma.track.update).toHaveBeenCalled()
+      expect(prisma.trackFile.deleteMany).toHaveBeenCalledWith({
+        where: { trackId: track.id, url: track.audioUrl },
+      })
+      expect(prisma.trackFile.upsert).not.toHaveBeenCalled()
       expect(queue.add).toHaveBeenCalledWith(
         'convert-audio',
         expect.objectContaining({ sourceFileName: audioFile.filename }),

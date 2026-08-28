@@ -99,10 +99,10 @@ export class TrackStreamingService {
       return {
         stream,
         contentType: mimeType,
-        contentLength: contentLength ?? 0,
-        fileSize: contentLength ?? 0,
+        contentLength,
+        fileSize: contentLength,
         start: 0,
-        end: (contentLength ?? 1) - 1,
+        end: contentLength === undefined ? undefined : contentLength - 1,
         isPartial: false,
         bitrate: selectedFile.bitrate,
         format: selectedFile.format,
@@ -138,8 +138,8 @@ export class TrackStreamingService {
 
   /** Returns the FFmpeg-generated HLS master playlist from storage. */
   async getHlsMasterPlaylist(id: TrackEntity['id']) {
-    const track = await this.prisma.track.findUnique({
-      where: { id },
+    const track = await this.prisma.track.findFirst({
+      where: { id, deletedAt: null },
       include: { audioFiles: { where: { format: DEFAULT_AUDIO_FORMAT }, take: 1 } },
     })
     if (!track) throw new NotFoundException('Track not found')
@@ -158,6 +158,10 @@ export class TrackStreamingService {
   /** Proxies an HLS asset (playlist or segment) from storage. */
   async getHlsAsset(id: TrackEntity['id'], bitrate: number, asset: string) {
     if (!isAllowedHlsAsset(asset)) throw new NotFoundException('HLS asset not found')
+
+    const track = await this.prisma.track.findFirst({ where: { id, deletedAt: null } })
+    if (!track) throw new NotFoundException('HLS asset not found')
+    if (track.processingStatus !== 'READY') throw new NotFoundException('HLS asset not found')
 
     const file = await this.prisma.trackFile.findUnique({
       where: { trackId_format_bitrate: { trackId: id, format: DEFAULT_AUDIO_FORMAT, bitrate } },

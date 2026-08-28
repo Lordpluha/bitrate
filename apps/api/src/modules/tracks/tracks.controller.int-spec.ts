@@ -198,6 +198,70 @@ describe('TracksController (int)', () => {
     expect(res.headers['content-range']).toBe('bytes 0-511/2048')
   })
 
+  it('GET /tracks/stream/:id with a supported format should pass it through', async () => {
+    const mockStream = new Readable({
+      read() {
+        this.push(null)
+      },
+    })
+    streamingService.getTrackStream.mockResolvedValue({
+      stream: mockStream,
+      contentType: 'audio/mpeg',
+      contentLength: 0,
+      fileSize: 0,
+      start: 0,
+      end: 0,
+      isPartial: false,
+    } as never)
+
+    const res = await request(app.getHttpServer())
+      .get('/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479')
+      .query({ format: 'mp3' })
+
+    expect(res.status).toBe(200)
+    expect(streamingService.getTrackStream).toHaveBeenCalledWith(
+      'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+      undefined,
+      undefined,
+      'mp3',
+    )
+  })
+
+  it('GET /tracks/stream/:id with an unsupported format should return 400', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479')
+      .query({ format: 'exe' })
+
+    expect(res.status).toBe(400)
+    expect(streamingService.getTrackStream).not.toHaveBeenCalled()
+  })
+
+  it('GET /tracks/stream/:id should omit Content-Length when the length is unknown', async () => {
+    const mockStream = new Readable({
+      read() {
+        this.push(Buffer.from('audio-bytes'))
+        this.push(null)
+      },
+    })
+    streamingService.getTrackStream.mockResolvedValue({
+      stream: mockStream,
+      contentType: 'audio/mpeg',
+      contentLength: undefined,
+      fileSize: undefined,
+      start: 0,
+      end: undefined,
+      isPartial: false,
+    } as never)
+
+    const res = await request(app.getHttpServer()).get(
+      '/tracks/stream/f47ac10b-58cc-4372-a567-0e02b2c3d479',
+    )
+
+    expect(res.status).toBe(200)
+    expect(res.headers['content-length']).toBeUndefined()
+    expect(res.headers['transfer-encoding']).toBe('chunked')
+  })
+
   it('PUT /tracks/:id should call uploadService.update and return 200', async () => {
     uploadService.update.mockResolvedValue(buildTrack() as never)
 

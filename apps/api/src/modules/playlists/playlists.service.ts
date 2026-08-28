@@ -1,11 +1,12 @@
 import { normalizePagination } from '@common/pagination'
-import { isPrismaP2025 } from '@common/utils/prisma'
+import { isPrismaP2002, isPrismaP2025 } from '@common/utils/prisma'
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { UserEntity } from '@modules/users'
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -153,6 +154,7 @@ export class PlaylistsService {
       return result
     } catch (error: unknown) {
       if (isPrismaP2025(error)) throw new NotFoundException('Playlist not found')
+      if (isPrismaP2002(error)) throw new ConflictException('Playlist already liked')
       throw error
     }
   }
@@ -261,7 +263,12 @@ export class PlaylistsService {
       } catch (error) {
         const code =
           error && typeof error === 'object' && 'code' in error ? String(error.code) : undefined
-        if (attempt === 3 || (code !== 'P2002' && code !== 'P2034')) throw error
+        if (code !== 'P2002' && code !== 'P2034') throw error
+        if (attempt === 3) {
+          if (code === 'P2002')
+            throw new ConflictException('One or more tracks are already in this playlist')
+          throw error
+        }
       }
     }
     await this.cache.invalidate(NS.SEARCH)

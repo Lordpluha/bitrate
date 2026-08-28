@@ -13,24 +13,15 @@ const MIN_SOURCE_BITRATE = 32
 /** Only these HLS artifact names may be proxied out of storage. */
 const HLS_ASSET_PATTERN = /^(index\.m3u8|init_\d+\.mp4|segment_\d{5}\.m4s)$/
 
-/** Upload MIME types mapped to the container/codec pair they imply. */
-const FORMAT_BY_MIME: Record<string, AudioFormat> = {
-  'audio/mpeg': { format: 'mp3', codec: 'mp3' },
-  'audio/ogg': { format: 'ogg', codec: null },
-  'audio/wav': { format: 'wav', codec: null },
-  'audio/webm': { format: 'webm', codec: null },
-}
+/**
+ * Progressive containers a track may be transcoded into and requested by format.
+ * `cmaf` is deliberately excluded — it is fragmented HLS media, not a progressive
+ * download, and is never selectable through the progressive streaming endpoints.
+ */
+export const SUPPORTED_AUDIO_STREAM_FORMATS = ['opus', 'ogg', 'mp3', 'flac'] as const
 
-/** A resolved container/codec pair for a stored audio file. */
-export type AudioFormat = { format: string; codec: string | null }
-
-/** What is known about an upload before its format is resolved. */
-export type ResolveAudioFormatInput = {
-  fileName: string
-  mimetype: string
-  container: string | null
-  codec: string | null
-}
+/** A progressive audio container a client may request via `?format=`. */
+export type AudioStreamFormat = (typeof SUPPORTED_AUDIO_STREAM_FORMATS)[number]
 
 /** The subset of a `TrackFile` that quality selection actually reads. */
 export type SelectableTrackFile = { format: string; bitrate: number }
@@ -64,22 +55,6 @@ export function getTargetBitrates(sourceBitrate: number): string[] {
 
   const bitrates = TARGET_AUDIO_BITRATES.filter((bitrate) => bitrate <= sourceBitrate)
   return bitrates.length > 0 ? bitrates.map((bitrate) => `${bitrate}k`) : [`${sourceBitrate}k`]
-}
-
-/** Resolves a stored container/codec pair, preferring probed metadata over the declared MIME. */
-export function resolveAudioFormat({
-  fileName,
-  mimetype,
-  container,
-  codec,
-}: ResolveAudioFormatInput): AudioFormat {
-  const extension = extname(fileName).replace('.', '').toLowerCase()
-  const fromMime = FORMAT_BY_MIME[mimetype]
-
-  return {
-    format: container ?? fromMime?.format ?? (extension || 'unknown'),
-    codec: codec ?? fromMime?.codec ?? null,
-  }
 }
 
 /** Returns a MIME type for a given filename extension. */

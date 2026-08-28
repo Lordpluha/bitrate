@@ -67,7 +67,7 @@ describe('TrackStreamingService', () => {
 
   describe('getHlsMasterPlaylist', () => {
     it('should return the generated HLS master playlist', async () => {
-      prisma.track.findUnique.mockResolvedValue({
+      prisma.track.findFirst.mockResolvedValue({
         ...buildTrack(),
         audioFiles: [{ url: 'tracks/track-1/audio/128k.opus' }],
       } as never)
@@ -79,10 +79,13 @@ describe('TrackStreamingService', () => {
 
       expect(playlist).toContain('128/index.m3u8')
       expect(storage.getObjectStream).toHaveBeenCalledWith('tracks/track-1/hls/master.m3u8')
+      expect(prisma.track.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: 'track-1', deletedAt: null } }),
+      )
     })
 
     it('reads HLS from the immutable generation associated with the published audio row', async () => {
-      prisma.track.findUnique.mockResolvedValue({
+      prisma.track.findFirst.mockResolvedValue({
         ...buildTrack(),
         audioFiles: [{ url: 'tracks/track-1/generations/0123456789abcdef/audio/128k.opus' }],
       } as never)
@@ -94,6 +97,13 @@ describe('TrackStreamingService', () => {
         'tracks/track-1/generations/0123456789abcdef/hls/master.m3u8',
       )
     })
+
+    it('should 404 a soft-deleted track instead of serving the playlist', async () => {
+      prisma.track.findFirst.mockResolvedValue(null)
+
+      await expect(service.getHlsMasterPlaylist('track-1')).rejects.toThrow(NotFoundException)
+      expect(storage.getObjectStream).not.toHaveBeenCalled()
+    })
   })
 
   describe('getHlsAsset', () => {
@@ -101,7 +111,47 @@ describe('TrackStreamingService', () => {
       await expect(service.getHlsAsset('track-1', 128, '../../secret')).rejects.toThrow(
         NotFoundException,
       )
+      expect(prisma.track.findFirst).not.toHaveBeenCalled()
       expect(prisma.trackFile.findUnique).not.toHaveBeenCalled()
+    })
+
+    it('should 404 a soft-deleted track instead of proxying the asset', async () => {
+      prisma.track.findFirst.mockResolvedValue(null)
+
+      await expect(service.getHlsAsset('track-1', 128, 'index.m3u8')).rejects.toThrow(
+        NotFoundException,
+      )
+      expect(prisma.trackFile.findUnique).not.toHaveBeenCalled()
+    })
+
+    it('should 404 a track that is not READY yet', async () => {
+      prisma.track.findFirst.mockResolvedValue({
+        ...buildTrack(),
+        processingStatus: 'PROCESSING',
+      } as never)
+
+      await expect(service.getHlsAsset('track-1', 128, 'index.m3u8')).rejects.toThrow(
+        NotFoundException,
+      )
+      expect(prisma.trackFile.findUnique).not.toHaveBeenCalled()
+    })
+
+    it('proxies the asset for a READY, non-deleted track', async () => {
+      prisma.track.findFirst.mockResolvedValue(buildTrack() as never)
+      prisma.trackFile.findUnique.mockResolvedValue({
+        url: 'tracks/track-1/generations/abc/audio/128k.opus',
+      } as never)
+      storage.getObjectStream.mockResolvedValue({
+        stream: Readable.from('segment'),
+        contentLength: 7,
+      } as never)
+
+      const asset = await service.getHlsAsset('track-1', 128, 'index.m3u8')
+
+      expect(asset.contentLength).toBe(7)
+      expect(prisma.track.findFirst).toHaveBeenCalledWith({
+        where: { id: 'track-1', deletedAt: null },
+      })
     })
   })
 })

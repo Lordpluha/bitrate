@@ -1,5 +1,6 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import { beforeEach, describe, expect, it } from '@jest/globals'
+import { ConflictException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { type DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended'
@@ -224,6 +225,21 @@ describe('PlaylistsService', () => {
     expect(result).toBe(playlist)
   })
 
+  it('like should return 409 when a concurrent request already created the like', async () => {
+    const playlist = buildPlaylist()
+    mockInteractiveTransaction(prisma)
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
+    prisma.userLikedPlaylist.findUnique.mockResolvedValue(null)
+    prisma.userLikedPlaylist.create.mockRejectedValue(
+      new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: 'test',
+      }) as never,
+    )
+
+    await expect(service.like('user-1', 'playlist-1')).rejects.toThrow(ConflictException)
+  })
+
   it('unlike should delete the explicit playlist like', async () => {
     const playlist = buildPlaylist({ followersCount: 1 })
     mockInteractiveTransaction(prisma)
@@ -279,5 +295,24 @@ describe('PlaylistsService', () => {
         },
       ],
     })
+  })
+
+  it('addTracks should return 409 after exhausting retries on a unique-constraint race', async () => {
+    const playlist = buildPlaylistWithTracks({ userId: 'user-1' })
+    prisma.playlist.findFirst.mockResolvedValue(playlist)
+    prisma.track.count.mockResolvedValue(1)
+    prisma.$transaction.mockRejectedValue(
+      new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: 'test',
+      }) as never,
+    )
+
+    await expect(
+      service.addTracks('user-1', 'playlist-1', {
+        trackIds: ['00000000-0000-0000-0000-000000000001'],
+      }),
+    ).rejects.toThrow(ConflictException)
+    expect(prisma.$transaction).toHaveBeenCalledTimes(3)
   })
 })

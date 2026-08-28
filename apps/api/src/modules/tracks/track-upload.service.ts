@@ -13,7 +13,7 @@ import { ConfigService } from '@nestjs/config'
 import type { Queue } from 'bullmq'
 import type { CreateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
-import { getTargetBitrates, resolveAudioFormat } from './track-audio.helpers'
+import { getTargetBitrates } from './track-audio.helpers'
 import {
   cleanupUploadedFiles,
   inspectAudioFile,
@@ -98,41 +98,20 @@ export class TrackUploadService {
       const inputPath = this.configService.getOrThrow('storage').getTracksDir(audioFile.filename)
       const metadata = await inspectAudioFile(inputPath)
       const bitrates = getTargetBitrates(metadata.bitrate)
-      const { format, codec } = resolveAudioFormat({
-        fileName: audioFile.filename,
-        mimetype: audioFile.mimetype,
-        container: metadata.container,
-        codec: metadata.codec,
-      })
 
-      const track = await this.prisma.$transaction(async (tx) => {
-        const created = await tx.track.create({
-          data: {
-            artistId,
-            title: createTrackDto.title,
-            audioUrl: audioFile.filename,
-            cover: coverFile?.filename ?? null,
-            duration: metadata.duration,
-            processingStatus: 'PROCESSING',
-            processingError: null,
-            processingAttempts: 0,
-            processingStartedAt: null,
-            processingFinishedAt: null,
-          },
-        })
-
-        await tx.trackFile.create({
-          data: {
-            trackId: created.id,
-            format,
-            bitrate: metadata.bitrate,
-            codec,
-            url: audioFile.filename,
-            size: audioFile.size,
-          },
-        })
-
-        return created
+      const track = await this.prisma.track.create({
+        data: {
+          artistId,
+          title: createTrackDto.title,
+          audioUrl: audioFile.filename,
+          cover: coverFile?.filename ?? null,
+          duration: metadata.duration,
+          processingStatus: 'PROCESSING',
+          processingError: null,
+          processingAttempts: 0,
+          processingStartedAt: null,
+          processingFinishedAt: null,
+        },
       })
       persisted = true
 
@@ -175,15 +154,6 @@ export class TrackUploadService {
       const inputPath = audioFile ? storageConfig.getTracksDir(audioFile.filename) : null
       const metadata = inputPath ? await inspectAudioFile(inputPath) : null
       const bitrates = metadata ? getTargetBitrates(metadata.bitrate) : null
-      const audio =
-        audioFile && metadata
-          ? resolveAudioFormat({
-              fileName: audioFile.filename,
-              mimetype: audioFile.mimetype,
-              container: metadata.container,
-              codec: metadata.codec,
-            })
-          : null
 
       const track = await this.prisma.$transaction(async (tx) => {
         const updated = await tx.track.update({
@@ -201,24 +171,11 @@ export class TrackUploadService {
           },
         })
 
-        if (audioFile && audio) {
-          const bitrate = metadata?.bitrate ?? 0
+        if (audioFile) {
+          // Drops any legacy pre-publication upload row tied to the replaced audioUrl —
+          // a bare multer filename is never a valid storage key.
           await tx.trackFile.deleteMany({
             where: { trackId: updated.id, url: existingTrack.audioUrl },
-          })
-          await tx.trackFile.upsert({
-            where: {
-              trackId_format_bitrate: { trackId: updated.id, format: audio.format, bitrate },
-            },
-            update: { codec: audio.codec, url: audioFile.filename, size: audioFile.size },
-            create: {
-              trackId: updated.id,
-              format: audio.format,
-              bitrate,
-              codec: audio.codec,
-              url: audioFile.filename,
-              size: audioFile.size,
-            },
           })
         }
 
