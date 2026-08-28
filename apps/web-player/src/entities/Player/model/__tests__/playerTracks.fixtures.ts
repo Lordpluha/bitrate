@@ -38,6 +38,9 @@ const createTrack = ({
   discNumber: 1,
   language: null,
   deletedAt: null,
+  playbackVersion: 1,
+  fragmentTimescale: null,
+  durationTicks: null,
 })
 
 export const first = createTrack({ id: 'first' })

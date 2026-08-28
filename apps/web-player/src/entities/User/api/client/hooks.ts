@@ -46,7 +46,6 @@ export const useUsers = ({ username, page = 1, limit = 10 }: UseUsersParams) =>
     {
       params: {
         query: { username, page, limit },
-        path: { username, page, limit },
       },
     },
     {
@@ -103,7 +102,9 @@ const FOLLOWED_USERS_PAGE_SIZE = 100
 const getFollowedUsersPage = async (page: number) => {
   const { data, response } = await clientFetchClient.GET(
     '/api/v1/users/me/following',
-    { params: { query: { limit: FOLLOWED_USERS_PAGE_SIZE, page } } },
+    {
+      params: { query: { limit: FOLLOWED_USERS_PAGE_SIZE, page } },
+    },
   )
   ensureOkResponse(response, 'Failed to fetch followed users')
   return followedUsersResponseSchema.parse(data)
