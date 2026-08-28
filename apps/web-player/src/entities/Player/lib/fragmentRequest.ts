@@ -45,38 +45,26 @@ const isRetryableRequestError = (error: unknown) => {
 }
 
 /**
- * Waits out a retry backoff.
- *
- * @returns `false` when the wait was aborted, so the caller stops retrying.
+ * Waits out a retry backoff. This is a plain delay — it must NOT race against
+ * the per-attempt timeout's `AbortController`, which the timeout that just
+ * fired already aborted. Teardown/seek cancellation during the wait is caught
+ * afterwards via `isCurrent()`, the same currency check every other await in
+ * this module honours.
  */
-const waitForRetry = (delayMs: number, signal: AbortSignal) =>
-  new Promise<boolean>((resolve) => {
-    if (signal.aborted) {
-      resolve(false)
-      return
-    }
-    if (delayMs <= 0) {
-      resolve(true)
-      return
-    }
-
-    const handleAbort = () => {
-      clearTimeout(timeoutId)
-      resolve(false)
-    }
-    const timeoutId = setTimeout(() => {
-      signal.removeEventListener('abort', handleAbort)
-      resolve(true)
-    }, delayMs)
-    signal.addEventListener('abort', handleAbort, { once: true })
-  })
+const sleep = (delayMs: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, Math.max(delayMs, 0)))
 
 /**
  * Downloads one byte range, retrying transient failures with exponential backoff.
  *
- * Returns `null` rather than throwing whenever the request was superseded — an
- * abort from a seek or a teardown is an expected outcome, not an error. Only a
- * genuine, non-retryable failure throws.
+ * Resolves to one of two distinct outcomes:
+ * - `null` — the request was superseded by a seek or teardown. Benign; the
+ *   caller stops quietly.
+ * - throws — every retry was exhausted, or the failure was non-retryable.
+ *   Fatal; the caller must surface it (`onError`, HLS fallback, etc).
+ *
+ * A per-attempt timeout is one specific failure among the retryable ones —
+ * it still consumes its full retry budget, it never short-circuits to `null`.
  */
 export async function requestFragment({
   fetchRange,
@@ -146,7 +134,8 @@ export async function requestFragment({
 
       clearTimeout(timeoutId)
       const delayMs = retry.baseDelayMs * 2 ** (attempt - 1)
-      if (!(await waitForRetry(delayMs, controller.signal))) return null
+      await sleep(delayMs)
+      if (!isCurrent()) return null
     } finally {
       clearTimeout(timeoutId)
       onRequestEnd(controller)

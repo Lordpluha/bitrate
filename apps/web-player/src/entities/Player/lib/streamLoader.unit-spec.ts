@@ -145,6 +145,29 @@ describe('StreamLoader', () => {
     loader.destroy()
   })
 
+  it('retries a timed-out request through its full budget before surfacing an error', async () => {
+    const onError = vi.fn()
+    const fetchRange = vi.fn(() => new Promise<ArrayBuffer>(() => undefined))
+    const loader = new StreamLoader({
+      audio: document.createElement('audio'),
+      fetchRange,
+      manifest,
+      maxRequestAttempts: 3,
+      onError,
+      requestTimeoutMs: 1,
+      retryBaseDelayMs: 0,
+    })
+
+    await loader.start()
+
+    expect(fetchRange).toHaveBeenCalledTimes(3)
+    expect(onError).toHaveBeenCalledOnce()
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Audio fragment request timed out' }),
+    )
+    loader.destroy()
+  })
+
   it('cancels an in-flight fragment before restarting from a seek', async () => {
     const audio = document.createElement('audio')
     const onError = vi.fn()
@@ -159,7 +182,9 @@ describe('StreamLoader', () => {
         signal.addEventListener(
           'abort',
           () => reject(new DOMException('aborted', 'AbortError')),
-          { once: true },
+          {
+            once: true,
+          },
         )
       })
     })

@@ -224,7 +224,9 @@ describe('repeat mode', () => {
 
     expect(
       resolvePlaybackTransition(usePlayerStore.getState(), 'next', 'ended'),
-    ).toEqual({ kind: 'stop' })
+    ).toEqual({
+      kind: 'stop',
+    })
   })
 
   it('wraps to the first track when repeat is all', () => {
@@ -235,6 +237,24 @@ describe('repeat mode', () => {
     usePlayerStore.getState().changeTrack('next')
 
     expect(usePlayerStore.getState().currentTrack?.id).toBe('first')
+    expect(usePlayerStore.getState().isPlaying).toBe(true)
+  })
+
+  it('does not wrap to the last track on prev at the start of the playlist when repeat is off', () => {
+    startPlaylist()
+
+    expect(
+      resolvePlaybackTransition(usePlayerStore.getState(), 'prev'),
+    ).toEqual({ kind: 'stop' })
+  })
+
+  it('wraps to the last track on prev at the start of the playlist when repeat is all', () => {
+    startPlaylist()
+    usePlayerStore.getState().setRepeatMode('all')
+
+    usePlayerStore.getState().changeTrack('prev')
+
+    expect(usePlayerStore.getState().currentTrack?.id).toBe('second')
     expect(usePlayerStore.getState().isPlaying).toBe(true)
   })
 

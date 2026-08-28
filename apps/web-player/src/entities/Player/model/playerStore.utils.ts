@@ -165,6 +165,11 @@ export const resolvePlaybackTransition = (
     }
   }
 
+  /** Mirrors `next`: no wrap past the start of the playlist when repeat is off. */
+  if (currentTrackIsAtCursor && contextIndex === 0 && repeatMode === 'off') {
+    return { kind: 'stop' }
+  }
+
   /** Previous from a queue item returns to the playlist track it interrupted. */
   const previousIndex = currentTrackIsAtCursor
     ? contextIndex === 0

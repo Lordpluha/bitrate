@@ -144,16 +144,30 @@ describe('SourceBufferQueue', () => {
     expect(fake.operations).toEqual([])
   })
 
-  it('clears everything buffered', async () => {
-    fake = new FakeSourceBuffer([
-      [0, 30],
-      [40, 90],
-    ])
+  it('evicts the forward buffer on a quota error early in a track, before the back buffer has anything to trim', async () => {
+    fake = new FakeSourceBuffer([[0, 120]])
+    fake.quotaFailures = 1
     const queue = new SourceBufferQueue({ sourceBuffer: asSourceBuffer(fake) })
 
-    await queue.clear()
+    await queue.append(new ArrayBuffer(64), 5)
 
-    expect(fake.operations).toEqual([{ type: 'remove', args: [0, 90] }])
+    expect(fake.operations).toEqual([
+      { type: 'remove', args: [10, 120] },
+      { type: 'append', args: [64] },
+    ])
+  })
+
+  it('keeps a safety window around the play head when evicting the forward buffer', async () => {
+    fake = new FakeSourceBuffer([[0, 8]])
+    fake.quotaFailures = 1
+    const queue = new SourceBufferQueue({ sourceBuffer: asSourceBuffer(fake) })
+
+    await queue.append(new ArrayBuffer(64), 5)
+
+    expect(
+      fake.operations.some((operation) => operation.type === 'remove'),
+    ).toBe(false)
+    expect(fake.operations).toContainEqual({ type: 'append', args: [64] })
   })
 
   it('aborts only while an operation is in flight', () => {
