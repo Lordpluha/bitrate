@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useMemo } from 'react'
-import { useAudioPlayerEvents } from '@/entities/Player/model/audioPlayer/useAudioPlayerEvents'
 import {
   getPlaybackKey,
   shouldDelayInitialPlayback,
 } from '@/entities/Player/model/audioPlayer/audioPlayer.utils'
+import { useAudioPlayerEvents } from '@/entities/Player/model/audioPlayer/useAudioPlayerEvents'
 import { useAudioSlots } from '@/entities/Player/model/audioPlayer/useAudioSlots'
 import { useManifestResolver } from '@/entities/Player/model/audioPlayer/useManifestResolver'
 import {

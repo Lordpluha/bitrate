@@ -1,6 +1,6 @@
 'use client'
 
-import { useLikeTrack, useLikedTracks, useUnlikeTrack } from '@entities/Track'
+import { useLikedTracks, useLikeTrack, useUnlikeTrack } from '@entities/Track'
 import { showApiSuccessToast } from '@shared/api/feedback'
 import { useCallback, useMemo } from 'react'
 

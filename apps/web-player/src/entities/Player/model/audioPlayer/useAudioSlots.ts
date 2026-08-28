@@ -1,10 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { usePlayerStore } from '@/entities/Player/model/playerStore'
-import type { TrackManifest } from '@/entities/Player/model/manifest.types'
-import type { PlayableTrack } from '@/entities/Player/model/playableTrack.types'
-import { showApiErrorToast } from '@/shared/api/feedback'
 import {
   ACTIVE_BUFFER_SECONDS,
   attachCmafSource,
@@ -20,6 +16,10 @@ import {
   savePlaybackPosition,
   shouldPrefetchNextTrack,
 } from '@/entities/Player/model/audioPlayer/audioPlayer.utils'
+import type { TrackManifest } from '@/entities/Player/model/manifest.types'
+import type { PlayableTrack } from '@/entities/Player/model/playableTrack.types'
+import { usePlayerStore } from '@/entities/Player/model/playerStore'
+import { showApiErrorToast } from '@/shared/api/feedback'
 
 type UseAudioSlotsOptions = {
   volume: number
