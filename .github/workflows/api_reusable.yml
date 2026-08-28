@@ -180,3 +180,14 @@ jobs:
           name: api-startup-log
           path: /tmp/spotify-api.log
           if-no-files-found: ignore
+
+      # Regenerating the contract needs a running API, so a developer without
+      # Postgres and Redis to hand cannot produce this file locally. On a drift
+      # failure the freshly generated one is right here — download and commit it.
+      - name: Upload regenerated API contract
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regenerated-api-contract
+          path: packages/contracts/src/api/v1.ts
+          if-no-files-found: ignore
