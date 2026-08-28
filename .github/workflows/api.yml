@@ -46,7 +46,7 @@ jobs:
     with:
       push-image: false
       image-tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/api:pr-${{ github.sha }}
-      timeout-build: 15
+      timeout-build: 25
       run-biome: true
       run-tests: true
 
@@ -58,7 +58,7 @@ jobs:
       image-tags: |
         ghcr.io/lordpluha/${{ github.event.repository.name }}/api:develop
         ghcr.io/lordpluha/${{ github.event.repository.name }}/api:develop-${{ github.sha }}
-      timeout-build: 15
+      timeout-build: 25
       run-biome: true
       run-tests: true
 
