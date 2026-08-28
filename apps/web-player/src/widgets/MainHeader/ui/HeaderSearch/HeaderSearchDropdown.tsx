@@ -1,6 +1,6 @@
 'use client'
 
-import { SearchIcon } from '@spotify/ui-react'
+import { cn, SearchIcon } from '@spotify/ui-react'
 import Image from 'next/image'
 import { useI18n } from '@/shared/i18n'
 import type {
@@ -49,11 +49,13 @@ export const HeaderSearchDropdown = ({
           return (
             <button
               aria-selected={isActive}
-              className={`${
+              className={cn(
                 variant === 'recent'
                   ? 'grid-cols-[44px_minmax(0,1fr)]'
-                  : 'grid-cols-[44px_minmax(0,1fr)_auto]'
-              } grid w-full items-center gap-3 rounded px-1 py-1.5 text-left transition-colors hover:bg-surface-hover ${isActive ? 'bg-surface-hover' : ''}`}
+                  : 'grid-cols-[44px_minmax(0,1fr)_auto]',
+                'grid w-full items-center gap-3 rounded px-1 py-1.5 text-left transition-colors hover:bg-surface-hover',
+                isActive && 'bg-surface-hover',
+              )}
               id={`${id}-option-${index}`}
               key={`${item.title}-${item.subtitle}`}
               onClick={() => onSelect(item)}

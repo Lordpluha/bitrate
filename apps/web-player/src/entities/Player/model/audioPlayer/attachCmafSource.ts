@@ -5,7 +5,7 @@ import {
   StreamLoader,
 } from '@/entities/Player/lib'
 import type { TrackManifest } from '@/entities/Player/model/manifest.types'
-import type { PlayerSlot } from '@/shared/hooks/audioPlayer/audioPlayer.types'
+import type { PlayerSlot } from '@/entities/Player/model/audioPlayer/audioPlayer.types'
 
 export type AttachCmafSourceInput = {
   element: HTMLAudioElement

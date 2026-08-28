@@ -61,7 +61,7 @@ export const LoginForm = () => {
           />
 
           <Link
-            className="text-right text-green-500 hover:opacity-70 text-sm"
+            className="text-right text-primary hover:opacity-70 text-sm"
             href={ROUTES.auth.forgotPassword}
           >
             Forgot password?

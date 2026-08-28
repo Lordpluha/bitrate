@@ -1,8 +1,7 @@
 'use client'
 
-import { useLikeTrack, useUnlikeTrack } from '@entities/Track/api/client'
+import { useLikeTrack, useLikedTracks, useUnlikeTrack } from '@entities/Track'
 import { showApiSuccessToast } from '@shared/api/feedback'
-import { useLikedTracks } from '@shared/hooks/useLikedTracks'
 import { useCallback, useMemo } from 'react'
 
 export const useCurrentTrackLike = (trackId?: string) => {

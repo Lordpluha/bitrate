@@ -64,7 +64,7 @@ export const LikeAlbumButton = ({
       type="button"
     >
       {isLiked ? (
-        <CheckCircle className="fill-green-500 text-green-500" size={18} />
+        <CheckCircle className="fill-primary text-primary" size={18} />
       ) : (
         <Heart size={18} />
       )}

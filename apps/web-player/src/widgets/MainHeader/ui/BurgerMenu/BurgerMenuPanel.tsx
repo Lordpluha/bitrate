@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@spotify/ui-react'
 import { X } from 'lucide-react'
 import Link from 'next/link'
 import { ThemeSwitcher } from '@/features/SwitchTheme'
@@ -37,7 +38,12 @@ export const BurgerMenuPanel = ({
       aria-hidden={!isOpen}
       aria-label={t('nav.main')}
       aria-modal={isOpen}
-      className={`fixed right-0 top-0 z-50 h-dvh w-full max-w-96 transform border-l border-border bg-background-secondary transition-[transform,visibility] duration-300 ease-in-out ${isOpen ? 'visible translate-x-0' : 'invisible pointer-events-none translate-x-full'}`}
+      className={cn(
+        'fixed right-0 top-0 z-50 h-dvh w-full max-w-96 transform border-l border-border bg-background-secondary transition-[transform,visibility] duration-300 ease-in-out',
+        isOpen
+          ? 'visible translate-x-0'
+          : 'invisible pointer-events-none translate-x-full',
+      )}
       id={id}
       inert={!isOpen}
       ref={panelRef}

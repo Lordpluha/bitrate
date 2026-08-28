@@ -14,6 +14,11 @@ export const useAuth = () => {
   /** Auth screens must not fetch the current user. */
   const isAuthPage = pathname?.startsWith('/auth/')
 
+  /**
+   * Never queries on auth pages, never retries a 401 (the middleware owns
+   * that), and otherwise relies entirely on the cache until an explicit
+   * invalidation.
+   */
   const {
     data: user,
     isLoading,
@@ -30,13 +35,13 @@ export const useAuth = () => {
 
       return data
     },
-    enabled: !isAuthPage, // Отключаем запрос на страницах авторизации
-    retry: false, // Не делаем retry - middleware сам обработает 401
-    staleTime: Infinity, // Data never becomes stale - only refetch manually
-    gcTime: Infinity, // Keep in cache forever until manual invalidation
-    refetchOnWindowFocus: false, // Don't refetch on window focus
-    refetchOnMount: false, // Don't refetch on every mount - use cache
-    refetchOnReconnect: false, // Don't refetch on reconnect
+    enabled: !isAuthPage,
+    retry: false,
+    staleTime: Infinity,
+    gcTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   })
 
   /** Cached user data still counts as authenticated; only an explicit 401/403 signs the user out. */

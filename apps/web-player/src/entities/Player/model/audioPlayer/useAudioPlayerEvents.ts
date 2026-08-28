@@ -1,21 +1,24 @@
 'use client'
 
 import { useCallback, useRef } from 'react'
-import { type PlaybackTransition, usePlayerStore } from '@/entities/Player'
-import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
-import type { SlotIndex } from '@/shared/hooks/audioPlayer/audioPlayer.types'
+import {
+  type PlaybackTransition,
+  usePlayerStore,
+} from '@/entities/Player/model/playerStore'
+import type { PlayableTrack } from '@/entities/Player/model/playableTrack.types'
+import type { SlotIndex } from '@/entities/Player/model/audioPlayer/audioPlayer.types'
 import {
   getPlaybackKey,
   removePlaybackPosition,
   savePlaybackPosition,
   shouldDelayInitialPlayback,
   shouldPrefetchNextTrack,
-} from '@/shared/hooks/audioPlayer/audioPlayer.utils'
-import type { useAudioSlots } from '@/shared/hooks/audioPlayer/useAudioSlots'
+} from '@/entities/Player/model/audioPlayer/audioPlayer.utils'
+import type { useAudioSlots } from '@/entities/Player/model/audioPlayer/useAudioSlots'
 
 type UseAudioPlayerEventsOptions = {
   currentPlaylistId: string | null
-  currentTrack: TrackEntity | null
+  currentTrack: PlayableTrack | null
   isPlaying: boolean
   nextTransition: PlaybackTransition | null
   playbackSequence: number

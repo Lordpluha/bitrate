@@ -71,7 +71,7 @@ export const ArtistPopularTrackRow = ({
     <span
       className={cn(
         'pointer-events-none relative z-10 truncate text-base',
-        isActive ? 'text-green-500' : 'text-text',
+        isActive ? 'text-primary' : 'text-text',
       )}
     >
       {track.title}

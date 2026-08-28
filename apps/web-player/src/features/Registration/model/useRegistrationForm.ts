@@ -38,8 +38,10 @@ export const useRegistrationForm = () => {
       })
       router.push(ROUTES.auth.verifyEmail(data.email))
     } catch {
-      // The mutation-level handler owns user feedback. Contain mutateAsync's
-      // rejection so React Hook Form does not surface an unhandled promise.
+      /**
+       * The mutation-level handler owns user feedback. Contain mutateAsync's
+       * rejection so React Hook Form does not surface an unhandled promise.
+       */
     }
   }
 

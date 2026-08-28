@@ -45,7 +45,7 @@ export const PlanCard = ({
         <Link
           className={cn(
             'text-xl py-2 px-6 rounded-3xl hover:opacity-70 transition-[1s] text-text font-medium border-solid border-2 border-text w-full block mb-4',
-            !!highlight && '!border-green-500 bg-green-500',
+            !!highlight && '!border-primary bg-primary',
           )}
           href={ROUTES.plans}
         >

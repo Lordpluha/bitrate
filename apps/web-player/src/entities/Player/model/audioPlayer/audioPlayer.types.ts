@@ -1,6 +1,6 @@
 import type Hls from 'hls.js'
 import type { StreamLoader } from '@/entities/Player/lib'
-import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
+import type { PlayableTrack } from '@/entities/Player/model/playableTrack.types'
 
 export type SlotIndex = 0 | 1
 
@@ -18,5 +18,5 @@ export type PlayerSlot = {
 export type PendingPrefetch = {
   playbackKey: string
   slot: SlotIndex
-  track: TrackEntity
+  track: PlayableTrack
 }

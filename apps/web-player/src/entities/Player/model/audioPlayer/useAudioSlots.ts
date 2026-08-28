@@ -1,25 +1,25 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { usePlayerStore } from '@/entities/Player'
+import { usePlayerStore } from '@/entities/Player/model/playerStore'
 import type { TrackManifest } from '@/entities/Player/model/manifest.types'
-import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'
+import type { PlayableTrack } from '@/entities/Player/model/playableTrack.types'
 import { showApiErrorToast } from '@/shared/api/feedback'
 import {
   ACTIVE_BUFFER_SECONDS,
   attachCmafSource,
-} from '@/shared/hooks/audioPlayer/attachCmafSource'
-import { attachHlsSource } from '@/shared/hooks/audioPlayer/attachHlsSource'
+} from '@/entities/Player/model/audioPlayer/attachCmafSource'
+import { attachHlsSource } from '@/entities/Player/model/audioPlayer/attachHlsSource'
 import type {
   PendingPrefetch,
   PlayerSlot,
   SlotIndex,
-} from '@/shared/hooks/audioPlayer/audioPlayer.types'
+} from '@/entities/Player/model/audioPlayer/audioPlayer.types'
 import {
   restorePlaybackPosition,
   savePlaybackPosition,
   shouldPrefetchNextTrack,
-} from '@/shared/hooks/audioPlayer/audioPlayer.utils'
+} from '@/entities/Player/model/audioPlayer/audioPlayer.utils'
 
 type UseAudioSlotsOptions = {
   volume: number
@@ -76,7 +76,7 @@ export const useAudioSlots = ({
   const attachTrack = useCallback(
     (
       index: SlotIndex,
-      track: TrackEntity,
+      track: PlayableTrack,
       playbackKey: string,
       isPrefetch: boolean,
     ) => {
@@ -240,7 +240,7 @@ export const useAudioSlots = ({
   )
 
   const prefetchTrackWhenBuffered = useCallback(
-    (index: SlotIndex, track: TrackEntity, playbackKey: string) => {
+    (index: SlotIndex, track: PlayableTrack, playbackKey: string) => {
       const standby = slotsRef.current[index]
       if (standby.playbackKey === playbackKey) {
         pendingPrefetchRef.current = null

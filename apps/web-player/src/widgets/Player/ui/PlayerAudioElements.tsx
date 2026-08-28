@@ -1,6 +1,6 @@
 'use client'
 
-import type { SlotIndex } from '@shared/hooks/audioPlayer/audioPlayer.types'
+import type { SlotIndex } from '@entities/Player'
 
 type PlayerAudioElementsProps = {
   activeSlot: SlotIndex

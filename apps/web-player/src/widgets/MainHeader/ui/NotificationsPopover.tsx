@@ -13,6 +13,7 @@ import {
   useReadNotification,
 } from '@/entities/Me'
 import { showApiErrorToast } from '@/shared/api/feedback'
+import { Z_INDEX_CLASS } from '@/shared/constants'
 
 const notificationDateFormatter = new Intl.DateTimeFormat(undefined, {
   day: 'numeric',
@@ -43,13 +44,16 @@ export const NotificationsPopover = () => {
       >
         <NotificationIcon className="h-5 w-5" />
         {Boolean(data?.unread) && (
-          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-green-500 ring-2 ring-background" />
+          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary ring-2 ring-background" />
         )}
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="!z-[1000] w-[min(24rem,calc(100vw-2rem))] rounded-md !border-border !bg-popover p-0 !text-text shadow-2xl"
-        positionerClassName="z-[1000]"
+        className={cn(
+          Z_INDEX_CLASS.popover,
+          'w-[min(24rem,calc(100vw-2rem))] rounded-md border border-border bg-popover p-0 text-text shadow-2xl',
+        )}
+        positionerClassName={Z_INDEX_CLASS.popover}
         sideOffset={8}
       >
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
@@ -109,7 +113,7 @@ export const NotificationsPopover = () => {
                   </span>
                 </span>
                 {!notification.readAt && (
-                  <span className="absolute bottom-3 right-3 h-2 w-2 rounded-full bg-green-500" />
+                  <span className="absolute bottom-3 right-3 h-2 w-2 rounded-full bg-primary" />
                 )}
               </button>
             ))

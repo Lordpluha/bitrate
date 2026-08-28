@@ -1,8 +1,10 @@
 'use client'
 
+import { cn } from '@spotify/ui-react'
 import { useState } from 'react'
 import { useCreateModerationReport } from '@/entities/Moderation'
 import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'
+import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useOverlayFocus } from '@/shared/hooks/useOverlayFocus'
 
 type ReportPlaylistDialogProps = {
@@ -55,7 +57,10 @@ export const ReportPlaylistDialog = ({
 
   return (
     <div
-      className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 p-4"
+      className={cn(
+        Z_INDEX_CLASS.modal,
+        'fixed inset-0 flex items-center justify-center bg-black/70 p-4',
+      )}
       ref={dialogRef}
     >
       <button

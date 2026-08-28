@@ -22,6 +22,7 @@ export const useSettingsSelect = ({
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   const focusOption = (index: number) => {
+    if (optionCount === 0) return
     const nextIndex = (index + optionCount) % optionCount
     setActiveIndex(nextIndex)
     requestAnimationFrame(() => optionRefs.current[nextIndex]?.focus())

@@ -1,6 +1,13 @@
 'use client'
 
 import { useEffect, useMemo } from 'react'
+import { useAudioPlayerEvents } from '@/entities/Player/model/audioPlayer/useAudioPlayerEvents'
+import {
+  getPlaybackKey,
+  shouldDelayInitialPlayback,
+} from '@/entities/Player/model/audioPlayer/audioPlayer.utils'
+import { useAudioSlots } from '@/entities/Player/model/audioPlayer/useAudioSlots'
+import { useManifestResolver } from '@/entities/Player/model/audioPlayer/useManifestResolver'
 import {
   type PlaybackTransition,
   resolvePlaybackTransition,
@@ -15,14 +22,7 @@ import {
   selectRepeatMode,
   selectVolume,
   usePlayerStore,
-} from '@/entities/Player'
-import {
-  getPlaybackKey,
-  shouldDelayInitialPlayback,
-} from '@/shared/hooks/audioPlayer/audioPlayer.utils'
-import { useAudioPlayerEvents } from '@/shared/hooks/audioPlayer/useAudioPlayerEvents'
-import { useAudioSlots } from '@/shared/hooks/audioPlayer/useAudioSlots'
-import { useManifestResolver } from '@/shared/hooks/audioPlayer/useManifestResolver'
+} from '@/entities/Player/model/playerStore'
 
 export const useAudioPlayer = () => {
   const currentTrack = usePlayerStore(selectCurrentTrack)

@@ -58,7 +58,7 @@ export const LikeTrackButton = ({
       aria-label={`${isLiked ? 'Unlike' : 'Like'} ${trackTitle}`}
       className={cn(
         'rounded-full p-1 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60',
-        isLiked ? 'text-green-500' : 'text-text-subdued hover:text-text',
+        isLiked ? 'text-primary' : 'text-text-subdued hover:text-text',
       )}
       disabled={isPending}
       onClick={(event) => {

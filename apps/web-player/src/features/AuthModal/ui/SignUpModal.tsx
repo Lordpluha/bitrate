@@ -58,7 +58,7 @@ export const SignUpModal = ({
                 Already have an account?{' '}
                 {onSwitchToLogin ? (
                   <button
-                    className="font-bold text-green-500 underline hover:no-underline"
+                    className="font-bold text-primary underline hover:no-underline"
                     onClick={onSwitchToLogin}
                     type="button"
                   >
@@ -66,7 +66,7 @@ export const SignUpModal = ({
                   </button>
                 ) : (
                   <Link
-                    className="font-bold text-green-500 underline hover:no-underline"
+                    className="font-bold text-primary underline hover:no-underline"
                     href={ROUTES.auth.login}
                   >
                     Log in.

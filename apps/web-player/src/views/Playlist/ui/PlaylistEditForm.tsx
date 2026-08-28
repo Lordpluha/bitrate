@@ -64,7 +64,7 @@ export const PlaylistEditForm = ({
         />
         <div className="flex flex-wrap gap-2">
           <button
-            className="rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-black hover:bg-green-400 disabled:opacity-60"
+            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-black hover:bg-primary-hover disabled:opacity-60"
             disabled={updatePlaylist.isPending || title.trim().length === 0}
             type="submit"
           >

@@ -28,15 +28,12 @@ export const RegistrationForm = () => {
         description={
           <>
             By clicking on sign-up, you agree to the <br />
-            <Link
-              className="text-green-500 hover:opacity-70"
-              href={ROUTES.terms}
-            >
+            <Link className="text-primary hover:opacity-70" href={ROUTES.terms}>
               Spotify Terms and Conditions
             </Link>{' '}
             and{' '}
             <Link
-              className="text-green-500 hover:opacity-70"
+              className="text-primary hover:opacity-70"
               href={ROUTES.privacy}
             >
               Privacy Policy

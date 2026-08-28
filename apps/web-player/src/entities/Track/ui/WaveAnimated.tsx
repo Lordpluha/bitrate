@@ -14,7 +14,7 @@ export type WaveAnimatedProps = SVGProps<SVGSVGElement>
 export const WaveAnimated = ({ className, ...props }: WaveAnimatedProps) => (
   <svg
     aria-hidden="true"
-    className={cn('text-green-500', className)}
+    className={cn('text-primary', className)}
     fill="none"
     focusable="false"
     height="18"

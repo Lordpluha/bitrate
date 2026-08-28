@@ -43,8 +43,8 @@ export const TracksList = ({
       <div
         className={
           viewMode === 'compact'
-            ? 'grid grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_140px] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden'
-            : 'grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_140px] gap-4 px-4 py-2 border-b border-gray-700 text-sm text-gray-400 mb-2 max-[1024px]:hidden'
+            ? 'grid grid-cols-[32px_minmax(0,2fr)_minmax(140px,1.3fr)_minmax(160px,1.5fr)_minmax(140px,1.4fr)_140px] gap-4 px-4 py-2 border-b border-border text-sm text-text-subdued mb-2 max-[1024px]:hidden'
+            : 'grid grid-cols-[32px_minmax(0,4fr)_minmax(160px,2fr)_minmax(140px,2fr)_140px] gap-4 px-4 py-2 border-b border-border text-sm text-text-subdued mb-2 max-[1024px]:hidden'
         }
       >
         <div>#</div>

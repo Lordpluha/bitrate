@@ -53,7 +53,7 @@ export const QueueTrackRow = ({
         <span
           className={cn(
             'block truncate text-sm font-medium',
-            isActive ? 'text-green-500' : 'text-text',
+            isActive ? 'text-primary' : 'text-text',
           )}
         >
           {track.title}

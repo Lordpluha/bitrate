@@ -1,5 +1,6 @@
 import { WifiOff } from 'lucide-react'
 import Link from 'next/link'
+import { ROUTES } from '@/shared/routes'
 
 export default function OfflinePage() {
   return (
@@ -11,8 +12,8 @@ export default function OfflinePage() {
           Check your connection and try opening the page again.
         </p>
         <Link
-          className="mt-6 inline-flex min-h-11 items-center rounded-full bg-green-500 px-5 font-semibold text-black transition-colors hover:bg-green-400"
-          href="/main"
+          className="mt-6 inline-flex min-h-11 items-center rounded-full bg-primary px-5 font-semibold text-black transition-colors hover:bg-primary-hover"
+          href={ROUTES.main}
         >
           Try again
         </Link>

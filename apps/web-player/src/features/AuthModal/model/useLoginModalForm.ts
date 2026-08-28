@@ -1,12 +1,15 @@
 'use client'
 
-import { type LoginFormData, loginSchema } from '@entities/User'
+import {
+  getLoginDestination,
+  type LoginFormData,
+  loginSchema,
+} from '@entities/User'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast } from '@shared/api/feedback'
 import { useRouter } from 'next/navigation'
 import { type SubmitHandler, useForm } from 'react-hook-form'
-import { getLoginDestination } from '@/features/Auth/model/getLoginDestination'
 
 export const useLoginModalForm = (onSuccess: () => void) => {
   const router = useRouter()

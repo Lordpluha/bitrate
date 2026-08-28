@@ -1,12 +1,12 @@
 import Hls from 'hls.js'
-import type { PlayerSlot } from '@/shared/hooks/audioPlayer/audioPlayer.types'
+import type { PlayerSlot } from '@/entities/Player/model/audioPlayer/audioPlayer.types'
 import {
   ACTIVE_BUFFER_SECONDS,
   applyNetworkAwareHlsQuality,
   getHlsUrl,
   PREFETCH_BUFFER_SECONDS,
   savePlaybackPosition,
-} from '@/shared/hooks/audioPlayer/audioPlayer.utils'
+} from '@/entities/Player/model/audioPlayer/audioPlayer.utils'
 
 type AttachHlsSourceOptions = {
   element: HTMLAudioElement

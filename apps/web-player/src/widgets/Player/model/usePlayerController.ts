@@ -5,9 +5,9 @@ import {
   selectCurrentPlaylistName,
   selectMusicPlayer,
   selectRepeatMode,
+  useAudioPlayer,
   usePlayerStore,
 } from '@entities/Player'
-import { useAudioPlayer } from '@shared/hooks'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
 import { useEffect } from 'react'
 import { useCurrentTrackLike } from './useCurrentTrackLike'

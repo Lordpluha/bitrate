@@ -80,7 +80,7 @@ export const MusicCardSm = ({
         <h3
           className={cn(
             'font-semibold text-sm truncate group-hover:text-text transition-colors duration-150 leading-tight',
-            isPlaying ? 'text-green-500' : 'text-text',
+            isPlaying ? 'text-primary' : 'text-text',
           )}
         >
           {item.title}
@@ -94,7 +94,7 @@ export const MusicCardSm = ({
       {isPlaying && (
         <Volume2
           aria-label={`${item.title} is playing`}
-          className="shrink-0 text-green-500"
+          className="shrink-0 text-primary"
           size={16}
         />
       )}

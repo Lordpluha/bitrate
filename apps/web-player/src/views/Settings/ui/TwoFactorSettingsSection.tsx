@@ -58,7 +58,7 @@ export const TwoFactorSettingsSection = () => {
             value={twoFactor.enableCode}
           />
           <button
-            className="w-fit rounded-full bg-green-500 px-5 py-2 text-sm font-bold text-black hover:bg-green-400 disabled:opacity-60"
+            className="w-fit rounded-full bg-primary px-5 py-2 text-sm font-bold text-black hover:bg-primary-hover disabled:opacity-60"
             disabled={twoFactor.isPending}
             type="submit"
           >
@@ -90,7 +90,7 @@ export const TwoFactorSettingsSection = () => {
             value={twoFactor.disableCode}
           />
           <button
-            className="rounded-full bg-red-500/15 px-5 py-2 text-sm font-bold text-red-200 hover:bg-red-500/25 disabled:opacity-60"
+            className="rounded-full bg-destructive/15 px-5 py-2 text-sm font-bold text-destructive hover:bg-destructive/25 disabled:opacity-60"
             disabled={twoFactor.isPending}
             type="submit"
           >

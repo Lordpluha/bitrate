@@ -48,10 +48,10 @@ export const TrackPlayIndicator = ({
     )}
     {isCurrent && !isPlaying && (
       <>
-        <span className="text-green-500 group-hover:hidden">{index + 1}</span>
+        <span className="text-primary group-hover:hidden">{index + 1}</span>
         <Play
           aria-hidden="true"
-          className="text-green-500 hidden group-hover:block"
+          className="text-primary hidden group-hover:block"
           fill="currentColor"
           size={14}
         />

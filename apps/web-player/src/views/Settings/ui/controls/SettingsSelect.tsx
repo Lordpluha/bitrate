@@ -1,5 +1,6 @@
 import { cn } from '@spotify/ui-react'
 import { ChevronDown } from 'lucide-react'
+import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useSettingsSelect } from '@/views/Settings/model/useSettingsSelect'
 
 export type SettingsSelectOption<TValue extends string> = {
@@ -74,7 +75,10 @@ export const SettingsSelect = <TValue extends string>({
 
       {select.isOpen && (
         <div
-          className="absolute left-0 top-full z-[110] mt-1 max-h-56 w-full overflow-hidden rounded bg-background-tinted py-1 shadow-2xl ring-1 ring-border"
+          className={cn(
+            Z_INDEX_CLASS.select,
+            'absolute left-0 top-full mt-1 max-h-56 w-full overflow-hidden rounded bg-background-tinted py-1 shadow-2xl ring-1 ring-border',
+          )}
           id={select.listboxId}
           onKeyDown={select.handleListboxKeyDown}
           role="listbox"

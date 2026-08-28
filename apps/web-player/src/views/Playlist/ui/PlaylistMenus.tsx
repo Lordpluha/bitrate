@@ -1,3 +1,4 @@
+import { cn } from '@spotify/ui-react'
 import {
   Check,
   Flag,
@@ -12,6 +13,7 @@ import {
   UserPlus,
   UserRoundPlus,
 } from 'lucide-react'
+import { Z_INDEX_CLASS } from '@/shared/constants'
 import type { TrackViewMode } from '@/views/Playlist/model/playlist.types'
 import { PlaylistMenuItem } from './PlaylistMenuItem'
 
@@ -23,16 +25,20 @@ type TrackViewMenuProps = {
 export const TrackViewMenu = ({ onChange, value }: TrackViewMenuProps) => (
   <div
     aria-label="Track list view"
-    className="absolute right-0 top-[calc(100%+10px)] z-[80] w-40 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl"
+    className={cn(
+      Z_INDEX_CLASS.dropdownMenu,
+      'absolute right-0 top-[calc(100%+10px)] w-40 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl',
+    )}
     role="menu"
   >
     <div className="px-3 py-2 text-xs font-bold text-text-subdued">View as</div>
     {(['compact', 'list'] as const).map((viewMode) => (
       <button
         aria-checked={value === viewMode}
-        className={`flex w-full items-center justify-between rounded-sm px-3 py-2 text-left capitalize transition-colors hover:bg-white/10 ${
-          value === viewMode ? 'text-green-500' : 'text-text'
-        }`}
+        className={cn(
+          'flex w-full items-center justify-between rounded-sm px-3 py-2 text-left capitalize transition-colors hover:bg-white/10',
+          value === viewMode ? 'text-primary' : 'text-text',
+        )}
         key={viewMode}
         onClick={() => onChange(viewMode)}
         role="menuitemradio"
@@ -65,7 +71,10 @@ export const PlaylistMoreMenu = ({
 }: PlaylistMoreMenuProps) => (
   <div
     aria-label="Playlist actions"
-    className="absolute left-0 top-[calc(100%+8px)] z-[80] w-66 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl"
+    className={cn(
+      Z_INDEX_CLASS.dropdownMenu,
+      'absolute left-0 top-[calc(100%+8px)] w-66 max-w-[calc(100vw-2rem)] rounded-md bg-popover p-1 text-sm text-text shadow-2xl',
+    )}
     role="menu"
   >
     <PlaylistMenuItem disabled icon={<List size={17} />} label="Add to queue" />

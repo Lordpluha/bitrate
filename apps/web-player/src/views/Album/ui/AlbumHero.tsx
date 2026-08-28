@@ -1,10 +1,10 @@
+import type { AlbumResponse } from '@entities/Album'
 import { ArtistLink } from '@entities/Artist'
 import { BackButton } from '@shared/ui/BackButton'
 import { DateUtils } from '@shared/utils/DateUtils'
 import { TimeUtils } from '@shared/utils/TimeUtils'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
-import type { AlbumResponse } from '@/entities/Album/api/client/albumResponse.schema'
 
 type AlbumHeroProps = {
   album: AlbumResponse

@@ -5,6 +5,7 @@ import { generateColor } from '@shared/utils'
 import { getUserAvatarUrl } from '@shared/utils/mediaUrl'
 
 import {
+  cn,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -15,6 +16,7 @@ import {
 } from '@spotify/ui-react'
 import Image from 'next/image'
 import type { HTMLAttributes } from 'react'
+import { Z_INDEX_CLASS } from '@/shared/constants'
 import { ProfileMenuContent } from './ProfileMenuContent'
 
 interface ProfileButtonProps extends HTMLAttributes<HTMLDivElement> {
@@ -68,8 +70,11 @@ export const ProfileButton = ({
         </TooltipProvider>
         <PopoverContent
           align="end"
-          className="!z-[1000] w-82 rounded-md !border-border !bg-popover p-1 text-sm !text-text shadow-2xl"
-          positionerClassName="z-[1000]"
+          className={cn(
+            Z_INDEX_CLASS.popover,
+            'w-82 rounded-md border border-border bg-popover p-1 text-sm text-text shadow-2xl',
+          )}
+          positionerClassName={Z_INDEX_CLASS.popover}
           sideOffset={8}
         >
           <ProfileMenuContent

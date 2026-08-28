@@ -1,6 +1,10 @@
 'use client'
 
-import { type LoginFormData, loginSchema } from '@entities/User'
+import {
+  getLoginDestination,
+  type LoginFormData,
+  loginSchema,
+} from '@entities/User'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast } from '@shared/api/feedback'
@@ -8,7 +12,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
-import { getLoginDestination } from '@/features/Auth/model/getLoginDestination'
 
 export const useLoginForm = () => {
   const router = useRouter()

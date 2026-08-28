@@ -41,7 +41,7 @@ export const LibraryPage = () => {
               {t('library.heading')}
             </h1>
             <button
-              className="rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-black hover:bg-green-400 max-[420px]:w-full"
+              className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-black hover:bg-primary-hover max-[420px]:w-full"
               onClick={() => setIsCreateOpen((value) => !value)}
               type="button"
             >

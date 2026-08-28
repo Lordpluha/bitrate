@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@spotify/ui-react'
 import { BookmarkCheck, BookmarkPlus } from 'lucide-react'
 import Image from 'next/image'
 import { useMemo } from 'react'
@@ -66,7 +67,10 @@ const EpisodeRow = ({
     {onToggleSaved ? (
       <button
         aria-label={`${isSaved ? 'Remove' : 'Save'} ${episode.title}`}
-        className={`self-center rounded-full p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${isSaved ? 'text-accent' : 'text-text-subdued hover:text-text'}`}
+        className={cn(
+          'self-center rounded-full p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+          isSaved ? 'text-accent' : 'text-text-subdued hover:text-text',
+        )}
         onClick={onToggleSaved}
         type="button"
       >

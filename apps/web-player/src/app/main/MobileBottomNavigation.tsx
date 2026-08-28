@@ -3,7 +3,9 @@
 import { ROUTES } from '@shared/routes'
 import { cn } from '@spotify/ui-react'
 import { House, Library, Plus, Search, X } from 'lucide-react'
-import { usePathname, useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useI18n } from '@/shared/i18n'
 import { MobileCreatePlaylistSheet } from '@/widgets/LeftSidebar'
 
@@ -21,7 +23,6 @@ export const MobileBottomNavigation = ({
 }: MobileBottomNavigationProps) => {
   const { t } = useI18n()
   const pathname = usePathname()
-  const router = useRouter()
   const isHomeActive = pathname === ROUTES.main && !isCreateOpen
   const isSearchActive = pathname.startsWith(ROUTES.search()) && !isCreateOpen
   const isLibraryActive =
@@ -29,10 +30,7 @@ export const MobileBottomNavigation = ({
       pathname.startsWith(ROUTES.likedSongs)) &&
     !isCreateOpen
 
-  const navigate = (href: string) => {
-    onCreateOpenChange(false)
-    router.push(href)
-  }
+  const closeCreateSheet = () => onCreateOpenChange(false)
 
   return (
     <>
@@ -43,43 +41,46 @@ export const MobileBottomNavigation = ({
 
       <nav
         aria-label={t('nav.main')}
-        className="fixed inset-x-0 bottom-0 z-[70] h-[calc(4rem+env(safe-area-inset-bottom))] border-t border-white/10 bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md"
+        className={cn(
+          Z_INDEX_CLASS.bottomNavigation,
+          'fixed inset-x-0 bottom-0 h-[calc(4rem+env(safe-area-inset-bottom))] border-t border-white/10 bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md',
+        )}
       >
         <div className="grid h-full grid-cols-4 px-1">
-          <button
+          <Link
             aria-current={isHomeActive ? 'page' : undefined}
             className={cn(
               navigationItemClassName,
               isHomeActive ? 'text-text' : 'text-text-subdued',
             )}
-            onClick={() => navigate(ROUTES.main)}
-            type="button"
+            href={ROUTES.main}
+            onClick={closeCreateSheet}
           >
             <House size={22} strokeWidth={isHomeActive ? 3 : 2} />
             <span className="truncate">{t('nav.home')}</span>
-          </button>
+          </Link>
 
-          <button
+          <Link
             aria-current={isSearchActive ? 'page' : undefined}
             className={cn(
               navigationItemClassName,
               isSearchActive ? 'text-text' : 'text-text-subdued',
             )}
-            onClick={() => navigate(ROUTES.search())}
-            type="button"
+            href={ROUTES.search()}
+            onClick={closeCreateSheet}
           >
             <Search size={23} strokeWidth={isSearchActive ? 3 : 2} />
             <span className="truncate">{t('nav.search')}</span>
-          </button>
+          </Link>
 
-          <button
+          <Link
             aria-current={isLibraryActive ? 'page' : undefined}
             className={cn(
               navigationItemClassName,
               isLibraryActive ? 'text-text' : 'text-text-subdued',
             )}
-            onClick={() => navigate(ROUTES.library)}
-            type="button"
+            href={ROUTES.library}
+            onClick={closeCreateSheet}
           >
             <Library
               fill={isLibraryActive ? 'currentColor' : 'none'}
@@ -87,7 +88,7 @@ export const MobileBottomNavigation = ({
               strokeWidth={isLibraryActive ? 2.5 : 2}
             />
             <span className="truncate">{t('nav.library')}</span>
-          </button>
+          </Link>
 
           <button
             aria-expanded={isCreateOpen}

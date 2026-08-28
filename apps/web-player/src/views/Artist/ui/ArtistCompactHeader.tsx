@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@spotify/ui-react'
 import type { CSSProperties } from 'react'
 import { ArtistPlayButton } from '@/views/Artist/ui/ArtistPlayButton'
 
@@ -27,11 +28,12 @@ export const ArtistCompactHeader = ({
   >
     <div
       aria-hidden={!isVisible}
-      className={`absolute inset-x-0 top-0 flex h-16 items-center gap-3 bg-[var(--artist-header)] px-4 shadow-sm transition-transform duration-200 sm:px-5 ${
+      className={cn(
+        'absolute inset-x-0 top-0 flex h-16 items-center gap-3 bg-[var(--artist-header)] px-4 shadow-sm transition-transform duration-200 sm:px-5',
         isVisible
           ? 'translate-y-0 pointer-events-auto'
-          : '-translate-y-full pointer-events-none'
-      }`}
+          : '-translate-y-full pointer-events-none',
+      )}
     >
       <ArtistPlayButton
         artistName={artistName}

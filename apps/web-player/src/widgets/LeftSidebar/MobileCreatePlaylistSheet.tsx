@@ -1,6 +1,8 @@
 'use client'
 
+import { cn } from '@spotify/ui-react'
 import { X } from 'lucide-react'
+import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useOverlayFocus } from '@/shared/hooks'
 import { CreatePlaylistActions } from '@/widgets/LeftSidebar/CreatePlaylistActions'
 import { useCreateLibraryPlaylist } from '@/widgets/LeftSidebar/model/useCreateLibraryPlaylist'
@@ -31,7 +33,10 @@ export const MobileCreatePlaylistSheet = ({
     <>
       <button
         aria-hidden="true"
-        className="fixed inset-0 z-[60] bg-black/75"
+        className={cn(
+          Z_INDEX_CLASS.mobileSheetBackdrop,
+          'fixed inset-0 bg-black/75',
+        )}
         onClick={() => onOpenChange(false)}
         tabIndex={-1}
         type="button"
@@ -39,7 +44,10 @@ export const MobileCreatePlaylistSheet = ({
       <div
         aria-label="Create"
         aria-modal="true"
-        className="fixed inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-[65] max-h-[70dvh] overflow-y-auto rounded-xl border border-white/10 bg-popover p-3 shadow-2xl custom-scrollbar"
+        className={cn(
+          Z_INDEX_CLASS.mobileSheetContent,
+          'fixed inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] max-h-[70dvh] overflow-y-auto rounded-xl border border-white/10 bg-popover p-3 shadow-2xl custom-scrollbar',
+        )}
         ref={dialogRef}
         role="dialog"
         tabIndex={-1}

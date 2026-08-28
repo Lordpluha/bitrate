@@ -25,7 +25,7 @@ export const PlaylistPrimaryActions = ({
       <>
         <button
           aria-label={`${playback.isPlaying ? 'Pause' : 'Play'} ${details.title}`}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500 text-black transition-transform hover:scale-105 sm:h-14 sm:w-14"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-black transition-transform hover:scale-105 sm:h-14 sm:w-14"
           onClick={playback.handlePlayPlaylist}
           type="button"
         >
@@ -42,7 +42,7 @@ export const PlaylistPrimaryActions = ({
           aria-pressed={playback.isShuffled}
           className={
             playback.isShuffled
-              ? 'text-green-500 transition-colors hover:text-green-400'
+              ? 'text-primary transition-colors hover:text-primary-hover'
               : 'transition-colors hover:text-text'
           }
           onClick={playback.handleShufflePlaylist}

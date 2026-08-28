@@ -1,8 +1,7 @@
 'use client'
 
 import { useRecommendationsFeed } from '@/entities/Discovery'
-import { mapDiscoveryFeedItem } from '@/features/Search/lib/mapDiscoveryFeed'
-import { MediaRow } from '@/features/Search/ui/MediaRow'
+import { mapDiscoveryFeedItem, MediaRow } from '@/features/Search'
 import { ErrorState } from '@/shared/ui/ErrorState'
 
 export const RecommendationsFeed = () => {

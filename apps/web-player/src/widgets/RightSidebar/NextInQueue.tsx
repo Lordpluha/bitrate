@@ -67,7 +67,7 @@ export const NextInQueue = () => {
         <div className="min-w-0 flex-1">
           <Typography
             as="p"
-            className="truncate text-sm text-text transition-colors group-hover:text-green-500"
+            className="truncate text-sm text-text transition-colors group-hover:text-primary"
             size="body"
           >
             {nextTrack.title}

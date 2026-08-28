@@ -46,9 +46,9 @@ export const PopularArtists = () => {
           />
           <CarouselContent className="flex">
             {loadingArtists ? (
-              <div className="text-gray-400 p-4">{t('common.loading')}</div>
+              <div className="text-text-subdued p-4">{t('common.loading')}</div>
             ) : artists.length === 0 ? (
-              <div className="text-gray-400 p-4">{t('main.noArtists')}</div>
+              <div className="text-text-subdued p-4">{t('main.noArtists')}</div>
             ) : (
               artists.map((artist) => (
                 <CarouselItem className="basis-auto max-w-50" key={artist.id}>

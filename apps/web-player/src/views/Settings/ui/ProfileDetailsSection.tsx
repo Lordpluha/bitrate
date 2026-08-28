@@ -32,7 +32,7 @@ export const ProfileDetailsSection = () => {
           />
         </label>
         <button
-          className="w-fit rounded-full bg-green-500 px-5 py-2 text-sm font-bold text-black hover:bg-green-400 disabled:opacity-60"
+          className="w-fit rounded-full bg-primary px-5 py-2 text-sm font-bold text-black hover:bg-primary-hover disabled:opacity-60"
           disabled={profile.isUpdatePending}
           type="submit"
         >

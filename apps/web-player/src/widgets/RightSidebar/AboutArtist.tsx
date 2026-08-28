@@ -78,7 +78,7 @@ export const AboutArtist = () => {
               <>
                 {ncsBioPrefix}{' '}
                 <a
-                  className="font-medium text-text underline decoration-text-subdued underline-offset-2 transition-colors hover:text-green-500 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
+                  className="font-medium text-text underline decoration-text-subdued underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
                   href={ncsBioLink.href}
                   rel="noopener noreferrer"
                   target="_blank"
