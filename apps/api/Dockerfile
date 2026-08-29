@@ -17,7 +17,7 @@ COPY packages/converter/bin ./packages/converter/bin
 COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/ncs-parser/package.json ./packages/ncs-parser/
 COPY turbo.json ./
-RUN pnpm install --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development
@@ -50,7 +50,7 @@ COPY packages/converter/package.json ./packages/converter/
 COPY packages/converter/bin ./packages/converter/bin
 COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/ncs-parser/package.json ./packages/ncs-parser/
-RUN pnpm install --prod --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lockfile
 
 # Stage 6: Production
 FROM base AS production

@@ -18,7 +18,7 @@ COPY packages/svgr/bin ./packages/svgr/bin
 COPY packages/vite-svgr/package.json ./packages/vite-svgr/
 COPY packages/contracts/package.json ./packages/contracts/
 COPY turbo.json ./
-RUN pnpm install --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development
@@ -62,7 +62,7 @@ COPY scripts ./scripts
 COPY apps/web-player/package.json ./apps/web-player/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/contracts/package.json ./packages/contracts/
-RUN pnpm install --prod --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lockfile
 
 # Stage 6: Production
 FROM base AS production
