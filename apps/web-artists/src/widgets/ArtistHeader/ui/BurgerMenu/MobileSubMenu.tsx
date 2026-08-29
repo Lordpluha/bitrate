@@ -175,7 +175,7 @@ export const MobileSubMenu = ({
                             </div>
                           ) : (
                             <>
-                              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-800">
+                              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-surface">
                                 <Image
                                   alt={item.title}
                                   className="object-cover"

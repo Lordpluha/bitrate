@@ -2,8 +2,10 @@
 name: web-player-rules
 description: Next.js App Router + FSD quick reference for apps/web-player — layer anatomy, the openapi-fetch/React Query API client, Zustand state, Server vs Client components, and the ROUTES routing convention. Use whenever writing or reviewing a component, hook, store, or route file under apps/web-player/src/, or whenever asked to add a page, feature, or piece of client state to the web player.
 metadata:
+  version: "1.0.0"
   type: reference
   author: lordpluha
+license: MIT
 ---
 
 # Web-player rules — Next.js App Router + FSD
@@ -90,7 +92,7 @@ Use `ROUTES` at every `<Link href={...}>` and `router.push(...)` — never inlin
 
 - `fsd-web-player` — the FSD layer table, import permission matrix, and public-API barrel
   rule this file assumes.
-- `fsd-scaffold` — scaffolds new `features/`/`entities/` slices that follow that layer anatomy.
+- `fsd` — scaffolds new `features/`/`entities/` slices that follow that layer anatomy.
 - `vitest`, `playwright` skills — test layers for this app; `testing.md` routes
   between them.
 - `project-conventions` — the cross-cutting rules this file specializes.

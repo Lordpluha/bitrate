@@ -1,3 +1,12 @@
+---
+name: typescript
+description: TypeScript conventions for every .ts and .tsx in apps/ and packages/ — compiler strictness, named types in signature positions, the ban on any and suppression comments, the single-object parameter pattern in web-player, import and file-naming rules, TSDoc style, and test placement. Use whenever writing or reviewing TypeScript anywhere in the repository.
+license: MIT
+metadata:
+  author: lordpluha
+  version: "1.0.0"
+---
+
 # TypeScript conventions
 
 Applies to all `.ts` and `.tsx` files in `apps/` and `packages/`.
@@ -211,7 +220,6 @@ export const registerSchema = z.object({ email: z.string(), password: z.string()
 | API | unit/integration | Co-located under `apps/api/src/` |
 | API | E2E | `apps/api/test/e2e/` |
 | ui-react | unit/int/snapshot/screenshot | Co-located with the component |
-| tokens-generator | node:test integration | Package test tree |
 
 Do not create web-player Vitest or Playwright specs until the app owns runner configuration
 and scripts.

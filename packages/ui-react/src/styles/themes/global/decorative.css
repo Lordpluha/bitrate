@@ -1,0 +1,44 @@
+/**
+ * Decorative & Data-Visualisation Roles
+ * Chart series and decorative washes — picked to be distinguishable from each other rather than to
+ * carry a UI meaning.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Categorical chart series 1. */
+  --color-chart-1: var(--color-green-500);
+  /* Categorical chart series 2. */
+  --color-chart-2: var(--color-blue-500);
+  /* Categorical chart series 3. */
+  --color-chart-3: var(--color-purple-500);
+  /* Categorical chart series 4. */
+  --color-chart-4: var(--color-orange-500);
+  /* Categorical chart series 5. */
+  --color-chart-5: var(--color-red-500);
+  /* Decorative color wash behind a hero/banner header. */
+  --color-hero-wash: var(--color-purple-800);
+  /* Stops of the animated gradient behind the auth screens, in sweep order. */
+  --color-auth-gradient-green: oklch(0.51 0.14 152);
+  --color-auth-gradient-purple: oklch(0.36 0.19 305);
+  --color-auth-gradient-ink: oklch(0.19 0 0);
+  --color-auth-gradient-red: oklch(0.42 0.19 27);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-chart-1: var(--color-green-600);
+  --color-chart-2: var(--color-blue-600);
+  --color-chart-3: var(--color-purple-600);
+  --color-chart-4: var(--color-orange-600);
+  --color-chart-5: var(--color-red-600);
+  --color-hero-wash: #ddd6f3;
+  --color-auth-gradient-green: oklch(0.51 0.14 152);
+  --color-auth-gradient-purple: oklch(0.36 0.19 305);
+  --color-auth-gradient-ink: oklch(0.19 0 0);
+  --color-auth-gradient-red: oklch(0.42 0.19 27);
+}

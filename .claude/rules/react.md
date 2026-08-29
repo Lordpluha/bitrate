@@ -1,3 +1,12 @@
+---
+name: react
+description: React conventions for apps/web-player/src — function components with named exports, the Server versus Client component boundary, hook rules and the wrapping convention for third-party hooks, the two-useEffect budget, Zustand and React Query ownership, the accessibility baseline, and routing through ROUTES. Use whenever writing or reviewing a .tsx file in the web player.
+license: MIT
+metadata:
+  author: lordpluha
+  version: "1.0.0"
+---
+
 # React conventions — web-player
 
 Applies to all `.tsx` files under `apps/web-player/src/`. Read alongside `typescript.md` — the TypeScript rules (named types, imports) apply to component files too.

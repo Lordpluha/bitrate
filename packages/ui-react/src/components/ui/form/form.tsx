@@ -88,7 +88,7 @@ export const FormLabel = ({ className, ...props }: ComponentPropsWithoutRef<'lab
 
   return (
     <Label
-      className={cn(error && 'text-red-500 dark:text-red-900', className)}
+      className={cn(error && 'text-form-message-foreground', className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -117,7 +117,7 @@ export const FormDescription = ({ className, ...props }: HTMLAttributes<HTMLPara
   return (
     <p
       id={formDescriptionId}
-      className={cn('text-sm text-slate-500 dark:text-slate-400', className)}
+      className={cn('text-sm text-form-description-foreground', className)}
       {...props}
     />
   )

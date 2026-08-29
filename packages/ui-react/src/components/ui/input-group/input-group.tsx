@@ -12,7 +12,7 @@ function InputGroup({ className, ...props }: ComponentProps<'div'>) {
       data-slot="input-group"
       role="group"
       className={cn(
-        'group/input-group border-slate-200 dark:bg-slate-200/30 shadow-xs relative flex w-full items-center rounded-md border outline-none transition-[color,box-shadow] dark:border-slate-800 dark:dark:bg-slate-800/30',
+        'group/input-group border-input-border bg-input-group-surface/30 shadow-xs relative flex w-full items-center rounded-md border outline-none transition-[color,box-shadow]',
         'h-9 has-[>textarea]:h-auto',
 
         // Variants based on alignment.
@@ -22,10 +22,10 @@ function InputGroup({ className, ...props }: ComponentProps<'div'>) {
         'has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3',
 
         // Focus state.
-        'has-[[data-slot=input-group-control]:focus-visible]:ring-slate-950 has-[[data-slot=input-group-control]:focus-visible]:ring-1 dark:has-[[data-slot=input-group-control]:focus-visible]:ring-slate-300',
+        'has-[[data-slot=input-group-control]:focus-visible]:ring-ring has-[[data-slot=input-group-control]:focus-visible]:ring-1',
 
         // Error state.
-        'has-[[data-slot][aria-invalid=true]]:ring-red-500/20 has-[[data-slot][aria-invalid=true]]:border-red-500 dark:has-[[data-slot][aria-invalid=true]]:ring-red-500/40 dark:has-[[data-slot][aria-invalid=true]]:ring-red-900/20 dark:has-[[data-slot][aria-invalid=true]]:border-red-900 dark:dark:has-[[data-slot][aria-invalid=true]]:ring-red-900/40',
+        'has-[[data-slot][aria-invalid=true]]:ring-destructive/30 has-[[data-slot][aria-invalid=true]]:border-input-invalid-border',
 
         className,
       )}
@@ -35,7 +35,7 @@ function InputGroup({ className, ...props }: ComponentProps<'div'>) {
 }
 
 const inputGroupAddonVariants = cva(
-  "text-slate-500 flex h-auto cursor-text select-none items-center justify-center gap-2 py-1.5 text-sm font-medium group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4 dark:text-slate-400",
+  "text-input-addon-foreground flex h-auto cursor-text select-none items-center justify-center gap-2 py-1.5 text-sm font-medium group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4",
   {
     variants: {
       align: {
@@ -113,7 +113,7 @@ function InputGroupText({ className, ...props }: ComponentProps<'span'>) {
   return (
     <span
       className={cn(
-        "text-slate-500 flex items-center gap-2 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none dark:text-slate-400",
+        "text-input-addon-foreground flex items-center gap-2 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none",
         className,
       )}
       {...props}
@@ -126,7 +126,7 @@ function InputGroupInput({ className, ...props }: ComponentProps<'input'>) {
     <Input
       data-slot="input-group-control"
       className={cn(
-        'flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent',
+        'flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0',
         className,
       )}
       {...props}
@@ -139,7 +139,7 @@ function InputGroupTextarea({ className, ...props }: ComponentProps<'textarea'>)
     <Textarea
       data-slot="input-group-control"
       className={cn(
-        'flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent',
+        'flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0',
         className,
       )}
       {...props}

@@ -1,0 +1,40 @@
+/**
+ * Global Text & Border Neutrals
+ * Text, icon and divider neutrals shared across unrelated screens.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Secondary body text, one step down from `foreground`. */
+  --color-foreground-secondary: var(--color-neutral-200);
+  /* Primary text color. Same value as `foreground` (base.css) — see the note there. */
+  --color-text: var(--color-white);
+  /* Secondary text — subtitles, metadata rows, list captions. */
+  --color-text-secondary: var(--color-neutral-400);
+  /* Subdued text — helper copy and inactive icons. */
+  --color-text-subdued: var(--color-neutral-500);
+  /* Lowest-emphasis text. */
+  --color-text-muted: var(--color-neutral-600);
+  /* Text color written on an inverted surface — see `contrast` below. */
+  --color-text-contrast: #000000;
+  /* Inverted surface color, the background `text-contrast` is written on. */
+  --color-contrast: #ffffff;
+  /* Faint divider/border, one step softer than `border` (base.css). */
+  --color-border-subtle: var(--color-neutral-900);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-foreground-secondary: #414b58;
+  --color-text: #2a3038;
+  --color-text-secondary: #4a5462;
+  --color-text-subdued: #5f6a78;
+  --color-text-muted: #6b7480;
+  --color-text-contrast: #ffffff;
+  --color-contrast: #2a3038;
+  --color-border-subtle: #e8ebef;
+}

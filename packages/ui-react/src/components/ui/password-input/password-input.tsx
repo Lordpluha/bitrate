@@ -38,7 +38,7 @@ export const PasswordInput = ({
       />
       <button
         type="button"
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-input-addon-foreground hover:text-foreground"
         onClick={handleToggle}
         tabIndex={-1}
       >

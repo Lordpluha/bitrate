@@ -40,7 +40,7 @@ const PopoverContent = ({
       <PopoverPrimitive.Popup
         ref={ref}
         className={cn(
-          'z-50 w-72 rounded-md border border-slate-200 bg-white p-4 text-slate-950 shadow-md outline-none origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
+          'z-50 w-72 rounded-md border border-overlay-border bg-overlay-surface p-4 text-overlay-foreground shadow-md outline-none origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95',
           className,
         )}
         {...props}

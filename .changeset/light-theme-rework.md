@@ -1,7 +1,6 @@
 ---
 '@spotify/web-player': minor
 '@spotify/ui-react': minor
-'@spotify/tokens': minor
 ---
 
 The light theme reads as a designed counterpart to the dark one rather than an

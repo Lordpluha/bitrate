@@ -7,7 +7,8 @@
     "dev": "next dev --port 3002",
     "build": "next build",
     "start": "next start",
-    "lint": "pnpm exec biome lint --write",
+    "lint": "pnpm exec biome lint --error-on-warnings",
+    "lint:fix": "pnpm exec biome lint --write",
     "check-types": "tsc --noEmit",
     "format": "pnpm exec biome format --write"
   },

@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": ["biome.json", ".npmrc"],
   "globalPassThroughEnv": ["SKIP_GRAPHIFY_INSTALL", "SKIP_RTK_INSTALL"],
   "tasks": {
     "build": {
@@ -8,16 +9,21 @@
       "outputs": ["dist/**", ".next/**", "!.next/cache/**", "build/**", ".docusaurus/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/__snapshots__/**", "!**/__screenshots__/**"],
+      "outputs": []
     },
     "test": {
-      "dependsOn": ["^test"]
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md"],
+      "outputs": ["coverage/**"]
     },
     "format": {
-      "dependsOn": ["^format"]
+      "cache": false
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/__snapshots__/**", "!**/__screenshots__/**"],
+      "outputs": []
     },
     "dev": {
       "cache": false

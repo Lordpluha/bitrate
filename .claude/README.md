@@ -3,70 +3,102 @@
 This folder wires up the ticket-driven command set for Claude Code users. It is one layer
 on top of `CLAUDE.md`, the compact routing and shared non-negotiables entrypoint.
 
-The command layer defaults to token-budget mode: commands run in the current session and
-invoke subagents only when `--agent` is passed or the user explicitly asks for one. See
-`TOKEN_BUDGET.md`.
+The command layer defaults to agent dispatch: every command invokes its matching specialist
+by default (see [ADR-0021](../apps/docs/docs/architecture/0021-default-agent-dispatch.md));
+pass `--session` to keep a task in the current session instead. This applies to ordinary
+tasks outside any command too — see `CLAUDE.md`'s "Default to agent dispatch, even outside a
+command". See `TOKEN_BUDGET.md` for the cost trade-off this implies.
 
 ## Commands
 
 | Command | Args | What it does |
 |---------|------|-------------|
-| `/sp-take-ticket` | `"<issue number or search>"` | Find/confirm a GitHub issue on the Projects board (live query), move its card, and check out a branch. Confirms before any mutating GitHub action. Self-contained. |
-| `/sp-implement` | `"<task>" [--agent] [--plan] [--review]` | Write or modify web-player, API, or package code, then open/update the pull request. Confirms before pushing or touching the PR. Dispatches to a named specialist with `--agent`. |
-| `/sp-sync-docs` | `[path]` | Find and (with confirmation) fix drift between `apps/docs/` and the rule/ADR sources. Run periodically. Self-contained. |
+| `/sp-create-task` | `"<idea>" [--update NNN] [--epic] [--dry-run]` | Read the whole Projects board + repo context, classify the idea against what already exists, then draft or restructure one issue. Confirms before every GitHub mutation. |
+| `/sp-implement` | `"<task>" [--session] [--plan] [--review]` | Write or modify web-player, API, or package code, then open/update the pull request. Confirms before pushing or touching the PR. Dispatches to a named specialist by default. |
+| `/sp-auto` | `[--limit N] [--issue NNN] [--dry-run] [--recover-only]` | Unattended pipeline over the board's `Todo` column: worktree per issue, one `sp-worker` each, then PR + board move + issue comment. Resumable and idempotent by design. |
+| `/sp-sync-docs` | `[path] [--session]` | Find and (with confirmation) fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Dispatches discovery to `sp-librarian`; confirms and applies fixes at the command level. Run periodically. |
 
-Only `/sp-implement` has agent specialists behind it — planning/coding/debugging/testing/
-review personas, dispatched with `--agent` or invoked directly by name via the Agent tool:
+Twelve specialists back these four commands — a planner, five app-scoped implementation
+agents, debugging/testing/review personas, an infrastructure agent, the unattended pipeline
+worker, and a read-only documentation-order agent — dispatched by default, or invoked
+directly by name via the Agent tool:
 
-| Agent | Model | Role |
-|---|---|---|
-| `sp-planner` | Fable | Decomposes a non-trivial task into ordered steps before any code is written. Plan-only. |
-| `sp-developer` | Sonnet | Writes/modifies code across web-player, API, and packages. Auto-invokes `sp-reviewer` on substantial diffs. |
-| `sp-debugger` | Opus | Reproduce → isolate root cause → surgical fix → verify. |
-| `sp-tester` | Opus | Writes or runs one focused Jest/Vitest/Playwright/screenshot spec. |
-| `sp-reviewer` | Opus | Mechanical pass + architecture checklist walk + goal-achievement check. |
+| Agent | Model | Effort | Role |
+|---|---|---|---|
+| `sp-planner` | Fable | low | Decomposes a non-trivial task into ordered steps before any code is written. Plan-only. |
+| `sp-frontend-developer` | Sonnet | medium | `apps/web-player`, `apps/web-artists`, `packages/ui-react` — Next.js + FSD + Tailwind v4. Auto-invokes `sp-reviewer` on substantial diffs. |
+| `sp-backend-developer` | Sonnet | medium | `apps/api` — NestJS, Prisma, BullMQ, Socket.io. Owns the Swagger-decorator and thin-controller rules. |
+| `sp-mobile-developer` | Sonnet | medium | `apps/mobile` — React Native + Expo. Flags conventions this scaffolded app has not established. |
+| `sp-desktop-developer` | Sonnet | medium | `apps/desktop` — Tauri 2 shell + React renderer. Owns the capability/CSP boundary. |
+| `sp-admin-developer` | Sonnet | medium | `apps/admin` — Kottster + Knex. Flags API invariants the direct-DB path bypasses. |
+| `sp-debugger` | Opus | high | Reproduce → isolate root cause → surgical fix → verify. |
+| `sp-tester` | Opus | high | Writes or runs one focused Jest/Vitest/Playwright/screenshot spec. |
+| `sp-reviewer` | Opus | high | Mechanical pass + architecture checklist walk + goal-achievement check. |
+| `sp-devops` | Opus | high | `.github/workflows`, `.github/actions`, `infra/`, `turbo.json`, `lefthook.yml`, Changesets release. Reviews its own diff for permissions, secrets, and injection. |
+| `sp-worker` | Opus | high | Orchestrator. Owns a task 0→100%: clarifies it (`/grill-me`), plans it, delegates each stage to the owning agent, re-verifies every claim, reports to the developer. Interactive, or unattended under `/sp-auto` inside a worktree. |
+| `sp-librarian` | Sonnet | medium | Keeps `.claude/`, `.changeset/`, `apps/docs/`, and `PRODUCT.md` in order. Read-only — never edits. |
 
-Model is fixed per agent in its own frontmatter, not chosen per invocation: light,
-fast-turnaround planning on Fable; routine implementation on Sonnet; the three
-verification-heavy roles (bugs, tests, review — where a missed edge case is expensive) on
-Opus.
+Model and effort are both fixed per agent in its own frontmatter, not chosen per invocation:
+light, fast-turnaround planning on Fable at low effort; routine implementation and
+documentation discovery on Sonnet at medium effort; the unattended worker on Sonnet at high
+effort; and the verification-heavy roles — bugs, tests, review, DevOps, and orchestration,
+where a missed edge case is expensive or blocks the whole team — on Opus at high effort.
+`sp-worker` sits on that tier because its job is to catch what the other agents missed.
 
-None of these five have their own slash command — `/sp-implement [--agent] [--plan]
-[--review]` is the single entrypoint that routes to the right one (see its own file for the
-routing table). `/sp-take-ticket` and `/sp-sync-docs` carry their own instructions directly
-in the command file — no separate agent file, no `--agent` flag — and talk to GitHub
-themselves: prefer an MCP GitHub server if one is connected in the session, otherwise the
-`gh` CLI.
+None of these twelve have their own slash command — each of the four commands is the single
+entrypoint that dispatches to its matching specialist/specialists by default (see each
+command's own file for its routing table). Every specialist that finds/proposes rather than
+executes (`sp-planner`, `sp-librarian`) hands its findings back to the orchestrating command,
+which confirms with the user and performs the mutation/fix itself — specialists never push,
+open a PR, move a board card, or edit a doc file on their own. The one deliberate exception is
+`sp-worker`, which commits and pushes its own branch inside its own worktree when running
+unattended; even it never touches GitHub state, which the `/sp-auto` dispatcher owns.
+`sp-worker` is also the one agent that dispatches other agents — it is an orchestrator, not
+a peer of the specialists it delegates to.
+
+## Large or vague efforts — `grill-me` and `wayfinder`
+
+Two user-invoked skills from the `mattpocock-skills` plugin sit outside this command set:
+
+- **`/grill-me`** sharpens a complex or large task by interview before it is planned. Run it
+  ahead of `/sp-create-task` or `/sp-implement --plan`.
+- **`/wayfinder`** drives implementation of an effort spanning more than one agent session,
+  charting it as a map of decision tickets on the issue tracker.
+
+Install once per machine: `claude plugin install mattpocock-skills`. It is user-scope, so it
+is not committed here and each developer installs it themselves.
 
 ## Recommended workflow
 
-1. `/sp-take-ticket "<issue>"` — pick up the ticket, confirm the board move, get a branch.
-2. `/sp-implement "<task>"` — write the code (dispatching to a specialist agent if
-   `--agent`/`--plan`/`--review` is used), run `pnpm lint && pnpm check-types`, add a
-   changeset if the change is user-visible (see `.claude/rules/commit-style.md` §
-   "Changesets"), then confirm before opening/updating the PR.
+1. `/sp-create-task "<idea>"` — if the task doesn't exist yet: research the board, then
+   draft it. Skip when you already have an issue number.
+2. `/sp-implement "<task>"` — write the code (dispatched to a specialist agent by default),
+   run `pnpm lint && pnpm check-types`, add a changeset if the change is user-visible (see
+   `.claude/rules/commit-style.md` § "Changesets"), then confirm before opening/updating the
+   PR.
 
 Ticket/board state is never mirrored to a file — re-run a `gh`/MCP query whenever the
 current state is needed, at any point in the workflow.
 
-On `/sp-implement`, add `--agent` only when you deliberately want an isolated specialist
-run and accept the extra token cost.
+Pass `--session` on any of the four commands only when you deliberately want to skip the
+agent round-trip for a task small enough that dispatch is pure overhead.
 
 ## Concepts from the agent workflow
 
 - **Rules are project law.** Architecture, framework, test, style, and review conventions
   live under `.claude/rules/`.
 - **Skills are recipes.** Every command and every specialist agent has access to **any**
-  skill under `.claude/skills/` — `fsd-scaffold`, `shadcn`,
+  skill under `.claude/skills/` — `fsd`, `shadcn`,
   `prisma-client-api`, `graphify`, `web-design-guidelines`, `writing-guidelines`,
   `vercel-react-best-practices` — plus any global skill. Pick whichever fits the task, not
   a fixed subset.
 - **Commands are entrypoints.** They decide scope, load the smallest useful recipe set, and
-  keep routine work in the current Claude session. Two of the three (`sp-take-ticket`,
-  `sp-sync-docs`) are fully self-contained — no agent file backs them.
-- **Subagents are `/sp-implement`'s named specialists.** `sp-planner`, `sp-developer`,
-  `sp-debugger`, `sp-tester`, `sp-reviewer`. Dispatch them with `--agent`, or invoke any of
-  them directly by name via the Agent tool.
+  dispatch to their matching specialist(s) by default — `--session` keeps a task in the
+  current Claude session instead.
+- **Every command has at least one named specialist behind it.** `sp-planner`,
+  the five `sp-*-developer` agents, `sp-debugger`, `sp-tester`, `sp-reviewer`, `sp-devops`
+  for `/sp-implement`; `sp-worker` for `/sp-auto`; `sp-librarian` for `/sp-sync-docs`.
+  Dispatched automatically, or invoked directly by name via the Agent tool.
 - **No working-notes vault.** Durable decisions go straight into ADRs
   (`apps/docs/docs/architecture/`); see
   [ADR-0017](../apps/docs/docs/architecture/0017-remove-obsidian-vault.md). GitHub
@@ -89,9 +121,10 @@ run and accept the extra token cost.
 | `TOKEN_BUDGET.md` | Token-saving workflow for Claude Code: current-session commands, narrow scope, short logs. |
 | `rules/` | Project convention docs, one file per concern. Read by agents and humans. |
 | `skills/` | Workflow/tool skills only. |
-| `agents/` | `/sp-implement`'s five named `--agent` specialists: `sp-planner`, `sp-developer`, `sp-debugger`, `sp-tester`, `sp-reviewer`. |
-| `commands/` | Three commands: `sp-implement` delegates to `agents/`; `sp-take-ticket`, `sp-sync-docs` are self-contained. |
-| `templates/` | Canonical feature/entity/widget/view trees and the ui-react component tree, consumed internally by `sp-developer` through the `fsd-scaffold` skill. |
+| `agents/` | Twelve named specialists: `sp-planner`, `sp-frontend-developer`, `sp-backend-developer`, `sp-mobile-developer`, `sp-desktop-developer`, `sp-admin-developer`, `sp-debugger`, `sp-tester`, `sp-reviewer`, `sp-devops` (`/sp-implement`); `sp-worker` (`/sp-auto`); `sp-librarian` (`/sp-sync-docs`). |
+| `scripts/auto/` | `sp-worktree.sh` and `sp-pr.sh` — the worktree/branch lifecycle and `gh` wrapper the `/sp-auto` pipeline is built on. |
+| `commands/` | Three commands, each dispatching to its matching specialist(s) in `agents/` by default. |
+| `templates/` | Canonical feature/entity/widget/view trees and the ui-react component tree, consumed internally by `sp-frontend-developer` and `sp-worker` through the `fsd` skill. |
 
 ## What this layer does NOT automate
 
@@ -99,7 +132,7 @@ run and accept the extra token cost.
 - **Pushing to remote / opening PRs without confirmation** — `/sp-implement` always confirms
   first; a prior approval does not carry over to a later push/PR action.
 - **Moving a board card or commenting on an issue without confirmation** — same rule for
-  `/sp-take-ticket`.
+  `/sp-create-task` and `/sp-auto`.
 - **Database migrations** — run `pnpm --filter @spotify/api db:migration:start` manually.
 - **External skill locking** — `skills-lock.json` records installed external skills only;
   repository-owned rules and skills live directly under `.claude/`.

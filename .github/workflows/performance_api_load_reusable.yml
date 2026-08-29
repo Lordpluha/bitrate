@@ -3,9 +3,10 @@ name: "[performance] API Load Reusable"
 on:
   workflow_call:
 
+# `issues: write` is what `issues.createComment` needs to comment on a PR; `pull-requests:
+# write` was redundant for that call and is dropped.
 permissions:
   contents: read
-  pull-requests: write
   issues: write
 
 jobs:
@@ -145,6 +146,10 @@ jobs:
           STORAGE_DRIVER: local
           NODE_ENV: test
           PORT: 3001
+          # The global ThrottlerGuard is keyed by client IP; the whole load test arrives from
+          # one localhost IP, so the production ceiling of 100 req/min would make this job
+          # measure the throttler instead of the API. Auth routes keep their own 10/min limit.
+          API_RATE_LIMIT_MAX: '1000000'
 
       - name: Upload results
         if: always()
@@ -152,22 +157,32 @@ jobs:
         with:
           name: k6-results
           path: |
-            results.json
+            packages/performance-test/results.json
+            packages/performance-test/summary.json
             ${{ runner.temp }}/api-load-test.log
           if-no-files-found: ignore
 
+      # NOTE: performance.yml has no `pull_request` trigger today, so this step is currently
+      # unreachable. Kept (rather than deleted) so adding that trigger just works.
       - name: Comment PR with results
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
-            if (!fs.existsSync('results.json')) {
-              console.log('No results.json file found - load test may have failed');
+            // k6 runs with cwd packages/performance-test, so both the --summary-export file
+            // and handleSummary's output land there, not at the repo root.
+            const candidates = [
+              'packages/performance-test/results.json',
+              'packages/performance-test/summary.json',
+            ];
+            const resultsPath = candidates.find((p) => fs.existsSync(p));
+            if (!resultsPath) {
+              console.log('No k6 results file found - load test may have failed');
               return;
             }
 
-            const results = JSON.parse(fs.readFileSync('results.json', 'utf8'));
+            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
             if (!results.metrics || !results.metrics.http_reqs) {
               console.log('No metrics found in results - load test did not complete successfully');
               return;

@@ -35,6 +35,23 @@ jobs:
       - name: Run Biome check
         run: pnpm exec biome ci packages/ui-react
 
+  tokens:
+    name: UI React Design Tokens
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      # Source that paints with Tailwind's built-in palette never reaches the token layer in
+      # src/styles, so the theme switch cannot touch it. That failure lints clean, which is
+      # why it needs its own gate.
+      - name: Fail if UI source uses stock Tailwind colours
+        run: pnpm check:tokens
+
   unit:
     if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
     needs: biome

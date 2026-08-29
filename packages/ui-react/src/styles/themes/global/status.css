@@ -1,0 +1,40 @@
+/**
+ * Semantic Status Colors
+ * Success, error, warning and info roles with the text color each one carries.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Positive/confirmation status color. */
+  --color-success: var(--color-green-500);
+  /* Text on a success surface. */
+  --color-success-foreground: var(--color-black);
+  /* Error status color. Same value as `destructive` (base.css) — see the note there. */
+  --color-error: var(--color-red-500);
+  /* Text on an error surface. */
+  --color-error-foreground: var(--color-white);
+  /* Warning status color. */
+  --color-warning: var(--color-orange-500);
+  /* Text on a warning surface. */
+  --color-warning-foreground: var(--color-black);
+  /* Informational status color. */
+  --color-info: var(--color-blue-500);
+  /* Text on an info surface. */
+  --color-info-foreground: var(--color-white);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-success: var(--color-green-600);
+  --color-success-foreground: var(--color-white);
+  --color-error: var(--color-red-600);
+  --color-error-foreground: var(--color-white);
+  --color-warning: var(--color-orange-600);
+  --color-warning-foreground: var(--color-white);
+  --color-info: var(--color-blue-600);
+  --color-info-foreground: var(--color-white);
+}

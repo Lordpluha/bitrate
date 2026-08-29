@@ -2,8 +2,10 @@
 name: playwright
 description: Playwright conventions for web-player E2E specs and route screenshots, plus the Vitest-Browser-Mode Chromium provider used for co-located ui-react screenshot specs. Use whenever writing or reviewing a *.e2e-spec.ts, *.screenshot-spec.ts(x) file, or whenever asked to add an E2E flow, route screenshot, or component screenshot test.
 metadata:
+  version: "1.0.0"
   type: reference
   author: lordpluha
+license: MIT
 ---
 
 # Playwright rules — current repository state
@@ -104,9 +106,22 @@ resulting image diff before accepting it.
 - Web-player tests use the configured `baseURL`; do not hardcode `http://localhost:3001`.
 - E2E assertions verify user-visible outcomes across route boundaries.
 
+## When this skill does not cover it
+
+Do not guess an API from memory. In order:
+
+1. **Read the installed version.** `node_modules/@playwright/test` is what this repo actually runs; the
+   docs site describes the latest release, which may not be it.
+   ```bash
+   node -p "require('@playwright/test/package.json').version"
+   ```
+2. **Then the official docs:** https://playwright.dev/docs/intro — match them to the version you just read.
+3. **If both are silent, say so in your report** rather than inventing an API. Here that
+   matters because assertion and fixture APIs differ across versions; screenshot options especially.
+
 ## Related rules and skills
 
 - `vitest` — the unit/integration projects screenshot specs sit alongside.
-- `sp-tester` — the heavy `--agent` specialist that writes/runs one focused E2E/screenshot
-  spec end to end and smoke-runs it; dispatched by `/sp-implement --agent`, or invoke it
+- `sp-tester` — the heavy specialist that writes/runs one focused E2E/screenshot
+  spec end to end and smoke-runs it; dispatched by `/sp-implement` by default, or invoke it
   directly via the Agent tool.

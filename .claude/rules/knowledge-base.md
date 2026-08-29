@@ -1,9 +1,11 @@
 ---
 name: knowledge-base
-description: How this repo's codebase-navigation tool (graphify) works, and how GitHub ticket/board state is queried live rather than mirrored to files. Use before deep exploration of an unfamiliar area, whenever graphify-out/ exists, or when working with /sp-take-ticket or /sp-implement.
+description: How this repo's codebase-navigation tool (graphify) works, and how GitHub ticket/board state is queried live rather than mirrored to files. Use before deep exploration of an unfamiliar area, whenever graphify-out/ exists, or when working with /sp-create-task, /sp-implement, or /sp-auto.
 metadata:
+  version: "1.0.0"
   type: reference
   author: lordpluha
+license: MIT
 ---
 
 # Knowledge base — graphify + live GitHub state
@@ -36,15 +38,19 @@ rather than re-deriving the same context by reading files one at a time.
 the graph:
 
 ```bash
-graphify . --update
+graphify update .
 ```
 
-`--update` re-extracts only new/changed files — it does not rebuild the whole graph. This
-regenerates `graph.json`, `graph.html`, and `GRAPH_REPORT.md` — graphify's own native
-formats. **This is the default and only workflow** — `graphify query`, `graph.html`, and
-`GRAPH_REPORT.md` are how Claude and developers actually consume graphify in this repo.
-Output lives entirely in `graphify-out/`, gitignored, local-only, fully regenerable from
-source in one command.
+`update` re-extracts only new/changed files — it does not rebuild the whole graph. This
+regenerates `graph.json` and `GRAPH_REPORT.md` — graphify's own native formats. **This is
+the default and only workflow** — `graphify query` and `GRAPH_REPORT.md` are how Claude and
+developers actually consume graphify in this repo. Output lives entirely in `graphify-out/`,
+gitignored, local-only, fully regenerable from source in one command.
+
+`graph.html` is **not** produced any more: this repo's graph is past graphify's 5000-node
+visualization limit (currently ~15.4k nodes / ~30.4k edges), so `update` skips it and says
+so. Raise `GRAPHIFY_VIZ_NODE_LIMIT` if you genuinely want the HTML view; don't treat its
+absence as a broken run.
 
 ### Obsidian-flavored export — removed
 
@@ -71,7 +77,7 @@ Useful lookups, run whenever the current state is needed (not cached anywhere):
 
 ```bash
 gh issue view <number> --json number,title,body,state,labels,assignees,url,comments
-gh project item-list <project-number> --owner Lordpluha --format json
+gh project item-list 6 --owner Lordpluha --format json   # board: /users/Lordpluha/projects/6
 gh pr list --search "linked:<number>" --json number,title,state,url
 ```
 
@@ -79,15 +85,23 @@ gh pr list --search "linked:<number>" --json number,title,state,url
 per-developer `gh auth refresh -s read:project,project`, not something the agent layer can
 grant itself.
 
-Only `/sp-take-ticket` and `/sp-implement` mutate GitHub state (board card moves, issue
-comments, PR create/edit), and only after explicit user confirmation for each mutating
-action — a prior approval never carries over to a later mutation in the same conversation.
+Only `/sp-create-task`, `/sp-implement`, and `/sp-auto` mutate GitHub state (issue
+create/edit, board card moves, comments, PR create/edit), and only after explicit user
+confirmation for each mutating action — a prior approval never carries over to a later
+mutation in the same conversation. `/sp-auto` is the one exception to per-action prompting:
+starting it is the approval for the whole unattended cycle it describes. Its gate is the
+board's `Todo` column rather than the agent's judgement, so what a human puts in `Todo` is
+what the pipeline may take — bound the run with `--limit` and preview it with `--dry-run`.
 
 | Command | What it does |
 |---|---|
-| `/sp-take-ticket "<issue>"` | Find/confirm a ticket live, move its board card, check out a branch. |
-| `/sp-implement "<task>"` | Write the code, then open/update the PR (confirm before pushing). |
-| `/sp-sync-docs` | Find/fix drift between `apps/docs/` and the rule/ADR sources. Read-mostly, confirms fixes. |
+| `/sp-create-task "<idea>"` | Reads the whole board + repo context, then drafts or restructures one issue that fits the work already planned. Confirms before every mutation. |
+| `/sp-implement "<task>"` | Checks out the branch, dispatches to a specialist by default, writes the code, then open/update the PR (confirm before pushing). |
+| `/sp-auto` | Unattended: claims issues from the board's `Todo` column into worktrees, runs `sp-worker` on each, then owns the PR, board move, and issue comment. |
+| `/sp-sync-docs` | Dispatches discovery to `sp-librarian`, finds/fixes drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Read-mostly, confirms fixes. |
+
+All four dispatch to an agent by default now — see
+[ADR-0021](../../apps/docs/docs/architecture/0021-default-agent-dispatch.md).
 
 ## Durable decisions go to ADRs, not a notes vault
 

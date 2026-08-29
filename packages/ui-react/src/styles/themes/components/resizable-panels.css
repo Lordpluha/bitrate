@@ -1,0 +1,22 @@
+/**
+ * Resizable Panels
+ * The drag handle between two resizable panels.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Drag handle at rest. */
+  --color-resizable-handle: var(--color-border);
+  /* Drag handle while focused or dragging. */
+  --color-resizable-handle-focus: var(--color-primary);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-resizable-handle: var(--color-border);
+  --color-resizable-handle-focus: var(--color-primary);
+}

@@ -40,6 +40,15 @@
   "overrides": [
     {
       "includes": ["*.mjs"]
+    },
+    {
+      "includes": ["assets/**"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
     }
   ],
   "assist": {

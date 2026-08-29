@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@spotify/ui-react/themes.css";
+@import "./brand-colors.css";
 
 @source "../";
 @source "../../node_modules/@spotify/ui-react/src";
@@ -8,37 +9,17 @@
 @custom-variant touch (@media (hover: none) and (pointer: coarse));
 
 @theme {
-  /* Breakpoints */
+  /*
+   * Breakpoints — these SHADOW the set in @spotify/ui-react's layout.css, and three of the
+   * six differ (xs 480 vs 320, sm 650 vs 640, lg 1025 vs 1024). A ui-react component's `sm:`
+   * therefore breaks at a different width here than it does in Storybook. Unreconciled.
+   */
   --breakpoint-xs: 480px;
   --breakpoint-sm: 650px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1025px;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
-
-  /* App-level tokens: the only place raw colour values are declared here. */
-  --color-scrollbar-thumb: oklch(0.44 0 0);
-  --color-scrollbar-thumb-hover: oklch(0.5 0 0);
-  --color-auth-gradient-green: oklch(0.51 0.14 152);
-  --color-auth-gradient-purple: oklch(0.36 0.19 305);
-  --color-auth-gradient-ink: oklch(0.19 0 0);
-  --color-auth-gradient-red: oklch(0.42 0.19 27);
-  --color-browse-pink: #dc148c;
-  --color-browse-deep-green: #006450;
-  --color-browse-violet: #8400e7;
-  --color-browse-grey: #777777;
-  --color-browse-navy: #1e3264;
-  --color-browse-lime: #608108;
-  --color-browse-blue-grey: #477d95;
-  --color-browse-rose: #e1338b;
-  --color-browse-lilac: #8d67ab;
-  --color-browse-magenta: #af2896;
-  --color-browse-copper: #b06239;
-  --color-browse-red: #e03131;
-  --color-browse-rust: #b06216;
-  --color-browse-blue: #3273dc;
-  --shadow-primary-glow: 0 6px 20px 1px
-    color-mix(in oklab, var(--color-primary) 30%, transparent);
 }
 
 @layer base {

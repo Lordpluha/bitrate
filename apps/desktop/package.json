@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "check-types": "tsc --noEmit",
     "preview": "vite preview",
     "tauri": "tauri"
   },
@@ -21,6 +22,6 @@
     "@types/react-dom": "~19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "typescript": "~6.0.3",
-    "vite": "^8.0.16"
+    "vite": "^8.2.2"
   }
 }

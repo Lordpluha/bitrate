@@ -1,0 +1,22 @@
+/**
+ * Dynamic Label
+ * The floating field label that sits on top of a control border.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Fill behind the label so it masks the border it crosses. */
+  --color-dynamic-label-surface: var(--color-background);
+  /* Label text. */
+  --color-dynamic-label-foreground: var(--color-muted-foreground);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-dynamic-label-surface: var(--color-background);
+  --color-dynamic-label-foreground: var(--color-muted-foreground);
+}

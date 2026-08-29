@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile для Web (Next.js)
 
 # Stage 1: Base
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
@@ -16,12 +16,9 @@ COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/svgr/package.json ./packages/svgr/
 COPY packages/svgr/bin ./packages/svgr/bin
 COPY packages/vite-svgr/package.json ./packages/vite-svgr/
-COPY packages/tokens/package.json ./packages/tokens/
-COPY packages/tokens-generator/package.json ./packages/tokens-generator/
-COPY packages/tokens-generator/bin ./packages/tokens-generator/bin
 COPY packages/contracts/package.json ./packages/contracts/
 COPY turbo.json ./
-RUN pnpm install --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development
@@ -65,7 +62,7 @@ COPY scripts ./scripts
 COPY apps/web-player/package.json ./apps/web-player/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/contracts/package.json ./packages/contracts/
-RUN pnpm install --prod --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lockfile
 
 # Stage 6: Production
 FROM base AS production

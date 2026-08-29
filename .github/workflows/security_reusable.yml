@@ -8,6 +8,9 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,6 +63,19 @@ jobs:
       fail-fast: false
       matrix:
         service: [api, web-player, web-artists, admin]
+        # Each service declares only the build args its own Dockerfile consumes.
+        # api/admin need none: apps/api/Dockerfile's ARGs already carry defaults
+        # and apps/admin/Dockerfile declares no ARG at all.
+        # Values mirror web_player_reusable.yml so there is one convention.
+        include:
+          - service: web-player
+            buildArgs: |
+              API_URL=${{ vars.API_URL || 'http://localhost:3000' }}
+              NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
+              NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://spotify-clone-web-olive.vercel.app' }}
+          - service: web-artists
+            buildArgs: |
+              NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
 
     permissions:
       security-events: write
@@ -87,6 +103,7 @@ jobs:
           push: false
           tags: local-security-scan:${{ matrix.service }}
           platforms: linux/amd64
+          build-args: ${{ matrix.buildArgs }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master

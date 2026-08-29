@@ -1,6 +1,19 @@
 import { z } from 'zod'
 
 /**
+ * Optional URL that treats an empty string as absent.
+ *
+ * A Dockerfile's `ENV X=${X}` sets `X` to `""` when its `ARG` was not supplied,
+ * so a forgotten build arg arrives as present-but-empty. Without this the
+ * failure reads "Invalid URL" instead of naming the variable that is missing;
+ * the deployment requirements below still reject the empty value.
+ */
+const optionalUrl = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.url().optional(),
+)
+
+/**
  * Shape of the environment, without the deployment-time requirements.
  *
  * A build only needs the variables to be *well-formed*; which of them must be
@@ -10,10 +23,10 @@ const baseEnvSchema = z.object({
   NODE_ENV: z.enum(['local', 'development', 'production']).default('local'),
 
   // Public URLs
-  NEXT_PUBLIC_API_URL: z.string().url().optional(),
-  NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_API_URL: optionalUrl,
+  NEXT_PUBLIC_SITE_URL: optionalUrl,
 
-  API_URL: z.string().url().optional(),
+  API_URL: optionalUrl,
 
   // Analytics
   // NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),

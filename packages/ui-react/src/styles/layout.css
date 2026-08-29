@@ -58,7 +58,7 @@
   --border-4: 4px;
   --border-8: 8px;
 
-  /* Container */
+  /* Container widths */
   --container-xs: 20rem; /* 320px */
   --container-sm: 24rem; /* 384px */
   --container-md: 28rem; /* 448px */
@@ -80,7 +80,7 @@
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
 
-  /* Z index */
+  /* Z-index layers */
   --z-base: 0;
   --z-dropdown: 1000;
   --z-sticky: 1020;
@@ -102,6 +102,7 @@
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.5);
   --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
   --shadow-none: 0 0 #0000;
+  --shadow-primary-glow: 0 6px 20px 1px color-mix(in oklab, var(--color-primary) 30%, transparent);
 
   /* Opacity */
   --opacity-0: 0;
@@ -120,7 +121,7 @@
   --opacity-95: 0.95;
   --opacity-100: 1;
 
-  /* Aspect ratio */
+  /* Aspect ratios */
   --aspect-auto: auto;
   --aspect-square: 1 / 1;
   --aspect-video: 16 / 9;

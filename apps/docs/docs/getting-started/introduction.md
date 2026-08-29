@@ -37,11 +37,10 @@ cd spotify-clone
 pnpm install
 
 # Set up environment variables
-cp apps/api/.env.example apps/api/.env
-cp apps/web/.env.example apps/web/.env
+cp .env.example .env
 
-# Start PostgreSQL (via Docker)
-docker compose up -d postgres
+# Start PostgreSQL + Redis (minimal local stack)
+docker-compose -f infra/docker-compose.dev.yaml up -d
 
 # Run database migrations
 pnpm --filter @spotify/api db:migration:start

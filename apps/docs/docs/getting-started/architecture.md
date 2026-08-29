@@ -21,8 +21,7 @@ spotify-clone/
 │
 ├── packages/         # Shared packages (@spotify/ namespace)
 │   ├── ui-react/         # React 19 component library (Tailwind v4, shadcn/ui, Storybook)
-│   ├── tokens/           # Design tokens (tokens.json) + SVG icons source
-│   ├── tokens-generator/ # CLI: tokens.json → CSS files
+│   │                     #   also owns the design tokens: hand-written @theme layers
 │   ├── contracts/        # OpenAPI TypeScript types (auto-generated from Swagger)
 │   ├── vite-svgr/        # Vite plugin — SVG generation integrated into Vite build
 │   ├── svgr/             # SVG → typed React component converter
@@ -35,8 +34,7 @@ spotify-clone/
 │   ├── docker-compose.preprod.yaml  # Full dev stack
 │   ├── docker-compose.prod.yaml     # Production
 │   ├── nginx/           # Nginx configuration
-│   ├── docker-manage.sh
-│   └── docker-monitor.sh
+│   └── docker-monitor.sh # health/resource/db reporting — see `task monitor:*`
 │
 ├── scripts/           # Cross-platform helper scripts (Node.js)
 ├── Taskfile.yml       # Cross-platform task runner (go-task)
@@ -147,8 +145,6 @@ graph TD
     D --> E
     F[apps/api] --> E
     G[apps/admin] --> B
-    B --> H[packages/tokens]
-    I[packages/tokens-generator] --> H
     J[packages/vite-svgr] --> B
     K[packages/svgr] --> J
 ```
@@ -157,32 +153,29 @@ graph TD
 
 | Package | Depends On | Used By |
 |---------|-----------|---------|
-| `@spotify/ui-react` | `@spotify/tokens` | web-player, mobile, desktop, admin |
+| `@spotify/ui-react` | — | web-player, mobile, desktop, admin |
 | `@spotify/contracts` | — | api, web-player, mobile, desktop |
 | `@spotify/converter` | — | api |
-| `@spotify/tokens-generator` | — | ui-react (via gen:tokens script) |
 | `@spotify/vite-svgr` | `@spotify/svgr` | ui-react (build-time SVG generation) |
 | `@spotify/svgr` | — | vite-svgr |
 
 ## 🎨 Design Token Pipeline
 
-`packages/tokens/tokens.json` is the single source of truth for all design values:
+The design values are hand-written Tailwind v4 `@theme` layers under
+`packages/ui-react/src/styles/` — there is no generator and no `tokens.json`:
 
 ```
-tokens.json
-  └─▶ @spotify/tokens-generator (CLI)
-        ├─▶ ui-react/src/styles/palette.css
-        ├─▶ ui-react/src/styles/layout.css
-        ├─▶ ui-react/src/styles/typography.css
-        └─▶ ui-react/src/styles/themes.css  ← @theme + :root.{theme} selectors
+ui-react/src/styles/
+  ├─ palette.css       raw colour scales
+  ├─ layout.css        spacing, radii, shadows, breakpoints, z-index
+  ├─ typography.css    families, sizes, weights
+  └─ themes.css        barrel → themes/{base,global/*,components/*}.css
 ```
 
-CSS files use Tailwind v4 `@theme` blocks. First theme becomes the default (`@theme`); additional themes get `:root.{name}` selectors.
+The default theme is declared in `@theme`; every other theme overrides the same roles under
+a `:root.{name}` selector in the same part-file. See
+[the design-token contract](../brand/tokens.md).
 
-Regenerate after editing `tokens.json`:
-```bash
-pnpm --filter @spotify/ui-react gen:tokens
-```
 
 ## 🗄️ Database Schema
 

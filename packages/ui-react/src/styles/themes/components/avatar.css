@@ -1,0 +1,19 @@
+/**
+ * Avatar
+ * Avatar has one paintable slot: the fallback shown while the image is missing or loading.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Fallback fill behind the initials. */
+  --color-avatar-fallback-surface: var(--color-muted);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-avatar-fallback-surface: var(--color-muted);
+}

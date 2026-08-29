@@ -1,5 +1,5 @@
+import banner1 from '@assets/images/banner-1.jpg'
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
-import banner1 from '../../../assets/images/banner-1.jpg'
 
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 

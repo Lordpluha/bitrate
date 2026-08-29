@@ -9,6 +9,11 @@ Note: originally written when agent rules were split across `.agents/`/`.claude/
 `.claude/` alone. The boundary and drift-detection decision below is unaffected — only the
 path of "agent working rules" changed.
 
+Note: `/sp-sync-docs`'s scope was later widened beyond `apps/docs/` alone — see
+[ADR-0020](./0020-expand-docs-sync-scope.md), which adds root onboarding docs and `.claude/`
+self-consistency as checked surfaces. The `apps/docs/` boundary and drift categories below
+are unaffected.
+
 ## Context
 
 `apps/docs/` (public Docusaurus site) and `.claude/` (agent working rules)

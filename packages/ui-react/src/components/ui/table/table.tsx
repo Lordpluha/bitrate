@@ -18,7 +18,7 @@ export const TableBody = ({ className, ...props }: ComponentProps<'tbody'>) => (
 export const TableFooter = ({ className, ...props }: ComponentProps<'tfoot'>) => (
   <tfoot
     className={cn(
-      'border-t bg-slate-100/50 font-medium [&>tr]:last:border-b-0 dark:bg-slate-800/50',
+      'border-t bg-collection-row-muted/50 font-medium [&>tr]:last:border-b-0',
       className,
     )}
     {...props}
@@ -28,7 +28,7 @@ export const TableFooter = ({ className, ...props }: ComponentProps<'tfoot'>) =>
 export const TableRow = ({ className, ...props }: ComponentProps<'tr'>) => (
   <tr
     className={cn(
-      'border-b transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800',
+      'border-b transition-colors hover:bg-collection-row-hover/50 data-[state=selected]:bg-collection-row-selected',
       className,
     )}
     {...props}
@@ -38,7 +38,7 @@ export const TableRow = ({ className, ...props }: ComponentProps<'tr'>) => (
 export const TableHead = ({ className, ...props }: ComponentProps<'th'>) => (
   <th
     className={cn(
-      'h-12 px-4 text-left align-middle font-medium text-slate-500 [&:has([role=checkbox])]:pr-0 dark:text-slate-400',
+      'h-12 px-4 text-left align-middle font-medium text-collection-text-secondary [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}
@@ -50,8 +50,5 @@ export const TableCell = ({ className, ...props }: ComponentProps<'td'>) => (
 )
 
 export const TableCaption = ({ className, ...props }: ComponentProps<'caption'>) => (
-  <caption
-    className={cn('mt-4 text-sm text-slate-500 dark:text-slate-400', className)}
-    {...props}
-  />
+  <caption className={cn('mt-4 text-sm text-collection-text-secondary', className)} {...props} />
 )

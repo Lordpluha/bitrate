@@ -5,7 +5,7 @@ import { type ComponentProps, isValidElement } from 'react'
 import { cn } from '@/lib/utils'
 
 const POPUP_CLS =
-  'z-50 min-w-32 overflow-hidden rounded-md border border-slate-200 bg-white p-1 text-slate-950 shadow-md origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50'
+  'z-50 min-w-32 overflow-hidden rounded-md border border-overlay-border bg-overlay-surface p-1 text-overlay-foreground shadow-md origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95'
 
 const DropdownMenu = Menu.Root
 
@@ -40,7 +40,7 @@ const DropdownMenuSubTrigger = ({
 }: ComponentProps<typeof Menu.SubmenuTrigger> & { inset?: boolean }) => (
   <Menu.SubmenuTrigger
     className={cn(
-      'flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-slate-100 data-popup-open:bg-slate-100 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:focus:bg-slate-800 dark:data-popup-open:bg-slate-800',
+      'flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-overlay-item-hover data-popup-open:bg-overlay-item-hover [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
       inset && 'pl-8',
       className,
     )}
@@ -96,7 +96,7 @@ const DropdownMenuItem = ({
 }: ComponentProps<typeof Menu.Item> & { inset?: boolean }) => (
   <Menu.Item
     className={cn(
-      'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-slate-100 focus:text-slate-900 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:focus:bg-slate-800 dark:focus:text-slate-50',
+      'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-overlay-item-hover focus:text-overlay-item-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
       inset && 'pl-8',
       className,
     )}
@@ -113,7 +113,7 @@ const DropdownMenuCheckboxItem = ({
 }: ComponentProps<typeof Menu.CheckboxItem>) => (
   <Menu.CheckboxItem
     className={cn(
-      'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-slate-100 focus:text-slate-900 data-disabled:pointer-events-none data-disabled:opacity-50 dark:focus:bg-slate-800 dark:focus:text-slate-50',
+      'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-overlay-item-hover focus:text-overlay-item-foreground data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     checked={checked}
@@ -136,7 +136,7 @@ const DropdownMenuRadioItem = ({
 }: ComponentProps<typeof Menu.RadioItem>) => (
   <Menu.RadioItem
     className={cn(
-      'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-slate-100 focus:text-slate-900 data-disabled:pointer-events-none data-disabled:opacity-50 dark:focus:bg-slate-800 dark:focus:text-slate-50',
+      'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-overlay-item-hover focus:text-overlay-item-foreground data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     {...props}
@@ -161,10 +161,7 @@ const DropdownMenuLabel = ({
 DropdownMenuLabel.displayName = 'DropdownMenuLabel'
 
 const DropdownMenuSeparator = ({ className, ...props }: ComponentProps<typeof Menu.Separator>) => (
-  <Menu.Separator
-    className={cn('-mx-1 my-1 h-px bg-slate-100 dark:bg-slate-800', className)}
-    {...props}
-  />
+  <Menu.Separator className={cn('-mx-1 my-1 h-px bg-overlay-item-hover', className)} {...props} />
 )
 DropdownMenuSeparator.displayName = 'DropdownMenuSeparator'
 

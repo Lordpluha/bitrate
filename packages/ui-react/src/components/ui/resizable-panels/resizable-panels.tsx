@@ -96,7 +96,7 @@ export const ResizableHandle = ({ disabled, className }: ResizableHandleProps) =
     <PanelResizeHandle
       disabled={disabled}
       className={cn(
-        'w-1 bg-border hover:bg-primary transition-all duration-200 cursor-col-resize',
+        'w-1 bg-resizable-handle hover:bg-resizable-handle-focus transition-all duration-200 cursor-col-resize',
         className,
       )}
     />

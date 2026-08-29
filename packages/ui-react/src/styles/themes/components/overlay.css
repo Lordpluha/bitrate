@@ -1,0 +1,45 @@
+/**
+ * Floating Surface Family
+ * Popover, Tooltip, HoverCard, DropdownMenu and Select content all paint the same floating card, so
+ * they share one file. HoverCard keeps its own surface because it deliberately sits on a different
+ * fill.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Floating card fill — popover, tooltip, menu and select content. */
+  --color-overlay-surface: var(--color-popover);
+  /* Text on a floating card. */
+  --color-overlay-foreground: var(--color-popover-foreground);
+  /* Floating card border. */
+  --color-overlay-border: var(--color-border);
+  /* Menu/select row fill on hover or keyboard focus. */
+  --color-overlay-item-hover: var(--color-muted);
+  /* Menu/select row text when focused. */
+  --color-overlay-item-foreground: var(--color-foreground);
+  /* Select trigger fill. */
+  --color-overlay-trigger-surface: var(--color-background);
+  /* Select trigger border. */
+  --color-overlay-trigger-border: var(--color-input);
+  /* HoverCard fill — deliberately not the popover fill. */
+  --color-overlay-hover-card-surface: var(--color-background-secondary);
+  /* HoverCard text. */
+  --color-overlay-hover-card-foreground: var(--color-text);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-overlay-surface: var(--color-popover);
+  --color-overlay-foreground: var(--color-popover-foreground);
+  --color-overlay-border: var(--color-border);
+  --color-overlay-item-hover: var(--color-muted);
+  --color-overlay-item-foreground: var(--color-foreground);
+  --color-overlay-trigger-surface: var(--color-background);
+  --color-overlay-trigger-border: var(--color-input);
+  --color-overlay-hover-card-surface: var(--color-background-secondary);
+  --color-overlay-hover-card-foreground: var(--color-text);
+}

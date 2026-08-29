@@ -4,7 +4,12 @@
 # later at the lefthook pre-commit stage.
 set -euo pipefail
 
-file_path=$(node -e '
+# jq is ~5ms, node ~25ms, and this runs after every edit. Prefer jq, keep node as the
+# fallback so the hook still works on a machine without jq.
+if command -v jq >/dev/null 2>&1; then
+  file_path=$(jq -r '.tool_input.file_path // empty' 2>/dev/null || echo "")
+else
+  file_path=$(node -e '
 let data = "";
 process.stdin.on("data", c => (data += c));
 process.stdin.on("end", () => {
@@ -16,6 +21,7 @@ process.stdin.on("end", () => {
   }
 });
 ')
+fi
 
 [ -n "$file_path" ] || exit 0
 

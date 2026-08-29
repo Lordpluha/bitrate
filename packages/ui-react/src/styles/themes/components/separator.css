@@ -1,0 +1,19 @@
+/**
+ * Separator
+ * The standalone rule drawn by Separator.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Separator line colour. */
+  --color-separator-color: var(--color-border);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-separator-color: var(--color-border);
+}

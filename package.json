@@ -23,6 +23,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "test": "turbo run test",
     "check-types": "turbo run check-types",
     "format": "turbo run format",
     "prepare": "lefthook install || true",
@@ -33,29 +34,9 @@
     "changeset:release": "changeset tag",
     "knip": "knip",
     "check:artifacts": "bash scripts/check-repository-artifacts.sh",
+    "check:tokens": "node scripts/check-design-tokens.mjs",
     "clean:dist": "rimraf --glob \"apps/*/dist\" \"packages/*/dist\"",
-    "clean:cache": "rimraf --glob \"apps/*/.next/dev/cache\" \"apps/*/.next/cache\" \".turbo/cache\"",
-    "docker:dev": "docker-compose -f infra/docker-compose.preprod.yaml up -d",
-    "docker:dev:build": "docker-compose -f infra/docker-compose.preprod.yaml up -d --build",
-    "docker:down": "docker-compose -f infra/docker-compose.preprod.yaml down",
-    "docker:down:volumes": "docker-compose -f infra/docker-compose.preprod.yaml down -v",
-    "docker:logs": "docker-compose -f infra/docker-compose.preprod.yaml logs -f",
-    "docker:logs:api": "docker-compose -f infra/docker-compose.preprod.yaml logs -f api",
-    "docker:logs:web": "docker-compose -f infra/docker-compose.preprod.yaml logs -f web",
-    "docker:logs:admin": "docker-compose -f infra/docker-compose.preprod.yaml logs -f admin",
-    "docker:prod": "docker-compose -f infra/docker-compose.prod.yaml up -d",
-    "docker:prod:build": "docker-compose -f infra/docker-compose.prod.yaml up -d --build",
-    "docker:clean": "docker-compose -f infra/docker-compose.preprod.yaml down -v && docker system prune -af",
-    "docker:db:migrate": "docker-compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @spotify/api run db:migration:start",
-    "docker:db:gen": "docker-compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @spotify/api run db:gen",
-    "docker:db:seed": "docker-compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @spotify/api run seed",
-    "docker:db:studio": "docker-compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @spotify/api run db:ui",
-    "docker:manage": "chmod +x infra/docker-manage.sh && ./infra/docker-manage.sh",
-    "docker:desktop:dev": "docker-compose -f infra/docker-compose.preprod.yaml --profile desktop up -d",
-    "docker:desktop:logs": "docker-compose -f infra/docker-compose.preprod.yaml logs -f desktop",
-    "docker:mobile:dev": "docker-compose -f infra/docker-compose.preprod.yaml --profile mobile up -d",
-    "docker:mobile:logs": "docker-compose -f infra/docker-compose.preprod.yaml logs -f mobile",
-    "docker:mobile:qr": "docker-compose -f infra/docker-compose.preprod.yaml logs mobile | grep 'exp://'"
+    "clean:cache": "rimraf --glob \"apps/*/.next/dev/cache\" \"apps/*/.next/cache\" \".turbo/cache\""
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
@@ -72,7 +53,7 @@
   },
   "packageManager": "pnpm@10.30.3",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "config": {
     "commitizen": {
@@ -106,10 +87,14 @@
       "prisma",
       "sharp",
       "unrs-resolver"
-    ]
-  },
-  "dependencies": {
-    "react-resizable-panels": "^4.11.2",
-    "typedoc": "^0.28.16"
+    ],
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "openapi-typescript>typescript": "6",
+        "tsconfck>typescript": "6",
+        "i18next>typescript": "6",
+        "@expo/require-utils>typescript": "6"
+      }
+    }
   }
 }

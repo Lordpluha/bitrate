@@ -1,3 +1,12 @@
+---
+name: commit-style
+description: Conventional Commits without a ticket prefix — the type and scope vocabulary, summary rules, when a change needs a changeset and which bump it gets, branch naming, and the mechanical enforcement through commitlint and Lefthook. Use whenever composing a commit message, naming a branch, or deciding whether a change needs a changeset.
+license: MIT
+metadata:
+  author: lordpluha
+  version: "1.0.0"
+---
+
 # Commit message style
 
 Applies to every commit in this repository.
@@ -27,7 +36,6 @@ The app or package name:
 | `admin` | `apps/admin/` |
 | `ui-react` | `packages/ui-react/` |
 | `contracts` | `packages/contracts/` |
-| `tokens` | `packages/tokens/` |
 | `converter` | `packages/converter/` |
 | `docs` | `apps/docs/` |
 | `ci` | GitHub Actions workflows |
@@ -65,7 +73,8 @@ per-workspace versioning and `CHANGELOG.md` generation (`.changeset/config.json`
 `access: "restricted"`). Add a changeset whenever a change is user/behaviour-visible in an
 app or package, not for pure docs/rules/test-only/chore changes.
 
-`sp-developer` (and `/sp-implement` when working in-session) writes the file directly —
+The `sp-*-developer` agents and `sp-worker` (and `/sp-implement` when working in-session)
+write the file directly —
 `pnpm changeset`'s interactive wizard is for humans; an agent just writes the markdown:
 
 ```markdown

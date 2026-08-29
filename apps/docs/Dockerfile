@@ -1,16 +1,17 @@
 # Multi-stage Dockerfile для Docs (Docusaurus)
 
 # Stage 1: Base
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 WORKDIR /app
 
 # Stage 2: Dependencies
 FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts ./scripts
 COPY apps/docs/package.json ./apps/docs/
 COPY turbo.json ./
-RUN pnpm install --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development

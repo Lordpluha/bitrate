@@ -9,6 +9,7 @@
     "dev:add-data-source": "kottster add-data-source",
     "dev:upgrade-kottster": "kottster upgrade",
     "build": "vite build && kottster build:server",
+    "check-types": "tsc --noEmit",
     "start": "node dist/server/server.cjs"
   },
   "dependencies": {

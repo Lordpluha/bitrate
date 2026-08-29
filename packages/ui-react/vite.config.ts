@@ -8,7 +8,7 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
   plugins: [
     svgrPlugin({
-      input: '@spotify/tokens/icons',
+      input: './assets/icons',
       output: 'src/icons/svgr',
       variables: ['primaryColor', 'secondaryColor'],
     }),
@@ -31,10 +31,16 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: { '@': resolve(__dirname, 'src') },
+    alias: {
+      '@': resolve(__dirname, 'src'),
+      '@assets': resolve(__dirname, 'assets'),
+    },
   },
   build: {
     outDir: 'dist',
+    /* Empties dist/esm and dist/cjs — the dirs rollup writes below. It does not reach
+       dist/types (vite-plugin-dts), which is why `pnpm clean` runs first; see
+       scripts/clean-dist.mjs. */
     emptyOutDir: true,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),

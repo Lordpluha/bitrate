@@ -1,0 +1,42 @@
+/**
+ * Form Control Family
+ * Input, Textarea, InputGroup, PasswordInput and InputWithLabel share one border/fill/focus
+ * contract, so they share one file. Ring and placeholder stay global — they are cross-cutting, not
+ * per-control.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Text-control fill. */
+  --color-input-surface: var(--color-background);
+  /* Text typed into a control. */
+  --color-input-foreground: var(--color-foreground);
+  /* Text-control border. */
+  --color-input-border: var(--color-input);
+  /* InputGroup leading/trailing addon text. */
+  --color-input-addon-foreground: var(--color-muted-foreground);
+  /* Border of a control failing validation. */
+  --color-input-invalid-border: var(--color-destructive);
+  /* InputGroup shell fill behind the control. */
+  --color-input-group-surface: var(--color-muted);
+  /* Inverted (contrast) control fill. */
+  --color-input-contrast-surface: var(--color-contrast);
+  /* Text in an inverted control. */
+  --color-input-contrast-foreground: var(--color-text-contrast);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-input-surface: var(--color-background);
+  --color-input-foreground: var(--color-foreground);
+  --color-input-border: var(--color-input);
+  --color-input-addon-foreground: var(--color-muted-foreground);
+  --color-input-invalid-border: var(--color-destructive);
+  --color-input-group-surface: var(--color-muted);
+  --color-input-contrast-surface: var(--color-contrast);
+  --color-input-contrast-foreground: var(--color-text-contrast);
+}

@@ -65,7 +65,7 @@ export const VideoSlide = memo(function VideoSlide({
       {/* biome-ignore lint/a11y/useSemanticElements: cannot be a real <button> — it wraps nested interactive play/mute buttons, and buttons cannot contain buttons */}
       <div
         aria-label={`Play ${item.title}`}
-        className="relative h-full w-full max-h-132.5 max-w-75 overflow-hidden bg-zinc-900"
+        className="relative h-full w-full max-h-132.5 max-w-75 overflow-hidden bg-surface"
         onClick={handleCardTap}
         onKeyDown={(event) => {
           if (event.key === 'Enter' || event.key === ' ') {

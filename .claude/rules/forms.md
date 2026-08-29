@@ -1,3 +1,12 @@
+---
+name: forms
+description: React Hook Form + Zod conventions for apps/web-player — where a schema lives so it is never duplicated, zodResolver setup, register versus Controller, mapping server validation errors onto fields, field arrays, async validation, and the accessibility contract every field must meet. Use whenever writing or reviewing a form, a validation schema, or a field component in the web player.
+license: MIT
+metadata:
+  author: lordpluha
+  version: "1.0.0"
+---
+
 # Form layer — web-player
 
 React Hook Form + Zod. Used in `features/AuthModal`, `features/Login`, `features/Registration` and any future form-bearing slice. Read before writing a form component.

@@ -1,8 +1,13 @@
 version: '3'
 
 vars:
+  # Day-to-day Docker environment despite the "preprod" file name: api,
+  # web-player, web-artists, admin and the infra services, plus the
+  # profile-gated mobile/desktop/docs/nginx. `dev:*`, `db:*`, `shell:*` and
+  # `mobile:*`/`desktop:*` all target this file.
   DC_DEV: docker compose -f infra/docker-compose.preprod.yaml
   DC_PROD: docker compose -f infra/docker-compose.prod.yaml
+  # Infrastructure only — no application containers. Used by `infra:*`.
   DC_INFRA: docker compose -f infra/docker-compose.dev.yaml
 
 tasks:
@@ -16,24 +21,26 @@ tasks:
       - task --list
 
   # ─────────────────────────────────────────
-  # Minimal infra (postgres + redis only)
+  # Minimal infra — no application containers
   # Recommended for native app development
   # ─────────────────────────────────────────
   infra:up:
-    desc: Start postgres + redis only (~320 MB)
+    desc: Start infra only — postgres, postgres_test, redis, mailhog (~320 MB)
     cmds:
       - cmd: '{{.DC_INFRA}} up -d'
 
   infra:down:
-    desc: Stop postgres + redis
+    desc: Stop the infra-only stack
     cmds:
       - cmd: '{{.DC_INFRA}} down'
 
   # ─────────────────────────────────────────
   # Full development stack (all apps in Docker)
+  # Profile-gated services (mobile, desktop, docs, nginx) are NOT started here
+  # — use mobile:up / desktop:up for those.
   # ─────────────────────────────────────────
   dev:up:
-    desc: Start full development stack (all apps)
+    desc: Start development stack (api, web-player, web-artists, admin + infra)
     cmds:
       - cmd: '{{.DC_DEV}} up -d'
       - task: _print-urls
@@ -72,16 +79,30 @@ tasks:
 
   # ─────────────────────────────────────────
   # Database
+  # These run Prisma inside the `api` container, so the full stack must be up
+  # (task dev:up). With the native workflow (infra:up + app:dev) there is no
+  # `api` container — use the `:native` variants, which run Prisma on the host
+  # against the same Postgres.
   # ─────────────────────────────────────────
   db:migrate:
-    desc: Run Prisma migrations
+    desc: Run Prisma migrations inside the api container
     cmds:
       - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:migration:start'
+
+  db:migrate:native:
+    desc: Run Prisma migrations from the host (requires infra:up)
+    cmds:
+      - cmd: pnpm --filter @spotify/api run db:migration:start
 
   db:seed:
     desc: Seed database with test data
     cmds:
-      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run seed'
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:seed'
+
+  db:seed:native:
+    desc: Seed database from the host (requires infra:up)
+    cmds:
+      - cmd: pnpm --filter @spotify/api run db:seed
 
   db:studio:
     desc: Open Prisma Studio in browser
@@ -94,8 +115,11 @@ tasks:
     cmds:
       - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:migration:reset'
 
+  # Credentials come from the container's own environment rather than being
+  # hardcoded, so these keep working when POSTGRES_USER / POSTGRES_DB are
+  # overridden in .env. backups/ is gitignored — never commit a dump.
   db:backup:
-    desc: Dump database to backups/
+    desc: Dump database to backups/ (gitignored)
     vars:
       TIMESTAMP: '{{now | date "20060102_150405"}}'
     cmds:
@@ -103,13 +127,13 @@ tasks:
         platforms: [linux, darwin]
       - cmd: if not exist backups mkdir backups
         platforms: [windows]
-      - cmd: '{{.DC_DEV}} exec -T postgres pg_dump -U admin spotify > backups/backup_{{.TIMESTAMP}}.sql'
+      - cmd: '{{.DC_DEV}} exec -T postgres sh -c ''pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"'' > backups/backup_{{.TIMESTAMP}}.sql'
       - cmd: echo "Saved to backups/backup_{{.TIMESTAMP}}.sql"
 
   db:restore:
     desc: 'Restore from a backup file: task db:restore -- backup_20240101_120000.sql'
     cmds:
-      - cmd: '{{.DC_DEV}} exec -T postgres psql -U admin spotify < backups/{{.CLI_ARGS}}'
+      - cmd: '{{.DC_DEV}} exec -T postgres sh -c ''psql -U "$POSTGRES_USER" "$POSTGRES_DB"'' < backups/{{.CLI_ARGS}}'
 
   # ─────────────────────────────────────────
   # Container shells
@@ -136,7 +160,7 @@ tasks:
     desc: Open psql in postgres container
     interactive: true
     cmds:
-      - cmd: '{{.DC_DEV}} exec postgres psql -U admin spotify'
+      - cmd: '{{.DC_DEV}} exec postgres sh -c ''psql -U "$POSTGRES_USER" "$POSTGRES_DB"'''
 
   # ─────────────────────────────────────────
   # Mobile
@@ -147,10 +171,13 @@ tasks:
       - cmd: '{{.DC_DEV}} --profile mobile up -d mobile'
       - cmd: echo "Open http://localhost:19000 for the QR code"
 
+  # `down` would tear down the whole project — it ignores --profile when
+  # removing — so stop/rm the single service instead.
   mobile:down:
-    desc: Stop mobile service
+    desc: Stop and remove the mobile service only
     cmds:
-      - cmd: '{{.DC_DEV}} --profile mobile down'
+      - cmd: '{{.DC_DEV}} --profile mobile stop mobile'
+      - cmd: '{{.DC_DEV}} --profile mobile rm -f mobile'
 
   mobile:logs:
     desc: Tail mobile service logs
@@ -171,10 +198,12 @@ tasks:
       - cmd: '{{.DC_DEV}} --profile desktop up -d desktop'
       - cmd: echo "Open http://localhost:1420"
 
+  # Same caveat as mobile:down — scope the teardown to the one service.
   desktop:down:
-    desc: Stop desktop service
+    desc: Stop and remove the desktop service only
     cmds:
-      - cmd: '{{.DC_DEV}} --profile desktop down'
+      - cmd: '{{.DC_DEV}} --profile desktop stop desktop'
+      - cmd: '{{.DC_DEV}} --profile desktop rm -f desktop'
 
   desktop:logs:
     desc: Tail desktop service logs
@@ -207,7 +236,62 @@ tasks:
       - cmd: '{{.DC_PROD}} logs -f {{.CLI_ARGS}}'
 
   # ─────────────────────────────────────────
+  # Monitoring
+  # Thin wrappers over infra/docker-monitor.sh — the script owns the logic,
+  # these only make it discoverable from `task --list`. It inspects the same
+  # stack as DC_DEV, so it needs `task dev:up` first.
+  # ─────────────────────────────────────────
+  monitor:
+    desc: Interactive monitoring menu
+    interactive: true
+    cmds:
+      - cmd: bash infra/docker-monitor.sh
+
+  monitor:health:
+    desc: Container status plus an HTTP reachability probe per app
+    cmds:
+      - cmd: bash infra/docker-monitor.sh health
+
+  monitor:resources:
+    desc: Per-container CPU, memory, network and block IO
+    cmds:
+      - cmd: bash infra/docker-monitor.sh resources
+
+  monitor:disk:
+    desc: Docker disk usage breakdown
+    cmds:
+      - cmd: bash infra/docker-monitor.sh disk
+
+  monitor:db:
+    desc: Database size, largest tables, connection count
+    cmds:
+      - cmd: bash infra/docker-monitor.sh db
+
+  monitor:network:
+    desc: Docker networks and container addresses on the project network
+    cmds:
+      - cmd: bash infra/docker-monitor.sh network
+
+  monitor:errors:
+    desc: Recent error lines from the api, web-player, web-artists and admin logs
+    cmds:
+      - cmd: bash infra/docker-monitor.sh errors
+
+  monitor:report:
+    desc: Full report — health, resources, database, disk, recent errors
+    cmds:
+      - cmd: bash infra/docker-monitor.sh report
+
+  monitor:fix:
+    desc: Restart unhealthy containers, prune dangling networks and images
+    prompt: This restarts containers and prunes dangling resources. Continue?
+    cmds:
+      - cmd: bash infra/docker-monitor.sh fix
+
+  # ─────────────────────────────────────────
   # Monorepo dev (native, no Docker for apps)
+  # These mirror the root pnpm scripts one-to-one and exist so the whole
+  # workflow is reachable from one runner; the pnpm scripts stay canonical.
   # ─────────────────────────────────────────
   app:dev:
     desc: Start all apps natively (requires infra:up first)
@@ -254,24 +338,30 @@ tasks:
       - task: db:seed
       - cmd: echo "Project initialized!"
 
+  # Prisma runs on the host here: infra:up starts no `api` container, so the
+  # container-based db:migrate / db:seed would have nothing to exec into.
   init:native:
     desc: First-time native setup — start infra, migrate DB, seed, run apps
     cmds:
       - task: infra:up
-      - task: db:migrate
-      - task: db:seed
+      - task: db:migrate:native
+      - task: db:seed:native
       - task: app:dev
 
   # ─────────────────────────────────────────
   # Internal helpers (not listed)
   # ─────────────────────────────────────────
+  # Default ports only — each is overridable in .env (API_PORT, WEB_PORT,
+  # WEB_ARTISTS_PORT, ADMIN_PORT, MAILHOG_UI_PORT). Profile-gated services
+  # (docs :3003, desktop :1420, mobile :19000) are not started by dev:up.
   _print-urls:
     internal: true
     silent: true
     cmds:
       - cmd: echo "Services:"
-      - cmd: echo "  API    -> http://localhost:3000"
-      - cmd: echo "  Web    -> http://localhost:3001"
-      - cmd: echo "  Admin  -> http://localhost:3002"
-      - cmd: echo "  Mail   -> http://localhost:8025"
-      - cmd: echo "  Swagger-> http://localhost:3000/swagger"
+      - cmd: echo "  API     -> http://localhost:3000"
+      - cmd: echo "  Web     -> http://localhost:3001"
+      - cmd: echo "  Admin   -> http://localhost:3002"
+      - cmd: echo "  Artists -> http://localhost:3004"
+      - cmd: echo "  Mail    -> http://localhost:8025"
+      - cmd: echo "  Swagger -> http://localhost:3000/swagger"

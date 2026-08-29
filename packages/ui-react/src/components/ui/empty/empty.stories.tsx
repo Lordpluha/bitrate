@@ -1,3 +1,6 @@
+import banner1 from '@assets/images/banner-1.jpg'
+import banner2 from '@assets/images/banner-2.jpg'
+import banner3 from '@assets/images/banner-3.jpg'
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import { Bell, Cloud, Music2, PlusIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -12,9 +15,6 @@ import {
 } from '@/components/ui/empty'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Kbd } from '@/components/ui/kbd'
-import banner1 from '../../../assets/images/banner-1.jpg'
-import banner2 from '../../../assets/images/banner-2.jpg'
-import banner3 from '../../../assets/images/banner-3.jpg'
 
 /**
  * Use the Empty component to display a empty state.

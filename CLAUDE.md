@@ -4,7 +4,7 @@ Compact entrypoint for Claude Code in this repository. Keep it small — detaile
 under `.claude/rules/*.md`, workflow/tool skills under `.claude/skills/`, and durable
 architecture docs under `apps/docs/docs/architecture/`. There is no working-notes vault:
 durable decisions go straight into ADRs; GitHub ticket/board state is queried live via
-`gh`/MCP, never mirrored. The codebase graph (`graph.json`/`graph.html`/`graphify query`)
+`gh`/MCP, never mirrored. The codebase graph (`graph.json`/`GRAPH_REPORT.md`/`graphify query`)
 lives entirely in `graphify-out/`; an Obsidian-flavored export of the graph exists but is
 opt-in, not part of the default workflow — see `.claude/rules/knowledge-base.md`.
 
@@ -35,12 +35,19 @@ Monorepo: Turborepo + pnpm, packages use the `@spotify/` namespace.
 Main apps:
 - `apps/api` — NestJS API, Prisma/PostgreSQL, Redis, BullMQ, Socket.io.
 - `apps/web-player` — Next.js App Router frontend, Feature-Sliced Design.
+- `apps/web-artists` — Next.js artist-facing frontend, same stack as web-player.
 - `packages/ui-react` — shared React component library, Tailwind v4, Base UI, shadcn-style components.
 - `packages/contracts` — generated OpenAPI TypeScript types.
-- `packages/tokens` and `packages/tokens-generator` — design token source and CSS generator.
+- `packages/ui-react` also owns the design system: the Tailwind `@theme` layers are written
+  by hand in `src/styles/` — there is no token generator and no `tokens.json`.
 
-Other apps/packages exist (`admin`, `desktop`, `mobile`, `docs`, `converter`,
-`ncs-parser`, `performance-test`), but do not read them unless the task names them.
+Scaffolded but unstarted — do not assume mature conventions in them:
+- `apps/mobile` — React Native + Expo (roadmap v0.5.0).
+- `apps/desktop` — Tauri 2 + React (roadmap v1.2.0).
+- `apps/admin` — Kottster admin panel; reaches PostgreSQL directly via Knex, bypassing the API.
+
+Other packages exist (`docs`, `converter`, `ncs-parser`, `performance-test`, `svgr`,
+`vite-svgr`), but do not read them unless the task names them.
 
 ## Rule Index
 
@@ -56,6 +63,9 @@ current task; do not read every row's target file up front.
 | API module/controller/service/DTO/guard/error patterns | `.claude/rules/api-rules.md` |
 | web-player component/hook/store/route | `.claude/rules/web-player-rules.md` |
 | web-player — deep FSD layer/slice-anatomy/public-API rules | `.claude/rules/fsd-web-player.md` |
+| `apps/mobile` — React Native + Expo | `.claude/rules/mobile-rules.md` |
+| `apps/desktop` — Tauri 2 + React/Vite | `.claude/rules/desktop-rules.md` |
+| `apps/admin` — Kottster + Knex (read its security note first) | `.claude/rules/admin-rules.md` |
 | Any test (API Jest, web-player/ui-react Vitest, Playwright E2E/screenshots) | `.claude/rules/testing.md` (routes to the `jest`/`vitest`/`playwright` skills) |
 | ui-react/shadcn primitives | the `ui-react-rules` skill (project overrides) + the `shadcn` skill (generic reference) |
 | React components — deep hooks/state/a11y/routing conventions | `.claude/rules/react.md` |
@@ -70,47 +80,128 @@ current task; do not read every row's target file up front.
 | codebase exploration, working notes, decisions, GitHub ticket/board sync | `.claude/rules/knowledge-base.md` |
 
 `/sp-implement` reads this whole table (not each target file) as its mandatory first step —
-see `.claude/agents/sp-developer.md` Step 0.
+see each developer agent's Step 0, e.g. `.claude/agents/sp-frontend-developer.md`.
+
+Each app's rule file states which web-player conventions do **not** apply to it — FSD,
+`'use client'`, Tailwind, and `cn()` are web-player concepts, not universal law. The three
+scaffolded apps still have large unestablished areas, so their agents propose a convention in
+their report rather than inventing one silently.
+
+## Skill Index
+
+Skills are recipes for a specific technology or workflow; rules are project law. Load a skill
+when you are working in that technology, on top of the rule its row names. Every command and
+every agent may use **any** of these — the list is exhaustive, so scanning it (titles only)
+never misses one.
+
+| Technology / workflow | Skill | Paired rule |
+|---|---|---|
+| NestJS framework mechanics (DI, guards, pipes, lifecycle) | `nestjs` | `api-rules.md` |
+| Prisma queries | `prisma-client-api` | `api-rules.md` |
+| BullMQ background jobs | `bullmq` | `api-rules.md` |
+| Socket.io gateways | `socketio` | `api-rules.md` |
+| Zod schemas (both apps) | `zod` | `forms.md`, `api-rules.md` |
+| FSD slice/component scaffolding | `fsd` | `fsd-web-player.md` |
+| React Query + openapi data layer | `react-query` | `web-player-rules.md` |
+| Zustand client state | `zustand` | `react.md` |
+| Tailwind v4 + tokens | `tailwindcss` | `styling.md` |
+| Base UI primitives | `base-ui` | `styling.md` |
+| shadcn methodology / ui-react package | `shadcn`, `ui-react-rules` | `styling.md` |
+| Storybook stories | `storybook` | — |
+| React/Next.js performance | `vercel-react-best-practices` | `react.md` |
+| Expo / React Native (`apps/mobile`) | `expo` | `mobile-rules.md` |
+| Tauri 2 (`apps/desktop`) | `tauri` | `desktop-rules.md` |
+| Kottster (`apps/admin`) | `kottster` | `admin-rules.md` |
+| Jest (API tests) | `jest` | `testing.md` |
+| Vitest (web-player, ui-react) | `vitest` | `testing.md` |
+| Playwright (E2E, screenshots) | `playwright` | `testing.md` |
+| Turborepo pipeline | `turborepo` | `monorepo.md` |
+| Biome lint/format | `biome` | `code-style.md` |
+| Changesets versioning | `changesets` | `commit-style.md` |
+| Codebase graph / exploration | `graphify` | `knowledge-base.md` |
+| UI design, audit, polish | `impeccable`, `web-design-guidelines` | `styling.md` |
+| Documentation prose | `writing-guidelines` | — |
 
 ## Commands
 
-`.claude/` contains the ticket-driven command set. Commands run in the current session by
-default and use subagents only with `--agent`.
+`.claude/` contains the ticket-driven command set. Every command dispatches to an agent by
+default (see [ADR-0021](apps/docs/docs/architecture/0021-default-agent-dispatch.md)); pass
+`--session` to work in the current session instead for a task small enough that a dispatch
+round-trip is pure overhead.
 
 | Command | Purpose |
 |---|---|
-| `/sp-take-ticket "<issue>"` | Find/confirm a GitHub ticket live, move its Projects board card, check out a branch. Self-contained — no agent file. |
-| `/sp-implement "<task>" [--agent] [--plan] [--review]` | Write code with narrow scope detection, then open/update the PR. Dispatches to `sp-planner`/`sp-developer`/`sp-debugger`/`sp-tester`/`sp-reviewer` as needed. |
-| `/sp-sync-docs [path]` | Find and (with confirmation) fix drift between `apps/docs/` and the rule/ADR sources. Run periodically — see `.claude/rules/monorepo.md` § "Documentation ownership". Self-contained. |
+| `/sp-create-task "<idea>" [--update NNN] [--epic] [--dry-run]` | Read the whole Projects board + repo context, then draft a correctly-scoped issue — or restructure an existing one — that fits the work already planned. Confirms before every GitHub mutation. |
+| `/sp-implement "<task>" [--session] [--plan] [--review]` | Write code, then open/update the PR. Checks out the branch itself, then dispatches to `sp-planner`/the matching `sp-*-developer`/`sp-debugger`/`sp-tester`/`sp-reviewer` as needed. |
+| `/sp-auto [--limit N] [--issue NNN] [--dry-run] [--recover-only]` | Unattended pipeline: poll the board's `Todo` column and drive each issue end to end — worktree, `sp-worker`, commit, push, PR, board move, issue comment — with crash recovery. |
+| `/sp-sync-docs [path] [--session]` | Find and (with confirmation) fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Dispatches discovery to `sp-librarian`. Run periodically — see `.claude/rules/monorepo.md` § "Documentation ownership". |
 
-Only `/sp-implement` has `--agent`/named specialists behind it (`sp-planner`,
-`sp-developer`, `sp-debugger`, `sp-tester`, `sp-reviewer` — see `.claude/agents/`). The
-other two commands carry their own instructions directly and talk to GitHub themselves
-(prefer an MCP GitHub server if one is connected, otherwise the `gh` CLI) — there is no
-separate agent file for them. Every command and every specialist has access to any skill
-under `.claude/skills/` (not a restricted subset) — pick whichever the task calls for.
-`/sp-take-ticket` and `/sp-implement` mutate GitHub state (board cards, comments, PRs) only
-after explicit confirmation for each action — a prior approval doesn't carry over to a
-later action in the same conversation. Ticket/board state itself is never mirrored to a
+Twelve named specialists live under `.claude/agents/`. Five implementation agents split by
+app — `sp-frontend-developer` (web-player, web-artists, ui-react), `sp-backend-developer`
+(api), `sp-mobile-developer`, `sp-desktop-developer`, `sp-admin-developer` — plus
+`sp-planner`, `sp-debugger`, `sp-tester`, `sp-reviewer` (dispatched by `/sp-implement`),
+`sp-devops` (CI/CD, Docker, infra, release tooling), `sp-worker` (the orchestrator: owns a
+task 0→100%, delegates each stage to the agent that owns it, verifies the result itself
+rather than trusting reports, and reports back to the developer — interactively, or
+unattended under `/sp-auto`), and `sp-librarian` (read-only documentation-order discovery
+for `/sp-sync-docs`).
+
+Every command and every specialist has access to any skill under `.claude/skills/` (not a
+restricted subset) — pick whichever the task calls for. `/sp-create-task`, `/sp-implement`
+and `/sp-auto` mutate GitHub state (issues, board cards, comments, PRs) only after explicit
+confirmation for each action, executed at the command level (specialists never mutate GitHub
+or push/open a PR themselves; `sp-worker` commits and pushes its own branch only, and the
+`/sp-auto` dispatcher owns every outward-facing action) — a prior approval doesn't carry over
+to a later action in the same conversation. Ticket/board state itself is never mirrored to a
 file — it's queried live via `gh`/MCP whenever it's needed (see
 `.claude/rules/knowledge-base.md` and
 [ADR-0016](apps/docs/docs/architecture/0016-live-github-queries.md)).
 
+## Planning and implementing large efforts
+
+Two installed skills from the `mattpocock-skills` plugin carry work that is too big or too
+vague for a single command:
+
+- **`/grill-me`** — use when a complex or large task is not yet sharp enough to plan. It is a
+  relentless interview that walks the decision tree branch by branch until nothing material
+  is unresolved. Run it *before* `/sp-create-task` or `/sp-implement --plan`, not after.
+  `sp-worker` invokes it itself in interactive mode when the task it was handed is too
+  ambiguous to build.
+- **`/wayfinder`** — use to drive implementation of an effort spanning more than one agent
+  session. It charts the work as a map of decision tickets on the issue tracker and resolves
+  them one at a time, so a new session can tell what is actually finished without re-reading
+  the repo.
+
+Both are user-invoked only. Install with `claude plugin install mattpocock-skills` — it is a
+user-scope plugin, not committed to this repo, so each developer installs it once.
+
+## Default to agent dispatch, even outside a command
+
+This isn't limited to the slash commands: any task that touches application code — including
+ordinary conversation with no `/sp-*` command invoked — routes to the matching specialist via
+the Agent tool by default. `sp-planner` first for non-trivial multi-file/cross-cutting work;
+then the developer agent that owns the surface (`sp-frontend-developer`,
+`sp-backend-developer`, `sp-mobile-developer`, `sp-desktop-developer`,
+`sp-admin-developer`, or `sp-devops` for CI/infra); `sp-debugger` for a bug fix; `sp-tester`
+for focused test authoring/running; `sp-reviewer` before a PR or on a substantial diff. Work
+in the current session only when the user explicitly asks to skip the agent for that task.
+See [ADR-0021](apps/docs/docs/architecture/0021-default-agent-dispatch.md).
+
 ## Model tier by task type
 
-Planning is light and fast-turnaround; implementation is routine; debugging, testing, and
-review are verification-heavy — a missed edge case there is expensive, so they get the
-strongest reasoning tier:
+Planning is light and fast-turnaround; implementation is routine; debugging, testing, review,
+and infrastructure are verification-heavy — a missed edge case there is expensive, so they get
+the strongest reasoning tier:
 
-| Task type | Tier |
-|---|---|
-| Planning | Fable |
-| Development / implementation | Sonnet |
-| Debugging, testing, review | Opus |
+| Task type | Tier | Effort |
+|---|---|---|
+| Planning | Fable | low |
+| Development / implementation, documentation discovery | Sonnet | medium |
+| Debugging, testing, review, DevOps, orchestration (`sp-worker`) | Opus | high |
 
-`sp-planner`/`sp-developer`/`sp-debugger`/`sp-tester`/`sp-reviewer` each pin their model in
-their own agent frontmatter (see `.claude/README.md`) — dispatching one via `/sp-implement
---agent` always runs it on its assigned tier, not a per-invocation choice.
+All twelve specialists pin their model and effort in their own agent frontmatter (see
+`.claude/README.md`) — dispatching one always runs it on its assigned tier, not a
+per-invocation choice.
 
 ## Token-Budget Defaults
 
@@ -119,8 +210,9 @@ their own agent frontmatter (see `.claude/README.md`) — dispatching one via `/
 - Prefer `rg` under narrow paths before opening files.
 - Do not read generated output, caches, build artifacts, `.env*`, or `.claude/worktrees`.
 - Do not read `.claude/templates/` unless creating a new slice/component through the
-  `fsd-scaffold` skill.
-- Use subagents only when `--agent` is passed or explicitly requested.
+  `fsd` skill.
+- Dispatch to a subagent by default (see "Default to agent dispatch, even outside a
+  command" above); work in-session only when `--session` is passed or explicitly requested.
 - Keep logs short: pipe long command output through `head -200` or a focused `rg`.
 - Before broad exploration of an unfamiliar area, try `graphify query "<question>"` first —
   it's faster than grepping across many files.
@@ -131,6 +223,26 @@ their own agent frontmatter (see `.claude/README.md`) — dispatching one via `/
 For detailed guidance, prefer the smallest relevant file under `.claude/rules/*.md`; see
 `.claude/README.md` for the full command layer and `.claude/TOKEN_BUDGET.md` for more
 token-saving rules.
+
+## Sandbox: host tools via `flatpak-spawn`
+
+This project is often opened from VS Code installed as a **Flatpak**, so the shell tools run
+in the `com.visualstudio.code` sandbox whose `/usr` is the Flatpak runtime's, not the host's.
+Consequences worth knowing before concluding a tool is missing:
+
+- `gh`, `docker`, and `graphify` are installed on the host but **not usable directly here**.
+  `command -v gh` failing does not mean the user lacks it, and `graphify` is worse than
+  missing: its launcher resolves but dies with `ModuleNotFoundError` because its uv venv is
+  outside the sandbox. Reach all three with `flatpak-spawn --host <tool> …`.
+  `.claude/scripts/auto/sp-pr.sh` and `.claude/hooks/graphify-guard.sh` do this
+  automatically and report which transport they used.
+- So the mandated `graphify query "<question>"` above is
+  `flatpak-spawn --host graphify query "<question>"` in this environment.
+- The repo is shared with the host, but **sandbox `/tmp` is not**. Any file handed to a host
+  command must live inside the repo — use the gitignored `.sp-scratch/`, never the session
+  scratchpad, for PR bodies and issue comments.
+- `pnpm`, `node`, `git`, and `rg` all resolve normally; only host-installed system tools are
+  affected.
 
 ## Shell commands
 
@@ -155,12 +267,21 @@ pnpm --filter @spotify/ui-react test:unit
 pnpm --filter @spotify/ui-react test:screenshot
 ```
 
-Infrastructure for local development:
+Infrastructure for local development. `Taskfile.yml` at the repo root is the **only**
+interface for Docker, database, and monitoring workflows — there are no `pnpm docker:*`
+scripts, and `task` with no arguments lists everything:
 
 ```bash
-docker-compose -f infra/docker-compose.dev.yaml up -d
-pnpm dev
+task infra:up      # postgres, postgres_test, redis, mailhog — nothing else
+pnpm dev           # apps natively
+
+task dev:up        # or: the whole stack in Docker
+task db:migrate    # Prisma inside the api container (dev:up first)
+task monitor:health
 ```
+
+Under the VS Code Flatpak sandbox `docker` is host-only, so these run from a host terminal
+or via `flatpak-spawn --host` (see "Sandbox" above).
 
 ## Non-Negotiables
 
@@ -183,6 +304,10 @@ pnpm dev
   before finishing. Enforced automatically via `.claude/hooks/format-on-edit.sh`.
 
 ## Documentation Hierarchy
+
+`.claude/CONTEXT.md` defines the shared vocabulary these layers use — issue vs task, rule vs
+skill, module vs slice, worker vs agent. Read it once, then use those words exactly; a
+synonym makes a grep miss and sends an agent to the wrong document.
 
 1. `CLAUDE.md` — compact routing and shared non-negotiables.
 2. `.claude/rules/*.md` — canonical project rules.

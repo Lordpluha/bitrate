@@ -2,16 +2,17 @@
 # Используется в основном для CI/CD и кросс-компиляции
 
 # Stage 1: Base
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 WORKDIR /app
 
 # Stage 2: Dependencies (Node.js)
 FROM base AS node-dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts ./scripts
 COPY apps/desktop/package.json ./apps/desktop/
 COPY turbo.json ./
-RUN pnpm install --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 # Stage 3: Rust Build Environment (для production сборки)
 FROM rustlang/rust:nightly-alpine AS rust-builder
@@ -100,8 +101,9 @@ RUN cargo install tauri-cli
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts ./scripts
 COPY apps/desktop/package.json ./apps/desktop/
-RUN pnpm install --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 COPY . .
 

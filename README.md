@@ -30,10 +30,15 @@ Full-stack Spotify clone — Turborepo + pnpm monorepo with web, mobile, desktop
 
 | Tool | Version |
 |---|---|
-| Node.js | >= 20.x |
+| Node.js | >= 24.x |
 | pnpm | 10.30.3 |
 | Docker | >= 24.x |
 | Git | >= 2.x |
+| [task](https://taskfile.dev/installation/) | >= 3.x |
+
+`task` is the single entry point for every Docker and database workflow — run `task` with no
+arguments to list them. Everything below can also be run by hand; `task` just keeps the
+commands in one place.
 
 ```bash
 # Install dependencies
@@ -42,16 +47,21 @@ pnpm install
 # Copy environment variables
 cp .env.example .env
 
-# Start postgres + redis (~320 MB)
-docker compose -f infra/docker-compose.dev.yaml up -d
+# Start infra, migrate, seed, then run all apps natively
+task init:native
+```
 
-# Run migrations + seed
+<details>
+<summary>The same thing without <code>task</code></summary>
+
+```bash
+docker compose -f infra/docker-compose.dev.yaml up -d
 pnpm --filter @spotify/api run db:migration:start
 pnpm --filter @spotify/api run db:seed
-
-# Start all apps
 pnpm dev
 ```
+
+</details>
 
 > For full Docker stack, mobile, desktop, or Windows setup see the **[Setup Guide](apps/docs/docs/getting-started/setup.md)**.
 
@@ -146,19 +156,33 @@ for the working rules.
 
 ## 🤖 Agent workflow
 
-The repository includes a ticket-driven command set: `/sp-take-ticket`, `/sp-implement`,
-`/sp-sync-docs`. They all read the same conventions from `CLAUDE.md` and `.claude/`, and
-every command has access to any project or global skill.
+The repository includes a ticket-driven command set: `/sp-create-task`, `/sp-implement`,
+`/sp-auto`, `/sp-sync-docs`. They all read the same conventions from `CLAUDE.md` and
+`.claude/`, and every command has access to any project or global skill.
 
 ```text
-/sp-take-ticket → /sp-implement → PR (confirmed)
+/sp-create-task → /sp-implement → PR (confirmed)          # human in the loop
+/sp-auto                                                   # unattended, board Todo column
 ```
 
-`/sp-implement` reads `CLAUDE.md`'s exhaustive Rule Index first, then either does the work
-in-session or dispatches to a named specialist agent (`sp-planner`, `sp-developer`,
-`sp-debugger`, `sp-tester`, `sp-reviewer`) with `--agent`. Ticket/board state is queried
-live from GitHub (via `gh`/MCP), never mirrored to a file; `/sp-sync-docs` catches drift
-between `apps/docs/` and the rules/ADRs.
+`/sp-implement` reads `CLAUDE.md`'s exhaustive Rule Index first, then dispatches to a named
+specialist agent by default — one of five app-scoped developers
+(`sp-frontend-developer`, `sp-backend-developer`, `sp-mobile-developer`,
+`sp-desktop-developer`, `sp-admin-developer`), plus `sp-planner`, `sp-debugger`,
+`sp-tester`, `sp-reviewer`, and `sp-devops` for CI/infra. Pass `--session` to do the work
+in-session instead. `/sp-sync-docs` dispatches to `sp-librarian` the same way, and
+`/sp-auto` runs `sp-worker` in an isolated git worktree per issue. This
+default-to-agent behavior also applies to ordinary tasks outside any command — see
+`CLAUDE.md`.
+
+Ticket/board state is queried live from GitHub (via `gh`/MCP), never mirrored to a file;
+`/sp-sync-docs` catches drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`,
+and the root onboarding docs.
+
+For work that is too large or too vague for a single command, install the
+`mattpocock-skills` plugin (`claude plugin install mattpocock-skills`) and use `/grill-me`
+to sharpen the idea before planning, and `/wayfinder` to drive a multi-session effort as a
+map of decision tickets.
 
 ---
 

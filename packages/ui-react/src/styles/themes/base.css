@@ -1,0 +1,78 @@
+/**
+ * Base Roles (shadcn)
+ * The role names shadcn itself ships with, which every other part-file builds on. These names
+ * mirror upstream exactly and must not be renamed — diverging from them means hand-editing every
+ * component pulled from the shadcn CLI.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Page background. */
+  --color-background: #0a0a0a;
+  /* Default body text color. Same value as `text` (global/text.css) in every theme; kept
+     separate so body copy can be retinted without moving the page's own foreground. */
+  --color-foreground: var(--color-white);
+  /* Card surface background. Same value as `background-elevated` (global/surfaces.css) in every
+     theme; kept separate so the Card component and a generic elevated surface can diverge. */
+  --color-card: #121212;
+  /* Text on a card surface. */
+  --color-card-foreground: var(--color-white);
+  /* Popover / menu-content surface — Base UI Popover, Select content, dropdown panels. */
+  --color-popover: #1a1a1a;
+  /* Text on a popover surface. */
+  --color-popover-foreground: var(--color-white);
+  /* Primary action surface — the Spotify green used by CTA buttons and active controls. */
+  --color-primary: var(--color-green-500);
+  /* Text/icon color on a primary surface. */
+  --color-primary-foreground: var(--color-black);
+  /* Secondary action surface. */
+  --color-secondary: var(--color-neutral-800);
+  /* Text on a secondary surface. */
+  --color-secondary-foreground: var(--color-white);
+  /* Muted background — skeletons, disabled and inactive surfaces. */
+  --color-muted: var(--color-neutral-800);
+  /* Text on a muted surface. */
+  --color-muted-foreground: var(--color-neutral-400);
+  /* Accent background — the hover/focus state of a menu item. */
+  --color-accent: var(--color-green-400);
+  /* Text on an accent surface. */
+  --color-accent-foreground: var(--color-black);
+  /* Destructive (delete/remove) action surface. Same value as `error` (global/status.css) in
+     every theme; kept separate so a destructive control and an error message can diverge. */
+  --color-destructive: var(--color-red-500);
+  /* Text on a destructive surface. */
+  --color-destructive-foreground: var(--color-white);
+  /* Default border color for shadcn primitives. */
+  --color-border: var(--color-neutral-800);
+  /* Input surface/border color. */
+  --color-input: var(--color-neutral-800);
+  /* Focus ring color. */
+  --color-ring: var(--color-green-500);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-background: #eff1f4;
+  --color-foreground: #2a3038;
+  --color-card: #ffffff;
+  --color-card-foreground: #2a3038;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #2a3038;
+  --color-primary: var(--color-green-600);
+  --color-primary-foreground: var(--color-white);
+  --color-secondary: #e7eaee;
+  --color-secondary-foreground: #2a3038;
+  --color-muted: #f5f7f9;
+  --color-muted-foreground: #5f6a78;
+  --color-accent: var(--color-green-600);
+  --color-accent-foreground: var(--color-white);
+  --color-destructive: var(--color-red-600);
+  --color-destructive-foreground: var(--color-white);
+  --color-border: #dde1e7;
+  --color-input: #d7dce3;
+  --color-ring: var(--color-green-600);
+}
