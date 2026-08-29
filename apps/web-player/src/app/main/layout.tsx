@@ -106,7 +106,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
                 onClick={handleExpandRightSidebar}
                 type="button"
               >
-                <ChevronLeft className="text-gray-300 w-5 h-5 transition-transform duration-300 hover:scale-110" />
+                <ChevronLeft className="text-muted-foreground w-5 h-5 transition-transform duration-300 hover:scale-110" />
               </button>
             )}
           </aside>

@@ -3,127 +3,34 @@
 @import "./layout.css";
 @import "./animations.css";
 
-@custom-variant light (&:is(.light *));
-
 /**
  * Semantic Theme Tokens
  * These tokens reference the palette and provide semantic meaning.
+ *
+ * Every role lives in exactly one part-file below, and each part carries BOTH the default-theme
+ * declarations and the variant-theme overrides for the same roles — so a reader changing one
+ * context sees its whole story in a single file.
+ *
+ * No role name is declared in more than one part-file, so this import order has no effect on any
+ * computed value — it exists purely for reading order.
  */
+@import "./themes/base.css";
+@import "./themes/global/surfaces.css";
+@import "./themes/global/text.css";
+@import "./themes/global/status.css";
+@import "./themes/global/decorative.css";
+@import "./themes/components/button.css";
+@import "./themes/components/input.css";
+@import "./themes/components/overlay.css";
+@import "./themes/components/collection.css";
+@import "./themes/components/avatar.css";
+@import "./themes/components/badge.css";
+@import "./themes/components/dynamic-label.css";
+@import "./themes/components/empty.css";
+@import "./themes/components/form.css";
+@import "./themes/components/kbd.css";
+@import "./themes/components/resizable-panels.css";
+@import "./themes/components/separator.css";
+@import "./themes/components/sonner.css";
 
-/**
- * Dark Theme (Default)
- */
-@theme {
-  --color-background: #0a0a0a;
-  --color-background-elevated: #121212;
-  --color-background-tinted: #1a1a1a;
-  --color-background-secondary: #121212;
-  --color-bg-secondary: #121212;
-  --color-background-highlight: var(--color-neutral-900);
-  --color-background-pressed: var(--color-black);
-  --color-foreground: var(--color-white);
-  --color-foreground-secondary: var(--color-neutral-200);
-  --color-text: var(--color-white);
-  --color-text-secondary: var(--color-neutral-400);
-  --color-text-subdued: var(--color-neutral-500);
-  --color-text-muted: var(--color-neutral-600);
-  --color-text-contrast: #000000;
-  --color-contrast: #ffffff;
-  --color-primary: var(--color-green-500);
-  --color-primary-hover: var(--color-green-400);
-  --color-primary-active: var(--color-green-600);
-  --color-primary-foreground: var(--color-black);
-  --color-secondary: var(--color-neutral-800);
-  --color-secondary-hover: var(--color-neutral-700);
-  --color-secondary-foreground: var(--color-white);
-  --color-accent: var(--color-green-400);
-  --color-accent-foreground: var(--color-black);
-  --color-success: var(--color-green-500);
-  --color-success-foreground: var(--color-black);
-  --color-error: var(--color-red-500);
-  --color-error-foreground: var(--color-white);
-  --color-warning: var(--color-orange-500);
-  --color-warning-foreground: var(--color-black);
-  --color-info: var(--color-blue-500);
-  --color-info-foreground: var(--color-white);
-  --color-destructive: var(--color-red-500);
-  --color-destructive-foreground: var(--color-white);
-  --color-muted: var(--color-neutral-800);
-  --color-muted-foreground: var(--color-neutral-400);
-  --color-border: var(--color-neutral-800);
-  --color-border-subtle: var(--color-neutral-900);
-  --color-input: var(--color-neutral-800);
-  --color-ring: var(--color-green-500);
-  --color-card: #121212;
-  --color-card-foreground: var(--color-white);
-  --color-surface: rgba(255, 255, 255, 0.1);
-  --color-surface-hover: rgba(255, 255, 255, 0.15);
-  --color-surface-active: rgba(255, 255, 255, 0.2);
-  --color-popover: #1a1a1a;
-  --color-popover-foreground: var(--color-white);
-  --color-chart-1: var(--color-green-500);
-  --color-chart-2: var(--color-blue-500);
-  --color-chart-3: var(--color-purple-500);
-  --color-chart-4: var(--color-orange-500);
-  --color-chart-5: var(--color-red-500);
-  --color-hero-wash: var(--color-purple-800);
-}
-
-/**
- * Light Theme
- */
-:root.light {
-  --color-background: #eff1f4;
-  --color-background-elevated: #ffffff;
-  --color-background-tinted: #f5f7f9;
-  --color-background-secondary: #ffffff;
-  --color-bg-secondary: #ffffff;
-  --color-background-highlight: #e7eaee;
-  --color-background-pressed: #dfe3e8;
-  --color-foreground: #2a3038;
-  --color-foreground-secondary: #414b58;
-  --color-text: #2a3038;
-  --color-text-secondary: #4a5462;
-  --color-text-subdued: #5f6a78;
-  --color-text-muted: #6b7480;
-  --color-text-contrast: #ffffff;
-  --color-contrast: #2a3038;
-  --color-primary: var(--color-green-600);
-  --color-primary-hover: var(--color-green-700);
-  --color-primary-active: var(--color-green-800);
-  --color-primary-foreground: var(--color-white);
-  --color-secondary: #e7eaee;
-  --color-secondary-hover: #dde1e7;
-  --color-secondary-foreground: #2a3038;
-  --color-accent: var(--color-green-600);
-  --color-accent-foreground: var(--color-white);
-  --color-success: var(--color-green-600);
-  --color-success-foreground: var(--color-white);
-  --color-error: var(--color-red-600);
-  --color-error-foreground: var(--color-white);
-  --color-warning: var(--color-orange-600);
-  --color-warning-foreground: var(--color-white);
-  --color-info: var(--color-blue-600);
-  --color-info-foreground: var(--color-white);
-  --color-destructive: var(--color-red-600);
-  --color-destructive-foreground: var(--color-white);
-  --color-muted: #f5f7f9;
-  --color-muted-foreground: #5f6a78;
-  --color-border: #dde1e7;
-  --color-border-subtle: #e8ebef;
-  --color-input: #d7dce3;
-  --color-ring: var(--color-green-600);
-  --color-card: #ffffff;
-  --color-card-foreground: #2a3038;
-  --color-surface: rgba(18, 22, 28, 0.05);
-  --color-surface-hover: rgba(18, 22, 28, 0.08);
-  --color-surface-active: rgba(18, 22, 28, 0.12);
-  --color-popover: #ffffff;
-  --color-popover-foreground: #2a3038;
-  --color-chart-1: var(--color-green-600);
-  --color-chart-2: var(--color-blue-600);
-  --color-chart-3: var(--color-purple-600);
-  --color-chart-4: var(--color-orange-600);
-  --color-chart-5: var(--color-red-600);
-  --color-hero-wash: #ddd6f3;
-}
+@custom-variant light (&:is(.light *));

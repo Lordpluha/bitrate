@@ -29,13 +29,13 @@ function ItemSeparator({ className, ...props }: ComponentProps<typeof Separator>
 }
 
 const itemVariants = cva(
-  'group/item [a]:hover:bg-slate-100/50 focus-visible:border-slate-950 focus-visible:ring-slate-950/50 [a]:transition-colors flex flex-wrap items-center rounded-md border border-slate-200 border-transparent text-sm outline-none transition-colors duration-100 focus-visible:ring-[3px] dark:[a]:hover:bg-slate-800/50 dark:focus-visible:border-slate-300 dark:focus-visible:ring-slate-300/50 dark:border-slate-800',
+  'group/item [a]:hover:bg-collection-row-hover/50 focus-visible:border-ring focus-visible:ring-ring/50 [a]:transition-colors flex flex-wrap items-center rounded-md border border-transparent text-sm outline-none transition-colors duration-100 focus-visible:ring-[3px]',
   {
     variants: {
       variant: {
         default: 'bg-transparent',
-        outline: 'border-slate-200 dark:border-slate-800',
-        muted: 'bg-slate-100/50 dark:bg-slate-800/50',
+        outline: 'border-collection-border',
+        muted: 'bg-collection-row-muted/50',
       },
       size: {
         default: 'gap-4 p-4',
@@ -74,7 +74,7 @@ const itemMediaVariants = cva(
     variants: {
       variant: {
         default: 'bg-transparent',
-        icon: "bg-slate-100 size-8 rounded-sm border border-slate-200 [&_svg:not([class*='size-'])]:size-4 dark:bg-slate-800 dark:border-slate-800",
+        icon: "bg-collection-media-surface size-8 rounded-sm border border-collection-border [&_svg:not([class*='size-'])]:size-4",
         image: 'size-10 overflow-hidden rounded-sm [&_img]:size-full [&_img]:object-cover',
       },
     },
@@ -124,8 +124,8 @@ function ItemDescription({ className, ...props }: ComponentProps<'p'>) {
     <p
       data-slot="item-description"
       className={cn(
-        'text-slate-500 line-clamp-2 text-balance text-sm font-normal leading-normal dark:text-slate-400',
-        '[&>a:hover]:text-slate-900 [&>a]:underline [&>a]:underline-offset-4 dark:[&>a:hover]:text-slate-50',
+        'text-collection-text-secondary line-clamp-2 text-balance text-sm font-normal leading-normal',
+        '[&>a:hover]:text-foreground [&>a]:underline [&>a]:underline-offset-4',
         className,
       )}
       {...props}

@@ -18,7 +18,7 @@ export const PlanCard = ({
   return (
     <div
       className={cn(
-        'bg-bgSecondary h-full shadow-primary-glow p-8 rounded-xl flex flex-col items-start justify-start text-text',
+        'bg-background-secondary h-full shadow-primary-glow p-8 rounded-xl flex flex-col items-start justify-start text-text',
         !!highlight && 'border-green-600 border-solid border-4',
       )}
     >

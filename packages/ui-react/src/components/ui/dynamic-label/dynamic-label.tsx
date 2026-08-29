@@ -10,9 +10,9 @@ const labelVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-white text-slate-600',
+        default: 'bg-dynamic-label-surface text-dynamic-label-foreground',
         contrast: 'bg-contrast text-grey-400',
-        search: 'bg-white text-gray-600',
+        search: 'bg-dynamic-label-surface text-dynamic-label-foreground',
       },
       state: {
         idle: 'top-1/2 -translate-y-1/2 text-base',

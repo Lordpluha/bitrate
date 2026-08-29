@@ -30,7 +30,7 @@ export const Footer = (props: FooterProps) => {
 
   return (
     <footer {...props}>
-      <div className="bg-bgSecondary py-20">
+      <div className="bg-background-secondary py-20">
         <div className="container">
           <div className="grid grid-cols-[1fr_3fr_1fr] items-start max-md:grid-cols-1 max-md:gap-8 max-md:py-10">
             <div className="flex items-center justify-start">

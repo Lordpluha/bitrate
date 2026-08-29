@@ -1,3 +1,12 @@
+---
+name: styling
+description: "Tailwind v4 + design tokens for the web apps — the hand-written @theme layers that are the token source, where each semantic role lives, the cn() plus CVA recipe, and the forbidden patterns that lint clean but silently break theming (Tailwind's built-in colour scales and the dark: variant). Use whenever writing or reviewing markup that sets className, adding a design token, or when a utility class appears to do nothing."
+license: MIT
+metadata:
+  author: lordpluha
+  version: "1.0.0"
+---
+
 # Styling conventions — web-player
 
 Tailwind v4 + `@spotify/ui-react` design tokens + CVA + `cn()`. Read before writing any styled markup, any new component, or anything that sets `className`. For the token pipeline, see `.claude/rules/monorepo.md` § "Asset generation pipelines".
@@ -7,7 +16,7 @@ Tailwind v4 + `@spotify/ui-react` design tokens + CVA + `cn()`. Read before writ
 | Concern | Choice |
 |---|---|
 | Utility engine | Tailwind v4 via `@tailwindcss/postcss` — no `tailwind.config.js` |
-| Token layer | CSS variables from `@spotify/ui-react/styles/*.css` (generated from `tokens.json`) |
+| Token layer | Hand-written `@theme` layers in `@spotify/ui-react`, imported through `themes.css` |
 | Class merging | `cn(...inputs)` from `@spotify/ui-react` — wraps `clsx` + `tailwind-merge` |
 | Variant component pattern | CVA (`class-variance-authority`) via `cva(...)` factory |
 | Animations | `motion` (Motion for React) |
@@ -15,16 +24,59 @@ Tailwind v4 + `@spotify/ui-react` design tokens + CVA + `cn()`. Read before writ
 
 ## Design tokens
 
-All design values come from `packages/tokens/tokens.json` → `@spotify/ui-react` CSS files. Import the CSS in the app root:
+All design values are declared as Tailwind v4 `@theme` layers in `packages/ui-react/src/styles/`. That CSS is the source — there is no generator, no `tokens.json`, and nothing to re-run. Import it in the app root:
 
-```ts
-import '@spotify/ui-react/styles/palette.css'
-import '@spotify/ui-react/styles/layout.css'
-import '@spotify/ui-react/styles/typography.css'
-import '@spotify/ui-react/styles/themes.css'
+```css
+/* apps/web-player/src/app/global.css */
+@import "@spotify/ui-react/themes.css";
 ```
 
-The generated CSS registers Tailwind v4 `@theme` blocks. Every `--color-*`, `--radius-*`, `--shadow-*` token in `@theme` produces a Tailwind utility: `bg-primary`, `text-foreground`, `border-input`, etc.
+**One import, not many.** `themes.css` is a barrel: it `@import`s `palette.css`,
+`typography.css`, `layout.css`, `animations.css`, and every semantic-role part-file under
+`themes/`, and declares no colour of its own. It is also the *only* stylesheet the package
+exports: `@spotify/ui-react/styles/palette.css` is not in the package's `exports` map and
+fails with `MODULE_NOT_FOUND`.
+
+### Where a role lives
+
+Semantic roles are split across part-files under `packages/ui-react/src/styles/themes/`,
+one group per file, each carrying **both** the default dark declarations and its
+`:root.light` overrides:
+
+| Part-file | Owns |
+|---|---|
+| `themes/base.css` | The shadcn role set (`background`, `card`, `primary`, `border`, …) — names mirror upstream and are never renamed |
+| `themes/global/surfaces.css` | Fills and washes not tied to one component |
+| `themes/global/text.css` | Text, icon, and divider neutrals |
+| `themes/global/status.css` | `success` / `error` / `warning` / `info` and their foregrounds |
+| `themes/global/decorative.css` | Chart series and decorative washes |
+| `themes/components/<name>.css` | One file per component — `avatar.css`, `badge.css`, `table.css`… A file covers several components only when they are one family: `button.css` (Button + ButtonGroup), `input.css` (the text controls), `overlay.css` (the floating surfaces), `collection.css` (Item + Table) |
+
+These files are **hand-written source**, not build output. Editing one is the whole
+workflow — save the file and Tailwind picks the change up.
+
+| Edit | Where |
+|---|---|
+| A raw colour value or a new scale | `src/styles/palette.css` |
+| A semantic role's value in each theme | the part-file that owns it under `src/styles/themes/` |
+| A new role | add it to **both** the `@theme` block and the `:root.light` block of one part-file |
+| A new part-file | create it, then add one `@import` line to `src/styles/themes.css` |
+
+Three invariants have no tool enforcing them any more, so they are on you:
+
+- **A role lives in exactly one part-file.** Declaring it twice means the later `@import`
+  silently wins.
+- **A role appears in both blocks.** A role present in `@theme` but missing from
+  `:root.light` keeps its dark value in the light theme — it does not fall back to anything
+  sensible.
+- **A new part-file is imported.** `themes.css` is a barrel of `@import`s and declares no
+  colour of its own; an unimported part-file is dead.
+
+A component-scoped role should alias the semantic role it is built on
+(`--color-button-primary: var(--color-primary)`) rather than repeat a literal, so retuning
+the semantic role carries through.
+
+These `@theme` blocks are what Tailwind reads. Every `--color-*`, `--radius-*`, `--shadow-*` token in `@theme` produces a Tailwind utility: `bg-primary`, `text-foreground`, `border-input`, etc.
 
 ## The `cn()` + CVA recipe
 
@@ -71,6 +123,33 @@ Five non-negotiable rules for every variant component:
 - **Arbitrary colour values** — `bg-[#1a1a1a]` and `text-[color:#fff]` defeat the token system. Promote to a token instead.
 - **`tailwind.config.js`** — Tailwind v4 reads config from `@theme`. A JS config file is a red flag.
 - **`tailwindcss-animate`** — that package is Tailwind v3 only. Use the `motion` library or CSS transitions.
+- **Tailwind's built-in colour scales** — `bg-slate-100`, `text-gray-500`, `border-zinc-700`
+  and the rest of `slate | gray | zinc | stone | amber | yellow | lime | emerald | teal |
+  cyan | sky | indigo | violet | fuchsia | pink | rose`. See below — this one is invisible
+  rather than merely untidy.
+- **The `dark:` variant** — this repo never registers `@custom-variant dark`, so `dark:`
+  compiles to `@media (prefers-color-scheme: dark)` and follows the **operating system**,
+  not the `light`/`dark` class the app puts on `<html>`. A role already carries both
+  themes, so a token-based class needs no variant at all.
+
+### Why stock Tailwind colours are worse than a hex literal
+
+A hex literal is at least visible to review and to the `Quality-1` grep. `bg-slate-100` is
+not: it lints clean, type-checks clean, and looks like a design token. But the repo never
+clears Tailwind's defaults (no `--color-*: initial`), so it resolves to Tailwind's own grey —
+a value no `@theme` layer in `src/styles/` declares and `:root.light` never overrides. The component silently stops responding to the theme switch.
+
+That is not hypothetical: 22 of 29 `ui-react` components were painted this way, every
+mechanical gate stayed green, and the theme toggle did nothing to them while the OS setting
+did. `pnpm check:tokens` (`scripts/check-design-tokens.mjs`, wired into the
+`UI React Design Tokens` CI job) now fails the build on any occurrence in
+`apps/web-player/src`, `apps/web-artists/src`, or `packages/ui-react/src`. Specs and stories
+are exempt — they assert class merging, not appearance.
+
+Reach for a semantic role first (`bg-muted`, `text-muted-foreground`, `border-border`,
+`ring-ring`, `bg-primary`, `bg-destructive`, `bg-popover`, `chart-1`…`chart-5`), and a repo
+palette scale (`green`, `neutral`, `blue`, `red`, `orange`, `purple`, `grey`, `black`,
+`white`, `white-alpha`) only when the colour is deliberately the same in both themes.
 
 ## Responsive conventions
 

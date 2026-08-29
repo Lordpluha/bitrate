@@ -1,6 +1,8 @@
 # ADR-0006: Shared UI package, tokens, Base UI, and shadcn methodology
 
-Status: Accepted
+Status: Accepted — the shared-package and shadcn parts stand; the token *pipeline* it
+describes was retired by [ADR-0023](./0023-tokens-into-ui-react.md), which makes the CSS
+itself the source
 
 Date: 2026-06-24
 

@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc --module CommonJS --outDir dist/cjs && tsc --module ESNext --outDir dist/esm",
+    "check-types": "tsc --noEmit",
     "buildWatch": "concurrently \"tsc --watch --module CommonJS --outDir dist/cjs\" \"tsc --watch --module ESNext --outDir dist/esm\"",
     "dev": "concurrently \"pnpm run buildWatch\" \"pnpm run devStart\"",
     "prepublishOnly": "pnpm run clean && pnpm run build && pnpm run format",

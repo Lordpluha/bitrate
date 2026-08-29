@@ -42,7 +42,7 @@ const HoverCardContent = ({
       <HoverCardPrimitive.Popup
         ref={ref}
         className={cn(
-          'w-64 origin-[--transform-origin] rounded-md border border-border bg-background-secondary p-3 text-text shadow-xl outline-none transition-[opacity,transform] data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0',
+          'w-64 origin-[--transform-origin] rounded-md border border-overlay-border bg-overlay-hover-card-surface p-3 text-overlay-hover-card-foreground shadow-xl outline-none transition-[opacity,transform] data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0',
           className,
         )}
         {...props}

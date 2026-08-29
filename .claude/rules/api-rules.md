@@ -2,8 +2,10 @@
 name: api-rules
 description: NestJS API quick reference for apps/api — module anatomy, the decorators/ Swagger rule, nestjs-zod DTOs, Prisma injection, BullMQ queues, guards, and HttpException error handling. Use whenever writing or reviewing a controller, service, module, guard, DTO, or Swagger decorator under apps/api/, or whenever asked to add an endpoint, queue job, or auth guard to the API.
 metadata:
+  version: "1.0.0"
   type: reference
   author: lordpluha
+license: MIT
 ---
 
 # API rules — NestJS
@@ -140,7 +142,11 @@ async findAll({ page, limit }: PaginationInput) {
 
 ## BullMQ
 
-Jobs live in `apps/api/src/infra/queues/<queue-name>/`. Processor (`@Processor`) + producer service. Registered in `InfraModule`.
+Jobs live **in the module that owns them**, not in a shared queue folder:
+`apps/api/src/modules/tracks/audio-processing.consumer.ts` is the reference. A consumer
+(`@Processor`) sits beside the service that enqueues to it, and the queue is registered with
+`BullModule.registerQueue(...)` in that module (`tracks.module.ts`), with the Redis
+connection configured once in `app.module.ts`. See the `bullmq` skill for the full pattern.
 
 ## Guards
 

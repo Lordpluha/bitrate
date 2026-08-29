@@ -1,6 +1,6 @@
 # ADR-0012: Ticket-driven agent commands, GitHub Projects, and Obsidian sync
 
-Status: Accepted
+Status: Accepted — agent-roster and command-set parts superseded by [ADR-0022](./0022-app-scoped-agent-roster.md)
 
 Date: 2026-07-20
 
@@ -19,6 +19,13 @@ assignments, `/sp-implement` routing, self-contained-command pattern, confirm-be
 rule) is unaffected and still in force. [ADR-0017](./0017-remove-obsidian-vault.md) later
 removed the `obsidian/` vault entirely — every mention of it below (as a sync target or as
 "source of truth for ticket state") is historical only.
+
+**Also partially superseded** by [ADR-0021](./0021-default-agent-dispatch.md): the
+"self-contained, no agent file" decision for `/sp-take-ticket` and `/sp-sync-docs` (in
+"Alternatives considered" below) is reversed — both now dispatch to a new read-only
+discovery agent (`sp-ticket`, `sp-docs`) by default. `/sp-implement`'s `--agent`-gated
+routing is also reversed — dispatch is now the default, not an opt-in flag. The
+confirm-before-mutate rule and the specialist-agent split itself are unaffected.
 
 ## Context
 

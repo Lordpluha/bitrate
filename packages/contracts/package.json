@@ -5,7 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "gen:api": "tsx src/scripts/fetch-openapi.ts"
+    "gen:api": "tsx src/scripts/fetch-openapi.ts",
+    "check-types": "tsc --noEmit"
   },
   "exports": {
     ".": "./src/index.ts",

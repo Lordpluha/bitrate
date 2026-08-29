@@ -10,12 +10,14 @@ type LibraryItemCoverProps = {
   item: MusicItem
 }
 
+/** Decorative cover washes. Uses the theme's `chart-*` roles so each stays legible
+ *  against the light theme's brighter ground instead of being a fixed palette hue. */
 const typeGradient: Record<MusicItem['type'], string> = {
-  album: 'from-orange-500 to-red-500',
-  artist: 'from-sky-500 to-cyan-500',
-  playlist: 'from-green-500 to-blue-500',
-  podcast: 'from-blue-600 to-indigo-600',
-  single: 'from-purple-500 to-pink-500',
+  album: 'from-chart-4 to-chart-5',
+  artist: 'from-chart-2 to-chart-1',
+  playlist: 'from-chart-1 to-chart-2',
+  podcast: 'from-chart-2 to-chart-3',
+  single: 'from-chart-3 to-chart-5',
 }
 
 export const LibraryItemCover = ({

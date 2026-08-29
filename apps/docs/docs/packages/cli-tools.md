@@ -12,7 +12,6 @@ The project includes several reusable CLI tools built as standalone packages:
 
 | Package | Command | Purpose |
 |---------|---------|---------|
-| `@spotify/tokens-generator` | `tokens-generator` | Design tokens → CSS variables |
 | `@spotify/svgr` | `react-svgr` | SVG → React components |
 | `@spotify/vite-svgr` | — | Vite plugin: SVG generation in build pipeline |
 | `@spotify/converter` | `media-converter` | Audio/video conversion |
@@ -22,82 +21,6 @@ All tools follow the same pattern:
 - ✅ Programmatic API
 - ✅ TypeScript support
 - ✅ Fast execution
-
-## 🎨 tokens-generator
-
-Generate Tailwind v4 CSS tokens from design tokens (JSON).
-
-### Installation
-
-```bash
-pnpm add @spotify/tokens-generator
-```
-
-### CLI Usage
-
-```bash
-# Basic usage
-tokens-generator \
-  --tokens ./tokens.json \
-  --output ./src/styles
-```
-
-### Options
-
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--tokens` | Path to tokens JSON file | Required |
-| `--output` | Output directory | `./styles` |
-
-`tokens-generator` now uses a fixed Tailwind preset and does not require an external config file.
-
-### Input Format
-
-**tokens.json:**
-
-```json
-{
-  "colors": {
-    "primary": {
-      "50": "#eff6ff",
-      "500": "#3b82f6",
-      "900": "#1e3a8a"
-    }
-  },
-  "spacing": {
-    "xs": "4px",
-    "sm": "8px",
-    "md": "16px"
-  }
-}
-```
-
-### Output
-
-Generates CSS files with custom properties:
-
-```css
-/* palette.css */
-@theme {
-  --color-green-500: #1db954;
-}
-
-/* layout.css */
-@theme {
-  --spacing-4: 1rem;
-}
-```
-
-### Programmatic API
-
-```javascript
-import { generateTokens } from '@spotify/tokens-generator'
-
-await generateTokens({
-  tokensPath: './tokens.json',
-  outputDir: './styles',
-})
-```
 
 ## ⚡ vite-svgr
 
@@ -343,7 +266,6 @@ const videoResult = await convertVideo({
 ```json
 {
   "scripts": {
-    "tokens": "tokens-generator --tokens ../tokens/tokens.json --output ./src/styles",
     "icons": "react-svgr build -i @spotify/tokens/icons -o src/icons",
     "icons:watch": "react-svgr dev -i @spotify/tokens/icons -o src/icons",
     "build": "vite build",
@@ -429,7 +351,6 @@ pnpm dev
 pnpm install
 
 # Or use pnpm exec
-pnpm exec tokens-generator --help
 ```
 
 ### FFmpeg Not Found

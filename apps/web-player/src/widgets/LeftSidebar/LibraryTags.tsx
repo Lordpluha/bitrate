@@ -64,7 +64,7 @@ export const LibraryTags = ({ onToggle, selectedTypes }: LibraryTagsProps) => (
           )
         })}
       </CarouselContent>
-      <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 border-none hover:bg-zinc-700 rounded-full" />
+      <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 border-none hover:bg-surface-hover rounded-full" />
     </Carousel>
   </div>
 )

@@ -1,10 +1,20 @@
+---
+name: architecture-checklist
+description: The mechanical review checklist walked before a PR — FSD layering, NestJS controller/Swagger rules, TypeScript and React conventions, state ownership, design-token usage, code-principle limits, forms, and test depth, each with the exact command or grep that proves it. Use when reviewing a diff, preparing to open or update a PR, or deciding whether a change is finished.
+license: MIT
+metadata:
+  author: lordpluha
+  version: "1.0.0"
+---
+
 # Architecture checklist
 
-Verification list walked by `sp-reviewer` (the heavy `--agent` review specialist,
-auto-invoked by `sp-developer` on diffs over 100 lines/5 files, or dispatched by
-`/sp-implement --review`/`--agent`). `/sp-implement` self-checks against this list in-session
-for smaller diffs, and human reviewers use it before merging. Each item states the rule,
-how to check it, and which file owns the full rationale.
+Verification list walked by `sp-reviewer` (the heavy review specialist, auto-invoked by
+the `sp-*-developer` agents on diffs over 100 lines/5 files, or dispatched by
+`/sp-implement --review`).
+`/sp-implement --session` self-checks against this list in-session for smaller diffs, and
+human reviewers use it before merging. Each item states the rule, how to check it, and which
+file owns the full rationale.
 
 ## FSD rules (web-player)
 
@@ -36,7 +46,7 @@ new view must have `ui/<Name>.tsx` and `index.ts`. A new `packages/ui-react` UI 
 must have `<name>.tsx`, `.stories.tsx`, `.unit-spec.tsx`, `.int-spec.tsx`,
 `.snapshot-spec.tsx`, `.screenshot-spec.tsx`, and `index.ts`.
 Check: `git diff --name-only | grep 'apps/web-player/src/\(features\|entities\|widgets\|views\)/\|packages/ui-react/src/components/ui/'` — for each new slice/component directory verify the required files exist.
-→ `.claude/templates/`, the `fsd-scaffold` skill
+→ `.claude/templates/`, the `fsd` skill
 
 ## NestJS API rules
 
@@ -174,6 +184,11 @@ Check: grep for template literals with class strings — `className={\`.*\`}` �
 Check: semantic pass. A component with multiple visual variants that doesn't use `cva(...)` is a review signal.
 → `.claude/rules/styling.md` § "The cn() + CVA recipe"
 
+**Style-4 — No Tailwind built-in colour scale, and no `dark:` variant.**
+`slate`/`gray`/`zinc`/`stone`/`amber`/`yellow`/`lime`/`emerald`/`teal`/`cyan`/`sky`/`indigo`/`violet`/`fuchsia`/`pink`/`rose` bypass the token pipeline entirely — they lint clean but the theme switch cannot reach them. `dark:` compiles to a `prefers-color-scheme` media query here, so it follows the OS rather than the app's theme class.
+Check: `pnpm check:tokens` — any finding IS a violation. Also grep changed files for `dark:`.
+→ `.claude/rules/styling.md` § "Why stock Tailwind colours are worse than a hex literal"
+
 **Style-3 — Responsive UI and interaction details follow the token/a11y contract.**
 Check mobile stacking, full-width controls, focus visibility, target size, popup width,
 overlay z-index, and reduced-motion behaviour.
@@ -210,6 +225,15 @@ tests do not inspect private implementation state.
 Check: screenshot specs render a deterministic subject and use
 `toMatchScreenshot()`; changed baselines correspond only to changed specs.
 → the `playwright` skill
+
+**Test-4 — New specs cover a failure path, not only the happy path.**
+Any new spec for logic that can fail asserts at least one negative case — invalid/missing
+input, a not-found record, a rejected mutation, a failed guard. In `apps/api` the assertion
+names the exact exception. A positive-only spec for fallible logic is a review signal, and a
+coverage percentage is never the justification.
+Check: `rg -l 'toThrow|rejects|toBeInvalid' <changed spec files>`; for a changed spec with no
+match, confirm from the diff that the code under test genuinely cannot fail.
+→ `.claude/rules/testing.md` § "Coverage — depth before percentage"
 
 ## Mechanical pass commands
 

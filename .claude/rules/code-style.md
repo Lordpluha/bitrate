@@ -2,8 +2,10 @@
 name: code-style
 description: How to run and interpret the monorepo's mechanical gates — pnpm lint, pnpm format, pnpm check-types, pnpm knip — and how to fix common Biome/tsc violations. Use before any commit or PR, whenever lint/type-check/build fails, or whenever asked to "fix the lint errors", "why is check-types failing", or "clean up unused exports".
 metadata:
+  version: "1.0.0"
   type: reference
   author: lordpluha
+license: MIT
 ---
 
 # Code style — spotify-clone
@@ -14,10 +16,19 @@ Four CLI commands cover mechanical verification. Run from the monorepo root.
 
 ### `pnpm lint`
 
-Runs `biome lint` across all apps and packages.
+Runs `biome lint --error-on-warnings` in `api`, `web-player`, `web-artists`, and `ui-react`
+(plus `expo lint` in `mobile`).
 
-- **PASS** — exits 0, no errors.
-- **FAIL** — exits non-zero; violations printed with file:line. Fix every error before committing.
+- **PASS** — exits 0, no diagnostics.
+- **FAIL** — exits non-zero; violations printed with file:line. Fix every one before committing.
+
+**`pnpm lint` never modifies a file.** `--error-on-warnings` is what makes it a real gate:
+most `recommended` rules report at warning severity, and without the flag Biome prints them
+and still exits 0. To apply autofixes, run the opt-in mutating form instead:
+
+```bash
+pnpm --filter @spotify/web-player lint:fix   # biome lint --write
+```
 
 Common fixes:
 - `noUnusedVariables` — remove unused imports/vars.
@@ -32,10 +43,16 @@ Config: `biome.json` at repo root — 2-space indent, single quotes, no semicolo
 
 ### `pnpm check-types`
 
-Runs `tsc --noEmit` across all apps (via Turborepo). Each app uses its own `tsconfig.json`:
+Runs `tsc --noEmit` (via Turborepo) in every workspace that declares the script: `api`,
+`admin`, `desktop`, `mobile`, `docs`, `web-player`, `web-artists`, `ui-react`, `contracts`,
+`ncs-parser`. Each uses its own `tsconfig.json`:
 
 - `apps/api` — `strictNullChecks: true`, `noUncheckedIndexedAccess: true` (no `noImplicitAny`)
 - `apps/web-player` — `strict: true`, `noUncheckedIndexedAccess: true`
+
+The task declares `dependsOn: ["^build"]`, so `@spotify/ui-react` is built first — the web
+apps typecheck against its emitted `dist/types`, not its `src/`. `apps/api` regenerates the
+Prisma client first via `precheck-types`.
 
 **PASS** — exits 0, no output.
 **FAIL** — exits non-zero; compiler errors printed. Fix every error; never weaken `tsconfig.json` to silence errors.

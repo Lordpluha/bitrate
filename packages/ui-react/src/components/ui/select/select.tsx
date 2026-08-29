@@ -29,7 +29,7 @@ const SelectTrigger = ({
 }: ComponentProps<typeof SelectPrimitive.Trigger>) => (
   <SelectPrimitive.Trigger
     className={cn(
-      'flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white data-placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:data-placeholder:text-slate-400 dark:focus:ring-slate-300',
+      'flex h-10 w-full items-center justify-between rounded-md border border-overlay-trigger-border bg-overlay-trigger-surface px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
       className,
     )}
     {...props}
@@ -85,7 +85,7 @@ const SelectContent = ({
       <SelectPrimitive.Popup
         ref={ref}
         className={cn(
-          'relative z-50 max-h-(--available-height) min-w-32 overflow-y-auto overflow-x-hidden rounded-md border border-slate-200 bg-white text-slate-950 shadow-md origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
+          'relative z-50 max-h-(--available-height) min-w-32 overflow-y-auto overflow-x-hidden rounded-md border border-overlay-border bg-overlay-surface text-overlay-foreground shadow-md origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95',
           className,
         )}
         {...props}
@@ -117,7 +117,7 @@ const SelectItem = ({
 }: ComponentProps<typeof SelectPrimitive.Item>) => (
   <SelectPrimitive.Item
     className={cn(
-      'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-slate-100 focus:text-slate-900 data-disabled:pointer-events-none data-disabled:opacity-50 dark:focus:bg-slate-800 dark:focus:text-slate-50',
+      'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-overlay-item-hover focus:text-overlay-item-foreground data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     {...props}
@@ -137,7 +137,7 @@ const SelectSeparator = ({
   ...props
 }: ComponentProps<typeof SelectPrimitive.Separator>) => (
   <SelectPrimitive.Separator
-    className={cn('-mx-1 my-1 h-px bg-slate-100 dark:bg-slate-800', className)}
+    className={cn('-mx-1 my-1 h-px bg-overlay-item-hover', className)}
     {...props}
   />
 )

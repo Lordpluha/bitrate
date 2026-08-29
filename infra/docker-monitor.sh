@@ -5,7 +5,7 @@
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
-DC="docker-compose -f infra/docker-compose.preprod.yaml"
+DC="docker compose -f infra/docker-compose.preprod.yaml"
 
 # Colors
 GREEN='\033[0;32m'
@@ -22,33 +22,28 @@ check_health() {
     print_header "Service Health Status"
     $DC ps
 
+    # Docker-stack ports (see infra/docker-compose.preprod.yaml). They differ
+    # from the native `pnpm dev` ports for web-artists and admin.
     echo -e "\n${YELLOW}Service URLs:${NC}"
-    echo "  Web:   http://localhost:3001"
-    echo "  API:   http://localhost:3000"
-    echo "  Admin: http://localhost:3002"
+    echo "  API:     http://localhost:${API_PORT:-3000}"
+    echo "  Web:     http://localhost:${WEB_PORT:-3001}"
+    echo "  Admin:   http://localhost:${ADMIN_PORT:-3002}"
+    echo "  Artists: http://localhost:${WEB_ARTISTS_PORT:-3004}"
 
     echo -e "\n${YELLOW}Testing endpoints...${NC}"
 
-    # Test API
-    if curl -sf http://localhost:3000 > /dev/null 2>&1; then
-        echo -e "  API:   ${GREEN}✓ Online${NC}"
-    else
-        echo -e "  API:   ${RED}✗ Offline${NC}"
-    fi
+    probe() {
+        if curl -sf "http://localhost:$2" > /dev/null 2>&1; then
+            echo -e "  $1 ${GREEN}✓ Online${NC}"
+        else
+            echo -e "  $1 ${RED}✗ Offline${NC}"
+        fi
+    }
 
-    # Test Web
-    if curl -sf http://localhost:3001 > /dev/null 2>&1; then
-        echo -e "  Web:   ${GREEN}✓ Online${NC}"
-    else
-        echo -e "  Web:   ${RED}✗ Offline${NC}"
-    fi
-
-    # Test Admin
-    if curl -sf http://localhost:3002 > /dev/null 2>&1; then
-        echo -e "  Admin: ${GREEN}✓ Online${NC}"
-    else
-        echo -e "  Admin: ${RED}✗ Offline${NC}"
-    fi
+    probe "API:    " "${API_PORT:-3000}"
+    probe "Web:    " "${WEB_PORT:-3001}"
+    probe "Admin:  " "${ADMIN_PORT:-3002}"
+    probe "Artists:" "${WEB_ARTISTS_PORT:-3004}"
 }
 
 # Resource usage
@@ -70,8 +65,11 @@ logs_summary() {
     echo -e "${YELLOW}API Errors:${NC}"
     $DC logs --tail=50 api 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
 
-    echo -e "\n${YELLOW}Web Errors:${NC}"
-    $DC logs --tail=50 web 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+    echo -e "\n${YELLOW}Web Player Errors:${NC}"
+    $DC logs --tail=50 web-player 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+
+    echo -e "\n${YELLOW}Web Artists Errors:${NC}"
+    $DC logs --tail=50 web-artists 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
 
     echo -e "\n${YELLOW}Admin Errors:${NC}"
     $DC logs --tail=50 admin 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
@@ -82,21 +80,33 @@ network_info() {
     print_header "Network Information"
     docker network ls
     echo ""
-    docker network inspect spotify-clone_spotify-network | grep -E "Name|IPv4Address" | head -20
+    net=$(docker network ls --filter name=spotify-network --format '{{.Name}}' | head -1)
+    if [ -n "$net" ]; then
+        docker network inspect "$net" | grep -E "Name|IPv4Address" | head -20
+    else
+        echo "  Project network not found — is the stack up?"
+    fi
 }
 
 # Database info
 database_info() {
     print_header "Database Information"
 
+    # psql reads the credentials from the container's own environment, so an
+    # overridden POSTGRES_USER/POSTGRES_DB in .env keeps working.
+    psql_q() {
+        $DC exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "$0"' "$1" \
+            2>/dev/null || echo "  Database not accessible"
+    }
+
     echo -e "${YELLOW}Database Size:${NC}"
-    $DC exec -T postgres psql -U admin -d spotify -c "SELECT pg_size_pretty(pg_database_size('spotify')) as size;" 2>/dev/null || echo "  Database not accessible"
+    psql_q "SELECT pg_size_pretty(pg_database_size(current_database())) AS size;"
 
     echo -e "\n${YELLOW}Table Sizes:${NC}"
-    $DC exec -T postgres psql -U admin -d spotify -c "SELECT schemaname,tablename,pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size FROM pg_tables WHERE schemaname = 'public' ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC LIMIT 10;" 2>/dev/null || echo "  Database not accessible"
+    psql_q "SELECT schemaname,tablename,pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size FROM pg_tables WHERE schemaname = 'public' ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC LIMIT 10;"
 
     echo -e "\n${YELLOW}Connection Count:${NC}"
-    $DC exec -T postgres psql -U admin -d spotify -c "SELECT count(*) as connections FROM pg_stat_activity;" 2>/dev/null || echo "  Database not accessible"
+    psql_q "SELECT count(*) AS connections FROM pg_stat_activity;"
 }
 
 # Full report

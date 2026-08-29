@@ -10,12 +10,12 @@ describe('Input', () => {
 
   it('applies the default variant classes', () => {
     render(<Input data-testid="input" />)
-    expect(screen.getByTestId('input')).toHaveClass('bg-white')
+    expect(screen.getByTestId('input')).toHaveClass('bg-input-surface')
   })
 
   it('applies the contrast variant classes', () => {
     render(<Input variant="contrast" data-testid="input" />)
-    expect(screen.getByTestId('input')).toHaveClass('bg-contrast')
+    expect(screen.getByTestId('input')).toHaveClass('bg-input-contrast-surface')
   })
 
   it('applies the search variant classes', () => {

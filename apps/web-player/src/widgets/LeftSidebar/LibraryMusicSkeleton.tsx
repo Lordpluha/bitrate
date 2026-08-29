@@ -29,15 +29,15 @@ export const LibraryMusicSkeleton = ({
       >
         <div
           className={cn(
-            'animate-pulse rounded-md bg-gray-600',
+            'animate-pulse rounded-md bg-muted',
             isExpanded && 'aspect-square w-full',
             isCollapsed && 'h-14 w-14',
             !isExpanded && !isCollapsed && 'h-12 w-12',
           )}
         />
         <div className={isExpanded ? 'mt-3' : 'flex-1'}>
-          <div className="mb-1 h-4 animate-pulse rounded bg-gray-600" />
-          <div className="h-3 w-2/3 animate-pulse rounded bg-gray-700" />
+          <div className="mb-1 h-4 animate-pulse rounded bg-muted" />
+          <div className="h-3 w-2/3 animate-pulse rounded bg-muted/60" />
         </div>
       </div>
     ))}

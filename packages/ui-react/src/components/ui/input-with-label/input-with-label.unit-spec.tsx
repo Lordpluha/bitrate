@@ -33,7 +33,7 @@ describe('InputWithLabel', () => {
 
   it('renders contrast variant', () => {
     render(<InputWithLabel label="Name" variant="contrast" />)
-    expect(screen.getByRole('textbox')).toHaveClass('bg-contrast')
+    expect(screen.getByRole('textbox')).toHaveClass('bg-input-contrast-surface')
   })
 
   it('renders search variant', () => {

@@ -6,9 +6,9 @@ function Kbd({ className, ...props }: ComponentProps<'kbd'>) {
     <kbd
       data-slot="kbd"
       className={cn(
-        'bg-slate-100 text-slate-500 pointer-events-none inline-flex h-5 w-fit min-w-5 select-none items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium dark:bg-slate-800 dark:text-slate-400',
+        'bg-kbd-surface text-kbd-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 select-none items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium',
         "[&_svg:not([class*='size-'])]:size-3",
-        '[[data-slot=tooltip-content]_&]:bg-white/20 [[data-slot=tooltip-content]_&]:text-white dark:[[data-slot=tooltip-content]_&]:bg-white/10 dark:[[data-slot=tooltip-content]_&]:bg-slate-950/20 dark:[[data-slot=tooltip-content]_&]:text-slate-950 dark:dark:[[data-slot=tooltip-content]_&]:bg-slate-950/10',
+        '[[data-slot=tooltip-content]_&]:bg-kbd-on-overlay-foreground/15 [[data-slot=tooltip-content]_&]:text-kbd-on-overlay-foreground',
         className,
       )}
       {...props}

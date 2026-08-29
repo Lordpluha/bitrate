@@ -1,0 +1,25 @@
+/**
+ * Keyboard Key
+ * The Kbd chip, including the variant rendered inside a tooltip where the surrounding fill differs.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Key cap fill. */
+  --color-kbd-surface: var(--color-muted);
+  /* Key cap glyph. */
+  --color-kbd-foreground: var(--color-muted-foreground);
+  /* Key cap glyph when the chip sits inside a tooltip. */
+  --color-kbd-on-overlay-foreground: var(--color-popover-foreground);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-kbd-surface: var(--color-muted);
+  --color-kbd-foreground: var(--color-muted-foreground);
+  --color-kbd-on-overlay-foreground: var(--color-popover-foreground);
+}

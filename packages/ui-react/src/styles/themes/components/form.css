@@ -1,0 +1,22 @@
+/**
+ * Form Messaging
+ * Validation and helper copy rendered by the Form primitives.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Validation error text. */
+  --color-form-message-foreground: var(--color-destructive);
+  /* Field helper text. */
+  --color-form-description-foreground: var(--color-muted-foreground);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-form-message-foreground: var(--color-destructive);
+  --color-form-description-foreground: var(--color-muted-foreground);
+}

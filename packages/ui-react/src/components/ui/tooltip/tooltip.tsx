@@ -35,7 +35,7 @@ const TooltipContent = ({
       <TooltipPrimitive.Popup
         ref={ref}
         className={cn(
-          'z-50 overflow-hidden rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-950 shadow-md origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
+          'z-50 overflow-hidden rounded-md border border-overlay-border bg-overlay-surface px-3 py-1.5 text-sm text-overlay-foreground shadow-md origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95',
           className,
         )}
         {...props}

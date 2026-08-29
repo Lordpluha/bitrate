@@ -1,3 +1,12 @@
+---
+name: fsd-web-player
+description: Feature-Sliced Design for apps/web-player/src — the layer order imports may flow in, the cross-layer permission matrix, slice anatomy, the public-API barrel rule, and when a primitive should be lifted down the stack. Use whenever adding a file, creating a slice, moving code between slices, or resolving a layer-boundary question in the web player.
+license: MIT
+metadata:
+  author: lordpluha
+  version: "1.0.0"
+---
+
 # FSD architecture — web-player
 
 Feature-Sliced Design is the module-organisation pattern for `apps/web-player/src/`. Read this before adding a new file, moving code between slices, or creating a new slice.
@@ -88,7 +97,7 @@ A primitive used by two or more unrelated slices belongs one layer lower. Ask: "
 ## Adding a new slice
 
 When `implement` creates a new `feature`, `entity`, `widget`, or `view`, it applies the
-`fsd-scaffold` skill and copies the canonical `.claude/templates/` tree. Do not hand-roll a
+`fsd` skill and copies the canonical `.claude/templates/` tree. Do not hand-roll a
 new feature/entity/widget/view tree.
 
 After scaffolding, add only real API hooks, UI, store, and helpers. The template intentionally
@@ -102,6 +111,6 @@ Biome's `noRestrictedImports` rules enforce layer boundaries. Run `pnpm lint` �
 
 - `web-player-rules` — the API client, state management, component, and routing
   conventions built on top of this layer structure.
-- `fsd-scaffold` skill — the exact file trees to generate for a new slice; this file only
+- `fsd` skill — the exact file trees to generate for a new slice; this file only
   covers what's allowed, not what to generate.
 - `project-conventions` — the cross-cutting rules this file specializes.

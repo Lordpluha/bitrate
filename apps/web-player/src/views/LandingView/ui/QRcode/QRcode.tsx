@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 export const QRcode = () => {
   return (
-    <div className="container rounded-3xl bg-bgSecondary py-20 pb-0 mt-2">
+    <div className="container rounded-3xl bg-background-secondary py-20 pb-0 mt-2">
       <div className="flex flex-col items-start gap-8">
         <Typography
           as="h1"

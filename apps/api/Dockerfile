@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile для API (NestJS + Prisma)
 
 # Stage 1: Base
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 ARG DATABASE_URL=postgresql://admin:admin@postgres:5432/spotify
 ARG SHADOW_DATABASE_URL=postgresql://admin:admin@postgres:5432/spotify_shadow
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate

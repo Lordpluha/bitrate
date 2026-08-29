@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile для Web (Next.js)
 
 # Stage 1: Base
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
@@ -16,9 +16,6 @@ COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/svgr/package.json ./packages/svgr/
 COPY packages/svgr/bin ./packages/svgr/bin
 COPY packages/vite-svgr/package.json ./packages/vite-svgr/
-COPY packages/tokens/package.json ./packages/tokens/
-COPY packages/tokens-generator/package.json ./packages/tokens-generator/
-COPY packages/tokens-generator/bin ./packages/tokens-generator/bin
 COPY packages/contracts/package.json ./packages/contracts/
 COPY turbo.json ./
 RUN pnpm install --frozen-lockfile

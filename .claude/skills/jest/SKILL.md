@@ -2,8 +2,10 @@
 name: jest
 description: Jest testing conventions for apps/api — unit specs with jest-mock-extended, integration specs with NestJS TestingModule + supertest, E2E specs against real Postgres/Redis, fixture builders, and guard overrides. Use whenever writing or reviewing a *.unit-spec.ts, *.int-spec.ts, or *.e2e-spec.ts file, or whenever asked to "write a test for" a NestJS controller/service.
 metadata:
+  version: "1.0.0"
   type: reference
   author: lordpluha
+license: MIT
 ---
 
 # Jest rules — apps/api
@@ -172,10 +174,23 @@ jest.mock('qrcode', () => ({ toDataURL: jest.fn() }))
 import { TwoFactorService } from './two-factor.service'
 ```
 
+## When this skill does not cover it
+
+Do not guess an API from memory. In order:
+
+1. **Read the installed version.** `node_modules/jest` is what this repo actually runs; the
+   docs site describes the latest release, which may not be it.
+   ```bash
+   node -p "require('jest/package.json').version"
+   ```
+2. **Then the official docs:** https://jestjs.io/docs/getting-started — match them to the version you just read.
+3. **If both are silent, say so in your report** rather than inventing an API. Here that
+   matters because this repo uses ESM-style `@jest/globals` imports, unlike most examples.
+
 ## Related rules and skills
 
 - `api-rules` — the module structure these specs test against.
-- `sp-tester` — the heavy `--agent` specialist that writes/runs one focused spec end to end
-  and smoke-runs it; dispatched by `/sp-implement --agent`, or invoke it directly via the
+- `sp-tester` — the heavy specialist that writes/runs one focused spec end to end
+  and smoke-runs it; dispatched by `/sp-implement` by default, or invoke it directly via the
   Agent tool. Prefer this skill when you just need the conventions to review or hand-write a
-  spec yourself in-session.
+  spec yourself in-session (`--session`).

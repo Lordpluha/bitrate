@@ -1,9 +1,9 @@
+import banner1 from '@assets/images/banner-1.jpg'
+import banner2 from '@assets/images/banner-2.jpg'
+import banner3 from '@assets/images/banner-3.jpg'
+import banner4 from '@assets/images/banner-4.jpg'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, userEvent } from 'storybook/test'
-import banner1 from '../../../assets/images/banner-1.jpg'
-import banner2 from '../../../assets/images/banner-2.jpg'
-import banner3 from '../../../assets/images/banner-3.jpg'
-import banner4 from '../../../assets/images/banner-4.jpg'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './carousel'
 
 const slides = [

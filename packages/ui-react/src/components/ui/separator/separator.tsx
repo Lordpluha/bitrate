@@ -12,7 +12,7 @@ export const Separator = ({
     {...(decorative ? { role: 'none' as const } : {})}
     orientation={orientation}
     className={cn(
-      'shrink-0 bg-slate-200 dark:bg-grey-500',
+      'shrink-0 bg-separator-color',
       orientation === 'horizontal' ? 'h-px w-full' : 'h-full w-px',
       className,
     )}

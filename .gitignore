@@ -57,5 +57,19 @@ FRONTEND_BACKLOG.md
 # don't commit. See .claude/rules/knowledge-base.md for details.
 /graphify-out/
 
-# Локальные чек-листы (не коммитим)
-/.checklists/
+# Scratch dir for /sp-auto and /sp-implement PR bodies.
+# Must live inside the repo: under the VS Code Flatpak sandbox the host `gh`
+# cannot see sandbox /tmp, but it can see the repo.
+.sp-scratch/
+
+# Database dumps written by `task db:backup`. Never commit a dump — it can
+# contain real user data.
+/backups/
+
+# k6 load-test output (packages/performance-test)
+packages/performance-test/results.json
+packages/performance-test/summary.json
+
+# tsc --noEmit still writes a build-info file when `incremental` is on, so every
+# `pnpm check-types` regenerates this. Only packages/contracts emits one outside dist/.
+*.tsbuildinfo

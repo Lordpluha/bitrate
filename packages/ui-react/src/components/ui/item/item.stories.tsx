@@ -1,3 +1,6 @@
+import banner1 from '@assets/images/banner-1.jpg'
+import banner2 from '@assets/images/banner-2.jpg'
+import banner3 from '@assets/images/banner-3.jpg'
 import type { StoryObj, StrictMeta } from '@storybook/react-vite'
 import {
   BadgeCheckIcon,
@@ -27,9 +30,6 @@ import {
   ItemSeparator,
   ItemTitle,
 } from '@/components/ui/item'
-import banner1 from '../../../assets/images/banner-1.jpg'
-import banner2 from '../../../assets/images/banner-2.jpg'
-import banner3 from '../../../assets/images/banner-3.jpg'
 
 /**
  * A versatile component that you can use to display any content.

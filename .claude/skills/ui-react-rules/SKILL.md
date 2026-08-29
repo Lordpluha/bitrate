@@ -2,8 +2,10 @@
 name: ui-react-rules
 description: Project conventions for the packages/ui-react component library — where component source, barrels, and config live, the search-before-adding workflow, Base UI as the primitive library, and where the generic shadcn skill's defaults are overridden. Use whenever adding, searching for, or modifying a UI component in packages/ui-react, or whenever the generic shadcn skill's guidance conflicts with this package's existing source.
 metadata:
+  version: "1.0.0"
   type: reference
   author: lordpluha
+license: MIT
 ---
 
 # ui-react rules — `@spotify/ui-react`
@@ -21,10 +23,18 @@ win.
 - Class helper: `cn` from `packages/ui-react/src/lib/utils.ts`
 - Primitive library: Base UI (`@base-ui-components/react`)
 - Consumer import: `import { Button } from '@spotify/ui-react'`
+- Raw source art: `packages/ui-react/assets/` — `icons/` (SVG the svgr plugin compiles into
+  `src/icons/svgr/` on `pnpm build`) and `images/` (raster files stories import as
+  `@assets/images/...`). Nothing under `assets/` is shipped; it is build-time input only.
+- Token values: `packages/ui-react/tokens/tokens.json`; how they render:
+  hand-written `@theme` layers in `packages/ui-react/src/styles/`.
 
-The existing `components.json` contains legacy Tailwind/shadcn fields. Inspect generated
-diffs carefully; package source, Tailwind v4 setup, and design-token pipeline are
-authoritative.
+Put a new SVG in `assets/icons/` and rebuild — never hand-write a file in `src/icons/svgr/`,
+it is regenerated on every build.
+
+`components.json` describes the package as it actually is (`src/styles/index.css`, no
+Tailwind config file, `cssVariables: true`, `baseColor: neutral`). Inspect generated diffs
+carefully; package source, Tailwind v4 setup, and design-token pipeline are authoritative.
 
 ## Before creating a component
 
@@ -67,7 +77,7 @@ matrix. Export through the local barrel and `components/ui/index.ts`.
 - Component APIs are project-owned. Inspect the installed source before applying generic
   Base UI or Radix advice. For example, the current `Button` intentionally exposes
   `asChild` through the package's `Slot` helper.
-- Use design tokens generated from `packages/tokens/tokens.json`.
+- Use design tokens generated from `packages/ui-react/tokens/tokens.json`.
 - Use `cn()` and CVA for variants.
 - Use icons from `@/icons` or the package's configured icon source before adding another
   icon library.

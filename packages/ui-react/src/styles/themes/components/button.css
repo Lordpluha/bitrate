@@ -1,0 +1,71 @@
+/**
+ * Button Family
+ * Surfaces, text and interaction states for Button and the ButtonGroup shell built around it. Every
+ * variant owns its slots here so recolouring one action style never touches another component.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Primary button surface. */
+  --color-button-primary: var(--color-primary);
+  /* Text/icon on a primary button. */
+  --color-button-primary-foreground: var(--color-primary-foreground);
+  /* Primary button surface on hover. */
+  --color-button-primary-hover: var(--color-primary-hover);
+  /* Primary button surface while pressed. */
+  --color-button-primary-active: var(--color-primary-active);
+  /* Secondary button surface. */
+  --color-button-secondary: var(--color-secondary);
+  /* Text on a secondary button. */
+  --color-button-secondary-foreground: var(--color-secondary-foreground);
+  /* Secondary button surface on hover. */
+  --color-button-secondary-hover: var(--color-secondary-hover);
+  /* Destructive button surface. */
+  --color-button-destructive: var(--color-destructive);
+  /* Text on a destructive button. */
+  --color-button-destructive-foreground: var(--color-destructive-foreground);
+  /* Outline button fill. */
+  --color-button-outline-surface: var(--color-background);
+  /* Outline button border. */
+  --color-button-outline-border: var(--color-input);
+  /* Outline button fill on hover. */
+  --color-button-outline-hover: var(--color-muted);
+  /* Ghost button fill on hover. */
+  --color-button-ghost-hover: var(--color-bg-secondary);
+  /* Inverted (contrast) button surface. */
+  --color-button-contrast-surface: var(--color-contrast);
+  /* Text on an inverted button. */
+  --color-button-contrast-foreground: var(--color-text-contrast);
+  /* Link-styled button text. */
+  --color-button-link-foreground: var(--color-foreground);
+  /* ButtonGroup text/shell fill. */
+  --color-button-group-surface: var(--color-muted);
+  /* ButtonGroup border and inner separator. */
+  --color-button-group-border: var(--color-border);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-button-primary: var(--color-primary);
+  --color-button-primary-foreground: var(--color-primary-foreground);
+  --color-button-primary-hover: var(--color-primary-hover);
+  --color-button-primary-active: var(--color-primary-active);
+  --color-button-secondary: var(--color-secondary);
+  --color-button-secondary-foreground: var(--color-secondary-foreground);
+  --color-button-secondary-hover: var(--color-secondary-hover);
+  --color-button-destructive: var(--color-destructive);
+  --color-button-destructive-foreground: var(--color-destructive-foreground);
+  --color-button-outline-surface: var(--color-background);
+  --color-button-outline-border: var(--color-input);
+  --color-button-outline-hover: var(--color-muted);
+  --color-button-ghost-hover: var(--color-bg-secondary);
+  --color-button-contrast-surface: var(--color-contrast);
+  --color-button-contrast-foreground: var(--color-text-contrast);
+  --color-button-link-foreground: var(--color-foreground);
+  --color-button-group-surface: var(--color-muted);
+  --color-button-group-border: var(--color-border);
+}

@@ -92,10 +92,12 @@ docker compose -f infra/docker-compose.dev.yaml ps
 ### 5. Run Database Migrations
 
 ```bash
-pnpm --filter @spotify/api run db:migration:start
+task db:migrate:native
+task db:seed:native
 
-# Seed the database with sample data
-pnpm --filter @spotify/api run seed
+# Or without task:
+pnpm --filter @spotify/api run db:migration:start
+pnpm --filter @spotify/api run db:seed
 ```
 
 ### 6. Start Development Servers
@@ -110,7 +112,11 @@ pnpm dev
 This starts (via Turbo):
 - API on `http://localhost:3000`
 - Web Player on `http://localhost:3001`
-- Admin on `http://localhost:3002`
+- Web Artists on `http://localhost:3002`
+- Admin on `http://localhost:5480`
+
+These are the **native** ports. The Docker stack maps web-artists to `3004` and admin to
+`3002` — see [Docker](../infrastructure/docker.md).
 
 #### Individual Applications
 
@@ -141,21 +147,16 @@ If you prefer running all apps in Docker:
 ```bash
 # First run — build images, migrate, seed
 task init
-# or
-pnpm docker:dev:build
-pnpm docker:db:migrate
-pnpm docker:db:seed
 
 # Subsequent runs
 task dev:up
-# or
-pnpm docker:dev
 
 # Stop
 task dev:down
-# or
-pnpm docker:down
 ```
+
+`task` is the only interface to the Docker stack — the old `pnpm docker:*` scripts were
+removed. Run `task` with no arguments to list everything.
 
 ## 🔧 Development Workflow
 
@@ -173,14 +174,11 @@ pnpm --filter @spotify/ui-react build
 
 #### Regenerating Assets
 
-After editing `packages/tokens/tokens.json`:
-```bash
-pnpm --filter @spotify/ui-react gen:tokens
-```
 
-After adding SVG icons to `packages/tokens/icons/`:
+After adding SVG icons to `packages/ui-react/assets/icons/` — the svgr plugin in
+`vite.config.ts` regenerates `src/icons/svgr/` as part of the build:
 ```bash
-pnpm --filter @spotify/ui-react svgr:build
+pnpm --filter @spotify/ui-react build
 ```
 
 After API schema changes (API must be running on :3000):
@@ -225,8 +223,6 @@ pnpm --filter @spotify/api test:int
 # API E2E tests
 pnpm --filter @spotify/api test:e2e
 
-# tokens-generator integration tests
-pnpm --filter @spotify/tokens-generator test
 ```
 
 ### Linting & Formatting

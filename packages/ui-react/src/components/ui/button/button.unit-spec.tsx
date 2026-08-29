@@ -15,12 +15,12 @@ describe('Button', () => {
 
   it('applies the destructive variant class', () => {
     render(<Button variant="destructive">Delete</Button>)
-    expect(screen.getByRole('button')).toHaveClass('bg-red-500')
+    expect(screen.getByRole('button')).toHaveClass('bg-button-destructive')
   })
 
   it('applies the primary variant class', () => {
     render(<Button variant="primary">Go</Button>)
-    expect(screen.getByRole('button')).toHaveClass('bg-green-500')
+    expect(screen.getByRole('button')).toHaveClass('bg-button-primary')
   })
 
   it('applies a size class', () => {
@@ -63,17 +63,17 @@ describe('Button', () => {
 
   it('applies the secondary variant class', () => {
     render(<Button variant="secondary">Secondary</Button>)
-    expect(screen.getByRole('button')).toHaveClass('bg-slate-800')
+    expect(screen.getByRole('button')).toHaveClass('bg-button-secondary')
   })
 
   it('applies the ghost variant class', () => {
     render(<Button variant="ghost">Ghost</Button>)
-    expect(screen.getByRole('button')).toHaveClass('hover:bg-bg-secondary')
+    expect(screen.getByRole('button')).toHaveClass('hover:bg-button-ghost-hover')
   })
 
   it('applies the contrast variant class', () => {
     render(<Button variant="contrast">Contrast</Button>)
-    expect(screen.getByRole('button')).toHaveClass('bg-contrast')
+    expect(screen.getByRole('button')).toHaveClass('bg-button-contrast-surface')
   })
 
   it('applies the link variant class', () => {

@@ -22,7 +22,7 @@ describe('DynamicLabel', () => {
 
   it('applies the default variant background', () => {
     render(<DynamicLabel variant="default">Email</DynamicLabel>)
-    expect(screen.getByText('Email')).toHaveClass('bg-white')
+    expect(screen.getByText('Email')).toHaveClass('bg-dynamic-label-surface')
   })
 
   it('applies the contrast variant background', () => {
@@ -38,6 +38,6 @@ describe('DynamicLabel', () => {
         </DynamicLabel>
       </InputProvider>,
     )
-    expect(screen.getByText('Label')).toHaveClass('bg-white')
+    expect(screen.getByText('Label')).toHaveClass('bg-dynamic-label-surface')
   })
 })

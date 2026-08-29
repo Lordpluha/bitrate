@@ -1,0 +1,35 @@
+/**
+ * Row Collection Family
+ * Item and Table are both rows in a collection with the same hover/selected/secondary-text
+ * vocabulary, so they share one file.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Row fill on hover. */
+  --color-collection-row-hover: var(--color-muted);
+  /* Row fill while selected. */
+  --color-collection-row-selected: var(--color-muted);
+  /* Static muted row fill — the Item muted variant and the table footer. */
+  --color-collection-row-muted: var(--color-muted);
+  /* Row divider and outline-variant border. */
+  --color-collection-border: var(--color-border);
+  /* Secondary row text — descriptions, table headers, captions. */
+  --color-collection-text-secondary: var(--color-muted-foreground);
+  /* Fill behind a row icon or media slot. */
+  --color-collection-media-surface: var(--color-muted);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-collection-row-hover: var(--color-muted);
+  --color-collection-row-selected: var(--color-muted);
+  --color-collection-row-muted: var(--color-muted);
+  --color-collection-border: var(--color-border);
+  --color-collection-text-secondary: var(--color-muted-foreground);
+  --color-collection-media-surface: var(--color-muted);
+}

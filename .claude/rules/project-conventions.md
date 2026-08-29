@@ -2,8 +2,10 @@
 name: project-conventions
 description: READ THIS FIRST — canonical cross-cutting conventions for the spotify-clone monorepo, covering FSD layering in web-player, NestJS module structure in the API, TypeScript/React patterns, import rules, the Swagger-decorators-in-decorators/ rule, testing layers, and commit style. Use whenever writing, reviewing, or planning any change under apps/ or packages/, especially at the start of a task, before reaching for a narrower app/package rules reference.
 metadata:
+  version: "1.0.0"
   type: reference
   author: lordpluha
+license: MIT
 ---
 
 # Project conventions — spotify-clone
@@ -34,7 +36,7 @@ Cross-slice imports go through the target slice's `index.ts` barrel only.
 
 Deep doc: `.claude/rules/fsd-web-player.md`.
 
-New feature/entity slices are created by `implement` through the `fsd-scaffold` skill; its
+New feature/entity slices are created by `implement` through the `fsd` skill; its
 templates are the canonical initial shape.
 
 ## Web-player: path aliases
@@ -160,7 +162,7 @@ Deep doc: the `ui-react-rules` skill (project overrides); generic reference: the
 Run from monorepo root:
 - `pnpm lint` — Biome lint all
 - `pnpm format` — Biome format all
-- `pnpm check-types` — `tsc --noEmit` across all apps
+- `pnpm check-types` — `tsc --noEmit` in every workspace that declares the script
 
 Deep doc: the `code-style` rule.
 
@@ -180,4 +182,4 @@ Deep doc: `.claude/rules/commit-style.md`.
 
 ## Deep docs
 
-`.claude/rules/fsd-web-player.md`, `.claude/rules/typescript.md`, `.claude/rules/react.md`, `.claude/rules/code-principles.md`, `.claude/rules/styling.md`, `.claude/rules/forms.md`, `.claude/rules/monorepo.md`, `.claude/rules/commit-style.md`, `.claude/rules/architecture-checklist.md`, `.claude/rules/testing.md`. Sibling references: `api-rules`, `web-player-rules`, `code-style`. Workflow skills: `fsd-scaffold`, `jest`, `vitest`, `playwright`, `ui-react-rules`.
+`.claude/rules/fsd-web-player.md`, `.claude/rules/typescript.md`, `.claude/rules/react.md`, `.claude/rules/code-principles.md`, `.claude/rules/styling.md`, `.claude/rules/forms.md`, `.claude/rules/monorepo.md`, `.claude/rules/commit-style.md`, `.claude/rules/architecture-checklist.md`, `.claude/rules/testing.md`. Sibling references: `api-rules`, `web-player-rules`, `code-style`. Workflow skills: `fsd`, `jest`, `vitest`, `playwright`, `ui-react-rules`.

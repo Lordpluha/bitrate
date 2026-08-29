@@ -69,6 +69,6 @@ describe('Item', () => {
         </ItemContent>
       </Item>,
     )
-    expect(screen.getByTestId('item')).toHaveClass('bg-slate-100/50')
+    expect(screen.getByTestId('item')).toHaveClass('bg-collection-row-muted/50')
   })
 })

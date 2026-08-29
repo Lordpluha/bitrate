@@ -2,8 +2,10 @@
 name: vitest
 description: Vitest conventions for web-player and ui-react — the unit/integration/snapshot/screenshot projects, file placement and suffixes, mocking with vi.mock, and single-file smoke-run commands. Use whenever writing or reviewing a *.unit-spec, *.int-spec, *.snapshot-spec, or *.screenshot-spec file in apps/web-player or packages/ui-react, or whenever asked to "write a Vitest test" or "test this component".
 metadata:
+  version: "1.0.0"
   type: reference
   author: lordpluha
+license: MIT
 ---
 
 # Vitest rules
@@ -101,9 +103,23 @@ Use the button specs as the smallest canonical examples:
 
 For browser/page flows and screenshots, also load the `playwright` skill.
 
+## When this skill does not cover it
+
+Do not guess an API from memory. In order:
+
+1. **Read the installed version.** `node_modules/vitest` is what this repo actually runs; the
+   docs site describes the latest release, which may not be it.
+   ```bash
+   node -p "require('vitest/package.json').version"
+   ```
+2. **Then the official docs:** https://vitest.dev/guide/ — match them to the version you just read.
+3. **If both are silent, say so in your report** rather than inventing an API. Here that
+   matters because the browser-mode and projects APIs moved significantly in v3 and again in
+   v4, and this repo is on v4.
+
 ## Related rules and skills
 
 - `playwright` — the Chromium provider behind the `screenshot` project, plus web-player E2E.
-- `sp-tester` — the heavy `--agent` specialist that writes/runs one focused spec end to end
-  and smoke-runs it; dispatched by `/sp-implement --agent`, or invoke it directly via the
+- `sp-tester` — the heavy specialist that writes/runs one focused spec end to end
+  and smoke-runs it; dispatched by `/sp-implement` by default, or invoke it directly via the
   Agent tool.

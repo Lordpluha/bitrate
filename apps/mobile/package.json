@@ -19,7 +19,8 @@
     "build:prod:ios": "eas build --platform ios --profile production",
     "build:preview": "eas build --platform all --profile preview",
     "build:prod": "eas build --platform all --profile production",
-    "build": "pnpm export"
+    "build": "pnpm export",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",

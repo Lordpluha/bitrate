@@ -297,15 +297,14 @@ The docker-compose files use a dedicated bridge network (`spotify-network`) that
 ### Health Checks
 
 ```bash
-# Check service status
-docker compose -f infra/docker-compose.preprod.yaml ps
-
-# Run interactive monitoring script
-./infra/docker-monitor.sh
-
-# Quick health check
-./infra/docker-monitor.sh health
+task dev:status        # container status
+task monitor:health    # status + an HTTP probe per app
+task monitor:report    # health, resources, database, disk, recent errors
+task monitor           # interactive menu
 ```
+
+`monitor:*` wraps `infra/docker-monitor.sh`, which can also be called directly
+(`./infra/docker-monitor.sh health|resources|disk|db|network|errors|report|fix`).
 
 ## 🐛 Troubleshooting
 
