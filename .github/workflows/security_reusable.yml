@@ -112,9 +112,15 @@ jobs:
           format: sarif
           output: trivy-results-${{ matrix.service }}.sarif
           severity: CRITICAL,HIGH
+          # Trivy's default is 5m. The web-artists image ships the full
+          # node_modules tree, and the secret scanner walks every file in it,
+          # so analysis blew past that default and produced no SARIF at all.
+          timeout: 20m
 
       - name: Upload Trivy results to GitHub Security
-        if: always()
+        # Skip when the scanner produced nothing — otherwise a scan failure
+        # reports twice, and the second (missing-path) error hides the first.
+        if: always() && hashFiles(format('trivy-results-{0}.sarif', matrix.service)) != ''
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-results-${{ matrix.service }}.sarif
