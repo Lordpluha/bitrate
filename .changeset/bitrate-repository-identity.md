@@ -6,7 +6,7 @@
 
 The project is now named Bitrate everywhere it names itself: repository metadata, README,
 CONTRIBUTING, the Docusaurus site, the agent layer under `.claude/`, and the GitHub URLs,
-which now point at `github.com/Lordpluha/bitrate`. `PRODUCT.md` no longer describes the brand
+which now point at `github.com/Lordpluha/bitrate-music`. `PRODUCT.md` no longer describes the brand
 as undecided scaffolding — it records Bitrate, the purple primary, and the three themes as
 settled, and points at `brand.md` and `design.md` for the rest.
 

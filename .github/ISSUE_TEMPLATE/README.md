@@ -63,7 +63,7 @@
 - Core Web Vitals улучшения
 
 ### Security Issue
-**⚠️ Для критических уязвимостей используйте [GitHub Security Advisories](https://github.com/lordpluha/bitrate/security/advisories/new)**
+**⚠️ Для критических уязвимостей используйте [GitHub Security Advisories](https://github.com/lordpluha/bitrate-music/security/advisories/new)**
 
 ## 🛠️ Технологический стек проекта
 

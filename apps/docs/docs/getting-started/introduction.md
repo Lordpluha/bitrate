@@ -30,7 +30,7 @@ This is a comprehensive music streaming service including:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Lordpluha/bitrate.git
+git clone https://github.com/Lordpluha/bitrate-music.git
 cd bitrate
 
 # Install dependencies
@@ -122,11 +122,11 @@ pnpm --filter @bitrate/desktop tauri dev  # Desktop app
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](https://github.com/Lordpluha/bitrate/blob/develop/CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](https://github.com/Lordpluha/bitrate-music/blob/develop/CONTRIBUTING.md) for details.
 
 ### Ways to Contribute
 
-- 🐛 Report bugs via [GitHub Issues](https://github.com/Lordpluha/bitrate/issues)
+- 🐛 Report bugs via [GitHub Issues](https://github.com/Lordpluha/bitrate-music/issues)
 - 💡 Suggest features or improvements
 - 🔀 Submit Pull Requests
 - 📖 Improve documentation
@@ -134,11 +134,11 @@ We welcome contributions! Please see our [Contributing Guide](https://github.com
 
 ## 📝 License
 
-This project is licensed under the UNLICENSED license - see the [LICENSE](https://github.com/Lordpluha/bitrate/blob/develop/LICENSE) file for details.
+This project is licensed under the UNLICENSED license - see the [LICENSE](https://github.com/Lordpluha/bitrate-music/blob/develop/LICENSE) file for details.
 
 ## 🔗 Links
 
-- **GitHub Repository:** [github.com/Lordpluha/bitrate](https://github.com/Lordpluha/bitrate)
+- **GitHub Repository:** [github.com/Lordpluha/bitrate-music](https://github.com/Lordpluha/bitrate-music)
 - **Blog:** [Blog](/blog) - Development updates and technical insights
 
 ---

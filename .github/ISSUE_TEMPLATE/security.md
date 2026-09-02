@@ -62,4 +62,4 @@ assignees: []
 
 ---
 
-**Security Notice**: Please do not publicly disclose sensitive security details. For critical vulnerabilities, use [GitHub Security Advisories](https://github.com/lordpluha/bitrate/security/advisories/new) for private reporting.
+**Security Notice**: Please do not publicly disclose sensitive security details. For critical vulnerabilities, use [GitHub Security Advisories](https://github.com/lordpluha/bitrate-music/security/advisories/new) for private reporting.

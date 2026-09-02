@@ -86,7 +86,7 @@ In upcoming posts, I'll be sharing about:
 
 The project is open for contributions! Source code is available on GitHub:
 
-👉 [github.com/Lordpluha/bitrate](https://github.com/Lordpluha/bitrate)
+👉 [github.com/Lordpluha/bitrate-music](https://github.com/Lordpluha/bitrate-music)
 
 ### How to Help?
 
