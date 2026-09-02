@@ -1,6 +1,6 @@
 # @bitrate/ui-react
 
-UI kit for [Bitrate](https://github.com/Lordpluha/bitrate-music), built on **React 19**, **Next.js 15**, **TailwindCSS**, and **shadcn/ui**.
+UI kit for [Bitrate](https://github.com/Lordpluha/bitrate), built on **React 19**, **Next.js 15**, **TailwindCSS**, and **shadcn/ui**.
 Contains reusable components, styles, and a Tailwind preset for consistent styling across frontend applications.
 
 ---
@@ -112,4 +112,4 @@ pnpm -F @bitrate/ui-react clean
 
 > If you want to use predefined stories from @shadcn/ui - https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry preview (https://registry.lloydrichards.dev/storybook/?path=/docs/design-typography--docs&globals=backgrounds.grid:!true)
 
-💚 Made for [bitrate](https://github.com/Lordpluha/bitrate-music)
+💚 Made for [bitrate](https://github.com/Lordpluha/bitrate)

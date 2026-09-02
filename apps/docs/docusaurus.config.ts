@@ -29,7 +29,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'lordpluha', // Usually your GitHub org/user name.
-  projectName: 'bitrate-music', // Usually your repo name.
+  projectName: 'bitrate', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -47,7 +47,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/Lordpluha/bitrate-music/tree/develop/apps/docs/',
+          editUrl: 'https://github.com/Lordpluha/bitrate/tree/develop/apps/docs/',
         },
         blog: {
           showReadingTime: true,
@@ -55,7 +55,7 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          editUrl: 'https://github.com/Lordpluha/bitrate-music/tree/develop/apps/docs/',
+          editUrl: 'https://github.com/Lordpluha/bitrate/tree/develop/apps/docs/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -89,7 +89,7 @@ const config: Config = {
         },
         { to: '/blog', label: 'Blog', position: 'left' },
         {
-          href: 'https://github.com/lordpluha/bitrate-music',
+          href: 'https://github.com/lordpluha/bitrate',
           label: 'GitHub',
           position: 'right',
         },
@@ -141,7 +141,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/lordpluha/bitrate-music',
+              href: 'https://github.com/lordpluha/bitrate',
             },
           ],
         },

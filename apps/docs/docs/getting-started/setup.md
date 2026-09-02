@@ -49,7 +49,7 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Lordpluha/bitrate-music.git
+git clone https://github.com/Lordpluha/bitrate.git
 cd bitrate
 ```
 
@@ -439,4 +439,4 @@ pnpm turbo build --force
 
 ---
 
-Having issues? Check out [Troubleshooting](#-troubleshooting) or [open an issue](https://github.com/Lordpluha/bitrate-music/issues).
+Having issues? Check out [Troubleshooting](#-troubleshooting) or [open an issue](https://github.com/Lordpluha/bitrate/issues).

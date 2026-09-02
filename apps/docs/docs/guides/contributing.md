@@ -30,7 +30,7 @@ cd bitrate
 ### 3. Add Upstream Remote
 
 ```bash
-git remote add upstream https://github.com/Lordpluha/bitrate-music.git
+git remote add upstream https://github.com/Lordpluha/bitrate.git
 ```
 
 ### 4. Create a Branch
@@ -234,7 +234,7 @@ export const Button = (props: any) => {
 
 ## 🐛 Bug Reports
 
-Use the [bug report template](https://github.com/Lordpluha/bitrate-music/issues/new?template=bug_report.md):
+Use the [bug report template](https://github.com/Lordpluha/bitrate/issues/new?template=bug_report.md):
 
 **Required Information:**
 - Description of the bug
@@ -246,7 +246,7 @@ Use the [bug report template](https://github.com/Lordpluha/bitrate-music/issues/
 
 ## 💡 Feature Requests
 
-Use the [feature request template](https://github.com/Lordpluha/bitrate-music/issues/new?template=feature_request.md):
+Use the [feature request template](https://github.com/Lordpluha/bitrate/issues/new?template=feature_request.md):
 
 **Required Information:**
 - Problem description
@@ -294,4 +294,4 @@ Every contribution, no matter how small, is valued and appreciated!
 
 ---
 
-**Questions?** Open a [discussion](https://github.com/Lordpluha/bitrate-music/discussions) or join our community.
+**Questions?** Open a [discussion](https://github.com/Lordpluha/bitrate/discussions) or join our community.

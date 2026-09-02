@@ -97,4 +97,4 @@ validation rejects it when `NODE_ENV=production`. CI/E2E must use an SMTP transp
 depend on token logging.
 
 ## License
-Nest is [MIT licensed](https://github.com/Lordpluha/bitrate-music/LICENSE).
+Nest is [MIT licensed](https://github.com/Lordpluha/bitrate/LICENSE).

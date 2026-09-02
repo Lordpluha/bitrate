@@ -25,7 +25,7 @@ Production deployment guide for Bitrate.
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/Lordpluha/bitrate-music.git
+git clone https://github.com/Lordpluha/bitrate.git
 cd bitrate
 ```
 

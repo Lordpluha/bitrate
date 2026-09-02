@@ -89,7 +89,7 @@ Explicitly out of scope, and still open:
 - **The Vercel preview host** `spotify-clone-web-olive.vercel.app`, kept until the deployment is
   renamed.
 - **Renaming the GitHub repository and the local checkout**, which is a manual step; URLs in the
-  repo already point at `github.com/Lordpluha/bitrate-music`.
+  repo already point at `github.com/Lordpluha/bitrate`.
 
 ## Alternatives considered
 
