@@ -104,6 +104,26 @@ tasks:
     cmds:
       - cmd: pnpm --filter @bitrate/api run db:seed
 
+  db:backup:
+    desc: Dump the database to backups/ (reads credentials from the container, never hardcoded)
+    cmds:
+      - cmd: mkdir -p backups
+      - cmd: |
+          {{.DC_DEV}} exec -T postgres sh -c \
+            'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists' \
+            > "backups/$(date +%Y-%m-%d_%H%M%S).sql"
+      - cmd: ls -lh backups | tail -1
+
+  db:restore:
+    desc: Restore the database from a dump — DESTRUCTIVE, replaces current data. Pass FILE=path
+    prompt: This overwrites the current database. Continue?
+    requires:
+      vars: [FILE]
+    cmds:
+      - cmd: |
+          {{.DC_DEV}} exec -T postgres sh -c \
+            'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < "{{.FILE}}"
+
   db:studio:
     desc: Open Prisma Studio in browser
     cmds:

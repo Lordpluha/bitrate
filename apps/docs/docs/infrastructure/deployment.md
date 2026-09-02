@@ -4,441 +4,223 @@ sidebar_position: 2
 
 # Deployment
 
-Production deployment guide for Bitrate.
+Deploying Bitrate to a single Linux server with Docker Compose.
 
-## 🚀 Deployment Options
+This is the only deployment path the repository actually supports. Earlier revisions of this
+page also described Elastic Beanstalk, Cloud Run, Azure Container Instances, and Kubernetes;
+none of them had configuration in the repository, so the instructions could not work. They
+were removed rather than left as an untested promise.
 
-### 1. Docker Compose (Recommended for small-scale)
-### 2. Kubernetes (Recommended for scale)
-### 3. Cloud Platforms (AWS, GCP, Azure)
-### 4. Serverless (Vercel, Netlify)
+## What you are deploying
 
-## 🐳 Docker Compose Deployment
+`infra/docker-compose.prod.yaml` runs seven containers:
 
-### Prerequisites
+| Container | Role | Reachable from outside |
+|---|---|---|
+| `nginx` | TLS termination and routing | **yes** — 80, 443 |
+| `api` | NestJS, port 3000 | no |
+| `web-player` | Next.js, port 3001 | no |
+| `web-artists` | Next.js, port 3002 | no |
+| `admin` | Kottster, port 3002 | no |
+| `postgres` | PostgreSQL 16 | no |
+| `redis` | Redis 7 | no |
 
-- Docker 20.10+
-- Docker Compose 2.0+
-- Domain name with DNS configured
-- SSL certificate (Let's Encrypt)
+Only nginx publishes ports. Postgres and Redis are reachable only inside the Docker network —
+do not add a `ports:` mapping to them.
 
-### 1. Clone Repository
+## Sizing
+
+The four application containers are capped at 512 MB each, so the stack idles at roughly 3 GB
+including Postgres, Redis, nginx, and the OS. **8 GB is the practical floor**, because the
+production compose builds images on the server and two parallel Next.js builds can ask for more
+than the idle stack leaves free.
+
+Audio transcoding (ffmpeg, via the BullMQ consumer in `apps/api`) is the only CPU-heavy work.
+Four cores is comfortable for a small deployment.
+
+## Prerequisites
+
+- Docker Engine with the Compose plugin
+- [`task`](https://taskfile.dev/installation/) — the only supported interface to the Docker and
+  database workflows in this repository
+- A domain pointing at the server's IP
+
+Node and pnpm are **not** needed on the host; everything is built inside containers.
+
+## 1. Harden the server
+
+Before anything else:
+
+```bash
+# key-only SSH
+sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo systemctl reload ssh
+
+# only SSH and the web ports
+sudo ufw allow OpenSSH && sudo ufw allow 80,443/tcp && sudo ufw enable
+
+sudo apt install -y fail2ban unattended-upgrades
+```
+
+Run the stack as a non-root user in the `docker` group, not as root.
+
+### Swap
+
+Production images are built on the server, and `turbo run build` builds them in parallel. On
+an 8 GB machine that can exhaust memory mid-build:
+
+```bash
+sudo fallocate -l 4G /swapfile && sudo chmod 600 /swapfile
+sudo mkswap /swapfile && sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+## 2. Clone and configure
 
 ```bash
 git clone https://github.com/Lordpluha/bitrate.git
 cd bitrate
+cp .env.example .env
 ```
 
-### 2. Environment Configuration
+Edit `.env`. The API validates its environment at startup with Zod (`apps/api/env.schema.ts`)
+and refuses to boot with a message naming what is missing — so start the stack and read the
+error rather than guessing.
+
+Four values need attention:
 
 ```bash
-# Copy production env file
-cp .env.example .env.production
+# Generate, do not invent
+JWT_SECRET=$(openssl rand -base64 48)
 
-# Edit configuration
-vi .env.production
+# The API sits behind exactly one proxy hop (nginx). Leaving this at 0 makes rate limiting
+# and audit logs see nginx's address for every request, which disables brute-force protection.
+TRUST_PROXY_HOPS=1
+
+# Must match the certificate issued below, or nginx will not start
+DOMAIN=example.com
+
+# Validated as URLs
+WEB_HOST=https://example.com
+USER_WEB_HOST=https://example.com
+ARTIST_WEB_HOST=https://example.com/artists
+API_BASE_URL=https://example.com/api
 ```
 
-**Required Variables:**
+`OAUTH_*`, `SMTP_*`, `SENTRY_DSN`, and `METRICS_TOKEN` are optional — the API starts without
+them. `EMAIL_FROM` becomes required as soon as `SMTP_HOST` is set.
+
+The admin panel has its own required variables (`KOTTSTER_*`, `ADMIN_ROOT_*`) and refuses to
+start without them. See the security checklist below before setting them.
+
+## 3. Issue the TLS certificate
+
+nginx serves the ACME challenge from `infra/nginx/certbot-webroot`, so the first certificate is
+issued before nginx has a certificate to start with. Use standalone mode once, then webroot for
+renewals:
 
 ```bash
-# Database
-DATABASE_URL=postgresql://user:password@postgres:5432/bitrate
-
-# JWT Secrets (CHANGE THESE!)
-JWT_SECRET=your-super-secret-jwt-key-min-32-chars
-JWT_REFRESH_SECRET=your-super-secret-refresh-key-min-32-chars
-
-# Application
-NODE_ENV=production
-API_URL=https://api.yourdomain.com
-WEB_URL=https://yourdomain.com
-
-# CORS
-CORS_ORIGIN=https://yourdomain.com,https://api.yourdomain.com
-
-# Storage
-S3_ENDPOINT=https://storage.yourdomain.com
-S3_ACCESS_KEY=your-access-key
-S3_SECRET_KEY=your-secret-key
-S3_BUCKET=bitrate
-
-# Email (optional)
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=noreply@yourdomain.com
-SMTP_PASS=password
+sudo apt install -y certbot
+sudo certbot certonly --standalone -d example.com --agree-tos -m you@example.com
 ```
 
-### 3. SSL Configuration
+Certificates land in `/etc/letsencrypt/live/<domain>/`, which the nginx container mounts
+read-only. Renewal runs from certbot's own systemd timer; point it at the webroot so it does not
+need to stop nginx:
 
 ```bash
-# Install certbot
-sudo apt install certbot
-
-# Generate certificates
-sudo certbot certonly --standalone -d yourdomain.com -d api.yourdomain.com
-
-# Certificates will be at:
-# /etc/letsencrypt/live/yourdomain.com/fullchain.pem
-# /etc/letsencrypt/live/yourdomain.com/privkey.pem
+sudo certbot certonly --webroot -w /path/to/bitrate/infra/nginx/certbot-webroot -d example.com
 ```
 
-### 4. Nginx Configuration
-
-```nginx
-# nginx/conf.d/production.conf
-server {
-    listen 80;
-    server_name yourdomain.com api.yourdomain.com;
-    return 301 https://$server_name$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name yourdomain.com;
-
-    ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
-
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-
-    location / {
-        proxy_pass http://web:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-
-server {
-    listen 443 ssl http2;
-    server_name api.yourdomain.com;
-
-    ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
-
-    location / {
-        proxy_pass http://api:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    # File upload size limit
-    client_max_body_size 100M;
-}
-```
-
-### 5. Build and Deploy
+Reload nginx after renewal:
 
 ```bash
-# Build production images
-docker compose -f docker-compose.prod.yaml build
-
-# Start services
-docker compose -f docker-compose.prod.yaml up -d
-
-# Run migrations
-docker compose exec api pnpm db:migration:start
-
-# Verify services
-docker compose ps
+echo 'docker exec bitrate-nginx-prod nginx -s reload' | \
+  sudo tee /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
+sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
 ```
 
-### 6. Health Check
+## 4. First deploy
 
 ```bash
-# API
-curl https://api.yourdomain.com/health
-
-# Web
-curl https://yourdomain.com
+task prod:build
+task prod:up
 ```
 
-## ☁️ Cloud Platform Deployment
-
-### AWS (Elastic Beanstalk)
+If the build is killed for memory, build one package at a time:
 
 ```bash
-# Install EB CLI
-pip install awsebcli
-
-# Initialize
-eb init
-
-# Create environment
-eb create production
-
-# Deploy
-eb deploy
+docker compose -f infra/docker-compose.prod.yaml build --parallel=1
 ```
 
-### Google Cloud (Cloud Run)
+Then apply migrations and seed:
 
 ```bash
-# Build and push
-gcloud builds submit --tag gcr.io/PROJECT_ID/bitrate-api
-gcloud builds submit --tag gcr.io/PROJECT_ID/bitrate-web
-
-# Deploy
-gcloud run deploy api --image gcr.io/PROJECT_ID/bitrate-api
-gcloud run deploy web --image gcr.io/PROJECT_ID/bitrate-web
+task db:migrate
+task db:seed
 ```
 
-### Azure (Container Instances)
+## 5. Verify
 
 ```bash
-# Login
-az login
-
-# Create resource group
-az group create --name bitrate --location eastus
-
-# Deploy containers
-az container create \
-  --resource-group bitrate \
-  --name api \
-  --image yourregistry.azurecr.io/bitrate-api:latest \
-  --dns-name-label bitrate-api \
-  --ports 3000
+task prod:logs                     # all services
+curl -f https://example.com/health # nginx
+curl -f https://example.com/api/health
 ```
 
-## 🎯 Serverless Deployment
+If nginx exits immediately, the usual causes are a `DOMAIN` that does not match the issued
+certificate, or a missing certificate at `/etc/letsencrypt/live/<DOMAIN>/`.
 
-### Vercel (Web Player)
+## 6. Backups
 
 ```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-cd apps/web-player
-vercel --prod
+task db:backup                     # dump to backups/
+task db:restore FILE=backups/2026-09-02_120000.sql
 ```
 
-**vercel.json:**
+`db:restore` is destructive and asks for confirmation. Copy dumps off the machine — a snapshot
+of a volume with a running Postgres is not a consistent backup, so volume snapshots are a second
+line of defence, not a substitute.
 
-```json
-{
-  "framework": "nextjs",
-  "buildCommand": "pnpm build",
-  "installCommand": "pnpm install",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://api.yourdomain.com"
-  }
-}
-```
-
-### Netlify (Documentation)
+## 7. Updating
 
 ```bash
-# Deploy docs
-cd apps/docs
-pnpm build
-
-# Upload to Netlify
-netlify deploy --prod --dir=build
+git pull
+task prod:build
+task prod:up
+task db:migrate
 ```
 
-## 🔄 CI/CD Pipeline
+Images are built on the server because `infra/docker-compose.prod.yaml` uses `build:`. Publishing
+images from CI to a registry and switching to `image:` would remove the build from the production
+host entirely; that is not set up yet.
 
-### GitHub Actions
+## Monitoring
 
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy
+The API exposes Prometheus metrics at `/metrics` under the names `bitrate_api_http_requests_total`
+and `bitrate_api_http_request_duration_ms_sum`. Set `METRICS_TOKEN` (32 characters or more) to
+require a bearer token; without it the endpoint is unauthenticated.
 
-on:
-  push:
-    branches: [master]
+Container logs are capped at 10 MB × 3 files per service in the production compose. Without that
+cap Docker's json-file driver grows until the disk is full.
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+## Security checklist
 
-    steps:
-      - uses: actions/checkout@v3
+- [ ] Key-only SSH, firewall limited to 22/80/443, `fail2ban` running
+- [ ] `TRUST_PROXY_HOPS=1` — otherwise rate limiting sees only nginx
+- [ ] **Rotate the admin credentials.** `KOTTSTER_SECRET_KEY`, `KOTTSTER_API_TOKEN`,
+      `KOTTSTER_JWT_SECRET_SALT`, and the root admin password were literals in
+      `apps/admin/app/_server/app.ts` in a public repository. They now come from the
+      environment, but the old values are compromised and must be replaced — including the
+      Kottster API token, which is rotated in the Kottster dashboard.
+- [ ] The admin panel reaches Postgres directly, bypassing every guard, validation rule, and
+      queue job in the API. Restrict who can reach `/admin`.
+- [ ] `JWT_SECRET` generated, not invented
+- [ ] Postgres and Redis have no published ports
+- [ ] Backups running and restored at least once as a test
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 10.28.1
+## Related
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Run tests
-        run: pnpm test
-
-      - name: Build
-        run: pnpm build
-
-      - name: Build Docker images
-        run: docker compose -f docker-compose.prod.yaml build
-
-      - name: Push to registry
-        run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker push yourregistry/bitrate-api:latest
-          docker push yourregistry/bitrate-web:latest
-
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /opt/bitrate
-            git pull
-            docker compose -f docker-compose.prod.yaml pull
-            docker compose -f docker-compose.prod.yaml up -d
-```
-
-## 📊 Monitoring
-
-### Health Checks
-
-```yaml
-# docker-compose.prod.yaml
-services:
-  api:
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-```
-
-### Logging
-
-```bash
-# View logs
-docker compose logs -f api
-
-# Export to file
-docker compose logs api > api.log
-
-# Use logging driver
-docker-compose.prod.yaml:
-  api:
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-```
-
-### Prometheus Metrics
-
-```yaml
-# prometheus.yml
-scrape_configs:
-  - job_name: 'api'
-    static_configs:
-      - targets: ['api:3000']
-    metrics_path: '/metrics'
-```
-
-## 🔧 Database Management
-
-### Migrations
-
-```bash
-# Run migrations
-docker compose exec api pnpm db:migration:start
-
-# Create backup
-docker compose exec postgres pg_dump -U postgres bitrate > backup.sql
-
-# Restore
-docker compose exec -T postgres psql -U postgres bitrate < backup.sql
-```
-
-### Scheduled Backups
-
-```bash
-# crontab
-0 2 * * * /opt/scripts/backup-db.sh
-```
-
-**backup-db.sh:**
-
-```bash
-#!/bin/bash
-DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="/backups"
-
-docker compose exec -T postgres pg_dump -U postgres bitrate | \
-  gzip > $BACKUP_DIR/backup_$DATE.sql.gz
-
-# Keep last 7 days
-find $BACKUP_DIR -name "backup_*.sql.gz" -mtime +7 -delete
-```
-
-## 🔐 Security Checklist
-
-- [ ] Change all default passwords
-- [ ] Generate strong JWT secrets
-- [ ] Enable SSL/TLS
-- [ ] Configure firewall
-- [ ] Set up rate limiting
-- [ ] Enable CORS properly
-- [ ] Use environment variables
-- [ ] Regular security updates
-- [ ] Set up monitoring
-- [ ] Configure backups
-
-## 📈 Scaling
-
-### Horizontal Scaling
-
-```yaml
-# docker-compose.prod.yaml
-services:
-  api:
-    deploy:
-      replicas: 3
-      update_config:
-        parallelism: 1
-        delay: 10s
-      restart_policy:
-        condition: on-failure
-```
-
-### Load Balancing
-
-```nginx
-upstream api_backend {
-    least_conn;
-    server api-1:3000;
-    server api-2:3000;
-    server api-3:3000;
-}
-
-server {
-    location / {
-        proxy_pass http://api_backend;
-    }
-}
-```
-
----
-
-**Related:**
-- [Docker Setup](/docs/infrastructure/docker)
+- [Docker setup](./docker.md) — the compose stacks and local development
+- [Environment variables](../guides/environment.md)
+- [ADR-0024](../architecture/0024-rebrand-to-bitrate.md) — infrastructure identifiers

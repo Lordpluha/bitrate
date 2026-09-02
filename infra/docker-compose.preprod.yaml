@@ -166,6 +166,11 @@ services:
       NODE_ENV: development
       DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}
       PORT: 3002
+      KOTTSTER_SECRET_KEY: ${KOTTSTER_SECRET_KEY:?required}
+      KOTTSTER_API_TOKEN: ${KOTTSTER_API_TOKEN:?required}
+      KOTTSTER_JWT_SECRET_SALT: ${KOTTSTER_JWT_SECRET_SALT:?required}
+      ADMIN_ROOT_USERNAME: ${ADMIN_ROOT_USERNAME:?required}
+      ADMIN_ROOT_PASSWORD: ${ADMIN_ROOT_PASSWORD:?required}
     ports:
       - "${ADMIN_PORT:-3002}:3002"
     volumes:
@@ -276,6 +281,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
     depends_on:
       - api
       - web-player
