@@ -5,7 +5,7 @@ authors: [lordpluha]
 tags: [announcement, development]
 ---
 
-Welcome to the official **Spotify Clone** blog - a full-featured music streaming service built from scratch!
+Welcome to the official **Bitrate** blog - a full-featured music streaming service built from scratch!
 
 This is an ambitious pet project aimed at recreating the functionality of a popular music service using modern technology stack.
 
@@ -13,7 +13,7 @@ This is an ambitious pet project aimed at recreating the functionality of a popu
 
 ## 🎯 What Is This Project?
 
-**Spotify Clone** is a comprehensive monorepo including:
+**Bitrate** is a comprehensive monorepo including:
 
 - 🎵 **Backend API** (NestJS + PostgreSQL + Prisma)
 - 🌐 **Web Application** (Next.js + React)
@@ -50,11 +50,11 @@ The project is built with modern technologies:
 Reusable CLI utilities created for the project:
 
 - **@spotify/tokens-generator** - Design tokens to CSS generation
-- **@spotify/vite-svgr** - Vite plugin for SVG-to-React generation in the build pipeline
-- **@spotify/svgr** - SVG to React component conversion
-- **@spotify/converter** - Media conversion (OGG Opus, AAC)
-- **@spotify/ncs-parser** - NCS music parsing
-- **@spotify/ui-react** - Reusable UI components
+- **@bitrate/vite-svgr** - Vite plugin for SVG-to-React generation in the build pipeline
+- **@bitrate/svgr** - SVG to React component conversion
+- **@bitrate/converter** - Media conversion (OGG Opus, AAC)
+- **@bitrate/ncs-parser** - NCS music parsing
+- **@bitrate/ui-react** - Reusable UI components
 
 ## 🎨 Key Features
 
@@ -86,7 +86,7 @@ In upcoming posts, I'll be sharing about:
 
 The project is open for contributions! Source code is available on GitHub:
 
-👉 [github.com/Lordpluha/spotify-clone](https://github.com/Lordpluha/spotify-clone)
+👉 [github.com/Lordpluha/bitrate](https://github.com/Lordpluha/bitrate)
 
 ### How to Help?
 

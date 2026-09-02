@@ -1,7 +1,5 @@
 'use client'
 
-import { useArtists } from '@entities/Artist'
-import { MusicCardLg } from '@shared/ui/MusicCardLg'
 import {
   Carousel,
   CarouselContent,
@@ -10,7 +8,9 @@ import {
   CarouselPrevious,
   CustomNextIcon,
   CustomPrevIcon,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
+import { useArtists } from '@entities/Artist'
+import { MusicCardLg } from '@shared/ui/MusicCardLg'
 import { useI18n } from '@/shared/i18n'
 import { getArtistAvatarUrl } from '@/shared/utils/mediaUrl'
 

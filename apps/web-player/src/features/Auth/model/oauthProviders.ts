@@ -1,4 +1,3 @@
-import type { ActiveOAuthProvider } from '@features/Auth/api/oauth'
 import {
   AppleIcon,
   DiscordIcon,
@@ -13,7 +12,8 @@ import {
   TiktokIcon,
   TwitchIcon,
   TwitterIcon,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
+import type { ActiveOAuthProvider } from '@features/Auth/api/oauth'
 import type { ComponentType, SVGProps } from 'react'
 
 export type SocialProvider = {

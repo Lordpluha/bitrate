@@ -16,7 +16,7 @@ graph and reproducible build order without forcing every surface into one runtim
 - Turborepo owns root orchestration and dependency-aware `build`, `lint`, `test`,
   `check-types`, and `dev` tasks.
 - Each app/package owns its runner-specific scripts and configuration.
-- Shared packages use the `@spotify/` namespace.
+- Shared packages use the `@bitrate/` namespace.
 - Node 20+ and the pinned `pnpm@10.30.3` package manager are the supported baseline.
 - PostgreSQL and Redis run through the minimal development Compose stack; apps normally
   run natively.

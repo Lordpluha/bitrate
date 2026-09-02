@@ -1,5 +1,5 @@
+import { cn, Typography } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
-import { cn, Typography } from '@spotify/ui-react'
 import Link from 'next/link'
 
 import type plansConfig from '../config/plans.json'

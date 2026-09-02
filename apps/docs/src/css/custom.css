@@ -1,45 +1,45 @@
 /**
- * Spotify Clone Documentation - Custom Styles
- * Spotify-inspired color palette and branding
+ * Bitrate Documentation - Custom Styles
+ * Mirrors the Bitrate palette in packages/ui-react/src/styles/palette.css.
  */
 
-/* Spotify Brand Colors */
+/* Bitrate Brand Colors */
 :root {
-  /* Spotify Green */
-  --ifm-color-primary: #1db954;
-  --ifm-color-primary-dark: #1aa34a;
-  --ifm-color-primary-darker: #189b46;
-  --ifm-color-primary-darkest: #148039;
-  --ifm-color-primary-light: #2bc65e;
-  --ifm-color-primary-lighter: #34ca65;
-  --ifm-color-primary-lightest: #4dd678;
+  /* Bitrate Purple */
+  --ifm-color-primary: #7c3aed;
+  --ifm-color-primary-dark: #6d28d9;
+  --ifm-color-primary-darker: #5b21b6;
+  --ifm-color-primary-darkest: #4c1d95;
+  --ifm-color-primary-light: #8b5cf6;
+  --ifm-color-primary-lighter: #a78bfa;
+  --ifm-color-primary-lightest: #c4b5fd;
 
   /* Custom Colors */
-  --spotify-green: #1db954;
-  --spotify-black: #191414;
-  --spotify-white: #ffffff;
-  --spotify-gray: #b3b3b3;
-  --spotify-dark-gray: #535353;
+  --bitrate-purple: #7c3aed;
+  --bitrate-black: #0b0d12;
+  --bitrate-white: #ffffff;
+  --bitrate-gray: #9ca3af;
+  --bitrate-dark-gray: #4b5563;
 
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(29, 185, 84, 0.1);
-  --ifm-font-family-base: "Circular Std", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --docusaurus-highlighted-code-line-bg: rgba(124, 58, 237, 0.1);
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --ifm-heading-font-weight: 700;
 }
 
-/* Dark mode - Spotify style */
+/* Dark mode */
 [data-theme="dark"] {
-  --ifm-color-primary: #1ed760;
-  --ifm-color-primary-dark: #1bc656;
-  --ifm-color-primary-darker: #19bb51;
-  --ifm-color-primary-darkest: #159a43;
-  --ifm-color-primary-light: #35dd71;
-  --ifm-color-primary-lighter: #42df79;
-  --ifm-color-primary-lightest: #62e490;
+  --ifm-color-primary: #8b5cf6;
+  --ifm-color-primary-dark: #7c3aed;
+  --ifm-color-primary-darker: #6d28d9;
+  --ifm-color-primary-darkest: #5b21b6;
+  --ifm-color-primary-light: #a78bfa;
+  --ifm-color-primary-lighter: #c4b5fd;
+  --ifm-color-primary-lightest: #ddd6fe;
 
-  --ifm-background-color: #121212;
-  --ifm-background-surface-color: #181818;
-  --docusaurus-highlighted-code-line-bg: rgba(30, 215, 96, 0.15);
+  --ifm-background-color: #0b0d12;
+  --ifm-background-surface-color: #151923;
+  --docusaurus-highlighted-code-line-bg: rgba(139, 92, 246, 0.15);
 }
 
 /* Hero section animations */
@@ -68,13 +68,13 @@
 
 /* Custom hero styles */
 .hero--primary {
-  background: linear-gradient(-45deg, #1db954, #1ed760, #1aa34a, #2bc65e);
+  background: linear-gradient(-45deg, #6d28d9, #7c3aed, #a78bfa, #3b82f6);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
 }
 
 [data-theme="dark"] .hero--primary {
-  background: linear-gradient(-45deg, #191414, #1db954, #121212, #1ed760);
+  background: linear-gradient(-45deg, #0b0d12, #6d28d9, #151923, #7c3aed);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
 }
@@ -106,19 +106,19 @@
 }
 
 .button--secondary {
-  background-color: var(--spotify-white);
-  color: var(--spotify-black);
+  background-color: var(--bitrate-white);
+  color: var(--bitrate-black);
   border: none;
 }
 
 .button--secondary:hover {
   background-color: #f6f6f6;
-  color: var(--spotify-black);
+  color: var(--bitrate-black);
 }
 
 [data-theme="dark"] .button--secondary {
-  background-color: var(--spotify-white);
-  color: var(--spotify-black);
+  background-color: var(--bitrate-white);
+  color: var(--bitrate-black);
 }
 
 [data-theme="dark"] .button--secondary:hover {

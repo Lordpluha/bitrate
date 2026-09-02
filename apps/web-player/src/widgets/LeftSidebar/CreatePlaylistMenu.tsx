@@ -5,7 +5,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 import { useState } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { CreatePlaylistActions } from '@/widgets/LeftSidebar/CreatePlaylistActions'

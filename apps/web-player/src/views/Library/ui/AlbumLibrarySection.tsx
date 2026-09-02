@@ -1,4 +1,4 @@
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ROUTES } from '@/shared/routes'

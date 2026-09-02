@@ -21,7 +21,7 @@ Cross-cutting implementation discipline for all first-party code under `apps/web
 
 ## DRY
 
-Three near-identical blocks → extract. **Search before writing**: reuse `@spotify/ui-react` components, `@/shared/ui`, `@/shared/hooks`, and existing `use*` hooks before creating new ones. Never duplicate a Zod schema — import the one in `entities/<entity>/model/<entity>.schema.ts`.
+Three near-identical blocks → extract. **Search before writing**: reuse `@bitrate/ui-react` components, `@/shared/ui`, `@/shared/hooks`, and existing `use*` hooks before creating new ones. Never duplicate a Zod schema — import the one in `entities/<entity>/model/<entity>.schema.ts`.
 
 ## KISS
 

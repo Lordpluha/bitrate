@@ -16,13 +16,13 @@ const footerColumns = [
     ],
   },
   {
-    title: 'Spotify Plans',
+    title: 'Bitrate Plans',
     links: [
       'Premium Individual',
       'Premium Duo',
       'Premium Family',
       'Premium Student',
-      'Spotify Free',
+      'Bitrate Free',
     ],
   },
 ]
@@ -64,7 +64,7 @@ export const ProfileFooter = () => (
           </Link>
         ))}
       </div>
-      <span>© 2026 Spotify AB</span>
+      <span>© 2026 Bitrate</span>
     </div>
   </footer>
 )

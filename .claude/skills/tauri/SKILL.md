@@ -109,9 +109,9 @@ const un = await listen<Progress>('download://progress', (e) => …)
 ## Commands
 
 ```bash
-pnpm --filter @spotify/desktop dev            # vite renderer
-pnpm --filter @spotify/desktop tauri dev      # full app
-pnpm --filter @spotify/desktop exec tsc --noEmit
+pnpm --filter @bitrate/desktop dev            # vite renderer
+pnpm --filter @bitrate/desktop tauri dev      # full app
+pnpm --filter @bitrate/desktop exec tsc --noEmit
 cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml
 ```
 

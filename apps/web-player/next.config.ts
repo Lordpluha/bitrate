@@ -42,7 +42,7 @@ const nextConfig = {
   },
   pageExtensions: ['ts', 'tsx', 'mdx'],
   poweredByHeader: false,
-  transpilePackages: ['@spotify/ui-react'],
+  transpilePackages: ['@bitrate/ui-react'],
   async rewrites() {
     return [
       {

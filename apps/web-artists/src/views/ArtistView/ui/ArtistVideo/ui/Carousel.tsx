@@ -5,7 +5,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 import { useCallback, useState } from 'react'
 import config from '../config/video-config.json'
 import { useCarouselMediaState } from '../model/useCarouselMediaState'

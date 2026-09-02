@@ -1,4 +1,4 @@
-import { cn, SwitchLanguagesIcon } from '@spotify/ui-react'
+import { cn, SwitchLanguagesIcon } from '@bitrate/ui-react'
 
 export const SwitchLanguagesLogo = ({
   className,

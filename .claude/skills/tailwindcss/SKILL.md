@@ -1,6 +1,6 @@
 ---
 name: tailwindcss
-description: Tailwind v4 conventions for this monorepo — CSS-first @theme configuration with no tailwind.config.js, token-backed utilities from @spotify/ui-react, cn() merging, CVA variants, and the v3 patterns that no longer work. Use when writing or reviewing any className, adding a design token, or when a utility class silently does nothing.
+description: Tailwind v4 conventions for this monorepo — CSS-first @theme configuration with no tailwind.config.js, token-backed utilities from @bitrate/ui-react, cn() merging, CVA variants, and the v3 patterns that no longer work. Use when writing or reviewing any className, adding a design token, or when a utility class silently does nothing.
 license: MIT
 metadata:
   author: lordpluha
@@ -34,13 +34,13 @@ The app imports the generated stylesheets at its root:
 
 ```css
 /* apps/web-player/src/app/global.css */
-@import "@spotify/ui-react/themes.css";
+@import "@bitrate/ui-react/themes.css";
 ```
 
 **One import, not many.** `themes.css` is a barrel: it `@import`s `palette.css`,
 `typography.css`, `layout.css`, `animations.css`, and every semantic-role part-file under
 `themes/`, and declares no colour of its own. It is also the *only* stylesheet the package
-exports: `@spotify/ui-react/styles/palette.css` is not in the package's `exports` map and
+exports: `@bitrate/ui-react/styles/palette.css` is not in the package's `exports` map and
 fails with `MODULE_NOT_FOUND`.
 
 Semantic roles live in one part-file each under `styles/themes/` (`base.css`,
@@ -64,7 +64,7 @@ JS), never for colour or spacing.
 ## Merging — always through `cn()`
 
 ```tsx
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 
 <div className={cn('rounded-lg p-4', isActive && 'ring-2 ring-primary', className)} />
 ```

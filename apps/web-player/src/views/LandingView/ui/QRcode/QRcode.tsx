@@ -1,4 +1,4 @@
-import { Typography } from '@spotify/ui-react'
+import { Typography } from '@bitrate/ui-react'
 import Image from 'next/image'
 
 export const QRcode = () => {
@@ -10,7 +10,7 @@ export const QRcode = () => {
           className={'leading-[1.2] text-center w-full'}
           size={'heading1'}
         >
-          Discover a World of Music with Spotify
+          Discover a World of Music with Bitrate
         </Typography>
         <Image
           alt="QR-code"

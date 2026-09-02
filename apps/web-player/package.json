@@ -1,5 +1,5 @@
 {
-  "name": "@spotify/web-player",
+  "name": "@bitrate/web-player",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -19,11 +19,11 @@
     "test:e2e": "playwright test --config=tests/configs/playwright.e2e.config.ts",
     "test:screenshot": "playwright test --config=tests/configs/playwright.screenshot.config.ts",
     "test:screenshot:update": "playwright test --config=tests/configs/playwright.screenshot.config.ts --update-snapshots",
-    "ci:bundle-analysis-install": "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @spotify/ui-react run build"
+    "ci:bundle-analysis-install": "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @bitrate/ui-react run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
-    "@spotify/ui-react": "workspace:*",
+    "@bitrate/ui-react": "workspace:*",
     "@tanstack/react-query": "^5.101.0",
     "@tanstack/react-query-devtools": "^5.101.0",
     "@types/react-transition-group": "^4.4.12",
@@ -51,7 +51,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
     "@playwright/test": "^1.60.0",
-    "@spotify/contracts": "workspace:*",
+    "@bitrate/contracts": "workspace:*",
     "@tailwindcss/postcss": "^4.3.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.2",

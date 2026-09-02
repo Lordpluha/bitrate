@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# @spotify/converter
+# @bitrate/converter
 
 CLI и Node.js обёртка над FFmpeg для конвертации аудио и изображений.
 
@@ -45,7 +45,7 @@ media-converter image -i cover.png -q 85  # качество 0-100
 ## Программный API
 
 ```typescript
-import { convertAudio, convertImage } from '@spotify/converter'
+import { convertAudio, convertImage } from '@bitrate/converter'
 
 // Аудио
 await convertAudio({
@@ -65,7 +65,7 @@ await convertImage({
 
 ## Использование в API
 
-`AudioProcessor` (BullMQ воркер) использует `@spotify/converter` для создания progressive
+`AudioProcessor` (BullMQ воркер) использует `@bitrate/converter` для создания progressive
 Opus fallback и единого multi-bitrate HLS-пакета AAC/fMP4. HLS-варианты кодируются совместно,
 чтобы границы сегментов совпадали при адаптивном переключении.
 

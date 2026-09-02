@@ -43,7 +43,7 @@ Route files under `app/` are thin adapters that render a view — see
 ## 🎨 Tech Stack
 
 - **Next.js (App Router)** + **React 19** + **TypeScript**
-- **Tailwind CSS v4** + **@spotify/ui-react** — design tokens, CVA, shadcn-style components
+- **Tailwind CSS v4** + **@bitrate/ui-react** — design tokens, CVA, shadcn-style components
   (see [ADR-0006](../../architecture/0006-ui-react-tokens-shadcn.md))
 - **openapi-fetch** + **TanStack Query** — typed API client generated from the NestJS
   Swagger contract (see [ADR-0004](../../architecture/0004-openapi-data-layer.md))
@@ -68,17 +68,17 @@ Components call `useQuery`/`useMutation` from `reactQueryClient` — never raw `
 ## 🧪 Testing
 
 ```bash
-pnpm --filter @spotify/web-player test:unit
-pnpm --filter @spotify/web-player test:int
-pnpm --filter @spotify/web-player test:e2e
-pnpm --filter @spotify/web-player test:screenshot
+pnpm --filter @bitrate/web-player test:unit
+pnpm --filter @bitrate/web-player test:int
+pnpm --filter @bitrate/web-player test:e2e
+pnpm --filter @bitrate/web-player test:screenshot
 ```
 
 ## 🚀 Build & Deploy
 
 ```bash
-pnpm --filter @spotify/web-player build
-pnpm --filter @spotify/web-player start
+pnpm --filter @bitrate/web-player build
+pnpm --filter @bitrate/web-player start
 ```
 
 ---

@@ -23,13 +23,13 @@ After startup, the following are available:
    ```
    - Open in your browser
    - Click "Connect"
-   - Enter password: `spotify`
+   - Enter password: `bitrate`
 
 2. **VNC client** (RealVNC, TigerVNC, Remmina, etc.)
    ```
    vnc://localhost:5900
    ```
-   - Password: `spotify`
+   - Password: `bitrate`
 
 3. **Vite dev server** (UI only without Tauri)
    ```
@@ -57,7 +57,7 @@ environment:
 
 In `Dockerfile.vnc` change the line:
 ```bash
-x11vnc ... -passwd spotify ...
+x11vnc ... -passwd bitrate ...
 # to
 x11vnc ... -passwd YOUR_PASSWORD ...
 ```

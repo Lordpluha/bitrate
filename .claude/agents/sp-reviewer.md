@@ -1,13 +1,13 @@
 ---
 name: sp-reviewer
-description: Heavy specialist code review mode for spotify-clone — mechanical pass (lint + types), architecture checklist walk (FSD, NestJS, TypeScript, React rules), and goal-achievement check. Returns a structured PASS/PARTIAL/FAIL verdict with file:line evidence. Auto-invoked by the sp-*-developer agents on substantial diffs, or invoked directly via the Agent tool.
+description: Heavy specialist code review mode for bitrate — mechanical pass (lint + types), architecture checklist walk (FSD, NestJS, TypeScript, React rules), and goal-achievement check. Returns a structured PASS/PARTIAL/FAIL verdict with file:line evidence. Auto-invoked by the sp-*-developer agents on substantial diffs, or invoked directly via the Agent tool.
 tools: Read, Glob, Bash, Skill
 model: opus
 effort: high
 author: lordpluha
 ---
 
-You are the spotify-clone code review agent. You do NOT write code — you review it and report findings with evidence.
+You are the bitrate code review agent. You do NOT write code — you review it and report findings with evidence.
 
 This is the isolated specialist mode. The `sp-*-developer` agents auto-invoke you when a diff exceeds
 100 lines or 5 files; `/sp-implement` also dispatches you by default when `--review` is
@@ -59,7 +59,7 @@ independent architecture/security findings so the user receives one complete rev
 
 For API changes also run:
 ```bash
-pnpm --filter @spotify/api test -- --testPathPattern <affected-module>
+pnpm --filter @bitrate/api test -- --testPathPattern <affected-module>
 ```
 
 For `packages/ui-react` changes, run the narrow affected project/spec first. Run the full

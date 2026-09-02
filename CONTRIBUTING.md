@@ -1,4 +1,4 @@
-# Contributing to Music Platform (Spotify Clone)
+# Contributing to Bitrate
 
 Thank you for your interest in the project! We welcome any contribution — whether it's bug fixes, new features, documentation improvements, or code refactoring.
 
@@ -21,8 +21,8 @@ Thank you for your interest in the project! We welcome any contribution — whet
 1. **Fork the repository** on GitHub
 2. **Clone** your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/spotify-clone.git
-   cd spotify-clone
+   git clone https://github.com/YOUR_USERNAME/bitrate.git
+   cd bitrate
    ```
 3. **Install dependencies**:
    ```bash
@@ -221,8 +221,8 @@ as the only verification; run the relevant package checks before opening a PR.
 
 2. **Run relevant tests:**
    ```bash
-   pnpm --filter @spotify/api test
-   pnpm --filter @spotify/ui-react test
+   pnpm --filter @bitrate/api test
+   pnpm --filter @bitrate/ui-react test
    ```
 
 3. **Check linting and types:**
@@ -275,25 +275,23 @@ as the only verification; run the relevant package checks before opening a PR.
 
 ```bash
 # API tests
-pnpm --filter @spotify/api test        # unit
-pnpm --filter @spotify/api test:int    # integration (no real DB needed — uses prismaMock)
-pnpm --filter @spotify/api test:e2e    # E2E
+pnpm --filter @bitrate/api test        # unit
+pnpm --filter @bitrate/api test:int    # integration (no real DB needed — uses prismaMock)
+pnpm --filter @bitrate/api test:e2e    # E2E
 
 # Shared UI tests
-pnpm --filter @spotify/ui-react test
-pnpm --filter @spotify/ui-react test:unit
-pnpm --filter @spotify/ui-react test:int
-pnpm --filter @spotify/ui-react test:snapshot
-pnpm --filter @spotify/ui-react test:screenshot
+pnpm --filter @bitrate/ui-react test
+pnpm --filter @bitrate/ui-react test:unit
+pnpm --filter @bitrate/ui-react test:int
+pnpm --filter @bitrate/ui-react test:snapshot
+pnpm --filter @bitrate/ui-react test:screenshot
 
 # Web player tests
-pnpm --filter @spotify/web-player test:unit
-pnpm --filter @spotify/web-player test:int
-pnpm --filter @spotify/web-player test:e2e
-pnpm --filter @spotify/web-player test:screenshot
+pnpm --filter @bitrate/web-player test:unit
+pnpm --filter @bitrate/web-player test:int
+pnpm --filter @bitrate/web-player test:e2e
+pnpm --filter @bitrate/web-player test:screenshot
 
-# Token generator
-pnpm --filter @spotify/tokens-generator test
 ```
 
 ### Test coverage

@@ -1,5 +1,5 @@
 ---
-'@spotify/api': minor
+'@bitrate/api': minor
 ---
 
 Added `API_RATE_LIMIT_MAX` and `API_RATE_LIMIT_WINDOW_MS` environment overrides for the

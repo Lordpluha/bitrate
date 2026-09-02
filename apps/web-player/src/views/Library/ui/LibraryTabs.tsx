@@ -1,4 +1,4 @@
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { useI18n } from '@/shared/i18n'
 import type { LibraryControls } from '@/views/Library/model/library.types'
 import { libraryTabs } from '@/views/Library/model/library.utils'

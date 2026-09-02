@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # API Reference
 
-Complete API documentation for the Spotify Clone backend is available via **Compodoc**.
+Complete API documentation for the Bitrate backend is available via **Compodoc**.
 
 ## 📚 Backend API Documentation
 
@@ -45,7 +45,7 @@ The API documentation is automatically generated from the source code:
 
 ```bash
 # Generate documentation
-pnpm --filter @spotify/api doc:gen
+pnpm --filter @bitrate/api doc:gen
 ```
 
 :::tip

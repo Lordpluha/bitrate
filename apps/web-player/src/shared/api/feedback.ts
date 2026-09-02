@@ -1,6 +1,6 @@
 'use client'
 
-import { toast } from '@spotify/ui-react'
+import { toast } from '@bitrate/ui-react'
 import { ApiRequestError, getApiErrorStatus } from './errors'
 
 const DEFAULT_ERROR_MESSAGE = 'Something went wrong. Please try again.'

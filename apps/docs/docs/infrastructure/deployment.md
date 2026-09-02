@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Deployment
 
-Production deployment guide for Spotify Clone.
+Production deployment guide for Bitrate.
 
 ## 🚀 Deployment Options
 
@@ -25,8 +25,8 @@ Production deployment guide for Spotify Clone.
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/Lordpluha/spotify-clone.git
-cd spotify-clone
+git clone https://github.com/Lordpluha/bitrate.git
+cd bitrate
 ```
 
 ### 2. Environment Configuration
@@ -43,7 +43,7 @@ vi .env.production
 
 ```bash
 # Database
-DATABASE_URL=postgresql://user:password@postgres:5432/spotify_clone
+DATABASE_URL=postgresql://user:password@postgres:5432/bitrate
 
 # JWT Secrets (CHANGE THESE!)
 JWT_SECRET=your-super-secret-jwt-key-min-32-chars
@@ -61,7 +61,7 @@ CORS_ORIGIN=https://yourdomain.com,https://api.yourdomain.com
 S3_ENDPOINT=https://storage.yourdomain.com
 S3_ACCESS_KEY=your-access-key
 S3_SECRET_KEY=your-secret-key
-S3_BUCKET=spotify-clone
+S3_BUCKET=bitrate
 
 # Email (optional)
 SMTP_HOST=smtp.example.com
@@ -187,12 +187,12 @@ eb deploy
 
 ```bash
 # Build and push
-gcloud builds submit --tag gcr.io/PROJECT_ID/spotify-clone-api
-gcloud builds submit --tag gcr.io/PROJECT_ID/spotify-clone-web
+gcloud builds submit --tag gcr.io/PROJECT_ID/bitrate-api
+gcloud builds submit --tag gcr.io/PROJECT_ID/bitrate-web
 
 # Deploy
-gcloud run deploy api --image gcr.io/PROJECT_ID/spotify-clone-api
-gcloud run deploy web --image gcr.io/PROJECT_ID/spotify-clone-web
+gcloud run deploy api --image gcr.io/PROJECT_ID/bitrate-api
+gcloud run deploy web --image gcr.io/PROJECT_ID/bitrate-web
 ```
 
 ### Azure (Container Instances)
@@ -202,14 +202,14 @@ gcloud run deploy web --image gcr.io/PROJECT_ID/spotify-clone-web
 az login
 
 # Create resource group
-az group create --name spotify-clone --location eastus
+az group create --name bitrate --location eastus
 
 # Deploy containers
 az container create \
-  --resource-group spotify-clone \
+  --resource-group bitrate \
   --name api \
-  --image yourregistry.azurecr.io/spotify-clone-api:latest \
-  --dns-name-label spotify-clone-api \
+  --image yourregistry.azurecr.io/bitrate-api:latest \
+  --dns-name-label bitrate-api \
   --ports 3000
 ```
 
@@ -293,8 +293,8 @@ jobs:
       - name: Push to registry
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker push yourregistry/spotify-clone-api:latest
-          docker push yourregistry/spotify-clone-web:latest
+          docker push yourregistry/bitrate-api:latest
+          docker push yourregistry/bitrate-web:latest
 
       - name: Deploy to server
         uses: appleboy/ssh-action@master
@@ -303,7 +303,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /opt/spotify-clone
+            cd /opt/bitrate
             git pull
             docker compose -f docker-compose.prod.yaml pull
             docker compose -f docker-compose.prod.yaml up -d
@@ -364,10 +364,10 @@ scrape_configs:
 docker compose exec api pnpm db:migration:start
 
 # Create backup
-docker compose exec postgres pg_dump -U postgres spotify_clone > backup.sql
+docker compose exec postgres pg_dump -U postgres bitrate > backup.sql
 
 # Restore
-docker compose exec -T postgres psql -U postgres spotify_clone < backup.sql
+docker compose exec -T postgres psql -U postgres bitrate < backup.sql
 ```
 
 ### Scheduled Backups
@@ -384,7 +384,7 @@ docker compose exec -T postgres psql -U postgres spotify_clone < backup.sql
 DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR="/backups"
 
-docker compose exec -T postgres pg_dump -U postgres spotify_clone | \
+docker compose exec -T postgres pg_dump -U postgres bitrate | \
   gzip > $BACKUP_DIR/backup_$DATE.sql.gz
 
 # Keep last 7 days

@@ -18,13 +18,13 @@ FROM base AS development
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 EXPOSE 3002
-CMD ["pnpm", "--filter", "@spotify/admin", "run", "dev"]
+CMD ["pnpm", "--filter", "@bitrate/admin", "run", "dev"]
 
 # Stage 4: Build
 FROM base AS build
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-RUN pnpm --filter @spotify/admin run build
+RUN pnpm --filter @bitrate/admin run build
 
 # Stage 5: Production Dependencies
 FROM base AS prod-dependencies
@@ -45,12 +45,12 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 --ingroup nodejs spotifyadmin
+    adduser --system --uid 1001 --ingroup nodejs bitrateadmin
 
 # Set ownership
-RUN chown -R spotifyadmin:nodejs /app
+RUN chown -R bitrateadmin:nodejs /app
 
-USER spotifyadmin
+USER bitrateadmin
 
 EXPOSE 3002
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \

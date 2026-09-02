@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { X } from 'lucide-react'
 import Link from 'next/link'
 import { ThemeSwitcher } from '@/features/SwitchTheme'

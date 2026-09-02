@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# @spotify/contracts
+# @bitrate/contracts
 
 Авто-генерируемые TypeScript-типы из Swagger-схемы API. Единственный источник истины для типов запросов и ответов во всех фронтенд-приложениях.
 
@@ -20,7 +20,7 @@ packages/contracts/src/
 
 ```bash
 # API должен быть запущен на localhost:3000
-pnpm --filter @spotify/contracts gen:api
+pnpm --filter @bitrate/contracts gen:api
 ```
 
 Скрипт fetches `http://localhost:3000/swagger/json` и перезаписывает `src/api/v1.ts` через `openapi-typescript`.
@@ -36,7 +36,7 @@ pnpm --filter @spotify/contracts gen:api
 ```typescript
 // shared/api/client/fetchClient.ts
 import createClient from 'openapi-fetch'
-import type { paths } from '@spotify/contracts'
+import type { paths } from '@bitrate/contracts'
 
 export const apiClient = createClient<paths>({
   baseUrl: '/api/v1',

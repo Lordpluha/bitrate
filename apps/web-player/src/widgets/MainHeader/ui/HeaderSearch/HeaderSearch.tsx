@@ -1,6 +1,6 @@
 'use client'
 
-import { cn, Input, ReviewIcon, SearchIcon } from '@spotify/ui-react'
+import { cn, Input, ReviewIcon, SearchIcon } from '@bitrate/ui-react'
 import { type FocusEvent, type KeyboardEvent, useId, useState } from 'react'
 import { useI18n } from '@/shared/i18n'
 import { HeaderSearchDropdown } from '@/widgets/MainHeader/ui/HeaderSearch/HeaderSearchDropdown'

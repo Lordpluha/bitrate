@@ -1,5 +1,5 @@
 ---
-'@spotify/api': patch
+'@bitrate/api': patch
 ---
 
 Swagger examples no longer embed the current time. Four fields in the liked-tracks

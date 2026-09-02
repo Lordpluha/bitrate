@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { Menu } from 'lucide-react'
 import Image from 'next/image'
 import { useId, useState } from 'react'

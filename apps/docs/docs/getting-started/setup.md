@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Setup Guide
 
-Complete guide to setting up your development environment for Spotify Clone.
+Complete guide to setting up your development environment for Bitrate.
 
 ## 📋 Prerequisites
 
@@ -49,8 +49,8 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Lordpluha/spotify-clone.git
-cd spotify-clone
+git clone https://github.com/Lordpluha/bitrate.git
+cd bitrate
 ```
 
 ### 2. Install Dependencies
@@ -96,8 +96,8 @@ task db:migrate:native
 task db:seed:native
 
 # Or without task:
-pnpm --filter @spotify/api run db:migration:start
-pnpm --filter @spotify/api run db:seed
+pnpm --filter @bitrate/api run db:migration:start
+pnpm --filter @bitrate/api run db:seed
 ```
 
 ### 6. Start Development Servers
@@ -122,22 +122,22 @@ These are the **native** ports. The Docker stack maps web-artists to `3004` and 
 
 ```bash
 # Backend API
-pnpm --filter @spotify/api start:dev
+pnpm --filter @bitrate/api start:dev
 
 # Web Player
-pnpm --filter @spotify/web-player dev
+pnpm --filter @bitrate/web-player dev
 
 # Mobile Application
-pnpm --filter @spotify/mobile start
+pnpm --filter @bitrate/mobile start
 
 # Desktop Application
-pnpm --filter @spotify/desktop tauri dev
+pnpm --filter @bitrate/desktop tauri dev
 
 # Admin Panel
-pnpm --filter @spotify/admin dev
+pnpm --filter @bitrate/admin dev
 
 # Documentation
-pnpm --filter @spotify/docs start
+pnpm --filter @bitrate/docs start
 ```
 
 ## 🐳 Full Docker Stack (alternative)
@@ -169,7 +169,7 @@ removed. Run `task` with no arguments to list everything.
 pnpm build
 
 # Build specific package
-pnpm --filter @spotify/ui-react build
+pnpm --filter @bitrate/ui-react build
 ```
 
 #### Regenerating Assets
@@ -178,12 +178,12 @@ pnpm --filter @spotify/ui-react build
 After adding SVG icons to `packages/ui-react/assets/icons/` — the svgr plugin in
 `vite.config.ts` regenerates `src/icons/svgr/` as part of the build:
 ```bash
-pnpm --filter @spotify/ui-react build
+pnpm --filter @bitrate/ui-react build
 ```
 
 After API schema changes (API must be running on :3000):
 ```bash
-pnpm --filter @spotify/contracts gen:api
+pnpm --filter @bitrate/contracts gen:api
 ```
 
 ### Database Management
@@ -191,7 +191,7 @@ pnpm --filter @spotify/contracts gen:api
 #### Prisma Studio (GUI)
 
 ```bash
-pnpm --filter @spotify/api run db:ui
+pnpm --filter @bitrate/api run db:ui
 # Opens at http://localhost:5555
 ```
 
@@ -199,14 +199,14 @@ pnpm --filter @spotify/api run db:ui
 
 ```bash
 # After modifying schema.prisma
-pnpm --filter @spotify/api run db:migration:start
+pnpm --filter @bitrate/api run db:migration:start
 ```
 
 #### Resetting Database
 
 ```bash
 # ⚠️ WARNING: This will delete all data!
-pnpm --filter @spotify/api run db:migration:reset
+pnpm --filter @bitrate/api run db:migration:reset
 # or via task (with confirmation prompt):
 task db:reset
 ```
@@ -215,13 +215,13 @@ task db:reset
 
 ```bash
 # API unit tests
-pnpm --filter @spotify/api test
+pnpm --filter @bitrate/api test
 
 # API integration tests (needs running DB)
-pnpm --filter @spotify/api test:int
+pnpm --filter @bitrate/api test:int
 
 # API E2E tests
-pnpm --filter @spotify/api test:e2e
+pnpm --filter @bitrate/api test:e2e
 
 ```
 
@@ -257,19 +257,19 @@ pnpm changeset
 ### iOS (macOS only)
 
 ```bash
-pnpm --filter @spotify/mobile ios
+pnpm --filter @bitrate/mobile ios
 ```
 
 ### Android
 
 ```bash
-pnpm --filter @spotify/mobile android
+pnpm --filter @bitrate/mobile android
 ```
 
 ### Expo Go
 
 ```bash
-pnpm --filter @spotify/mobile start
+pnpm --filter @bitrate/mobile start
 # Scan QR code with Expo Go app
 ```
 
@@ -327,7 +327,7 @@ source $HOME/.cargo/env
 
 ```bash
 # Development mode (native Tauri window)
-pnpm --filter @spotify/desktop tauri dev
+pnpm --filter @bitrate/desktop tauri dev
 
 # UI only in Docker (no Tauri backend)
 docker compose --profile desktop up -d desktop
@@ -342,7 +342,7 @@ See [Desktop App Guide](/docs/applications/desktop/overview) for detailed instru
 
 ```bash
 # Debug mode with inspector
-pnpm --filter @spotify/api start:debug
+pnpm --filter @bitrate/api start:debug
 ```
 
 **VSCode Debug Configuration:**
@@ -364,7 +364,7 @@ pnpm --filter @spotify/api start:debug
 
 ```bash
 # API must be running on :3000
-pnpm --filter @spotify/contracts gen:api
+pnpm --filter @bitrate/contracts gen:api
 ```
 
 ### Clean Build Artifacts
@@ -411,7 +411,7 @@ docker compose -f infra/docker-compose.dev.yaml restart postgres
 ### Prisma Client Out of Sync
 
 ```bash
-pnpm --filter @spotify/api run db:gen
+pnpm --filter @bitrate/api run db:gen
 ```
 
 ### node_modules Issues
@@ -439,4 +439,4 @@ pnpm turbo build --force
 
 ---
 
-Having issues? Check out [Troubleshooting](#-troubleshooting) or [open an issue](https://github.com/Lordpluha/spotify-clone/issues).
+Having issues? Check out [Troubleshooting](#-troubleshooting) or [open an issue](https://github.com/Lordpluha/bitrate/issues).

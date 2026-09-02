@@ -1,9 +1,9 @@
 'use client'
 
+import { Button, PasswordInput } from '@bitrate/ui-react'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
-import { Button, PasswordInput } from '@spotify/ui-react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { type FormEvent, useState } from 'react'

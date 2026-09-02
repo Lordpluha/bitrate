@@ -1,4 +1,3 @@
-import { SwitchLanguagesButton } from '@shared/ui'
 import {
   cn,
   FooterAndroid,
@@ -8,7 +7,8 @@ import {
   SpotifyLogo,
   Tiktok,
   XTwitter,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
+import { SwitchLanguagesButton } from '@shared/ui'
 import Link from 'next/link'
 import footerData from '../config/footer-links.json'
 
@@ -120,7 +120,7 @@ export const Footer = () => {
         <div className="xs:py-8 xs:flex-row flex flex-col justify-between items-center py-5 border-solid border-t border-neutral-800 text-neutral-400 text-sm font-bold">
           <div className="xs:gap-6 xs:order-1 flex order-2 flex-row gap-4">
             <div>
-              <span className="font-normal">© 2026 Spotify AB</span>
+              <span className="font-normal">© 2026 Bitrate</span>
             </div>
             <ul className="xs:gap-6 flex flex-row gap-3">
               <li>

@@ -8,10 +8,10 @@ metadata:
 license: MIT
 ---
 
-# ui-react rules — `@spotify/ui-react`
+# ui-react rules — `@bitrate/ui-react`
 
 The generic shadcn skill is linked at `.claude/skills/shadcn/`. This file records the
-spotify-clone overrides; when guidance conflicts, this file and the existing package source
+bitrate overrides; when guidance conflicts, this file and the existing package source
 win.
 
 ## Ownership and config
@@ -22,7 +22,7 @@ win.
 - Package barrel: `packages/ui-react/src/index.ts`
 - Class helper: `cn` from `packages/ui-react/src/lib/utils.ts`
 - Primitive library: Base UI (`@base-ui-components/react`)
-- Consumer import: `import { Button } from '@spotify/ui-react'`
+- Consumer import: `import { Button } from '@bitrate/ui-react'`
 - Raw source art: `packages/ui-react/assets/` — `icons/` (SVG the svgr plugin compiles into
   `src/icons/svgr/` on `pnpm build`) and `images/` (raster files stories import as
   `@assets/images/...`). Nothing under `assets/` is shipped; it is build-time input only.
@@ -41,7 +41,7 @@ carefully; package source, Tailwind v4 setup, and design-token pipeline are auth
 1. Search existing exports and component folders.
 2. Search the shadcn registry through the CLI and read current component docs. MCP is
    disabled by default in `.mcp.json` for token budget; use it only if enabled locally.
-3. Prefer composition from existing `@spotify/ui-react` components.
+3. Prefer composition from existing `@bitrate/ui-react` components.
 4. Add a new primitive only when no existing component or composition fits.
 
 Run CLI commands from `packages/ui-react/`:
@@ -88,21 +88,21 @@ matrix. Export through the local barrel and `components/ui/index.ts`.
 
 Known overrides to the generic skill:
 
-| Generic guidance | spotify-clone convention |
+| Generic guidance | bitrate convention |
 |---|---|
 | Base UI triggers always use `render` | Follow the installed component API; `Button` currently supports `asChild` |
 | Button has no loading prop | Existing `Button` has `isLoading`; preserve compatibility unless intentionally redesigning it |
 | Generic flat component destination | Use `components/ui/<kebab-name>/<name>.tsx` plus local and package barrels |
 | Generic icon library assumption | Prefer generated `@/icons` and existing package icons |
-| Generic form primitives | Reuse the form/input primitives already exported by `@spotify/ui-react` |
+| Generic form primitives | Reuse the form/input primitives already exported by `@bitrate/ui-react` |
 
 After adding or updating a component:
 
 ```bash
-pnpm --filter @spotify/ui-react check-types
-pnpm --filter @spotify/ui-react lint
-pnpm --filter @spotify/ui-react test:unit
-pnpm --filter @spotify/ui-react test:int
+pnpm --filter @bitrate/ui-react check-types
+pnpm --filter @bitrate/ui-react lint
+pnpm --filter @bitrate/ui-react test:unit
+pnpm --filter @bitrate/ui-react test:int
 ```
 
 Run snapshot/screenshot updates only when the output change is intentional.

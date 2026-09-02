@@ -110,4 +110,4 @@ GET /api/v1/tracks/stream/:id/hls/:bitrate/segment_00000.m4s
 
 ## Конвертация
 
-Использует пакет `@spotify/converter` (FFmpeg wrapper). Поддерживаемые входные форматы: MP3, WAV, FLAC, M4A, OGG, OPUS.
+Использует пакет `@bitrate/converter` (FFmpeg wrapper). Поддерживаемые входные форматы: MP3, WAV, FLAC, M4A, OGG, OPUS.

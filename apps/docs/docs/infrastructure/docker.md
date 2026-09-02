@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Docker Setup
 
-Complete guide for running Spotify Clone with Docker.
+Complete guide for running Bitrate with Docker.
 
 ## 🐳 Overview
 
@@ -60,8 +60,8 @@ pnpm dev
 ```bash
 # First run (build images, migrate, seed)
 docker compose -f infra/docker-compose.preprod.yaml up -d --build
-docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @spotify/api run db:migration:start
-docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @spotify/api run seed
+docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @bitrate/api run db:migration:start
+docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @bitrate/api run seed
 
 # Subsequent runs
 docker compose -f infra/docker-compose.preprod.yaml up -d
@@ -93,13 +93,13 @@ postgres:
   environment:
     POSTGRES_USER: admin
     POSTGRES_PASSWORD: admin
-    POSTGRES_DB: spotify
+    POSTGRES_DB: bitrate
 ```
 
 **Access:**
 - Host: `localhost:5432`
 - User: `admin` / Password: `admin`
-- Database: `spotify`
+- Database: `bitrate`
 
 ### Redis
 
@@ -144,13 +144,13 @@ $DC down -v
 DC="docker compose -f infra/docker-compose.preprod.yaml"
 
 # Run migrations
-$DC exec api pnpm --filter @spotify/api run db:migration:start
+$DC exec api pnpm --filter @bitrate/api run db:migration:start
 
 # Open shell
 $DC exec api sh
 
 # Open psql
-$DC exec postgres psql -U admin spotify
+$DC exec postgres psql -U admin bitrate
 ```
 
 ### Build & Rebuild
@@ -183,8 +183,8 @@ docker compose -f infra/docker-compose.preprod.yaml up -d
 ### 2. Run Apps Locally
 
 ```bash
-pnpm --filter @spotify/api start:dev
-pnpm --filter @spotify/web-player dev
+pnpm --filter @bitrate/api start:dev
+pnpm --filter @bitrate/web-player dev
 ```
 
 ## 📱 Optional: Mobile & Desktop containers
@@ -242,7 +242,7 @@ $DC exec api ping postgres
 
 ```bash
 docker compose -f infra/docker-compose.preprod.yaml exec -T postgres \
-  pg_dump -U admin spotify > backups/backup.sql
+  pg_dump -U admin bitrate > backups/backup.sql
 
 # Or via task:
 task db:backup
@@ -252,7 +252,7 @@ task db:backup
 
 ```bash
 docker compose -f infra/docker-compose.preprod.yaml exec -T postgres \
-  psql -U admin spotify < backups/backup.sql
+  psql -U admin bitrate < backups/backup.sql
 
 # Or via task:
 task db:restore -- backup_20260101_120000.sql
@@ -290,7 +290,7 @@ cp .env.example .env
 
 ### Network Isolation
 
-The docker-compose files use a dedicated bridge network (`spotify-network`) that isolates services from the host network. Only required ports are published.
+The docker-compose files use a dedicated bridge network (`bitrate-network`) that isolates services from the host network. Only required ports are published.
 
 ## 📊 Monitoring
 

@@ -1,6 +1,8 @@
-# Music Platform (Spotify Clone)
+# Bitrate
 
-Full-stack Spotify clone — Turborepo + pnpm monorepo with web, mobile, desktop, and backend apps.
+**All-in-one for musicians.** Turborepo + pnpm monorepo with web, mobile, desktop, and
+backend apps. See [`brand.md`](apps/docs/docs/brand/brand.md) for what the product is and
+[`design.md`](apps/docs/docs/brand/design.md) for how it should look and behave.
 
 ## 📚 Documentation
 
@@ -19,7 +21,7 @@ Full-stack Spotify clone — Turborepo + pnpm monorepo with web, mobile, desktop
 
 - **GitHub Project** — https://github.com/users/Lordpluha/projects/6
 - **Chromatic** — https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
-- **Storybook** — https://spotify-clone-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
+- **Storybook** — https://bitrate-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
 - **Web App** — https://spotify-clone-web-olive.vercel.app/
 
 ---
@@ -56,8 +58,8 @@ task init:native
 
 ```bash
 docker compose -f infra/docker-compose.dev.yaml up -d
-pnpm --filter @spotify/api run db:migration:start
-pnpm --filter @spotify/api run db:seed
+pnpm --filter @bitrate/api run db:migration:start
+pnpm --filter @bitrate/api run db:seed
 pnpm dev
 ```
 
@@ -98,7 +100,7 @@ React Native · Expo SDK 54 · expo-router · EAS Build
 Tauri 2 · React · Vite
 
 ### Shared packages
-`@spotify/ui-react` · `@spotify/tokens` · `@spotify/contracts` · `@spotify/svgr` · `@spotify/converter`
+`@bitrate/ui-react` · `@bitrate/contracts` · `@bitrate/svgr` · `@bitrate/vite-svgr` · `@bitrate/converter`
 
 ### Infrastructure
 Turborepo · pnpm workspaces · Biome · Lefthook · Changesets · GitHub Actions (20+ workflows) · Docker Compose
@@ -118,21 +120,19 @@ Package test surfaces:
 
 ```bash
 # API — Jest
-pnpm --filter @spotify/api test
-pnpm --filter @spotify/api test:int
-pnpm --filter @spotify/api test:e2e
+pnpm --filter @bitrate/api test
+pnpm --filter @bitrate/api test:int
+pnpm --filter @bitrate/api test:e2e
 
 # Shared UI — Vitest + Playwright-backed browser screenshots
-pnpm --filter @spotify/ui-react test
-pnpm --filter @spotify/ui-react test:screenshot
+pnpm --filter @bitrate/ui-react test
+pnpm --filter @bitrate/ui-react test:screenshot
 
 # Web player — Vitest + standalone Playwright
-pnpm --filter @spotify/web-player test
-pnpm --filter @spotify/web-player test:e2e
-pnpm --filter @spotify/web-player test:screenshot
+pnpm --filter @bitrate/web-player test
+pnpm --filter @bitrate/web-player test:e2e
+pnpm --filter @bitrate/web-player test:screenshot
 
-# Token generator — node:test
-pnpm --filter @spotify/tokens-generator test
 ```
 
 See the [testing guide](apps/docs/docs/guides/testing.md) for placement and runner details.
@@ -143,10 +143,9 @@ See the [testing guide](apps/docs/docs/guides/testing.md) for placement and runn
 
 - Web-player imports follow `app → views → widgets → features → entities → shared`.
 - Next.js route files are framework adapters; full screens live in `views/`.
-- API contracts flow from NestJS Swagger into `@spotify/contracts`.
+- API contracts flow from NestJS Swagger into `@bitrate/contracts`.
 - Server state uses TanStack Query; new client state targets per-slice Zustand stores.
-- Shared React primitives and design tokens live in `@spotify/ui-react` and
-  `@spotify/tokens`.
+- Shared React primitives and design tokens both live in `@bitrate/ui-react`.
 - User-facing web UI targets WCAG 2.2 AA.
 
 See [`apps/docs/docs/architecture`](apps/docs/docs/architecture/) for the decisions and [`CLAUDE.md`](CLAUDE.md)

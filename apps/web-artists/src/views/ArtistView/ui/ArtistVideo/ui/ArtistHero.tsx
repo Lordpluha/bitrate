@@ -1,4 +1,4 @@
-import { ArrowDownIcon, Pause, Unpause } from '@spotify/ui-react'
+import { ArrowDownIcon, Pause, Unpause } from '@bitrate/ui-react'
 import Link from 'next/link'
 import { useReducer, useRef } from 'react'
 

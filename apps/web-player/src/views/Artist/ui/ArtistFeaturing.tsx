@@ -1,8 +1,8 @@
 'use client'
 
+import { PlayIcon } from '@bitrate/ui-react'
 import type { TrackEntity } from '@entities/Track'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { PlayIcon } from '@spotify/ui-react'
 import Image from 'next/image'
 
 export type ArtistFeaturingProps = {

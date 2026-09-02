@@ -1,6 +1,6 @@
 # Issue Templates
 
-Этот проект использует структурированные шаблоны для issue, адаптированные под архитектуру Spotify Clone monorepo.
+Этот проект использует структурированные шаблоны для issue, адаптированные под архитектуру Bitrate monorepo.
 
 ## 📋 Доступные шаблоны
 
@@ -63,7 +63,7 @@
 - Core Web Vitals улучшения
 
 ### Security Issue
-**⚠️ Для критических уязвимостей используйте [GitHub Security Advisories](https://github.com/lordpluha/spotify-clone/security/advisories/new)**
+**⚠️ Для критических уязвимостей используйте [GitHub Security Advisories](https://github.com/lordpluha/bitrate/security/advisories/new)**
 
 ## 🛠️ Технологический стек проекта
 

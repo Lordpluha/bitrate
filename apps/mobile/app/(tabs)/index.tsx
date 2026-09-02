@@ -18,7 +18,7 @@ export default function HomeScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome to @spotify/mobile!</ThemedText>
+        <ThemedText type="title">Welcome to @bitrate/mobile!</ThemedText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>

@@ -1,20 +1,20 @@
 'use client'
 
 import {
-  AuthFormFooter,
-  AuthFormHeader,
-  FloatingAuthField,
-  useAuthenticatedRedirect,
-} from '@features/Auth'
-import { ROUTES } from '@shared/routes'
-import {
   Form,
   FormField,
   FormItem,
   FormMessage,
   Input,
   PasswordInput,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
+import {
+  AuthFormFooter,
+  AuthFormHeader,
+  FloatingAuthField,
+  useAuthenticatedRedirect,
+} from '@features/Auth'
+import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { useLoginForm } from '../model/useLoginForm'
 

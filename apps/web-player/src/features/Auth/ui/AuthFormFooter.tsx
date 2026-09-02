@@ -1,5 +1,5 @@
+import { Button } from '@bitrate/ui-react'
 import { SocialsAuthDivider } from '@shared/ui'
-import { Button } from '@spotify/ui-react'
 import Link from 'next/link'
 import { OAuthButtons } from './OAuthButtons'
 

@@ -43,7 +43,7 @@ await this.audioQueue.add('convert-audio', {
 
 **Consumer** — `AudioProcessor` воркер (NestJS BullMQ processor):
 - Берёт задачу из очереди
-- Запускает FFmpeg через `@spotify/converter`
+- Запускает FFmpeg через `@bitrate/converter`
 - Обновляет `Track.processingStatus` в БД
 - При ошибке — BullMQ автоматически повторяет (до 5 раз)
 

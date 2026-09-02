@@ -1,4 +1,4 @@
-# `.claude/` — spotify-clone agent layer
+# `.claude/` — bitrate agent layer
 
 This folder wires up the ticket-driven command set for Claude Code users. It is one layer
 on top of `CLAUDE.md`, the compact routing and shared non-negotiables entrypoint.
@@ -133,7 +133,7 @@ agent round-trip for a task small enough that dispatch is pure overhead.
   first; a prior approval does not carry over to a later push/PR action.
 - **Moving a board card or commenting on an issue without confirmation** — same rule for
   `/sp-create-task` and `/sp-auto`.
-- **Database migrations** — run `pnpm --filter @spotify/api db:migration:start` manually.
+- **Database migrations** — run `pnpm --filter @bitrate/api db:migration:start` manually.
 - **External skill locking** — `skills-lock.json` records installed external skills only;
   repository-owned rules and skills live directly under `.claude/`.
 

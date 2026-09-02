@@ -1,4 +1,4 @@
-# @spotify/ui-react
+# @bitrate/ui-react
 
 ## 0.0.2
 

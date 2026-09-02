@@ -33,7 +33,7 @@ exist:
 | FSD layers (`features/`, `entities/`, `widgets/`, `views/`) | Not used — `expo-router` owns the structure |
 | `'use client'` / Server Components | No server component model |
 | Tailwind classes, `cn()`, CVA | No DOM, no CSS classes |
-| `@spotify/ui-react` | **Will not run** — DOM + Tailwind library |
+| `@bitrate/ui-react` | **Will not run** — DOM + Tailwind library |
 | `ROUTES` from `@/shared/routes` | `expo-router` paths instead |
 | `<div>` / `<span>` / `<button>` | `<View>` / `<Text>` / `<Pressable>` |
 | Biome | This app uses `eslint-config-expo` |
@@ -83,7 +83,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme'
 - **`reactCompiler: true`** — the React Compiler memoises automatically. **Do not add
   `useMemo`/`useCallback`/`memo` by reflex here**; measure first, and say what you measured.
 
-`scheme: "mobile"` is the deep-link scheme. Changing it breaks existing links.
+`scheme: "bitrate"` is the deep-link scheme. Changing it breaks existing links.
 
 ## Styling and tokens
 
@@ -96,8 +96,8 @@ your report that the bridge is still missing.
 
 ## API access
 
-Types come from `@spotify/contracts`. Do not hand-write a duplicate response shape, and do
-not import `@spotify/ui-react`.
+Types come from `@bitrate/contracts`. Do not hand-write a duplicate response shape, and do
+not import `@bitrate/ui-react`.
 
 No API client exists in this app yet. When one is needed, propose its shape before building
 it — this is exactly the kind of convention that must be decided once.
@@ -111,10 +111,10 @@ Reanimated animations.
 ## Commands
 
 ```bash
-pnpm --filter @spotify/mobile start
-pnpm --filter @spotify/mobile ios | android | web
-pnpm --filter @spotify/mobile lint                 # eslint-config-expo, NOT Biome
-pnpm --filter @spotify/mobile check-types          # tsc --noEmit
+pnpm --filter @bitrate/mobile start
+pnpm --filter @bitrate/mobile ios | android | web
+pnpm --filter @bitrate/mobile lint                 # eslint-config-expo, NOT Biome
+pnpm --filter @bitrate/mobile check-types          # tsc --noEmit
 ```
 
 **There is no test setup in this app.** `check-types` and `lint` (via `eslint-config-expo`)

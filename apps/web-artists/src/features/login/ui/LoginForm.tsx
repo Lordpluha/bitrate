@@ -1,8 +1,5 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { apiBaseUrl } from '@shared/api'
-import { ROUTES } from '@shared/routes/routes'
 import {
   Button,
   FacebookArtistIcon,
@@ -12,7 +9,10 @@ import {
   PasswordInput,
   Typography,
   toast,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { apiBaseUrl } from '@shared/api'
+import { ROUTES } from '@shared/routes/routes'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { type SubmitHandler, useForm } from 'react-hook-form'

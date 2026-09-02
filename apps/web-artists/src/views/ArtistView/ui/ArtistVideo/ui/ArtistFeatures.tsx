@@ -13,7 +13,7 @@ export const ArtistFeatures = () => {
           </h1>
           <p className="text-base font-normal mt-4">
             Grow your career while keeping your music at the center. With
-            Spotify for Artists, you can amplify your reach, serve up videos,
+            Bitrate for Artists, you can amplify your reach, serve up videos,
             build pre-release hype, and sell merch and tickets – right where
             streaming happens.
           </p>

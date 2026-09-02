@@ -1,20 +1,20 @@
 'use client'
 
 import {
-  AuthFormFooter,
-  AuthFormHeader,
-  FloatingAuthField,
-  useAuthenticatedRedirect,
-} from '@features/Auth'
-import { ROUTES } from '@shared/routes'
-import {
   Form,
   FormField,
   FormItem,
   FormMessage,
   Input,
   PasswordInput,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
+import {
+  AuthFormFooter,
+  AuthFormHeader,
+  FloatingAuthField,
+  useAuthenticatedRedirect,
+} from '@features/Auth'
+import { ROUTES } from '@shared/routes'
 import Link from 'next/link'
 import { useRegistrationForm } from '../model/useRegistrationForm'
 
@@ -29,7 +29,7 @@ export const RegistrationForm = () => {
           <>
             By clicking on sign-up, you agree to the <br />
             <Link className="text-primary hover:opacity-70" href={ROUTES.terms}>
-              Spotify Terms and Conditions
+              Bitrate Terms and Conditions
             </Link>{' '}
             and{' '}
             <Link

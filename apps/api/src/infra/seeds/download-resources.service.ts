@@ -3,8 +3,8 @@ import { createWriteStream } from 'node:fs'
 import * as path from 'node:path'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
+import type { Song as NCSSong } from '@bitrate/ncs-parser'
 import { Logger } from '@nestjs/common'
-import type { Song as NCSSong } from '@spotify/ncs-parser'
 import config from './config'
 
 /**

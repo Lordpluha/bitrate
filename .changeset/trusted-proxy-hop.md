@@ -1,5 +1,5 @@
 ---
-'@spotify/api': patch
+'@bitrate/api': patch
 ---
 
 The reverse proxy no longer lets a client choose its own IP address. `/api` was

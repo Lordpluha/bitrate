@@ -112,7 +112,7 @@ export class LibrarySeeder {
         {
           userId: user.id,
           type: 'SYSTEM' as const,
-          title: 'Welcome to Spotify Clone',
+          title: 'Welcome to Bitrate',
           readAt: faker.datatype.boolean() ? new Date() : null,
         },
       ]),

@@ -31,7 +31,7 @@ recoverable late:
 Encode **one fragmented-MP4 (CMAF) file per bitrate**, index it by byte range, and drive
 playback from a first-party MediaSource loader with our own ABR.
 
-**Encoding** — `convertAudioToCmaf` in `@spotify/converter` runs FFmpeg **once** with one
+**Encoding** — `convertAudioToCmaf` in `@bitrate/converter` runs FFmpeg **once** with one
 `-map 0:a:0` output per bitrate, so the source decodes a single time and all renditions
 share fragment boundaries:
 

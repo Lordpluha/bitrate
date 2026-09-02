@@ -1,4 +1,4 @@
-# @spotify/api
+# @bitrate/api
 
 ## 0.1.0
 
@@ -11,4 +11,4 @@
 - eedc147: Add adaptive HLS audio variants, resilient hls.js playback, and an atomic BullMQ conversion pipeline with versioned jobs, retries, FFmpeg timeouts, stale-job protection, cleanup, and processing statuses.
 - 7aaa0f4: Fix authorization and private playlist exposure, make cache fallbacks safe, repair auth request retries and media URLs, and restore Base UI wrapper compatibility.
 - Updated dependencies [eedc147]
-  - @spotify/converter@1.1.0
+  - @bitrate/converter@1.1.0

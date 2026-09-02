@@ -1,9 +1,9 @@
 'use client'
 
+import { Button, Form } from '@bitrate/ui-react'
 import { useLoginModalForm } from '@features/AuthModal/model/useLoginModalForm'
 import { ROUTES } from '@shared/routes'
 import { SocialsAuthDivider } from '@shared/ui'
-import { Button, Form } from '@spotify/ui-react'
 import Link from 'next/link'
 import { AuthModalGoogleButton, AuthModalHeader } from './AuthModalHeader'
 import { LoginModalFields } from './LoginModalFields'

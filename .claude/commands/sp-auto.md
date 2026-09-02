@@ -28,7 +28,7 @@ Edit this block to retune the pipeline; nothing else hardcodes these values.
 | Setting | Value |
 |---|---|
 | Gate | the board column — an issue is eligible only from `Todo`, and only when assigned to the running user. No label is required |
-| Repository | `Lordpluha/spotify-clone` |
+| Repository | `Lordpluha/bitrate` |
 | Projects board | number `6`, owner `Lordpluha` (user project) — https://github.com/users/Lordpluha/projects/6 |
 | Status column | the board's `Status` single-select field |
 | Parallel workers | 3 (override with `--limit N`) |
@@ -259,7 +259,7 @@ Handle each worker as its report arrives, not after all of them finish.
    - <what changed and why — why matters more than what>
 
    ## Test plan
-   - [ ] pnpm --filter @spotify/<workspace> check-types
+   - [ ] pnpm --filter @bitrate/<workspace> check-types
    - [ ] <the spec the worker actually ran>
    - [ ] <manual check of the affected UI, when applicable>
 

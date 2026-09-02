@@ -2,8 +2,8 @@
 
 # Stage 1: Base
 FROM node:24-alpine AS base
-ARG DATABASE_URL=postgresql://admin:admin@postgres:5432/spotify
-ARG SHADOW_DATABASE_URL=postgresql://admin:admin@postgres:5432/spotify_shadow
+ARG DATABASE_URL=postgresql://admin:admin@postgres:5432/bitrate
+ARG SHADOW_DATABASE_URL=postgresql://admin:admin@postgres:5432/bitrate_shadow
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 WORKDIR /app
 
@@ -26,9 +26,9 @@ ENV SHADOW_DATABASE_URL=$SHADOW_DATABASE_URL
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
-RUN pnpm --filter @spotify/api run db:gen
+RUN pnpm --filter @bitrate/api run db:gen
 EXPOSE 3000
-CMD ["pnpm", "--filter", "@spotify/api", "run", "start:dev"]
+CMD ["pnpm", "--filter", "@bitrate/api", "run", "start:dev"]
 
 # Stage 4: Build
 FROM base AS build
@@ -37,9 +37,9 @@ ENV SHADOW_DATABASE_URL=$SHADOW_DATABASE_URL
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
-RUN pnpm --filter @spotify/api run db:gen
-RUN pnpm --filter @spotify/ncs-parser run build
-RUN pnpm --filter @spotify/api run build
+RUN pnpm --filter @bitrate/api run db:gen
+RUN pnpm --filter @bitrate/ncs-parser run build
+RUN pnpm --filter @bitrate/api run build
 
 # Stage 5: Production Dependencies
 FROM base AS prod-dependencies
@@ -66,16 +66,16 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
 
 # Generate Prisma Client
-RUN pnpm --filter @spotify/api run db:gen:prod
+RUN pnpm --filter @bitrate/api run db:gen:prod
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 --ingroup nodejs spotifyapi
+    adduser --system --uid 1001 --ingroup nodejs bitrateapi
 
 # Set ownership
-RUN chown -R spotifyapi:nodejs /app
+RUN chown -R bitrateapi:nodejs /app
 
-USER spotifyapi
+USER bitrateapi
 
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \

@@ -1,12 +1,12 @@
-# @spotify/web-artists
+# @bitrate/web-artists
 
-Next.js 16 web application for the Spotify Clone artists portal.
+Next.js 16 web application for the Bitrate artists portal.
 
 ## Stack
 
 - **Next.js 16** App Router, React 19, TypeScript
-- **TailwindCSS v4**, `@spotify/ui-react` — shared component library
-- **`@spotify/contracts`** — OpenAPI TypeScript types (generated from Swagger)
+- **TailwindCSS v4**, `@bitrate/ui-react` — shared component library
+- **`@bitrate/contracts`** — OpenAPI TypeScript types (generated from Swagger)
 - **Biome** — lint + format
 - **Port:** 3002
 
@@ -29,13 +29,13 @@ src/
 pnpm install
 
 # Dev server (http://localhost:3002)
-pnpm --filter @spotify/web-artists dev
+pnpm --filter @bitrate/web-artists dev
 
 # Type check
-pnpm --filter @spotify/web-artists check-types
+pnpm --filter @bitrate/web-artists check-types
 
 # Build
-pnpm --filter @spotify/web-artists build
+pnpm --filter @bitrate/web-artists build
 ```
 
 Or inside `apps/web-artists/`:
@@ -48,5 +48,5 @@ pnpm check-types
 
 ## Notes
 
-- The `predev` hook automatically builds `@spotify/ui-react` before starting the dev server.
+- The `predev` hook automatically builds `@bitrate/ui-react` before starting the dev server.
 - Requires the API running on port 3000 for data fetching.

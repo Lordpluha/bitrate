@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # CLI Tools
 
-Custom command-line utilities built for the Spotify Clone project.
+Custom command-line utilities built for the Bitrate project.
 
 ## 📦 Overview
 
@@ -12,9 +12,9 @@ The project includes several reusable CLI tools built as standalone packages:
 
 | Package | Command | Purpose |
 |---------|---------|---------|
-| `@spotify/svgr` | `react-svgr` | SVG → React components |
-| `@spotify/vite-svgr` | — | Vite plugin: SVG generation in build pipeline |
-| `@spotify/converter` | `media-converter` | Audio/video conversion |
+| `@bitrate/svgr` | `react-svgr` | SVG → React components |
+| `@bitrate/vite-svgr` | — | Vite plugin: SVG generation in build pipeline |
+| `@bitrate/converter` | `media-converter` | Audio/video conversion |
 
 All tools follow the same pattern:
 - ✅ CLI with `--help` flag
@@ -24,12 +24,12 @@ All tools follow the same pattern:
 
 ## ⚡ vite-svgr
 
-Vite plugin that integrates `@spotify/svgr` into the Vite build pipeline — no separate pre-build step needed.
+Vite plugin that integrates `@bitrate/svgr` into the Vite build pipeline — no separate pre-build step needed.
 
 ### Installation
 
 ```bash
-pnpm add @spotify/vite-svgr
+pnpm add @bitrate/vite-svgr
 ```
 
 ### Usage
@@ -37,13 +37,13 @@ pnpm add @spotify/vite-svgr
 Add to `vite.config.ts` **before** other plugins so SVG components are generated before transforms run:
 
 ```typescript
-import { svgrPlugin } from '@spotify/vite-svgr'
+import { svgrPlugin } from '@bitrate/vite-svgr'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
     svgrPlugin({
-      input: '@spotify/tokens/icons',   // supports @scope/pkg/subpath
+      input: './assets/icons',   // supports @scope/pkg/subpath
       output: 'src/icons/svgr',
       variables: ['primaryColor', 'secondaryColor'],
     }),
@@ -75,7 +75,7 @@ Convert SVG files to React components with dynamic color support.
 ### Installation
 
 ```bash
-pnpm add @spotify/svgr
+pnpm add @bitrate/svgr
 ```
 
 ### CLI Usage
@@ -83,13 +83,13 @@ pnpm add @spotify/svgr
 ```bash
 # Build mode
 react-svgr build \
-  -i @spotify/tokens/icons \
+  -i ./assets/icons \
   -o src/icons/svgr \
   --variables "primaryColor,secondaryColor"
 
 # Watch mode
 react-svgr dev \
-  -i @spotify/tokens/icons \
+  -i ./assets/icons \
   -o src/icons/svgr
 ```
 
@@ -156,7 +156,7 @@ Convert media files using FFmpeg (Audio → OGG Opus, Video → AAC).
 ### Installation
 
 ```bash
-pnpm add @spotify/converter
+pnpm add @bitrate/converter
 ```
 
 ### Prerequisites
@@ -229,7 +229,7 @@ media-converter video -i video.avi -b 64k --profile aac_he
 ### Programmatic API
 
 ```javascript
-import { convertAudio, convertVideo } from '@spotify/converter'
+import { convertAudio, convertVideo } from '@bitrate/converter'
 
 // Audio conversion
 const result = await convertAudio({
@@ -266,8 +266,8 @@ const videoResult = await convertVideo({
 ```json
 {
   "scripts": {
-    "icons": "react-svgr build -i @spotify/tokens/icons -o src/icons",
-    "icons:watch": "react-svgr dev -i @spotify/tokens/icons -o src/icons",
+    "icons": "react-svgr build -i ./assets/icons -o src/icons",
+    "icons:watch": "react-svgr dev -i ./assets/icons -o src/icons",
     "build": "vite build",
     "dev": "vite build --watch",
     "convert": "media-converter audio -i input.mp3 -o output.opus"

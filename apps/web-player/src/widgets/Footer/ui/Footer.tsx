@@ -1,5 +1,5 @@
+import { Facebook, Inst, Twit } from '@bitrate/ui-react'
 import { Logo } from '@shared/ui'
-import { Facebook, Inst, Twit } from '@spotify/ui-react'
 import Link from 'next/link'
 import type { HTMLAttributes } from 'react'
 

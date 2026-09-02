@@ -1,7 +1,7 @@
 'use client'
 
+import { Button } from '@bitrate/ui-react'
 import { LoginModal, SignUpModal } from '@features/AuthModal'
-import { Button } from '@spotify/ui-react'
 import { useState } from 'react'
 
 export const AuthButtons = () => {

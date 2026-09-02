@@ -32,20 +32,20 @@ export class MetricsService {
 
   render(): string {
     const lines = [
-      '# HELP spotify_api_http_requests_total Total HTTP requests.',
-      '# TYPE spotify_api_http_requests_total counter',
+      '# HELP bitrate_api_http_requests_total Total HTTP requests.',
+      '# TYPE bitrate_api_http_requests_total counter',
     ]
     for (const metric of this.routes.values()) {
       const labels = this.renderLabels(metric)
-      lines.push(`spotify_api_http_requests_total{${labels}} ${metric.count}`)
+      lines.push(`bitrate_api_http_requests_total{${labels}} ${metric.count}`)
     }
     lines.push(
-      '# HELP spotify_api_http_request_duration_ms_sum Accumulated HTTP request duration.',
-      '# TYPE spotify_api_http_request_duration_ms_sum counter',
+      '# HELP bitrate_api_http_request_duration_ms_sum Accumulated HTTP request duration.',
+      '# TYPE bitrate_api_http_request_duration_ms_sum counter',
     )
     for (const metric of this.routes.values()) {
       const labels = this.renderLabels(metric)
-      lines.push(`spotify_api_http_request_duration_ms_sum{${labels}} ${metric.totalDurationMs}`)
+      lines.push(`bitrate_api_http_request_duration_ms_sum{${labels}} ${metric.totalDurationMs}`)
     }
     return `${lines.join('\n')}\n`
   }

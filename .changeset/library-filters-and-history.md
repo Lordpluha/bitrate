@@ -1,5 +1,5 @@
 ---
-'@spotify/web-player': minor
+'@bitrate/web-player': minor
 ---
 
 Listening history is now recorded. A track played for more than fifteen seconds

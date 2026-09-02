@@ -1,7 +1,7 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
-import { cn } from '@spotify/ui-react'
 import { House, Library, Plus, Search, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'

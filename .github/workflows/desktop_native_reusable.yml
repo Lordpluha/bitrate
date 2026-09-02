@@ -63,11 +63,11 @@ jobs:
 
       - name: Install desktop dependencies
         if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
-        run: pnpm install --frozen-lockfile --filter @spotify/desktop...
+        run: pnpm install --frozen-lockfile --filter @bitrate/desktop...
 
       - name: Build desktop app (native)
         if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
-        run: pnpm --filter @spotify/desktop run tauri build
+        run: pnpm --filter @bitrate/desktop run tauri build
 
       - name: Upload native artifacts
         if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}

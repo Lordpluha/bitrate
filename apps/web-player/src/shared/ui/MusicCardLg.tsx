@@ -1,7 +1,7 @@
 'use client'
+import { cn, PlayIcon } from '@bitrate/ui-react'
 import { fallbackArtistImage, fallbackPlaylistCover } from '@shared/constants'
 import { ROUTES } from '@shared/routes'
-import { cn, PlayIcon } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
 

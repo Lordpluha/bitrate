@@ -6,7 +6,7 @@ sidebar_position: 1
 
 Shared React component library used across all frontend applications.
 
-## 📦 Package: @spotify/ui-react
+## 📦 Package: @bitrate/ui-react
 
 Reusable UI components built with React 19, TypeScript, Base UI, Tailwind v4, and
 shadcn-style owned source.
@@ -15,7 +15,7 @@ shadcn-style owned source.
 
 ```bash
 # In your app
-pnpm add @spotify/ui-react
+pnpm add @bitrate/ui-react
 
 # Development
 cd packages/ui-react
@@ -60,7 +60,7 @@ packages/ui-react/
 ### Button
 
 ```tsx
-import { Button } from '@spotify/ui-react'
+import { Button } from '@bitrate/ui-react'
 
 <Button variant="primary" size="lg" onClick={handleClick}>
   Click me
@@ -73,7 +73,7 @@ import { Button } from '@spotify/ui-react'
 ### Input
 
 ```tsx
-import { Input } from '@spotify/ui-react'
+import { Input } from '@bitrate/ui-react'
 
 <Input
   type="text"
@@ -86,7 +86,7 @@ import { Input } from '@spotify/ui-react'
 ### Form primitives
 
 ```tsx
-import { Form, Input, Label } from '@spotify/ui-react'
+import { Form, Input, Label } from '@bitrate/ui-react'
 
 <Form {...form}>
   <Label htmlFor="email">Email</Label>
@@ -97,7 +97,7 @@ import { Form, Input, Label } from '@spotify/ui-react'
 ### Icons
 
 ```tsx
-import { MusicIcon, PlayIcon } from '@spotify/ui-react'
+import { MusicIcon, PlayIcon } from '@bitrate/ui-react'
 
 <MusicIcon className="size-6" />
 <PlayIcon className="size-8" />
@@ -128,16 +128,16 @@ pnpm build
 
 ```tsx
 // app/layout.tsx
-import '@spotify/ui-react/themes.css'
+import '@bitrate/ui-react/themes.css'
 
 // components/MyComponent.tsx
-import { Button } from '@spotify/ui-react'
+import { Button } from '@bitrate/ui-react'
 ```
 
 ### Tauri (Desktop)
 
 ```tsx
-import { Button } from '@spotify/ui-react'
+import { Button } from '@bitrate/ui-react'
 ```
 
 ## 🎨 Theming

@@ -1,5 +1,5 @@
 ---
-'@spotify/web-player': minor
+'@bitrate/web-player': minor
 ---
 
 Added the artist page with follow, popular tracks and discography, a real playback

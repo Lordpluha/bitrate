@@ -89,8 +89,8 @@ export const pl = {
   'settings.twoFactor.setup': 'Skonfiguruj 2FA',
   'settings.twoFactor.setupDescription':
     'Chroń konto aplikacją uwierzytelniającą.',
-  'settings.video': 'Filmy i Canvas',
-  'settings.video.canvas': 'Canvas',
+  'settings.video': 'Filmy i wizualizacje',
+  'settings.video.canvas': 'Zapętlone wizualizacje',
   'settings.video.canvas.description':
     'Krótkie zapętlone animacje podczas odtwarzania.',
   'settings.video.info': 'Aktualizacja ustawień może chwilę potrwać.',

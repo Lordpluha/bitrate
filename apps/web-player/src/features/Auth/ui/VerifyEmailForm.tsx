@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Input } from '@spotify/ui-react'
+import { Button, Input } from '@bitrate/ui-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { type FormEvent, useState } from 'react'

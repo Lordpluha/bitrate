@@ -33,7 +33,7 @@ export async function prepareVariants(
   temporaryRoot: string,
 ): Promise<PreparedVariant[]> {
   const { inputPath, format, bitrates, sourceFileName, trackId } = job.data
-  const { convertAudio } = await import('@spotify/converter')
+  const { convertAudio } = await import('@bitrate/converter')
   const generationRoot = getAudioGenerationRoot(trackId, sourceFileName)
   const prepared: PreparedVariant[] = []
 
@@ -74,7 +74,7 @@ export async function generateHls(
   temporaryHlsPath: string,
   bitrates: string[],
 ): Promise<void> {
-  const { convertAudioToHls } = await import('@spotify/converter')
+  const { convertAudioToHls } = await import('@bitrate/converter')
   await convertAudioToHls({
     input: job.data.inputPath,
     outputDir: temporaryHlsPath,
@@ -115,7 +115,7 @@ export async function generateCmaf(
   temporaryRoot: string,
   bitrates: string[],
 ): Promise<PreparedCmafPackage> {
-  const { convertAudioToCmaf } = await import('@spotify/converter')
+  const { convertAudioToCmaf } = await import('@bitrate/converter')
 
   const result = await convertAudioToCmaf({
     input: job.data.inputPath,

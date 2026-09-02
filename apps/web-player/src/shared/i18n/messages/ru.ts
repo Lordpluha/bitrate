@@ -90,8 +90,8 @@ export const ru = {
   'settings.twoFactor.setup': 'Настроить 2FA',
   'settings.twoFactor.setupDescription':
     'Защитите аккаунт с помощью приложения-аутентификатора.',
-  'settings.video': 'Видео и Canvas',
-  'settings.video.canvas': 'Canvas',
+  'settings.video': 'Видео и визуализации',
+  'settings.video.canvas': 'Зацикленные визуализации',
   'settings.video.canvas.description':
     'Короткие зацикленные визуальные эффекты во время воспроизведения.',
   'settings.video.info': 'Обновление настроек может занять некоторое время.',

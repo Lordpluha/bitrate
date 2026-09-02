@@ -51,7 +51,7 @@ jobs:
     uses: ./.github/workflows/desktop_docker_reusable.yml
     with:
       push-image: false
-      image-tags: spotify-desktop-pr:${{ github.sha }}
+      image-tags: bitrate-desktop-pr:${{ github.sha }}
       load-image: true
       timeout-minutes: 20
       run-ui-test: true

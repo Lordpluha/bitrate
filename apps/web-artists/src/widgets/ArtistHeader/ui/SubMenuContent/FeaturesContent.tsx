@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import Link from 'next/link'
 import { memo } from 'react'
 import type { SubmenuGroup } from './SubMenuContent.types'

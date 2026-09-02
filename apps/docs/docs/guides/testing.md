@@ -22,7 +22,7 @@ it('returns album by id', async () => {
 })
 ```
 
-**Запуск:** `pnpm --filter @spotify/api test`
+**Запуск:** `pnpm --filter @bitrate/api test`
 
 ### Integration (`*.int-spec.ts`)
 
@@ -39,7 +39,7 @@ const module = await Test.createTestingModule({
   .compile()
 ```
 
-**Запуск:** `pnpm --filter @spotify/api test:int`
+**Запуск:** `pnpm --filter @bitrate/api test:int`
 
 ### E2E (`*.e2e-spec.ts`)
 
@@ -52,7 +52,7 @@ test/e2e/
 └── ...
 ```
 
-**Запуск:** `pnpm --filter @spotify/api test:e2e`
+**Запуск:** `pnpm --filter @bitrate/api test:e2e`
 
 ## Соглашения по именованию
 
@@ -91,7 +91,7 @@ Unit и integration тесты не требуют никакой инфраст
 ## Покрытие
 
 ```bash
-pnpm --filter @spotify/api test:cov
+pnpm --filter @bitrate/api test:cov
 ```
 
 Отчёт генерируется в `apps/api/coverage/`.
@@ -122,14 +122,14 @@ src/components/ui/button/
 Команды:
 
 ```bash
-pnpm --filter @spotify/ui-react test
-pnpm --filter @spotify/ui-react test:unit
-pnpm --filter @spotify/ui-react test:int
-pnpm --filter @spotify/ui-react test:snapshot
-pnpm --filter @spotify/ui-react test:snapshot:update
-pnpm --filter @spotify/ui-react test:screenshot
-pnpm --filter @spotify/ui-react test:screenshot:update
-pnpm --filter @spotify/ui-react test:cov
+pnpm --filter @bitrate/ui-react test
+pnpm --filter @bitrate/ui-react test:unit
+pnpm --filter @bitrate/ui-react test:int
+pnpm --filter @bitrate/ui-react test:snapshot
+pnpm --filter @bitrate/ui-react test:snapshot:update
+pnpm --filter @bitrate/ui-react test:screenshot
+pnpm --filter @bitrate/ui-react test:screenshot:update
+pnpm --filter @bitrate/ui-react test:cov
 ```
 
 В `ui-react` Playwright используется как browser provider для screenshot-тестов; отдельные
@@ -139,10 +139,10 @@ E2E-сценарии приложения принадлежат `web-player`.
 
 | Тип | Расположение | Команда |
 |---|---|---|
-| Unit | `src/**/*.unit-spec.ts(x)` | `pnpm --filter @spotify/web-player test:unit` |
-| Integration | `src/**/*.int-spec.ts(x)` | `pnpm --filter @spotify/web-player test:int` |
-| E2E | `tests/e2e/**/*.e2e-spec.ts` | `pnpm --filter @spotify/web-player test:e2e` |
-| Screenshot | `src/**/*.screenshot-spec.ts` | `pnpm --filter @spotify/web-player test:screenshot` |
+| Unit | `src/**/*.unit-spec.ts(x)` | `pnpm --filter @bitrate/web-player test:unit` |
+| Integration | `src/**/*.int-spec.ts(x)` | `pnpm --filter @bitrate/web-player test:int` |
+| E2E | `tests/e2e/**/*.e2e-spec.ts` | `pnpm --filter @bitrate/web-player test:e2e` |
+| Screenshot | `src/**/*.screenshot-spec.ts` | `pnpm --filter @bitrate/web-player test:screenshot` |
 
 Playwright автоматически запускает Next.js dev server на `http://localhost:3001`, если
 `BASE_URL` не указывает на уже развёрнутое окружение.

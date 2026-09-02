@@ -1,9 +1,9 @@
 'use client'
 
+import { Button, Form } from '@bitrate/ui-react'
 import { useSignUpModalForm } from '@features/AuthModal/model/useSignUpModalForm'
 import { ROUTES } from '@shared/routes'
 import { SocialsAuthDivider } from '@shared/ui'
-import { Button, Form } from '@spotify/ui-react'
 import Link from 'next/link'
 import type { ComponentProps } from 'react'
 import { AuthModalGoogleButton, AuthModalHeader } from './AuthModalHeader'
@@ -32,7 +32,7 @@ export const SignUpModal = ({
     >
       <div className="flex flex-col items-stretch justify-center gap-4 rounded-lg bg-contrast p-8 text-text-contrast">
         <AuthModalHeader
-          description="Sign up to enjoy the features of Spotify."
+          description="Sign up to enjoy the features of Bitrate."
           title="Sign Up"
         />
         <Form {...form}>

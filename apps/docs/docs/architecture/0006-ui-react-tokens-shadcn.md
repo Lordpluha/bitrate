@@ -13,7 +13,7 @@ tests without locking product UI behind an opaque dependency.
 
 ## Decision
 
-- `@spotify/ui-react` owns React component source and public exports.
+- `@bitrate/ui-react` owns React component source and public exports.
 - `packages/tokens/tokens.json` is the design-value source of truth.
 - `@spotify/tokens-generator` produces Tailwind v4 CSS.
 - Base UI and package-owned Slot helpers provide primitives.
@@ -23,7 +23,7 @@ tests without locking product UI behind an opaque dependency.
 
 ## Consequences
 
-Applications consume `@spotify/ui-react` before creating local primitives. Literal visual
+Applications consume `@bitrate/ui-react` before creating local primitives. Literal visual
 values are promoted to tokens. Updating an upstream shadcn component uses CLI diff/merge,
 not blind overwrite.
 

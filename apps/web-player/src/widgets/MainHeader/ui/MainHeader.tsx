@@ -1,10 +1,10 @@
 'use client'
 
+import { MembersIcon } from '@bitrate/ui-react'
 import { ThemeSwitcher } from '@features/SwitchTheme'
 import { useAuth } from '@shared/hooks'
 import { ROUTES } from '@shared/routes'
 import { Logo } from '@shared/ui'
-import { MembersIcon } from '@spotify/ui-react'
 import Link from 'next/link'
 import { AuthButtons } from './AuthButtons'
 import { HeaderSearch } from './HeaderSearch'

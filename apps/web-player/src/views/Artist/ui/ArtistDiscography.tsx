@@ -1,7 +1,7 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import type { TrackEntity } from '@entities/Track'
-import { cn } from '@spotify/ui-react'
 import { useState } from 'react'
 import type { ArtistAlbum } from '../model/artist.types'
 import {

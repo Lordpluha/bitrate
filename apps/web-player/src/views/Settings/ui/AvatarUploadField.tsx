@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import type { DragEvent } from 'react'
 import { useRef, useState } from 'react'
 import { useI18n } from '@/shared/i18n'

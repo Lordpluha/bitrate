@@ -4,13 +4,13 @@
     {
       "name": "api",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@spotify/api", "start:dev"],
+      "runtimeArgs": ["--filter", "@bitrate/api", "start:dev"],
       "port": 3000
     },
     {
       "name": "web-player",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@spotify/web-player", "dev"],
+      "runtimeArgs": ["--filter", "@bitrate/web-player", "dev"],
       "port": 3001
     }
   ]

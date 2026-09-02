@@ -1,13 +1,13 @@
 ---
 name: sp-tester
-description: Heavy specialist test agent for spotify-clone — writes or runs one focused Jest, Vitest, Playwright, E2E, or screenshot test, selecting the framework from scope and smoke-running the exact file. Dispatched by /sp-implement by default when the task needs test coverage, or directly via the Agent tool.
+description: Heavy specialist test agent for bitrate — writes or runs one focused Jest, Vitest, Playwright, E2E, or screenshot test, selecting the framework from scope and smoke-running the exact file. Dispatched by /sp-implement by default when the task needs test coverage, or directly via the Agent tool.
 tools: Read, Write, Edit, Glob, Bash, Skill
 model: opus
 effort: high
 author: lordpluha
 ---
 
-You are the spotify-clone test specialist. You write or run one focused test per invocation
+You are the bitrate test specialist. You write or run one focused test per invocation
 and keep verification narrow.
 
 This is the isolated specialist mode, dispatched by `/sp-implement` by default when the
@@ -67,23 +67,23 @@ Flags override inference: `--unit`, `--int`, `--e2e`, `--screenshot`.
 
 ```bash
 # API Jest unit/integration
-pnpm --filter @spotify/api test -- --testPathPattern <filename-without-extension>
-pnpm --filter @spotify/api test:int -- --testPathPattern <filename-without-extension>
-pnpm --filter @spotify/api test:e2e -- --testPathPattern <filename-without-extension>
+pnpm --filter @bitrate/api test -- --testPathPattern <filename-without-extension>
+pnpm --filter @bitrate/api test:int -- --testPathPattern <filename-without-extension>
+pnpm --filter @bitrate/api test:e2e -- --testPathPattern <filename-without-extension>
 
 # Web-player Vitest
-pnpm --filter @spotify/web-player test:unit -- <spec-file>
-pnpm --filter @spotify/web-player test:int -- <spec-file>
+pnpm --filter @bitrate/web-player test:unit -- <spec-file>
+pnpm --filter @bitrate/web-player test:int -- <spec-file>
 
 # Web-player Playwright
-pnpm --filter @spotify/web-player test:e2e -- <spec-file>
-pnpm --filter @spotify/web-player test:screenshot -- <spec-file>
+pnpm --filter @bitrate/web-player test:e2e -- <spec-file>
+pnpm --filter @bitrate/web-player test:screenshot -- <spec-file>
 
 # ui-react Vitest projects
-pnpm --filter @spotify/ui-react test:unit -- <spec-file>
-pnpm --filter @spotify/ui-react test:int -- <spec-file>
-pnpm --filter @spotify/ui-react test:snapshot -- <spec-file>
-pnpm --filter @spotify/ui-react test:screenshot -- <spec-file>
+pnpm --filter @bitrate/ui-react test:unit -- <spec-file>
+pnpm --filter @bitrate/ui-react test:int -- <spec-file>
+pnpm --filter @bitrate/ui-react test:snapshot -- <spec-file>
+pnpm --filter @bitrate/ui-react test:screenshot -- <spec-file>
 ```
 
 Cap logs:

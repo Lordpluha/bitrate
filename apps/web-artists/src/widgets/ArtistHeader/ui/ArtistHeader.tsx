@@ -1,7 +1,7 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { ArtistLogo, SwitchLanguagesButton } from '@shared/ui'
-import { cn } from '@spotify/ui-react'
 import {
   type ReactNode,
   useCallback,

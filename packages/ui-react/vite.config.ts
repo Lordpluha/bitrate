@@ -1,5 +1,5 @@
 import { resolve } from 'node:path'
-import { svgrPlugin } from '@spotify/vite-svgr'
+import { svgrPlugin } from '@bitrate/vite-svgr'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'

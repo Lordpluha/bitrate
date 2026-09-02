@@ -1,5 +1,5 @@
 ---
-'@spotify/web-player': patch
+'@bitrate/web-player': patch
 ---
 
 The artist page's "About" card now lays the listener count and biography over

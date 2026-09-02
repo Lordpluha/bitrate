@@ -163,12 +163,12 @@ See `code-principles.md` for the full rules. In short:
 ## Styling
 
 - Tailwind v4 utility classes.
-- Design tokens from `@spotify/ui-react` CSS variables. No hardcoded hex.
-- `cn()` from `@spotify/ui-react` for conditional class merging.
+- Design tokens from `@bitrate/ui-react` CSS variables. No hardcoded hex.
+- `cn()` from `@bitrate/ui-react` for conditional class merging.
 - CVA (`class-variance-authority`) for variant components.
 
 ```tsx
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 
 <div className={cn('rounded-lg p-4', isActive && 'ring-2 ring-primary')} />
 ```

@@ -1,5 +1,5 @@
 ---
-'@spotify/web-player': patch
+'@bitrate/web-player': patch
 ---
 
 The next/previous track hover cards space the cover art away from the label

@@ -31,7 +31,7 @@ bridge, no tests.
 | `'use client'` / Server Components | No server component model |
 | `app/**/page.tsx` route adapters | No file-based routing at all |
 | `ROUTES` from `@/shared/routes` | No router installed yet |
-| `@spotify/ui-react` | Not a dependency today — check before assuming |
+| `@bitrate/ui-react` | Not a dependency today — check before assuming |
 
 Rules that **do** apply: `.claude/rules/typescript.md`,
 `.claude/rules/code-principles.md`, and the framework-agnostic parts of
@@ -111,14 +111,14 @@ positions, no production `any`. ≤100 logic lines per component file, ≤5 own 
 ≤2 `useEffect`.
 
 Design values should trace back to `packages/ui-react/tokens/tokens.json`. No bridge exists yet — propose one
-rather than scattering hex literals. API types come from `@spotify/contracts`.
+rather than scattering hex literals. API types come from `@bitrate/contracts`.
 
 ## Commands
 
 ```bash
-pnpm --filter @spotify/desktop dev                 # renderer only (Vite, :1420)
-pnpm --filter @spotify/desktop tauri dev           # full app
-pnpm --filter @spotify/desktop check-types    # tsc --noEmit
+pnpm --filter @bitrate/desktop dev                 # renderer only (Vite, :1420)
+pnpm --filter @bitrate/desktop tauri dev           # full app
+pnpm --filter @bitrate/desktop check-types    # tsc --noEmit
 cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml
 ```
 

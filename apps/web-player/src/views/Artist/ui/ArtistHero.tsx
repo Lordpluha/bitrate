@@ -5,7 +5,7 @@ import { BadgeCheck } from 'lucide-react'
 import Image from 'next/image'
 import type { ArtistHeroProps } from '@/views/Artist/model/artist.types'
 
-/** Full-bleed artist header matching Spotify's desktop artist treatment. */
+/** Full-bleed artist header: cover art, name, and the primary listen action. */
 export const ArtistHero = ({ artist, statsLabel }: ArtistHeroProps) => {
   const backgroundUrl = getArtistBackgroundUrl(
     artist.backgroundImage,

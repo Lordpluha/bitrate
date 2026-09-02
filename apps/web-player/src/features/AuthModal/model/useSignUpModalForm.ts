@@ -1,11 +1,11 @@
 'use client'
 
+import { toast } from '@bitrate/ui-react'
 import { type RegistrationFormData, registrationSchema } from '@entities/User'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@shared/api/client'
 import { showApiErrorToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
-import { toast } from '@spotify/ui-react'
 import { useRouter } from 'next/navigation'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 

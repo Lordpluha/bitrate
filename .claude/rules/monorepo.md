@@ -14,15 +14,15 @@ Working reference for the repository structure and cross-package tooling.
 ## Workspace topology
 
 ```
-spotify-clone/
+bitrate/
   apps/
-    api/          NestJS backend — @spotify/api
-    web-player/   Next.js App Router — @spotify/web-player
-    web-artists/  Next.js artist-facing frontend — @spotify/web-artists
-    admin/        Kottster admin — @spotify/admin
-    desktop/      Tauri 2 + React — @spotify/desktop
-    mobile/       React Native + Expo — @spotify/mobile
-    docs/         Docusaurus 3 — @spotify/docs
+    api/          NestJS backend — @bitrate/api
+    web-player/   Next.js App Router — @bitrate/web-player
+    web-artists/  Next.js artist-facing frontend — @bitrate/web-artists
+    admin/        Kottster admin — @bitrate/admin
+    desktop/      Tauri 2 + React — @bitrate/desktop
+    mobile/       React Native + Expo — @bitrate/mobile
+    docs/         Docusaurus 3 — @bitrate/docs
   packages/
     ui-react/         Shared React component library — also owns the design tokens,
                       hand-written as Tailwind @theme layers in src/styles/
@@ -50,8 +50,8 @@ spotify-clone/
 
 ```bash
 pnpm install                          # install all deps
-pnpm add <dep> --filter @spotify/api  # add to a specific package
-pnpm --filter @spotify/web-player dev # run a script in one package
+pnpm add <dep> --filter @bitrate/api  # add to a specific package
+pnpm --filter @bitrate/web-player dev # run a script in one package
 ```
 
 ### TypeScript 6 and `peerDependencyRules`
@@ -124,7 +124,7 @@ the container's own environment so an override in `.env` cannot silently break t
 `tsconfig.json`, so there is nothing to check — that is deliberate, not a gap to fill.
 
 Both `check-types` and `test` declare `dependsOn: ["^build"]` in `turbo.json`, because
-`web-player` and `web-artists` resolve `@spotify/ui-react` through its built
+`web-player` and `web-artists` resolve `@bitrate/ui-react` through its built
 `dist/types/index.d.ts`. Without that edge a stale `dist/` makes `pnpm check-types` fail on
 components that exist in `src/` — do not remove it.
 
@@ -150,10 +150,10 @@ These must be re-run when source data changes:
 ```bash
 # SVG sources in packages/ui-react/assets/icons/ are converted into
 # src/icons/svgr/ by the svgr plugin in vite.config.ts during
-pnpm --filter @spotify/ui-react build
+pnpm --filter @bitrate/ui-react build
 
 # After changing API endpoints (API must run on :3000)
-pnpm --filter @spotify/contracts gen:api
+pnpm --filter @bitrate/contracts gen:api
 ```
 
 `openapi-typescript@7.13.0` — the latest release — still declares `peerDependencies:
@@ -169,13 +169,13 @@ TypeScript** — re-run the generator and re-verify before changing either versi
 Use workspace package names, not relative paths:
 
 ```ts
-import type { ApiPaths } from '@spotify/contracts'
-import { Button } from '@spotify/ui-react'
+import type { ApiPaths } from '@bitrate/contracts'
+import { Button } from '@bitrate/ui-react'
 ```
 
 ## Adding a new package
 
-1. Create `packages/<name>/` with `package.json` (name: `@spotify/<name>`).
+1. Create `packages/<name>/` with `package.json` (name: `@bitrate/<name>`).
 2. Add to `pnpm-workspace.yaml` packages list.
 3. Add a `tsconfig.json`.
 4. Add a reference in `turbo.json` if it has a `build` step.

@@ -8,7 +8,7 @@ metadata:
 license: MIT
 ---
 
-# Code style — spotify-clone
+# Code style — bitrate
 
 Four CLI commands cover mechanical verification. Run from the monorepo root.
 
@@ -27,7 +27,7 @@ most `recommended` rules report at warning severity, and without the flag Biome 
 and still exits 0. To apply autofixes, run the opt-in mutating form instead:
 
 ```bash
-pnpm --filter @spotify/web-player lint:fix   # biome lint --write
+pnpm --filter @bitrate/web-player lint:fix   # biome lint --write
 ```
 
 Common fixes:
@@ -50,7 +50,7 @@ Runs `tsc --noEmit` (via Turborepo) in every workspace that declares the script:
 - `apps/api` — `strictNullChecks: true`, `noUncheckedIndexedAccess: true` (no `noImplicitAny`)
 - `apps/web-player` — `strict: true`, `noUncheckedIndexedAccess: true`
 
-The task declares `dependsOn: ["^build"]`, so `@spotify/ui-react` is built first — the web
+The task declares `dependsOn: ["^build"]`, so `@bitrate/ui-react` is built first — the web
 apps typecheck against its emitted `dist/types`, not its `src/`. `apps/api` regenerates the
 Prisma client first via `precheck-types`.
 
@@ -81,10 +81,10 @@ pnpm exec biome check --write .
 
 ```bash
 # Lint only the API
-pnpm --filter @spotify/api exec biome lint src/
+pnpm --filter @bitrate/api exec biome lint src/
 
 # Type-check only web-player
-pnpm --filter @spotify/web-player check-types
+pnpm --filter @bitrate/web-player check-types
 ```
 
 ## Common tsc errors in the API

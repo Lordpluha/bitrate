@@ -1,6 +1,6 @@
+import { cn } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { cn } from '@spotify/ui-react'
 import Image from 'next/image'
 import type { KeyboardEventHandler } from 'react'
 import type { TrackEntity } from '../models/schema/Track.entity'

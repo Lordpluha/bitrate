@@ -1,4 +1,4 @@
-# @spotify/web-player
+# @bitrate/web-player
 
 ## 0.1.0
 
@@ -10,4 +10,4 @@
 
 - 7aaa0f4: Fix authorization and private playlist exposure, make cache fallbacks safe, repair auth request retries and media URLs, and restore Base UI wrapper compatibility.
 - Updated dependencies [7aaa0f4]
-  - @spotify/ui-react@0.0.2
+  - @bitrate/ui-react@0.0.2

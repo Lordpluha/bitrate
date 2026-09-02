@@ -4,7 +4,7 @@ import {
   NoWifiIcon,
   PhoneIcon,
   Typography,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 import type { ReactNode } from 'react'
 
 const iconMap = {

@@ -1,12 +1,12 @@
 'use client'
 
+import { Toaster } from '@bitrate/ui-react'
 import { useSettingsPersistence, useSettingsStore } from '@entities/Settings'
 import { shouldRetryApiQuery } from '@shared/api/errors'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ThemeProvider } from '@shared/contexts'
 import { I18nProvider } from '@shared/i18n'
 import { ServiceWorkerRegistration } from '@shared/ui/ServiceWorkerRegistration'
-import { Toaster } from '@spotify/ui-react'
 import {
   MutationCache,
   QueryCache,

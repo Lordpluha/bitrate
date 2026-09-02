@@ -1,4 +1,4 @@
-import { Button, CheckMark, Pause, Unpause } from '@spotify/ui-react'
+import { Button, CheckMark, Pause, Unpause } from '@bitrate/ui-react'
 import Link from 'next/link'
 import { useReducer, useRef } from 'react'
 import config from '../config/video-config.json'
@@ -30,27 +30,31 @@ export const ArtistVideoCards = () => {
               </p>
               <ul className={ulCls}>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('Marquee')}>
-                    Marquee
+                  <Link className={linkCls} href={l('release campaigns')}>
+                    Release campaigns
                   </Link>{' '}
                   makes your new release unmissable with a full-screen
                   recommendation.
                 </Description>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('Showcase')}>
-                    Showcase
+                  <Link
+                    className={linkCls}
+                    href={l('sponsored recommendations')}
+                  >
+                    Sponsored recommendations
                   </Link>{' '}
-                  promotes your music on Spotify's Home with a selected
+                  promotes your music on the Bitrate home feed with a selected
                   headline.
                 </Description>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('Discovery Mode')}>
-                    Discovery Mode
+                  <Link className={linkCls} href={l('algorithmic promotion')}>
+                    Algorithmic promotion
                   </Link>{' '}
                   can give your music a boost in personalized playlists.
                 </Description>
                 <Description accent={video.accent}>
-                  Share your upcoming tracks with Spotify editors using{' '}
+                  Share your upcoming tracks with the Bitrate editorial team
+                  using{' '}
                   <Link className={linkCls} href={l('playlist pitching')}>
                     playlist pitching
                   </Link>
@@ -74,7 +78,7 @@ export const ArtistVideoCards = () => {
               </p>
               <ul className={ulCls}>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('Clips')}>
+                  <Link className={linkCls} href={l('short clips')}>
                     Clips
                   </Link>{' '}
                   are short videos you create to connect with fans while keeping
@@ -82,13 +86,13 @@ export const ArtistVideoCards = () => {
                 </Description>
                 <Description accent={video.accent}>
                   Add a{' '}
-                  <Link className={linkCls} href={l('Canvas')}>
-                    Canvas
+                  <Link className={linkCls} href={l('looping visuals')}>
+                    A looping visual
                   </Link>{' '}
-                  – a short, looping visual – to each of your tracks on Spotify.
+                  – a short, looping visual – to each of your tracks on Bitrate.
                 </Description>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('Countdown Pages')}>
+                  <Link className={linkCls} href={l('countdown pages')}>
                     Countdown Pages
                   </Link>{' '}
                   help you get fans hyped for your upcoming album.
@@ -112,10 +116,10 @@ export const ArtistVideoCards = () => {
           return (
             <VideoCard reverse={false} video={video}>
               <p className={paragraphCls}>
-                There are many ways to earn revenue as an artist on Spotify.
+                There are many ways to earn revenue as an artist on Bitrate.
                 While{' '}
-                <Link className={linkCls} href={l('Loud & Clear')}>
-                  Loud & Clear
+                <Link className={linkCls} href={l('royalty reporting')}>
+                  Royalty reporting
                 </Link>{' '}
                 is your source for data, resources, and transparency around
                 streaming royalties, here are some other opportunities to
@@ -126,7 +130,7 @@ export const ArtistVideoCards = () => {
                   <Link className={linkCls} href={l('Sell and promote merch')}>
                     Sell and promote merch
                   </Link>{' '}
-                  on Spotify, because music and merch are better together.
+                  on Bitrate, because music and merch are better together.
                 </Description>
                 <Description accent={video.accent}>
                   List your{' '}
@@ -139,8 +143,8 @@ export const ArtistVideoCards = () => {
                   to make sure your fans never miss another show.
                 </Description>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('Fan Support')}>
-                    Fan Support
+                  <Link className={linkCls} href={l('fan contributions')}>
+                    Fan contributions
                   </Link>{' '}
                   lets you collect tips, or rally listeners around a charitable
                   cause.
@@ -162,8 +166,8 @@ export const ArtistVideoCards = () => {
               </p>
               <ul className={ulCls}>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('Segments')}>
-                    Segments
+                  <Link className={linkCls} href={l('audience segments')}>
+                    Audience segments
                   </Link>{' '}
                   allow you to better understand the breakdown of your audience.
                 </Description>
@@ -178,8 +182,8 @@ export const ArtistVideoCards = () => {
                   .
                 </Description>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('Fan Study')}>
-                    Fan Study
+                  <Link className={linkCls} href={l('fan surveys')}>
+                    Fan surveys
                   </Link>{' '}
                   is our ongoing report about fan behavior around the world.
                 </Description>

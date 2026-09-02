@@ -1,4 +1,4 @@
-import type { CarouselApi } from '@spotify/ui-react'
+import type { CarouselApi } from '@bitrate/ui-react'
 import { useEffect, useRef, useState } from 'react'
 
 export const useCarouselSync = (

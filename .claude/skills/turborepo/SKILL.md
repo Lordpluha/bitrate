@@ -20,7 +20,7 @@ topology; this skill covers the pipeline mechanics.
 "test":  { "dependsOn": ["build"] }    // no ^ = my OWN build first
 ```
 
-`^build` is what makes `@spotify/ui-react` build before `@spotify/web-player`. Getting this
+`^build` is what makes `@bitrate/ui-react` build before `@bitrate/web-player`. Getting this
 wrong is the usual cause of "it works after I build twice" — the consumer compiled against
 the previous artifact.
 
@@ -56,24 +56,24 @@ inputs per task).
 ## Filtering
 
 ```bash
-pnpm --filter @spotify/api build          # one workspace
-pnpm --filter @spotify/web-player...      # it and everything it depends on
-pnpm --filter ...@spotify/ui-react        # it and everything that depends on it
+pnpm --filter @bitrate/api build          # one workspace
+pnpm --filter @bitrate/web-player...      # it and everything it depends on
+pnpm --filter ...@bitrate/ui-react        # it and everything that depends on it
 pnpm --filter './packages/*' lint         # by path glob
 ```
 
 The `...` direction matters: `pkg...` is *dependencies*, `...pkg` is *dependents*. Use
-`...@spotify/ui-react` to check what a shared-package change could break.
+`...@bitrate/ui-react` to check what a shared-package change could break.
 
 ## Adding a workspace to the graph
 
-1. `packages/<name>/package.json` with `"name": "@spotify/<name>"`.
+1. `packages/<name>/package.json` with `"name": "@bitrate/<name>"`.
 2. Add it to `pnpm-workspace.yaml`.
 3. Add a `tsconfig.json`.
 4. If it has a `build`, make sure its outputs are declared so consumers can cache.
 5. `pnpm install` to link it.
 
-Consumers import by workspace name (`@spotify/contracts`), never a relative path across
+Consumers import by workspace name (`@bitrate/contracts`), never a relative path across
 package boundaries.
 
 ## Gotchas

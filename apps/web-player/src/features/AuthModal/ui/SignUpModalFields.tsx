@@ -1,4 +1,3 @@
-import type { RegistrationFormData } from '@entities/User'
 import {
   DynamicLabel,
   FormControl,
@@ -8,7 +7,8 @@ import {
   Input,
   InputProvider,
   PasswordInput,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
+import type { RegistrationFormData } from '@entities/User'
 import type { Control } from 'react-hook-form'
 
 type SignUpModalFieldsProps = {

@@ -51,7 +51,7 @@ const siteUrlRuleSet = () =>
 export const getSiteUrl = () =>
   resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL, siteUrlRuleSet())
 
-export const SITE_NAME = 'Spotify clone'
+export const SITE_NAME = 'Bitrate'
 
 export const SITE_DESCRIPTION =
   'Listen to music, build playlists and follow artists.'

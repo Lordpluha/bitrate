@@ -24,7 +24,7 @@ Instead:
    - 📧 **vladislavteslyukofficial@gmail.com**
 
 2. **GitHub Security Advisories** (recommended):
-   - Go to the [Security](https://github.com/Lordpluha/spotify-clone/security) tab
+   - Go to the [Security](https://github.com/Lordpluha/bitrate/security) tab
    - Click "Report a vulnerability"
    - Fill in the form with details
 

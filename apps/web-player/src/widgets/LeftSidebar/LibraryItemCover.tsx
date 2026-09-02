@@ -1,4 +1,4 @@
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { Volume2 } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'

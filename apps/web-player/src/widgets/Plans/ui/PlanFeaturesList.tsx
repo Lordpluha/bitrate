@@ -1,4 +1,4 @@
-import { GreenCheck } from '@spotify/ui-react'
+import { GreenCheck } from '@bitrate/ui-react'
 
 type PlanListProps = {
   features: string[]

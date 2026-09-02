@@ -1,4 +1,4 @@
-import { ArtistlogoIcon, cn } from '@spotify/ui-react'
+import { ArtistlogoIcon, cn } from '@bitrate/ui-react'
 import Link from 'next/link'
 
 export const ArtistLogo = () => {

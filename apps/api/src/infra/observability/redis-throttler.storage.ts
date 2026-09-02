@@ -42,7 +42,7 @@ export class RedisThrottlerStorage implements ThrottlerStorage {
   ) {
     const safeKey = key.replaceAll(/[{}]/g, '')
     const safeName = throttlerName.replaceAll(/[^a-zA-Z0-9_-]/g, '_')
-    const keyPrefix = `spotify:throttle:{${safeKey}}:${safeName}`
+    const keyPrefix = `bitrate:throttle:{${safeKey}}:${safeName}`
     const result = await this.redis.eval(
       INCREMENT_SCRIPT,
       2,

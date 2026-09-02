@@ -23,8 +23,8 @@ apps/web-player/src/shared/api/
   server/                     # the server-side counterpart for Server Components
 ```
 
-Types come from `@spotify/contracts`, generated from the API's Swagger document
-(`pnpm --filter @spotify/contracts gen:api`, with the API running on :3000). **If a path or
+Types come from `@bitrate/contracts`, generated from the API's Swagger document
+(`pnpm --filter @bitrate/contracts gen:api`, with the API running on :3000). **If a path or
 response type does not exist in the generated types, regenerate before working around it** —
 a hand-written type here is a lie that compiles.
 

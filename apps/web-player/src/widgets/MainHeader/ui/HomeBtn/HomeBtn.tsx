@@ -1,5 +1,5 @@
+import { HomeIcon } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
-import { HomeIcon } from '@spotify/ui-react'
 import Link from 'next/link'
 
 export const HomeBtn = () => {

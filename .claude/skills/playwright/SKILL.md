@@ -21,8 +21,8 @@ Playwright has two roles:
 
 | Mode | Location | Config | Command |
 |---|---|---|---|
-| E2E | `tests/e2e/<area>/*.e2e-spec.ts` | `tests/configs/playwright.e2e.config.ts` | `pnpm --filter @spotify/web-player test:e2e` |
-| Screenshot | Co-located `src/**/*.screenshot-spec.ts` | `tests/configs/playwright.screenshot.config.ts` | `pnpm --filter @spotify/web-player test:screenshot` |
+| E2E | `tests/e2e/<area>/*.e2e-spec.ts` | `tests/configs/playwright.e2e.config.ts` | `pnpm --filter @bitrate/web-player test:e2e` |
+| Screenshot | Co-located `src/**/*.screenshot-spec.ts` | `tests/configs/playwright.screenshot.config.ts` | `pnpm --filter @bitrate/web-player test:screenshot` |
 
 Use role → label → test id → text selector priority. CSS selectors are forbidden. Shared
 fixtures start under `tests/e2e/fixtures/` only after repeated setup appears in 2+ specs.
@@ -33,7 +33,7 @@ screenshot spec belongs to the view it renders.
 
 E2E runs Desktop Chrome and Pixel 5 projects. Route screenshots use Chromium only for
 stable baselines. Generate intentional baselines with
-`pnpm --filter @spotify/web-player test:screenshot:update`.
+`pnpm --filter @bitrate/web-player test:screenshot:update`.
 
 ## Screenshot location and shape
 
@@ -77,15 +77,15 @@ tests, prefer role and label selectors.
 ## Commands
 
 ```bash
-pnpm --filter @spotify/ui-react test:screenshot
-pnpm --filter @spotify/ui-react test:screenshot:update
+pnpm --filter @bitrate/ui-react test:screenshot
+pnpm --filter @bitrate/ui-react test:screenshot:update
 ```
 
 Smoke-run one file directly:
 
 ```bash
-pnpm --filter @spotify/ui-react exec vitest run --project=screenshot src/components/ui/button/button.screenshot-spec.tsx
-pnpm --filter @spotify/ui-react exec vitest run --project=screenshot src/components/ui/button/button.screenshot-spec.tsx --update
+pnpm --filter @bitrate/ui-react exec vitest run --project=screenshot src/components/ui/button/button.screenshot-spec.tsx
+pnpm --filter @bitrate/ui-react exec vitest run --project=screenshot src/components/ui/button/button.screenshot-spec.tsx --update
 ```
 
 Filter further with `-t "<title>"`. Baselines are written to the component's

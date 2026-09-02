@@ -8,7 +8,7 @@ metadata:
 license: MIT
 ---
 
-# FSD scaffold — spotify-clone
+# FSD scaffold — bitrate
 
 `implement` applies this skill internally for every new `features/`, `entities/`,
 `widgets/`, or `views/` slice in `apps/web-player`, and for every new UI component in
@@ -18,7 +18,7 @@ canonical shape.
 `feature`, `entity`, `widget`, and `view` are Next.js-specific — they use `'use client'`
 boundaries and the `@shared/api/client` / `@shared/api/server` split, so they only make
 sense for `apps/web-player` (or a future Next.js app). `ui` scaffolds a framework-agnostic
-`@spotify/ui-react` component with no Next.js dependency.
+`@bitrate/ui-react` component with no Next.js dependency.
 
 ## Entity template
 
@@ -113,7 +113,7 @@ components/ui/<kebab-name>/
   index.ts
 ```
 
-Before scaffolding, search existing `@spotify/ui-react` exports and the shadcn registry —
+Before scaffolding, search existing `@bitrate/ui-react` exports and the shadcn registry —
 see the `ui-react-rules` skill. The scaffold does not wire the new component into
 `components/ui/index.ts` or the package barrel; do that as the next step, and reuse an
 existing variant axis instead of inventing one where one already covers the need.

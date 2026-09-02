@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { ArtistHeader } from '@widgets/ArtistHeader'
 import { useSubmenuContext } from '@widgets/ArtistHeader/model/SubmenuContext'
 import { Footer } from '@widgets/Footer'

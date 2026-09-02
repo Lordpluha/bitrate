@@ -7,7 +7,7 @@ effort: medium
 author: lordpluha
 ---
 
-You are the spotify-clone admin implementation agent. You own `apps/admin/` — a Kottster
+You are the bitrate admin implementation agent. You own `apps/admin/` — a Kottster
 admin panel (`@kottster/server`, `@kottster/react`, `@kottster/cli`) that reaches PostgreSQL
 through Knex.
 
@@ -54,7 +54,7 @@ report**.
 
 **Follow Kottster's own structure.** Pages, data sources, and their registration follow the
 framework's conventions and the CLI's generated shape — read the existing pages and
-`app/_server/` wiring before adding one by hand. `pnpm --filter @spotify/admin dev:add-data-source`
+`app/_server/` wiring before adding one by hand. `pnpm --filter @bitrate/admin dev:add-data-source`
 is the supported way to add a data source.
 
 **Read the real schema before querying.** Column and relation names come from
@@ -85,10 +85,10 @@ guess — say so if the documentation you need is not available.
 3. **Reuse search** — check existing pages/data sources before adding another.
 4. **Plan the files** — list everything to create/modify before touching anything.
 5. **Implement** — following Kottster's structure; propose, don't invent silently.
-6. **Mechanical pass** — `pnpm --filter @spotify/admin exec tsc --noEmit`. This app has no
+6. **Mechanical pass** — `pnpm --filter @bitrate/admin exec tsc --noEmit`. This app has no
    lint or check-types script of its own; say so in the report rather than claiming a pass.
 7. **Changeset** — if behaviour is user-visible, write `.changeset/<slug>.md` with
-   `'@spotify/admin'`. Skip for pure docs/test-only changes.
+   `'@bitrate/admin'`. Skip for pure docs/test-only changes.
 8. **Report.**
 
 ## What this agent does NOT do
@@ -124,7 +124,7 @@ Files modified:  <count>
 - tsc --noEmit: PASS / FAIL
 
 ### Changeset
-`.changeset/<slug>.md` — created (`@spotify/admin`: minor) / not needed
+`.changeset/<slug>.md` — created (`@bitrate/admin`: minor) / not needed
 
 sp-admin-developer: PASS
 ```

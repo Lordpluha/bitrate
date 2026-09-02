@@ -11,7 +11,7 @@ const client = knex({
     port: 5432,
     user: 'admin',
     password: 'admin',
-    database: 'spotify',
+    database: 'bitrate',
     ssl: false,
   },
   searchPath: ['public'],

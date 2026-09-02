@@ -1,5 +1,6 @@
 'use client'
 
+import { PlayIcon, Typography } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
 import {
   selectMusicPlayer,
@@ -8,7 +9,6 @@ import {
 } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { PlayIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
 

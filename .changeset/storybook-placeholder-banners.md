@@ -1,5 +1,5 @@
 ---
-'@spotify/ui-react': patch
+'@bitrate/ui-react': patch
 ---
 
 Added the four placeholder banner images the avatar, carousel, and empty stories have

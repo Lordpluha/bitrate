@@ -1,6 +1,6 @@
 'use client'
 
-import type { Theme } from '@shared/constants'
+import { type Theme, Themes } from '@shared/constants'
 import { usePersistedState } from '@shared/hooks'
 import {
   createContext,
@@ -37,7 +37,7 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (!hydrated) return
-    document.documentElement.classList.remove('light', 'dark')
+    document.documentElement.classList.remove(...Themes)
     document.documentElement.classList.add(theme)
   }, [theme, hydrated])
 

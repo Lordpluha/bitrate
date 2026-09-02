@@ -1,6 +1,6 @@
 'use client'
 
-import { cn, SearchIcon } from '@spotify/ui-react'
+import { cn, SearchIcon } from '@bitrate/ui-react'
 import Image from 'next/image'
 import { useI18n } from '@/shared/i18n'
 import type {

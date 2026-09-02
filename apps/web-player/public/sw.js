@@ -1,4 +1,8 @@
-const CACHE_PREFIX = 'spotify-web-player-'
+const CACHE_PREFIX = 'bitrate-web-player-'
+// Caches written before the Bitrate rename. The activate sweep below only sees keys under
+// CACHE_PREFIX, so without this the old caches would sit in origin storage forever. Safe to
+// drop one release after every client has updated.
+const LEGACY_CACHE_PREFIXES = ['spotify-web-player-']
 const CACHE_VERSION = 'v2'
 const PRECACHE_NAME = `${CACHE_PREFIX}precache-${CACHE_VERSION}`
 const RUNTIME_CACHE_NAME = `${CACHE_PREFIX}static-${CACHE_VERSION}`
@@ -79,9 +83,12 @@ self.addEventListener('activate', (event) => {
           keys
             .filter(
               (key) =>
-                key.startsWith(CACHE_PREFIX) &&
-                key !== PRECACHE_NAME &&
-                key !== RUNTIME_CACHE_NAME,
+                LEGACY_CACHE_PREFIXES.some((prefix) =>
+                  key.startsWith(prefix),
+                ) ||
+                (key.startsWith(CACHE_PREFIX) &&
+                  key !== PRECACHE_NAME &&
+                  key !== RUNTIME_CACHE_NAME),
             )
             .map((key) => caches.delete(key)),
         ),

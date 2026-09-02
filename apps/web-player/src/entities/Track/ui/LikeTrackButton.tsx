@@ -1,8 +1,8 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { useLikeTrack, useUnlikeTrack } from '@entities/Track/api/client'
 import { showApiSuccessToast } from '@shared/api/feedback'
-import { cn } from '@spotify/ui-react'
 import { Heart } from 'lucide-react'
 import { useEffect, useState } from 'react'
 

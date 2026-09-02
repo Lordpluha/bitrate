@@ -1,8 +1,8 @@
 'use client'
 
+import { AlignJustify, cn, X } from '@bitrate/ui-react'
 import { ThemeSwitcher } from '@features/SwitchTheme'
 import { Logo } from '@shared/ui'
-import { AlignJustify, cn, X } from '@spotify/ui-react'
 import { useEffect, useState } from 'react'
 
 import { AuthButtons } from './AuthButtons/AuthButtons'

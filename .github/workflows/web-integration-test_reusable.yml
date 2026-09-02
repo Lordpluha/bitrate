@@ -32,8 +32,8 @@ jobs:
         run: |
           cp .env.example .env
           echo "JWT_SECRET=test_secret_key_for_ci" >> .env
-          echo "DATABASE_URL=postgresql://admin:admin@postgres:5432/spotify" >> .env
-          echo "SHADOW_DATABASE_URL=postgresql://admin:admin@postgres:5432/spotify_shadow" >> .env
+          echo "DATABASE_URL=postgresql://admin:admin@postgres:5432/bitrate" >> .env
+          echo "SHADOW_DATABASE_URL=postgresql://admin:admin@postgres:5432/bitrate_shadow" >> .env
 
       - name: Build application images
         run: |
@@ -107,10 +107,10 @@ jobs:
 
       - name: Run database migrations
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='spotify_shadow'" | grep -q 1 || \
-            docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE spotify_shadow;"
-          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:gen
-          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @spotify/api run db:migration:start
+          docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='bitrate_shadow'" | grep -q 1 || \
+            docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE bitrate_shadow;"
+          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @bitrate/api run db:gen
+          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @bitrate/api run db:migration:start
 
       - name: Seed database
         run: |

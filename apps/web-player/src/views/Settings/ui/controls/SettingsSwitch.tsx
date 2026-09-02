@@ -1,4 +1,4 @@
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 
 type SettingsSwitchProps = {
   ariaLabel: string

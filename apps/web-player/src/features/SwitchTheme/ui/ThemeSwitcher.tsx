@@ -1,8 +1,8 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { Themes } from '@shared/constants'
 import { useTheme } from '@shared/contexts'
-import { cn } from '@spotify/ui-react'
 import { useEffect, useState } from 'react'
 import { THEME_ICONS } from '../config/theme-icons'
 

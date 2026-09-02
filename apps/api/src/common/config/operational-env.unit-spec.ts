@@ -41,7 +41,7 @@ describe('operational environment schema', () => {
         ...requiredEnv,
         SMTP_HOST: 'localhost',
         SMTP_PORT: '1025',
-        EMAIL_FROM: 'no-reply@spotify.local',
+        EMAIL_FROM: 'no-reply@bitrate.local',
       }),
     ).toMatchObject({ SMTP_HOST: 'localhost', SMTP_PORT: 1025 })
   })

@@ -30,7 +30,7 @@ and cross-file relationships.
 
 ## Repository Map
 
-Monorepo: Turborepo + pnpm, packages use the `@spotify/` namespace.
+Monorepo: Turborepo + pnpm, packages use the `@bitrate/` namespace.
 
 Main apps:
 - `apps/api` — NestJS API, Prisma/PostgreSQL, Redis, BullMQ, Socket.io.
@@ -259,12 +259,12 @@ pnpm knip
 Prefer package/app-specific commands:
 
 ```bash
-pnpm --filter @spotify/api test
-pnpm --filter @spotify/api test:int
-pnpm --filter @spotify/web-player check-types
-pnpm --filter @spotify/web-player test:unit
-pnpm --filter @spotify/ui-react test:unit
-pnpm --filter @spotify/ui-react test:screenshot
+pnpm --filter @bitrate/api test
+pnpm --filter @bitrate/api test:int
+pnpm --filter @bitrate/web-player check-types
+pnpm --filter @bitrate/web-player test:unit
+pnpm --filter @bitrate/ui-react test:unit
+pnpm --filter @bitrate/ui-react test:screenshot
 ```
 
 Infrastructure for local development. `Taskfile.yml` at the repo root is the **only**
@@ -293,7 +293,7 @@ or via `flatpak-spawn --host` (see "Sandbox" above).
 - API: controllers are thin, Prisma lives in services, Swagger decorators live in
   `decorators/`, not inline in controllers.
 - UI: no hardcoded hex colors; use token-backed Tailwind utilities and `cn()` from
-  `@spotify/ui-react`.
+  `@bitrate/ui-react`.
 - Routes: use `ROUTES`, not inline path strings.
 - Tests: choose the narrowest useful test layer and smoke-run the exact file when possible.
 - Git: use Conventional Commits; use `pnpm commit` for the wizard when committing manually.

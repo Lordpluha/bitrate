@@ -1,6 +1,6 @@
 ---
 name: project-conventions
-description: READ THIS FIRST — canonical cross-cutting conventions for the spotify-clone monorepo, covering FSD layering in web-player, NestJS module structure in the API, TypeScript/React patterns, import rules, the Swagger-decorators-in-decorators/ rule, testing layers, and commit style. Use whenever writing, reviewing, or planning any change under apps/ or packages/, especially at the start of a task, before reaching for a narrower app/package rules reference.
+description: READ THIS FIRST — canonical cross-cutting conventions for the bitrate monorepo, covering FSD layering in web-player, NestJS module structure in the API, TypeScript/React patterns, import rules, the Swagger-decorators-in-decorators/ rule, testing layers, and commit style. Use whenever writing, reviewing, or planning any change under apps/ or packages/, especially at the start of a task, before reaching for a narrower app/package rules reference.
 metadata:
   version: "1.0.0"
   type: reference
@@ -8,7 +8,7 @@ metadata:
 license: MIT
 ---
 
-# Project conventions — spotify-clone
+# Project conventions — bitrate
 
 Read this rule before writing or reviewing any file in `apps/`. It is a distillation of the deep docs in `.claude/rules/`; refer to those for full rationale.
 
@@ -54,7 +54,7 @@ import { usePlayer } from '@/entities/Player'
 
 `shared/api/client/fetchClient.ts` — `openapi-fetch` client with JWT refresh middleware.
 `shared/api/client/reactQueryClient.ts` — `openapi-react-query` wrapper; exports `useQuery`, `useMutation`.
-Types from `@spotify/contracts` (generated from Swagger). Never call `fetch()` directly — use the client.
+Types from `@bitrate/contracts` (generated from Swagger). Never call `fetch()` directly — use the client.
 
 ## NestJS API: module structure
 
@@ -99,8 +99,8 @@ Always use these aliases inside `apps/api/src/`. No relative paths crossing modu
 
 - Function components only. Named exports only (no default exports for components).
 - `import { ... } from 'react'` — never `React.` namespace.
-- `cn()` from `@spotify/ui-react` for conditional class merging.
-- Tailwind v4 + design tokens from `@spotify/ui-react` CSS variables. No hardcoded hex.
+- `cn()` from `@bitrate/ui-react` for conditional class merging.
+- Tailwind v4 + design tokens from `@bitrate/ui-react` CSS variables. No hardcoded hex.
 - **≤ 100 logic lines per `.tsx`**, **≤ 5 own props**, **≤ 2 `useEffect`** — decompose as you build.
 - **Zustand** for cross-component state.
 - `createPersistedStore` and the reset registry live in `shared/store/`; concrete stores live
@@ -153,7 +153,7 @@ Deep doc: `apps/docs/docs/brand/a11y.md`.
 
 shadcn ownership lives in `packages/ui-react`, not `apps/web-player`. Search package
 exports first, run the CLI from `packages/ui-react/`, use Base UI APIs established by
-neighbouring components, and export public primitives from `@spotify/ui-react`.
+neighbouring components, and export public primitives from `@bitrate/ui-react`.
 
 Deep doc: the `ui-react-rules` skill (project overrides); generic reference: the `shadcn` skill.
 

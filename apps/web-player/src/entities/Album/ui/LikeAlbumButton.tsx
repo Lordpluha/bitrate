@@ -1,8 +1,8 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { useLikeAlbum, useUnlikeAlbum } from '@entities/Album/api/client'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
-import { cn } from '@spotify/ui-react'
 import { CheckCircle, Heart } from 'lucide-react'
 import { useState } from 'react'
 

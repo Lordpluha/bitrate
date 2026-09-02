@@ -1,5 +1,5 @@
 ---
-'@spotify/api': patch
+'@bitrate/api': patch
 ---
 
 Album endpoints returned the `AlbumTrack` join-row id in place of the track's

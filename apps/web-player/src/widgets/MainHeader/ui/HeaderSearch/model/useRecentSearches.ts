@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { RecentSearch } from '@/widgets/MainHeader/ui/HeaderSearch/model/headerSearch.types'
 
-const storageKey = 'spotify:web-player:recent-searches'
+const storageKey = 'bitrate:web-player:recent-searches'
 const limit = 8
 
 const isOptionalString = (value: unknown) =>

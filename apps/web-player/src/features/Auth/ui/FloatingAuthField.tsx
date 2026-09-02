@@ -5,7 +5,7 @@ import {
   FormControl,
   InputProvider,
   useFormField,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 import type { ReactElement } from 'react'
 
 type FloatingAuthFieldProps = {

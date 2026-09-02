@@ -5,7 +5,7 @@ import {
   FacebookArtistIcon,
   GoogleIcon,
   Typography,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 
 const buttonStyles =
   'border bg-black-800 text-white border-neutral-600 relative w-full inline-flex items-center justify-center'

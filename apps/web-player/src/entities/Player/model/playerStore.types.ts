@@ -1,4 +1,4 @@
-import type { ApiSchemas } from '@spotify/contracts'
+import type { ApiSchemas } from '@bitrate/contracts'
 
 export type TrackDirection = 'next' | 'prev'
 export type PlayerTrack = ApiSchemas['TrackEntity']

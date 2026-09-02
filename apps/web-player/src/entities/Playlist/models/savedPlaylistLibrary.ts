@@ -8,10 +8,10 @@ export type SavedPlaylistLibraryItem = {
   username: string
 }
 
-const savedPlaylistsStoragePrefix = 'spotify:web-player:saved-playlists'
+const savedPlaylistsStoragePrefix = 'bitrate:web-player:saved-playlists'
 
 export const savedPlaylistsChangedEvent =
-  'spotify:web-player:saved-playlists-changed'
+  'bitrate:web-player:saved-playlists-changed'
 
 export const getSavedPlaylistsStorageKey = (userId: string | undefined) =>
   `${savedPlaylistsStoragePrefix}:${userId ?? 'anonymous'}`

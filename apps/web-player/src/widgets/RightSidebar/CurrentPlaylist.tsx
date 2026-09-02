@@ -1,5 +1,6 @@
 'use client'
 
+import { RollupIcon, SavedSongIcon, Typography } from '@bitrate/ui-react'
 import { useArtist } from '@entities/Artist'
 import {
   selectCurrentPlaylistName,
@@ -8,7 +9,6 @@ import {
 } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { RollupIcon, SavedSongIcon, Typography } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
 

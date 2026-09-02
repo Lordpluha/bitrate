@@ -2,15 +2,15 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Spotify clone',
-    short_name: 'Spotify',
+    name: 'Bitrate',
+    short_name: 'Bitrate',
     description: 'Listen to music, build playlists and follow artists.',
     start_url: '/main',
     scope: '/',
     display: 'standalone',
     orientation: 'any',
-    background_color: '#121212',
-    theme_color: '#121212',
+    background_color: '#0b0d12',
+    theme_color: '#7c3aed',
     categories: ['music', 'entertainment'],
     icons: [
       {

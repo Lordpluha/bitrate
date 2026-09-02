@@ -2,7 +2,7 @@ import type Hls from 'hls.js'
 
 export const ACTIVE_BUFFER_SECONDS = 10
 export const PREFETCH_BUFFER_SECONDS = 10
-export const POSITION_STORAGE_PREFIX = 'spotify-player-position:'
+export const POSITION_STORAGE_PREFIX = 'bitrate-player-position:'
 
 const PREFETCH_AFTER_BUFFER_SECONDS = 8
 const PREFETCH_REMAINING_SECONDS = 45

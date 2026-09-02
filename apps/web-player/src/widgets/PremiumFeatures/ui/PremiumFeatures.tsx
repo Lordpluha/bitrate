@@ -1,4 +1,4 @@
-import { Typography } from '@spotify/ui-react'
+import { Typography } from '@bitrate/ui-react'
 
 import premiumFeatures from '../config/premium-features.json'
 
@@ -12,10 +12,10 @@ export const PremiumFeatures = () => {
           Enhance Your Music Journey with Premium
         </Typography>
         <Typography as="p" size={'body'}>
-          Upgrade to Spotify Premium and take your music journey to the next
-          level. Enjoy uninterrupted music playback, even in offline mode. Say
-          goodbye to those pesky ads, and indulge in high-quality audio for a
-          truly immersive experience.
+          Upgrade to Bitrate Pro and take your music journey to the next level.
+          Enjoy uninterrupted music playback, even in offline mode. Say goodbye
+          to those pesky ads, and indulge in high-quality audio for a truly
+          immersive experience.
         </Typography>
       </div>
 

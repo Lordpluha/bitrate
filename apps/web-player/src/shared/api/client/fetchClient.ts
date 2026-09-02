@@ -1,7 +1,7 @@
 'use client'
 
+import type { ApiPaths } from '@bitrate/contracts'
 import { ROUTES } from '@shared/routes'
-import type { ApiPaths } from '@spotify/contracts'
 import createClient, { type Middleware } from 'openapi-fetch'
 
 /** Shared refresh state so concurrent 401s trigger only one refresh call. */

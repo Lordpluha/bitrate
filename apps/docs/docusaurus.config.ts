@@ -5,7 +5,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Spotify Clone Documentation',
+  title: 'Bitrate Documentation',
   tagline: 'Open source music streaming platform built with modern web technologies',
   favicon: 'img/favicon.ico',
 
@@ -29,7 +29,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'lordpluha', // Usually your GitHub org/user name.
-  projectName: 'spotify-clone', // Usually your repo name.
+  projectName: 'bitrate', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -47,7 +47,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/Lordpluha/spotify-clone/tree/develop/apps/docs/',
+          editUrl: 'https://github.com/Lordpluha/bitrate/tree/develop/apps/docs/',
         },
         blog: {
           showReadingTime: true,
@@ -55,7 +55,7 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          editUrl: 'https://github.com/Lordpluha/spotify-clone/tree/develop/apps/docs/',
+          editUrl: 'https://github.com/Lordpluha/bitrate/tree/develop/apps/docs/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -75,9 +75,9 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: '@spotify/docs',
+      title: '@bitrate/docs',
       logo: {
-        alt: 'Spotify logo',
+        alt: 'Site logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -89,7 +89,7 @@ const config: Config = {
         },
         { to: '/blog', label: 'Blog', position: 'left' },
         {
-          href: 'https://github.com/lordpluha/spotify-clone',
+          href: 'https://github.com/lordpluha/bitrate',
           label: 'GitHub',
           position: 'right',
         },
@@ -141,7 +141,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/lordpluha/spotify-clone',
+              href: 'https://github.com/lordpluha/bitrate',
             },
           ],
         },

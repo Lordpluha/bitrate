@@ -16,7 +16,7 @@ server-error projection, and reusable field composition.
 - React Hook Form owns form state and submission.
 - `zodResolver` connects both layers.
 - Native controls use `register`; controlled package components use `Controller` or the
-  existing `@spotify/ui-react` form wrappers.
+  existing `@bitrate/ui-react` form wrappers.
 - Field errors set `aria-invalid`, connect messages through `aria-describedby`, and expose
   an announced error region.
 - Repeated API error mapping is extracted into one shared adapter when the second consumer

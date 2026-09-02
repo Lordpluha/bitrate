@@ -90,8 +90,8 @@ export const uk = {
   'settings.twoFactor.setup': 'Налаштувати 2FA',
   'settings.twoFactor.setupDescription':
     'Захистіть обліковий запис за допомогою застосунку-автентифікатора.',
-  'settings.video': 'Відео та Canvas',
-  'settings.video.canvas': 'Canvas',
+  'settings.video': 'Відео та візуалізації',
+  'settings.video.canvas': 'Зациклені візуалізації',
   'settings.video.canvas.description':
     'Короткі зациклені візуальні ефекти під час відтворення.',
   'settings.video.info': 'Оновлення налаштувань може зайняти деякий час.',

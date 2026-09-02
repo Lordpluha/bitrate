@@ -150,6 +150,17 @@ Check: `pnpm knip`. Verify framework/generated false positives before suppressin
 For token, icon, and OpenAPI contract changes, inspect the source and generated diff together.
 → `.claude/rules/monorepo.md` § "Asset generation pipelines"
 
+**Quality-6 — A renamed string is verified on both sides of every lookup it feeds.**
+Every mechanical check in this file greps one file at a time, so a string renamed in a producer
+but not its consumer passes all of them: lint, types, and tests stay green while the feature
+silently breaks. Applies to config lookup keys matched by display text, cache-name prefixes an
+eviction filter tests with `startsWith`, `localStorage` key prefixes, i18n message keys, query
+keys, event names, and CSS custom-property names.
+Check: for each renamed string literal in the diff, grep the *old* value across the whole repo.
+A remaining hit in a file the diff did not touch is a FAIL. Where the rename changes a persisted
+key, confirm the old value is either migrated or explicitly swept.
+→ `.claude/rules/typescript.md` § "Constants — no magic values"
+
 **Quality-5 — A changeset exists for any user/behaviour-visible change.**
 Check: `git diff --name-only -- .changeset/` (or `ls .changeset/*.md`) has a new file when
 `apps/*`/`packages/*` behaviour changed. Not required for pure docs/rules/test-only/chore
@@ -176,7 +187,7 @@ Check: `grep -c "useEffect(" <file>.tsx` — any file with > 2 matches is a revi
 
 ## Style rules (web-player)
 
-**Style-1 — All `className` merges use `cn()` from `@spotify/ui-react`.**
+**Style-1 — All `className` merges use `cn()` from `@bitrate/ui-react`.**
 Check: grep for template literals with class strings — `className={\`.*\`}` — any concatenation outside `cn()` is a FAIL.
 → `.claude/rules/styling.md` § "Forbidden patterns"
 
@@ -205,7 +216,7 @@ Check `aria-invalid`, `aria-describedby`, and announced error messages.
 → `.claude/rules/forms.md`, `apps/docs/docs/brand/a11y.md`
 
 **Form-3 — Shared form primitives are reused before creating another abstraction.**
-Check `@spotify/ui-react` exports and existing feature wrappers.
+Check `@bitrate/ui-react` exports and existing feature wrappers.
 → `.claude/rules/forms.md` § "Shared form composition"
 
 ## Test rules (`ui-react`)
@@ -247,6 +258,6 @@ pnpm format      # auto-fix formatting
 
 For API tests:
 ```bash
-pnpm --filter @spotify/api test        # unit tests
-pnpm --filter @spotify/api test:int    # integration tests
+pnpm --filter @bitrate/api test        # unit tests
+pnpm --filter @bitrate/api test:int    # integration tests
 ```

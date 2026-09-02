@@ -1,9 +1,9 @@
 {
-  "name": "@spotify/web-artists",
+  "name": "@bitrate/web-artists",
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "predev": "pnpm --filter @spotify/ui-react run build",
+    "predev": "pnpm --filter @bitrate/ui-react run build",
     "dev": "next dev --port 3002",
     "build": "next build",
     "start": "next start",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@spotify/ui-react": "workspace:*",
+    "@bitrate/ui-react": "workspace:*",
     "lucide-react": "^1.18.0",
     "@tanstack/react-query": "^5.101.0",
     "@tanstack/react-query-devtools": "^5.101.0",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
-    "@spotify/contracts": "workspace:*",
+    "@bitrate/contracts": "workspace:*",
     "@tailwindcss/postcss": "^4.3.1",
     "@types/node": "^25.9.3",
     "@types/react": "~19.2.17",

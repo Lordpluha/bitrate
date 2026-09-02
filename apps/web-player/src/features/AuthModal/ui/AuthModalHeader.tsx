@@ -1,5 +1,5 @@
+import { Button, GoogleIcon, LogoIcon, Typography } from '@bitrate/ui-react'
 import { getOAuthUrl } from '@features/Auth/api/oauth'
-import { Button, GoogleIcon, LogoIcon, Typography } from '@spotify/ui-react'
 
 type AuthModalHeaderProps = {
   description: string

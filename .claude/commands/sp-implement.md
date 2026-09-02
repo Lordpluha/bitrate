@@ -101,8 +101,8 @@ skips a layer of orchestration for no loss:
 A specialist's report is a claim. Re-run the checks:
 
 ```bash
-pnpm --filter @spotify/<workspace> lint
-pnpm --filter @spotify/<workspace> check-types
+pnpm --filter @bitrate/<workspace> lint
+pnpm --filter @bitrate/<workspace> check-types
 pnpm knip                 # when files, exports, or dependencies changed
 git diff --stat           # does the diff match the task, and nothing else?
 ```
@@ -141,7 +141,7 @@ PR body:
 - <what changed and why — why matters more than what>
 
 ## Test plan
-- [ ] pnpm --filter @spotify/<workspace> check-types
+- [ ] pnpm --filter @bitrate/<workspace> check-types
 - [ ] <the spec that actually ran>
 
 Closes #NNN

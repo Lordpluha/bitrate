@@ -87,8 +87,8 @@ export const en = {
   'settings.twoFactor.setup': 'Set up 2FA',
   'settings.twoFactor.setupDescription':
     'Protect your account with an authenticator app.',
-  'settings.video': 'Videos and Canvas',
-  'settings.video.canvas': 'Canvas',
+  'settings.video': 'Videos and visuals',
+  'settings.video.canvas': 'Looping visuals',
   'settings.video.canvas.description':
     'Short, looping visuals when a song is playing.',
   'settings.video.info': 'It may take some time for your experience to update.',

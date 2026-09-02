@@ -79,8 +79,8 @@ write the file directly —
 
 ```markdown
 ---
-'@spotify/web-player': minor
-'@spotify/api': patch
+'@bitrate/web-player': minor
+'@bitrate/api': patch
 ---
 
 One paragraph, past tense, describing the user/consumer-visible change.

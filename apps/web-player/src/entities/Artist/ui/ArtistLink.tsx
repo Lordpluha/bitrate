@@ -1,8 +1,8 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { useArtist } from '@entities/Artist/api/client'
 import { ROUTES } from '@shared/routes'
-import { cn } from '@spotify/ui-react'
 import Link from 'next/link'
 
 export type ArtistLinkProps = {

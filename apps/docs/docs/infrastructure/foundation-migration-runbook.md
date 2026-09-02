@@ -16,7 +16,7 @@ while an old or new API binary is accepting writes.
    Web clients must receive the normal maintenance response during this period.
 4. Take and verify a restorable database backup. Record the backup identifier and the
    pre-deploy application image digest.
-5. Run `pnpm --filter @spotify/api db:migration:deploy` exactly once. The migration is one
+5. Run `pnpm --filter @bitrate/api db:migration:deploy` exactly once. The migration is one
    transaction with a 10-second lock timeout and a 15-minute statement timeout; any failed
    assertion rolls the complete migration back.
 6. Run the verification queries below before starting the new binary.

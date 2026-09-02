@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import {
   LikeTrackButton,
   type TrackEntity,
@@ -7,7 +8,6 @@ import {
 } from '@entities/Track'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { cn } from '@spotify/ui-react'
 import { Play } from 'lucide-react'
 import Image from 'next/image'
 

@@ -1,5 +1,5 @@
 ---
-'@spotify/web-player': minor
+'@bitrate/web-player': minor
 ---
 
 Playback now opens at the quality the connection actually supports. Every track

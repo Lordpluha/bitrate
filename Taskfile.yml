@@ -87,33 +87,33 @@ tasks:
   db:migrate:
     desc: Run Prisma migrations inside the api container
     cmds:
-      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:migration:start'
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @bitrate/api run db:migration:start'
 
   db:migrate:native:
     desc: Run Prisma migrations from the host (requires infra:up)
     cmds:
-      - cmd: pnpm --filter @spotify/api run db:migration:start
+      - cmd: pnpm --filter @bitrate/api run db:migration:start
 
   db:seed:
     desc: Seed database with test data
     cmds:
-      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:seed'
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @bitrate/api run db:seed'
 
   db:seed:native:
     desc: Seed database from the host (requires infra:up)
     cmds:
-      - cmd: pnpm --filter @spotify/api run db:seed
+      - cmd: pnpm --filter @bitrate/api run db:seed
 
   db:studio:
     desc: Open Prisma Studio in browser
     cmds:
-      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:ui'
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @bitrate/api run db:ui'
 
   db:reset:
     desc: Reset database — drops and recreates all tables
     prompt: This will destroy all data. Continue?
     cmds:
-      - cmd: '{{.DC_DEV}} exec api pnpm --filter @spotify/api run db:migration:reset'
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @bitrate/api run db:migration:reset'
 
   # Credentials come from the container's own environment rather than being
   # hardcoded, so these keep working when POSTGRES_USER / POSTGRES_DB are

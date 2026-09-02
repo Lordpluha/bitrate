@@ -42,25 +42,25 @@ Playwright.
 ## Commands
 
 ```bash
-pnpm --filter @spotify/ui-react test
-pnpm --filter @spotify/ui-react test:unit
-pnpm --filter @spotify/ui-react test:int
-pnpm --filter @spotify/ui-react test:snapshot
-pnpm --filter @spotify/ui-react test:snapshot:update
-pnpm --filter @spotify/ui-react test:screenshot
-pnpm --filter @spotify/ui-react test:screenshot:update
-pnpm --filter @spotify/ui-react test:cov
-pnpm --filter @spotify/web-player test:unit
-pnpm --filter @spotify/web-player test:int
+pnpm --filter @bitrate/ui-react test
+pnpm --filter @bitrate/ui-react test:unit
+pnpm --filter @bitrate/ui-react test:int
+pnpm --filter @bitrate/ui-react test:snapshot
+pnpm --filter @bitrate/ui-react test:snapshot:update
+pnpm --filter @bitrate/ui-react test:screenshot
+pnpm --filter @bitrate/ui-react test:screenshot:update
+pnpm --filter @bitrate/ui-react test:cov
+pnpm --filter @bitrate/web-player test:unit
+pnpm --filter @bitrate/web-player test:int
 ```
 
 Smoke-run one file directly through Vitest:
 
 ```bash
-pnpm --filter @spotify/ui-react exec vitest run --project=unit src/components/ui/button/button.unit-spec.tsx
-pnpm --filter @spotify/ui-react exec vitest run --project=integration src/components/ui/button/button.int-spec.tsx
-pnpm --filter @spotify/ui-react exec vitest run --project=snapshot src/components/ui/button/button.snapshot-spec.tsx
-pnpm --filter @spotify/web-player exec vitest run --config=tests/configs/vitest.config.ts --project=unit src/shared/store/resetStores.unit-spec.ts
+pnpm --filter @bitrate/ui-react exec vitest run --project=unit src/components/ui/button/button.unit-spec.tsx
+pnpm --filter @bitrate/ui-react exec vitest run --project=integration src/components/ui/button/button.int-spec.tsx
+pnpm --filter @bitrate/ui-react exec vitest run --project=snapshot src/components/ui/button/button.snapshot-spec.tsx
+pnpm --filter @bitrate/web-player exec vitest run --config=tests/configs/vitest.config.ts --project=unit src/shared/store/resetStores.unit-spec.ts
 ```
 
 Filter one test title with `-t "<title>"`. Do not insert a standalone `--` before the file

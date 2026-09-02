@@ -1,7 +1,7 @@
 'use client'
 
+import type { ApiPaths } from '@bitrate/contracts'
 import { ROUTES } from '@shared/routes/routes'
-import type { ApiPaths } from '@spotify/contracts'
 import createClient, { type Middleware } from 'openapi-fetch'
 
 let refreshPromise: Promise<boolean> | null = null

@@ -120,7 +120,7 @@ async function bootstrap() {
       status: HttpStatus.TOO_MANY_REQUESTS,
       description: 'Too many requests',
     })
-    .setExternalDoc('@spotify/docs', '')
+    .setExternalDoc('@bitrate/docs', '')
     .build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, config)

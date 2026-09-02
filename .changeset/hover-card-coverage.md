@@ -1,5 +1,5 @@
 ---
-'@spotify/ui-react': patch
+'@bitrate/ui-react': patch
 ---
 
 The `HoverCard` primitive ships with the coverage every other component in the

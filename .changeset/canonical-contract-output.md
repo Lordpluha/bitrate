@@ -1,6 +1,6 @@
 ---
-'@spotify/contracts': patch
-'@spotify/converter': minor
+'@bitrate/contracts': patch
+'@bitrate/converter': minor
 ---
 
 `gen:api` now formats what it writes. `astToString` emits the TypeScript

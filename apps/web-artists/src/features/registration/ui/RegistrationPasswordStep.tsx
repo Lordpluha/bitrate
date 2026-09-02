@@ -5,7 +5,7 @@ import {
   Button,
   PasswordInput,
   Typography,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 import type { UseFormReturn } from 'react-hook-form'
 import type { PasswordRules } from '../model/useRegistrationForm'
 import type { RegistrationFormData } from '../validation/RegistrationForm.validation'

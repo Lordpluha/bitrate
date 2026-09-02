@@ -1,6 +1,6 @@
+import { cn, PlayIcon } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
 import { getAlbumCoverUrl, getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { cn, PlayIcon } from '@spotify/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { AlbumRelease, SingleRelease } from '../model/artistDiscography'

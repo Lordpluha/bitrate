@@ -1,10 +1,10 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { useFollowArtist, useUnfollowArtist } from '@entities/Artist/api/client'
 import { useIsFollowingArtist } from '@entities/Artist/lib/useIsFollowingArtist'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { useAuth } from '@shared/hooks/useAuth'
-import { cn } from '@spotify/ui-react'
 
 export type FollowArtistButtonProps = {
   artistId: string

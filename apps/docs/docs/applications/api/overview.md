@@ -48,11 +48,11 @@ apps/api/src/
 docker compose -f infra/docker-compose.dev.yaml up -d
 
 # Миграции + сидинг
-pnpm --filter @spotify/api db:migration:start
-pnpm --filter @spotify/api db:seed
+pnpm --filter @bitrate/api db:migration:start
+pnpm --filter @bitrate/api db:seed
 
 # Dev-сервер
-pnpm --filter @spotify/api start:dev
+pnpm --filter @bitrate/api start:dev
 ```
 
 API доступен на `http://localhost:3000`, Swagger — на `http://localhost:3000/swagger`.

@@ -9,7 +9,7 @@
  * stops responding to the theme switch. That is how 22 of 29 ui-react components once ended
  * up theme-deaf while `pnpm lint` stayed green.
  *
- * Scales the repo defines itself (green, neutral, blue, red, orange, purple, grey, black,
+ * Scales the repo defines itself (green, neutral, blue, red, amber, purple, grey, black,
  * white…) are allowed: those are real palette tokens. Only Tailwind-only scales are rejected.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs'
@@ -17,11 +17,11 @@ import { join } from 'node:path'
 
 /** Colour scales Tailwind ships that this repo's palette does not define. */
 const STOCK_SCALES = [
+  'orange',
   'slate',
   'gray',
   'zinc',
   'stone',
-  'amber',
   'yellow',
   'lime',
   'emerald',
