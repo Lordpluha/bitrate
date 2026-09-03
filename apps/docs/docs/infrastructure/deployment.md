@@ -165,9 +165,13 @@ docker compose -f infra/docker-compose.prod.yaml build --parallel=1
 Then apply migrations and seed:
 
 ```bash
-task db:migrate
-task db:seed
+task prod:migrate
+task prod:seed
 ```
+
+Not `task db:migrate` — that targets the preprod stack and runs `prisma migrate dev`, which
+generates migrations, wants a shadow database, and can reset the data it is pointed at.
+`prod:migrate` runs `migrate deploy` against the production stack.
 
 ## 5. Verify
 

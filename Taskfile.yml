@@ -248,6 +248,19 @@ tasks:
     cmds:
       - cmd: '{{.DC_PROD}} up -d --build'
 
+  prod:migrate:
+    desc: Apply pending migrations to the production database
+    cmds:
+      # migrate deploy, never migrate dev: the dev command generates migrations, wants a shadow
+      # database, and can reset the data it is pointed at.
+      - cmd: '{{.DC_PROD}} exec -T api pnpm --filter @bitrate/api run db:migration:deploy'
+
+  prod:seed:
+    desc: Seed the production database
+    prompt: Seed the PRODUCTION database?
+    cmds:
+      - cmd: '{{.DC_PROD}} exec -T api pnpm --filter @bitrate/api run db:seed'
+
   prod:down:
     desc: Stop production stack
     cmds:

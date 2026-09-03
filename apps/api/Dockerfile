@@ -61,6 +61,10 @@ COPY --from=prod-dependencies /app/node_modules ./node_modules
 COPY --from=prod-dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY apps/api/prisma ./apps/api/prisma
+# Prisma looks for the config in the working directory, and schema.prisma declares no datasource
+# url — it comes from here. The compiled copy is used rather than prisma.config.ts so the image
+# needs no TypeScript loader at runtime.
+COPY --from=build /app/apps/api/dist/prisma.config.js ./apps/api/prisma.config.js
 COPY apps/api/storage ./apps/api/storage
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
