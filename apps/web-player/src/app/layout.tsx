@@ -33,7 +33,8 @@ export const metadata: Metadata = {
       { url: '/favicon.ico', sizes: 'any' },
       { url: '/icon.svg', type: 'image/svg+xml' },
     ],
-    apple: '/icon.svg',
+    /** PNG, not the SVG: iOS ignores an SVG apple-touch-icon and screenshots the page instead. */
+    apple: '/apple-icon.png',
   },
   openGraph: {
     type: 'website',
