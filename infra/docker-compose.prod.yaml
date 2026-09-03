@@ -35,10 +35,15 @@ services:
     container_name: bitrate-redis-prod
     restart: always
     command: redis-server --requirepass ${REDIS_PASSWORD}
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      # Authenticates, and asserts on the reply. `redis-cli --raw incr ping` exits 0 even when
+      # the server answers NOAUTH, so the old check reported healthy while the API could not
+      # connect at all — and it incremented a key in the live database on every probe.
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
       interval: 10s
       timeout: 3s
       retries: 3
@@ -68,6 +73,7 @@ services:
       - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
       # Required by the schema. Without it the API exits at startup, which is what the
       # production stack did before this line existed.

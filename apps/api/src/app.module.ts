@@ -79,6 +79,7 @@ import { HttpCacheInterceptor } from './common/interceptors/http-cache.intercept
         connection: {
           host: config.getOrThrow('REDIS_HOST'),
           port: config.getOrThrow('REDIS_PORT'),
+          password: config.get('REDIS_PASSWORD'),
         },
       }),
     }),
