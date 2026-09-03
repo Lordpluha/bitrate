@@ -51,7 +51,7 @@ export const LoginForm = () => {
   return (
     <div className="w-full max-w-120 flex flex-col items-stretch justify-center gap-4 px-14 py-20 bg-inherit text-white overflow-hidden rounded-[10px] max-lg:p-6 box-border">
       <div className="flex flex-col items-center">
-        <LogoIcon height={64} primaryColor="#FFF" width={64} />
+        <LogoIcon height={64} width={64} />
         <Typography as="h5" className="mt-2 text-center" size={'heading2'}>
           Welcome back!
         </Typography>

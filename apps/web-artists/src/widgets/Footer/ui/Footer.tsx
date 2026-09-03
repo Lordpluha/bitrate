@@ -4,7 +4,7 @@ import {
   FooterIos,
   InstagramArtist,
   Linkedin,
-  SpotifyLogo,
+  LogoIcon,
   Tiktok,
   XTwitter,
 } from '@bitrate/ui-react'
@@ -54,12 +54,7 @@ export const Footer = () => {
           )}
         >
           <div className="flex flex-col gap-16 lg:items-start lg:w-[15%]">
-            <SpotifyLogo
-              className="w-34 h-10"
-              color3="#ffffff"
-              color4="#ffffff"
-              primaryColor="#ffffff"
-            />
+            <LogoIcon className="h-10 w-10" />
           </div>
           <div
             className={cn(
