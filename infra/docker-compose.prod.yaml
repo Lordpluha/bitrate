@@ -55,16 +55,43 @@ services:
         - NODE_ENV=production
     container_name: bitrate-api-prod
     restart: always
+    # List form, deliberately. A bare name is passed through only when the variable is set;
+    # `KEY=${KEY}` hands the container an empty string instead, and apps/api/env.schema.ts
+    # validates the optional URL and token fields with z.url()/min(32) — an empty string fails
+    # both. Optional has to mean absent, not empty.
     environment:
-      NODE_ENV: production
-      DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      JWT_SECRET: ${JWT_SECRET}
-      PORT: 3000
+      - NODE_ENV=production
+      - PORT=3000
       # Production exposes the API only through the single nginx hop above.
-      TRUST_PROXY_HOPS: 1
+      - TRUST_PROXY_HOPS=1
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - JWT_SECRET=${JWT_SECRET}
+      # Required by the schema. Without it the API exits at startup, which is what the
+      # production stack did before this line existed.
+      - WEB_HOST=${WEB_HOST}
+      # Optional — passed through only when set in .env
+      - SHADOW_DATABASE_URL
+      - USER_WEB_HOST
+      - ARTIST_WEB_HOST
+      - API_BASE_URL
+      - METRICS_TOKEN
+      - SENTRY_DSN
+      - SMTP_HOST
+      - SMTP_PORT
+      - SMTP_USER
+      - SMTP_PASS
+      - EMAIL_FROM
+      - STORAGE_DRIVER
+      - S3_ENDPOINT
+      - S3_REGION
+      - S3_BUCKET
+      - S3_ACCESS_KEY
+      - S3_SECRET_KEY
+      - S3_PUBLIC_URL
+      - S3_FORCE_PATH_STYLE
     volumes:
       - ../apps/api/uploads:/app/apps/api/uploads
       - ../apps/api/public:/app/apps/api/public

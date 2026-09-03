@@ -83,9 +83,14 @@ cd bitrate
 cp .env.example .env
 ```
 
-Edit `.env`. The API validates its environment at startup with Zod (`apps/api/env.schema.ts`)
-and refuses to boot with a message naming what is missing — so start the stack and read the
-error rather than guessing.
+Edit the **root** `.env` — not `apps/api/.env`. The compose stacks read only the repository
+root, and `.dockerignore` keeps per-app env files out of the image entirely, so a value placed
+in one is silently ignored. See [Environment variables](../guides/environment.md) for which file
+is read when.
+
+The API validates its environment at startup with Zod (`apps/api/env.schema.ts`) and refuses to
+boot with a message naming what is missing — so start the stack and read the error rather than
+guessing.
 
 Four values need attention:
 
