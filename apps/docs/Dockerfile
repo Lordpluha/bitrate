@@ -1,40 +1,36 @@
-# Multi-stage Dockerfile для Docs (Docusaurus)
+# Multi-stage Dockerfile for the documentation site (Docusaurus).
+#
+# The build installs inside its own stage rather than copying node_modules across stages. That
+# copy is what broke this image: pnpm's isolated linker created `apps/*/node_modules` for
+# importers it read from the lockfile while leaving none for `apps/docs`, so
+# `COPY --from=dependencies /app/apps/docs/node_modules` failed with "not found". Installing where
+# the build runs removes the guesswork about which per-package directories exist.
 
 # Stage 1: Base
 FROM node:24-alpine AS base
-RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
-# Stage 2: Dependencies
-FROM base AS dependencies
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY scripts ./scripts
-COPY apps/docs/package.json ./apps/docs/
-COPY turbo.json ./
-RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
-
-# Stage 3: Development
+# Stage 2: Development
 FROM base AS development
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/docs/node_modules ./apps/docs/node_modules
 COPY . .
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile --filter @bitrate/docs...
 EXPOSE 3003
 WORKDIR /app/apps/docs
 CMD ["pnpm", "run", "start", "--host", "0.0.0.0"]
 
-# Stage 4: Build
+# Stage 3: Build
 FROM base AS build
-ENV NODE_ENV=production
-
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/docs/node_modules ./apps/docs/node_modules
 COPY . .
+# Dev dependencies are needed even for a production build: the site is configured in TypeScript
+# (docusaurus.config.ts), so the compiler has to be present. NODE_ENV stays unset here for the
+# same reason — pnpm drops devDependencies when it is `production`.
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile --filter @bitrate/docs...
+RUN NODE_ENV=production pnpm --filter @bitrate/docs run build
 
-# Build приложения
-WORKDIR /app/apps/docs
-RUN pnpm run build
-
-# Stage 5: Production
+# Stage 4: Production
 FROM nginx:1.27-alpine AS production
 COPY --from=build /app/apps/docs/build /usr/share/nginx/html
 COPY infra/nginx/static-site.conf /etc/nginx/nginx.conf

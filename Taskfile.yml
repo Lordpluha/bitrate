@@ -243,10 +243,23 @@ tasks:
       - cmd: '{{.DC_PROD}} up -d'
 
   prod:build:
-    desc: Build images and start production stack
-    prompt: Build and start PRODUCTION environment?
+    desc: Build images ON THE SERVER and start production — the slow fallback, prefer prod:deploy
+    prompt: Build images on this machine and start PRODUCTION? prod:deploy pulls instead.
     cmds:
       - cmd: '{{.DC_PROD}} up -d --build'
+
+  prod:deploy:
+    desc: Pull the images CI published and restart production — no build on the server
+    prompt: Deploy the latest published images to PRODUCTION?
+    cmds:
+      # The normal path. CI builds every app image and pushes it to GHCR, so a deploy is a pull
+      # and a restart — a couple of minutes instead of the twenty-odd a build on this box takes.
+      # --no-build is what makes that a guarantee: without it compose silently falls back to
+      # building any service whose image it cannot pull, and the deploy quietly becomes the slow
+      # path again.
+      - cmd: '{{.DC_PROD}} pull'
+      - cmd: '{{.DC_PROD}} up -d --no-build'
+      - cmd: '{{.DC_PROD}} ps'
 
   prod:migrate:
     desc: Apply pending migrations to the production database
