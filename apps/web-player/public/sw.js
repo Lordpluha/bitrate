@@ -3,7 +3,13 @@ const CACHE_PREFIX = 'bitrate-web-player-'
 // CACHE_PREFIX, so without this the old caches would sit in origin storage forever. Safe to
 // drop one release after every client has updated.
 const LEGACY_CACHE_PREFIXES = ['spotify-web-player-']
-const CACHE_VERSION = 'v2'
+/**
+ * Bumped whenever a precached asset's *content* changes under an unchanged URL. `/icon.svg` kept
+ * its path through the logo replacement, so every client that had already installed v2 went on
+ * serving the previous mark from cache — the network copy is only consulted after a version bump
+ * clears the old precache.
+ */
+const CACHE_VERSION = 'v3'
 const PRECACHE_NAME = `${CACHE_PREFIX}precache-${CACHE_VERSION}`
 const RUNTIME_CACHE_NAME = `${CACHE_PREFIX}static-${CACHE_VERSION}`
 const OFFLINE_URL = '/offline'

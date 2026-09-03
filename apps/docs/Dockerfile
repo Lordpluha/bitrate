@@ -36,41 +36,11 @@ RUN pnpm run build
 
 # Stage 5: Production
 FROM nginx:1.27-alpine AS production
-
-# Копируем собранную статику
 COPY --from=build /app/apps/docs/build /usr/share/nginx/html
-
-# Nginx конфигурация для SPA
-RUN echo 'server { \
-    listen 80; \
-    server_name localhost; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    location / { \
-        try_files $uri $uri/ /index.html; \
-    } \
-    # Кеширование статических файлов \
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ { \
-        expires 1y; \
-        add_header Cache-Control "public, immutable"; \
-    } \
-    # Безопасность \
-    add_header X-Frame-Options "SAMEORIGIN" always; \
-    add_header X-Content-Type-Options "nosniff" always; \
-    add_header X-XSS-Protection "1; mode=block" always; \
-    # Gzip сжатие \
-    gzip on; \
-    gzip_vary on; \
-    gzip_min_length 1024; \
-    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/json application/javascript; \
-}' > /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-# Run as non-root user for security
+COPY infra/nginx/static-site.conf /etc/nginx/nginx.conf
+RUN chown -R nginx:nginx /usr/share/nginx/html
 USER nginx
-
+EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
-
+  CMD wget --quiet --tries=1 --spider http://localhost:8080/ || exit 1
 CMD ["nginx", "-g", "daemon off;"]

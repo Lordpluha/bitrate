@@ -167,6 +167,42 @@ services:
         reservations:
           memory: 256M
 
+  # Static sites. Both serve a prebuilt bundle from nginx inside the container on 8080 and hold no
+  # runtime state, so they need neither environment nor a dependency on the API.
+  docs:
+    logging: *default-logging
+    build:
+      context: ..
+      dockerfile: ./apps/docs/Dockerfile
+      target: production
+    container_name: bitrate-docs-prod
+    restart: always
+    networks:
+      - bitrate-network
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 32M
+
+  storybook:
+    logging: *default-logging
+    build:
+      context: ..
+      dockerfile: ./packages/ui-react/Dockerfile
+      target: production
+    container_name: bitrate-storybook-prod
+    restart: always
+    networks:
+      - bitrate-network
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 32M
+
   nginx:
     logging: *default-logging
     image: nginx:alpine
@@ -192,6 +228,8 @@ services:
       - api
       - web-player
       - web-artists
+      - docs
+      - storybook
     networks:
       - bitrate-network
 

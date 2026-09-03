@@ -44,7 +44,8 @@
     "test:snapshot:update": "vitest run --project=snapshot --reporter=verbose --update",
     "test:screenshot": "vitest run --project=screenshot",
     "test:screenshot:update": "vitest run --project=screenshot --update",
-    "test:cov": "vitest run --project=unit --project=integration --project=snapshot --coverage"
+    "test:cov": "vitest run --project=unit --project=integration --project=snapshot --coverage",
+    "build-storybook": "storybook build"
   },
   "peerDependencies": {
     "embla-carousel": "^8.6.0",
