@@ -192,7 +192,7 @@ Then, per issue, in this order:
    claim.
 3. Pick the Conventional Commits branch type from the issue's labels — this repo's real
    type labels are `bug` → `fix`, `feature` → `feat`, `docs` → `docs`, otherwise `chore`.
-   (Scope labels `api`, `web-player`, `web-artists`, `mobile`, `desktop`, `admin`, `ui`,
+   (Scope labels `api`, `web-player`, `web-artists`, `mobile`, `desktop`, `ui`,
    `infra`, `general` tell you which specialist will own it.) Then:
 
    ```bash

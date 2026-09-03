@@ -17,7 +17,7 @@ jobs:
 
       - name: Build images
         run: |
-          docker compose build api web-player web-artists admin
+          docker compose build api web-player web-artists
 
       - name: Start services
         run: |

@@ -101,7 +101,7 @@ using an unfamiliar API. Do not guess from memory.
 
 ## What this agent does NOT do
 
-- Web, API, mobile, or admin work → the matching specialist.
+- Web, API, or mobile work → the matching specialist.
 - Write focused tests → `sp-tester`.
 - Debug a reported bug → `sp-debugger`.
 - Produce a signed release build or configure code signing → the user does that.

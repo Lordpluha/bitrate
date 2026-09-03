@@ -77,7 +77,6 @@ pnpm dev
 | API | http://localhost:3000 |
 | Swagger | http://localhost:3000/swagger |
 | Web Artists | http://localhost:3002 |
-| Admin | http://localhost:5480 |
 | Storybook | http://localhost:6006 |
 | Docs | http://localhost:3003 |
 | Mobile (Metro) | http://localhost:8081 |
@@ -167,7 +166,7 @@ The repository includes a ticket-driven command set: `/sp-create-task`, `/sp-imp
 `/sp-implement` reads `CLAUDE.md`'s exhaustive Rule Index first, then dispatches to a named
 specialist agent by default — one of five app-scoped developers
 (`sp-frontend-developer`, `sp-backend-developer`, `sp-mobile-developer`,
-`sp-desktop-developer`, `sp-admin-developer`), plus `sp-planner`, `sp-debugger`,
+`sp-desktop-developer`), plus `sp-planner`, `sp-debugger`,
 `sp-tester`, `sp-reviewer`, and `sp-devops` for CI/infra. Pass `--session` to do the work
 in-session instead. `/sp-sync-docs` dispatches to `sp-librarian` the same way, and
 `/sp-auto` runs `sp-worker` in an isolated git worktree per issue. This

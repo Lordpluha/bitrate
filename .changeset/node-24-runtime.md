@@ -2,7 +2,6 @@
 '@bitrate/web-player': minor
 '@bitrate/web-artists': minor
 '@bitrate/api': minor
-'@bitrate/admin': minor
 '@bitrate/desktop': minor
 '@bitrate/mobile': minor
 '@bitrate/docs': minor

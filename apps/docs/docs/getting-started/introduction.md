@@ -14,7 +14,6 @@ This is a comprehensive music streaming service including:
 - 🌐 **Web Application** - Next.js with React 19
 - 📱 **Mobile App** - React Native with Expo
 - 🖥️ **Desktop App** - Tauri-based native application
-- ⚙️ **Admin Panel** - Kottster-based management interface
 - 📚 **Documentation** - You're reading it!
 
 ## 🚀 Quick Start

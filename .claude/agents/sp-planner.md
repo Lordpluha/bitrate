@@ -100,7 +100,6 @@ sp-planner: PLAN READY
 | New web-player/web-artists feature/entity/widget/view, or ui-react component | `/sp-implement` → dispatches to `sp-frontend-developer` |
 | React Native screen or navigation | `/sp-implement` → dispatches to `sp-mobile-developer` |
 | Tauri shell, native command, capability | `/sp-implement` → dispatches to `sp-desktop-developer` |
-| Kottster admin page or data source | `/sp-implement` → dispatches to `sp-admin-developer` |
 | CI workflow, Docker, infra, release tooling | `/sp-implement` → dispatches to `sp-devops` |
 | Bug fix (any app) | `/sp-implement` → dispatches to `sp-debugger` |
 | New or existing focused test (Jest, Vitest, Playwright, screenshot) | `/sp-implement` → dispatches to `sp-tester` |

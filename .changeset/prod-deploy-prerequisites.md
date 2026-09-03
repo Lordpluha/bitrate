@@ -1,5 +1,4 @@
 ---
-'@bitrate/admin': major
 '@bitrate/docs': minor
 ---
 
@@ -18,11 +17,10 @@ Production now terminates TLS. The routes and upstreams moved into `infra/nginx/
 shared by the preprod HTTP server and a new production template that adds HTTPS, HSTS, an ACME
 challenge location, and a redirect, with the domain substituted from `DOMAIN`.
 
-The admin panel's Kottster secret key, API token, JWT salt, and root credentials were literals in
-`apps/admin/app/_server/app.ts`, and its Knex data source repeated the database password — all
-tracked in a public repository. They now come from the environment and the panel refuses to start
-without them. **The previous values are compromised and must be rotated**, the Kottster token from
-its dashboard.
+The admin panel's Kottster secret key, API token, JWT salt, root credentials, and database
+password were literals tracked in a public repository. The app has since been removed entirely
+(ADR-0025), which narrows what they open but does not un-publish them: **the Kottster API token
+must still be revoked in its dashboard.**
 
 Also: every production container caps its logs at 10 MB × 3 files, `task db:backup` and
 `task db:restore` were added, and the deployment guide was rewritten against the actual

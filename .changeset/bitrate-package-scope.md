@@ -1,5 +1,4 @@
 ---
-'@bitrate/admin': major
 '@bitrate/api': major
 '@bitrate/contracts': major
 '@bitrate/converter': major

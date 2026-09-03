@@ -118,7 +118,6 @@ Route by the surface the work touches, not by what the task calls itself:
 | `apps/api` | `sp-backend-developer` |
 | `apps/mobile` | `sp-mobile-developer` |
 | `apps/desktop` | `sp-desktop-developer` |
-| `apps/admin` | `sp-admin-developer` |
 | `.github/workflows`, `.github/actions`, `infra/`, `turbo.json`, `lefthook.yml`, release | `sp-devops` |
 | a reported bug, root cause unknown | `sp-debugger` |
 | a focused Jest/Vitest/Playwright/screenshot spec | `sp-tester` |
@@ -243,7 +242,7 @@ STATUS: DONE | BLOCKED
 ISSUE: <number>
 BRANCH: <branch name>
 PUSHED: yes | no
-SCOPE: api | web-player | web-artists | mobile | desktop | admin | packages | multiple
+SCOPE: api | web-player | web-artists | mobile | desktop | packages | multiple
 COMMITS:
   - <short sha> <commit header>
 FILES:

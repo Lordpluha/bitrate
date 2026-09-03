@@ -30,7 +30,6 @@ directly by name via the Agent tool:
 | `sp-backend-developer` | Sonnet | medium | `apps/api` — NestJS, Prisma, BullMQ, Socket.io. Owns the Swagger-decorator and thin-controller rules. |
 | `sp-mobile-developer` | Sonnet | medium | `apps/mobile` — React Native + Expo. Flags conventions this scaffolded app has not established. |
 | `sp-desktop-developer` | Sonnet | medium | `apps/desktop` — Tauri 2 shell + React renderer. Owns the capability/CSP boundary. |
-| `sp-admin-developer` | Sonnet | medium | `apps/admin` — Kottster + Knex. Flags API invariants the direct-DB path bypasses. |
 | `sp-debugger` | Opus | high | Reproduce → isolate root cause → surgical fix → verify. |
 | `sp-tester` | Opus | high | Writes or runs one focused Jest/Vitest/Playwright/screenshot spec. |
 | `sp-reviewer` | Opus | high | Mechanical pass + architecture checklist walk + goal-achievement check. |
@@ -121,7 +120,7 @@ agent round-trip for a task small enough that dispatch is pure overhead.
 | `TOKEN_BUDGET.md` | Token-saving workflow for Claude Code: current-session commands, narrow scope, short logs. |
 | `rules/` | Project convention docs, one file per concern. Read by agents and humans. |
 | `skills/` | Workflow/tool skills only. |
-| `agents/` | Twelve named specialists: `sp-planner`, `sp-frontend-developer`, `sp-backend-developer`, `sp-mobile-developer`, `sp-desktop-developer`, `sp-admin-developer`, `sp-debugger`, `sp-tester`, `sp-reviewer`, `sp-devops` (`/sp-implement`); `sp-worker` (`/sp-auto`); `sp-librarian` (`/sp-sync-docs`). |
+| `agents/` | Eleven named specialists: `sp-planner`, `sp-frontend-developer`, `sp-backend-developer`, `sp-mobile-developer`, `sp-desktop-developer`, `sp-debugger`, `sp-tester`, `sp-reviewer`, `sp-devops` (`/sp-implement`); `sp-worker` (`/sp-auto`); `sp-librarian` (`/sp-sync-docs`). |
 | `scripts/auto/` | `sp-worktree.sh` and `sp-pr.sh` — the worktree/branch lifecycle and `gh` wrapper the `/sp-auto` pipeline is built on. |
 | `commands/` | Three commands, each dispatching to its matching specialist(s) in `agents/` by default. |
 | `templates/` | Canonical feature/entity/widget/view trees and the ui-react component tree, consumed internally by `sp-frontend-developer` and `sp-worker` through the `fsd` skill. |

@@ -1,6 +1,5 @@
 ---
 '@bitrate/api': major
-'@bitrate/admin': major
 '@bitrate/desktop': major
 '@bitrate/web-artists': patch
 '@bitrate/web-player': patch

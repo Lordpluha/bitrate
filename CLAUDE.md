@@ -44,7 +44,6 @@ Main apps:
 Scaffolded but unstarted — do not assume mature conventions in them:
 - `apps/mobile` — React Native + Expo (roadmap v0.5.0).
 - `apps/desktop` — Tauri 2 + React (roadmap v1.2.0).
-- `apps/admin` — Kottster admin panel; reaches PostgreSQL directly via Knex, bypassing the API.
 
 Other packages exist (`docs`, `converter`, `ncs-parser`, `performance-test`, `svgr`,
 `vite-svgr`), but do not read them unless the task names them.
@@ -65,7 +64,6 @@ current task; do not read every row's target file up front.
 | web-player — deep FSD layer/slice-anatomy/public-API rules | `.claude/rules/fsd-web-player.md` |
 | `apps/mobile` — React Native + Expo | `.claude/rules/mobile-rules.md` |
 | `apps/desktop` — Tauri 2 + React/Vite | `.claude/rules/desktop-rules.md` |
-| `apps/admin` — Kottster + Knex (read its security note first) | `.claude/rules/admin-rules.md` |
 | Any test (API Jest, web-player/ui-react Vitest, Playwright E2E/screenshots) | `.claude/rules/testing.md` (routes to the `jest`/`vitest`/`playwright` skills) |
 | ui-react/shadcn primitives | the `ui-react-rules` skill (project overrides) + the `shadcn` skill (generic reference) |
 | React components — deep hooks/state/a11y/routing conventions | `.claude/rules/react.md` |
@@ -111,7 +109,6 @@ never misses one.
 | React/Next.js performance | `vercel-react-best-practices` | `react.md` |
 | Expo / React Native (`apps/mobile`) | `expo` | `mobile-rules.md` |
 | Tauri 2 (`apps/desktop`) | `tauri` | `desktop-rules.md` |
-| Kottster (`apps/admin`) | `kottster` | `admin-rules.md` |
 | Jest (API tests) | `jest` | `testing.md` |
 | Vitest (web-player, ui-react) | `vitest` | `testing.md` |
 | Playwright (E2E, screenshots) | `playwright` | `testing.md` |
@@ -138,7 +135,7 @@ round-trip is pure overhead.
 
 Twelve named specialists live under `.claude/agents/`. Five implementation agents split by
 app — `sp-frontend-developer` (web-player, web-artists, ui-react), `sp-backend-developer`
-(api), `sp-mobile-developer`, `sp-desktop-developer`, `sp-admin-developer` — plus
+(api), `sp-mobile-developer`, `sp-desktop-developer` — plus
 `sp-planner`, `sp-debugger`, `sp-tester`, `sp-reviewer` (dispatched by `/sp-implement`),
 `sp-devops` (CI/CD, Docker, infra, release tooling), `sp-worker` (the orchestrator: owns a
 task 0→100%, delegates each stage to the agent that owns it, verifies the result itself
@@ -182,7 +179,7 @@ ordinary conversation with no `/sp-*` command invoked — routes to the matching
 the Agent tool by default. `sp-planner` first for non-trivial multi-file/cross-cutting work;
 then the developer agent that owns the surface (`sp-frontend-developer`,
 `sp-backend-developer`, `sp-mobile-developer`, `sp-desktop-developer`,
-`sp-admin-developer`, or `sp-devops` for CI/infra); `sp-debugger` for a bug fix; `sp-tester`
+or `sp-devops` for CI/infra); `sp-debugger` for a bug fix; `sp-tester`
 for focused test authoring/running; `sp-reviewer` before a PR or on a substantial diff. Work
 in the current session only when the user explicitly asks to skip the agent for that task.
 See [ADR-0021](apps/docs/docs/architecture/0021-default-agent-dispatch.md).

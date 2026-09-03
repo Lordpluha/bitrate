@@ -19,7 +19,6 @@ bitrate/
     api/          NestJS backend — @bitrate/api
     web-player/   Next.js App Router — @bitrate/web-player
     web-artists/  Next.js artist-facing frontend — @bitrate/web-artists
-    admin/        Kottster admin — @bitrate/admin
     desktop/      Tauri 2 + React — @bitrate/desktop
     mobile/       React Native + Expo — @bitrate/mobile
     docs/         Docusaurus 3 — @bitrate/docs
@@ -118,7 +117,7 @@ Two conventions worth keeping when editing it: destructive tasks declare `prompt
 tasks never hardcode database credentials — they read `POSTGRES_USER`/`POSTGRES_DB` from
 the container's own environment so an override in `.env` cannot silently break them.
 
-`check-types` runs in `api`, `admin`, `desktop`, `mobile`, `docs`, `web-player`,
+`check-types` runs in `api`, `desktop`, `mobile`, `docs`, `web-player`,
 `web-artists`, `ui-react`, `contracts`, and `ncs-parser`. The remaining packages
 (`converter`, `performance-test`, `svgr`, `vite-svgr`) have no
 `tsconfig.json`, so there is nothing to check — that is deliberate, not a gap to fill.

@@ -33,7 +33,6 @@ The app or package name:
 | `web-player` | `apps/web-player/` |
 | `desktop` | `apps/desktop/` |
 | `mobile` | `apps/mobile/` |
-| `admin` | `apps/admin/` |
 | `ui-react` | `packages/ui-react/` |
 | `contracts` | `packages/contracts/` |
 | `converter` | `packages/converter/` |

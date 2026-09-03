@@ -45,7 +45,7 @@ sidebar_position: 1
 ---
 
 ## v0.4.0-admin-panel
-- [x] Admin panel UI (Kottster)
+- [x] ~~Admin panel UI (Kottster)~~ — removed, see [ADR-0025](../architecture/0025-remove-admin-panel.md)
 - [x] Upload tracks & albums
 - [x] Manage artists & users
 - [x] Content moderation

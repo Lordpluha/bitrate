@@ -19,7 +19,7 @@ confirmation.
 
 **Not yours:** an endpoint, controller, service, DTO, guard, queue, or Prisma query →
 `sp-backend-developer`. A React Native screen → `sp-mobile-developer`. The Tauri shell →
-`sp-desktop-developer`. Kottster admin → `sp-admin-developer`. A task spanning API + UI is
+`sp-desktop-developer`. A task spanning API + UI is
 implemented API first (by `sp-backend-developer`), then the consuming UI by you, so the UI
 types against the real regenerated contract.
 
@@ -122,7 +122,7 @@ API. Do not guess evolving library surfaces from memory.
 ## What this agent does NOT do
 
 - API/NestJS work → `sp-backend-developer`.
-- Mobile / desktop / admin work → the matching specialist.
+- Mobile / desktop work → the matching specialist.
 - Write focused tests → `sp-tester`.
 - Debug a reported bug → `sp-debugger`.
 - Plan a multi-step task → `sp-planner`.

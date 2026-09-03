@@ -26,8 +26,9 @@ only the auth surface — login, registration, forgot/reset password. Artists ha
 credentials, OAuth, and account model, separate from listener accounts.
 
 **Operators — internal.** Staff uploading catalog, managing artists and users, and
-moderating content, through the Kottster admin panel (`apps/admin`, port 5480). Not a
-public audience; its needs are throughput and correctness, not persuasion.
+moderating content. There is no operator surface today: the Kottster admin panel was removed
+(ADR-0025) and nothing replaced it, so these tasks go through the API or the database
+directly. Its needs are throughput and correctness, not persuasion.
 
 ## Product Purpose
 
@@ -76,7 +77,6 @@ this question to be answered first, not assumed.
 - Like/unlike for tracks, albums, and playlists; follow/unfollow artists; listening history;
   playlist management with owner permissions.
 - Full-text search across tracks, artists, albums, and playlists (PostgreSQL FTS + GIN).
-- Admin panel: catalog upload, artist/user management, content moderation.
 
 **Built but incomplete — UI lags the API.** Several capabilities exist server-side with the
 listener-facing UI still unbuilt: search page, artist page, album page, listening-history

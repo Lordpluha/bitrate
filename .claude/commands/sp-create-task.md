@@ -123,7 +123,7 @@ The draft must be specific enough that a worker does not have to re-derive your 
 - **Dependencies** — `Blocked by #N` / `Blocks #N` for anything you found in Step 2.
 
 Propose labels from this repo's **actual** taxonomy — do not invent one. Type: `bug`,
-`feature`, `docs`. Scope: `api`, `web-player`, `web-artists`, `mobile`, `desktop`, `admin`,
+`feature`, `docs`. Scope: `api`, `web-player`, `web-artists`, `mobile`, `desktop`,
 `ui`, `infra`, `general`. (`dependencies`, `javascript`, `rust` are applied to PRs by
 automation, not to new issues.) Verify against `gh label list` before using anything else;
 a label that does not exist makes `gh issue create` fail.

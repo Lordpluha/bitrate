@@ -126,7 +126,6 @@ Scope indicates the part of the project:
 - `web-player` - Web application (Next.js)
 - `mobile` - Mobile application (React Native)
 - `api` - Backend API (NestJS)
-- `admin` - Admin panel
 - `desktop` - Desktop application (Tauri)
 - `docs` - Documentation
 - `contracts` - API contracts
@@ -326,7 +325,7 @@ Ticket and board state aren't mirrored anywhere — these commands query GitHub 
 All four commands dispatch to an agent by default now. `/sp-implement` routes to the
 specialist that owns the surface: `sp-frontend-developer` (web-player, web-artists,
 ui-react), `sp-backend-developer` (api), `sp-mobile-developer`, `sp-desktop-developer`,
-`sp-admin-developer`, or `sp-devops` (CI, Docker, infra, release) — plus `sp-planner` for
+or `sp-devops` (CI, Docker, infra, release) — plus `sp-planner` for
 plans, `sp-debugger` for bug fixes, `sp-tester` for tests, and `sp-reviewer` for review
 (also auto-invoked on large diffs). `/sp-sync-docs` routes to `sp-librarian`; `/sp-auto`
 runs `sp-worker` in its own git worktree per issue. Pass `--session` on any of them to

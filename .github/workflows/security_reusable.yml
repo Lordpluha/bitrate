@@ -62,10 +62,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [api, web-player, web-artists, admin]
+        service: [api, web-player, web-artists]
         # Each service declares only the build args its own Dockerfile consumes.
-        # api/admin need none: apps/api/Dockerfile's ARGs already carry defaults
-        # and apps/admin/Dockerfile declares no ARG at all.
+        # api needs none: apps/api/Dockerfile's ARGs already carry defaults.
         # Values mirror web_player_reusable.yml so there is one convention.
         include:
           - service: web-player

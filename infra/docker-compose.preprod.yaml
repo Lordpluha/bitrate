@@ -155,39 +155,6 @@ services:
     command: pnpm --filter @bitrate/web-artists run dev
 
   # Admin Panel (Kottster)
-  admin:
-    build:
-      context: ..
-      dockerfile: ./apps/admin/Dockerfile
-      target: development
-    container_name: bitrate-admin
-    restart: unless-stopped
-    environment:
-      NODE_ENV: development
-      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}
-      PORT: 3002
-      # Dev-only placeholders, matching how this file already treats the database credentials.
-      # This stack is for local development and CI integration runs and is never internet-facing;
-      # docker-compose.prod.yaml requires real values instead of defaulting.
-      KOTTSTER_SECRET_KEY: ${KOTTSTER_SECRET_KEY:-dev-only-kottster-secret-key-000}
-      KOTTSTER_API_TOKEN: ${KOTTSTER_API_TOKEN:-dev0only0kottster0api0token00000}
-      KOTTSTER_JWT_SECRET_SALT: ${KOTTSTER_JWT_SECRET_SALT:-dev0only0salt000}
-      ADMIN_ROOT_USERNAME: ${ADMIN_ROOT_USERNAME:-admin}
-      ADMIN_ROOT_PASSWORD: ${ADMIN_ROOT_PASSWORD:-admin}
-    ports:
-      - "${ADMIN_PORT:-3002}:3002"
-    volumes:
-      - ../apps/admin:/app/apps/admin
-      - ../packages:/app/packages
-      - /app/node_modules
-      - /app/apps/admin/node_modules
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - bitrate-network
-    command: pnpm --filter @bitrate/admin run dev
-
   # Mobile App (Expo Development Server)
   mobile:
     build:
@@ -289,7 +256,6 @@ services:
       - api
       - web-player
       - web-artists
-      - admin
     networks:
       - bitrate-network
     profiles:

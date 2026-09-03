@@ -18,7 +18,7 @@ open/update the PR — that stays at the `/sp-implement` orchestration level, af
 confirmation.
 
 **Not yours:** a route, page, component, hook, or store → `sp-frontend-developer` (or the
-mobile/desktop/admin specialist). A task spanning API + UI is implemented **API first — your
+mobile/desktop specialist). A task spanning API + UI is implemented **API first — your
 part — then the consuming UI**, so the UI types against the real regenerated contract. Say
 so in your report when the task has a UI half still to do.
 
@@ -110,7 +110,7 @@ current official docs before using an unfamiliar API. Do not guess from memory.
 
 ## What this agent does NOT do
 
-- Any frontend work → `sp-frontend-developer` / mobile / desktop / admin specialists.
+- Any frontend work → `sp-frontend-developer` / mobile / desktop specialists.
 - Write focused tests → `sp-tester`.
 - Debug a reported bug → `sp-debugger`.
 - Plan a multi-step task → `sp-planner`.

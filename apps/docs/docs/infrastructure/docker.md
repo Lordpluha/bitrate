@@ -26,7 +26,6 @@ services:
   redis:        # Cache & sessions
   api:          # NestJS backend
   web:          # Next.js frontend (web-player)
-  admin:        # Admin panel (Kottster)
   mobile:       # React Native / Expo bundler  [--profile mobile]
   desktop:      # Vite dev server (UI only)    [--profile desktop]
 ```
@@ -40,7 +39,6 @@ services:
   redis:        # Cache
   api:          # Backend API
   web:          # Web app
-  admin:        # Admin panel
 ```
 
 ## 🚀 Quick Start

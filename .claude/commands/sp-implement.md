@@ -90,7 +90,7 @@ skips a layer of orchestration for no loss:
 | A bug fix with an unknown root cause | `sp-debugger` |
 | Feature/change in `apps/web-player`, `apps/web-artists`, `packages/ui-react` | `sp-frontend-developer` |
 | Feature/change in `apps/api` | `sp-backend-developer` |
-| Feature/change in `apps/mobile` / `apps/desktop` / `apps/admin` | the matching `sp-*-developer` |
+| Feature/change in `apps/mobile` / `apps/desktop` | the matching `sp-*-developer` |
 | `.github/workflows`, `.github/actions`, `infra/`, `turbo.json`, `lefthook.yml`, release | `sp-devops` |
 | Write or run one focused spec, nothing else | `sp-tester` |
 | Spans API + a UI | `sp-backend-developer` first, then the UI agent, so the UI types against the regenerated contract |

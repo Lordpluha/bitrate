@@ -16,7 +16,6 @@ bitrate/
 │   ├── web-artists/  # Artists web app (Next.js)
 │   ├── mobile/       # Mobile app (React Native + Expo)
 │   ├── desktop/      # Desktop app (Tauri 2 + React)
-│   ├── admin/        # Admin panel (Kottster)
 │   └── docs/         # Documentation (Docusaurus 3)
 │
 ├── packages/         # Shared packages (@bitrate/ namespace)
@@ -144,7 +143,6 @@ graph TD
     C --> E
     D --> E
     F[apps/api] --> E
-    G[apps/admin] --> B
     J[packages/vite-svgr] --> B
     K[packages/svgr] --> J
 ```
@@ -153,7 +151,7 @@ graph TD
 
 | Package | Depends On | Used By |
 |---------|-----------|---------|
-| `@bitrate/ui-react` | — | web-player, mobile, desktop, admin |
+| `@bitrate/ui-react` | — | web-player, mobile, desktop |
 | `@bitrate/contracts` | — | api, web-player, mobile, desktop |
 | `@bitrate/converter` | — | api |
 | `@bitrate/vite-svgr` | `@bitrate/svgr` | ui-react (build-time SVG generation) |
@@ -238,7 +236,6 @@ graph LR
 - **nginx** — Reverse proxy (ports 80/443)
 - **api** — NestJS backend (port 3000)
 - **web** — Next.js web-player (port 3001)
-- **admin** — Admin panel (port 3002)
 - **postgres** — Primary database (port 5432)
 - **redis** — Session store & cache (port 6379)
 
@@ -296,7 +293,7 @@ graph LR
 
 20+ GitHub Actions workflows in `.github/workflows/`:
 
-- Per-app workflows: `api.yml`, `web_player.yml`, `mobile.yml`, `desktop.yml`, `admin.yml`
+- Per-app workflows: `api.yml`, `web_player.yml`, `mobile.yml`, `desktop.yml`
 - Shared reusable workflows: `*_reusable.yml`
 - Cross-cutting: `monitoring.yml`, `security.yml`, `performance.yml`, `release.yml`
 

@@ -44,7 +44,7 @@ Config: `biome.json` at repo root — 2-space indent, single quotes, no semicolo
 ### `pnpm check-types`
 
 Runs `tsc --noEmit` (via Turborepo) in every workspace that declares the script: `api`,
-`admin`, `desktop`, `mobile`, `docs`, `web-player`, `web-artists`, `ui-react`, `contracts`,
+`desktop`, `mobile`, `docs`, `web-player`, `web-artists`, `ui-react`, `contracts`,
 `ncs-parser`. Each uses its own `tsconfig.json`:
 
 - `apps/api` — `strictNullChecks: true`, `noUncheckedIndexedAccess: true` (no `noImplicitAny`)

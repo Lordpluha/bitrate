@@ -21,7 +21,6 @@ were removed rather than left as an untested promise.
 | `api` | NestJS, port 3000 | no |
 | `web-player` | Next.js, port 3001 | no |
 | `web-artists` | Next.js, port 3002 | no |
-| `admin` | Kottster, port 3002 | no |
 | `postgres` | PostgreSQL 16 | no |
 | `redis` | Redis 7 | no |
 
@@ -119,9 +118,6 @@ API_BASE_URL=https://example.com/api
 
 `OAUTH_*`, `SMTP_*`, `SENTRY_DSN`, and `METRICS_TOKEN` are optional — the API starts without
 them. `EMAIL_FROM` becomes required as soon as `SMTP_HOST` is set.
-
-The admin panel has its own required variables (`KOTTSTER_*`, `ADMIN_ROOT_*`) and refuses to
-start without them. See the security checklist below before setting them.
 
 ## 3. Issue the TLS certificate
 
@@ -221,13 +217,10 @@ cap Docker's json-file driver grows until the disk is full.
 
 - [ ] Key-only SSH, firewall limited to 22/80/443, `fail2ban` running
 - [ ] `TRUST_PROXY_HOPS=1` — otherwise rate limiting sees only nginx
-- [ ] **Rotate the admin credentials.** `KOTTSTER_SECRET_KEY`, `KOTTSTER_API_TOKEN`,
-      `KOTTSTER_JWT_SECRET_SALT`, and the root admin password were literals in
-      `apps/admin/app/_server/app.ts` in a public repository. They now come from the
-      environment, but the old values are compromised and must be replaced — including the
-      Kottster API token, which is rotated in the Kottster dashboard.
-- [ ] The admin panel reaches Postgres directly, bypassing every guard, validation rule, and
-      queue job in the API. Restrict who can reach `/admin`.
+- [ ] **Rotate the credentials the removed admin panel published.** Its Kottster secret key,
+      API token, JWT salt, and root password were literals in a public repository until
+      [ADR-0025](../architecture/0025-remove-admin-panel.md) deleted the app. Deleting the
+      code does not un-publish them: revoke the Kottster API token in its dashboard.
 - [ ] `JWT_SECRET` generated, not invented
 - [ ] Postgres and Redis have no published ports
 - [ ] Backups running and restored at least once as a test

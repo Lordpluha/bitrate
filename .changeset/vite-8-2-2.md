@@ -4,8 +4,7 @@
 '@bitrate/desktop': patch
 ---
 
-Bumped Vite from 8.0.16 to 8.2.2 in the three workspaces on that major. `apps/admin` stays
-on Vite 6 — Kottster pins it.
+Bumped Vite from 8.0.16 to 8.2.2 in every workspace on that major.
 
 The bump was prompted by `build.emptyOutDir` appearing not to clear `packages/ui-react/dist`,
 but that turned out to be correct behaviour rather than a bug, and 8.2.2 behaves the same:

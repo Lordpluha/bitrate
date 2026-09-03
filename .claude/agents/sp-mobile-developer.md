@@ -102,7 +102,7 @@ current official docs before using an unfamiliar API. Do not guess from memory.
 
 ## What this agent does NOT do
 
-- Web, API, desktop, or admin work → the matching specialist.
+- Web, API, or desktop work → the matching specialist.
 - Write focused tests → `sp-tester`.
 - Debug a reported bug → `sp-debugger`.
 - Run an EAS build or ship to a store → the user does that.

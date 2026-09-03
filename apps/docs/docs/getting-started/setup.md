@@ -113,10 +113,9 @@ This starts (via Turbo):
 - API on `http://localhost:3000`
 - Web Player on `http://localhost:3001`
 - Web Artists on `http://localhost:3002`
-- Admin on `http://localhost:5480`
 
-These are the **native** ports. The Docker stack maps web-artists to `3004` and admin to
-`3002` — see [Docker](../infrastructure/docker.md).
+These are the **native** ports. The Docker stack maps web-artists to `3004` — see
+[Docker](../infrastructure/docker.md).
 
 #### Individual Applications
 
@@ -132,9 +131,6 @@ pnpm --filter @bitrate/mobile start
 
 # Desktop Application
 pnpm --filter @bitrate/desktop tauri dev
-
-# Admin Panel
-pnpm --filter @bitrate/admin dev
 
 # Documentation
 pnpm --filter @bitrate/docs start

@@ -31,6 +31,7 @@ how to apply it day to day.
 | [0022](./0022-app-scoped-agent-roster.md) | App-scoped developer agents, unattended `/sp-auto` pipeline, retire `sp-ticket` |
 | [0023](./0023-tokens-into-ui-react.md) | Hand-write the design tokens as CSS; retire the token generator |
 | [0024](./0024-rebrand-to-bitrate.md) | Rebrand the project from spotify-clone to Bitrate |
+| [0025](./0025-remove-admin-panel.md) | Remove the Kottster admin panel |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.
