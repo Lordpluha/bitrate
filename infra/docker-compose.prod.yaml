@@ -52,6 +52,7 @@ services:
 
   api:
     logging: *default-logging
+    image: ghcr.io/lordpluha/bitrate/api:develop
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
@@ -117,6 +118,7 @@ services:
 
   web-player:
     logging: *default-logging
+    image: ghcr.io/lordpluha/bitrate/web-player:develop
     build:
       context: ..
       dockerfile: ./apps/web-player/Dockerfile
@@ -145,6 +147,7 @@ services:
 
   web-artists:
     logging: *default-logging
+    image: ghcr.io/lordpluha/bitrate/web-artists:develop
     build:
       context: ..
       dockerfile: ./apps/web-artists/Dockerfile
@@ -171,6 +174,7 @@ services:
   # runtime state, so they need neither environment nor a dependency on the API.
   docs:
     logging: *default-logging
+    image: ghcr.io/lordpluha/bitrate/docs:develop
     build:
       context: ..
       dockerfile: ./apps/docs/Dockerfile
@@ -188,6 +192,7 @@ services:
 
   storybook:
     logging: *default-logging
+    image: ghcr.io/lordpluha/bitrate/storybook:develop
     build:
       context: ..
       dockerfile: ./packages/ui-react/Dockerfile

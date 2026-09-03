@@ -2,8 +2,6 @@
 
 # Stage 1: Base
 FROM node:24-alpine AS base
-ARG DATABASE_URL=postgresql://admin:admin@postgres:5432/bitrate
-ARG SHADOW_DATABASE_URL=postgresql://admin:admin@postgres:5432/bitrate_shadow
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 WORKDIR /app
 
@@ -21,8 +19,6 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development
-ENV DATABASE_URL=$DATABASE_URL
-ENV SHADOW_DATABASE_URL=$SHADOW_DATABASE_URL
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
@@ -31,9 +27,12 @@ EXPOSE 3000
 CMD ["pnpm", "--filter", "@bitrate/api", "run", "start:dev"]
 
 # Stage 4: Build
+#
+# No DATABASE_URL is set here on purpose. `prisma generate` never connects — prisma.config.ts wraps
+# the value in Prisma's lazy `env()`, resolved at connection time — and the ARG that used to feed
+# it was declared in `base`, which the later stages do not inherit, so every `ENV X=$X` below it
+# expanded to an empty string anyway.
 FROM base AS build
-ENV DATABASE_URL=$DATABASE_URL
-ENV SHADOW_DATABASE_URL=$SHADOW_DATABASE_URL
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
@@ -55,8 +54,6 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lock
 # Stage 6: Production
 FROM base AS production
 ENV NODE_ENV=production
-ENV DATABASE_URL=$DATABASE_URL
-ENV SHADOW_DATABASE_URL=$SHADOW_DATABASE_URL
 COPY --from=prod-dependencies /app/node_modules ./node_modules
 COPY --from=prod-dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=build /app/apps/api/dist ./apps/api/dist
