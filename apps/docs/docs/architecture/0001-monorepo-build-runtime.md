@@ -1,6 +1,7 @@
 # ADR-0001: Turborepo + pnpm multi-runtime monorepo
 
-Status: Accepted
+Status: Accepted — the orchestration decision stands; the pinned Node and pnpm baseline it
+names is superseded by [ADR-0026](./0026-pnpm-11-settings-in-workspace-yaml.md).
 
 Date: 2026-06-24
 
