@@ -227,6 +227,25 @@ Images are built on the server because `infra/docker-compose.prod.yaml` uses `bu
 images from CI to a registry and switching to `image:` would remove the build from the production
 host entirely; that is not set up yet.
 
+## Outbound SMTP is blocked on standard ports
+
+Most hosting providers block outbound 25, 465, and 587 to limit spam, and they do it silently —
+the connection times out rather than being refused, so a mail failure looks like a hang. Verified
+on netcup: 25, 465, and 587 all time out while **2465 and 2587 are open**, which is why
+transactional providers publish those alternatives.
+
+Check before assuming the credentials are wrong:
+
+```bash
+docker exec <api-container> node -e '
+  const net = require("net")
+  const s = net.connect(2587, "smtp.resend.com", () => { console.log("open"); s.destroy() })
+  s.setTimeout(6000, () => { console.log("timed out"); process.exit(0) })
+  s.on("error", e => console.log("refused:", e.code))'
+```
+
+Use 2587 (STARTTLS) or 2465 (implicit TLS). `SMTP_PORT` drives which one the API negotiates.
+
 ## Monitoring
 
 The API exposes Prometheus metrics at `/metrics` under the names `bitrate_api_http_requests_total`

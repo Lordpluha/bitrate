@@ -19,7 +19,10 @@ export class MailService {
       this.transporter = nodemailer.createTransport({
         host: mail.host,
         port: mail.port,
-        secure: mail.port === 465,
+        // Implicit TLS on 465 and on 2465, the alternative many hosts leave open when they
+        // block the standard SMTP ports. 587 and 2587 upgrade through STARTTLS instead, which
+        // nodemailer does on its own when `secure` is false.
+        secure: mail.port === 465 || mail.port === 2465,
         ...(mail.user && mail.pass ? { auth: { user: mail.user, pass: mail.pass } } : {}),
       })
     } else {
