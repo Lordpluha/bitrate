@@ -10,7 +10,14 @@ export default defineConfig({
     toHaveScreenshot: {
       animations: 'disabled',
       caret: 'hide',
-      maxDiffPixelRatio: 0.02,
+      /**
+       * 0.02 allowed 18k differing pixels on a 1280x720 shot — 18x the area of the header logo,
+       * so replacing the logo outright passed this gate silently. Consecutive runs here are
+       * byte-identical (verified down to a ratio of 0), and this value still leaves ~370px of
+       * headroom for antialiasing while failing on anything logo-sized or larger. A renderer
+       * change on CI shows up as a real diff to regenerate, not as a silent pass.
+       */
+      maxDiffPixelRatio: 0.0004,
     },
   },
   use: {
