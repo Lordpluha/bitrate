@@ -69,15 +69,14 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/bitrate-social-card.png',
     colorMode: {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: '@bitrate/docs',
+      title: 'Bitrate Docs',
       logo: {
-        alt: 'Site logo',
+        alt: 'Bitrate',
         src: 'img/logo.svg',
       },
       items: [
