@@ -79,7 +79,9 @@ USER bitrateweb
 
 EXPOSE 3002
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3002', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+  # Anything below 500 counts: the root path answers 307 to /auth/login because the artists
+  # portal is behind auth, so demanding exactly 200 marked a working server unhealthy forever.
+  CMD node -e "require('http').get('http://localhost:3002', (r) => {process.exit(r.statusCode < 500 ? 0 : 1)}).on('error', () => process.exit(1))"
 
 WORKDIR /app/apps/web-artists
 CMD ["pnpm", "start", "--port", "3002"]
