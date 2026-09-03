@@ -126,8 +126,11 @@ renewals:
 
 ```bash
 sudo apt install -y certbot
-sudo certbot certonly --standalone -d example.com --agree-tos -m you@example.com
+sudo certbot certonly --standalone -d example.com -d www.example.com --agree-tos -m you@example.com
 ```
+
+Both names, because the production template serves `www` as a redirect to the apex and cannot
+present a certificate that omits it.
 
 Certificates land in `/etc/letsencrypt/live/<domain>/`, which the nginx container mounts
 read-only. Renewal runs from certbot's own systemd timer; point it at the webroot so it does not
