@@ -99,6 +99,20 @@ services:
       - S3_SECRET_KEY
       - S3_PUBLIC_URL
       - S3_FORCE_PATH_STYLE
+      # Token lifetimes and cookie names. Absent here, the API fell back to its schema defaults, so
+      # changing any of them in .env had no effect on production at all.
+      - JWT_ACCESS_EXPIRES_IN
+      - JWT_REFRESH_EXPIRES_IN
+      - ACCESS_TOKEN_NAME
+      - REFRESH_TOKEN_NAME
+      - HEALTH_CHECK_TIMEOUT_MS
+      - DEV_MAIL_LOG_TOKENS
+      # Social sign-in. Without these four the Google and Facebook flows cannot work in production
+      # no matter what .env holds — nothing was passing them through.
+      - OAUTH_GOOGLE_CLIENT_ID
+      - OAUTH_GOOGLE_CLIENT_SECRET
+      - OAUTH_FACEBOOK_APP_ID
+      - OAUTH_FACEBOOK_APP_SECRET
     volumes:
       - ../apps/api/uploads:/app/apps/api/uploads
       - ../apps/api/public:/app/apps/api/public

@@ -53,6 +53,33 @@ Current workflow map for .github/workflows.
 - web-integration-test.yml — integration tests for PR and push (develop/master) + workflow_dispatch.
 - web-integration-test_reusable.yml — reusable integration test scenario.
 
+### Deploy (production)
+- deploy.yml — production deploy entry workflow: push to `master` plus `workflow_dispatch`
+  with a `full` / `redeploy` / `health-only` mode.
+- deploy_reusable.yml — waits for this commit's images, renders the server's `.env` from
+  repository secrets and variables, pushes `infra/` and `Taskfile.yml`, runs
+  `task prod:deploy` and `task prod:migrate`, then probes the public endpoints.
+
+Three things about it are easy to get wrong:
+
+- **The `production` environment is the approval gate.** The deploy job declares
+  `environment: production`. Until that environment exists in repository settings *with a
+  required reviewer*, the job runs unattended — declaring it is not itself a gate.
+- **Configuration is repository-scoped, not environment-scoped.** The caller job resolves
+  `secrets:` before entering the environment, and the health job has no environment at all,
+  so environment-scoped secrets and variables would silently be empty. Set them at the
+  repository level.
+- **The deploy pushes `infra/` and `Taskfile.yml` to the server rather than having the server
+  `git fetch`.** Anonymous git traffic from the VPS is throttled intermittently; a failed
+  fetch would leave the old compose file and nginx templates in place while newer images
+  are pulled, which is exactly the mismatch the step exists to prevent. `.deployed-commit`
+  in the server's checkout records which commit is live.
+
+The deploy is triggered by the push itself and its first job polls the image workflows'
+runs for that SHA, rather than hanging off `workflow_run`. `workflow_run` cannot express
+"wait for whichever subset of the five image workflows this commit's path filters actually
+started", and it runs with repository secrets in a context the caller does not choose.
+
 ### Security
 - security.yml — security checks for develop/master (push, schedule, workflow_dispatch).
 
@@ -67,7 +94,7 @@ Current workflow map for .github/workflows.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_image_size_reusable.yml / monitoring_ssl_reusable.yml / monitoring_backup_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, performance.yml, monitoring.yml, web-integration-test.yml.
+- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, performance.yml, monitoring.yml, web-integration-test.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 
