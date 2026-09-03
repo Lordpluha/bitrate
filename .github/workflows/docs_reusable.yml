@@ -1,0 +1,97 @@
+name: "[docs] Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      push-image:
+        description: Push docker image
+        required: true
+        type: boolean
+      tags:
+        description: Docker tags (multiline)
+        required: true
+        type: string
+      timeout-minutes:
+        description: Job timeout in minutes
+        required: false
+        default: 30
+        type: number
+      run-typecheck:
+        description: Run the Docusaurus typecheck before the docker build
+        required: false
+        default: true
+        type: boolean
+      cache-to-registry:
+        description: Export build cache to GHCR registry
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
+jobs:
+  docs-build:
+    name: Docs Build and Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The site is configured in TypeScript (docusaurus.config.ts), so a broken config is a
+      # type error rather than a runtime one. Biome does not cover apps/docs.
+      - name: Setup Node.js and pnpm
+        if: ${{ inputs.run-typecheck }}
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run docs typecheck
+        if: ${{ inputs.run-typecheck }}
+        run: pnpm --filter @bitrate/docs check-types
+
+      - name: Setup Docker + registries
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      # The production target serves the prebuilt bundle from nginx on 8080 and reads no
+      # configuration, so this image carries no build args and is environment-agnostic.
+      - name: Build Docs Docker image (with registry cache export)
+        if: ${{ inputs.cache-to-registry }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/docs/Dockerfile
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache
+            type=gha,scope=docs
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache,mode=max
+            type=gha,mode=max,scope=docs
+          target: production
+
+      - name: Build Docs Docker image (GHA cache export only)
+        if: ${{ !inputs.cache-to-registry }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/docs/Dockerfile
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache
+            type=gha,scope=docs
+          cache-to: |
+            type=gha,mode=max,scope=docs
+          target: production

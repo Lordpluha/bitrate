@@ -35,6 +35,14 @@ env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
 
+  # `next build` inlines NEXT_PUBLIC_* into the client bundle, so this value is what the
+  # published image talks to forever — a server-side env var cannot correct it later. This
+  # build passed no build arg at all before, which left the ARG empty and the bundle
+  # pointing at apps/web-artists/env.schema.ts's http://localhost:3000 default. The
+  # repository declares no Actions variables, so the fallback is the value that applies;
+  # `vars.*` stays as the override hook for forks and a future staging environment.
+  BUILD_NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://api.bitrate.me' }}
+
 jobs:
   web-artists-checks:
     name: Web Artists Build and Docker
@@ -75,6 +83,8 @@ jobs:
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-artists:buildcache,mode=max
             type=gha,mode=max,scope=web-artists
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
           target: production
 
       - name: Build Web Artists Docker image (GHA cache export only)
@@ -90,4 +100,6 @@ jobs:
             type=gha,scope=web-artists
           cache-to: |
             type=gha,mode=max,scope=web-artists
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
           target: production

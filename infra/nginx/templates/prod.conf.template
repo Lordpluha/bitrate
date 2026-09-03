@@ -8,7 +8,11 @@ include /etc/nginx/snippets/upstreams.conf;
 
 # HTTP: serves the ACME challenge, sends everything else to HTTPS.
 server {
-    listen 80;
+    # default_server, so this block owns port 80 regardless of include order. The image ships its
+    # own conf.d/default.conf, which sorts before prod.conf and was therefore answering every
+    # unrecognised Host with the stock welcome page — and, worse, swallowing ACME challenges for
+    # any name not listed below, which is exactly when a new subdomain's first certificate fails.
+    listen 80 default_server;
     server_name ${DOMAIN} www.${DOMAIN} artists.${DOMAIN} api.${DOMAIN} docs.${DOMAIN} ui.${DOMAIN};
 
     # Must stay reachable over plain HTTP — certbot renews through it.

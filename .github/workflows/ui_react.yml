@@ -45,6 +45,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
+# These jobs only check out and test. The Storybook image is built by storybook.yml, which
+# is the only ui-react workflow that needs packages: write.
+permissions:
+  contents: read
+
 jobs:
   ui-react-pr:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}

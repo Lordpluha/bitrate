@@ -221,6 +221,9 @@ services:
       # so conf.d must stay writable and must not also carry the preprod HTTP-only server.
       - ./nginx/templates:/etc/nginx/templates:ro
       - ./nginx/snippets:/etc/nginx/snippets:ro
+      # Blanks out the image's stock default.conf, which sorts before the rendered prod.conf
+      # and so became the default server for port 80.
+      - ./nginx/conf.d-disabled/default.conf:/etc/nginx/conf.d/default.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - ./nginx/certbot-webroot:/var/www/certbot
       - ./nginx/logs:/var/log/nginx
