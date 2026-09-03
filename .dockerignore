@@ -19,11 +19,20 @@ pnpm-debug.log
 # Development
 *.log
 
-# Build outputs
-dist/
-build/
-.next/
-out/
+# Build outputs. Prefixed with **/ for the same reason as the env files above: a root-relative
+# pattern matches only the context root, so a bare `.next/` left apps/*/.next and packages/*/dist
+# in the context. That shipped a local dev build into the production image and sent gigabytes of
+# artifacts to the daemon on every build — apps/ alone is 2.3 GB with them.
+**/dist/
+**/build/
+**/.next/
+**/out/
+**/coverage/
+**/.turbo/
+**/test-results/
+**/playwright-report/
+apps/desktop/src-tauri/target/
+graphify-out/
 
 # Keep example file
 !**/.env.example
