@@ -1,3 +1,4 @@
+import { API_DOC_DESCRIPTION, API_DOC_TITLE, API_DOC_VERSION } from '@common/swagger'
 import { HttpStatus, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
@@ -50,12 +51,13 @@ async function bootstrap() {
   app.enableCors(configService.getOrThrow('connections').http)
   app.enableShutdownHooks()
 
-  const config = new DocumentBuilder()
-    .setTitle(process.env.npm_package_name || 'API Documentation')
-    .setDescription(`${process.env.npm_package_name} Swagger documentation`)
-    .setVersion(process.env.npm_package_version ?? '1.0')
+  const apiBaseUrl = configService.get('API_BASE_URL')
+
+  const documentBuilder = new DocumentBuilder()
+    .setTitle(API_DOC_TITLE)
+    .setDescription(API_DOC_DESCRIPTION)
+    .setVersion(API_DOC_VERSION)
     .addServer(`http://localhost:${configService.getOrThrow('PORT')}`, 'Local server')
-    .addServer('https://spotify-clone-api-jp5z.onrender.com/', 'Remote dev server')
     .addOAuth2({
       type: 'oauth2',
       flows: {
@@ -120,12 +122,21 @@ async function bootstrap() {
       status: HttpStatus.TOO_MANY_REQUESTS,
       description: 'Too many requests',
     })
-    .setExternalDoc('@bitrate/docs', '')
-    .build()
+
+  /**
+   * Added after the chain because the deployed origin is optional — `addServer` only accepts a
+   * real URL, and `build()` returns the document rather than the builder.
+   */
+  if (apiBaseUrl) {
+    documentBuilder.addServer(apiBaseUrl, 'Deployed server')
+  }
+
+  const config = documentBuilder.build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('swagger', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
+    customSiteTitle: API_DOC_TITLE,
   })
 
   await app.listen(configService.getOrThrow('PORT'))
