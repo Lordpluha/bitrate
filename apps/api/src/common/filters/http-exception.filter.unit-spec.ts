@@ -72,6 +72,36 @@ describe('HttpExceptionFilter', () => {
     )
   })
 
+  it('labels a status from the status code when the exception omits an error field', () => {
+    const host = makeHost('POST', '/api/v1/auth/registration')
+    const exception = new HttpException(
+      { statusCode: 400, message: 'Validation failed' },
+      HttpStatus.BAD_REQUEST,
+    )
+
+    filter.catch(exception, host as never)
+
+    expect(host.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: 'Validation failed',
+      }),
+    )
+  })
+
+  it("keeps the exception's own error field when it supplies one", () => {
+    const host = makeHost()
+    const exception = new HttpException(
+      { message: 'Nope', error: 'Teapot' },
+      HttpStatus.I_AM_A_TEAPOT,
+    )
+
+    filter.catch(exception, host as never)
+
+    expect(host.json).toHaveBeenCalledWith(expect.objectContaining({ error: 'Teapot' }))
+  })
+
   it('should handle NotFoundError (serve-static)', () => {
     const host = makeHost()
     const error = new Error('Not Found')

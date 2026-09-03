@@ -1,3 +1,4 @@
+import { STATUS_CODES } from 'node:http'
 import {
   type ArgumentsHost,
   Catch,
@@ -22,7 +23,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR
     let message = 'Internal server error'
-    let error = 'Internal Server Error'
+    /**
+     * Left unset until the status is known, then filled from the status itself. Seeding it with a
+     * 500 label instead made every exception that omits its own `error` field — nestjs-zod's
+     * validation exception among them — answer `400 Internal Server Error`.
+     */
+    let error: string | undefined
 
     if (exception instanceof HttpException) {
       status = exception.getStatus()
@@ -92,7 +98,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      error,
+      error: error ?? STATUS_CODES[status] ?? 'Internal Server Error',
       message,
       timestamp: new Date().toISOString(),
       path: request.url,
