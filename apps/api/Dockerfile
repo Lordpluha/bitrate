@@ -1,6 +1,14 @@
 # Multi-stage Dockerfile для API (NestJS + Prisma)
 
 # Stage 1: Base
+# prisma.config.ts resolves env('DATABASE_URL') when the config is *loaded*, not when a connection
+# is opened, so `prisma generate` fails outright without it. Generation only reads the schema, so
+# this is never dialled — and it is deliberately not credential-shaped, because the ARG that used
+# to sit here defaulted to a real-looking postgresql://admin:admin@postgres:5432/… that invited
+# someone to treat it as a working fallback. It is passed per-command rather than set as ENV so
+# that nothing lands in the published image's environment.
+ARG PRISMA_GENERATE_ONLY_URL="postgresql://unused:unused@127.0.0.1:5432/prisma-generate-only"
+
 FROM node:24-alpine AS base
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 WORKDIR /app
@@ -19,6 +27,8 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development
+ARG PRISMA_GENERATE_ONLY_URL
+ENV DATABASE_URL=$PRISMA_GENERATE_ONLY_URL
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
@@ -27,14 +37,9 @@ EXPOSE 3000
 CMD ["pnpm", "--filter", "@bitrate/api", "run", "start:dev"]
 
 # Stage 4: Build
-#
-# prisma.config.ts resolves env('DATABASE_URL') when the config is *loaded*, not when a connection
-# is opened, so `prisma generate` fails outright without it. Generation only reads the schema, so
-# the value below is never dialled — it is deliberately not credential-shaped, because the previous
-# ARG default here was a real-looking `postgresql://admin:admin@postgres:5432/…` that invited
-# someone to treat it as a working fallback. Nothing from this stage reaches the final image.
 FROM base AS build
-ENV DATABASE_URL="postgresql://unused:unused@127.0.0.1:5432/prisma-generate-only"
+ARG PRISMA_GENERATE_ONLY_URL
+ENV DATABASE_URL=$PRISMA_GENERATE_ONLY_URL
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
@@ -55,6 +60,7 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lock
 
 # Stage 6: Production
 FROM base AS production
+ARG PRISMA_GENERATE_ONLY_URL
 ENV NODE_ENV=production
 COPY --from=prod-dependencies /app/node_modules ./node_modules
 COPY --from=prod-dependencies /app/apps/api/node_modules ./apps/api/node_modules
@@ -69,7 +75,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
 
 # Generate Prisma Client
-RUN pnpm --filter @bitrate/api run db:gen:prod
+RUN DATABASE_URL="$PRISMA_GENERATE_ONLY_URL" pnpm --filter @bitrate/api run db:gen:prod
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \

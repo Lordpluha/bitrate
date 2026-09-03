@@ -20,3 +20,8 @@ wherever the variable was unset. It builds locally only because a developer's `a
 being copied in; CI, which has no such file, failed. The shadow database is only used by
 `migrate dev`, and production runs `migrate deploy`, so it is read from `process.env` and genuinely
 optional now.
+
+`prisma generate` and the Nest build both load that config, in three stages, so the placeholder URL
+is declared once as a build argument. The two stages that are discarded set it as `ENV`, which
+covers every command in them; the production stage passes it per-command instead, so nothing lands
+in the published image's environment — verified with `docker inspect`.
