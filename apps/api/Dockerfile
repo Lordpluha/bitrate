@@ -28,11 +28,13 @@ CMD ["pnpm", "--filter", "@bitrate/api", "run", "start:dev"]
 
 # Stage 4: Build
 #
-# No DATABASE_URL is set here on purpose. `prisma generate` never connects — prisma.config.ts wraps
-# the value in Prisma's lazy `env()`, resolved at connection time — and the ARG that used to feed
-# it was declared in `base`, which the later stages do not inherit, so every `ENV X=$X` below it
-# expanded to an empty string anyway.
+# prisma.config.ts resolves env('DATABASE_URL') when the config is *loaded*, not when a connection
+# is opened, so `prisma generate` fails outright without it. Generation only reads the schema, so
+# the value below is never dialled — it is deliberately not credential-shaped, because the previous
+# ARG default here was a real-looking `postgresql://admin:admin@postgres:5432/…` that invited
+# someone to treat it as a working fallback. Nothing from this stage reaches the final image.
 FROM base AS build
+ENV DATABASE_URL="postgresql://unused:unused@127.0.0.1:5432/prisma-generate-only"
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
