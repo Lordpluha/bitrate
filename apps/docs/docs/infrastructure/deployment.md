@@ -13,16 +13,23 @@ were removed rather than left as an untested promise.
 
 ## What you are deploying
 
-`infra/docker-compose.prod.yaml` runs seven containers:
+`infra/docker-compose.prod.yaml` runs eight containers behind one nginx, the only one that
+publishes ports:
 
-| Container | Role | Reachable from outside |
+| Container | Role | Host it serves |
 |---|---|---|
-| `nginx` | TLS termination and routing | **yes** — 80, 443 |
-| `api` | NestJS, port 3000 | no |
-| `web-player` | Next.js, port 3001 | no |
-| `web-artists` | Next.js, port 3002 | no |
-| `postgres` | PostgreSQL 16 | no |
-| `redis` | Redis 7 | no |
+| `nginx` | TLS termination and routing | all of them — 80, 443 |
+| `web-player` | Next.js, port 3001 | the apex, and `www` by redirect |
+| `web-artists` | Next.js, port 3002 | `artists.` |
+| `api` | NestJS, port 3000 | `api.` |
+| `docs` | Docusaurus build on nginx, port 8080 | `docs.` |
+| `storybook` | Storybook build on nginx, port 8080 | `ui.` |
+| `postgres` | PostgreSQL 16 | — |
+| `redis` | Redis 7 | — |
+
+One host, one application; there are no path routes between them. Both frontends request their
+build output from `/_next/`, so serving them under paths on a single host made the portal's assets
+resolve against the player.
 
 Only nginx publishes ports. Postgres and Redis are reachable only inside the Docker network —
 do not add a `ports:` mapping to them.
@@ -128,11 +135,16 @@ renewals:
 ```bash
 sudo apt install -y certbot
 sudo certbot certonly --standalone -d example.com -d www.example.com \
-  -d artists.example.com -d api.example.com --agree-tos -m you@example.com
+  -d artists.example.com -d api.example.com -d docs.example.com -d ui.example.com \
+  --agree-tos -m you@example.com
 ```
 
-All three names: the template serves `www` as a redirect to the apex, and the artists portal on
-its own host. A certificate that omits a name means nginx cannot present a valid one for it.
+Every name the template declares a server block for. A certificate that omits one means nginx
+cannot present a valid certificate for that host.
+
+If the domain sits behind a proxy such as Cloudflare, set these names to DNS-only first. A proxied
+name terminates TLS at the edge under the proxy's own certificate, so the origin's never reaches
+the visitor and the HTTP-01 challenge is answered by whatever the proxy decides to forward.
 
 The portal needs a separate host rather than a path under the main domain because neither Next.js
 app sets `basePath` — both request their build output from `/_next/…`, so under path routing the
@@ -167,8 +179,14 @@ required. Verify the whole path with `--dry-run` before trusting it.
 ## 4. First deploy
 
 ```bash
+task prod:deploy
+```
+
+That pulls the images CI publishes and starts them. Build on the server only when you need
+something CI has not published yet:
+
+```bash
 task prod:build
-task prod:up
 ```
 
 If the build is killed for memory, build one package at a time:
@@ -218,14 +236,21 @@ line of defence, not a substitute.
 
 ```bash
 git pull
-task prod:build
-task prod:up
+task prod:deploy
 task db:migrate
 ```
 
-Images are built on the server because `infra/docker-compose.prod.yaml` uses `build:`. Publishing
-images from CI to a registry and switching to `image:` would remove the build from the production
-host entirely; that is not set up yet.
+CI builds every app image on a push to `develop` and pushes it to GHCR, so a deploy is a pull and a
+restart rather than a twenty-minute build on the production box. `git pull` is still required: the
+nginx templates, the compose file, and the Taskfile are read from the checkout, not from an image.
+
+`prod:deploy` passes `--no-build` deliberately. Without it, compose quietly builds any service
+whose image it cannot pull, and a deploy meant to take two minutes silently becomes the slow path.
+
+The images are `ghcr.io/lordpluha/bitrate/<service>:develop` for `api`, `web-player`,
+`web-artists`, `docs`, and `storybook`. `NEXT_PUBLIC_*` values are baked in at build time, so an
+image built against the wrong API origin cannot be corrected by editing `.env` — the workflow's
+build args are the place to look.
 
 ## Outbound SMTP is blocked on standard ports
 
