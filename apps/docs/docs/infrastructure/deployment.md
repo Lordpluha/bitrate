@@ -127,11 +127,16 @@ renewals:
 
 ```bash
 sudo apt install -y certbot
-sudo certbot certonly --standalone -d example.com -d www.example.com --agree-tos -m you@example.com
+sudo certbot certonly --standalone -d example.com -d www.example.com -d artists.example.com \
+  --agree-tos -m you@example.com
 ```
 
-Both names, because the production template serves `www` as a redirect to the apex and cannot
-present a certificate that omits it.
+All three names: the template serves `www` as a redirect to the apex, and the artists portal on
+its own host. A certificate that omits a name means nginx cannot present a valid one for it.
+
+The portal needs a separate host rather than a path under the main domain because neither Next.js
+app sets `basePath` — both request their build output from `/_next/…`, so under path routing the
+portal's assets resolve against the web player, which does not have them.
 
 Certificates land in `/etc/letsencrypt/live/<domain>/`, which the nginx container mounts
 read-only. Renewal runs from certbot's own systemd timer; point it at the webroot so it does not

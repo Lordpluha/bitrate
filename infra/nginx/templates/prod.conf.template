@@ -9,7 +9,7 @@ include /etc/nginx/snippets/upstreams.conf;
 # HTTP: serves the ACME challenge, sends everything else to HTTPS.
 server {
     listen 80;
-    server_name ${DOMAIN} www.${DOMAIN};
+    server_name ${DOMAIN} www.${DOMAIN} artists.${DOMAIN};
 
     # Must stay reachable over plain HTTP — certbot renews through it.
     location /.well-known/acme-challenge/ {
@@ -17,7 +17,8 @@ server {
     }
 
     location / {
-        return 301 https://${DOMAIN}$request_uri;
+        # $host, not ${DOMAIN}: artists.${DOMAIN} must land on itself over HTTPS, not on the apex.
+        return 301 https://$host$request_uri;
     }
 }
 
@@ -56,4 +57,27 @@ server {
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
 
     include /etc/nginx/snippets/app-routes.conf;
+}
+
+# Artists portal on its own host. Same certificate — it covers every name issued for this site,
+# so certbot must be given artists.${DOMAIN} too.
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name artists.${DOMAIN};
+
+    ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+
+    include /etc/nginx/snippets/artists-routes.conf;
 }
