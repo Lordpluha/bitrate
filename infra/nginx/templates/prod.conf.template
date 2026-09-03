@@ -9,7 +9,7 @@ include /etc/nginx/snippets/upstreams.conf;
 # HTTP: serves the ACME challenge, sends everything else to HTTPS.
 server {
     listen 80;
-    server_name ${DOMAIN} www.${DOMAIN} artists.${DOMAIN};
+    server_name ${DOMAIN} www.${DOMAIN} artists.${DOMAIN} api.${DOMAIN};
 
     # Must stay reachable over plain HTTP — certbot renews through it.
     location /.well-known/acme-challenge/ {
@@ -80,4 +80,25 @@ server {
     add_header X-Content-Type-Options "nosniff" always;
 
     include /etc/nginx/snippets/artists-routes.conf;
+}
+
+# API on its own host. The path route at <domain>/api stays in place so nothing breaks while the
+# clients move over; drop it once they have.
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name api.${DOMAIN};
+
+    ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
+
+    include /etc/nginx/snippets/api-routes.conf;
 }

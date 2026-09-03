@@ -127,8 +127,8 @@ renewals:
 
 ```bash
 sudo apt install -y certbot
-sudo certbot certonly --standalone -d example.com -d www.example.com -d artists.example.com \
-  --agree-tos -m you@example.com
+sudo certbot certonly --standalone -d example.com -d www.example.com \
+  -d artists.example.com -d api.example.com --agree-tos -m you@example.com
 ```
 
 All three names: the template serves `www` as a redirect to the apex, and the artists portal on
