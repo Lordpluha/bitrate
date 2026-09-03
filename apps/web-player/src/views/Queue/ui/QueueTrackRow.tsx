@@ -1,10 +1,10 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { ArtistName } from '@entities/Artist'
 import type { TrackEntity } from '@entities/Track'
 import { formatDuration } from '@shared/utils/apiHelpers'
 import { getTrackCoverUrl } from '@shared/utils/mediaUrl'
-import { cn } from '@spotify/ui-react'
 import { Play, X } from 'lucide-react'
 import Image from 'next/image'
 

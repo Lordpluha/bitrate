@@ -1,9 +1,5 @@
 'use client'
 
-import { useAuth } from '@shared/hooks'
-import { generateColor } from '@shared/utils'
-import { getUserAvatarUrl } from '@shared/utils/mediaUrl'
-
 import {
   cn,
   Popover,
@@ -13,7 +9,10 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
+import { useAuth } from '@shared/hooks'
+import { generateColor } from '@shared/utils'
+import { getUserAvatarUrl } from '@shared/utils/mediaUrl'
 import Image from 'next/image'
 import type { HTMLAttributes } from 'react'
 import { Z_INDEX_CLASS } from '@/shared/constants'

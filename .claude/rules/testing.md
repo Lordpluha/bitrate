@@ -8,7 +8,7 @@ metadata:
 license: MIT
 ---
 
-# Testing — spotify-clone
+# Testing — bitrate
 
 Three independent test stacks, one per concern. This file is the router — read it first to
 know which stack applies, then load only that stack's skill for the full conventions,
@@ -68,8 +68,8 @@ deserves a test; do not write tests to move the number, and never delete or weak
 assertion to make a threshold pass.
 
 ```bash
-pnpm --filter @spotify/api test:cov         # jest --coverage
-pnpm --filter @spotify/ui-react test:cov    # vitest --coverage (v8)
+pnpm --filter @bitrate/api test:cov         # jest --coverage
+pnpm --filter @bitrate/ui-react test:cov    # vitest --coverage (v8)
 ```
 
 `apps/web-player` has no coverage script and 7 spec files in total, so a coverage figure for

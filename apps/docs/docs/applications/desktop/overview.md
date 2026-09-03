@@ -141,7 +141,7 @@ http://localhost:6080/vnc.html
 ```
 
 - Click "Connect"
-- Enter password: `spotify`
+- Enter password: `bitrate`
 - You will see the desktop with the Tauri application
 
 **2. VNC client (RealVNC, TigerVNC, Remmina)**
@@ -150,7 +150,7 @@ http://localhost:6080/vnc.html
 vnc://localhost:5900
 ```
 
-- Password: `spotify`
+- Password: `bitrate`
 
 ---
 

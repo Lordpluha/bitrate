@@ -10,7 +10,7 @@ import { TwoFactorService } from './two-factor.service'
 jest.mock('otplib', () => ({
   generateSecret: jest.fn(() => 'MOCK_SECRET'),
   generateURI: jest.fn(
-    () => 'otpauth://totp/Spotify:user@example.com?secret=MOCK_SECRET&issuer=Spotify',
+    () => 'otpauth://totp/Bitrate:user@example.com?secret=MOCK_SECRET&issuer=Bitrate',
   ),
   verify: jest.fn(),
 }))

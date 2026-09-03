@@ -1,6 +1,6 @@
-# @spotify/docs
+# @bitrate/docs
 
-Docusaurus 3 documentation site for the Spotify Clone monorepo.
+Docusaurus 3 documentation site for the Bitrate monorepo.
 
 ## Stack
 
@@ -16,13 +16,13 @@ Docusaurus 3 documentation site for the Spotify Clone monorepo.
 pnpm install
 
 # Start dev server (http://localhost:3003)
-pnpm --filter @spotify/docs start
+pnpm --filter @bitrate/docs start
 
 # Build static output
-pnpm --filter @spotify/docs build
+pnpm --filter @bitrate/docs build
 
 # Serve built output locally
-pnpm --filter @spotify/docs serve
+pnpm --filter @bitrate/docs serve
 ```
 
 Or inside `apps/docs/`:

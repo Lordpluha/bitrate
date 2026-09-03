@@ -1,6 +1,6 @@
-# @spotify/mobile
+# @bitrate/mobile
 
-React Native + Expo mobile app for the Spotify Clone. Runs on Android, iOS, and web (via react-native-web).
+React Native + Expo mobile app for Bitrate. Runs on Android, iOS, and web (via react-native-web).
 
 ## Stack
 
@@ -26,16 +26,16 @@ React Native + Expo mobile app for the Spotify Clone. Runs on Android, iOS, and 
 pnpm install
 
 # Start Metro bundler
-pnpm --filter @spotify/mobile start
+pnpm --filter @bitrate/mobile start
 
 # Android emulator
-pnpm --filter @spotify/mobile android
+pnpm --filter @bitrate/mobile android
 
 # iOS simulator (macOS only)
-pnpm --filter @spotify/mobile ios
+pnpm --filter @bitrate/mobile ios
 
 # Web browser
-pnpm --filter @spotify/mobile web
+pnpm --filter @bitrate/mobile web
 ```
 
 Or inside `apps/mobile/`:

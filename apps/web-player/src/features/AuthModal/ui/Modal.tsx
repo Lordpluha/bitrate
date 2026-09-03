@@ -1,7 +1,7 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { useOverlayFocus } from '@shared/hooks'
-import { cn } from '@spotify/ui-react'
 import type { ComponentProps } from 'react'
 
 interface ModalProps extends ComponentProps<'div'> {

@@ -1,8 +1,8 @@
 import path from 'node:path'
-import { processSvgFiles, resolvePath } from '@spotify/svgr'
+import { processSvgFiles, resolvePath } from '@bitrate/svgr'
 
 /**
- * Vite plugin that integrates @spotify/svgr into the build pipeline.
+ * Vite plugin that integrates @bitrate/svgr into the build pipeline.
  *
  * Build mode      — runs once in buildStart before any module transforms.
  * Watch mode      — re-runs on any .svg change in the input directory.
@@ -36,7 +36,7 @@ export function svgrPlugin(options) {
   let built = false
 
   return {
-    name: 'spotify-vite-svgr',
+    name: 'bitrate-vite-svgr',
 
     watchChange(id) {
       // Reset so the next buildStart re-generates when SVGs actually changed.

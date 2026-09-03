@@ -9,18 +9,18 @@ metadata:
 
 # Styling conventions — web-player
 
-Tailwind v4 + `@spotify/ui-react` design tokens + CVA + `cn()`. Read before writing any styled markup, any new component, or anything that sets `className`. For the token pipeline, see `.claude/rules/monorepo.md` § "Asset generation pipelines".
+Tailwind v4 + `@bitrate/ui-react` design tokens + CVA + `cn()`. Read before writing any styled markup, any new component, or anything that sets `className`. For the token pipeline, see `.claude/rules/monorepo.md` § "Asset generation pipelines".
 
 ## Stack at a glance
 
 | Concern | Choice |
 |---|---|
 | Utility engine | Tailwind v4 via `@tailwindcss/postcss` — no `tailwind.config.js` |
-| Token layer | Hand-written `@theme` layers in `@spotify/ui-react`, imported through `themes.css` |
-| Class merging | `cn(...inputs)` from `@spotify/ui-react` — wraps `clsx` + `tailwind-merge` |
+| Token layer | Hand-written `@theme` layers in `@bitrate/ui-react`, imported through `themes.css` |
+| Class merging | `cn(...inputs)` from `@bitrate/ui-react` — wraps `clsx` + `tailwind-merge` |
 | Variant component pattern | CVA (`class-variance-authority`) via `cva(...)` factory |
 | Animations | `motion` (Motion for React) |
-| Theme switching | CSS class on `<html>` resolved by `:root.<theme>` selectors from tokens |
+| Theme switching | CSS class on `<html>` (`light` / `dim`; dark is the default) resolved by `:root.<theme>` selectors |
 
 ## Design tokens
 
@@ -28,13 +28,13 @@ All design values are declared as Tailwind v4 `@theme` layers in `packages/ui-re
 
 ```css
 /* apps/web-player/src/app/global.css */
-@import "@spotify/ui-react/themes.css";
+@import "@bitrate/ui-react/themes.css";
 ```
 
 **One import, not many.** `themes.css` is a barrel: it `@import`s `palette.css`,
 `typography.css`, `layout.css`, `animations.css`, and every semantic-role part-file under
 `themes/`, and declares no colour of its own. It is also the *only* stylesheet the package
-exports: `@spotify/ui-react/styles/palette.css` is not in the package's `exports` map and
+exports: `@bitrate/ui-react/styles/palette.css` is not in the package's `exports` map and
 fails with `MODULE_NOT_FOUND`.
 
 ### Where a role lives
@@ -60,6 +60,7 @@ workflow — save the file and Tailwind picks the change up.
 | A raw colour value or a new scale | `src/styles/palette.css` |
 | A semantic role's value in each theme | the part-file that owns it under `src/styles/themes/` |
 | A new role | add it to **both** the `@theme` block and the `:root.light` block of one part-file |
+| The brand primary or a surface value | `themes/base.css` — Bitrate Purple `#7c3aed` is `--color-purple-500`, aliased by `--color-primary` |
 | A new part-file | create it, then add one `@import` line to `src/styles/themes.css` |
 
 Three invariants have no tool enforcing them any more, so they are on you:
@@ -69,6 +70,10 @@ Three invariants have no tool enforcing them any more, so they are on you:
 - **A role appears in both blocks.** A role present in `@theme` but missing from
   `:root.light` keeps its dark value in the light theme — it does not fall back to anything
   sensible.
+- **Dim is deliberately partial.** `:root.dim` in `themes/base.css` overrides only the surface,
+  text, border and action roles the brand board specifies. Every other role — component-scoped
+  roles included — inherits its dark value on purpose, so a component gets dim support for free.
+  Do not "complete" dim by copying the dark block into every part-file.
 - **A new part-file is imported.** `themes.css` is a barrel of `@import`s and declares no
   colour of its own; an unimported part-file is dead.
 
@@ -81,7 +86,7 @@ These `@theme` blocks are what Tailwind reads. Every `--color-*`, `--radius-*`, 
 ## The `cn()` + CVA recipe
 
 ```tsx
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { forwardRef, type HTMLAttributes } from 'react'
 
@@ -124,9 +129,10 @@ Five non-negotiable rules for every variant component:
 - **`tailwind.config.js`** — Tailwind v4 reads config from `@theme`. A JS config file is a red flag.
 - **`tailwindcss-animate`** — that package is Tailwind v3 only. Use the `motion` library or CSS transitions.
 - **Tailwind's built-in colour scales** — `bg-slate-100`, `text-gray-500`, `border-zinc-700`
-  and the rest of `slate | gray | zinc | stone | amber | yellow | lime | emerald | teal |
-  cyan | sky | indigo | violet | fuchsia | pink | rose`. See below — this one is invisible
-  rather than merely untidy.
+  and the rest. `scripts/check-design-tokens.mjs` owns the exact list (`STOCK_SCALES`); read it
+  there rather than trusting a copy in prose, because the two drift whenever a scale moves
+  between the repo palette and Tailwind's. See below — this one is invisible rather than
+  merely untidy.
 - **The `dark:` variant** — this repo never registers `@custom-variant dark`, so `dark:`
   compiles to `@media (prefers-color-scheme: dark)` and follows the **operating system**,
   not the `light`/`dark` class the app puts on `<html>`. A role already carries both
@@ -148,7 +154,7 @@ are exempt — they assert class merging, not appearance.
 
 Reach for a semantic role first (`bg-muted`, `text-muted-foreground`, `border-border`,
 `ring-ring`, `bg-primary`, `bg-destructive`, `bg-popover`, `chart-1`…`chart-5`), and a repo
-palette scale (`green`, `neutral`, `blue`, `red`, `orange`, `purple`, `grey`, `black`,
+palette scale (`purple`, `green`, `neutral`, `blue`, `red`, `amber`, `grey`, `black`,
 `white`, `white-alpha`) only when the colour is deliberately the same in both themes.
 
 ## Responsive conventions
@@ -162,9 +168,13 @@ Tailwind v4 reads breakpoints from `--breakpoint-*` tokens. Rules:
   only at the appropriate breakpoint.
 - Validate changed screens at 320 CSS px and 400% zoom.
 
-## Dark mode
+## Themes
 
-Theme is a CSS class on `<html>` (driven by the theme token system). Components reference token utilities — no separate JSX trees for light / dark.
+There are three themes: **dark** (the default, declared in `@theme`), **light** (`:root.light`)
+and **dim** (`:root.dim`, a low-light variant layered on dark). The active one is a CSS class on
+`<html>` driven by `apps/web-player/src/shared/constants/themes.ts` — add a theme there and the
+switcher, the no-flash boot script, and the provider all pick it up. Components reference token
+utilities; never branch the JSX per theme.
 
 ```tsx
 /** ✗ Don't — two JSX trees for dark mode. */
@@ -176,7 +186,7 @@ Theme is a CSS class on `<html>` (driven by the theme token system). Components 
 
 ## Adding a new component to `@/shared/ui/`
 
-1. Check `@spotify/ui-react` first — use its exported components rather than building from scratch.
+1. Check `@bitrate/ui-react` first — use its exported components rather than building from scratch.
 2. If building a custom component: `src/shared/ui/<PascalName>.tsx` + update `src/shared/ui/index.ts`.
 3. Follow the CVA + `cn()` + `forwardRef` pattern above.
 4. Keep the file ≤ 100 logic lines (`code-principles.md`).
@@ -217,7 +227,7 @@ Theme is a CSS class on `<html>` (driven by the theme token system). Components 
 
 ```tsx
 /** ✓ Do */
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import type { HTMLAttributes } from 'react'
 

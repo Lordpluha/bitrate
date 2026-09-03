@@ -9,7 +9,7 @@ sidebar_position: 5
 ## Запуск
 
 ```bash
-pnpm --filter @spotify/api db:seed
+pnpm --filter @bitrate/api db:seed
 ```
 
 ## Что создаётся
@@ -51,10 +51,10 @@ fakerService.generatePlaylists(userIds, 30)  // массив объектов Pl
 
 ```bash
 # Сбросить БД и применить миграции заново
-pnpm --filter @spotify/api db:migration:reset
+pnpm --filter @bitrate/api db:migration:reset
 
 # Затем пересидить
-pnpm --filter @spotify/api db:seed
+pnpm --filter @bitrate/api db:seed
 ```
 
 :::warning
@@ -65,7 +65,7 @@ pnpm --filter @spotify/api db:seed
 
 ```bash
 # Открыть Prisma Studio
-pnpm --filter @spotify/api db:ui
+pnpm --filter @bitrate/api db:ui
 ```
 
 Откроется на `http://localhost:5555`.

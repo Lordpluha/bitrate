@@ -1,6 +1,6 @@
 ---
-'@spotify/web-player': minor
-'@spotify/ui-react': minor
+'@bitrate/web-player': minor
+'@bitrate/ui-react': minor
 ---
 
 The light theme reads as a designed counterpart to the dark one rather than an

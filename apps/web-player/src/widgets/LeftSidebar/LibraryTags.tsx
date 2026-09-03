@@ -6,7 +6,7 @@ import {
   CarouselItem,
   CarouselNext,
   cn,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 import type { LibraryItemType } from '@/widgets/LeftSidebar/model/library.types'
 
 type LibraryTag = {

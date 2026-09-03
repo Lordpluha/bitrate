@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { X } from 'lucide-react'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useOverlayFocus } from '@/shared/hooks'

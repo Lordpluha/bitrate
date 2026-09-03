@@ -1,6 +1,6 @@
 'use client'
 
-import { PlusIcon, Typography } from '@spotify/ui-react'
+import { PlusIcon, Typography } from '@bitrate/ui-react'
 import { Maximize2, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { useI18n } from '@/shared/i18n'
 import { CreatePlaylistMenu } from '@/widgets/LeftSidebar/CreatePlaylistMenu'

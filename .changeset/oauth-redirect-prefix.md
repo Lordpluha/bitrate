@@ -1,5 +1,5 @@
 ---
-'@spotify/api': patch
+'@bitrate/api': patch
 ---
 
 OAuth redirect URIs now include the API's global prefix and version. The

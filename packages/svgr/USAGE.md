@@ -1,11 +1,11 @@
-# Using @spotify/svgr
+# Using @bitrate/svgr
 
 ## Quick Start
 
 ### 1. Installation
 
 ```bash
-pnpm add -D @spotify/svgr
+pnpm add -D @bitrate/svgr
 ```
 
 ### 2. Configure package.json

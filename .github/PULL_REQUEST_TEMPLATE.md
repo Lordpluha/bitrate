@@ -1,4 +1,4 @@
-# 🎵 Spotify Clone Pull Request
+# 🎵 Bitrate Pull Request
 
 ## 📋 Summary
 <!-- Provide a clear and concise description of your changes -->

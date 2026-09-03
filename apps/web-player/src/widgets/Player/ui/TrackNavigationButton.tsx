@@ -4,7 +4,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 import { SkipBack, SkipForward } from 'lucide-react'
 import Image from 'next/image'
 import type { TrackEntity } from '@/entities/Track/models/schema/Track.entity'

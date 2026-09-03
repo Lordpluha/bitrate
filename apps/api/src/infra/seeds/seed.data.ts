@@ -14,7 +14,7 @@ export const SEED_GENRES = [
 export const SEED_PODCASTS = [
   {
     title: 'Behind the Beat',
-    publisher: 'Spotify Clone Studios',
+    publisher: 'Bitrate Studios',
     description: 'Artists and producers unpack how electronic tracks are made.',
     language: 'en',
   },

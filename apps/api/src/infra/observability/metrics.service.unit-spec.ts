@@ -9,10 +9,10 @@ describe('MetricsService', () => {
     metrics.record('GET', '/api/v1/tracks/:id', 200, 5)
 
     expect(metrics.render()).toContain(
-      'spotify_api_http_requests_total{method="GET",route="/api/v1/tracks/:id",status="200"} 2',
+      'bitrate_api_http_requests_total{method="GET",route="/api/v1/tracks/:id",status="200"} 2',
     )
     expect(metrics.render()).toContain(
-      'spotify_api_http_request_duration_ms_sum{method="GET",route="/api/v1/tracks/:id",status="200"} 15',
+      'bitrate_api_http_request_duration_ms_sum{method="GET",route="/api/v1/tracks/:id",status="200"} 15',
     )
   })
 
@@ -30,6 +30,6 @@ describe('MetricsService', () => {
     metrics.record('get with user data', 'x'.repeat(300), 999, Number.NaN)
 
     expect(metrics.render()).toContain('method="UNKNOWN",route="unknown",status="0"')
-    expect(metrics.render()).toContain('spotify_api_http_request_duration_ms_sum')
+    expect(metrics.render()).toContain('bitrate_api_http_request_duration_ms_sum')
   })
 })

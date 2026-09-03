@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 

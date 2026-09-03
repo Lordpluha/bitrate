@@ -4,29 +4,29 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: spotify-postgres
+    container_name: bitrate-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
-      POSTGRES_DB: ${POSTGRES_DB:-spotify}
+      POSTGRES_DB: ${POSTGRES_DB:-bitrate}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../docker/postgres/initdb:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d spotify"]
+      test: ["CMD-SHELL", "pg_isready -U admin -d bitrate"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - spotify-network
+      - bitrate-network
 
   # Redis для кэширования и сессий
   redis:
     image: redis:7-alpine
-    container_name: spotify-redis
+    container_name: bitrate-redis
     restart: unless-stopped
     ports:
       - "${REDIS_PORT:-6379}:6379"
@@ -38,18 +38,18 @@ services:
       timeout: 3s
       retries: 3
     networks:
-      - spotify-network
+      - bitrate-network
 
   # Local SMTP capture. No real email leaves the development stack.
   mailhog:
     image: mailhog/mailhog:v1.0.1
-    container_name: spotify-mailhog
+    container_name: bitrate-mailhog
     restart: unless-stopped
     ports:
       - "${MAILHOG_SMTP_PORT:-1025}:1025"
       - "${MAILHOG_UI_PORT:-8025}:8025"
     networks:
-      - spotify-network
+      - bitrate-network
 
   # Backend API (NestJS)
   api:
@@ -57,19 +57,19 @@ services:
       context: ..
       dockerfile: ./apps/api/Dockerfile
       target: development
-    container_name: spotify-api
+    container_name: bitrate-api
     restart: unless-stopped
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-spotify}
-      SHADOW_DATABASE_URL: ${SHADOW_DATABASE_URL:-postgresql://admin:admin@postgres:5432/spotify_shadow}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}
+      SHADOW_DATABASE_URL: ${SHADOW_DATABASE_URL:-postgresql://admin:admin@postgres:5432/bitrate_shadow}
       REDIS_URL: redis://redis:6379
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
       WEB_HOST: ${WEB_HOST:-http://localhost:3001}
       SMTP_HOST: mailhog
       SMTP_PORT: 1025
-      EMAIL_FROM: no-reply@spotify.local
+      EMAIL_FROM: no-reply@bitrate.local
       JWT_SECRET: ${JWT_SECRET:-change_me_in_production_secret}
       PORT: 3000
     ports:
@@ -89,8 +89,8 @@ services:
       mailhog:
         condition: service_started
     networks:
-      - spotify-network
-    command: pnpm --filter @spotify/api run start:dev
+      - bitrate-network
+    command: pnpm --filter @bitrate/api run start:dev
 
   # Web Player (Next.js)
   web-player:
@@ -98,7 +98,7 @@ services:
       context: ..
       dockerfile: ./apps/web-player/Dockerfile
       target: development
-    container_name: spotify-web-player
+    container_name: bitrate-web-player
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -121,8 +121,8 @@ services:
     depends_on:
       - api
     networks:
-      - spotify-network
-    command: pnpm --filter @spotify/web-player run dev
+      - bitrate-network
+    command: pnpm --filter @bitrate/web-player run dev
 
   # Web Artists (Next.js)
   web-artists:
@@ -130,7 +130,7 @@ services:
       context: ..
       dockerfile: ./apps/web-artists/Dockerfile
       target: development
-    container_name: spotify-web-artists
+    container_name: bitrate-web-artists
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -151,8 +151,8 @@ services:
     depends_on:
       - api
     networks:
-      - spotify-network
-    command: pnpm --filter @spotify/web-artists run dev
+      - bitrate-network
+    command: pnpm --filter @bitrate/web-artists run dev
 
   # Admin Panel (Kottster)
   admin:
@@ -160,12 +160,20 @@ services:
       context: ..
       dockerfile: ./apps/admin/Dockerfile
       target: development
-    container_name: spotify-admin
+    container_name: bitrate-admin
     restart: unless-stopped
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-spotify}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}
       PORT: 3002
+      # Dev-only placeholders, matching how this file already treats the database credentials.
+      # This stack is for local development and CI integration runs and is never internet-facing;
+      # docker-compose.prod.yaml requires real values instead of defaulting.
+      KOTTSTER_SECRET_KEY: ${KOTTSTER_SECRET_KEY:-dev-only-kottster-secret-key-000}
+      KOTTSTER_API_TOKEN: ${KOTTSTER_API_TOKEN:-dev0only0kottster0api0token00000}
+      KOTTSTER_JWT_SECRET_SALT: ${KOTTSTER_JWT_SECRET_SALT:-dev0only0salt000}
+      ADMIN_ROOT_USERNAME: ${ADMIN_ROOT_USERNAME:-admin}
+      ADMIN_ROOT_PASSWORD: ${ADMIN_ROOT_PASSWORD:-admin}
     ports:
       - "${ADMIN_PORT:-3002}:3002"
     volumes:
@@ -177,8 +185,8 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - spotify-network
-    command: pnpm --filter @spotify/admin run dev
+      - bitrate-network
+    command: pnpm --filter @bitrate/admin run dev
 
   # Mobile App (Expo Development Server)
   mobile:
@@ -186,7 +194,7 @@ services:
       context: ..
       dockerfile: ./apps/mobile/Dockerfile
       target: development
-    container_name: spotify-mobile
+    container_name: bitrate-mobile
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -204,8 +212,8 @@ services:
       - /app/apps/mobile/node_modules
       - /app/apps/mobile/.expo
     networks:
-      - spotify-network
-    command: pnpm --filter @spotify/mobile run start -- --tunnel
+      - bitrate-network
+    command: pnpm --filter @bitrate/mobile run start -- --tunnel
     profiles:
       - mobile
 
@@ -215,7 +223,7 @@ services:
       context: ..
       dockerfile: ./apps/desktop/Dockerfile
       target: development
-    container_name: spotify-desktop
+    container_name: bitrate-desktop
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -227,8 +235,8 @@ services:
       - /app/node_modules
       - /app/apps/desktop/node_modules
     networks:
-      - spotify-network
-    command: pnpm --filter @spotify/desktop run dev
+      - bitrate-network
+    command: pnpm --filter @bitrate/desktop run dev
     profiles:
       - desktop
 
@@ -238,7 +246,7 @@ services:
       context: ..
       dockerfile: ./apps/docs/Dockerfile
       target: development
-    container_name: spotify-docs
+    container_name: bitrate-docs
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -255,7 +263,7 @@ services:
       - /app/apps/docs/.docusaurus
       - /app/apps/docs/build
     networks:
-      - spotify-network
+      - bitrate-network
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3003"]
       interval: 30s
@@ -268,7 +276,7 @@ services:
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
-    container_name: spotify-nginx
+    container_name: bitrate-nginx
     restart: unless-stopped
     ports:
       - "${NGINX_HTTP_PORT:-80}:80"
@@ -276,13 +284,14 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
     depends_on:
       - api
       - web-player
       - web-artists
       - admin
     networks:
-      - spotify-network
+      - bitrate-network
     profiles:
       - production
 
@@ -293,5 +302,5 @@ volumes:
     driver: local
 
 networks:
-  spotify-network:
+  bitrate-network:
     driver: bridge

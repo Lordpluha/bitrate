@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { useState } from 'react'
 import { useCreateModerationReport } from '@/entities/Moderation'
 import { showApiErrorToast, showApiSuccessToast } from '@/shared/api/feedback'

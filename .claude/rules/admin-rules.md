@@ -15,7 +15,7 @@ framework mechanics; this file is project law.
 ## ⚠️ Open security issue — read first
 
 `apps/admin/app/_server/app.ts` and
-`apps/admin/app/_server/data-sources/spotify_postgres_local/index.ts` are **tracked in git in
+`apps/admin/app/_server/data-sources/bitrate_postgres_local/index.ts` are **tracked in git in
 a public repository** and contain live literal values:
 
 - the Kottster `secretKey` and `kottsterApiToken`,
@@ -103,9 +103,9 @@ apps/admin/
 Use the CLI rather than hand-rolling:
 
 ```bash
-pnpm --filter @spotify/admin dev
-pnpm --filter @spotify/admin dev:add-data-source
-pnpm --filter @spotify/admin dev:upgrade-kottster
+pnpm --filter @bitrate/admin dev
+pnpm --filter @bitrate/admin dev:add-data-source
+pnpm --filter @bitrate/admin dev:upgrade-kottster
 ```
 
 ## Querying safely
@@ -128,7 +128,7 @@ whether it belongs there. Prefer a soft delete or status change where the schema
 ## Commands
 
 ```bash
-pnpm --filter @spotify/admin check-types
+pnpm --filter @bitrate/admin check-types
 ```
 
 This app has a `check-types` script (`tsc --noEmit`) but **no lint and no tests**. Say so

@@ -1,6 +1,6 @@
 'use client'
 
-import { LogoIcon, Typography } from '@spotify/ui-react'
+import { LogoIcon, Typography } from '@bitrate/ui-react'
 import { useRegistrationForm } from '../model/useRegistrationForm'
 import { RegistrationEmailStep } from './RegistrationEmailStep'
 import { RegistrationPasswordStep } from './RegistrationPasswordStep'

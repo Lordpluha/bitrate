@@ -101,7 +101,7 @@ const browseCategoryTitles = [
   'Nature & Noise',
   'Funk & Disco',
   'GLOW',
-  'Spotify Singles',
+  'Bitrate Singles',
   'Netflix',
   'Summer',
   'RADAR',

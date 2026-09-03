@@ -2,6 +2,7 @@ export {
   AlignJustify,
   ArrowLeft,
   ArrowRight,
+  Contrast,
   Eye,
   EyeOff,
   Loader2,

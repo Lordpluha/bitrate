@@ -50,16 +50,16 @@ export async function runCli() {
     console.error('  -o, --output     Output directory for React components (required)')
     console.error('  --variables      Comma-separated color variable names (optional)')
     console.error('\nExamples:')
-    console.error('  # Build from package')
-    console.error('  react-svgr build -i @spotify/tokens/icons -o src/icons/svgr')
+    console.error('  # Build from the package assets')
+    console.error('  react-svgr build -i ./assets/icons -o src/icons/svgr')
     console.error('\n  # Build from relative path')
-    console.error('  react-svgr build -i ../tokens/icons -o src/icons/svgr')
+    console.error('  react-svgr build -i ../ui-react/assets/icons -o src/icons/svgr')
     console.error('\n  # With color variables')
     console.error(
       '  react-svgr build -i ../icons -o ./output --variables "primaryColor,secondaryColor"',
     )
     console.error('\n  # Watch mode')
-    console.error('  react-svgr dev --input @spotify/tokens/icons --output src/icons/svgr')
+    console.error('  react-svgr dev --input ./assets/icons --output src/icons/svgr')
     process.exit(1)
   }
 

@@ -102,7 +102,7 @@ Crashed Thread: [thread number]
 ### Android Crash Log (if available)
 ```
 FATAL EXCEPTION: main
-Process: com.spotify.clone
+Process: com.lordpluha.bitratemobile
 java.lang.RuntimeException: [details]
 ```
 

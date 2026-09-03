@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import type { KeyboardEvent } from 'react'
 import type { searchFilterTabs } from '@/features/Search/model/search.constants'
 

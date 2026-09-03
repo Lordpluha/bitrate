@@ -12,7 +12,7 @@ and a single place for transport concerns.
 ## Decision
 
 - NestJS Swagger at `/swagger/json` is the contract source.
-- `@spotify/contracts` generates TypeScript paths from the running API.
+- `@bitrate/contracts` generates TypeScript paths from the running API.
 - `apps/web-player/src/shared/api/client/fetchClient.ts` owns `openapi-fetch` transport and
   JWT refresh middleware.
 - `reactQueryClient.ts` wraps it with `openapi-react-query`.

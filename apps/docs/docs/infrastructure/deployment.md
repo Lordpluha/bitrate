@@ -4,441 +4,223 @@ sidebar_position: 2
 
 # Deployment
 
-Production deployment guide for Spotify Clone.
+Deploying Bitrate to a single Linux server with Docker Compose.
 
-## 🚀 Deployment Options
+This is the only deployment path the repository actually supports. Earlier revisions of this
+page also described Elastic Beanstalk, Cloud Run, Azure Container Instances, and Kubernetes;
+none of them had configuration in the repository, so the instructions could not work. They
+were removed rather than left as an untested promise.
 
-### 1. Docker Compose (Recommended for small-scale)
-### 2. Kubernetes (Recommended for scale)
-### 3. Cloud Platforms (AWS, GCP, Azure)
-### 4. Serverless (Vercel, Netlify)
+## What you are deploying
 
-## 🐳 Docker Compose Deployment
+`infra/docker-compose.prod.yaml` runs seven containers:
 
-### Prerequisites
+| Container | Role | Reachable from outside |
+|---|---|---|
+| `nginx` | TLS termination and routing | **yes** — 80, 443 |
+| `api` | NestJS, port 3000 | no |
+| `web-player` | Next.js, port 3001 | no |
+| `web-artists` | Next.js, port 3002 | no |
+| `admin` | Kottster, port 3002 | no |
+| `postgres` | PostgreSQL 16 | no |
+| `redis` | Redis 7 | no |
 
-- Docker 20.10+
-- Docker Compose 2.0+
-- Domain name with DNS configured
-- SSL certificate (Let's Encrypt)
+Only nginx publishes ports. Postgres and Redis are reachable only inside the Docker network —
+do not add a `ports:` mapping to them.
 
-### 1. Clone Repository
+## Sizing
 
-```bash
-git clone https://github.com/Lordpluha/spotify-clone.git
-cd spotify-clone
-```
+The four application containers are capped at 512 MB each, so the stack idles at roughly 3 GB
+including Postgres, Redis, nginx, and the OS. **8 GB is the practical floor**, because the
+production compose builds images on the server and two parallel Next.js builds can ask for more
+than the idle stack leaves free.
 
-### 2. Environment Configuration
+Audio transcoding (ffmpeg, via the BullMQ consumer in `apps/api`) is the only CPU-heavy work.
+Four cores is comfortable for a small deployment.
 
-```bash
-# Copy production env file
-cp .env.example .env.production
+## Prerequisites
 
-# Edit configuration
-vi .env.production
-```
+- Docker Engine with the Compose plugin
+- [`task`](https://taskfile.dev/installation/) — the only supported interface to the Docker and
+  database workflows in this repository
+- A domain pointing at the server's IP
 
-**Required Variables:**
+Node and pnpm are **not** needed on the host; everything is built inside containers.
 
-```bash
-# Database
-DATABASE_URL=postgresql://user:password@postgres:5432/spotify_clone
+## 1. Harden the server
 
-# JWT Secrets (CHANGE THESE!)
-JWT_SECRET=your-super-secret-jwt-key-min-32-chars
-JWT_REFRESH_SECRET=your-super-secret-refresh-key-min-32-chars
-
-# Application
-NODE_ENV=production
-API_URL=https://api.yourdomain.com
-WEB_URL=https://yourdomain.com
-
-# CORS
-CORS_ORIGIN=https://yourdomain.com,https://api.yourdomain.com
-
-# Storage
-S3_ENDPOINT=https://storage.yourdomain.com
-S3_ACCESS_KEY=your-access-key
-S3_SECRET_KEY=your-secret-key
-S3_BUCKET=spotify-clone
-
-# Email (optional)
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=noreply@yourdomain.com
-SMTP_PASS=password
-```
-
-### 3. SSL Configuration
+Before anything else:
 
 ```bash
-# Install certbot
-sudo apt install certbot
+# key-only SSH
+sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo systemctl reload ssh
 
-# Generate certificates
-sudo certbot certonly --standalone -d yourdomain.com -d api.yourdomain.com
+# only SSH and the web ports
+sudo ufw allow OpenSSH && sudo ufw allow 80,443/tcp && sudo ufw enable
 
-# Certificates will be at:
-# /etc/letsencrypt/live/yourdomain.com/fullchain.pem
-# /etc/letsencrypt/live/yourdomain.com/privkey.pem
+sudo apt install -y fail2ban unattended-upgrades
 ```
 
-### 4. Nginx Configuration
+Run the stack as a non-root user in the `docker` group, not as root.
 
-```nginx
-# nginx/conf.d/production.conf
-server {
-    listen 80;
-    server_name yourdomain.com api.yourdomain.com;
-    return 301 https://$server_name$request_uri;
-}
+### Swap
 
-server {
-    listen 443 ssl http2;
-    server_name yourdomain.com;
-
-    ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
-
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-
-    location / {
-        proxy_pass http://web:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-
-server {
-    listen 443 ssl http2;
-    server_name api.yourdomain.com;
-
-    ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
-
-    location / {
-        proxy_pass http://api:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    # File upload size limit
-    client_max_body_size 100M;
-}
-```
-
-### 5. Build and Deploy
+Production images are built on the server, and `turbo run build` builds them in parallel. On
+an 8 GB machine that can exhaust memory mid-build:
 
 ```bash
-# Build production images
-docker compose -f docker-compose.prod.yaml build
-
-# Start services
-docker compose -f docker-compose.prod.yaml up -d
-
-# Run migrations
-docker compose exec api pnpm db:migration:start
-
-# Verify services
-docker compose ps
+sudo fallocate -l 4G /swapfile && sudo chmod 600 /swapfile
+sudo mkswap /swapfile && sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
-### 6. Health Check
+## 2. Clone and configure
 
 ```bash
-# API
-curl https://api.yourdomain.com/health
-
-# Web
-curl https://yourdomain.com
+git clone https://github.com/Lordpluha/bitrate.git
+cd bitrate
+cp .env.example .env
 ```
 
-## ☁️ Cloud Platform Deployment
+Edit `.env`. The API validates its environment at startup with Zod (`apps/api/env.schema.ts`)
+and refuses to boot with a message naming what is missing — so start the stack and read the
+error rather than guessing.
 
-### AWS (Elastic Beanstalk)
+Four values need attention:
 
 ```bash
-# Install EB CLI
-pip install awsebcli
+# Generate, do not invent
+JWT_SECRET=$(openssl rand -base64 48)
 
-# Initialize
-eb init
+# The API sits behind exactly one proxy hop (nginx). Leaving this at 0 makes rate limiting
+# and audit logs see nginx's address for every request, which disables brute-force protection.
+TRUST_PROXY_HOPS=1
 
-# Create environment
-eb create production
+# Must match the certificate issued below, or nginx will not start
+DOMAIN=example.com
 
-# Deploy
-eb deploy
+# Validated as URLs
+WEB_HOST=https://example.com
+USER_WEB_HOST=https://example.com
+ARTIST_WEB_HOST=https://example.com/artists
+API_BASE_URL=https://example.com/api
 ```
 
-### Google Cloud (Cloud Run)
+`OAUTH_*`, `SMTP_*`, `SENTRY_DSN`, and `METRICS_TOKEN` are optional — the API starts without
+them. `EMAIL_FROM` becomes required as soon as `SMTP_HOST` is set.
+
+The admin panel has its own required variables (`KOTTSTER_*`, `ADMIN_ROOT_*`) and refuses to
+start without them. See the security checklist below before setting them.
+
+## 3. Issue the TLS certificate
+
+nginx serves the ACME challenge from `infra/nginx/certbot-webroot`, so the first certificate is
+issued before nginx has a certificate to start with. Use standalone mode once, then webroot for
+renewals:
 
 ```bash
-# Build and push
-gcloud builds submit --tag gcr.io/PROJECT_ID/spotify-clone-api
-gcloud builds submit --tag gcr.io/PROJECT_ID/spotify-clone-web
-
-# Deploy
-gcloud run deploy api --image gcr.io/PROJECT_ID/spotify-clone-api
-gcloud run deploy web --image gcr.io/PROJECT_ID/spotify-clone-web
+sudo apt install -y certbot
+sudo certbot certonly --standalone -d example.com --agree-tos -m you@example.com
 ```
 
-### Azure (Container Instances)
+Certificates land in `/etc/letsencrypt/live/<domain>/`, which the nginx container mounts
+read-only. Renewal runs from certbot's own systemd timer; point it at the webroot so it does not
+need to stop nginx:
 
 ```bash
-# Login
-az login
-
-# Create resource group
-az group create --name spotify-clone --location eastus
-
-# Deploy containers
-az container create \
-  --resource-group spotify-clone \
-  --name api \
-  --image yourregistry.azurecr.io/spotify-clone-api:latest \
-  --dns-name-label spotify-clone-api \
-  --ports 3000
+sudo certbot certonly --webroot -w /path/to/bitrate/infra/nginx/certbot-webroot -d example.com
 ```
 
-## 🎯 Serverless Deployment
-
-### Vercel (Web Player)
+Reload nginx after renewal:
 
 ```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-cd apps/web-player
-vercel --prod
+echo 'docker exec bitrate-nginx-prod nginx -s reload' | \
+  sudo tee /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
+sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
 ```
 
-**vercel.json:**
-
-```json
-{
-  "framework": "nextjs",
-  "buildCommand": "pnpm build",
-  "installCommand": "pnpm install",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://api.yourdomain.com"
-  }
-}
-```
-
-### Netlify (Documentation)
+## 4. First deploy
 
 ```bash
-# Deploy docs
-cd apps/docs
-pnpm build
-
-# Upload to Netlify
-netlify deploy --prod --dir=build
+task prod:build
+task prod:up
 ```
 
-## 🔄 CI/CD Pipeline
-
-### GitHub Actions
-
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy
-
-on:
-  push:
-    branches: [master]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 10.28.1
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Run tests
-        run: pnpm test
-
-      - name: Build
-        run: pnpm build
-
-      - name: Build Docker images
-        run: docker compose -f docker-compose.prod.yaml build
-
-      - name: Push to registry
-        run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker push yourregistry/spotify-clone-api:latest
-          docker push yourregistry/spotify-clone-web:latest
-
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /opt/spotify-clone
-            git pull
-            docker compose -f docker-compose.prod.yaml pull
-            docker compose -f docker-compose.prod.yaml up -d
-```
-
-## 📊 Monitoring
-
-### Health Checks
-
-```yaml
-# docker-compose.prod.yaml
-services:
-  api:
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-```
-
-### Logging
+If the build is killed for memory, build one package at a time:
 
 ```bash
-# View logs
-docker compose logs -f api
-
-# Export to file
-docker compose logs api > api.log
-
-# Use logging driver
-docker-compose.prod.yaml:
-  api:
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+docker compose -f infra/docker-compose.prod.yaml build --parallel=1
 ```
 
-### Prometheus Metrics
-
-```yaml
-# prometheus.yml
-scrape_configs:
-  - job_name: 'api'
-    static_configs:
-      - targets: ['api:3000']
-    metrics_path: '/metrics'
-```
-
-## 🔧 Database Management
-
-### Migrations
+Then apply migrations and seed:
 
 ```bash
-# Run migrations
-docker compose exec api pnpm db:migration:start
-
-# Create backup
-docker compose exec postgres pg_dump -U postgres spotify_clone > backup.sql
-
-# Restore
-docker compose exec -T postgres psql -U postgres spotify_clone < backup.sql
+task db:migrate
+task db:seed
 ```
 
-### Scheduled Backups
+## 5. Verify
 
 ```bash
-# crontab
-0 2 * * * /opt/scripts/backup-db.sh
+task prod:logs                     # all services
+curl -f https://example.com/health # nginx
+curl -f https://example.com/api/health
 ```
 
-**backup-db.sh:**
+If nginx exits immediately, the usual causes are a `DOMAIN` that does not match the issued
+certificate, or a missing certificate at `/etc/letsencrypt/live/<DOMAIN>/`.
+
+## 6. Backups
 
 ```bash
-#!/bin/bash
-DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="/backups"
-
-docker compose exec -T postgres pg_dump -U postgres spotify_clone | \
-  gzip > $BACKUP_DIR/backup_$DATE.sql.gz
-
-# Keep last 7 days
-find $BACKUP_DIR -name "backup_*.sql.gz" -mtime +7 -delete
+task db:backup                     # dump to backups/
+task db:restore FILE=backups/2026-09-02_120000.sql
 ```
 
-## 🔐 Security Checklist
+`db:restore` is destructive and asks for confirmation. Copy dumps off the machine — a snapshot
+of a volume with a running Postgres is not a consistent backup, so volume snapshots are a second
+line of defence, not a substitute.
 
-- [ ] Change all default passwords
-- [ ] Generate strong JWT secrets
-- [ ] Enable SSL/TLS
-- [ ] Configure firewall
-- [ ] Set up rate limiting
-- [ ] Enable CORS properly
-- [ ] Use environment variables
-- [ ] Regular security updates
-- [ ] Set up monitoring
-- [ ] Configure backups
+## 7. Updating
 
-## 📈 Scaling
-
-### Horizontal Scaling
-
-```yaml
-# docker-compose.prod.yaml
-services:
-  api:
-    deploy:
-      replicas: 3
-      update_config:
-        parallelism: 1
-        delay: 10s
-      restart_policy:
-        condition: on-failure
+```bash
+git pull
+task prod:build
+task prod:up
+task db:migrate
 ```
 
-### Load Balancing
+Images are built on the server because `infra/docker-compose.prod.yaml` uses `build:`. Publishing
+images from CI to a registry and switching to `image:` would remove the build from the production
+host entirely; that is not set up yet.
 
-```nginx
-upstream api_backend {
-    least_conn;
-    server api-1:3000;
-    server api-2:3000;
-    server api-3:3000;
-}
+## Monitoring
 
-server {
-    location / {
-        proxy_pass http://api_backend;
-    }
-}
-```
+The API exposes Prometheus metrics at `/metrics` under the names `bitrate_api_http_requests_total`
+and `bitrate_api_http_request_duration_ms_sum`. Set `METRICS_TOKEN` (32 characters or more) to
+require a bearer token; without it the endpoint is unauthenticated.
 
----
+Container logs are capped at 10 MB × 3 files per service in the production compose. Without that
+cap Docker's json-file driver grows until the disk is full.
 
-**Related:**
-- [Docker Setup](/docs/infrastructure/docker)
+## Security checklist
+
+- [ ] Key-only SSH, firewall limited to 22/80/443, `fail2ban` running
+- [ ] `TRUST_PROXY_HOPS=1` — otherwise rate limiting sees only nginx
+- [ ] **Rotate the admin credentials.** `KOTTSTER_SECRET_KEY`, `KOTTSTER_API_TOKEN`,
+      `KOTTSTER_JWT_SECRET_SALT`, and the root admin password were literals in
+      `apps/admin/app/_server/app.ts` in a public repository. They now come from the
+      environment, but the old values are compromised and must be replaced — including the
+      Kottster API token, which is rotated in the Kottster dashboard.
+- [ ] The admin panel reaches Postgres directly, bypassing every guard, validation rule, and
+      queue job in the API. Restrict who can reach `/admin`.
+- [ ] `JWT_SECRET` generated, not invented
+- [ ] Postgres and Redis have no published ports
+- [ ] Backups running and restored at least once as a test
+
+## Related
+
+- [Docker setup](./docker.md) — the compose stacks and local development
+- [Environment variables](../guides/environment.md)
+- [ADR-0024](../architecture/0024-rebrand-to-bitrate.md) — infrastructure identifiers

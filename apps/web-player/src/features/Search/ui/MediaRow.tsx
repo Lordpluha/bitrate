@@ -7,7 +7,7 @@ import {
   CarouselItem,
   CustomNextIcon,
   CustomPrevIcon,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 import { useCallback, useEffect, useState } from 'react'
 import type { MediaCardItem } from '@/features/Search/model/types'
 import { MusicCardLg } from '@/shared/ui'

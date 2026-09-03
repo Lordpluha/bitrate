@@ -7,7 +7,7 @@ import {
 } from '@entities/Player'
 import { useEffect, useRef } from 'react'
 
-const PLAYER_SESSION_STORAGE_KEY = 'spotify:last-player-session'
+const PLAYER_SESSION_STORAGE_KEY = 'bitrate:last-player-session'
 const PLAYER_SESSION_PERSIST_INTERVAL_MS = 5000
 
 type PersistedPlayerSession = Pick<

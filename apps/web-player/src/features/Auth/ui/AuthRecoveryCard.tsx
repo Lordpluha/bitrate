@@ -1,4 +1,4 @@
-import { LogoIcon } from '@spotify/ui-react'
+import { LogoIcon } from '@bitrate/ui-react'
 import type { ReactNode } from 'react'
 
 type AuthRecoveryCardProps = {

@@ -1,7 +1,7 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
-import { cn } from '@spotify/ui-react'
 import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
 import { Player } from '@widgets/Player'
@@ -71,7 +71,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
           aria-valuemax={leftResizeLimits.max}
           aria-valuemin={leftResizeLimits.min}
           aria-valuenow={Math.round(leftResizeLimits.value)}
-          className="relative hidden h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-[var(--color-spotify-green)] xl:block"
+          className="relative hidden h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-primary xl:block"
           tabIndex={0}
           {...leftResizeHandleProps}
         />
@@ -86,7 +86,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
             aria-valuemin={rightResizeLimits.min}
             aria-valuenow={Math.round(rightResizeLimits.value)}
             className={cn(
-              'relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-[var(--color-spotify-green)]',
+              'relative h-full w-full cursor-col-resize border-0 bg-transparent outline-none before:absolute before:left-1/2 before:top-0 before:h-full before:w-px before:-translate-x-1/2 before:bg-transparent before:transition-colors hover:before:bg-white/25 focus-visible:before:bg-white/40 active:before:bg-primary',
               isRightSidebarCollapsed && 'cursor-default hover:bg-transparent',
             )}
             tabIndex={0}

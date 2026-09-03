@@ -1,4 +1,4 @@
-# @spotify/svgr
+# @bitrate/svgr
 
 Converter for SVG files to React/TypeScript components with advanced color handling.
 
@@ -14,11 +14,11 @@ Converter for SVG files to React/TypeScript components with advanced color handl
 ## Installation
 
 ```bash
-npm install @spotify/svgr
+npm install @bitrate/svgr
 # or
-pnpm add @spotify/svgr
+pnpm add @bitrate/svgr
 # or
-yarn add @spotify/svgr
+yarn add @bitrate/svgr
 ```
 
 ## Usage
@@ -29,10 +29,10 @@ yarn add @spotify/svgr
 
 ```bash
 # Build mode (one-time conversion)
-react-svgr build -i @spotify/tokens/icons -o src/icons/svgr
+react-svgr build -i ./assets/icons -o src/icons/svgr
 
 # Dev mode (with file watching)
-react-svgr dev -i @spotify/tokens/icons -o src/icons/svgr
+react-svgr dev -i ./assets/icons -o src/icons/svgr
 ```
 
 #### With custom color variables
@@ -64,8 +64,8 @@ react-svgr dev -i ../tokens/icons -o src/icons/svgr --variables "color1,color2"
 ### As a module
 
 ```javascript
-import { build } from '@spotify/svgr/build';
-import { dev } from '@spotify/svgr/dev';
+import { build } from '@bitrate/svgr/build';
+import { dev } from '@bitrate/svgr/dev';
 
 // Build
 await build(inputDir, outputDir, {

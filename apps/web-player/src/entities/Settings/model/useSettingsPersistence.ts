@@ -8,7 +8,7 @@ import {
 } from '@/entities/Settings/model/settingsStore'
 import { normalizeLocale } from '@/shared/i18n'
 
-const STORAGE_KEY = 'spotify-settings'
+const STORAGE_KEY = 'bitrate-settings'
 
 const readStoredSettings = (): Partial<SettingsSnapshot> => {
   try {

@@ -1,5 +1,5 @@
 ---
-'@spotify/web-player': patch
+'@bitrate/web-player': patch
 ---
 
 Settings no longer stretch the page past the viewport. The avatar picker's

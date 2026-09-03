@@ -1,5 +1,5 @@
+import { RecentsIcon, SearchIcon } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
-import { RecentsIcon, SearchIcon } from '@spotify/ui-react'
 import Link from 'next/link'
 import { useI18n } from '@/shared/i18n'
 

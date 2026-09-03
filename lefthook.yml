@@ -15,7 +15,7 @@ pre-push:
       run: |
         if [ "$WEB_ONLY" = "true" ]; then
           echo "Building web stack (api, web-player, web-artists, ui-react)..."
-          pnpm --filter @spotify/api --filter @spotify/web-player --filter @spotify/web-artists --filter @spotify/ui-react build
+          pnpm --filter @bitrate/api --filter @bitrate/web-player --filter @bitrate/web-artists --filter @bitrate/ui-react build
         else
           echo "Building full monorepo..."
           pnpm build

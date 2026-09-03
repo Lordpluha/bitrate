@@ -1,4 +1,4 @@
-import { Pause, Spinner, Unpause, Volume, VolumeMute } from '@spotify/ui-react'
+import { Pause, Spinner, Unpause, Volume, VolumeMute } from '@bitrate/ui-react'
 import Image from 'next/image'
 import { memo } from 'react'
 import type config from '../config/video-config.json'

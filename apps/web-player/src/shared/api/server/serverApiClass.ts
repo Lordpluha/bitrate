@@ -1,6 +1,6 @@
 import 'server-only'
 
-import type { ApiPaths } from '@spotify/contracts'
+import type { ApiPaths } from '@bitrate/contracts'
 import { cookies } from 'next/headers'
 import createClient from 'openapi-fetch'
 

@@ -92,13 +92,14 @@ playback, equalizer, offline mode, podcasts/audiobooks, recommendations.
 **Technical constraints that bind design work:**
 - Web UI is Next.js App Router with Feature-Sliced Design; imports flow
   `app → views → widgets → features → entities → shared`.
-- All design values come from `packages/tokens/tokens.json` through the
-  `@spotify/ui-react` generator. Hardcoded color, spacing, radius, shadow, breakpoint, and
+- All design values are hand-written Tailwind v4 `@theme` layers in
+  `packages/ui-react/src/styles/` — there is no generator and no `tokens.json`, see
+  ADR-0023. Hardcoded color, spacing, radius, shadow, breakpoint, and
   z-index values are not permitted — a missing role gets a named token, not an arbitrary
   utility.
 - Theme switching swaps token values; components do not fork into separate light/dark trees.
 - Server state lives in TanStack Query; cross-component client state in Zustand. The API
-  contract is generated from Swagger into `@spotify/contracts` — the UI cannot invent
+  contract is generated from Swagger into `@bitrate/contracts` — the UI cannot invent
   endpoints.
 - **No i18n runtime is wired.** `apps/web-artists` ships a `SwitchLanguages` UI shell with
   no `next-intl`/`i18next` dependency behind it. Do not design flows that assume working
@@ -109,14 +110,24 @@ playback, equalizer, offline mode, podcasts/audiobooks, recommendations.
 
 ## Brand Commitments
 
-**The current Spotify-derivative identity is explicitly not binding.** It is scaffolding.
-The v1.0.0-rebranding milestone — new name, logo, icons, color scheme, package namespace,
-domain, OG images — is the intended direction, and design work is free to move away from the
-familiar look rather than preserve it. Do not treat resemblance to the incumbent as a
-requirement, a safety net, or a review criterion.
+**The product is Bitrate — all-in-one for musicians.** [`apps/docs/docs/brand/brand.md`](apps/docs/docs/brand/brand.md) is the source of truth for
+positioning, promise, tone, and the product decision filter; the sibling `design.md` translates
+it into design rules. Read those before making a naming, copy, or visual decision here — this section
+only records what binds the codebase.
 
-The name `spotify-clone` and the `@spotify/*` package namespace are working placeholders
-scheduled for replacement. No product name, voice, logo, or personality has been decided.
+Settled: the name **Bitrate**, the `@bitrate/*` package namespace, and the brand primary
+**Bitrate Purple `#7C3AED`** with three themes (dark, light, dim).
+
+Resemblance to the incumbent is not a requirement, a safety net, or a review criterion. The
+inherited Spotify-derivative surfaces — palette, logo, marketing copy carried over into
+`apps/web-artists` — are being removed, not preserved. Deliberately still open per
+`design.md` §24: the final logo and mark, typography, the spacing scale, illustration and
+photography direction, motion tokens, and the icon family.
+
+The name remains subject to trademark, domain, and legal clearance before irreversible
+investment (`brand.md` §17), so identifiers that would claim a `bitrate.*` domain stay
+owner-namespaced for now.
+
 Author: Vladyslav Tesliuk (github.com/Lordpluha). MIT licensed.
 
 ## Evidence on Hand
@@ -124,10 +135,10 @@ Author: Vladyslav Tesliuk (github.com/Lordpluha). MIT licensed.
 **Real:**
 - Deployed web player — https://spotify-clone-web-olive.vercel.app/
 - Storybook for the shared component library —
-  https://spotify-clone-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
+  https://bitrate-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
 - Chromatic visual-review library — appId `68787858d0b6a0a00b0ca47f`
-- Live API + Swagger contract at `/swagger`; generated types in `@spotify/contracts`
-- Icon set and design tokens in `packages/tokens/` (icons, palette, themes, typography)
+- Live API + Swagger contract at `/swagger`; generated types in `@bitrate/contracts`
+- Icon set and design tokens in `packages/ui-react/` (icons, palette, themes, typography)
 - Seeded development data with genuinely downloaded audio files and cover images
   (`apps/api/src/infra/seeds/`) — usable as realistic content in comps, though the artist
   and user names are Faker-generated, not real people

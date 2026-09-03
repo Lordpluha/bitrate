@@ -48,7 +48,7 @@ export const ArtistPage = ({ artistId }: ArtistPageProps) => {
   if (isError || !artist) return <ArtistPageState variant="error" />
 
   /**
-   * Spotify leads with monthly listeners; the catalogue counts are the
+   * Bitrate leads with monthly listeners; the catalogue counts are the
    * fallback for artists the API has no listener figure for yet.
    */
   const statsLabel = content.isPending

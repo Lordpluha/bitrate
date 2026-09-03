@@ -1,11 +1,11 @@
 'use client'
 
+import { Button, Typography } from '@bitrate/ui-react'
 import { getOAuthUrl } from '@features/Auth/api/oauth'
 import {
   type SocialProvider,
   socialProviders,
 } from '@features/Auth/model/oauthProviders'
-import { Button, Typography } from '@spotify/ui-react'
 
 const SocialIcon = ({ provider }: { provider: SocialProvider }) => {
   const Icon = provider.icon

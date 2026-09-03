@@ -1,6 +1,6 @@
 # Architecture decision records
 
-This directory records stable architectural decisions for the Spotify clone monorepo.
+This directory records stable architectural decisions for the Bitrate monorepo.
 ADRs explain why the repository uses a pattern; `CLAUDE.md` and `.claude/rules/` explain
 how to apply it day to day.
 
@@ -30,6 +30,7 @@ how to apply it day to day.
 | [0021](./0021-default-agent-dispatch.md) | Default to agent dispatch across all commands and ordinary tasks |
 | [0022](./0022-app-scoped-agent-roster.md) | App-scoped developer agents, unattended `/sp-auto` pipeline, retire `sp-ticket` |
 | [0023](./0023-tokens-into-ui-react.md) | Hand-write the design tokens as CSS; retire the token generator |
+| [0024](./0024-rebrand-to-bitrate.md) | Rebrand the project from spotify-clone to Bitrate |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

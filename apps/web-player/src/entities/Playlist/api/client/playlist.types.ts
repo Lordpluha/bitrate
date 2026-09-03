@@ -1,4 +1,4 @@
-import type { ApiSchemas } from '@spotify/contracts'
+import type { ApiSchemas } from '@bitrate/contracts'
 
 export type PlaylistEntity = ApiSchemas['PlaylistEntity']
 export type PlaylistTrack = ApiSchemas['TrackEntity']

@@ -1,7 +1,7 @@
 'use client'
 
+import { Typography } from '@bitrate/ui-react'
 import { useAuth } from '@shared/hooks'
-import { Typography } from '@spotify/ui-react'
 import { useState } from 'react'
 import { useI18n } from '@/shared/i18n'
 import {

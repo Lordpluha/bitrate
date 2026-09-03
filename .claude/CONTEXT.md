@@ -1,4 +1,4 @@
-# Shared vocabulary — spotify-clone agent layer
+# Shared vocabulary — bitrate agent layer
 
 The words below mean one thing each in this repository. They are used in `CLAUDE.md`,
 `.claude/rules/`, `.claude/commands/`, `.claude/agents/`, commit messages, and PR
@@ -67,7 +67,7 @@ changed) `knip`. "Green" means all of them exited zero. *Avoid*: the checks, CI 
 **Changeset** — a file under `.changeset/` declaring a version bump per workspace. Required
 for any user- or consumer-visible change; not for docs/rules/test-only/chore diffs.
 
-**Workspace** — one pnpm package in the monorepo: `@spotify/api`, `@spotify/web-player`, and
+**Workspace** — one pnpm package in the monorepo: `@bitrate/api`, `@bitrate/web-player`, and
 so on. The unit a `--filter` and a changeset bump both address. *Avoid*: project, sub-repo.
 
 **Slice** — one directory under an FSD layer in a Next.js app: `features/Album/`,

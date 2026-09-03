@@ -2,7 +2,7 @@
 sidebar_position: 6
 ---
 
-# @spotify/ncs-parser
+# @bitrate/ncs-parser
 
 Парсер сайта NoCopyrightSounds (NCS) для получения данных о треках, артистах и жанрах.
 
@@ -17,7 +17,7 @@ NCS — каталог музыки без авторских прав. Парс
 ## Использование
 
 ```typescript
-import { NcsParser } from '@spotify/ncs-parser'
+import { NcsParser } from '@bitrate/ncs-parser'
 
 const parser = new NcsParser()
 

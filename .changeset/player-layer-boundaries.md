@@ -1,5 +1,5 @@
 ---
-'@spotify/web-player': patch
+'@bitrate/web-player': patch
 ---
 
 The FSD layer guard now enforces the rule it claimed to. Its restricted-import

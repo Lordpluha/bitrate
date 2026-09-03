@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { ArtistLink } from '@entities/Artist'
 import {
   selectCurrentTrack,
@@ -9,7 +10,6 @@ import {
 import type { TrackEntity } from '@entities/Track/models/schema/Track.entity'
 import { useTrackContextMenuPosition } from '@entities/Track/models/useTrackContextMenuPosition'
 import { DateUtils } from '@shared/utils/DateUtils'
-import { cn } from '@spotify/ui-react'
 import { TrackContextMenu } from './TrackContextMenu'
 import { TrackPlayIndicator } from './TrackPlayIndicator'
 import { TrackPrimaryInfo } from './TrackPrimaryInfo'

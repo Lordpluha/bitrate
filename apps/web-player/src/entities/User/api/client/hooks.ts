@@ -1,5 +1,6 @@
 'use client'
 
+import type { ApiSchemas } from '@bitrate/contracts'
 import {
   clientFetchClient,
   fetchWithAuthRefresh,
@@ -9,7 +10,6 @@ import {
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
 import { getApiUrl } from '@shared/utils/mediaUrl'
-import type { ApiSchemas } from '@spotify/contracts'
 import {
   useQueryClient,
   useMutation as useTanStackMutation,

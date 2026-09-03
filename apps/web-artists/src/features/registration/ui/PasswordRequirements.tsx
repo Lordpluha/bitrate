@@ -1,6 +1,6 @@
 'use client'
 
-import { CircleCheck, CircleIcon, Typography } from '@spotify/ui-react'
+import { CircleCheck, CircleIcon, Typography } from '@bitrate/ui-react'
 import type { PasswordRules } from '../model/useRegistrationForm'
 
 /** Marker size used by both the met and unmet states. */

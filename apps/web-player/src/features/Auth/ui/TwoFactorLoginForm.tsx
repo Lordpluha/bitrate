@@ -1,10 +1,10 @@
 'use client'
 
+import { Button, Input, LogoIcon, Typography, toast } from '@bitrate/ui-react'
 import { clientFetchClient } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ROUTES } from '@shared/routes'
-import { Button, Input, LogoIcon, Typography, toast } from '@spotify/ui-react'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 

@@ -1,9 +1,9 @@
 'use client'
 
+import type { ApiSchemas } from '@bitrate/contracts'
+import { cn } from '@bitrate/ui-react'
 import { usePlayerStore } from '@entities/Player/model/playerStore'
 import { showApiSuccessToast } from '@shared/api/feedback'
-import type { ApiSchemas } from '@spotify/contracts'
-import { cn } from '@spotify/ui-react'
 import { ListPlus } from 'lucide-react'
 
 export type AddToQueueButtonProps = {

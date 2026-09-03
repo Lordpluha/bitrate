@@ -66,7 +66,7 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
 
       - name: Run unit tests
-        run: pnpm --filter @spotify/ui-react run test:unit
+        run: pnpm --filter @bitrate/ui-react run test:unit
 
   integration:
     if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
@@ -82,7 +82,7 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
 
       - name: Run integration tests
-        run: pnpm --filter @spotify/ui-react run test:int
+        run: pnpm --filter @bitrate/ui-react run test:int
 
   snapshot:
     if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
@@ -98,7 +98,7 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
 
       - name: Run snapshot tests
-        run: pnpm --filter @spotify/ui-react run test:snapshot
+        run: pnpm --filter @bitrate/ui-react run test:snapshot
 
   screenshot:
     if: ${{ always() && inputs.run-screenshot && (!inputs.run-biome || needs.biome.result == 'success') }}
@@ -117,4 +117,4 @@ jobs:
         run: pnpm exec playwright install chromium --with-deps
 
       - name: Run screenshot tests
-        run: pnpm --filter @spotify/ui-react run test:screenshot
+        run: pnpm --filter @bitrate/ui-react run test:screenshot

@@ -1,4 +1,4 @@
-import { Button } from '@spotify/ui-react'
+import { Button } from '@bitrate/ui-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import config from '../config/artist-blog.json'
@@ -46,7 +46,7 @@ export const ArtistBlog = () => {
               Ready to claim your artist profile?
             </span>
             <span className="font-normal text-base text-white">
-              Use a Spotify account to get access to Spotify for Artists.
+              Use a Bitrate account to get access to Bitrate for Artists.
             </span>
           </header>
           <div className="flex justify-center lg:justify-end xs:justify-start">

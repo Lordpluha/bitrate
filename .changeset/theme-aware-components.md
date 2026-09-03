@@ -1,7 +1,7 @@
 ---
-'@spotify/ui-react': minor
-'@spotify/web-player': minor
-'@spotify/web-artists': patch
+'@bitrate/ui-react': minor
+'@bitrate/web-player': minor
+'@bitrate/web-artists': patch
 ---
 
 Every component now paints with design tokens instead of Tailwind's built-in colour scales.

@@ -1,11 +1,11 @@
 ---
-'@spotify/web-player': minor
-'@spotify/web-artists': minor
-'@spotify/api': minor
-'@spotify/admin': minor
-'@spotify/desktop': minor
-'@spotify/mobile': minor
-'@spotify/docs': minor
+'@bitrate/web-player': minor
+'@bitrate/web-artists': minor
+'@bitrate/api': minor
+'@bitrate/admin': minor
+'@bitrate/desktop': minor
+'@bitrate/mobile': minor
+'@bitrate/docs': minor
 ---
 
 Every application image moved from the `node:22-alpine` base to `node:24-alpine`, matching

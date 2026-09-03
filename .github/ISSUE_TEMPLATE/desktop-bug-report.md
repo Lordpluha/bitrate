@@ -18,7 +18,7 @@ assignees: []
 - **Build Type**: [Development | Production]
 
 ## 🔍 Steps to Reproduce
-1. Run `pnpm --filter @spotify/desktop run tauri dev`
+1. Run `pnpm --filter @bitrate/desktop run tauri dev`
 2. Navigate to [Menu/Section]
 3. Click [Element]
 4. Observe error

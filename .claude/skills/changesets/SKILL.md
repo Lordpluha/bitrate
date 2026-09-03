@@ -32,8 +32,8 @@ changeset.
 
 ```markdown
 ---
-'@spotify/web-player': minor
-'@spotify/api': patch
+'@bitrate/web-player': minor
+'@bitrate/api': patch
 ---
 
 Added a Range-header audio streaming endpoint and wired the player's seek bar to it, so
@@ -67,17 +67,17 @@ its own bump — not one file per workspace:
 
 ```markdown
 ---
-'@spotify/api': minor
-'@spotify/contracts': patch
-'@spotify/web-player': minor
+'@bitrate/api': minor
+'@bitrate/contracts': patch
+'@bitrate/web-player': minor
 ---
 ```
 
 List every workspace whose *behaviour* changed. A workspace you only reformatted does not
 belong there.
 
-**A changed API contract usually means three entries**: `@spotify/api` (the endpoint),
-`@spotify/contracts` (the regenerated types), and each frontend that consumes it.
+**A changed API contract usually means three entries**: `@bitrate/api` (the endpoint),
+`@bitrate/contracts` (the regenerated types), and each frontend that consumes it.
 
 ## Gotchas
 

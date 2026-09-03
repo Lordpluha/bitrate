@@ -1,7 +1,7 @@
 ---
-'@spotify/web-player': patch
-'@spotify/web-artists': patch
-'@spotify/api': patch
+'@bitrate/web-player': patch
+'@bitrate/web-artists': patch
+'@bitrate/api': patch
 ---
 
 Split the largest source files into focused modules without changing any

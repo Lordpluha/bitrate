@@ -1,7 +1,7 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { useImageColor, useOverlayFocus } from '@shared/hooks'
-import { cn } from '@spotify/ui-react'
 import { ChevronDown, Minimize2 } from 'lucide-react'
 import { NowPlayingDetails } from './NowPlayingDetails'
 import { NowPlayingFooter } from './NowPlayingFooter'

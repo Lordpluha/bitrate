@@ -18,8 +18,8 @@ describe('RedisThrottlerStorage', () => {
     expect(evalCommand).toHaveBeenCalledWith(
       expect.any(String),
       2,
-      'spotify:throttle:{request-key}:default:hits',
-      'spotify:throttle:{request-key}:default:block',
+      'bitrate:throttle:{request-key}:default:hits',
+      'bitrate:throttle:{request-key}:default:block',
       60_000,
       10,
       30_000,

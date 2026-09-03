@@ -1,8 +1,8 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { useAuthContext } from '@shared/hooks'
 import { ROUTES } from '@shared/routes/routes'
-import { cn } from '@spotify/ui-react'
 import Link from 'next/link'
 
 interface AuthButtonsProps {

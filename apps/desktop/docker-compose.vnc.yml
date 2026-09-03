@@ -5,7 +5,7 @@ services:
     build:
       context: ../..
       dockerfile: ./apps/desktop/Dockerfile.vnc
-    container_name: spotify-desktop-vnc
+    container_name: bitrate-desktop-vnc
     restart: unless-stopped
     environment:
       - DISPLAY=:99

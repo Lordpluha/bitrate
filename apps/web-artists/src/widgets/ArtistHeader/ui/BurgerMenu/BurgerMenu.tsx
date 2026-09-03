@@ -1,7 +1,7 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { ArtistLogo } from '@shared/ui'
-import { cn } from '@spotify/ui-react'
 import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SwitchLanguagesButton } from '../../../../shared/ui/SwitchLanguages/SwitchLanguagesButton/SwitchLanguagesButton'

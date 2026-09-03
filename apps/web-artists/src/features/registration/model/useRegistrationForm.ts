@@ -1,8 +1,8 @@
 'use client'
 
+import { toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ROUTES } from '@shared/routes/routes'
-import { toast } from '@spotify/ui-react'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'

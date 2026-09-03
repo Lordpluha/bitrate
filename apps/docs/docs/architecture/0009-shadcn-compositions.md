@@ -11,7 +11,7 @@ exports, icon pipeline, tests, or compatibility requirements unchanged.
 
 ## Decision
 
-- Search existing `@spotify/ui-react` exports first.
+- Search existing `@bitrate/ui-react` exports first.
 - Use the shadcn CLI for discovery, docs, and source previews. MCP stays disabled by
   default and is enabled only locally or by explicit team decision.
 - Prefer composing installed primitives over adding near-duplicates.

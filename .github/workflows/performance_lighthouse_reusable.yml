@@ -15,10 +15,10 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
 
       - name: Build dependencies
-        run: pnpm --filter @spotify/ui-react run build
+        run: pnpm --filter @bitrate/ui-react run build
 
       - name: Build web app
-        run: pnpm --filter @spotify/web-player run build
+        run: pnpm --filter @bitrate/web-player run build
         env:
           API_URL: http://localhost:3001
           NEXT_PUBLIC_API_URL: http://localhost:3001

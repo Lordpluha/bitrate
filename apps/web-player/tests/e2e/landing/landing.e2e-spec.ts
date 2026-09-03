@@ -7,7 +7,7 @@ test.describe('landing page', () => {
     await expect(
       page
         .getByRole('heading', {
-          name: 'Discover a World of Music with Spotify',
+          name: 'Discover a World of Music with Bitrate',
         })
         .first(),
     ).toBeVisible()

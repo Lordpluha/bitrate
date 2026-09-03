@@ -1,16 +1,16 @@
 @import "tailwindcss";
-@import "@spotify/ui-react/themes.css";
+@import "@bitrate/ui-react/themes.css";
 @import "./brand-colors.css";
 
 @source "../";
-@source "../../node_modules/@spotify/ui-react/src";
+@source "../../node_modules/@bitrate/ui-react/src";
 
 /* Touch-device variant — replaces JS useIsTouchDevice */
 @custom-variant touch (@media (hover: none) and (pointer: coarse));
 
 @theme {
   /*
-   * Breakpoints — these SHADOW the set in @spotify/ui-react's layout.css, and three of the
+   * Breakpoints — these SHADOW the set in @bitrate/ui-react's layout.css, and three of the
    * six differ (xs 480 vs 320, sm 650 vs 640, lg 1025 vs 1024). A ui-react component's `sm:`
    * therefore breaks at a different width here than it does in Storybook. Unreconciled.
    */
@@ -120,7 +120,7 @@
     }
   }
 
-  .bg-auth-spotify {
+  .bg-auth-brand {
     background-image: linear-gradient(
       30deg,
       var(--color-auth-gradient-green),

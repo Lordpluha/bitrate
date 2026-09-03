@@ -1,4 +1,4 @@
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { ArrowDownUp, Grid3X3, List, SearchIcon, X } from 'lucide-react'
 import { useState } from 'react'
 import { useI18n } from '@/shared/i18n'

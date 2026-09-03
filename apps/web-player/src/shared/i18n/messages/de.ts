@@ -88,8 +88,8 @@ export const de = {
   'settings.twoFactor.setup': '2FA einrichten',
   'settings.twoFactor.setupDescription':
     'Schütze dein Konto mit einer Authenticator-App.',
-  'settings.video': 'Videos und Canvas',
-  'settings.video.canvas': 'Canvas',
+  'settings.video': 'Videos und Visuals',
+  'settings.video.canvas': 'Endlos-Visuals',
   'settings.video.canvas.description':
     'Kurze Animationen während der Wiedergabe.',
   'settings.video.info': 'Die Aktualisierung kann einen Moment dauern.',

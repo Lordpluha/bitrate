@@ -5,7 +5,7 @@ const { toastError } = vi.hoisted(() => ({
   toastError: vi.fn(),
 }))
 
-vi.mock('@spotify/ui-react', () => ({
+vi.mock('@bitrate/ui-react', () => ({
   toast: {
     error: toastError,
     success: vi.fn(),

@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { Pause, Play, Repeat, Repeat1, Shuffle } from 'lucide-react'
 import { usePlayerNavigationTracks } from '@/widgets/Player/model/usePlayerNavigationTracks'
 import { PlaybackProgress } from '@/widgets/Player/ui/PlaybackProgress'

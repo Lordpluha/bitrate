@@ -1,13 +1,13 @@
 import { readdir, rm, stat } from 'node:fs/promises'
+import { convertAudio, convertAudioToCmaf, convertAudioToHls } from '@bitrate/converter'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { convertAudio, convertAudioToCmaf, convertAudioToHls } from '@spotify/converter'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildJob, cmafResult, jobData } from './__tests__/fixtures/audio-processing.fixtures'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
 
-jest.mock('@spotify/converter', () => ({
+jest.mock('@bitrate/converter', () => ({
   convertAudio: jest.fn().mockResolvedValue(undefined as never),
   convertAudioToHls: jest.fn().mockResolvedValue(undefined as never),
   convertAudioToCmaf: jest.fn(),

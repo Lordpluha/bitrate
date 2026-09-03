@@ -148,7 +148,7 @@ z.preprocess((val) => String(val).trim(), z.string().min(1))
 
 ## Shared form composition
 
-Inspect existing `@spotify/ui-react` form/input exports before building field markup.
+Inspect existing `@bitrate/ui-react` form/input exports before building field markup.
 Use `Form`, `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormDescription`,
 `FormMessage`, `InputGroup`, and specialised controls when they fit.
 

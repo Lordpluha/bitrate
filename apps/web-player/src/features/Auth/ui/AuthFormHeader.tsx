@@ -1,4 +1,4 @@
-import { LogoIcon, Typography } from '@spotify/ui-react'
+import { LogoIcon, Typography } from '@bitrate/ui-react'
 import type { ReactNode } from 'react'
 
 type AuthFormHeaderProps = {

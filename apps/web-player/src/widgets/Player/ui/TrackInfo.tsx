@@ -1,5 +1,5 @@
+import { cn } from '@bitrate/ui-react'
 import { fallbackTrackCover } from '@shared/constants'
-import { cn } from '@spotify/ui-react'
 import { Heart, PictureInPicture2 } from 'lucide-react'
 import Image from 'next/image'
 

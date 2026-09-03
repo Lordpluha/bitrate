@@ -80,7 +80,7 @@ network_info() {
     print_header "Network Information"
     docker network ls
     echo ""
-    net=$(docker network ls --filter name=spotify-network --format '{{.Name}}' | head -1)
+    net=$(docker network ls --filter name=bitrate-network --format '{{.Name}}' | head -1)
     if [ -n "$net" ]; then
         docker network inspect "$net" | grep -E "Name|IPv4Address" | head -20
     else

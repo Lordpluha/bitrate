@@ -73,3 +73,9 @@ packages/performance-test/summary.json
 # tsc --noEmit still writes a build-info file when `incremental` is on, so every
 # `pnpm check-types` regenerates this. Only packages/contracts emits one outside dist/.
 *.tsbuildinfo
+
+# Database dumps from `task db:backup`
+backups/
+
+# ACME challenge webroot for certbot
+infra/nginx/certbot-webroot/

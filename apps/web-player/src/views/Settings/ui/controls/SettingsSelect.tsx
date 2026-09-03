@@ -1,4 +1,4 @@
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import { ChevronDown } from 'lucide-react'
 import { Z_INDEX_CLASS } from '@/shared/constants'
 import { useSettingsSelect } from '@/views/Settings/model/useSettingsSelect'

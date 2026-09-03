@@ -1,6 +1,6 @@
 'use client'
 
-import { cn, Newspaper, YoutubeIcon } from '@spotify/ui-react'
+import { cn, Newspaper, YoutubeIcon } from '@bitrate/ui-react'
 import { ChevronLeft, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'

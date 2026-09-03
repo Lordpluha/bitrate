@@ -1,4 +1,4 @@
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import links from '@widgets/MainHeader/config/nav-links.json'
 import Link from 'next/link'
 

@@ -1,4 +1,4 @@
-import { Spinner } from '@spotify/ui-react'
+import { Spinner } from '@bitrate/ui-react'
 import { PlaylistHeader } from '@views/Playlist/ui/PlaylistHeader'
 
 export default function Loading() {

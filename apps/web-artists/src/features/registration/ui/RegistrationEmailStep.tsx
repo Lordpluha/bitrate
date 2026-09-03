@@ -1,7 +1,7 @@
 'use client'
 
+import { Button, Input, Typography } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes/routes'
-import { Button, Input, Typography } from '@spotify/ui-react'
 import Link from 'next/link'
 import type { UseFormReturn } from 'react-hook-form'
 import type { RegistrationFormData } from '../validation/RegistrationForm.validation'

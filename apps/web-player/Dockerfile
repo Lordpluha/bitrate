@@ -28,7 +28,7 @@ COPY . .
 COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
 EXPOSE 3001
-CMD ["pnpm", "--filter", "@spotify/web-player", "run", "dev"]
+CMD ["pnpm", "--filter", "@bitrate/web-player", "run", "dev"]
 
 # Stage 4: Build
 FROM base AS build
@@ -52,8 +52,8 @@ COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react
 COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 
 # Build приложения
-RUN pnpm --filter @spotify/ui-react run build
-RUN pnpm --filter @spotify/web-player run build
+RUN pnpm --filter @bitrate/ui-react run build
+RUN pnpm --filter @bitrate/web-player run build
 
 # Stage 5: Production Dependencies
 FROM base AS prod-dependencies
@@ -79,12 +79,12 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 --ingroup nodejs spotifyweb
+    adduser --system --uid 1001 --ingroup nodejs bitrateweb
 
 # Set ownership
-RUN chown -R spotifyweb:nodejs /app
+RUN chown -R bitrateweb:nodejs /app
 
-USER spotifyweb
+USER bitrateweb
 
 EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \

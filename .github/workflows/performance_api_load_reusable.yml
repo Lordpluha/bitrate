@@ -18,9 +18,9 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: spotify
-          POSTGRES_PASSWORD: spotify_password
-          POSTGRES_DB: spotify_test
+          POSTGRES_USER: bitrate
+          POSTGRES_PASSWORD: bitrate_password
+          POSTGRES_DB: bitrate_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -52,28 +52,28 @@ jobs:
 
       - name: Create shadow database
         run: |
-          psql -h localhost -U spotify -d spotify_test -c "CREATE DATABASE spotify_test_shadow;" || true
+          psql -h localhost -U bitrate -d bitrate_test -c "CREATE DATABASE bitrate_test_shadow;" || true
         env:
-          PGPASSWORD: spotify_password
+          PGPASSWORD: bitrate_password
 
       - name: Build ncs-parser
-        run: pnpm --filter @spotify/ncs-parser run build
+        run: pnpm --filter @bitrate/ncs-parser run build
 
       - name: Generate Prisma Client
         run: |
           cd apps/api
           pnpm prisma generate
         env:
-          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
+          DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test
+          SHADOW_DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test_shadow
 
       - name: Build API
         run: |
-          pnpm --filter @spotify/api run build
+          pnpm --filter @bitrate/api run build
           ls -la apps/api/dist || echo "dist folder not found"
         env:
-          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
+          DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test
+          SHADOW_DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test_shadow
 
       - name: Setup database
         run: |
@@ -81,8 +81,8 @@ jobs:
           pnpm prisma migrate deploy
           pnpm prisma db seed
         env:
-          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
+          DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test
+          SHADOW_DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test_shadow
 
       - name: Setup k6
         run: |
@@ -98,7 +98,7 @@ jobs:
           set -Eeuo pipefail
 
           api_log="${RUNNER_TEMP}/api-load-test.log"
-          pnpm --filter @spotify/api run start:prod >"${api_log}" 2>&1 &
+          pnpm --filter @bitrate/api run start:prod >"${api_log}" 2>&1 &
           api_pid=$!
 
           cleanup() {
@@ -134,11 +134,11 @@ jobs:
             exit 1
           fi
 
-          pnpm --filter @spotify/performance-test run load:api
+          pnpm --filter @bitrate/performance-test run load:api
         env:
           API_URL: http://localhost:3001
-          DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test
-          SHADOW_DATABASE_URL: postgresql://spotify:spotify_password@localhost:5432/spotify_test_shadow
+          DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test
+          SHADOW_DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test_shadow
           REDIS_HOST: localhost
           REDIS_PORT: 6379
           WEB_HOST: http://localhost:3000

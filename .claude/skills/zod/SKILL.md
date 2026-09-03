@@ -50,7 +50,7 @@ export class CreateTrackDto extends createZodDto(CreateTrackSchema) {}
 ```
 
 `createZodDto` produces a class Nest can use as a `@Body()` type *and* Swagger can read for
-the OpenAPI document. That generated document becomes `@spotify/contracts`, which the
+the OpenAPI document. That generated document becomes `@bitrate/contracts`, which the
 frontends type against — so **a loose API schema is a loose frontend type**. `z.any()` or a
 missing constraint here propagates all the way to the UI.
 
@@ -71,7 +71,7 @@ a `reset()` call is how a form drifts out of sync with its schema.
 
 ## web-player — validating responses
 
-`@spotify/contracts` gives compile-time types from the OpenAPI document; it does not check
+`@bitrate/contracts` gives compile-time types from the OpenAPI document; it does not check
 what the server actually sent at runtime. Where a wrong shape would be dangerous or hard to
 debug, parse the response:
 

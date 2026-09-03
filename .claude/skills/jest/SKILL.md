@@ -153,13 +153,13 @@ describe('Tracks (e2e)', () => {
 
 ```bash
 # Run one unit spec
-pnpm --filter @spotify/api test -- --testPathPattern users-auth.controller.unit-spec
+pnpm --filter @bitrate/api test -- --testPathPattern users-auth.controller.unit-spec
 
 # Run one integration spec
-pnpm --filter @spotify/api test:int -- --testPathPattern tracks.controller.int-spec
+pnpm --filter @bitrate/api test:int -- --testPathPattern tracks.controller.int-spec
 
 # Run with coverage
-pnpm --filter @spotify/api test:cov
+pnpm --filter @bitrate/api test:cov
 ```
 
 ## Module-level mocks

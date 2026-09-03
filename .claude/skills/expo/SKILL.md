@@ -10,7 +10,7 @@ metadata:
 # Expo — apps/mobile
 
 React Native on Expo with `expo-router`, React Navigation tabs, and Reanimated.
-`@spotify/contracts` supplies API types.
+`@bitrate/contracts` supplies API types.
 
 ## Read this first — maturity
 
@@ -36,7 +36,7 @@ This is the section that saves the most time. None of these exist in React Nativ
 | FSD layers (`features/`, `entities/`, `widgets/`) | Not used — `expo-router` owns the structure |
 | `'use client'` | Meaningless — there is no server component model |
 | Tailwind classes, `cn()` | No DOM, no CSS classes |
-| `@spotify/ui-react` | **Will not run** — it is a DOM + Tailwind library |
+| `@bitrate/ui-react` | **Will not run** — it is a DOM + Tailwind library |
 | `ROUTES` from `@/shared/routes` | `expo-router` paths instead |
 | `<div>`, `<span>`, `<button>` | `<View>`, `<Text>`, `<Pressable>` |
 | `localStorage` | `expo-secure-store` / `AsyncStorage` |
@@ -92,10 +92,10 @@ stale value. `react-native-worklets` is installed, so the Babel plugin must stay
 ## Commands
 
 ```bash
-pnpm --filter @spotify/mobile start          # dev server
-pnpm --filter @spotify/mobile ios|android|web
-pnpm --filter @spotify/mobile lint           # eslint-config-expo, NOT Biome
-pnpm --filter @spotify/mobile exec tsc --noEmit
+pnpm --filter @bitrate/mobile start          # dev server
+pnpm --filter @bitrate/mobile ios|android|web
+pnpm --filter @bitrate/mobile lint           # eslint-config-expo, NOT Biome
+pnpm --filter @bitrate/mobile exec tsc --noEmit
 ```
 
 This app has **no `check-types` script** — run `tsc --noEmit` explicitly and say so in your

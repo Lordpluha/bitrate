@@ -6,7 +6,7 @@ test('landing page default state', async ({ page }) => {
     page
       .getByRole('heading', {
         level: 1,
-        name: 'Discover a World of Music with Spotify',
+        name: 'Discover a World of Music with Bitrate',
       })
       .first(),
   ).toBeVisible()

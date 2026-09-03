@@ -1,6 +1,6 @@
-# @spotify/ui-react
+# @bitrate/ui-react
 
-UI kit for [Spotify Clone](https://github.com/Lordpluha/spotify-clone), built on **React 19**, **Next.js 15**, **TailwindCSS**, and **shadcn/ui**.
+UI kit for [Bitrate](https://github.com/Lordpluha/bitrate), built on **React 19**, **Next.js 15**, **TailwindCSS**, and **shadcn/ui**.
 Contains reusable components, styles, and a Tailwind preset for consistent styling across frontend applications.
 
 ---
@@ -8,13 +8,13 @@ Contains reusable components, styles, and a Tailwind preset for consistent styli
 ## 🚀 Installation
 
 ```bash
-pnpm add @spotify/ui-react
+pnpm add @bitrate/ui-react
 ```
 
 or
 
 ```bash
-npm install @spotify/ui-react
+npm install @bitrate/ui-react
 ```
 
 ---
@@ -26,7 +26,7 @@ npm install @spotify/ui-react
 In `app/layout.tsx` or `pages/_app.tsx`:
 
 ```tsx
-import '@spotify/ui-react/globals.css'
+import '@bitrate/ui-react/globals.css'
 ```
 
 ### 2. Use components
@@ -34,7 +34,7 @@ import '@spotify/ui-react/globals.css'
 ```tsx
 'use client'
 
-import { Typography, PasswordInput } from '@spotify/ui-react'
+import { Typography, PasswordInput } from '@bitrate/ui-react'
 
 export default function Example() {
   return (
@@ -56,21 +56,21 @@ All styles and settings are defined in `globals.css`, which must be imported in 
 
 ```ts
 // In your main CSS file (e.g., app/global.css)
-import '@spotify/ui-react/globals.css';
+import '@bitrate/ui-react/globals.css';
 ```
 
 Or import directly in the layout/main component:
 
 ```tsx
-import '@spotify/ui-react/globals.css';
+import '@bitrate/ui-react/globals.css';
 ```
 
 ---
 
 ## 📦 Exports
 
-- `@spotify/ui-react` — main React components and hooks.
-- `@spotify/ui-react/globals.css` — global Tailwind CSS v4 styles with @theme configuration.
+- `@bitrate/ui-react` — main React components and hooks.
+- `@bitrate/ui-react/globals.css` — global Tailwind CSS v4 styles with @theme configuration.
 
 ---
 
@@ -78,10 +78,10 @@ import '@spotify/ui-react/globals.css';
 
 | Component            | Import                                        | Usage example |
 |----------------------|-----------------------------------------------|---------------|
-| `Typography`         | `import { Typography } from '@spotify/ui-react'`   | `<Typography as='h1' size='heading1'>Hello</Typography>` |
-| `PasswordInput`      | `import { PasswordInput } from '@spotify/ui-react'`| `<PasswordInput placeholder="Password" />` |
-| `Form`               | `import { Form } from '@spotify/ui-react'`         | `<Form {...methods}>...</Form>` |
-| `Carousel`           | `import { Carousel } from '@spotify/ui-react'`     | `<Carousel>...</Carousel>` |
+| `Typography`         | `import { Typography } from '@bitrate/ui-react'`   | `<Typography as='h1' size='heading1'>Hello</Typography>` |
+| `PasswordInput`      | `import { PasswordInput } from '@bitrate/ui-react'`| `<PasswordInput placeholder="Password" />` |
+| `Form`               | `import { Form } from '@bitrate/ui-react'`         | `<Form {...methods}>...</Form>` |
+| `Carousel`           | `import { Carousel } from '@bitrate/ui-react'`     | `<Carousel>...</Carousel>` |
 
 ---
 
@@ -90,13 +90,13 @@ import '@spotify/ui-react/globals.css';
 Local build:
 
 ```bash
-pnpm -F @spotify/ui-react build
+pnpm -F @bitrate/ui-react build
 ```
 
 Clean:
 
 ```bash
-pnpm -F @spotify/ui-react clean
+pnpm -F @bitrate/ui-react clean
 ```
 
 ---
@@ -112,4 +112,4 @@ pnpm -F @spotify/ui-react clean
 
 > If you want to use predefined stories from @shadcn/ui - https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry preview (https://registry.lloydrichards.dev/storybook/?path=/docs/design-typography--docs&globals=backgrounds.grid:!true)
 
-💚 Made for [spotify-clone](https://github.com/Lordpluha/spotify-clone)
+💚 Made for [bitrate](https://github.com/Lordpluha/bitrate)

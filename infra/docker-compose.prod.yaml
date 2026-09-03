@@ -1,9 +1,18 @@
 # Docker Compose configuration for production environment with PostgreSQL, Redis, and all application services.
 
+# Docker's default json-file driver keeps every log line forever. On a single-server
+# deployment that fills the disk and takes the whole stack down with it.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   postgres:
+    logging: *default-logging
     image: postgres:16-alpine
-    container_name: spotify-postgres-prod
+    container_name: bitrate-postgres-prod
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -18,11 +27,12 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - spotify-network
+      - bitrate-network
 
   redis:
+    logging: *default-logging
     image: redis:7-alpine
-    container_name: spotify-redis-prod
+    container_name: bitrate-redis-prod
     restart: always
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
@@ -33,16 +43,17 @@ services:
       timeout: 3s
       retries: 3
     networks:
-      - spotify-network
+      - bitrate-network
 
   api:
+    logging: *default-logging
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
       target: production
       args:
         - NODE_ENV=production
-    container_name: spotify-api-prod
+    container_name: bitrate-api-prod
     restart: always
     environment:
       NODE_ENV: production
@@ -63,7 +74,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - spotify-network
+      - bitrate-network
     deploy:
       resources:
         limits:
@@ -72,6 +83,7 @@ services:
           memory: 256M
 
   web-player:
+    logging: *default-logging
     build:
       context: ..
       dockerfile: ./apps/web-player/Dockerfile
@@ -80,7 +92,7 @@ services:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
         - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
         - API_URL=${API_URL:-http://api:3000}
-    container_name: spotify-web-player-prod
+    container_name: bitrate-web-player-prod
     restart: always
     environment:
       NODE_ENV: production
@@ -90,7 +102,7 @@ services:
     depends_on:
       - api
     networks:
-      - spotify-network
+      - bitrate-network
     deploy:
       resources:
         limits:
@@ -99,13 +111,14 @@ services:
           memory: 256M
 
   web-artists:
+    logging: *default-logging
     build:
       context: ..
       dockerfile: ./apps/web-artists/Dockerfile
       target: production
       args:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-    container_name: spotify-web-artists-prod
+    container_name: bitrate-web-artists-prod
     restart: always
     environment:
       NODE_ENV: production
@@ -113,7 +126,7 @@ services:
     depends_on:
       - api
     networks:
-      - spotify-network
+      - bitrate-network
     deploy:
       resources:
         limits:
@@ -122,20 +135,26 @@ services:
           memory: 256M
 
   admin:
+    logging: *default-logging
     build:
       context: ..
       dockerfile: ./apps/admin/Dockerfile
       target: production
-    container_name: spotify-admin-prod
+    container_name: bitrate-admin-prod
     restart: always
     environment:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL}
+      KOTTSTER_SECRET_KEY: ${KOTTSTER_SECRET_KEY:?required}
+      KOTTSTER_API_TOKEN: ${KOTTSTER_API_TOKEN:?required}
+      KOTTSTER_JWT_SECRET_SALT: ${KOTTSTER_JWT_SECRET_SALT:?required}
+      ADMIN_ROOT_USERNAME: ${ADMIN_ROOT_USERNAME:?required}
+      ADMIN_ROOT_PASSWORD: ${ADMIN_ROOT_PASSWORD:?required}
     depends_on:
       postgres:
         condition: service_healthy
     networks:
-      - spotify-network
+      - bitrate-network
     deploy:
       resources:
         limits:
@@ -144,16 +163,25 @@ services:
           memory: 256M
 
   nginx:
+    logging: *default-logging
     image: nginx:alpine
-    container_name: spotify-nginx-prod
+    container_name: bitrate-nginx-prod
     restart: always
+    environment:
+      # Substituted into templates/prod.conf.template. Must match the certificate issued
+      # under /etc/letsencrypt/live/<DOMAIN>/ or nginx will not start.
+      DOMAIN: ${DOMAIN:?DOMAIN is required for the production nginx template}
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
+      # Templates, not conf.d: the image's entrypoint renders ${DOMAIN} into conf.d at start,
+      # so conf.d must stay writable and must not also carry the preprod HTTP-only server.
+      - ./nginx/templates:/etc/nginx/templates:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./nginx/certbot-webroot:/var/www/certbot
       - ./nginx/logs:/var/log/nginx
     depends_on:
       - api
@@ -161,7 +189,7 @@ services:
       - web-artists
       - admin
     networks:
-      - spotify-network
+      - bitrate-network
 
 volumes:
   postgres_data:
@@ -170,5 +198,5 @@ volumes:
     driver: local
 
 networks:
-  spotify-network:
+  bitrate-network:
     driver: bridge

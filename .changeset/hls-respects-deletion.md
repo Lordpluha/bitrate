@@ -1,5 +1,5 @@
 ---
-'@spotify/api': patch
+'@bitrate/api': patch
 ---
 
 Deleting a track now actually stops it streaming. Both HLS entry points — the

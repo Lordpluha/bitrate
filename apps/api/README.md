@@ -2,7 +2,7 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-<h1 align="center">@spotify/api</h1>
+<h1 align="center">@bitrate/api</h1>
 
 ## Description
 
@@ -88,7 +88,7 @@ transport such as MailHog, configured through `SMTP_HOST`, `SMTP_PORT`, `SMTP_US
 
 `task dev:up` starts MailHog automatically; delivered messages are visible at
 `http://localhost:8025`. For a natively running API, `task infra:up` exposes SMTP on port `1025`;
-set `SMTP_HOST=localhost`, `SMTP_PORT=1025`, and `EMAIL_FROM=no-reply@spotify.local`.
+set `SMTP_HOST=localhost`, `SMTP_PORT=1025`, and `EMAIL_FROM=no-reply@bitrate.local`.
 
 For isolated local development only, set `DEV_MAIL_LOG_TOKENS=true`. When SMTP is unavailable,
 the API then prints the complete verification/reset URL; open that URL in the matching user or
@@ -97,4 +97,4 @@ validation rejects it when `NODE_ENV=production`. CI/E2E must use an SMTP transp
 depend on token logging.
 
 ## License
-Nest is [MIT licensed](https://github.com/Lordpluha/spotify-clone/LICENSE).
+Nest is [MIT licensed](https://github.com/Lordpluha/bitrate/LICENSE).

@@ -55,9 +55,9 @@ not always the same, and Knex uses the column name.
 Follow Kottster's own conventions and the CLI's generated shape rather than hand-rolling:
 
 ```bash
-pnpm --filter @spotify/admin dev                    # dev server
-pnpm --filter @spotify/admin dev:add-data-source    # supported way to add a data source
-pnpm --filter @spotify/admin dev:upgrade-kottster
+pnpm --filter @bitrate/admin dev                    # dev server
+pnpm --filter @bitrate/admin dev:add-data-source    # supported way to add a data source
+pnpm --filter @bitrate/admin dev:upgrade-kottster
 ```
 
 Read the existing pages and the `app/_server/` wiring before adding one. Kottster owns its

@@ -13,8 +13,8 @@ Storybook 10 with `@storybook/react-vite`, plus `@storybook/addon-a11y` and
 `@storybook/addon-docs`. It belongs to `packages/ui-react` only — the apps do not run it.
 
 ```bash
-pnpm --filter @spotify/ui-react storybook        # dev
-pnpm --filter @spotify/ui-react build-storybook  # static build
+pnpm --filter @bitrate/ui-react storybook        # dev
+pnpm --filter @bitrate/ui-react build-storybook  # static build
 ```
 
 ## Where stories live
@@ -116,7 +116,7 @@ human-review surface. Keep both.
 ## Gotchas
 
 - **Stories need the token CSS.** A component rendering unstyled in Storybook but fine in the
-  app usually means `.storybook/preview` is not importing `@spotify/ui-react/styles/*.css`.
+  app usually means `.storybook/preview` is not importing `@bitrate/ui-react/styles/*.css`.
 - **Both themes.** A story only ever viewed in one theme hides half the contrast problems —
   use the theme toggle before calling a component done.
 - **No app imports.** `packages/ui-react` must not import from `apps/*`; a story that needs

@@ -1,5 +1,5 @@
 ---
-'@spotify/api': patch
+'@bitrate/api': patch
 ---
 
 Track durations stopped being invented. The seeder generated a random 180-300

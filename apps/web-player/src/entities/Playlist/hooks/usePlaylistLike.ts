@@ -35,7 +35,7 @@ export const usePlaylistLike = ({
   const likePlaylist = useLikePlaylist()
   const unlikePlaylist = useUnlikePlaylist()
   const userStorageScope = user?.id ?? 'anonymous'
-  const likedPlaylistStorageKey = `spotify:web-player:liked-playlist:${userStorageScope}:${playlist.id}`
+  const likedPlaylistStorageKey = `bitrate:web-player:liked-playlist:${userStorageScope}:${playlist.id}`
   const savedPlaylistsStorageKey = getSavedPlaylistsStorageKey(userStorageScope)
   const isPending = likePlaylist.isPending || unlikePlaylist.isPending
 

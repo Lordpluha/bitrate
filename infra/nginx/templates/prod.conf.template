@@ -1,0 +1,46 @@
+# Production entrypoint. Rendered by the nginx image's entrypoint, which substitutes ${DOMAIN}
+# from the container environment into /etc/nginx/conf.d/ before nginx starts.
+#
+# Certificates come from certbot on the host, mounted read-only at /etc/letsencrypt.
+# See apps/docs/docs/infrastructure/deployment.md for how to issue them the first time.
+
+include /etc/nginx/snippets/upstreams.conf;
+
+# HTTP: serves the ACME challenge, sends everything else to HTTPS.
+server {
+    listen 80;
+    server_name ${DOMAIN};
+
+    # Must stay reachable over plain HTTP — certbot renews through it.
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name ${DOMAIN};
+
+    ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    # Two years, and only here: sending HSTS over plain HTTP is meaningless, and a wrong
+    # max-age is not something a browser lets you take back.
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
+
+    include /etc/nginx/snippets/app-routes.conf;
+}

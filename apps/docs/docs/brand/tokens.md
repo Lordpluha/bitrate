@@ -20,9 +20,18 @@ packages/ui-react/src/styles/
     components/<name>.css    one file per component, or per component family
 ```
 
-Each semantic role lives in exactly one part-file, and that file carries **both** the
-default dark declarations (`@theme`) and the `:root.light` overrides — so a role's whole
-dark+light story is readable in one place.
+There are three themes. **Dark** is the default and lives in `@theme`; **light** overrides it
+under `:root.light`; **dim** is a low-light variant under `:root.dim`. The active one is a class
+on `<html>`, driven by `apps/web-player/src/shared/constants/themes.ts`.
+
+Each semantic role lives in exactly one part-file, and that file carries **both** the default
+dark declarations and its `:root.light` overrides — so a role's whole dark+light story is
+readable in one place.
+
+**Dim is deliberately partial.** It lives only in `themes/base.css` and overrides just the
+surface, text, border, and action roles the brand board specifies. Every other role —
+component-scoped roles included — inherits its dark value on purpose, so a component supports
+dim without a third block. Do not "complete" dim by copying the dark block into every part-file.
 
 | Part-file | Owns |
 |---|---|
@@ -34,10 +43,15 @@ A component-scoped role aliases the semantic role it is built on
 (`--color-button-primary: var(--color-primary)`) rather than repeating a literal, so
 retuning the semantic role carries through to every component built on it.
 
+The brand primary is **Bitrate Purple `#7c3aed`** — `--color-purple-500` in `palette.css`,
+aliased by `--color-primary`. Its foreground is white, not black: black on that purple fails
+WCAG AA.
+
 Nothing is generated, so nothing is regenerated: edit the file, save, done. Three invariants
 have no tool enforcing them — a role must be declared in exactly one part-file, must appear
 in **both** the `@theme` and `:root.light` blocks, and a new part-file must be added to the
-`themes.css` barrel or it is dead.
+`themes.css` barrel or it is dead. `pnpm check:tokens` catches a fourth: a stock Tailwind colour
+scale looks like a token but no theme can reach it.
 
 ## Consumption contract
 
@@ -45,9 +59,8 @@ in **both** the `@theme` and `:root.light` blocks, and a new part-file must be a
 - Do not add hardcoded colour, spacing, radius, shadow, breakpoint, or z-index values when
   an existing token expresses the role.
 - If a role is missing, add a named token rather than an arbitrary utility.
-- Theme changes swap token values; component JSX does not fork into separate light/dark
-  trees.
-- Consumers import package CSS through supported `@spotify/ui-react` exports.
+- Theme changes swap token values; component JSX never forks per theme.
+- Consumers import package CSS through supported `@bitrate/ui-react` exports.
 
 ## Taxonomy
 

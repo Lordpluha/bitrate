@@ -64,7 +64,7 @@ small without creating an excessive number of requests.
 The player stores the current position in `sessionStorage` under:
 
 ```text
-spotify-player-position:<trackId>
+bitrate-player-position:<trackId>
 ```
 
 The position is updated during playback and explicit seek. If the HLS transport must be recreated, playback resumes from the saved position after metadata is loaded. A WebSocket disconnect does not stop audio because media is transported over independent HTTP requests.

@@ -1,6 +1,6 @@
 'use client'
 
-import type { ApiSchemas } from '@spotify/contracts'
+import type { ApiSchemas } from '@bitrate/contracts'
 import { useMutation } from '@/shared/api/client'
 
 export type CreateReportPayload = ApiSchemas['CreateReportDto']

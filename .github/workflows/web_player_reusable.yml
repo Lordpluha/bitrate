@@ -70,19 +70,19 @@ jobs:
 
       - name: Build ui-react
         if: ${{ inputs.run-tests }}
-        run: pnpm --filter @spotify/ui-react run build
+        run: pnpm --filter @bitrate/ui-react run build
 
       - name: Generate Next.js route types
         if: ${{ inputs.run-tests }}
-        run: pnpm --filter @spotify/web-player exec next typegen
+        run: pnpm --filter @bitrate/web-player exec next typegen
 
       - name: Run web-player typecheck
         if: ${{ inputs.run-tests }}
-        run: pnpm --filter @spotify/web-player check-types
+        run: pnpm --filter @bitrate/web-player check-types
 
       - name: Run web-player unit and integration tests
         if: ${{ inputs.run-tests }}
-        run: pnpm --filter @spotify/web-player test
+        run: pnpm --filter @bitrate/web-player test
 
       - name: Install Playwright Chromium
         if: ${{ inputs.run-e2e || inputs.run-screenshot }}
@@ -90,11 +90,11 @@ jobs:
 
       - name: Run web-player E2E tests
         if: ${{ inputs.run-e2e }}
-        run: pnpm --filter @spotify/web-player test:e2e
+        run: pnpm --filter @bitrate/web-player test:e2e
 
       - name: Run web-player screenshot tests
         if: ${{ inputs.run-screenshot }}
-        run: pnpm --filter @spotify/web-player test:screenshot
+        run: pnpm --filter @bitrate/web-player test:screenshot
 
       - name: Upload screenshot test failure artifacts
         if: ${{ inputs.run-screenshot && failure() }}

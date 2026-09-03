@@ -33,11 +33,11 @@ export const useFloatingPlayerWindow = (trackTitle?: string) => {
           height: 140,
           width: 380,
         })
-      : window.open('', 'spotify-floating-player', 'popup,width=380,height=140')
+      : window.open('', 'bitrate-floating-player', 'popup,width=380,height=140')
 
     if (!nextWindow) return
 
-    nextWindow.document.title = `${trackTitle} - Spotify`
+    nextWindow.document.title = `${trackTitle} - Bitrate`
     nextWindow.addEventListener('pagehide', () => setTargetWindow(null), {
       once: true,
     })

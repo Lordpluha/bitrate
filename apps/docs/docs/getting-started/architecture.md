@@ -4,12 +4,12 @@ sidebar_position: 2
 
 # System Architecture
 
-Understanding the architecture of Spotify Clone — a modern Turborepo monorepo.
+Understanding the architecture of Bitrate — a modern Turborepo monorepo.
 
 ## 🏗️ Repository Structure
 
 ```
-spotify-clone/
+bitrate/
 ├── apps/              # Applications
 │   ├── api/          # Backend API (NestJS)
 │   ├── web-player/   # Web app (Next.js App Router, Feature-Sliced Design)
@@ -19,7 +19,7 @@ spotify-clone/
 │   ├── admin/        # Admin panel (Kottster)
 │   └── docs/         # Documentation (Docusaurus 3)
 │
-├── packages/         # Shared packages (@spotify/ namespace)
+├── packages/         # Shared packages (@bitrate/ namespace)
 │   ├── ui-react/         # React 19 component library (Tailwind v4, shadcn/ui, Storybook)
 │   │                     #   also owns the design tokens: hand-written @theme layers
 │   ├── contracts/        # OpenAPI TypeScript types (auto-generated from Swagger)
@@ -58,7 +58,7 @@ All applications and packages live in a single repository, managed by **pnpm wor
 
 TypeScript is used throughout the entire stack:
 
-- **@spotify/contracts** — Shared types between frontend and backend (generated from Swagger)
+- **@bitrate/contracts** — Shared types between frontend and backend (generated from Swagger)
 - **Prisma** — Type-safe database access
 - **Zod** — Runtime validation and env schema (`apps/api/env.schema.ts`)
 
@@ -153,11 +153,11 @@ graph TD
 
 | Package | Depends On | Used By |
 |---------|-----------|---------|
-| `@spotify/ui-react` | — | web-player, mobile, desktop, admin |
-| `@spotify/contracts` | — | api, web-player, mobile, desktop |
-| `@spotify/converter` | — | api |
-| `@spotify/vite-svgr` | `@spotify/svgr` | ui-react (build-time SVG generation) |
-| `@spotify/svgr` | — | vite-svgr |
+| `@bitrate/ui-react` | — | web-player, mobile, desktop, admin |
+| `@bitrate/contracts` | — | api, web-player, mobile, desktop |
+| `@bitrate/converter` | — | api |
+| `@bitrate/vite-svgr` | `@bitrate/svgr` | ui-react (build-time SVG generation) |
+| `@bitrate/svgr` | — | vite-svgr |
 
 ## 🎨 Design Token Pipeline
 

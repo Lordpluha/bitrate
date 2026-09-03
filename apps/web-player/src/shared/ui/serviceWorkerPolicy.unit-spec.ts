@@ -44,7 +44,7 @@ describe('service worker cache policy', () => {
       delete: deleteCache,
       keys: vi
         .fn()
-        .mockResolvedValue(['spotify-web-player-v1', 'third-party-cache']),
+        .mockResolvedValue(['bitrate-web-player-v1', 'third-party-cache']),
     })
     let activation: Promise<unknown> | undefined
 
@@ -55,7 +55,33 @@ describe('service worker cache policy', () => {
     })
     await activation
 
-    expect(deleteCache).toHaveBeenCalledWith('spotify-web-player-v1')
+    expect(deleteCache).toHaveBeenCalledWith('bitrate-web-player-v1')
+    expect(deleteCache).not.toHaveBeenCalledWith('third-party-cache')
+  })
+
+  it('evicts caches left behind by the pre-rebrand prefix', async () => {
+    const deleteCache = vi.fn().mockResolvedValue(true)
+    const listeners = loadWorker({
+      delete: deleteCache,
+      keys: vi
+        .fn()
+        .mockResolvedValue([
+          'spotify-web-player-precache-v2',
+          'spotify-web-player-static-v2',
+          'third-party-cache',
+        ]),
+    })
+    let activation: Promise<unknown> | undefined
+
+    listeners.get('activate')?.({
+      waitUntil: (work) => {
+        activation = work
+      },
+    })
+    await activation
+
+    expect(deleteCache).toHaveBeenCalledWith('spotify-web-player-precache-v2')
+    expect(deleteCache).toHaveBeenCalledWith('spotify-web-player-static-v2')
     expect(deleteCache).not.toHaveBeenCalledWith('third-party-cache')
   })
 

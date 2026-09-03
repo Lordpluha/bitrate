@@ -1,7 +1,7 @@
 'use client'
 
+import { cn } from '@bitrate/ui-react'
 import { getArtistBackgroundUrl } from '@shared/utils/mediaUrl'
-import { cn } from '@spotify/ui-react'
 import Image from 'next/image'
 import { useState } from 'react'
 

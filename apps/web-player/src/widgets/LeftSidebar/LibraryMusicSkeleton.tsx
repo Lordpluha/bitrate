@@ -1,4 +1,4 @@
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
 import type { ReactNode } from 'react'
 
 const loadingItemKeys = Array.from(

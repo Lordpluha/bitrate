@@ -42,7 +42,7 @@ apps/admin/
 
 New data-management pages are added via `pnpm dev:add-data-source`, not by hand-authoring
 FSD slices. Data access goes through Knex (`knex`, `pg`) directly against the shared
-Postgres database — not through `@spotify/contracts`/the NestJS API.
+Postgres database — not through `@bitrate/contracts`/the NestJS API.
 
 ## 🎨 Tech Stack
 
@@ -54,8 +54,8 @@ Postgres database — not through `@spotify/contracts`/the NestJS API.
 ## 🚀 Build & Deploy
 
 ```bash
-pnpm --filter @spotify/admin build
-pnpm --filter @spotify/admin start
+pnpm --filter @bitrate/admin build
+pnpm --filter @bitrate/admin start
 ```
 
 ---

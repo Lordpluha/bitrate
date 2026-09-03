@@ -1,4 +1,4 @@
-import { Spinner } from '@spotify/ui-react'
+import { Spinner } from '@bitrate/ui-react'
 
 export default function Loading() {
   return (

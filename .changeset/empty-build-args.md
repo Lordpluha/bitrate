@@ -1,5 +1,5 @@
 ---
-'@spotify/web-player': patch
+'@bitrate/web-player': patch
 ---
 
 An unsupplied Docker build argument no longer produces a confusing "Invalid URL"

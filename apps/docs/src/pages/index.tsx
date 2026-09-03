@@ -46,7 +46,7 @@ export default function Home(): ReactNode {
   return (
     <Layout
       title={`Documentation`}
-      description="Complete documentation for Spotify Clone - open source music streaming platform built with modern web technologies"
+      description="Complete documentation for Bitrate - open source music streaming platform built with modern web technologies"
     >
       <HomepageHeader />
       <main>

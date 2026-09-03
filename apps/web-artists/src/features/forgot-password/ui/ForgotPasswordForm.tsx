@@ -1,8 +1,8 @@
 'use client'
 
+import { Button, Input, Typography, toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { apiBaseUrl } from '@shared/api'
-import { Button, Input, Typography, toast } from '@spotify/ui-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 

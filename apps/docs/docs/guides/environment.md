@@ -40,7 +40,7 @@ sidebar_position: 4
 
 | Переменная | Обязательна | Описание |
 |---|---|---|
-| `DATABASE_URL` | **да** | PostgreSQL connection string. Пример: `postgresql://user:pass@localhost:5432/spotify` |
+| `DATABASE_URL` | **да** | PostgreSQL connection string. Пример: `postgresql://user:pass@localhost:5432/bitrate` |
 
 ## Redis
 
@@ -81,7 +81,7 @@ JWT_ACCESS_EXPIRES_IN=5m
 JWT_REFRESH_EXPIRES_IN=30d
 
 # Database
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/spotify
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/bitrate
 
 # Redis
 REDIS_HOST=localhost

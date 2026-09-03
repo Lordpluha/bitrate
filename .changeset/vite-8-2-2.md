@@ -1,7 +1,7 @@
 ---
-'@spotify/ui-react': patch
-'@spotify/web-player': patch
-'@spotify/desktop': patch
+'@bitrate/ui-react': patch
+'@bitrate/web-player': patch
+'@bitrate/desktop': patch
 ---
 
 Bumped Vite from 8.0.16 to 8.2.2 in the three workspaces on that major. `apps/admin` stays

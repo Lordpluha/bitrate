@@ -1,6 +1,6 @@
 'use client'
 
-import { Carousel, CarouselContent, CarouselItem } from '@spotify/ui-react'
+import { Carousel, CarouselContent, CarouselItem } from '@bitrate/ui-react'
 import Autoplay from 'embla-carousel-autoplay'
 import Image from 'next/image'
 import { useRef } from 'react'

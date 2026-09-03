@@ -1,6 +1,10 @@
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { resolvePath } from './resolve-path.mjs'
+
+/** This repo's root, derived from this file so the tests survive a rename or a clone elsewhere. */
+const workspaceRoot = path.resolve(fileURLToPath(new URL('.', import.meta.url)), '../../../..')
 
 describe('resolvePath', () => {
   describe('absolute paths', () => {
@@ -43,20 +47,19 @@ describe('resolvePath', () => {
 
     it('throws when the package is not found in the workspace', async () => {
       // The workspace root exists (this repo) but the package does not
-      const base = '/home/lordpluha/develop/PetProjects/spotify-clone'
-      await expect(resolvePath('@nonexistent/totally-fake-pkg/icons', base)).rejects.toThrow()
+      await expect(
+        resolvePath('@nonexistent/totally-fake-pkg/icons', workspaceRoot),
+      ).rejects.toThrow()
     })
 
     it('resolves a real workspace package without a sub-path', async () => {
-      const base = '/home/lordpluha/develop/PetProjects/spotify-clone'
-      const result = await resolvePath('@spotify/svgr', base)
+      const result = await resolvePath('@bitrate/svgr', workspaceRoot)
       expect(path.isAbsolute(result)).toBe(true)
       expect(result).toContain('svgr')
     })
 
     it('resolves a real workspace package with a sub-path', async () => {
-      const base = '/home/lordpluha/develop/PetProjects/spotify-clone'
-      const result = await resolvePath('@spotify/svgr/src', base)
+      const result = await resolvePath('@bitrate/svgr/src', workspaceRoot)
       expect(result.endsWith('/src')).toBe(true)
     })
   })

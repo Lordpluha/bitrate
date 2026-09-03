@@ -140,8 +140,8 @@ dispatching. Judge honestly: if it needs a rule sweep, it needs the specialist.
 reports said:
 
 ```bash
-pnpm --filter @spotify/<workspace> lint
-pnpm --filter @spotify/<workspace> check-types
+pnpm --filter @bitrate/<workspace> lint
+pnpm --filter @bitrate/<workspace> check-types
 pnpm knip        # when files, exports, or dependencies changed
 ```
 

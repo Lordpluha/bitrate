@@ -1,4 +1,4 @@
-import { ArrowrightIcon, cn } from '@spotify/ui-react'
+import { ArrowrightIcon, cn } from '@bitrate/ui-react'
 import Link from 'next/link'
 import links from '../../config/nav-links.json'
 

@@ -1,5 +1,5 @@
+import { cn, SpotifyLogo } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
-import { cn, SpotifyLogo } from '@spotify/ui-react'
 import Link from 'next/link'
 
 export type LogoProps = {

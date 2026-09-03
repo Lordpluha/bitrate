@@ -1,9 +1,9 @@
 'use client'
 
+import { Typography } from '@bitrate/ui-react'
 import { FollowArtistButton, useArtist } from '@entities/Artist'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
 import { ROUTES } from '@shared/routes'
-import { Typography } from '@spotify/ui-react'
 import Link from 'next/link'
 
 /**

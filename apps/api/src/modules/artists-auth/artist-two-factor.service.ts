@@ -43,7 +43,7 @@ export class ArtistTwoFactorService {
       throw new BadRequestException('2FA is already enabled. Disable it first before re-enrolling.')
     }
     const secret = generateSecret()
-    const uri = generateURI({ label: artist.email, issuer: 'Spotify', secret })
+    const uri = generateURI({ label: artist.email, issuer: 'Bitrate', secret })
     const qrCodeDataUrl = await toDataURL(uri)
 
     await this.prisma.artist.update({

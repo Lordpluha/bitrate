@@ -18,7 +18,7 @@ export type ArtistPopularTracksProps = {
 
 const COLLAPSED_COUNT = 5
 
-/** Numbered "Popular" list, mirroring Spotify's artist page top-tracks block. */
+/** Numbered "Popular" list — the artist's most-played tracks. */
 export const ArtistPopularTracks = ({
   isPlaybackContextActive,
   likedTrackIds,

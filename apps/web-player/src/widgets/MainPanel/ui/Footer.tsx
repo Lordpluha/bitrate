@@ -1,4 +1,4 @@
-import { Facebook, InstIcon, TwitIcon } from '@spotify/ui-react'
+import { Facebook, InstIcon, TwitIcon } from '@bitrate/ui-react'
 import Link from 'next/link'
 
 const sections = [
@@ -20,13 +20,13 @@ const sections = [
     ],
   },
   {
-    title: 'Spotify Plans',
+    title: 'Bitrate Plans',
     links: [
       'Premium Individual',
       'Premium Duo',
       'Premium Family',
       'Premium Student',
-      'Spotify Free',
+      'Bitrate Free',
     ],
   },
 ]
@@ -98,7 +98,7 @@ function Footer() {
             </Link>
           ))}
         </div>
-        <div className="text-xs text-text-subdued">© 2025 Spotify AB</div>
+        <div className="text-xs text-text-subdued">© 2026 Bitrate</div>
       </div>
     </footer>
   )

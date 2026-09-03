@@ -38,7 +38,7 @@ export const apiClient = createClient<ApiPaths>({ baseUrl: ... })
 export const { useQuery, useMutation, useSuspenseQuery } = createReactQueryClient(apiClient)
 ```
 
-Use `useQuery`/`useMutation` from `reactQueryClient`. Types come from `@spotify/contracts`.
+Use `useQuery`/`useMutation` from `reactQueryClient`. Types come from `@bitrate/contracts`.
 
 ## State
 
@@ -69,7 +69,7 @@ cross-component client state.
 
 - Function components, named exports only.
 - `import { useState } from 'react'` — never `React.useState`.
-- Tailwind v4 + design tokens from `@spotify/ui-react`.
+- Tailwind v4 + design tokens from `@bitrate/ui-react`.
 - `cn()` for conditional classes.
 
 ## Server vs Client components

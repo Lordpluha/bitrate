@@ -112,13 +112,16 @@ sidebar_position: 1
 ---
 
 ## v1.0.0-rebranding
-- [ ] New brand name & identity
-- [ ] Logo & icons redesign
-- [ ] Color scheme & design tokens update
-- [ ] Rename `@spotify/*` packages namespace
+
+Delivered by [ADR-0024](../architecture/0024-rebrand-to-bitrate.md).
+
+- [x] New brand name & identity — Bitrate, defined in `brand.md` and `design.md`
+- [ ] Logo & icons redesign — a mark is being designed; `design.md` §24 leaves it open
+- [x] Color scheme & design tokens update — Bitrate Purple `#7c3aed`, three themes
+- [x] Rename the package namespace from `@spotify/*` to `@bitrate/*`
 - [ ] New domain & SSL
 - [ ] OG images, favicons, metadata update
-- [ ] Documentation & marketing materials update
+- [x] Documentation & marketing materials update
 
 ---
 

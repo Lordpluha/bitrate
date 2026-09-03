@@ -1,6 +1,6 @@
-# @spotify/desktop
+# @bitrate/desktop
 
-Tauri 2 desktop application for the Spotify Clone.
+Tauri 2 desktop application for Bitrate.
 
 ## Stack
 
@@ -40,10 +40,10 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 pnpm install
 
 # Full Tauri app (recommended)
-pnpm --filter @spotify/desktop tauri dev
+pnpm --filter @bitrate/desktop tauri dev
 
 # Frontend only (no Tauri window)
-pnpm --filter @spotify/desktop dev
+pnpm --filter @bitrate/desktop dev
 ```
 
 Or inside `apps/desktop/`:
@@ -65,7 +65,7 @@ docker compose --profile desktop up -d desktop
 ```bash
 cd apps/desktop
 docker compose -f docker-compose.vnc.yml up --build
-# Open http://localhost:6080/vnc.html  (password: spotify)
+# Open http://localhost:6080/vnc.html  (password: bitrate)
 ```
 
 See [VNC-README.md](VNC-README.md) for VNC setup details.
@@ -73,7 +73,7 @@ See [VNC-README.md](VNC-README.md) for VNC setup details.
 ## Build
 
 ```bash
-pnpm --filter @spotify/desktop tauri build
+pnpm --filter @bitrate/desktop tauri build
 ```
 
 Produces platform-native installers in `src-tauri/target/release/bundle/`.

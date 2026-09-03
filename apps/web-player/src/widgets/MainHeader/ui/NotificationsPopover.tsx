@@ -6,7 +6,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@spotify/ui-react'
+} from '@bitrate/ui-react'
 import {
   useNotifications,
   useReadAllNotifications,

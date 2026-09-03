@@ -34,8 +34,8 @@ and `shared/ui/` (logo and language-switcher components).
 ## 🎨 Tech Stack
 
 - **Next.js (App Router)** + **React 19** + **TypeScript**
-- **Tailwind CSS v4** + **@spotify/ui-react** — shared design tokens and components
-- **@spotify/contracts** — generated OpenAPI types (dev dependency, for the upcoming API
+- **Tailwind CSS v4** + **@bitrate/ui-react** — shared design tokens and components
+- **@bitrate/contracts** — generated OpenAPI types (dev dependency, for the upcoming API
   integration)
 
 ## 🧪 Testing
@@ -47,8 +47,8 @@ skills (same conventions as `web-player`) once specs are added.
 ## 🚀 Build & Deploy
 
 ```bash
-pnpm --filter @spotify/web-artists build
-pnpm --filter @spotify/web-artists start
+pnpm --filter @bitrate/web-artists build
+pnpm --filter @bitrate/web-artists start
 ```
 
 ---

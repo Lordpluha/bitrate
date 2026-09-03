@@ -1,6 +1,6 @@
 'use client'
 
-import type { ApiSchemas } from '@spotify/contracts'
+import type { ApiSchemas } from '@bitrate/contracts'
 import { createContext, type ReactNode, useContext } from 'react'
 import { useAuth } from './useAuth'
 

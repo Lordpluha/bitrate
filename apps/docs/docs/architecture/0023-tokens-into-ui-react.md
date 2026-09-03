@@ -10,7 +10,7 @@ The design system ran through three workspace packages and a build step. `@spoti
 held `tokens.json` — every colour, scale, and semantic role as data. `@spotify/tokens-generator`
 was a CLI that read those values, applied `packages/ui-react/tokens.config.mjs`, and wrote
 the Tailwind v4 `@theme` layers under `packages/ui-react/src/styles/`, plus a
-`tokens.manifest.json` for the Storybook token pages. `@spotify/ui-react` consumed all of it.
+`tokens.manifest.json` for the Storybook token pages. `@bitrate/ui-react` consumed all of it.
 
 The split implied reuse that never happened: the generator appeared in exactly one
 `package.json` and the token package in **none** — `vite.config.ts` reached for

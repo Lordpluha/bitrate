@@ -1,5 +1,5 @@
 ---
-'@spotify/ui-react': minor
+'@bitrate/ui-react': minor
 ---
 
 The design tokens are now plain CSS that you edit directly. `@spotify/tokens` (the values)

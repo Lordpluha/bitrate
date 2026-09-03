@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introduction
 
-**Spotify Clone** is a full-featured music streaming platform built from scratch using modern technologies. This project demonstrates best practices in monorepo architecture, microservices, and cross-platform development.
+**Bitrate** is a full-featured music streaming platform built from scratch using modern technologies. This project demonstrates best practices in monorepo architecture, microservices, and cross-platform development.
 
 ## 🎯 Project Overview
 
@@ -30,8 +30,8 @@ This is a comprehensive music streaming service including:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Lordpluha/spotify-clone.git
-cd spotify-clone
+git clone https://github.com/Lordpluha/bitrate.git
+cd bitrate
 
 # Install dependencies
 pnpm install
@@ -43,10 +43,10 @@ cp .env.example .env
 docker-compose -f infra/docker-compose.dev.yaml up -d
 
 # Run database migrations
-pnpm --filter @spotify/api db:migration:start
+pnpm --filter @bitrate/api db:migration:start
 
 # Seed the database
-pnpm --filter @spotify/api db:seed
+pnpm --filter @bitrate/api db:seed
 ```
 
 ### Development
@@ -56,10 +56,10 @@ pnpm --filter @spotify/api db:seed
 pnpm dev
 
 # Or start individual apps
-pnpm --filter @spotify/api start:dev      # Backend API
-pnpm --filter @spotify/web dev            # Web app
-pnpm --filter @spotify/mobile start       # Mobile app
-pnpm --filter @spotify/desktop tauri dev  # Desktop app
+pnpm --filter @bitrate/api start:dev      # Backend API
+pnpm --filter @bitrate/web-player dev     # Web player
+pnpm --filter @bitrate/mobile start       # Mobile app
+pnpm --filter @bitrate/desktop tauri dev  # Desktop app
 ```
 
 ## 📖 Documentation Structure
@@ -122,11 +122,11 @@ pnpm --filter @spotify/desktop tauri dev  # Desktop app
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](https://github.com/Lordpluha/spotify-clone/blob/develop/CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](https://github.com/Lordpluha/bitrate/blob/develop/CONTRIBUTING.md) for details.
 
 ### Ways to Contribute
 
-- 🐛 Report bugs via [GitHub Issues](https://github.com/Lordpluha/spotify-clone/issues)
+- 🐛 Report bugs via [GitHub Issues](https://github.com/Lordpluha/bitrate/issues)
 - 💡 Suggest features or improvements
 - 🔀 Submit Pull Requests
 - 📖 Improve documentation
@@ -134,11 +134,11 @@ We welcome contributions! Please see our [Contributing Guide](https://github.com
 
 ## 📝 License
 
-This project is licensed under the UNLICENSED license - see the [LICENSE](https://github.com/Lordpluha/spotify-clone/blob/develop/LICENSE) file for details.
+This project is licensed under the UNLICENSED license - see the [LICENSE](https://github.com/Lordpluha/bitrate/blob/develop/LICENSE) file for details.
 
 ## 🔗 Links
 
-- **GitHub Repository:** [github.com/Lordpluha/spotify-clone](https://github.com/Lordpluha/spotify-clone)
+- **GitHub Repository:** [github.com/Lordpluha/bitrate](https://github.com/Lordpluha/bitrate)
 - **Blog:** [Blog](/blog) - Development updates and technical insights
 
 ---
