@@ -83,9 +83,10 @@ Breaking, and accepted deliberately:
 
 Explicitly out of scope, and still open:
 
-- **The logo.** `design.md` §24 leaves the mark undecided and one is being designed, so
-  `SpotifyLogo`, its SVG asset, `aria-label="Spotify Home"`, and `public/icon.svg` are unchanged
-  on purpose. They change together once a Bitrate mark exists.
+- **The logo.** At the time of this ADR no Bitrate mark existed, so `SpotifyLogo`, its SVG asset,
+  `aria-label="Spotify Home"`, and `public/icon.svg` were left in place on purpose. *Superseded:*
+  the mark arrived and all four were replaced — `design.md` §24 is now the contract. The wordmark
+  is still raster-only, which is what keeps the lockup slots square.
 - **The Vercel preview host** `spotify-clone-web-olive.vercel.app`, kept until the deployment is
   renamed.
 - **Renaming the GitHub repository and the local checkout**, which is a manual step; URLs in the

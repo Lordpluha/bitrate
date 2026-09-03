@@ -334,12 +334,34 @@ If yes, it is probably moving in the Bitrate direction.
 
 If it adds explanation because the interface itself became harder to understand, reconsider the design.
 
-## 24. What remains intentionally open
+## 24. Logo
+
+The mark is a single gradient glyph — a stylised **B** built from two stacked strokes, filled left
+to right from `#490AE5` to `#C060FA`. It is self-coloured, so it needs no light-theme variant and
+no recolouring: place it on any surface the palette defines.
+
+It lives at `packages/ui-react/assets/icons/logo-icon.svg` and reaches the product only through the
+generated `LogoIcon` component, exported from `@bitrate/ui-react`. Never import the SVG or a copy of
+it directly; the svgr build owns that file and namespaces its gradient id.
+
+`LogoIcon` expands each gradient stop into a prop (`primaryColor`, `secondaryColor`, `color3`…), all
+defaulted to the values above. **Passing one of them recolours a single stop, not the mark** — a lone
+`primaryColor="#FFF"` produces a white-to-purple ramp rather than a white glyph. Leave them unset.
+
+Every raster icon in both apps — the multi-size favicon, `apple-icon`, and the PNG manifest icons —
+is rasterised from this vector against the brand dark ground. Regenerate them from the SVG rather
+than editing a PNG, and keep `src/app/icon.svg` in step with the source.
+
+**The wordmark is not settled.** It exists only as pixels inside the social cards
+(`apps/web-*/src/app/opengraph-image.png`) and the brand board, so the header, footers, and the
+artists lockup render the mark alone and their slots are square. A wordmark vector replaces
+`logo.svg` and turns those slots back into lockups; until then, do not trace one from the raster.
+
+## 25. What remains intentionally open
 
 The following should be developed in the visual identity phase rather than invented prematurely:
 
-- final logo;
-- logo mark;
+- final wordmark, and the mark-plus-wordmark lockup;
 - final typography;
 - exact spacing scale;
 - illustration system;
