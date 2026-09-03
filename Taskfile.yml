@@ -255,11 +255,6 @@ tasks:
       # database, and can reset the data it is pointed at.
       - cmd: '{{.DC_PROD}} exec -T api pnpm --filter @bitrate/api run db:migration:deploy'
 
-  prod:seed:
-    desc: Seed the production database
-    prompt: Seed the PRODUCTION database?
-    cmds:
-      - cmd: '{{.DC_PROD}} exec -T api pnpm --filter @bitrate/api run db:seed'
 
   prod:down:
     desc: Stop production stack

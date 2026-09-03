@@ -141,13 +141,23 @@ need to stop nginx:
 sudo certbot certonly --webroot -w /path/to/bitrate/infra/nginx/certbot-webroot -d example.com
 ```
 
-Reload nginx after renewal:
+Renewal must use webroot, not standalone: nginx holds port 80, so a standalone renewal cannot
+bind it. nginx also caches the certificate at startup and has to be told to re-read it, so the
+renewal and the reload belong in one script:
 
-```bash
-echo 'docker exec bitrate-nginx-prod nginx -s reload' | \
-  sudo tee /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
-sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
+```sh
+#!/bin/sh
+set -e
+docker run --rm \
+  -v /etc/letsencrypt:/etc/letsencrypt \
+  -v /var/lib/letsencrypt:/var/lib/letsencrypt \
+  -v "$HOME/bitrate/infra/nginx/certbot-webroot:/var/www/certbot" \
+  certbot/certbot renew --webroot -w /var/www/certbot --quiet
+docker exec bitrate-nginx-prod nginx -s reload 2>/dev/null || true
 ```
+
+Run it weekly from the deploying user's crontab — Docker group membership is enough, no root
+required. Verify the whole path with `--dry-run` before trusting it.
 
 ## 4. First deploy
 
@@ -166,8 +176,12 @@ Then apply migrations and seed:
 
 ```bash
 task prod:migrate
-task prod:seed
 ```
+
+There is no production seed. The seed script runs through `ts-node` and generates its content
+with `@faker-js/faker`, both devDependencies that the production image deliberately omits — and
+filling a live catalogue with generated artists is not something to do by accident. A production
+database starts empty.
 
 Not `task db:migrate` — that targets the preprod stack and runs `prisma migrate dev`, which
 generates migrations, wants a shadow database, and can reset the data it is pointed at.
