@@ -80,4 +80,7 @@ USER bitrateapi
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/api/v1/health/ready', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
-CMD ["node", "apps/api/dist/main.js"]
+# dist/src/, not dist/. env.schema.ts and prisma.config.ts live outside src/ and tsconfig sets
+# no rootDir, so tsc's common root is apps/api/ and the compiled entrypoint keeps the src/
+# segment. The package's own start:prod script already points here; only this line did not.
+CMD ["node", "apps/api/dist/src/main.js"]
