@@ -62,9 +62,9 @@ COPY --from=prod-dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY apps/api/prisma ./apps/api/prisma
 # Prisma looks for the config in the working directory, and schema.prisma declares no datasource
-# url — it comes from here. The compiled copy is used rather than prisma.config.ts so the image
-# needs no TypeScript loader at runtime.
-COPY --from=build /app/apps/api/dist/prisma.config.js ./apps/api/prisma.config.js
+# url — it comes from here. The TypeScript source, not the compiled output: tsc emits CommonJS
+# that Prisma's config loader rejects with "Failed to parse syntax of config file".
+COPY apps/api/prisma.config.ts ./apps/api/prisma.config.ts
 COPY apps/api/storage ./apps/api/storage
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
