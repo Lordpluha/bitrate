@@ -35,12 +35,7 @@ export const RegistrationEmailStep = ({
     ) : null}
 
     <div className="mt-4 flex flex-col items-stretch gap-4">
-      <Button
-        className="bg-green-400"
-        size={'xl'}
-        type="submit"
-        variant="artistCard"
-      >
+      <Button size={'xl'} type="submit" variant="primary">
         Continue
       </Button>
 

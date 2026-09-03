@@ -30,7 +30,7 @@ export const RegistrationPasswordStep = ({
   <form className="flex flex-col gap-3" onSubmit={onSubmit}>
     <header className="flex flex-col items-start w-full gap-4">
       <div className="h-0.5 w-full rounded-full overflow-hidden flex">
-        <div className="h-full bg-green-400 w-1/2" />
+        <div className="h-full bg-primary w-1/2" />
         <div className="h-full bg-neutral-600 w-1/2" />
       </div>
 
@@ -77,11 +77,11 @@ export const RegistrationPasswordStep = ({
       <PasswordRequirements rules={rules} />
 
       <Button
-        className="mt-5 bg-green-400 w-full"
+        className="mt-5 w-full"
         disabled={isPending}
         size={'xl'}
         type="submit"
-        variant="artistCard"
+        variant="primary"
       >
         {isPending ? 'Creating account...' : 'Continue'}
       </Button>

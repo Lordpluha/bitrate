@@ -95,11 +95,10 @@ export const LoginForm = () => {
 
         <div className="mt-4 flex flex-col items-stretch gap-4">
           <Button
-            className="bg-green-400"
             disabled={isPending}
             size={'xl'}
             type="submit"
-            variant="artistCard"
+            variant="primary"
           >
             {isPending ? 'Logging in...' : 'Continue'}
           </Button>
