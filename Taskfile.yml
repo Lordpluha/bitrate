@@ -1,14 +1,17 @@
 version: '3'
 
 vars:
+  # --env-file .env is not redundant. Compose looks for .env next to the compose file, so with
+  # `-f infra/...` it reads infra/.env — a file that does not exist — and every ${VAR} silently
+  # resolves to empty. The repository keeps its .env at the root, next to .env.example.
   # Day-to-day Docker environment despite the "preprod" file name: api,
   # web-player, web-artists, admin and the infra services, plus the
   # profile-gated mobile/desktop/docs/nginx. `dev:*`, `db:*`, `shell:*` and
   # `mobile:*`/`desktop:*` all target this file.
-  DC_DEV: docker compose -f infra/docker-compose.preprod.yaml
-  DC_PROD: docker compose -f infra/docker-compose.prod.yaml
+  DC_DEV: docker compose --env-file .env -f infra/docker-compose.preprod.yaml
+  DC_PROD: docker compose --env-file .env -f infra/docker-compose.prod.yaml
   # Infrastructure only — no application containers. Used by `infra:*`.
-  DC_INFRA: docker compose -f infra/docker-compose.dev.yaml
+  DC_INFRA: docker compose --env-file .env -f infra/docker-compose.dev.yaml
 
 tasks:
   # ─────────────────────────────────────────

@@ -88,6 +88,11 @@ root, and `.dockerignore` keeps per-app env files out of the image entirely, so 
 in one is silently ignored. See [Environment variables](../guides/environment.md) for which file
 is read when.
 
+Use `task` rather than calling `docker compose` by hand. Compose looks for `.env` beside the
+compose file, so a bare `docker compose -f infra/docker-compose.prod.yaml` reads `infra/.env`,
+finds nothing, and resolves every variable to an empty string without saying so. The `task`
+targets pass `--env-file .env` explicitly.
+
 The API validates its environment at startup with Zod (`apps/api/env.schema.ts`) and refuses to
 boot with a message naming what is missing — so start the stack and read the error rather than
 guessing.

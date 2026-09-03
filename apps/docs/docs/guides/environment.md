@@ -16,6 +16,11 @@ sidebar_position: 4
 | `pnpm dev` нативно | `apps/api/.env*`, `apps/web-player/.env*` | приложение само загружает свой файл |
 | `task dev:up`, `task prod:up` в Docker | **только корневой `.env`** | подстановка `${VAR}` в compose |
 
+Вызывай стеки через `task`, а не через `docker compose` напрямую. Compose ищет `.env` рядом с
+compose-файлом, поэтому команда `docker compose -f infra/docker-compose.prod.yaml` читает
+`infra/.env`, не находит его и молча подставляет пустые строки во все `${VAR}`. Задачи в
+`Taskfile.yml` передают `--env-file .env` явно.
+
 Per-app файлы до контейнера не доходят по двум причинам сразу: ни один сервис в
 `infra/docker-compose.*.yaml` не объявляет `env_file`, а `.dockerignore` исключает `.env`,
 `.env.development` и `.env*.local` из сборочного контекста. Внутрь образа попадает только
