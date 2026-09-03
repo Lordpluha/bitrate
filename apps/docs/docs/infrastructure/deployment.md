@@ -240,14 +240,17 @@ task prod:deploy
 task db:migrate
 ```
 
-CI builds every app image on a push to `develop` and pushes it to GHCR, so a deploy is a pull and a
-restart rather than a twenty-minute build on the production box. `git pull` is still required: the
-nginx templates, the compose file, and the Taskfile are read from the checkout, not from an image.
+Production tracks `master`, not `develop`. CI builds every app image on a push to either branch and
+pushes it to GHCR; the compose file names the `:master` tag, so a deploy is a pull and a restart
+rather than a twenty-minute build on the production box. `git pull` is still required, and from
+`master`: the nginx templates, the compose file, and the Taskfile are read from the checkout rather
+than from any image, so a checkout on the wrong branch deploys images built from one commit with
+configuration from another.
 
 `prod:deploy` passes `--no-build` deliberately. Without it, compose quietly builds any service
 whose image it cannot pull, and a deploy meant to take two minutes silently becomes the slow path.
 
-The images are `ghcr.io/lordpluha/bitrate/<service>:develop` for `api`, `web-player`,
+The images are `ghcr.io/lordpluha/bitrate/<service>:master` for `api`, `web-player`,
 `web-artists`, `docs`, and `storybook`. `NEXT_PUBLIC_*` values are baked in at build time, so an
 image built against the wrong API origin cannot be corrected by editing `.env` — the workflow's
 build args are the place to look.
