@@ -99,6 +99,39 @@ compose file, so a bare `docker compose -f infra/docker-compose.prod.yaml` reads
 finds nothing, and resolves every variable to an empty string without saying so. The `task`
 targets pass `--env-file .env` explicitly.
 
+### Where production configuration actually lives
+
+The server's `.env` is a rendered artifact, not the source. The deploy workflow writes it from
+GitHub, so editing it by hand on the server works only until the next deploy overwrites it.
+
+| Kind | Stored as | Holds |
+|---|---|---|
+| Secret | repository **secret** | `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `JWT_SECRET`, `DATABASE_URL`, `SMTP_USER`, `SMTP_PASS`, both OAuth client secrets, `METRICS_TOKEN`, `SENTRY_DSN`, `DEPLOY_SSH_KEY` |
+| Configuration | repository **variable** | hosts, ports, token lifetimes, cookie names, `STORAGE_DRIVER`, both OAuth client ids, `DEPLOY_HOST`, `DEPLOY_USER` |
+
+`NEXT_PUBLIC_*` belong in the variable column on purpose: they are compiled into a client bundle
+that any visitor can read, so storing them as secrets protects nothing and only makes them harder
+to change.
+
+Both must be **repository**-scoped rather than attached to the `production` environment. The calling
+job resolves `secrets:` before it enters the environment, and the health-check job has no
+environment at all, so environment-scoped values would resolve to empty strings without an error.
+
+`scripts/sync-env-to-github.sh` uploads an existing env file in one pass. It pipes each value into
+`gh` on stdin rather than passing it as an argument — arguments are visible to anyone who can run
+`ps` — prints names only, and lists any name its classification does not cover, since such a name
+would silently vanish from the rendered file.
+
+```bash
+./scripts/sync-env-to-github.sh            # dry run, names only
+./scripts/sync-env-to-github.sh --apply
+```
+
+A compose `--env-file` is not a shell file: compose interpolates `${...}` inside it and treats
+` #` as the start of a comment, so a password containing `$` or ` #` is corrupted rather than
+rejected. The deploy's preflight fails by name on those characters — regenerate the credential
+without them rather than trying to escape it.
+
 The API validates its environment at startup with Zod (`apps/api/env.schema.ts`) and refuses to
 boot with a message naming what is missing — so start the stack and read the error rather than
 guessing.
@@ -234,6 +267,18 @@ line of defence, not a substitute.
 
 ## 7. Updating
 
+A push to `master` deploys on its own. The `[deploy] Production` workflow waits for that commit's
+image builds, then stops at the `production` environment for a human to approve; only after the
+approval does it touch the server. It renders `~/bitrate/.env` from the repository's secrets and
+variables, copies `infra/` and `Taskfile.yml` from the runner, pulls the images, migrates, and
+checks all three public hosts.
+
+The environment gate is not automatic. `environment: production` in a workflow blocks nothing by
+itself — someone has to create that environment under **Settings → Environments** and add a
+**required reviewer**. Until then the deploy runs unattended.
+
+To deploy by hand instead — or when the workflow is unavailable:
+
 ```bash
 git pull
 task prod:deploy
@@ -242,10 +287,12 @@ task db:migrate
 
 Production tracks `master`, not `develop`. CI builds every app image on a push to either branch and
 pushes it to GHCR; the compose file names the `:master` tag, so a deploy is a pull and a restart
-rather than a twenty-minute build on the production box. `git pull` is still required, and from
-`master`: the nginx templates, the compose file, and the Taskfile are read from the checkout rather
-than from any image, so a checkout on the wrong branch deploys images built from one commit with
-configuration from another.
+rather than a twenty-minute build on the production box. `git pull` is still required for a manual
+deploy, and from `master`: the nginx templates, the compose file, and the Taskfile are read from the
+checkout rather than from any image, so a checkout on the wrong branch deploys images built from one
+commit with configuration from another. The workflow avoids that trap by copying those files from
+the runner rather than asking the server to fetch — the server's unauthenticated `git` access to
+GitHub is throttled intermittently, and a fetch that fails silently leaves exactly that mismatch.
 
 `prod:deploy` passes `--no-build` deliberately. Without it, compose quietly builds any service
 whose image it cannot pull, and a deploy meant to take two minutes silently becomes the slow path.
@@ -294,6 +341,17 @@ cap Docker's json-file driver grows until the disk is full.
 - [ ] `JWT_SECRET` generated, not invented
 - [ ] Postgres and Redis have no published ports
 - [ ] Backups running and restored at least once as a test
+- [ ] **GHCR package visibility reviewed.** The published images and their build caches are
+      readable without authentication by default. The application images are meant to be pullable
+      by the server, but `cache/*` serves no one outside CI and exports intermediate build stages,
+      so anything that reaches a build context reaches it too.
+- [ ] **Committed env files audited.** `apps/api/.env.development`, `apps/api/.env.test` and
+      `apps/web-player/.env.development` are tracked in a public repository — Jest and the E2E
+      suite read the first one, so they cannot simply be deleted. Confirm they hold only local
+      placeholders; anything real in them is already published.
+- [ ] `DEPLOY_SSH_HOST_KEY` pinned. Until it is set the deploy trusts the host key it sees on
+      first connection, which is weaker than verification — read the fingerprint from the deploy
+      log, check it against the server, then set the variable.
 
 ## Related
 
