@@ -109,10 +109,41 @@ describe('UserAuthGuard', () => {
     const result = await guard.canActivate(createHttpContext(req))
 
     expect(result).toBe(true)
-    expect(tokenService.verifyToken).toHaveBeenCalledTimes(2)
+    expect(tokenService.verifyToken).toHaveBeenCalledTimes(1)
+    expect(tokenService.verifyToken).toHaveBeenCalledWith('access-token')
     expect(req.user).toBeDefined()
     expect(req.access_token).toBe('access-token')
     expect(req.refresh_token).toBe('refresh-token')
+  })
+
+  it('should authorize an access request even when a co-present refresh cookie is invalid', async () => {
+    reflector.getAllAndOverride.mockReturnValue('access')
+
+    const req = mockDeep<
+      Request & { user?: ReturnType<typeof buildUser> } & Record<string, string>
+    >()
+    req.cookies = {
+      access_token: 'access-token',
+      refresh_token: 'expired-refresh-token',
+    }
+
+    tokenService.verifyToken.mockImplementation((token: string) => {
+      if (token === 'expired-refresh-token') return Promise.reject(new Error('expired'))
+      return Promise.resolve({ sub: 'user-1', username: 'user', type: 'user' })
+    })
+    prisma.user.findUnique.mockResolvedValue(buildUser({ id: 'user-1' }))
+    prisma.userSession.findFirst.mockResolvedValue(
+      buildUserSession({
+        userId: 'user-1',
+        access_token: 'access-token',
+        refresh_token: 'expired-refresh-token',
+      }),
+    )
+
+    const result = await guard.canActivate(createHttpContext(req))
+
+    expect(result).toBe(true)
+    expect(tokenService.verifyToken).toHaveBeenCalledTimes(1)
   })
 
   it('should reject when user not found', async () => {

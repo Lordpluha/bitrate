@@ -1,4 +1,3 @@
-import { rm } from 'node:fs/promises'
 import type { ArtistEntity } from '@modules/artists'
 import { ArtistAuth } from '@modules/artists-auth/artists-auth.guard'
 import type { UserEntity } from '@modules/users'
@@ -41,6 +40,7 @@ import {
 import { type CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
 import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
 import { type AudioStreamFormat, SUPPORTED_AUDIO_STREAM_FORMATS } from './track-audio.helpers'
+import { cleanupUploadedFiles } from './track-media'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
 import { TrackStreamingService } from './track-streaming.service'
@@ -169,7 +169,7 @@ export class TracksController {
     const coverFile = files?.cover?.[0]
 
     if (!audioFile) {
-      if (coverFile) await rm(coverFile.path, { force: true })
+      if (coverFile) await cleanupUploadedFiles([coverFile])
       throw new BadRequestException('Audio file is required')
     }
 
