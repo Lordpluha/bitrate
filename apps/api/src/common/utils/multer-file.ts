@@ -14,9 +14,14 @@ import { BadRequestException } from '@nestjs/common'
  * @throws BadRequestException when the generated filename would escape its directory.
  */
 export function resolveSafeMulterPath(file: Express.Multer.File): string {
-  if (basename(file.filename) !== file.filename) {
+  const safeName = basename(file.filename)
+
+  if (safeName !== file.filename) {
     throw new BadRequestException('Invalid uploaded file name')
   }
 
-  return join(dirname(file.path), file.filename)
+  // `safeName`, not `file.filename` — the two are equal by the check above, but joining the
+  // result of `basename()` is what makes the sanitisation visible to a reader and to static
+  // analysis. Comparing against it and then using the original leaves the taint intact.
+  return join(dirname(file.path), safeName)
 }
