@@ -108,6 +108,12 @@ export default function (data) {
   // `GET /playlists` is deliberately absent: playlists.controller.ts carries a per-route
   // `@Throttle({ ttl: 60_000, limit: 240 })` that the global API_RATE_LIMIT_MAX override does
   // not lift, so any meaningful weight would measure that throttler instead of the API.
+  //
+  // `GET /auth/me` is absent for the same reason, and a stricter one: every route on
+  // users-auth.controller.ts carries AUTH_ROUTE_THROTTLE — ten requests per minute, documented
+  // as deliberately immune to the env override so a load-test variable cannot switch off
+  // brute-force protection. The authenticated slice uses `GET /me/settings` instead: same shape,
+  // subject only to the global throttler this test is allowed to raise.
   const scenario = Math.random()
 
   if (scenario < 0.3) {
@@ -121,7 +127,7 @@ export default function (data) {
     validate(res, 'albums', 200, 200)
   } else if (scenario < 0.85) {
     if (authParams) {
-      const res = http.get(`${API_BASE}/auth/me`, authParams)
+      const res = http.get(`${API_BASE}/me/settings`, authParams)
       validate(res, 'profile', 200, 100)
     } else {
       browseTracks(publicParams)

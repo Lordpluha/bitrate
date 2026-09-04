@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { open, unlink } from 'node:fs/promises'
 import { detectAllowedImageMime, IMAGE_EXTENSION_BY_MIME } from '@common/utils/image'
+import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { SafeUserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
@@ -118,15 +119,16 @@ export class UsersController {
   async uploadAvatar(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
     if (!file) throw new BadRequestException('Avatar file is required')
 
+    const safePath = resolveSafeMulterPath(file)
     const buf = Buffer.alloc(12)
-    const fd = await open(file.path, 'r')
+    const fd = await open(safePath, 'r')
     try {
       await fd.read(buf, 0, 12, 0)
     } finally {
       await fd.close()
     }
     if (detectAllowedImageMime(buf) !== file.mimetype) {
-      await unlink(file.path)
+      await unlink(safePath)
       throw new BadRequestException('Invalid file content')
     }
 
@@ -134,7 +136,7 @@ export class UsersController {
     try {
       return await this.usersService.uploadAvatar(user.id, file.filename)
     } catch (error) {
-      await unlink(file.path)
+      await unlink(safePath)
       throw error
     }
   }

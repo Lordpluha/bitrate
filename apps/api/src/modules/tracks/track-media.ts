@@ -1,6 +1,7 @@
 import { open, rm } from 'node:fs/promises'
 import { basename } from 'node:path'
 import { detectAllowedImageMime } from '@common/utils/image'
+import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { BadRequestException, Logger } from '@nestjs/common'
 import { parseFile } from 'music-metadata'
 import { MAX_COVER_BYTES } from './track-audio.helpers'
@@ -52,7 +53,7 @@ export async function validateCoverFile(file: Express.Multer.File): Promise<void
   if (file.size > MAX_COVER_BYTES) throw new BadRequestException('Cover file is too large')
 
   const header = Buffer.alloc(IMAGE_MAGIC_BYTES)
-  const handle = await open(file.path, 'r')
+  const handle = await open(resolveSafeMulterPath(file), 'r')
   try {
     await handle.read(header, 0, header.length, 0)
   } finally {
@@ -68,7 +69,9 @@ export async function validateCoverFile(file: Express.Multer.File): Promise<void
 export async function cleanupUploadedFiles(
   files: Array<Express.Multer.File | undefined>,
 ): Promise<void> {
-  await Promise.all(files.flatMap((file) => (file ? [rm(file.path, { force: true })] : [])))
+  await Promise.all(
+    files.flatMap((file) => (file ? [rm(resolveSafeMulterPath(file), { force: true })] : [])),
+  )
 }
 
 /**

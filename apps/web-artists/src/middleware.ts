@@ -1,3 +1,4 @@
+import { ROUTES } from '@shared/routes/routes'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
@@ -7,7 +8,6 @@ const AUTH_EXEMPT_PATHS = [
   '/static',
   '/favicon.ico',
   '/robots.txt',
-  '/auth',
   '/login',
   '/registration',
   '/forgot-password',
@@ -34,7 +34,7 @@ export function middleware(req: NextRequest) {
 
   if (!hasRefresh) {
     const url = req.nextUrl.clone()
-    url.pathname = '/auth/login'
+    url.pathname = ROUTES.auth.login
     url.searchParams.set('next', req.nextUrl.pathname)
     return NextResponse.redirect(url)
   }
