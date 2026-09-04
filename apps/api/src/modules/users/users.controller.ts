@@ -38,6 +38,9 @@ import { UpdateUserDto, UpdateUserSchema } from './dtos'
 import { UserEntity } from './entities'
 import { UsersService } from './users.service'
 
+/** Where avatar uploads are written. Server-owned, so it can be joined into a path safely. */
+const AVATAR_DESTINATION = './storage/public/users/avatars'
+
 /** Represents the users controller. */
 @ApiExtraModels(UserEntity, SafeUserEntity)
 @ApiTags('Users')
@@ -100,7 +103,7 @@ export class UsersController {
     FileInterceptor('avatar', {
       limits: { fileSize: 5 * 1024 * 1024 },
       storage: diskStorage({
-        destination: './storage/public/users/avatars',
+        destination: AVATAR_DESTINATION,
         filename: (_req, file, cb) => {
           const extension =
             IMAGE_EXTENSION_BY_MIME[file.mimetype as keyof typeof IMAGE_EXTENSION_BY_MIME]
@@ -119,7 +122,7 @@ export class UsersController {
   async uploadAvatar(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
     if (!file) throw new BadRequestException('Avatar file is required')
 
-    const safePath = resolveSafeMulterPath(file)
+    const safePath = resolveSafeMulterPath(file, AVATAR_DESTINATION)
     const buf = Buffer.alloc(12)
     const fd = await open(safePath, 'r')
     try {

@@ -18,10 +18,20 @@ const buildFile = (overrides: Partial<Express.Multer.File> = {}): Express.Multer
   }) as Express.Multer.File
 
 describe('resolveSafeMulterPath', () => {
-  it('reconstructs the path from the file directory and its generated filename', () => {
+  it('joins the caller-supplied directory with the generated filename', () => {
     const file = buildFile()
 
-    expect(resolveSafeMulterPath(file)).toBe('storage/public/uploads/generated.png')
+    expect(resolveSafeMulterPath(file, './storage/public/uploads')).toBe(
+      'storage/public/uploads/generated.png',
+    )
+  })
+
+  it('ignores the path the upload arrived with, using only the directory it is given', () => {
+    const file = buildFile({ path: './somewhere/else/generated.png' })
+
+    expect(resolveSafeMulterPath(file, './storage/public/uploads')).toBe(
+      'storage/public/uploads/generated.png',
+    )
   })
 
   it('rejects a generated filename that would escape its directory', () => {
@@ -30,6 +40,8 @@ describe('resolveSafeMulterPath', () => {
       path: './storage/public/uploads/../../etc/passwd',
     })
 
-    expect(() => resolveSafeMulterPath(file)).toThrow(BadRequestException)
+    expect(() => resolveSafeMulterPath(file, './storage/public/uploads')).toThrow(
+      BadRequestException,
+    )
   })
 })

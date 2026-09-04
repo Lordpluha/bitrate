@@ -117,6 +117,9 @@ describe('UsersController', () => {
 
     await expect(controller.uploadAvatar(req, file)).rejects.toThrow('database unavailable')
 
-    expect(unlinkMock).toHaveBeenCalledWith(file.path)
+    // The avatar directory, not the `/tmp/avatar.png` the request arrived carrying. Everything on
+    // the uploaded-file object came in with the request, so the cleanup deletes the file the server
+    // wrote rather than whichever path the object happened to name.
+    expect(unlinkMock).toHaveBeenCalledWith('storage/public/users/avatars/avatar.png')
   })
 })

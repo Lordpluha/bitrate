@@ -16,6 +16,7 @@ import type { Queue } from 'bullmq'
 import { parseFile } from 'music-metadata'
 import { buildAudioFile, buildCoverFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import type { CreateTrackDto } from './dtos/create-track.dto'
+import { uploadDestination } from './track-media'
 import { TrackUploadService } from './track-upload.service'
 
 jest.mock(
@@ -158,8 +159,14 @@ describe('TrackUploadService', () => {
       ).rejects.toThrow('Invalid cover file content')
 
       expect(prisma.track.create).not.toHaveBeenCalled()
-      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile), { force: true })
-      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(coverFile), { force: true })
+      expect(rmMock).toHaveBeenCalledWith(
+        resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
+        { force: true },
+      )
+      expect(rmMock).toHaveBeenCalledWith(
+        resolveSafeMulterPath(coverFile, uploadDestination(coverFile)),
+        { force: true },
+      )
     })
 
     it('rejects a source bitrate below the converter minimum before creating a track', async () => {
@@ -174,7 +181,10 @@ describe('TrackUploadService', () => {
 
       expect(prisma.track.create).not.toHaveBeenCalled()
       expect(queue.add).not.toHaveBeenCalled()
-      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile), { force: true })
+      expect(rmMock).toHaveBeenCalledWith(
+        resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
+        { force: true },
+      )
     })
   })
 
@@ -229,7 +239,10 @@ describe('TrackUploadService', () => {
         service.update('artist-2', 'track-1', { title: 'Updated' } as never, audioFile),
       ).rejects.toThrow(NotFoundException)
 
-      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile), { force: true })
+      expect(rmMock).toHaveBeenCalledWith(
+        resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
+        { force: true },
+      )
       expect(prisma.track.update).not.toHaveBeenCalled()
     })
   })
