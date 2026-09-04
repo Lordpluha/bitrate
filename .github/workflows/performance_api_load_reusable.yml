@@ -150,6 +150,11 @@ jobs:
           # one localhost IP, so the production ceiling of 100 req/min would make this job
           # measure the throttler instead of the API. Auth routes keep their own 10/min limit.
           API_RATE_LIMIT_MAX: '1000000'
+          # The run lasts twenty-two minutes and the setup stage authenticates once, so the
+          # five-minute default expired mid-test and every authenticated request after minute five
+          # returned 401 — counted as a server failure and enough on its own to cross the
+          # threshold. This lengthens the token for the load-test API only.
+          JWT_ACCESS_EXPIRES_IN: '60m'
 
       - name: Upload results
         if: always()
