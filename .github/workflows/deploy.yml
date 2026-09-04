@@ -25,40 +25,45 @@ on:
           - health-only
 
 # Never cancel a deploy in flight: a half-applied `compose up` plus a cancelled
-# migration is worse than a queued second deploy.
+# migration is worse than a queued second deploy. A future staging caller gets
+# its own group -- do not widen this one to cover both environments.
 concurrency:
   group: deploy-production
   cancel-in-progress: false
 
 # The deploy pushes nothing and publishes nothing. `actions: read` exists solely
 # so the await-images job can read this commit's workflow run statuses; the
-# called workflow narrows further, per job.
+# called workflow narrows further, per job. `secrets: inherit` below does not
+# change this token's scope -- it governs the secrets context, not permissions.
 permissions:
   contents: read
   actions: read
 
 jobs:
-  # One caller job, deliberately. The alternative -- one job per dispatch mode,
-  # as in api.yml -- would repeat the eleven-secret `secrets:` block three times,
-  # and a secret dropped from one copy fails at deploy time rather than at review
-  # time. With a single job the "if: conditions are mutually exclusive" question
-  # cannot arise; `inputs.mode` is an empty string on a push, so both expressions
-  # short-circuit on `event_name == 'push'`.
+  # One caller job, deliberately. `inputs.mode` is an empty string on a push, so
+  # both `with:` expressions short-circuit on `event_name == 'push'`.
+  #
+  # `secrets: inherit` rather than an explicit eleven-secret mapping. This is
+  # forced, not preferred. Production configuration now lives at *environment*
+  # scope, and a job that calls a reusable workflow may not declare
+  # `environment:` -- GitHub allows only name/uses/with/secrets/needs/if/
+  # permissions/strategy/concurrency on such a job. This caller therefore has no
+  # environment, so `${{ secrets.JWT_SECRET }}` written here would resolve
+  # against repository scope and yield an empty string, and the deploy would
+  # succeed while starting the API with a blank signing key. Passing `inherit`
+  # moves secret resolution into the called workflow's `deploy` job, which does
+  # carry `environment:` and therefore sees the environment's values.
+  #
+  # The cost is real and deliberate: `inherit` exposes *every* repository secret
+  # to deploy_reusable.yml, not just the eleven the deploy consumes. That is
+  # acceptable only because the called workflow is in this same repository and
+  # is reviewed with this file; it would not be acceptable for a third-party or
+  # cross-repository reusable workflow.
   production:
     name: Production
     uses: ./.github/workflows/deploy_reusable.yml
     with:
+      environment: production
       wait-for-images: ${{ github.event_name == 'push' || inputs.mode == 'full' }}
       run-deploy: ${{ github.event_name == 'push' || inputs.mode != 'health-only' }}
-    secrets:
-      postgres-password: ${{ secrets.POSTGRES_PASSWORD }}
-      redis-password: ${{ secrets.REDIS_PASSWORD }}
-      jwt-secret: ${{ secrets.JWT_SECRET }}
-      database-url: ${{ secrets.DATABASE_URL }}
-      deploy-ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
-      smtp-user: ${{ secrets.SMTP_USER }}
-      smtp-pass: ${{ secrets.SMTP_PASS }}
-      oauth-google-client-secret: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
-      oauth-facebook-app-secret: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
-      metrics-token: ${{ secrets.METRICS_TOKEN }}
-      sentry-dsn: ${{ secrets.SENTRY_DSN }}
+    secrets: inherit

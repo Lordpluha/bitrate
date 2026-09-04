@@ -3,6 +3,16 @@ name: "[deploy] Production Reusable"
 on:
   workflow_call:
     inputs:
+      environment:
+        description: >-
+          Name of the GitHub Environment holding this target's secrets and variables.
+          The deploy job binds to it, so every secrets.* and vars.* reference below
+          resolves against this environment. Required and deliberately not defaulted:
+          a caller that forgets it must fail at parse time, not deploy production by
+          accident. Adding staging is then a new environment plus a new caller, not
+          an edit to this file.
+        required: true
+        type: string
       wait-for-images:
         description: >-
           Block until every image workflow that ran for this commit has published.
@@ -20,31 +30,19 @@ on:
         required: false
         default: 20
         type: number
-    secrets:
-      # Genuinely secret values. Every one is consumed through an `env:` block and
-      # never interpolated into a `run:` string.
-      postgres-password:
-        required: true
-      redis-password:
-        required: true
-      jwt-secret:
-        required: true
-      database-url:
-        required: true
-      deploy-ssh-key:
-        required: true
-      smtp-user:
-        required: false
-      smtp-pass:
-        required: false
-      oauth-google-client-secret:
-        required: false
-      oauth-facebook-app-secret:
-        required: false
-      metrics-token:
-        required: false
-      sentry-dsn:
-        required: false
+
+# No `secrets:` block, on purpose. Declaring a secret here would make the caller
+# responsible for mapping it, and the caller has no environment -- it would map
+# empty strings. Callers pass `secrets: inherit` instead, and every secret below
+# is resolved inside the deploy job, where `environment:` applies and the
+# environment's value wins over any repository secret of the same name.
+#
+# A declared `required: true` secret would additionally break this outright: the
+# value lives at environment scope, so the caller genuinely cannot supply it and
+# the call would be rejected before the environment is ever entered.
+#
+# Every secret is still consumed through an `env:` block and never interpolated
+# into a `run:` string.
 
 jobs:
   # ---------------------------------------------------------------------------
@@ -130,19 +128,38 @@ jobs:
           done
 
   # ---------------------------------------------------------------------------
-  # `environment: production` is what makes this job wait for a human. The gate
-  # does nothing until the environment exists and has a required reviewer.
+  # `environment:` is what makes this job wait for a human. The gate does nothing
+  # until the environment exists and has a required reviewer.
+  #
+  # It is also the only place in this workflow where environment-scoped secrets
+  # and variables resolve. That is why the job runs in *every* mode, including
+  # health-only, rather than being gated by `inputs.run-deploy` as it once was:
+  # it is the sole resolver of the deploy target's configuration, and the health
+  # job downstream has no environment of its own. `inputs.run-deploy` now gates
+  # the individual steps that touch the server, not the job.
+  #
+  # The alternative -- giving the health job its own `environment:` -- was
+  # rejected. Protection rules apply per job, so a second environment-bound job
+  # would create a second pending deployment, and a run whose deploy was approved
+  # but whose health check was never approved would report an unverified deploy
+  # as still in progress. Routing the domain through a job output keeps exactly
+  # one approval per run regardless of how GitHub batches pending deployments.
   # ---------------------------------------------------------------------------
   deploy:
-    if: ${{ inputs.run-deploy && !cancelled() && needs['await-images'].result != 'failure' }}
+    if: ${{ !cancelled() && needs['await-images'].result != 'failure' }}
     name: Deploy
     needs: await-images
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    environment: production
+    environment: ${{ inputs.environment }}
 
     permissions:
       contents: read
+
+    # Consumed by the health job, which has no environment and therefore cannot
+    # read vars.DOMAIN itself.
+    outputs:
+      domain: ${{ steps.resolve.outputs.domain }}
 
     env:
       # An ssh_config alias rather than a flag string: the host, the user, the key
@@ -151,9 +168,48 @@ jobs:
       SSH_TARGET: bitrate-deploy
 
     steps:
+      # Runs in every mode, first, and before anything touches the server. This is
+      # the one step that exists purely to carry environment-scoped configuration
+      # out to a job that cannot read it. DOMAIN is a variable, not a secret -- no
+      # secret is ever written to an output, where it would be readable by every
+      # downstream job.
+      #
+      # The emptiness check is the point: an unset DOMAIN reads as "" rather than
+      # failing, and the health job would otherwise probe "https://api./" and
+      # report a confusing DNS error instead of a configuration one.
+      #
+      # Note that this job can also see *repository*-scoped values -- an
+      # environment-bound job resolves environment, repository and organization
+      # scope, with the environment winning on a name collision. So a leftover
+      # repository-scoped DOMAIN will not fail here; it will quietly apply to
+      # every environment that does not define its own. That is a footgun for
+      # staging, not an error today, which is why the repository-scoped copies
+      # are removed rather than merely shadowed.
+      - name: Resolve deployment configuration
+        id: resolve
+        env:
+          DOMAIN: ${{ vars.DOMAIN }}
+          ENVIRONMENT_NAME: ${{ inputs.environment }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${DOMAIN}" ]; then
+            echo "::error::DOMAIN is not set on the '${ENVIRONMENT_NAME}' environment."
+            echo "It must be an environment variable of that environment, not a repository variable:"
+            echo "  Settings -> Environments -> ${ENVIRONMENT_NAME} -> Environment variables."
+            echo "A repository-scoped DOMAIN is not visible here and reads as an empty string."
+            exit 1
+          fi
+
+          printf 'domain=%s\n' "${DOMAIN}" >> "${GITHUB_OUTPUT}"
+          echo "Deploy target: ${ENVIRONMENT_NAME} (${DOMAIN})"
+
       # Production tracks master. workflow_dispatch can be started from any ref,
       # and the sync step would happily push a feature branch's infra onto the box.
+      # Only enforced when something is actually being deployed: health-only mode
+      # touches nothing and is legitimately useful from any ref.
       - name: Assert the ref is master
+        if: ${{ inputs.run-deploy }}
         env:
           REF_NAME: ${{ github.ref_name }}
         run: |
@@ -164,12 +220,14 @@ jobs:
           fi
 
       - name: Checkout
+        if: ${{ inputs.run-deploy }}
         uses: actions/checkout@v4
 
       # Everything after this step touches the server. A name-only report of what
       # is missing is the whole point: an empty JWT_SECRET renders an env file that
       # starts an API signing tokens with a blank key.
       - name: Preflight -- required configuration present
+        if: ${{ inputs.run-deploy }}
         env:
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
@@ -200,17 +258,17 @@ jobs:
           DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
           OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
           OAUTH_FACEBOOK_APP_ID: ${{ vars.OAUTH_FACEBOOK_APP_ID }}
-          POSTGRES_PASSWORD: ${{ secrets.postgres-password }}
-          REDIS_PASSWORD: ${{ secrets.redis-password }}
-          JWT_SECRET: ${{ secrets.jwt-secret }}
-          DATABASE_URL: ${{ secrets.database-url }}
-          SMTP_USER: ${{ secrets.smtp-user }}
-          SMTP_PASS: ${{ secrets.smtp-pass }}
-          OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.oauth-google-client-secret }}
-          OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.oauth-facebook-app-secret }}
-          METRICS_TOKEN: ${{ secrets.metrics-token }}
-          SENTRY_DSN: ${{ secrets.sentry-dsn }}
-          DEPLOY_SSH_KEY: ${{ secrets.deploy-ssh-key }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
+          OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
+          METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
           set -euo pipefail
 
@@ -245,7 +303,8 @@ jobs:
 
           if [ ${#missing[@]} -gt 0 ]; then
             echo "::error::Missing required configuration. Nothing was deployed."
-            echo "Set each of these as a repository secret or variable."
+            echo "Set each of these on the '${ENVIRONMENT_NAME}' environment:"
+            echo "  Settings -> Environments -> ${ENVIRONMENT_NAME} -> Environment secrets / variables."
             echo "Names only -- no value is ever printed by this workflow:"
             printf '  - %s\n' "${missing[@]}"
             exit 1
@@ -311,8 +370,9 @@ jobs:
       # $HOME is /home/runner; the workspace is /home/runner/work/<repo>/<repo>.
       # The key therefore never lands anywhere upload-artifact or a cache would look.
       - name: Install deploy key and pin the host key
+        if: ${{ inputs.run-deploy }}
         env:
-          DEPLOY_SSH_KEY: ${{ secrets.deploy-ssh-key }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
           DEPLOY_SSH_HOST_KEY: ${{ vars.DEPLOY_SSH_HOST_KEY }}
@@ -360,6 +420,7 @@ jobs:
           ssh-keygen -lf /home/runner/.ssh/known_hosts
 
       - name: Server preflight -- directory, docker, task
+        if: ${{ inputs.run-deploy }}
         run: |
           set -euo pipefail
           ssh "${SSH_TARGET}" bash -euo pipefail -s <<'REMOTE'
@@ -397,6 +458,7 @@ jobs:
       # pick it up. `umask 077` on the server means the file is 600 from birth
       # rather than briefly world-readable, and the rename is atomic.
       - name: Render production .env on the server
+        if: ${{ inputs.run-deploy }}
         env:
           NODE_ENV: ${{ vars.NODE_ENV }}
           PORT: ${{ vars.PORT }}
@@ -425,17 +487,18 @@ jobs:
           DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
           OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
           OAUTH_FACEBOOK_APP_ID: ${{ vars.OAUTH_FACEBOOK_APP_ID }}
-          POSTGRES_PASSWORD: ${{ secrets.postgres-password }}
-          REDIS_PASSWORD: ${{ secrets.redis-password }}
-          JWT_SECRET: ${{ secrets.jwt-secret }}
-          DATABASE_URL: ${{ secrets.database-url }}
-          SMTP_USER: ${{ secrets.smtp-user }}
-          SMTP_PASS: ${{ secrets.smtp-pass }}
-          OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.oauth-google-client-secret }}
-          OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.oauth-facebook-app-secret }}
-          METRICS_TOKEN: ${{ secrets.metrics-token }}
-          SENTRY_DSN: ${{ secrets.sentry-dsn }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
+          OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
+          METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           RENDERED_FROM: ${{ github.sha }}
+          ENVIRONMENT_NAME: ${{ inputs.environment }}
         run: |
           set -euo pipefail
 
@@ -452,7 +515,7 @@ jobs:
 
           {
             printf '# Generated by .github/workflows/deploy_reusable.yml -- do not edit on the server.\n'
-            printf '# Source of truth: the repository secrets and variables of %s.\n' "${GITHUB_REPOSITORY}"
+            printf '# Source of truth: the secrets and variables of the %s environment of %s.\n' "${ENVIRONMENT_NAME}" "${GITHUB_REPOSITORY}"
             printf '# Rendered from commit %s. Re-run the deploy workflow to regenerate.\n\n' "${RENDERED_FROM}"
 
             printf '# --- Runtime ---\n'
@@ -522,6 +585,7 @@ jobs:
       # while newer images get pulled -- precisely the mismatch this step prevents.
       # Pushing also guarantees the files come from the exact commit CI validated.
       - name: Sync infra and Taskfile to the server
+        if: ${{ inputs.run-deploy }}
         env:
           DEPLOY_SHA: ${{ github.sha }}
         run: |
@@ -553,6 +617,7 @@ jobs:
           echo "infra/ and Taskfile.yml on the server now match ${DEPLOY_SHA}"
 
       - name: Deploy -- pull images and restart
+        if: ${{ inputs.run-deploy }}
         run: |
           set -euo pipefail
           ssh "${SSH_TARGET}" bash -euo pipefail -s <<'REMOTE'
@@ -573,6 +638,7 @@ jobs:
           REMOTE
 
       - name: Apply database migrations
+        if: ${{ inputs.run-deploy }}
         run: |
           set -euo pipefail
           ssh "${SSH_TARGET}" bash -euo pipefail -s <<'REMOTE'
@@ -603,8 +669,21 @@ jobs:
         if: always()
         run: rm -f /home/runner/.ssh/bitrate_deploy /home/runner/.ssh/known_hosts /home/runner/.ssh/config
 
+  # ---------------------------------------------------------------------------
+  # Deliberately has no `environment:`, so it is not gated and cannot leave a
+  # deploy unverified while it waits for a second approval. The consequence is
+  # that it cannot see environment-scoped configuration: `vars.DOMAIN` here would
+  # resolve against repository scope and silently be an empty string. The domain
+  # therefore arrives as an output of the deploy job, which does have the
+  # environment.
+  # ---------------------------------------------------------------------------
+  # Requires deploy to have *succeeded*, not merely "not failed". The deploy job
+  # is now the sole source of the domain, so if it was skipped -- which happens
+  # when await-images failed -- there is nothing to probe with, and the old
+  # "!= 'failure'" form would have run this job with an empty domain and reported
+  # a second, misleading error on a run that had already failed upstream.
   health:
-    if: ${{ !cancelled() && needs.deploy.result != 'failure' }}
+    if: ${{ needs.deploy.result == 'success' }}
     name: Health Check
     needs: deploy
     runs-on: ubuntu-latest
@@ -616,13 +695,20 @@ jobs:
     steps:
       - name: Probe the public endpoints
         env:
-          DOMAIN: ${{ vars.DOMAIN }}
+          # NOT vars.DOMAIN -- see the comment above this job.
+          DOMAIN: ${{ needs.deploy.outputs.domain }}
+          ENVIRONMENT_NAME: ${{ inputs.environment }}
           ATTEMPTS: ${{ inputs.health-attempts }}
         run: |
           set -euo pipefail
 
+          # Defence in depth. The deploy job already fails on an empty DOMAIN, so
+          # reaching this branch means the output plumbing broke rather than the
+          # variable being unset -- say so, instead of probing "https://api./".
           if [ -z "${DOMAIN}" ]; then
-            echo "::error::The DOMAIN variable is not set, so there is nothing to probe."
+            echo "::error::No domain was received from the deploy job."
+            echo "Expected it as the 'domain' output of that job, resolved from the"
+            echo "DOMAIN variable of the '${ENVIRONMENT_NAME}' environment."
             exit 1
           fi
 

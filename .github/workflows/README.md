@@ -57,18 +57,33 @@ Current workflow map for .github/workflows.
 - deploy.yml — production deploy entry workflow: push to `master` plus `workflow_dispatch`
   with a `full` / `redeploy` / `health-only` mode.
 - deploy_reusable.yml — waits for this commit's images, renders the server's `.env` from
-  repository secrets and variables, pushes `infra/` and `Taskfile.yml`, runs
+  the deploy environment's secrets and variables, pushes `infra/` and `Taskfile.yml`, runs
   `task prod:deploy` and `task prod:migrate`, then probes the public endpoints.
 
-Three things about it are easy to get wrong:
+Four things about it are easy to get wrong:
 
-- **The `production` environment is the approval gate.** The deploy job declares
-  `environment: production`. Until that environment exists in repository settings *with a
-  required reviewer*, the job runs unattended — declaring it is not itself a gate.
-- **Configuration is repository-scoped, not environment-scoped.** The caller job resolves
-  `secrets:` before entering the environment, and the health job has no environment at all,
-  so environment-scoped secrets and variables would silently be empty. Set them at the
-  repository level.
+- **The environment is the approval gate.** The deploy job declares
+  `environment: ${{ inputs.environment }}`, and `deploy.yml` passes `production`. Until that
+  environment exists in repository settings *with a required reviewer*, the job runs
+  unattended — declaring it is not itself a gate.
+- **Configuration is environment-scoped.** Every application secret and variable belongs to
+  the `production` environment, not to repository scope, so a future `staging` can carry the
+  same names with different values. Only `GITHUB_TOKEN` usage is repository-wide.
+- **That scoping is why the caller passes `secrets: inherit`.** A job that calls a reusable
+  workflow may not declare `environment:` — GitHub allows only
+  `name`/`uses`/`with`/`secrets`/`needs`/`if`/`permissions`/`strategy`/`concurrency` there.
+  The caller therefore has no environment, so an explicit `secrets: JWT_SECRET: ${{ secrets.JWT_SECRET }}`
+  mapping would resolve against repository scope and pass an empty string. `inherit` defers
+  resolution to the called workflow's `deploy` job, which does carry the environment. The
+  trade is that `inherit` exposes every repository secret to `deploy_reusable.yml`, not just
+  the eleven the deploy uses.
+- **The health job has no environment, on purpose, and so cannot read `vars.DOMAIN`.**
+  Protection rules apply per job, so giving it one would create a second pending deployment
+  and could leave a deploy approved but never verified. The domain instead travels as a
+  `domain` output of the deploy job. That is also why the deploy job now runs in *every*
+  mode — including `health-only` — with `inputs.run-deploy` gating its individual
+  server-touching steps rather than the job: it is the only place environment-scoped config
+  resolves.
 - **The deploy pushes `infra/` and `Taskfile.yml` to the server rather than having the server
   `git fetch`.** Anonymous git traffic from the VPS is throttled intermittently; a failed
   fetch would leave the old compose file and nginx templates in place while newer images

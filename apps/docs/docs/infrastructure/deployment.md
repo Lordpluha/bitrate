@@ -113,9 +113,26 @@ GitHub, so editing it by hand on the server works only until the next deploy ove
 that any visitor can read, so storing them as secrets protects nothing and only makes them harder
 to change.
 
-Both must be **repository**-scoped rather than attached to the `production` environment. The calling
-job resolves `secrets:` before it enters the environment, and the health-check job has no
-environment at all, so environment-scoped values would resolve to empty strings without an error.
+Both live on the **`production` environment**, not at repository scope, because the same names hold
+different values per deployment target. Adding `staging` is then a second environment plus a caller
+that passes its name — the reusable workflow itself does not change.
+
+A leftover repository-scoped copy is not an error, which is precisely what makes it dangerous: an
+environment-bound job reads repository scope too, and environment only wins on a name collision. The
+stale copy would quietly apply to every environment that has not defined its own value. Delete it
+rather than leaving it.
+
+The caller passes `secrets: inherit` rather than mapping each secret. It has no choice: GitHub does
+not allow `environment:` on a job that calls a reusable workflow, so an explicit
+`${{ secrets.X }}` mapping there would be evaluated outside the environment and pass empty strings —
+a deploy that succeeds while starting the API with a blank signing key. The cost of `inherit` is
+real: every repository secret becomes visible to the called workflow.
+
+One seam to know about. `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_SITE_URL` and `API_URL` are also read by
+the image-build workflows, which have no environment and therefore fall back to the production
+values hardcoded in them. Production is unaffected — the fallbacks match — but the image side is a
+separate axis from the server's `.env`, and changing the environment variable will not change a
+published bundle.
 
 `scripts/sync-env-to-github.sh` uploads an existing env file in one pass. It pipes each value into
 `gh` on stdin rather than passing it as an argument — arguments are visible to anyone who can run
@@ -123,9 +140,15 @@ environment at all, so environment-scoped values would resolve to empty strings 
 would silently vanish from the rendered file.
 
 ```bash
-./scripts/sync-env-to-github.sh            # dry run, names only
+./scripts/sync-env-to-github.sh                      # dry run against production
 ./scripts/sync-env-to-github.sh --apply
+./scripts/sync-env-to-github.sh --env staging --apply
 ```
+
+The environment must exist first, and its required reviewer has to be added by hand — `gh` can
+create neither. After writing, the script re-reads the environment and names anything that did not
+land: a missing required value aborts the next deploy loudly, but a missing optional one just
+reverts to a schema default without saying so.
 
 A compose `--env-file` is not a shell file: compose interpolates `${...}` inside it and treats
 ` #` as the start of a comment, so a password containing `$` or ` #` is corrupted rather than
