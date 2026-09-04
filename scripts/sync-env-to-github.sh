@@ -27,6 +27,10 @@ ENVIRONMENT="production"
 # Genuinely secret. Everything else about the deployment is configuration.
 SECRETS=(
   POSTGRES_PASSWORD REDIS_PASSWORD JWT_SECRET DATABASE_URL
+  # Carries the same credentials as DATABASE_URL. Only `migrate dev` uses a shadow database and
+  # production runs `migrate deploy`, but the compose file passes it through, so dropping it here
+  # would change what the container sees.
+  SHADOW_DATABASE_URL
   SMTP_USER SMTP_PASS
   OAUTH_GOOGLE_CLIENT_SECRET OAUTH_FACEBOOK_APP_SECRET
   METRICS_TOKEN SENTRY_DSN
