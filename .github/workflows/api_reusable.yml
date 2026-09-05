@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js and pnpm
         if: ${{ inputs.run-biome }}
@@ -62,7 +62,7 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build API Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/api/Dockerfile
@@ -120,7 +120,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
@@ -175,7 +175,7 @@ jobs:
 
       - name: Upload API startup log
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: api-startup-log
           path: /tmp/bitrate-api.log
@@ -186,7 +186,7 @@ jobs:
       # failure the freshly generated one is right here — download and commit it.
       - name: Upload regenerated API contract
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: regenerated-api-contract
           path: packages/contracts/src/api/v1.ts

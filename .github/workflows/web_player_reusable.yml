@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js and pnpm
         if: ${{ inputs.run-biome || inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
@@ -115,7 +115,7 @@ jobs:
 
       - name: Upload screenshot test failure artifacts
         if: ${{ inputs.run-screenshot && failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web-player-screenshot-diffs
           path: apps/web-player/test-results/
@@ -131,7 +131,7 @@ jobs:
 
       - name: Build Web Player Docker image (with registry cache export)
         if: ${{ inputs.cache-to-registry }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/web-player/Dockerfile
@@ -151,7 +151,7 @@ jobs:
 
       - name: Build Web Player Docker image (GHA cache export only)
         if: ${{ !inputs.cache-to-registry }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/web-player/Dockerfile
