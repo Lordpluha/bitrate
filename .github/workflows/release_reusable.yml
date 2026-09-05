@@ -548,13 +548,26 @@ jobs:
       - name: "Gate: pnpm lint"
         run: pnpm lint
 
+      # apps/api's `precheck-types` runs `prisma generate`, which loads
+      # prisma.config.ts, which resolves DATABASE_URL through Prisma's `env()` --
+      # and that throws rather than returning empty when the variable is unset.
+      # Generation never opens a connection, so the value only has to parse; this
+      # is the same placeholder api_reusable.yml uses for its own type check, and
+      # the same reasoning as PRISMA_GENERATE_ONLY_URL in apps/api/Dockerfile.
       - name: "Gate: pnpm check-types"
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
         run: pnpm check-types
+
 
       # What lefthook's pre-push hook runs for every human push. A release branch
       # is a push; exempting it would make the release the least-checked branch in
       # the repository.
       - name: "Gate: pnpm build"
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
         run: pnpm build
 
       - name: Report the gates as a commit status
