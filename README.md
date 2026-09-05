@@ -86,25 +86,70 @@ pnpm dev
 
 ## 📦 Tech Stack
 
-### Backend
-NestJS 11 · PostgreSQL 16 (Prisma) · Redis · BullMQ · Socket.io · JWT + OAuth · Swagger · Prometheus + Grafana
+Versions are the ones actually resolved in the workspace, not aspirations. Where a choice has a
+reason that is easy to get wrong, the reason is in the linked rule rather than repeated here.
 
-### Web (Next.js App Router + Feature-Sliced Design)
-Next.js · React 19 · TailwindCSS v4 · Zustand target architecture · TanStack Query · openapi-fetch
+### Backend — `apps/api`
 
-### Mobile
-React Native · Expo SDK 54 · expo-router · EAS Build
+NestJS 11 on Node 24, TypeScript 6. PostgreSQL 16 through Prisma 7, whose datasource lives in
+`prisma.config.ts` rather than in the schema. Redis 7 via ioredis, backing both BullMQ 5 job queues
+and the throttler's storage. Socket.io 4 for real-time — single-instance only until a Redis adapter
+is added. Validation is Zod 4 through nestjs-zod, so DTOs and their runtime checks cannot drift.
+Auth is JWT with argon2 hashing plus Google and Facebook OAuth. Swagger is generated from
+decorators kept in `decorators/`, never inline. Mail goes out through nodemailer, audio is probed
+with music-metadata, helmet sets the security headers.
 
-### Desktop
-Tauri 2 · React · Vite
+Errors and traces go to Sentry (`@sentry/nestjs` 10 with the profiling integration), sampled at 10%
+in production. Metrics are hand-rolled in `infra/observability` and emitted in Prometheus text
+format behind a token — there is no Prometheus server and no Grafana in this stack today.
+
+Tests are Jest 30 in three layers: unit with `jest-mock-extended`, integration through supertest,
+and E2E against real Postgres and Redis.
+
+### Web — `apps/web-player`, `apps/web-artists`
+
+Next.js 16 App Router with React 19, organised by Feature-Sliced Design — imports flow
+`app → views → widgets → features → entities → shared` and never upward. Server state is TanStack
+Query 5 over `openapi-fetch`, typed from the generated `@bitrate/contracts`; client state is
+Zustand 5 with a shared persistence factory. Forms are React Hook Form with Zod resolvers. Styling
+is Tailwind v4 configured entirely in CSS `@theme` layers — there is no `tailwind.config.js`.
+Animation is Motion. Tests are Vitest 4 and Playwright 1.60.
+
+### Shared UI — `packages/ui-react`
+
+The design system and component library: Base UI primitives, Tailwind v4, CVA variants merged
+through `cn()`, Lucide icons, built with Vite 8. Storybook 10 is published at `ui.bitrate.me`. Four
+co-located Vitest projects per component — unit, integration, DOM snapshot, and Chromium screenshot
+through `@vitest/browser-playwright`.
+
+### Mobile — `apps/mobile`
+
+React Native 0.81 on Expo SDK 54 with expo-router 6 and Reanimated 4. Scaffolded, not started; the
+web conventions above deliberately do not apply there.
+
+### Desktop — `apps/desktop`
+
+Tauri 2 shell around a React 19 renderer built by Vite 8. Also scaffolded rather than built out.
+
+### Documentation — `apps/docs`
+
+Docusaurus 3.10 with the Mermaid theme, published at `docs.bitrate.me`. Architecture decisions live
+here as ADRs.
 
 ### Shared packages
-`@bitrate/ui-react` · `@bitrate/contracts` · `@bitrate/svgr` · `@bitrate/vite-svgr` · `@bitrate/converter`
 
-### Infrastructure
-Turborepo · pnpm workspaces · Biome · Lefthook · Changesets · GitHub Actions (20+ workflows) · Docker Compose
+`@bitrate/contracts` — OpenAPI types generated from the running API.
+`@bitrate/ui-react` — components and design tokens.
+`@bitrate/svgr` and `@bitrate/vite-svgr` — SVG sources compiled to React components at build time.
+`@bitrate/converter`, `@bitrate/ncs-parser` — media utilities.
+`@bitrate/performance-test` — k6 load, spike and soak scenarios.
 
----
+### Tooling and delivery
+
+Turborepo over pnpm 10 workspaces. Biome for lint and format, Lefthook for git hooks, Changesets for
+versioning. 40 GitHub Actions workflows build five Docker images per release and push them to GHCR;
+production pulls those images rather than building, behind a required-reviewer gate. Docker Compose
+runs the stack, `Taskfile.yml` is the only interface to it. nginx terminates TLS for all six hosts.
 
 ## 🧪 Verification
 
