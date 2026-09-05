@@ -65,14 +65,21 @@ It also runs `lefthook install` automatically (pre-commit, commit-msg, pre-push 
 
 ### 3. Environment Variables
 
-Copy the root `.env.example` for Docker Compose variables:
+Nothing to do for the Docker stacks — there is no repository-root env file. Every variable in
+`infra/docker-compose.dev.yaml` and `infra/docker-compose.preprod.yaml` carries a default, so
+they start on a clean checkout. Export a shell variable to override one:
 
 ```bash
-cp .env.example .env
+POSTGRES_PORT=5433 task infra:up
 ```
+
+To run a single app natively, copy that app's own template — `apps/api`, `apps/web-player` and
+`apps/web-artists` each ship one — into that app's `.env`. Deploy and CI values live in GitHub
+environment secrets and variables, not in any file.
 
 The API validates its own environment at startup via Zod (`apps/api/env.schema.ts`).
 Required variables: `DATABASE_URL`, `REDIS_HOST`, `REDIS_PORT`, `JWT_SECRET`, `WEB_HOST`.
+See [Environment variables](../guides/environment.md) for the full list.
 
 ### 4. Start Infrastructure
 

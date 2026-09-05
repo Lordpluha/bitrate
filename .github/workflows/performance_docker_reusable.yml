@@ -3,32 +3,127 @@ name: "[performance] Docker Reusable"
 on:
   workflow_call:
 
+permissions:
+  contents: read
+
 jobs:
   docker-performance:
     name: Docker Performance Benchmarks
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    # docker-compose.preprod.yaml defaults every variable, so no env file is needed. These
+    # are the values this job pins deliberately, exported at job level so `docker compose`
+    # reads them through shell interpolation. They are not written to a `.env` file:
+    # `-f infra/...` makes `infra/` the project directory, so compose ignores a root `.env`.
+    env:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: bitrate
+      SHADOW_DATABASE_URL: postgresql://admin:admin@postgres:5432/bitrate_shadow
+      JWT_SECRET: docker_performance_secret_for_ci
+      COMPOSE_FILE: infra/docker-compose.preprod.yaml
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create .env
-        run: cp .env.example .env
+      # `install: false` is enough: @bitrate/performance-test declares no dependencies, so
+      # `pnpm --filter ... run load:api` only needs the workspace on disk to shell out to k6.
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          install: "false"
+
+      - name: Free up disk space
+        run: |
+          sudo apt-get clean
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          docker system prune -af --volumes
+          df -h
 
       - name: Build images
-        run: |
-          docker compose build api web-player web-artists
+        run: docker compose build api web-player web-artists
 
       - name: Start services
         run: |
-          docker compose up -d
-          sleep 30
+          docker compose up -d postgres redis
+          timeout 60 bash -c 'until docker compose exec -T postgres pg_isready -U admin; do sleep 1; done'
+          docker compose exec -T redis redis-cli ping
+          docker compose up -d api web-player web-artists
 
+      # The load test authenticates as a seeded user, so an unmigrated, unseeded database
+      # makes every authenticated request 401 and the benchmark measures nothing. These are
+      # the same commands web-integration-test_reusable.yml runs against this stack.
+      - name: Run database migrations and seed
+        run: |
+          docker compose exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='bitrate_shadow'" | grep -q 1 || \
+            docker compose exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE bitrate_shadow;"
+          docker compose exec -T api pnpm --filter @bitrate/api run db:gen
+          docker compose exec -T api pnpm --filter @bitrate/api run db:migration:start
+          docker compose exec -T api sh -c "cd apps/api && pnpm prisma db seed"
+
+      - name: Wait for API readiness
+        run: |
+          for i in {1..60}; do
+            if curl --fail --silent http://localhost:3000/api/v1/health/ready >/dev/null 2>&1; then
+              echo "API readiness check passed"
+              exit 0
+            fi
+            echo "Waiting for API readiness... ($i/60)"
+            sleep 2
+          done
+          echo "API did not become ready"
+          docker compose logs --tail=200 api
+          exit 1
+
+      # Installed natively rather than via grafana/k6-action: that action runs k6 inside its
+      # own container, where `localhost` is the action container and not the runner, so it
+      # could never reach the published compose ports.
+      - name: Setup k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      # KNOWN LIMITATION, deliberately not worked around here: the API runs inside the
+      # compose stack, and docker-compose.preprod.yaml does not pass API_RATE_LIMIT_MAX or
+      # JWT_ACCESS_EXPIRES_IN through to the api service. performance_api_load_reusable.yml
+      # widens both for its native run because the global ThrottlerGuard (100 req/min per
+      # IP) otherwise measures the throttler, and the 5m access token expires mid-run.
+      # Neither can be set from this workflow without adding them to the shared preprod
+      # compose file, which is a change to a real environment definition rather than to CI.
+      # Read the numbers below as "the API under Docker with production throttling on".
+      # continue-on-error is kept from the original step, not newly added: with the throttler
+      # active the k6 thresholds are not meaningfully applicable, so a threshold breach here
+      # should not fail the weekly performance run. Read the uploaded artifact instead. If
+      # the two variables above ever reach the container, drop this and let it gate.
       - name: Run k6 load tests
-        uses: grafana/k6-action@v0.3.1
-        with:
-          filename: tests/load/api-load-test.js
         continue-on-error: true
+        run: pnpm --filter @bitrate/performance-test run load:api
+        env:
+          # The compose stack publishes the API on 3000; the script's own default of 3001 is
+          # web-player in this stack.
+          API_URL: http://localhost:3000
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-docker-results
+          path: |
+            packages/performance-test/results.json
+            packages/performance-test/summary.json
+          if-no-files-found: ignore
+
+      - name: Show container logs on failure
+        if: failure()
+        run: docker compose logs --tail=200
 
       - name: Cleanup
         if: always()
