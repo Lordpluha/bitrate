@@ -5,12 +5,17 @@ node_modules
 .pnp
 .pnp.js
 
-# Local env files
+# Local env files. Real values live outside the repository; each app ships a .env.example
+# instead. apps/api/.env.test is the one deliberate exception — the E2E suite reads it and CI
+# gives that step no environment of its own, so removing it breaks the pipeline.
 .env
 .env.local
+.env.development
+.env.production
 .env.development.local
 .env.test.local
 .env.production.local
+!.env.example
 
 # Testing
 coverage

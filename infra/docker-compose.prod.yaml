@@ -52,7 +52,7 @@ services:
 
   api:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/api:master
+    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
@@ -86,6 +86,10 @@ services:
       - API_BASE_URL
       - METRICS_TOKEN
       - SENTRY_DSN
+      # Which release and which environment an event belongs to. Without them every error in
+      # Sentry is unattributed and a spike cannot be traced to the deploy that caused it.
+      - SENTRY_RELEASE
+      - SENTRY_ENVIRONMENT
       - SMTP_HOST
       - SMTP_PORT
       - SMTP_USER
@@ -132,7 +136,7 @@ services:
 
   web-player:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/web-player:master
+    image: ghcr.io/lordpluha/bitrate/web-player:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./apps/web-player/Dockerfile
@@ -161,7 +165,7 @@ services:
 
   web-artists:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/web-artists:master
+    image: ghcr.io/lordpluha/bitrate/web-artists:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./apps/web-artists/Dockerfile
@@ -188,7 +192,7 @@ services:
   # runtime state, so they need neither environment nor a dependency on the API.
   docs:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/docs:master
+    image: ghcr.io/lordpluha/bitrate/docs:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./apps/docs/Dockerfile
@@ -206,7 +210,7 @@ services:
 
   storybook:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/storybook:master
+    image: ghcr.io/lordpluha/bitrate/storybook:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./packages/ui-react/Dockerfile

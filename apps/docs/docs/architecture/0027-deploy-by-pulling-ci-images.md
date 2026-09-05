@@ -34,13 +34,17 @@ falls back to building any image it cannot pull and the fast path silently becom
 **Production tracks `master`.** `develop` is the working branch; the released state is what branch
 protection and the pull-request flow already treat as such.
 
-**Configuration lives in GitHub, and the server's `.env` is a rendered artifact.** Genuinely secret
+**Configuration lives in GitHub on the `production` environment, and the server's `.env` is a
+rendered artifact.** Genuinely secret
 values are repository secrets; hosts, ports, lifetimes, cookie names and both OAuth client ids are
 repository variables. `NEXT_PUBLIC_*` are variables on purpose — they are compiled into a bundle any
 visitor can read, so storing them as secrets protects nothing and only makes them harder to change.
-Both must be repository-scoped: the calling job resolves `secrets:` before entering the environment,
-and the health job has no environment, so environment-scoped values would resolve to empty strings
-without an error.
+Both live on the environment. The constraint that first suggested repository scope is real — a job
+calling a reusable workflow cannot declare `environment:`, so an explicit `${{ secrets.X }}` mapping
+in the caller would be evaluated outside it and pass empty strings — but it is solved by passing
+`secrets: inherit` and letting the called workflow resolve them inside the environment-bound job.
+The health job, which has no environment, receives the domain as a job output rather than reading a
+variable it cannot see.
 
 **A push to `master` deploys, behind a required reviewer.** The workflow waits for that commit's
 image builds, then stops at the `production` environment. `environment: production` is not itself a

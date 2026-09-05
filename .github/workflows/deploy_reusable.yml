@@ -82,6 +82,7 @@ jobs:
           while :; do
             pending=""
             failed=""
+            found=""
 
             for wf in $IMAGE_WORKFLOWS; do
               if ! runs=$(gh api \
@@ -94,7 +95,15 @@ jobs:
 
               # No run for this SHA means the workflow's path filter excluded this
               # commit. Its published image is unchanged and already correct.
+              #
+              # That still holds under the release-commit flow: a version commit
+              # touches apps/<name>/package.json and CHANGELOG.md only for the
+              # workspaces that actually changed, so a service with no changeset
+              # in this release legitimately has no run and keeps its existing
+              # :master image. Do not turn this into an error.
               [ -n "${runs}" ] || continue
+
+              found="${found} ${wf}"
 
               while IFS= read -r line; do
                 status="${line%%:*}"
@@ -114,6 +123,19 @@ jobs:
             fi
 
             if [ -z "${pending}" ]; then
+              # A warning, not an error. Zero runs is legitimate for a release
+              # whose only changed workspaces are ones no image workflow watches
+              # (packages/svgr, for example), and for a workflow_dispatch of a
+              # commit that was never built for master. Both deploy the images
+              # published for an *earlier* commit, which is usually right and
+              # occasionally a surprise -- so it is said out loud, in the run the
+              # reviewer is about to approve, rather than failing a valid deploy.
+              if [ -z "${found}" ]; then
+                echo "::warning::No image workflow ran for ${DEPLOY_SHA}. This deploy will use the images published for an earlier commit."
+                echo "If that is not what you want, dispatch the image workflows for master first, then re-run this deploy."
+              else
+                echo "Image workflows that published for this commit:${found}"
+              fi
               echo "All image workflows for ${DEPLOY_SHA} have published."
               exit 0
             fi
@@ -223,6 +245,39 @@ jobs:
         if: ${{ inputs.run-deploy }}
         uses: actions/checkout@v4
 
+      # The identifier every Sentry event from this deploy is tagged with, and the
+      # thing a future source-map upload would hang on. It is the *released*
+      # version rather than the commit SHA: this workflow only auto-runs on a
+      # `chore(release): version packages` commit, so apps/api/package.json here is
+      # the version that was just released, tagged, and given a changelog entry --
+      # a name a human can look up, unlike a SHA.
+      #
+      # `bitrate-api@x.y.z`, not `@bitrate/api@x.y.z`: a Sentry release name may
+      # not contain a forward slash.
+      #
+      # The SHA fallback is for a workflow_dispatch of a commit that predates this
+      # wiring, where reading the file could yield nothing usable. An unattributed
+      # event is worse than one attributed to a commit.
+      - name: Resolve the Sentry release identifier
+        id: release-id
+        if: ${{ inputs.run-deploy }}
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          version=$(node -p "require('./apps/api/package.json').version" 2>/dev/null || true)
+
+          if [ -n "${version}" ] && [ "${version}" != "undefined" ]; then
+            release="bitrate-api@${version}"
+          else
+            release="bitrate-api@${DEPLOY_SHA}"
+            echo "::warning::Could not read a version from apps/api/package.json; using the commit SHA as the Sentry release."
+          fi
+
+          printf 'release=%s\n' "${release}" >> "${GITHUB_OUTPUT}"
+          echo "Sentry release: ${release}"
+
       # Everything after this step touches the server. A name-only report of what
       # is missing is the whole point: an empty JWT_SECRET renders an env file that
       # starts an API signing tokens with a blank key.
@@ -268,6 +323,8 @@ jobs:
           OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_RELEASE: ${{ steps.release-id.outputs.release }}
+          SENTRY_ENVIRONMENT: ${{ inputs.environment }}
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
           set -euo pipefail
@@ -293,7 +350,7 @@ jobs:
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
             OAUTH_GOOGLE_CLIENT_ID OAUTH_GOOGLE_CLIENT_SECRET
             OAUTH_FACEBOOK_APP_ID OAUTH_FACEBOOK_APP_SECRET
-            METRICS_TOKEN SENTRY_DSN
+            METRICS_TOKEN SENTRY_DSN SENTRY_RELEASE SENTRY_ENVIRONMENT
           "
 
           missing=()
@@ -497,6 +554,13 @@ jobs:
           OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          # Not configuration a human sets anywhere: both are derived per deploy.
+          # SENTRY_RELEASE names the released version being started, and
+          # SENTRY_ENVIRONMENT is the name of the GitHub Environment this deploy
+          # targets, so a future staging caller labels its events correctly
+          # without anyone remembering to set NODE_ENV consistently.
+          SENTRY_RELEASE: ${{ steps.release-id.outputs.release }}
+          SENTRY_ENVIRONMENT: ${{ inputs.environment }}
           RENDERED_FROM: ${{ github.sha }}
           ENVIRONMENT_NAME: ${{ inputs.environment }}
         run: |
@@ -570,6 +634,12 @@ jobs:
             printf '\n# --- Observability ---\n'
             opt METRICS_TOKEN
             opt SENTRY_DSN
+            # Inert until infra/docker-compose.prod.yaml lists both names in the
+            # api service's `environment:` block -- compose passes through only
+            # what that list names. Writing them here first is harmless and makes
+            # the compose change a one-line edit.
+            opt SENTRY_RELEASE
+            opt SENTRY_ENVIRONMENT
           } | ssh "${SSH_TARGET}" \
                 'umask 077; cat > "$HOME/bitrate/.env.deploy-tmp" && chmod 600 "$HOME/bitrate/.env.deploy-tmp" && mv -f "$HOME/bitrate/.env.deploy-tmp" "$HOME/bitrate/.env"'
 
@@ -664,6 +734,71 @@ jobs:
           echo "::error::Migrations did not apply. The new images are running against the old schema."
           exit 1
           REMOTE
+
+      # ---------------------------------------------------------------------
+      # Sentry release publishing. Entirely optional, and off today.
+      #
+      # The *attribution* does not depend on any of this: the API tags every
+      # event with SENTRY_RELEASE and SENTRY_ENVIRONMENT from its own
+      # environment, and Sentry creates a release the first time it sees one.
+      # Publishing the release ahead of the events only adds the deploy marker,
+      # the commit association, and somewhere to attach source maps.
+      #
+      # So this is a probe plus a gated step, never a required one. A missing
+      # token must skip, not fail: the deploy has already succeeded by this
+      # point and a red run would suggest production needs rolling back.
+      # ---------------------------------------------------------------------
+      - name: Check whether Sentry release publishing is configured
+        id: sentry
+        if: ${{ inputs.run-deploy }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+        run: |
+          set -euo pipefail
+
+          # Presence only. No value is printed, and the boolean is what leaves
+          # this step -- a secret must never reach a step output, where every
+          # downstream job can read it.
+          if [ -n "${SENTRY_AUTH_TOKEN:-}" ] && [ -n "${SENTRY_ORG:-}" ] && [ -n "${SENTRY_PROJECT:-}" ]; then
+            echo "configured=true" >> "${GITHUB_OUTPUT}"
+            echo "Sentry release publishing is configured."
+          else
+            echo "configured=false" >> "${GITHUB_OUTPUT}"
+            echo "::notice::Skipping Sentry release publishing -- SENTRY_AUTH_TOKEN, SENTRY_ORG or SENTRY_PROJECT is unset."
+            echo "Events still carry their release and environment; only the deploy marker and commit association are missing."
+          fi
+
+      # set_commits: skip, deliberately. 'auto' needs either the Sentry GitHub
+      # integration configured for this organisation or a full git history, and
+      # fails the step when neither is true -- after production is already live.
+      # Turn it on once the integration exists and suspect commits are wanted.
+      #
+      # No sourcemaps either: this runner has a checkout but no build output, so
+      # apps/api/dist does not exist here. Uploading maps belongs in the image
+      # build, not in the deploy -- see .github/workflows/README.md.
+      #
+      # `continue-on-error` here is deliberate and is the only one in this file.
+      # It is not hiding a gate. This step runs *after* the new images are live
+      # and the migrations are applied; the deploy's actual verdict is the health
+      # job downstream. Letting a Sentry API hiccup fail this job would mark a
+      # working production deploy as failed and, worse, skip the health check that
+      # decides whether it really is working. The step still reports red in the
+      # run, so the failure is visible rather than swallowed.
+      - name: Publish the Sentry release
+        if: ${{ inputs.run-deploy && steps.sentry.outputs.configured == 'true' }}
+        continue-on-error: true
+        uses: getsentry/action-release@ff07929a6537bac57790c3451cf4d364aca38528 # v3.7.0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+        with:
+          release: ${{ steps.release-id.outputs.release }}
+          environment: ${{ inputs.environment }}
+          set_commits: skip
+          finalize: true
 
       - name: Remove deploy key from the runner
         if: always()

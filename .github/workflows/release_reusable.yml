@@ -1,0 +1,184 @@
+name: "[release] Version and Tag Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: >-
+          Branch the version commit is written to. The released state lives on
+          master; this is an input rather than a literal so a future release
+          line is a new caller instead of an edit to this file.
+        required: false
+        default: master
+        type: string
+    secrets:
+      RELEASE_TOKEN:
+        description: >-
+          Repository secret holding a token that is allowed to push to the
+          release branch. Optional. Its only purpose is to make the version
+          commit start the downstream workflows: GitHub does not create workflow
+          runs for push events authenticated with GITHUB_TOKEN, so without this
+          token the release lands but nothing builds or deploys.
+        required: false
+    outputs:
+      released:
+        description: '"true" when a version commit was written and pushed.'
+        value: ${{ jobs.version.outputs.released }}
+      api-version:
+        description: Version of @bitrate/api after the bump. Empty when nothing was released.
+        value: ${{ jobs.version.outputs.api-version }}
+
+jobs:
+  version:
+    name: Version and Tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # The whole point of the job. Nothing else here reads or writes anything
+    # beyond the repository contents -- no packages, no actions, no issues.
+    permissions:
+      contents: write
+
+    outputs:
+      released: ${{ steps.version.outputs.released }}
+      api-version: ${{ steps.version.outputs.api-version }}
+
+    env:
+      # A boolean derived from the secret, never the secret. Step-level `if:`
+      # cannot read a secret, and putting the secret in a job-level `env:` would
+      # hand it to every step in the job for no reason.
+      HAS_RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN != '' }}
+      RELEASE_BRANCH: ${{ inputs.branch }}
+
+    steps:
+      # fetch-depth: 0 is required, not defensive. `changeset tag` reads every
+      # existing tag to decide which packages are still untagged; a shallow
+      # clone has none of them and the command would re-create tags that already
+      # exist on the remote, failing the push.
+      #
+      # The token is what the push below authenticates with, via the credential
+      # actions/checkout writes into .git/config. It is passed as an action
+      # input, never interpolated into a `run:` body.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.branch }}
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      # workflow_dispatch can be started from any ref. The checkout above pins
+      # the branch, but say so rather than silently versioning master from a run
+      # someone started on a feature branch expecting it to version that.
+      - name: Report the target branch
+        run: |
+          set -euo pipefail
+          echo "Versioning ${RELEASE_BRANCH} at $(git rev-parse --short HEAD)."
+
+      - name: Version, commit and tag
+        id: version
+        run: |
+          set -euo pipefail
+
+          # README.md is a changesets fixture, not a changeset. Counting it would
+          # make every run think there is something to release.
+          pending=$(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | wc -l | tr -d '[:space:]')
+
+          if [ "${pending}" -eq 0 ]; then
+            echo "released=false" >> "${GITHUB_OUTPUT}"
+            echo "api-version=" >> "${GITHUB_OUTPUT}"
+            echo "::notice::No changesets to consume. Nothing was versioned, and therefore nothing will build or deploy."
+            {
+              echo "### No release"
+              echo
+              echo "This merge carried no changesets, so no version commit was written."
+              echo "No image was built and no deploy was started -- that is the designed behaviour"
+              echo "for a merge with nothing user-visible in it."
+              echo
+              echo "To ship it anyway, run the **[platform] Deploy Production** workflow by hand"
+              echo "(\`workflow_dispatch\`, mode \`full\`) after dispatching the image workflows for"
+              echo "\`master\`. See .github/workflows/README.md."
+            } >> "${GITHUB_STEP_SUMMARY}"
+            exit 0
+          fi
+
+          echo "Consuming ${pending} changeset(s)."
+
+          # `changeset version` only rewrites package.json versions, CHANGELOG.md
+          # files and deletes the consumed changesets. Every internal dependency
+          # in this repo is declared `workspace:*`, which changesets leaves alone,
+          # so pnpm-lock.yaml does not move and --frozen-lockfile stays valid on
+          # the next run.
+          pnpm changeset:version
+
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "released=false" >> "${GITHUB_OUTPUT}"
+            echo "api-version=" >> "${GITHUB_OUTPUT}"
+            echo "::warning::Changesets were present but produced no change. Nothing was committed."
+            exit 0
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+
+          # This exact subject is load-bearing. release.yml refuses to re-enter on
+          # it, and deploy.yml plus the five image workflows use it to tell the
+          # released commit apart from the merge commit that preceded it. Changing
+          # the wording here without changing all seven `if:` conditions stops the
+          # whole chain silently.
+          git commit -m 'chore(release): version packages'
+          git push origin "HEAD:refs/heads/${RELEASE_BRANCH}"
+
+          # Tags are created locally by changesets and pushed separately.
+          # `changeset tag` is idempotent -- it skips a tag that already exists --
+          # so a re-run after a partial failure is safe. Every workspace here is
+          # private, so this only produces tags because .changeset/config.json
+          # sets privatePackages.tag; with the changesets default of false this
+          # command is a silent no-op.
+          pnpm changeset:release
+          git push origin --tags
+
+          version=$(node -p "require('./apps/api/package.json').version")
+          echo "released=true" >> "${GITHUB_OUTPUT}"
+          printf 'api-version=%s\n' "${version}" >> "${GITHUB_OUTPUT}"
+
+          {
+            echo "### Released"
+            echo
+            echo "Consumed ${pending} changeset(s) and pushed \`chore(release): version packages\` to \`${RELEASE_BRANCH}\`."
+            echo
+            echo "New tags:"
+            echo '```'
+            git tag --points-at HEAD
+            echo '```'
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      # Runs last so it is the final thing in the log. Without RELEASE_TOKEN the
+      # release is real -- the commit and tags are on master -- but GitHub does
+      # not raise a push event for a GITHUB_TOKEN push, so no image workflow and
+      # no deploy will start from it. Failing here would be worse: the commit is
+      # already pushed and a red run would suggest it needs undoing.
+      - name: Warn when the version commit cannot start the downstream workflows
+        if: ${{ steps.version.outputs.released == 'true' && env.HAS_RELEASE_TOKEN != 'true' }}
+        run: |
+          set -euo pipefail
+          echo "::warning::RELEASE_TOKEN is not set, so the version commit was pushed with GITHUB_TOKEN."
+          echo "GitHub does not create workflow runs for push events made with GITHUB_TOKEN, so the"
+          echo "image workflows and the deploy will NOT start for this commit."
+          {
+            echo "### Downstream workflows did not start"
+            echo
+            echo "The version commit was pushed with \`GITHUB_TOKEN\`, and GitHub does not raise a"
+            echo "push event for it. The images were not rebuilt and no deploy is pending."
+            echo
+            echo "Fix it once: create a fine-grained personal access token scoped to this repository"
+            echo "with **Contents: Read and write**, store it as the repository secret"
+            echo "\`RELEASE_TOKEN\`, and allow its owner to push to \`master\` if a ruleset requires"
+            echo "pull requests there."
+            echo
+            echo "To ship this commit now: dispatch each image workflow for \`master\`, then run"
+            echo "**[platform] Deploy Production** with mode \`full\`."
+          } >> "${GITHUB_STEP_SUMMARY}"

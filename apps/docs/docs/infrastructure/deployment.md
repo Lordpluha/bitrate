@@ -62,7 +62,7 @@ do not add a `ports:` mapping to them.
 
 ## Sizing
 
-The four application containers are capped at 512 MB each, so the stack idles at roughly 3 GB
+`api`, `web-player` and `web-artists` are capped at 512 MB each, `docs` and `storybook` at 128 MB, so the stack idles at roughly 3 GB
 including Postgres, Redis, nginx, and the OS. **8 GB is the practical floor**, because the
 production compose builds images on the server and two parallel Next.js builds can ask for more
 than the idle stack leaves free.
@@ -98,7 +98,7 @@ Run the stack as a non-root user in the `docker` group, not as root.
 
 ### Swap
 
-Production images are built on the server, and `turbo run build` builds them in parallel. On
+Images are built in CI, not here — swap matters for the running stack, not for a build. On
 an 8 GB machine that can exhaust memory mid-build:
 
 ```bash
@@ -132,8 +132,8 @@ GitHub, so editing it by hand on the server works only until the next deploy ove
 
 | Kind | Stored as | Holds |
 |---|---|---|
-| Secret | repository **secret** | `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `JWT_SECRET`, `DATABASE_URL`, `SMTP_USER`, `SMTP_PASS`, both OAuth client secrets, `METRICS_TOKEN`, `SENTRY_DSN`, `DEPLOY_SSH_KEY` |
-| Configuration | repository **variable** | hosts, ports, token lifetimes, cookie names, `STORAGE_DRIVER`, both OAuth client ids, `DEPLOY_HOST`, `DEPLOY_USER` |
+| Secret | **environment** secret | `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `JWT_SECRET`, `DATABASE_URL`, `SMTP_USER`, `SMTP_PASS`, both OAuth client secrets, `METRICS_TOKEN`, `SENTRY_DSN`, `DEPLOY_SSH_KEY` |
+| Configuration | **environment** variable | hosts, ports, token lifetimes, cookie names, `STORAGE_DRIVER`, both OAuth client ids, `DEPLOY_HOST`, `DEPLOY_USER` |
 
 `NEXT_PUBLIC_*` belong in the variable column on purpose: they are compiled into a client bundle
 that any visitor can read, so storing them as secrets protects nothing and only makes them harder
@@ -311,8 +311,11 @@ task prod:build
 If the build is killed for memory, build one package at a time:
 
 ```bash
-docker compose -f infra/docker-compose.prod.yaml build --parallel=1
+COMPOSE_PARALLEL_LIMIT=1 docker compose --env-file .env -f infra/docker-compose.prod.yaml build
 ```
+
+Compose v2 has no `--parallel` flag — that was v1. And `--env-file` is not optional here for the
+reason given two sections above.
 
 Then apply migrations and seed:
 
@@ -334,7 +337,7 @@ generates migrations, wants a shadow database, and can reset the data it is poin
 ```bash
 task prod:logs                     # all services
 curl -f https://example.com/health # nginx
-curl -f https://example.com/api/health
+curl -f https://api.example.com/api/v1/health/ready
 ```
 
 If nginx exits immediately, the usual causes are a `DOMAIN` that does not match the issued
@@ -403,7 +406,7 @@ To deploy by hand instead — or when the workflow is unavailable:
 ```bash
 git pull
 task prod:deploy
-task db:migrate
+task prod:migrate
 ```
 
 Production tracks `master`, not `develop`. CI builds every app image on a push to either branch and
@@ -433,17 +436,17 @@ worked is still in the registry.
 # On the server. Find the commit you want back:
 git -C ~/bitrate log --oneline master | head
 
-# Pin every app service to it, then restart from those images:
-SHA=<the commit sha>
-for svc in api web-player web-artists docs storybook; do
-  docker pull "ghcr.io/lordpluha/bitrate/$svc:$SHA"
-  docker tag "ghcr.io/lordpluha/bitrate/$svc:$SHA" "ghcr.io/lordpluha/bitrate/$svc:master"
-done
-task prod:deploy
+# Redeploy every service from that commit's images:
+IMAGE_TAG=<the commit sha> task prod:deploy
 ```
 
-Re-tagging locally is what makes this work without editing the compose file: the services name
-`:master`, and the pull in `prod:deploy` finds the local tag already satisfied.
+The tag is a variable in the compose file, so this needs no editing and nothing to undo afterwards:
+the next ordinary deploy renders a fresh `.env` without `IMAGE_TAG`, the default takes over, and
+production is back on `:master`.
+
+Re-tagging the images locally instead does **not** work, however intuitive it looks. `prod:deploy`
+runs `pull` before `up`, and the pull re-points a locally re-tagged name back at the registry's
+version — quietly undoing the rollback and restarting the release you were trying to escape.
 
 Two things a rollback does not undo:
 

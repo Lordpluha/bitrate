@@ -1,0 +1,86 @@
+name: "[release] Version and Tag"
+
+# The first step of the release chain, and the only workflow that writes to master.
+#
+#   human merges develop -> master
+#     -> this workflow consumes .changeset/*.md, bumps every changed workspace,
+#        writes its CHANGELOG.md, commits "chore(release): version packages"
+#        back to master, and tags each bumped workspace
+#     -> that version commit is a normal push to master, so the five image
+#        workflows build it under their existing path filters
+#     -> deploy.yml, also triggered by that commit, waits for those images and
+#        stops at the production environment for one Approve click
+#
+# Nothing here publishes to npm. Every workspace is `"private": true` and
+# .changeset/config.json sets `access: "restricted"`, so the whole value of this
+# workflow is version numbers, changelogs and git tags -- there is no registry
+# step to add later and none is missing.
+#
+# It also deploys nothing. It writes a commit and some tags; the build and the
+# deploy are downstream reactions to that commit, owned by other workflows.
+on:
+  push:
+    branches: [master]
+  # Escape hatch: re-run versioning by hand if a push-triggered run was cancelled
+  # part-way. Safe to repeat -- a run with no changesets left to consume writes
+  # nothing.
+  workflow_dispatch:
+
+# Never cancel a run in flight. A cancelled `changeset version` that has already
+# rewritten package.json but not yet committed leaves the runner's tree dirty and
+# the repository untouched, which is recoverable; a cancelled run that has pushed
+# the commit but not the tags is recoverable too, because `changeset tag` skips
+# tags that already exist. Cancelling between those two points is the one state
+# worth never creating.
+concurrency:
+  group: release-master
+  cancel-in-progress: false
+
+# Read-only by default. The one job that needs to write does so explicitly below.
+permissions:
+  contents: read
+
+jobs:
+  release:
+    # Loop guard, layer 1: do not version the version commit.
+    #
+    # This has to be a commit-message test rather than an actor test. When
+    # RELEASE_TOKEN is set the push is authenticated as that token's owner --
+    # a human account, not github-actions[bot] -- so `github.actor` is exactly
+    # the same on the merge and on the bot's own push and cannot distinguish
+    # them. The message is written by this workflow one job below and is the
+    # only thing that differs.
+    #
+    # Layer 2 lives inside the called workflow: a run that gets past this guard
+    # finds zero changesets, writes nothing, and pushes nothing. So even a
+    # human commit that happens to start with this prefix terminates after one
+    # no-op run. The recursion is bounded by construction, not by the guard.
+    #
+    # `github.event.head_commit.message` is attacker-influenceable in general,
+    # but it is used here only inside an `if:` expression evaluated by the
+    # Actions engine. It is never interpolated into a `run:` body anywhere in
+    # this pair of files.
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch'
+          || !startsWith(github.event.head_commit.message, 'chore(release): version packages') }}
+    name: Version and Tag
+    uses: ./.github/workflows/release_reusable.yml
+
+    # Widened from the workflow default on purpose, and to one permission only:
+    # the job commits the version bumps and pushes the tags. A called workflow
+    # cannot hold more than its caller grants, so this has to be declared here.
+    permissions:
+      contents: write
+
+    # Mapped explicitly rather than `secrets: inherit`. deploy.yml is forced into
+    # `inherit` because its secrets live at environment scope and a calling job
+    # may not declare `environment:`; this workflow has no environment, so
+    # repository scope resolves here correctly and the narrow mapping works.
+    #
+    # RELEASE_TOKEN is optional. Without it the called workflow still versions,
+    # commits and tags -- but the push is authenticated with GITHUB_TOKEN, and
+    # GitHub deliberately does not start workflow runs for push events made with
+    # that token, so nothing downstream would fire. The job says so loudly rather
+    # than appearing to have released.
+    secrets:
+      RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}

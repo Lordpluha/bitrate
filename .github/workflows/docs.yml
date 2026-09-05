@@ -61,7 +61,23 @@ jobs:
       cache-to-registry: true
 
   docs-master:
-    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    # Master builds the released commit, not every commit that reaches master.
+    #
+    # release.yml consumes the changesets and pushes exactly one commit with this
+    # subject; deploy.yml gates on the same string. A plain merge commit therefore
+    # publishes no ':master' image and starts no deploy -- which is the point: an
+    # image that goes to production always corresponds to a version that has a
+    # changelog entry and a git tag.
+    #
+    # To build master by hand anyway, use workflow_dispatch with mode 'master'.
+    #
+    # 'github.event.head_commit.message' is read only inside this expression,
+    # evaluated by the Actions engine. It never reaches a 'run:' body.
+    if: >-
+      ${{ (github.event_name == 'push'
+            && github.ref == 'refs/heads/master'
+            && startsWith(github.event.head_commit.message, 'chore(release): version packages'))
+          || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
     uses: ./.github/workflows/docs_reusable.yml
     with:
       push-image: true

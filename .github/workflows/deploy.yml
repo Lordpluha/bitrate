@@ -6,6 +6,11 @@ name: "[platform] Deploy Production"
 # repository secrets in a context the caller does not choose. Instead this
 # workflow starts on the push and its first job polls the runs that exist for
 # this exact SHA -- see the await-images job in deploy_reusable.yml.
+#
+# Not every push to master deploys. The one that does is the version commit that
+# release.yml writes after consuming the changesets -- see the job condition
+# below. A merge commit is not a release; the commit that carries the version
+# numbers and changelogs is.
 on:
   push:
     branches: [master]
@@ -60,6 +65,25 @@ jobs:
   # is reviewed with this file; it would not be acceptable for a third-party or
   # cross-repository reusable workflow.
   production:
+    # Deploy the released state, not every commit that reaches master.
+    #
+    # release.yml consumes the changesets and pushes exactly one commit with this
+    # subject; the five image workflows gate their master jobs on the same string.
+    # So the artefact this job deploys always corresponds to a version that has a
+    # changelog entry and a git tag, instead of to whatever happened to land.
+    #
+    # A merge with no changesets behind it produces no version commit, no image
+    # build and no deploy. That is deliberate -- nothing user-visible changed --
+    # and `workflow_dispatch` below is the way to ship it anyway. Dispatch the
+    # five image workflows for master first if the commit needs new images at all;
+    # `full` mode then waits for them, and `redeploy` mode skips the wait for
+    # images that already exist.
+    #
+    # `github.event.head_commit.message` is used only inside this expression,
+    # which the Actions engine evaluates. It never reaches a `run:` body.
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch'
+          || startsWith(github.event.head_commit.message, 'chore(release): version packages') }}
     name: Production
     uses: ./.github/workflows/deploy_reusable.yml
     with:

@@ -108,9 +108,12 @@ tasks:
       - cmd: pnpm --filter @bitrate/api run db:seed
 
   db:backup:
-    desc: Dump the database to backups/ (reads credentials from the container, never hardcoded)
+    desc: Dump the PREPROD database to backups/ — for production use prod:backup
     cmds:
       - cmd: mkdir -p backups
+        platforms: [linux, darwin]
+      - cmd: if not exist backups mkdir backups
+        platforms: [windows]
       - cmd: |
           {{.DC_DEV}} exec -T postgres sh -c \
             'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists' \
@@ -141,23 +144,6 @@ tasks:
   # Credentials come from the container's own environment rather than being
   # hardcoded, so these keep working when POSTGRES_USER / POSTGRES_DB are
   # overridden in .env. backups/ is gitignored — never commit a dump.
-  db:backup:
-    desc: Dump database to backups/ (gitignored)
-    vars:
-      TIMESTAMP: '{{now | date "20060102_150405"}}'
-    cmds:
-      - cmd: mkdir -p backups
-        platforms: [linux, darwin]
-      - cmd: if not exist backups mkdir backups
-        platforms: [windows]
-      - cmd: '{{.DC_DEV}} exec -T postgres sh -c ''pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"'' > backups/backup_{{.TIMESTAMP}}.sql'
-      - cmd: echo "Saved to backups/backup_{{.TIMESTAMP}}.sql"
-
-  db:restore:
-    desc: 'Restore from a backup file: task db:restore -- backup_20240101_120000.sql'
-    cmds:
-      - cmd: '{{.DC_DEV}} exec -T postgres sh -c ''psql -U "$POSTGRES_USER" "$POSTGRES_DB"'' < backups/{{.CLI_ARGS}}'
-
   # ─────────────────────────────────────────
   # Container shells
   # ─────────────────────────────────────────

@@ -53,9 +53,75 @@ Current workflow map for .github/workflows.
 - web-integration-test.yml — integration tests for PR and push (develop/master) + workflow_dispatch.
 - web-integration-test_reusable.yml — reusable integration test scenario.
 
+### Release (changesets)
+- release.yml — release entry workflow: push to `master` plus `workflow_dispatch`.
+- release_reusable.yml — consumes `.changeset/*.md`, bumps every changed workspace, writes
+  its `CHANGELOG.md`, commits `chore(release): version packages` back to `master`, and
+  pushes one git tag per bumped workspace.
+
+**Nothing publishes to npm.** Every workspace is `"private": true` and
+`.changeset/config.json` sets `access: "restricted"`. The whole output of this workflow is
+version numbers, changelogs, and tags — there is no publish step missing.
+
+`privatePackages.tag` in `.changeset/config.json` is what makes the tags exist at all.
+Changesets defaults it to `false`, and with every workspace private that made
+`changeset tag` a silent no-op; the repository had exactly one tag after seventy
+changesets had accumulated.
+
+#### The release chain
+
+```
+human merges develop -> master
+   |
+   v  release.yml  — versions, commits, tags. Deploys nothing.
+   |
+   v  the version commit is a normal push to master
+   |
+   +--> api.yml / web_player.yml / web_artists.yml / docs.yml / storybook.yml
+   |      build only the workspaces whose paths the version commit touched
+   |
+   +--> deploy.yml — waits for those images, then stops at the production gate
+          |
+          v  one human presses Approve
+```
+
+Four things hold this together, and each is easy to break by accident:
+
+- **The commit subject `chore(release): version packages` is a protocol string.** It is
+  written in `release_reusable.yml` and read by seven `if:` conditions: `release.yml`'s loop
+  guard, the five image workflows' `-master` jobs, and `deploy.yml`'s `production` job.
+  Change the wording in one place and the chain stops silently. It is matched with
+  `startsWith(github.event.head_commit.message, ...)` inside `if:` expressions only — never
+  interpolated into a `run:` body.
+- **`RELEASE_TOKEN` is what makes the chain start.** GitHub deliberately does not create
+  workflow runs for a `push` authenticated with `GITHUB_TOKEN`, so without this repository
+  secret the version commit lands on `master` and *nothing downstream fires*. The release
+  workflow still versions, commits, and tags — and says loudly in its summary that no build
+  and no deploy started, plus how to run them by hand. It needs a fine-grained personal
+  access token scoped to this repository with **Contents: Read and write** and nothing else,
+  and its owner must be allowed to push to `master` if a ruleset requires pull requests there.
+- **A merge with no changesets produces no version commit, no image build, and no deploy.**
+  That is the designed behaviour, not a bug: nothing user-visible changed. An
+  infrastructure-only or docs-only merge therefore never reaches the server on its own. The
+  escape hatch is `workflow_dispatch`: dispatch the image workflows for `master` if the
+  commit needs new images, then run `[platform] Deploy Production` with mode `full`
+  (or `redeploy` to skip the image wait entirely).
+- **A release does not rebuild every service.** The image workflows keep their path filters,
+  and a version commit only touches `package.json` and `CHANGELOG.md` for workspaces that
+  actually changed. A service with no changeset in a release gets no run and keeps its
+  existing `:master` image, which is correct — `await-images` treats "no run for this SHA"
+  as exactly that. When *no* image workflow ran for the commit, the deploy warns rather than
+  failing, because that is legitimate for a release that only bumped a package no image
+  watches.
+
+There is deliberately **no `:<version>` image tag**. Versions here are per-workspace, so
+there is no single release version an image could carry, and a service that legitimately did
+not rebuild could not satisfy one — a tag that some service can never have is worse than no
+tag. `:<sha>` already provides the immutable handle a rollback needs.
+
 ### Deploy (production)
-- deploy.yml — production deploy entry workflow: push to `master` plus `workflow_dispatch`
-  with a `full` / `redeploy` / `health-only` mode.
+- deploy.yml — production deploy entry workflow: the `chore(release): version packages` push
+  to `master`, plus `workflow_dispatch` with a `full` / `redeploy` / `health-only` mode.
 - deploy_reusable.yml — waits for this commit's images, renders the server's `.env` from
   the deploy environment's secrets and variables, pushes `infra/` and `Taskfile.yml`, runs
   `task prod:deploy` and `task prod:migrate`, then probes the public endpoints.
@@ -90,6 +156,33 @@ Four things about it are easy to get wrong:
   are pulled, which is exactly the mismatch the step exists to prevent. `.deployed-commit`
   in the server's checkout records which commit is live.
 
+#### Sentry attribution
+
+The deploy renders two extra names into the server's `.env`:
+
+| Name | Value | Why |
+|---|---|---|
+| `SENTRY_RELEASE` | `bitrate-api@<version of @bitrate/api>` | The deploy only auto-runs on a version commit, so this names a released version with a changelog entry and a tag — not an arbitrary SHA. A forward slash is illegal in a Sentry release name, which is why it is not `@bitrate/api@…`. |
+| `SENTRY_ENVIRONMENT` | the `environment` input, i.e. `production` | Labels events by deploy target without depending on `NODE_ENV` being set correctly, and gives a future `staging` correct labels for free. |
+
+**Both are inert until `infra/docker-compose.prod.yaml` lists them in the `api` service's
+`environment:` block.** Compose passes through only the names that list carries; writing
+them into `.env` first is harmless and makes that a one-line change.
+
+Publishing the release to Sentry — the deploy marker, commit association, and a place to
+attach source maps — is separate and currently **off**. It needs a `SENTRY_AUTH_TOKEN`
+secret plus `SENTRY_ORG` and `SENTRY_PROJECT` variables on the `production` environment.
+A probe step checks all three and the publish step is skipped when any is missing; it never
+fails, because by that point production is already live and a red run would suggest a
+rollback is needed. `set_commits` is `skip` on purpose: `auto` needs the Sentry GitHub
+integration or a full git history and fails the step when it has neither.
+
+Source maps are **not** uploaded. `apps/api/tsconfig.json` sets `sourceMap: true`, so the
+maps exist inside the image, but the deploy runner has a checkout and no build output. That
+upload belongs in `api_reusable.yml` alongside the Docker build, which would mean extracting
+`dist/**/*.map` from the built image — a separate change, and one worth making only after the
+auth token exists.
+
 The deploy is triggered by the push itself and its first job polls the image workflows'
 runs for that SHA, rather than hanging off `workflow_run`. `workflow_run` cannot express
 "wait for whichever subset of the five image workflows this commit's path filters actually
@@ -109,7 +202,7 @@ started", and it runs with repository secrets in a context the caller does not c
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_image_size_reusable.yml / monitoring_ssl_reusable.yml / monitoring_backup_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, performance.yml, monitoring.yml, web-integration-test.yml, deploy.yml.
+- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, performance.yml, monitoring.yml, web-integration-test.yml, release.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 
