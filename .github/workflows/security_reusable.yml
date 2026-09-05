@@ -12,7 +12,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -44,16 +44,16 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: javascript-typescript
           queries: security-extended
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
 
   docker-security-scan:
     name: Docker Security Scan ${{ matrix.service }}
@@ -82,7 +82,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Docker Buildx
         uses: ./.github/actions/setup-docker
@@ -93,7 +93,7 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image for scanning
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/${{ matrix.service }}/Dockerfile
@@ -120,6 +120,6 @@ jobs:
         # Skip when the scanner produced nothing — otherwise a scan failure
         # reports twice, and the second (missing-path) error hides the first.
         if: always() && hashFiles(format('trivy-results-{0}.sarif', matrix.service)) != ''
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-results-${{ matrix.service }}.sarif
