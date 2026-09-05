@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "globalDependencies": ["biome.json", ".npmrc"],
-  "globalPassThroughEnv": ["SKIP_GRAPHIFY_INSTALL", "SKIP_RTK_INSTALL"],
+  "globalPassThroughEnv": ["SKIP_GRAPHIFY_INSTALL", "SKIP_RTK_INSTALL", "NO_COLOR"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

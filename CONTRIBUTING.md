@@ -18,6 +18,9 @@ Thank you for your interest in the project! We welcome any contribution — whet
 
 ## 🚀 Getting Started
 
+Planned and in-flight work lives on the [Projects board](https://github.com/users/Lordpluha/projects/6); pick something from `Todo`
+or open an issue before starting anything substantial.
+
 1. **Fork the repository** on GitHub
 2. **Clone** your fork:
    ```bash

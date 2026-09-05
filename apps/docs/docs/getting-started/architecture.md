@@ -86,6 +86,31 @@ conventions built on top of it: `web-player-rules`
 - `fetchClient.ts` — `openapi-fetch` with automatic JWT refresh middleware
 - `reactQueryClient.ts` — `openapi-react-query` wrapper
 
+## 📐 Architecture contracts
+
+The invariants every change is reviewed against. Each is owned by a rule file or an ADR, which is
+where the reasoning lives — this list is the summary, not the source.
+
+- **Web-player imports flow one way.** `app → views → widgets → features → entities → shared`,
+  never upward, and never sideways between slices of the same layer. Biome enforces it, so a
+  violation fails `pnpm lint` rather than review
+  ([ADR-0002](/docs/architecture/web-player-feature-sliced-design)).
+- **Next.js route files are adapters.** A `page.tsx` reads params and server data and renders a
+  view from `views/`; a full screen is never composed inside the route file
+  ([ADR-0010](/docs/architecture/next-routes-as-adapters)).
+- **API contracts are generated, not written.** Swagger decorators produce the OpenAPI document,
+  `@bitrate/contracts` is generated from it, and both web apps consume those types — so a backend
+  change that breaks a frontend shows up as a type error
+  ([ADR-0004](/docs/architecture/openapi-data-layer)).
+- **Server state is TanStack Query; client state is per-slice Zustand.** New client state belongs
+  to the slice that owns it, not to a global store
+  ([ADR-0005](/docs/architecture/client-state-zustand)).
+- **Shared React primitives and design tokens both live in `@bitrate/ui-react`.** The tokens are
+  hand-written Tailwind `@theme` layers, not generated output
+  ([ADR-0023](/docs/architecture/tokens-into-ui-react)).
+- **User-facing web UI targets WCAG 2.2 AA** — semantic controls, visible focus, keyboard
+  operation, reduced motion, and usable layout at 320 CSS px and 400% zoom.
+
 ## 🔄 Data Flow
 
 ### Authentication Flow
@@ -312,7 +337,11 @@ pnpm changeset          # describe change, select bump type
 pnpm changeset:version  # apply changesets → bump versions + CHANGELOG
 ```
 
-The `release.yml` GitHub Action creates "Version Packages" PRs automatically on push to `develop`.
+Releasing is a chain rather than a single action, and it runs on `master`, not `develop`.
+Merging into `master` triggers `release.yml`, which consumes the pending changesets, bumps every
+changed workspace, writes its `CHANGELOG.md`, commits `chore(release): version packages` back to
+`master` and tags each bump. That commit is what the image builds react to, and the deploy then
+waits for one manual approval — see [Deployment](/docs/infrastructure/deployment).
 
 ---
 

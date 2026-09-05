@@ -35,6 +35,7 @@
     "knip": "knip",
     "check:artifacts": "bash scripts/check-repository-artifacts.sh",
     "check:tokens": "node scripts/check-design-tokens.mjs",
+    "check:env": "node scripts/check-environment.mjs",
     "clean:dist": "rimraf --glob \"apps/*/dist\" \"packages/*/dist\"",
     "clean:cache": "rimraf --glob \"apps/*/.next/dev/cache\" \"apps/*/.next/cache\" \".turbo/cache\""
   },

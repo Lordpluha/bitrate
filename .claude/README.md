@@ -69,6 +69,11 @@ is not committed here and each developer installs it themselves.
 
 ## Recommended workflow
 
+```text
+/br-create-task → /br-implement → PR (confirmed)   # human in the loop
+/br-auto                                            # unattended, board Todo column
+```
+
 1. `/br-create-task "<idea>"` — if the task doesn't exist yet: research the board, then
    draft it. Skip when you already have an issue number.
 2. `/br-implement "<task>"` — write the code (dispatched to a specialist agent by default),

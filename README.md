@@ -1,28 +1,19 @@
 # Bitrate
 
-**All-in-one for musicians.** Turborepo + pnpm monorepo with web, mobile, desktop, and
-backend apps. See [`brand.md`](apps/docs/docs/brand/brand.md) for what the product is and
-[`design.md`](apps/docs/docs/brand/design.md) for how it should look and behave.
+**All-in-one for musicians.** A Turborepo + pnpm monorepo holding the listener app, the artists
+portal, the API and the shared design system, plus mobile and desktop shells that are scaffolded
+but not yet built out.
 
-## 📚 Documentation
+Everything beyond this page lives at **[docs.bitrate.me](https://docs.bitrate.me)** — start with
+[Introduction](https://docs.bitrate.me/docs/getting-started/introduction) for the map, or
+[Architecture](https://docs.bitrate.me/docs/getting-started/architecture) for how the pieces fit.
 
-- **[Full docs site](apps/docs/)** — Docusaurus 3 site with guides, architecture, API reference
-- **[Architecture](apps/docs/docs/getting-started/architecture.md)** — system design, data flow, DB schema
-- **[Setup Guide](apps/docs/docs/getting-started/setup.md)** — detailed local setup instructions
-- **[Roadmap](apps/docs/docs/guides/roadmap.md)** — milestones, current progress, future plans
-- **[Contributing](CONTRIBUTING.md)** — git workflow, commit conventions, PR process
-- **[Code style](CODE_STYLE.md)** — stable entry point for enforced conventions
-- **[Architecture decisions](apps/docs/docs/architecture/)** — why the repository uses its core patterns
-- **[Design system](apps/docs/docs/brand/)** — tokens and WCAG baseline
-- **[Agent layer](.claude/README.md)** — repository-owned AI workflows
-- **[CI/CD](.github/workflows/README.md)** — GitHub Actions workflow map
+## Live sites
 
-### Live sites
-
-Six hosts, one VPS, one nginx in front of them. All served from images CI builds — see
+Five sites on one VPS behind one nginx, all served from images CI builds — see
 [Deployment](apps/docs/docs/infrastructure/deployment.md).
 
-| | |
+| Site | URL |
 |---|---|
 | Web player | https://bitrate.me |
 | Artists portal | https://artists.bitrate.me |
@@ -30,74 +21,41 @@ Six hosts, one VPS, one nginx in front of them. All served from images CI builds
 | Documentation | https://docs.bitrate.me |
 | Component workshop | https://ui.bitrate.me |
 
-### Useful links
+## Quick Start
 
-- **GitHub Project** — https://github.com/users/Lordpluha/projects/6
-
----
-
-## 🚀 Quick Start
-
-### Requirements
-
-| Tool | Version |
-|---|---|
-| Node.js | >= 24.x |
-| pnpm | 10.30.3 |
-| Docker | >= 24.x |
-| Git | >= 2.x |
-| [task](https://taskfile.dev/installation/) | >= 3.x |
-
-`task` is the single entry point for every Docker and database workflow — run `task` with no
-arguments to list them. Everything below can also be run by hand; `task` just keeps the
-commands in one place.
+Install the [requirements](#requirements) first, then:
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Copy environment variables. The root file is what Docker Compose reads;
-# each app carries its own .env.example for running it on its own.
 cp .env.example .env
-
-# Start infra, migrate, seed, then run all apps natively
 task init:native
 ```
 
-<details>
-<summary>The same thing without <code>task</code></summary>
+`task init:native` starts the infrastructure containers, runs the migrations, seeds the database
+and then runs every app natively. `task` with no arguments lists every Docker, database and
+monitoring workflow it owns — see the [Taskfile documentation](https://taskfile.dev/usage/).
 
-```bash
-docker compose -f infra/docker-compose.dev.yaml up -d
-pnpm --filter @bitrate/api run db:migration:start
-pnpm --filter @bitrate/api run db:seed
-pnpm dev
-```
+`.env` is what Docker Compose reads; each app also carries its own `.env.example` for running that
+app alone. For the full Docker stack, mobile, desktop or Windows, follow the
+[setup guide](https://docs.bitrate.me/docs/getting-started/setup) instead — it covers the paths
+this three-line version deliberately skips.
 
-</details>
+## Requirements
 
-> For full Docker stack, mobile, desktop, or Windows setup see the **[Setup Guide](apps/docs/docs/getting-started/setup.md)**.
+| Tool | Version | Needed for |
+|---|---|---|
+| [Node.js](https://nodejs.org/en/download) | >= 24 | everything |
+| [pnpm](https://pnpm.io/installation) | 10.30.3 exactly | everything |
+| [Git](https://git-scm.com/downloads) | >= 2 | everything |
+| [Docker](https://docs.docker.com/engine/install/) | >= 24 | Postgres, Redis, the container stacks |
+| [task](https://taskfile.dev/installation/) | >= 3 | every Docker and database workflow |
+| [Rust](https://www.rust-lang.org/tools/install) | >= 1.77 | `apps/desktop` only |
+| [k6](https://grafana.com/docs/k6/latest/set-up/install-k6/) | >= 0.4 | `packages/performance-test` only |
 
----
+The pnpm version is pinned by `packageManager` and the Node floor by `engines`, so both are checked
+rather than suggested. Don't run `npm install` or `yarn` here — the lockfile is pnpm's.
 
-## 🌐 Local service URLs
-
-What `pnpm dev` gives you. For the deployed sites see [Live sites](#live-sites) above.
-
-| Service | URL |
-|---|---|
-| Web Player | http://localhost:3001 |
-| API | http://localhost:3000 |
-| Swagger | http://localhost:3000/swagger |
-| Web Artists | http://localhost:3002 |
-| Storybook | http://localhost:6006 |
-| Docs | http://localhost:3003 |
-| Mobile (Metro) | http://localhost:8081 |
-| Desktop (Vite) | http://localhost:1420 |
-
----
-
-## 📦 Tech Stack
+## Tech Stack
 
 Versions are the ones actually resolved in the workspace, not aspirations. Where a choice has a
 reason that is easy to get wrong, the reason is in the linked rule rather than repeated here.
@@ -160,88 +118,32 @@ here as ADRs.
 ### Tooling and delivery
 
 Turborepo over pnpm 10 workspaces. Biome for lint and format, Lefthook for git hooks, Changesets for
-versioning. 40 GitHub Actions workflows build five Docker images per release and push them to GHCR;
-production pulls those images rather than building, behind a required-reviewer gate. Docker Compose
-runs the stack, `Taskfile.yml` is the only interface to it. nginx terminates TLS for all six hosts.
+versioning. GitHub Actions builds five Docker images per release and pushes them to GHCR; production
+pulls those images rather than building, behind a required-reviewer gate. Docker Compose runs the
+stack, `Taskfile.yml` is the only interface to it. nginx terminates TLS for all six hostnames.
 
-## 🧪 Verification
-
-```bash
-pnpm lint
-pnpm check-types
-pnpm build
-pnpm knip
-```
-
-Package test surfaces:
+## Verification
 
 ```bash
-# API — Jest
-pnpm --filter @bitrate/api test
-pnpm --filter @bitrate/api test:int
-pnpm --filter @bitrate/api test:e2e
-
-# Shared UI — Vitest + Playwright-backed browser screenshots
-pnpm --filter @bitrate/ui-react test
-pnpm --filter @bitrate/ui-react test:screenshot
-
-# Web player — Vitest + standalone Playwright
-pnpm --filter @bitrate/web-player test
-pnpm --filter @bitrate/web-player test:e2e
-pnpm --filter @bitrate/web-player test:screenshot
-
+pnpm check:env
 ```
 
-See the [testing guide](apps/docs/docs/guides/testing.md) for placement and runner details.
+Checks that this machine can actually build the repository: every tool in
+[Requirements](#requirements) against its minimum, and every declared dependency of every
+workspace. It exits non-zero when something required is missing, and warns without failing when
+only optional tooling is absent.
 
----
+Narrow it to the projects you are working on:
 
-## 🏗️ Architecture contracts
-
-- Web-player imports follow `app → views → widgets → features → entities → shared`.
-- Next.js route files are framework adapters; full screens live in `views/`.
-- API contracts flow from NestJS Swagger into `@bitrate/contracts`.
-- Server state uses TanStack Query; new client state targets per-slice Zustand stores.
-- Shared React primitives and design tokens both live in `@bitrate/ui-react`.
-- User-facing web UI targets WCAG 2.2 AA.
-
-See [`apps/docs/docs/architecture`](apps/docs/docs/architecture/) for the decisions and [`CLAUDE.md`](CLAUDE.md)
-for the working rules.
-
----
-
-## 🤖 Agent workflow
-
-The repository includes a ticket-driven command set: `/br-create-task`, `/br-implement`,
-`/br-auto`, `/br-sync-docs`. They all read the same conventions from `CLAUDE.md` and
-`.claude/`, and every command has access to any project or global skill.
-
-```text
-/br-create-task → /br-implement → PR (confirmed)          # human in the loop
-/br-auto                                                   # unattended, board Todo column
+```bash
+pnpm check:env api ui-react   # only these two
+pnpm check:env --list         # the workspace names it accepts
 ```
 
-`/br-implement` reads `CLAUDE.md`'s exhaustive Rule Index first, then dispatches to a named
-specialist agent by default — one of five app-scoped developers
-(`br-frontend-developer`, `br-backend-developer`, `br-mobile-developer`,
-`br-desktop-developer`), plus `br-planner`, `br-debugger`,
-`br-tester`, `br-reviewer`, and `br-devops` for CI/infra. Pass `--session` to do the work
-in-session instead. `/br-sync-docs` dispatches to `br-librarian` the same way, and
-`/br-auto` runs `br-worker` in an isolated git worktree per issue. This
-default-to-agent behavior also applies to ordinary tasks outside any command — see
-`CLAUDE.md`.
+The repository's own gates — lint, types, build, tests — are documented in
+[CONTRIBUTING.md](CONTRIBUTING.md), and the test layers in the
+[testing guide](https://docs.bitrate.me/docs/guides/testing).
 
-Ticket/board state is queried live from GitHub (via `gh`/MCP), never mirrored to a file;
-`/br-sync-docs` catches drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`,
-and the root onboarding docs.
+## License
 
-For work that is too large or too vague for a single command, install the
-`mattpocock-skills` plugin (`claude plugin install mattpocock-skills`) and use `/grill-me`
-to sharpen the idea before planning, and `/wayfinder` to drive a multi-session effort as a
-map of decision tickets.
-
----
-
-## 📄 License
-
-MIT © 2026 Lordpluha
+MIT © 2025 Lordpluha — see [LICENSE](LICENSE).

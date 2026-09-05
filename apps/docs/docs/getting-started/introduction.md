@@ -88,6 +88,17 @@ its accessibility notes.
 - **[Deployment](/docs/infrastructure/deployment)** - Production deployment guide
 - **[API Reference](/docs/applications/api/reference)** - Complete API documentation
 
+### In the repository
+
+Documentation that lives next to the code rather than on this site:
+
+- **[Contributing](https://github.com/Lordpluha/bitrate/blob/develop/CONTRIBUTING.md)** - git workflow, commit conventions, the checks to run before a PR
+- **[Code style](https://github.com/Lordpluha/bitrate/blob/develop/CODE_STYLE.md)** - stable entry point for the enforced conventions
+- **[Architecture decisions](/docs/architecture/)** - why the repository uses its core patterns
+- **[Design system](/docs/brand/)** - brand, tokens, and the accessibility baseline
+- **[Agent layer](https://github.com/Lordpluha/bitrate/blob/develop/.claude/README.md)** - the repository-owned AI commands and specialists
+- **[CI/CD](https://github.com/Lordpluha/bitrate/blob/develop/.github/workflows/README.md)** - the GitHub Actions workflow map
+
 ### Project Planning
 - **[Roadmap](/docs/guides/roadmap)** - Development roadmap and milestones
 
@@ -147,7 +158,7 @@ We welcome contributions! Please see our [Contributing Guide](https://github.com
 
 ## 📝 License
 
-This project is licensed under the UNLICENSED license - see the [LICENSE](https://github.com/Lordpluha/bitrate/blob/develop/LICENSE) file for details.
+This project is licensed under the MIT license - see the [LICENSE](https://github.com/Lordpluha/bitrate/blob/develop/LICENSE) file for details.
 
 ## 🔗 Links
 

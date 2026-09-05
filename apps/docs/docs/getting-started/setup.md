@@ -109,13 +109,23 @@ pnpm --filter @bitrate/api run db:seed
 pnpm dev
 ```
 
-This starts (via Turbo):
-- API on `http://localhost:3000`
-- Web Player on `http://localhost:3001`
-- Web Artists on `http://localhost:3002`
+This starts every app Turbo knows about. The full set of local addresses, including the ones that
+only appear once you start that app on its own:
+
+| Service | URL |
+|---|---|
+| API | `http://localhost:3000` |
+| Swagger | `http://localhost:3000/swagger` |
+| Web Player | `http://localhost:3001` |
+| Web Artists | `http://localhost:3002` |
+| Docs (Docusaurus) | `http://localhost:3003` |
+| Storybook | `http://localhost:6006` |
+| Mobile (Metro) | `http://localhost:8081` |
+| Desktop (Vite) | `http://localhost:1420` |
 
 These are the **native** ports. The Docker stack maps web-artists to `3004` — see
-[Docker](../infrastructure/docker.md).
+[Docker](../infrastructure/docker.md). For the deployed sites see
+[Deployment](../infrastructure/deployment.md).
 
 #### Individual Applications
 
