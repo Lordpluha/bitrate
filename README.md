@@ -17,12 +17,22 @@ backend apps. See [`brand.md`](apps/docs/docs/brand/brand.md) for what the produ
 - **[Agent layer](.claude/README.md)** — repository-owned AI workflows
 - **[CI/CD](.github/workflows/README.md)** — GitHub Actions workflow map
 
+### Live sites
+
+Six hosts, one VPS, one nginx in front of them. All served from images CI builds — see
+[Deployment](apps/docs/docs/infrastructure/deployment.md).
+
+| | |
+|---|---|
+| Web player | https://bitrate.me |
+| Artists portal | https://artists.bitrate.me |
+| API | https://api.bitrate.me · [Swagger](https://api.bitrate.me/swagger) |
+| Documentation | https://docs.bitrate.me |
+| Component workshop | https://ui.bitrate.me |
+
 ### Useful links
 
 - **GitHub Project** — https://github.com/users/Lordpluha/projects/6
-- **Chromatic** — https://www.chromatic.com/library?appId=68787858d0b6a0a00b0ca47f
-- **Storybook** — https://bitrate-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
-- **Web App** — https://spotify-clone-web-olive.vercel.app/
 
 ---
 
@@ -46,7 +56,8 @@ commands in one place.
 # Install dependencies
 pnpm install
 
-# Copy environment variables
+# Copy environment variables. The root file is what Docker Compose reads;
+# each app carries its own .env.example for running it on its own.
 cp .env.example .env
 
 # Start infra, migrate, seed, then run all apps natively
@@ -69,7 +80,9 @@ pnpm dev
 
 ---
 
-## 🌐 Service URLs
+## 🌐 Local service URLs
+
+What `pnpm dev` gives you. For the deployed sites see [Live sites](#live-sites) above.
 
 | Service | URL |
 |---|---|

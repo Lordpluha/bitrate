@@ -133,11 +133,11 @@ Author: Vladyslav Tesliuk (github.com/Lordpluha). MIT licensed.
 ## Evidence on Hand
 
 **Real:**
-- Deployed web player — https://spotify-clone-web-olive.vercel.app/
-- Storybook for the shared component library —
-  https://bitrate-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
-- Chromatic visual-review library — appId `68787858d0b6a0a00b0ca47f`
-- Live API + Swagger contract at `/swagger`; generated types in `@bitrate/contracts`
+- Deployed web player — https://bitrate.me, with the artists portal at https://artists.bitrate.me
+- Storybook for the shared component library — https://ui.bitrate.me
+- Documentation site — https://docs.bitrate.me
+- Live API at https://api.bitrate.me with the Swagger contract at `/swagger`; generated types in
+  `@bitrate/contracts`
 - Icon set and design tokens in `packages/ui-react/` (icons, palette, themes, typography)
 - Seeded development data with genuinely downloaded audio files and cover images
   (`apps/api/src/infra/seeds/`) — usable as realistic content in comps, though the artist
