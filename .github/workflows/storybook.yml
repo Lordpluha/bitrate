@@ -1,8 +1,16 @@
 name: "[storybook] Image"
 
+# `master` is deliberately absent from the push trigger. Release builds do not
+# come through here at all: release_publish.yml and release_images.yml call this
+# app's *_reusable.yml directly, alongside the other four, because the production
+# compose file pulls every service at one shared ${IMAGE_TAG} and a path-filtered
+# build would leave a hole in the version tag. See ADR-0029.
+#
+# The `master` mode below is therefore only a hand-run escape hatch for
+# rebuilding this one service's `:master` image. `develop` is unchanged.
 on:
   push:
-    branches: [develop, master]
+    branches: [develop]
     paths:
       - 'packages/ui-react/**'
       # The production stage copies this nginx config into the image, so a change to it
@@ -28,10 +36,20 @@ on:
           - pr
           - develop
           - master
+      release-tag:
+        description: >-
+          Product version tag (`v1.4.0`) to publish this image under, in addition
+          to :master and :<sha>. Normally left empty: a release publishes all five
+          images through release_images_reusable.yml, not through this workflow.
+        required: false
+        default: ''
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+  # A tag run is a release rebuild, so it must be as uncancellable as a master
+  # run: its image is the one a deploy may already be waiting for.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref_type != 'tag' }}
 
 permissions:
   contents: read
@@ -59,28 +77,30 @@ jobs:
       cache-to-registry: true
 
   storybook-master:
-    # Master builds the released commit, not every commit that reaches master.
+    # Release builds are dispatched, never pushed into existence.
     #
-    # release.yml consumes the changesets and pushes exactly one commit with this
-    # subject; deploy.yml gates on the same string. A plain merge commit therefore
-    # publishes no ':master' image and starts no deploy -- which is the point: an
-    # image that goes to production always corresponds to a version that has a
-    # changelog entry and a git tag.
+    # A release does not come through here -- release_publish.yml calls this
+    # app's reusable workflow directly, at the merged tree, together with the
+    # other four. This mode is the hand-run escape hatch for rebuilding just this
+    # service's `:master` image.
     #
-    # To build master by hand anyway, use workflow_dispatch with mode 'master'.
-    #
-    # 'github.event.head_commit.message' is read only inside this expression,
-    # evaluated by the Actions engine. It never reaches a 'run:' body.
-    if: >-
-      ${{ (github.event_name == 'push'
-            && github.ref == 'refs/heads/master'
-            && startsWith(github.event.head_commit.message, 'chore(release): version packages'))
-          || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    # It used to be started by the version commit's push and gated on that
+    # commit's subject, which only worked when a PAT pushed it: GitHub raises no
+    # push event for a GITHUB_TOKEN push. See ADR-0029.
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
     uses: ./.github/workflows/storybook_reusable.yml
     with:
       push-image: true
+      # Three tags, and the third one is the rollback handle:
+      #   :master  -- moving convenience pointer, never a rollback target
+      #   :<sha>   -- immutable, but unreadable and not chronologically sortable
+      #   :v<x.y.z> -- immutable; what IMAGE_TAG is pinned to, and the rollback
+      #                handle. Empty unless release-tag was passed.
+      # The third line evaluates to an empty string on a hand-run master build;
+      # docker/build-push-action drops empty entries from a multiline tag list.
       tags: |
         ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:master
         ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:${{ github.sha }}
+        ${{ inputs.release-tag != '' && format('ghcr.io/lordpluha/{0}/storybook:{1}', github.event.repository.name, inputs.release-tag) || '' }}
       timeout-minutes: 60
       cache-to-registry: true

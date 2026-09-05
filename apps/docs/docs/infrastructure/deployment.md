@@ -354,54 +354,359 @@ task db:restore FILE=backups/2026-09-02_120000.sql
 of a volume with a running Postgres is not a consistent backup, so volume snapshots are a second
 line of defence, not a substitute.
 
-## 7. Updating
+## 7. Releasing
 
-A push to `master` deploys on its own. The `[deploy] Production` workflow waits for that commit's
-image builds, then stops at the `production` environment for a human to approve; only after the
-approval does it touch the server. It renders `~/bitrate/.env` from the repository's secrets and
-variables, copies `infra/` and `Taskfile.yml` from the runner, pulls the images, migrates, and
-checks all three public hosts.
+A release is one pull request. Changesets accumulate on `develop`; a workflow cuts them onto a
+short-lived release branch and opens that branch as a pull request into `master`; **your merge of
+that pull request is what triggers everything else.** A merge performed on github.com is
+authenticated as the person who clicked it, so the push to `master` it produces raises a push event
+and starts the builds. Nothing in the chain needs a personal access token or a GitHub App.
+
+### One-time setup
+
+Two things a workflow cannot do for itself, both requiring repository admin.
+
+**Register the release checks as required on `master`.** The cut posts its results as commit
+statuses, and branch protection matches required checks by *context name*. Until they are
+registered, nothing stops a release pull request merging with a failed gate:
+
+```bash
+pnpm check:branch-protection            # report only — shows what would change
+pnpm check:branch-protection --apply    # register them
+```
+
+That adds exactly two contexts, `bitrate/release-gates` and `bitrate/release-version`, and touches
+no other protection setting. **The GitHub UI cannot do this**: its picker only offers checks it has
+seen in the last seven days, and these have never run. The script uses the API, which has no such
+restriction.
+
+**Give the `production` environment a required reviewer.** `environment: production` in a workflow
+blocks nothing by itself. Go to **Settings → Environments → production** and add one, or the deploy
+runs unattended.
+
+Two things you should *not* do:
+
+- **Do not tick "Require deployments to succeed before merging"** for `production` on `master`. The
+  deploy runs *after* the release pull request merges, so the pull request would wait forever on a
+  deployment only its own merge can start.
+- **Do not add a branch protection rule for `release/*`.** One with "Allow deletions" unchecked
+  makes release branches undeletable, so every finished release leaves permanent litter and the
+  cut's "this branch already exists" guard starts blocking re-cuts.
+
+### The shape
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor dev as Developer
-    participant ci as GitHub Actions
+    participant cut as Cut Release PR workflow
+    participant pr as Release PR into master
+    participant pub as Publish and Ship workflow
     participant ghcr as GHCR
     actor rev as Reviewer
     participant vps as Production VPS
 
-    dev->>ci: merge into master
-    par one workflow per app
-        ci->>ghcr: push api:master
-        and
-        ci->>ghcr: push web-player:master
-        and
-        ci->>ghcr: push web-artists:master
-        and
-        ci->>ghcr: push docs:master
-        and
-        ci->>ghcr: push storybook:master
-    end
-    Note over ci: the deploy polls for those runs<br/>before asking anyone to approve
-    ci->>rev: production environment gate
-    rev-->>ci: approve
-    ci->>vps: copy infra/ and Taskfile.yml
-    ci->>vps: render .env, mode 600
-    vps->>ghcr: pull :master
-    ci->>vps: up -d --no-build
-    ci->>vps: migrate deploy
-    ci->>vps: health check, three public hosts
+    dev->>cut: Run workflow (workflow_dispatch)
+    cut->>cut: derive v1.4.0 from the pending changesets
+    cut->>cut: create release/v1.4.0 from develop
+    cut->>cut: merge master in (signed, server-side)
+    cut->>cut: changeset version + product version into root package.json
+    cut->>cut: one GitHub-SIGNED commit via createCommitOnBranch
+    cut->>cut: gates — install, lint, check-types, build
+    cut->>pr: open the pull request, post both commit statuses
+    dev->>pr: review, approve, merge
+    pr-->>pub: push event on master, authored by the human
+    pub->>pub: create tag v1.4.0 + GitHub Release
+    pub->>ghcr: build and push five images at :v1.4.0
+    pub->>rev: production environment gate
+    rev-->>pub: approve
+    pub->>vps: render .env with IMAGE_TAG, sync infra/, pull, migrate, restart
+    pub->>dev: open the back-merge PR, backmerge/v1.4.0 → develop
+    dev->>dev: merge it, so develop carries the bumps again
 ```
 
-The wait comes before the gate on purpose: by the time a human is asked, the images either exist or
-the run has already failed by name, so nobody approves a release that cannot land.
+### The release commit is signed, and that is not decoration
 
-The environment gate is not automatic. `environment: production` in a workflow blocks nothing by
-itself — someone has to create that environment under **Settings → Environments** and add a
-**required reviewer**. Until then the deploy runs unattended.
+`master` and `develop` both have **Require signed commits** on. A commit made by `git commit` on a
+CI runner is unsigned, and a pull request containing one is refused at the merge button with:
 
-To deploy by hand instead — or when the workflow is unavailable:
+```text
+Commits must have verified signatures.
+```
+
+So the cut never runs `git commit`. It creates the version commit through GitHub's GraphQL
+`createCommitOnBranch` mutation and merges `master` in through `POST /repos/{owner}/{repo}/merges`,
+both of which GitHub signs with its own key. You will see the release commit attributed to
+`github-actions[bot]` with a green **Verified** badge.
+
+The practical consequence for you: **all three merge strategies work.** Merge, squash and rebase are
+equivalent here, and nothing downstream depends on which you pick.
+
+### The branch is kept up to date for you
+
+`master` has **Require branches to be up to date before merging** on, so a release branch that does
+not contain `master`'s tip cannot merge. The cut merges `master` into the release branch as part of
+cutting it, so a fresh cut is always mergeable. If `master` and `develop` have genuinely diverged
+the cut fails loudly rather than guessing a resolution — reconcile them in their own pull request
+and cut again.
+
+One case is left to you, because it happens after the cut: if something lands on `master` while the
+release pull request is open, GitHub shows **Update branch**. Clicking it is safe — GitHub creates
+another signed merge commit — but it makes *you* the last pusher, and `require_last_push_approval`
+then needs somebody else's approval. Unless a second reviewer is handy, the cleaner recovery is to
+close the pull request, delete the release branch, land the `master` change into `develop`, and
+re-cut.
+
+### The version is derived, never typed
+
+The release is tagged with the **product's semantic version** — `v1.4.0` — and that version follows
+from what the release actually contains. The rule is one line: the product bumps by the **highest
+bump type present among the workspaces this release versions**. Any `major` in the pending
+changesets makes it a major release; otherwise any `minor` makes it a minor one; otherwise it is a
+patch.
+
+The cut workflow reads that from Changesets rather than from anyone's judgement:
+
+```bash
+pnpm exec changeset status --output status.json
+jq -r '[.changesets[].releases[].type]
+       | if index("major") then "major"
+         elif index("minor") then "minor"
+         elif index("patch") then "patch"
+         else "none" end' status.json
+```
+
+You can run exactly that locally to see what the next release would be called, without starting one.
+
+`.changesets[]` — the bumps a person actually **wrote** — and not `.releases[]`, which is Changesets'
+resolved plan and also contains the patch bumps it generates for *dependents*. Deriving from the
+resolved plan would let a change travel along a dependency edge and inflate the product version.
+
+If it resolves to `none` — or there are no changesets — the run **fails**. It never falls through to
+`patch`, because a patch release naming changes it does not contain is worse than no release.
+
+The product version lives in the **root `package.json`**'s `version` field. The root package is
+outside `pnpm-workspace.yaml`'s `apps/*` and `packages/*` globs, so Changesets never touches it and
+cannot fight the release workflow over it.
+
+### Package versions move independently
+
+The product version is a separate axis from the per-workspace versions. Packages are **not**
+versioned in lockstep: `.changeset/config.json` sets `fixed: []` and `linked: []`, so nothing is
+forced to move with anything else.
+
+Worked example — **you change only the UI kit** and write one `minor` changeset for
+`@bitrate/ui-react`:
+
+| Workspace | Before | After | Why |
+|---|---|---|---|
+| `@bitrate/ui-react` | 0.0.2 | **0.1.0** | the bump you wrote |
+| `@bitrate/web-player` | 0.1.0 | **0.1.1** | it bundles `ui-react`, so its image genuinely changed |
+| `@bitrate/web-artists` | 0.1.1 | **0.1.2** | same |
+| `@bitrate/api` | 0.1.0 | 0.1.0 | depends on `converter`, `ncs-parser`, `contracts` — not on `ui-react` |
+| `@bitrate/docs`, `mobile`, `desktop`, everything else | — | unchanged | no dependency edge |
+| **product version** | 1.4.0 | **1.5.0** | minor, because the only *authored* bump was minor |
+| **release tag** | | **`v1.5.0`** | |
+
+Three things in that table are worth reading twice.
+
+**The dependents' patch bump is not a leak, and it cannot be turned off.** Measured against this
+repository's own `@changesets/cli` 2.31.0: `web-player` takes a patch whatever
+`updateInternalDependencies` is set to, and the experimental
+`updateInternalDependents` escape hatch does not suppress it either. It is also correct — `next build`
+inlines `ui-react` into the web-player bundle, so the published image really is different, and a
+version that stayed put would stop identifying what is deployed.
+
+**The product version took a minor, not the dependents' patch.** It is derived from the authored
+changeset only, so a change cannot inflate itself by propagating through the dependency graph.
+
+**All five images are still rebuilt and published at `:v1.5.0`,** including `api` and `docs` whose
+versions did not move. The production compose file pulls every service at one shared `${IMAGE_TAG}`,
+so every service needs an image under that tag or `compose pull` fails. Image rebuilds and version
+bumps are different questions.
+
+### Listing releases
+
+Because semver does not sort as text, **always use a version sort** when listing releases:
+
+```bash
+git tag -l 'v*' --sort=-v:refname | head   # correct: v1.10.0 before v1.9.0
+gh release list --limit 10                 # correct
+git tag -l 'v*' --sort=-refname            # wrong: plain lexicographic
+```
+
+### What gets checked, and when
+
+Two independent layers, and neither needs a credential the repository does not already have.
+
+**Before the pull request exists**, the cut workflow runs the repository's own gates on the release
+branch and refuses to open a pull request if any of them fails. The diff is version bumps, `CHANGELOG.md` prose and
+deleted changeset files, so the gates are chosen to match it:
+
+| Runs | Skipped, and why |
+|---|---|
+| `pnpm install --frozen-lockfile`, re-run after the bump | Jest / Vitest / Playwright — no source file changed, so they would re-test what `develop`'s own CI already ran |
+| `pnpm lint` — Biome also formats `package.json`, which changesets rewrites | `pnpm knip` — a version bump cannot create an unused export |
+| `pnpm check-types` | `pnpm check:tokens` — no `.tsx` or `.css` changed |
+| `pnpm build` — the same gate `lefthook` runs on every human push | the five Docker image builds — they run after the merge, and a failure there stops the release before production is touched |
+| the version derivation itself — non-empty `releases[]`, a resolved bump, an empty `.changeset/`, and a new root version that is valid semver and strictly greater than the old one | |
+
+The results are posted onto the release branch's head commit as two commit statuses:
+
+| Context | Covers |
+|---|---|
+| `bitrate/release-version` | the derivation itself — an authored changeset set, a resolved bump, an emptied `.changeset/`, a workspace version that actually moved, a valid semver strictly greater than the old one, and a **verified signature** on the version commit |
+| `bitrate/release-gates` | `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm check-types`, `pnpm build` |
+
+Register both as required checks once — see [One-time setup](#one-time-setup).
+
+**These two are the whole automated gate on the release pull request.** The repository's normal
+`pull_request` workflows — `api.yml`, `web_player.yml`, `ui_react.yml` and the rest — do **not** run
+on it, because GitHub suppresses workflow runs for events raised by `GITHUB_TOKEN` and the workflow
+is what opened the pull request.
+
+That is a deliberate trade rather than an oversight. `master` requires an approving review, and
+GitHub does not let you approve your own pull request — so if you opened the release pull request
+yourself, you could not approve it, and every release would need an admin bypass. Letting the bot
+open it keeps your approval valid. The suites that are skipped test source code, and a release diff
+contains none: it is version fields, changelog prose and deleted changeset files over a tree whose
+source is identical to `develop`'s tip, which `develop`'s own CI already tested.
+
+If a particular release pull request really does need the full suite, **close it and reopen it by
+hand**. The `reopened` event is authored by you, so the `pull_request` workflows fire retroactively
+on the same pull request — no new branch, no force-push.
+
+### Cut a release
+
+```bash
+# 1. Cut it. This creates the release branch, runs the gates and opens the pull request.
+gh workflow run release.yml --ref develop -f dry_run=false
+
+# 2. Watch it. The summary names the derived version and ends with the pull request URL.
+gh run watch "$(gh run list --workflow=release.yml --limit 1 \
+  --json databaseId --jq '.[0].databaseId')"
+```
+
+The summary says which version was derived and why — for example
+`major bump from 126 authored changeset release(s): 0.0.0 -> 1.0.0`.
+
+```bash
+# 3. Read the diff — it IS the release manifest — then approve and merge.
+gh pr list --base master --state open
+gh pr diff <number>
+gh pr checks <number> --watch     # bitrate/release-version + bitrate/release-gates
+gh pr review <number> --approve
+gh pr merge <number> --merge      # --squash and --rebase are equivalent here
+
+# 4. The merge starts the publish run. Approve it at the production environment.
+gh run list --workflow=release_publish.yml --limit 1
+gh run view --web                 # then click Review deployments → Approve
+
+# 5. Merge the back-merge PR so develop carries the version bumps again.
+gh pr list --base develop --state open
+gh pr merge <number> --merge
+```
+
+Step 3's approval is yours to give because the *bot* opened and pushed the pull request, not you.
+That is the whole reason the workflow opens it.
+
+Step 5 is not optional and it is the step most often forgotten. Until it lands, `develop` still
+holds the changesets the release consumed *and* the old root version, so the next cut would consume
+them a second time, derive the same version again, and collide with the tag that already exists. The
+cut refuses to run while an open release pull request into `master` exists, but only the back-merge
+actually fixes the drift.
+
+The back-merge pull request's head is `backmerge/v<version>`, a branch the bot creates, rather than
+`master` itself — otherwise `require_last_push_approval` on `develop` would ask *you* to approve
+your own release merge.
+
+### Dry run
+
+```bash
+gh workflow run release.yml --ref develop -f dry_run=true
+```
+
+Runs the whole cut — checkout, install, a **trial merge of `master`** so a divergence is still
+caught, `changeset status`, the version derivation, `changeset version` and **every** gate — and
+prints the derived version and the full diff to the run summary. It creates no branch, no commit, no
+commit status and no pull request. Nothing is written to the repository, the registry or the server.
+
+This is the cheapest way to answer "what would the next release be called, and is it breaking?"
+before committing to one.
+
+`release_images.yml` takes the same input and builds all five images without pushing any.
+`release_publish.yml` has no dry run and needs none: it takes no inputs, and everything it does
+follows from the merged tree that the cut's dry run already showed you.
+
+A dry run cannot prove the deploy, because the deploy's failure modes live on the server.
+`[platform] Deploy Production` in `health-only` mode is the closest equivalent and touches nothing.
+
+### If the release PR ever needs full CI
+
+The release pull request gets the two `bitrate/release-*` commit statuses and nothing else, because
+the workflow opened it. If that ever stops being enough — a release that carries a source change,
+say, or a policy that every pull request into `master` must run the full suite — the answer is a
+GitHub App, as `changesets/changesets`, Immich and `twentyhq/twenty` all use. Its token authors the
+`pull_request` event, so every `pull_request` workflow fires normally.
+
+The same setup is what a *scheduled* release would need for a different reason: nobody would be
+present to approve and merge.
+
+**Do not set it up before you need it.** It adds a private key to store, scope and rotate, and the
+close-and-reopen trick above already gets full CI on a one-off basis for free.
+
+If and when it is needed:
+
+1. **Create the App.** GitHub → *Settings* → *Developer settings* → *GitHub Apps* → *New GitHub
+   App*. Name it something like `bitrate-release`. Any homepage URL. **Uncheck** *Webhook → Active*.
+2. **Grant exactly two repository permissions**, everything else *No access*:
+   - *Contents*: **Read and write** — push the release branch.
+   - *Pull requests*: **Read and write** — open the release PR and the back-merge PR.
+3. Under *Where can this GitHub App be installed*, choose **Only on this account**. Create it.
+4. On the App's page, note the **Client ID**, then *Generate a private key* — a `.pem` downloads.
+5. **Install App** → select **Only select repositories** → `bitrate`.
+6. In the `bitrate` repository: *Settings* → *Secrets and variables* → *Actions*:
+   - *Variables* → *New repository variable*: `RELEASE_APP_CLIENT_ID` = the Client ID.
+   - *Secrets* → *New repository secret*: `RELEASE_APP_PRIVATE_KEY` = the **entire** contents of the
+     `.pem`, including the `-----BEGIN` and `-----END` lines.
+
+Wire it so the workflow *detects* it rather than assuming it: skip the token-minting step unless
+`vars.RELEASE_APP_CLIENT_ID` is non-empty, and have every later step fall back to
+`${{ steps.app-token.outputs.token || github.token }}`. **If nobody ever performs this setup,
+nothing may break** — that is the same guard that would have caught the missing `RELEASE_TOKEN`
+before it shipped.
+
+### What the publish run does
+
+Once the release PR is merged, the run on `master` reads the product version out of the merged
+tree's root `package.json`, creates the annotated tag `v1.4.0`, publishes a GitHub Release whose
+body is assembled from the changelog entries changesets just wrote, builds all five service images
+and publishes each under `:master`, `:<sha>` and `:v1.4.0`, and then stops at the `production`
+environment.
+
+Only after the approval does it touch the server: it renders `~/bitrate/.env` — including
+`IMAGE_TAG`, pinned to the version tag — from the environment's secrets and variables, copies
+`infra/` and `Taskfile.yml` from the runner, pulls the images, migrates, and checks all three public
+hosts.
+
+All five images are always built, even when one workspace changed. That is required, not wasteful:
+`infra/docker-compose.prod.yaml` pulls every service at one shared `${IMAGE_TAG}`, so a service that
+skipped its build would have no image under the version tag and `compose pull` would fail on it.
+
+It also opens the back-merge pull request, and does so as soon as the tag exists rather than waiting
+for the deploy: the version bumps belong on `develop` whether or not production was approved.
+
+A push to `master` that carries no release — a hotfix pushed directly, say — mints nothing, builds
+nothing and deploys nothing. The publish run reads the root version, sees that `v<version>` already
+exists as a tag, and stops. No workflow pattern-matches a commit subject to work this out. To ship
+such a push anyway, run `[release] Release Images` and then `[platform] Deploy Production` with mode
+`redeploy`.
+
+The environment gate is not automatic — see [One-time setup](#one-time-setup).
+
+### Deploying by hand
+
+Independent of everything above, for when the workflow is unavailable:
 
 ```bash
 git pull
@@ -417,56 +722,116 @@ long as migrations are additive — expand first, contract in a later release, n
 The migration runs in a throwaway container from the image just pulled, so it needs nothing running
 but the database.
 
-Production tracks `master`, not `develop`. CI builds every app image on a push to either branch and
-pushes it to GHCR; the compose file names the `:master` tag, so a deploy is a pull and a restart
-rather than a twenty-minute build on the production box. `git pull` is still required for a manual
-deploy, and from `master`: the nginx templates, the compose file, and the Taskfile are read from the
-checkout rather than from any image, so a checkout on the wrong branch deploys images built from one
-commit with configuration from another. The workflow avoids that trap by copying those files from
-the runner rather than asking the server to fetch — the server's unauthenticated `git` access to
-GitHub is throttled intermittently, and a fetch that fails silently leaves exactly that mismatch.
+Production tracks `master`, not `develop`. CI builds every app image on a push to `develop` and on
+every release, and pushes it to GHCR, so a deploy is a pull and a restart rather than a
+twenty-minute build on the production box. `git pull` is still required for a manual deploy, and
+from `master` or a version tag: the nginx templates, the compose file, and the Taskfile are read
+from the checkout rather than from any image, so a checkout on the wrong ref deploys images built
+from one commit with configuration from another. The workflow avoids that trap by copying those
+files from the runner rather than asking the server to fetch — the server's unauthenticated `git`
+access to GitHub is throttled intermittently, and a fetch that fails silently leaves exactly that
+mismatch.
 
 `prod:deploy` passes `--no-build` deliberately. Without it, compose quietly builds any service
 whose image it cannot pull, and a deploy meant to take two minutes silently becomes the slow path.
 
-The images are `ghcr.io/lordpluha/bitrate/<service>:master` for `api`, `web-player`,
-`web-artists`, `docs`, and `storybook`. `NEXT_PUBLIC_*` values are baked in at build time, so an
-image built against the wrong API origin cannot be corrected by editing `.env` — the workflow's
-build args are the place to look.
+The images are `ghcr.io/lordpluha/bitrate/<service>:${IMAGE_TAG}` for `api`, `web-player`,
+`web-artists`, `docs`, and `storybook`, where `IMAGE_TAG` is the release's own tag and defaults
+to `master` when unset. `NEXT_PUBLIC_*` values are baked in at build time, so an image built
+against the wrong API origin cannot be corrected by editing `.env` — the workflow's build args are
+the place to look.
 
 ## 8. Rolling back
 
-Every master build publishes two tags for each service: the moving `:master`, and the immutable
-commit SHA. A rollback is therefore a redeploy of an older SHA, not a rebuild — the artefact that
-worked is still in the registry.
+Every release is named by one tag, and every service image of that release is published under it. A
+rollback is a redeploy of an older tag — not a rebuild, and not a SHA hunt. The artefact that worked
+is still in the registry, so picking "the one before this one" is reading a list.
+
+Find the release you want back. **Use a version sort**: semantic versions do not order as text, and
+plain `--sort=-refname` would put `v1.10.0` before `v1.9.0`.
 
 ```bash
-# On the server. Find the commit you want back:
-git -C ~/bitrate log --oneline master | head
-
-# Redeploy every service from that commit's images:
-IMAGE_TAG=<the commit sha> task prod:deploy
+git fetch --tags
+git tag -l 'v*' --sort=-v:refname | head
+gh release list --limit 10
 ```
 
-The tag is a variable in the compose file, so this needs no editing and nothing to undo afterwards:
-the next ordinary deploy renders a fresh `.env` without `IMAGE_TAG`, the default takes over, and
-production is back on `:master`.
+Roll production back to it, from anywhere with `gh`:
+
+```bash
+gh workflow run deploy.yml \
+  --ref v1.3.2 \
+  -f mode=redeploy \
+  -f image-tag=v1.3.2
+```
+
+Then approve the run at the `production` environment, exactly as for a normal deploy.
+
+`--ref` is the load-bearing part and does two jobs at once. It pins `IMAGE_TAG`, so every service
+is pulled at that release's image; and it checks the workflow out **at that tag**, so `infra/`, the
+nginx templates and the Taskfile that get pushed to the server are the ones that release shipped
+with. Under the old SHA-based procedure those had to be restored by hand with a separate
+`git checkout <sha> -- infra Taskfile.yml`, and forgetting it left old containers running behind
+new routing. `-f image-tag=` is redundant when `--ref` is already the tag; pass it anyway so the
+run's inputs say plainly what is being deployed.
+
+`mode=redeploy` skips the wait for image builds, which is right here: the images already exist.
+Rebuilding them would be worse than pointless — a rebuild resolves dependencies afresh and may not
+reproduce the artefact that was known to work.
+
+The deploy refuses any ref that is not `master` or a release tag reachable from `master`, so a typo
+cannot deploy a side branch.
+
+The deploy has a second trigger for the same thing: **pushing a version tag by hand starts both the
+image build and the deploy for it**, so a rollback never depends on one mechanism having fired
+correctly. (The release path's own tag is created with `GITHUB_TOKEN`, which raises no tag event —
+that is why the release builds and deploys as jobs of one run instead.)
+
+If the images for an older tag ever need rebuilding — they should not, but a registry can be
+pruned — that is `release_images.yml`:
+
+```bash
+gh workflow run release_images.yml --ref v1.3.2 -f release-tag=v1.3.2
+```
+
+Pass `--ref` and `-f release-tag=` the same value. The workflow refuses to run if the tag does not
+resolve to the commit it checked out, because building one tree and publishing it under another
+release's version is the one mistake here that is invisible afterwards.
+
+To deploy by hand on the server instead — when the workflow is unavailable — the compose variable
+still works directly:
+
+```bash
+git -C ~/bitrate checkout v1.3.2
+IMAGE_TAG=v1.3.2 task prod:deploy
+```
+
+`~/bitrate/.deployed-release` records which tag production is currently pulling, and
+`~/bitrate/.deployed-commit` which commit its `infra/` came from.
 
 Re-tagging the images locally instead does **not** work, however intuitive it looks. `prod:deploy`
 runs `pull` before `up`, and the pull re-points a locally re-tagged name back at the registry's
 version — quietly undoing the rollback and restarting the release you were trying to escape.
+
+Do not roll back to `:master` or to a per-workspace changeset tag. `:master` moves with every
+release, so it is never a rollback target — and `release_images.yml` deliberately does not republish
+it, so rebuilding an old release cannot drag the pointer backwards either. `@bitrate/api@1.2.0`
+names one workspace's version, and
+the production compose file pulls all five services at one shared `IMAGE_TAG`, so a per-workspace
+tag cannot describe a deployable stack.
 
 Two things a rollback does not undo:
 
 - **Migrations.** `migrate deploy` only moves forward. An older image against a newer schema works
   only if the migration was additive. Before rolling back across one, check what it did — a dropped
   column is not recoverable by redeploying the previous image.
-- **The checkout.** `infra/`, the nginx templates and the Taskfile come from the working tree, not
-  from an image. If the bad release changed any of them, `git -C ~/bitrate checkout <sha> -- infra
-  Taskfile.yml` as well, or the old containers run behind new routing.
+- **The database's contents.** Restore from `task db:backup` output if the bad release wrote data
+  the old code cannot read.
 
-The durable fix is the next deploy, not the rollback: push the revert to `master` and let the normal
-path run, so the registry and the checkout agree again.
+The durable fix is the next release, not the rollback: merge the revert into `develop` with a
+changeset, cut a release from it, and let the normal path run, so the registry, the tags and the
+server agree again. The revert's changeset is what decides whether that release is `v1.4.1` or
+something larger — the version follows the change, as it does for every other release.
 
 ## Outbound SMTP is blocked on standard ports
 

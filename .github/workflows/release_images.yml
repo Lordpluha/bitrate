@@ -1,0 +1,125 @@
+name: "[release] Release Images"
+
+# Rebuild the five service images for a release tag.
+#
+# Dual trigger, which is Cal.com's shape in release-docker.yaml: neither the
+# build nor the deploy may depend on a single mechanism having fired correctly.
+#
+#   push: tags ['v*']    a human pushes a version tag
+#   workflow_dispatch    an explicitly named release-tag, for a rebuild
+#
+# This is NOT how a release builds its images. The tag release_publish.yml
+# creates is pushed with GITHUB_TOKEN and raises no tag event, so on the release
+# path the images are `needs:` jobs of that run. This workflow is alive for the
+# two cases that are genuinely a human action: rebuilding an older release whose
+# images were pruned from the registry, and pushing a tag by hand.
+#
+# Because release_publish.yml has no tag trigger and this workflow has no master
+# trigger, no single event ever starts two builds of the same thing.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release-tag:
+        description: >-
+          Version tag to publish the images under, e.g. `v1.3.2`. It must already
+          exist and must point at the commit this run checked out -- pass the same
+          value to `--ref` so the tree and the label cannot disagree. Leave empty
+          when this run is already at a tag.
+        required: false
+        default: ''
+        type: string
+      dry_run:
+        description: Build all five images without pushing any of them.
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: release-images-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+jobs:
+  # Not a thin router: this one step is the safety property. Without it a
+  # dispatch could label the tree of one commit with another release's version,
+  # and the registry would then hold an image whose tag lies about its contents.
+  resolve:
+    name: Resolve and verify the tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+
+    outputs:
+      tag: ${{ steps.resolve.outputs.tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+        with:
+          fetch-depth: 0
+
+      - name: Resolve and verify
+        id: resolve
+        env:
+          INPUT_TAG: ${{ inputs.release-tag }}
+          REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+        run: |
+          if [ -n "${INPUT_TAG}" ]; then
+            tag="${INPUT_TAG}"
+            source="the release-tag input"
+          elif [ "${REF_TYPE}" = "tag" ]; then
+            tag="${REF_NAME}"
+            source="this run's tag ref"
+          else
+            echo "::error::No release tag. This run is on branch '${REF_NAME}', so pass release-tag explicitly."
+            exit 1
+          fi
+
+          if ! printf '%s' "${tag}" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::'${tag}' is not a product version tag (v<major>.<minor>.<patch>)."
+            echo "Per-workspace changeset tags such as @bitrate/api@1.2.0 are not deployable:"
+            echo "the production compose file pulls every service at one shared IMAGE_TAG."
+            exit 1
+          fi
+
+          if ! tagged=$(git rev-parse -q --verify "refs/tags/${tag}^{commit}" 2>/dev/null); then
+            echo "::error::Tag '${tag}' does not exist."
+            exit 1
+          fi
+
+          # The whole point of this job. Building commit A and publishing it as
+          # release B is the one mistake here that is invisible afterwards.
+          if [ "${tagged}" != "${GITHUB_SHA}" ]; then
+            echo "::error::Tag '${tag}' points at ${tagged}, but this run checked out ${GITHUB_SHA}."
+            echo "Re-run with --ref ${tag} so the tree and the label agree."
+            exit 1
+          fi
+
+          printf 'tag=%s\n' "${tag}" >> "${GITHUB_OUTPUT}"
+          echo "Publishing images for ${tag} (from ${source}), built at ${tagged}."
+
+  images:
+    name: Images
+    needs: resolve
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/release_images_reusable.yml
+    with:
+      image-tag: ${{ needs.resolve.outputs.tag }}
+      push-image: ${{ !inputs.dry_run }}
+      # Deliberately empty. This workflow exists to rebuild an OLDER release, and
+      # re-publishing `:master` from here would drag the moving convenience
+      # pointer backwards onto an artefact that is not the newest release.
+      moving-tag: ''

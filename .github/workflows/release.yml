@@ -1,86 +1,76 @@
-name: "[release] Version and Tag"
+name: "[release] Cut Release PR"
 
-# The first step of the release chain, and the only workflow that writes to master.
+# Stage 2 of the release chain (ADR-0029). Dispatch-only, and it opens the
+# release pull request itself -- Route B.
 #
-#   human merges develop -> master
-#     -> this workflow consumes .changeset/*.md, bumps every changed workspace,
-#        writes its CHANGELOG.md, commits "chore(release): version packages"
-#        back to master, and tags each bumped workspace
-#     -> that version commit is a normal push to master, so the five image
-#        workflows build it under their existing path filters
-#     -> deploy.yml, also triggered by that commit, waits for those images and
-#        stops at the production environment for one Approve click
+#   human runs this workflow
+#     -> derive the product version from the AUTHORED changesets
+#     -> create release/v<x.y.z> from develop
+#     -> merge master into it, server-side, so the branch is up to date
+#     -> `changeset version`, write the product version into root package.json,
+#        and land all of it as ONE commit created through GitHub's GraphQL
+#        createCommitOnBranch mutation, so the commit is SIGNED
+#     -> run the layer-1 gates on it
+#     -> open the pull request into master
 #
-# Nothing here publishes to npm. Every workspace is `"private": true` and
-# .changeset/config.json sets `access: "restricted"`, so the whole value of this
-# workflow is version numbers, changelogs and git tags -- there is no registry
-# step to add later and none is missing.
+#   human approves and merges it
+#     -> a human-authored push to master, which raises a push event and starts
+#        release_publish.yml. No PAT, no GitHub App, no workflow_dispatch.
 #
-# It also deploys nothing. It writes a commit and some tags; the build and the
-# deploy are downstream reactions to that commit, owned by other workflows.
+# Why the commit is made through the API rather than by `git commit`:
+# `master` has `required_signatures: true`, and a commit made on a runner is
+# unsigned. Pushing it to `release/*` is fine -- that ref is unprotected -- but
+# the merge into `master` is then refused with "Commits must have verified
+# signatures". Squash-merging would launder it today and break the day someone
+# picks "Create a merge commit", so the commit is created by GitHub and signed
+# with GitHub's own key instead. Verified empirically, both directions.
 on:
-  push:
-    branches: [master]
-  # Escape hatch: re-run versioning by hand if a push-triggered run was cancelled
-  # part-way. Safe to repeat -- a run with no changesets left to consume writes
-  # nothing.
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: >-
+          Run the whole cut and stop short of every irreversible effect. It
+          derives and prints the next version, runs `changeset version` and every
+          gate, and prints the diff and the assembled PR body -- but creates no
+          branch, no commit, no commit status and no pull request.
+        required: false
+        default: false
+        type: boolean
 
-# Never cancel a run in flight. A cancelled `changeset version` that has already
-# rewritten package.json but not yet committed leaves the runner's tree dirty and
-# the repository untouched, which is recoverable; a cancelled run that has pushed
-# the commit but not the tags is recoverable too, because `changeset tag` skips
-# tags that already exist. Cancelling between those two points is the one state
-# worth never creating.
+# One cut at a time. Two concurrent cuts would derive the same version from the
+# same changesets and race to create the same ref.
 concurrency:
-  group: release-master
+  group: release-cut
   cancel-in-progress: false
 
-# Read-only by default. The one job that needs to write does so explicitly below.
-permissions:
-  contents: read
+# Read-only by default; the called workflow's one job widens to exactly what it
+# needs. `permissions: {}` here would not work: a called workflow can never hold
+# more than its caller grants, so the caller has to name the same three.
+permissions: {}
 
 jobs:
-  release:
-    # Loop guard, layer 1: do not version the version commit.
-    #
-    # This has to be a commit-message test rather than an actor test. When
-    # RELEASE_TOKEN is set the push is authenticated as that token's owner --
-    # a human account, not github-actions[bot] -- so `github.actor` is exactly
-    # the same on the merge and on the bot's own push and cannot distinguish
-    # them. The message is written by this workflow one job below and is the
-    # only thing that differs.
-    #
-    # Layer 2 lives inside the called workflow: a run that gets past this guard
-    # finds zero changesets, writes nothing, and pushes nothing. So even a
-    # human commit that happens to start with this prefix terminates after one
-    # no-op run. The recursion is bounded by construction, not by the guard.
-    #
-    # `github.event.head_commit.message` is attacker-influenceable in general,
-    # but it is used here only inside an `if:` expression evaluated by the
-    # Actions engine. It is never interpolated into a `run:` body anywhere in
-    # this pair of files.
-    if: >-
-      ${{ github.event_name == 'workflow_dispatch'
-          || !startsWith(github.event.head_commit.message, 'chore(release): version packages') }}
-    name: Version and Tag
+  cut:
+    name: Cut
     uses: ./.github/workflows/release_reusable.yml
+    with:
+      dry-run: ${{ inputs.dry_run }}
 
-    # Widened from the workflow default on purpose, and to one permission only:
-    # the job commits the version bumps and pushes the tags. A called workflow
-    # cannot hold more than its caller grants, so this has to be declared here.
+    # Widened from nothing on purpose, to exactly three permissions:
+    #
+    #   contents: write       -- create the release/* ref, merge master into it
+    #                            via POST /merges, and create the version commit
+    #                            via createCommitOnBranch. It does NOT push to
+    #                            master or develop and does not create tags.
+    #   statuses: write       -- POST the two layer-1 commit statuses onto the
+    #                            release branch head so they render on the PR.
+    #   pull-requests: write  -- Route B: open the release PR. Also covers the
+    #                            read used to refuse a second concurrent cut.
+    #
+    # Deliberately NOT granted: packages, actions, id-token. No job anywhere in
+    # this chain holds `actions: write`.
     permissions:
       contents: write
+      statuses: write
+      pull-requests: write
 
-    # Mapped explicitly rather than `secrets: inherit`. deploy.yml is forced into
-    # `inherit` because its secrets live at environment scope and a calling job
-    # may not declare `environment:`; this workflow has no environment, so
-    # repository scope resolves here correctly and the narrow mapping works.
-    #
-    # RELEASE_TOKEN is optional. Without it the called workflow still versions,
-    # commits and tags -- but the push is authenticated with GITHUB_TOKEN, and
-    # GitHub deliberately does not start workflow runs for push events made with
-    # that token, so nothing downstream would fire. The job says so loudly rather
-    # than appearing to have released.
-    secrets:
-      RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+    # No `secrets:` block. The whole chain runs on GITHUB_TOKEN.
