@@ -235,15 +235,20 @@ tasks:
       - cmd: '{{.DC_PROD}} up -d --build'
 
   prod:deploy:
-    desc: Pull the images CI published and restart production — no build on the server
+    desc: Pull the images CI published, migrate, then restart production — no build on the server
     prompt: Deploy the latest published images to PRODUCTION?
     cmds:
-      # The normal path. CI builds every app image and pushes it to GHCR, so a deploy is a pull
-      # and a restart — a couple of minutes instead of the twenty-odd a build on this box takes.
-      # --no-build is what makes that a guarantee: without it compose silently falls back to
-      # building any service whose image it cannot pull, and the deploy quietly becomes the slow
-      # path again.
+      # CI builds every app image and pushes it to GHCR, so a deploy is a pull and a restart — a
+      # couple of minutes instead of the twenty-odd a build on this box takes. --no-build is what
+      # makes that a guarantee: without it compose silently falls back to building any service
+      # whose image it cannot pull, and the deploy quietly becomes the slow path again.
       - cmd: '{{.DC_PROD}} pull'
+      # Migrations run between the pull and the restart, from the image just pulled. Running them
+      # afterwards meant the new code served requests against the old schema for as long as the
+      # migration took — the window in which it is most likely to fail, since new code is exactly
+      # what needs the new columns. The old code meeting a migrated schema is the safe direction,
+      # provided migrations stay additive.
+      - task: prod:migrate
       - cmd: '{{.DC_PROD}} up -d --no-build'
       - cmd: '{{.DC_PROD}} ps'
 
@@ -252,7 +257,11 @@ tasks:
     cmds:
       # migrate deploy, never migrate dev: the dev command generates migrations, wants a shadow
       # database, and can reset the data it is pointed at.
-      - cmd: '{{.DC_PROD}} exec -T api pnpm --filter @bitrate/api run db:migration:deploy'
+      #
+      # `run --rm`, not `exec`: exec needs the api container already running, which forced
+      # migrations to happen after the restart and made every deploy race the container's boot.
+      # A throwaway container from the same image needs nothing running but the database.
+      - cmd: '{{.DC_PROD}} run --rm --no-TTY api pnpm --filter @bitrate/api run db:migration:deploy'
 
 
   prod:down:

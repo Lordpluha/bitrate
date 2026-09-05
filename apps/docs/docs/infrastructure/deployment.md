@@ -406,8 +406,16 @@ To deploy by hand instead — or when the workflow is unavailable:
 ```bash
 git pull
 task prod:deploy
-task prod:migrate
 ```
+
+`prod:deploy` pulls, migrates, then restarts — in that order and deliberately. Running migrations
+after the restart meant the new code answered requests against the old schema for as long as the
+migration took, which is the worst of the two windows: new code is precisely what needs the new
+columns. Old code meeting an already-migrated schema is the safe direction, and it stays safe as
+long as migrations are additive — expand first, contract in a later release, never both at once.
+
+The migration runs in a throwaway container from the image just pulled, so it needs nothing running
+but the database.
 
 Production tracks `master`, not `develop`. CI builds every app image on a push to either branch and
 pushes it to GHCR; the compose file names the `:master` tag, so a deploy is a pull and a restart

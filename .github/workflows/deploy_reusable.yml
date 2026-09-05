@@ -686,7 +686,10 @@ jobs:
             | ssh "${SSH_TARGET}" 'cat > "$HOME/bitrate/.deployed-commit"'
           echo "infra/ and Taskfile.yml on the server now match ${DEPLOY_SHA}"
 
-      - name: Deploy -- pull images and restart
+      # prod:deploy is pull, then migrate, then restart. The migration moved inside it so the
+      # new code never serves requests against the old schema, and it no longer races the
+      # container's boot — a throwaway container needs nothing running but the database.
+      - name: Deploy -- pull images, migrate, restart
         if: ${{ inputs.run-deploy }}
         run: |
           set -euo pipefail
@@ -705,34 +708,6 @@ jobs:
           if "$TASK_BIN" --help 2>&1 | grep -q -- '--yes'; then YES="--yes"; fi
 
           "$TASK_BIN" $YES prod:deploy
-          REMOTE
-
-      - name: Apply database migrations
-        if: ${{ inputs.run-deploy }}
-        run: |
-          set -euo pipefail
-          ssh "${SSH_TARGET}" bash -euo pipefail -s <<'REMOTE'
-          cd "$HOME/bitrate"
-
-          TASK_BIN=""
-          for candidate in task "$HOME/.local/bin/task" /usr/local/bin/task /usr/bin/task /snap/bin/task "$HOME/go/bin/task"; do
-            if command -v "$candidate" >/dev/null 2>&1; then TASK_BIN="$(command -v "$candidate")"; break; fi
-          done
-          [ -n "$TASK_BIN" ] || { echo "::error::task not found on the deploy user's PATH."; exit 1; }
-
-          # prod:migrate runs `compose exec api`, which fails while the freshly
-          # restarted container is still starting. `migrate deploy` is idempotent, so
-          # retrying is safe; a persistent failure is still surfaced.
-          for attempt in 1 2 3 4 5 6; do
-            if "$TASK_BIN" prod:migrate; then
-              echo "migrations applied on attempt ${attempt}"
-              exit 0
-            fi
-            echo "api container not ready yet (attempt ${attempt}/6) -- retrying in 10s"
-            sleep 10
-          done
-          echo "::error::Migrations did not apply. The new images are running against the old schema."
-          exit 1
           REMOTE
 
       # ---------------------------------------------------------------------

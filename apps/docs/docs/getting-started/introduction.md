@@ -55,10 +55,13 @@ pnpm --filter @bitrate/api db:seed
 pnpm dev
 
 # Or start individual apps
-pnpm --filter @bitrate/api start:dev      # Backend API
-pnpm --filter @bitrate/web-player dev     # Web player
-pnpm --filter @bitrate/mobile start       # Mobile app
-pnpm --filter @bitrate/desktop tauri dev  # Desktop app
+pnpm --filter @bitrate/api start:dev       # Backend API
+pnpm --filter @bitrate/web-player dev      # Web player
+pnpm --filter @bitrate/web-artists dev     # Artists portal
+pnpm --filter @bitrate/mobile start        # Mobile app
+pnpm --filter @bitrate/desktop tauri dev   # Desktop app
+pnpm --filter @bitrate/docs start          # This documentation site
+pnpm --filter @bitrate/ui-react storybook  # Component workshop
 ```
 
 ## 📖 Documentation Structure
@@ -70,9 +73,15 @@ pnpm --filter @bitrate/desktop tauri dev  # Desktop app
 
 ### Applications
 - **[Backend API](/docs/applications/api/overview)** - NestJS API documentation
-- **[Web Player](/docs/applications/web-player/overview)** - Next.js web app guide
+- **[Web Player](/docs/applications/web-player/overview)** - the listener-facing Next.js app, served at `bitrate.me`
+- **[Artists Portal](/docs/applications/web-artists/overview)** - where artists publish and track their music, at `artists.bitrate.me`
 - **[Mobile App](/docs/applications/mobile/overview)** - React Native development
 - **[Desktop App](/docs/applications/desktop/overview)** - Tauri desktop application
+
+Two more surfaces are published from this repository but have no guide of their own, because the
+sites are the documentation: this Docusaurus site at `docs.bitrate.me`, and the component workshop
+at [ui.bitrate.me](https://ui.bitrate.me) — every `@bitrate/ui-react` component, its variants and
+its accessibility notes.
 
 ### Advanced
 - **[CLI Tools](/docs/packages/cli-tools)** - Custom build tools and utilities
@@ -92,9 +101,12 @@ pnpm --filter @bitrate/desktop tauri dev  # Desktop app
 - **WebSockets** - Real-time synchronization
 
 ### Frontend
-- **Next.js** - React framework with App Router
+- **Next.js** - React framework with App Router, organised by Feature-Sliced Design
 - **React 19** - UI library
-- **Tailwind CSS v4** - Utility-first CSS (Rust-based)
+- **Tailwind CSS v4** - utilities configured in CSS `@theme` layers, with no `tailwind.config.js`
+- **TanStack Query** - server state, typed from the generated OpenAPI contracts
+- **Zustand** - client state, with a shared persistence factory
+- **Base UI + `@bitrate/ui-react`** - the shared primitives and design system
 - **TypeScript** - Type safety across the stack
 
 ### Mobile & Desktop
@@ -106,8 +118,10 @@ pnpm --filter @bitrate/desktop tauri dev  # Desktop app
 - **pnpm workspaces** - Monorepo package management
 - **Turbo** - Incremental builds
 - **Biome** - Fast linting and formatting
-- **Docker** - Containerization
+- **Docker** - containerisation; production runs images built in CI rather than on the server
 - **GitHub Actions** - CI/CD pipelines
+- **Changesets** - versioning; a merge to `master` releases, and the release is what gets deployed
+- **nginx** - TLS termination and host routing for all six published domains
 
 ## 🎨 Key Features
 
