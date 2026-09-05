@@ -31,6 +31,32 @@ One host, one application; there are no path routes between them. Both frontends
 build output from `/_next/`, so serving them under paths on a single host made the portal's assets
 resolve against the player.
 
+```mermaid
+flowchart LR
+    visitor([Visitor])
+    visitor --> nginx
+
+    subgraph vps["One VPS — nginx is the only container that publishes a port"]
+        nginx["nginx<br/>80, 443"]
+
+        nginx -->|"bitrate.me<br/>www redirects here"| player["web-player<br/>3001"]
+        nginx -->|"artists.bitrate.me"| artists["web-artists<br/>3002"]
+        nginx -->|"api.bitrate.me"| api["api<br/>3000"]
+        nginx -->|"docs.bitrate.me"| docs["docs<br/>8080"]
+        nginx -->|"ui.bitrate.me"| storybook["storybook<br/>8080"]
+
+        api --- postgres[("postgres")]
+        api --- redis[("redis")]
+    end
+
+    player -.->|"browser calls api.bitrate.me directly"| nginx
+    artists -.-> nginx
+```
+
+The dotted edges are the part that catches people out: a page served from the apex does not reach
+the API through its own origin. The browser calls `api.bitrate.me`, which is why that origin is
+compiled into the frontend bundles and why CORS has to allow it.
+
 Only nginx publishes ports. Postgres and Redis are reachable only inside the Docker network —
 do not add a `ports:` mapping to them.
 
@@ -133,6 +159,43 @@ the image-build workflows, which have no environment and therefore fall back to 
 values hardcoded in them. Production is unaffected — the fallbacks match — but the image side is a
 separate axis from the server's `.env`, and changing the environment variable will not change a
 published bundle.
+
+```mermaid
+flowchart TD
+    subgraph env["GitHub — environment: production"]
+        secrets["Secrets<br/>DATABASE_URL, JWT_SECRET,<br/>passwords, SMTP, deploy key"]
+        vars["Variables<br/>hosts, ports, lifetimes,<br/>cookie names, NEXT_PUBLIC_*"]
+    end
+
+    subgraph buildtime["Build time — frozen into the image"]
+        wf["image workflow<br/>build args"]
+        image["image in GHCR"]
+    end
+
+    subgraph runtime["Run time — read when the container starts"]
+        dotenv[".env on the server<br/>a rendered artifact"]
+        container["running container"]
+    end
+
+    secrets --> dotenv
+    vars --> dotenv
+    dotenv --> container
+    wf --> image
+    image --> container
+
+    fallback["production values hardcoded<br/>in the workflow"] --> wf
+    vars -. "not visible here —<br/>the image job has no environment" .-> wf
+
+    style fallback stroke-dasharray: 4 4
+```
+
+Read the dotted edge as the rule it is: **changing a variable changes the server's next `.env`, not
+any image that has already been built.** A frontend's API origin is decided by the workflow's build
+args and frozen when the image is made; no amount of editing configuration afterwards moves it. The
+only way to change it is to rebuild.
+
+The same asymmetry explains why editing `.env` on the server looks like it works and then quietly
+stops working: the next deploy overwrites the file from GitHub.
 
 `scripts/sync-env-to-github.sh` uploads an existing env file in one pass. It pipes each value into
 `gh` on stdin rather than passing it as an argument — arguments are visible to anyone who can run
@@ -296,6 +359,41 @@ approval does it touch the server. It renders `~/bitrate/.env` from the reposito
 variables, copies `infra/` and `Taskfile.yml` from the runner, pulls the images, migrates, and
 checks all three public hosts.
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor dev as Developer
+    participant ci as GitHub Actions
+    participant ghcr as GHCR
+    actor rev as Reviewer
+    participant vps as Production VPS
+
+    dev->>ci: merge into master
+    par one workflow per app
+        ci->>ghcr: push api:master
+        and
+        ci->>ghcr: push web-player:master
+        and
+        ci->>ghcr: push web-artists:master
+        and
+        ci->>ghcr: push docs:master
+        and
+        ci->>ghcr: push storybook:master
+    end
+    Note over ci: the deploy polls for those runs<br/>before asking anyone to approve
+    ci->>rev: production environment gate
+    rev-->>ci: approve
+    ci->>vps: copy infra/ and Taskfile.yml
+    ci->>vps: render .env, mode 600
+    vps->>ghcr: pull :master
+    ci->>vps: up -d --no-build
+    ci->>vps: migrate deploy
+    ci->>vps: health check, three public hosts
+```
+
+The wait comes before the gate on purpose: by the time a human is asked, the images either exist or
+the run has already failed by name, so nobody approves a release that cannot land.
+
 The environment gate is not automatic. `environment: production` in a workflow blocks nothing by
 itself — someone has to create that environment under **Settings → Environments** and add a
 **required reviewer**. Until then the deploy runs unattended.
@@ -324,6 +422,40 @@ The images are `ghcr.io/lordpluha/bitrate/<service>:master` for `api`, `web-play
 `web-artists`, `docs`, and `storybook`. `NEXT_PUBLIC_*` values are baked in at build time, so an
 image built against the wrong API origin cannot be corrected by editing `.env` — the workflow's
 build args are the place to look.
+
+## 8. Rolling back
+
+Every master build publishes two tags for each service: the moving `:master`, and the immutable
+commit SHA. A rollback is therefore a redeploy of an older SHA, not a rebuild — the artefact that
+worked is still in the registry.
+
+```bash
+# On the server. Find the commit you want back:
+git -C ~/bitrate log --oneline master | head
+
+# Pin every app service to it, then restart from those images:
+SHA=<the commit sha>
+for svc in api web-player web-artists docs storybook; do
+  docker pull "ghcr.io/lordpluha/bitrate/$svc:$SHA"
+  docker tag "ghcr.io/lordpluha/bitrate/$svc:$SHA" "ghcr.io/lordpluha/bitrate/$svc:master"
+done
+task prod:deploy
+```
+
+Re-tagging locally is what makes this work without editing the compose file: the services name
+`:master`, and the pull in `prod:deploy` finds the local tag already satisfied.
+
+Two things a rollback does not undo:
+
+- **Migrations.** `migrate deploy` only moves forward. An older image against a newer schema works
+  only if the migration was additive. Before rolling back across one, check what it did — a dropped
+  column is not recoverable by redeploying the previous image.
+- **The checkout.** `infra/`, the nginx templates and the Taskfile come from the working tree, not
+  from an image. If the bad release changed any of them, `git -C ~/bitrate checkout <sha> -- infra
+  Taskfile.yml` as well, or the old containers run behind new routing.
+
+The durable fix is the next deploy, not the rollback: push the revert to `master` and let the normal
+path run, so the registry and the checkout agree again.
 
 ## Outbound SMTP is blocked on standard ports
 
