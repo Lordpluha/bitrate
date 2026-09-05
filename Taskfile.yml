@@ -1,17 +1,30 @@
 version: '3'
 
 vars:
-  # --env-file .env is not redundant. Compose looks for .env next to the compose file, so with
-  # `-f infra/...` it reads infra/.env — a file that does not exist — and every ${VAR} silently
-  # resolves to empty. The repository keeps its .env at the root, next to .env.example.
+  # The dev/preprod stacks ask for no env file. Every variable in them is declared with a
+  # `:-default`, so they come up on a clean checkout. `--env-file .env` used to be passed
+  # here; compose treats a missing --env-file as a hard error, so once the repository stopped
+  # carrying a root .env that flag made every task below fail before it started.
+  #
+  # To override a value, export it in your shell — a shell variable wins over the compose
+  # default (`POSTGRES_PORT=5433 task infra:up`). Per-app .env files under apps/* configure
+  # an app run natively; deploy and CI values come from GitHub environment secrets.
+  #
   # Day-to-day Docker environment despite the "preprod" file name: api,
   # web-player, web-artists, admin and the infra services, plus the
   # profile-gated mobile/desktop/docs/nginx. `dev:*`, `db:*`, `shell:*` and
   # `mobile:*`/`desktop:*` all target this file.
-  DC_DEV: docker compose --env-file .env -f infra/docker-compose.preprod.yaml
+  DC_DEV: docker compose -f infra/docker-compose.preprod.yaml
+  # prod KEEPS --env-file, and that is not an inconsistency. It defaults nothing on purpose
+  # (DOMAIN, DATABASE_URL, JWT_SECRET, POSTGRES_*, REDIS_PASSWORD, WEB_HOST, NEXT_PUBLIC_*),
+  # and it never runs from a developer checkout: deploy_reusable.yml renders those values
+  # from GitHub environment secrets into $HOME/bitrate/.env on the server (mode 600), rsyncs
+  # this file next to it, then runs `task prod:deploy` there. That .env is a deploy artifact
+  # on the target host, not a repository file. Dropping --env-file here would make compose
+  # look for infra/.env, find nothing, and fail every production deploy.
   DC_PROD: docker compose --env-file .env -f infra/docker-compose.prod.yaml
   # Infrastructure only — no application containers. Used by `infra:*`.
-  DC_INFRA: docker compose --env-file .env -f infra/docker-compose.dev.yaml
+  DC_INFRA: docker compose -f infra/docker-compose.dev.yaml
 
 tasks:
   # ─────────────────────────────────────────

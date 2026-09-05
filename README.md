@@ -27,7 +27,6 @@ Install the [requirements](#requirements) first, then:
 
 ```bash
 pnpm install
-cp .env.example .env
 task init:native
 ```
 
@@ -35,8 +34,13 @@ task init:native
 and then runs every app natively. `task` with no arguments lists every Docker, database and
 monitoring workflow it owns — see the [Taskfile documentation](https://taskfile.dev/usage/).
 
-`.env` is what Docker Compose reads; each app also carries its own `.env.example` for running that
-app alone. For the full Docker stack, mobile, desktop or Windows, follow the
+There is no repository-root env file to create. The Docker stacks run on the defaults built into
+`infra/docker-compose.*.yaml`, so `task infra:up` and `task dev:up` work on a clean checkout; export
+a shell variable to override one (`POSTGRES_PORT=5433 task infra:up`). To run a single app natively,
+copy that app's own template — `apps/api`, `apps/web-player` and `apps/web-artists` each ship one.
+Deploy and CI values are not files at all: they live in GitHub environment secrets and variables.
+
+For the full Docker stack, mobile, desktop or Windows, follow the
 [setup guide](https://docs.bitrate.me/docs/getting-started/setup) instead — it covers the paths
 this three-line version deliberately skips.
 

@@ -112,18 +112,23 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```bash
 git clone https://github.com/Lordpluha/bitrate.git
 cd bitrate
-cp .env.example .env
 ```
 
-Edit the **root** `.env` — not `apps/api/.env`. The compose stacks read only the repository
-root, and `.dockerignore` keeps per-app env files out of the image entirely, so a value placed
-in one is silently ignored. See [Environment variables](../guides/environment.md) for which file
-is read when.
+There is no template to copy: the repository ships no root `.env` and no root example. The
+server's `$HOME/bitrate/.env` is written by the deploy workflow from GitHub environment
+secrets and variables (mode 600) — see the next section. Nothing about production
+configuration is edited in a checkout.
 
-Use `task` rather than calling `docker compose` by hand. Compose looks for `.env` beside the
-compose file, so a bare `docker compose -f infra/docker-compose.prod.yaml` reads `infra/.env`,
-finds nothing, and resolves every variable to an empty string without saying so. The `task`
-targets pass `--env-file .env` explicitly.
+Use `task` rather than calling `docker compose` by hand. Compose looks for its env file beside
+the compose file, so a bare `docker compose -f infra/docker-compose.prod.yaml` would read
+`infra/.env`, find nothing, and fail on `DOMAIN`. `task prod:*` passes `--env-file .env`
+explicitly so the rendered root file is the one that is read — which is exactly why
+`prod:deploy` must be run from `$HOME/bitrate`.
+
+Note the asymmetry: `dev:*` and `infra:*` pass **no** `--env-file`, because every variable in
+`docker-compose.dev.yaml` and `docker-compose.preprod.yaml` has a `:-default` and those stacks
+must work on a clean checkout. Only `prod:*` needs the file, and only on the server. See
+[Environment variables](../guides/environment.md).
 
 ### Where production configuration actually lives
 

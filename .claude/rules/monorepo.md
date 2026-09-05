@@ -202,7 +202,38 @@ caused, and [ADR-0013](../../apps/docs/docs/architecture/0013-docs-sync.md)). Ru
 
 ## Environment variables
 
-Copy `.env.example` to `.env` for Docker Compose variables. The API validates its own env at startup via Zod (`apps/api/env.schema.ts`). Required API vars: `DATABASE_URL`, `REDIS_HOST`, `REDIS_PORT`, `JWT_SECRET`, `WEB_HOST`.
+Three sources, and only three. There is **no repository-root `.env`** and no root template —
+do not reintroduce either.
+
+| Where a value is needed | Where it comes from |
+|---|---|
+| Deploy and CI | GitHub environment secrets and variables, referenced as `${{ secrets.NAME }}` / `${{ vars.NAME }}` and passed to a step through `env:` |
+| A developer running one app natively | That app's own `.env`, seeded from its own `apps/<app>/.env.example` |
+| The Docker stacks | The `:-default` values written into `infra/docker-compose.*.yaml` |
+
+Every variable in `docker-compose.dev.yaml` and `docker-compose.preprod.yaml` is declared
+with a default, so both stacks come up on a clean checkout with no env file present;
+`docker compose -f infra/docker-compose.dev.yaml config -q` exits 0 with nothing to read.
+Override one by exporting it in the shell — a shell variable beats the compose default.
+`Taskfile.yml`'s `infra:*` and `dev:*` therefore pass no `--env-file`; adding one back makes
+every `task dev:*` fail with `couldn't find env file` on a clean checkout.
+
+`docker-compose.prod.yaml` is the exception on both counts. It defaults **nothing**
+(`DOMAIN`, `DATABASE_URL`, `JWT_SECRET`, `POSTGRES_*`, `REDIS_PASSWORD`, `WEB_HOST`,
+`NEXT_PUBLIC_*`), and `DC_PROD` **keeps** `--env-file .env`. That is not a leftover: the deploy
+workflow renders those values from GitHub environment secrets into `$HOME/bitrate/.env` on the
+server (mode 600), rsyncs `infra/` and `Taskfile.yml` beside it, and runs `task prod:deploy`
+there. That file is a deploy artifact on the target host, never a repository file — **do not
+"tidy" the flag away, it breaks production deploys.** `config` failing on `DOMAIN` outside a
+deploy is the guard working.
+
+A CI job that needs a non-default value sets it as job- or step-level `env:` so compose picks
+it up through shell interpolation. Do **not** write a root `.env` in a workflow: with
+`-f infra/...` the project directory is `infra/`, so compose looks for `infra/.env` and
+ignores a root one entirely — a root `.env` written by a CI step is silently dead.
+
+The API validates its own env at startup via Zod (`apps/api/env.schema.ts`). Required API
+vars: `DATABASE_URL`, `REDIS_HOST`, `REDIS_PORT`, `JWT_SECRET`, `WEB_HOST`.
 
 ## Pre-push hook
 

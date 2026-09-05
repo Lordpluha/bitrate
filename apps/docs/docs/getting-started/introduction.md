@@ -35,9 +35,7 @@ cd bitrate
 # Install dependencies
 pnpm install
 
-# Set up environment variables
-cp .env.example .env
-
+# No env file needed — the local stack runs on the compose defaults
 # Start PostgreSQL + Redis (minimal local stack)
 docker-compose -f infra/docker-compose.dev.yaml up -d
 
