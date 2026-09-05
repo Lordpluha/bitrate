@@ -1,19 +1,29 @@
 name: "[platform] Deploy Production"
 
-# Triggered by the push itself rather than by workflow_run after the image
-# workflows. workflow_run cannot express "wait for whichever subset of the five
-# image workflows this commit's path filters actually started", and it runs with
-# repository secrets in a context the caller does not choose. Instead this
-# workflow starts on the push and its first job polls the runs that exist for
-# this exact SHA -- see the await-images job in deploy_reusable.yml.
+# Dual trigger, per ADR-0029. Neither the build nor the deploy may depend on a
+# single mechanism having fired correctly, so production is reachable two ways:
 #
-# Not every push to master deploys. The one that does is the version commit that
-# release.yml writes after consuming the changesets -- see the job condition
-# below. A merge commit is not a release; the commit that carries the version
-# numbers and changelogs is.
+#   push: tags ['v*']    a human pushes a version tag -> full deploy of that tag
+#   workflow_dispatch    an explicit image-tag, in full / redeploy / health-only
+#
+# On the RELEASE path neither fires, and that is deliberate. The tag
+# release_publish.yml creates is pushed with GITHUB_TOKEN, which raises no tag
+# event, so there the deploy is a `needs:` job of the publish run -- ordered by
+# the graph rather than by polling. These triggers are alive for the two cases
+# that are genuinely a human action: a hand-pushed tag, and a rollback.
+#
+# Because release_publish.yml has no tag trigger and this workflow has no master
+# trigger, no single event ever starts two deploys of the same thing.
+#
+# There is no push-to-master trigger, and its absence is not a loosened gate. It
+# used to guess which push to master was a release by matching the commit
+# subject, and only ever fired when a PAT wrote the version commit. The
+# `production` environment approval is untouched and still the last thing
+# between a run and the server -- see deploy_reusable.yml's `deploy` job.
 on:
   push:
-    branches: [master]
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       mode:
@@ -22,12 +32,22 @@ on:
         default: full
         type: choice
         options:
-          # Wait for this commit's images, then render, deploy, migrate, probe.
+          # Wait for this ref's image runs, then render, deploy, migrate, probe.
           - full
           # Skip the image wait -- for redeploying images that already exist.
+          # This is the rollback mode.
           - redeploy
           # Probe production only. Touches nothing on the server.
           - health-only
+      image-tag:
+        description: >-
+          Value of IMAGE_TAG on the server, i.e. which published image tag every
+          service is pulled at. Normally a stack release tag
+          (`v1.4.0`). Leave empty to derive it: the ref's own name when this
+          run is at a tag, otherwise `master`.
+        required: false
+        default: ''
+        type: string
 
 # Never cancel a deploy in flight: a half-applied `compose up` plus a cancelled
 # migration is worse than a queued second deploy. A future staging caller gets
@@ -36,17 +56,12 @@ concurrency:
   group: deploy-production
   cancel-in-progress: false
 
-# The deploy pushes nothing and publishes nothing. `actions: read` exists solely
-# so the await-images job can read this commit's workflow run statuses; the
-# called workflow narrows further, per job. `secrets: inherit` below does not
-# change this token's scope -- it governs the secrets context, not permissions.
-permissions:
-  contents: read
-  actions: read
+# Nothing at workflow level; the one caller job below asks for exactly what the
+# called workflow's jobs need. The deploy pushes nothing and publishes nothing.
+permissions: {}
 
 jobs:
-  # One caller job, deliberately. `inputs.mode` is an empty string on a push, so
-  # both `with:` expressions short-circuit on `event_name == 'push'`.
+  # One caller job, deliberately.
   #
   # `secrets: inherit` rather than an explicit eleven-secret mapping. This is
   # forced, not preferred. Production configuration now lives at *environment*
@@ -65,29 +80,29 @@ jobs:
   # is reviewed with this file; it would not be acceptable for a third-party or
   # cross-repository reusable workflow.
   production:
-    # Deploy the released state, not every commit that reaches master.
-    #
-    # release.yml consumes the changesets and pushes exactly one commit with this
-    # subject; the five image workflows gate their master jobs on the same string.
-    # So the artefact this job deploys always corresponds to a version that has a
-    # changelog entry and a git tag, instead of to whatever happened to land.
-    #
-    # A merge with no changesets behind it produces no version commit, no image
-    # build and no deploy. That is deliberate -- nothing user-visible changed --
-    # and `workflow_dispatch` below is the way to ship it anyway. Dispatch the
-    # five image workflows for master first if the commit needs new images at all;
-    # `full` mode then waits for them, and `redeploy` mode skips the wait for
-    # images that already exist.
-    #
-    # `github.event.head_commit.message` is used only inside this expression,
-    # which the Actions engine evaluates. It never reaches a `run:` body.
-    if: >-
-      ${{ github.event_name == 'workflow_dispatch'
-          || startsWith(github.event.head_commit.message, 'chore(release): version packages') }}
+    # No `if:`, and nothing is weakened by its absence. The old condition existed
+    # to tell a release push from an ordinary push to master; with no master
+    # trigger there is no such question, and every run of this workflow is
+    # somebody explicitly asking for a deploy of a named tag.
     name: Production
     uses: ./.github/workflows/deploy_reusable.yml
+
+    #   contents: read  -- check out infra/, the nginx templates and the Taskfile.
+    #   actions:  read  -- the await-images job reads this ref's run statuses.
+    #
+    # `read`, not `write`: this workflow is started, it never starts anything
+    # itself. No job in this repository holds `actions: write` any more.
+    permissions:
+      contents: read
+      actions: read
     with:
       environment: production
+      # On a tag push there is no `inputs` context at all, so every reference
+      # below reads as an empty string. Both booleans therefore have to name the
+      # push case explicitly rather than relying on a default: a bare
+      # `inputs.mode == 'full'` would evaluate false on a tag push and silently
+      # skip the wait for that tag's images.
       wait-for-images: ${{ github.event_name == 'push' || inputs.mode == 'full' }}
       run-deploy: ${{ github.event_name == 'push' || inputs.mode != 'health-only' }}
+      image-tag: ${{ inputs.image-tag }}
     secrets: inherit

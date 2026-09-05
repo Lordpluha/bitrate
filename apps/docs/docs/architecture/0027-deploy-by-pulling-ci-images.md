@@ -1,8 +1,16 @@
 # ADR-0027: Deploy by pulling CI-built images, with configuration held in GitHub
 
-Status: Accepted
+Status: Accepted — how a release *starts* is being reworked by
+[ADR-0029](./0029-release-pr-merged-by-a-human.md) (proposed)
 
 Date: 2026-09-03
+
+> ADR-0029 proposes replacing how a release *starts*: instead of an ordinary push to `master`
+> triggering the deploy, a release pull request is merged by a human, and `IMAGE_TAG` is pinned to
+> that release's version tag rather than defaulting to `:master`. It is a proposal and is not yet
+> implemented. Everything else below still holds — images are built once by CI and pulled,
+> production configuration lives on the `production` environment, and the deploy copies `infra/` and
+> `Taskfile.yml` from the runner.
 
 ## Context
 

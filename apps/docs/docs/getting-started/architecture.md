@@ -337,11 +337,16 @@ pnpm changeset          # describe change, select bump type
 pnpm changeset:version  # apply changesets → bump versions + CHANGELOG
 ```
 
-Releasing is a chain rather than a single action, and it runs on `master`, not `develop`.
-Merging into `master` triggers `release.yml`, which consumes the pending changesets, bumps every
-changed workspace, writes its `CHANGELOG.md`, commits `chore(release): version packages` back to
-`master` and tags each bump. That commit is what the image builds react to, and the deploy then
-waits for one manual approval — see [Deployment](/docs/infrastructure/deployment).
+Releasing runs on `master`, not `develop`. Today `release.yml` is triggered by a push to `master`,
+consumes the pending changesets, bumps every changed workspace, writes its `CHANGELOG.md`, tags each
+bump, and creates one release tag; it then publishes a GitHub Release, dispatches the five image
+builds at that tag, and dispatches the deploy, which waits for one manual approval.
+
+That is being reworked. [ADR-0029](../architecture/0029-release-pr-merged-by-a-human.md) **proposes**
+cutting a release branch from `develop` into a pull request against `master`, so that a human's
+merge is what triggers the build and deploy, and tagging each release with the product's semantic
+version derived from the changesets it consumes. It is a proposal, not yet implemented — see
+[Deployment](/docs/infrastructure/deployment) for both the current and the proposed procedures.
 
 ---
 

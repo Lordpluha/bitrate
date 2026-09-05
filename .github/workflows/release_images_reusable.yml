@@ -1,0 +1,135 @@
+name: "[release] Release Images Reusable"
+
+# The five service images of one release, built from whatever ref the caller is
+# running at.
+#
+# All five are always built, path filters and all. That is required rather than
+# wasteful: infra/docker-compose.prod.yaml pulls every service at one shared
+# ${IMAGE_TAG}, so a service that skipped its build would have no image under the
+# version tag and the deploy's `compose pull` would fail on it.
+#
+# This exists as a separate file, rather than as a tag trigger added to the five
+# per-app workflows, because GitHub ANDs `on: push: paths:` with `on: push:
+# tags:` inside a single `push` block -- so a tag trigger over there would be
+# path-filtered, which is meaningless. See ADR-0029.
+#
+# Two callers:
+#   release_images.yml            -- a human-pushed v* tag, or a hand-run rebuild
+#   release_publish_reusable.yml  -- the release path, as `needs:` jobs of the
+#                                    publish run (the tag it creates is pushed
+#                                    with GITHUB_TOKEN and raises no tag event)
+
+on:
+  workflow_call:
+    inputs:
+      image-tag:
+        description: >-
+          Immutable tag every image is published under, normally `v<x.y.z>`.
+          This is the rollback handle and what the deploy pins IMAGE_TAG to.
+        required: true
+        type: string
+      push-image:
+        description: Build and push. Off builds without pushing, for a dry run.
+        required: false
+        default: true
+        type: boolean
+      moving-tag:
+        description: >-
+          Additional MOVING tag, normally `master`, published alongside the
+          immutable ones. Empty on purpose for a rebuild of an older release:
+          re-publishing `:master` there would drag the convenience pointer
+          backwards onto an old artefact.
+        required: false
+        default: ''
+        type: string
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+# Nothing at workflow level; every job below declares exactly what it needs, which is
+# the shape changesets/changesets uses. A called workflow can never hold more than
+# its caller granted, so this is the inner half of a two-sided narrowing.
+permissions: {}
+
+# Every job below calls a workflow that declares `contents: read` + `packages:
+# write` for itself; a called workflow can never hold more than its caller
+# grants, so the same pair is granted per job here and nowhere wider.
+# `run-biome` and `run-tests` are off: the tree being built is the one develop's
+# own CI already checked, and the cut's layer-1 gates re-checked after the bump.
+jobs:
+  api:
+    name: api
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/api_reusable.yml
+    with:
+      push-image: ${{ inputs.push-image }}
+      image-tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/api:${{ inputs.image-tag }}
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/api:${{ github.sha }}
+        ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/api:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
+      timeout-build: 25
+      run-biome: false
+      run-tests: false
+
+  web-player:
+    name: web-player
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/web_player_reusable.yml
+    with:
+      push-image: ${{ inputs.push-image }}
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:${{ inputs.image-tag }}
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:${{ github.sha }}
+        ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/web-player:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
+      timeout-minutes: 30
+      run-biome: false
+      run-tests: false
+
+  web-artists:
+    name: web-artists
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/web_artists_reusable.yml
+    with:
+      push-image: ${{ inputs.push-image }}
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:${{ inputs.image-tag }}
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:${{ github.sha }}
+        ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/web-artists:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
+      timeout-minutes: 30
+      run-biome: false
+
+  docs:
+    name: docs
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/docs_reusable.yml
+    with:
+      push-image: ${{ inputs.push-image }}
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/docs:${{ inputs.image-tag }}
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/docs:${{ github.sha }}
+        ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/docs:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
+      timeout-minutes: 30
+      run-typecheck: false
+
+  storybook:
+    name: storybook
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/storybook_reusable.yml
+    with:
+      push-image: ${{ inputs.push-image }}
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:${{ inputs.image-tag }}
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:${{ github.sha }}
+        ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/storybook:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
+      timeout-minutes: 60
