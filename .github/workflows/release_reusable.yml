@@ -548,13 +548,26 @@ jobs:
       - name: "Gate: pnpm lint"
         run: pnpm lint
 
+      # apps/api's `precheck-types` runs `prisma generate`, which loads
+      # prisma.config.ts, which resolves DATABASE_URL through Prisma's `env()` --
+      # and that throws rather than returning empty when the variable is unset.
+      # Generation never opens a connection, so the value only has to parse; this
+      # is the same placeholder api_reusable.yml uses for its own type check, and
+      # the same reasoning as PRISMA_GENERATE_ONLY_URL in apps/api/Dockerfile.
       - name: "Gate: pnpm check-types"
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
         run: pnpm check-types
+
 
       # What lefthook's pre-push hook runs for every human push. A release branch
       # is a push; exempting it would make the release the least-checked branch in
       # the repository.
       - name: "Gate: pnpm build"
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
         run: pnpm build
 
       - name: Report the gates as a commit status
@@ -628,6 +641,24 @@ jobs:
               printf '\n'
             } >> "${body}"
           done
+
+          # GitHub rejects a pull request body over 65536 characters. A first release
+          # consuming 74 changesets across twelve workspaces produces several times
+          # that, so cut on a line boundary and point at the changelogs, which are in
+          # this diff anyway. The cap is below the limit to leave room for the notice.
+          limit=60000
+          if [ "$(wc -c < "${body}")" -gt "${limit}" ]; then
+            head -c "${limit}" "${body}" > "${body}.cut"
+            # head -c can stop mid-line; drop the partial one.
+            sed -i '$d' "${body}.cut"
+            {
+              printf '\n\n---\n\n'
+              printf '_This changelog was longer than GitHub allows in a pull request body, so it '
+              printf 'has been truncated. The complete entries are in the `CHANGELOG.md` files '
+              printf 'changed by this pull request._\n'
+            } >> "${body}.cut"
+            mv "${body}.cut" "${body}"
+          fi
 
           printf 'path=%s\n' "${body}" >> "${GITHUB_OUTPUT}"
           cat "${body}" >> "${GITHUB_STEP_SUMMARY}"
