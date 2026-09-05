@@ -54,7 +54,6 @@ this three-line version deliberately skips.
 | [Docker](https://docs.docker.com/engine/install/) | >= 24 | Postgres, Redis, the container stacks |
 | [task](https://taskfile.dev/installation/) | >= 3 | every Docker and database workflow |
 | [Rust](https://www.rust-lang.org/tools/install) | >= 1.77 | `apps/desktop` only |
-| [k6](https://grafana.com/docs/k6/latest/set-up/install-k6/) | >= 0.4 | `packages/performance-test` only |
 
 The pnpm version is pinned by `packageManager` and the Node floor by `engines`, so both are checked
 rather than suggested. Don't run `npm install` or `yarn` here — the lockfile is pnpm's.
@@ -117,7 +116,6 @@ here as ADRs.
 `@bitrate/ui-react` — components and design tokens.
 `@bitrate/svgr` and `@bitrate/vite-svgr` — SVG sources compiled to React components at build time.
 `@bitrate/converter`, `@bitrate/ncs-parser` — media utilities.
-`@bitrate/performance-test` — k6 load, spike and soak scenarios.
 
 ### Tooling and delivery
 

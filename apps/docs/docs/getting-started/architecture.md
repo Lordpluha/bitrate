@@ -25,8 +25,7 @@ bitrate/
 │   ├── vite-svgr/        # Vite plugin — SVG generation integrated into Vite build
 │   ├── svgr/             # SVG → typed React component converter
 │   ├── converter/        # Media/audio conversion utilities (FFmpeg wrapper)
-│   ├── ncs-parser/       # NCS (audio format) parser
-│   └── performance-test/ # K6 performance testing scenarios
+│   └── ncs-parser/       # NCS (audio format) parser
 │
 ├── infra/             # Docker Compose files + shell scripts
 │   ├── docker-compose.dev.yaml      # Minimal: postgres + redis
@@ -320,7 +319,7 @@ graph LR
 
 - Per-app workflows: `api.yml`, `web_player.yml`, `mobile.yml`, `desktop.yml`
 - Shared reusable workflows: `*_reusable.yml`
-- Cross-cutting: `monitoring.yml`, `security.yml`, `performance.yml`, `release.yml`
+- Cross-cutting: `monitoring.yml`, `security.yml`, `release.yml`
 
 ```
 push/PR → build → test → lint → type-check → deploy

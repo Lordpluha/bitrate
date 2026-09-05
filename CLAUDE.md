@@ -45,8 +45,8 @@ Scaffolded but unstarted — do not assume mature conventions in them:
 - `apps/mobile` — React Native + Expo (roadmap v0.5.0).
 - `apps/desktop` — Tauri 2 + React (roadmap v1.2.0).
 
-Other packages exist (`docs`, `converter`, `ncs-parser`, `performance-test`, `svgr`,
-`vite-svgr`), but do not read them unless the task names them.
+Other packages exist (`docs`, `converter`, `ncs-parser`, `svgr`, `vite-svgr`), but do not
+read them unless the task names them.
 
 ## Rule Index
 

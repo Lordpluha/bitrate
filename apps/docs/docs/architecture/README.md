@@ -36,6 +36,7 @@ how to apply it day to day.
 | [0027](./0027-deploy-by-pulling-ci-images.md) | Deploy by pulling CI-built images; production configuration lives in GitHub |
 | [0028](./0028-split-brand-foundation.md) | Split the brand foundation into one page per decision |
 | [0029](./0029-release-pr-merged-by-a-human.md) | **Proposed** — release by a PR a human merges; tag is the derived product version |
+| [0030](./0030-remove-performance-testing.md) | Remove the performance testing suite |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

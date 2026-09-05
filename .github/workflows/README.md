@@ -257,18 +257,13 @@ coupling this chain removed.
 ### Security
 - security.yml — security checks for develop/master (push, schedule, workflow_dispatch).
 
-### Performance
-- performance.yml — performance checks for develop/master (push, schedule, workflow_dispatch).
-- performance_reusable.yml — performance orchestration reusable workflow.
-- performance_api_load_reusable.yml / performance_lighthouse_reusable.yml / performance_bundle_reusable.yml / performance_db_reusable.yml / performance_docker_reusable.yml — smaller reusable performance blocks.
-
 ### Monitoring
 - monitoring.yml — release monitoring for develop/master (schedule, push, workflow_dispatch).
 - monitoring_reusable.yml — monitoring orchestration reusable workflow.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_image_size_reusable.yml / monitoring_ssl_reusable.yml / monitoring_backup_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, performance.yml, monitoring.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 

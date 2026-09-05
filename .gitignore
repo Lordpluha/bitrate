@@ -71,9 +71,6 @@ FRONTEND_BACKLOG.md
 # contain real user data.
 /backups/
 
-# k6 load-test output (packages/performance-test)
-packages/performance-test/results.json
-packages/performance-test/summary.json
 
 # tsc --noEmit still writes a build-info file when `incremental` is on, so every
 # `pnpm check-types` regenerates this. Only packages/contracts emits one outside dist/.

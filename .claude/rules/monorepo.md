@@ -30,7 +30,6 @@ bitrate/
     svgr/             SVG → React converter
     converter/        Media conversion utilities
     ncs-parser/       NCS audio format parser
-    performance-test/ K6 test scenarios
   infra/
     docker-compose.dev.yaml       infra only: postgres, postgres_test, redis, mailhog
     docker-compose.preprod.yaml   full stack — what every `task dev:*`/`db:*` targets
@@ -119,7 +118,7 @@ the container's own environment so an override in `.env` cannot silently break t
 
 `check-types` runs in `api`, `desktop`, `mobile`, `docs`, `web-player`,
 `web-artists`, `ui-react`, `contracts`, and `ncs-parser`. The remaining packages
-(`converter`, `performance-test`, `svgr`, `vite-svgr`) have no
+(`converter`, `svgr`, `vite-svgr`) have no
 `tsconfig.json`, so there is nothing to check — that is deliberate, not a gap to fill.
 
 Both `check-types` and `test` declare `dependsOn: ["^build"]` in `turbo.json`, because

@@ -63,12 +63,6 @@ const TOOLS = {
     min: '1.77',
     install: 'https://www.rust-lang.org/tools/install',
   },
-  k6: {
-    label: 'k6',
-    args: ['version'],
-    min: '0.4',
-    install: 'https://grafana.com/docs/k6/latest/set-up/install-k6/',
-  },
 }
 
 /** Tools every selected workspace needs, whatever the selection is. */
@@ -81,7 +75,6 @@ const BASE_TOOLS = ['node', 'pnpm', 'git']
 const WORKSPACE_TOOLS = {
   '@bitrate/api': { required: [], optional: ['docker', 'task'] },
   '@bitrate/desktop': { required: ['cargo'], optional: [] },
-  '@bitrate/performance-test': { required: [], optional: ['k6'] },
 }
 
 const args = process.argv.slice(2)

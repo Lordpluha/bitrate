@@ -6,7 +6,6 @@
 '@bitrate/docs': major
 '@bitrate/mobile': major
 '@bitrate/ncs-parser': major
-'@bitrate/performance-test': major
 '@bitrate/svgr': major
 '@bitrate/ui-react': major
 '@bitrate/vite-svgr': major
