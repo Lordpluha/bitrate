@@ -122,6 +122,6 @@ Do not guess an API from memory. In order:
 ## Related rules and skills
 
 - `vitest` — the unit/integration projects screenshot specs sit alongside.
-- `sp-tester` — the heavy specialist that writes/runs one focused E2E/screenshot
-  spec end to end and smoke-runs it; dispatched by `/sp-implement` by default, or invoke it
+- `br-tester` — the heavy specialist that writes/runs one focused E2E/screenshot
+  spec end to end and smoke-runs it; dispatched by `/br-implement` by default, or invoke it
   directly via the Agent tool.

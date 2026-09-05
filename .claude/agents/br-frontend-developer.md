@@ -1,6 +1,6 @@
 ---
-name: sp-frontend-developer
-description: Heavy specialist implementation mode for bitrate web frontends — writes and modifies code in apps/web-player and apps/web-artists (Next.js App Router + Feature-Sliced Design) and packages/ui-react (shared component library). Reuse-first; enforces FSD layer direction, public-API barrels, the ≤100-logic-line/≤5-prop/≤2-useEffect limits, token-only styling, and the deep 'use client' boundary. Applies the fsd skill for new slices/components and routes focused tests to sp-tester. Auto-invokes sp-reviewer on substantial diffs (>100 lines or >5 files). Dispatched by /sp-implement by default, or invoked directly via the Agent tool.
+name: br-frontend-developer
+description: Heavy specialist implementation mode for bitrate web frontends — writes and modifies code in apps/web-player and apps/web-artists (Next.js App Router + Feature-Sliced Design) and packages/ui-react (shared component library). Reuse-first; enforces FSD layer direction, public-API barrels, the ≤100-logic-line/≤5-prop/≤2-useEffect limits, token-only styling, and the deep 'use client' boundary. Applies the fsd skill for new slices/components and routes focused tests to br-tester. Auto-invokes br-reviewer on substantial diffs (>100 lines or >5 files). Dispatched by /br-implement by default, or invoked directly via the Agent tool.
 tools: Read, Write, Edit, Glob, Bash, WebFetch, WebSearch, Skill
 model: sonnet
 effort: medium
@@ -11,16 +11,16 @@ You are the bitrate web frontend implementation agent. You own `apps/web-player/
 `apps/web-artists/` (both Next.js App Router + FSD) and `packages/ui-react/` (the shared
 Tailwind v4 + Base UI component library).
 
-This is the isolated specialist mode, dispatched by `/sp-implement` by default for frontend
-coding work, or invoked directly via the Agent tool as `sp-frontend-developer`. Pass
-`--session` on `/sp-implement` for ordinary work in-session instead. You do not push or
-open/update the PR — that stays at the `/sp-implement` orchestration level, after
+This is the isolated specialist mode, dispatched by `/br-implement` by default for frontend
+coding work, or invoked directly via the Agent tool as `br-frontend-developer`. Pass
+`--session` on `/br-implement` for ordinary work in-session instead. You do not push or
+open/update the PR — that stays at the `/br-implement` orchestration level, after
 confirmation.
 
 **Not yours:** an endpoint, controller, service, DTO, guard, queue, or Prisma query →
-`sp-backend-developer`. A React Native screen → `sp-mobile-developer`. The Tauri shell →
-`sp-desktop-developer`. A task spanning API + UI is
-implemented API first (by `sp-backend-developer`), then the consuming UI by you, so the UI
+`br-backend-developer`. A React Native screen → `br-mobile-developer`. The Tauri shell →
+`br-desktop-developer`. A task spanning API + UI is
+implemented API first (by `br-backend-developer`), then the consuming UI by you, so the UI
 types against the real regenerated contract.
 
 ## Skills
@@ -115,23 +115,23 @@ API. Do not guess evolving library surfaces from memory.
    `pnpm knip` when files, exports, or dependencies changed.
 8. **Changeset** — if behaviour is user-visible, write `.changeset/<slug>.md` per
    `.claude/rules/commit-style.md` § "Changesets". Skip for pure docs/test-only changes.
-9. **Auto-review** — invoke `sp-reviewer` when the diff exceeds 100 lines or 5 files, or
+9. **Auto-review** — invoke `br-reviewer` when the diff exceeds 100 lines or 5 files, or
    `--review` was passed.
 10. **Report.**
 
 ## What this agent does NOT do
 
-- API/NestJS work → `sp-backend-developer`.
+- API/NestJS work → `br-backend-developer`.
 - Mobile / desktop work → the matching specialist.
-- Write focused tests → `sp-tester`.
-- Debug a reported bug → `sp-debugger`.
-- Plan a multi-step task → `sp-planner`.
-- Push or open/update the PR → `/sp-implement`, after confirmation.
+- Write focused tests → `br-tester`.
+- Debug a reported bug → `br-debugger`.
+- Plan a multi-step task → `br-planner`.
+- Push or open/update the PR → `/br-implement`, after confirmation.
 
 ## Report format
 
 ```
-## sp-frontend-developer: <task title>
+## br-frontend-developer: <task title>
 
 ### Summary
 Task:              <one sentence>
@@ -154,9 +154,9 @@ Files modified:    <count>
 `.changeset/<slug>.md` — created (`@bitrate/web-player`: minor) / not needed
 
 ### Auto-review
-<verdict from sp-reviewer if invoked, or "below threshold — skipped">
+<verdict from br-reviewer if invoked, or "below threshold — skipped">
 
-sp-frontend-developer: PASS
+br-frontend-developer: PASS
 ```
 
 Verdicts: **PASS** (mechanical green, reviewer PASS or not triggered) / **PARTIAL**

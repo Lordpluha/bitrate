@@ -26,9 +26,9 @@ how to apply it day to day.
 | [0018](./0018-consolidate-agents-into-claude.md) | Consolidate `.agents/`/`AGENTS.md` into `.claude/` only |
 | [0019](./0019-remove-obsidian-export-convenience.md) | Remove the `graphify:obsidian` convenience wrapper |
 | [0020](./0020-cmaf-range-mse-playback.md) | Single-file CMAF + Range index + MSE for audio playback |
-| [0020](./0020-expand-docs-sync-scope.md) | Expand `/sp-sync-docs` to root onboarding docs and `.claude/` self-consistency |
+| [0020](./0020-expand-docs-sync-scope.md) | Expand `/br-sync-docs` to root onboarding docs and `.claude/` self-consistency |
 | [0021](./0021-default-agent-dispatch.md) | Default to agent dispatch across all commands and ordinary tasks |
-| [0022](./0022-app-scoped-agent-roster.md) | App-scoped developer agents, unattended `/sp-auto` pipeline, retire `sp-ticket` |
+| [0022](./0022-app-scoped-agent-roster.md) | App-scoped developer agents, unattended `/br-auto` pipeline, retire `br-ticket` |
 | [0023](./0023-tokens-into-ui-react.md) | Hand-write the design tokens as CSS; retire the token generator |
 | [0024](./0024-rebrand-to-bitrate.md) | Rebrand the project from spotify-clone to Bitrate |
 | [0025](./0025-remove-admin-panel.md) | Remove the Kottster admin panel |

@@ -77,8 +77,8 @@ current task; do not read every row's target file up front.
 | Mechanical review checklist before opening/updating a PR | `.claude/rules/architecture-checklist.md` |
 | codebase exploration, working notes, decisions, GitHub ticket/board sync | `.claude/rules/knowledge-base.md` |
 
-`/sp-implement` reads this whole table (not each target file) as its mandatory first step —
-see each developer agent's Step 0, e.g. `.claude/agents/sp-frontend-developer.md`.
+`/br-implement` reads this whole table (not each target file) as its mandatory first step —
+see each developer agent's Step 0, e.g. `.claude/agents/br-frontend-developer.md`.
 
 Each app's rule file states which web-player conventions do **not** apply to it — FSD,
 `'use client'`, Tailwind, and `cn()` are web-player concepts, not universal law. The three
@@ -128,27 +128,27 @@ round-trip is pure overhead.
 
 | Command | Purpose |
 |---|---|
-| `/sp-create-task "<idea>" [--update NNN] [--epic] [--dry-run]` | Read the whole Projects board + repo context, then draft a correctly-scoped issue — or restructure an existing one — that fits the work already planned. Confirms before every GitHub mutation. |
-| `/sp-implement "<task>" [--session] [--plan] [--review]` | Write code, then open/update the PR. Checks out the branch itself, then dispatches to `sp-planner`/the matching `sp-*-developer`/`sp-debugger`/`sp-tester`/`sp-reviewer` as needed. |
-| `/sp-auto [--limit N] [--issue NNN] [--dry-run] [--recover-only]` | Unattended pipeline: poll the board's `Todo` column and drive each issue end to end — worktree, `sp-worker`, commit, push, PR, board move, issue comment — with crash recovery. |
-| `/sp-sync-docs [path] [--session]` | Find and (with confirmation) fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Dispatches discovery to `sp-librarian`. Run periodically — see `.claude/rules/monorepo.md` § "Documentation ownership". |
+| `/br-create-task "<idea>" [--update NNN] [--epic] [--dry-run]` | Read the whole Projects board + repo context, then draft a correctly-scoped issue — or restructure an existing one — that fits the work already planned. Confirms before every GitHub mutation. |
+| `/br-implement "<task>" [--session] [--plan] [--review]` | Write code, then open/update the PR. Checks out the branch itself, then dispatches to `br-planner`/the matching `br-*-developer`/`br-debugger`/`br-tester`/`br-reviewer` as needed. |
+| `/br-auto [--limit N] [--issue NNN] [--dry-run] [--recover-only]` | Unattended pipeline: poll the board's `Todo` column and drive each issue end to end — worktree, `br-worker`, commit, push, PR, board move, issue comment — with crash recovery. |
+| `/br-sync-docs [path] [--session]` | Find and (with confirmation) fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Dispatches discovery to `br-librarian`. Run periodically — see `.claude/rules/monorepo.md` § "Documentation ownership". |
 
 Twelve named specialists live under `.claude/agents/`. Five implementation agents split by
-app — `sp-frontend-developer` (web-player, web-artists, ui-react), `sp-backend-developer`
-(api), `sp-mobile-developer`, `sp-desktop-developer` — plus
-`sp-planner`, `sp-debugger`, `sp-tester`, `sp-reviewer` (dispatched by `/sp-implement`),
-`sp-devops` (CI/CD, Docker, infra, release tooling), `sp-worker` (the orchestrator: owns a
+app — `br-frontend-developer` (web-player, web-artists, ui-react), `br-backend-developer`
+(api), `br-mobile-developer`, `br-desktop-developer` — plus
+`br-planner`, `br-debugger`, `br-tester`, `br-reviewer` (dispatched by `/br-implement`),
+`br-devops` (CI/CD, Docker, infra, release tooling), `br-worker` (the orchestrator: owns a
 task 0→100%, delegates each stage to the agent that owns it, verifies the result itself
 rather than trusting reports, and reports back to the developer — interactively, or
-unattended under `/sp-auto`), and `sp-librarian` (read-only documentation-order discovery
-for `/sp-sync-docs`).
+unattended under `/br-auto`), and `br-librarian` (read-only documentation-order discovery
+for `/br-sync-docs`).
 
 Every command and every specialist has access to any skill under `.claude/skills/` (not a
-restricted subset) — pick whichever the task calls for. `/sp-create-task`, `/sp-implement`
-and `/sp-auto` mutate GitHub state (issues, board cards, comments, PRs) only after explicit
+restricted subset) — pick whichever the task calls for. `/br-create-task`, `/br-implement`
+and `/br-auto` mutate GitHub state (issues, board cards, comments, PRs) only after explicit
 confirmation for each action, executed at the command level (specialists never mutate GitHub
-or push/open a PR themselves; `sp-worker` commits and pushes its own branch only, and the
-`/sp-auto` dispatcher owns every outward-facing action) — a prior approval doesn't carry over
+or push/open a PR themselves; `br-worker` commits and pushes its own branch only, and the
+`/br-auto` dispatcher owns every outward-facing action) — a prior approval doesn't carry over
 to a later action in the same conversation. Ticket/board state itself is never mirrored to a
 file — it's queried live via `gh`/MCP whenever it's needed (see
 `.claude/rules/knowledge-base.md` and
@@ -161,8 +161,8 @@ vague for a single command:
 
 - **`/grill-me`** — use when a complex or large task is not yet sharp enough to plan. It is a
   relentless interview that walks the decision tree branch by branch until nothing material
-  is unresolved. Run it *before* `/sp-create-task` or `/sp-implement --plan`, not after.
-  `sp-worker` invokes it itself in interactive mode when the task it was handed is too
+  is unresolved. Run it *before* `/br-create-task` or `/br-implement --plan`, not after.
+  `br-worker` invokes it itself in interactive mode when the task it was handed is too
   ambiguous to build.
 - **`/wayfinder`** — use to drive implementation of an effort spanning more than one agent
   session. It charts the work as a map of decision tickets on the issue tracker and resolves
@@ -175,12 +175,12 @@ user-scope plugin, not committed to this repo, so each developer installs it onc
 ## Default to agent dispatch, even outside a command
 
 This isn't limited to the slash commands: any task that touches application code — including
-ordinary conversation with no `/sp-*` command invoked — routes to the matching specialist via
-the Agent tool by default. `sp-planner` first for non-trivial multi-file/cross-cutting work;
-then the developer agent that owns the surface (`sp-frontend-developer`,
-`sp-backend-developer`, `sp-mobile-developer`, `sp-desktop-developer`,
-or `sp-devops` for CI/infra); `sp-debugger` for a bug fix; `sp-tester`
-for focused test authoring/running; `sp-reviewer` before a PR or on a substantial diff. Work
+ordinary conversation with no `/br-*` command invoked — routes to the matching specialist via
+the Agent tool by default. `br-planner` first for non-trivial multi-file/cross-cutting work;
+then the developer agent that owns the surface (`br-frontend-developer`,
+`br-backend-developer`, `br-mobile-developer`, `br-desktop-developer`,
+or `br-devops` for CI/infra); `br-debugger` for a bug fix; `br-tester`
+for focused test authoring/running; `br-reviewer` before a PR or on a substantial diff. Work
 in the current session only when the user explicitly asks to skip the agent for that task.
 See [ADR-0021](apps/docs/docs/architecture/0021-default-agent-dispatch.md).
 
@@ -194,7 +194,7 @@ the strongest reasoning tier:
 |---|---|---|
 | Planning | Fable | low |
 | Development / implementation, documentation discovery | Sonnet | medium |
-| Debugging, testing, review, DevOps, orchestration (`sp-worker`) | Opus | high |
+| Debugging, testing, review, DevOps, orchestration (`br-worker`) | Opus | high |
 
 All twelve specialists pin their model and effort in their own agent frontmatter (see
 `.claude/README.md`) — dispatching one always runs it on its assigned tier, not a
@@ -231,12 +231,12 @@ Consequences worth knowing before concluding a tool is missing:
   `command -v gh` failing does not mean the user lacks it, and `graphify` is worse than
   missing: its launcher resolves but dies with `ModuleNotFoundError` because its uv venv is
   outside the sandbox. Reach all three with `flatpak-spawn --host <tool> …`.
-  `.claude/scripts/auto/sp-pr.sh` and `.claude/hooks/graphify-guard.sh` do this
+  `.claude/scripts/auto/br-pr.sh` and `.claude/hooks/graphify-guard.sh` do this
   automatically and report which transport they used.
 - So the mandated `graphify query "<question>"` above is
   `flatpak-spawn --host graphify query "<question>"` in this environment.
 - The repo is shared with the host, but **sandbox `/tmp` is not**. Any file handed to a host
-  command must live inside the repo — use the gitignored `.sp-scratch/`, never the session
+  command must live inside the repo — use the gitignored `.br-scratch/`, never the session
   scratchpad, for PR bodies and issue comments.
 - `pnpm`, `node`, `git`, and `rg` all resolve normally; only host-installed system tools are
   affected.

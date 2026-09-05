@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pull-request access for the /sp-auto pipeline.
+# Pull-request access for the /br-auto pipeline.
 #
 # Unlike the GitLab pipeline this was modelled on, GitHub has a first-class CLI, so
 # this is a thin wrapper over `gh` rather than hand-rolled REST calls. `gh` owns the
@@ -10,12 +10,12 @@
 # the branch, because a re-run of the pipeline must never open a second PR.
 #
 # Usage:
-#   sp-pr.sh verify
-#   sp-pr.sh create  <branch> <title> <body-file>
-#   sp-pr.sh update  <branch> <title> <body-file>   # rewrite after rework
-#   sp-pr.sh state   <branch>          # open/merged/closed + draft + mergeable + checks
-#   sp-pr.sh notes   <branch>          # reviewer feedback, unresolved review threads first
-#   sp-pr.sh comment <branch> <file>   # post an issue-comment on the PR
+#   br-pr.sh verify
+#   br-pr.sh create  <branch> <title> <body-file>
+#   br-pr.sh update  <branch> <title> <body-file>   # rewrite after rework
+#   br-pr.sh state   <branch>          # open/merged/closed + draft + mergeable + checks
+#   br-pr.sh notes   <branch>          # reviewer feedback, unresolved review threads first
+#   br-pr.sh comment <branch> <file>   # post an issue-comment on the PR
 set -euo pipefail
 
 BASE_BRANCH="${SP_BASE_BRANCH:-develop}"
@@ -44,7 +44,7 @@ resolve_gh() {
     GH_BIN=(flatpak-spawn --host gh); GH_TRANSPORT=flatpak-host; return 0
   fi
   die "gh CLI is not reachable — not on PATH, and no host gh via flatpak-spawn. \
-The /sp-auto pipeline cannot run without it."
+The /br-auto pipeline cannot run without it."
 }
 
 run_gh() { resolve_gh; "${GH_BIN[@]}" "$@"; }
@@ -64,7 +64,7 @@ check_body_file() {
   case "$abs" in
     "$REPO_ROOT"/*) return 0 ;;
     *) die "body file must live inside the repo when gh runs on the host \
-(sandbox /tmp is not visible to it): $abs — write it under $REPO_ROOT/.sp-scratch/ instead" ;;
+(sandbox /tmp is not visible to it): $abs — write it under $REPO_ROOT/.br-scratch/ instead" ;;
   esac
 }
 
@@ -207,5 +207,5 @@ case "${1:-}" in
   state)   shift; cmd_state   "$@" ;;
   notes)   shift; cmd_notes   "$@" ;;
   comment) shift; cmd_comment "$@" ;;
-  *) die "usage: sp-pr.sh {verify|create|update|state|notes|comment} [args]" ;;
+  *) die "usage: br-pr.sh {verify|create|update|state|notes|comment} [args]" ;;
 esac

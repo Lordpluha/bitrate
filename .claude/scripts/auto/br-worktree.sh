@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Worktree + branch lifecycle for the /sp-auto pipeline.
+# Worktree + branch lifecycle for the /br-auto pipeline.
 #
 # Every issue gets its own worktree branched off a freshly fetched origin/develop.
 # Parallel workers therefore never share a git index, and none of them inherits the
@@ -14,12 +14,12 @@
 # to its issue: `feat/123-audio-streaming`.
 #
 # Usage:
-#   sp-worktree.sh claim   123 feat "Add audio streaming"
-#   sp-worktree.sh adopt   123        # re-attach a worktree to an existing branch
-#   sp-worktree.sh state   123        # ground truth for recovery
-#   sp-worktree.sh scan               # every issue this repo has work in flight for
-#   sp-worktree.sh release 123        # drop worktree, keep branch (success path)
-#   sp-worktree.sh abandon 123        # drop worktree and branch (failure path)
+#   br-worktree.sh claim   123 feat "Add audio streaming"
+#   br-worktree.sh adopt   123        # re-attach a worktree to an existing branch
+#   br-worktree.sh state   123        # ground truth for recovery
+#   br-worktree.sh scan               # every issue this repo has work in flight for
+#   br-worktree.sh release 123        # drop worktree, keep branch (success path)
+#   br-worktree.sh abandon 123        # drop worktree and branch (failure path)
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
@@ -240,5 +240,5 @@ case "${1:-}" in
   scan)    shift; cmd_scan    "$@" ;;
   release) shift; cmd_release "$@" ;;
   abandon) shift; cmd_abandon "$@" ;;
-  *) die "usage: sp-worktree.sh {claim|adopt|state|scan|release|abandon} [args]" ;;
+  *) die "usage: br-worktree.sh {claim|adopt|state|scan|release|abandon} [args]" ;;
 esac

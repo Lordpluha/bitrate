@@ -33,7 +33,7 @@ Edit this block to retune the pipeline; nothing else hardcodes these values.
 | Status column | the board's `Status` single-select field |
 | Parallel workers | 3 (override with `--limit N`) |
 | Base branch | `develop` |
-| Scripts | `.claude/scripts/auto/sp-worktree.sh`, `.claude/scripts/auto/sp-pr.sh` |
+| Scripts | `.claude/scripts/auto/br-worktree.sh`, `.claude/scripts/auto/br-pr.sh` |
 
 Candidate query — one query covers intake and rework:
 
@@ -84,7 +84,7 @@ Two things to note about this board, because they shape every rule below:
   once they have answered.
 - **`Reopened` is the rework signal** — the same role "Code review failed" plays in a Jira
   workflow. An issue there has been kicked back by a reviewer. Both need the `project` OAuth scope
-— `sp-pr.sh verify` reports whether it is granted, and a missing scope stops the run
+— `br-pr.sh verify` reports whether it is granted, and a missing scope stops the run
 (see Stage 1); it is a one-time `gh auth refresh -s read:project,project` by the user, not
 something this command can grant itself.
 
@@ -102,8 +102,8 @@ something this command can grant itself.
 Stop the whole run if any of these fail; a half-configured pipeline must not touch GitHub.
 
 ```bash
-.claude/scripts/auto/sp-pr.sh verify          # gh installed, authenticated, scopes
-.claude/scripts/auto/sp-worktree.sh scan      # what is already in flight
+.claude/scripts/auto/br-pr.sh verify          # gh installed, authenticated, scopes
+.claude/scripts/auto/br-worktree.sh scan      # what is already in flight
 git fetch origin develop
 ```
 
@@ -114,7 +114,7 @@ report it to the user with the fix and run nothing else.
 inside the VS Code Flatpak sandbox and `gh` is being reached on the host via
 `flatpak-spawn`. That works, with one constraint that will otherwise bite you: **host `gh`
 cannot see sandbox `/tmp`**. Every PR body or comment file must be written under
-`.sp-scratch/` in the repo (gitignored), which the host can see. `sp-pr.sh` refuses a body
+`.br-scratch/` in the repo (gitignored), which the host can see. `br-pr.sh` refuses a body
 file outside the repo rather than letting `gh` fail with a confusing "no such file". `PROJECT_SCOPE=no` is also a hard
 stop for board moves: either the user grants the scope, or they explicitly accept a run that
 leaves cards unmoved (say so in every report line).
@@ -129,8 +129,8 @@ Run the candidate query, then for every issue that is either tagged `lock`/`work
 `scan` or sits in a dev-owned board column (`In progress`, `Reopened`), collect ground truth:
 
 ```bash
-.claude/scripts/auto/sp-worktree.sh state NNN   # LOCK/WORKTREE/BRANCH/REMOTE/DIRTY/COMMITS/UNPUSHED
-.claude/scripts/auto/sp-pr.sh state <branch>    # PR_STATE/PR_URL/PR_REVIEW/PR_MERGEABLE/PR_CHECKS
+.claude/scripts/auto/br-worktree.sh state NNN   # LOCK/WORKTREE/BRANCH/REMOTE/DIRTY/COMMITS/UNPUSHED
+.claude/scripts/auto/br-pr.sh state <branch>    # PR_STATE/PR_URL/PR_REVIEW/PR_MERGEABLE/PR_CHECKS
 ```
 
 Classify each issue, then resume from the first incomplete step. Every row is reachable
@@ -161,12 +161,12 @@ agents editing one issue. Report it, name both possibilities, and let the
 user say which; `--issue NNN` is how they hand it back to the pipeline.
 
 To tell `RESUME_REVIEW` from `REWORK`, read the PR's review state
-(`sp-pr.sh state` → `PR_REVIEW`) and its threads (`sp-pr.sh notes`). No reviews and no
+(`br-pr.sh state` → `PR_REVIEW`) and its threads (`br-pr.sh notes`). No reviews and no
 unresolved threads → the previous run died before moving the card. `CHANGES_REQUESTED` or
 unresolved threads → a reviewer returned it.
 
 Clear orphan locks: a lock with no worktree, no branch, and a board column outside
-`In progress` is debris from a crashed claim. Release it with `sp-worktree.sh release` and
+`In progress` is debris from a crashed claim. Release it with `br-worktree.sh release` and
 report it.
 
 ## Stage 3 — intake
@@ -196,7 +196,7 @@ Then, per issue, in this order:
    `infra`, `general` tell you which specialist will own it.) Then:
 
    ```bash
-   .claude/scripts/auto/sp-worktree.sh claim NNN <type> "<title>"
+   .claude/scripts/auto/br-worktree.sh claim NNN <type> "<title>"
    ```
 
    → gives `WORKTREE` and `BRANCH`. If `claim` fails because the lock exists, another run
@@ -208,8 +208,8 @@ An issue a reviewer sent back. The reviewer's comments are the new specification
 usually live on the PR rather than the issue, so gather both:
 
 ```bash
-.claude/scripts/auto/sp-pr.sh notes <branch>       # unresolved review threads first
-.claude/scripts/auto/sp-worktree.sh adopt NNN      # re-attach a worktree to the branch
+.claude/scripts/auto/br-pr.sh notes <branch>       # unresolved review threads first
+.claude/scripts/auto/br-worktree.sh adopt NNN      # re-attach a worktree to the branch
 gh issue view NNN --json comments
 ```
 
@@ -223,11 +223,11 @@ anywhere, do not guess — post an issue comment asking what needs changing and 
 
 ## Stage 5 — dispatch and completion
 
-Spawn one `sp-worker` per issue via the Agent tool, **all in one message** so they run
+Spawn one `br-worker` per issue via the Agent tool, **all in one message** so they run
 concurrently, `run_in_background: true`. Pass `MODE`, `ISSUE`, `TITLE`, `BODY`, `WORKTREE`,
 `BRANCH`, and `FEEDBACK` in rework mode.
 
-`sp-worker` is an orchestrator, not a single-stage implementer: it plans the issue, delegates
+`br-worker` is an orchestrator, not a single-stage implementer: it plans the issue, delegates
 each stage to the specialist that owns that surface, and re-verifies their claims before
 reporting. Passing `WORKTREE` is what puts it in `unattended` mode, where it never asks a
 question and blocks instead — so an issue that turns out to be ambiguous comes back as
@@ -243,13 +243,13 @@ Handle each worker as its report arrives, not after all of them finish.
 ### On `STATUS: DONE`
 
 1. **Verify before believing.** Confirm the branch is really on the remote:
-   `sp-worktree.sh state NNN` → `REMOTE=yes`, `UNPUSHED=0`. If not, the worker's report is
+   `br-worktree.sh state NNN` → `REMOTE=yes`, `UNPUSHED=0`. If not, the worker's report is
    wrong — treat it as a failure.
-2. **PR** — skip if `sp-pr.sh state <branch>` already reports an open PR (a re-run must not
+2. **PR** — skip if `br-pr.sh state <branch>` already reports an open PR (a re-run must not
    open a second one). Write the body to a scratch file, then:
 
    ```bash
-   .claude/scripts/auto/sp-pr.sh create <branch> "<type>(<scope>): <summary>" <body-file>
+   .claude/scripts/auto/br-pr.sh create <branch> "<type>(<scope>): <summary>" <body-file>
    ```
 
    Title follows `.claude/rules/commit-style.md`. Body:
@@ -266,9 +266,9 @@ Handle each worker as its report arrives, not after all of them finish.
    Closes #NNN
    ```
 
-   In rework mode, use `sp-pr.sh update` instead, append a `## Rework` section listing each
+   In rework mode, use `br-pr.sh update` instead, append a `## Rework` section listing each
    feedback item and how it was addressed, and post it as a PR comment too
-   (`sp-pr.sh comment`) so the reviewer sees it in the thread.
+   (`br-pr.sh comment`) so the reviewer sees it in the thread.
 3. **Board** → move the card to `Code review`.
 4. **Issue comment** — check existing comments first and skip if one already covers this
    PR URL:
@@ -286,9 +286,9 @@ Handle each worker as its report arrives, not after all of them finish.
    - lint / check-types: <result>
    - tests: <command> — <result>
 
-   Branch `<branch>`. Raised by /sp-auto; needs human review before merge.
+   Branch `<branch>`. Raised by /br-auto; needs human review before merge.
    ```
-5. `sp-worktree.sh release NNN` — drops the worktree, keeps the branch.
+5. `br-worktree.sh release NNN` — drops the worktree, keeps the branch.
 
 **Caveats go at the top, never at the bottom.** The worker's `CAVEATS` block always contains
 at least a build line. Anything beyond that — a trade-off, a reversed earlier decision, a
@@ -316,7 +316,7 @@ that it is ready again.
 | `technical`, `conflict` | the failure with its output |
 
 Push any partial work first if the worker committed something, so the next run resumes.
-Then `sp-worktree.sh release` (keep the branch — it holds real work). Only use `abandon`
+Then `br-worktree.sh release` (keep the branch — it holds real work). Only use `abandon`
 when there are no commits at all.
 
 ### On worker crash or no report
@@ -334,7 +334,7 @@ One row per issue, then a verdict line:
 #305  NEW       → BLOCKED   Blocked — no acceptance criteria
 #287  RESUME_PR → DONE      PR #341  Code review   recovered from interrupted run
 
-/sp-auto: 3 done, 1 blocked, 0 interrupted — 2 slots free
+/br-auto: 3 done, 1 blocked, 0 interrupted — 2 slots free
 ```
 
 Relay what each worker found; its report is not shown to the user. Name every issue you
@@ -346,7 +346,7 @@ there.
 Polling only runs while the session is open:
 
 ```text
-/loop 15m /sp-auto
+/loop 15m /br-auto
 ```
 
 Each firing runs the full command, so an interrupted previous cycle is recovered by stage 2

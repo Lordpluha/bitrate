@@ -1,13 +1,13 @@
 ---
-description: Drive one task end to end with a human in the loop — the single-task counterpart of /sp-auto. Same stages (understand, branch, implement via sp-worker, verify, changeset, PR), but one task at a time, in the current checkout, asking instead of blocking. Only uses a git worktree when the current checkout genuinely cannot be used. Confirms before every push or PR action.
+description: Drive one task end to end with a human in the loop — the single-task counterpart of /br-auto. Same stages (understand, branch, implement via br-worker, verify, changeset, PR), but one task at a time, in the current checkout, asking instead of blocking. Only uses a git worktree when the current checkout genuinely cannot be used. Confirms before every push or PR action.
 argument-hint: "<task description or issue number> [--issue NNN] [--worktree] [--session] [--plan] [--review]"
 author: lordpluha
 ---
 
-`/sp-implement` is `/sp-auto` for a single task with you present. Same pipeline, same
+`/br-implement` is `/br-auto` for a single task with you present. Same pipeline, same
 specialists, same verification discipline — three differences:
 
-| | `/sp-implement` | `/sp-auto` |
+| | `/br-implement` | `/br-auto` |
 |---|---|---|
 | Concurrency | one task | up to `--limit` in parallel |
 | Ambiguity | **ask you** (`/grill-me`, or a direct question) | block with `BLOCKED_REASON: clarification` |
@@ -15,7 +15,7 @@ specialists, same verification discipline — three differences:
 | GitHub | confirms with you before every mutation | owns them unattended, gated by the board's `Todo` column |
 
 If you find yourself running this repeatedly over a queue of well-specified issues, that is
-what `/sp-auto` is for.
+what `/br-auto` is for.
 
 ## Stage 1 — Understand the task
 
@@ -26,7 +26,7 @@ the body and comments, not the title:
 gh issue view NNN --json number,title,body,labels,comments,url
 ```
 
-`gh` missing or unauthenticated is not fatal here (unlike `/sp-auto`) — say so and continue
+`gh` missing or unauthenticated is not fatal here (unlike `/br-auto`) — say so and continue
 from the description the user gave.
 
 **Is it clear enough to build?** You must be able to state, in one sentence each, what
@@ -39,7 +39,7 @@ after implementing:
 - already unambiguous → skip both and move on. Grilling a clear task wastes your time.
 
 **Too big for one task?** More than a handful of stages, or work whose shape is still fogged
-after grilling, belongs on a map: recommend `/wayfinder`, or `/sp-create-task --epic` to
+after grilling, belongs on a map: recommend `/wayfinder`, or `/br-create-task --epic` to
 split it into real issues first. Do not start an unbounded effort here.
 
 ## Stage 2 — Branch
@@ -68,17 +68,17 @@ Use one only when the current checkout genuinely cannot be used:
 - the task must be built and run side by side with the current branch.
 
 ```bash
-.claude/scripts/auto/sp-worktree.sh claim NNN <type> "<title>"   # needs an issue number
+.claude/scripts/auto/br-worktree.sh claim NNN <type> "<title>"   # needs an issue number
 ```
 
 Remember to `release` it when the work lands.
 
 ## Stage 3 — Implement
 
-**Default: dispatch `sp-worker`** (Agent tool, `subagent_type: "sp-worker"`), the
+**Default: dispatch `br-worker`** (Agent tool, `subagent_type: "br-worker"`), the
 orchestrator. It plans the task, delegates each stage to the specialist that owns that
 surface, and re-verifies their claims rather than trusting the reports. Do **not** pass
-`WORKTREE` unless Stage 2 actually created one — its presence is what puts `sp-worker` into
+`WORKTREE` unless Stage 2 actually created one — its presence is what puts `br-worker` into
 unattended mode, where it stops asking questions.
 
 Go straight to a single specialist instead when the task is unambiguously one stage — that
@@ -86,14 +86,14 @@ skips a layer of orchestration for no loss:
 
 | Situation | Route |
 |---|---|
-| `--plan` passed, or non-trivial and you want the plan first | `sp-planner`, surface its plan, wait |
-| A bug fix with an unknown root cause | `sp-debugger` |
-| Feature/change in `apps/web-player`, `apps/web-artists`, `packages/ui-react` | `sp-frontend-developer` |
-| Feature/change in `apps/api` | `sp-backend-developer` |
-| Feature/change in `apps/mobile` / `apps/desktop` | the matching `sp-*-developer` |
-| `.github/workflows`, `.github/actions`, `infra/`, `turbo.json`, `lefthook.yml`, release | `sp-devops` |
-| Write or run one focused spec, nothing else | `sp-tester` |
-| Spans API + a UI | `sp-backend-developer` first, then the UI agent, so the UI types against the regenerated contract |
+| `--plan` passed, or non-trivial and you want the plan first | `br-planner`, surface its plan, wait |
+| A bug fix with an unknown root cause | `br-debugger` |
+| Feature/change in `apps/web-player`, `apps/web-artists`, `packages/ui-react` | `br-frontend-developer` |
+| Feature/change in `apps/api` | `br-backend-developer` |
+| Feature/change in `apps/mobile` / `apps/desktop` | the matching `br-*-developer` |
+| `.github/workflows`, `.github/actions`, `infra/`, `turbo.json`, `lefthook.yml`, release | `br-devops` |
+| Write or run one focused spec, nothing else | `br-tester` |
+| Spans API + a UI | `br-backend-developer` first, then the UI agent, so the UI types against the regenerated contract |
 | `--session` passed, or the user asked to skip the agent | do it yourself — see below |
 
 ## Stage 4 — Verify (yours to do, whatever the report said)
@@ -111,7 +111,7 @@ Re-run the exact test command that was reported and read the output. A `TESTS:` 
 a command is not a passing test. A bug fix needs a spec that fails before the fix and passes
 after.
 
-`--review`, or a diff over 100 lines / 5 files → dispatch `sp-reviewer` and treat findings as
+`--review`, or a diff over 100 lines / 5 files → dispatch `br-reviewer` and treat findings as
 work, routed back to the owning agent, then verify again.
 
 **Changeset**: if any workspace's behaviour changed, `.changeset/<slug>.md` must exist and
@@ -127,11 +127,11 @@ conversation does not carry to the next action.
 
 ```bash
 git push -u origin <branch>
-.claude/scripts/auto/sp-pr.sh create <branch> "<type>(<scope>): <summary>" <body-file>
+.claude/scripts/auto/br-pr.sh create <branch> "<type>(<scope>): <summary>" <body-file>
 ```
 
-Write the PR body to `.sp-scratch/pr-<issue>.md` (gitignored, inside the repo). It must be
-inside the repo, not `/tmp`: when `sp-pr.sh verify` reports `GH_TRANSPORT=flatpak-host`,
+Write the PR body to `.br-scratch/pr-<issue>.md` (gitignored, inside the repo). It must be
+inside the repo, not `/tmp`: when `br-pr.sh verify` reports `GH_TRANSPORT=flatpak-host`,
 `gh` is running on the host and cannot read the sandbox's `/tmp`.
 
 PR body:
@@ -154,7 +154,7 @@ If the lefthook `pre-push` hook fails for an environmental reason, `LEFTHOOK=0 g
 the fallback — and then say so explicitly: the build is unverified and CI is the gate. Never
 create an `.env` to make a hook pass, never `--force`, never push `develop`.
 
-Release the worktree if Stage 2 created one: `.claude/scripts/auto/sp-worktree.sh release NNN`.
+Release the worktree if Stage 2 created one: `.claude/scripts/auto/br-worktree.sh release NNN`.
 
 ## In-session implementation (`--session` only)
 
@@ -170,7 +170,7 @@ Release the worktree if Stage 2 created one: `.claude/scripts/auto/sp-worktree.s
 ## Report
 
 ```text
-## /sp-implement: <task>
+## /br-implement: <task>
 
 ### Needs your attention
 - <open question, trade-off, or improvised convention — or "nothing">
@@ -181,10 +181,10 @@ Release the worktree if Stage 2 created one: `.claude/scripts/auto/sp-worktree.s
 ### Verified (re-run by me)
 - lint / check-types / knip: <result>
 - tests: <exact command> — <result> | none — <why>
-- review: <sp-reviewer verdict, or "below threshold">
+- review: <br-reviewer verdict, or "below threshold">
 
 ### Branch / PR
 branch: <name>   worktree: <path or "none">   PR: <url or "not opened — awaiting confirmation">
 
-/sp-implement: PASS | PARTIAL | BLOCKED
+/br-implement: PASS | PARTIAL | BLOCKED
 ```

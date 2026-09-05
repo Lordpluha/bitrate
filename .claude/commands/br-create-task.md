@@ -21,12 +21,12 @@ specific action. A prior approval never carries to a later mutation in the same 
 ## Preflight
 
 ```bash
-.claude/scripts/auto/sp-pr.sh verify    # resolves gh, reports transport + scopes
+.claude/scripts/auto/br-pr.sh verify    # resolves gh, reports transport + scopes
 ```
 
 `gh` is required. Note that `command -v gh` failing does **not** mean it is missing: under
 the VS Code Flatpak sandbox `gh` lives on the host and is reached with
-`flatpak-spawn --host gh …`. `sp-pr.sh verify` resolves this for you and prints
+`flatpak-spawn --host gh …`. `br-pr.sh verify` resolves this for you and prints
 `GH_TRANSPORT`; use the same transport it reports for the queries below. If it is missing or unauthenticated, stop and tell the user how to fix it —
 do not fall back to guessing the board's contents from files in the repo, which are not a
 mirror of it (see [ADR-0016](../../apps/docs/docs/architecture/0016-live-github-queries.md)).
@@ -87,7 +87,7 @@ Never skip straight to drafting because the idea sounds new. Search the corpus b
 
 ## Step 3 — Scope it to one session
 
-A good task is one an `sp-worker` or a developer can finish in one sitting, with an
+A good task is one an `br-worker` or a developer can finish in one sitting, with an
 unambiguous done condition. If the draft has more than one "and then", split it.
 
 Detect the scope from the code the idea touches, and pick the matching issue template — the
@@ -115,7 +115,7 @@ The draft must be specific enough that a worker does not have to re-derive your 
 
 - **Problem / motivation** — the user-visible problem, not the implementation.
 - **Acceptance criteria** — a checklist of observable conditions. This is the field that
-  decides whether `/sp-auto` can take the task or must block it as `clarification`. Vague
+  decides whether `/br-auto` can take the task or must block it as `clarification`. Vague
   criteria are the single most common reason automated work fails.
 - **Affected code** — the actual files/slices/modules you found, as paths.
 - **Constraints** — the ADRs and rules that bind the implementation, linked.
@@ -132,8 +132,8 @@ New cards land in `Todo` (or `Backlog` for work that is real but not next). The 
 `Status` options in workflow order are `Backlog → Todo → In progress → Code review →
 Ready for testing → In testing → Ready for merge → Ready for release → Released`, plus
 `Reopened` for
-kick-backs, and `Blocked`, where `/sp-auto` parks work it cannot finish. A task whose card
-sits in `Todo` is eligible for the unattended `/sp-auto` pipeline, so its
+kick-backs, and `Blocked`, where `/br-auto` parks work it cannot finish. A task whose card
+sits in `Todo` is eligible for the unattended `/br-auto` pipeline, so its
 acceptance criteria are what decide whether that pipeline can act or must block. Put work
 that is real but not next into `Backlog` instead.
 
@@ -166,7 +166,7 @@ the whole set once rather than one prompt per child.
 ## Report
 
 ```text
-## /sp-create-task: <idea>
+## /br-create-task: <idea>
 
 ### Board context
 Open issues scanned:   <n>    Closed scanned: <n>    Open PRs: <n>
@@ -192,8 +192,8 @@ successful run of this command, not a failure.
 
 ## Related
 
-- `/sp-implement` — implements a task once it exists.
-- `/sp-auto` — takes tasks from the board's `Todo` column end to end, unattended.
+- `/br-implement` — implements a task once it exists.
+- `/br-auto` — takes tasks from the board's `Todo` column end to end, unattended.
 - `/grill-me` — when the idea itself is not yet clear enough to task; interview first,
   then come back here.
 - `/wayfinder` — when the effort is too big for one task set and needs a decision map on the

@@ -313,22 +313,22 @@ the same rules as human contributors:
 
 | Intent | Command |
 |---|---|
-| Draft or restructure a GitHub task against the whole board | `/sp-create-task "<idea>" [--dry-run]` |
-| Implement application or package work, then open/update the PR | `/sp-implement "<task>" [--session]` |
-| Drive `Todo`-column issues end to end, unattended | `/sp-auto [--limit N] [--issue NNN]` |
-| Find/fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, root onboarding docs (run periodically) | `/sp-sync-docs [--session]` |
+| Draft or restructure a GitHub task against the whole board | `/br-create-task "<idea>" [--dry-run]` |
+| Implement application or package work, then open/update the PR | `/br-implement "<task>" [--session]` |
+| Drive `Todo`-column issues end to end, unattended | `/br-auto [--limit N] [--issue NNN]` |
+| Find/fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, root onboarding docs (run periodically) | `/br-sync-docs [--session]` |
 
 Ticket and board state aren't mirrored anywhere — these commands query GitHub live (via
 `gh`/MCP) whenever they need it. That requires the `gh` CLI, authenticated, with the
 `read:project` scope for board access (`gh auth refresh -s read:project,project`).
 
-All four commands dispatch to an agent by default now. `/sp-implement` routes to the
-specialist that owns the surface: `sp-frontend-developer` (web-player, web-artists,
-ui-react), `sp-backend-developer` (api), `sp-mobile-developer`, `sp-desktop-developer`,
-or `sp-devops` (CI, Docker, infra, release) — plus `sp-planner` for
-plans, `sp-debugger` for bug fixes, `sp-tester` for tests, and `sp-reviewer` for review
-(also auto-invoked on large diffs). `/sp-sync-docs` routes to `sp-librarian`; `/sp-auto`
-runs `sp-worker` in its own git worktree per issue. Pass `--session` on any of them to
+All four commands dispatch to an agent by default now. `/br-implement` routes to the
+specialist that owns the surface: `br-frontend-developer` (web-player, web-artists,
+ui-react), `br-backend-developer` (api), `br-mobile-developer`, `br-desktop-developer`,
+or `br-devops` (CI, Docker, infra, release) — plus `br-planner` for
+plans, `br-debugger` for bug fixes, `br-tester` for tests, and `br-reviewer` for review
+(also auto-invoked on large diffs). `/br-sync-docs` routes to `br-librarian`; `/br-auto`
+runs `br-worker` in its own git worktree per issue. Pass `--session` on any of them to
 work in the current session instead. None of the specialists have their own slash command;
 each command is the single entrypoint that dispatches to its own. This also applies to
 ordinary tasks outside any command — see `CLAUDE.md`'s "Default to agent dispatch, even

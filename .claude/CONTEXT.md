@@ -11,8 +11,8 @@ Adapted from the `CONTEXT.md` convention in
 ## Language
 
 **Issue** — a single tracked unit of work on GitHub Issues: a bug, feature, or chore,
-identified by its number (`#312`). This is the only unit `/sp-create-task` creates and
-`/sp-auto` consumes. *Avoid*: ticket, story, card.
+identified by its number (`#312`). This is the only unit `/br-create-task` creates and
+`/br-auto` consumes. *Avoid*: ticket, story, card.
 
 **Board** — the GitHub Projects board for this repository:
 [`Lordpluha/projects/6`](https://github.com/users/Lordpluha/projects/6), a user-scope
@@ -25,7 +25,7 @@ Backlog → Todo → In progress → Code review → Ready for testing → In te
         (plus Reopened, the kick-back column)
 ```
 
-`Blocked` is where `/sp-auto` parks work it cannot finish; `Todo` is its intake gate, so a
+`Blocked` is where `/br-auto` parks work it cannot finish; `Todo` is its intake gate, so a
 card's column is what decides whether the unattended pipeline may touch it. Re-read the
 options with `gh project field-list 6 --owner Lordpluha` rather than trusting this list if a
 move fails. Board state is never
@@ -50,15 +50,15 @@ technology or workflow, listed in `CLAUDE.md`'s Skill Index. A skill is loaded b
 are working in that technology. Rules say what this project requires; skills say how the
 technology works. *Avoid*: guide, playbook, helper.
 
-**Command** — a file under `.claude/commands/`, invoked by a human as `/sp-<name>`. A command
+**Command** — a file under `.claude/commands/`, invoked by a human as `/br-<name>`. A command
 owns confirmation and every GitHub mutation; it dispatches the work to an agent.
 
 **Agent** / **specialist** — a file under `.claude/agents/`, dispatched via the Agent tool.
 Pins its own model and effort. *Specialist* is the collective noun for the eleven agents that
-own one stage or one app. `sp-worker` is the **orchestrator**: the one agent that dispatches
+own one stage or one app. `br-worker` is the **orchestrator**: the one agent that dispatches
 other agents. *Avoid*: subagent (except when naming the tool parameter), bot.
 
-**Worker** — `sp-worker` specifically, and only that. Not a generic word for an agent doing
+**Worker** — `br-worker` specifically, and only that. Not a generic word for an agent doing
 work.
 
 **Mechanical pass** — `lint`, `check-types`, and (when files, exports, or dependencies
@@ -77,7 +77,7 @@ target. *Avoid*: module, folder, component group.
 **Module** — a NestJS module in `apps/api/src/modules/<name>/`. Never used for a frontend
 slice.
 
-**Unattended** — running with no human reading the output: `/sp-auto`, and `sp-worker` when
+**Unattended** — running with no human reading the output: `/br-auto`, and `br-worker` when
 it was given a `WORKTREE`. In unattended mode an agent never asks a question; it blocks. The
 opposite is **interactive**.
 
@@ -91,7 +91,7 @@ plausible-looking change that does not compile is not.
 - The **Board** holds many **Cards**; each **Card** is one **Issue**.
 - An **Issue** is implemented by one or more **Tasks**.
 - A **Command** dispatches one or more **Agents**; only a Command mutates GitHub.
-- `sp-worker` is the one **Agent** that dispatches other **Agents**.
+- `br-worker` is the one **Agent** that dispatches other **Agents**.
 - A **Rule** is matched by scope; a **Skill** is matched by technology. Both are listed
   exhaustively in `CLAUDE.md`.
 - A **Workspace** contains many **Slices** (frontend) or many **Modules** (API).
@@ -100,13 +100,13 @@ plausible-looking change that does not compile is not.
 
 - **"ticket"** previously meant both a GitHub issue and an agent's unit of work. Resolved: the
   tracked record is an **Issue**, the unit of agent work is a **Task**. The retired
-  `/sp-take-ticket` command and `sp-ticket` agent are the last places the old usage appears,
+  `/br-take-ticket` command and `br-ticket` agent are the last places the old usage appears,
   and they survive only in superseded ADRs
   ([ADR-0022](../apps/docs/docs/architecture/0022-app-scoped-agent-roster.md)).
-- **"worker"** was ambiguous between `sp-worker` and any agent doing work. Resolved:
-  **Worker** names `sp-worker` only.
+- **"worker"** was ambiguous between `br-worker` and any agent doing work. Resolved:
+  **Worker** names `br-worker` only.
 - **"module"** meant both a NestJS module and a frontend directory. Resolved: **Module** is
   NestJS; the frontend unit is a **Slice**.
 - **"docs"** meant `apps/docs/`, `.claude/rules/`, and the root onboarding files
   interchangeably. Resolved: name the surface — `apps/docs/`, **rules**, or **root onboarding
-  docs**. `sp-librarian` owns all of them, plus `.changeset/` and `PRODUCT.md`.
+  docs**. `br-librarian` owns all of them, plus `.changeset/` and `PRODUCT.md`.

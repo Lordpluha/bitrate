@@ -199,27 +199,27 @@ for the working rules.
 
 ## 🤖 Agent workflow
 
-The repository includes a ticket-driven command set: `/sp-create-task`, `/sp-implement`,
-`/sp-auto`, `/sp-sync-docs`. They all read the same conventions from `CLAUDE.md` and
+The repository includes a ticket-driven command set: `/br-create-task`, `/br-implement`,
+`/br-auto`, `/br-sync-docs`. They all read the same conventions from `CLAUDE.md` and
 `.claude/`, and every command has access to any project or global skill.
 
 ```text
-/sp-create-task → /sp-implement → PR (confirmed)          # human in the loop
-/sp-auto                                                   # unattended, board Todo column
+/br-create-task → /br-implement → PR (confirmed)          # human in the loop
+/br-auto                                                   # unattended, board Todo column
 ```
 
-`/sp-implement` reads `CLAUDE.md`'s exhaustive Rule Index first, then dispatches to a named
+`/br-implement` reads `CLAUDE.md`'s exhaustive Rule Index first, then dispatches to a named
 specialist agent by default — one of five app-scoped developers
-(`sp-frontend-developer`, `sp-backend-developer`, `sp-mobile-developer`,
-`sp-desktop-developer`), plus `sp-planner`, `sp-debugger`,
-`sp-tester`, `sp-reviewer`, and `sp-devops` for CI/infra. Pass `--session` to do the work
-in-session instead. `/sp-sync-docs` dispatches to `sp-librarian` the same way, and
-`/sp-auto` runs `sp-worker` in an isolated git worktree per issue. This
+(`br-frontend-developer`, `br-backend-developer`, `br-mobile-developer`,
+`br-desktop-developer`), plus `br-planner`, `br-debugger`,
+`br-tester`, `br-reviewer`, and `br-devops` for CI/infra. Pass `--session` to do the work
+in-session instead. `/br-sync-docs` dispatches to `br-librarian` the same way, and
+`/br-auto` runs `br-worker` in an isolated git worktree per issue. This
 default-to-agent behavior also applies to ordinary tasks outside any command — see
 `CLAUDE.md`.
 
 Ticket/board state is queried live from GitHub (via `gh`/MCP), never mirrored to a file;
-`/sp-sync-docs` catches drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`,
+`/br-sync-docs` catches drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`,
 and the root onboarding docs.
 
 For work that is too large or too vague for a single command, install the

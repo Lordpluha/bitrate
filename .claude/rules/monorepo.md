@@ -198,7 +198,7 @@ module folder tree, or tech-stack list that a specific `.claude/rules/*.md` or
 since no agent workflow reads `apps/docs/` while implementing (see
 [ADR-0011](../../apps/docs/docs/architecture/0011-retire-apps-web.md), a real incident this
 caused, and [ADR-0013](../../apps/docs/docs/architecture/0013-docs-sync.md)). Run
-`/sp-sync-docs` periodically to catch drift before it goes stale for months.
+`/br-sync-docs` periodically to catch drift before it goes stale for months.
 
 ## Environment variables
 
