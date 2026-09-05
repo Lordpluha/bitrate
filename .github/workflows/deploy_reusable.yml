@@ -385,6 +385,11 @@ jobs:
       - name: Preflight -- required configuration present
         if: ${{ inputs.run-deploy }}
         env:
+          # Used by this step's own error message. It was missing, and `set -u` turned
+          # a failed preflight into "ENVIRONMENT_NAME: unbound variable" -- the list of
+          # what was actually missing never printed, which is the one thing the step
+          # exists to tell you.
+          ENVIRONMENT_NAME: ${{ inputs.environment }}
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
           NODE_ENV: ${{ vars.NODE_ENV }}
