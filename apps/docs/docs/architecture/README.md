@@ -34,6 +34,7 @@ how to apply it day to day.
 | [0025](./0025-remove-admin-panel.md) | Remove the Kottster admin panel |
 | [0026](./0026-pnpm-11-settings-in-workspace-yaml.md) | pnpm 11; `pnpm-workspace.yaml` is the only home for pnpm settings |
 | [0027](./0027-deploy-by-pulling-ci-images.md) | Deploy by pulling CI-built images; production configuration lives in GitHub |
+| [0028](./0028-split-brand-foundation.md) | Split the brand foundation into one page per decision |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

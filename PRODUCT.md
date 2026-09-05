@@ -110,7 +110,7 @@ playback, equalizer, offline mode, podcasts/audiobooks, recommendations.
 
 ## Brand Commitments
 
-**The product is Bitrate — all-in-one for musicians.** [`apps/docs/docs/brand/brand.md`](apps/docs/docs/brand/brand.md) is the source of truth for
+**The product is Bitrate — all-in-one for musicians.** [`apps/docs/docs/brand/`](apps/docs/docs/brand/) is the source of truth for
 positioning, promise, tone, and the product decision filter; the sibling `design.md` translates
 it into design rules. Read those before making a naming, copy, or visual decision here — this section
 only records what binds the codebase.
@@ -125,7 +125,7 @@ inherited Spotify-derivative surfaces — palette, logo, marketing copy carried 
 photography direction, motion tokens, and the icon family.
 
 The name remains subject to trademark, domain, and legal clearance before irreversible
-investment (`brand.md` §17), so identifiers that would claim a `bitrate.*` domain stay
+investment (`apps/docs/docs/brand/voice.md` § Naming), so identifiers that would claim a `bitrate.*` domain stay
 owner-namespaced for now.
 
 Author: Vladyslav Tesliuk (github.com/Lordpluha). MIT licensed.
