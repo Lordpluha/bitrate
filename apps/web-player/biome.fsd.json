@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
   "overrides": [
     {
       "includes": ["src/shared/**"],
@@ -9,14 +9,37 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": {
-                  "@/app": "shared не может импортировать из app (нарушение FSD архитектуры)",
-                  "@/features": "shared не может импортировать из features (нарушение FSD архитектуры)",
-                  "@/entities": "shared не может импортировать из entities (нарушение FSD архитектуры)",
-                  "@/widgets": "shared не может импортировать из widgets (нарушение FSD архитектуры)",
-                  "@/views": "shared не может импортировать из views (нарушение FSD архитектуры)",
-                  "@/processes": "shared не может импортировать из processes (нарушение FSD архитектуры)"
-                }
+                "patterns": [
+                  {
+                    "group": [
+                      "@/app",
+                      "@/app/**",
+                      "@app",
+                      "@app/**",
+                      "@/features",
+                      "@/features/**",
+                      "@features",
+                      "@features/**",
+                      "@/entities",
+                      "@/entities/**",
+                      "@entities",
+                      "@entities/**",
+                      "@/widgets",
+                      "@/widgets/**",
+                      "@widgets",
+                      "@widgets/**",
+                      "@/views",
+                      "@/views/**",
+                      "@views",
+                      "@views/**",
+                      "@/processes",
+                      "@/processes/**",
+                      "@processes",
+                      "@processes/**"
+                    ],
+                    "message": "shared \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0438\u043c\u043f\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0438\u0437 app/features/entities/widgets/views/processes (\u043d\u0430\u0440\u0443\u0448\u0435\u043d\u0438\u0435 FSD \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u044b)"
+                  }
+                ]
               }
             }
           }
@@ -31,13 +54,33 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": {
-                  "@/app": "entities не может импортировать из app (нарушение FSD архитектуры)",
-                  "@/features": "entities не может импортировать из features (нарушение FSD архитектуры)",
-                  "@/widgets": "entities не может импортировать из widgets (нарушение FSD архитектуры)",
-                  "@/views": "entities не может импортировать из views (нарушение FSD архитектуры)",
-                  "@/processes": "entities не может импортировать из processes (нарушение FSD архитектуры)"
-                }
+                "patterns": [
+                  {
+                    "group": [
+                      "@/app",
+                      "@/app/**",
+                      "@app",
+                      "@app/**",
+                      "@/features",
+                      "@/features/**",
+                      "@features",
+                      "@features/**",
+                      "@/widgets",
+                      "@/widgets/**",
+                      "@widgets",
+                      "@widgets/**",
+                      "@/views",
+                      "@/views/**",
+                      "@views",
+                      "@views/**",
+                      "@/processes",
+                      "@/processes/**",
+                      "@processes",
+                      "@processes/**"
+                    ],
+                    "message": "entities \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0438\u043c\u043f\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0438\u0437 app/features/widgets/views/processes (\u043d\u0430\u0440\u0443\u0448\u0435\u043d\u0438\u0435 FSD \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u044b)"
+                  }
+                ]
               }
             }
           }
@@ -52,12 +95,29 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": {
-                  "@/app": "features не может импортировать из app (нарушение FSD архитектуры)",
-                  "@/widgets": "features не может импортировать из widgets (нарушение FSD архитектуры)",
-                  "@/views": "features не может импортировать из views (нарушение FSD архитектуры)",
-                  "@/processes": "features не может импортировать из processes (нарушение FSD архитектуры)"
-                }
+                "patterns": [
+                  {
+                    "group": [
+                      "@/app",
+                      "@/app/**",
+                      "@app",
+                      "@app/**",
+                      "@/widgets",
+                      "@/widgets/**",
+                      "@widgets",
+                      "@widgets/**",
+                      "@/views",
+                      "@/views/**",
+                      "@views",
+                      "@views/**",
+                      "@/processes",
+                      "@/processes/**",
+                      "@processes",
+                      "@processes/**"
+                    ],
+                    "message": "features \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0438\u043c\u043f\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0438\u0437 app/widgets/views/processes (\u043d\u0430\u0440\u0443\u0448\u0435\u043d\u0438\u0435 FSD \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u044b)"
+                  }
+                ]
               }
             }
           }
@@ -72,11 +132,25 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": {
-                  "@/app": "widgets не может импортировать из app (нарушение FSD архитектуры)",
-                  "@/views": "widgets не может импортировать из views (нарушение FSD архитектуры)",
-                  "@/processes": "widgets не может импортировать из processes (нарушение FSD архитектуры)"
-                }
+                "patterns": [
+                  {
+                    "group": [
+                      "@/app",
+                      "@/app/**",
+                      "@app",
+                      "@app/**",
+                      "@/views",
+                      "@/views/**",
+                      "@views",
+                      "@views/**",
+                      "@/processes",
+                      "@/processes/**",
+                      "@processes",
+                      "@processes/**"
+                    ],
+                    "message": "widgets \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0438\u043c\u043f\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0438\u0437 app/views/processes (\u043d\u0430\u0440\u0443\u0448\u0435\u043d\u0438\u0435 FSD \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u044b)"
+                  }
+                ]
               }
             }
           }
@@ -91,10 +165,21 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": {
-                  "@/app": "views не может импортировать из app (нарушение FSD архитектуры)",
-                  "@/processes": "views не может импортировать из processes (нарушение FSD архитектуры)"
-                }
+                "patterns": [
+                  {
+                    "group": [
+                      "@/app",
+                      "@/app/**",
+                      "@app",
+                      "@app/**",
+                      "@/processes",
+                      "@/processes/**",
+                      "@processes",
+                      "@processes/**"
+                    ],
+                    "message": "views \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0438\u043c\u043f\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0438\u0437 app/processes (\u043d\u0430\u0440\u0443\u0448\u0435\u043d\u0438\u0435 FSD \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u044b)"
+                  }
+                ]
               }
             }
           }
@@ -109,25 +194,14 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": {
-                  "@/app": "processes не может импортировать из app (нарушение FSD архитектуры)"
-                }
+                "patterns": [
+                  {
+                    "group": ["@/app", "@/app/**", "@app", "@app/**"],
+                    "message": "processes \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0438\u043c\u043f\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0438\u0437 app (\u043d\u0430\u0440\u0443\u0448\u0435\u043d\u0438\u0435 FSD \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u044b)"
+                  }
+                ]
               }
             }
-          }
-        }
-      }
-    },
-    {
-      "includes": [
-        "src/shared/constants/**",
-        "src/**/config/**",
-        "src/widgets/**/ui/**"
-      ],
-      "linter": {
-        "rules": {
-          "style": {
-            "useNamingConvention": "off"
           }
         }
       }

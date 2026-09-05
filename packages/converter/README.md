@@ -1,4 +1,4 @@
-# @spotify/converter
+# @bitrate/converter
 
 CLI tool for media conversion using FFmpeg. Convert audio files to OGG Opus and extract audio from video files to AAC format.
 Also supports image conversion to WebP.
@@ -6,7 +6,7 @@ Also supports image conversion to WebP.
 ## Installation
 
 ```bash
-pnpm add @spotify/converter
+pnpm add @bitrate/converter
 ```
 
 ## Requirements
@@ -117,8 +117,8 @@ media-converter image -i logo.png --lossless
 You can also use the converter in your Node.js code:
 
 ```javascript
-import { convertAudio, convertVideo } from '@spotify/converter'
-import { convertImage } from '@spotify/converter'
+import { convertAudio, convertVideo } from '@bitrate/converter'
+import { convertImage } from '@bitrate/converter'
 
 // Convert audio
 const audioResult = await convertAudio({

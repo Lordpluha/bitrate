@@ -1,0 +1,52 @@
+/**
+ * Third-party brand colours for the OAuth provider buttons.
+ *
+ * These are not design tokens and deliberately live outside @bitrate/ui-react: they are
+ * other companies' brand marks, fixed by each vendor's brand guidelines. They must not
+ * follow this app's palette, and — unlike every role in themes/ — they must not change
+ * between the light and dark themes either, which is why there is no `:root.light` block
+ * below. Google's mark is white with dark text in both themes because Google says so.
+ *
+ * Each provider owns a surface/foreground pair, since the foreground is part of the same
+ * brand rule rather than a contrast choice we get to make.
+ */
+@theme {
+  --color-brand-google: #ffffff;
+  --color-brand-google-foreground: #1f1f1f;
+
+  --color-brand-facebook: #1877f2;
+  --color-brand-facebook-foreground: #ffffff;
+
+  --color-brand-apple: #000000;
+  --color-brand-apple-foreground: #ffffff;
+
+  --color-brand-discord: #5865f2;
+  --color-brand-discord-foreground: #ffffff;
+
+  --color-brand-github: #24292f;
+  --color-brand-github-foreground: #ffffff;
+
+  --color-brand-microsoft: #ffffff;
+  --color-brand-microsoft-foreground: #1f1f1f;
+
+  --color-brand-x: #000000;
+  --color-brand-x-foreground: #ffffff;
+
+  --color-brand-instagram: #e1306c;
+  --color-brand-instagram-foreground: #ffffff;
+
+  --color-brand-tiktok: #010101;
+  --color-brand-tiktok-foreground: #ffffff;
+
+  --color-brand-twitch: #9146ff;
+  --color-brand-twitch-foreground: #ffffff;
+
+  --color-brand-linkedin: #0a66c2;
+  --color-brand-linkedin-foreground: #ffffff;
+
+  --color-brand-reddit: #ff4500;
+  --color-brand-reddit-foreground: #ffffff;
+
+  --color-brand-telegram: #26a5e4;
+  --color-brand-telegram-foreground: #ffffff;
+}

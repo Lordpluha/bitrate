@@ -8,33 +8,60 @@
       "ignoreBinaries": ["biome"]
     },
     "apps/api": {
-      "entry": ["src/main.ts", "src/**/*.module.ts", "src/infra/**/*.ts"],
+      "entry": [
+        "src/main.ts",
+        "src/**/*.module.ts",
+        "src/**/*.unit-spec.ts",
+        "src/**/*.int-spec.ts",
+        "src/**/*.spec.ts",
+        "src/infra/**/*.ts",
+        "test/e2e/**/*.e2e-spec.ts",
+        "test/jest.setup.ts"
+      ],
       "ignoreFiles": ["prisma.config.ts"],
       "prisma": false,
       "ignore": ["src/**/index.ts"]
     },
     "apps/web-artists": {
-      "entry": [
-        "src/app/**/*.tsx",
-        "src/app/**/*.ts",
-        "src/app/global.css"
-      ],
+      "entry": ["src/app/**/*.tsx", "src/app/**/*.ts", "src/app/global.css"],
       "ignore": ["env.schema.ts"]
     },
     "apps/web-player": {
       "entry": [
         "src/app/**/*.tsx",
         "src/app/**/*.ts",
-        "src/app/global.css"
+        "src/app/global.css",
+        "src/**/*.unit-spec.ts",
+        "src/**/*.unit-spec.tsx",
+        "tests/**/*.int-spec.ts",
+        "tests/**/*.int-spec.tsx",
+        "tests/**/*.e2e-spec.ts",
+        "tests/**/*.screenshot-spec.ts",
+        "tests/configs/*.ts",
+        "vitest.config.ts"
       ],
       "ignore": ["env.schema.ts"]
     },
     "packages/ui-react": {
-      "entry": ["src/**/index.css"],
-      "ignoreDependencies": ["chromatic", "tsc-alias"]
+      "entry": [
+        "src/**/index.css",
+        "src/**/*.unit-spec.ts",
+        "src/**/*.unit-spec.tsx",
+        "src/**/*.int-spec.ts",
+        "src/**/*.int-spec.tsx",
+        "src/**/*.snapshot-spec.ts",
+        "src/**/*.snapshot-spec.tsx",
+        "src/**/*.screenshot-spec.ts",
+        "src/**/*.screenshot-spec.tsx",
+        "vitest.config.ts"
+      ],
+      "ignoreDependencies": ["tsc-alias"]
     }
   },
   "ignore": [
+    "graphify-out/**",
+    ".sp-scratch/**",
+    ".claude/**",
     "**/*.module.css",
     "**/*.stories.tsx",
     "**/*.test.tsx",

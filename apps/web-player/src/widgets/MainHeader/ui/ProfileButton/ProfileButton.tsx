@@ -1,10 +1,7 @@
 'use client'
 
-import { useAuth } from '@shared/hooks'
-import { generateColor } from '@shared/utils'
-import { ApiSchemas } from '@spotify/contracts'
 import {
-  Button,
+  cn,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -12,50 +9,77 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@spotify/ui-react'
-import { FC, HTMLAttributes, useState } from 'react'
+} from '@bitrate/ui-react'
+import { useAuth } from '@shared/hooks'
+import { generateColor } from '@shared/utils'
+import { getUserAvatarUrl } from '@shared/utils/mediaUrl'
+import Image from 'next/image'
+import type { HTMLAttributes } from 'react'
+import { Z_INDEX_CLASS } from '@/shared/constants'
+import { ProfileMenuContent } from './ProfileMenuContent'
 
 interface ProfileButtonProps extends HTMLAttributes<HTMLDivElement> {
-  username: ApiSchemas['UserEntity']['username']
+  avatar?: string | null
+  username: string
 }
 
-export const ProfileButton: FC<ProfileButtonProps> = ({
-  username,
+export const ProfileButton = ({
+  avatar,
   className,
+  username,
   ...etcDivProps
-}) => {
-  const [isHovered, setIsHovered] = useState(false)
-
+}: ProfileButtonProps) => {
   const firstLetter = username.charAt(0).toUpperCase()
   const backgroundColor = generateColor(username)
+  const avatarUrl = avatar ? getUserAvatarUrl(avatar) : null
 
-  const { logout } = useAuth()
+  const { isLogoutPending, logout } = useAuth()
 
   return (
-    <div
-      className={className}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      {...etcDivProps}
-    >
+    <div className={className} {...etcDivProps}>
       <Popover>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <PopoverTrigger className="w-12 h-12 rounded-full hover:scale-105 transition-transform duration-200 bg-grey-900 p-2">
-                <div
-                  className="w-full h-full rounded-full flex items-center justify-center text-black font-semibold text-xl"
-                  style={{ backgroundColor }}
-                >
-                  {firstLetter}
-                </div>
+              <PopoverTrigger
+                aria-label={`Open profile menu for ${username}`}
+                className="h-12 w-12 rounded-full bg-background-highlight p-2 transition-transform duration-200 hover:scale-105"
+              >
+                {avatarUrl ? (
+                  <Image
+                    alt={username}
+                    className="h-full w-full rounded-full object-cover"
+                    height={32}
+                    src={avatarUrl}
+                    unoptimized
+                    width={32}
+                  />
+                ) : (
+                  <div
+                    className="flex h-full w-full items-center justify-center rounded-full text-xl font-semibold text-black"
+                    style={{ backgroundColor }}
+                  >
+                    {firstLetter}
+                  </div>
+                )}
               </PopoverTrigger>
             </TooltipTrigger>
             <TooltipContent>{username}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <PopoverContent>
-          <Button onClick={() => logout()}>Logout</Button>
+        <PopoverContent
+          align="end"
+          className={cn(
+            Z_INDEX_CLASS.popover,
+            'w-82 rounded-md border border-border bg-popover p-1 text-sm text-text shadow-2xl',
+          )}
+          positionerClassName={Z_INDEX_CLASS.popover}
+          sideOffset={8}
+        >
+          <ProfileMenuContent
+            isLogoutPending={isLogoutPending}
+            onLogout={logout}
+          />
         </PopoverContent>
       </Popover>
     </div>

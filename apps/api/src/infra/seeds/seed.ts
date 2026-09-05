@@ -1,20 +1,33 @@
+import { faker } from '@faker-js/faker'
+import type { INestApplicationContext } from '@nestjs/common'
+import { NestFactory } from '@nestjs/core'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 import 'dotenv/config'
 import { existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { Pool } from 'pg'
+import { AppModule } from '../../app.module'
+import { TokenService } from '../../modules/tokens/token.service'
+import { TrackUploadService } from '../../modules/tracks/track-upload.service'
 import config from './config'
 import { DownloadResourcesService } from './download-resources.service'
+import { FakerService } from './faker.service'
 import { SeedService } from './seed.service'
 
+/** The pool value. */
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+/** The adapter value. */
 const adapter = new PrismaPg(pool)
+/** The prisma value. */
 const prisma = new PrismaClient({ adapter })
 
 // Подготовка директорий для хранения файлов
+/** The storage base value. */
 const STORAGE_BASE = process.cwd()
+/** The tracks dir value. */
 const TRACKS_DIR = join(STORAGE_BASE, config.storagePaths.tracks)
+/** The covers dir value. */
 const COVERS_DIR = join(STORAGE_BASE, config.storagePaths.covers)
 
 console.log('📁 Storage directories:')
@@ -33,13 +46,32 @@ if (!existsSync(COVERS_DIR)) {
  * Главная функция для запуска всех seed процессов
  */
 async function main() {
+  let app: INestApplicationContext | undefined
+
   try {
     console.log('🌱 Starting database seeding...')
     console.log('📡 NCS Import + Faker Data Generation\n')
+    faker.seed(20260811)
 
-    // Создаём сервисы
+    // Создаём NestJS application context для доступа к сервисам
+    console.log('🔧 Initializing NestJS application context...')
+    app = await NestFactory.createApplicationContext(AppModule, {
+      logger: ['error', 'warn', 'log'],
+    })
+
+    // Получаем необходимые сервисы через DI
+    const trackUploadService = app.get(TrackUploadService)
+    const tokenService = app.get(TokenService)
+
+    // Создаём сервисы для импорта
     const downloadService = new DownloadResourcesService(STORAGE_BASE)
-    const seedService = new SeedService(prisma, downloadService)
+    const seedService = new SeedService(
+      prisma,
+      downloadService,
+      new FakerService(),
+      trackUploadService,
+      tokenService,
+    )
 
     // Шаг 1: Очистка базы данных (опционально)
     if (config.clearBeforeImport) {
@@ -49,19 +81,25 @@ async function main() {
     // Шаг 2: Импорт артистов и треков из NCS
     const stats = await seedService.importFromNCS()
 
-    // Шаг 3: Создание альбомов для артистов (1 альбом = все треки артиста)
+    // Шаг 3: Жанры и связи артистов с треками
+    await seedService.createCatalogMetadata()
+
+    // Шаг 4: Создание альбомов для артистов (1 альбом = все треки артиста)
     await seedService.createAlbumsForArtists()
 
-    // Шаг 4: Создание пользователей (faker)
+    // Шаг 5: Создание пользователей (faker)
     await seedService.createUsers(50)
 
-    // Шаг 5: Создание плейлистов с треками для пользователей
+    // Шаг 6: Создание плейлистов с треками для пользователей
     await seedService.createPlaylistsForUsers(100)
 
-    // Шаг 6: Добавление лайков для пользователей
+    // Шаг 7: Добавление библиотеки и истории пользователей
     await seedService.createUserLikes()
 
-    // Шаг 7: Финальная статистика
+    // Шаг 8: Создание подкастов и сохранённых эпизодов
+    await seedService.createPodcasts()
+
+    // Шаг 9: Финальная статистика
     await seedService.printStats(stats)
 
     console.log('\n✅ Database seeding completed successfully!')
@@ -69,6 +107,9 @@ async function main() {
     console.error('\n❌ Fatal error during seeding:', error)
     throw error
   } finally {
+    if (app) {
+      await app.close()
+    }
     await prisma.$disconnect()
     await pool.end()
   }

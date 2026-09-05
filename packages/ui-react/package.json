@@ -1,6 +1,6 @@
 {
-  "name": "@spotify/ui-react",
-  "version": "0.0.1",
+  "name": "@bitrate/ui-react",
+  "version": "0.0.2",
   "private": true,
   "license": "MIT",
   "sideEffects": [
@@ -15,9 +15,9 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
     },
-    "./globals.css": {
-      "style": "./dist/globals.css",
-      "default": "./dist/globals.css"
+    "./themes.css": {
+      "style": "./src/styles/themes.css",
+      "default": "./src/styles/themes.css"
     },
     "./src": {
       "default": "./src/index.ts"
@@ -27,23 +27,26 @@
     "dist"
   ],
   "scripts": {
-    "lint": "pnpm exec biome lint --write",
+    "lint": "pnpm exec biome lint --error-on-warnings",
+    "lint:fix": "pnpm exec biome lint --write",
     "format": "pnpm exec biome format --write",
     "storybook": "storybook dev -p 6006",
-    "clean-build": "rimraf dist",
-    "clean-svgr": "rimraf src/icons/svgr",
-    "build-storybook": "storybook build",
-    "gen:tokens": "tokens-generator --tokens ../tokens/tokens.json --config ./tokens.config.mjs --output ./src/styles",
-    "svgr:build": "react-svgr build -i @spotify/tokens/icons -o src/icons/svgr --variables \"primaryColor,secondaryColor\"",
-    "svgr:dev": "react-svgr dev -i @spotify/tokens/icons -o src/icons/svgr --variables \"primaryColor,secondaryColor\"",
-    "build": "pnpm clean-build && pnpm svgr:build && react-bundler build",
-    "dev": "pnpm clean-build && react-bundler dev",
-    "typecheck": "tsc --noEmit"
+    "storybook:build": "storybook build",
+    "clean": "node ./scripts/clean-dist.mjs",
+    "build": "pnpm clean && vite build",
+    "dev": "vite build --watch",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run --project=unit --project=integration --project=snapshot",
+    "test:watch": "vitest --project=unit --project=integration --project=snapshot",
+    "test:unit": "vitest run --project=unit --reporter=verbose",
+    "test:int": "vitest run --project=integration --reporter=verbose",
+    "test:snapshot": "vitest run --project=snapshot --reporter=verbose",
+    "test:snapshot:update": "vitest run --project=snapshot --reporter=verbose --update",
+    "test:screenshot": "vitest run --project=screenshot",
+    "test:screenshot:update": "vitest run --project=screenshot --update",
+    "test:cov": "vitest run --project=unit --project=integration --project=snapshot --coverage"
   },
   "peerDependencies": {
-    "@radix-ui/react-avatar": "^1.1.10",
-    "@radix-ui/react-label": "^2.1.7",
-    "@radix-ui/react-separator": "^1.1.7",
     "embla-carousel": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "next-themes": "^0.4.6",
@@ -51,45 +54,41 @@
     "react-dom": "^19"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.14",
-    "@spotify/esbuild-bundler": "workspace:*",
-    "@spotify/svgr": "workspace:*",
-    "@spotify/tokens": "workspace:*",
-    "@spotify/tokens-generator": "workspace:*",
-    "@storybook/addon-a11y": "^10.2.7",
-    "@storybook/addon-docs": "^10.2.7",
-    "@storybook/react-vite": "^10.2.7",
-    "@svgr/core": "^8.1.0",
-    "@svgr/plugin-jsx": "^8.1.0",
-    "@svgr/plugin-prettier": "^8.1.0",
-    "@svgr/plugin-svgo": "^8.1.0",
-    "@types/node": "^25.2.2",
-    "@types/react": "~19.1.17",
-    "@types/react-dom": "~19.1.11",
-    "chromatic": "^15.0.0",
-    "esbuild": "0.27.3",
-    "glob": "^13.0.0",
-    "rimraf": "^6.1.2",
-    "storybook": "^10.2.7",
-    "tailwindcss": "^4.1.18",
-    "tsc-alias": "^1.8.16",
-    "typescript": "^5.9.3"
+    "@biomejs/biome": "2.5.0",
+    "@bitrate/vite-svgr": "workspace:*",
+    "@storybook/addon-a11y": "^10.4.4",
+    "@storybook/addon-docs": "^10.4.4",
+    "@storybook/react-vite": "^10.4.4",
+    "@tailwindcss/vite": "^4.3.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.9.3",
+    "@types/react": "~19.2.17",
+    "@types/react-dom": "~19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vitest/browser": "^4.1.9",
+    "@vitest/browser-playwright": "^4.1.9",
+    "@vitest/coverage-v8": "^4.1.9",
+    "jsdom": "^26.1.0",
+    "playwright": "^1.53.1",
+    "storybook": "^10.4.4",
+    "tailwindcss": "^4.3.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.2.2",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.1.9"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
-    "@radix-ui/react-dropdown-menu": "^2.1.16",
-    "@radix-ui/react-popover": "^1.1.15",
-    "@radix-ui/react-select": "^2.2.6",
-    "@radix-ui/react-slot": "^1.2.4",
-    "@radix-ui/react-tooltip": "^1.2.8",
-    "@tailwindcss/cli": "^4.1.18",
+    "@base-ui-components/react": "1.0.0-rc.0",
+    "@hookform/resolvers": "^5.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.563.0",
-    "react-hook-form": "^7.71.1",
-    "react-resizable-panels": "^3.0.6",
+    "lucide-react": "^1.18.0",
+    "react-hook-form": "^7.79.0",
+    "react-resizable-panels": "^4.11.2",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^3.4.0",
-    "zod": "^4.3.4"
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3"
   }
 }

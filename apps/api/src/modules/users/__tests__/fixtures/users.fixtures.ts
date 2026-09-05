@@ -1,5 +1,6 @@
 import type { UserEntity } from '../../entities'
 
+/** The build user value. */
 export const buildUser = (overrides: Partial<UserEntity> = {}): UserEntity => ({
   id: 'user-1',
   username: 'user',
@@ -9,5 +10,11 @@ export const buildUser = (overrides: Partial<UserEntity> = {}): UserEntity => ({
   description: null,
   createdAt: new Date(),
   updatedAt: new Date(),
+  twoFactorSecret: null,
+  twoFactorEnabled: false,
+  emailVerifiedAt: new Date(),
+  failedLoginAttempts: 0,
+  lockedUntil: null,
+  deletedAt: null,
   ...overrides,
 })

@@ -34,8 +34,7 @@ function HomepageHeader() {
         </div>
         <div style={{ marginTop: '2rem', opacity: 0.9 }}>
           <p>
-            <strong>Open Source</strong> • <strong>TypeScript</strong> •{' '}
-            <strong>Monorepo</strong>
+            <strong>Open Source</strong> • <strong>TypeScript</strong> • <strong>Monorepo</strong>
           </p>
         </div>
       </div>
@@ -44,11 +43,10 @@ function HomepageHeader() {
 }
 
 export default function Home(): ReactNode {
-  const { siteConfig } = useDocusaurusContext()
   return (
     <Layout
       title={`Documentation`}
-      description="Complete documentation for Spotify Clone - open source music streaming platform built with modern web technologies"
+      description="Complete documentation for Bitrate - open source music streaming platform built with modern web technologies"
     >
       <HomepageHeader />
       <main>

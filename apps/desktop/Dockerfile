@@ -2,16 +2,17 @@
 # Используется в основном для CI/CD и кросс-компиляции
 
 # Stage 1: Base
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 WORKDIR /app
 
 # Stage 2: Dependencies (Node.js)
 FROM base AS node-dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts ./scripts
 COPY apps/desktop/package.json ./apps/desktop/
 COPY turbo.json ./
-RUN pnpm install --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 # Stage 3: Rust Build Environment (для production сборки)
 FROM rustlang/rust:nightly-alpine AS rust-builder
@@ -34,7 +35,6 @@ WORKDIR /app
 
 # Копирование исходников
 COPY --from=node-dependencies /app/node_modules ./node_modules
-COPY --from=node-dependencies /app/apps/desktop/node_modules ./apps/desktop/node_modules
 COPY . .
 
 # Сборка приложения
@@ -51,7 +51,6 @@ RUN apk add --no-cache \
     supervisor
 
 COPY --from=node-dependencies /app/node_modules ./node_modules
-COPY --from=node-dependencies /app/apps/desktop/node_modules ./apps/desktop/node_modules
 COPY . .
 
 # VNC настройка
@@ -67,7 +66,6 @@ CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 # Stage 5: Development (только веб-сервер для разработки UI)
 FROM base AS development
 COPY --from=node-dependencies /app/node_modules ./node_modules
-COPY --from=node-dependencies /app/apps/desktop/node_modules ./apps/desktop/node_modules
 COPY . .
 
 EXPOSE 1420
@@ -103,14 +101,15 @@ RUN cargo install tauri-cli
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY scripts ./scripts
 COPY apps/desktop/package.json ./apps/desktop/
-RUN pnpm install --frozen-lockfile
+RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 COPY . .
 
 # Сборка
 WORKDIR /app/apps/desktop
-RUN pnpm run tauri build
+RUN rm -f src-tauri/Cargo.lock && pnpm run tauri build
 
 # Артефакты будут в src-tauri/target/release/bundle/
 CMD ["sh"]

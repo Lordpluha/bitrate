@@ -1,8 +1,8 @@
 'use client'
 
+import { AlignJustify, cn, X } from '@bitrate/ui-react'
 import { ThemeSwitcher } from '@features/SwitchTheme'
 import { Logo } from '@shared/ui'
-import { AlignJustify, cn, X } from '@spotify/ui-react'
 import { useEffect, useState } from 'react'
 
 import { AuthButtons } from './AuthButtons/AuthButtons'
@@ -37,7 +37,7 @@ export const Header = () => {
           <ul
             className={cn(
               'flex items-center gap-16 transition-all duration-300',
-              'max-lg:fixed max-lg:top-0 max-lg:right-0 max-lg:bottom-0 max-lg:h-screen max-lg:w-full max-lg:z-10',
+              'max-lg:fixed max-lg:top-0 max-lg:right-0 max-lg:bottom-0 max-lg:h-screen max-lg:w-full max-lg:z-10 max-lg:!bg-background ',
               'max-lg:bg-[color:var(--color-bg)] max-lg:flex-col max-lg:justify-center',
               isNav ? 'max-lg:left-0' : 'max-lg:left-[-100%]',
             )}

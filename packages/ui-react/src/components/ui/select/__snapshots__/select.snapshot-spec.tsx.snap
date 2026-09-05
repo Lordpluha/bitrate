@@ -1,0 +1,109 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Select snapshots > matches snapshot — closed trigger 1`] = `
+<button
+  aria-expanded="false"
+  aria-haspopup="listbox"
+  class="flex h-10 w-full items-center justify-between rounded-md border border-overlay-trigger-border bg-overlay-trigger-surface px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+  data-placeholder=""
+  role="combobox"
+  tabindex="0"
+  type="button"
+>
+  <span
+    data-placeholder=""
+  >
+    Pick one
+  </span>
+  <svg
+    aria-hidden="true"
+    class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+    fill="none"
+    height="24"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="m6 9 6 6 6-6"
+    />
+  </svg>
+</button>
+`;
+
+exports[`Select snapshots > matches snapshot — open state 1`] = `
+<div>
+  <button
+    aria-controls="base-ui-_r_2_-list"
+    aria-expanded="true"
+    aria-haspopup="listbox"
+    class="flex h-10 w-full items-center justify-between rounded-md border border-overlay-trigger-border bg-overlay-trigger-surface px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+    data-base-ui-inert=""
+    data-placeholder=""
+    data-popup-open=""
+    data-pressed=""
+    role="combobox"
+    tabindex="0"
+    type="button"
+  >
+    <span
+      data-placeholder=""
+    >
+      Pick one
+    </span>
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="m6 9 6 6 6-6"
+      />
+    </svg>
+  </button>
+  <span
+    aria-hidden="true"
+    data-base-ui-inert=""
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px;"
+    tabindex="-1"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    data-type="outside"
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+  <span
+    aria-owns="_r_4_"
+    data-base-ui-inert=""
+    style="clip-path: inset(50%); position: fixed; top: 0px; left: 0px;"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    data-type="outside"
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+  <input
+    aria-hidden="true"
+    data-base-ui-inert=""
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="-1"
+    value=""
+  />
+</div>
+`;

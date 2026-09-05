@@ -1,11 +1,19 @@
 @import "tailwindcss";
-@import "@spotify/ui-react/globals.css";
+@import "@bitrate/ui-react/themes.css";
+@import "./brand-colors.css";
 
 @source "../";
-@source "@spotify/ui-react/src";
+@source "../../node_modules/@bitrate/ui-react/src";
+
+/* Touch-device variant — replaces JS useIsTouchDevice */
+@custom-variant touch (@media (hover: none) and (pointer: coarse));
 
 @theme {
-  /* Breakpoints */
+  /*
+   * Breakpoints — these SHADOW the set in @bitrate/ui-react's layout.css, and three of the
+   * six differ (xs 480 vs 320, sm 650 vs 640, lg 1025 vs 1024). A ui-react component's `sm:`
+   * therefore breaks at a different width here than it does in Storybook. Unreconciled.
+   */
   --breakpoint-xs: 480px;
   --breakpoint-sm: 650px;
   --breakpoint-md: 768px;
@@ -20,6 +28,55 @@
     font-family: var(--font-source-sans);
   }
 
+  /*
+   * Light theme type weight.
+   *
+   * Dark text on a light ground is rendered with subpixel antialiasing, which
+   * thickens every stroke: the same weight that reads as confident on the dark
+   * theme reads as heavy-handed here. Grayscale smoothing thins the strokes
+   * back, and the bold range steps down one notch so headings keep their
+   * hierarchy without turning into slabs. Both are scoped to the light theme —
+   * applying them to light-on-dark text would make it look washed out instead.
+   */
+  :root.light {
+    --font-weight-semibold: 500;
+    --font-weight-bold: 600;
+    --font-weight-extrabold: 700;
+    --font-weight-black: 800;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    [role="menuitem"],
+    [role="option"],
+    [role="tab"]
+  ):focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override scrolling utilities. */
+      scroll-behavior: auto !important;
+      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override animation utilities. */
+      animation-duration: 0.01ms !important;
+      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override animation utilities. */
+      animation-iteration-count: 1 !important;
+      /* biome-ignore lint/complexity/noImportantStyles: Accessibility preferences must override transition utilities. */
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   /* Custom scrollbar styles */
   ::-webkit-scrollbar {
     width: 12px;
@@ -31,22 +88,22 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #4a4a4a;
-    border-radius: 6px;
-    border: 2px solid transparent;
+    background: var(--color-scrollbar-thumb);
     background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 6px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #5a5a5a;
-    border: 2px solid transparent;
+    background: var(--color-scrollbar-thumb-hover);
     background-clip: padding-box;
+    border: 2px solid transparent;
   }
 
   /* Firefox scrollbar */
   * {
+    scrollbar-color: var(--color-scrollbar-thumb) transparent;
     scrollbar-width: thin;
-    scrollbar-color: #4a4a4a transparent;
   }
 }
 
@@ -63,17 +120,17 @@
     }
   }
 
-  .bg-auth-spotify {
+  .bg-auth-brand {
     background-image: linear-gradient(
       30deg,
-      #0c7832,
-      #601e7a,
-      #121212,
-      #820c17,
-      #0c7832,
-      #601e7a,
-      #121212,
-      #820c17
+      var(--color-auth-gradient-green),
+      var(--color-auth-gradient-purple),
+      var(--color-auth-gradient-ink),
+      var(--color-auth-gradient-red),
+      var(--color-auth-gradient-green),
+      var(--color-auth-gradient-purple),
+      var(--color-auth-gradient-ink),
+      var(--color-auth-gradient-red)
     );
   }
 

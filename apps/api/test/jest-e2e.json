@@ -2,16 +2,18 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": "..",
   "testEnvironment": "node",
+  "maxWorkers": 1,
   "setupFiles": ["<rootDir>/test/jest.setup.ts"],
   "testMatch": ["<rootDir>/test/e2e/**/*.e2e-spec.ts"],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
+  "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib)/)"],
   "moduleNameMapper": {
     "^src/(.*)$": "<rootDir>/src/$1",
     "^@modules/(.*)$": "<rootDir>/src/modules/$1",
     "^@infra/(.*)$": "<rootDir>/src/infra/$1",
     "^@common/(.*)$": "<rootDir>/src/common/$1",
-    "^@test/(.*)$": "<rootDir>/../test/$1"
+    "^@test/(.*)$": "<rootDir>/test/$1"
   }
 }

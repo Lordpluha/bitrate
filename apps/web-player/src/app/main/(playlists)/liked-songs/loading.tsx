@@ -1,0 +1,22 @@
+import { Spinner } from '@bitrate/ui-react'
+import { PlaylistHeader } from '@views/Playlist/ui/PlaylistHeader'
+
+export default function Loading() {
+  return (
+    <>
+      <PlaylistHeader
+        author="Your Library"
+        duration={0}
+        imageUrl="/images/liked-songs.svg"
+        title="Liked Songs"
+        tracksCount={0}
+        type="Playlist"
+      />
+      <div className="flex justify-center items-center h-64">
+        <div className="text-text">
+          <Spinner />
+        </div>
+      </div>
+    </>
+  )
+}

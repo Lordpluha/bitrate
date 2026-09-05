@@ -1,91 +1,31 @@
 'use client'
 
-import { play, setPlaylist } from '@entities/Player'
-import { useAppDispatch } from '@shared/hooks'
-import { useTracks } from '@shared/hooks/useTracks'
-import { ITrack } from '@shared/types'
-import React, { useEffect } from 'react'
-import { PlaylistHeader } from './PlaylistHeader'
-import { Track, TracksList } from './TracksList'
+import { usePlaylist } from '@/entities/Playlist'
+import { PlaylistContent } from '@/views/Playlist/ui/PlaylistContent'
+import {
+  PlaylistLoadError,
+  PlaylistLoading,
+} from '@/views/Playlist/ui/PlaylistLoadStates'
 
-export const PlaylistPage: React.FC = () => {
-  const dispatch = useAppDispatch()
-  const { data, isPending } = useTracks()
+type PlaylistPageProps = {
+  playlistId: string
+}
 
-  const tracks = (data as any)?.data || data || []
-  const tracksArray = Array.isArray(tracks) ? tracks : []
+export const PlaylistPage = ({ playlistId }: PlaylistPageProps) => {
+  const { data: playlist, error, isPending, refetch } = usePlaylist(playlistId)
 
-  useEffect(() => {
-    if (tracksArray && tracksArray.length > 0) {
-      const iTracks = tracksArray.map((track) => ({
-        id: track.id,
-        title: track.title,
-        audioUrl: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
-        cover: track.cover,
-        createdAt: track.createdAt,
-        artistId: track.artistId || '',
-        artist: (track as any).artist || 'Unknown Artist',
-        duration: (track as any).duration || 0,
-        name: track.title,
-        file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
-      }))
-      dispatch(setPlaylist(iTracks as any))
-    }
-  }, [tracksArray, dispatch])
+  if (isPending) return <PlaylistLoading />
 
-  if (isPending) {
+  if (!playlist) {
     return (
-      <div className="h-full overflow-y-auto custom-scrollbar">
-        <PlaylistHeader
-          title="Loading..."
-          type="Playlist"
-          imageUrl="/images/drive-cover-big.jpg"
-          author="Loading..."
-          songsCount={0}
-          tracksCount={0}
-          duration="0 min"
-        />
-        <div className="flex justify-center items-center h-64">
-          <div className="text-text">Loading tracks...</div>
-        </div>
-      </div>
+      <PlaylistLoadError
+        error={error}
+        onRetry={() => {
+          void refetch()
+        }}
+      />
     )
   }
 
-  const handlePlayTrack = (track: Track) => {
-    const iTrack: ITrack = {
-      id: track.id,
-      title: track.title,
-      audioUrl: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
-      cover: track.cover,
-      createdAt: track.createdAt || new Date().toISOString(),
-      artistId: track.artistId || '',
-      artist:
-        (track as any).artist?.name ||
-        (track as any).artist ||
-        'Unknown Artist',
-      duration: (track as any).duration || 0,
-      name: track.title,
-      file: `${process.env.NEXT_PUBLIC_API_URL}tracks/stream/${track.id}`,
-      lyrics: null,
-      releaseDate: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-    dispatch(play(iTrack))
-  }
-
-  return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <PlaylistHeader
-        title="All Tracks"
-        type="Playlist"
-        imageUrl="/images/drive-cover-big.jpg"
-        author="Music Library"
-        songsCount={0}
-        tracksCount={tracksArray?.length || 0}
-        duration="6 hr 30 min"
-      />
-      <TracksList tracks={tracksArray} onPlayTrack={handlePlayTrack} />
-    </div>
-  )
+  return <PlaylistContent key={playlist.id} playlist={playlist} />
 }

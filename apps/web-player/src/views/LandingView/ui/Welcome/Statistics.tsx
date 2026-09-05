@@ -27,7 +27,7 @@ export const Statistics = () => {
         ))}
       </div>
       <span className="text-sm text-text font-medium">
-        517.69 million+ <br /> Spotify users worldwide
+        Artists and listeners, <br /> in one place
       </span>
     </div>
   )

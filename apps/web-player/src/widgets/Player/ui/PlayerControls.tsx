@@ -1,15 +1,16 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Shuffle,
-  Repeat,
-} from 'lucide-react'
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
+import { Pause, Play, Repeat, Repeat1, Shuffle } from 'lucide-react'
+import { usePlayerNavigationTracks } from '@/widgets/Player/model/usePlayerNavigationTracks'
+import { PlaybackProgress } from '@/widgets/Player/ui/PlaybackProgress'
+import { TrackNavigationButton } from '@/widgets/Player/ui/TrackNavigationButton'
+
+const repeatLabels: Record<'off' | 'all' | 'one', string> = {
+  all: 'Repeat one track',
+  off: 'Repeat playlist',
+  one: 'Disable repeat',
+}
 
 interface PlayerControlsProps {
   isPlaying: boolean
@@ -25,7 +26,7 @@ interface PlayerControlsProps {
   onRepeatToggle?: () => void
 }
 
-export const PlayerControls: React.FC<PlayerControlsProps> = ({
+export const PlayerControls = ({
   isPlaying,
   currentTime,
   duration,
@@ -37,143 +38,73 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   repeatMode = 'off',
   onShuffleToggle,
   onRepeatToggle,
-}) => {
-  const progressBarRef = useRef<HTMLDivElement>(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const [seekTime, setSeekTime] = useState<number | null>(null)
-
-  const formatTime = (seconds: number) => {
-    if (isNaN(seconds) || !isFinite(seconds)) return '0:00'
-    const mins = Math.floor(seconds / 60)
-    const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
-
-  const calculateTime = (e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
-    if (!progressBarRef.current || !duration) return null
-
-    const rect = progressBarRef.current.getBoundingClientRect()
-    const clickX = e.clientX - rect.left
-    const percentage = Math.max(0, Math.min(1, clickX / rect.width))
-    return percentage * duration
-  }
-
-  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging) return
-    const newTime = calculateTime(e)
-    if (newTime !== null) {
-      onSeek(newTime)
-    }
-  }
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsDragging(true)
-    const newTime = calculateTime(e)
-    if (newTime !== null) {
-      setSeekTime(newTime)
-    }
-  }
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return
-    const newTime = calculateTime(e)
-    if (newTime !== null) {
-      setSeekTime(newTime)
-    }
-  }
-
-  const handleMouseUp = () => {
-    if (isDragging && seekTime !== null) {
-      onSeek(seekTime)
-    }
-    setIsDragging(false)
-    setSeekTime(null)
-  }
-
-  React.useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove)
-        document.removeEventListener('mouseup', handleMouseUp)
-      }
-    }
-  }, [isDragging])
+}: PlayerControlsProps) => {
+  const { nextTrack, previousTrack } = usePlayerNavigationTracks()
 
   return (
-    <div className="flex-1 flex flex-col items-center gap-2 max-w-[722px]">
+    <div className="flex-1 flex flex-col items-center gap-2 max-w-180.5">
       <div className="flex items-center gap-4">
         <button
-          onClick={onShuffleToggle}
+          aria-label={isShuffled ? 'Disable shuffle' : 'Enable shuffle'}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            isShuffled ? 'text-green-500' : 'text-gray-400',
+            isShuffled ? 'text-green-500' : 'text-text-subdued',
           )}
+          disabled={!onShuffleToggle}
+          onClick={onShuffleToggle}
+          type="button"
         >
           <Shuffle size={16} />
         </button>
 
-        <button
+        <TrackNavigationButton
+          direction="previous"
           onClick={onPrevious}
-          className="p-1 text-gray-400 hover:text-white hover:scale-110 transition-all"
-        >
-          <SkipBack size={20} />
-        </button>
+          track={previousTrack}
+        />
 
         <button
+          aria-label={isPlaying ? 'Pause' : 'Play'}
+          className="w-8 h-8 rounded-full bg-text hover:scale-105 transition-transform flex items-center justify-center"
           onClick={onPlayPause}
-          className="w-8 h-8 rounded-full bg-white hover:scale-105 transition-transform flex items-center justify-center"
+          type="button"
         >
           {isPlaying ? (
-            <Pause size={20} className="text-black" fill="black" />
+            <Pause className="text-background" fill="currentColor" size={20} />
           ) : (
-            <Play size={20} className="text-black ml-0.5" fill="black" />
+            <Play
+              className="text-background ml-0.5"
+              fill="currentColor"
+              size={20}
+            />
           )}
         </button>
 
-        <button
+        <TrackNavigationButton
+          direction="next"
           onClick={onNext}
-          className="p-1 text-gray-400 hover:text-white hover:scale-110 transition-all"
-        >
-          <SkipForward size={20} />
-        </button>
+          track={nextTrack}
+        />
 
         <button
-          onClick={onRepeatToggle}
+          aria-label={repeatLabels[repeatMode]}
           className={cn(
             'p-1 hover:scale-110 transition-transform',
-            repeatMode !== 'off' ? 'text-green-500' : 'text-gray-400',
+            repeatMode !== 'off' ? 'text-green-500' : 'text-text-subdued',
           )}
+          disabled={!onRepeatToggle}
+          onClick={onRepeatToggle}
+          type="button"
         >
-          <Repeat size={16} />
+          {repeatMode === 'one' ? <Repeat1 size={16} /> : <Repeat size={16} />}
         </button>
       </div>
 
-      <div className="flex items-center gap-2 w-full">
-        <span className="text-xs text-gray-400 min-w-[40px] text-right">
-          {formatTime(seekTime !== null ? seekTime : currentTime)}
-        </span>
-        <div
-          ref={progressBarRef}
-          className="flex-1 h-1 bg-gray-600 rounded-full cursor-pointer group relative"
-          onMouseDown={handleMouseDown}
-          onClick={handleProgressClick}
-        >
-          <div
-            className="absolute top-0 left-0 h-full bg-white group-hover:bg-green-500 rounded-full pointer-events-none transition-colors"
-            style={{
-              width: `${duration && isFinite(duration) ? ((seekTime !== null ? seekTime : currentTime) / duration) * 100 : 0}%`,
-            }}
-          >
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-          </div>
-        </div>
-        <span className="text-xs text-gray-400 min-w-[40px]">
-          {formatTime(duration)}
-        </span>
-      </div>
+      <PlaybackProgress
+        currentTime={currentTime}
+        duration={duration}
+        onSeek={onSeek}
+      />
     </div>
   )
 }

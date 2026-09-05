@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the get user by username swagger operation. */
 export function GetUserByUsernameSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get user by username' }),

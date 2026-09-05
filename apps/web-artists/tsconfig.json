@@ -18,9 +18,15 @@
         "name": "next"
       }
     ],
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@*": ["./src/*"]
+      "@app/*": ["./src/*"],
+      "@views/*": ["./src/views/*"],
+      "@widgets/*": ["./src/widgets/*"],
+      "@features/*": ["./src/features/*"],
+      "@entities/*": ["./src/entities/*"],
+      "@shared/*": ["./src/shared/*"]
     }
   },
   "include": [

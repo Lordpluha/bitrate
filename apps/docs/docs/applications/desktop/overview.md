@@ -6,28 +6,28 @@ sidebar_position: 1
 
 Complete guide for developing and running the Tauri desktop application.
 
-## 📋 Содержание
+## 📋 Table of Contents
 
-- [🚀 Способы запуска](#-способы-запуска)
-  - [Локальный запуск](#вариант-1-локальный-запуск-рекомендуется)
-  - [Docker UI only](#вариант-2-docker-с-ui-только)
-  - [Docker с VNC](#вариант-3-docker-с-vnc)
-- [🔌 Доступные порты](#-доступные-порты)
-- [⚙️ Команды управления (VNC)](#️-команды-управления-vnc)
-- [🔧 Настройка](#-настройка)
-- [🔍 Отладка](#-отладка)
-- [🐛 Типичные проблемы](#-типичные-проблемы)
-- [📊 Сравнение вариантов](#-сравнение-вариантов)
+- [🚀 Run Options](#-run-options)
+  - [Local Run](#option-1-local-run-recommended)
+  - [Docker UI only](#option-2-docker-ui-only)
+  - [Docker with VNC](#option-3-docker-with-vnc)
+- [🔌 Available Ports](#-available-ports)
+- [⚙️ Management Commands (VNC)](#️-management-commands-vnc)
+- [🔧 Configuration](#-configuration)
+- [🔍 Debugging](#-debugging)
+- [🐛 Common Issues](#-common-issues)
+- [📊 Options Comparison](#-options-comparison)
 
 ---
 
-## 🚀 Способы запуска
+## 🚀 Run Options
 
-Desktop приложение можно запустить тремя способами:
+The desktop application can be run in three ways:
 
-### Вариант 1: Локальный запуск (рекомендуется)
+### Option 1: Local Run (recommended)
 
-**Установка системных зависимостей (один раз):**
+**Install system dependencies (once):**
 
 <details>
 <summary><b>Linux (Ubuntu/Debian)</b></summary>
@@ -56,15 +56,15 @@ source $HOME/.cargo/env
 <summary><b>Windows</b></summary>
 
 1. **Visual Studio 2022 Build Tools**
-   - Скачайте с [visualstudio.microsoft.com](https://visualstudio.microsoft.com/downloads/)
-   - Выберите "Desktop development with C++"
+   - Download from [visualstudio.microsoft.com](https://visualstudio.microsoft.com/downloads/)
+   - Select "Desktop development with C++"
 
-2. **WebView2 Runtime** (обычно уже установлен в Windows 11)
-   - Скачайте с [microsoft.com](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+2. **WebView2 Runtime** (usually already installed on Windows 11)
+   - Download from [microsoft.com](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 
 3. **Rust**
-   - Скачайте rustup-init.exe с https://rustup.rs/
-   - Запустите установщик
+   - Download rustup-init.exe from https://rustup.rs/
+   - Run the installer
 </details>
 
 <details>
@@ -80,131 +80,131 @@ source $HOME/.cargo/env
 ```
 </details>
 
-**Запуск приложения:**
+**Run the application:**
 
 ```bash
 cd apps/desktop
 pnpm install
-pnpm dev  # Запустит Tauri приложение с нативным окном
+pnpm dev  # Starts Tauri application with a native window
 ```
 
-**Преимущества:**
-- ✅ Полный функционал Tauri
-- ✅ Аппаратное ускорение GPU
-- ✅ Быстрый hot reload
-- ✅ Доступ ко всем нативным API
+**Advantages:**
+- ✅ Full Tauri functionality
+- ✅ GPU hardware acceleration
+- ✅ Fast hot reload
+- ✅ Access to all native APIs
 
 ---
 
-### Вариант 2: Docker с UI только
+### Option 2: Docker UI only
 
-Запускает только Vite dev server без Tauri backend.
+Runs only the Vite dev server without the Tauri backend.
 
 ```bash
-# Запуск Vite dev server в контейнере
+# Start Vite dev server in container
 docker compose --profile desktop up -d desktop
 
-# Откройте в браузере
+# Open in browser
 http://localhost:1420
 ```
 
-**Ограничения:**
-- ✅ Показывает React UI
-- ❌ Нет Tauri backend
-- ❌ Нет доступа к нативным API
+**Limitations:**
+- ✅ Shows React UI
+- ❌ No Tauri backend
+- ❌ No access to native APIs
 
 ---
 
-### Вариант 3: Docker с VNC
+### Option 3: Docker with VNC
 
-Полноценное Tauri приложение с GUI доступом через браузер.
+Full Tauri application with GUI access via browser.
 
-#### Быстрый старт
+#### Quick Start
 
 ```bash
-# Остановите обычный desktop контейнер если запущен
+# Stop the regular desktop container if running
 docker compose --profile desktop down
 
-# Запустите VNC версию
+# Start the VNC version
 cd apps/desktop
 docker compose -f docker-compose.vnc.yml up --build
 ```
 
-**⏱️ Первая сборка займет ~5-10 минут** (загрузка зависимостей, компиляция Rust).
+**⏱️ First build will take ~5-10 minutes** (downloading dependencies, compiling Rust).
 
-#### Доступ к приложению
+#### Accessing the application
 
-**1. noVNC (браузер) - проще всего**
+**1. noVNC (browser) - easiest**
 
 ```
 http://localhost:6080/vnc.html
 ```
 
-- Нажмите "Connect"
-- Введите пароль: `spotify`
-- Увидите рабочий стол с Tauri приложением
+- Click "Connect"
+- Enter password: `bitrate`
+- You will see the desktop with the Tauri application
 
-**2. VNC клиент (RealVNC, TigerVNC, Remmina)**
+**2. VNC client (RealVNC, TigerVNC, Remmina)**
 
 ```
 vnc://localhost:5900
 ```
 
-- Пароль: `spotify`
+- Password: `bitrate`
 
 ---
 
-## 🔌 Доступные порты
+## 🔌 Available Ports
 
-### Для Варианта 2 (Docker UI only)
+### For Option 2 (Docker UI only)
 
-| Порт | Назначение |
-|------|------------|
+| Port | Purpose |
+|------|---------|
 | 1420 | Vite dev server |
 
-### Для Варианта 3 (Docker VNC)
+### For Option 3 (Docker VNC)
 
-| Порт | Назначение |
-|------|------------|
-| 5900 | VNC сервер |
-| 6080 | noVNC (веб-интерфейс) |
+| Port | Purpose |
+|------|---------|
+| 5900 | VNC server |
+| 6080 | noVNC (web interface) |
 | 1421 | Vite dev server |
 
 ---
 
-## ⚙️ Команды управления (VNC)
+## ⚙️ Management Commands (VNC)
 
 ```bash
-# Запуск в фоне
+# Start in background
 docker compose -f docker-compose.vnc.yml up -d --build
 
-# Просмотр логов
+# View logs
 docker compose -f docker-compose.vnc.yml logs -f
 
-# Остановка
+# Stop
 docker compose -f docker-compose.vnc.yml down
 
-# Вход в контейнер
+# Enter container
 docker compose -f docker-compose.vnc.yml exec desktop-vnc bash
 
-# Пересборка без кэша
+# Rebuild without cache
 docker compose -f docker-compose.vnc.yml build --no-cache
 ```
 
 ---
 
-## 🔧 Настройка
+## 🔧 Configuration
 
-### Изменение разрешения экрана (VNC)
+### Changing screen resolution (VNC)
 
-В файле `apps/desktop/docker-compose.vnc.yml`:
+In `apps/desktop/docker-compose.vnc.yml`:
 
 ```yaml
 environment:
-  - RESOLUTION=1920x1080x24  # измените на нужное
+  - RESOLUTION=1920x1080x24  # change to desired
 ```
 
-Доступные разрешения:
+Available resolutions:
 - `1920x1080x24` (Full HD)
 - `1280x720x24` (HD)
 - `2560x1440x24` (2K)
@@ -212,15 +212,15 @@ environment:
 
 ---
 
-## 🔍 Отладка
+## 🔍 Debugging
 
-### Проверка процессов (VNC)
+### Check processes (VNC)
 
 ```bash
 docker compose -f docker-compose.vnc.yml exec desktop-vnc ps aux | grep -E "Xvfb|x11vnc|tauri"
 ```
 
-### Ручной запуск приложения
+### Manual application start
 
 ```bash
 docker compose -f docker-compose.vnc.yml exec desktop-vnc bash
@@ -228,13 +228,13 @@ cd /app/apps/desktop
 pnpm tauri dev
 ```
 
-### Проверка VNC
+### Check VNC
 
 ```bash
 curl http://localhost:6080
 ```
 
-### Просмотр логов Tauri
+### View Tauri logs
 
 ```bash
 docker compose -f docker-compose.vnc.yml logs | grep tauri
@@ -242,109 +242,109 @@ docker compose -f docker-compose.vnc.yml logs | grep tauri
 
 ---
 
-## 🐛 Типичные проблемы
+## 🐛 Common Issues
 
-### Черный экран в VNC
+### Black screen in VNC
 
-**Причина:** Xvfb медленно запускается при первом старте.
+**Cause:** Xvfb starts slowly on first boot.
 
-**Решение:**
-- Подождите 30-60 секунд после подключения
-- Проверьте логи: `docker compose -f docker-compose.vnc.yml logs -f`
-- Убедитесь что Xvfb запущен: `docker compose exec desktop-vnc ps aux | grep Xvfb`
+**Solution:**
+- Wait 30-60 seconds after connecting
+- Check logs: `docker compose -f docker-compose.vnc.yml logs -f`
+- Make sure Xvfb is running: `docker compose exec desktop-vnc ps aux | grep Xvfb`
 
-### Ошибка "port is already allocated"
+### Error "port is already allocated"
 
-**Причина:** Порт занят другим контейнером.
+**Cause:** Port is occupied by another container.
 
-**Решение:**
+**Solution:**
 ```bash
-# Остановите обычный desktop контейнер
+# Stop the regular desktop container
 docker compose --profile desktop down
 
-# Или измените порты в docker-compose.vnc.yml
+# Or change ports in docker-compose.vnc.yml
 ```
 
-### Приложение не появляется
+### Application doesn't appear
 
-**Причина:** Tauri не запустился или упал.
+**Cause:** Tauri did not start or crashed.
 
-**Решение:**
+**Solution:**
 ```bash
-# Проверьте что Tauri запустился
+# Check if Tauri started
 docker compose -f docker-compose.vnc.yml logs | grep tauri
 
-# Войдите в контейнер и запустите вручную
+# Enter container and start manually
 docker compose -f docker-compose.vnc.yml exec desktop-vnc bash
 cd /app/apps/desktop
 pnpm tauri dev
 ```
 
-### VNC не подключается
+### VNC won't connect
 
-**Решение:**
+**Solution:**
 ```bash
-# Проверьте что контейнер запущен
+# Check if container is running
 docker compose -f docker-compose.vnc.yml ps
 
-# Проверьте логи VNC сервера
+# Check VNC server logs
 docker compose -f docker-compose.vnc.yml logs | grep x11vnc
 
-# Перезапустите
+# Restart
 docker compose -f docker-compose.vnc.yml restart
 ```
 
-### Медленная работа
+### Slow performance
 
-**Причина:** VNC работает без GPU ускорения.
+**Cause:** VNC runs without GPU acceleration.
 
-**Решение:**
-- Это ожидаемо для VNC режима
-- Для быстрой разработки используйте локальный запуск
-- VNC предназначен для CI/CD или демонстрации
+**Solution:**
+- This is expected for VNC mode
+- For fast development, use local execution
+- VNC is intended for CI/CD or demonstrations
 
 ---
 
-## 📊 Сравнение вариантов
+## 📊 Options Comparison
 
-| Способ | Tauri Backend | GUI | Hot Reload | Сложность | Скорость | Размер образа |
-|--------|---------------|-----|------------|-----------|----------|---------------|
-| **Локально** | ✅ | ✅ | ✅ | Низкая | Быстро | - |
-| **Docker UI** | ❌ | Браузер | ✅ | Низкая | Быстро | ~9.4 GB |
-| **Docker VNC** | ✅ | ✅ | ✅ | Средняя | Медленно | ~12.5 GB |
+| Method | Tauri Backend | GUI | Hot Reload | Complexity | Speed | Image Size |
+|--------|---------------|-----|------------|------------|-------|------------|
+| **Local** | ✅ | ✅ | ✅ | Low | Fast | - |
+| **Docker UI** | ❌ | Browser | ✅ | Low | Fast | ~9.4 GB |
+| **Docker VNC** | ✅ | ✅ | ✅ | Medium | Slow | ~12.5 GB |
 
-### Когда использовать каждый способ
+### When to use each option
 
-**Локальный запуск:**
-- ✅ Ежедневная разработка
-- ✅ Отладка Tauri функционала
-- ✅ Быстрая итерация
+**Local run:**
+- ✅ Daily development
+- ✅ Debugging Tauri functionality
+- ✅ Fast iteration
 
 **Docker UI only:**
-- ✅ Тестирование React компонентов
-- ✅ UI разработка без Tauri
-- ✅ Быстрый просмотр изменений
+- ✅ Testing React components
+- ✅ UI development without Tauri
+- ✅ Quick preview of changes
 
 **Docker VNC:**
-- ✅ CI/CD тестирование GUI
-- ✅ Демонстрация приложения
-- ✅ Разработка на удаленном сервере
-- ✅ Нет локального GUI окружения
+- ✅ CI/CD GUI testing
+- ✅ Application demonstrations
+- ✅ Development on a remote server
+- ✅ No local GUI environment
 
 ---
 
-## 📚 Дополнительные ресурсы
+## 📚 Additional Resources
 
 - [Tauri Documentation](https://tauri.app/)
 - [Rust Documentation](https://doc.rust-lang.org/)
-- VNC README (`apps/desktop/VNC-README.md`) - подробная документация по VNC
+- VNC README (`apps/desktop/VNC-README.md`) - detailed VNC documentation
 - [Vite Documentation](https://vitejs.dev/)
 
 ---
 
-## ⚡ Быстрые команды
+## ⚡ Quick Commands
 
-### Локальный запуск
+### Local run
 ```bash
 cd apps/desktop && pnpm dev
 ```
@@ -359,9 +359,9 @@ docker compose --profile desktop up -d desktop
 cd apps/desktop && docker compose -f docker-compose.vnc.yml up --build
 ```
 
-### Остановка
+### Stop
 ```bash
 docker compose --profile desktop down
-# или
+# or
 docker compose -f docker-compose.vnc.yml down
 ```

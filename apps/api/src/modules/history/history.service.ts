@@ -1,0 +1,97 @@
+import { normalizePagination } from '@common/pagination'
+import { PrismaService } from '@infra/prisma/prisma.service'
+import type { UserEntity } from '@modules/users'
+import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
+
+/** The track select value. */
+const TRACK_SELECT = {
+  id: true,
+  title: true,
+  cover: true,
+  duration: true,
+  artistId: true,
+  artist: { select: { id: true, username: true, avatar: true } },
+} as const
+
+/** Represents the history service. */
+@Injectable()
+export class HistoryService {
+  /** Creates a new instance. */
+  constructor(private readonly prisma: PrismaService) {}
+
+  /** Runs the record operation. */
+  async record(userId: UserEntity['id'], trackId: string) {
+    return await this.prisma.listeningHistory.create({
+      data: { userId, trackId },
+      select: { id: true, listenedAt: true },
+    })
+  }
+
+  /** Runs the get history operation. */
+  async getHistory(userId: UserEntity['id'], page = 1, limit = 20) {
+    const pagination = normalizePagination(page, limit)
+
+    const historyWhere = {
+      userId,
+      track: { processingStatus: 'READY' as const, deletedAt: null },
+    }
+    const [latestTracks, countRows] = await Promise.all([
+      this.prisma.listeningHistory.groupBy({
+        by: ['trackId'],
+        where: historyWhere,
+        _max: { listenedAt: true },
+        orderBy: [{ _max: { listenedAt: 'desc' } }, { trackId: 'asc' }],
+        skip: pagination.skip,
+        take: pagination.limit,
+      }),
+      this.prisma.queryRaw<Array<{ total: bigint }>>(Prisma.sql`
+        SELECT COUNT(DISTINCT h."trackId")::bigint AS total
+        FROM "ListeningHistory" h
+        JOIN "Track" t ON t.id = h."trackId"
+        WHERE h."userId" = ${userId}::uuid
+          AND t."processingStatus" = 'READY'
+          AND t."deletedAt" IS NULL
+      `),
+    ])
+    const total = Number(countRows[0]?.total ?? 0n)
+
+    const trackIds = latestTracks.map(({ trackId }) => trackId)
+    if (trackIds.length === 0) {
+      return {
+        data: [],
+        total,
+        page: pagination.page,
+        limit: pagination.limit,
+      }
+    }
+
+    const entries = await this.prisma.listeningHistory.findMany({
+      where: { ...historyWhere, trackId: { in: trackIds } },
+      orderBy: { listenedAt: 'desc' },
+      distinct: ['trackId'],
+      select: { id: true, listenedAt: true, trackId: true, track: { select: TRACK_SELECT } },
+    })
+
+    const byTrackId = new Map(entries.map((e) => [e.trackId, e]))
+    return {
+      data: trackIds.flatMap((id) => {
+        const entry = byTrackId.get(id)
+        return entry ? [entry] : []
+      }),
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+    }
+  }
+
+  /** Runs the clear all operation. */
+  async clearAll(userId: UserEntity['id']) {
+    await this.prisma.listeningHistory.deleteMany({ where: { userId } })
+  }
+
+  /** Runs the remove track operation. */
+  async removeTrack(userId: UserEntity['id'], trackId: string) {
+    await this.prisma.listeningHistory.deleteMany({ where: { userId, trackId } })
+  }
+}

@@ -1,3 +1,4 @@
+import { CacheModule } from '@infra/cache/cache.module'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { TokensModule } from '@modules/tokens/tokens.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
@@ -8,7 +9,7 @@ import { AlbumsService } from './albums.service'
 @Module({
   controllers: [AlbumsController],
   providers: [AlbumsService],
-  imports: [PrismaModule, UsersAuthModule, TokensModule],
+  imports: [PrismaModule, CacheModule, UsersAuthModule, TokensModule],
   exports: [AlbumsService],
 })
 export class AlbumsModule {}

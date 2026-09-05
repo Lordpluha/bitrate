@@ -14,7 +14,7 @@ function App() {
 
   return (
     <main className="container">
-      <h1>Welcome to @spotify/desktop</h1>
+      <h1>Welcome to @bitrate/desktop</h1>
 
       <div className="row">
         <a href="https://vite.dev" target="_blank" rel="noopener">

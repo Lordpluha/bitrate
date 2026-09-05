@@ -1,6 +1,8 @@
+import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
-import { INestApplication } from '@nestjs/common'
-import * as request from 'supertest'
+import type { INestApplication } from '@nestjs/common'
+import request from 'supertest'
+import { verifyArtistEmail } from '../helpers/db'
 import { closeE2eApp, createE2eApp } from './e2e-app'
 
 const makeRunId = () => Math.random().toString(36).slice(2, 8)
@@ -19,6 +21,8 @@ const registerAndLoginArtist = async () => {
     .post('/artists/auth/registration')
     .send(registration)
     .expect(201)
+
+  await verifyArtistEmail(app.get(PrismaService), registration.email)
 
   const loginResponse = await request(app.getHttpServer())
     .post('/artists/auth/login')
@@ -84,10 +88,10 @@ describe('AlbumsController (e2e)', () => {
       .query({ title: 'rock', page: 1, limit: 10 })
       .expect(200)
 
-    expect(Array.isArray(response.body)).toBe(true)
-    expect(response.body.length).toBeGreaterThan(0)
+    expect(Array.isArray(response.body.data)).toBe(true)
+    expect(response.body.data.length).toBeGreaterThan(0)
     expect(
-      response.body.some((album: { title?: string }) =>
+      response.body.data.some((album: { title?: string }) =>
         album.title?.toLowerCase().includes('rock'),
       ),
     ).toBe(true)
@@ -108,10 +112,10 @@ describe('AlbumsController (e2e)', () => {
       .query({ title: 'rock', page: 1, limit: 10 })
       .expect(200)
 
-    expect(Array.isArray(response.body)).toBe(true)
-    expect(response.body.length).toBeGreaterThan(0)
+    expect(Array.isArray(response.body.data)).toBe(true)
+    expect(response.body.data.length).toBeGreaterThan(0)
     expect(
-      response.body.some((album: { title?: string }) =>
+      response.body.data.some((album: { title?: string }) =>
         album.title?.toLowerCase().includes('rock'),
       ),
     ).toBe(true)

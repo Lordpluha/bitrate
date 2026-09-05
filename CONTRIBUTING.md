@@ -1,92 +1,91 @@
-# Contributing to Music Platform (Spotify Clone)
+# Contributing to Bitrate
 
-Спасибо за интерес к проекту! Мы рады любому вкладу - будь то исправление багов, новые фичи, улучшение документации или рефакторинг кода.
+Thank you for your interest in the project! We welcome any contribution — whether it's bug fixes, new features, documentation improvements, or code refactoring.
 
-## 📋 Содержание
+## 📋 Table of Contents
 
-- [Как начать](#как-начать)
+- [Getting Started](#getting-started)
 - [Git Workflow](#git-workflow)
 - [Commit Guidelines](#commit-guidelines)
 - [Branch Naming](#branch-naming)
 - [Code Style](#code-style)
 - [Pull Request Process](#pull-request-process)
 - [Testing](#testing)
+- [Agent Workflow](#agent-workflow)
+- [Architecture and UX](#architecture-and-ux)
 
 ---
 
-## 🚀 Как начать
+## 🚀 Getting Started
 
-1. **Fork репозитория** на GitHub
-2. **Клонируйте** свой fork:
+1. **Fork the repository** on GitHub
+2. **Clone** your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/spotify-clone.git
-   cd spotify-clone
+   git clone https://github.com/YOUR_USERNAME/bitrate.git
+   cd bitrate
    ```
-3. **Установите зависимости**:
+3. **Install dependencies**:
    ```bash
    pnpm install
    ```
-4. **Создайте ветку** для ваших изменений:
+4. **Create a branch** for your changes:
    ```bash
    git checkout -b feat/your-feature-name
    ```
-5. **Сделайте изменения** и закоммитьте
-6. **Push** в свой fork:
+5. **Make changes** and commit
+6. **Push** to your fork:
    ```bash
-   pnpm push:web  # или другой вариант (см. ниже)
+   git push  # runs pre-push hook (full build)
+   # or WEB_ONLY=true git push  (web-player only)
    ```
-7. **Создайте Pull Request** в основной репозиторий
+7. **Create a Pull Request** to the main repository
 
 ---
 
 ## 📤 Git Workflow
 
-### Варианты push с разными уровнями проверок
+### Push options with different verification levels
 
-При выполнении `git push` автоматически запускается pre-push hook, который билдит проект. Доступны следующие варианты:
+When running `git push`, a pre-push hook is automatically triggered that builds the project. The following options are available:
 
-#### 🏗️ Полный билд монорепы (по умолчанию)
+#### 🏗️ Full monorepo build (default)
 ```bash
 git push
 ```
-Билдит все приложения в монорепе перед push. **Используйте перед созданием PR.**
+Builds all applications in the monorepo before push. **Use before creating a PR.**
 
-#### 🌐 Только веб-приложения (для веб-разработчиков)
-```bash
-pnpm push:web
-```
-или напрямую:
+#### 🌐 Web apps only (for web developers)
 ```bash
 WEB_ONLY=true git push
 ```
-Билдит только web-приложение, экономя время веб-разработчикам.
+Builds only api + web-player + ui-react, saving time for web developers.
 
-#### ⚡ Пропуск всех проверок
+#### ⚡ Skip all checks
 ```bash
-HUSKY=0 git push
+LEFTHOOK=0 git push
 ```
-Полностью отключает все husky hooks (билд, линтинг, коммит-проверки).
+Completely disables all lefthook hooks (build, linting, commit checks).
 
-**Рекомендации:**
-- Веб-разработчикам использовать `pnpm push:web` для экономии времени
-- Полный билд запускать **перед важными PR или релизами**
-- `HUSKY=0` использовать **только для hotfix** или срочных изменений документации
+**Recommendations:**
+- Web developers should use `WEB_ONLY=true git push` to save time
+- Run a full build **before important PRs or releases**
+- Use `LEFTHOOK=0` **only for hotfixes** or urgent documentation changes
 
 ---
 
 ## 💬 Commit Guidelines
 
-Проект использует [Conventional Commits](https://www.conventionalcommits.org/) с автоматической проверкой через `commitlint`.
+The project uses [Conventional Commits](https://www.conventionalcommits.org/) with automatic validation via `commitlint`.
 
-### Интерактивный режим (рекомендуется)
+### Interactive mode (recommended)
 
 ```bash
 pnpm commit
 ```
 
-Эта команда запустит интерактивный мастер создания коммита с подсказками.
+This command launches an interactive commit wizard with prompts.
 
-### Формат коммитов
+### Commit format
 
 ```
 <type>(<scope>): <subject>
@@ -96,65 +95,65 @@ pnpm commit
 <footer>
 ```
 
-**Примеры:**
+**Examples:**
 
 ```bash
-feat(web): добавить страницу плейлистов
-fix(api): исправить утечку памяти в auth middleware
-docs(readme): обновить инструкции по установке
-refactor(mobile): оптимизировать рендеринг списка треков
+feat(web-player): add playlist page
+fix(api): fix memory leak in auth middleware
+docs(readme): update installation instructions
+refactor(mobile): optimize track list rendering
 ```
 
-### Типы коммитов
+### Commit types
 
-| Тип | Описание |
-|-----|----------|
-| `feat` | Новая функциональность |
-| `fix` | Исправление бага |
-| `docs` | Только документация |
-| `style` | Форматирование кода (не влияет на поведение) |
-| `refactor` | Рефакторинг (без багфиксов/фич) |
-| `perf` | Оптимизация производительности |
-| `test` | Добавление/обновление тестов |
-| `build` | Изменения в сборке или зависимостях |
-| `ci` | Изменения в CI/CD конфигурации |
-| `chore` | Мелкие задачи, не влияющие на код |
-| `revert` | Откат изменений |
+| Type | Description |
+|------|-------------|
+| `feat` | New functionality |
+| `fix` | Bug fix |
+| `docs` | Documentation only |
+| `style` | Code formatting (no behavior change) |
+| `refactor` | Refactoring (no bugfixes/features) |
+| `perf` | Performance optimization |
+| `test` | Adding/updating tests |
+| `build` | Build or dependency changes |
+| `ci` | CI/CD configuration changes |
+| `chore` | Minor tasks with no code impact |
+| `revert` | Reverting changes |
 
-### Scopes (опционально)
+### Scopes (optional)
 
-Scope указывает на часть проекта:
-- `web` - Web приложение (Next.js)
-- `mobile` - Mobile приложение (React Native)
+Scope indicates the part of the project:
+- `web-player` - Web application (Next.js)
+- `mobile` - Mobile application (React Native)
 - `api` - Backend API (NestJS)
-- `admin` - Admin панель
-- `desktop` - Desktop приложение (Tauri)
-- `docs` - Документация
-- `contracts` - API контракты
-- `ui` - UI компоненты
-- `infra` - Инфраструктура (Docker, CI/CD)
+- `desktop` - Desktop application (Tauri)
+- `docs` - Documentation
+- `contracts` - API contracts
+- `ui-react` - Shared UI component library
+- `tokens` - Design tokens
+- `ci` - CI/CD configuration
 
 ### Breaking Changes
 
-Для breaking changes добавьте `!` после type/scope или используйте footer:
+For breaking changes, add `!` after type/scope or use the footer:
 
 ```bash
-feat(api)!: изменить формат ответа /auth/login
+feat(api)!: change response format for /auth/login
 
-BREAKING CHANGE: поле `user` теперь называется `userData`
+BREAKING CHANGE: the `user` field is now called `userData`
 ```
 
 ---
 
 ## 🌿 Branch Naming
 
-Используйте следующий формат для веток:
+Use the following format for branches:
 
 ```
 <type>/<short-description>
 ```
 
-**Примеры:**
+**Examples:**
 
 ```bash
 feat/add-playlist-page
@@ -164,143 +163,234 @@ refactor/optimize-track-list
 chore/upgrade-dependencies
 ```
 
-**Типы веток:**
-- `feat/` - новая функциональность
-- `fix/` - исправление бага
-- `docs/` - документация
-- `refactor/` - рефакторинг
-- `chore/` - технические задачи
-- `test/` - добавление тестов
-- `hotfix/` - срочное исправление в продакшене
+**Branch types:**
+- `feat/` - new functionality
+- `fix/` - bug fix
+- `docs/` - documentation
+- `refactor/` - refactoring
+- `chore/` - technical tasks
+- `test/` - adding tests
+- `hotfix/` - urgent production fix
 
 ---
 
 ## 🎨 Code Style
 
-Проект использует **Biome** для линтинга и форматирования кода.
+The project uses **Biome** for linting and code formatting.
 
-### Автоматическое форматирование
+[`CODE_STYLE.md`](CODE_STYLE.md) is the stable entry point. The complete rules live in
+[`CLAUDE.md`](CLAUDE.md) and [`.claude/rules/`](.claude/rules/).
+
+### Automatic formatting
 
 ```bash
-# Проверить код
+# Check code
 pnpm lint
 
-# Исправить автоматически
+# Fix automatically
 pnpm format
 ```
 
-### Pre-commit hook
+### Git hooks
 
-При коммите автоматически запускается `lint-staged`, который форматирует измененные файлы.
+Lefthook validates commits and performs the configured pre-push build. Do not rely on hooks
+as the only verification; run the relevant package checks before opening a PR.
 
-### Основные правила
+### Main rules
 
-- Используйте **TypeScript** для всего кода
-- **2 пробела** для отступов
-- **Одинарные кавычки** для строк
-- **Trailing commas** в объектах и массивах
-- **Semicolons** обязательны
-- Максимальная длина строки: **100 символов**
-- Используйте **async/await** вместо промисов
-- Именуйте переменные на **английском языке**
+- Use **TypeScript** for all code
+- **2 spaces** for indentation
+- **Single quotes** for strings
+- **Trailing commas** in objects and arrays
+- **No semicolons**
+- Maximum line length: **100 characters**
+- Use **async/await** instead of promises
+- Name variables in **English**
 
 ---
 
 ## 🔄 Pull Request Process
 
-### Перед созданием PR
+### Before creating a PR
 
-1. **Убедитесь, что код работает:**
+1. **Make sure the code works:**
    ```bash
-   pnpm dev  # Запустите проект локально
+   pnpm dev  # Run the project locally
    ```
 
-2. **Запустите тесты:**
+2. **Run relevant tests:**
    ```bash
-   pnpm test  # Если есть тесты для вашего изменения
+   pnpm --filter @bitrate/api test
+   pnpm --filter @bitrate/ui-react test
    ```
 
-3. **Проверьте линтинг:**
+3. **Check linting and types:**
    ```bash
    pnpm lint
+   pnpm check-types
    ```
 
-4. **Выполните полный билд:**
+4. **Check unused code when exports/dependencies changed:**
    ```bash
-   git push  # Запустит pre-push hook с билдом
+   pnpm knip
    ```
 
-### Создание PR
-
-1. **Заголовок** должен быть описательным:
-   ```
-   feat(web): добавить страницу плейлистов
+5. **Run a full build:**
+   ```bash
+   git push  # Runs pre-push hook with build
    ```
 
-2. **Описание** должно содержать:
-   - Что изменено и почему
-   - Скриншоты (для UI изменений)
-   - Ссылку на связанную issue (если есть)
+### Creating a PR
 
-3. **Чеклист:**
-   - [ ] Код следует code style проекта
-   - [ ] Добавлены/обновлены тесты (если применимо)
-   - [ ] Документация обновлена (если применимо)
-   - [ ] Все тесты проходят
-   - [ ] Билд проходит успешно
-   - [ ] Проверено локально
+1. **Title** should be descriptive:
+   ```
+   feat(web-player): add playlist page
+   ```
+
+2. **Description** should contain:
+   - What changed and why
+   - Screenshots (for UI changes)
+   - Link to related issue (if any)
+
+3. **Checklist:**
+   - [ ] Code follows project code style
+   - [ ] Tests added/updated (if applicable)
+   - [ ] Documentation updated (if applicable)
+   - [ ] All tests pass
+   - [ ] Build passes successfully
+   - [ ] Verified locally
 
 ### Code Review
 
-- Будьте открыты к конструктивной критике
-- Отвечайте на комментарии ревьюеров
-- Вносите запрошенные изменения
+- Be open to constructive criticism
+- Respond to reviewer comments
+- Make requested changes
 
 ---
 
 ## 🧪 Testing
 
-### Запуск тестов
+### Running tests
 
 ```bash
-# Unit тесты (Vitest/Jest)
-pnpm test
+# API tests
+pnpm --filter @bitrate/api test        # unit
+pnpm --filter @bitrate/api test:int    # integration (no real DB needed — uses prismaMock)
+pnpm --filter @bitrate/api test:e2e    # E2E
 
-# E2E тесты (Playwright)
-cd apps/web
-pnpm test:e2e
+# Shared UI tests
+pnpm --filter @bitrate/ui-react test
+pnpm --filter @bitrate/ui-react test:unit
+pnpm --filter @bitrate/ui-react test:int
+pnpm --filter @bitrate/ui-react test:snapshot
+pnpm --filter @bitrate/ui-react test:screenshot
 
-# Mobile тесты
-cd apps/mobile
-pnpm test
+# Web player tests
+pnpm --filter @bitrate/web-player test:unit
+pnpm --filter @bitrate/web-player test:int
+pnpm --filter @bitrate/web-player test:e2e
+pnpm --filter @bitrate/web-player test:screenshot
+
 ```
 
-### Покрытие тестами
+### Test coverage
 
-Старайтесь покрывать тестами:
-- Критическую бизнес-логику
-- Utility функции
+Try to cover with tests:
+- Critical business logic
+- Utility functions
 - API endpoints
-- UI компоненты (интеграционные тесты)
+- UI components (integration tests)
+
+Test files follow the runner owned by their package. See
+[`apps/docs/docs/guides/testing.md`](apps/docs/docs/guides/testing.md).
+
+---
+
+## 🤖 Agent Workflow
+
+The optional repository agent layer lives under [`.claude/`](.claude/). Project agents use
+the same rules as human contributors:
+
+| Intent | Command |
+|---|---|
+| Draft or restructure a GitHub task against the whole board | `/sp-create-task "<idea>" [--dry-run]` |
+| Implement application or package work, then open/update the PR | `/sp-implement "<task>" [--session]` |
+| Drive `Todo`-column issues end to end, unattended | `/sp-auto [--limit N] [--issue NNN]` |
+| Find/fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, root onboarding docs (run periodically) | `/sp-sync-docs [--session]` |
+
+Ticket and board state aren't mirrored anywhere — these commands query GitHub live (via
+`gh`/MCP) whenever they need it. That requires the `gh` CLI, authenticated, with the
+`read:project` scope for board access (`gh auth refresh -s read:project,project`).
+
+All four commands dispatch to an agent by default now. `/sp-implement` routes to the
+specialist that owns the surface: `sp-frontend-developer` (web-player, web-artists,
+ui-react), `sp-backend-developer` (api), `sp-mobile-developer`, `sp-desktop-developer`,
+or `sp-devops` (CI, Docker, infra, release) — plus `sp-planner` for
+plans, `sp-debugger` for bug fixes, `sp-tester` for tests, and `sp-reviewer` for review
+(also auto-invoked on large diffs). `/sp-sync-docs` routes to `sp-librarian`; `/sp-auto`
+runs `sp-worker` in its own git worktree per issue. Pass `--session` on any of them to
+work in the current session instead. None of the specialists have their own slash command;
+each command is the single entrypoint that dispatches to its own. This also applies to
+ordinary tasks outside any command — see `CLAUDE.md`'s "Default to agent dispatch, even
+outside a command".
+
+For an effort too large or too vague for one command, install `mattpocock-skills`
+(`claude plugin install mattpocock-skills`): `/grill-me` interviews the idea into shape
+before planning, and `/wayfinder` charts a multi-session effort as decision tickets on the
+tracker.
+
+Agents confirm before every mutating GitHub action (board card moves, issue comments,
+`git push`, PR create/edit) — a prior approval in a conversation does not carry over to a
+later action. Agents do not create releases unless explicitly asked.
+
+---
+
+## 🏗️ Architecture and UX
+
+- Architecture decisions: [`apps/docs/docs/architecture/`](apps/docs/docs/architecture/)
+- Design specifications: [`apps/docs/docs/specs/`](apps/docs/docs/specs/)
+- Persistent implementation plans: [`apps/docs/docs/plans/`](apps/docs/docs/plans/)
+- Design token contract: [`apps/docs/docs/brand/tokens.md`](apps/docs/docs/brand/tokens.md)
+- Accessibility baseline: [`apps/docs/docs/brand/a11y.md`](apps/docs/docs/brand/a11y.md)
+- Working conventions: [`CLAUDE.md`](CLAUDE.md)
+
+New durable architectural choices should get an ADR. Cross-cutting designs may start as a
+spec and then an implementation plan. New visual values should enter
+`packages/tokens/tokens.json`, not component literals. User-facing web changes must preserve
+the WCAG 2.2 AA baseline.
+
+---
+
+## 📦 Versioning (Changesets)
+
+After making changes to a package, describe what changed:
+
+```bash
+pnpm changeset
+# Select affected packages → bump level (patch/minor/major)
+# Commit the generated .changeset/*.md file alongside your code
+```
+
+Skip this step only for `docs`, `ci`, or `chore` commits that don't affect package behaviour.
 
 ---
 
 ## 🤝 Community Guidelines
 
-- Будьте уважительны к другим участникам
-- Придерживайтесь [Code of Conduct](CODE_OF_CONDUCT.md)
-- Сообщайте об уязвимостях согласно [Security Policy](SECURITY.md)
-- Задавайте вопросы в Issues или Discussions
-- Помогайте другим участникам
+- Be respectful to other participants
+- Follow the [Code of Conduct](CODE_OF_CONDUCT.md)
+- Report vulnerabilities according to the [Security Policy](SECURITY.md)
+- Ask questions in Issues or Discussions
+- Help other participants
 
 ---
 
-## 📝 Лицензия
+## 📝 License
 
-Участвуя в этом проекте, вы соглашаетесь, что ваш код будет распространяться под лицензией [MIT](LICENSE).
+By contributing to this project, you agree that your code will be distributed under the [MIT](LICENSE) license.
 
 ---
 
-**Спасибо за ваш вклад! 🎉**
+**Thank you for your contribution! 🎉**
 
-Если у вас есть вопросы, не стесняйтесь создавать issue или обращаться к мейнтейнерам.
+If you have questions, feel free to create an issue or reach out to the maintainers.

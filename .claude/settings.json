@@ -1,0 +1,189 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(which *)",
+      "Bash(rg *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git branch*)",
+      "Bash(git ls-files*)",
+      "Bash(git check-ignore *)",
+      "Bash(pnpm install*)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm exec *)",
+      "Bash(pnpm lint*)",
+      "Bash(pnpm format*)",
+      "Bash(pnpm check-types*)",
+      "Bash(pnpm knip*)",
+      "Bash(pnpm build*)",
+      "Bash(pnpm --filter @bitrate/* *)",
+      "Bash(pnpm --filter=@bitrate/* *)",
+      "Bash(gh issue list*)",
+      "Bash(gh issue view*)",
+      "Bash(gh pr list*)",
+      "Bash(gh pr view*)",
+      "Bash(gh project list*)",
+      "Bash(gh project item-list*)",
+      "Bash(gh project field-list*)",
+      "Bash(gh repo view*)",
+      "Bash(gh auth status*)",
+      "Bash(gh api -X GET *)",
+      "Bash(.claude/scripts/auto/sp-worktree.sh *)",
+      "Bash(.claude/scripts/auto/sp-pr.sh state*)",
+      "Bash(.claude/scripts/auto/sp-pr.sh notes*)",
+      "Bash(.claude/scripts/auto/sp-pr.sh verify*)",
+      "Bash(docker compose -f infra/docker-compose.dev.yaml *)",
+      "Bash(graphify *)",
+      "WebFetch(domain:nextjs.org)",
+      "WebFetch(domain:docs.nestjs.com)",
+      "WebFetch(domain:www.prisma.io)",
+      "WebFetch(domain:tanstack.com)",
+      "WebFetch(domain:zod.dev)",
+      "WebFetch(domain:tailwindcss.com)",
+      "WebFetch(domain:base-ui.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(flatpak-spawn --host gh issue list*)",
+      "Bash(flatpak-spawn --host gh issue view*)",
+      "Bash(flatpak-spawn --host gh pr list*)",
+      "Bash(flatpak-spawn --host gh pr view*)",
+      "Bash(flatpak-spawn --host gh project list*)",
+      "Bash(flatpak-spawn --host gh project item-list*)",
+      "Bash(flatpak-spawn --host gh repo view*)",
+      "Bash(flatpak-spawn --host gh auth status*)",
+      "Bash(flatpak-spawn --host gh api graphql*)",
+      "Bash(flatpak-spawn --host gh --version)",
+      "Bash(flatpak-spawn --host docker compose -f infra/docker-compose.dev.yaml *)",
+      "Bash(flatpak-spawn --host docker --version)",
+      "Bash(flatpak-spawn --host gh project field-list*)",
+      "WebFetch(domain:docs.bullmq.io)",
+      "WebFetch(domain:socket.io)",
+      "WebFetch(domain:zustand.docs.pmnd.rs)",
+      "WebFetch(domain:turborepo.com)",
+      "WebFetch(domain:biomejs.dev)",
+      "WebFetch(domain:storybook.js.org)",
+      "WebFetch(domain:docs.expo.dev)",
+      "WebFetch(domain:v2.tauri.app)",
+      "WebFetch(domain:kottster.app)",
+      "WebFetch(domain:jestjs.io)",
+      "WebFetch(domain:vitest.dev)",
+      "WebFetch(domain:playwright.dev)",
+      "WebFetch(domain:reactnative.dev)",
+      "WebFetch(domain:knexjs.org)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(//**/.env)",
+      "Read(//**/.env.*)",
+      "Read(//proc/*/environ)",
+      "Read(//**/.ssh/**)",
+      "Read(//**/.aws/**)",
+      "Read(//**/.gnupg/**)",
+      "Read(//**/.docker/config.json)",
+      "Read(//**/.npmrc)",
+      "Read(//**/.git-credentials)",
+      "Read(//**/id_rsa*)",
+      "Read(//**/id_ed25519*)",
+      "Read(//**/*.pem)",
+      "Read(//**/*.p12)",
+      "Read(//**/*.keystore)",
+      "Bash(cat .env*)",
+      "Bash(cat */.env*)",
+      "Bash(cat **/.env*)",
+      "Bash(cat ~/.ssh/*)",
+      "Bash(cat ~/.aws/*)",
+      "Bash(env)",
+      "Bash(printenv*)",
+      "Bash(gh auth token*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -fd*)",
+      "Read(./node_modules/**)",
+      "Read(./dist/**)",
+      "Read(./build/**)",
+      "Read(./coverage/**)",
+      "Read(./.next/**)",
+      "Read(./.turbo/**)",
+      "Read(./.claude/worktrees/**)",
+      "Read(./apps/mobile/.expo/**)",
+      "Read(./apps/desktop/src-tauri/target/**)",
+      "Read(./packages/**/dist/**)",
+      "Read(./**/coverage/**)",
+      "Read(./**/.next/**)",
+      "Read(./graphify-out/**)"
+    ],
+    "additionalDirectories": ["/tmp"]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-env-access.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-guard.sh\" search"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-guard.sh\" read"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/format-on-edit.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -f \"$CLAUDE_PROJECT_DIR/.claude/skills/impeccable/scripts/hook.mjs\" ] || node \"$CLAUDE_PROJECT_DIR/.claude/skills/impeccable/scripts/hook.mjs\"",
+            "timeout": 5,
+            "statusMessage": "Checking UI changes"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -f \"$CLAUDE_PROJECT_DIR/.claude/skills/impeccable/scripts/hook.mjs\" ] || node \"$CLAUDE_PROJECT_DIR/.claude/skills/impeccable/scripts/hook.mjs\"",
+            "timeout": 30,
+            "statusMessage": "Design deep pass"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "mattpocock-skills@claude-plugins-official": true
+  }
+}

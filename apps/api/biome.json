@@ -1,10 +1,10 @@
 {
   "root": false,
-  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
   "extends": ["../../biome.json"],
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
-    "includes": ["**", "!!**/dist/**", "!!**/docs/**"]
+    "includes": ["**", "!!**/dist", "!!**/docs"]
   },
   "formatter": {
     "enabled": true,
@@ -22,7 +22,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": false,
+      "preset": "recommended",
       "complexity": {
         "noAdjacentSpacesInRegex": "error",
         "noExtraBooleanCast": "error",
@@ -158,6 +158,16 @@
     }
   },
   "overrides": [
+    {
+      "includes": ["**/*.service.ts", "**/*.guard.ts", "**/*.controller.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useImportType": "off"
+          }
+        }
+      }
+    },
     {
       "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "linter": {

@@ -1,11 +1,15 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
 import { UserEntity } from './entities'
 
+/** Represents the users private service. */
 @Injectable()
 export class UsersPrivateService {
+  /** Creates a new instance. */
   constructor(private readonly prisma: PrismaService) {}
 
+  /** Runs the find by id operation. */
   async findById(id: UserEntity['id']) {
     return await this.prisma.user.findUniqueOrThrow({
       where: {
@@ -14,6 +18,7 @@ export class UsersPrivateService {
     })
   }
 
+  /** Runs the get by email operation. */
   async getByEmail(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
       where: {
@@ -22,6 +27,7 @@ export class UsersPrivateService {
     })
   }
 
+  /** Runs the get by username operation. */
   async getByUsername(username: UserEntity['username']) {
     return await this.prisma.user.findFirst({
       where: {
@@ -30,6 +36,7 @@ export class UsersPrivateService {
     })
   }
 
+  /** Runs the find all operation. */
   async findAll({
     username,
     limit = 10,
@@ -48,12 +55,14 @@ export class UsersPrivateService {
     })
   }
 
-  async create(data: Omit<UserEntity, 'id' | 'createdAt'>) {
+  /** Runs the create operation. */
+  async create(data: Prisma.UserUncheckedCreateInput) {
     return await this.prisma.user.create({
       data,
     })
   }
 
+  /** Runs the update by id operation. */
   async updateById(id: UserEntity['id'], userData: Partial<Omit<UserEntity, 'id' | ''>>) {
     return await this.prisma.user.update({
       where: { id },
@@ -61,6 +70,7 @@ export class UsersPrivateService {
     })
   }
 
+  /** Runs the upload avatar operation. */
   async uploadAvatar(userId: string, filename: string) {
     const avatarPath = `/static/users/avatars/${filename}`
     return await this.prisma.user.update({

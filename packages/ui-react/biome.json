@@ -1,6 +1,6 @@
 {
   "root": false,
-  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
   "extends": ["../../biome.json"],
   "vcs": {
     "enabled": true,
@@ -28,7 +28,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "preset": "recommended"
     }
   },
   "javascript": {
@@ -40,6 +40,15 @@
   "overrides": [
     {
       "includes": ["*.mjs"]
+    },
+    {
+      "includes": ["assets/**"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
     }
   ],
   "assist": {

@@ -1,7 +1,9 @@
-import { ArtistEntity } from '@modules/artists'
+import { paginatedResponseSchema } from '@common/swagger'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
+import { SafeArtistEntity } from '../../entities'
 
+/** Runs the get artists swagger operation. */
 export function GetArtistsSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get all artists with pagination' }),
@@ -28,19 +30,7 @@ export function GetArtistsSwagger() {
     ApiConsumes('application/json'),
     ApiResponse({
       status: HttpStatus.OK,
-      content: {
-        'application/json': {
-          example: [
-            {
-              avatar: 'https://example.com/avatar.jpg',
-              id: '1',
-              username: 'artist1',
-              backgroundImage: '',
-              bio: '',
-            } as Omit<ArtistEntity, 'password' | 'email'>,
-          ],
-        },
-      },
+      schema: paginatedResponseSchema(SafeArtistEntity),
     }),
   )
 }

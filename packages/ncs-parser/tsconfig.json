@@ -1,12 +1,14 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "strict": true,
-        "declaration": true,
-        "esModuleInterop": true,
-        "moduleResolution": "Node",
-        "skipLibCheck": true
-    },
-    "include": ["./src"],
-    "exclude": ["node_modules", "dist", "tests"]
+  "compilerOptions": {
+    "target": "ESNext",
+    "strict": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "ignoreDeprecations": "6.0",
+    "rootDir": "./src",
+    "skipLibCheck": true
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules", "dist", "tests"]
 }

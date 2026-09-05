@@ -78,7 +78,7 @@ sleep 2\n\
 fluxbox &\n\
 \n\
 # Запуск x11vnc\n\
-x11vnc -display :99 -forever -shared -rfbport ${VNC_PORT} -passwd spotify &\n\
+x11vnc -display :99 -forever -shared -rfbport ${VNC_PORT} -passwd bitrate &\n\
 X11VNC_PID=$!\n\
 \n\
 # Запуск noVNC для доступа через браузер\n\
@@ -90,7 +90,7 @@ sleep 2\n\
 \n\
 echo "===================================="\n\
 echo "VNC Server running:"\n\
-echo "  VNC:    vnc://localhost:5900 (password: spotify)"\n\
+echo "  VNC:    vnc://localhost:5900 (password: bitrate)"\n\
 echo "  noVNC:  http://localhost:6080/vnc.html"\n\
 echo "===================================="\n\
 \n\

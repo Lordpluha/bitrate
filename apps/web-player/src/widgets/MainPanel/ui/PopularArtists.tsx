@@ -1,88 +1,63 @@
 'use client'
 
-import React from 'react'
-
-import { useQuery } from '@shared/api'
-import { CustomNextIcon, CustomPrevIcon } from '@spotify/ui-react'
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@spotify/ui-react'
+  CustomNextIcon,
+  CustomPrevIcon,
+} from '@bitrate/ui-react'
+import { useArtists } from '@entities/Artist'
+import { MusicCardLg } from '@shared/ui/MusicCardLg'
+import { useI18n } from '@/shared/i18n'
+import { getArtistAvatarUrl } from '@/shared/utils/mediaUrl'
 
-import { MusicCardLg } from './MusicCardLg'
+export const PopularArtists = () => {
+  const { t } = useI18n()
+  const { data, isPending: loadingArtists } = useArtists()
 
-interface MusicItem {
-  id: string
-  name: string
-  description?: string
-  imageUrl?: string
-}
-
-export const PopularArtists: React.FC = () => {
-  const {
-    data,
-    isPending: loadingArtists,
-    error,
-  } = useQuery('get', '/api/v1/artists', {
-    params: {
-      query: {
-        limit: 20,
-      },
-    },
-  } as any)
-
-  const artists: MusicItem[] = Array.isArray(data)
+  const artists = Array.isArray(data)
     ? data.map((artist) => ({
         id: artist.id,
-        name:
-          artist.name || artist.username || artist.title || 'Unknown Artist',
-        description: 'Artist',
-        imageUrl: artist.imageUrl || artist.avatar || artist.cover,
+        name: artist.username,
+        description: t('common.artist'),
+        imageUrl: getArtistAvatarUrl(artist.avatar),
       }))
     : []
 
   return (
     <div className="relative mt-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-text text-2xl font-bold">Popular artists</h2>
-        <button
-          type="button"
-          className="text-gray-400 hover:text-white text-sm font-medium"
-        >
-          Show all
-        </button>
+        <h2 className="text-text text-2xl font-bold">
+          {t('main.popularArtists')}
+        </h2>
       </div>
       <div className="relative group">
-        {/* Carousel with navigation */}
-        <Carousel slidesToShow={5} className="w-full">
+        <Carousel className="w-full" slidesToShow={5}>
           <CarouselPrevious
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
             icon={<CustomPrevIcon />}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
           />
           <CarouselNext
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-background-secondary"
             icon={<CustomNextIcon />}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
           />
           <CarouselContent className="flex">
             {loadingArtists ? (
-              <div className="text-gray-400 p-4">Loading...</div>
+              <div className="text-text-subdued p-4">{t('common.loading')}</div>
             ) : artists.length === 0 ? (
-              <div className="text-gray-400 p-4">No artists found</div>
+              <div className="text-text-subdued p-4">{t('main.noArtists')}</div>
             ) : (
               artists.map((artist) => (
-                <CarouselItem
-                  key={artist.id}
-                  className="basis-auto max-w-[200px]"
-                >
+                <CarouselItem className="basis-auto max-w-50" key={artist.id}>
                   <MusicCardLg
-                    id={artist.id}
-                    name={artist.name}
                     description={artist.description}
+                    id={artist.id}
                     imageUrl={artist.imageUrl}
                     isArtist={true}
+                    name={artist.name}
                   />
                 </CarouselItem>
               ))

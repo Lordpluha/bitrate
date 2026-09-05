@@ -1,0 +1,411 @@
+version: '3'
+
+vars:
+  # --env-file .env is not redundant. Compose looks for .env next to the compose file, so with
+  # `-f infra/...` it reads infra/.env — a file that does not exist — and every ${VAR} silently
+  # resolves to empty. The repository keeps its .env at the root, next to .env.example.
+  # Day-to-day Docker environment despite the "preprod" file name: api,
+  # web-player, web-artists, admin and the infra services, plus the
+  # profile-gated mobile/desktop/docs/nginx. `dev:*`, `db:*`, `shell:*` and
+  # `mobile:*`/`desktop:*` all target this file.
+  DC_DEV: docker compose --env-file .env -f infra/docker-compose.preprod.yaml
+  DC_PROD: docker compose --env-file .env -f infra/docker-compose.prod.yaml
+  # Infrastructure only — no application containers. Used by `infra:*`.
+  DC_INFRA: docker compose --env-file .env -f infra/docker-compose.dev.yaml
+
+tasks:
+  # ─────────────────────────────────────────
+  # Default — list tasks
+  # ─────────────────────────────────────────
+  default:
+    desc: List all available tasks
+    silent: true
+    cmds:
+      - task --list
+
+  # ─────────────────────────────────────────
+  # Minimal infra — no application containers
+  # Recommended for native app development
+  # ─────────────────────────────────────────
+  infra:up:
+    desc: Start infra only — postgres, postgres_test, redis, mailhog (~320 MB)
+    cmds:
+      - cmd: '{{.DC_INFRA}} up -d'
+
+  infra:down:
+    desc: Stop the infra-only stack
+    cmds:
+      - cmd: '{{.DC_INFRA}} down'
+
+  # ─────────────────────────────────────────
+  # Full development stack (all apps in Docker)
+  # Profile-gated services (mobile, desktop, docs, nginx) are NOT started here
+  # — use mobile:up / desktop:up for those.
+  # ─────────────────────────────────────────
+  dev:up:
+    desc: Start development stack (api, web-player, web-artists, admin + infra)
+    cmds:
+      - cmd: '{{.DC_DEV}} up -d'
+      - task: _print-urls
+
+  dev:build:
+    desc: Build images and start development stack
+    cmds:
+      - cmd: '{{.DC_DEV}} up -d --build'
+      - task: _print-urls
+
+  dev:down:
+    desc: Stop all development services
+    cmds:
+      - cmd: '{{.DC_DEV}} down'
+
+  dev:restart:
+    desc: Restart all development services
+    cmds:
+      - cmd: '{{.DC_DEV}} restart'
+
+  dev:clean:
+    desc: Stop services and remove volumes
+    prompt: This will delete all container data. Continue?
+    cmds:
+      - cmd: '{{.DC_DEV}} down -v'
+
+  dev:status:
+    desc: Show container status
+    cmds:
+      - cmd: '{{.DC_DEV}} ps'
+
+  dev:logs:
+    desc: 'Tail logs. Optionally filter by service: task dev:logs -- api'
+    cmds:
+      - cmd: '{{.DC_DEV}} logs -f {{.CLI_ARGS}}'
+
+  # ─────────────────────────────────────────
+  # Database
+  # These run Prisma inside the `api` container, so the full stack must be up
+  # (task dev:up). With the native workflow (infra:up + app:dev) there is no
+  # `api` container — use the `:native` variants, which run Prisma on the host
+  # against the same Postgres.
+  # ─────────────────────────────────────────
+  db:migrate:
+    desc: Run Prisma migrations inside the api container
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @bitrate/api run db:migration:start'
+
+  db:migrate:native:
+    desc: Run Prisma migrations from the host (requires infra:up)
+    cmds:
+      - cmd: pnpm --filter @bitrate/api run db:migration:start
+
+  db:seed:
+    desc: Seed database with test data
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @bitrate/api run db:seed'
+
+  db:seed:native:
+    desc: Seed database from the host (requires infra:up)
+    cmds:
+      - cmd: pnpm --filter @bitrate/api run db:seed
+
+  db:backup:
+    desc: Dump the database to backups/ (reads credentials from the container, never hardcoded)
+    cmds:
+      - cmd: mkdir -p backups
+      - cmd: |
+          {{.DC_DEV}} exec -T postgres sh -c \
+            'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists' \
+            > "backups/$(date +%Y-%m-%d_%H%M%S).sql"
+      - cmd: ls -lh backups | tail -1
+
+  db:restore:
+    desc: Restore the database from a dump — DESTRUCTIVE, replaces current data. Pass FILE=path
+    prompt: This overwrites the current database. Continue?
+    requires:
+      vars: [FILE]
+    cmds:
+      - cmd: |
+          {{.DC_DEV}} exec -T postgres sh -c \
+            'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < "{{.FILE}}"
+
+  db:studio:
+    desc: Open Prisma Studio in browser
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @bitrate/api run db:ui'
+
+  db:reset:
+    desc: Reset database — drops and recreates all tables
+    prompt: This will destroy all data. Continue?
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api pnpm --filter @bitrate/api run db:migration:reset'
+
+  # Credentials come from the container's own environment rather than being
+  # hardcoded, so these keep working when POSTGRES_USER / POSTGRES_DB are
+  # overridden in .env. backups/ is gitignored — never commit a dump.
+  db:backup:
+    desc: Dump database to backups/ (gitignored)
+    vars:
+      TIMESTAMP: '{{now | date "20060102_150405"}}'
+    cmds:
+      - cmd: mkdir -p backups
+        platforms: [linux, darwin]
+      - cmd: if not exist backups mkdir backups
+        platforms: [windows]
+      - cmd: '{{.DC_DEV}} exec -T postgres sh -c ''pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"'' > backups/backup_{{.TIMESTAMP}}.sql'
+      - cmd: echo "Saved to backups/backup_{{.TIMESTAMP}}.sql"
+
+  db:restore:
+    desc: 'Restore from a backup file: task db:restore -- backup_20240101_120000.sql'
+    cmds:
+      - cmd: '{{.DC_DEV}} exec -T postgres sh -c ''psql -U "$POSTGRES_USER" "$POSTGRES_DB"'' < backups/{{.CLI_ARGS}}'
+
+  # ─────────────────────────────────────────
+  # Container shells
+  # ─────────────────────────────────────────
+  shell:api:
+    desc: Open shell in api container
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec api sh'
+
+  shell:web:
+    desc: Open shell in web-player container
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec web-player sh'
+
+  shell:admin:
+    desc: Open shell in admin container
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec admin sh'
+
+  shell:postgres:
+    desc: Open psql in postgres container
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec postgres sh -c ''psql -U "$POSTGRES_USER" "$POSTGRES_DB"'''
+
+  # ─────────────────────────────────────────
+  # Mobile
+  # ─────────────────────────────────────────
+  mobile:up:
+    desc: Start Expo Metro bundler in Docker
+    cmds:
+      - cmd: '{{.DC_DEV}} --profile mobile up -d mobile'
+      - cmd: echo "Open http://localhost:19000 for the QR code"
+
+  # `down` would tear down the whole project — it ignores --profile when
+  # removing — so stop/rm the single service instead.
+  mobile:down:
+    desc: Stop and remove the mobile service only
+    cmds:
+      - cmd: '{{.DC_DEV}} --profile mobile stop mobile'
+      - cmd: '{{.DC_DEV}} --profile mobile rm -f mobile'
+
+  mobile:logs:
+    desc: Tail mobile service logs
+    cmds:
+      - cmd: '{{.DC_DEV}} logs -f mobile'
+
+  mobile:qr:
+    desc: Print Expo tunnel URL for scanning
+    cmds:
+      - cmd: '{{.DC_DEV}} logs mobile 2>&1 | grep exp:// | tail -1'
+
+  # ─────────────────────────────────────────
+  # Desktop
+  # ─────────────────────────────────────────
+  desktop:up:
+    desc: Start desktop Vite dev server in Docker (UI only, no Tauri)
+    cmds:
+      - cmd: '{{.DC_DEV}} --profile desktop up -d desktop'
+      - cmd: echo "Open http://localhost:1420"
+
+  # Same caveat as mobile:down — scope the teardown to the one service.
+  desktop:down:
+    desc: Stop and remove the desktop service only
+    cmds:
+      - cmd: '{{.DC_DEV}} --profile desktop stop desktop'
+      - cmd: '{{.DC_DEV}} --profile desktop rm -f desktop'
+
+  desktop:logs:
+    desc: Tail desktop service logs
+    cmds:
+      - cmd: '{{.DC_DEV}} logs -f desktop'
+
+  # ─────────────────────────────────────────
+  # Production
+  # ─────────────────────────────────────────
+  prod:up:
+    desc: Start production stack
+    prompt: Start PRODUCTION environment?
+    cmds:
+      - cmd: '{{.DC_PROD}} up -d'
+
+  prod:build:
+    desc: Build images ON THE SERVER and start production — the slow fallback, prefer prod:deploy
+    prompt: Build images on this machine and start PRODUCTION? prod:deploy pulls instead.
+    cmds:
+      - cmd: '{{.DC_PROD}} up -d --build'
+
+  prod:deploy:
+    desc: Pull the images CI published and restart production — no build on the server
+    prompt: Deploy the latest published images to PRODUCTION?
+    cmds:
+      # The normal path. CI builds every app image and pushes it to GHCR, so a deploy is a pull
+      # and a restart — a couple of minutes instead of the twenty-odd a build on this box takes.
+      # --no-build is what makes that a guarantee: without it compose silently falls back to
+      # building any service whose image it cannot pull, and the deploy quietly becomes the slow
+      # path again.
+      - cmd: '{{.DC_PROD}} pull'
+      - cmd: '{{.DC_PROD}} up -d --no-build'
+      - cmd: '{{.DC_PROD}} ps'
+
+  prod:migrate:
+    desc: Apply pending migrations to the production database
+    cmds:
+      # migrate deploy, never migrate dev: the dev command generates migrations, wants a shadow
+      # database, and can reset the data it is pointed at.
+      - cmd: '{{.DC_PROD}} exec -T api pnpm --filter @bitrate/api run db:migration:deploy'
+
+
+  prod:down:
+    desc: Stop production stack
+    cmds:
+      - cmd: '{{.DC_PROD}} down'
+
+  prod:logs:
+    desc: 'Tail production logs. Optionally filter: task prod:logs -- api'
+    cmds:
+      - cmd: '{{.DC_PROD}} logs -f {{.CLI_ARGS}}'
+
+  # ─────────────────────────────────────────
+  # Monitoring
+  # Thin wrappers over infra/docker-monitor.sh — the script owns the logic,
+  # these only make it discoverable from `task --list`. It inspects the same
+  # stack as DC_DEV, so it needs `task dev:up` first.
+  # ─────────────────────────────────────────
+  monitor:
+    desc: Interactive monitoring menu
+    interactive: true
+    cmds:
+      - cmd: bash infra/docker-monitor.sh
+
+  monitor:health:
+    desc: Container status plus an HTTP reachability probe per app
+    cmds:
+      - cmd: bash infra/docker-monitor.sh health
+
+  monitor:resources:
+    desc: Per-container CPU, memory, network and block IO
+    cmds:
+      - cmd: bash infra/docker-monitor.sh resources
+
+  monitor:disk:
+    desc: Docker disk usage breakdown
+    cmds:
+      - cmd: bash infra/docker-monitor.sh disk
+
+  monitor:db:
+    desc: Database size, largest tables, connection count
+    cmds:
+      - cmd: bash infra/docker-monitor.sh db
+
+  monitor:network:
+    desc: Docker networks and container addresses on the project network
+    cmds:
+      - cmd: bash infra/docker-monitor.sh network
+
+  monitor:errors:
+    desc: Recent error lines from the api, web-player, web-artists and admin logs
+    cmds:
+      - cmd: bash infra/docker-monitor.sh errors
+
+  monitor:report:
+    desc: Full report — health, resources, database, disk, recent errors
+    cmds:
+      - cmd: bash infra/docker-monitor.sh report
+
+  monitor:fix:
+    desc: Restart unhealthy containers, prune dangling networks and images
+    prompt: This restarts containers and prunes dangling resources. Continue?
+    cmds:
+      - cmd: bash infra/docker-monitor.sh fix
+
+  # ─────────────────────────────────────────
+  # Monorepo dev (native, no Docker for apps)
+  # These mirror the root pnpm scripts one-to-one and exist so the whole
+  # workflow is reachable from one runner; the pnpm scripts stay canonical.
+  # ─────────────────────────────────────────
+  app:dev:
+    desc: Start all apps natively (requires infra:up first)
+    cmds:
+      - cmd: pnpm dev
+
+  app:build:
+    desc: Build all packages and apps
+    cmds:
+      - cmd: pnpm build
+
+  app:lint:
+    desc: Lint all packages and apps
+    cmds:
+      - cmd: pnpm lint
+
+  app:test:
+    desc: Run all tests across the monorepo
+    cmds:
+      - cmd: pnpm test
+
+  # ─────────────────────────────────────────
+  # Utils
+  # ─────────────────────────────────────────
+  clean:dist:
+    desc: Remove all dist/ build artifacts from packages and apps
+    cmds:
+      - cmd: node scripts/clean-dist.mjs
+
+  prune:
+    desc: Remove all unused Docker images, containers and volumes
+    prompt: Remove all unused Docker resources?
+    cmds:
+      - cmd: docker system prune -af
+
+  # ─────────────────────────────────────────
+  # Quick-start workflows
+  # ─────────────────────────────────────────
+  init:
+    desc: First-time setup — build Docker images, migrate DB, seed data
+    cmds:
+      - task: dev:build
+      - task: db:migrate
+      - task: db:seed
+      - cmd: echo "Project initialized!"
+
+  # Prisma runs on the host here: infra:up starts no `api` container, so the
+  # container-based db:migrate / db:seed would have nothing to exec into.
+  init:native:
+    desc: First-time native setup — start infra, migrate DB, seed, run apps
+    cmds:
+      - task: infra:up
+      - task: db:migrate:native
+      - task: db:seed:native
+      - task: app:dev
+
+  # ─────────────────────────────────────────
+  # Internal helpers (not listed)
+  # ─────────────────────────────────────────
+  # Default ports only — each is overridable in .env (API_PORT, WEB_PORT,
+  # WEB_ARTISTS_PORT, ADMIN_PORT, MAILHOG_UI_PORT). Profile-gated services
+  # (docs :3003, desktop :1420, mobile :19000) are not started by dev:up.
+  _print-urls:
+    internal: true
+    silent: true
+    cmds:
+      - cmd: echo "Services:"
+      - cmd: echo "  API     -> http://localhost:3000"
+      - cmd: echo "  Web     -> http://localhost:3001"
+      - cmd: echo "  Admin   -> http://localhost:3002"
+      - cmd: echo "  Artists -> http://localhost:3004"
+      - cmd: echo "  Mail    -> http://localhost:8025"
+      - cmd: echo "  Swagger -> http://localhost:3000/swagger"

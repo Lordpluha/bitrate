@@ -4,66 +4,79 @@ sidebar_position: 1
 
 # Docker Setup
 
-Complete guide for running Spotify Clone with Docker.
+Complete guide for running Bitrate with Docker.
 
 ## 🐳 Overview
 
-The project uses Docker Compose for local development and production deployment.
+Docker Compose files live in `infra/`:
+
+| File | Purpose |
+|------|---------|
+| `infra/docker-compose.dev.yaml` | Minimal — postgres + redis only (~320 MB). Use with native app dev. |
+| `infra/docker-compose.preprod.yaml` | Full development stack — all apps in containers. |
+| `infra/docker-compose.prod.yaml` | Production stack with nginx reverse proxy. |
 
 ## 📦 Services
 
-### Development Services
+### Development Stack (`docker-compose.preprod.yaml`)
 
 ```yaml
 services:
-  postgres:     # PostgreSQL database
+  postgres:     # PostgreSQL 16 database
   redis:        # Cache & sessions
-  minio:        # S3-compatible storage
   api:          # NestJS backend
-  web:          # Next.js frontend
-  mobile:       # React Native bundler
-  desktop:      # Tauri desktop app
-  docs:         # Documentation site
+  web:          # Next.js frontend (web-player)
+  mobile:       # React Native / Expo bundler  [--profile mobile]
+  desktop:      # Vite dev server (UI only)    [--profile desktop]
 ```
 
-### Production Services
+### Production Services (`docker-compose.prod.yaml`)
 
 ```yaml
 services:
   nginx:        # Reverse proxy
   postgres:     # Database
   redis:        # Cache
-  minio:        # Object storage
   api:          # Backend API
   web:          # Web app
 ```
 
 ## 🚀 Quick Start
 
-### Start All Services
+### Recommended: minimal infra + native apps
 
 ```bash
-# Development
-docker compose up -d
+# Start postgres + redis only
+docker compose -f infra/docker-compose.dev.yaml up -d
 
-# Production
-docker compose -f docker-compose.prod.yaml up -d
-
-# Minimal (DB only)
-docker compose -f docker-compose.minimal.yaml up -d
+# Run apps natively
+pnpm dev
 ```
 
-### Individual Services
+### Full Docker development stack
 
 ```bash
-# Start only database
-docker compose up -d postgres
+# First run (build images, migrate, seed)
+docker compose -f infra/docker-compose.preprod.yaml up -d --build
+docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @bitrate/api run db:migration:start
+docker compose -f infra/docker-compose.preprod.yaml exec api pnpm --filter @bitrate/api run seed
 
-# Start API + dependencies
-docker compose up -d postgres redis api
+# Subsequent runs
+docker compose -f infra/docker-compose.preprod.yaml up -d
 
-# Start Web + dependencies
-docker compose up -d postgres redis api web
+# Stop
+docker compose -f infra/docker-compose.preprod.yaml down
+```
+
+### Via task (cross-platform shortcut)
+
+```bash
+task infra:up       # minimal: postgres + redis
+task dev:up         # full dev stack
+task init           # first-time: build + migrate + seed
+task dev:down       # stop
+task dev:logs       # tail all logs
+task dev:logs -- api  # tail specific service
 ```
 
 ## 🔧 Service Configuration
@@ -72,22 +85,19 @@ docker compose up -d postgres redis api web
 
 ```yaml
 postgres:
-  image: postgres:15-alpine
+  image: postgres:16-alpine
   ports:
     - "5432:5432"
   environment:
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: postgres
-    POSTGRES_DB: spotify_clone
-  volumes:
-    - postgres-data:/var/lib/postgresql/data
+    POSTGRES_USER: admin
+    POSTGRES_PASSWORD: admin
+    POSTGRES_DB: bitrate
 ```
 
 **Access:**
 - Host: `localhost:5432`
-- User: `postgres`
-- Password: `postgres`
-- Database: `spotify_clone`
+- User: `admin` / Password: `admin`
+- Database: `bitrate`
 
 ### Redis
 
@@ -96,115 +106,64 @@ redis:
   image: redis:7-alpine
   ports:
     - "6379:6379"
-  volumes:
-    - redis-data:/data
 ```
 
-**Access:**
-- Host: `localhost:6379`
-
-### MinIO (S3)
-
-```yaml
-minio:
-  image: minio/minio
-  ports:
-    - "9000:9000"    # API
-    - "9001:9001"    # Console
-  environment:
-    MINIO_ROOT_USER: minioadmin
-    MINIO_ROOT_PASSWORD: minioadmin
-  command: server /data --console-address ":9001"
-```
-
-**Access:**
-- API: `http://localhost:9000`
-- Console: `http://localhost:9001`
-- Credentials: `minioadmin / minioadmin`
-
-### API (NestJS)
-
-```yaml
-api:
-  build:
-    context: .
-    dockerfile: apps/api/Dockerfile
-  ports:
-    - "3000:3000"
-  depends_on:
-    - postgres
-    - redis
-  environment:
-    DATABASE_URL: postgresql://postgres:postgres@postgres:5432/spotify_clone
-    REDIS_HOST: redis
-```
-
-### Web (Next.js)
-
-```yaml
-web:
-  build:
-    context: .
-    dockerfile: apps/web/Dockerfile
-  ports:
-    - "3001:3000"
-  depends_on:
-    - api
-  environment:
-    NEXT_PUBLIC_API_URL: http://api:3000
-```
+**Access:** `localhost:6379`
 
 ## 📝 Docker Commands
 
 ### Container Management
 
 ```bash
+DC="docker compose -f infra/docker-compose.preprod.yaml"
+
 # View running containers
-docker compose ps
+$DC ps
 
 # View logs
-docker compose logs -f
+$DC logs -f
 
 # View logs for specific service
-docker compose logs -f api
+$DC logs -f api
 
 # Restart service
-docker compose restart api
+$DC restart api
 
 # Stop all services
-docker compose down
+$DC down
 
 # Stop and remove volumes
-docker compose down -v
+$DC down -v
 ```
 
 ### Exec Commands
 
 ```bash
-# Run command in container
-docker compose exec api pnpm db:migration:start
+DC="docker compose -f infra/docker-compose.preprod.yaml"
+
+# Run migrations
+$DC exec api pnpm --filter @bitrate/api run db:migration:start
 
 # Open shell
-docker compose exec api sh
+$DC exec api sh
 
-# Run database migrations
-docker compose exec api pnpm db:gen
+# Open psql
+$DC exec postgres psql -U admin bitrate
 ```
 
 ### Build & Rebuild
 
 ```bash
-# Build all services
-docker compose build
+DC="docker compose -f infra/docker-compose.preprod.yaml"
 
 # Build specific service
-docker compose build api
+$DC build api
 
 # Rebuild and start
-docker compose up -d --build
+$DC up -d --build
 
 # Force rebuild (no cache)
-docker compose build --no-cache
+$DC build --no-cache api
 ```
 
 ## 🛠️ Development Workflow
@@ -212,28 +171,36 @@ docker compose build --no-cache
 ### 1. Start Infrastructure
 
 ```bash
-# Start only databases
-docker compose up -d postgres redis minio
+# Minimal (recommended for native dev)
+docker compose -f infra/docker-compose.dev.yaml up -d
+
+# Full stack
+docker compose -f infra/docker-compose.preprod.yaml up -d
 ```
 
 ### 2. Run Apps Locally
 
 ```bash
-# API
-pnpm --filter @spotify/api start:dev
-
-# Web
-pnpm --filter @spotify/web dev
+pnpm --filter @bitrate/api start:dev
+pnpm --filter @bitrate/web-player dev
 ```
 
-### 3. Full Docker Development
+## 📱 Optional: Mobile & Desktop containers
+
+Mobile and Desktop services use Docker Compose profiles:
 
 ```bash
-# Start everything
-docker compose up -d
+# Mobile (Metro Bundler + Expo tunnel)
+docker compose -f infra/docker-compose.preprod.yaml --profile mobile up -d mobile
+# Open http://localhost:19000
 
-# Watch logs
-docker compose logs -f api web
+# Desktop (Vite only, no Tauri)
+docker compose -f infra/docker-compose.preprod.yaml --profile desktop up -d desktop
+# Open http://localhost:1420
+
+# Stop profile containers
+docker compose -f infra/docker-compose.preprod.yaml --profile mobile down
+docker compose -f infra/docker-compose.preprod.yaml --profile desktop down
 ```
 
 ## 🔍 Debugging
@@ -241,153 +208,101 @@ docker compose logs -f api web
 ### View Logs
 
 ```bash
-# All services
-docker compose logs -f
+DC="docker compose -f infra/docker-compose.preprod.yaml"
 
-# Specific service
-docker compose logs -f api
-
-# Last 100 lines
-docker compose logs --tail=100 api
+$DC logs -f             # all services
+$DC logs -f api         # specific service
+$DC logs --tail=100 api # last 100 lines
 ```
 
 ### Inspect Container
 
 ```bash
-# Container details
-docker compose exec api env
+DC="docker compose -f infra/docker-compose.preprod.yaml"
 
-# Check process
-docker compose exec api ps aux
-
-# Check files
-docker compose exec api ls -la /app
+$DC exec api env        # environment variables
+$DC exec api ps aux     # processes
+$DC exec api ls -la /app
 ```
 
 ### Network Issues
 
 ```bash
-# Check network
-docker network ls
-docker network inspect spotify-clone_default
+DC="docker compose -f infra/docker-compose.preprod.yaml"
 
-# Test connectivity
-docker compose exec api ping postgres
-docker compose exec web curl http://api:3000/health
+docker network ls
+$DC exec api ping postgres
 ```
 
 ## 📦 Volumes
 
-### Data Persistence
-
-```yaml
-volumes:
-  postgres-data:    # Database data
-  redis-data:       # Redis data
-  minio-data:       # Object storage
-  uploads:          # Uploaded files
-```
-
-### Backup Data
+### Backup PostgreSQL
 
 ```bash
-# Backup PostgreSQL
-docker compose exec postgres pg_dump -U postgres spotify_clone > backup.sql
+docker compose -f infra/docker-compose.preprod.yaml exec -T postgres \
+  pg_dump -U admin bitrate > backups/backup.sql
 
-# Restore PostgreSQL
-docker compose exec -T postgres psql -U postgres spotify_clone < backup.sql
+# Or via task:
+task db:backup
 ```
 
-### Clear Data
+### Restore
 
 ```bash
-# Remove all volumes
-docker compose down -v
+docker compose -f infra/docker-compose.preprod.yaml exec -T postgres \
+  psql -U admin bitrate < backups/backup.sql
 
-# Remove specific volume
-docker volume rm spotify-clone_postgres-data
+# Or via task:
+task db:restore -- backup_20260101_120000.sql
+```
+
+### Clear All Data
+
+```bash
+docker compose -f infra/docker-compose.preprod.yaml down -v
+# Or via task (with prompt):
+task dev:clean
 ```
 
 ## 🚀 Production Deployment
 
-### Build Production Images
+### Start Production
 
 ```bash
-# Build all
-docker compose -f docker-compose.prod.yaml build
+# First time (build + start)
+docker compose -f infra/docker-compose.prod.yaml up -d --build
 
-# Tag for registry
-docker tag spotify-clone-api:latest registry.example.com/spotify-clone-api:latest
-
-# Push to registry
-docker push registry.example.com/spotify-clone-api:latest
+# Subsequent runs (with confirmation via task)
+task prod:up
 ```
 
 ### Environment Variables
 
 ```bash
-# Create .env file
+# Create .env from example
 cp .env.example .env
-
 # Edit production values
-vi .env
-```
-
-### Start Production
-
-```bash
-docker compose -f docker-compose.prod.yaml up -d
 ```
 
 ## 🔒 Security
 
-### Secrets Management
-
-```bash
-# Use Docker secrets (Swarm mode)
-echo "supersecret" | docker secret create jwt_secret -
-
-# Or use .env file
-echo "JWT_SECRET=supersecret" >> .env
-```
-
 ### Network Isolation
 
-```yaml
-networks:
-  frontend:
-    driver: bridge
-  backend:
-    driver: bridge
-    internal: true  # No internet access
-```
+The docker-compose files use a dedicated bridge network (`bitrate-network`) that isolates services from the host network. Only required ports are published.
 
 ## 📊 Monitoring
 
 ### Health Checks
 
-```yaml
-api:
-  healthcheck:
-    test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-    interval: 30s
-    timeout: 10s
-    retries: 3
+```bash
+task dev:status        # container status
+task monitor:health    # status + an HTTP probe per app
+task monitor:report    # health, resources, database, disk, recent errors
+task monitor           # interactive menu
 ```
 
-### Resource Limits
-
-```yaml
-api:
-  deploy:
-    resources:
-      limits:
-        cpus: '1.0'
-        memory: 512M
-      reservations:
-        cpus: '0.5'
-        memory: 256M
-```
+`monitor:*` wraps `infra/docker-monitor.sh`, which can also be called directly
+(`./infra/docker-monitor.sh health|resources|disk|db|network|errors|report|fix`).
 
 ## 🐛 Troubleshooting
 
@@ -396,36 +311,34 @@ api:
 ```bash
 # Find process using port
 lsof -i :3000
-
-# Kill process
 kill -9 <PID>
-
-# Or change port in docker-compose.yaml
 ```
 
 ### Container Won't Start
 
 ```bash
-# Check logs
-docker compose logs api
-
-# Rebuild from scratch
-docker compose down
-docker compose build --no-cache api
-docker compose up -d api
+DC="docker compose -f infra/docker-compose.preprod.yaml"
+$DC logs api
+$DC build --no-cache api
+$DC up -d api
 ```
 
 ### Database Connection Failed
 
 ```bash
-# Check if PostgreSQL is running
-docker compose ps postgres
+DC="docker compose -f infra/docker-compose.preprod.yaml"
+$DC ps postgres
+$DC logs postgres
+$DC restart postgres
+```
 
-# Check logs
-docker compose logs postgres
+### Permission Errors on `dist/` After Docker Build
 
-# Restart database
-docker compose restart postgres
+Docker may write `dist/` files as root. Clean before pushing:
+
+```bash
+pnpm clean:dist
+# or: task clean:dist
 ```
 
 ---

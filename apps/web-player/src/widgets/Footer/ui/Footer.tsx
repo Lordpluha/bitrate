@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import type { FC, HTMLAttributes } from 'react'
-import { Inst, Twit, Facebook } from '@spotify/ui-react'
+import { Facebook, Inst, Twit } from '@bitrate/ui-react'
 import { Logo } from '@shared/ui'
+import Link from 'next/link'
+import type { HTMLAttributes } from 'react'
 
 import footerLinks from '../config/footer-links.json'
 
@@ -24,13 +24,13 @@ const iconMap = {
   FacebookIcon: Facebook,
 }
 
-export const Footer: FC<FooterProps> = (props) => {
+export const Footer = (props: FooterProps) => {
   const columns: FooterColumn[] = footerLinks.columns
   const socials: SocialLink[] = footerLinks.socials
 
   return (
     <footer {...props}>
-      <div className="bg-bgSecondary py-20">
+      <div className="bg-background-secondary py-20">
         <div className="container">
           <div className="grid grid-cols-[1fr_3fr_1fr] items-start max-md:grid-cols-1 max-md:gap-8 max-md:py-10">
             <div className="flex items-center justify-start">
@@ -68,8 +68,8 @@ export const Footer: FC<FooterProps> = (props) => {
                     {IconComponent && (
                       <IconComponent
                         className="text-text fill-text"
-                        width={32}
                         height={32}
+                        width={32}
                       />
                     )}
                   </Link>

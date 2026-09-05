@@ -1,29 +1,28 @@
 import { faker } from '@faker-js/faker'
+import { Injectable } from '@nestjs/common'
 
-/**
- * Сервис для генерации фейковых данных
- */
+/** Represents the faker service. */
+@Injectable()
 export class FakerService {
-  /**
-   * Генерирует данные пользователей
-   */
-  static generateUsers(count: number) {
+  /** Runs the generate users operation. */
+  generateUsers(count: number, passwordHash: string) {
     const users: Array<{
       username: string
       email: string
       password: string
       avatar: string
       description: string | null
+      emailVerifiedAt: Date
       updatedAt: Date
     }> = []
 
-    // Тестовый пользователь
     users.push({
       username: 'testuser',
       email: 'test@example.com',
-      password: 'password123',
+      password: passwordHash,
       avatar: 'https://i.pravatar.cc/150?img=1',
       description: 'Test user for automated testing',
+      emailVerifiedAt: new Date(),
       updatedAt: new Date(),
     })
 
@@ -59,16 +58,17 @@ export class FakerService {
       'Creating vibes through music',
     ]
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 1; i < count; i++) {
       const username =
         `${faker.helpers.arrayElement(adjectives)}${faker.helpers.arrayElement(nouns)}${faker.number.int({ min: 1, max: 999 })}`.toLowerCase()
 
       users.push({
         username,
         email: faker.internet.email().toLowerCase(),
-        password: faker.internet.password({ length: 8 }),
+        password: passwordHash,
         avatar: faker.image.avatar(),
         description: faker.helpers.arrayElement([...descriptions, null, null]),
+        emailVerifiedAt: new Date(),
         updatedAt: new Date(),
       })
     }
@@ -76,10 +76,8 @@ export class FakerService {
     return users
   }
 
-  /**
-   * Генерирует данные плейлистов для пользователей
-   */
-  static generatePlaylists(userIds: string[], count: number) {
+  /** Runs the generate playlists operation. */
+  generatePlaylists(userIds: string[], count: number) {
     const playlistTitles = [
       'My Favorites',
       'Chill Vibes',

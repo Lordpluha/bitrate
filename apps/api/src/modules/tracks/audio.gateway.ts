@@ -1,56 +1,93 @@
 import { websocketConfig } from '@common/config/connections'
 import { WsUserAuthGuard } from '@modules/users-auth/users-auth.ws.guard'
-import { Logger, UseGuards } from '@nestjs/common'
+import { Inject, Logger, UseGuards } from '@nestjs/common'
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host'
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
+  type OnGatewayConnection,
+  type OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
+  type WsResponse,
 } from '@nestjs/websockets'
-import { Server, Socket } from 'socket.io'
-import { z } from 'zod'
-import { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
-import { TracksService } from './tracks.service'
+import type { Server } from 'socket.io'
+import {
+  playPayloadSchema,
+  streamPayloadSchema,
+  trackPayloadSchema,
+  updatePayloadSchema,
+} from './audio-gateway.schemas'
+import type { AuthenticatedSocket, StreamTrackPayload } from './audio-gateway.types'
+import { AudioSessionRegistry } from './audio-session.registry'
+import type { PauseTrackDto, StartTrackDto, UpdateStreamingDto } from './dtos'
+import { TrackStreamingService } from './track-streaming.service'
+import * as TracksServiceModule from './tracks.service'
 
-interface AuthenticatedSocket extends Socket {
-  userId?: string
-}
+/** The payload one WebSocket handler contributes to its success response. */
+type HandlerResult = Record<string, unknown>
 
-interface PlayingSession {
-  trackId: string
-  currentTime: number
-  timestamp: number
-}
-
+/** Represents the audio gateway. */
 @WebSocketGateway(websocketConfig)
 @UseGuards(WsUserAuthGuard)
 export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  /** The server value. */
   @WebSocketServer()
   server: Server
 
+  /** The logger value. */
   private readonly logger = new Logger(AudioGateway.name, { timestamp: true })
-  private userSessions = new Map<string, string>() // userId -> socketId
-  private playingSessions = new Map<string, PlayingSession>() // userId -> playing track info
 
-  private readonly trackPayloadSchema = z.object({
-    trackId: z.uuidv7(),
-    currentTime: z.number().min(0),
-  })
+  /** Connection, playback, and in-flight audio state for every live socket. */
+  private readonly sessions = new AudioSessionRegistry()
 
-  private readonly updatePayloadSchema = this.trackPayloadSchema.extend({
-    isPlaying: z.boolean(),
-  })
-
+  /** Creates a new instance. */
   constructor(
-    private tracksService: TracksService,
-    private wsAuthGuard: WsUserAuthGuard,
+    @Inject(TracksServiceModule.TracksService)
+    private tracksService: TracksServiceModule.TracksService,
+    @Inject(TrackStreamingService) private trackStreamingService: TrackStreamingService,
+    @Inject(WsUserAuthGuard) private wsAuthGuard: WsUserAuthGuard,
   ) {}
 
+  /**
+   * Runs one handler and wraps its result in the gateway's response envelope.
+   *
+   * Every message handler reports failure the same way, so the shape lives here
+   * rather than being repeated in each `catch`.
+   */
+  private async respond(
+    event: string,
+    action: () => Promise<HandlerResult> | HandlerResult,
+  ): Promise<WsResponse> {
+    try {
+      return { event, data: { success: true, ...(await action()) } }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      this.logger.error(`Error handling ${event}:`, message)
+      return { event, data: { success: false, error: message } }
+    }
+  }
+
+  /** Returns the socket's user id, refusing anonymous sockets. */
+  private requireUserId(client: AuthenticatedSocket): string {
+    if (!client.userId) throw new Error('Unauthorized')
+    return client.userId
+  }
+
+  /** Broadcasts an event to every socket the user has open. */
+  emitToUser(userId: string, event: string, data: Record<string, unknown>): void {
+    this.server.to(`user_${userId}`).emit(event, data)
+  }
+
+  /** Runs the create ws context operation. */
+  private createWsContext(client: AuthenticatedSocket) {
+    const context = new ExecutionContextHost([client])
+    context.setType('ws')
+    return context
+  }
+
+  /** Runs the handle connection operation. */
   async handleConnection(client: AuthenticatedSocket) {
     try {
       await this.wsAuthGuard.canActivate(this.createWsContext(client))
@@ -61,21 +98,14 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return
       }
 
-      this.userSessions.set(client.userId, client.id)
+      this.sessions.addSocket(client.userId, client.id)
       this.logger.log(`User ${client.userId} connected with socket ${client.id}`)
 
-      // Join user to their personal room
-      void client.join(`user_${client.userId}`)
+      Promise.resolve(client.join(`user_${client.userId}`)).catch((err: unknown) => {
+        this.logger.error('Failed to join user room', err)
+      })
 
-      // Send current playing state if exists
-      const currentSession = this.playingSessions.get(client.userId)
-      if (currentSession) {
-        client.emit('trackState', {
-          trackId: currentSession.trackId,
-          currentTime: this.calculateCurrentTime(currentSession),
-          isPlaying: true,
-        })
-      }
+      client.emit('trackState', this.sessions.getPlaybackState(client.userId))
     } catch (error) {
       this.logger.error(
         'Authentication failed:',
@@ -85,215 +115,148 @@ export class AudioGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  /** Runs the handle disconnect operation. */
   handleDisconnect(client: AuthenticatedSocket): void {
-    if (client.userId) {
-      this.userSessions.delete(client.userId)
-      this.logger.log(`User ${client.userId} disconnected`)
-    }
+    this.sessions.stopStream(client.id)
+    if (!client.userId) return
+
+    this.sessions.removeSocket(client.userId, client.id)
+    this.logger.log(`User ${client.userId} disconnected`)
   }
 
+  /** Runs the handle stream track operation. */
+  @SubscribeMessage('streamTrack')
+  async handleStreamTrack(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() payload: unknown,
+  ): Promise<WsResponse> {
+    return await this.respond('streamTrack', async () => {
+      this.requireUserId(client)
+
+      const parsed = streamPayloadSchema.safeParse(payload)
+      if (!parsed.success) throw new Error('Invalid payload')
+
+      return await this.startAudioStream(client, parsed.data)
+    })
+  }
+
+  /** Runs the handle stop track stream operation. */
+  @SubscribeMessage('stopTrackStream')
+  handleStopTrackStream(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
+    const stopped = this.sessions.stopStream(client.id)
+    return { event: 'stopTrackStream', data: { success: true, stopped } }
+  }
+
+  /** Runs the handle play track operation. */
   @SubscribeMessage('playTrack')
   async handlePlayTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() payload: StartTrackDto,
   ): Promise<WsResponse> {
-    try {
-      if (!client.userId) {
-        throw new Error('Unauthorized')
-      }
+    return await this.respond('playTrack', async () => {
+      const userId = this.requireUserId(client)
 
-      const parsed = this.trackPayloadSchema.safeParse(payload)
-      if (!parsed.success) {
-        throw new Error('Invalid payload')
-      }
+      const parsed = playPayloadSchema.safeParse(payload)
+      if (!parsed.success) throw new Error('Invalid payload')
 
-      // Verify track exists
       const track = await this.tracksService.findTrackById(parsed.data.trackId)
-      if (!track) {
-        throw new Error('Track not found')
-      }
+      if (!track) throw new Error('Track not found')
 
-      // Update user's playing session
-      this.playingSessions.set(client.userId, {
-        trackId: parsed.data.trackId,
-        currentTime: parsed.data.currentTime,
-        timestamp: Date.now(),
+      const { trackId, currentTime } = parsed.data
+      const audio = await this.startAudioStream(client, parsed.data)
+      this.sessions.startPlaying(userId, trackId, currentTime)
+
+      this.emitToUser(userId, 'trackPlaying', {
+        trackId,
+        currentTime,
+        bitrate: audio.bitrate,
+        format: audio.format,
+        userId,
       })
 
-      // Emit only to the user's personal room
-      this.server.to(`user_${client.userId}`).emit('trackPlaying', {
-        trackId: parsed.data.trackId,
-        currentTime: parsed.data.currentTime,
-        userId: client.userId,
-      })
-
-      return {
-        event: 'playTrack',
-        data: {
-          success: true,
-          trackId: parsed.data.trackId,
-          currentTime: parsed.data.currentTime,
-        },
-      }
-    } catch (error) {
-      this.logger.error(
-        'Error playing track:',
-        error instanceof Error ? error.message : 'Unknown error',
-      )
-      return {
-        event: 'playTrack',
-        data: {
-          success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        },
-      }
-    }
+      return { trackId, currentTime, bitrate: audio.bitrate, format: audio.format }
+    })
   }
 
+  /** Runs the handle pause track operation. */
   @SubscribeMessage('pauseTrack')
-  handlePauseTrack(
+  async handlePauseTrack(
     @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() payload: PauseTrackDto,
-  ): WsResponse {
-    try {
-      if (!client.userId) {
-        throw new Error('Unauthorized')
-      }
+  ): Promise<WsResponse> {
+    return await this.respond('pauseTrack', () => {
+      const userId = this.requireUserId(client)
 
-      const parsed = this.trackPayloadSchema.safeParse(payload)
-      if (!parsed.success) {
-        throw new Error('Invalid payload')
-      }
+      const parsed = trackPayloadSchema.safeParse(payload)
+      if (!parsed.success) throw new Error('Invalid payload')
 
-      // Remove from playing sessions
-      this.playingSessions.delete(client.userId)
+      const { trackId, currentTime } = parsed.data
+      this.sessions.stopPlaying(userId)
+      this.emitToUser(userId, 'trackPaused', { trackId, currentTime, userId })
 
-      // Emit only to the user's personal room
-      this.server.to(`user_${client.userId}`).emit('trackPaused', {
-        trackId: parsed.data.trackId,
-        currentTime: parsed.data.currentTime,
-        userId: client.userId,
-      })
-
-      return {
-        event: 'pauseTrack',
-        data: {
-          success: true,
-          trackId: parsed.data.trackId,
-          currentTime: parsed.data.currentTime,
-        },
-      }
-    } catch (error) {
-      this.logger.error(
-        'Error pausing track:',
-        error instanceof Error ? error.message : 'Unknown error',
-      )
-      return {
-        event: 'pauseTrack',
-        data: {
-          success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        },
-      }
-    }
+      return { trackId, currentTime }
+    })
   }
 
+  /** Runs the handle update streaming operation. */
   @SubscribeMessage('updateStreaming')
-  handleUpdateStreaming(
+  async handleUpdateStreaming(
     @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() payload: UpdateStreamingDto,
-  ): WsResponse {
-    try {
-      if (!client.userId) {
-        throw new Error('Unauthorized')
-      }
+  ): Promise<WsResponse> {
+    return await this.respond('updateStreaming', async () => {
+      const userId = this.requireUserId(client)
 
-      const parsed = this.updatePayloadSchema.safeParse(payload)
-      if (!parsed.success) {
-        throw new Error('Invalid payload')
-      }
+      const parsed = updatePayloadSchema.safeParse(payload)
+      if (!parsed.success) throw new Error('Invalid payload')
 
-      if (parsed.data.isPlaying) {
-        this.playingSessions.set(client.userId, {
-          trackId: parsed.data.trackId,
-          currentTime: parsed.data.currentTime,
-          timestamp: Date.now(),
-        })
+      const { trackId, currentTime, isPlaying } = parsed.data
+      if (isPlaying) {
+        const track = await this.tracksService.findTrackById(trackId)
+        if (!track) throw new Error('Track not found')
+        this.sessions.startPlaying(userId, trackId, currentTime)
       } else {
-        this.playingSessions.delete(client.userId)
+        this.sessions.stopPlaying(userId)
       }
 
-      // Emit only to the user's personal room
-      this.server.to(`user_${client.userId}`).emit('trackUpdated', {
-        trackId: parsed.data.trackId,
-        currentTime: parsed.data.currentTime,
-        isPlaying: parsed.data.isPlaying,
-        userId: client.userId,
-      })
+      this.emitToUser(userId, 'trackUpdated', { trackId, currentTime, isPlaying, userId })
 
-      return {
-        event: 'updateStreaming',
-        data: {
-          success: true,
-          trackId: parsed.data.trackId,
-          currentTime: parsed.data.currentTime,
-          isPlaying: parsed.data.isPlaying,
-        },
-      }
-    } catch (error) {
-      this.logger.error(
-        'Error updating streaming:',
-        error instanceof Error ? error.message : 'Unknown error',
-      )
-      return {
-        event: 'updateStreaming',
-        data: {
-          success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        },
-      }
-    }
+      return { trackId, currentTime, isPlaying }
+    })
   }
 
+  /** Runs the handle get current state operation. */
   @SubscribeMessage('getCurrentState')
   handleGetCurrentState(@ConnectedSocket() client: AuthenticatedSocket): WsResponse {
     if (!client.userId) {
       return { event: 'currentState', data: { error: 'Unauthorized' } }
     }
 
-    const currentSession = this.playingSessions.get(client.userId)
-    if (currentSession) {
-      return {
-        event: 'currentState',
-        data: {
-          trackId: currentSession.trackId,
-          currentTime: this.calculateCurrentTime(currentSession),
-          isPlaying: true,
-        },
-      }
-    }
-
-    return {
-      event: 'currentState',
-      data: {
-        isPlaying: false,
-      },
-    }
+    return { event: 'currentState', data: this.sessions.getPlaybackState(client.userId) }
   }
 
-  private calculateCurrentTime(session: PlayingSession): number {
-    const elapsed = (Date.now() - session.timestamp) / 1000
-    return session.currentTime + elapsed
-  }
+  /** Opens an audio stream for the requested quality and starts pushing it. */
+  private async startAudioStream(client: AuthenticatedSocket, payload: StreamTrackPayload) {
+    const audio = await this.trackStreamingService.getTrackAudioStream(
+      payload.trackId,
+      payload.bitrate,
+      payload.format,
+    )
 
-  private createWsContext(client: AuthenticatedSocket) {
-    const context = new ExecutionContextHost([client])
-    context.setType('ws')
-    return context
-  }
+    const session = { stream: audio.stream, trackId: audio.trackId }
+    this.sessions.openStream(client.id, session)
 
-  // Method to emit events from controller
-  emitToUser(userId: string, event: string, data: Record<string, unknown>): void {
-    this.server.to(`user_${userId}`).emit(event, data)
+    client.emit('audioStreamStarted', {
+      trackId: audio.trackId,
+      bitrate: audio.bitrate,
+      format: audio.format,
+      codec: audio.codec,
+      contentType: audio.contentType,
+      size: audio.size,
+    })
+
+    void this.sessions.pipeToSocket(client, session)
+
+    return { trackId: audio.trackId, bitrate: audio.bitrate, format: audio.format }
   }
 }

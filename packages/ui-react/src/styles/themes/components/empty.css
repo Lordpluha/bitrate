@@ -1,0 +1,25 @@
+/**
+ * Empty State
+ * The empty-state block: its media badge and its description copy.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Fill behind the empty-state icon. */
+  --color-empty-media-surface: var(--color-muted);
+  /* Empty-state icon colour. */
+  --color-empty-media-foreground: var(--color-foreground);
+  /* Empty-state description text. */
+  --color-empty-description: var(--color-muted-foreground);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-empty-media-surface: var(--color-muted);
+  --color-empty-media-foreground: var(--color-foreground);
+  --color-empty-description: var(--color-muted-foreground);
+}

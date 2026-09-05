@@ -1,7 +1,7 @@
-import { TrackEntity } from '@modules/tracks'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the tracks get liked swagger operation. */
 export function TracksGetLikedSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get liked user tracks with pagination' }),
@@ -36,12 +36,17 @@ export function TracksGetLikedSwagger() {
               cover: 'https://example.com/cover.jpg',
               audioUrl: '',
               userId: '',
-              createdAt: new Date(),
-              updatedAt: new Date(),
+              createdAt: new Date('2026-01-01T00:00:00.000Z'),
+              updatedAt: new Date('2026-01-01T00:00:00.000Z'),
               duration: 180,
               releaseDate: new Date('2023-10-01T12:00:00.000Z'),
               lyrics: null,
-            } as TrackEntity,
+              processingStatus: 'READY',
+              processingError: null,
+              processingAttempts: 1,
+              processingStartedAt: new Date('2026-01-01T00:00:00.000Z'),
+              processingFinishedAt: new Date('2026-01-01T00:00:00.000Z'),
+            },
           ],
         },
       },

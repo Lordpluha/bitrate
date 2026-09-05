@@ -1,7 +1,7 @@
-import { execSync } from "node:child_process"
-import fs from "node:fs"
-import { glob } from "glob"
-import { convertSvgToComponent, generateIndexFile } from "./converter.mjs"
+import { execFileSync } from 'node:child_process'
+import fs from 'node:fs'
+import { glob } from 'glob'
+import { convertSvgToComponent, generateIndexFile } from './converter.mjs'
 
 /**
  * Очищает выходную директорию
@@ -26,7 +26,7 @@ export async function processSvgFiles(inputDir, outputDir, options = {}) {
   }
 
   // Поиск всех SVG файлов
-  const svgFiles = await glob("**/*.svg", {
+  const svgFiles = await glob('**/*.svg', {
     cwd: inputDir,
     absolute: true,
   })
@@ -39,7 +39,7 @@ export async function processSvgFiles(inputDir, outputDir, options = {}) {
   if (verbose) {
     console.log(`📦 Found ${svgFiles.length} SVG files`)
     if (colorVarNames.length > 0) {
-      console.log(`🎨 Color variables: ${colorVarNames.join(", ")}`)
+      console.log(`🎨 Color variables: ${colorVarNames.join(', ')}`)
     }
   }
 
@@ -50,7 +50,7 @@ export async function processSvgFiles(inputDir, outputDir, options = {}) {
     components.push(component)
 
     if (verbose) {
-      const colorType = component.isMonochrome ? "monochrome" : "multicolor"
+      const colorType = component.isMonochrome ? 'monochrome' : 'multicolor'
       console.log(`✓ ${component.componentName} (${colorType})`)
     }
   }
@@ -60,14 +60,18 @@ export async function processSvgFiles(inputDir, outputDir, options = {}) {
 
   // Автоматическое форматирование сгенерированных файлов
   if (verbose) {
-    console.log("🔧 Formatting generated files with Biome...")
+    console.log('🔧 Formatting generated files with Biome...')
   }
   try {
-    execSync(`pnpm exec biome check --write "${outputDir}"`, {
-      stdio: verbose ? "inherit" : "pipe",
+    // execFileSync, not execSync: the output directory is resolved from workspace configuration
+    // and reaches this call as a path. Interpolated into a shell string it would be one quote
+    // away from running whatever the rest of that path said; passed as its own argument it is
+    // never parsed by a shell at all.
+    execFileSync('pnpm', ['exec', 'biome', 'check', '--write', outputDir], {
+      stdio: verbose ? 'inherit' : 'pipe',
     })
   } catch (_error) {
-    console.warn("⚠️  Biome formatting failed, files may need manual formatting")
+    console.warn('⚠️  Biome formatting failed, files may need manual formatting')
   }
 
   console.log(`✅ Generated ${components.length} components in ${outputDir}`)

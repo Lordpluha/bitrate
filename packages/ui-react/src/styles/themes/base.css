@@ -1,0 +1,109 @@
+/**
+ * Base Roles (shadcn)
+ * The role names shadcn itself ships with, which every other part-file builds on. These names
+ * mirror upstream exactly and must not be renamed — diverging from them means hand-editing every
+ * component pulled from the shadcn CLI.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Page background. */
+  --color-background: var(--color-neutral-950);
+  /* Default body text color. Same value as `text` (global/text.css) in every theme; kept
+     separate so body copy can be retinted without moving the page's own foreground. */
+  --color-foreground: var(--color-white);
+  /* Card surface background. Same value as `background-elevated` (global/surfaces.css) in every
+     theme; kept separate so the Card component and a generic elevated surface can diverge. */
+  --color-card: #151923;
+  /* Text on a card surface. */
+  --color-card-foreground: var(--color-white);
+  /* Popover / menu-content surface — Base UI Popover, Select content, dropdown panels. */
+  --color-popover: #1e232e;
+  /* Text on a popover surface. */
+  --color-popover-foreground: var(--color-white);
+  /* Primary action surface — Bitrate Purple, used by CTA buttons and active controls. */
+  --color-primary: var(--color-purple-500);
+  /* Text/icon color on a primary surface. White, not black: black on Bitrate Purple is
+     3.69:1 and fails WCAG AA; white measures 5.70:1 and clears it. */
+  --color-primary-foreground: var(--color-white);
+  /* Secondary action surface. */
+  --color-secondary: var(--color-neutral-800);
+  /* Text on a secondary surface. */
+  --color-secondary-foreground: var(--color-white);
+  /* Muted background — skeletons, disabled and inactive surfaces. */
+  --color-muted: var(--color-neutral-800);
+  /* Text on a muted surface. */
+  --color-muted-foreground: var(--color-neutral-400);
+  /* Accent background — the hover/focus state of a menu item. */
+  --color-accent: var(--color-purple-400);
+  /* Text on an accent surface. */
+  --color-accent-foreground: var(--color-black);
+  /* Destructive (delete/remove) action surface. Same value as `error` (global/status.css) in
+     every theme; kept separate so a destructive control and an error message can diverge. */
+  --color-destructive: var(--color-red-500);
+  /* Text on a destructive surface. */
+  --color-destructive-foreground: var(--color-white);
+  /* Default border color for shadcn primitives. */
+  --color-border: #2a303c;
+  /* Input surface/border color. */
+  --color-input: var(--color-neutral-800);
+  /* Focus ring color. */
+  --color-ring: var(--color-purple-500);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-background: var(--color-white);
+  --color-foreground: var(--color-neutral-950);
+  --color-card: #ffffff;
+  --color-card-foreground: var(--color-neutral-950);
+  --color-popover: #ffffff;
+  --color-popover-foreground: var(--color-neutral-950);
+  --color-primary: var(--color-purple-500);
+  --color-primary-foreground: var(--color-white);
+  --color-secondary: #f8fafc;
+  --color-secondary-foreground: var(--color-neutral-950);
+  --color-muted: #f8fafc;
+  --color-muted-foreground: var(--color-neutral-600);
+  --color-accent: var(--color-purple-500);
+  --color-accent-foreground: var(--color-white);
+  --color-destructive: var(--color-red-600);
+  --color-destructive-foreground: var(--color-white);
+  --color-border: var(--color-neutral-200);
+  --color-input: var(--color-neutral-300);
+  --color-ring: var(--color-purple-500);
+}
+
+/**
+ * Dim Theme (low-light)
+ *
+ * A partial theme layered on the dark defaults: it overrides only the surface, text, border and
+ * action roles the brand board specifies for dim. Every other role — component-scoped roles
+ * included — deliberately inherits its dark value, so a component gains dim support for free.
+ */
+:root.dim {
+  --color-background: #0e1117;
+  --color-card: #171b24;
+  --color-card-foreground: var(--color-neutral-200);
+  --color-popover: #1f2633;
+  --color-popover-foreground: var(--color-neutral-200);
+  --color-foreground: var(--color-neutral-200);
+  /* The brand board specifies #8b5cf6 for dim's primary action, but white on it measures
+     4.23:1 — below the 4.5:1 WCAG AA floor this repo treats as a release constraint. Dim
+     therefore keeps the shared Bitrate Purple, which clears it at 5.70:1. Revisit with the
+     designer if dim needs a distinct action colour. */
+  --color-primary: var(--color-purple-500);
+  --color-primary-foreground: var(--color-white);
+  --color-secondary: #1f2633;
+  --color-muted: #1f2633;
+  --color-muted-foreground: #a1a7b3;
+  /* Accent keeps #8b5cf6: its foreground stays the inherited black, 4.96:1. */
+  --color-accent: #8b5cf6;
+  --color-border: #2b3242;
+  --color-input: #2b3242;
+  --color-ring: var(--color-purple-500);
+}

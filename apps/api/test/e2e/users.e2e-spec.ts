@@ -1,6 +1,8 @@
+import { PrismaService } from '@infra/prisma/prisma.service'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
-import { INestApplication } from '@nestjs/common'
-import * as request from 'supertest'
+import type { INestApplication } from '@nestjs/common'
+import request from 'supertest'
+import { verifyUserEmail } from '../helpers/db'
 import { closeE2eApp, createE2eApp } from './e2e-app'
 
 const makeRunId = () => Math.random().toString(36).slice(2, 8)
@@ -26,6 +28,7 @@ describe('UsersController (e2e)', () => {
     }
 
     await request(app.getHttpServer()).post('/auth/registration').send(registration).expect(201)
+    await verifyUserEmail(app.get(PrismaService), registration.email)
 
     const loginResponse = await request(app.getHttpServer())
       .post('/auth/login')
@@ -61,6 +64,39 @@ describe('UsersController (e2e)', () => {
     await request(app.getHttpServer())
       .put('/users')
       .send({ username: 'user2', email: 'user2@example.com' })
+      .expect(401)
+  })
+
+  it('GET /users?username=... should return matching users', async () => {
+    const runId = makeRunId()
+    const registration = {
+      email: `user_${runId}@example.com`,
+      password: 'password123',
+      username: `user_${runId}`,
+    }
+
+    await request(app.getHttpServer()).post('/auth/registration').send(registration).expect(201)
+    await verifyUserEmail(app.get(PrismaService), registration.email)
+
+    const res = await request(app.getHttpServer())
+      .get('/users')
+      .query({ username: `user_${runId}`, limit: 10, page: 1 })
+      .expect(200)
+
+    expect(Array.isArray(res.body.data)).toBe(true)
+    expect(res.body.data.some((u: { username: string }) => u.username === `user_${runId}`)).toBe(
+      true,
+    )
+  })
+
+  it('GET /users without username should return 400', async () => {
+    await request(app.getHttpServer()).get('/users').query({ limit: 10, page: 1 }).expect(400)
+  })
+
+  it('POST /users/avatar should return 401 without auth', async () => {
+    await request(app.getHttpServer())
+      .post('/users/avatar')
+      .attach('avatar', Buffer.from('fake'), { filename: 'test.jpg', contentType: 'image/jpeg' })
       .expect(401)
   })
 })

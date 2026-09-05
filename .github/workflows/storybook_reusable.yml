@@ -1,0 +1,89 @@
+name: "[storybook] Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      push-image:
+        description: Push docker image
+        required: true
+        type: boolean
+      tags:
+        description: Docker tags (multiline)
+        required: true
+        type: string
+      timeout-minutes:
+        description: Job timeout in minutes
+        required: false
+        default: 60
+        type: number
+      cache-to-registry:
+        description: Export build cache to GHCR registry
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
+jobs:
+  storybook-build:
+    name: Storybook Build and Docker
+    runs-on: ubuntu-latest
+    # Two builds run inside this image: the ui-react library build (which generates
+    # src/icons/svgr/ that the stories import) and then the Storybook build itself. Neither
+    # is fast, so the default timeout is deliberately generous.
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+
+    # Biome, typecheck, and the four Vitest projects for packages/ui-react are already gated
+    # by ui_react.yml on the same path filter. This workflow only produces the image, so it
+    # does not repeat them.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Docker + registries
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      # The production target serves the prebuilt storybook-static bundle from nginx on 8080
+      # and reads no configuration, so this image carries no build args and is
+      # environment-agnostic.
+      - name: Build Storybook Docker image (with registry cache export)
+        if: ${{ inputs.cache-to-registry }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./packages/ui-react/Dockerfile
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook:buildcache
+            type=gha,scope=storybook
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook:buildcache,mode=max
+            type=gha,mode=max,scope=storybook
+          target: production
+
+      - name: Build Storybook Docker image (GHA cache export only)
+        if: ${{ !inputs.cache-to-registry }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./packages/ui-react/Dockerfile
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook:buildcache
+            type=gha,scope=storybook
+          cache-to: |
+            type=gha,mode=max,scope=storybook
+          target: production

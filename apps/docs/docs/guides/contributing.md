@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Contributing Guide
 
-Thank you for your interest in contributing to Spotify Clone!
+Thank you for your interest in contributing to Bitrate!
 
 ## 🎯 Ways to Contribute
 
@@ -23,14 +23,14 @@ Click the "Fork" button on GitHub to create your own copy.
 ### 2. Clone Your Fork
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/spotify-clone.git
-cd spotify-clone
+git clone https://github.com/YOUR_USERNAME/bitrate.git
+cd bitrate
 ```
 
 ### 3. Add Upstream Remote
 
 ```bash
-git remote add upstream https://github.com/Lordpluha/spotify-clone.git
+git remote add upstream https://github.com/Lordpluha/bitrate.git
 ```
 
 ### 4. Create a Branch
@@ -148,7 +148,7 @@ Before submitting:
 pnpm test
 
 # Specific app
-pnpm --filter @spotify/api test
+pnpm --filter @bitrate/api test
 
 # Watch mode
 pnpm test:watch
@@ -234,7 +234,7 @@ export const Button = (props: any) => {
 
 ## 🐛 Bug Reports
 
-Use the [bug report template](https://github.com/Lordpluha/spotify-clone/issues/new?template=bug_report.md):
+Use the [bug report template](https://github.com/Lordpluha/bitrate/issues/new?template=bug_report.md):
 
 **Required Information:**
 - Description of the bug
@@ -246,7 +246,7 @@ Use the [bug report template](https://github.com/Lordpluha/spotify-clone/issues/
 
 ## 💡 Feature Requests
 
-Use the [feature request template](https://github.com/Lordpluha/spotify-clone/issues/new?template=feature_request.md):
+Use the [feature request template](https://github.com/Lordpluha/bitrate/issues/new?template=feature_request.md):
 
 **Required Information:**
 - Problem description
@@ -294,4 +294,4 @@ Every contribution, no matter how small, is valued and appreciated!
 
 ---
 
-**Questions?** Open a [discussion](https://github.com/Lordpluha/spotify-clone/discussions) or join our community.
+**Questions?** Open a [discussion](https://github.com/Lordpluha/bitrate/discussions) or join our community.

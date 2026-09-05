@@ -1,0 +1,34 @@
+# ADR-0006: Shared UI package, tokens, Base UI, and shadcn methodology
+
+Status: Accepted — the shared-package and shadcn parts stand; the token *pipeline* it
+describes was retired by [ADR-0023](./0023-tokens-into-ui-react.md), which makes the CSS
+itself the source
+
+Date: 2026-06-24
+
+## Context
+
+Web surfaces need consistent primitives, themes, icons, accessibility, stories, and visual
+tests without locking product UI behind an opaque dependency.
+
+## Decision
+
+- `@bitrate/ui-react` owns React component source and public exports.
+- `packages/tokens/tokens.json` is the design-value source of truth.
+- `@spotify/tokens-generator` produces Tailwind v4 CSS.
+- Base UI and package-owned Slot helpers provide primitives.
+- shadcn is a discovery/scaffolding methodology; generated code is reviewed and becomes
+  repository-owned source.
+- Public primitives receive Storybook stories and Vitest coverage proportional to behaviour.
+
+## Consequences
+
+Applications consume `@bitrate/ui-react` before creating local primitives. Literal visual
+values are promoted to tokens. Updating an upstream shadcn component uses CLI diff/merge,
+not blind overwrite.
+
+## Alternatives considered
+
+- **Per-app component copies** — rejected because fixes and accessibility drift.
+- **Runtime component dependency only** — rejected because local ownership and customisation
+  are central to the design system.

@@ -1,10 +1,10 @@
-import { processSvgFiles } from "../core/processor.mjs"
+import { processSvgFiles } from '../core/processor.mjs'
 
 /**
  * Build режим - одноразовая конвертация всех SVG
  */
 export async function build(inputDir, outputDir, options = {}) {
-  console.log("🎨 [SVGR] Building SVG components...")
+  console.log('🎨 [SVGR] Building SVG components...')
 
   try {
     await processSvgFiles(inputDir, outputDir, {
@@ -13,7 +13,7 @@ export async function build(inputDir, outputDir, options = {}) {
       ...options,
     })
   } catch (error) {
-    console.error("❌ [SVGR] Build failed:", error)
+    console.error('❌ [SVGR] Build failed:', error)
     process.exit(1)
   }
 }

@@ -1,0 +1,76 @@
+name: "[ui-react] Tests"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'packages/ui-react/**'
+      - '.github/workflows/ui_react.yml'
+      - '.github/workflows/ui_react_reusable.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop]
+    paths:
+      - 'packages/ui-react/**'
+      - '.github/workflows/ui_react.yml'
+      - '.github/workflows/ui_react_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+      run-biome:
+        description: "Run Biome check"
+        required: false
+        default: true
+        type: boolean
+      run-tests:
+        description: "Run Vitest unit/snapshot/int tests"
+        required: false
+        default: true
+        type: boolean
+      run-screenshot:
+        description: "Run Vitest screenshot tests"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+# These jobs only check out and test. The Storybook image is built by storybook.yml, which
+# is the only ui-react workflow that needs packages: write.
+permissions:
+  contents: read
+
+jobs:
+  ui-react-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/ui_react_reusable.yml
+    with:
+      run-biome: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-biome'] == 'true' || true }}
+      run-tests: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-tests'] == 'true' || true }}
+      run-screenshot: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-screenshot'] == 'true' || false }}
+
+  ui-react-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/ui_react_reusable.yml
+    with:
+      run-biome: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-biome'] == 'true' || true }}
+      run-tests: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-tests'] == 'true' || true }}
+      run-screenshot: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-screenshot'] == 'true' || false }}
+
+  ui-react-master:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/ui_react_reusable.yml
+    with:
+      run-biome: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-biome'] == 'true' || false }}
+      run-tests: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-tests'] == 'true' || true }}
+      run-screenshot: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-screenshot'] == 'true' || false }}

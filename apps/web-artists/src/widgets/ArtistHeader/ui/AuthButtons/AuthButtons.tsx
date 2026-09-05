@@ -1,29 +1,55 @@
-import Link from 'next/link'
-import { cn } from '@spotify/ui-react'
+'use client'
 
-export const AuthButtons = () => (
-  <div className="flex items-center gap-4">
-    <Link
+import { cn } from '@bitrate/ui-react'
+import { useAuthContext } from '@shared/hooks'
+import { ROUTES } from '@shared/routes/routes'
+import Link from 'next/link'
+
+interface AuthButtonsProps {
+  variant?: 'default' | 'burger'
+  className?: string
+}
+
+export const AuthButtons = ({
+  variant = 'default',
+  className,
+}: AuthButtonsProps) => {
+  const isBurger = variant === 'burger'
+  const { logout } = useAuthContext()
+
+  return (
+    <div
       className={cn(
-        'text-sm text-center text-text font-bold',
-        'py-1 px-4 h-8',
-        'rounded-3xl border-solid border',
-        'transform hover:scale-105 transition duration-300 ease-in-out',
+        'flex items-center',
+        isBurger ? 'flex-col gap-3 w-full mb-10' : 'flex-row gap-4',
+        className,
       )}
-      href={'/login'}
     >
-      Log out
-    </Link>
-    <Link
-      className={cn(
-        'text-sm text-center bg-white font-bold',
-        'py-1 px-4 h-8',
-        'rounded-3xl border-solid border',
-        'transform hover:scale-105 transition duration-300 ease-in-out',
-      )}
-      href={'/registration'}
-    >
-      Get access
-    </Link>
-  </div>
-)
+      <button
+        className={cn(
+          'text-sm text-center text-text font-bold',
+          'py-1 px-4',
+          'rounded-3xl border-solid border',
+          'transform hover:scale-105 transition duration-300 ease-in-out',
+          isBurger && 'text-base w-full py-3 px-12 align-middle',
+        )}
+        onClick={() => logout()}
+        type="button"
+      >
+        Log out
+      </button>
+      <Link
+        className={cn(
+          'text-sm text-center bg-white font-bold',
+          'py-1 px-4',
+          'rounded-3xl',
+          'transform hover:scale-105 transition duration-300 ease-in-out',
+          isBurger && 'text-base w-full py-3 px-12',
+        )}
+        href={ROUTES.auth.registration}
+      >
+        Get access
+      </Link>
+    </div>
+  )
+}

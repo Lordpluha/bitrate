@@ -1,29 +1,19 @@
+import { LogoIcon } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
-import { SpotifyLogo, cn } from '@spotify/ui-react'
 import Link from 'next/link'
-import type { FC } from 'react'
 
 export type LogoProps = {
-  color?: 'dark' | 'light'
+  href?: string
 }
 
-export const Logo: FC<LogoProps> = ({ color = 'dark' }) => {
+export const Logo = ({ href = ROUTES.landing }: LogoProps) => {
   return (
     <Link
-      aria-label="Spotify Home"
+      aria-label="Bitrate Home"
       className="transition-[0.3s] hover:opacity-70"
-      href={ROUTES.landing}
+      href={href}
     >
-      <SpotifyLogo
-        width={112}
-        height={32}
-        className={cn(
-          'transition-[0.3s]',
-          color === 'dark'
-            ? 'text-text fill-text'
-            : 'text-text-contrast fill-text-contrast',
-        )}
-      />
+      <LogoIcon className="transition-[0.3s]" height={32} width={32} />
     </Link>
   )
 }

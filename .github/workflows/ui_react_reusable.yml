@@ -1,0 +1,123 @@
+name: "[ui-react] Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      run-biome:
+        description: Run biome check
+        required: false
+        default: true
+        type: boolean
+      run-tests:
+        description: Run Vitest unit/snapshot/int tests
+        required: false
+        default: true
+        type: boolean
+      run-screenshot:
+        description: Run Vitest screenshot tests (requires committed baselines)
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  biome:
+    if: ${{ inputs.run-biome }}
+    name: UI React Biome
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run Biome check
+        run: pnpm exec biome ci packages/ui-react
+
+  tokens:
+    name: UI React Design Tokens
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      # Source that paints with Tailwind's built-in palette never reaches the token layer in
+      # src/styles, so the theme switch cannot touch it. That failure lints clean, which is
+      # why it needs its own gate.
+      - name: Fail if UI source uses stock Tailwind colours
+        run: pnpm check:tokens
+
+  unit:
+    if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
+    needs: biome
+    name: UI React Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run unit tests
+        run: pnpm --filter @bitrate/ui-react run test:unit
+
+  integration:
+    if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
+    needs: biome
+    name: UI React Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run integration tests
+        run: pnpm --filter @bitrate/ui-react run test:int
+
+  snapshot:
+    if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
+    needs: biome
+    name: UI React Snapshot Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run snapshot tests
+        run: pnpm --filter @bitrate/ui-react run test:snapshot
+
+  screenshot:
+    if: ${{ always() && inputs.run-screenshot && (!inputs.run-biome || needs.biome.result == 'success') }}
+    needs: biome
+    name: UI React Screenshot Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Run screenshot tests
+        run: pnpm --filter @bitrate/ui-react run test:screenshot

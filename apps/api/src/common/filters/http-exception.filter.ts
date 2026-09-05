@@ -1,16 +1,34 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common'
-import { Request, Response } from 'express'
+import { STATUS_CODES } from 'node:http'
+import {
+  type ArgumentsHost,
+  Catch,
+  type ExceptionFilter,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common'
+import { SentryExceptionCaptured } from '@sentry/nestjs'
+import type { Request, Response } from 'express'
+import { getRequestId } from '../http/request-context'
 
+/** Represents the http exception filter. */
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
+  /** Runs the catch operation. */
+  @SentryExceptionCaptured()
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
     const request = ctx.getRequest<Request>()
+    const requestId = getRequestId(request)
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR
     let message = 'Internal server error'
-    let error = 'Internal Server Error'
+    /**
+     * Left unset until the status is known, then filled from the status itself. Seeding it with a
+     * 500 label instead made every exception that omits its own `error` field — nestjs-zod's
+     * validation exception among them — answer `400 Internal Server Error`.
+     */
+    let error: string | undefined
 
     if (exception instanceof HttpException) {
       status = exception.getStatus()
@@ -19,9 +37,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
       if (typeof exceptionResponse === 'string') {
         message = exceptionResponse
       } else if (typeof exceptionResponse === 'object') {
-        const responseObj = exceptionResponse as Record<string, any>
-        message = responseObj.message || message
-        error = responseObj.error || error
+        const responseObj = exceptionResponse as Record<string, unknown>
+        if (typeof responseObj.message === 'string') {
+          message = responseObj.message
+        } else if (Array.isArray(responseObj.message)) {
+          message =
+            responseObj.message.filter((item) => typeof item === 'string').join(', ') || message
+        }
+
+        if (typeof responseObj.error === 'string') {
+          error = responseObj.error
+        }
       }
     } else if (exception instanceof Error) {
       // Handle NotFoundError from serve-static/send
@@ -60,6 +86,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           timestamp: new Date().toISOString(),
           path: request.url,
           method: request.method,
+          requestId,
           exception: exception instanceof Error ? exception.message : exception,
           stack: exception instanceof Error ? exception.stack : undefined,
         })
@@ -71,10 +98,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      error,
+      error: error ?? STATUS_CODES[status] ?? 'Internal Server Error',
       message,
       timestamp: new Date().toISOString(),
       path: request.url,
+      ...(requestId ? { requestId } : {}),
     })
   }
 }

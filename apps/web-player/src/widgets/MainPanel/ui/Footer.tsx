@@ -1,8 +1,5 @@
-import React from 'react'
-
+import { Facebook, InstIcon, TwitIcon } from '@bitrate/ui-react'
 import Link from 'next/link'
-
-import { FacebookIcon, InstIcon, TwitIcon } from '@spotify/ui-react'
 
 const sections = [
   {
@@ -23,13 +20,13 @@ const sections = [
     ],
   },
   {
-    title: 'Spotify Plans',
+    title: 'Bitrate Plans',
     links: [
       'Premium Individual',
       'Premium Duo',
       'Premium Family',
       'Premium Student',
-      'Spotify Free',
+      'Bitrate Free',
     ],
   },
 ]
@@ -45,19 +42,19 @@ const bottomLinks = [
 
 function Footer() {
   return (
-    <footer className="mt-16 pt-16 pb-8">
-      <div className="grid grid-cols-5 gap-8 mb-8">
+    <footer className="mt-12 pb-8 pt-12 sm:mt-16 sm:pt-16">
+      <div className="mb-8 grid grid-cols-2 gap-8 lg:grid-cols-4 xl:grid-cols-5 max-[420px]:grid-cols-1">
         {sections.map((section) => (
           <div key={section.title}>
-            <h3 className="text-white font-semibold text-base mb-4">
+            <h3 className="text-text font-semibold text-base mb-4">
               {section.title}
             </h3>
             <ul className="space-y-3">
               {section.links.map((link) => (
                 <li key={link}>
                   <Link
+                    className="text-text-subdued hover:text-text text-sm transition-[0.3s]"
                     href="#"
-                    className="text-gray-400 hover:text-white text-sm transition-[0.3s]"
                   >
                     {link}
                   </Link>
@@ -66,42 +63,42 @@ function Footer() {
             </ul>
           </div>
         ))}
-        <div className="flex justify-end mb-8">
+        <div className="mb-8 flex justify-start lg:col-span-4 xl:col-span-1 xl:justify-end">
           <div className="flex items-start space-x-4">
             <Link
+              className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
               href="#"
-              className=" bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
             >
-              <FacebookIcon />
+              <Facebook height={50} width={50} />
             </Link>
             <Link
+              className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
               href="#"
-              className=" bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
             >
-              <TwitIcon />
+              <TwitIcon height={50} width={50} />
             </Link>
             <Link
+              className="w-10 h-10 bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
               href="#"
-              className=" bg-surface hover:opacity-[0.7] rounded-full flex items-center justify-center transition-[0.3s]"
             >
-              <InstIcon />
+              <InstIcon height={50} width={50} />
             </Link>
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-center justify-between pt-8 border-t border-gray-700">
-        <div className="flex flex-wrap items-center space-x-6 text-xs text-gray-400 mb-4 md:mb-0">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8">
+        <div className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-text-subdued md:mb-0">
           {bottomLinks.map((link) => (
             <Link
-              key={link}
+              className="hover:text-text transition-[0.3s]"
               href="#"
-              className="hover:text-white transition-[0.3s]"
+              key={link}
             >
               {link}
             </Link>
           ))}
         </div>
-        <div className="text-xs text-gray-400">© 2025 Spotify AB</div>
+        <div className="text-xs text-text-subdued">© 2026 Bitrate</div>
       </div>
     </footer>
   )

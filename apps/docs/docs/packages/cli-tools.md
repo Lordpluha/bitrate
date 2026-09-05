@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # CLI Tools
 
-Custom command-line utilities built for the Spotify Clone project.
+Custom command-line utilities built for the Bitrate project.
 
 ## 📦 Overview
 
@@ -12,10 +12,9 @@ The project includes several reusable CLI tools built as standalone packages:
 
 | Package | Command | Purpose |
 |---------|---------|---------|
-| `@spotify/tokens-generator` | `tokens-generator` | Design tokens → CSS variables |
-| `@spotify/esbuild-bundler` | `react-bundler` | Fast React library bundling |
-| `@spotify/svgr` | `react-svgr` | SVG → React components |
-| `@spotify/converter` | `media-converter` | Audio/video conversion |
+| `@bitrate/svgr` | `react-svgr` | SVG → React components |
+| `@bitrate/vite-svgr` | — | Vite plugin: SVG generation in build pipeline |
+| `@bitrate/converter` | `media-converter` | Audio/video conversion |
 
 All tools follow the same pattern:
 - ✅ CLI with `--help` flag
@@ -23,210 +22,51 @@ All tools follow the same pattern:
 - ✅ TypeScript support
 - ✅ Fast execution
 
-## 🎨 tokens-generator
+## ⚡ vite-svgr
 
-Generate CSS variables from design tokens (JSON).
-
-### Installation
-
-```bash
-pnpm add @spotify/tokens-generator
-```
-
-### CLI Usage
-
-```bash
-# Basic usage
-tokens-generator \
-  --tokens ./tokens.json \
-  --config ./tokens.config.mjs \
-  --output ./src/styles
-
-# Initialize config file
-tokens-generator --init
-```
-
-### Options
-
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--tokens` | Path to tokens JSON file | Required |
-| `--config` | Path to config file | `tokens.config.mjs` |
-| `--output` | Output directory | `./styles` |
-| `--init` | Create default config | - |
-
-### Configuration
-
-**tokens.config.mjs:**
-
-```javascript
-export default {
-  output: {
-    palette: 'palette.css',
-    layout: 'layout.css',
-    typography: 'typography.css',
-    themes: 'themes.css'
-  },
-  themes: ['light', 'dark'],
-  prefix: '--sp'
-}
-```
-
-### Input Format
-
-**tokens.json:**
-
-```json
-{
-  "colors": {
-    "primary": {
-      "50": "#eff6ff",
-      "500": "#3b82f6",
-      "900": "#1e3a8a"
-    }
-  },
-  "spacing": {
-    "xs": "4px",
-    "sm": "8px",
-    "md": "16px"
-  }
-}
-```
-
-### Output
-
-Generates CSS files with custom properties:
-
-```css
-/* palette.css */
-:root {
-  --sp-color-primary-50: #eff6ff;
-  --sp-color-primary-500: #3b82f6;
-  --sp-color-primary-900: #1e3a8a;
-}
-
-/* layout.css */
-:root {
-  --sp-spacing-xs: 4px;
-  --sp-spacing-sm: 8px;
-  --sp-spacing-md: 16px;
-}
-```
-
-### Programmatic API
-
-```javascript
-import { generateTokens } from '@spotify/tokens-generator'
-
-const config = {
-  tokensPath: './tokens.json',
-  output: './styles',
-  themes: ['light', 'dark']
-}
-
-await generateTokens(config)
-```
-
-## ⚡ esbuild-bundler
-
-Ultra-fast bundler for React libraries using ESBuild.
+Vite plugin that integrates `@bitrate/svgr` into the Vite build pipeline — no separate pre-build step needed.
 
 ### Installation
 
 ```bash
-pnpm add @spotify/esbuild-bundler
+pnpm add @bitrate/vite-svgr
 ```
 
-### CLI Usage
+### Usage
 
-```bash
-# Build mode
-react-bundler build
+Add to `vite.config.ts` **before** other plugins so SVG components are generated before transforms run:
 
-# Development mode (watch)
-react-bundler dev
+```typescript
+import { svgrPlugin } from '@bitrate/vite-svgr'
+import { defineConfig } from 'vite'
 
-# Custom options
-react-bundler build \
-  --cwd ./packages/ui \
-  --entry "src/**/*.{ts,tsx}" \
-  --outdir dist \
-  --css-input ./src/styles/index.css \
-  --css-output ./dist/globals.css
-```
-
-### Commands
-
-#### build
-
-Build for production (ESM + CJS + Types + CSS).
-
-```bash
-react-bundler build [options]
-```
-
-#### dev
-
-Watch mode with hot reload.
-
-```bash
-react-bundler dev [options]
+export default defineConfig({
+  plugins: [
+    svgrPlugin({
+      input: './assets/icons',   // supports @scope/pkg/subpath
+      output: 'src/icons/svgr',
+      variables: ['primaryColor', 'secondaryColor'],
+    }),
+    // ... other plugins
+  ],
+})
 ```
 
 ### Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--cwd` | Working directory | `process.cwd()` |
-| `--entry` | Entry glob pattern | `src/**/*.{ts,tsx}` |
-| `--ignore` | Ignore patterns | `**/*.test.*` |
-| `--outdir` | Output directory | `dist` |
-| `--css-input` | CSS entry file | `./src/styles/index.css` |
-| `--css-output` | CSS output file | `./dist/globals.css` |
+| Option | Type | Description | Required |
+|--------|------|-------------|----------|
+| `input` | `string` | SVG source directory (supports `@scope/pkg/subpath`, relative, or absolute paths) | ✅ |
+| `output` | `string` | Output directory for generated React components | ✅ |
+| `variables` | `string[]` | Color variable names for multicolor icons | ❌ |
 
 ### Features
 
-- ✅ **Dual builds**: ESM and CJS
-- ✅ **TypeScript**: Type generation with tsc
-- ✅ **Tailwind CSS v4**: Rust-based, ultra-fast
-- ✅ **Path aliases**: Automatic `@/` resolution
-- ✅ **Watch mode**: Incremental rebuilds
-
-### Build Output
-
-```
-dist/
-├── esm/          # ES Modules
-│   ├── index.js
-│   └── components/
-├── cjs/          # CommonJS
-│   ├── index.js
-│   └── components/
-├── types/        # TypeScript definitions
-│   ├── index.d.ts
-│   └── components/
-└── globals.css   # Compiled CSS
-```
-
-### Programmatic API
-
-```javascript
-import { runBuild, runDev } from '@spotify/esbuild-bundler'
-
-// Build
-await runBuild({
-  cwd: process.cwd(),
-  entry: 'src/**/*.{ts,tsx}',
-  outdir: 'dist'
-})
-
-// Dev mode
-await runDev({
-  cwd: process.cwd(),
-  entry: 'src/**/*.{ts,tsx}',
-  outdir: 'dist'
-})
-```
+- ✅ **Build mode**: runs once in `buildStart`, before any module transforms
+- ✅ **Watch mode** (`vite build --watch`): re-generates on any `.svg` change
+- ✅ **Dev server** (`vite dev` / Storybook): attaches to chokidar, triggers full-reload on SVG changes
+- ✅ **Package path resolution**: `@scope/package/subpath` resolved via pnpm workspace
+- ✅ **Automatic cleanup**: cleans output dir before each generation
 
 ## 🎨 svgr
 
@@ -235,7 +75,7 @@ Convert SVG files to React components with dynamic color support.
 ### Installation
 
 ```bash
-pnpm add @spotify/svgr
+pnpm add @bitrate/svgr
 ```
 
 ### CLI Usage
@@ -243,13 +83,13 @@ pnpm add @spotify/svgr
 ```bash
 # Build mode
 react-svgr build \
-  -i @spotify/tokens/icons \
+  -i ./assets/icons \
   -o src/icons/svgr \
   --variables "primaryColor,secondaryColor"
 
 # Watch mode
 react-svgr dev \
-  -i @spotify/tokens/icons \
+  -i ./assets/icons \
   -o src/icons/svgr
 ```
 
@@ -316,7 +156,7 @@ Convert media files using FFmpeg (Audio → OGG Opus, Video → AAC).
 ### Installation
 
 ```bash
-pnpm add @spotify/converter
+pnpm add @bitrate/converter
 ```
 
 ### Prerequisites
@@ -389,7 +229,7 @@ media-converter video -i video.avi -b 64k --profile aac_he
 ### Programmatic API
 
 ```javascript
-import { convertAudio, convertVideo } from '@spotify/converter'
+import { convertAudio, convertVideo } from '@bitrate/converter'
 
 // Audio conversion
 const result = await convertAudio({
@@ -426,11 +266,10 @@ const videoResult = await convertVideo({
 ```json
 {
   "scripts": {
-    "tokens": "tokens-generator --tokens ../tokens/tokens.json --output ./src/styles",
-    "icons": "react-svgr build -i @spotify/tokens/icons -o src/icons",
-    "icons:watch": "react-svgr dev -i @spotify/tokens/icons -o src/icons",
-    "build": "react-bundler build",
-    "dev": "react-bundler dev",
+    "icons": "react-svgr build -i ./assets/icons -o src/icons",
+    "icons:watch": "react-svgr dev -i ./assets/icons -o src/icons",
+    "build": "vite build",
+    "dev": "vite build --watch",
     "convert": "media-converter audio -i input.mp3 -o output.opus"
   }
 }
@@ -448,10 +287,10 @@ pnpm icons
 # Watch icons
 pnpm icons:watch
 
-# Build package
+# Build package (SVG generation + Vite build, all in one)
 pnpm build
 
-# Development
+# Watch mode
 pnpm dev
 ```
 
@@ -512,7 +351,6 @@ pnpm dev
 pnpm install
 
 # Or use pnpm exec
-pnpm exec tokens-generator --help
 ```
 
 ### FFmpeg Not Found

@@ -14,6 +14,12 @@ node_modules
 
 # Testing
 coverage
+.playwright-cli/
+.playwright-mcp/
+**/playwright-report/
+**/test-results/
+**/blob-report/
+/output/playwright/
 
 # Turbo
 .turbo
@@ -39,3 +45,37 @@ yarn-error.log*
 
 *storybook.log
 storybook-static
+
+FRONTEND_BACKLOG.md
+
+# Claude Code — track the agent layer, ignore local settings and worktrees
+.claude/settings.local.json
+.claude/worktrees/
+
+# graphify — local raw cache/visualization/codebase map (graph.json, graph.html,
+# graph.canvas). Fully regenerable, high-churn — regenerate with `graphify . --update`,
+# don't commit. See .claude/rules/knowledge-base.md for details.
+/graphify-out/
+
+# Scratch dir for /sp-auto and /sp-implement PR bodies.
+# Must live inside the repo: under the VS Code Flatpak sandbox the host `gh`
+# cannot see sandbox /tmp, but it can see the repo.
+.sp-scratch/
+
+# Database dumps written by `task db:backup`. Never commit a dump — it can
+# contain real user data.
+/backups/
+
+# k6 load-test output (packages/performance-test)
+packages/performance-test/results.json
+packages/performance-test/summary.json
+
+# tsc --noEmit still writes a build-info file when `incremental` is on, so every
+# `pnpm check-types` regenerates this. Only packages/contracts emits one outside dist/.
+*.tsbuildinfo
+
+# Database dumps from `task db:backup`
+backups/
+
+# ACME challenge webroot for certbot
+infra/nginx/certbot-webroot/

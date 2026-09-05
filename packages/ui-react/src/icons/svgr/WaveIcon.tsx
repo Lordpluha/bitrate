@@ -4,7 +4,7 @@ interface WaveIconProps extends SVGProps<SVGSVGElement> {
   primaryColor?: string
 }
 
-export const WaveIcon = ({ primaryColor = '#1db954', ...props }: WaveIconProps) => (
+export const WaveIcon = ({ primaryColor = 'var(--color-primary)', ...props }: WaveIconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"

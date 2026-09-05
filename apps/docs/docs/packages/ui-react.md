@@ -6,15 +6,16 @@ sidebar_position: 1
 
 Shared React component library used across all frontend applications.
 
-## 📦 Package: @spotify/ui-react
+## 📦 Package: @bitrate/ui-react
 
-Reusable UI components built with React, TypeScript, and Tailwind CSS.
+Reusable UI components built with React 19, TypeScript, Base UI, Tailwind v4, and
+shadcn-style owned source.
 
 ## 🚀 Installation
 
 ```bash
 # In your app
-pnpm add @spotify/ui-react
+pnpm add @bitrate/ui-react
 
 # Development
 cd packages/ui-react
@@ -25,25 +26,32 @@ pnpm install
 
 ```
 packages/ui-react/
+├── assets/              # Raw source art — not shipped, consumed at build time
+│   ├── icons/          # SVG sources the svgr plugin compiles
+│   └── images/         # Raster assets used by stories (@assets/images/...)
 ├── src/
-│   ├── components/      # React components
-│   │   ├── Button/
-│   │   ├── Input/
-│   │   ├── Card/
+│   ├── components/ui/   # React components
+│   │   ├── button/
+│   │   ├── input/
+│   │   ├── form/
 │   │   └── ...
 │   ├── icons/           # Icon components
-│   │   └── svgr/       # Generated from SVG
+│   │   └── svgr/       # Generated from assets/icons/
 │   ├── lib/            # Utilities
-│   ├── styles/         # Global styles
+│   ├── styles/         # Hand-written Tailwind @theme layers — the token source
 │   │   ├── palette.css
 │   │   ├── layout.css
+│   │   ├── typography.css
+│   │   ├── themes.css   # Barrel — imports only, no colours of its own
+│   │   ├── themes/      # base.css, global/*.css, one components/*.css per component
+│   │   │   ├── base.css
+│   │   │   ├── global/
+│   │   │   └── components/
 │   │   └── index.css
-│   └── index.ts        # Public API
-├── dist/               # Built files
-│   ├── esm/           # ES Modules
-│   ├── cjs/           # CommonJS
-│   ├── types/         # TypeScript definitions
-│   └── globals.css    # Compiled CSS
+│   └── index.ts         # Public API
+├── vitest.config.ts     # Unit, integration, snapshot, screenshot projects
+├── components.json      # shadcn CLI configuration
+├── dist/                # ESM, CJS, and declarations
 └── package.json
 ```
 
@@ -52,50 +60,47 @@ packages/ui-react/
 ### Button
 
 ```tsx
-import { Button } from '@spotify/ui-react'
+import { Button } from '@bitrate/ui-react'
 
-<Button variant="primary" size="md" onClick={handleClick}>
+<Button variant="primary" size="lg" onClick={handleClick}>
   Click me
 </Button>
 
-// Variants: primary, secondary, ghost, danger
-// Sizes: sm, md, lg
+// Variants include default, primary, secondary, outline, ghost, destructive
+// Sizes: default, sm, lg, icon
 ```
 
 ### Input
 
 ```tsx
-import { Input } from '@spotify/ui-react'
+import { Input } from '@bitrate/ui-react'
 
 <Input
   type="text"
   placeholder="Enter text..."
   value={value}
-  onChange={setValue}
-  error={error}
+  onChange={(event) => setValue(event.target.value)}
 />
 ```
 
-### Card
+### Form primitives
 
 ```tsx
-import { Card } from '@spotify/ui-react'
+import { Form, Input, Label } from '@bitrate/ui-react'
 
-<Card>
-  <Card.Header>Title</Card.Header>
-  <Card.Body>Content</Card.Body>
-  <Card.Footer>Footer</Card.Footer>
-</Card>
+<Form {...form}>
+  <Label htmlFor="email">Email</Label>
+  <Input id="email" {...form.register('email')} />
+</Form>
 ```
 
 ### Icons
 
 ```tsx
-import { Music, Play, Pause } from '@spotify/ui-react/icons'
+import { MusicIcon, PlayIcon } from '@bitrate/ui-react'
 
-<Music primaryColor="#3b82f6" className="w-6 h-6" />
-<Play className="w-8 h-8" />
-<Pause className="w-8 h-8" />
+<MusicIcon className="size-6" />
+<PlayIcon className="size-8" />
 ```
 
 ## 🛠️ Development
@@ -113,18 +118,8 @@ pnpm dev
 ### Generate Icons
 
 ```bash
-# Generate React components from SVG
-pnpm svgr:build
-
-# Watch mode
-pnpm svgr:dev
-```
-
-### Generate Design Tokens
-
-```bash
-# Generate CSS from tokens.json
-pnpm gen:tokens
+# SVG generation also runs during the package build
+pnpm build
 ```
 
 ## 📝 Usage in Apps
@@ -133,76 +128,58 @@ pnpm gen:tokens
 
 ```tsx
 // app/layout.tsx
-import '@spotify/ui-react/styles'
+import '@bitrate/ui-react/themes.css'
 
 // components/MyComponent.tsx
-import { Button } from '@spotify/ui-react'
-```
-
-### React Native (Mobile)
-
-```tsx
-// Only use platform-agnostic components
-import { Button } from '@spotify/ui-react/native'
+import { Button } from '@bitrate/ui-react'
 ```
 
 ### Tauri (Desktop)
 
 ```tsx
-import { Button, Card } from '@spotify/ui-react'
+import { Button } from '@bitrate/ui-react'
 ```
 
 ## 🎨 Theming
 
-### CSS Variables
+Design tokens are hand-written Tailwind v4 `@theme` layers under `src/styles/`:
+`palette.css` for raw colours, `layout.css` and `typography.css` for the scales, and the
+`themes.css` barrel importing one part-file per semantic role group — `base.css`,
+`global/*.css`, and one `components/*.css` per component (or per component family). Each
+part carries both the default dark declarations and its `:root.light` overrides. There is
+no generator: the CSS is the source. Components consume the resulting Tailwind utilities
+instead of hardcoded colours.
 
-```css
-/* Light theme (default) */
-:root {
-  --sp-color-primary: #3b82f6;
-  --sp-color-background: #ffffff;
-  --sp-color-text: #1f2937;
-}
-
-/* Dark theme */
-[data-theme="dark"] {
-  --sp-color-primary: #60a5fa;
-  --sp-color-background: #1f2937;
-  --sp-color-text: #f9fafb;
-}
-```
-
-### Theme Provider
-
-```tsx
-import { ThemeProvider } from '@spotify/ui-react'
-
-<ThemeProvider theme="dark">
-  <App />
-</ThemeProvider>
-```
+The `design/Palette` and `design/Theme` Storybook pages parse those stylesheets at build
+time through `src/styles/token-docs.ts`, so they list exactly what the CSS declares — a
+role added to a part-file shows up without anyone editing a story. Use the theme toggle in
+the Storybook toolbar to view any story against `:root.light`.
 
 ## 🧪 Testing
 
 ```bash
-# Run tests
 pnpm test
-
-# Coverage
+pnpm test:unit
+pnpm test:int
+pnpm test:snapshot
+pnpm test:screenshot
 pnpm test:cov
 ```
 
-## 📚 Storybook (Planned)
+Screenshot tests run in Chromium through Vitest Browser Mode and Playwright.
+
+## 📚 Storybook
 
 ```bash
 # Start Storybook
 pnpm storybook
 
 # Build static
-pnpm build-storybook
+pnpm storybook:build
 ```
 
 ---
 
 **Related:**
-- [CLI Tools](/docs/packages/cli-tools) - Build tools
+- [Testing](/docs/guides/testing)
+- [CLI Tools](/docs/packages/cli-tools)

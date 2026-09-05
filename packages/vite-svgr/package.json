@@ -1,0 +1,33 @@
+{
+  "name": "@bitrate/vite-svgr",
+  "version": "1.0.0",
+  "description": "Vite plugin for @bitrate/svgr — integrates SVG-to-React generation into the build pipeline",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.mts",
+      "default": "./src/index.mjs"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "echo \"No tests\" && exit 0"
+  },
+  "keywords": [
+    "vite-plugin",
+    "svgr",
+    "svg",
+    "react"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "vite": ">=5.0.0"
+  },
+  "dependencies": {
+    "@bitrate/svgr": "workspace:*"
+  }
+}

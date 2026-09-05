@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, it } from '@jest/globals'
-import { INestApplication } from '@nestjs/common'
-import * as request from 'supertest'
+import type { INestApplication } from '@nestjs/common'
+import request from 'supertest'
 import { closeE2eApp, createE2eApp } from './e2e-app'
 
 describe('AppController (e2e)', () => {
@@ -16,6 +16,6 @@ describe('AppController (e2e)', () => {
   })
 
   it('/ (GET)', () => {
-    return request(app.getHttpServer()).get('/').expect(200).expect('Welcome to @spotify/api!')
+    return request(app.getHttpServer()).get('/').expect(200).expect('Welcome to @bitrate/api!')
   })
 })

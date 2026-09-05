@@ -1,0 +1,103 @@
+import { useI18n } from '@/shared/i18n'
+import { useTwoFactorSettings } from '@/views/Settings/model/useTwoFactorSettings'
+import { SettingsSection } from '@/views/Settings/ui/controls/SettingsSection'
+
+const sanitizeCode = (value: string) => value.replace(/\D/g, '')
+
+export const TwoFactorSettingsSection = () => {
+  const { t } = useI18n()
+  const twoFactor = useTwoFactorSettings()
+
+  return (
+    <SettingsSection title={t('settings.twoFactor')}>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="text-sm text-text-subdued">
+          {twoFactor.isEnabled
+            ? t('settings.twoFactor.enabled')
+            : t('settings.twoFactor.setupDescription')}
+        </p>
+        {!twoFactor.isEnabled && !twoFactor.setup && (
+          <button
+            className="rounded-full bg-white/10 px-5 py-2 text-sm font-bold text-text hover:bg-white/15 disabled:opacity-60"
+            disabled={twoFactor.isPending}
+            onClick={twoFactor.startSetup}
+            type="button"
+          >
+            {t('settings.twoFactor.setup')}
+          </button>
+        )}
+      </div>
+
+      {twoFactor.setup && !twoFactor.isEnabled && (
+        <form className="grid max-w-160 gap-3" onSubmit={twoFactor.enable}>
+          {twoFactor.setup.manualCode && (
+            <div className="rounded bg-surface p-3 text-sm text-text">
+              {t('settings.twoFactor.manualCode', {
+                code: twoFactor.setup.manualCode,
+              })}
+            </div>
+          )}
+          <label
+            className="grid gap-2 text-sm text-text"
+            htmlFor="enable-two-factor-code"
+          >
+            {t('settings.twoFactor.code')}
+          </label>
+          <input
+            autoComplete="one-time-code"
+            className="h-10 rounded bg-surface px-3 text-sm text-text outline-none focus:ring-2 focus:ring-white/25"
+            id="enable-two-factor-code"
+            inputMode="numeric"
+            maxLength={6}
+            name="enable-two-factor-code"
+            onChange={(event) =>
+              twoFactor.setEnableCode(sanitizeCode(event.target.value))
+            }
+            pattern="[0-9]{6}"
+            required
+            value={twoFactor.enableCode}
+          />
+          <button
+            className="w-fit rounded-full bg-primary px-5 py-2 text-sm font-bold text-black hover:bg-primary-hover disabled:opacity-60"
+            disabled={twoFactor.isPending}
+            type="submit"
+          >
+            {t('settings.twoFactor.enable')}
+          </button>
+        </form>
+      )}
+
+      {twoFactor.isEnabled && (
+        <form className="grid max-w-160 gap-3" onSubmit={twoFactor.disable}>
+          <label
+            className="text-sm text-text"
+            htmlFor="disable-two-factor-code"
+          >
+            {t('settings.twoFactor.currentCode')}
+          </label>
+          <input
+            autoComplete="one-time-code"
+            className="h-10 rounded bg-surface px-3 text-sm text-text outline-none focus:ring-2 focus:ring-white/25"
+            id="disable-two-factor-code"
+            inputMode="numeric"
+            maxLength={6}
+            name="disable-two-factor-code"
+            onChange={(event) =>
+              twoFactor.setDisableCode(sanitizeCode(event.target.value))
+            }
+            pattern="[0-9]{6}"
+            required
+            value={twoFactor.disableCode}
+          />
+          <button
+            className="rounded-full bg-destructive/15 px-5 py-2 text-sm font-bold text-destructive hover:bg-destructive/25 disabled:opacity-60"
+            disabled={twoFactor.isPending}
+            type="submit"
+          >
+            {t('settings.twoFactor.disable')}
+          </button>
+        </form>
+      )}
+    </SettingsSection>
+  )
+}

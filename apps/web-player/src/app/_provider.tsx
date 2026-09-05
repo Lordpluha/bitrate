@@ -1,39 +1,82 @@
 'use client'
 
-import { FC, PropsWithChildren, useEffect, useState } from 'react'
-
-import { Theme } from '@shared/constants'
+import { Toaster } from '@bitrate/ui-react'
+import { useSettingsPersistence, useSettingsStore } from '@entities/Settings'
+import { shouldRetryApiQuery } from '@shared/api/errors'
+import { showApiErrorToast, showApiSuccessToast } from '@shared/api/feedback'
 import { ThemeProvider } from '@shared/contexts'
-import { usePersistedState } from '@shared/hooks'
-import { Toaster } from '@spotify/ui-react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { I18nProvider } from '@shared/i18n'
+import { ServiceWorkerRegistration } from '@shared/ui/ServiceWorkerRegistration'
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import ReduxProvider from './providers/ReduxProvider'
+import type { PropsWithChildren } from 'react'
+import { useState } from 'react'
 
-export const Provider: FC<PropsWithChildren> = ({ children }) => {
-  const [queryClient] = useState(() => new QueryClient())
-  const [theme, setTheme, , hydrated] = usePersistedState<Theme>(
-    'theme',
-    'dark',
-  )
+interface ApiFeedbackMeta {
+  errorMessage?: string
+  successMessage?: string
+  suppressErrorToast?: boolean
+  suppressSuccessToast?: boolean
+}
 
-  useEffect(() => {
-    if (!hydrated) return
-    document.documentElement.classList.remove('light', 'dark')
-    document.documentElement.classList.add(theme)
-  }, [theme, hydrated])
+const getFeedbackMeta = (meta: unknown): ApiFeedbackMeta => {
+  if (typeof meta !== 'object' || meta === null) return {}
 
-  if (!hydrated) return null
+  return meta as ApiFeedbackMeta
+}
+
+const createQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: shouldRetryApiQuery,
+        refetchOnWindowFocus: false,
+      },
+    },
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        const meta = getFeedbackMeta(query.meta)
+        if (!meta.suppressErrorToast) {
+          showApiErrorToast(error, meta.errorMessage)
+        }
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error, _variables, _context, mutation) => {
+        const meta = getFeedbackMeta(mutation.meta)
+        if (!meta.suppressErrorToast) {
+          showApiErrorToast(error, meta.errorMessage)
+        }
+      },
+      onSuccess: (_data, _variables, _context, mutation) => {
+        const meta = getFeedbackMeta(mutation.meta)
+        if (meta.successMessage && !meta.suppressSuccessToast) {
+          showApiSuccessToast(meta.successMessage)
+        }
+      },
+    }),
+  })
+
+export const Provider = ({ children }: PropsWithChildren) => {
+  const [queryClient] = useState(createQueryClient)
+  const locale = useSettingsStore((state) => state.language)
+  useSettingsPersistence()
 
   return (
-    <ReduxProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider value={{ theme, setTheme }}>
+    <QueryClientProvider client={queryClient}>
+      <I18nProvider locale={locale}>
+        <ThemeProvider>
           <Toaster />
+          <ServiceWorkerRegistration />
           {children}
         </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </ReduxProvider>
+      </I18nProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }

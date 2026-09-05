@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the get user swagger operation. */
 export function GetUserSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Get user by id' }),

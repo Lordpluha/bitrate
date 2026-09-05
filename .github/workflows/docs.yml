@@ -1,0 +1,73 @@
+name: "[docs] Checks"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'apps/docs/**'
+      # The production stage copies this nginx config into the image, so a change to it
+      # changes the published artifact.
+      - 'infra/nginx/static-site.conf'
+      - '.github/workflows/docs.yml'
+      - '.github/workflows/docs_reusable.yml'
+  pull_request:
+    branches: [master, develop]
+    paths:
+      - 'apps/docs/**'
+      - 'infra/nginx/static-site.conf'
+      - '.github/workflows/docs.yml'
+      - '.github/workflows/docs_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  docs-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/docs_reusable.yml
+    with:
+      push-image: false
+      tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/docs:pr-${{ github.sha }}
+      timeout-minutes: 30
+      run-typecheck: true
+      cache-to-registry: false
+
+  docs-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/docs_reusable.yml
+    with:
+      push-image: true
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/docs:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/docs:develop-${{ github.sha }}
+      timeout-minutes: 30
+      run-typecheck: true
+      cache-to-registry: true
+
+  docs-master:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'master') }}
+    uses: ./.github/workflows/docs_reusable.yml
+    with:
+      push-image: true
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/docs:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/docs:${{ github.sha }}
+      timeout-minutes: 30
+      run-typecheck: false
+      cache-to-registry: true

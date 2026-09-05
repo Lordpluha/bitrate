@@ -1,0 +1,60 @@
+/**
+ * Global Surfaces & Panels
+ * Fill and wash roles that are not tied to any one component — reused across unrelated screens.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Surface one step above the page background — cards, panels, raised sections. Same value as
+     `card` (base.css) — see the note there. */
+  --color-background-elevated: #121212;
+  /* Tinted surface for a raised block sitting inside an already-elevated panel. */
+  --color-background-tinted: #1a1a1a;
+  /* Secondary page surface — sidebar and main-panel shells. */
+  --color-background-secondary: #121212;
+  /* Short alias of `background-secondary`, carrying the same value in every theme. Kept because
+     call sites use both spellings; prefer `background-secondary` in new code. */
+  --color-bg-secondary: #121212;
+  /* Hover/highlight wash painted over the page background. */
+  --color-background-highlight: var(--color-neutral-900);
+  /* Pressed/active wash painted over the page background. */
+  --color-background-pressed: var(--color-black);
+  /* Translucent overlay surface — tints whatever it sits on instead of replacing it. */
+  --color-surface: rgba(255, 255, 255, 0.1);
+  /* Hover state of `surface`. */
+  --color-surface-hover: rgba(255, 255, 255, 0.15);
+  /* Pressed state of `surface`. */
+  --color-surface-active: rgba(255, 255, 255, 0.2);
+  /* Scrollbar thumb at rest. */
+  --color-scrollbar-thumb: oklch(0.44 0 0);
+  /* Scrollbar thumb on hover. */
+  --color-scrollbar-thumb-hover: oklch(0.5 0 0);
+  /* Primary action surface on hover. */
+  --color-primary-hover: var(--color-purple-600);
+  /* Primary action surface while pressed. */
+  --color-primary-active: var(--color-purple-700);
+  /* Secondary action surface on hover. */
+  --color-secondary-hover: var(--color-neutral-700);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-background-elevated: #ffffff;
+  --color-background-tinted: #f5f7f9;
+  --color-background-secondary: #ffffff;
+  --color-bg-secondary: #ffffff;
+  --color-background-highlight: #e7eaee;
+  --color-background-pressed: #dfe3e8;
+  --color-surface: rgba(18, 22, 28, 0.05);
+  --color-surface-hover: rgba(18, 22, 28, 0.08);
+  --color-surface-active: rgba(18, 22, 28, 0.12);
+  --color-scrollbar-thumb: oklch(0.44 0 0);
+  --color-scrollbar-thumb-hover: oklch(0.5 0 0);
+  --color-primary-hover: var(--color-purple-600);
+  --color-primary-active: var(--color-purple-700);
+  --color-secondary-hover: #dde1e7;
+}

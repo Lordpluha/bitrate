@@ -1,16 +1,16 @@
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
+import links from '@widgets/MainHeader/config/nav-links.json'
 import Link from 'next/link'
-import links from '../../config/nav-links.json'
 
 export const NavLinks = () => (
   <>
     {links.map((link) => (
       <Link
-        key={link.title}
         className={cn(
           'text-base relative transition-all duration-300 hover:opacity-70',
         )}
         href={link.href}
+        key={link.title}
       >
         {link.title}
       </Link>

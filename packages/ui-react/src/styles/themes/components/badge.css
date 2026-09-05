@@ -1,0 +1,41 @@
+/**
+ * Badge
+ * One surface/text pair per badge variant, so a status colour can be retuned without moving the
+ * button of the same name.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Badge border for variants that show one. */
+  --color-badge-border: var(--color-border);
+  /* Default badge fill. */
+  --color-badge-default-surface: var(--color-primary);
+  /* Default badge text. */
+  --color-badge-default-foreground: var(--color-primary-foreground);
+  /* Secondary badge fill. */
+  --color-badge-secondary-surface: var(--color-secondary);
+  /* Secondary badge text. */
+  --color-badge-secondary-foreground: var(--color-secondary-foreground);
+  /* Destructive badge fill. */
+  --color-badge-destructive-surface: var(--color-destructive);
+  /* Destructive badge text. */
+  --color-badge-destructive-foreground: var(--color-destructive-foreground);
+  /* Outline badge text. */
+  --color-badge-outline-foreground: var(--color-foreground);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-badge-border: var(--color-border);
+  --color-badge-default-surface: var(--color-primary);
+  --color-badge-default-foreground: var(--color-primary-foreground);
+  --color-badge-secondary-surface: var(--color-secondary);
+  --color-badge-secondary-foreground: var(--color-secondary-foreground);
+  --color-badge-destructive-surface: var(--color-destructive);
+  --color-badge-destructive-foreground: var(--color-destructive-foreground);
+  --color-badge-outline-foreground: var(--color-foreground);
+}

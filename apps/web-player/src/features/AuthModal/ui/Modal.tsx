@@ -1,54 +1,52 @@
 'use client'
 
-import React, { type ComponentProps, useEffect } from 'react'
-import { cn } from '@spotify/ui-react'
+import { cn } from '@bitrate/ui-react'
+import { useOverlayFocus } from '@shared/hooks'
+import type { ComponentProps } from 'react'
 
 interface ModalProps extends ComponentProps<'div'> {
+  ariaLabel?: string
   isOpen: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export const Modal: React.FC<ModalProps> = ({
+export const Modal = ({
   isOpen,
   onOpenChange: toggleIsOpen,
   children,
   className,
-}) => {
-  // Close on Escape key
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        toggleIsOpen(false)
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'hidden'
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen, toggleIsOpen])
+  ariaLabel = 'Dialog',
+  ...dialogProps
+}: ModalProps) => {
+  const dialogRef = useOverlayFocus<HTMLDivElement>({
+    isOpen,
+    onClose: () => toggleIsOpen(false),
+  })
 
   if (!isOpen) return null
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      onClick={() => toggleIsOpen(false)}
-    >
-      <div className="absolute inset-0 w-[100vw] bg-black/60 backdrop-blur-sm" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <button
+        aria-hidden="true"
+        className="absolute inset-0 w-screen bg-black/60 backdrop-blur-sm"
+        onClick={() => toggleIsOpen(false)}
+        tabIndex={-1}
+        type="button"
+      />
 
       <div
+        aria-label={ariaLabel}
+        aria-modal="true"
         className={cn(
           'relative z-10 max-h-[90vh] max-w-[90vw] overflow-auto rounded-lg shadow-xl',
           'animate-in zoom-in-95 duration-200',
           className,
         )}
-        onClick={(e) => e.stopPropagation()}
+        ref={dialogRef}
+        role="dialog"
+        tabIndex={-1}
+        {...dialogProps}
       >
         {children}
       </div>

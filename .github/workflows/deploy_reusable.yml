@@ -1,0 +1,742 @@
+name: "[deploy] Production Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: >-
+          Name of the GitHub Environment holding this target's secrets and variables.
+          The deploy job binds to it, so every secrets.* and vars.* reference below
+          resolves against this environment. Required and deliberately not defaulted:
+          a caller that forgets it must fail at parse time, not deploy production by
+          accident. Adding staging is then a new environment plus a new caller, not
+          an edit to this file.
+        required: true
+        type: string
+      wait-for-images:
+        description: >-
+          Block until every image workflow that ran for this commit has published.
+          Turn off only to redeploy images that are already published.
+        required: false
+        default: true
+        type: boolean
+      run-deploy:
+        description: Render the env file and deploy. Off runs only the health check.
+        required: false
+        default: true
+        type: boolean
+      health-attempts:
+        description: How many times each endpoint is polled before it is called unhealthy
+        required: false
+        default: 20
+        type: number
+
+# No `secrets:` block, on purpose. Declaring a secret here would make the caller
+# responsible for mapping it, and the caller has no environment -- it would map
+# empty strings. Callers pass `secrets: inherit` instead, and every secret below
+# is resolved inside the deploy job, where `environment:` applies and the
+# environment's value wins over any repository secret of the same name.
+#
+# A declared `required: true` secret would additionally break this outright: the
+# value lives at environment scope, so the caller genuinely cannot supply it and
+# the call would be rejected before the environment is ever entered.
+#
+# Every secret is still consumed through an `env:` block and never interpolated
+# into a `run:` string.
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # A push to master fans out to five image workflows. Deploying immediately
+  # would `docker compose pull` the *previous* master images, so this job waits
+  # for the runs that exist for this exact commit. A workflow whose path filter
+  # excluded this commit has no run for the SHA and nothing to wait for -- its
+  # existing :master tag is still the right image for this commit.
+  # ---------------------------------------------------------------------------
+  await-images:
+    if: ${{ inputs.wait-for-images }}
+    name: Await Published Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    permissions:
+      contents: read
+      actions: read
+
+    steps:
+      - name: Wait for image workflows on this commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEPLOY_SHA: ${{ github.sha }}
+          IMAGE_WORKFLOWS: "api.yml web_player.yml web_artists.yml docs.yml storybook.yml"
+        run: |
+          set -euo pipefail
+
+          # GitHub creates a push's workflow runs within seconds, but not
+          # atomically with the push event that started this job. Settle first,
+          # otherwise the first poll can see zero runs and wave the deploy through.
+          echo "Settling for 45s so every triggered run exists before the first poll."
+          sleep 45
+
+          deadline=$(( $(date +%s) + 35 * 60 ))
+
+          while :; do
+            pending=""
+            failed=""
+
+            for wf in $IMAGE_WORKFLOWS; do
+              if ! runs=$(gh api \
+                "repos/${GITHUB_REPOSITORY}/actions/workflows/${wf}/runs?head_sha=${DEPLOY_SHA}&per_page=50" \
+                --jq '.workflow_runs[] | select(.event == "push") | "\(.status):\(.conclusion // "none")"' 2>&1); then
+                echo "::error::Cannot read runs for ${wf}. Has it been renamed or removed?"
+                echo "${runs}"
+                exit 1
+              fi
+
+              # No run for this SHA means the workflow's path filter excluded this
+              # commit. Its published image is unchanged and already correct.
+              [ -n "${runs}" ] || continue
+
+              while IFS= read -r line; do
+                status="${line%%:*}"
+                conclusion="${line#*:}"
+                if [ "${status}" != "completed" ]; then
+                  pending="${pending} ${wf}"
+                elif [ "${conclusion}" != "success" ] && [ "${conclusion}" != "skipped" ]; then
+                  failed="${failed} ${wf}(${conclusion})"
+                fi
+              done <<< "${runs}"
+            done
+
+            if [ -n "${failed}" ]; then
+              echo "::error::Image workflows did not succeed for this commit:${failed}"
+              echo "Nothing was deployed. Fix the build, then re-run this workflow."
+              exit 1
+            fi
+
+            if [ -z "${pending}" ]; then
+              echo "All image workflows for ${DEPLOY_SHA} have published."
+              exit 0
+            fi
+
+            if [ "$(date +%s)" -ge "${deadline}" ]; then
+              echo "::error::Timed out waiting for:${pending}"
+              exit 1
+            fi
+
+            echo "Still running:${pending} -- re-checking in 30s."
+            sleep 30
+          done
+
+  # ---------------------------------------------------------------------------
+  # `environment:` is what makes this job wait for a human. The gate does nothing
+  # until the environment exists and has a required reviewer.
+  #
+  # It is also the only place in this workflow where environment-scoped secrets
+  # and variables resolve. That is why the job runs in *every* mode, including
+  # health-only, rather than being gated by `inputs.run-deploy` as it once was:
+  # it is the sole resolver of the deploy target's configuration, and the health
+  # job downstream has no environment of its own. `inputs.run-deploy` now gates
+  # the individual steps that touch the server, not the job.
+  #
+  # The alternative -- giving the health job its own `environment:` -- was
+  # rejected. Protection rules apply per job, so a second environment-bound job
+  # would create a second pending deployment, and a run whose deploy was approved
+  # but whose health check was never approved would report an unverified deploy
+  # as still in progress. Routing the domain through a job output keeps exactly
+  # one approval per run regardless of how GitHub batches pending deployments.
+  # ---------------------------------------------------------------------------
+  deploy:
+    if: ${{ !cancelled() && needs['await-images'].result != 'failure' }}
+    name: Deploy
+    needs: await-images
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ inputs.environment }}
+
+    permissions:
+      contents: read
+
+    # Consumed by the health job, which has no environment and therefore cannot
+    # read vars.DOMAIN itself.
+    outputs:
+      domain: ${{ steps.resolve.outputs.domain }}
+
+    env:
+      # An ssh_config alias rather than a flag string: the host, the user, the key
+      # and the verification options live in one place, and no step has to pass an
+      # unquoted, word-splitting option variable on a command line.
+      SSH_TARGET: bitrate-deploy
+
+    steps:
+      # Runs in every mode, first, and before anything touches the server. This is
+      # the one step that exists purely to carry environment-scoped configuration
+      # out to a job that cannot read it. DOMAIN is a variable, not a secret -- no
+      # secret is ever written to an output, where it would be readable by every
+      # downstream job.
+      #
+      # The emptiness check is the point: an unset DOMAIN reads as "" rather than
+      # failing, and the health job would otherwise probe "https://api./" and
+      # report a confusing DNS error instead of a configuration one.
+      #
+      # Note that this job can also see *repository*-scoped values -- an
+      # environment-bound job resolves environment, repository and organization
+      # scope, with the environment winning on a name collision. So a leftover
+      # repository-scoped DOMAIN will not fail here; it will quietly apply to
+      # every environment that does not define its own. That is a footgun for
+      # staging, not an error today, which is why the repository-scoped copies
+      # are removed rather than merely shadowed.
+      - name: Resolve deployment configuration
+        id: resolve
+        env:
+          DOMAIN: ${{ vars.DOMAIN }}
+          ENVIRONMENT_NAME: ${{ inputs.environment }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${DOMAIN}" ]; then
+            echo "::error::DOMAIN is not set on the '${ENVIRONMENT_NAME}' environment."
+            echo "It must be an environment variable of that environment, not a repository variable:"
+            echo "  Settings -> Environments -> ${ENVIRONMENT_NAME} -> Environment variables."
+            echo "A repository-scoped DOMAIN is not visible here and reads as an empty string."
+            exit 1
+          fi
+
+          printf 'domain=%s\n' "${DOMAIN}" >> "${GITHUB_OUTPUT}"
+          echo "Deploy target: ${ENVIRONMENT_NAME} (${DOMAIN})"
+
+      # Production tracks master. workflow_dispatch can be started from any ref,
+      # and the sync step would happily push a feature branch's infra onto the box.
+      # Only enforced when something is actually being deployed: health-only mode
+      # touches nothing and is legitimately useful from any ref.
+      - name: Assert the ref is master
+        if: ${{ inputs.run-deploy }}
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [ "${REF_NAME}" != "master" ]; then
+            echo "::error::Production deploys only from master. This run is on '${REF_NAME}'."
+            exit 1
+          fi
+
+      - name: Checkout
+        if: ${{ inputs.run-deploy }}
+        uses: actions/checkout@v4
+
+      # Everything after this step touches the server. A name-only report of what
+      # is missing is the whole point: an empty JWT_SECRET renders an env file that
+      # starts an API signing tokens with a blank key.
+      - name: Preflight -- required configuration present
+        if: ${{ inputs.run-deploy }}
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          NODE_ENV: ${{ vars.NODE_ENV }}
+          PORT: ${{ vars.PORT }}
+          DOMAIN: ${{ vars.DOMAIN }}
+          WEB_HOST: ${{ vars.WEB_HOST }}
+          USER_WEB_HOST: ${{ vars.USER_WEB_HOST }}
+          ARTIST_WEB_HOST: ${{ vars.ARTIST_WEB_HOST }}
+          API_BASE_URL: ${{ vars.API_BASE_URL }}
+          API_URL: ${{ vars.API_URL }}
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+          REDIS_HOST: ${{ vars.REDIS_HOST }}
+          REDIS_PORT: ${{ vars.REDIS_PORT }}
+          SMTP_HOST: ${{ vars.SMTP_HOST }}
+          SMTP_PORT: ${{ vars.SMTP_PORT }}
+          EMAIL_FROM: ${{ vars.EMAIL_FROM }}
+          ACCESS_TOKEN_NAME: ${{ vars.ACCESS_TOKEN_NAME }}
+          REFRESH_TOKEN_NAME: ${{ vars.REFRESH_TOKEN_NAME }}
+          JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
+          JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
+          STORAGE_DRIVER: ${{ vars.STORAGE_DRIVER }}
+          TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
+          HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
+          DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
+          OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
+          OAUTH_FACEBOOK_APP_ID: ${{ vars.OAUTH_FACEBOOK_APP_ID }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
+          OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
+          METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          set -euo pipefail
+
+          # Required by infra/docker-compose.prod.yaml, or by apps/api/env.schema.ts
+          # with no usable default. Keep in sync with the render step below.
+          required="
+            DEPLOY_HOST DEPLOY_USER DEPLOY_SSH_KEY
+            DOMAIN NODE_ENV PORT
+            WEB_HOST NEXT_PUBLIC_API_URL NEXT_PUBLIC_SITE_URL
+            POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB
+            REDIS_HOST REDIS_PASSWORD
+            DATABASE_URL JWT_SECRET
+            JWT_ACCESS_EXPIRES_IN JWT_REFRESH_EXPIRES_IN
+          "
+
+          # Every name the rendered file may carry. Checked below for characters a
+          # compose env file cannot represent.
+          optional="
+            USER_WEB_HOST ARTIST_WEB_HOST API_BASE_URL API_URL
+            REDIS_PORT SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_FROM
+            ACCESS_TOKEN_NAME REFRESH_TOKEN_NAME STORAGE_DRIVER
+            TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
+            OAUTH_GOOGLE_CLIENT_ID OAUTH_GOOGLE_CLIENT_SECRET
+            OAUTH_FACEBOOK_APP_ID OAUTH_FACEBOOK_APP_SECRET
+            METRICS_TOKEN SENTRY_DSN
+          "
+
+          missing=()
+          for name in ${required}; do
+            [ -n "${!name:-}" ] || missing+=("${name}")
+          done
+
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Missing required configuration. Nothing was deployed."
+            echo "Set each of these on the '${ENVIRONMENT_NAME}' environment:"
+            echo "  Settings -> Environments -> ${ENVIRONMENT_NAME} -> Environment secrets / variables."
+            echo "Names only -- no value is ever printed by this workflow:"
+            printf '  - %s\n' "${missing[@]}"
+            exit 1
+          fi
+
+          # Shape checks for the things that would otherwise surface as a crash loop.
+          bad=()
+          [ "${#JWT_SECRET}" -ge 10 ] || bad+=("JWT_SECRET (env.schema.ts requires at least 10 characters)")
+          if [ -n "${METRICS_TOKEN:-}" ] && [ "${#METRICS_TOKEN}" -lt 32 ]; then
+            bad+=("METRICS_TOKEN (schema requires at least 32 characters when set)")
+          fi
+          case "${DATABASE_URL}" in
+            postgresql://*|postgres://*) ;;
+            *) bad+=("DATABASE_URL (must be a postgresql:// URL)") ;;
+          esac
+          case "${WEB_HOST}" in
+            http://*|https://*) ;;
+            *) bad+=("WEB_HOST (schema requires an absolute URL)") ;;
+          esac
+          if [ "${NODE_ENV}" = "production" ] && [ "${DEV_MAIL_LOG_TOKENS:-false}" = "true" ]; then
+            bad+=("DEV_MAIL_LOG_TOKENS (the schema rejects it in production)")
+          fi
+          if { [ -n "${SMTP_USER:-}" ] && [ -z "${SMTP_PASS:-}" ]; } || \
+             { [ -z "${SMTP_USER:-}" ] && [ -n "${SMTP_PASS:-}" ]; }; then
+            bad+=("SMTP_USER / SMTP_PASS (the schema requires them together)")
+          fi
+          if [ -n "${SMTP_HOST:-}" ] && [ -z "${EMAIL_FROM:-}" ]; then
+            bad+=("EMAIL_FROM (required when SMTP_HOST is set)")
+          fi
+
+          # A compose --env-file is not a shell script. A value containing a newline,
+          # a '$', a leading/trailing space, an opening quote, or a ' #' is truncated,
+          # re-interpolated, or silently mangled by the dotenv parser. Failing by name
+          # here beats a stack that comes up with a subtly wrong password.
+          for name in ${required} ${optional}; do
+            value="${!name:-}"
+            [ -n "${value}" ] || continue
+            case "${value}" in
+              *$'\n'*|*$'\r'*) bad+=("${name} (contains a line break)") ;;
+            esac
+            case "${value}" in
+              *'$'*) bad+=("${name} (contains a dollar sign, which a compose env file re-interpolates)") ;;
+            esac
+            case "${value}" in
+              *' #'*) bad+=("${name} (contains ' #', which a compose env file reads as a comment)") ;;
+            esac
+            case "${value}" in
+              ' '*|*' ') bad+=("${name} (has leading or trailing whitespace)") ;;
+            esac
+            case "${value}" in
+              '"'*|"'"*) bad+=("${name} (starts with a quote, which the dotenv parser strips)") ;;
+            esac
+          done
+
+          if [ ${#bad[@]} -gt 0 ]; then
+            echo "::error::Configuration is present but unusable. Nothing was deployed."
+            printf '  - %s\n' "${bad[@]}"
+            exit 1
+          fi
+
+          echo "Preflight passed: every required name is present and representable."
+
+      # $HOME is /home/runner; the workspace is /home/runner/work/<repo>/<repo>.
+      # The key therefore never lands anywhere upload-artifact or a cache would look.
+      - name: Install deploy key and pin the host key
+        if: ${{ inputs.run-deploy }}
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          DEPLOY_SSH_HOST_KEY: ${{ vars.DEPLOY_SSH_HOST_KEY }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p /home/runner/.ssh
+
+          install -m 600 /dev/null /home/runner/.ssh/bitrate_deploy
+          printf '%s\n' "${DEPLOY_SSH_KEY}" | tr -d '\r' > /home/runner/.ssh/bitrate_deploy
+
+          # StrictHostKeyChecking=yes, not "accept-new" and certainly not "no":
+          # the key file below is authoritative and an unknown key aborts.
+          install -m 600 /dev/null /home/runner/.ssh/config
+          {
+            printf 'Host bitrate-deploy\n'
+            printf '  HostName %s\n' "${DEPLOY_HOST}"
+            printf '  User %s\n' "${DEPLOY_USER}"
+            printf '  IdentityFile /home/runner/.ssh/bitrate_deploy\n'
+            printf '  IdentitiesOnly yes\n'
+            printf '  UserKnownHostsFile /home/runner/.ssh/known_hosts\n'
+            printf '  StrictHostKeyChecking yes\n'
+            printf '  BatchMode yes\n'
+            printf '  ConnectTimeout 15\n'
+          } > /home/runner/.ssh/config
+
+          install -m 600 /dev/null /home/runner/.ssh/known_hosts
+          if [ -n "${DEPLOY_SSH_HOST_KEY}" ]; then
+            # Real verification: the expected public key, pinned by the repo owner.
+            printf '%s\n' "${DEPLOY_SSH_HOST_KEY}" > /home/runner/.ssh/known_hosts
+            echo "Host key taken from the DEPLOY_SSH_HOST_KEY variable."
+          else
+            # Trust on first use, scoped to this job. Weaker than a pinned key, but
+            # strictly better than StrictHostKeyChecking=no: the key is fixed once and
+            # every later connection in this run is verified against it.
+            ssh-keyscan -T 15 -t ed25519,rsa "${DEPLOY_HOST}" > /home/runner/.ssh/known_hosts 2>/dev/null
+            [ -s /home/runner/.ssh/known_hosts ] || {
+              echo "::error::ssh-keyscan returned no host key for the deploy host."
+              exit 1
+            }
+            echo "::warning::DEPLOY_SSH_HOST_KEY is not set -- the host key was scanned at job start (trust on first use)."
+            echo "Pin it: copy the matching line into the DEPLOY_SSH_HOST_KEY repository variable."
+          fi
+          # A host's public key and fingerprint are public information, not secrets.
+          ssh-keygen -lf /home/runner/.ssh/known_hosts
+
+      - name: Server preflight -- directory, docker, task
+        if: ${{ inputs.run-deploy }}
+        run: |
+          set -euo pipefail
+          ssh "${SSH_TARGET}" bash -euo pipefail -s <<'REMOTE'
+          mkdir -p "$HOME/bitrate"
+          cd "$HOME/bitrate"
+
+          command -v docker >/dev/null 2>&1 || { echo "::error::docker is not on the deploy user's PATH."; exit 1; }
+          docker compose version >/dev/null 2>&1 || { echo "::error::docker compose v2 is unavailable."; exit 1; }
+
+          # go-task is frequently installed somewhere a non-interactive SSH shell
+          # does not read (~/.local/bin, /snap/bin), so resolve it explicitly.
+          found=""
+          for candidate in task "$HOME/.local/bin/task" /usr/local/bin/task /usr/bin/task /snap/bin/task "$HOME/go/bin/task"; do
+            if command -v "$candidate" >/dev/null 2>&1; then
+              echo "task resolves to: $(command -v "$candidate")"
+              found=1
+              break
+            fi
+          done
+          if [ -z "$found" ]; then
+            echo "::error::task (go-task) is not on the deploy user's non-interactive PATH."
+            echo "Install it, or symlink the binary into /usr/local/bin."
+            exit 1
+          fi
+
+          if command -v rsync >/dev/null 2>&1; then
+            echo "rsync is available -- the infra sync will prune removed files."
+          else
+            echo "::warning::rsync is not installed on the server. Falling back to tar-over-ssh, which cannot prune deleted files."
+          fi
+          REMOTE
+
+      # The file is assembled on stdout and piped straight into ssh. It is never
+      # written to the runner's filesystem, so no later step, artifact or cache can
+      # pick it up. `umask 077` on the server means the file is 600 from birth
+      # rather than briefly world-readable, and the rename is atomic.
+      - name: Render production .env on the server
+        if: ${{ inputs.run-deploy }}
+        env:
+          NODE_ENV: ${{ vars.NODE_ENV }}
+          PORT: ${{ vars.PORT }}
+          DOMAIN: ${{ vars.DOMAIN }}
+          WEB_HOST: ${{ vars.WEB_HOST }}
+          USER_WEB_HOST: ${{ vars.USER_WEB_HOST }}
+          ARTIST_WEB_HOST: ${{ vars.ARTIST_WEB_HOST }}
+          API_BASE_URL: ${{ vars.API_BASE_URL }}
+          API_URL: ${{ vars.API_URL }}
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+          REDIS_HOST: ${{ vars.REDIS_HOST }}
+          REDIS_PORT: ${{ vars.REDIS_PORT }}
+          SMTP_HOST: ${{ vars.SMTP_HOST }}
+          SMTP_PORT: ${{ vars.SMTP_PORT }}
+          EMAIL_FROM: ${{ vars.EMAIL_FROM }}
+          ACCESS_TOKEN_NAME: ${{ vars.ACCESS_TOKEN_NAME }}
+          REFRESH_TOKEN_NAME: ${{ vars.REFRESH_TOKEN_NAME }}
+          JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
+          JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
+          STORAGE_DRIVER: ${{ vars.STORAGE_DRIVER }}
+          TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
+          HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
+          DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
+          OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
+          OAUTH_FACEBOOK_APP_ID: ${{ vars.OAUTH_FACEBOOK_APP_ID }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
+          OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
+          METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          RENDERED_FROM: ${{ github.sha }}
+          ENVIRONMENT_NAME: ${{ inputs.environment }}
+        run: |
+          set -euo pipefail
+
+          # printf '%s' with a quoted argument performs no further expansion, so a
+          # value containing a backtick or $(...) is written literally instead of
+          # being executed by this shell.
+          req() { printf '%s=%s\n' "$1" "${!1:-}"; }
+
+          # An optional name is omitted entirely when empty, never written as `NAME=`.
+          # infra/docker-compose.prod.yaml passes several of them through in bare
+          # `- NAME` form, and an empty string reaches the API as a present-but-invalid
+          # value that fails z.url()/min(32). Optional has to mean absent.
+          opt() { [ -n "${!1:-}" ] && printf '%s=%s\n' "$1" "${!1}"; return 0; }
+
+          {
+            printf '# Generated by .github/workflows/deploy_reusable.yml -- do not edit on the server.\n'
+            printf '# Source of truth: the secrets and variables of the %s environment of %s.\n' "${ENVIRONMENT_NAME}" "${GITHUB_REPOSITORY}"
+            printf '# Rendered from commit %s. Re-run the deploy workflow to regenerate.\n\n' "${RENDERED_FROM}"
+
+            printf '# --- Runtime ---\n'
+            req NODE_ENV
+            req PORT
+            opt TRUST_PROXY_HOPS
+            opt HEALTH_CHECK_TIMEOUT_MS
+
+            printf '\n# --- Hosts ---\n'
+            req DOMAIN
+            req WEB_HOST
+            opt USER_WEB_HOST
+            opt ARTIST_WEB_HOST
+            opt API_BASE_URL
+            opt API_URL
+            req NEXT_PUBLIC_API_URL
+            req NEXT_PUBLIC_SITE_URL
+
+            printf '\n# --- PostgreSQL ---\n'
+            req POSTGRES_USER
+            req POSTGRES_PASSWORD
+            req POSTGRES_DB
+            req DATABASE_URL
+
+            printf '\n# --- Redis ---\n'
+            req REDIS_HOST
+            opt REDIS_PORT
+            req REDIS_PASSWORD
+
+            printf '\n# --- Auth ---\n'
+            req JWT_SECRET
+            req JWT_ACCESS_EXPIRES_IN
+            req JWT_REFRESH_EXPIRES_IN
+            opt ACCESS_TOKEN_NAME
+            opt REFRESH_TOKEN_NAME
+            opt OAUTH_GOOGLE_CLIENT_ID
+            opt OAUTH_GOOGLE_CLIENT_SECRET
+            opt OAUTH_FACEBOOK_APP_ID
+            opt OAUTH_FACEBOOK_APP_SECRET
+
+            printf '\n# --- Mail ---\n'
+            opt SMTP_HOST
+            opt SMTP_PORT
+            opt SMTP_USER
+            opt SMTP_PASS
+            opt EMAIL_FROM
+            opt DEV_MAIL_LOG_TOKENS
+
+            printf '\n# --- Storage ---\n'
+            opt STORAGE_DRIVER
+
+            printf '\n# --- Observability ---\n'
+            opt METRICS_TOKEN
+            opt SENTRY_DSN
+          } | ssh "${SSH_TARGET}" \
+                'umask 077; cat > "$HOME/bitrate/.env.deploy-tmp" && chmod 600 "$HOME/bitrate/.env.deploy-tmp" && mv -f "$HOME/bitrate/.env.deploy-tmp" "$HOME/bitrate/.env"'
+
+          # Names and the line count only. The contents are never read back.
+          ssh "${SSH_TARGET}" \
+            'cd "$HOME/bitrate" && printf "wrote .env: %s lines, mode %s\nnames: " "$(wc -l < .env)" "$(stat -c %a .env)" && grep -v "^#" .env | grep -v "^$" | cut -d= -f1 | sort | tr "\n" " " && echo'
+
+      # The compose file, the nginx templates and the Taskfile are read from the
+      # server's working tree, not from an image, so they must match the images
+      # being pulled. They are pushed from this runner's checkout rather than
+      # fetched by the server: anonymous git traffic from the VPS is throttled
+      # intermittently, and a failed fetch leaves the old compose file in place
+      # while newer images get pulled -- precisely the mismatch this step prevents.
+      # Pushing also guarantees the files come from the exact commit CI validated.
+      - name: Sync infra and Taskfile to the server
+        if: ${{ inputs.run-deploy }}
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          if ssh "${SSH_TARGET}" 'command -v rsync >/dev/null 2>&1'; then
+            # --delete prunes files removed from the repo (a retired nginx conf would
+            # otherwise keep being loaded). The two excluded directories are live
+            # server state that is not in the repo: the ACME challenge webroot and
+            # the nginx logs, both bind-mounted by the compose file.
+            rsync -az --delete \
+              --exclude 'nginx/certbot-webroot/' \
+              --exclude 'nginx/logs/' \
+              infra/ "${SSH_TARGET}:bitrate/infra/"
+            rsync -az Taskfile.yml "${SSH_TARGET}:bitrate/Taskfile.yml"
+          else
+            echo "::warning::rsync is missing on the server; using tar-over-ssh. Files deleted from the repo will not be pruned."
+            tar -czf - \
+              --exclude 'infra/nginx/certbot-webroot' \
+              --exclude 'infra/nginx/logs' \
+              infra Taskfile.yml \
+              | ssh "${SSH_TARGET}" 'cd "$HOME/bitrate" && tar -xzf -'
+          fi
+
+          # The server no longer runs `git fetch`, so record what is actually
+          # deployed. This file is the answer to "which commit is production on?".
+          printf '%s\n' "${DEPLOY_SHA}" \
+            | ssh "${SSH_TARGET}" 'cat > "$HOME/bitrate/.deployed-commit"'
+          echo "infra/ and Taskfile.yml on the server now match ${DEPLOY_SHA}"
+
+      - name: Deploy -- pull images and restart
+        if: ${{ inputs.run-deploy }}
+        run: |
+          set -euo pipefail
+          ssh "${SSH_TARGET}" bash -euo pipefail -s <<'REMOTE'
+          cd "$HOME/bitrate"
+
+          TASK_BIN=""
+          for candidate in task "$HOME/.local/bin/task" /usr/local/bin/task /usr/bin/task /snap/bin/task "$HOME/go/bin/task"; do
+            if command -v "$candidate" >/dev/null 2>&1; then TASK_BIN="$(command -v "$candidate")"; break; fi
+          done
+          [ -n "$TASK_BIN" ] || { echo "::error::task not found on the deploy user's PATH."; exit 1; }
+
+          # Taskfile.yml declares `prompt:` on prod:deploy. A non-interactive shell
+          # cannot answer it, so the run aborts unless --yes is passed.
+          YES=""
+          if "$TASK_BIN" --help 2>&1 | grep -q -- '--yes'; then YES="--yes"; fi
+
+          "$TASK_BIN" $YES prod:deploy
+          REMOTE
+
+      - name: Apply database migrations
+        if: ${{ inputs.run-deploy }}
+        run: |
+          set -euo pipefail
+          ssh "${SSH_TARGET}" bash -euo pipefail -s <<'REMOTE'
+          cd "$HOME/bitrate"
+
+          TASK_BIN=""
+          for candidate in task "$HOME/.local/bin/task" /usr/local/bin/task /usr/bin/task /snap/bin/task "$HOME/go/bin/task"; do
+            if command -v "$candidate" >/dev/null 2>&1; then TASK_BIN="$(command -v "$candidate")"; break; fi
+          done
+          [ -n "$TASK_BIN" ] || { echo "::error::task not found on the deploy user's PATH."; exit 1; }
+
+          # prod:migrate runs `compose exec api`, which fails while the freshly
+          # restarted container is still starting. `migrate deploy` is idempotent, so
+          # retrying is safe; a persistent failure is still surfaced.
+          for attempt in 1 2 3 4 5 6; do
+            if "$TASK_BIN" prod:migrate; then
+              echo "migrations applied on attempt ${attempt}"
+              exit 0
+            fi
+            echo "api container not ready yet (attempt ${attempt}/6) -- retrying in 10s"
+            sleep 10
+          done
+          echo "::error::Migrations did not apply. The new images are running against the old schema."
+          exit 1
+          REMOTE
+
+      - name: Remove deploy key from the runner
+        if: always()
+        run: rm -f /home/runner/.ssh/bitrate_deploy /home/runner/.ssh/known_hosts /home/runner/.ssh/config
+
+  # ---------------------------------------------------------------------------
+  # Deliberately has no `environment:`, so it is not gated and cannot leave a
+  # deploy unverified while it waits for a second approval. The consequence is
+  # that it cannot see environment-scoped configuration: `vars.DOMAIN` here would
+  # resolve against repository scope and silently be an empty string. The domain
+  # therefore arrives as an output of the deploy job, which does have the
+  # environment.
+  # ---------------------------------------------------------------------------
+  # Requires deploy to have *succeeded*, not merely "not failed". The deploy job
+  # is now the sole source of the domain, so if it was skipped -- which happens
+  # when await-images failed -- there is nothing to probe with, and the old
+  # "!= 'failure'" form would have run this job with an empty domain and reported
+  # a second, misleading error on a run that had already failed upstream.
+  health:
+    if: ${{ needs.deploy.result == 'success' }}
+    name: Health Check
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Probe the public endpoints
+        env:
+          # NOT vars.DOMAIN -- see the comment above this job.
+          DOMAIN: ${{ needs.deploy.outputs.domain }}
+          ENVIRONMENT_NAME: ${{ inputs.environment }}
+          ATTEMPTS: ${{ inputs.health-attempts }}
+        run: |
+          set -euo pipefail
+
+          # Defence in depth. The deploy job already fails on an empty DOMAIN, so
+          # reaching this branch means the output plumbing broke rather than the
+          # variable being unset -- say so, instead of probing "https://api./".
+          if [ -z "${DOMAIN}" ]; then
+            echo "::error::No domain was received from the deploy job."
+            echo "Expected it as the 'domain' output of that job, resolved from the"
+            echo "DOMAIN variable of the '${ENVIRONMENT_NAME}' environment."
+            exit 1
+          fi
+
+          targets="
+            https://api.${DOMAIN}/api/v1/health/ready
+            https://${DOMAIN}/
+            https://artists.${DOMAIN}/
+          "
+
+          failed=""
+          for url in ${targets}; do
+            ok=""
+            for attempt in $(seq 1 "${ATTEMPTS}"); do
+              code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 15 "${url}" || echo 000)
+              if [ "${code}" = "200" ]; then
+                echo "healthy (${code}) -- ${url}"
+                ok=1
+                break
+              fi
+              echo "  attempt ${attempt}/${ATTEMPTS}: ${url} returned ${code}"
+              sleep 10
+            done
+            [ -n "${ok}" ] || failed="${failed} ${url}"
+          done
+
+          if [ -n "${failed}" ]; then
+            echo "::error::Unhealthy after deploy:${failed}"
+            exit 1
+          fi
+
+          echo "All production endpoints are healthy."

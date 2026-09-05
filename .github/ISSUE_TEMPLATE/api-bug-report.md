@@ -92,7 +92,7 @@ Stack trace if available
 
 ### External Services
 <!-- If the issue involves external APIs -->
-- **Service Name**: [Spotify API, AWS S3, etc.]
+- **Service Name**: [AWS S3, SMTP provider, etc.]
 - **Service Status**: [Up/Down/Degraded]
 - **Response Time**: [ms]
 

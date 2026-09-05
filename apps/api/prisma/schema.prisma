@@ -7,25 +7,87 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid(7)) @db.Uuid
-  username String @unique
-  email    String @unique
-  password String
+  id       String  @id @default(uuid(7)) @db.Uuid
+  username String  @unique
+  email    String  @unique
+  password String?
 
   avatar      String?
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 
-  sessions    UserSession[]
-  playlists   Playlist[]
-  likedTracks Track[]    @relation("UserLikedTracks")
-  likedArtists Artist[]  @relation("UserLikedArtists")
-  likedAlbums  Album[]    @relation("UserLikedAlbums")
-  likedPlaylists Playlist[] @relation("UserLikedPlaylists")
+  twoFactorSecret     String?
+  twoFactorEnabled    Boolean   @default(false)
+  emailVerifiedAt     DateTime?
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+  deletedAt           DateTime?
+
+  sessions            UserSession[]
+  passwordResets      UserPasswordReset[]
+  emailVerifications  UserEmailVerification[]
+  oauthAccounts       UserOAuthAccount[]
+  playlists           Playlist[]
+  likedTracks         UserLikedTrack[]
+  likedArtists        UserLikedArtist[]
+  followedArtists     UserFollowedArtist[]
+  likedAlbums         UserLikedAlbum[]
+  likedPlaylists      UserLikedPlaylist[]
+  listeningHistory    ListeningHistory[]
+  playlistTracksAdded PlaylistTrack[]
+  following           UserFollow[]            @relation("UserFollowing")
+  followers           UserFollow[]            @relation("UserFollowers")
+  settings            UserSettings?
+  searchHistory       SearchHistory[]
+  notifications       Notification[]
+  devices             PlayerDevice[]
+  playerState         PlayerState?
+  subscriptions       Subscription[]
+  auditLogs           AuditLog[]
+  moderationReports   ModerationReport[]
+  savedEpisodes       UserSavedEpisode[]
 
   @@index([email])
   @@index([username])
+}
+
+model UserEmailVerification {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model UserOAuthAccount {
+  id                String @id @default(uuid(7)) @db.Uuid
+  userId            String @db.Uuid
+  provider          String
+  providerAccountId String
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model UserPasswordReset {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model UserSession {
@@ -34,8 +96,8 @@ model UserSession {
   access_token  String @unique
   refresh_token String @unique
 
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -46,18 +108,24 @@ model UserSession {
 
 model ArtistSession {
   id            String @id @default(uuid(7)) @db.Uuid
-  artistId        String @db.Uuid
+  artistId      String @db.Uuid
   access_token  String @unique
   refresh_token String @unique
 
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
   @@index([artistId])
   @@index([access_token])
   @@index([refresh_token])
+}
+
+enum TrackProcessingStatus {
+  PROCESSING
+  READY
+  FAILED
 }
 
 model Track {
@@ -70,30 +138,68 @@ model Track {
   duration    Int? // Duration in seconds
   releaseDate DateTime?
   lyrics      String?   @db.Text
+  explicit    Boolean   @default(false)
+  popularity  Int       @default(0)
+  playCount   Int       @default(0)
+  isrc        String?   @unique
+  previewUrl  String?
+  trackNumber Int?
+  discNumber  Int       @default(1)
+  language    String?
+  deletedAt   DateTime?
+
+  processingStatus     TrackProcessingStatus @default(PROCESSING)
+  processingError      String?               @db.Text
+  processingAttempts   Int                   @default(0)
+  processingStartedAt  DateTime?
+  processingFinishedAt DateTime?
+
+  // 1 = legacy HLS pipeline, 2 = single-file CMAF + Range index (ADR-0020).
+  // Lets both pipelines coexist while the CMAF path is rolled out.
+  playbackVersion   Int  @default(1)
+  // Shared by every CMAF rendition of this track; null on legacy tracks.
+  fragmentTimescale Int?
+  durationTicks     Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  audioFiles TrackFile[]
-  albums     Album[]
-  playlists  Playlist[]
-  likedBy    User[]      @relation("UserLikedTracks")
+  audioFiles       TrackFile[]
+  albums           AlbumTrack[]
+  playlists        PlaylistTrack[]
+  likedBy          UserLikedTrack[]
+  artists          TrackArtist[]
+  genres           TrackGenre[]
+  listeningHistory ListeningHistory[]
+  playerStates     PlayerState[]
+  queueEntries     PlayerQueueItem[]
 
-  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artist Artist @relation("PrimaryArtist", fields: [artistId], references: [id], onDelete: Restrict)
 
   @@index([artistId])
   @@index([title])
   @@index([releaseDate])
+  @@index([popularity(sort: Desc)])
+  @@index([playCount(sort: Desc)])
+  @@index([deletedAt])
 }
 
 model TrackFile {
   id      String  @id @default(uuid(7)) @db.Uuid
   trackId String  @db.Uuid
-  format  String // "opus", "ogg", "mp3", "flac"
+  format  String // "opus", "ogg", "mp3", "flac", "cmaf"
   bitrate Int // 128, 192, 256, 320
-  codec   String? // "opus", "vorbis", "mp3"
+  codec   String? // "opus", "vorbis", "mp3", "mp4a.40.2"
   url     String
   size    Int? // File size in bytes
+
+  // Byte-range playback index. Set only on CMAF renditions (format = "cmaf").
+  // initRange covers ftyp+moov and is the MSE initialization segment; sidx is
+  // parsed at build time and never served. See ADR-0020.
+  initRangeStart Int?
+  initRangeEnd   Int?
+  // [[startTicks, durationTicks, offset, length], ...] — one entry per fragment.
+  fragments      Json?
 
   createdAt DateTime @default(now())
 
@@ -105,27 +211,91 @@ model TrackFile {
 }
 
 model Artist {
-  id       String @id @default(uuid(7)) @db.Uuid
-  username String @unique
-  email    String @unique
-  password String
+  id       String  @id @default(uuid(7)) @db.Uuid
+  username String  @unique
+  email    String  @unique
+  password String?
 
   bio             String? @db.Text
   avatar          String?
   backgroundImage String?
 
+  twoFactorSecret     String?
+  twoFactorEnabled    Boolean   @default(false)
+  emailVerifiedAt     DateTime?
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+  verified            Boolean   @default(false)
+  monthlyListeners    Int       @default(0)
+  country             String?
+  socials             Json?
+  deletedAt           DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  tracks Track[]
-  albums Album[]
+  tracks       Track[]       @relation("PrimaryArtist")
+  trackCredits TrackArtist[]
+  albums       Album[]
+  genres       ArtistGenre[]
 
-  sessions    ArtistSession[]
+  sessions           ArtistSession[]
+  oauthAccounts      ArtistOAuthAccount[]
+  passwordResets     ArtistPasswordReset[]
+  emailVerifications ArtistEmailVerification[]
 
-  likedBy    User[]      @relation("UserLikedArtists")
+  likedBy   UserLikedArtist[]
+  followers UserFollowedArtist[]
 
   @@index([email])
   @@index([username])
+  @@index([monthlyListeners(sort: Desc)])
+  @@index([deletedAt])
+}
+
+model ArtistOAuthAccount {
+  id                String @id @default(uuid(7)) @db.Uuid
+  artistId          String @db.Uuid
+  provider          String
+  providerAccountId String
+
+  createdAt DateTime @default(now())
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([artistId])
+}
+
+model ArtistPasswordReset {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  artistId  String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId])
+}
+
+model ArtistEmailVerification {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  artistId  String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId])
+}
+
+enum AlbumType {
+  ALBUM
+  SINGLE
+  EP
+  COMPILATION
 }
 
 model Album {
@@ -136,38 +306,458 @@ model Album {
   description String? @db.Text
 
   releaseDate DateTime?
+  type        AlbumType @default(ALBUM)
+  label       String?
+  totalTracks Int       @default(0)
+  copyright   String?
+  deletedAt   DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  tracks Track[]
+  tracks AlbumTrack[]
+  genres AlbumGenre[]
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
-  likedBy    User[]      @relation("UserLikedAlbums")
+  likedBy UserLikedAlbum[]
 
   @@index([artistId])
   @@index([title])
   @@index([releaseDate])
+  @@index([deletedAt])
 }
 
 model Playlist {
-  id          String  @id @default(uuid(7)) @db.Uuid
-  title       String
-  cover       String?
-  description String? @db.Text
-  isPublic    Boolean @default(false)
+  id             String    @id @default(uuid(7)) @db.Uuid
+  title          String
+  cover          String?
+  description    String?   @db.Text
+  isPublic       Boolean   @default(false)
+  collaborative  Boolean   @default(false)
+  followersCount Int       @default(0)
+  deletedAt      DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   userId    String   @db.Uuid
 
-  tracks Track[]
+  tracks PlaylistTrack[]
 
-  likedBy    User[]      @relation("UserLikedPlaylists")
+  likedBy UserLikedPlaylist[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([isPublic])
+  @@index([deletedAt])
+}
+
+model PlaylistTrack {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  playlistId String   @db.Uuid
+  trackId    String   @db.Uuid
+  position   Int
+  addedAt    DateTime @default(now())
+  addedById  String?  @db.Uuid
+
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  track    Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  addedBy  User?    @relation(fields: [addedById], references: [id], onDelete: SetNull)
+
+  @@unique([playlistId, position])
+  @@index([playlistId, addedAt(sort: Desc)])
+  @@index([trackId])
+  @@index([addedById])
+}
+
+model AlbumTrack {
+  id          String @id @default(uuid(7)) @db.Uuid
+  albumId     String @db.Uuid
+  trackId     String @db.Uuid
+  trackNumber Int
+  discNumber  Int    @default(1)
+
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@unique([albumId, trackId])
+  @@unique([albumId, discNumber, trackNumber])
+  @@index([trackId])
+}
+
+model UserLikedTrack {
+  userId    String   @db.Uuid
+  trackId   String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@id([userId, trackId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([trackId])
+}
+
+model UserLikedAlbum {
+  userId    String   @db.Uuid
+  albumId   String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@id([userId, albumId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([albumId])
+}
+
+model UserLikedPlaylist {
+  userId     String   @db.Uuid
+  playlistId String   @db.Uuid
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+
+  @@id([userId, playlistId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([playlistId])
+}
+
+model UserLikedArtist {
+  userId    String   @db.Uuid
+  artistId  String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@id([userId, artistId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([artistId])
+}
+
+model UserFollowedArtist {
+  userId    String   @db.Uuid
+  artistId  String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@id([userId, artistId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([artistId])
+}
+
+model UserFollow {
+  followerId  String   @db.Uuid
+  followingId String   @db.Uuid
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
+  @@index([followingId, createdAt(sort: Desc)])
+}
+
+model TrackArtist {
+  trackId   String  @db.Uuid
+  artistId  String  @db.Uuid
+  position  Int     @default(0)
+  isPrimary Boolean @default(false)
+
+  track  Track  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@id([trackId, artistId])
+  @@unique([trackId, position])
+  @@index([artistId])
+}
+
+model Genre {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  slug        String   @unique
+  name        String   @unique
+  description String?  @db.Text
+  color       String?
+  cover       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  tracks  TrackGenre[]
+  albums  AlbumGenre[]
+  artists ArtistGenre[]
+}
+
+model TrackGenre {
+  trackId String @db.Uuid
+  genreId String @db.Uuid
+  track   Track  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([trackId, genreId])
+  @@index([genreId])
+}
+
+model AlbumGenre {
+  albumId String @db.Uuid
+  genreId String @db.Uuid
+  album   Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([albumId, genreId])
+  @@index([genreId])
+}
+
+model ArtistGenre {
+  artistId String @db.Uuid
+  genreId  String @db.Uuid
+  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  genre    Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([artistId, genreId])
+  @@index([genreId])
+}
+
+model ListeningHistory {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String   @db.Uuid
+  trackId    String   @db.Uuid
+  listenedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@index([userId, listenedAt(sort: Desc)])
+  @@index([trackId])
+}
+
+model UserSettings {
+  userId           String   @id @db.Uuid
+  language         String   @default("en")
+  streamingQuality String   @default("automatic")
+  normalizeVolume  Boolean  @default(true)
+  compactLibrary   Boolean  @default(false)
+  showNowPlaying   Boolean  @default(true)
+  autoplay         Boolean  @default(true)
+  explicitContent  Boolean  @default(true)
+  privateSession   Boolean  @default(false)
+  updatedAt        DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SearchHistory {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String   @db.Uuid
+  query      String
+  entityType String?
+  entityId   String?  @db.Uuid
+  searchedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, searchedAt(sort: Desc)])
+}
+
+enum NotificationType {
+  NEW_RELEASE
+  PLAYLIST_UPDATE
+  FOLLOW
+  SYSTEM
+}
+
+model Notification {
+  id        String           @id @default(uuid(7)) @db.Uuid
+  userId    String           @db.Uuid
+  type      NotificationType
+  title     String
+  body      String?          @db.Text
+  payload   Json?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, readAt])
+}
+
+model PlayerDevice {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String   @db.Uuid
+  name       String
+  type       String
+  isActive   Boolean  @default(false)
+  lastSeenAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  playerState PlayerState?
+
+  @@index([userId, lastSeenAt(sort: Desc)])
+}
+
+model PlayerState {
+  id             String   @id @default(uuid(7)) @db.Uuid
+  userId         String   @unique @db.Uuid
+  deviceId       String?  @unique @db.Uuid
+  currentTrackId String?  @db.Uuid
+  contextType    String?
+  contextId      String?  @db.Uuid
+  positionMs     Int      @default(0)
+  isPlaying      Boolean  @default(false)
+  shuffle        Boolean  @default(false)
+  repeatMode     String   @default("off")
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device       PlayerDevice?     @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  currentTrack Track?            @relation(fields: [currentTrackId], references: [id], onDelete: SetNull)
+  queue        PlayerQueueItem[]
+
+  @@index([currentTrackId])
+}
+
+model PlayerQueueItem {
+  id            String   @id @default(uuid(7)) @db.Uuid
+  playerStateId String   @db.Uuid
+  trackId       String   @db.Uuid
+  position      Int
+  addedAt       DateTime @default(now())
+
+  playerState PlayerState @relation(fields: [playerStateId], references: [id], onDelete: Cascade)
+  track       Track       @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@unique([playerStateId, position])
+  @@index([trackId])
+}
+
+enum SubscriptionPlan {
+  FREE
+  PREMIUM_INDIVIDUAL
+  PREMIUM_DUO
+  PREMIUM_FAMILY
+  PREMIUM_STUDENT
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  EXPIRED
+}
+
+model Subscription {
+  id                     String             @id @default(uuid(7)) @db.Uuid
+  userId                 String             @db.Uuid
+  plan                   SubscriptionPlan   @default(FREE)
+  status                 SubscriptionStatus @default(ACTIVE)
+  provider               String?
+  providerSubscriptionId String?            @unique
+  currentPeriodStart     DateTime           @default(now())
+  currentPeriodEnd       DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+}
+
+model Podcast {
+  id          String    @id @default(uuid(7)) @db.Uuid
+  title       String
+  publisher   String
+  description String?   @db.Text
+  cover       String?
+  language    String?
+  explicit    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  deletedAt   DateTime?
+
+  episodes Episode[]
+
+  @@index([title])
+  @@index([deletedAt])
+}
+
+model Episode {
+  id          String    @id @default(uuid(7)) @db.Uuid
+  podcastId   String    @db.Uuid
+  title       String
+  description String?   @db.Text
+  audioUrl    String
+  cover       String?
+  duration    Int?
+  releaseDate DateTime?
+  explicit    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  deletedAt   DateTime?
+
+  podcast Podcast            @relation(fields: [podcastId], references: [id], onDelete: Cascade)
+  savedBy UserSavedEpisode[]
+
+  @@index([podcastId, releaseDate(sort: Desc)])
+  @@index([title])
+  @@index([deletedAt])
+}
+
+model UserSavedEpisode {
+  userId    String   @db.Uuid
+  episodeId String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  episode Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, episodeId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([episodeId])
+}
+
+enum ModerationStatus {
+  OPEN
+  REVIEWING
+  RESOLVED
+  REJECTED
+}
+
+model ModerationReport {
+  id         String           @id @default(uuid(7)) @db.Uuid
+  reporterId String           @db.Uuid
+  entityType String
+  entityId   String           @db.Uuid
+  reason     String
+  details    String?          @db.Text
+  status     ModerationStatus @default(OPEN)
+  resolvedAt DateTime?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @default(now()) @updatedAt
+
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([entityType, entityId])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String?  @db.Uuid
+  action     String
+  entityType String
+  entityId   String?  @db.Uuid
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([entityType, entityId])
 }

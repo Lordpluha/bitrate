@@ -1,4 +1,4 @@
-import { AppConfig } from '@common/config'
+import type { AppConfig } from '@common/config'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { TokenService } from '@modules/tokens/token.service'
 import { Module } from '@nestjs/common'

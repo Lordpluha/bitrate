@@ -1,0 +1,53 @@
+name: "[performance] Bundle Reusable"
+
+on:
+  workflow_call:
+
+jobs:
+  bundle-analysis:
+    name: Bundle Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Generate Prisma Client
+        run: pnpm --filter @bitrate/api run db:gen
+        env:
+          DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test
+          SHADOW_DATABASE_URL: postgresql://bitrate:bitrate_password@localhost:5432/bitrate_test
+
+      - name: Build dependencies
+        run: pnpm --filter @bitrate/ui-react run build
+
+      - name: Build with bundle analyzer
+        run: ANALYZE=true pnpm --filter @bitrate/web-player run build
+        env:
+          API_URL: http://localhost:3000
+          NEXT_PUBLIC_API_URL: http://localhost:3000
+          NEXT_PUBLIC_SITE_URL: https://spotify-clone-web-olive.vercel.app
+
+      - name: Upload bundle report
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis
+          path: apps/web-player/.next/analyze
+
+      - name: Compare bundle sizes
+        uses: preactjs/compressed-size-action@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: 'apps/web-player/.next/static/**/*.js'
+          compression: gzip
+          cwd: apps/web-player
+          install-script: pnpm run ci:bundle-analysis-install
+
+      - name: Restore repository state
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1

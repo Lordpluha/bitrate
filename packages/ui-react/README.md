@@ -1,40 +1,40 @@
-# @spotify/ui-react
+# @bitrate/ui-react
 
-UI-кит для [Spotify Clone](https://github.com/Lordpluha/spotify-clone), построенный на **React 19**, **Next.js 15**, **TailwindCSS** и **shadcn/ui**.
-Содержит переиспользуемые компоненты, стили и Tailwind-пресет для унифицированного оформления фронтенд-приложений.
-
----
-
-## 🚀 Установка
-
-```bash
-pnpm add @spotify/ui-react
-```
-
-или
-
-```bash
-npm install @spotify/ui-react
-```
+UI kit for [Bitrate](https://github.com/Lordpluha/bitrate), built on **React 19**, **Next.js 15**, **TailwindCSS**, and **shadcn/ui**.
+Contains reusable components, styles, and a Tailwind preset for consistent styling across frontend applications.
 
 ---
 
-## ⚡ Использование
+## 🚀 Installation
 
-### 1. Подключение глобальных стилей
+```bash
+pnpm add @bitrate/ui-react
+```
 
-В `app/layout.tsx` или `pages/_app.tsx`:
+or
+
+```bash
+npm install @bitrate/ui-react
+```
+
+---
+
+## ⚡ Usage
+
+### 1. Import global styles
+
+In `app/layout.tsx` or `pages/_app.tsx`:
 
 ```tsx
-import '@spotify/ui-react/globals.css'
+import '@bitrate/ui-react/globals.css'
 ```
 
-### 2. Использование компонентов
+### 2. Use components
 
 ```tsx
 'use client'
 
-import { Typography, PasswordInput } from '@spotify/ui-react'
+import { Typography, PasswordInput } from '@bitrate/ui-react'
 
 export default function Example() {
   return (
@@ -50,66 +50,66 @@ export default function Example() {
 
 ## 🎨 Tailwind Configuration
 
-UI-кит использует **Tailwind CSS v4** с конфигурацией на основе CSS (`@theme`).
+The UI kit uses **Tailwind CSS v4** with CSS-based configuration (`@theme`).
 
-Все стили и настройки определены в `globals.css`, который нужно импортировать в ваше приложение:
+All styles and settings are defined in `globals.css`, which must be imported in your application:
 
 ```ts
-// В вашем основном CSS файле (например, app/global.css)
-import '@spotify/ui-react/globals.css';
+// In your main CSS file (e.g., app/global.css)
+import '@bitrate/ui-react/globals.css';
 ```
 
-Или импортируйте напрямую в layout/главный компонент:
+Or import directly in the layout/main component:
 
 ```tsx
-import '@spotify/ui-react/globals.css';
+import '@bitrate/ui-react/globals.css';
 ```
 
 ---
 
-## 📦 Экспорты
+## 📦 Exports
 
-- `@spotify/ui-react` — основные React-компоненты и хуки.
-- `@spotify/ui-react/globals.css` — глобальные стили Tailwind CSS v4 с @theme конфигурацией.
-
----
-
-## 🧩 Примеры компонентов
-
-| Компонент            | Импорт                                        | Пример использования |
-|----------------------|-----------------------------------------------|----------------------|
-| `Typography`         | `import { Typography } from '@spotify/ui-react'`   | `<Typography as='h1' size='heading1'>Hello</Typography>` |
-| `PasswordInput`      | `import { PasswordInput } from '@spotify/ui-react'`| `<PasswordInput placeholder="Пароль" />` |
-| `Form`               | `import { Form } from '@spotify/ui-react'`         | `<Form {...methods}>...</Form>` |
-| `Carousel`           | `import { Carousel } from '@spotify/ui-react'`     | `<Carousel>...</Carousel>` |
+- `@bitrate/ui-react` — main React components and hooks.
+- `@bitrate/ui-react/globals.css` — global Tailwind CSS v4 styles with @theme configuration.
 
 ---
 
-## 🛠 Разработка
+## 🧩 Component Examples
 
-Локальная сборка:
+| Component            | Import                                        | Usage example |
+|----------------------|-----------------------------------------------|---------------|
+| `Typography`         | `import { Typography } from '@bitrate/ui-react'`   | `<Typography as='h1' size='heading1'>Hello</Typography>` |
+| `PasswordInput`      | `import { PasswordInput } from '@bitrate/ui-react'`| `<PasswordInput placeholder="Password" />` |
+| `Form`               | `import { Form } from '@bitrate/ui-react'`         | `<Form {...methods}>...</Form>` |
+| `Carousel`           | `import { Carousel } from '@bitrate/ui-react'`     | `<Carousel>...</Carousel>` |
+
+---
+
+## 🛠 Development
+
+Local build:
 
 ```bash
-pnpm -F @spotify/ui-react build
+pnpm -F @bitrate/ui-react build
 ```
 
-Очистка:
+Clean:
 
 ```bash
-pnpm -F @spotify/ui-react clean
+pnpm -F @bitrate/ui-react clean
 ```
 
 ---
 
-## 🧩 Технологии
+## 🧩 Technologies
 
 - **React 19**
 - **Next.js 15**
 - **TailwindCSS**
-- **shadcn/ui**
-- **Radix UI**
+- **shadcn/ui** (component style)
+- **Base UI** (`@base-ui-components/react`)
 - **Lucide Icons**
 
 > If you want to use predefined stories from @shadcn/ui - https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry preview (https://registry.lloydrichards.dev/storybook/?path=/docs/design-typography--docs&globals=backgrounds.grid:!true)
 
-💚 Сделано для [spotify-clone](https://github.com/Lordpluha/spotify-clone)
+💚 Made for [bitrate](https://github.com/Lordpluha/bitrate)

@@ -1,0 +1,48 @@
+import { Tooltip as TooltipPrimitive } from '@base-ui-components/react'
+import { type ComponentProps, isValidElement } from 'react'
+
+import { cn } from '@/lib/utils'
+
+const TooltipProvider = TooltipPrimitive.Provider
+
+const Tooltip = TooltipPrimitive.Root
+
+const TooltipTrigger = ({
+  asChild = false,
+  children,
+  ...props
+}: ComponentProps<typeof TooltipPrimitive.Trigger> & { asChild?: boolean }) => {
+  if (asChild) {
+    if (!isValidElement<Record<string, unknown>>(children)) {
+      throw new Error('TooltipTrigger with asChild requires a single React element')
+    }
+    return <TooltipPrimitive.Trigger {...props} render={children} />
+  }
+
+  return <TooltipPrimitive.Trigger {...props}>{children}</TooltipPrimitive.Trigger>
+}
+
+const TooltipContent = ({
+  ref,
+  className,
+  sideOffset = 4,
+  side = 'top',
+  ...props
+}: ComponentProps<typeof TooltipPrimitive.Popup> &
+  Pick<ComponentProps<typeof TooltipPrimitive.Positioner>, 'sideOffset' | 'side'>) => (
+  <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Positioner side={side} sideOffset={sideOffset}>
+      <TooltipPrimitive.Popup
+        ref={ref}
+        className={cn(
+          'z-50 overflow-hidden rounded-md border border-overlay-border bg-overlay-surface px-3 py-1.5 text-sm text-overlay-foreground shadow-md origin-[--transform-origin] transition-[opacity,scale] data-starting-style:opacity-0 data-starting-style:scale-95 data-ending-style:opacity-0 data-ending-style:scale-95',
+          className,
+        )}
+        {...props}
+      />
+    </TooltipPrimitive.Positioner>
+  </TooltipPrimitive.Portal>
+)
+TooltipContent.displayName = 'TooltipContent'
+
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger }

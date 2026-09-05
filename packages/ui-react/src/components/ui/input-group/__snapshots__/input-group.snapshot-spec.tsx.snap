@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`InputGroup snapshots > matches snapshot — input only 1`] = `
+<div
+  class="group/input-group border-input-border bg-input-group-surface/30 shadow-xs relative flex w-full items-center rounded-md border outline-none transition-[color,box-shadow] h-9 has-[>textarea]:h-auto has-[>[data-align=inline-start]]:[&>input]:pl-2 has-[>[data-align=inline-end]]:[&>input]:pr-2 has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-start]]:[&>input]:pb-3 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring has-[[data-slot=input-group-control]:focus-visible]:ring-1 has-[[data-slot][aria-invalid=true]]:ring-destructive/30 has-[[data-slot][aria-invalid=true]]:border-input-invalid-border"
+  data-slot="input-group"
+  role="group"
+>
+  <input
+    class="px-3 py-2 flex w-full text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium border-input-border text-input-foreground focus-visible:ring-ring flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0"
+    data-slot="input-group-control"
+    placeholder="Search"
+  />
+</div>
+`;
+
+exports[`InputGroup snapshots > matches snapshot — with leading addon 1`] = `
+<div
+  class="group/input-group border-input-border bg-input-group-surface/30 shadow-xs relative flex w-full items-center rounded-md border outline-none transition-[color,box-shadow] h-9 has-[>textarea]:h-auto has-[>[data-align=inline-start]]:[&>input]:pl-2 has-[>[data-align=inline-end]]:[&>input]:pr-2 has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-start]]:[&>input]:pb-3 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring has-[[data-slot=input-group-control]:focus-visible]:ring-1 has-[[data-slot][aria-invalid=true]]:ring-destructive/30 has-[[data-slot][aria-invalid=true]]:border-input-invalid-border"
+  data-slot="input-group"
+  role="group"
+>
+  <div
+    class="text-input-addon-foreground flex h-auto cursor-text select-none items-center justify-center gap-2 py-1.5 text-sm font-medium group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4 order-first pl-3 has-[>button]:ml-[-0.45rem] has-[>kbd]:ml-[-0.35rem]"
+    data-align="inline-start"
+    data-slot="input-group-addon"
+    role="group"
+  >
+    <span
+      class="text-input-addon-foreground flex items-center gap-2 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none"
+    >
+      @
+    </span>
+  </div>
+  <input
+    class="px-3 py-2 flex w-full text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium border-input-border text-input-foreground focus-visible:ring-ring flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0"
+    data-slot="input-group-control"
+  />
+</div>
+`;

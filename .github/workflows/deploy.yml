@@ -1,113 +1,69 @@
-name: Production Deploy
+name: "[platform] Deploy Production"
 
+# Triggered by the push itself rather than by workflow_run after the image
+# workflows. workflow_run cannot express "wait for whichever subset of the five
+# image workflows this commit's path filters actually started", and it runs with
+# repository secrets in a context the caller does not choose. Instead this
+# workflow starts on the push and its first job polls the runs that exist for
+# this exact SHA -- see the await-images job in deploy_reusable.yml.
 on:
+  push:
+    branches: [master]
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Deployment environment'
+      mode:
+        description: "Deploy mode"
         required: true
+        default: full
         type: choice
         options:
-          - staging
-          - production
+          # Wait for this commit's images, then render, deploy, migrate, probe.
+          - full
+          # Skip the image wait -- for redeploying images that already exist.
+          - redeploy
+          # Probe production only. Touches nothing on the server.
+          - health-only
 
-  push:
-    branches: [main]
-    paths:
-      - 'apps/**'
-      - 'packages/**'
-      - 'docker-compose.prod.yaml'
-
-# Prevent concurrent deployments
+# Never cancel a deploy in flight: a half-applied `compose up` plus a cancelled
+# migration is worse than a queued second deploy. A future staging caller gets
+# its own group -- do not widen this one to cover both environments.
 concurrency:
-  group: deploy-${{ github.event.inputs.environment || 'production' }}
+  group: deploy-production
   cancel-in-progress: false
 
-env:
-  DEPLOY_ENV: ${{ github.event.inputs.environment || 'production' }}
+# The deploy pushes nothing and publishes nothing. `actions: read` exists solely
+# so the await-images job can read this commit's workflow run statuses; the
+# called workflow narrows further, per job. `secrets: inherit` below does not
+# change this token's scope -- it governs the secrets context, not permissions.
+permissions:
+  contents: read
+  actions: read
 
 jobs:
-  # Build and Deploy
-  deploy:
-    name: Deploy to ${{ github.event.inputs.environment || 'production' }}
-    runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.event.inputs.environment || 'production' }}
-      url: https://${{ secrets.SERVER_HOST }}
-    timeout-minutes: 30
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Validate config
-        run: docker compose -f docker-compose.prod.yaml config
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push images
-        run: |
-          for service in api web-player web-artists admin; do
-            docker build \
-              --file ./apps/$service/Dockerfile \
-              --tag ghcr.io/${{ github.repository }}/$service:${{ env.DEPLOY_ENV }} \
-              --tag ghcr.io/${{ github.repository }}/$service:${{ github.sha }} \
-              --cache-from type=gha,scope=$service \
-              --cache-to type=gha,mode=max,scope=$service \
-              --push .
-          done
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy to server
-        run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'ENDSSH'
-            cd ${{ secrets.DEPLOY_PATH }}
-
-            # Backup database
-            docker compose exec -T postgres pg_dump > backup.sql
-
-            # Pull and deploy
-            docker compose -f docker-compose.prod.yaml pull
-            docker compose -f docker-compose.prod.yaml up -d
-            # Cleanup
-            docker image prune -af
-          ENDSSH
-
-      - name: Health check
-        run: |
-          for i in {1..5}; do
-            if curl -sf https://${{ secrets.SERVER_HOST }}/health; then
-              exit 0
-            fi
-            sleep 5
-          done
-          exit 1
-
-  # Post-deployment notification
-  notify:
-    name: Notify
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: always()
-
-    steps:
-      - name: Result
-        run: |
-          if [ "${{ needs.deploy.result }}" == "success" ]; then
-            echo "✅ Deployment successful"
-          else
-            echo "❌ Deployment failed"
-            exit 1
-          fi
+  # One caller job, deliberately. `inputs.mode` is an empty string on a push, so
+  # both `with:` expressions short-circuit on `event_name == 'push'`.
+  #
+  # `secrets: inherit` rather than an explicit eleven-secret mapping. This is
+  # forced, not preferred. Production configuration now lives at *environment*
+  # scope, and a job that calls a reusable workflow may not declare
+  # `environment:` -- GitHub allows only name/uses/with/secrets/needs/if/
+  # permissions/strategy/concurrency on such a job. This caller therefore has no
+  # environment, so `${{ secrets.JWT_SECRET }}` written here would resolve
+  # against repository scope and yield an empty string, and the deploy would
+  # succeed while starting the API with a blank signing key. Passing `inherit`
+  # moves secret resolution into the called workflow's `deploy` job, which does
+  # carry `environment:` and therefore sees the environment's values.
+  #
+  # The cost is real and deliberate: `inherit` exposes *every* repository secret
+  # to deploy_reusable.yml, not just the eleven the deploy consumes. That is
+  # acceptable only because the called workflow is in this same repository and
+  # is reviewed with this file; it would not be acceptable for a third-party or
+  # cross-repository reusable workflow.
+  production:
+    name: Production
+    uses: ./.github/workflows/deploy_reusable.yml
+    with:
+      environment: production
+      wait-for-images: ${{ github.event_name == 'push' || inputs.mode == 'full' }}
+      run-deploy: ${{ github.event_name == 'push' || inputs.mode != 'health-only' }}
+    secrets: inherit

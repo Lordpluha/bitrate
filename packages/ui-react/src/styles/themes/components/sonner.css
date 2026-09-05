@@ -1,0 +1,40 @@
+/**
+ * Toast
+ * Sonner toast surface and the two action buttons it can render.
+ */
+
+/**
+ * Dark Theme (Default)
+ */
+@theme {
+  /* Toast fill. */
+  --color-toast-surface: var(--color-popover);
+  /* Toast title text. */
+  --color-toast-foreground: var(--color-popover-foreground);
+  /* Toast border. */
+  --color-toast-border: var(--color-border);
+  /* Toast description text. */
+  --color-toast-description: var(--color-muted-foreground);
+  /* Toast primary action fill. */
+  --color-toast-action-surface: var(--color-primary);
+  /* Toast primary action text. */
+  --color-toast-action-foreground: var(--color-primary-foreground);
+  /* Toast cancel action fill. */
+  --color-toast-cancel-surface: var(--color-muted);
+  /* Toast cancel action text. */
+  --color-toast-cancel-foreground: var(--color-muted-foreground);
+}
+
+/**
+ * Light Theme
+ */
+:root.light {
+  --color-toast-surface: var(--color-popover);
+  --color-toast-foreground: var(--color-popover-foreground);
+  --color-toast-border: var(--color-border);
+  --color-toast-description: var(--color-muted-foreground);
+  --color-toast-action-surface: var(--color-primary);
+  --color-toast-action-foreground: var(--color-primary-foreground);
+  --color-toast-cancel-surface: var(--color-muted);
+  --color-toast-cancel-foreground: var(--color-muted-foreground);
+}

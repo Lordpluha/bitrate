@@ -1,4 +1,4 @@
-import { Typography } from '@spotify/ui-react'
+import { Typography } from '@bitrate/ui-react'
 import Image from 'next/image'
 
 import paymentMethods from '../config/payment-methods.json'
@@ -15,8 +15,8 @@ export const Plans = () => {
         </Typography>
 
         <Typography as="p" className={'mb-6'} size={'body'}>
-          Upgrade to Spotify Premium and take your music journey to the next
-          level. Enjoy uninterrupted music playback, even in offline mode
+          Upgrade to Bitrate Pro and take your music journey to the next level.
+          Enjoy uninterrupted music playback, even in offline mode
         </Typography>
 
         <div className="flex items-center justify-center gap-4">

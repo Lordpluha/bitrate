@@ -1,81 +1,65 @@
 'use client'
 
-import React, { useState } from 'react'
-
+import { Typography } from '@bitrate/ui-react'
 import { useAuth } from '@shared/hooks'
-import { Typography } from '@spotify/ui-react'
-import { PlaylistPage } from '@/views/Playlist'
-
-import { Tabs } from './Tabs'
-import { LastPlaylists } from './LastPlaylists'
-import { PopularPlaylists } from './PopularPlaylists'
-import { PopularArtists } from './PopularArtists'
+import { useState } from 'react'
+import { useI18n } from '@/shared/i18n'
+import {
+  type HomeTabId,
+  homeTabs,
+} from '@/widgets/MainPanel/model/mainPanel.constants'
 import { Footer } from './Footer'
-
-const tabs = [
-  { id: 'all', label: 'All' },
-  { id: 'music', label: 'Music' },
-  { id: 'podcasts', label: 'Podcasts' },
-]
-
-const lastPlaylists: any[] = [
-  {
-    id: 'test-all-tracks',
-    name: 'Test All Tracks',
-    description: 'For player testing',
-    imageUrl: '/images/default-playlist.jpg',
-  },
-  {
-    id: 'liked',
-    name: 'Liked Songs',
-    description: '317 songs',
-    imageUrl: '/images/liked-songs.jpg',
-  },
-  {
-    id: 'drive',
-    name: 'Drive',
-    description: 'Playlist',
-    imageUrl: '/images/drive-cover.jpg',
-  },
-]
+import { LibraryQuickGrid } from './LibraryQuickGrid'
+import { PodcastsPanel } from './PodcastsPanel'
+import { PopularArtists } from './PopularArtists'
+import { RecentlyPlayed } from './RecentlyPlayed'
+import { RecommendationsFeed } from './RecommendationsFeed'
+import { Tabs } from './Tabs'
 
 export const MainPanel = () => {
+  const { t } = useI18n()
   const { user, isAuthenticated } = useAuth()
-  const [showTestTracks, setShowTestTracks] = useState(false)
-
-  const handlePlaylistClick = (id: string) => {
-    if (id === 'test-all-tracks') {
-      setShowTestTracks(true)
-    }
-  }
-
-  if (showTestTracks) {
-    return (
-      <div className="h-full overflow-y-auto custom-scrollbar relative z-10">
-        <PlaylistPage />
-      </div>
-    )
-  }
+  const [activeTab, setActiveTab] = useState<HomeTabId>('all')
+  const showsMusic = activeTab !== 'podcasts'
+  const localizedTabs = homeTabs.map((tab) => ({
+    ...tab,
+    label:
+      tab.id === 'all'
+        ? t('common.all')
+        : tab.id === 'music'
+          ? t('common.music')
+          : t('common.podcasts'),
+  }))
 
   return (
-    <div className="h-full py-4 px-6 overflow-y-auto custom-scrollbar relative z-10">
-      <Tabs tabs={tabs} />
-      <LastPlaylists
-        items={lastPlaylists}
-        onPlaylistClick={handlePlaylistClick}
-      />
-      <div className="mt-6">
-        {isAuthenticated && user ? (
-          <div className="min-w-[280px] mb-8">
-            <p className="text-gray-400 text-xs">Made For</p>
-            <Typography as="h5" size="heading5" className="text-text">
-              {(user as any).username || 'User'}
-            </Typography>
-          </div>
-        ) : null}
-        <PopularPlaylists />
-        <PopularArtists />
-        <Footer />
+    <div className="h-full overflow-y-auto custom-scrollbar relative">
+      <div className="absolute top-0 left-0 right-0 h-80 bg-linear-to-b from-hero-wash to-transparent pointer-events-none z-0" />
+      <div className="relative z-10 px-4 py-4 sm:px-6">
+        <Tabs
+          onTabChange={(id) => setActiveTab(id as HomeTabId)}
+          tabs={localizedTabs}
+        />
+        {activeTab === 'all' && <LibraryQuickGrid />}
+        <div className="mt-6">
+          {isAuthenticated && user && showsMusic ? (
+            <div className="mb-8 min-w-0">
+              <p className="text-text-subdued text-xs">{t('main.madeFor')}</p>
+              <Typography as="h5" className="text-text" size="heading5">
+                {user.username || 'User'}
+              </Typography>
+            </div>
+          ) : null}
+          {showsMusic ? (
+            <>
+              <RecommendationsFeed />
+              <PopularArtists />
+              {activeTab === 'all' && <RecentlyPlayed />}
+            </>
+          ) : (
+            <PodcastsPanel />
+          )}
+          <Footer />
+        </div>
       </div>
     </div>
   )

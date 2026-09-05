@@ -1,0 +1,125 @@
+name: "[security] Reusable"
+
+on:
+  workflow_call:
+
+jobs:
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Reject generated and oversized repository artifacts
+        run: pnpm check:artifacts
+
+      - name: Run pnpm audit
+        run: pnpm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Secret scanning
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+        continue-on-error: true
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  docker-security-scan:
+    name: Docker Security Scan ${{ matrix.service }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [api, web-player, web-artists]
+        # Each service declares only the build args its own Dockerfile consumes.
+        # api needs none: apps/api/Dockerfile's ARGs already carry defaults.
+        # Values mirror web_player_reusable.yml so there is one convention.
+        include:
+          - service: web-player
+            buildArgs: |
+              API_URL=${{ vars.API_URL || 'http://localhost:3000' }}
+              NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
+              NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://spotify-clone-web-olive.vercel.app' }}
+          - service: web-artists
+            buildArgs: |
+              NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
+
+    permissions:
+      security-events: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ghcr.io
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image for scanning
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/${{ matrix.service }}/Dockerfile
+          target: production
+          load: true
+          push: false
+          tags: local-security-scan:${{ matrix.service }}
+          platforms: linux/amd64
+          build-args: ${{ matrix.buildArgs }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: local-security-scan:${{ matrix.service }}
+          format: sarif
+          output: trivy-results-${{ matrix.service }}.sarif
+          severity: CRITICAL,HIGH
+          # Trivy's default is 5m. The web-artists image ships the full
+          # node_modules tree, and the secret scanner walks every file in it,
+          # so analysis blew past that default and produced no SARIF at all.
+          timeout: 20m
+
+      - name: Upload Trivy results to GitHub Security
+        # Skip when the scanner produced nothing — otherwise a scan failure
+        # reports twice, and the second (missing-path) error hides the first.
+        if: always() && hashFiles(format('trivy-results-{0}.sarif', matrix.service)) != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results-${{ matrix.service }}.sarif

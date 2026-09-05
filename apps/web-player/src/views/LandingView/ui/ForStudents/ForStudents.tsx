@@ -1,5 +1,5 @@
+import { Typography } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes'
-import { Typography } from '@spotify/ui-react'
 import Link from 'next/link'
 
 export const ForStudents = () => {
@@ -15,7 +15,7 @@ export const ForStudents = () => {
         </Typography>
 
         <Typography as="p" className="mb-6 max-md:mb-4" size={'body'}>
-          Spotify loves students, and we've got a special treat for you! Elevate
+          Bitrate loves students, and we've got a special treat for you! Elevate
           your music experience without breaking the bank. Unlock all the
           premium features you love at an exclusive student discount.
         </Typography>

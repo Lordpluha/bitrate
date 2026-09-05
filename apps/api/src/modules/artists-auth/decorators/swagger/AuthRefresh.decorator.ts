@@ -1,6 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the auth refresh swagger operation. */
 export function AuthRefreshSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Refresh access token' }),

@@ -2,6 +2,7 @@ import { UploadAvatarDto } from '@modules/users'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
+/** Runs the upload avatar swagger operation. */
 export function UploadAvatarSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Upload avatar for user' }),

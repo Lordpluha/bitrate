@@ -1,6 +1,5 @@
-import { InstallIcon } from '@spotify/ui-react'
+import { InstallIcon } from '@bitrate/ui-react'
 import Link from 'next/link'
-import React from 'react'
 
 export const InstallBtn = () => {
   return (

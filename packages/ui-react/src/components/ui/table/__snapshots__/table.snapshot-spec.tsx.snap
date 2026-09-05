@@ -1,0 +1,93 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Table snapshots > matches snapshot — basic table 1`] = `
+<div
+  class="relative w-full overflow-auto"
+>
+  <table
+    class="w-full caption-bottom text-sm"
+  >
+    <thead
+      class="[&_tr]:border-b"
+    >
+      <tr
+        class="border-b transition-colors hover:bg-collection-row-hover/50 data-[state=selected]:bg-collection-row-selected"
+      >
+        <th
+          class="h-12 px-4 text-left align-middle font-medium text-collection-text-secondary [&:has([role=checkbox])]:pr-0"
+        >
+          Name
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="[&_tr:last-child]:border-0"
+    >
+      <tr
+        class="border-b transition-colors hover:bg-collection-row-hover/50 data-[state=selected]:bg-collection-row-selected"
+      >
+        <td
+          class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+        >
+          Song
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Table snapshots > matches snapshot — table with caption and footer 1`] = `
+<div
+  class="relative w-full overflow-auto"
+>
+  <table
+    class="w-full caption-bottom text-sm"
+  >
+    <caption
+      class="mt-4 text-sm text-collection-text-secondary"
+    >
+      A list of invoices
+    </caption>
+    <thead
+      class="[&_tr]:border-b"
+    >
+      <tr
+        class="border-b transition-colors hover:bg-collection-row-hover/50 data-[state=selected]:bg-collection-row-selected"
+      >
+        <th
+          class="h-12 px-4 text-left align-middle font-medium text-collection-text-secondary [&:has([role=checkbox])]:pr-0"
+        >
+          Invoice
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="[&_tr:last-child]:border-0"
+    >
+      <tr
+        class="border-b transition-colors hover:bg-collection-row-hover/50 data-[state=selected]:bg-collection-row-selected"
+      >
+        <td
+          class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+        >
+          INV-001
+        </td>
+      </tr>
+    </tbody>
+    <tfoot
+      class="border-t bg-collection-row-muted/50 font-medium [&>tr]:last:border-b-0"
+    >
+      <tr
+        class="border-b transition-colors hover:bg-collection-row-hover/50 data-[state=selected]:bg-collection-row-selected"
+      >
+        <td
+          class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+        >
+          Total: $100
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+`;

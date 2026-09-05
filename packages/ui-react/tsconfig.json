@@ -16,9 +16,11 @@
     "allowJs": false,
     "target": "ES2022",
     "jsx": "react-jsx",
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@assets/*": ["assets/*"]
     }
   },
   "include": ["src", ".svgrrc.js"],

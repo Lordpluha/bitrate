@@ -1,138 +1,138 @@
-# Desktop приложение с VNC
+# Desktop App with VNC
 
-Этот setup позволяет запускать Tauri desktop приложение в Docker контейнере с GUI доступом через VNC.
+This setup allows running a Tauri desktop application in a Docker container with GUI access via VNC.
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### Запуск
+### Launch
 
 ```bash
 cd apps/desktop
 docker compose -f docker-compose.vnc.yml up --build
 ```
 
-Подождите пока контейнер соберется и запустится (первый раз ~5-10 минут).
+Wait for the container to build and start (first time ~5-10 minutes).
 
-### Доступ к приложению
+### Accessing the application
 
-После запуска доступны:
+After startup, the following are available:
 
-1. **noVNC (браузер)** - рекомендуется
+1. **noVNC (browser)** - recommended
    ```
    http://localhost:6080/vnc.html
    ```
-   - Откройте в браузере
-   - Нажмите "Connect"
-   - Введите пароль: `spotify`
+   - Open in your browser
+   - Click "Connect"
+   - Enter password: `bitrate`
 
-2. **VNC клиент** (RealVNC, TigerVNC, Remmina и т.д.)
+2. **VNC client** (RealVNC, TigerVNC, Remmina, etc.)
    ```
    vnc://localhost:5900
    ```
-   - Пароль: `spotify`
+   - Password: `bitrate`
 
-3. **Vite dev server** (только UI без Tauri)
+3. **Vite dev server** (UI only without Tauri)
    ```
    http://localhost:1420
    ```
 
-## 📋 Использование
+## 📋 Usage
 
-После подключения через noVNC/VNC вы увидите:
-- Рабочий стол с Fluxbox window manager
-- Tauri приложение запустится автоматически
-- Hot reload работает при изменении файлов
+After connecting via noVNC/VNC you will see:
+- Desktop with Fluxbox window manager
+- The Tauri application will start automatically
+- Hot reload works when files change
 
-## 🔧 Настройки
+## 🔧 Configuration
 
-### Изменить разрешение экрана
+### Change screen resolution
 
-В `docker-compose.vnc.yml`:
+In `docker-compose.vnc.yml`:
 ```yaml
 environment:
-  - RESOLUTION=1280x720x24  # или другое разрешение
+  - RESOLUTION=1280x720x24  # or another resolution
 ```
 
-### Изменить пароль VNC
+### Change VNC password
 
-В `Dockerfile.vnc` измените строку:
+In `Dockerfile.vnc` change the line:
 ```bash
-x11vnc ... -passwd spotify ...
-# на
-x11vnc ... -passwd ВАШ_ПАРОЛЬ ...
+x11vnc ... -passwd bitrate ...
+# to
+x11vnc ... -passwd YOUR_PASSWORD ...
 ```
 
-## 🛠️ Команды
+## 🛠️ Commands
 
 ```bash
-# Запуск
+# Start
 docker compose -f docker-compose.vnc.yml up --build
 
-# Запуск в фоне
+# Start in background
 docker compose -f docker-compose.vnc.yml up -d --build
 
-# Логи
+# Logs
 docker compose -f docker-compose.vnc.yml logs -f
 
-# Остановка
+# Stop
 docker compose -f docker-compose.vnc.yml down
 
-# Пересборка
+# Rebuild
 docker compose -f docker-compose.vnc.yml build --no-cache
 ```
 
-## ⚠️ Ограничения
+## ⚠️ Limitations
 
-- **Производительность**: Работает медленнее чем нативный запуск
-- **GPU**: Нет аппаратного ускорения
-- **Размер**: Образ ~3-4 GB из-за всех зависимостей
-- **Первая сборка**: Занимает 5-10 минут
+- **Performance**: Runs slower than native execution
+- **GPU**: No hardware acceleration
+- **Size**: Image ~3-4 GB due to all dependencies
+- **First build**: Takes 5-10 minutes
 
-## 🎯 Рекомендации
+## 🎯 Recommendations
 
-**Для разработки лучше использовать нативный запуск:**
+**For development, native execution is preferred:**
 
 ```bash
 cd apps/desktop
 pnpm dev
 ```
 
-**VNC полезен для:**
-- CI/CD тестирования GUI
-- Демонстрации приложения
-- Разработки на удаленном сервере
-- Когда нет локального GUI окружения
+**VNC is useful for:**
+- CI/CD GUI testing
+- Application demonstrations
+- Development on a remote server
+- When no local GUI environment is available
 
 ## 🐛 Troubleshooting
 
-### Черный экран в VNC
-- Подождите ~30 секунд после подключения
-- Проверьте логи: `docker compose logs -f`
+### Black screen in VNC
+- Wait ~30 seconds after connecting
+- Check logs: `docker compose logs -f`
 
-### Приложение не запускается
+### Application won't start
 ```bash
-# Войдите в контейнер
+# Enter the container
 docker compose -f docker-compose.vnc.yml exec desktop-vnc bash
 
-# Проверьте процессы
+# Check processes
 ps aux | grep -E "Xvfb|x11vnc|tauri"
 
-# Запустите вручную
+# Start manually
 cd /app/apps/desktop
 pnpm tauri dev
 ```
 
-### Нет подключения к VNC
+### No VNC connection
 ```bash
-# Проверьте что порты открыты
+# Check that ports are open
 docker compose -f docker-compose.vnc.yml ps
 
-# Проверьте firewall
+# Check firewall
 sudo ufw allow 5900/tcp
 sudo ufw allow 6080/tcp
 ```
 
-## 📚 Ресурсы
+## 📚 Resources
 
 - [Tauri Documentation](https://tauri.app/)
 - [noVNC](https://novnc.com/)

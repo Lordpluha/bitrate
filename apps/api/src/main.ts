@@ -1,17 +1,48 @@
+/**
+ * Sentry first, before anything else is imported. Its instrumentation patches modules as `init()`
+ * runs, so a module already loaded by an earlier import is never traced — Nest, Express and the
+ * Postgres driver among them. It sits in its own block because Biome sorts within blocks but keeps
+ * their order, and alphabetical sorting had previously placed this line below every other import.
+ */
+import './instrument'
+
+import { API_DOC_DESCRIPTION, API_DOC_TITLE, API_DOC_VERSION } from '@common/swagger'
 import { HttpStatus, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
+import type { NestExpressApplication } from '@nestjs/platform-express'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import * as cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
+import helmet from 'helmet'
 
 import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'
+import { resolveTrustProxySetting } from './common/config/trusted-proxy.config'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 
+/** Runs the bootstrap operation. */
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule)
   const configService = app.get<ConfigService<AppConfig>>(ConfigService)
+  const { userHost, artistHost } = configService.getOrThrow('web')
+  app.set('trust proxy', resolveTrustProxySetting(configService.getOrThrow('TRUST_PROXY_HOPS')))
 
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          connectSrc: ["'self'", userHost, artistHost],
+          objectSrc: ["'none'"],
+          frameAncestors: ["'none'"],
+        },
+      },
+      crossOriginResourcePolicy: { policy: 'same-site' },
+    }),
+  )
   app.use(cookieParser())
   app.useGlobalFilters(new HttpExceptionFilter())
 
@@ -24,16 +55,24 @@ async function bootstrap() {
   })
 
   app.enableCors(configService.getOrThrow('connections').http)
+  app.enableShutdownHooks()
 
-  const config = new DocumentBuilder()
-    .setTitle(process.env.npm_package_name || 'API Documentation')
-    .setDescription(`${process.env.npm_package_name} Swagger documentation`)
-    .setVersion(process.env.npm_package_version ?? '1.0')
+  const apiBaseUrl = configService.get('API_BASE_URL')
+
+  const documentBuilder = new DocumentBuilder()
+    .setTitle(API_DOC_TITLE)
+    .setDescription(API_DOC_DESCRIPTION)
+    .setVersion(API_DOC_VERSION)
     .addServer(`http://localhost:${configService.getOrThrow('PORT')}`, 'Local server')
-    .addServer('https://spotify-clone-api-jp5z.onrender.com/', 'Remote dev server')
-    // In progress
     .addOAuth2({
-      type: 'openIdConnect',
+      type: 'oauth2',
+      flows: {
+        authorizationCode: {
+          authorizationUrl: '/api/v1/auth/oauth/google',
+          tokenUrl: '/api/v1/auth/oauth/google/callback',
+          scopes: {},
+        },
+      },
     })
     .addCookieAuth(configService.getOrThrow('ACCESS_TOKEN_NAME'), {
       type: 'apiKey',
@@ -89,12 +128,21 @@ async function bootstrap() {
       status: HttpStatus.TOO_MANY_REQUESTS,
       description: 'Too many requests',
     })
-    .setExternalDoc('@spotify/docs', '')
-    .build()
+
+  /**
+   * Added after the chain because the deployed origin is optional — `addServer` only accepts a
+   * real URL, and `build()` returns the document rather than the builder.
+   */
+  if (apiBaseUrl) {
+    documentBuilder.addServer(apiBaseUrl, 'Deployed server')
+  }
+
+  const config = documentBuilder.build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('swagger', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
+    customSiteTitle: API_DOC_TITLE,
   })
 
   await app.listen(configService.getOrThrow('PORT'))

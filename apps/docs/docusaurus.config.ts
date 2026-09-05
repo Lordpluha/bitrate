@@ -5,7 +5,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Spotify Clone Documentation',
+  title: 'Bitrate Documentation',
   tagline: 'Open source music streaming platform built with modern web technologies',
   favicon: 'img/favicon.ico',
 
@@ -20,8 +20,7 @@ const config: Config = {
     mermaid: true,
   },
 
-  // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://docs.bitrate.me',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -29,7 +28,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'lordpluha', // Usually your GitHub org/user name.
-  projectName: 'spotify-clone', // Usually your repo name.
+  projectName: 'bitrate', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -47,10 +46,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/Lordpluha/bitrate/tree/develop/apps/docs/',
         },
         blog: {
           showReadingTime: true,
@@ -58,10 +54,7 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/Lordpluha/bitrate/tree/develop/apps/docs/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -75,15 +68,14 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/bitrate-social-card.png',
     colorMode: {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: '@spotify/docs',
+      title: 'Bitrate Docs',
       logo: {
-        alt: 'Spotify logo',
+        alt: 'Bitrate',
         src: 'img/logo.svg',
       },
       items: [
@@ -95,7 +87,7 @@ const config: Config = {
         },
         { to: '/blog', label: 'Blog', position: 'left' },
         {
-          href: 'https://github.com/lordpluha/spotify-clone',
+          href: 'https://github.com/lordpluha/bitrate',
           label: 'GitHub',
           position: 'right',
         },
@@ -125,8 +117,8 @@ const config: Config = {
           title: 'Applications',
           items: [
             {
-              label: 'Web App',
-              to: '/docs/applications/web/overview',
+              label: 'Web Player',
+              to: '/docs/applications/web-player/overview',
             },
             {
               label: 'Mobile App',
@@ -147,7 +139,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/lordpluha/spotify-clone',
+              href: 'https://github.com/lordpluha/bitrate',
             },
           ],
         },

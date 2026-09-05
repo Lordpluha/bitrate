@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ButtonGroup snapshots > matches snapshot — horizontal 1`] = `
+<div
+  class="flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none"
+  data-slot="button-group"
+  role="group"
+>
+  <button
+    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer bg-white text-black hover:bg-transparent border-2 border-solid border-white hover:text-text hover:opacity-70 transition-[.3s] h-10 px-4 py-2"
+  >
+    One
+  </button>
+  <button
+    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer bg-white text-black hover:bg-transparent border-2 border-solid border-white hover:text-text hover:opacity-70 transition-[.3s] h-10 px-4 py-2"
+  >
+    Two
+  </button>
+</div>
+`;
+
+exports[`ButtonGroup snapshots > matches snapshot — vertical 1`] = `
+<div
+  class="flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1 flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none"
+  data-orientation="vertical"
+  data-slot="button-group"
+  role="group"
+>
+  <button
+    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer bg-white text-black hover:bg-transparent border-2 border-solid border-white hover:text-text hover:opacity-70 transition-[.3s] h-10 px-4 py-2"
+  >
+    One
+  </button>
+  <button
+    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer bg-white text-black hover:bg-transparent border-2 border-solid border-white hover:text-text hover:opacity-70 transition-[.3s] h-10 px-4 py-2"
+  >
+    Two
+  </button>
+</div>
+`;

@@ -1,4 +1,5 @@
-export { convertAudio } from "./audio.mjs"
-export { convertImage } from "./image.mjs"
-export { convertVideo } from "./video.mjs"
-
+export { convertAudio } from './audio.mjs'
+export { convertAudioToCmaf } from './cmaf.mjs'
+export { convertAudioToHls } from './hls.mjs'
+export { convertImage } from './image.mjs'
+export { convertVideo } from './video.mjs'

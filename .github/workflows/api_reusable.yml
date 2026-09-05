@@ -1,0 +1,193 @@
+name: "[api] Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      push-image:
+        description: Push API image
+        required: true
+        type: boolean
+      image-tags:
+        description: Docker tags for API image (multiline)
+        required: true
+        type: string
+      timeout-build:
+        description: Timeout for API build job
+        required: false
+        default: 15
+        type: number
+      run-biome:
+        description: Run biome check before Docker build
+        required: false
+        default: true
+        type: boolean
+      run-tests:
+        description: Run API tests after image build
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
+jobs:
+  api-build:
+    name: API Build
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-build }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        if: ${{ inputs.run-biome }}
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run Biome check
+        if: ${{ inputs.run-biome }}
+        run: pnpm exec biome ci apps/api packages/contracts
+
+      - name: Setup Docker + registries
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build API Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/api/Dockerfile
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.image-tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache
+            type=gha,scope=api
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache,mode=max
+            type=gha,mode=max,scope=api
+          target: production
+
+  api-tests:
+    if: ${{ inputs.run-tests }}
+    name: API Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: api-build
+
+    env:
+      DATABASE_URL: postgresql://test:test@localhost:5432/test
+      SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      WEB_HOST: http://localhost:3001
+      JWT_SECRET: api-ci-secret-value
+      STORAGE_DRIVER: local
+      PORT: 3000
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_USER: test
+          POSTGRES_DB: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Generate Prisma Client
+        run: pnpm --filter @bitrate/api run db:gen
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
+
+      - name: Create shadow database
+        run: |
+          PGPASSWORD=test psql -h localhost -U test -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'test_shadow'" | grep -q 1 || \
+          PGPASSWORD=test psql -h localhost -U test -d postgres -c "CREATE DATABASE test_shadow;"
+
+      - name: Run migrations
+        run: pnpm --filter @bitrate/api run db:migration:deploy
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
+
+      - name: Run converter tests
+        run: pnpm --filter @bitrate/converter run test
+
+      - name: Run unit tests
+        run: pnpm --filter @bitrate/api run test
+
+      - name: Run integration tests
+        run: pnpm --filter @bitrate/api run test:int
+
+      - name: Run e2e tests
+        run: pnpm --filter @bitrate/api run test:e2e
+
+      - name: Build ncs-parser
+        run: pnpm --filter @bitrate/ncs-parser run build
+
+      - name: Verify generated API contracts
+        run: |
+          pnpm --filter @bitrate/api run start > /tmp/bitrate-api.log 2>&1 &
+          API_PID=$!
+          trap 'kill "$API_PID" 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            curl --fail --silent http://localhost:3000/swagger/json > /dev/null && break
+            if [ "$i" = 30 ]; then
+              cat /tmp/bitrate-api.log
+              exit 1
+            fi
+            sleep 1
+          done
+          pnpm --filter @bitrate/contracts run gen:api
+          git diff --exit-code -- packages/contracts/src/api/v1.ts
+
+      - name: Upload API startup log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-startup-log
+          path: /tmp/bitrate-api.log
+          if-no-files-found: ignore
+
+      # Regenerating the contract needs a running API, so a developer without
+      # Postgres and Redis to hand cannot produce this file locally. On a drift
+      # failure the freshly generated one is right here — download and commit it.
+      - name: Upload regenerated API contract
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regenerated-api-contract
+          path: packages/contracts/src/api/v1.ts
+          if-no-files-found: ignore

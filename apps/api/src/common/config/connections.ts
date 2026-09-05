@@ -1,6 +1,7 @@
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { registerAs } from '@nestjs/config'
-import { GatewayMetadata } from '@nestjs/websockets'
+import type { GatewayMetadata } from '@nestjs/websockets'
+import { resolveWebHosts } from './web.config'
 
 /**
  * Allowed origins for CORS
@@ -8,13 +9,11 @@ import { GatewayMetadata } from '@nestjs/websockets'
 const getAllowedOrigins = (): CorsOptions['origin'] => {
   const baseOrigins = [
     /^http:\/\/localhost(:\d+)?$/, // Any localhost with optional port
-    'file://', // For local HTML files
-    'null', // For file:// origin in some browsers
   ]
 
-  const webHost = process.env.WEB_HOST || 'http://localhost:3001'
+  const { userHost, artistHost } = resolveWebHosts()
 
-  return [webHost, ...baseOrigins, /^file:\/\//]
+  return [...new Set([userHost, artistHost]), ...baseOrigins]
 }
 
 /**
@@ -32,6 +31,7 @@ const httpConfig: CorsOptions = {
     'Range',
     'Access-Control-Request-Method',
     'Access-Control-Request-Headers',
+    'X-Request-ID',
   ],
   exposedHeaders: [
     'Set-Cookie',
@@ -39,6 +39,7 @@ const httpConfig: CorsOptions = {
     'Accept-Ranges',
     'Content-Length',
     'X-Track-Duration',
+    'X-Request-ID',
   ],
   credentials: true,
   preflightContinue: false,
@@ -55,6 +56,7 @@ export const websocketConfig: GatewayMetadata = {
   },
 }
 
+/** The connections config value. */
 export const connectionsConfig = registerAs('connections', () => ({
   http: httpConfig,
   ws: websocketConfig,

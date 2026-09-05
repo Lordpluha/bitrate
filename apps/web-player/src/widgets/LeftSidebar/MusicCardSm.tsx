@@ -1,72 +1,103 @@
 'use client'
-import React, { useState } from 'react'
+import { cn } from '@bitrate/ui-react'
+import { Volume2 } from 'lucide-react'
+import Link from 'next/link'
+import type { MouseEvent } from 'react'
+import { LibraryItemCover } from './LibraryItemCover'
+import { resolveLibraryHref } from './lib/resolveLibraryHref'
 
-interface MusicItem {
+export interface MusicItem {
   id: string
   title: string
-  artist: string
-  type: 'playlist' | 'album' | 'single' | 'podcast'
+  username: string
+  type: 'artist' | 'playlist' | 'album' | 'single' | 'podcast'
   cover: string
   tracksCount?: number
 }
 
 interface MusicCardSmProps {
+  isActive?: boolean
+  isCollapsed?: boolean
+  isPlaying?: boolean
   item: MusicItem
 }
 
-const getTypeColor = (type: MusicItem['type']) => {
-  switch (type) {
-    case 'playlist':
-      return 'from-green-500 to-blue-500'
-    case 'album':
-      return 'from-orange-500 to-red-500'
-    case 'single':
-      return 'from-purple-500 to-pink-500'
-    case 'podcast':
-      return 'from-blue-600 to-indigo-600'
-    default:
-      return 'from-gray-500 to-gray-700'
+let lastSidebarNavigationAt = 0
+const sidebarNavigationCooldownMs = 450
+
+export const MusicCardSm = ({
+  isActive = false,
+  isCollapsed = false,
+  isPlaying = false,
+  item,
+}: MusicCardSmProps) => {
+  const href = resolveLibraryHref(item)
+  const handleNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
+    const now = Date.now()
+
+    if (
+      isActive ||
+      now - lastSidebarNavigationAt < sidebarNavigationCooldownMs
+    ) {
+      event.preventDefault()
+      return
+    }
+
+    lastSidebarNavigationAt = now
   }
-}
 
-export const MusicCardSm = ({ item }: MusicCardSmProps) => {
-  const [imageError, setImageError] = useState(false)
-
-  const handleImageError = () => {
-    setImageError(true)
+  if (isCollapsed) {
+    return (
+      <Link
+        aria-label={item.title}
+        className={cn(
+          'group flex h-16 w-16 items-center justify-center rounded-md transition-colors hover:bg-surface',
+          isActive && 'bg-surface',
+        )}
+        href={href}
+        onClick={handleNavigate}
+        prefetch={false}
+        title={item.title}
+      >
+        <LibraryItemCover collapsed isPlaying={isPlaying} item={item} />
+      </Link>
+    )
   }
 
   return (
-    <div className="group flex items-center gap-3 p-2 rounded-md hover:bg-white/10 cursor-pointer transition-all duration-150">
-      <div className="w-12 h-12 rounded-md flex-shrink-0 overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-150">
-        {!imageError ? (
-          <img
-            src={item.cover}
-            alt={item.title}
-            className="w-full h-full object-cover"
-            onError={handleImageError}
-          />
-        ) : (
-          <div
-            className={`w-full h-full bg-gradient-to-br ${getTypeColor(item.type)} flex items-center justify-center`}
-          >
-            <span className="text-white text-xs font-bold drop-shadow-sm">
-              {item.title.charAt(0).toUpperCase()}
-            </span>
-          </div>
-        )}
-      </div>
+    <Link
+      className={cn(
+        'group flex items-center gap-3 p-2 rounded-md hover:bg-surface cursor-pointer transition-all duration-150',
+        isActive && 'bg-surface',
+      )}
+      href={href}
+      onClick={handleNavigate}
+      prefetch={false}
+    >
+      <LibraryItemCover isPlaying={isPlaying} item={item} />
 
       <div className="flex-1 min-w-0">
-        <h3 className="text-text font-semibold text-sm truncate group-hover:text-white transition-colors duration-150 leading-tight">
+        <h3
+          className={cn(
+            'font-semibold text-sm truncate group-hover:text-text transition-colors duration-150 leading-tight',
+            isPlaying ? 'text-primary' : 'text-text',
+          )}
+        >
           {item.title}
         </h3>
-        <p className="text-gray-400 text-xs truncate group-hover:text-gray-300 transition-colors duration-150 mt-0.5">
+        <p className="text-text-subdued text-xs truncate group-hover:text-text-secondary transition-colors duration-150 mt-0.5">
           {item.type.slice(0, 1).toUpperCase() + item.type.slice(1)} •{' '}
-          {item.artist}
+          {item.username}
           {item.tracksCount && ` • ${item.tracksCount} songs`}
         </p>
       </div>
-    </div>
+      {isPlaying && (
+        <Volume2
+          aria-label={`${item.title} is playing`}
+          className="shrink-0 text-primary"
+          size={16}
+        />
+      )}
+    </Link>
   )
 }

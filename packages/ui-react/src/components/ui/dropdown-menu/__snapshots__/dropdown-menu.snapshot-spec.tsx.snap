@@ -1,0 +1,68 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DropdownMenu snapshots > matches snapshot — closed trigger 1`] = `
+<button
+  aria-expanded="false"
+  aria-haspopup="menu"
+  id="base-ui-_r_4_"
+  tabindex="0"
+  type="button"
+>
+  Open menu
+</button>
+`;
+
+exports[`DropdownMenu snapshots > renders open state snapshot 1`] = `
+<div>
+  <span
+    data-base-ui-focus-guard=""
+    data-base-ui-inert=""
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+  <button
+    aria-controls="_r_8_"
+    aria-expanded="true"
+    aria-haspopup="menu"
+    data-popup-open=""
+    data-pressed=""
+    id="base-ui-_r_a_"
+    tabindex="0"
+    type="button"
+  >
+    Open
+  </button>
+  <span
+    aria-hidden="true"
+    data-base-ui-inert=""
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px;"
+    tabindex="-1"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    data-type="outside"
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+  <span
+    aria-owns="_r_c_"
+    data-base-ui-inert=""
+    style="clip-path: inset(50%); position: fixed; top: 0px; left: 0px;"
+  />
+  <span
+    data-base-ui-focus-guard=""
+    data-type="outside"
+    role="button"
+    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    tabindex="0"
+  />
+</div>
+`;

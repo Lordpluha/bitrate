@@ -2,166 +2,166 @@
 
 ## 🔒 Supported Versions
 
-Мы поддерживаем безопасность следующих версий проекта:
+We support the security of the following project versions:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| main    | ✅ Активная поддержка |
-| develop | ✅ Активная разработка |
-| < 1.0   | ❌ Не поддерживается |
+| master  | ✅ Active support |
+| develop | ✅ Active development |
+| < 1.0   | ❌ Not supported |
 
 ## 🐛 Reporting a Vulnerability
 
-Безопасность наших пользователей - наш главный приоритет. Если вы обнаружили уязвимость в проекте, пожалуйста, сообщите нам об этом **конфиденциально**.
+The security of our users is our top priority. If you have discovered a vulnerability in the project, please report it to us **confidentially**.
 
-### Как сообщить об уязвимости
+### How to report a vulnerability
 
-**НЕ создавайте публичный issue** для сообщения об уязвимостях безопасности.
+**Do NOT create a public issue** for reporting security vulnerabilities.
 
-Вместо этого:
+Instead:
 
-1. **Email:** Отправьте подробное описание уязвимости на:
+1. **Email:** Send a detailed description of the vulnerability to:
    - 📧 **vladislavteslyukofficial@gmail.com**
 
-2. **GitHub Security Advisories** (рекомендуется):
-   - Перейдите на вкладку [Security](https://github.com/Lordpluha/spotify-clone/security)
-   - Нажмите "Report a vulnerability"
-   - Заполните форму с деталями
+2. **GitHub Security Advisories** (recommended):
+   - Go to the [Security](https://github.com/Lordpluha/bitrate/security) tab
+   - Click "Report a vulnerability"
+   - Fill in the form with details
 
-### Что включить в отчет
+### What to include in your report
 
-Для быстрого реагирования, пожалуйста, включите:
+For a quick response, please include:
 
-- **Тип уязвимости** (XSS, SQL Injection, CSRF, etc.)
-- **Затронутые компоненты** (API, Web, Mobile, Desktop)
-- **Шаги для воспроизведения** (step-by-step)
-- **Потенциальное влияние** (что может сделать атакующий)
-- **Предлагаемое решение** (если есть)
-- **Версия проекта** или commit hash
-- **Скриншоты/видео** (если применимо)
+- **Vulnerability type** (XSS, SQL Injection, CSRF, etc.)
+- **Affected components** (API, Web, Mobile, Desktop)
+- **Steps to reproduce** (step-by-step)
+- **Potential impact** (what an attacker could do)
+- **Suggested fix** (if any)
+- **Project version** or commit hash
+- **Screenshots/video** (if applicable)
 
-### Процесс обработки
+### Handling process
 
-После получения отчета об уязвимости:
+After receiving a vulnerability report:
 
-1. ✅ **Подтверждение получения** - в течение **48 часов**
-2. 🔍 **Анализ уязвимости** - в течение **7 дней**
-3. 🛠️ **Разработка патча** - зависит от серьезности
-4. 📦 **Релиз исправления** - с упоминанием автора (если не против)
-5. 📢 **Публичное объявление** - после выхода патча
+1. ✅ **Acknowledgment** - within **48 hours**
+2. 🔍 **Vulnerability analysis** - within **7 days**
+3. 🛠️ **Patch development** - depends on severity
+4. 📦 **Fix release** - with credit to reporter (if agreed)
+5. 📢 **Public announcement** - after patch release
 
 ### Severity Levels
 
-Мы используем следующую классификацию уязвимостей:
+We use the following vulnerability classification:
 
-| Уровень | Описание | SLA Response |
-|---------|----------|--------------|
-| 🔴 **Critical** | Удаленное выполнение кода, полная компрометация системы | 24 часа |
-| 🟠 **High** | Утечка данных пользователей, обход аутентификации | 48 часов |
-| 🟡 **Medium** | Несанкционированный доступ к ограниченным данным | 7 дней |
-| 🟢 **Low** | Раскрытие минимальной информации, DoS | 14 дней |
+| Level | Description | SLA Response |
+|-------|-------------|--------------|
+| 🔴 **Critical** | Remote code execution, full system compromise | 24 hours |
+| 🟠 **High** | User data leak, authentication bypass | 48 hours |
+| 🟡 **Medium** | Unauthorized access to restricted data | 7 days |
+| 🟢 **Low** | Minimal information disclosure, DoS | 14 days |
 
 ## 🛡️ Security Best Practices
 
-При работе с проектом придерживайтесь следующих правил:
+When working with the project, follow these rules:
 
-### Для разработчиков
+### For developers
 
-- ✅ Никогда не коммитьте `.env` файлы с реальными credentials
-- ✅ Используйте `.env.example` для документирования переменных
-- ✅ Регулярно обновляйте зависимости: `pnpm update`
-- ✅ Проверяйте уязвимости: `pnpm audit`
-- ✅ Используйте pre-commit hooks для проверки секретов
-- ✅ Валидируйте все пользовательские входные данные
-- ✅ Используйте parameterized queries (Prisma делает это автоматически)
-- ✅ Храните пароли только в хешированном виде (bcrypt/argon2)
+- ✅ Never commit `.env` files with real credentials
+- ✅ Use `.env.example` to document variables
+- ✅ Regularly update dependencies: `pnpm update`
+- ✅ Check for vulnerabilities: `pnpm audit`
+- ✅ Use pre-commit hooks to check for secrets
+- ✅ Validate all user input
+- ✅ Use parameterized queries (Prisma does this automatically)
+- ✅ Store passwords only in hashed form (bcrypt/argon2)
 
-### Для deployment
+### For deployment
 
-- ✅ Используйте HTTPS в продакшене
-- ✅ Настройте CORS правильно (не используйте `*` в продакшене)
-- ✅ Включите Rate Limiting (уже настроено в API)
-- ✅ Используйте CSP (Content Security Policy)
-- ✅ Храните секреты в secrets manager (не в .env файлах)
-- ✅ Регулярно делайте бэкапы базы данных
-- ✅ Мониторьте логи на подозрительную активность
-- ✅ Используйте 2FA для критичных сервисов
+- ✅ Use HTTPS in production
+- ✅ Configure CORS properly (do not use `*` in production)
+- ✅ Enable Rate Limiting (already configured in the API)
+- ✅ Use CSP (Content Security Policy)
+- ✅ Store secrets in a secrets manager (not in .env files)
+- ✅ Regularly back up the database
+- ✅ Monitor logs for suspicious activity
+- ✅ Use 2FA for critical services
 
 ## 🔐 Security Features
 
-Проект уже включает следующие меры безопасности:
+The project already includes the following security measures:
 
 ### Backend (NestJS API)
 
-- ✅ **JWT Authentication** с refresh tokens
+- ✅ **JWT Authentication** with refresh tokens
 - ✅ **OAuth 2.0** (Google, Facebook, Discord)
 - ✅ **2FA (Two-Factor Authentication)**
-- ✅ **Rate Limiting** через `@nestjs/throttler`
-- ✅ **CORS** настройка
+- ✅ **Rate Limiting** via `@nestjs/throttler`
+- ✅ **CORS** configuration
 - ✅ **CSP (Content Security Policy)**
-- ✅ **Helmet** для HTTP headers security
+- ✅ **Helmet** for HTTP header security
 - ✅ **CSRF Protection**
 - ✅ **IP-based rate limiting and banning**
 - ✅ **Fingerprint Authentication**
-- ✅ **File Upload Security** через Multer с валидацией
-- ✅ **SHA-3** для хеширования
-- ✅ **Global Error Filters** для предотвращения утечки информации
-- ✅ **Prisma** (защита от SQL Injection)
+- ✅ **File Upload Security** via Multer with validation
+- ✅ **SHA-3** for hashing
+- ✅ **Global Error Filters** to prevent information leakage
+- ✅ **Prisma** (SQL Injection protection)
 
 ### Frontend (Next.js Web)
 
-- ✅ **Server-side validation** через Server Actions
-- ✅ **Zod validation** для всех форм
-- ✅ **CSP Headers** через middleware
-- ✅ **CORS** настройка
+- ✅ **Server-side validation** via Server Actions
+- ✅ **Zod validation** for all forms
+- ✅ **CSP Headers** via middleware
+- ✅ **CORS** configuration
 - ✅ **Secure cookies** (httpOnly, secure, sameSite)
-- ✅ **MSW** для безопасного тестирования API
+- ✅ **MSW** for secure API testing
 
 ### Infrastructure
 
-- ✅ **Docker** изоляция сервисов
-- ✅ **Environment variables** через env.schema validation
-- ✅ **PostgreSQL** с proper user permissions
-- ✅ **Redis** для session management
-- ✅ **Cloudflare** готовность (упоминается в stack)
-- ✅ **Sentry** для мониторинга ошибок
+- ✅ **Docker** service isolation
+- ✅ **Environment variables** via env.schema validation
+- ✅ **PostgreSQL** with proper user permissions
+- ✅ **Redis** for session management
+- ✅ **Cloudflare** ready (mentioned in stack)
+- ✅ **Sentry** for error monitoring
 
 ## 📋 Security Checklist
 
-Перед деплоем в продакшен:
+Before deploying to production:
 
-- [ ] Все `.env` файлы в `.gitignore`
-- [ ] Секреты перенесены в secrets manager
-- [ ] HTTPS включен и настроен
-- [ ] CORS настроен правильно (не `*`)
-- [ ] Rate limiting протестирован
-- [ ] Все зависимости обновлены (`pnpm audit`)
-- [ ] CSP headers настроены
+- [ ] All `.env` files in `.gitignore`
+- [ ] Secrets moved to secrets manager
+- [ ] HTTPS enabled and configured
+- [ ] CORS configured correctly (not `*`)
+- [ ] Rate limiting tested
+- [ ] All dependencies updated (`pnpm audit`)
+- [ ] CSP headers configured
 - [ ] Cookie settings: httpOnly, secure, sameSite
-- [ ] Database backups настроены
-- [ ] Monitoring и alerting настроены
-- [ ] 2FA включен для admin аккаунтов
-- [ ] SQL injection тесты пройдены
-- [ ] XSS тесты пройдены
-- [ ] CSRF защита работает
+- [ ] Database backups configured
+- [ ] Monitoring and alerting configured
+- [ ] 2FA enabled for admin accounts
+- [ ] SQL injection tests passed
+- [ ] XSS tests passed
+- [ ] CSRF protection working
 
 ## 🏆 Responsible Disclosure
 
-Мы благодарны исследователям безопасности, которые помогают делать проект безопаснее.
+We are grateful to security researchers who help make the project safer.
 
-**Благодарности:**
-- Исследователи, ответственно раскрывающие уязвимости, будут упомянуты в CHANGELOG
-- По желанию, можем добавить вас в CONTRIBUTORS.md
-- Для критичных уязвимостей можем рассмотреть вознаграждение (bug bounty)
+**Recognition:**
+- Researchers who responsibly disclose vulnerabilities will be mentioned in the CHANGELOG
+- Upon request, we can add you to CONTRIBUTORS.md
+- For critical vulnerabilities, a reward may be considered (bug bounty)
 
-## 📞 Контакты
+## 📞 Contacts
 
-- **Владислав Теслюк** (Lead Developer)
+- **Vladyslav Tesliuk** (Lead Developer)
   - Email: vladislavteslyukofficial@gmail.com
   - GitHub: [@Lordpluha](https://github.com/Lordpluha)
 
 ---
 
-**Благодарим за помощь в обеспечении безопасности проекта! 🙏**
+**Thank you for helping keep this project secure! 🙏**
 
-*Последнее обновление: January 2026*
+*Last updated: June 2026*
