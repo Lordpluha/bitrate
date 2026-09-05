@@ -642,6 +642,24 @@ jobs:
             } >> "${body}"
           done
 
+          # GitHub rejects a pull request body over 65536 characters. A first release
+          # consuming 74 changesets across twelve workspaces produces several times
+          # that, so cut on a line boundary and point at the changelogs, which are in
+          # this diff anyway. The cap is below the limit to leave room for the notice.
+          limit=60000
+          if [ "$(wc -c < "${body}")" -gt "${limit}" ]; then
+            head -c "${limit}" "${body}" > "${body}.cut"
+            # head -c can stop mid-line; drop the partial one.
+            sed -i '$d' "${body}.cut"
+            {
+              printf '\n\n---\n\n'
+              printf '_This changelog was longer than GitHub allows in a pull request body, so it '
+              printf 'has been truncated. The complete entries are in the `CHANGELOG.md` files '
+              printf 'changed by this pull request._\n'
+            } >> "${body}.cut"
+            mv "${body}.cut" "${body}"
+          fi
+
           printf 'path=%s\n' "${body}" >> "${GITHUB_OUTPUT}"
           cat "${body}" >> "${GITHUB_STEP_SUMMARY}"
 
