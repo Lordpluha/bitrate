@@ -1,3 +1,7 @@
+---
+sidebar_position: 7
+---
+
 # Bitrate — Design Principles
 
 > Status: Design direction v1.0  
@@ -369,4 +373,5 @@ The following should be developed in the visual identity phase rather than inven
 - motion tokens;
 - final icon family.
 
-These decisions must follow [`brand.md`](./brand.md), not redefine it.
+These decisions must follow the brand pages — [foundation](./foundation.md),
+[positioning](./positioning.md), [principles](./principles.md) — not redefine them.

@@ -129,5 +129,5 @@ builds and code signing are the user's to run.
 ## Related
 
 - `tauri` skill — invoke, capabilities, events, why Tauri 1 material misleads.
-- `sp-desktop-developer` — the agent that owns this app.
+- `br-desktop-developer` — the agent that owns this app.
 - `.claude/rules/typescript.md`, `.claude/rules/code-principles.md`.

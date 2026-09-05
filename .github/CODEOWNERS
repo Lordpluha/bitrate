@@ -1,0 +1,103 @@
+# Code owners for Lordpluha/bitrate
+#
+# Syntax is gitignore-like and THE LAST MATCHING PATTERN WINS, so the catch-all
+# sits at the top and gets progressively narrowed below it. Only accounts with
+# write access can be owners; today that is @Lordpluha, @andreo-kalashnello and
+# @andreo-kalashnello.
+#
+# ---------------------------------------------------------------------------
+# READ THIS BEFORE COMMITTING THE FILE
+# ---------------------------------------------------------------------------
+# The `develop` branch is protected with:
+#
+#     required_approving_review_count: 1
+#     require_code_owner_reviews:      true
+#     require_last_push_approval:      true
+#     enforce_admins:                  false
+#
+# Right now `require_code_owner_reviews` is inert, because no CODEOWNERS file
+# exists. Committing this file makes it real, and GitHub does not let anyone
+# approve their own pull request. The consequence is concrete:
+#
+#   * A pull request touching a path owned by MORE THAN ONE person can be
+#     approved by any other owner of that path. Those are fine.
+#   * A pull request touching a path owned by @Lordpluha ALONE and opened by
+#     @Lordpluha can never satisfy the code-owner requirement. It will sit
+#     blocked until an admin bypasses the rule (`enforce_admins: false` allows
+#     that) or the setting is turned off.
+#
+# The single-owner paths below are the CI, infra, agent-tooling and root-config
+# blocks. That is not an accident — they should not be rubber-stamped — but it
+# does mean every infrastructure pull request costs an admin bypass. The same
+# applies to anything `/br-auto` opens on its own.
+#
+# So pick one deliberately:
+#
+#   a) Commit as-is and accept the bypass on infra/CI pull requests.
+#   b) Add a co-owner to the single-owner blocks so someone can actually review.
+#   c) Leave this file out and turn `require_code_owner_reviews` off instead,
+#      which is the honest way to say "one approval from anyone is enough".
+#
+# ---------------------------------------------------------------------------
+
+# Default owner for everything not matched below.
+*                               @Lordpluha
+
+# --- Applications ----------------------------------------------------------
+# Ownership follows the last twelve months of contribution history rather than
+# org chart guesswork.
+
+# @andreo-kalashnello is the heaviest contributor here after the maintainer.
+/apps/web-player/               @Lordpluha @andreo-kalashnello
+/apps/api/                      @Lordpluha @andreo-kalashnello
+
+# @andreo-kalashnello built and maintains the artist-facing frontend.
+/apps/web-artists/              @Lordpluha @andreo-kalashnello
+
+# Scaffolded, not started (roadmap v0.5.0 / v1.2.0). Conventions here are still
+# being set, so changes want the maintainer's eye.
+/apps/mobile/                   @Lordpluha
+/apps/desktop/                  @Lordpluha
+
+/apps/docs/                     @Lordpluha
+
+# --- Packages --------------------------------------------------------------
+# ui-react is the shared component library and the design-token source; all
+# three of us have shipped into it, and a change here reaches every frontend.
+/packages/ui-react/             @Lordpluha @andreo-kalashnello
+
+/packages/contracts/            @Lordpluha @andreo-kalashnello
+/packages/converter/            @Lordpluha
+/packages/ncs-parser/           @Lordpluha
+/packages/svgr/                 @Lordpluha
+/packages/vite-svgr/            @Lordpluha
+
+# --- Delivery and infrastructure -------------------------------------------
+# Single-owner on purpose: a workflow or compose change can leak secrets, push
+# images, or deploy. See the warning at the top about what that costs.
+/.github/                       @Lordpluha
+/infra/                         @Lordpluha
+/scripts/                       @Lordpluha
+/Taskfile.yml                   @Lordpluha
+/lefthook.yml                   @Lordpluha
+
+# --- Agent and repository configuration ------------------------------------
+# CLAUDE.md, the rules, agents, commands and skills are project law for every
+# agent session; drift here is expensive and invisible.
+/.claude/                       @Lordpluha
+/CLAUDE.md                      @Lordpluha
+
+# --- Root configuration ----------------------------------------------------
+# Dependency and toolchain surface: pnpm overrides, the turbo task graph and
+# the workspace list decide what the whole monorepo resolves and builds.
+/package.json                   @Lordpluha
+/pnpm-lock.yaml                 @Lordpluha
+/pnpm-workspace.yaml            @Lordpluha
+/turbo.json                     @Lordpluha
+/biome.json                     @Lordpluha
+
+# --- Governance ------------------------------------------------------------
+/SECURITY.md                    @Lordpluha
+/CODE_OF_CONDUCT.md             @Lordpluha
+/CONTRIBUTING.md                @Lordpluha
+/.github/CODEOWNERS             @Lordpluha

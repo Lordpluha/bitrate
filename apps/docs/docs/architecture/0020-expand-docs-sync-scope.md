@@ -1,4 +1,4 @@
-# ADR-0020: Expand /sp-sync-docs to root onboarding docs and .claude/ self-consistency
+# ADR-0020: Expand /br-sync-docs to root onboarding docs and .claude/ self-consistency
 
 Status: Accepted
 
@@ -6,7 +6,7 @@ Date: 2026-07-30
 
 ## Context
 
-[ADR-0013](./0013-docs-sync.md) scoped `/sp-sync-docs` to one direction: check `apps/docs/`
+[ADR-0013](./0013-docs-sync.md) scoped `/br-sync-docs` to one direction: check `apps/docs/`
 references, tech-stack claims, and ADR restatements against `.claude/rules/` and
 `package.json` as the sources of truth. Two other surfaces were left unchecked:
 
@@ -27,7 +27,7 @@ happens to read the stale line.
 
 ## Decision
 
-- `/sp-sync-docs` (`.claude/commands/sp-sync-docs.md`) now checks three surfaces instead of
+- `/br-sync-docs` (`.claude/commands/br-sync-docs.md`) now checks three surfaces instead of
   one:
   1. `apps/docs/` against `.claude/rules/`, ADRs, and `package.json` — unchanged from
      ADR-0013.
@@ -54,8 +54,8 @@ happens to read the stale line.
 - A renamed/deleted rule, command, or agent file is caught as an orphaned Rule Index/Commands
   table row instead of silently leaving stale routing in `CLAUDE.md`.
 - Root onboarding docs get the same periodic drift check `apps/docs/` already had — three
-  files, not a large surface, so the added scan cost per `/sp-sync-docs` run is small.
-- `/sp-sync-docs` remains a periodic/manual-trigger command (per ADR-0013) — this ADR widens
+  files, not a large surface, so the added scan cost per `/br-sync-docs` run is small.
+- `/br-sync-docs` remains a periodic/manual-trigger command (per ADR-0013) — this ADR widens
   what it checks, not when it runs.
 
 ## Alternatives considered

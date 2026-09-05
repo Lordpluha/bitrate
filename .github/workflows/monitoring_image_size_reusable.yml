@@ -26,7 +26,7 @@ jobs:
         service: [api, web-player, web-artists]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
         uses: ./.github/actions/setup-docker
@@ -37,7 +37,7 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/${{ matrix.service }}/Dockerfile
@@ -59,7 +59,7 @@ jobs:
           echo "${{ matrix.service }}: $size" >> image-sizes.txt
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: image-sizes-${{ inputs.branch-name }}-${{ matrix.service }}
           path: image-sizes.txt

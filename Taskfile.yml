@@ -1,17 +1,30 @@
 version: '3'
 
 vars:
-  # --env-file .env is not redundant. Compose looks for .env next to the compose file, so with
-  # `-f infra/...` it reads infra/.env — a file that does not exist — and every ${VAR} silently
-  # resolves to empty. The repository keeps its .env at the root, next to .env.example.
+  # The dev/preprod stacks ask for no env file. Every variable in them is declared with a
+  # `:-default`, so they come up on a clean checkout. `--env-file .env` used to be passed
+  # here; compose treats a missing --env-file as a hard error, so once the repository stopped
+  # carrying a root .env that flag made every task below fail before it started.
+  #
+  # To override a value, export it in your shell — a shell variable wins over the compose
+  # default (`POSTGRES_PORT=5433 task infra:up`). Per-app .env files under apps/* configure
+  # an app run natively; deploy and CI values come from GitHub environment secrets.
+  #
   # Day-to-day Docker environment despite the "preprod" file name: api,
   # web-player, web-artists, admin and the infra services, plus the
   # profile-gated mobile/desktop/docs/nginx. `dev:*`, `db:*`, `shell:*` and
   # `mobile:*`/`desktop:*` all target this file.
-  DC_DEV: docker compose --env-file .env -f infra/docker-compose.preprod.yaml
+  DC_DEV: docker compose -f infra/docker-compose.preprod.yaml
+  # prod KEEPS --env-file, and that is not an inconsistency. It defaults nothing on purpose
+  # (DOMAIN, DATABASE_URL, JWT_SECRET, POSTGRES_*, REDIS_PASSWORD, WEB_HOST, NEXT_PUBLIC_*),
+  # and it never runs from a developer checkout: deploy_reusable.yml renders those values
+  # from GitHub environment secrets into $HOME/bitrate/.env on the server (mode 600), rsyncs
+  # this file next to it, then runs `task prod:deploy` there. That .env is a deploy artifact
+  # on the target host, not a repository file. Dropping --env-file here would make compose
+  # look for infra/.env, find nothing, and fail every production deploy.
   DC_PROD: docker compose --env-file .env -f infra/docker-compose.prod.yaml
   # Infrastructure only — no application containers. Used by `infra:*`.
-  DC_INFRA: docker compose --env-file .env -f infra/docker-compose.dev.yaml
+  DC_INFRA: docker compose -f infra/docker-compose.dev.yaml
 
 tasks:
   # ─────────────────────────────────────────
@@ -108,9 +121,12 @@ tasks:
       - cmd: pnpm --filter @bitrate/api run db:seed
 
   db:backup:
-    desc: Dump the database to backups/ (reads credentials from the container, never hardcoded)
+    desc: Dump the PREPROD database to backups/ — for production use prod:backup
     cmds:
       - cmd: mkdir -p backups
+        platforms: [linux, darwin]
+      - cmd: if not exist backups mkdir backups
+        platforms: [windows]
       - cmd: |
           {{.DC_DEV}} exec -T postgres sh -c \
             'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists' \
@@ -141,23 +157,6 @@ tasks:
   # Credentials come from the container's own environment rather than being
   # hardcoded, so these keep working when POSTGRES_USER / POSTGRES_DB are
   # overridden in .env. backups/ is gitignored — never commit a dump.
-  db:backup:
-    desc: Dump database to backups/ (gitignored)
-    vars:
-      TIMESTAMP: '{{now | date "20060102_150405"}}'
-    cmds:
-      - cmd: mkdir -p backups
-        platforms: [linux, darwin]
-      - cmd: if not exist backups mkdir backups
-        platforms: [windows]
-      - cmd: '{{.DC_DEV}} exec -T postgres sh -c ''pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"'' > backups/backup_{{.TIMESTAMP}}.sql'
-      - cmd: echo "Saved to backups/backup_{{.TIMESTAMP}}.sql"
-
-  db:restore:
-    desc: 'Restore from a backup file: task db:restore -- backup_20240101_120000.sql'
-    cmds:
-      - cmd: '{{.DC_DEV}} exec -T postgres sh -c ''psql -U "$POSTGRES_USER" "$POSTGRES_DB"'' < backups/{{.CLI_ARGS}}'
-
   # ─────────────────────────────────────────
   # Container shells
   # ─────────────────────────────────────────
@@ -249,15 +248,20 @@ tasks:
       - cmd: '{{.DC_PROD}} up -d --build'
 
   prod:deploy:
-    desc: Pull the images CI published and restart production — no build on the server
+    desc: Pull the images CI published, migrate, then restart production — no build on the server
     prompt: Deploy the latest published images to PRODUCTION?
     cmds:
-      # The normal path. CI builds every app image and pushes it to GHCR, so a deploy is a pull
-      # and a restart — a couple of minutes instead of the twenty-odd a build on this box takes.
-      # --no-build is what makes that a guarantee: without it compose silently falls back to
-      # building any service whose image it cannot pull, and the deploy quietly becomes the slow
-      # path again.
+      # CI builds every app image and pushes it to GHCR, so a deploy is a pull and a restart — a
+      # couple of minutes instead of the twenty-odd a build on this box takes. --no-build is what
+      # makes that a guarantee: without it compose silently falls back to building any service
+      # whose image it cannot pull, and the deploy quietly becomes the slow path again.
       - cmd: '{{.DC_PROD}} pull'
+      # Migrations run between the pull and the restart, from the image just pulled. Running them
+      # afterwards meant the new code served requests against the old schema for as long as the
+      # migration took — the window in which it is most likely to fail, since new code is exactly
+      # what needs the new columns. The old code meeting a migrated schema is the safe direction,
+      # provided migrations stay additive.
+      - task: prod:migrate
       - cmd: '{{.DC_PROD}} up -d --no-build'
       - cmd: '{{.DC_PROD}} ps'
 
@@ -266,7 +270,11 @@ tasks:
     cmds:
       # migrate deploy, never migrate dev: the dev command generates migrations, wants a shadow
       # database, and can reset the data it is pointed at.
-      - cmd: '{{.DC_PROD}} exec -T api pnpm --filter @bitrate/api run db:migration:deploy'
+      #
+      # `run --rm`, not `exec`: exec needs the api container already running, which forced
+      # migrations to happen after the restart and made every deploy race the container's boot.
+      # A throwaway container from the same image needs nothing running but the database.
+      - cmd: '{{.DC_PROD}} run --rm --no-TTY api pnpm --filter @bitrate/api run db:migration:deploy'
 
 
   prod:down:

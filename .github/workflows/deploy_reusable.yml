@@ -25,6 +25,26 @@ on:
         required: false
         default: true
         type: boolean
+      image-tag:
+        description: >-
+          Value written as IMAGE_TAG into the server's .env, i.e. the published
+          tag every service in infra/docker-compose.prod.yaml is pulled at. One
+          shared tag for the whole stack, because that compose file has one
+          shared ${IMAGE_TAG}. Normally a product version tag (`v1.4.0`).
+          Empty means "derive it": the ref's own name when this run is at a tag,
+          otherwise `master`.
+        required: false
+        default: ''
+        type: string
+      image-workflows:
+        description: >-
+          Space-separated workflow file names the await-images job polls for a run
+          on this commit. Defaults to release_images.yml, which is what builds all
+          five images for a version tag. On the release path the deploy is a
+          `needs:` job of the publish run and this job is off entirely.
+        required: false
+        default: 'release_images.yml'
+        type: string
       health-attempts:
         description: How many times each endpoint is polled before it is called unhealthy
         required: false
@@ -46,11 +66,17 @@ on:
 
 jobs:
   # ---------------------------------------------------------------------------
-  # A push to master fans out to five image workflows. Deploying immediately
-  # would `docker compose pull` the *previous* master images, so this job waits
-  # for the runs that exist for this exact commit. A workflow whose path filter
-  # excluded this commit has no run for the SHA and nothing to wait for -- its
-  # existing :master tag is still the right image for this commit.
+  # Deploying immediately would `docker compose pull` the *previous* images, so
+  # this job waits for the image runs that exist for this exact commit.
+  #
+  # It is OFF on the release path: there the deploy is a `needs:` job of
+  # release_publish.yml, which orders it after the images by the job graph rather
+  # than by polling. This job exists for a tag push and for a hand-dispatched
+  # `full` deploy, where no such graph edge exists.
+  #
+  # Both `push` and `workflow_dispatch` runs count: a tag push produces the
+  # first, a hand-run rebuild the second, and filtering to either alone would
+  # see nothing and wave the deploy through.
   # ---------------------------------------------------------------------------
   await-images:
     if: ${{ inputs.wait-for-images }}
@@ -67,7 +93,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           DEPLOY_SHA: ${{ github.sha }}
-          IMAGE_WORKFLOWS: "api.yml web_player.yml web_artists.yml docs.yml storybook.yml"
+          IMAGE_WORKFLOWS: ${{ inputs.image-workflows }}
         run: |
           set -euo pipefail
 
@@ -82,19 +108,25 @@ jobs:
           while :; do
             pending=""
             failed=""
+            found=""
 
             for wf in $IMAGE_WORKFLOWS; do
               if ! runs=$(gh api \
                 "repos/${GITHUB_REPOSITORY}/actions/workflows/${wf}/runs?head_sha=${DEPLOY_SHA}&per_page=50" \
-                --jq '.workflow_runs[] | select(.event == "push") | "\(.status):\(.conclusion // "none")"' 2>&1); then
+                --jq '.workflow_runs[] | select(.event == "push" or .event == "workflow_dispatch") | "\(.status):\(.conclusion // "none")"' 2>&1); then
                 echo "::error::Cannot read runs for ${wf}. Has it been renamed or removed?"
                 echo "${runs}"
                 exit 1
               fi
 
-              # No run for this SHA means the workflow's path filter excluded this
-              # commit. Its published image is unchanged and already correct.
+              # No run for this SHA. Legitimate for a hand-run deploy of a commit
+              # nobody built images for, which deploys the previously published
+              # ones; the zero-runs warning below says so out loud. It cannot
+              # happen on the release path, where the images are a `needs:` edge
+              # rather than something to wait for.
               [ -n "${runs}" ] || continue
+
+              found="${found} ${wf}"
 
               while IFS= read -r line; do
                 status="${line%%:*}"
@@ -114,6 +146,19 @@ jobs:
             fi
 
             if [ -z "${pending}" ]; then
+              # A warning, not an error. Zero runs is legitimate for a release
+              # whose only changed workspaces are ones no image workflow watches
+              # (packages/svgr, for example), and for a hand-run deploy of a
+              # commit that was never built for master. Both deploy the images
+              # published for an *earlier* commit, which is usually right and
+              # occasionally a surprise -- so it is said out loud, in the run the
+              # reviewer is about to approve, rather than failing a valid deploy.
+              if [ -z "${found}" ]; then
+                echo "::warning::No image workflow ran for ${DEPLOY_SHA}. This deploy will use the images published for an earlier commit."
+                echo "If that is not what you want, run [release] Release Images for this tag first, then re-run this deploy."
+              else
+                echo "Image workflows that published for this commit:${found}"
+              fi
               echo "All image workflows for ${DEPLOY_SHA} have published."
               exit 0
             fi
@@ -204,24 +249,135 @@ jobs:
           printf 'domain=%s\n' "${DOMAIN}" >> "${GITHUB_OUTPUT}"
           echo "Deploy target: ${ENVIRONMENT_NAME} (${DOMAIN})"
 
-      # Production tracks master. workflow_dispatch can be started from any ref,
-      # and the sync step would happily push a feature branch's infra onto the box.
+      # fetch-depth: 0 so the ref assertion below can prove ancestry rather than
+      # merely pattern-match a tag name. The cost is one full fetch; the thing it
+      # buys is that a `v*` tag pushed to a side branch cannot deploy.
+      - name: Checkout
+        if: ${{ inputs.run-deploy }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      # Production deploys from master, or from a product version tag that is on
+      # master. A run can be started from any ref and the sync step would happily
+      # push a feature branch's infra onto the box.
+      #
+      # The tag case is what makes rollback work: running this workflow at an
+      # older `v*` tag checks out that release's infra/, Taskfile.yml and nginx
+      # templates as well as pinning IMAGE_TAG to it, so the checkout and the
+      # images agree. That used to be a manual `git checkout <sha> -- infra`
+      # step a human had to remember.
+      #
       # Only enforced when something is actually being deployed: health-only mode
       # touches nothing and is legitimately useful from any ref.
-      - name: Assert the ref is master
+      - name: Assert the ref is master or a release tag on master
         if: ${{ inputs.run-deploy }}
         env:
           REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
         run: |
           set -euo pipefail
-          if [ "${REF_NAME}" != "master" ]; then
-            echo "::error::Production deploys only from master. This run is on '${REF_NAME}'."
+
+          if [ "${REF_TYPE}" = "branch" ] && [ "${REF_NAME}" = "master" ]; then
+            echo "Deploying from branch master."
+            exit 0
+          fi
+
+          if [ "${REF_TYPE}" != "tag" ]; then
+            echo "::error::Production deploys from master or a release tag. This run is on branch '${REF_NAME}'."
             exit 1
           fi
 
-      - name: Checkout
+          if ! printf '%s' "${REF_NAME}" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::'${REF_NAME}' is not a product version tag (v<major>.<minor>.<patch>)."
+            echo "Per-workspace changeset tags such as @bitrate/api@1.2.0 are not deployable:"
+            echo "the production compose file pulls every service at one shared IMAGE_TAG."
+            exit 1
+          fi
+
+          # A release tag is only trustworthy if it is on the release branch.
+          # Without this, anyone able to push a tag could deploy any tree.
+          if ! git merge-base --is-ancestor HEAD origin/master; then
+            echo "::error::Tag '${REF_NAME}' is not an ancestor of origin/master. Refusing to deploy it."
+            exit 1
+          fi
+
+          echo "Deploying from release tag ${REF_NAME}."
+
+      # Which published image tag every service is pulled at. ONE value for the
+      # whole stack, because infra/docker-compose.prod.yaml writes
+      # `image: ghcr.io/lordpluha/bitrate/<svc>:${IMAGE_TAG:-master}` for all
+      # five services -- rolling one service back independently is not something
+      # that compose file can express, and pretending otherwise would produce a
+      # deploy that half-applies.
+      #
+      # Precedence: the explicit input, then the ref's own name when this run is
+      # at a tag, then `master`. The middle rule means a hand-dispatched deploy
+      # at a release tag does the right thing even if someone forgets the input.
+      - name: Resolve the image tag
+        id: image-tag
         if: ${{ inputs.run-deploy }}
-        uses: actions/checkout@v4
+        env:
+          INPUT_IMAGE_TAG: ${{ inputs.image-tag }}
+          REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "${INPUT_IMAGE_TAG}" ]; then
+            tag="${INPUT_IMAGE_TAG}"
+            source="the image-tag input"
+          elif [ "${REF_TYPE}" = "tag" ]; then
+            tag="${REF_NAME}"
+            source="this run's tag ref"
+          else
+            tag="master"
+            source="the default for a branch run"
+          fi
+
+          # A Docker tag, and one that a compose --env-file can carry verbatim.
+          case "${tag}" in
+            *[!A-Za-z0-9._-]*)
+              echo "::error::IMAGE_TAG '${tag}' contains a character that is not legal in a Docker tag."
+              exit 1
+              ;;
+          esac
+
+          printf 'tag=%s\n' "${tag}" >> "${GITHUB_OUTPUT}"
+          echo "IMAGE_TAG=${tag} (from ${source})"
+
+      # The identifier every Sentry event from this deploy is tagged with, and the
+      # thing a future source-map upload would hang on. It is the *released*
+      # version rather than the commit SHA: a release deploy runs at a stack
+      # release tag, so apps/api/package.json here is the version that was just
+      # released, tagged, and given a changelog entry -- a name a human can look
+      # up, unlike a SHA.
+      #
+      # `bitrate-api@x.y.z`, not `@bitrate/api@x.y.z`: a Sentry release name may
+      # not contain a forward slash.
+      #
+      # The SHA fallback is for a workflow_dispatch of a commit that predates this
+      # wiring, where reading the file could yield nothing usable. An unattributed
+      # event is worse than one attributed to a commit.
+      - name: Resolve the Sentry release identifier
+        id: release-id
+        if: ${{ inputs.run-deploy }}
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          version=$(node -p "require('./apps/api/package.json').version" 2>/dev/null || true)
+
+          if [ -n "${version}" ] && [ "${version}" != "undefined" ]; then
+            release="bitrate-api@${version}"
+          else
+            release="bitrate-api@${DEPLOY_SHA}"
+            echo "::warning::Could not read a version from apps/api/package.json; using the commit SHA as the Sentry release."
+          fi
+
+          printf 'release=%s\n' "${release}" >> "${GITHUB_OUTPUT}"
+          echo "Sentry release: ${release}"
 
       # Everything after this step touches the server. A name-only report of what
       # is missing is the whole point: an empty JWT_SECRET renders an env file that
@@ -268,14 +424,22 @@ jobs:
           OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_RELEASE: ${{ steps.release-id.outputs.release }}
+          SENTRY_ENVIRONMENT: ${{ inputs.environment }}
+          IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
           set -euo pipefail
 
           # Required by infra/docker-compose.prod.yaml, or by apps/api/env.schema.ts
           # with no usable default. Keep in sync with the render step below.
+          #
+          # IMAGE_TAG is derived rather than configured, so a missing one is a
+          # broken workflow rather than a missing setting -- but it is checked
+          # here anyway, because an empty one silently deploys `:master`.
           required="
             DEPLOY_HOST DEPLOY_USER DEPLOY_SSH_KEY
+            IMAGE_TAG
             DOMAIN NODE_ENV PORT
             WEB_HOST NEXT_PUBLIC_API_URL NEXT_PUBLIC_SITE_URL
             POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB
@@ -293,7 +457,7 @@ jobs:
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
             OAUTH_GOOGLE_CLIENT_ID OAUTH_GOOGLE_CLIENT_SECRET
             OAUTH_FACEBOOK_APP_ID OAUTH_FACEBOOK_APP_SECRET
-            METRICS_TOKEN SENTRY_DSN
+            METRICS_TOKEN SENTRY_DSN SENTRY_RELEASE SENTRY_ENVIRONMENT
           "
 
           missing=()
@@ -497,6 +661,19 @@ jobs:
           OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          # Not configuration a human sets anywhere: both are derived per deploy.
+          # SENTRY_RELEASE names the released version being started, and
+          # SENTRY_ENVIRONMENT is the name of the GitHub Environment this deploy
+          # targets, so a future staging caller labels its events correctly
+          # without anyone remembering to set NODE_ENV consistently.
+          SENTRY_RELEASE: ${{ steps.release-id.outputs.release }}
+          SENTRY_ENVIRONMENT: ${{ inputs.environment }}
+          # The single tag every service in the prod compose file is pulled at.
+          # Always written, never omitted: relying on the compose file's
+          # `${IMAGE_TAG:-master}` default would silently deploy `:master` if
+          # this ever resolved empty, which is the exact accident a rollback
+          # cannot afford.
+          IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
           RENDERED_FROM: ${{ github.sha }}
           ENVIRONMENT_NAME: ${{ inputs.environment }}
         run: |
@@ -518,7 +695,11 @@ jobs:
             printf '# Source of truth: the secrets and variables of the %s environment of %s.\n' "${ENVIRONMENT_NAME}" "${GITHUB_REPOSITORY}"
             printf '# Rendered from commit %s. Re-run the deploy workflow to regenerate.\n\n' "${RENDERED_FROM}"
 
-            printf '# --- Runtime ---\n'
+            printf '# --- Images ---\n'
+            # Read by infra/docker-compose.prod.yaml for every app service.
+            req IMAGE_TAG
+
+            printf '\n# --- Runtime ---\n'
             req NODE_ENV
             req PORT
             opt TRUST_PROXY_HOPS
@@ -570,6 +751,12 @@ jobs:
             printf '\n# --- Observability ---\n'
             opt METRICS_TOKEN
             opt SENTRY_DSN
+            # Inert until infra/docker-compose.prod.yaml lists both names in the
+            # api service's `environment:` block -- compose passes through only
+            # what that list names. Writing them here first is harmless and makes
+            # the compose change a one-line edit.
+            opt SENTRY_RELEASE
+            opt SENTRY_ENVIRONMENT
           } | ssh "${SSH_TARGET}" \
                 'umask 077; cat > "$HOME/bitrate/.env.deploy-tmp" && chmod 600 "$HOME/bitrate/.env.deploy-tmp" && mv -f "$HOME/bitrate/.env.deploy-tmp" "$HOME/bitrate/.env"'
 
@@ -588,6 +775,7 @@ jobs:
         if: ${{ inputs.run-deploy }}
         env:
           DEPLOY_SHA: ${{ github.sha }}
+          DEPLOY_IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
         run: |
           set -euo pipefail
 
@@ -611,15 +799,37 @@ jobs:
           fi
 
           # The server no longer runs `git fetch`, so record what is actually
-          # deployed. This file is the answer to "which commit is production on?".
+          # deployed. These two files are the answer to "which commit is
+          # production on?" and "which release tag is it pulling?" -- the second
+          # is what a human needs to pick the release to roll back to.
           printf '%s\n' "${DEPLOY_SHA}" \
             | ssh "${SSH_TARGET}" 'cat > "$HOME/bitrate/.deployed-commit"'
-          echo "infra/ and Taskfile.yml on the server now match ${DEPLOY_SHA}"
+          printf '%s\n' "${DEPLOY_IMAGE_TAG}" \
+            | ssh "${SSH_TARGET}" 'cat > "$HOME/bitrate/.deployed-release"'
+          echo "infra/ and Taskfile.yml on the server now match ${DEPLOY_SHA} (IMAGE_TAG=${DEPLOY_IMAGE_TAG})"
 
-      - name: Deploy -- pull images and restart
+      # prod:deploy is pull, then migrate, then restart. The migration moved inside it so the
+      # new code never serves requests against the old schema, and it no longer races the
+      # container's boot — a throwaway container needs nothing running but the database.
+      - name: Deploy -- pull images, migrate, restart
         if: ${{ inputs.run-deploy }}
+        env:
+          DEPLOY_IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
           set -euo pipefail
+
+          echo "Pulling every service at :${DEPLOY_IMAGE_TAG} (ref ${REF_NAME})."
+          {
+            echo "### Deployed"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Ref | \`${REF_NAME}\` |"
+            echo "| IMAGE_TAG | \`${DEPLOY_IMAGE_TAG}\` |"
+            echo "| Commit | \`${GITHUB_SHA}\` |"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
           ssh "${SSH_TARGET}" bash -euo pipefail -s <<'REMOTE'
           cd "$HOME/bitrate"
 
@@ -637,33 +847,70 @@ jobs:
           "$TASK_BIN" $YES prod:deploy
           REMOTE
 
-      - name: Apply database migrations
+      # ---------------------------------------------------------------------
+      # Sentry release publishing. Entirely optional, and off today.
+      #
+      # The *attribution* does not depend on any of this: the API tags every
+      # event with SENTRY_RELEASE and SENTRY_ENVIRONMENT from its own
+      # environment, and Sentry creates a release the first time it sees one.
+      # Publishing the release ahead of the events only adds the deploy marker,
+      # the commit association, and somewhere to attach source maps.
+      #
+      # So this is a probe plus a gated step, never a required one. A missing
+      # token must skip, not fail: the deploy has already succeeded by this
+      # point and a red run would suggest production needs rolling back.
+      # ---------------------------------------------------------------------
+      - name: Check whether Sentry release publishing is configured
+        id: sentry
         if: ${{ inputs.run-deploy }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
         run: |
           set -euo pipefail
-          ssh "${SSH_TARGET}" bash -euo pipefail -s <<'REMOTE'
-          cd "$HOME/bitrate"
 
-          TASK_BIN=""
-          for candidate in task "$HOME/.local/bin/task" /usr/local/bin/task /usr/bin/task /snap/bin/task "$HOME/go/bin/task"; do
-            if command -v "$candidate" >/dev/null 2>&1; then TASK_BIN="$(command -v "$candidate")"; break; fi
-          done
-          [ -n "$TASK_BIN" ] || { echo "::error::task not found on the deploy user's PATH."; exit 1; }
+          # Presence only. No value is printed, and the boolean is what leaves
+          # this step -- a secret must never reach a step output, where every
+          # downstream job can read it.
+          if [ -n "${SENTRY_AUTH_TOKEN:-}" ] && [ -n "${SENTRY_ORG:-}" ] && [ -n "${SENTRY_PROJECT:-}" ]; then
+            echo "configured=true" >> "${GITHUB_OUTPUT}"
+            echo "Sentry release publishing is configured."
+          else
+            echo "configured=false" >> "${GITHUB_OUTPUT}"
+            echo "::notice::Skipping Sentry release publishing -- SENTRY_AUTH_TOKEN, SENTRY_ORG or SENTRY_PROJECT is unset."
+            echo "Events still carry their release and environment; only the deploy marker and commit association are missing."
+          fi
 
-          # prod:migrate runs `compose exec api`, which fails while the freshly
-          # restarted container is still starting. `migrate deploy` is idempotent, so
-          # retrying is safe; a persistent failure is still surfaced.
-          for attempt in 1 2 3 4 5 6; do
-            if "$TASK_BIN" prod:migrate; then
-              echo "migrations applied on attempt ${attempt}"
-              exit 0
-            fi
-            echo "api container not ready yet (attempt ${attempt}/6) -- retrying in 10s"
-            sleep 10
-          done
-          echo "::error::Migrations did not apply. The new images are running against the old schema."
-          exit 1
-          REMOTE
+      # set_commits: skip, deliberately. 'auto' needs either the Sentry GitHub
+      # integration configured for this organisation or a full git history, and
+      # fails the step when neither is true -- after production is already live.
+      # Turn it on once the integration exists and suspect commits are wanted.
+      #
+      # No sourcemaps either: this runner has a checkout but no build output, so
+      # apps/api/dist does not exist here. Uploading maps belongs in the image
+      # build, not in the deploy -- see .github/workflows/README.md.
+      #
+      # `continue-on-error` here is deliberate and is the only one in this file.
+      # It is not hiding a gate. This step runs *after* the new images are live
+      # and the migrations are applied; the deploy's actual verdict is the health
+      # job downstream. Letting a Sentry API hiccup fail this job would mark a
+      # working production deploy as failed and, worse, skip the health check that
+      # decides whether it really is working. The step still reports red in the
+      # run, so the failure is visible rather than swallowed.
+      - name: Publish the Sentry release
+        if: ${{ inputs.run-deploy && steps.sentry.outputs.configured == 'true' }}
+        continue-on-error: true
+        uses: getsentry/action-release@ff07929a6537bac57790c3451cf4d364aca38528 # v3.7.0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+        with:
+          release: ${{ steps.release-id.outputs.release }}
+          environment: ${{ inputs.environment }}
+          set_commits: skip
+          finalize: true
 
       - name: Remove deploy key from the runner
         if: always()

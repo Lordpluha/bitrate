@@ -1,0 +1,358 @@
+name: "[release] Publish and Ship Reusable"
+
+# Five jobs, composed with `needs:` rather than dispatched:
+#
+#   resolve          -- read the product version out of the merged tree; decide
+#                       whether this push to master is a release at all
+#   tag-and-release  -- annotated tag v<x.y.z> + a GitHub Release whose body is
+#                       assembled from the changelog entries changesets wrote
+#   images           -- the five service images at :v<x.y.z>, :<sha> and :master
+#   deploy           -- production, behind the environment approval
+#   back-merge       -- a pull request putting master's bumps back on develop
+#
+# Composing them as jobs of one run rather than dispatching them is what deletes
+# the polling loop, the 45-second settle sleep and both `actions: write` grants
+# the previous design needed. It also makes "what happened in release N?" one tab
+# instead of six.
+#
+# The tag this workflow creates is pushed with GITHUB_TOKEN and therefore raises
+# no `push: tags` event. That is why `images` is a `needs:` job here rather than
+# a workflow woken by the tag. release_images.yml's and deploy.yml's tag triggers
+# are alive for a HUMAN-pushed tag, which is what a rebuild and a rollback are.
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: GitHub Environment the deploy binds to.
+        required: false
+        default: production
+        type: string
+      back-merge-branch:
+        description: Branch the release is merged back into.
+        required: false
+        default: develop
+        type: string
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+# Nothing at workflow level; every job below declares exactly what it needs, which is
+# the shape changesets/changesets uses. A called workflow can never hold more than
+# its caller granted, so this is the inner half of a two-sided narrowing.
+permissions: {}
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Is this push a release, and what is it called?
+  #
+  # The version lives in the tree, so this is a read rather than a guess. It also
+  # survives all three merge strategies, which a commit-subject match or a
+  # head-branch parse would not.
+  # ---------------------------------------------------------------------------
+  resolve:
+    name: Resolve the product version
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+
+    outputs:
+      release: ${{ steps.resolve.outputs.release }}
+      version: ${{ steps.resolve.outputs.version }}
+      tag: ${{ steps.resolve.outputs.tag }}
+
+    steps:
+      # fetch-depth: 0 brings the tags, which is how "has this version already
+      # been released?" is answered, and gives the notes step a previous tag to
+      # diff against.
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Read the product version and decide
+        id: resolve
+        run: |
+          version=$(node -p "require('./package.json').version || ''")
+
+          if [ -z "${version}" ]; then
+            echo "::notice::Root package.json has no version field. This push is not a release."
+            printf 'release=false\n' >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          if ! printf '%s' "${version}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Root package.json version '${version}' is not a plain X.Y.Z semver."
+            exit 1
+          fi
+
+          tag="v${version}"
+
+          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null 2>&1; then
+            echo "::notice::${tag} already exists, so this push to master carried no release."
+            {
+              printf '### No release\n\n'
+              printf 'The product version in the tree is `%s`, and `%s` is already tagged, ' "${version}" "${tag}"
+              printf 'so this push was an ordinary change to `master` rather than a release.\n\n'
+              printf 'Nothing was tagged, built or deployed. To ship it anyway, run\n'
+              printf '**[release] Release Images** and then **[platform] Deploy Production** '
+              printf 'with mode `redeploy`.\n'
+            } >> "${GITHUB_STEP_SUMMARY}"
+            printf 'release=false\n' >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          {
+            printf 'release=true\n'
+            printf 'version=%s\n' "${version}"
+            printf 'tag=%s\n' "${tag}"
+          } >> "${GITHUB_OUTPUT}"
+
+          echo "This push carries release ${tag}."
+
+  # ---------------------------------------------------------------------------
+  # The tag and the GitHub Release.
+  # ---------------------------------------------------------------------------
+  tag-and-release:
+    name: Tag and publish the GitHub Release
+    needs: resolve
+    if: ${{ needs.resolve.outputs.release == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      # Assembled BEFORE the new tag exists, so `git tag --sort=-v:refname` names
+      # the *previous* release. Diffing from there rather than from HEAD^ is what
+      # makes this correct under merge, squash AND rebase: only the version-in-
+      # the-tree and the previous tag are relied on, never the shape of the merge.
+      #
+      # Semantic versions do not sort as text -- v1.10.0 comes before v1.9.0 under
+      # plain --sort=-refname -- so the version sort is load-bearing here.
+      - name: Assemble the release notes
+        id: notes
+        env:
+          TAG: ${{ needs.resolve.outputs.tag }}
+        run: |
+          notes="${RUNNER_TEMP}/release-notes.md"
+          previous=$(git tag -l 'v*' --sort=-v:refname | head -1)
+
+          {
+            printf 'Product release `%s`.\n\n' "${TAG}"
+            printf 'Every service image is published as '
+            printf '`ghcr.io/lordpluha/%s/<service>:%s`. ' "${GITHUB_REPOSITORY##*/}" "${TAG}"
+            printf 'To roll production back to it, run **[platform] Deploy Production** at this '
+            printf 'tag with mode `redeploy`.\n\n'
+          } > "${notes}"
+
+          if [ -n "${previous}" ]; then
+            printf 'Changes since `%s`.\n\n' "${previous}" >> "${notes}"
+            mapfile -t changelogs < <(
+              git diff --name-only "${previous}" HEAD -- \
+                'apps/*/CHANGELOG.md' 'packages/*/CHANGELOG.md' | sort -u
+            )
+          else
+            printf 'First product release.\n\n' >> "${notes}"
+            mapfile -t changelogs < <(
+              git ls-files -- 'apps/*/CHANGELOG.md' 'packages/*/CHANGELOG.md' | sort -u
+            )
+          fi
+
+          printf '## Changelog\n\n' >> "${notes}"
+
+          if [ "${#changelogs[@]}" -eq 0 ]; then
+            echo "::warning::No workspace CHANGELOG.md changed for this release."
+            printf '_No workspace changelog entries were written for this release._\n' >> "${notes}"
+          fi
+
+          for file in "${changelogs[@]:-}"; do
+            [ -n "${file}" ] || continue
+            dir=$(dirname "${file}")
+            [ -f "${dir}/package.json" ] || continue
+            name=$(node -p "require('./${dir}/package.json').name")
+            ver=$(node -p "require('./${dir}/package.json').version")
+
+            entry=$(awk -v v="## ${ver}" '
+              /^## / { if (found) exit; if ($0 == v) found = 1; next }
+              found { print }
+            ' "${file}")
+
+            # A workspace whose CHANGELOG.md moved but whose current version has
+            # no section is one changesets patched as a dependent in an earlier
+            # release. Naming it with an empty body would be noise.
+            [ -n "${entry}" ] || continue
+
+            {
+              printf '### %s@%s\n' "${name}" "${ver}"
+              printf '%s\n\n' "${entry}"
+            } >> "${notes}"
+          done
+
+          printf 'path=%s\n' "${notes}" >> "${GITHUB_OUTPUT}"
+          cat "${notes}" >> "${GITHUB_STEP_SUMMARY}"
+
+      # Created through the git data API rather than `git tag && git push`, for
+      # consistency with the version commit: nothing in this chain writes to the
+      # repository with a runner-side git credential. It is an annotated tag, so
+      # `git describe` and the Releases UI have their own date and tagger.
+      - name: Create the annotated tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.resolve.outputs.tag }}
+        run: |
+          tag_sha=$(gh api --method POST "repos/${GITHUB_REPOSITORY}/git/tags" \
+                      -f tag="${TAG}" \
+                      -f message="Release ${TAG}" \
+                      -f object="${GITHUB_SHA}" \
+                      -f type=commit \
+                      --jq '.sha')
+
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/git/refs" \
+            -f ref="refs/tags/${TAG}" \
+            -f sha="${tag_sha}" >/dev/null
+
+          echo "Created ${TAG} at ${GITHUB_SHA}."
+
+      # --verify-tag makes gh refuse to invent a tag: it must already exist on
+      # the remote, which it does because of the step above. Without it a typo
+      # would silently create a second tag at the default branch.
+      - name: Create the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.resolve.outputs.tag }}
+          NOTES: ${{ steps.notes.outputs.path }}
+        run: |
+          gh release create "${TAG}" \
+            --title "${TAG}" \
+            --notes-file "${NOTES}" \
+            --verify-tag \
+            --latest
+          echo "::notice::Published GitHub Release ${TAG}."
+
+  # ---------------------------------------------------------------------------
+  # The five images, at the merged tree.
+  # ---------------------------------------------------------------------------
+  images:
+    name: Images
+    needs: [resolve, tag-and-release]
+    if: ${{ needs.resolve.outputs.release == 'true' }}
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/release_images_reusable.yml
+    with:
+      image-tag: ${{ needs.resolve.outputs.tag }}
+      push-image: true
+      # The release path is the one place `:master` should move: this IS the
+      # newest release.
+      moving-tag: master
+
+  # ---------------------------------------------------------------------------
+  # Production.
+  #
+  # wait-for-images is false because `needs: images` has already done that job,
+  # deterministically and without polling. The `production` environment approval
+  # inside deploy_reusable.yml is untouched and is still the last thing between
+  # this run and the server.
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: Deploy
+    needs: [resolve, images]
+    if: ${{ needs.resolve.outputs.release == 'true' }}
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/deploy_reusable.yml
+    with:
+      environment: ${{ inputs.environment }}
+      wait-for-images: false
+      run-deploy: true
+      image-tag: ${{ needs.resolve.outputs.tag }}
+    secrets: inherit
+
+  # ---------------------------------------------------------------------------
+  # The back-merge.
+  #
+  # Depends on the tag, NOT on the deploy: the version bumps belong on develop
+  # whether or not production was approved, and gating them behind the
+  # environment would leave develop drifting for as long as the approval sits
+  # unclicked. Until it lands, develop still holds the changesets this release
+  # consumed and the old root version, so the next cut would collide.
+  #
+  # A pull request rather than a direct push, for the reason this whole redesign
+  # exists: a GITHUB_TOKEN push to develop raises no event, so develop would take
+  # the release's bumps with no CI at all.
+  #
+  # It goes through a dedicated branch rather than offering `master` as the head.
+  # `develop` has require_last_push_approval, and the last push to `master` was
+  # the release merge -- performed by the very person who then has to approve the
+  # back-merge. A bot-created branch makes the bot the last pusher, so their
+  # approval counts.
+  # ---------------------------------------------------------------------------
+  back-merge:
+    name: Open the back-merge pull request
+    needs: [resolve, tag-and-release]
+    if: ${{ needs.resolve.outputs.release == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Open it
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.resolve.outputs.tag }}
+          BACK_MERGE_BRANCH: ${{ inputs.back-merge-branch }}
+        run: |
+          branch="backmerge/${TAG}"
+
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${branch}" >/dev/null 2>&1; then
+            echo "::warning::${branch} already exists; not recreating it."
+          else
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/git/refs" \
+              -f ref="refs/heads/${branch}" \
+              -f sha="${GITHUB_SHA}" >/dev/null
+            echo "Created ${branch} at ${GITHUB_SHA}."
+          fi
+
+          existing=$(gh pr list --base "${BACK_MERGE_BRANCH}" --head "${branch}" \
+                       --state open --json url --jq '.[].url')
+          if [ -n "${existing}" ]; then
+            echo "::notice::Back-merge pull request already open: ${existing}"
+            exit 0
+          fi
+
+          body="${RUNNER_TEMP}/back-merge.md"
+          {
+            printf 'Puts `%s`'"'"'s release commit back on `%s` after `%s`.\n\n' \
+              "${GITHUB_REF_NAME}" "${BACK_MERGE_BRANCH}" "${TAG}"
+            printf 'Until this lands, `%s` still holds the changesets this release consumed ' "${BACK_MERGE_BRANCH}"
+            printf 'and the old product version, so the next cut would consume them a second '
+            printf 'time and collide with `%s`.\n\n' "${TAG}"
+            printf 'Merging it produces a human-authored push to `%s`, which is what gets ' "${BACK_MERGE_BRANCH}"
+            printf 'the bumps onto the integration branch with CI actually running on them.\n'
+          } > "${body}"
+
+          url=$(gh pr create \
+                  --base "${BACK_MERGE_BRANCH}" \
+                  --head "${branch}" \
+                  --title "chore(release): back-merge ${TAG} into ${BACK_MERGE_BRANCH}" \
+                  --body-file "${body}")
+
+          echo "::notice::Opened ${url}"
+          {
+            printf '\n### Back-merge\n\n%s\n\nMerge it before cutting the next release.\n' "${url}"
+          } >> "${GITHUB_STEP_SUMMARY}"

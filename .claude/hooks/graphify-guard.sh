@@ -23,7 +23,7 @@ set -uo pipefail
 
 MODE="${1:?usage: graphify-guard.sh <search|read>}"
 PAYLOAD="$(cat)"
-CACHE="${TMPDIR:-/tmp}/.sp-graphify-transport.$(id -u)"
+CACHE="${TMPDIR:-/tmp}/.br-graphify-transport.$(id -u)"
 
 # Run a candidate against the payload. 0 = handled, 2 = the guard blocked the tool
 # (propagate), anything else = this candidate is unusable, try the next.

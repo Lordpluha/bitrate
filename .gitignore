@@ -5,12 +5,17 @@ node_modules
 .pnp
 .pnp.js
 
-# Local env files
+# Local env files. Real values live outside the repository; each app ships a .env.example
+# instead. apps/api/.env.test is the one deliberate exception — the E2E suite reads it and CI
+# gives that step no environment of its own, so removing it breaks the pipeline.
 .env
 .env.local
+.env.development
+.env.production
 .env.development.local
 .env.test.local
 .env.production.local
+!.env.example
 
 # Testing
 coverage
@@ -60,15 +65,12 @@ FRONTEND_BACKLOG.md
 # Scratch dir for /sp-auto and /sp-implement PR bodies.
 # Must live inside the repo: under the VS Code Flatpak sandbox the host `gh`
 # cannot see sandbox /tmp, but it can see the repo.
-.sp-scratch/
+.br-scratch/
 
 # Database dumps written by `task db:backup`. Never commit a dump — it can
 # contain real user data.
 /backups/
 
-# k6 load-test output (packages/performance-test)
-packages/performance-test/results.json
-packages/performance-test/summary.json
 
 # tsc --noEmit still writes a build-info file when `incremental` is on, so every
 # `pnpm check-types` regenerates this. Only packages/contracts emits one outside dist/.

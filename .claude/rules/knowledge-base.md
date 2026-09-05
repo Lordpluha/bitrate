@@ -1,6 +1,6 @@
 ---
 name: knowledge-base
-description: How this repo's codebase-navigation tool (graphify) works, and how GitHub ticket/board state is queried live rather than mirrored to files. Use before deep exploration of an unfamiliar area, whenever graphify-out/ exists, or when working with /sp-create-task, /sp-implement, or /sp-auto.
+description: How this repo's codebase-navigation tool (graphify) works, and how GitHub ticket/board state is queried live rather than mirrored to files. Use before deep exploration of an unfamiliar area, whenever graphify-out/ exists, or when working with /br-create-task, /br-implement, or /br-auto.
 metadata:
   version: "1.0.0"
   type: reference
@@ -85,20 +85,20 @@ gh pr list --search "linked:<number>" --json number,title,state,url
 per-developer `gh auth refresh -s read:project,project`, not something the agent layer can
 grant itself.
 
-Only `/sp-create-task`, `/sp-implement`, and `/sp-auto` mutate GitHub state (issue
+Only `/br-create-task`, `/br-implement`, and `/br-auto` mutate GitHub state (issue
 create/edit, board card moves, comments, PR create/edit), and only after explicit user
 confirmation for each mutating action — a prior approval never carries over to a later
-mutation in the same conversation. `/sp-auto` is the one exception to per-action prompting:
+mutation in the same conversation. `/br-auto` is the one exception to per-action prompting:
 starting it is the approval for the whole unattended cycle it describes. Its gate is the
 board's `Todo` column rather than the agent's judgement, so what a human puts in `Todo` is
 what the pipeline may take — bound the run with `--limit` and preview it with `--dry-run`.
 
 | Command | What it does |
 |---|---|
-| `/sp-create-task "<idea>"` | Reads the whole board + repo context, then drafts or restructures one issue that fits the work already planned. Confirms before every mutation. |
-| `/sp-implement "<task>"` | Checks out the branch, dispatches to a specialist by default, writes the code, then open/update the PR (confirm before pushing). |
-| `/sp-auto` | Unattended: claims issues from the board's `Todo` column into worktrees, runs `sp-worker` on each, then owns the PR, board move, and issue comment. |
-| `/sp-sync-docs` | Dispatches discovery to `sp-librarian`, finds/fixes drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Read-mostly, confirms fixes. |
+| `/br-create-task "<idea>"` | Reads the whole board + repo context, then drafts or restructures one issue that fits the work already planned. Confirms before every mutation. |
+| `/br-implement "<task>"` | Checks out the branch, dispatches to a specialist by default, writes the code, then open/update the PR (confirm before pushing). |
+| `/br-auto` | Unattended: claims issues from the board's `Todo` column into worktrees, runs `br-worker` on each, then owns the PR, board move, and issue comment. |
+| `/br-sync-docs` | Dispatches discovery to `br-librarian`, finds/fixes drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Read-mostly, confirms fixes. |
 
 All four dispatch to an agent by default now — see
 [ADR-0021](../../apps/docs/docs/architecture/0021-default-agent-dispatch.md).

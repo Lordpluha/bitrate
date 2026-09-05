@@ -4,14 +4,14 @@ Status: Accepted
 
 Date: 2026-07-24
 
-Supersedes: [ADR-0012](./0012-ticket-driven-agent-commands.md) (the `/sp-sync-ticket` and
-`/sp-sync-board` command-and-mirror portion only — the rest of ADR-0012's command/agent
+Supersedes: [ADR-0012](./0012-ticket-driven-agent-commands.md) (the `/br-sync-ticket` and
+`/br-sync-board` command-and-mirror portion only — the rest of ADR-0012's command/agent
 split stays in force), [ADR-0014](./0014-obsidian-storage-scope.md) (the `Tickets/`/`Board/`
 committed-vs-local-only portion only — the `Decisions/` portion stays in force).
 
 ## Context
 
-`/sp-sync-ticket` and `/sp-sync-board` (added by [ADR-0012](./0012-ticket-driven-agent-commands.md))
+`/br-sync-ticket` and `/br-sync-board` (added by [ADR-0012](./0012-ticket-driven-agent-commands.md))
 mirrored GitHub issue, PR, and Projects-board state into `obsidian/Tickets/*.md` and
 `obsidian/Board/board.md`. [ADR-0014](./0014-obsidian-storage-scope.md) then worked out
 which half of that mirror to commit.
@@ -24,13 +24,13 @@ both moving cards or re-syncing independently was also a standing source of merg
 in `obsidian/Tickets/*.md`, the exact failure mode ADR-0014 already had to design around for
 `Board/board.md`.
 
-`/sp-take-ticket` already queried GitHub live for its own step (find/confirm a ticket,
+`/br-take-ticket` already queried GitHub live for its own step (find/confirm a ticket,
 move its card) — the mirror commands were a separate, redundant read path layered on top,
 not something other commands depended on.
 
 ## Decision
 
-- `/sp-sync-ticket` and `/sp-sync-board` are deleted. There is no command, agent, or hook
+- `/br-sync-ticket` and `/br-sync-board` are deleted. There is no command, agent, or hook
   that writes GitHub ticket/board state to a file anywhere in this repository.
 - `obsidian/Tickets/` and `obsidian/Board/` no longer exist. `obsidian/` now contains only
   `Decisions/` (unaffected by this ADR — see [ADR-0014](./0014-obsidian-storage-scope.md)).
@@ -41,12 +41,12 @@ not something other commands depended on.
   gh project item-list <project-number> --owner Lordpluha --format json
   gh pr list --search "linked:<number>" --json number,title,state,url
   ```
-- `/sp-take-ticket` keeps its existing live-query behavior unchanged. `/sp-implement`
+- `/br-take-ticket` keeps its existing live-query behavior unchanged. `/br-implement`
   re-queries ticket state live if it needs it mid-implementation, rather than reading a
   vault note.
-- The command set shrinks from five to three: `/sp-take-ticket`, `/sp-implement`,
-  `/sp-sync-docs`. Nothing about `/sp-implement`'s specialist-agent routing
-  (`sp-planner`/`sp-developer`/`sp-debugger`/`sp-tester`/`sp-reviewer`) or `/sp-sync-docs`
+- The command set shrinks from five to three: `/br-take-ticket`, `/br-implement`,
+  `/br-sync-docs`. Nothing about `/br-implement`'s specialist-agent routing
+  (`br-planner`/`br-developer`/`br-debugger`/`br-tester`/`br-reviewer`) or `/br-sync-docs`
   changes.
 - The sensitive-label withholding rule ADR-0014 added for `Tickets/` (never commit the
   body of a `security`/`confidential`-labeled issue) is moot — there is no committed copy
@@ -68,7 +68,7 @@ not something other commands depended on.
   never fully reliable anyway.
 - `.claude/rules/knowledge-base.md`, `AGENTS.md`, `README.md`, `CLAUDE.md`,
   `CONTRIBUTING.md`, `.claude/README.md`, `.claude/TOKEN_BUDGET.md`, and
-  `.claude/agents/sp-planner.md` all drop their `/sp-sync-ticket`/`/sp-sync-board`
+  `.claude/agents/br-planner.md` all drop their `/br-sync-ticket`/`/br-sync-board`
   references — anywhere a command/agent count or table is stated, it now reflects three
   commands, not five.
 
@@ -84,7 +84,7 @@ not something other commands depended on.
   problem, just relocated. (The wiki remains a reasonable home for genuinely freeform,
   no-PR-needed content — that question is separate from this ADR and unresolved as of this
   writing.)
-- **Keep `/sp-sync-ticket`/`/sp-sync-board` as read-only "print current state, don't write a
+- **Keep `/br-sync-ticket`/`/br-sync-board` as read-only "print current state, don't write a
   file" commands** — rejected as unnecessary indirection: the `gh`/MCP calls they'd run are
   already documented in `.claude/rules/knowledge-base.md`, and any command or agent that
   needs ticket/board context can issue them directly without a wrapper command whose only

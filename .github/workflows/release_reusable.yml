@@ -1,0 +1,684 @@
+name: "[release] Cut Release PR Reusable"
+
+# One job. It cuts the release branch, lands the version commit on it as a
+# GitHub-SIGNED commit, gates it, and opens the pull request into master.
+#
+# Everything that could ever reach `master` is created server-side by GitHub, for
+# one reason: `master` has `required_signatures: true`, so a commit made on the
+# runner is refused at merge time with "Commits must have verified signatures".
+# Two endpoints do the work, and both were verified to produce
+# `verification.verified == true`:
+#
+#   POST /repos/{owner}/{repo}/merges          -- merge master into the release
+#                                                 branch (strict protection)
+#   GraphQL createCommitOnBranch               -- the version commit itself
+#
+# A plain `git commit` + `git push` with the same GITHUB_TOKEN produces
+# `verified: false, reason: "unsigned"`. Do not "simplify" either call back into
+# git; squash-merging happens to launder an unsigned commit today, and would stop
+# doing so the moment someone picks "Create a merge commit".
+
+on:
+  workflow_call:
+    inputs:
+      dry-run:
+        description: >-
+          Do everything except the irreversible parts: no ref, no server-side
+          merge, no commit, no commit status, no pull request.
+        required: false
+        default: false
+        type: boolean
+      base-branch:
+        description: >-
+          Branch the release is cut FROM. An input rather than a literal so a
+          future release line is a new caller instead of an edit to this file.
+        required: false
+        default: develop
+        type: string
+      target-branch:
+        description: Branch the release pull request is opened AGAINST.
+        required: false
+        default: master
+        type: string
+    outputs:
+      version:
+        description: The derived product version, without the leading `v`.
+        value: ${{ jobs.cut.outputs.version }}
+      release-branch:
+        description: Name of the release branch. Empty on a dry run.
+        value: ${{ jobs.cut.outputs.release-branch }}
+      pull-request:
+        description: URL of the release pull request. Empty on a dry run.
+        value: ${{ jobs.cut.outputs.pull-request }}
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+# Nothing at workflow level; every job below declares exactly what it needs, which is
+# the shape changesets/changesets uses. A called workflow can never hold more than
+# its caller granted, so this is the inner half of a two-sided narrowing.
+permissions: {}
+
+jobs:
+  cut:
+    name: Cut the release branch and open the PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    permissions:
+      contents: write
+      statuses: write
+      pull-requests: write
+
+    outputs:
+      version: ${{ steps.derive.outputs.version }}
+      release-branch: ${{ steps.branch.outputs.name }}
+      pull-request: ${{ steps.pr.outputs.url }}
+
+    env:
+      # Every value the shell reads arrives through env. No `run:` block in this
+      # file interpolates ${{ }} -- see the security note in the README.
+      BASE_BRANCH: ${{ inputs.base-branch }}
+      TARGET_BRANCH: ${{ inputs.target-branch }}
+      DRY_RUN: ${{ inputs.dry-run }}
+      GATES_CONTEXT: bitrate/release-gates
+      VERSION_CONTEXT: bitrate/release-version
+
+    steps:
+      # fetch-depth: 0 because the trial merge below needs a real merge base
+      # between develop and master, which a shallow clone does not have.
+      - name: Checkout the base branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.base-branch }}
+          fetch-depth: 0
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      # A second open release PR would consume the same changesets and derive the
+      # same version, then collide on the tag. The real fix is the back-merge;
+      # this only stops the near-miss.
+      - name: Refuse to cut while a release PR is already open
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open=$(gh pr list --base "${TARGET_BRANCH}" --state open \
+                   --json headRefName,url \
+                   --jq '[.[] | select(.headRefName | startswith("release/"))] | .[].url')
+          if [ -n "${open}" ]; then
+            echo "::error::A release pull request into ${TARGET_BRANCH} is already open:"
+            echo "${open}"
+            echo "Merge or close it, then merge the back-merge PR into ${BASE_BRANCH}, then cut again."
+            exit 1
+          fi
+          echo "No open release pull request into ${TARGET_BRANCH}."
+
+      # `required_status_checks.strict` is true on master, so a release branch
+      # that does not contain master's tip is unmergeable. Merge master in as
+      # part of cutting, rather than making the operator do it afterwards.
+      #
+      # This trial merge runs LOCALLY and is never pushed. It exists to answer
+      # two questions before anything is created: does the merge conflict, and
+      # what does the merged tree say the current product version is? The real
+      # merge is done server-side further down so that it is signed.
+      - name: Trial-merge the target branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          base_sha=$(git rev-parse HEAD)
+          printf 'BASE_SHA=%s\n' "${base_sha}" >> "${GITHUB_ENV}"
+
+          if ! git merge --no-ff --no-commit "origin/${TARGET_BRANCH}"; then
+            git merge --abort || true
+            echo "::error::${TARGET_BRANCH} does not merge cleanly into ${BASE_BRANCH}."
+            echo "The two branches have genuinely diverged, and this workflow will not guess"
+            echo "a resolution for a release. Reconcile them by hand -- normally by merging"
+            echo "${TARGET_BRANCH} into ${BASE_BRANCH} in a pull request and resolving the"
+            echo "conflicts there -- and then cut again."
+            exit 1
+          fi
+          echo "${TARGET_BRANCH} merges cleanly into ${BASE_BRANCH}."
+
+      # Nobody types a version. The product bumps by the highest bump type a
+      # HUMAN authored -- `.changesets[].releases[].type` -- and deliberately not
+      # by `.releases[].type`, which is Changesets' resolved plan and includes the
+      # patch bumps it generates for dependents. Verified against this
+      # repository's 74 pending changesets: authored is 33 major / 34 minor /
+      # 59 patch, while the resolved plan is 13 x major. Deriving from the
+      # resolved plan would let a change inflate itself along a dependency edge.
+      - name: Derive the product version
+        id: derive
+        run: |
+          status="${RUNNER_TEMP}/status.json"
+
+          if ! pnpm exec changeset status --output "${status}"; then
+            echo "::error::\`changeset status\` failed. Cannot derive a release version."
+            exit 1
+          fi
+          if [ ! -s "${status}" ]; then
+            echo "::error::\`changeset status\` wrote no output."
+            exit 1
+          fi
+
+          authored=$(jq -r '[.changesets[].releases[].type] | length' "${status}")
+          if [ "${authored}" -eq 0 ]; then
+            echo "::error::No changesets to release. Nothing to cut."
+            echo "A release with no authored changeset would produce a version tag naming"
+            echo "changes it does not contain, so this is an error and never a patch release."
+            exit 1
+          fi
+
+          bump=$(jq -r '
+            [.changesets[].releases[].type]
+            | if   index("major") then "major"
+              elif index("minor") then "minor"
+              elif index("patch") then "patch"
+              else "none" end
+          ' "${status}")
+
+          case "${bump}" in
+            major|minor|patch) ;;
+            *)
+              echo "::error::Authored changeset bumps resolved to '${bump}', which is not a release."
+              exit 1
+              ;;
+          esac
+
+          # The merged tree's root package.json is authoritative: if the base
+          # branch is missing a back-merge, master still carries the real current
+          # product version and the trial merge has just brought it in.
+          old=$(node -p "require('./package.json').version || '0.0.0'")
+          if ! printf '%s' "${old}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Root package.json version '${old}' is not a plain X.Y.Z semver."
+            exit 1
+          fi
+
+          IFS=. read -r major minor patch <<< "${old}"
+          case "${bump}" in
+            major) major=$((major + 1)); minor=0; patch=0 ;;
+            minor) minor=$((minor + 1)); patch=0 ;;
+            patch) patch=$((patch + 1)) ;;
+          esac
+          new="${major}.${minor}.${patch}"
+
+          # Semver build metadata is not legal in a Docker tag, and IMAGE_TAG is
+          # this version. Reject it here rather than at `docker push`.
+          case "${new}" in
+            *+*)
+              echo "::error::Derived version '${new}' carries build metadata, which is not a legal Docker tag."
+              exit 1
+              ;;
+          esac
+
+          {
+            printf 'version=%s\n' "${new}"
+            printf 'old-version=%s\n' "${old}"
+            printf 'bump=%s\n' "${bump}"
+            printf 'changeset-count=%s\n' "${authored}"
+          } >> "${GITHUB_OUTPUT}"
+
+          {
+            printf '## Release `v%s`\n\n' "${new}"
+            printf '%s bump from %s authored changeset release(s): `%s` -> **`%s`**\n\n' \
+              "${bump}" "${authored}" "${old}" "${new}"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "Derived v${new} (${bump} from ${old}, ${authored} authored changeset releases)."
+
+      - name: Name the release branch
+        id: branch
+        env:
+          VERSION: ${{ steps.derive.outputs.version }}
+        run: |
+          if [ "${DRY_RUN}" = "true" ]; then
+            printf 'name=\n' >> "${GITHUB_OUTPUT}"
+            echo "Dry run: would have cut release/v${VERSION}."
+          else
+            printf 'name=release/v%s\n' "${VERSION}" >> "${GITHUB_OUTPUT}"
+          fi
+
+      # Created at the base branch's tip, NOT at the trial-merged tree: the merge
+      # itself has to be made by GitHub so that it is signed.
+      - name: Create the release branch
+        if: ${{ !inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_BRANCH: ${{ steps.branch.outputs.name }}
+        run: |
+          git merge --abort 2>/dev/null || git reset --hard "${BASE_SHA}"
+
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${RELEASE_BRANCH}" >/dev/null 2>&1; then
+            echo "::error::Branch ${RELEASE_BRANCH} already exists."
+            echo "A previous cut of this version was abandoned without deleting its branch,"
+            echo "or the back-merge into ${BASE_BRANCH} has not landed. Delete the branch or"
+            echo "merge the back-merge, then cut again."
+            exit 1
+          fi
+
+          gh api "repos/${GITHUB_REPOSITORY}/git/refs" \
+            -f ref="refs/heads/${RELEASE_BRANCH}" \
+            -f sha="${BASE_SHA}" >/dev/null
+          echo "Created ${RELEASE_BRANCH} at ${BASE_SHA}."
+
+      # POST /merges, not `git merge` + push: GitHub signs the merge commit it
+      # creates, and an unsigned one would make the release PR unmergeable.
+      #   201 -- merged, signed
+      #   204 -- already up to date, nothing created
+      #   409 -- conflict; the trial merge above should have caught it already
+      - name: Merge the target branch into the release branch
+        if: ${{ !inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_BRANCH: ${{ steps.branch.outputs.name }}
+        run: |
+          jq -n --arg base "${RELEASE_BRANCH}" --arg head "${TARGET_BRANCH}" \
+                --arg msg "chore(release): merge ${TARGET_BRANCH} into the release branch" \
+                '{base: $base, head: $head, commit_message: $msg}' > "${RUNNER_TEMP}/merge.json"
+
+          # --include prints the status line first; --silent drops the body, so
+          # the 409 and 404 cases produce a code rather than a stack of JSON.
+          # `|| true` because gh exits non-zero on 4xx and the code is the signal.
+          code=$(gh api --method POST "repos/${GITHUB_REPOSITORY}/merges" \
+                   --input "${RUNNER_TEMP}/merge.json" --include --silent 2>/dev/null \
+                 | sed -n '1s/.* \([0-9][0-9][0-9]\).*/\1/p') || true
+
+          case "${code}" in
+            201)
+              echo "Merged ${TARGET_BRANCH} into ${RELEASE_BRANCH} with a GitHub-signed merge commit."
+              ;;
+            204)
+              echo "${RELEASE_BRANCH} already contains ${TARGET_BRANCH}. Nothing to merge."
+              ;;
+            *)
+              echo "::error::Could not merge ${TARGET_BRANCH} into ${RELEASE_BRANCH} (HTTP ${code})."
+              echo "409 means the branches conflict; reconcile them by hand and cut again."
+              echo "404 means the branch or the target was not found."
+              echo "The release branch ${RELEASE_BRANCH} has been left in place for inspection."
+              exit 1
+              ;;
+          esac
+
+      # The remote branch is now authoritative and signed. Discard the local
+      # trial merge and take the remote tree verbatim, so `changeset version`
+      # runs against exactly the tree the commit will be based on.
+      - name: Sync the workspace to the release branch head
+        if: ${{ !inputs.dry-run }}
+        env:
+          RELEASE_BRANCH: ${{ steps.branch.outputs.name }}
+        run: |
+          git fetch --no-tags origin "${RELEASE_BRANCH}"
+          git reset --hard FETCH_HEAD
+          head=$(git rev-parse HEAD)
+          printf 'HEAD_SHA=%s\n' "${head}" >> "${GITHUB_ENV}"
+          echo "Release branch head is ${head}."
+
+      # The merge may have brought changesets or a newer root version in. If the
+      # derived version moved, develop and master have diverged in a way a
+      # release must not paper over.
+      - name: Re-derive after the merge and assert it did not move
+        if: ${{ !inputs.dry-run }}
+        env:
+          EXPECTED: ${{ steps.derive.outputs.version }}
+        run: |
+          status="${RUNNER_TEMP}/status-after.json"
+          pnpm exec changeset status --output "${status}"
+
+          bump=$(jq -r '
+            [.changesets[].releases[].type]
+            | if   index("major") then "major"
+              elif index("minor") then "minor"
+              elif index("patch") then "patch"
+              else "none" end
+          ' "${status}")
+          old=$(node -p "require('./package.json').version || '0.0.0'")
+
+          IFS=. read -r major minor patch <<< "${old}"
+          case "${bump}" in
+            major) major=$((major + 1)); minor=0; patch=0 ;;
+            minor) minor=$((minor + 1)); patch=0 ;;
+            patch) patch=$((patch + 1)) ;;
+            *)     echo "::error::Post-merge bump resolved to '${bump}'."; exit 1 ;;
+          esac
+          actual="${major}.${minor}.${patch}"
+
+          if [ "${actual}" != "${EXPECTED}" ]; then
+            echo "::error::The derived version changed after merging ${TARGET_BRANCH}: ${EXPECTED} -> ${actual}."
+            echo "${TARGET_BRANCH} carries changesets or a product version ${BASE_BRANCH} does not."
+            echo "Merge the back-merge PR into ${BASE_BRANCH} first, then cut again."
+            exit 1
+          fi
+          echo "Derived version is still v${actual} after the merge."
+
+      - name: Version the workspaces and write the product version
+        env:
+          VERSION: ${{ steps.derive.outputs.version }}
+        run: |
+          pnpm changeset:version
+
+          # The root package is outside pnpm-workspace.yaml's globs, so Changesets
+          # never touches this field and the two cannot fight over it.
+          node -e '
+            const fs = require("node:fs")
+            const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"))
+            pkg.version = process.env.VERSION
+            fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n")
+          '
+
+          echo "Root package.json version is now $(node -p "require('./package.json').version")."
+
+      - name: Assert the release actually released something
+        env:
+          VERSION: ${{ steps.derive.outputs.version }}
+          OLD_VERSION: ${{ steps.derive.outputs.old-version }}
+        run: |
+          # README.md is a changesets fixture, not a changeset.
+          left=$(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | wc -l | tr -d '[:space:]')
+          if [ "${left}" -ne 0 ]; then
+            echo "::error::${left} changeset(s) survived \`changeset version\`."
+            find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md'
+            exit 1
+          fi
+
+          moved=$(git diff --name-only -- 'apps/*/package.json' 'packages/*/package.json' | wc -l | tr -d '[:space:]')
+          if [ "${moved}" -eq 0 ]; then
+            echo "::error::No workspace package.json version moved. This is not a release."
+            exit 1
+          fi
+
+          if [ "${VERSION}" = "${OLD_VERSION}" ]; then
+            echo "::error::Derived version ${VERSION} is not greater than the current ${OLD_VERSION}."
+            exit 1
+          fi
+
+          echo "${moved} workspace version(s) moved; .changeset/ is clean."
+
+      # ONE signed commit, created by GitHub. `git status --porcelain` never
+      # reports a rename here because nothing is staged, so the only statuses
+      # that can appear are ' M', ' D' and '??'.
+      - name: Create the version commit, signed, through the GraphQL API
+        id: commit
+        if: ${{ !inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_BRANCH: ${{ steps.branch.outputs.name }}
+          VERSION: ${{ steps.derive.outputs.version }}
+          BUMP: ${{ steps.derive.outputs.bump }}
+          CHANGESET_COUNT: ${{ steps.derive.outputs.changeset-count }}
+        run: |
+          adds="${RUNNER_TEMP}/additions.ndjson"
+          dels="${RUNNER_TEMP}/deletions.ndjson"
+          : > "${adds}"
+          : > "${dels}"
+
+          while IFS= read -r -d '' entry; do
+            state=${entry:0:2}
+            path=${entry:3}
+
+            # A release commit may only ever touch the root manifest, a
+            # workspace's manifest or changelog, or a changeset file. `git status`
+            # already honours .gitignore, but this bounds the blast radius of any
+            # stray untracked file a gate or a tool leaves behind -- the commit is
+            # taken from the whole working tree, so "whatever happens to be there"
+            # is not an acceptable definition of a release.
+            case "${path}" in
+              package.json|apps/*/package.json|packages/*/package.json) ;;
+              apps/*/CHANGELOG.md|packages/*/CHANGELOG.md) ;;
+              .changeset/*.md) ;;
+              *)
+                echo "::error::'${path}' changed, and a release commit may not contain it."
+                echo "Only the root package.json, workspace package.json/CHANGELOG.md files"
+                echo "and .changeset/*.md are part of a version commit. Something else wrote"
+                echo "to the workspace; investigate before releasing."
+                exit 1
+                ;;
+            esac
+
+            case "${state}" in
+              ' D'|'D '|'AD')
+                jq -nc --arg path "${path}" '{path: $path}' >> "${dels}"
+                ;;
+              *)
+                jq -nc --arg path "${path}" --arg contents "$(base64 -w0 "${path}")" \
+                      '{path: $path, contents: $contents}' >> "${adds}"
+                ;;
+            esac
+          done < <(git status --porcelain -z)
+
+          if [ ! -s "${adds}" ] && [ ! -s "${dels}" ]; then
+            echo "::error::Nothing to commit. \`changeset version\` produced no change."
+            exit 1
+          fi
+
+          echo "Committing $(wc -l < "${adds}") addition(s) and $(wc -l < "${dels}") deletion(s)."
+
+          jq -n \
+            --slurpfile additions "${adds}" \
+            --slurpfile deletions "${dels}" \
+            --arg repo "${GITHUB_REPOSITORY}" \
+            --arg branch "${RELEASE_BRANCH}" \
+            --arg oid "${HEAD_SHA}" \
+            --arg headline "chore(release): version packages for v${VERSION}" \
+            --arg body "Derived a ${BUMP} product version from ${CHANGESET_COUNT} authored changeset release(s)." \
+            '{query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid url } } }",
+              variables: {input: {
+                branch: {repositoryNameWithOwner: $repo, branchName: $branch},
+                message: {headline: $headline, body: $body},
+                expectedHeadOid: $oid,
+                fileChanges: {additions: $additions, deletions: $deletions}
+              }}}' > "${RUNNER_TEMP}/commit.json"
+
+          gh api graphql --input "${RUNNER_TEMP}/commit.json" > "${RUNNER_TEMP}/commit-result.json"
+
+          if jq -e '.errors' "${RUNNER_TEMP}/commit-result.json" >/dev/null 2>&1; then
+            echo "::error::createCommitOnBranch failed."
+            jq -r '.errors[].message' "${RUNNER_TEMP}/commit-result.json"
+            exit 1
+          fi
+
+          sha=$(jq -r '.data.createCommitOnBranch.commit.oid' "${RUNNER_TEMP}/commit-result.json")
+          printf 'sha=%s\n' "${sha}" >> "${GITHUB_OUTPUT}"
+          echo "Created ${sha}."
+
+      # The whole reason the commit is made through the API. If this ever reports
+      # false, the release PR is unmergeable into a `required_signatures` branch
+      # and the run must stop here rather than at the merge button.
+      - name: Assert the commit is signed
+        if: ${{ !inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          verification=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${SHA}" --jq '.commit.verification')
+          verified=$(printf '%s' "${verification}" | jq -r '.verified')
+          reason=$(printf '%s' "${verification}" | jq -r '.reason')
+
+          echo "Signature: verified=${verified} reason=${reason}"
+
+          if [ "${verified}" != "true" ]; then
+            echo "::error::The version commit is NOT signed (reason: ${reason})."
+            echo "'${TARGET_BRANCH}' requires verified signatures, so this pull request could"
+            echo "not be merged. Stopping before a PR is opened."
+            exit 1
+          fi
+
+      - name: Report the version derivation as a commit status
+        if: ${{ !inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.commit.outputs.sha }}
+          VERSION: ${{ steps.derive.outputs.version }}
+          BUMP: ${{ steps.derive.outputs.bump }}
+        run: |
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${SHA}" \
+            -f state=success \
+            -f context="${VERSION_CONTEXT}" \
+            -f description="${BUMP} -> v${VERSION}, signed" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >/dev/null
+
+      - name: Mark the gates pending
+        if: ${{ !inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${SHA}" \
+            -f state=pending \
+            -f context="${GATES_CONTEXT}" \
+            -f description="running" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >/dev/null
+
+      # ---- Layer 1 gates -------------------------------------------------
+      # Chosen to match this diff, which is package.json version fields,
+      # CHANGELOG.md prose and deleted changeset files -- and no source at all.
+      # Jest/Vitest/Playwright, knip and check:tokens are deliberately excluded;
+      # see ADR-0029 for each exclusion's reason.
+
+      # The one failure mode specific to this diff. Internal dependencies are
+      # `workspace:*`, which changesets leaves alone, so the lockfile must not
+      # have moved -- and --frozen-lockfile is what proves it.
+      - name: "Gate: pnpm install --frozen-lockfile"
+        run: pnpm install --frozen-lockfile
+
+      # Biome formats package.json. `changeset version` rewrites those files with
+      # its own formatter, and a disagreement would otherwise land as a lint
+      # failure on the next unrelated pull request.
+      - name: "Gate: pnpm lint"
+        run: pnpm lint
+
+      - name: "Gate: pnpm check-types"
+        run: pnpm check-types
+
+      # What lefthook's pre-push hook runs for every human push. A release branch
+      # is a push; exempting it would make the release the least-checked branch in
+      # the repository.
+      - name: "Gate: pnpm build"
+        run: pnpm build
+
+      - name: Report the gates as a commit status
+        if: ${{ always() && !inputs.dry-run && steps.commit.outputs.sha != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.commit.outputs.sha }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          if [ "${JOB_STATUS}" = "success" ]; then
+            state=success
+            description="install, lint, check-types, build"
+          else
+            state=failure
+            description="a layer-1 gate failed"
+          fi
+
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${SHA}" \
+            -f state="${state}" \
+            -f context="${GATES_CONTEXT}" \
+            -f description="${description}" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >/dev/null
+
+          if [ "${state}" != "success" ]; then
+            echo "::notice::Gates failed, so no pull request was opened. The release branch is left in place for inspection."
+          fi
+
+      # The release PR's diff is the release manifest, so the body is the same
+      # changelog the GitHub Release will carry.
+      - name: Assemble the pull request body
+        id: body
+        env:
+          VERSION: ${{ steps.derive.outputs.version }}
+          BUMP: ${{ steps.derive.outputs.bump }}
+          CHANGESET_COUNT: ${{ steps.derive.outputs.changeset-count }}
+          OLD_VERSION: ${{ steps.derive.outputs.old-version }}
+        run: |
+          body="${RUNNER_TEMP}/pr-body.md"
+
+          {
+            printf 'Release **`v%s`** — a `%s` bump from `%s`, derived from %s authored changeset release(s).\n\n' \
+              "${VERSION}" "${BUMP}" "${OLD_VERSION}" "${CHANGESET_COUNT}"
+            printf 'Merging this pull request is what starts the release. It raises a push event on `%s` ' "${TARGET_BRANCH}"
+            printf 'authored by you, which runs `release_publish.yml`: tag `v%s`, a GitHub Release, ' "${VERSION}"
+            printf 'five images at `:v%s`, and the deploy behind the `production` approval.\n\n' "${VERSION}"
+            printf -- '---\n\n## Changelog\n\n'
+          } > "${body}"
+
+          # `changeset version` touches CHANGELOG.md for exactly the workspaces it
+          # bumped, so the diff itself is the list -- no bookkeeping to drift.
+          mapfile -t changelogs < <(
+            git status --porcelain -- 'apps/*/CHANGELOG.md' 'packages/*/CHANGELOG.md' \
+              | cut -c4- | sort -u
+          )
+
+          if [ "${#changelogs[@]}" -eq 0 ]; then
+            printf '_No workspace changelog entries were written._\n' >> "${body}"
+          fi
+
+          for file in "${changelogs[@]:-}"; do
+            [ -n "${file}" ] || continue
+            dir=$(dirname "${file}")
+            name=$(node -p "require('./${dir}/package.json').name")
+            ver=$(node -p "require('./${dir}/package.json').version")
+            {
+              printf '### %s@%s\n' "${name}" "${ver}"
+              awk -v v="## ${ver}" '
+                /^## / { if (found) exit; if ($0 == v) found = 1; next }
+                found { print }
+              ' "${file}"
+              printf '\n'
+            } >> "${body}"
+          done
+
+          printf 'path=%s\n' "${body}" >> "${GITHUB_OUTPUT}"
+          cat "${body}" >> "${GITHUB_STEP_SUMMARY}"
+
+      # Route B: the workflow opens the pull request. Route A -- printing a
+      # compare link for a human to submit -- was the ADR's original
+      # recommendation and is wrong for this repository: `master` requires one
+      # approving review, GitHub forbids approving your own pull request, and
+      # `require_last_push_approval` is on. If the operator authored the PR they
+      # could not approve it, so every release would need an admin bypass. With
+      # the bot as author and pusher, the operator's approval counts normally.
+      #
+      # The cost is that no `pull_request` workflow runs on a PR opened by
+      # GITHUB_TOKEN. The two commit statuses above are what stand behind it, and
+      # they are exactly the checks to register as required on `master`. If a
+      # specific PR does need the full suite, close and reopen it by hand: the
+      # `reopened` event is authored by the person who clicked it.
+      - name: Open the release pull request
+        id: pr
+        if: ${{ !inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_BRANCH: ${{ steps.branch.outputs.name }}
+          BODY_FILE: ${{ steps.body.outputs.path }}
+          VERSION: ${{ steps.derive.outputs.version }}
+        run: |
+          url=$(gh pr create \
+                  --base "${TARGET_BRANCH}" \
+                  --head "${RELEASE_BRANCH}" \
+                  --title "chore(release): v${VERSION}" \
+                  --body-file "${BODY_FILE}")
+
+          printf 'url=%s\n' "${url}" >> "${GITHUB_OUTPUT}"
+
+          {
+            printf '\n---\n\n### Release pull request\n\n%s\n\n' "${url}"
+            printf 'Review the diff, approve, and merge. Your merge is what starts the publish run.\n'
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "::notice::Opened ${url}"
+
+      - name: Summarise the dry run
+        if: ${{ inputs.dry-run }}
+        env:
+          VERSION: ${{ steps.derive.outputs.version }}
+        run: |
+          {
+            printf '\n---\n\n### Dry run\n\n'
+            printf 'Nothing was written. A real cut would have created `release/v%s`, ' "${VERSION}"
+            printf 'merged `%s` into it, committed the diff below and opened the pull request.\n\n' "${TARGET_BRANCH}"
+            printf '```diff\n'
+            git --no-pager diff --stat
+            printf '\n```\n'
+          } >> "${GITHUB_STEP_SUMMARY}"

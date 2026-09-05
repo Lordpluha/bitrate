@@ -125,5 +125,5 @@ did not happen. EAS builds
 ## Related
 
 - `expo` skill — routing, Reanimated, the native/web boundary in depth.
-- `sp-mobile-developer` — the agent that owns this app.
+- `br-mobile-developer` — the agent that owns this app.
 - `.claude/rules/typescript.md`, `.claude/rules/code-principles.md`.

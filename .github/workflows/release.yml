@@ -1,0 +1,76 @@
+name: "[release] Cut Release PR"
+
+# Stage 2 of the release chain (ADR-0029). Dispatch-only, and it opens the
+# release pull request itself -- Route B.
+#
+#   human runs this workflow
+#     -> derive the product version from the AUTHORED changesets
+#     -> create release/v<x.y.z> from develop
+#     -> merge master into it, server-side, so the branch is up to date
+#     -> `changeset version`, write the product version into root package.json,
+#        and land all of it as ONE commit created through GitHub's GraphQL
+#        createCommitOnBranch mutation, so the commit is SIGNED
+#     -> run the layer-1 gates on it
+#     -> open the pull request into master
+#
+#   human approves and merges it
+#     -> a human-authored push to master, which raises a push event and starts
+#        release_publish.yml. No PAT, no GitHub App, no workflow_dispatch.
+#
+# Why the commit is made through the API rather than by `git commit`:
+# `master` has `required_signatures: true`, and a commit made on a runner is
+# unsigned. Pushing it to `release/*` is fine -- that ref is unprotected -- but
+# the merge into `master` is then refused with "Commits must have verified
+# signatures". Squash-merging would launder it today and break the day someone
+# picks "Create a merge commit", so the commit is created by GitHub and signed
+# with GitHub's own key instead. Verified empirically, both directions.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: >-
+          Run the whole cut and stop short of every irreversible effect. It
+          derives and prints the next version, runs `changeset version` and every
+          gate, and prints the diff and the assembled PR body -- but creates no
+          branch, no commit, no commit status and no pull request.
+        required: false
+        default: false
+        type: boolean
+
+# One cut at a time. Two concurrent cuts would derive the same version from the
+# same changesets and race to create the same ref.
+concurrency:
+  group: release-cut
+  cancel-in-progress: false
+
+# Read-only by default; the called workflow's one job widens to exactly what it
+# needs. `permissions: {}` here would not work: a called workflow can never hold
+# more than its caller grants, so the caller has to name the same three.
+permissions: {}
+
+jobs:
+  cut:
+    name: Cut
+    uses: ./.github/workflows/release_reusable.yml
+    with:
+      dry-run: ${{ inputs.dry_run }}
+
+    # Widened from nothing on purpose, to exactly three permissions:
+    #
+    #   contents: write       -- create the release/* ref, merge master into it
+    #                            via POST /merges, and create the version commit
+    #                            via createCommitOnBranch. It does NOT push to
+    #                            master or develop and does not create tags.
+    #   statuses: write       -- POST the two layer-1 commit statuses onto the
+    #                            release branch head so they render on the PR.
+    #   pull-requests: write  -- Route B: open the release PR. Also covers the
+    #                            read used to refuse a second concurrent cut.
+    #
+    # Deliberately NOT granted: packages, actions, id-token. No job anywhere in
+    # this chain holds `actions: write`.
+    permissions:
+      contents: write
+      statuses: write
+      pull-requests: write
+
+    # No `secrets:` block. The whole chain runs on GITHUB_TOKEN.
