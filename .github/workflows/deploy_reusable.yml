@@ -385,6 +385,11 @@ jobs:
       - name: Preflight -- required configuration present
         if: ${{ inputs.run-deploy }}
         env:
+          # Used by this step's own error message. It was missing, and `set -u` turned
+          # a failed preflight into "ENVIRONMENT_NAME: unbound variable" -- the list of
+          # what was actually missing never printed, which is the one thing the step
+          # exists to tell you.
+          ENVIRONMENT_NAME: ${{ inputs.environment }}
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
           NODE_ENV: ${{ vars.NODE_ENV }}
@@ -503,7 +508,16 @@ jobs:
           # a '$', a leading/trailing space, an opening quote, or a ' #' is truncated,
           # re-interpolated, or silently mangled by the dotenv parser. Failing by name
           # here beats a stack that comes up with a subtly wrong password.
+          # DEPLOY_HOST, DEPLOY_USER and DEPLOY_SSH_KEY are the SSH transport, not
+          # runtime configuration: the render step below never writes them into the
+          # compose env file, so none of these checks applies to them. The key is
+          # PEM, so it always contains line breaks -- checking it here could only
+          # ever fail, which is exactly what it did on the first production deploy.
+          transport=" DEPLOY_HOST DEPLOY_USER DEPLOY_SSH_KEY "
+
           for name in ${required} ${optional}; do
+            case "${transport}" in *" ${name} "*) continue ;; esac
+
             value="${!name:-}"
             [ -n "${value}" ] || continue
             case "${value}" in
