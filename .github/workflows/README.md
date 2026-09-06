@@ -131,8 +131,9 @@ human merges the back-merge PR, and develop carries the bumps again
 - **The version is derived from `.changesets[].releases[].type`, never `.releases[].type`.** The
   first is what a human wrote; the second is Changesets' resolved plan and includes the patch bumps
   it generates for *dependents*, so deriving from it would let a change inflate the product version
-  by travelling along a dependency edge. Against this repository's current 74 changesets the
-  authored set is 33 major / 34 minor / 59 patch, while the resolved plan is 13 x major.
+  by travelling along a dependency edge. At the v1.0.0 cut the authored set was 33 major /
+  34 minor / 59 patch across 74 changesets, while the resolved plan was 13 x major -- which is
+  what the distinction costs when it is got wrong.
 - **A release rebuilds all five services, path filters and all.** `infra/docker-compose.prod.yaml`
   pulls every service at one shared `${IMAGE_TAG}`, so a service that skipped its build would have
   no image under the version tag and `compose pull` would fail on it. That is why

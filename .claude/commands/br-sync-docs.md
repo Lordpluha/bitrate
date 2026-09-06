@@ -18,7 +18,7 @@ This is not hypothetical: [ADR-0011](../../apps/docs/docs/architecture/0011-reti
 documents a real incident on the `apps/docs/` surface — a page kept describing a deleted app
 and a stack an ADR had already superseded, for months, undetected. See
 [ADR-0013](../../apps/docs/docs/architecture/0013-docs-sync.md) (original `apps/docs/` scope),
-[ADR-0020](../../apps/docs/docs/architecture/0020-expand-docs-sync-scope.md) (root onboarding
+[ADR-0031](../../apps/docs/docs/architecture/0031-expand-docs-sync-scope.md) (root onboarding
 docs + `.claude/` self-consistency added), and
 [ADR-0021](../../apps/docs/docs/architecture/0021-default-agent-dispatch.md) (this command
 now dispatches discovery to `br-librarian` by default).

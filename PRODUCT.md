@@ -59,7 +59,8 @@ this question to be answered first, not assumed.
 - **Sessions are long and re-entrant.** People return to the same library, the same recents,
   the same liked songs. Continuity across visits matters more than first-run impact.
 - **The catalog is real audio.** Tracks are uploaded, processed through a BullMQ pipeline,
-  and streamed as HLS at 128/192/320 kbps Opus. Cover art, avatars, and audio are served as
+  and streamed as CMAF fragments over byte ranges at 128/192/320 kbps, with HLS retained as the
+  fallback for tracks encoded before CMAF (ADR-0020). Cover art, avatars, and audio are served as
   real media, not placeholders — `mediaUrl` helpers resolve and fall back on them.
 - **Two account worlds, one catalog.** Listener accounts and artist accounts are distinct
   (separate auth, separate apps). An artist page a listener browses is the public face of an
@@ -72,7 +73,7 @@ this question to be answered first, not assumed.
 **Shipped (roadmap-confirmed):**
 - JWT auth (access + refresh), OAuth 2.0 via Google and Facebook, for both listeners and
   artists; TOTP two-factor with QR and backup codes; email password recovery.
-- Audio upload and processing pipeline; HLS streaming at three bitrates; track and album
+- Audio upload and processing pipeline; CMAF/Range streaming at three bitrates; track and album
   CRUD; static file serving.
 - Like/unlike for tracks, albums, and playlists; follow/unfollow artists; listening history;
   playlist management with owner permissions.
@@ -81,7 +82,7 @@ this question to be answered first, not assumed.
 **Built but incomplete — UI lags the API.** Several capabilities exist server-side with the
 listener-facing UI still unbuilt: search page, artist page, album page, listening-history
 view, public user profiles, profile editing, follow-users, activity feed. Media player
-transport itself (play/pause/seek/next/prev, volume, progress, queue, shuffle, repeat, HLS
+transport itself (play/pause/seek/next/prev, volume, progress, queue, shuffle, repeat, adaptive
 quality switching) is the current v0.3.0 focus and not yet complete. Treat "the API supports
 it" as a reason a surface is worth designing, not as evidence it already works.
 
