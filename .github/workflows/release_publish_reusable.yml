@@ -328,7 +328,14 @@ jobs:
             echo "Created ${branch} at ${GITHUB_SHA}."
           fi
 
-          existing=$(gh pr list --base "${BACK_MERGE_BRANCH}" --head "${branch}" \
+          # --repo, because this job deliberately has no actions/checkout: everything
+          # else it does goes through `gh api`, which needs no working copy. But
+          # `gh pr list` and `gh pr create` are repository-aware wrappers that resolve
+          # the repository from a git remote, so without either a checkout or --repo
+          # they fail with "not a git repository" -- which is how v1.0.0's back-merge
+          # was left as a branch with no pull request.
+          existing=$(gh pr list --repo "${GITHUB_REPOSITORY}" \
+                       --base "${BACK_MERGE_BRANCH}" --head "${branch}" \
                        --state open --json url --jq '.[].url')
           if [ -n "${existing}" ]; then
             echo "::notice::Back-merge pull request already open: ${existing}"
@@ -347,6 +354,7 @@ jobs:
           } > "${body}"
 
           url=$(gh pr create \
+                  --repo "${GITHUB_REPOSITORY}" \
                   --base "${BACK_MERGE_BRANCH}" \
                   --head "${branch}" \
                   --title "chore(release): back-merge ${TAG} into ${BACK_MERGE_BRANCH}" \
