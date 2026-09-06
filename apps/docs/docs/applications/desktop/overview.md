@@ -83,10 +83,12 @@ source $HOME/.cargo/env
 **Run the application:**
 
 ```bash
-cd apps/desktop
 pnpm install
-pnpm dev  # Starts Tauri application with a native window
+pnpm --filter @bitrate/desktop tauri dev   # native window, Rust side included
 ```
+
+`pnpm --filter @bitrate/desktop dev` is **not** the same thing: that script is plain `vite`, so it
+serves the renderer on `http://localhost:1420` and starts no Tauri process and no native window.
 
 **Advantages:**
 - ✅ Full Tauri functionality
@@ -101,12 +103,12 @@ pnpm dev  # Starts Tauri application with a native window
 Runs only the Vite dev server without the Tauri backend.
 
 ```bash
-# Start Vite dev server in container
-docker compose --profile desktop up -d desktop
-
-# Open in browser
-http://localhost:1420
+task desktop:up     # start the Vite dev server in a container
+task desktop:logs   # tail its logs
 ```
+
+Then open `http://localhost:1420`. `Taskfile.yml` is the only supported interface to Docker here —
+a bare `docker compose` fails from the repository root, because the compose files live in `infra/`.
 
 **Limitations:**
 - ✅ Shows React UI
@@ -123,7 +125,7 @@ Full Tauri application with GUI access via browser.
 
 ```bash
 # Stop the regular desktop container if running
-docker compose --profile desktop down
+task desktop:down
 
 # Start the VNC version
 cd apps/desktop
@@ -251,7 +253,8 @@ docker compose -f docker-compose.vnc.yml logs | grep tauri
 **Solution:**
 - Wait 30-60 seconds after connecting
 - Check logs: `docker compose -f docker-compose.vnc.yml logs -f`
-- Make sure Xvfb is running: `docker compose exec desktop-vnc ps aux | grep Xvfb`
+- Make sure Xvfb is running:
+  `docker compose -f docker-compose.vnc.yml exec desktop-vnc ps aux | grep Xvfb`
 
 ### Error "port is already allocated"
 
@@ -260,7 +263,7 @@ docker compose -f docker-compose.vnc.yml logs | grep tauri
 **Solution:**
 ```bash
 # Stop the regular desktop container
-docker compose --profile desktop down
+task desktop:down
 
 # Or change ports in docker-compose.vnc.yml
 ```
@@ -346,12 +349,12 @@ docker compose -f docker-compose.vnc.yml restart
 
 ### Local run
 ```bash
-cd apps/desktop && pnpm dev
+pnpm --filter @bitrate/desktop tauri dev
 ```
 
 ### Docker UI
 ```bash
-docker compose --profile desktop up -d desktop
+task desktop:up
 ```
 
 ### Docker VNC
@@ -361,7 +364,7 @@ cd apps/desktop && docker compose -f docker-compose.vnc.yml up --build
 
 ### Stop
 ```bash
-docker compose --profile desktop down
-# or
-docker compose -f docker-compose.vnc.yml down
+task desktop:down
+# or, for the VNC stack
+cd apps/desktop && docker compose -f docker-compose.vnc.yml down
 ```

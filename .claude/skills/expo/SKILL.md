@@ -63,7 +63,7 @@ two navigators competing for the same stack is a hard bug to unpick.
 ## Styling
 
 `StyleSheet.create` (or whatever the app has established — check first). Design values should
-trace back to `packages/ui-react/tokens/tokens.json`; if no bridge exists for this app yet, say so rather than
+trace back to the token roles in `packages/ui-react/src/styles/`; if no bridge exists for this app yet, say so rather than
 scattering raw hex literals.
 
 React Native's layout is flexbox-only, `flexDirection` defaults to `column` (not `row`), and

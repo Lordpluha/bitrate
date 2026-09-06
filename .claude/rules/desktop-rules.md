@@ -110,7 +110,7 @@ React function components, named exports, named React imports, named types in si
 positions, no production `any`. ≤100 logic lines per component file, ≤5 own declared props,
 ≤2 `useEffect`.
 
-Design values should trace back to `packages/ui-react/tokens/tokens.json`. No bridge exists yet — propose one
+Design values should trace back to the token roles in `packages/ui-react/src/styles/`. No bridge exists yet — propose one
 rather than scattering hex literals. API types come from `@bitrate/contracts`.
 
 ## Commands

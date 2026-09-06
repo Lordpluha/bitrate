@@ -10,7 +10,7 @@ Note: originally written when agent rules were split across `.agents/`/`.claude/
 path of "agent working rules" changed.
 
 Note: `/br-sync-docs`'s scope was later widened beyond `apps/docs/` alone — see
-[ADR-0020](./0020-expand-docs-sync-scope.md), which adds root onboarding docs and `.claude/`
+[ADR-0031](./0031-expand-docs-sync-scope.md), which adds root onboarding docs and `.claude/`
 self-consistency as checked surfaces. The `apps/docs/` boundary and drift categories below
 are unaffected.
 

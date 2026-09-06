@@ -1,4 +1,9 @@
-# ADR-0020: Expand /br-sync-docs to root onboarding docs and .claude/ self-consistency
+# ADR-0031: Expand /br-sync-docs to root onboarding docs and .claude/ self-consistency
+
+> Renumbered from ADR-0020. Two records were committed under that number — this one and
+> [CMAF + Range + MSE playback](./0020-cmaf-range-mse-playback.md), which reached the
+> repository first and keeps it. The Docusaurus route strips the numeric prefix, so this
+> page's URL is unchanged.
 
 Status: Accepted
 

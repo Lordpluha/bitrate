@@ -64,7 +64,7 @@ Follow the existing group/layout structure (`_layout.tsx`) rather than adding a 
 navigator by hand.
 
 **Styling.** React Native `StyleSheet` / the app's existing styling approach — **not**
-Tailwind, not `cn()`. Design values should trace back to `packages/ui-react/tokens/tokens.json` rather than
+Tailwind, not `cn()`. Design values should trace back to the token roles in `packages/ui-react/src/styles/` rather than
 hardcoded literals; if no token bridge exists for this app yet, say so instead of scattering
 raw hex values.
 

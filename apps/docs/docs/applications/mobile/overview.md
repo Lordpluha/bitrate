@@ -24,12 +24,14 @@ Complete guide for developing and running the React Native mobile application.
 ### Docker (Metro Bundler + tunnel only)
 
 ```bash
-# Start container
-docker compose --profile mobile up -d mobile
-
-# View logs
-docker compose logs -f mobile
+task mobile:up      # start the Metro bundler container
+task mobile:logs    # tail its logs
+task mobile:qr      # print the QR code URL
 ```
+
+`Taskfile.yml` is the only supported interface to Docker here. A bare `docker compose` will not
+work from the repository root — the compose files live in `infra/`, so every raw invocation needs
+`-f infra/docker-compose.preprod.yaml`, which is exactly what the `task` targets supply.
 
 ### Native run (recommended)
 
@@ -54,12 +56,11 @@ Install **Expo Go** on your phone:
 Works from any network, including different WiFi or mobile internet.
 
 ```bash
-# Already configured in docker-compose.yaml with --tunnel flag
-docker compose logs mobile  # Find URL like exp://u.expo.dev/...
-
-# Open Expo DevTools for QR code
-http://localhost:19000
+task mobile:logs   # find a URL like exp://u.expo.dev/...
+task mobile:qr     # or print it directly
 ```
+
+Expo DevTools is published on `http://localhost:19000`.
 
 **In the Expo Go app:**
 1. Scan the QR code from the browser (localhost:19000)
@@ -76,15 +77,20 @@ ip addr show | grep "inet " | grep -v 127.0.0.1
 ifconfig | grep "inet " | grep -v 127.0.0.1
 ```
 
-**2. Create a `.env` file in the project root:**
+**2. Export the address for the compose stack:**
 ```bash
-echo "MOBILE_HOST=192.168.0.31" >> .env  # replace with your IP
+export MOBILE_HOST=192.168.0.31   # replace with your IP
 ```
+
+There is no repository-root `.env` any more, and writing one would not help: the compose files
+live in `infra/`, so that directory is the project directory and compose reads `infra/.env`, never
+a root file. Every variable in `docker-compose.preprod.yaml` carries a default
+(`MOBILE_HOST` falls back to `192.168.1.100`), and a shell variable beats the default.
 
 **3. Restart the container:**
 ```bash
-docker compose --profile mobile down
-docker compose --profile mobile up -d mobile
+task mobile:down
+task mobile:up
 ```
 
 **4. In Expo Go enter:**
@@ -98,11 +104,10 @@ exp://YOUR_IP:8081
 
 ```bash
 # Recommended to do on the host (not in the container)
-cd apps/mobile
-pnpm add expo@~54.0.31 expo-constants@~18.0.13
+pnpm add expo expo-constants --filter @bitrate/mobile
 
-# Restart container
-docker compose restart mobile
+# Restart the container
+task mobile:down && task mobile:up
 ```
 
 ---
@@ -129,25 +134,25 @@ curl http://localhost:8081/status
 ### Check environment variables
 
 ```bash
-docker compose exec mobile printenv | grep -E "(EXPO|MOBILE)"
+docker compose -f infra/docker-compose.preprod.yaml exec mobile printenv | grep -E "(EXPO|MOBILE)"
 ```
 
 ### Enter the container
 
 ```bash
-docker compose exec mobile sh
+docker compose -f infra/docker-compose.preprod.yaml exec mobile sh
 ```
 
 ### View Metro logs
 
 ```bash
-docker compose logs mobile | grep "Metro\|Bundler\|exp://"
+task mobile:logs | grep "Metro\|Bundler\|exp://"
 ```
 
 ### Restart with cache clear
 
 ```bash
-docker compose exec mobile npx expo start --clear
+docker compose -f infra/docker-compose.preprod.yaml exec mobile npx expo start --clear
 ```
 
 ---
@@ -168,7 +173,8 @@ docker compose exec mobile npx expo start --clear
 
 **Solution:**
 - Update packages on the host, not in the container
-- Or rebuild the container: `docker compose build --no-cache mobile`
+- Or rebuild the container:
+  `docker compose -f infra/docker-compose.preprod.yaml build --no-cache mobile`
 
 ### QR code doesn't appear
 
@@ -183,10 +189,10 @@ docker compose exec mobile npx expo start --clear
 # Check that Metro is running
 curl http://localhost:8081/status
 
-# Restart with cache clear
-docker compose down
-docker compose --profile mobile up -d mobile
-docker compose logs -f mobile
+# Restart
+task mobile:down
+task mobile:up
+task mobile:logs
 ```
 
 ---
@@ -203,18 +209,8 @@ docker compose logs -f mobile
 ## ⚡ Quick Commands
 
 ```bash
-# Start
-docker compose --profile mobile up -d mobile
-
-# Logs
-docker compose logs -f mobile
-
-# Stop
-docker compose --profile mobile down
-
-# Restart
-docker compose restart mobile
-
-# Enter container
-docker compose exec mobile sh
+task mobile:up      # start
+task mobile:logs    # logs
+task mobile:qr      # QR code URL
+task mobile:down    # stop and remove
 ```
