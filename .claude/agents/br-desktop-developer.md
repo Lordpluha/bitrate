@@ -71,7 +71,7 @@ scoped permission instead.
 
 **Renderer conventions.** React function components, named exports, named React imports,
 named types in signature positions, no production `any`. Design values should trace back to
-`packages/ui-react/tokens/tokens.json`; if no bridge exists for this app yet, say so rather than scattering raw
+the token roles in `packages/ui-react/src/styles/`; if no bridge exists for this app yet, say so rather than scattering raw
 hex values.
 
 **API access.** Types come from `@bitrate/contracts` when this app talks to the API. Do not

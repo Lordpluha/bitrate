@@ -23,7 +23,8 @@ Do not weaken TypeScript, lint, test, or architecture settings to make a change 
 - React uses named imports and named component exports.
 - Web-player imports obey FSD boundaries and use the `@/` alias.
 - API controllers stay thin; services own business logic; Swagger lives in `decorators/`.
-- UI values come from `packages/tokens/tokens.json`; components do not invent colours,
+- UI values come from the hand-written `@theme` layers in `packages/ui-react/src/styles/`;
+  components do not invent colours,
   spacing, radii, or shadows.
 - Comments are short factual TSDoc. Tracker metadata belongs in issues and commits.
 

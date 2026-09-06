@@ -90,7 +90,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme'
 React Native `StyleSheet`, flexbox only, `flexDirection` defaults to `column`, no cascade.
 Theme values live in `constants/theme.ts` and are read through `useThemeColor`.
 
-There is **no bridge to the design tokens yet** (`packages/ui-react/tokens/tokens.json`). Until one exists, extend
+There is **no bridge to the design tokens yet** (the token roles in `packages/ui-react/src/styles/`). Until one exists, extend
 `constants/theme.ts` rather than scattering raw hex literals through components, and flag in
 your report that the bridge is still missing.
 

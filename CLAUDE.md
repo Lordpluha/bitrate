@@ -133,7 +133,7 @@ round-trip is pure overhead.
 | `/br-auto [--limit N] [--issue NNN] [--dry-run] [--recover-only]` | Unattended pipeline: poll the board's `Todo` column and drive each issue end to end — worktree, `br-worker`, commit, push, PR, board move, issue comment — with crash recovery. |
 | `/br-sync-docs [path] [--session]` | Find and (with confirmation) fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Dispatches discovery to `br-librarian`. Run periodically — see `.claude/rules/monorepo.md` § "Documentation ownership". |
 
-Twelve named specialists live under `.claude/agents/`. Five implementation agents split by
+Eleven named specialists live under `.claude/agents/`. Four implementation agents split by
 app — `br-frontend-developer` (web-player, web-artists, ui-react), `br-backend-developer`
 (api), `br-mobile-developer`, `br-desktop-developer` — plus
 `br-planner`, `br-debugger`, `br-tester`, `br-reviewer` (dispatched by `/br-implement`),
