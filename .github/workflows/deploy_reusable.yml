@@ -944,7 +944,12 @@ jobs:
   # "!= 'failure'" form would have run this job with an empty domain and reported
   # a second, misleading error on a run that had already failed upstream.
   health:
-    if: ${{ needs.deploy.result == 'success' }}
+    # `!cancelled()` is load-bearing, not decoration. A skip propagates down the
+    # needs graph transitively, and in redeploy mode `await-images` is skipped --
+    # so without this the skip reached `health` through `deploy` even when the
+    # deploy itself succeeded. That is why the health check had never once run.
+    # The `deploy` job above breaks the same propagation the same way.
+    if: ${{ !cancelled() && needs.deploy.result == 'success' }}
     name: Health Check
     needs: deploy
     runs-on: ubuntu-latest

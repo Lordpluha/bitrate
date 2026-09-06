@@ -359,7 +359,8 @@ later action. Agents do not create releases unless explicitly asked.
 
 New durable architectural choices should get an ADR. Cross-cutting designs may start as a
 spec and then an implementation plan. New visual values should enter
-`packages/tokens/tokens.json`, not component literals. User-facing web changes must preserve
+the `@theme`/`:root.light` part-file in `packages/ui-react/src/styles/` that owns the role,
+not component literals. User-facing web changes must preserve
 the WCAG 2.2 AA baseline.
 
 ---

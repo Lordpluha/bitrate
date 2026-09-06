@@ -18,7 +18,7 @@ command". See `TOKEN_BUDGET.md` for the cost trade-off this implies.
 | `/br-auto` | `[--limit N] [--issue NNN] [--dry-run] [--recover-only]` | Unattended pipeline over the board's `Todo` column: worktree per issue, one `br-worker` each, then PR + board move + issue comment. Resumable and idempotent by design. |
 | `/br-sync-docs` | `[path] [--session]` | Find and (with confirmation) fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Dispatches discovery to `br-librarian`; confirms and applies fixes at the command level. Run periodically. |
 
-Twelve specialists back these four commands — a planner, five app-scoped implementation
+Eleven specialists back these four commands — a planner, four app-scoped implementation
 agents, debugging/testing/review personas, an infrastructure agent, the unattended pipeline
 worker, and a read-only documentation-order agent — dispatched by default, or invoked
 directly by name via the Agent tool:

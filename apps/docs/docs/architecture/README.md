@@ -26,7 +26,6 @@ how to apply it day to day.
 | [0018](./0018-consolidate-agents-into-claude.md) | Consolidate `.agents/`/`AGENTS.md` into `.claude/` only |
 | [0019](./0019-remove-obsidian-export-convenience.md) | Remove the `graphify:obsidian` convenience wrapper |
 | [0020](./0020-cmaf-range-mse-playback.md) | Single-file CMAF + Range index + MSE for audio playback |
-| [0020](./0020-expand-docs-sync-scope.md) | Expand `/br-sync-docs` to root onboarding docs and `.claude/` self-consistency |
 | [0021](./0021-default-agent-dispatch.md) | Default to agent dispatch across all commands and ordinary tasks |
 | [0022](./0022-app-scoped-agent-roster.md) | App-scoped developer agents, unattended `/br-auto` pipeline, retire `br-ticket` |
 | [0023](./0023-tokens-into-ui-react.md) | Hand-write the design tokens as CSS; retire the token generator |
@@ -35,8 +34,9 @@ how to apply it day to day.
 | [0026](./0026-pnpm-11-settings-in-workspace-yaml.md) | pnpm 11; `pnpm-workspace.yaml` is the only home for pnpm settings |
 | [0027](./0027-deploy-by-pulling-ci-images.md) | Deploy by pulling CI-built images; production configuration lives in GitHub |
 | [0028](./0028-split-brand-foundation.md) | Split the brand foundation into one page per decision |
-| [0029](./0029-release-pr-merged-by-a-human.md) | **Proposed** — release by a PR a human merges; tag is the derived product version |
+| [0029](./0029-release-pr-merged-by-a-human.md) | Release by a pull request a human merges; the tag is the derived product version |
 | [0030](./0030-remove-performance-testing.md) | Remove the performance testing suite |
+| [0031](./0031-expand-docs-sync-scope.md) | Expand `/br-sync-docs` to root onboarding docs and `.claude/` self-consistency |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

@@ -14,9 +14,9 @@ including the v3 habits that fail silently here.
 
 ## There is no `tailwind.config.js`
 
-Tailwind v4 is configured in CSS. Tokens are generated from
-`packages/ui-react/tokens/tokens.json` into `packages/ui-react/src/styles/*.css`, which register `@theme`
-blocks. Every token in `@theme` becomes a utility automatically:
+Tailwind v4 is configured in CSS. The tokens are hand-written in
+`packages/ui-react/src/styles/*.css`, which register `@theme` blocks — that CSS is the source,
+not build output (see [ADR-0023](../../../apps/docs/docs/architecture/0023-tokens-into-ui-react.md)). Every token in `@theme` becomes a utility automatically:
 
 ```css
 @theme {
@@ -45,7 +45,7 @@ fails with `MODULE_NOT_FOUND`.
 
 Semantic roles live in one part-file each under `styles/themes/` (`base.css`,
 `global/*.css`, `components/*.css`), every part carrying both the dark declarations and its
-`:root.light` overrides. Values come from `packages/ui-react/tokens/tokens.json`; which part-file
+`:root.light` overrides. A role's value is written in the part-file itself; which part-file
 owns a role is simply the file it is declared in — see
 `.claude/rules/styling.md` § "Where a role lives".
 
