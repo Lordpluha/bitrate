@@ -367,6 +367,61 @@ that pull request is what triggers everything else.** A merge performed on githu
 authenticated as the person who clicked it, so the push to `master` it produces raises a push event
 and starts the builds. Nothing in the chain needs a personal access token or a GitHub App.
 
+### The short version
+
+Once the one-time setup below is done, a release is six steps. Everything after this section
+explains *why* each of them is shaped the way it is; you do not need to re-read it every time.
+
+```bash
+# 1. Cut the release. Derives the version from the changesets, opens the pull request.
+gh workflow run release.yml --ref develop -f dry_run=false
+
+# 2. Watch it. Ends with the derived version and the pull request URL.
+gh run watch "$(gh run list --workflow=release.yml --limit 1 \
+  --json databaseId --jq '.[0].databaseId')"
+
+# 3. Read the release pull request, then approve and merge it.
+#    The bot is its author, so your approval counts — no --admin needed here.
+gh pr diff <n> && gh pr review <n> --approve && gh pr merge <n> --merge
+
+# 4. The merge starts the publish run on its own: tag, GitHub Release, five images, deploy.
+gh run watch "$(gh run list --workflow=release_publish.yml --limit 1 \
+  --json databaseId --jq '.[0].databaseId')"
+
+# 5. Approve the deploy when the run reaches the production environment.
+gh run view <run id> --web        # Review deployments -> Approve
+
+# 6. Merge the back-merge pull request the publish run opens into develop.
+gh pr merge <n> --merge
+```
+
+Then check the result yourself rather than trusting the run's own health job:
+
+```bash
+for u in https://bitrate.me https://artists.bitrate.me https://api.bitrate.me/api/v1/health \
+         https://docs.bitrate.me https://ui.bitrate.me; do
+  printf '%-44s %s\n' "$u" "$(curl -s -o /dev/null -w '%{http_code}' -L "$u")"
+done
+```
+
+Step 6 is not optional. Until the back-merge lands, `develop` still holds the changesets this
+release consumed and the previous product version, so the next cut would consume them a second time
+and derive a version that collides with the tag you just published.
+
+**Deploying without releasing** — a configuration or infrastructure fix that must reach `master`
+outside a release — is a normal pull request into `master` followed by a manual redeploy. Merging it
+needs `--admin`, because `master` requires one approving review and GitHub does not let you approve
+your own pull request:
+
+```bash
+gh pr create --base master --head develop --title "fix(ci): ..." --fill-verbose
+gh pr merge --merge --admin
+gh workflow run deploy.yml --ref master -f mode=redeploy -f image-tag=<current version>
+```
+
+Passing `image-tag` explicitly matters: without it the deploy resolves the tag itself, and a
+configuration fix is not a reason to move production onto a different build.
+
 ### One-time setup
 
 Two things a workflow cannot do for itself, both requiring repository admin.
@@ -387,7 +442,36 @@ restriction.
 
 **Give the `production` environment a required reviewer.** `environment: production` in a workflow
 blocks nothing by itself. Go to **Settings → Environments → production** and add one, or the deploy
-runs unattended.
+runs unattended. Leave **Prevent self-review** unticked while one person maintains the repository —
+ticking it means the person who starts a release cannot approve its deploy, and nobody else can.
+
+**Allow release tags to deploy.** The `production` environment restricts which refs may deploy to
+it. Out of the box that list is the `master` branch alone, which is enough for a normal release and
+**not** enough for a rollback: `--ref v1.0.0` is refused before a single step runs, and the job
+fails in about two seconds with an empty log, which reads like an infrastructure fault rather than
+a policy decision. Add the tag pattern once:
+
+```bash
+gh api --method POST \
+  repos/Lordpluha/bitrate/environments/production/deployment-branch-policies \
+  -f name='v*' -f type=tag
+```
+
+**Configure commit signing on every machine that pushes.** `master` requires verified signatures.
+The release commit is signed by GitHub, but the ordinary commits that reach `master` through a
+release are signed by whoever wrote them — and an unsigned one blocks the merge:
+
+```bash
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/<your key>.pub
+git config --global commit.gpgsign true
+gh auth refresh -h github.com -s admin:ssh_signing_key
+gh ssh-key add ~/.ssh/<your key>.pub --type signing --title "commit signing"
+```
+
+The key must be registered as a **signing** key; GitHub keeps those separate from authentication
+keys, and a key present only as the latter still verifies as unsigned. Point `user.signingkey` at a
+file that exists — with `commit.gpgsign true` and a missing key, every commit fails outright.
 
 Two things you should *not* do:
 
@@ -771,6 +855,23 @@ gh workflow run deploy.yml \
 ```
 
 Then approve the run at the `production` environment, exactly as for a normal deploy.
+
+:::warning This needs the tag policy from § One-time setup
+
+Deploying at a tag works only once `v*` is on the `production` environment's allowed-ref list.
+Without it the job is refused by environment policy **before any step runs** — two seconds, no log,
+no error message naming the cause. If that happens, either add the policy, or fall back to:
+
+```bash
+gh workflow run deploy.yml --ref master -f mode=redeploy -f image-tag=v1.3.2
+```
+
+That still pins every image to the release you named, because `IMAGE_TAG` comes from the input. What
+it does not pin is `infra/`, the nginx templates and the Taskfile — those come from `master`. That is
+usually harmless and occasionally the whole problem: when you are rolling back *because* `master` is
+broken, it ships the broken half of the thing you are backing out of.
+
+:::
 
 `--ref` is the load-bearing part and does two jobs at once. It pins `IMAGE_TAG`, so every service
 is pulled at that release's image; and it checks the workflow out **at that tag**, so `infra/`, the
