@@ -1,5 +1,18 @@
 # @bitrate/web-player
 
+## 1.1.0
+
+### Minor Changes
+
+- 0ff841a: Added Sentry error monitoring, tracing, and session replay to the web player across all three Next.js runtimes — browser, Node server, and edge — matching the API's existing environment and release conventions. Client events are tunnelled through the app's own origin so ad-blockers cannot drop them, and the route guard now lets that tunnel through. Source maps upload on a production build when `SENTRY_AUTH_TOKEN` is present.
+
+### Patch Changes
+
+- 0ff841a: The service worker no longer sweeps caches left by the pre-rebrand prefix. The product has no installed clients to clean up after, so the sweep only kept a dead brand name in the source; its unit spec now asserts the opposite guarantee — that caches outside the worker's own prefix are never touched.
+- 0ff841a: Dropped the non-standard `local` value for `NODE_ENV`. Node tooling recognises only `development`, `production`, and `test` — Next.js warns on anything else and assigns one of the three itself, and Nest never sets the variable at all, so `local` only ever appeared as a schema default that no runtime produced. Both env schemas now accept the three standard values and default to `development`; the Sentry environment fallbacks follow.
+- 0ff841a: Upgraded both Next.js apps to 16.3.4. The release removed `experimental.turbopackMemoryLimit`, which the web player used to cap Turbopack's dev cache; it has no replacement, so disabling the Turbopack filesystem cache is now the only lever there.
+- 0ff841a: The web player's Sentry DSN now comes only from `NEXT_PUBLIC_SENTRY_DSN`, with no hardcoded fallback — an unconfigured build starts the SDK disabled and reports nowhere instead of adopting a baked-in project. The variable is passed as a Docker build arg through the image workflows, since `next build` inlines it into the client bundle and a runtime-only value would never reach the browser.
+
 ## 1.0.0
 
 ### Major Changes

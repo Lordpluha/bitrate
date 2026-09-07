@@ -109,6 +109,10 @@ services:
       - JWT_REFRESH_EXPIRES_IN
       - ACCESS_TOKEN_NAME
       - REFRESH_TOKEN_NAME
+      # The parent domain the session cookies are scoped to, e.g. `.bitrate.me`. Without it the
+      # cookies are host-only on the API subdomain, so the web apps' route guards never see a
+      # session and every authenticated route redirects back to the login page.
+      - COOKIE_DOMAIN
       - HEALTH_CHECK_TIMEOUT_MS
       - DEV_MAIL_LOG_TOKENS
       # Social sign-in. Without these four the Google and Facebook flows cannot work in production
@@ -145,6 +149,13 @@ services:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
         - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
         - API_URL=${API_URL:-http://api:3000}
+        # Sentry is baked in at build time — `next build` inlines the DSN into the client
+        # bundle, so a runtime variable would never reach the browser. Unset, the SDK
+        # starts disabled; the source's only DSN is this variable.
+        - NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN:-}
+        - NEXT_PUBLIC_SENTRY_ENVIRONMENT=${NEXT_PUBLIC_SENTRY_ENVIRONMENT:-production}
+        - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN:-}
+        - SENTRY_RELEASE=${SENTRY_RELEASE:-}
     container_name: bitrate-web-player-prod
     restart: always
     environment:

@@ -1,6 +1,6 @@
 {
   "name": "@bitrate/web-artists",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "predev": "pnpm --filter @bitrate/ui-react run build",
@@ -13,12 +13,12 @@
     "format": "pnpm exec biome format --write"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
     "@bitrate/ui-react": "workspace:*",
-    "lucide-react": "^1.18.0",
+    "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.101.0",
     "@tanstack/react-query-devtools": "^5.101.0",
-    "next": "16.2.11",
+    "lucide-react": "^1.18.0",
+    "next": "16.3.4",
     "openapi-fetch": "^0.15.2",
     "openapi-react-query": "^0.5.4",
     "react": "19.2.7",

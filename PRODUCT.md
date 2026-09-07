@@ -120,7 +120,7 @@ Settled: the name **Bitrate**, the `@bitrate/*` package namespace, and the brand
 **Bitrate Purple `#7C3AED`** with three themes (dark, light, dim).
 
 Resemblance to the incumbent is not a requirement, a safety net, or a review criterion. The
-inherited Spotify-derivative surfaces — palette, logo, marketing copy carried over into
+inherited incumbent-derivative surfaces — palette, logo, marketing copy carried over into
 `apps/web-artists` — are being removed, not preserved. Deliberately still open per
 `design.md` §24: the final logo and mark, typography, the spacing scale, illustration and
 photography direction, motion tokens, and the icon family.
