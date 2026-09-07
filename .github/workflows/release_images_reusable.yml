@@ -80,6 +80,7 @@ jobs:
       contents: read
       packages: write
     uses: ./.github/workflows/web_player_reusable.yml
+    secrets: inherit
     with:
       push-image: ${{ inputs.push-image }}
       tags: |

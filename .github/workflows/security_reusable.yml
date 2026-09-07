@@ -71,7 +71,7 @@ jobs:
             buildArgs: |
               API_URL=${{ vars.API_URL || 'http://localhost:3000' }}
               NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
-              NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://spotify-clone-web-olive.vercel.app' }}
+              NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://bitrate.me' }}
           - service: web-artists
             buildArgs: |
               NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}

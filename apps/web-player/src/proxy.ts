@@ -48,8 +48,12 @@ export const config = {
    * answers with a redirect to the login page, the browser fails to parse that
    * as JSON, and the app silently stops being installable. Same for
    * `/robots.txt` and `/sitemap.xml`, which crawlers request anonymously.
+   *
+   * `monitoring` is Sentry's `tunnelRoute` from `next.config.ts`: the browser
+   * posts events to it without a session, so guarding it answers the beacon
+   * with a login redirect and every client-side error is lost in silence.
    */
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|webmanifest|txt|xml)$).*)',
+    '/((?!api|monitoring|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|webmanifest|txt|xml)$).*)',
   ],
 }

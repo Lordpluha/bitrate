@@ -35,9 +35,20 @@ FROM base AS build
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_SITE_URL
 ARG API_URL
+# Sentry. The DSN is inlined into the browser bundle at build time, so it must
+# arrive as a build arg — a runtime-only value never reaches the client. The
+# auth token is a build secret and only enables the source map upload.
+ARG NEXT_PUBLIC_SENTRY_DSN
+ARG NEXT_PUBLIC_SENTRY_ENVIRONMENT
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_RELEASE
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 ENV API_URL=${API_URL}
+ENV NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN}
+ENV NEXT_PUBLIC_SENTRY_ENVIRONMENT=${NEXT_PUBLIC_SENTRY_ENVIRONMENT}
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+ENV SENTRY_RELEASE=${SENTRY_RELEASE}
 ENV NODE_ENV=production
 # This image is the deployable artifact, so the deployment URLs above are
 # demanded here rather than on every `next build`: lint, typecheck and E2E runs
