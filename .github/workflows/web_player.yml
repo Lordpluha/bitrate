@@ -59,6 +59,7 @@ jobs:
   web-player-pr:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
     uses: ./.github/workflows/web_player_reusable.yml
+    secrets: inherit
     with:
       push-image: false
       tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/web-player:pr-${{ github.sha }}
@@ -72,6 +73,7 @@ jobs:
   web-player-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
     uses: ./.github/workflows/web_player_reusable.yml
+    secrets: inherit
     with:
       push-image: true
       tags: |
@@ -97,6 +99,7 @@ jobs:
     # push event for a GITHUB_TOKEN push. See ADR-0029.
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
     uses: ./.github/workflows/web_player_reusable.yml
+    secrets: inherit
     with:
       push-image: true
       # Three tags, and the third one is the rollback handle:
