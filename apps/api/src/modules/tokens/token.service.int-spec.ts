@@ -5,6 +5,19 @@ import { JwtService } from '@nestjs/jwt'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { TokenService } from './token.service'
 
+/**
+ * A cookie config with a `domain`, because that is the case the clear path can get wrong:
+ * a browser only drops a cookie when the clear carries the same attributes it was written
+ * with, so clearing a domain-scoped cookie without the domain leaves the session alive.
+ */
+const COOKIE_CONFIG = {
+  httpOnly: true,
+  sameSite: 'lax' as const,
+  secure: true,
+  path: '/',
+  domain: '.bitrate.me',
+}
+
 const makeJwtServiceMock = () =>
   ({
     signAsync: jest.fn(),
@@ -14,12 +27,13 @@ const makeJwtServiceMock = () =>
 const makeConfigServiceMock = () =>
   ({
     getOrThrow: jest.fn().mockImplementation((key: unknown) => {
-      const config: Record<string, string> = {
+      const config: Record<string, unknown> = {
         JWT_ACCESS_EXPIRES_IN: '15m',
         JWT_REFRESH_EXPIRES_IN: '7d',
         JWT_SECRET: 'test-secret',
         ACCESS_TOKEN_NAME: 'access_token',
         REFRESH_TOKEN_NAME: 'refresh_token',
+        cookie: COOKIE_CONFIG,
       }
       return config[key as string] ?? {}
     }),
@@ -107,12 +121,32 @@ describe('TokenService (int)', () => {
     )
   })
 
-  it('clearAuthCookies should call res.clearCookie for both tokens', () => {
+  it('clearAuthCookies should clear both tokens with the attributes they were written with', () => {
     const res = { clearCookie: jest.fn() } as never
 
     service.clearAuthCookies(res)
 
-    expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledWith('access_token')
-    expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledWith('refresh_token')
+    expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledTimes(2)
+    expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledWith(
+      'access_token',
+      COOKIE_CONFIG,
+    )
+    expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledWith(
+      'refresh_token',
+      COOKIE_CONFIG,
+    )
+  })
+
+  it('clearAuthCookies should omit domain when none is configured', () => {
+    const { domain: _domain, ...withoutDomain } = COOKIE_CONFIG
+    configService.getOrThrow.mockImplementationOnce(() => withoutDomain as never)
+
+    const res = { clearCookie: jest.fn() } as never
+    service.clearAuthCookies(res)
+
+    expect((res as { clearCookie: jest.Mock }).clearCookie).toHaveBeenCalledWith(
+      'access_token',
+      expect.not.objectContaining({ domain: expect.anything() }),
+    )
   })
 })
