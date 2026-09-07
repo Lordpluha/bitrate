@@ -1,5 +1,12 @@
 # @bitrate/web-artists
 
+## 1.0.1
+
+### Patch Changes
+
+- 0ff841a: Upgraded both Next.js apps to 16.3.4. The release removed `experimental.turbopackMemoryLimit`, which the web player used to cap Turbopack's dev cache; it has no replacement, so disabling the Turbopack filesystem cache is now the only lever there.
+- 5b8c7e0: Fixed the artists portal middleware redirecting every visitor to the login page. The guard denied access by default and its exemption list omitted the landing page and the reset-password route, so the portal's only real page was unreachable without a session. It now gates an explicit list of authenticated routes instead, leaving the landing, the auth flows, and static assets public.
+
 ## 1.0.0
 
 ### Major Changes

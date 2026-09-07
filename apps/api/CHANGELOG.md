@@ -1,5 +1,12 @@
 # @bitrate/api
 
+## 1.0.1
+
+### Patch Changes
+
+- 0ff841a: Dropped the non-standard `local` value for `NODE_ENV`. Node tooling recognises only `development`, `production`, and `test` — Next.js warns on anything else and assigns one of the three itself, and Nest never sets the variable at all, so `local` only ever appeared as a schema default that no runtime produced. Both env schemas now accept the three standard values and default to `development`; the Sentry environment fallbacks follow.
+- d373ea9: Fixed logging in leaving the user on the login page. The API issued its session cookies without a `Domain`, so they were host-only on the API's subdomain and the web apps' route guards — running on a different subdomain — never saw a session: login succeeded, the redirect to the player bounced straight back to the login page. The cookies now take an optional `COOKIE_DOMAIN` (e.g. `.bitrate.me`) and are scoped to the parent domain, logout clears them with the same attributes they were written with, and they use `SameSite=Lax` so a link followed from an email or an OAuth provider still carries the session.
+
 ## 1.0.0
 
 ### Major Changes
