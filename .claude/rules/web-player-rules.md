@@ -19,7 +19,10 @@ client, state management, component conventions, and routing below.
 
 ## Path alias
 
-`"@*": ["./src/*"]` in tsconfig. All intra-src imports use `@/`:
+Per-layer aliases in tsconfig — `@/*` plus one entry per FSD layer (`@shared/*`,
+`@entities/*`, …). There is deliberately no `@*` catch-all: it also matched scoped
+packages, so `@sentry/nextjs` resolved to `./src/sentry/nextjs`. All intra-src imports use
+`@/`:
 
 ```ts
 import { usePlayerStore } from '@/entities/Player'

@@ -17,7 +17,7 @@ behind these choices is on the [foundation](./foundation.md) page.
 
 **All-in-one for musicians.**
 
-Bitrate should not position itself as “a better Spotify,” “another distributor,” or “a social network for artists.”
+Bitrate should not position itself as “a better incumbent,” “another distributor,” or “a social network for artists.”
 
 Streaming is one surface of the ecosystem. Distribution is one capability. Communication is one tool. None of them individually defines the company.
 
