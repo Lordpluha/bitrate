@@ -7,12 +7,12 @@ import { nodeProfilingIntegration } from '@sentry/profiling-node'
  * SENTRY_ENVIRONMENT is set by the deploy workflow from the name of the GitHub
  * Environment it deployed, so it is authoritative and independent of NODE_ENV
  * being correct. NODE_ENV is only the fallback for a container started outside
- * that path, and 'local' matches the default in apps/api/env.schema.ts.
+ * that path, and 'development' matches the default in apps/api/env.schema.ts.
  *
  * Read from process.env rather than the validated config because this module is
  * imported before the Nest application, and therefore before ConfigModule, exists.
  */
-const environment = process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || 'local'
+const environment = process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || 'development'
 
 /**
  * Released version this image was built from, as `bitrate-api@<version>`.
