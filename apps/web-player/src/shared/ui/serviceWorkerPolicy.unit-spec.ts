@@ -59,15 +59,15 @@ describe('service worker cache policy', () => {
     expect(deleteCache).not.toHaveBeenCalledWith('third-party-cache')
   })
 
-  it('evicts caches left behind by the pre-rebrand prefix', async () => {
+  it('leaves every cache outside its own prefix alone', async () => {
     const deleteCache = vi.fn().mockResolvedValue(true)
     const listeners = loadWorker({
       delete: deleteCache,
       keys: vi
         .fn()
         .mockResolvedValue([
-          'spotify-web-player-precache-v2',
-          'spotify-web-player-static-v2',
+          'legacy-web-player-precache-v2',
+          'other-app-static-v2',
           'third-party-cache',
         ]),
     })
@@ -80,9 +80,7 @@ describe('service worker cache policy', () => {
     })
     await activation
 
-    expect(deleteCache).toHaveBeenCalledWith('spotify-web-player-precache-v2')
-    expect(deleteCache).toHaveBeenCalledWith('spotify-web-player-static-v2')
-    expect(deleteCache).not.toHaveBeenCalledWith('third-party-cache')
+    expect(deleteCache).not.toHaveBeenCalled()
   })
 
   it('never intercepts mutable media from the API rewrite', () => {

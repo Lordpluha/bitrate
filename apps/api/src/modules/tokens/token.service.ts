@@ -87,10 +87,19 @@ export class TokenService {
     })
   }
 
-  /** Runs the clear auth cookies operation. */
+  /**
+   * Runs the clear auth cookies operation.
+   *
+   * The clearing cookie has to carry the same `domain` and `path` the session was
+   * written with — a bare `clearCookie` writes a host-only cookie that leaves a
+   * domain-scoped session in place, so logout silently does nothing.
+   */
   clearAuthCookies(res: Response) {
-    res.clearCookie(this.configService.getOrThrow('ACCESS_TOKEN_NAME'))
-    res.clearCookie(this.configService.getOrThrow('REFRESH_TOKEN_NAME'))
+    const { httpOnly, sameSite, secure, path, domain } = this.configService.getOrThrow('cookie')
+    const options = { httpOnly, sameSite, secure, path, ...(domain ? { domain } : {}) }
+
+    res.clearCookie(this.configService.getOrThrow('ACCESS_TOKEN_NAME'), options)
+    res.clearCookie(this.configService.getOrThrow('REFRESH_TOKEN_NAME'), options)
   }
 
   /** Returns the cookie name for access or refresh token. */

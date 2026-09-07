@@ -98,14 +98,44 @@ describe('TokenService', () => {
     })
   })
 
-  it('clearAuthCookies should clear access and refresh cookies', () => {
+  it('clearAuthCookies should clear access and refresh cookies with the write-time attributes', () => {
     const res = {
       clearCookie: jest.fn(),
     } as unknown as jest.Mocked<Response>
 
     service.clearAuthCookies(res)
 
-    expect(res.clearCookie).toHaveBeenCalledWith('access_token')
-    expect(res.clearCookie).toHaveBeenCalledWith('refresh_token')
+    const attributes = { httpOnly: true, sameSite: 'lax' as const, secure: false, path: '/' }
+    expect(res.clearCookie).toHaveBeenCalledWith('access_token', attributes)
+    expect(res.clearCookie).toHaveBeenCalledWith('refresh_token', attributes)
+  })
+
+  it('clearAuthCookies should repeat the cookie domain, or a scoped session survives logout', () => {
+    const res = {
+      clearCookie: jest.fn(),
+    } as unknown as jest.Mocked<Response>
+    configMap.set('cookie', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: true,
+      path: '/',
+      domain: '.bitrate.me',
+    })
+
+    try {
+      service.clearAuthCookies(res)
+    } finally {
+      configMap.set('cookie', { httpOnly: true, sameSite: 'lax', secure: false, path: '/' })
+    }
+
+    const attributes = {
+      httpOnly: true,
+      sameSite: 'lax' as const,
+      secure: true,
+      path: '/',
+      domain: '.bitrate.me',
+    }
+    expect(res.clearCookie).toHaveBeenCalledWith('access_token', attributes)
+    expect(res.clearCookie).toHaveBeenCalledWith('refresh_token', attributes)
   })
 })

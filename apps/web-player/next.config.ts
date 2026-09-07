@@ -1,3 +1,4 @@
+import { withSentryConfig } from '@sentry/nextjs/config'
 import type { NextConfig } from 'next'
 import { parseWebEnv } from './env.schema'
 
@@ -11,23 +12,16 @@ const apiBaseUrl =
     '',
   ) ?? 'http://localhost:3000'
 
-/**
- * Target memory ceiling for Turbopack, in bytes.
- *
- * Turbopack keeps its dev cache in memory and, without a target, grows until the
- * machine runs out — this repo saw the dev server sit at 1.5–2.3 GB with a JS
- * heap of only ~160 MB, i.e. the weight was Turbopack's cache, not app code.
- * With a target it evicts instead of accumulating. Raise it if HMR gets slow.
- */
-const TURBOPACK_MEMORY_LIMIT = 1_536 * 1024 * 1024
-
 const nextConfig = {
   experimental: {
     staleTimes: {
       dynamic: 60,
     },
-    turbopackMemoryLimit: TURBOPACK_MEMORY_LIMIT,
     /**
+     * Next 16.3 removed `experimental.turbopackMemoryLimit`, which this config
+     * used to cap Turbopack's in-memory dev cache; there is no replacement knob,
+     * so disabling the filesystem cache below is now the only lever here.
+     *
      * Turbopack's dev filesystem cache is the source of the runaway memory in
      * this repo: measured live, the dev server climbed from 1.6 GB to 6.5 GB in
      * about two minutes and kept growing while completely idle, and
@@ -82,4 +76,19 @@ const nextConfig = {
   },
 } satisfies NextConfig
 
-export default nextConfig
+export default withSentryConfig(nextConfig, {
+  org: 'bitrate-1l',
+  project: 'player',
+  /** Build-time secret, unlike the DSN. Absent, the build just skips the upload. */
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  /** Upload a wider set of client files so browser stack traces resolve. */
+  widenClientFileUpload: true,
+  /**
+   * Route the browser's events through this app's own origin so ad-blockers do
+   * not drop them. It must stay a fixed string and stay excluded from the route
+   * guard's matcher in `src/proxy.ts` — a redirect on this path silently kills
+   * client-side reporting.
+   */
+  tunnelRoute: '/monitoring',
+  silent: !process.env.CI,
+})

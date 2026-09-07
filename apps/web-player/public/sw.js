@@ -1,8 +1,4 @@
 const CACHE_PREFIX = 'bitrate-web-player-'
-// Caches written before the Bitrate rename. The activate sweep below only sees keys under
-// CACHE_PREFIX, so without this the old caches would sit in origin storage forever. Safe to
-// drop one release after every client has updated.
-const LEGACY_CACHE_PREFIXES = ['spotify-web-player-']
 /**
  * Bumped whenever a precached asset's *content* changes under an unchanged URL. `/icon.svg` kept
  * its path through the logo replacement, so every client that had already installed v2 went on
@@ -89,12 +85,9 @@ self.addEventListener('activate', (event) => {
           keys
             .filter(
               (key) =>
-                LEGACY_CACHE_PREFIXES.some((prefix) =>
-                  key.startsWith(prefix),
-                ) ||
-                (key.startsWith(CACHE_PREFIX) &&
-                  key !== PRECACHE_NAME &&
-                  key !== RUNTIME_CACHE_NAME),
+                key.startsWith(CACHE_PREFIX) &&
+                key !== PRECACHE_NAME &&
+                key !== RUNTIME_CACHE_NAME,
             )
             .map((key) => caches.delete(key)),
         ),
