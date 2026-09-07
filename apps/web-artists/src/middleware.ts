@@ -2,32 +2,27 @@ import { ROUTES } from '@shared/routes/routes'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-const AUTH_EXEMPT_PATHS = [
-  '/api',
-  '/_next',
-  '/static',
-  '/favicon.ico',
-  '/robots.txt',
-  '/login',
-  '/registration',
-  '/forgot-password',
-]
+/**
+ * Route prefixes that require an authenticated artist session.
+ * Everything else — the landing page, the auth flows, static assets — is public.
+ * The portal ships no authenticated area yet (see PRODUCT.md); add its prefix
+ * here (e.g. '/dashboard') when one lands.
+ */
+const PROTECTED_PREFIXES: readonly string[] = []
 
-function isExempt(pathname: string) {
-  for (const p of AUTH_EXEMPT_PATHS) {
-    if (pathname === p) return true
-    if (p.endsWith('/') && pathname.startsWith(p)) return true
-    if (pathname.startsWith(p)) return true
-  }
-  if (pathname.match(/\.(png|jpg|jpeg|svg|css|js|map|ico|webmanifest)$/))
-    return true
-  return false
+/** True when `pathname` is the prefix itself or a path segment below it. */
+function isUnder(pathname: string, prefix: string) {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`)
+}
+
+function isProtected(pathname: string) {
+  return PROTECTED_PREFIXES.some((prefix) => isUnder(pathname, prefix))
 }
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
-  if (isExempt(pathname)) return NextResponse.next()
+  if (!isProtected(pathname)) return NextResponse.next()
 
   const refreshCookieName = process.env.REFRESH_TOKEN_NAME || 'refresh_token'
   const hasRefresh = Boolean(req.cookies.get(refreshCookieName)?.value)
@@ -35,7 +30,7 @@ export function middleware(req: NextRequest) {
   if (!hasRefresh) {
     const url = req.nextUrl.clone()
     url.pathname = ROUTES.auth.login
-    url.searchParams.set('next', req.nextUrl.pathname)
+    url.searchParams.set('next', pathname)
     return NextResponse.redirect(url)
   }
 
@@ -43,5 +38,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: '/((?!_next/static|_next/image|favicon.ico).*)',
+  matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)',
 }
