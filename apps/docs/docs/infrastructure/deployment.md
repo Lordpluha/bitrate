@@ -382,6 +382,8 @@ gh run watch "$(gh run list --workflow=release.yml --limit 1 \
 
 # 3. Read the release pull request, then approve and merge it.
 #    The bot is its author, so your approval counts — no --admin needed here.
+#    WAIT for the checks first — see the warning below.
+gh pr checks <n> --watch
 gh pr diff <n> && gh pr review <n> --approve && gh pr merge <n> --merge
 
 # 4. The merge starts the publish run on its own: tag, GitHub Release, five images, deploy.
@@ -394,6 +396,20 @@ gh run view <run id> --web        # Review deployments -> Approve
 # 6. Merge the back-merge pull request the publish run opens into develop.
 gh pr merge <n> --merge
 ```
+
+:::warning Do not merge before the checks report
+`gh pr checks` immediately after the cut reports only the two commit statuses the cut itself
+posts — `bitrate/release-gates` and `bitrate/release-version`. The per-surface workflow runs
+(`[api] Checks`, `[web-player] Checks`, the integration test) take another minute to register,
+so a summary reading "Passed: 2, Failed: 0" means *two things have reported*, not *CI is green*.
+
+Merging at that moment also deletes the head branch, which terminates every in-flight
+`pull_request` run on it. Those runs then show as **failed with zero jobs** — they never
+executed a step. That failure is an artefact of the merge, not a signal about the code, and it
+destroys the evidence you would have wanted.
+
+Use `--watch`, or read the same commit's runs on `develop`, which are unaffected by the merge.
+:::
 
 Then check the result yourself rather than trusting the run's own health job:
 
