@@ -4,7 +4,11 @@ sidebar_position: 1
 
 # Introduction
 
-**Bitrate** is a full-featured music streaming platform built from scratch using modern technologies. This project demonstrates best practices in monorepo architecture, microservices, and cross-platform development.
+**Bitrate** is an all-in-one platform for musicians: a listening surface, an artists portal,
+and the API behind both, in one Turborepo monorepo.
+
+For what the product is *for* — the vision, the roadmaps, and the sequencing behind them —
+start with [Strategy](../strategy/README.md). This page covers the codebase.
 
 ## 🎯 Project Overview
 
@@ -20,8 +24,8 @@ This is a comprehensive music streaming service including:
 
 ### Prerequisites
 
-- **Node.js** 20.0 or above
-- **pnpm** 10.28.1 or above
+- **Node.js** 24 or above (pinned by `engines`)
+- **pnpm** 10.30.3 exactly (pinned by `packageManager`)
 - **Docker** & Docker Compose (optional, for containerized development)
 - **PostgreSQL** 15+ (or use Docker)
 
