@@ -13,7 +13,7 @@ The single most damaging thing that can be done with this page is to treat it as
 equally important work. It is not. It spans four product layers that stack, and a capability
 from layer 3 built before layer 2 works is waste, however good the idea is.
 
-:::note Where an idea goes
+:::note[Where an idea goes]
 A new idea goes **here**, under a zone — not into the delivery roadmap and not into an app.
 Promotion out of this page happens when the validation gate for its layer has been passed.
 :::
