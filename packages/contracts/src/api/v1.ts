@@ -1719,6 +1719,267 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/auth/login': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the login operation. */
+    post: operations['AdminAuthController_login_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/auth/logout': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the logout operation. */
+    post: operations['AdminAuthController_logout_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/auth/refresh': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the refresh operation. */
+    post: operations['AdminAuthController_refresh_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/auth/me': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the get me operation. */
+    get: operations['AdminAuthController_getMe_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/moderation/reports': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list reports operation. */
+    get: operations['AdminModerationController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/moderation/reports/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the get report operation. */
+    get: operations['AdminModerationController_getById_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /** Runs the update report operation. */
+    patch: operations['AdminModerationController_update_v1']
+    trace?: never
+  }
+  '/api/v1/admin/artists': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list artists operation. Available to any staff role. */
+    get: operations['AdminArtistsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/artists/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the get artist operation. Available to any staff role. */
+    get: operations['AdminArtistsController_getById_v1']
+    put?: never
+    post?: never
+    /** Runs the soft-delete operation. Requires the ADMIN role. */
+    delete: operations['AdminArtistsController_remove_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/artists/{id}/verification': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /** Runs the update verification operation. Requires the ADMIN role. */
+    patch: operations['AdminArtistsController_updateVerification_v1']
+    trace?: never
+  }
+  '/api/v1/admin/users': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list users operation. Available to any staff role. */
+    get: operations['AdminUsersController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/users/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the get user operation. Available to any staff role. */
+    get: operations['AdminUsersController_getById_v1']
+    put?: never
+    post?: never
+    /** Runs the soft-delete operation. Requires the ADMIN role. */
+    delete: operations['AdminUsersController_remove_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/tracks': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the list tracks operation. Available to any staff role.
+     * @description Sorted problem-first by default: FAILED, then the longest-stuck PROCESSING rows, then everything else.
+     */
+    get: operations['AdminTracksController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/tracks/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the get track operation. Available to any staff role. */
+    get: operations['AdminTracksController_getById_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/tracks/{id}/reprocess': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the reprocess operation. Requires the ADMIN role. */
+    post: operations['AdminTracksController_reprocess_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/audit': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list audit logs operation. */
+    get: operations['AdminAuditController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -1774,12 +2035,12 @@ export interface components {
     }
     LoginDto: {
       /**
-       * @description User email
-       * @example user@example.com
+       * @description Staff email
+       * @example ops@bitrate.app
        */
       email: string
       /**
-       * @description User password
+       * @description Staff password
        * @example password123
        */
       password: string
@@ -2343,6 +2604,317 @@ export interface components {
       entityId: string
       reason: string
       details?: string
+    }
+    StaffEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The email value. */
+      email: string
+      /** @description The username value. */
+      username: string
+      /**
+       * @description The staff role value.
+       * @enum {string}
+       */
+      role: 'ADMIN' | 'MODERATOR'
+      /** @description Whether two-factor authentication is enabled. */
+      twoFactorEnabled: boolean
+      /** @description Consecutive failed login attempts. */
+      failedLoginAttempts: number
+      /**
+       * Format: date-time
+       * @description Account lock expiration timestamp.
+       */
+      lockedUntil: string | null
+      /**
+       * Format: date-time
+       * @description Soft-delete timestamp.
+       */
+      deletedAt: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    StaffSessionEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The staff id value. */
+      staffId: string
+      /** @description The access token value. */
+      access_token: string
+      /** @description The refresh token value. */
+      refresh_token: string
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The expires at value.
+       */
+      expiresAt: string
+    }
+    AdminModerationReportEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The reporter id value. */
+      reporterId: string
+      /** @description The reported entity's type. */
+      entityType: string
+      /** @description The reported entity's id. */
+      entityId: string
+      /** @description The reason value. */
+      reason: string
+      /** @description The details value. */
+      details?: string | null
+      /**
+       * @description The moderation status value.
+       * @enum {string}
+       */
+      status: 'OPEN' | 'REVIEWING' | 'RESOLVED' | 'REJECTED'
+      /**
+       * Format: date-time
+       * @description When the report was resolved, if it was.
+       */
+      resolvedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedReportsEntity: {
+      /** @description The reports on this page. */
+      data: components['schemas']['AdminModerationReportEntity'][]
+      /** @description The total number of reports matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    UpdateReportDto: {
+      /** @enum {string} */
+      status: 'OPEN' | 'REVIEWING' | 'RESOLVED' | 'REJECTED'
+    }
+    AdminArtistEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The username value. */
+      username: string
+      /** @description The email value. */
+      email: string
+      /** @description The artist bio. */
+      bio?: string | null
+      /** @description The avatar URL. */
+      avatar?: string | null
+      /** @description The profile background image URL. */
+      backgroundImage?: string | null
+      /** @description Whether the artist account is verified. */
+      verified: boolean
+      /** @description Recorded monthly listener count. */
+      monthlyListeners: number
+      /** @description The artist's declared country. */
+      country?: string | null
+      /** @description Whether two-factor authentication is enabled. */
+      twoFactorEnabled: boolean
+      /**
+       * Format: date-time
+       * @description Email verification timestamp.
+       */
+      emailVerifiedAt?: string | null
+      /** @description Consecutive failed login attempts. */
+      failedLoginAttempts: number
+      /**
+       * Format: date-time
+       * @description Account lock expiration timestamp.
+       */
+      lockedUntil?: string | null
+      /**
+       * Format: date-time
+       * @description Soft-delete timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedAdminArtistsEntity: {
+      /** @description The artists on this page. */
+      data: components['schemas']['AdminArtistEntity'][]
+      /** @description The total number of artists matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    UpdateArtistVerificationDto: {
+      verified: boolean
+    }
+    AdminUserEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The username value. */
+      username: string
+      /** @description The email value. */
+      email: string
+      /** @description The avatar URL. */
+      avatar?: string | null
+      /** @description The profile description. */
+      description?: string | null
+      /** @description Whether two-factor authentication is enabled. */
+      twoFactorEnabled: boolean
+      /**
+       * Format: date-time
+       * @description Email verification timestamp.
+       */
+      emailVerifiedAt?: string | null
+      /** @description Consecutive failed login attempts. */
+      failedLoginAttempts: number
+      /**
+       * Format: date-time
+       * @description Account lock expiration timestamp.
+       */
+      lockedUntil?: string | null
+      /**
+       * Format: date-time
+       * @description Soft-delete timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedAdminUsersEntity: {
+      /** @description The users on this page. */
+      data: components['schemas']['AdminUserEntity'][]
+      /** @description The total number of users matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    AdminTrackEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The primary artist's id. */
+      artistId: string
+      /** @description The primary artist's display name — avoids an N+1 lookup on the operator screen. */
+      artistUsername: string
+      /**
+       * @description The processing status value.
+       * @enum {string}
+       */
+      processingStatus: 'PROCESSING' | 'READY' | 'FAILED'
+      /** @description The last recorded processing error, if any. */
+      processingError?: string | null
+      /** @description How many processing attempts have been made. */
+      processingAttempts: number
+      /**
+       * Format: date-time
+       * @description When the current/most-recent processing attempt started.
+       */
+      processingStartedAt?: string | null
+      /**
+       * Format: date-time
+       * @description When processing last finished (success or failure).
+       */
+      processingFinishedAt?: string | null
+      /**
+       * Format: date-time
+       * @description Soft-delete timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedAdminTracksEntity: {
+      /** @description The tracks on this page. */
+      data: components['schemas']['AdminTrackEntity'][]
+      /** @description The total number of tracks matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    AdminAuditLogEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The audited action, e.g. `admin-artists.updateVerification`. */
+      action: string
+      /** @description The controller-derived entity type the action targeted. */
+      entityType: string
+      /** @description The id of the entity the action targeted, if resolvable from the route. */
+      entityId?: string | null
+      /** @description The raw user id of the actor, if the actor was an end user. */
+      userId?: string | null
+      /** @description The raw staff id of the actor, if the actor was a staff operator. */
+      staffId?: string | null
+      /**
+       * @description The actor's display username — resolved server-side so the operator screen
+       *     never has to N+1 a lookup per row. `null` when the actor could not be
+       *     resolved (e.g. the account was later deleted).
+       */
+      actorUsername?: string | null
+      /** @description Freeform metadata captured at audit time. */
+      metadata?: Record<string, never> | null
+      /** @description The originating request's IP address, if recorded. */
+      ipAddress?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+    }
+    PaginatedAdminAuditLogsEntity: {
+      /** @description The audit log rows on this page. */
+      data: components['schemas']['AdminAuditLogEntity'][]
+      /** @description The total number of rows matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
     }
   }
   responses: never
@@ -17209,6 +17781,2528 @@ export interface operations {
         content: {
           'application/json': Record<string, never>
         }
+      }
+    }
+  }
+  AdminAuthController_login_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LoginDto']
+      }
+    }
+    responses: {
+      /** @description Logged in — sets access_token and refresh_token cookies, no body. */
+      201: {
+        headers: {
+          /** @description HttpOnly cookies: access_token and refresh_token */
+          'Set-Cookie'?: string
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Validation error */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          /**
+           * @example {
+           *       "errors": [
+           *         {
+           *           "field": "email",
+           *           "message": "email must be an email"
+           *         }
+           *       ]
+           *     }
+           */
+          'application/json': unknown
+        }
+      }
+      /** @description Invalid credentials */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Account is temporarily locked */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminAuthController_logout_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successfully logged out */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminAuthController_refresh_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Token refreshed */
+      201: {
+        headers: {
+          /** @description HttpOnly cookies: access_token and refresh_token */
+          'Set-Cookie'?: string
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminAuthController_getMe_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description The authenticated staff member */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['StaffEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminModerationController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'OPEN' | 'REVIEWING' | 'RESOLVED' | 'REJECTED'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of moderation reports */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedReportsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminModerationController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminModerationReportEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Report not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminModerationController_update_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateReportDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminModerationReportEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Report not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminArtistsController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        verified?: boolean
+        /** @description Search username/email */
+        q?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of artists */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminArtistsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminArtistsController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminArtistEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Artist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminArtistsController_remove_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminArtistEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Requires the ADMIN role
+       *
+       *     Insufficient staff role
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Artist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminArtistsController_updateVerification_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateArtistVerificationDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminArtistEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Requires the ADMIN role
+       *
+       *     Insufficient staff role
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Artist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminUsersController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        /** @description Search username/email */
+        q?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of users */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminUsersEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminUsersController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminUserEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminUsersController_remove_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminUserEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Requires the ADMIN role
+       *
+       *     Insufficient staff role
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminTracksController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        processingStatus?: 'PROCESSING' | 'READY' | 'FAILED'
+        /** @description Search by title */
+        q?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of tracks */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminTracksEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminTracksController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminTrackEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Track not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminTracksController_reprocess_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminTrackEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Requires the ADMIN role
+       *
+       *     Insufficient staff role
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Track not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminAuditController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        entityType?: string
+        staffId?: string
+        from?: string
+        to?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of audit log entries */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminAuditLogsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Insufficient staff role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
     }
   }

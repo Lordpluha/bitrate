@@ -1,3 +1,5 @@
 export * from './dtos'
 export * from './entities'
+export * from './track-upload.service'
+export * from './tracks.module'
 export * from './types'
