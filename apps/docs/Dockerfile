@@ -7,7 +7,7 @@
 # the build runs removes the guesswork about which per-package directories exist.
 
 # Stage 1: Base
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
@@ -31,7 +31,7 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile --
 RUN NODE_ENV=production pnpm --filter @bitrate/docs run build
 
 # Stage 4: Production
-FROM nginx:1.27-alpine AS production
+FROM nginx:1.31-alpine AS production
 COPY --from=build /app/apps/docs/build /usr/share/nginx/html
 COPY infra/nginx/static-site.conf /etc/nginx/nginx.conf
 RUN chown -R nginx:nginx /usr/share/nginx/html

@@ -1,7 +1,7 @@
 # Dockerfile для Desktop приложения с VNC поддержкой
 # Позволяет запускать GUI Tauri приложение в контейнере с доступом через VNC
 
-FROM ubuntu:22.04
+FROM ubuntu:26.04
 
 # Избежать интерактивных prompts при установке
 ENV DEBIAN_FRONTEND=noninteractive

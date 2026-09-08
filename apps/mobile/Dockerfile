@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile для Mobile (Expo)
 
 # Stage 1: Base
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 RUN corepack enable && corepack prepare pnpm@10.30.3 --activate
 WORKDIR /app
 
