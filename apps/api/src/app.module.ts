@@ -7,6 +7,7 @@ import { MetricsService } from '@infra/observability/metrics.service'
 import { RedisThrottlerStorage } from '@infra/observability/redis-throttler.storage'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { StorageModule } from '@infra/storage/storage.module'
+import { AdminModule } from '@modules/admin'
 import { AlbumsModule } from '@modules/albums/albums.module'
 import { ArtistsModule } from '@modules/artists/artists.module'
 import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
@@ -99,6 +100,7 @@ import { HttpCacheInterceptor } from './common/interceptors/http-cache.intercept
     MeModule,
     PodcastsModule,
     ModerationModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [
