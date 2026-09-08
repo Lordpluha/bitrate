@@ -58,9 +58,9 @@ ships". CMAF has shipped. Decide the retirement path and stop paying for both.
 `continue-on-error: true`, and Trivy sets no exit code. All three report; none of them can fail
 a build. That is a reporting pipeline being mistaken for a control.
 
-Two documentation drifts worth correcting while nearby: `PRODUCT.md` and the delivery roadmap
-both describe search as "PostgreSQL FTS + GIN indexes", which is not what the code does; and
-`apps/web-artists` has no Sentry dependency, so one of the two web apps reports nothing.
+One documentation drift remains: `apps/web-artists` has no Sentry dependency, so one of the
+two web apps reports nothing. (`PRODUCT.md` and the delivery roadmap used to describe search as
+"PostgreSQL FTS + GIN indexes"; both now say trigram, which is what the code does.)
 
 ## Stage 1 — make the foundation honest
 

@@ -77,7 +77,8 @@ this question to be answered first, not assumed.
   CRUD; static file serving.
 - Like/unlike for tracks, albums, and playlists; follow/unfollow artists; listening history;
   playlist management with owner permissions.
-- Full-text search across tracks, artists, albums, and playlists (PostgreSQL FTS + GIN).
+- Fuzzy search across tracks, artists, albums, and playlists (PostgreSQL `pg_trgm`
+  trigram similarity plus `ILIKE`, with GIN trigram indexes — not full-text search).
 
 **Built but incomplete — UI lags the API.** Several capabilities exist server-side with the
 listener-facing UI still unbuilt: search page, artist page, album page, listening-history
