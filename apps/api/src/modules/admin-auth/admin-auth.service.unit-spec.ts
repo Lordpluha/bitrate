@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { HttpException, UnauthorizedException } from '@nestjs/common'
 import type { JwtService } from '@nestjs/jwt'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import type { TokenService } from '../tokens/token.service'
 import { buildStaff } from './__tests__/fixtures/admin-auth.fixtures'
 import { AdminAuthService } from './admin-auth.service'
-import type { TokenService } from '../tokens/token.service'
 
 const makeTokenServiceMock = () => {
   const mock = {
