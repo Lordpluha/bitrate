@@ -1,5 +1,5 @@
-import { ArtistView } from '@views/ArtistView'
 import { createFileRoute } from '@tanstack/react-router'
+import { ArtistView } from '@views/ArtistView'
 
 export const Route = createFileRoute('/')({
   component: Artist,
