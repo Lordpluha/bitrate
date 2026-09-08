@@ -3,14 +3,17 @@
     <nav class="w-56 shrink-0 border-r border-border bg-card p-4" aria-label="Sections">
       <p class="mb-6 text-sm font-semibold text-card-foreground">Bitrate operators</p>
       <ul class="space-y-1">
-        <li>
-          <a
-            class="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
-            routerLink="/moderation"
-          >
-            Moderation queue
-          </a>
-        </li>
+        @for (item of navItems; track item.path) {
+          <li>
+            <a
+              class="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
+              [routerLink]="item.path"
+              routerLinkActive="bg-muted font-medium"
+            >
+              {{ item.label }}
+            </a>
+          </li>
+        }
       </ul>
     </nav>
 
