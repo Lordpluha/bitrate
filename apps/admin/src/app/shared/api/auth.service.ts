@@ -43,6 +43,14 @@ export class AuthService {
     }
   }
 
+  /**
+   * Only reachable while the development auth bypass is on — see `auth.guard.ts`. The branch
+   * that calls it is dropped from a production build, so this is unreachable there.
+   */
+  useBypassStaff(staff: Staff): void {
+    this.staff.set(staff)
+  }
+
   async logout(): Promise<void> {
     try {
       await firstValueFrom(

@@ -33,7 +33,8 @@
     "db:gen:prod": "prisma generate",
     "db:ui": "prisma studio",
     "db:seed": "prisma db seed",
-    "doc:gen": "pnpm dlx @compodoc/compodoc -p tsconfig.json -s -d docs"
+    "doc:gen": "pnpm dlx @compodoc/compodoc -p tsconfig.json -s -d docs",
+    "db:seed:staff": "cross-env TS_NODE_PROJECT=tsconfig.seed.json node -r ts-node/register/transpile-only -r tsconfig-paths/register src/infra/seeds/seed-staff.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

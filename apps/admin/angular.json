@@ -24,9 +24,12 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css"
+            ],
             "define": {
-              "NG_APP_API_URL": "\"http://localhost:3000\""
+              "NG_APP_API_URL": "\"http://localhost:3000\"",
+              "NG_APP_AUTH_BYPASS": "false"
             }
           },
           "configurations": {
@@ -43,12 +46,20 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "define": {
+                "NG_APP_API_URL": "\"http://localhost:3000\"",
+                "NG_APP_AUTH_BYPASS": "false"
+              }
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "define": {
+                "NG_APP_API_URL": "\"http://localhost:3000\"",
+                "NG_APP_AUTH_BYPASS": "true"
+              }
             }
           },
           "defaultConfiguration": "production"
@@ -73,7 +84,9 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "tsconfig.spec.json",
-            "include": ["src/**/*.unit-spec.ts"]
+            "include": [
+              "src/**/*.unit-spec.ts"
+            ]
           }
         }
       }

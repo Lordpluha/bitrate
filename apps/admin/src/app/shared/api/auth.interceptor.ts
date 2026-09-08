@@ -8,6 +8,9 @@ import { API_BASE_URL } from './api.config'
 /** Endpoints that must never trigger a refresh — a 401 from them IS the answer. */
 const NO_REFRESH = ['/admin/auth/login', '/admin/auth/refresh', '/admin/auth/logout']
 
+/** See `auth.guard.ts` — true only in the development configuration, dropped from a production build. */
+declare const NG_APP_AUTH_BYPASS: boolean
+
 /**
  * Mirrors the refresh middleware the artists portal runs: on a 401, try the refresh endpoint
  * once, then replay the original request. Tokens are httpOnly cookies, so nothing is read or
@@ -30,7 +33,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         .pipe(
           switchMap(() => next(authed)),
           catchError((refreshError: unknown) => {
-            void router.navigate(['/login'])
+            /**
+             * Without this the bypass would only get you past the guard: the first API call
+             * still 401s, the refresh still fails, and the redirect would bounce you to the
+             * login screen the bypass exists to skip.
+             */
+            const bypassing = typeof NG_APP_AUTH_BYPASS !== 'undefined' && NG_APP_AUTH_BYPASS
+            if (!bypassing) void router.navigate(['/login'])
             return throwError(() => refreshError)
           }),
         ) as Observable<never>
