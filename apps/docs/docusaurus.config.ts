@@ -13,7 +13,35 @@ const config: Config = {
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
   },
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: [
+    '@docusaurus/theme-mermaid',
+    [
+      '@easyops-cn/docusaurus-search-local',
+      /**
+       * Search runs entirely in the browser against an index built at compile time, so it
+       * ships inside the docs image and adds no third-party processor — see the law
+       * roadmap, which requires a DPA for every service user data reaches. Algolia
+       * DocSearch would have meant an application, an API key, and every query leaving
+       * the site.
+       *
+       * `ru` is listed alongside `en` because part of the guides is written in Russian;
+       * without its stemmer those pages index by exact word form only.
+       */
+      {
+        hashed: true,
+        indexDocs: true,
+        indexBlog: true,
+        indexPages: false,
+        docsRouteBasePath: '/docs',
+        blogRouteBasePath: '/blog',
+        language: ['en', 'ru'],
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+        searchResultLimits: 10,
+        searchResultContextMaxLength: 60,
+      },
+    ],
+  ],
   // In order for Mermaid code blocks in Markdown to work,
   // you also need to enable the Remark plugin with this option
   markdown: {
@@ -91,6 +119,8 @@ const config: Config = {
           label: 'GitHub',
           position: 'right',
         },
+        /** Placed last so the search box sits at the far right of the navbar. */
+        { type: 'search', position: 'right' },
       ],
     },
     footer: {
