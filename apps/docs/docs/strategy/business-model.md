@@ -33,7 +33,7 @@ one at a time.
 
 It is also the only model where the first euro is reachable in [phase 4](./validation.md#phase-4--first-market)
 rather than year three. That single fact is why the whole strategy is
-[artist-first](./vision.md#the-open-question).
+[artist-first](./vision.md#the-decision-artist-first).
 
 ## Pricing hypothesis
 

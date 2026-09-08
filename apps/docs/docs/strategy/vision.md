@@ -313,26 +313,32 @@ a way somebody notices:
 None of these is fatal on its own. All of them are cheaper to discover in
 [phase 1](./validation.md#phase-1--validation) than in year two.
 
-## The open question
+## The decision: artist-first
 
-`PRODUCT.md` names **listeners** as the primary audience. This document names **artists**.
-That is a genuine fork, and it has to be chosen rather than averaged:
+`PRODUCT.md` used to name **listeners** as the primary audience while this document named
+**artists**. That fork is now closed: Bitrate is **artist-first**, recorded in
+[ADR-0032](../architecture/0032-artist-first.md) and reflected in `PRODUCT.md`.
 
-**Option A — artist-first.** Build the release workflow. Success is measured in completed
-releases and artist retention. The player becomes a supporting surface: it makes an artist's
-page worth linking to. Revenue arrives early, from artists, in a market where people already
-pay for these tools. The risk is that the listener side stays thin for years, and that the
-product is judged as a distributor with a weak catalogue.
+The independent artist is the customer. The listening surface is a supporting surface — it makes
+an artist's page worth linking to, and it is the listener-acquisition channel a pure streaming
+competitor cannot copy without first becoming a distributor. Success is measured in
+[completed releases](./metrics.md#the-north-star), not listener retention.
 
-**Option B — listener-first.** Finish the player, discovery and social layers. Success is
-measured in listening retention. Revenue arrives late, because listener subscriptions require
-scale and a catalogue Bitrate cannot license. The risk is competing directly with companies
-that have a decade and a billion dollars of head start, on the one axis where they are
-strongest.
+What decided it was not preference. Listener-first has no reachable revenue: a listener
+subscription needs a catalogue Bitrate cannot license at a scale it does not have. Artist-first
+has an expensive gate — the artist agreement, a distribution partner, payments — but it is a
+gate with something on the other side of it. And the
+[1,000-stream floor](./music-business.md#the-money-honestly) means a listener-first product has
+nothing to offer the artist this is built for, whose streaming income is not small but absent.
 
-The whole of this section is written on the assumption of **Option A**, because it is the only
-one where the first euro of revenue is reachable without licensing a catalogue. But it is an
-assumption, and it is the user's call — not a decision that should be settled by whichever
-document was edited most recently.
+**The known risk, accepted deliberately.** The recommendation on record was to run ten
+[concierge releases](./validation.md#the-rule) before building anything — weeks of work, no
+legal entity, no code, and it tests the hypothesis before paying for it. The decision was to
+build the workspace instead. That means the cost of being wrong about the customer is months
+rather than weeks. ADR-0032 records this so it is not re-argued later; interviews are reordered,
+not cancelled.
 
-Once chosen, record it as an ADR and update `PRODUCT.md` and this page together.
+Two things follow that are easy to get wrong. The 25 existing player routes are not wasted —
+they become the artist's shopfront, though they are not where new investment goes. And the
+expensive gate does not have to be paid up front: the workspace is buildable and usable before
+distribution is wired to any DSP.

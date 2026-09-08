@@ -14,16 +14,26 @@ conventions, so native platform guidance applies to its design work when it begi
 
 ## Users
 
-**Listeners — primary.** People who want to play music: browse, search, build and manage
-playlists, like tracks/albums/playlists, follow artists, and return to what they were
-recently playing. Served by `apps/web-player` (Next.js, port 3001), later by the mobile and
-desktop apps. This is the audience the product's success is measured against.
+**Artists — primary, and almost entirely unbuilt.** Independent musicians publishing through
+the platform: upload tracks and metadata, maintain a public artist page, and eventually run a
+release end to end and read what happened. **This is the audience the product's success is
+measured against** — the metric is artists completing a release, not listener retention. Served
+by `apps/web-artists` (port 3002), which today implements only the auth surface: login,
+registration, forgot/reset password. Artists have their own credentials, OAuth, and account
+model, separate from listener accounts.
 
-**Artists — secondary, early.** Musicians publishing to the platform: upload tracks and
-metadata, maintain a public artist page, and (roadmap v0.6.0) read analytics on plays,
-followers, and geography. Served by `apps/web-artists` (port 3002), which today implements
-only the auth surface — login, registration, forgot/reset password. Artists have their own
-credentials, OAuth, and account model, separate from listener accounts.
+Note the gap between those two sentences. Artists are primary by decision
+([ADR-0032](apps/docs/docs/architecture/0032-artist-first.md)), not by present state — there is
+no artist product yet. Design work here is greenfield, and nothing about the existing artist
+surface should be read as established convention.
+
+**Listeners — the supporting surface, and the mature one.** People who want to play music:
+browse, search, build and manage playlists, like tracks/albums/playlists, follow artists, and
+return to what they were recently playing. Served by `apps/web-player` (Next.js, port 3001),
+later by the mobile and desktop apps. This is where nearly all the product that exists lives,
+and it stays the reference for how this product looks and behaves. Under the artist-first
+decision it exists to make an artist's page worth linking to — it is not where new investment
+goes, but it is not deprecated either.
 
 **Operators — internal.** Staff uploading catalog, managing artists and users, and
 moderating content. There is no operator surface today: the Kottster admin panel was removed
@@ -157,8 +167,10 @@ Author: Vladyslav Tesliuk (github.com/Lordpluha). MIT licensed.
 
 ## Product Principles
 
-1. **Playback is the product; everything else is navigation.** When a decision trades away
-   the immediacy or reliability of getting sound out of the speakers, it loses.
+1. **Within the player, playback is the product; everything else is navigation.** When a
+   decision trades away the immediacy or reliability of getting sound out of the speakers, it
+   loses. This governs the listening surface, not the company: the product Bitrate sells is the
+   artist's workflow ([ADR-0032](apps/docs/docs/architecture/0032-artist-first.md)).
 2. **Design for the return visit, not the first one.** Library, recents, and liked songs are
    where a real listener actually lives. A surface that only impresses on first load has
    optimized for the wrong session.

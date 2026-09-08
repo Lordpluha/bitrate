@@ -23,7 +23,7 @@ The [four layers](./README.md#the-four-layers) are a **value stack**: how the pr
 compounds, and where the defensible part sits. They are *not* a build order, and reading them
 as one is the mistake this page most wants to prevent.
 
-Under [Option A](./vision.md#the-open-question) — the assumption the whole section runs on —
+Under [Option A](./vision.md#the-decision-artist-first) — the assumption the whole section runs on —
 the **Artist Workspace is built first**, and the Player is a supporting surface that makes an
 artist's page worth linking to. Numbering the Player as layer 1 describes where it sits in the
 value stack, not when it gets built.
@@ -38,9 +38,9 @@ value stack, not when it gets built.
 | Marketplace, Platform | Ecosystem | a core worth extending |
 
 So a capability from the AI zone built before the workspace works is waste, however good the
-idea. A capability from the Player zone built first is not waste — it is simply the other
-strategy, and choosing it means answering
-[the open question](./vision.md#the-open-question) differently.
+idea. A capability from the Player zone built first is not waste — but it is the other strategy,
+and building it now means reversing
+[ADR-0032](../architecture/0032-artist-first.md) rather than filling a gap.
 
 ## Player / Listener Experience
 
