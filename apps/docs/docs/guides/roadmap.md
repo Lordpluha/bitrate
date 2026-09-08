@@ -92,7 +92,7 @@ sidebar_position: 1
 
 ## v0.9.0-additional
 - [x] Like / Unlike — tracks, albums, playlists
-- [x] Full-text search — tracks, artists, albums, playlists (PostgreSQL FTS + GIN indexes)
+- [x] Fuzzy search — tracks, artists, albums, playlists (PostgreSQL `pg_trgm` trigram + GIN)
 - [x] Listening history
 - [x] Follow / Unfollow artists
 - [x] Playlist management — add/remove tracks, owner permissions

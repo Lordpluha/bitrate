@@ -35,8 +35,8 @@ const FeatureList: FeatureItem[] = [
     emoji: '🏗️',
     description: (
       <>
-        Monorepo with <strong>Turborepo</strong>, microservices architecture, Docker
-        containerization and production-ready setup.
+        Monorepo with <strong>Turborepo</strong>, a modular NestJS backend, Docker containerization
+        and production-ready setup.
       </>
     ),
   },
