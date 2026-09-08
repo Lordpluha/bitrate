@@ -1,0 +1,81 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Audit log</h1>
+    <p class="text-sm text-muted-foreground">
+      Every operator mutation, newest first. Read-only — entries cannot be edited or removed from
+      here.
+    </p>
+  </header>
+
+  <form class="flex gap-2" (ngSubmit)="applyFilters()">
+    <label class="sr-only" for="audit-entity">Filter by entity type</label>
+    <input
+      hlmInput
+      class="w-64"
+      id="audit-entity"
+      type="search"
+      placeholder="Entity type, e.g. Track"
+      [value]="entityType()"
+      (input)="entityType.set($any($event.target).value)"
+    />
+    <button hlmBtn size="sm" variant="outline" type="submit">Filter</button>
+  </form>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No audit entries match this filter."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Recorded operator actions
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">When</th>
+            <th hlmTh scope="col">Who</th>
+            <th hlmTh scope="col">Action</th>
+            <th hlmTh scope="col">Entity</th>
+            <th hlmTh scope="col">From</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (entry of collection.items(); track entry.id) {
+            <tr hlmTr>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ entry.createdAt | date: 'dd.MM.yyyy HH:mm:ss' }}
+              </td>
+              <td hlmTd>{{ entry.actorName ?? 'system' }}</td>
+              <td hlmTd>
+                <span hlmBadge variant="outline">{{ entry.action }}</span>
+              </td>
+              <td hlmTd>
+                <span class="text-muted-foreground">{{ entry.entityType }}</span>
+                @if (entry.entityId) {
+                  <span class="ml-2 font-mono text-xs text-muted-foreground">
+                    {{ entry.entityId.slice(0, 8) }}
+                  </span>
+                }
+              </td>
+              <td hlmTd class="font-mono text-xs text-muted-foreground">
+                {{ entry.ipAddress ?? '—' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="collection.goTo($event)"
+    />
+  }
+</section>

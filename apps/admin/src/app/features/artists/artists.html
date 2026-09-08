@@ -1,0 +1,122 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Artists</h1>
+    <p class="text-sm text-muted-foreground">
+      Verification and account state. Deactivating is reversible — it sets a deletion date, it does
+      not erase the catalog.
+    </p>
+  </header>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <form class="flex gap-2" (ngSubmit)="applyFilters()">
+      <label class="sr-only" for="artist-search">Search artists</label>
+      <input
+        hlmInput
+        class="w-64"
+        id="artist-search"
+        type="search"
+        placeholder="Username or email"
+        [value]="query()"
+        (input)="query.set($any($event.target).value)"
+      />
+      <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
+    </form>
+
+    <div class="flex gap-2">
+      @for (option of ['all', 'verified', 'unverified']; track option) {
+        <button
+          hlmBtn
+          size="sm"
+          type="button"
+          [variant]="verified() === option ? 'default' : 'outline'"
+          (click)="setVerifiedFilter($any(option))"
+        >
+          {{ option }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No artists match this filter."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Artist accounts
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Artist</th>
+            <th hlmTh scope="col">Email</th>
+            <th hlmTh scope="col">Verified</th>
+            <th hlmTh scope="col">Monthly listeners</th>
+            <th hlmTh scope="col">Joined</th>
+            <th hlmTh scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (artist of collection.items(); track artist.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                {{ artist.username }}
+                @if (artist.deletedAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">deactivated</span>
+                }
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ artist.email }}</td>
+              <td hlmTd>
+                <span hlmBadge [variant]="artist.verified ? 'default' : 'outline'">
+                  {{ artist.verified ? 'verified' : 'unverified' }}
+                </span>
+              </td>
+              <td hlmTd class="tabular-nums">{{ artist.monthlyListeners }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ artist.createdAt | date: 'dd.MM.yyyy' }}
+              </td>
+              <td hlmTd>
+                <div class="flex gap-2">
+                  <button
+                    hlmBtn
+                    size="sm"
+                    variant="outline"
+                    type="button"
+                    [disabled]="busyId() === artist.id"
+                    (click)="toggleVerification(artist)"
+                  >
+                    {{ artist.verified ? 'Unverify' : 'Verify' }}
+                  </button>
+                  @if (!artist.deletedAt) {
+                    <button
+                      hlmBtn
+                      size="sm"
+                      variant="ghost"
+                      type="button"
+                      [disabled]="busyId() === artist.id"
+                      (click)="remove(artist)"
+                    >
+                      Deactivate
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="collection.goTo($event)"
+    />
+  }
+</section>
