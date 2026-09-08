@@ -11,7 +11,10 @@
     "lint": "pnpm exec biome lint --error-on-warnings",
     "lint:fix": "pnpm exec biome lint --write",
     "check-types": "tsc --noEmit",
-    "format": "pnpm exec biome format --write"
+    "format": "pnpm exec biome format --write",
+    "test": "pnpm test:unit && pnpm test:int",
+    "test:unit": "vitest run --project=unit",
+    "test:int": "vitest run --project=integration --passWithNoTests"
   },
   "dependencies": {
     "@bitrate/ui-react": "workspace:*",
@@ -34,13 +37,17 @@
     "@bitrate/contracts": "workspace:*",
     "@tailwindcss/vite": "^4.3.1",
     "@tanstack/nitro-v2-vite-plugin": "^1.155.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^25.9.3",
     "@types/react": "~19.2.17",
     "@types/react-dom": "~19.2.3",
     "@types/react-transition-group": "^4.4.12",
     "@vitejs/plugin-react": "^6.1.1",
+    "jsdom": "^26.1.0",
     "tailwindcss": "^4.3.1",
     "typescript": "^6.0.3",
-    "vite": "^8.2.2"
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }
