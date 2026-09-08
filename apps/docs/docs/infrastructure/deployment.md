@@ -397,7 +397,7 @@ gh run view <run id> --web        # Review deployments -> Approve
 gh pr merge <n> --merge
 ```
 
-:::warning Do not merge before the checks report
+:::warning[Do not merge before the checks report]
 `gh pr checks` immediately after the cut reports only the two commit statuses the cut itself
 posts — `bitrate/release-gates` and `bitrate/release-version`. The per-surface workflow runs
 (`[api] Checks`, `[web-player] Checks`, the integration test) take another minute to register,
@@ -872,7 +872,7 @@ gh workflow run deploy.yml \
 
 Then approve the run at the `production` environment, exactly as for a normal deploy.
 
-:::warning This needs the tag policy from § One-time setup
+:::warning[This needs the tag policy from § One-time setup]
 
 Deploying at a tag works only once `v*` is on the `production` environment's allowed-ref list.
 Without it the job is refused by environment policy **before any step runs** — two seconds, no log,
