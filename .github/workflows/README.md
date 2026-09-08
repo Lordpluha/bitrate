@@ -262,9 +262,50 @@ coupling this chain removed.
 - monitoring.yml — release monitoring for develop/master (schedule, push, workflow_dispatch).
 - monitoring_reusable.yml — monitoring orchestration reusable workflow.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_image_size_reusable.yml / monitoring_ssl_reusable.yml / monitoring_backup_reusable.yml — smaller reusable monitoring blocks.
+- monitoring_restore_reusable.yml — the **restore rehearsal**. Runs on the master job only.
+  Pulls the newest object out of the backup bucket, restores it into a throwaway Postgres, and
+  asserts the schema and row counts that come back. `monitoring_backup_reusable.yml` proves a
+  recent file is on the server; this proves the off-host copy is a database.
+
+### Backups
+
+- backup.yml — daily off-host production backup (`17 3 * * *`) plus `workflow_dispatch`.
+- backup_reusable.yml — the implementation.
+
+**Where the credentials are, and are not.** `infra/backup.sh` runs on the server, writes into
+`$DEPLOY_PATH/backups`, and uploads nothing. `backup_reusable.yml` streams those files to the
+runner over SSH, verifies a sha256 on both ends, and uploads from the runner. The
+object-storage keys therefore live only in GitHub — a host that is lost or compromised cannot
+reach the copies that outlive it. Do **not** "simplify" this by pushing to the bucket from the
+server; see [ADR-0033](../../apps/docs/docs/architecture/0033-off-host-backups-and-object-storage.md).
+
+The script is piped in over stdin (`ssh … bash -s < infra/backup.sh`) rather than run from the
+server's checkout, so the version that runs is the one in the workflow's commit, whether or not
+the last deploy synced `infra/`.
+
+**Deliberately not bound to the `production` GitHub Environment.** That environment gates on a
+human reviewer, and a backup waiting for an approval at 03:00 is a backup that did not happen.
+Its configuration is repository-scoped, like the monitoring workflow's:
+
+| Name | Kind | Notes |
+|---|---|---|
+| `BACKUP_S3_ENDPOINT` | variable | `https://…`. Any S3 API — R2, B2, Wasabi, Hetzner, MinIO. |
+| `BACKUP_S3_BUCKET` | variable | The backup bucket. **Not** the media bucket. |
+| `BACKUP_S3_REGION` | variable | Optional, defaults to `auto` (correct for R2). |
+| `BACKUP_S3_PREFIX` | variable | Optional, defaults to `production`. |
+| `BACKUP_S3_ACCESS_KEY_ID` | secret | Needs `PutObject` + `ListBucket`. No delete. |
+| `BACKUP_S3_SECRET_ACCESS_KEY` | secret | |
+| `BACKUP_S3_READ_ACCESS_KEY_ID` | secret | Optional, read-only, for the restore rehearsal. Falls back to the writing key. |
+| `BACKUP_S3_READ_SECRET_ACCESS_KEY` | secret | |
+| `SERVER_HOST` / `SERVER_USER` / `SSH_PRIVATE_KEY` / `DEPLOY_PATH` | secrets | Already set; shared with monitoring.yml. |
+| `SERVER_SSH_HOST_KEY` | secret | Optional. Without it the host key is scanned once per run (trust on first use). |
+
+Retention in the bucket is a **lifecycle rule set on the bucket**, not a workflow step, so the
+credential above never needs `DeleteObject` and a leaked key cannot destroy the history it just
+wrote. `prune-remote` exists for a provider with no lifecycle support and is off.
 
 ## Structure Summary
-- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, backup.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 

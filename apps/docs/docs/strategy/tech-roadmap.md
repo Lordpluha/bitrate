@@ -58,22 +58,28 @@ ships". CMAF has shipped. Decide the retirement path and stop paying for both.
 `continue-on-error: true`, and Trivy sets no exit code. All three report; none of them can fail
 a build. That is a reporting pipeline being mistaken for a control.
 
-**5. The backups are on the machine they protect, and the audio has none.** `task prod:backup`
-dumps the database into `$DEPLOY_PATH/backups` on the server itself. Nothing copies it
-anywhere else — there is no `aws s3 cp`, no `rclone`, no off-host rsync in the Taskfile or in
-any workflow. A disk failure or a lost host takes the database and its backups together, which
-makes them a copy rather than a backup.
+**5. The backups did not exist, and the audio was not persisted.** Addressed by
+[ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md); the code has landed
+and the operator steps in that ADR have not all been run yet. What was actually true, since the
+earlier description of this item on this page was itself wrong in the reassuring direction:
 
-The monitoring job checks that the newest dump is recent and readable. **Nothing has ever
-restored one**, so what is verified is that a file exists, not that it contains a recoverable
-database.
+- `task prod:backup` **did not exist**. This page and `Taskfile.yml`'s `db:backup` description
+  both referred to it; no revision ever defined it. Nothing has written a production dump.
+- Where the dumps would have gone was `$DEPLOY_PATH/backups` on the server — the disk they
+  protect. There was no `aws s3 cp`, no `rclone`, no off-host rsync anywhere.
+- The monitoring job checked that the newest file was recent and non-empty. **Nothing had ever
+  restored one**, so what was verified was that a file exists.
+- Uploaded audio was not merely un-backed-up. The production entrypoint runs from `/app`, so
+  the API wrote every upload under `/app/storage`, and the two mounts the compose file declared
+  (`../apps/api/uploads`, `../apps/api/public`) pointed at paths nothing has ever written to.
+  `/app/storage` was mounted nowhere: **the masters lived in the container's writable layer and
+  were destroyed by every deploy.** Backing up "the uploads directory" would have archived an
+  empty directory Docker created for the bind mount.
 
-Worse, nothing backs up `uploads` at all — the directory production bind-mounts at
-`/app/apps/api/uploads`. Whether that matters depends on a value this repository cannot see:
-if production runs `STORAGE_DRIVER=s3` the audio is in object storage with its own durability,
-and if it runs the schema default of `local` then **the master recordings artists uploaded
-exist in exactly one place with no copy**. Establish which it is before anything else on this
-page, because it changes that sentence from a note into an emergency.
+The storage driver question this page raised is settled: production runs the `local` default,
+because `STORAGE_DRIVER` is not set as a production environment variable and no `S3_*` secrets
+exist. The decision is to move the audio to `STORAGE_DRIVER=s3`, which also removes the
+single-host pin listed below.
 
 This is the one defect where the failure is not recoverable by fixing code afterwards. A
 platform whose pitch is that artists entrust it with their masters cannot be the reason those
@@ -98,10 +104,9 @@ and they currently are not.
 | Retire the duplicate HLS encode | Halves transcode cost and removes a fork in the delivery path |
 | Make the scanners gate | A control that cannot fail is not a control |
 | Extract the transcode worker from the API process | FFmpeg currently runs three encode passes inside the same 512 MB container that serves HTTP. This is the single most likely cause of a production outage today |
-| Decide the storage driver for production | The default is `local`, which pins the API to one host. Which one production runs cannot be determined from the repository |
+| Move production to `STORAGE_DRIVER=s3` | It runs the `local` default, which pins the API to one host and kept the masters on one disk. The driver is implemented; see ADR-0033 for the migration |
 | Sentry in `web-artists` | One of two web apps currently reports nothing |
-| Get a backup off the host, and restore one | Today's backups sit on the disk they protect and have never been restored |
-| Establish what production stores audio with | If it is the `local` default, the masters have no copy at all |
+| Run the ADR-0033 operator steps | The code ships a daily off-host backup and a restore rehearsal; the bucket, the secrets, and the one-time upload rescue are still to be done by hand |
 
 **Extracting the worker is the load-bearing item.** It is what turns "one container that does
 everything" into something that can be scaled, and it is a prerequisite for every ingest-heavy

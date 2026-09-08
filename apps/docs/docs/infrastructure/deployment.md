@@ -350,14 +350,30 @@ certificate, or a missing certificate at `/etc/letsencrypt/live/<DOMAIN>/`.
 
 ## 6. Backups
 
+Production backups are automated and off-host. `.github/workflows/backup.yml` runs daily: the
+server dumps the database with `infra/backup.sh`, the runner streams the result off over SSH and
+uploads it to S3-compatible object storage, and the monitoring workflow restores the newest
+object into a throwaway Postgres and asserts on the data that comes back. The object-storage
+credentials live only in GitHub, never on the server. Setup — bucket, secret names, and the
+one-time rescue of the existing uploads — is in
+[ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md); the secret table is in
+[`.github/workflows/README.md` § Backups](https://github.com/Lordpluha/bitrate/blob/develop/.github/workflows/README.md).
+
+By hand, on the server, from `$HOME/bitrate`:
+
 ```bash
-task db:backup                     # dump to backups/
-task db:restore FILE=backups/2026-09-02_120000.sql
+task prod:backup                          # dump + storage archive into backups/, prune old ones
+task prod:restore FILE=backups/db-20260908T031711Z.dump
 ```
 
-`db:restore` is destructive and asks for confirmation. Copy dumps off the machine — a snapshot
-of a volume with a running Postgres is not a consistent backup, so volume snapshots are a second
-line of defence, not a substitute.
+`prod:restore` is destructive and asks for confirmation. It uses `pg_restore`, because
+`prod:backup` writes `pg_dump --format=custom`; piping a custom-format dump into `psql` fails at
+the first byte.
+
+For the preprod stack, `task db:backup` / `task db:restore FILE=…` write and read plain SQL.
+
+A snapshot of a volume with a running Postgres is not a consistent backup, so volume snapshots
+are a second line of defence, not a substitute.
 
 ## 7. Releasing
 

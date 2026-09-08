@@ -38,6 +38,7 @@ how to apply it day to day.
 | [0030](./0030-remove-performance-testing.md) | Remove the performance testing suite |
 | [0031](./0031-expand-docs-sync-scope.md) | Expand `/br-sync-docs` to root onboarding docs and `.claude/` self-consistency |
 | [0032](./0032-artist-first.md) | Bitrate is artist-first; the listening surface supports it |
+| [0033](./0033-off-host-backups-and-object-storage.md) | Backups leave the host and are restore-rehearsed; audio moves to object storage |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.
