@@ -42,6 +42,29 @@ Common fixes:
 - `noExplicitAny` — replace `any` with a proper type or `unknown`.
 - Import organisation — Biome auto-fixes with `biome check --write`.
 
+### `biome ci` — what CI actually runs, and why local green is not enough
+
+The per-app workflows do **not** run `pnpm lint`. They run:
+
+```bash
+pnpm exec biome ci apps/<app> packages/ui-react packages/contracts
+```
+
+`biome ci` is lint **and** format **and** the assist actions. This repo turns
+`assist.actions.source.organizeImports` on per app, and neither `pnpm lint`
+(`biome lint`) nor `pnpm format` (`biome format --write`) applies or checks assists. So a
+branch where both pass locally still fails CI on unsorted imports — and the diagnostic points at
+the import block, which reads like a formatting nit rather than a red build.
+
+Before pushing, run the mutating form that covers all three:
+
+```bash
+pnpm exec biome check --write .
+```
+
+then confirm with the exact command CI uses. `check --write` applies only safe fixes; anything
+it leaves behind is a real decision for you.
+
 ### `pnpm format`
 
 Runs `biome format --write` — applies formatting in place. Run before committing to avoid CI failures.

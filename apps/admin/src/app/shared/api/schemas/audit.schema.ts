@@ -7,7 +7,7 @@ const auditEntrySchema = z.object({
   entityType: z.string(),
   entityId: z.uuid().nullable(),
   /** Resolved server-side so the list does not have to issue a request per row. */
-  actorName: z.string().nullable(),
+  actorUsername: z.string().nullable(),
   ipAddress: z.string().nullable(),
   createdAt: z.iso.datetime(),
 })
