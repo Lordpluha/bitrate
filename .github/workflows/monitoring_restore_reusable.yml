@@ -1,0 +1,317 @@
+name: "[monitoring] Restore Rehearsal Reusable"
+
+# Proves the off-host backup can actually be restored.
+#
+# monitoring_backup_reusable.yml checks that a recent, non-empty file exists on the server.
+# That is a file-exists check: it cannot tell a good dump from one pg_dump truncated halfway
+# through. This job takes the newest object out of the bucket, restores it into a throwaway
+# Postgres, and asserts on the data that comes back. Nothing here touches production — it
+# never connects to the server at all, only to object storage, read-only.
+#
+# It rehearses the OFF-HOST copy on purpose. The copy on the server is the one you will not
+# have in the disaster this exists for.
+
+on:
+  workflow_call:
+    inputs:
+      s3-endpoint:
+        required: true
+        type: string
+      s3-bucket:
+        required: true
+        type: string
+      s3-region:
+        required: false
+        default: auto
+        type: string
+      s3-prefix:
+        required: false
+        default: production
+        type: string
+      max-age-hours:
+        description: Fail when the newest object in the bucket is older than this.
+        required: false
+        default: 48
+        type: number
+      postgres-image:
+        description: Must be at least the major version of the server that wrote the dump.
+        required: false
+        default: postgres:16-alpine
+        type: string
+      required-tables:
+        description: >-
+          Space-separated table names that must exist after the restore. Prisma declares no
+          @@map in apps/api/prisma/schema.prisma, so these are the model names verbatim and
+          are case-sensitive.
+        required: false
+        default: 'User Artist Track TrackFile Album Playlist'
+        type: string
+      min-user-rows:
+        description: >-
+          Minimum row count in "User" for the restore to be considered real data rather than
+          an empty schema. Raise it as production grows.
+        required: false
+        default: 1
+        type: number
+    secrets:
+      s3-access-key-id:
+        required: true
+      s3-secret-access-key:
+        required: true
+
+jobs:
+  restore-rehearsal:
+    name: Restore the newest backup and assert on it
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    # No checkout, no repository write, no server access. This job needs read access to one
+    # bucket and nothing else.
+    permissions:
+      contents: read
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.s3-access-key-id }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.s3-secret-access-key }}
+      AWS_DEFAULT_REGION: ${{ inputs.s3-region }}
+      # Several S3-compatible services reject the CRC32 trailing checksums newer AWS clients
+      # send by default. See backup_reusable.yml for the same setting on the write path.
+      AWS_REQUEST_CHECKSUM_CALCULATION: WHEN_REQUIRED
+      AWS_RESPONSE_CHECKSUM_VALIDATION: WHEN_REQUIRED
+      S3_ENDPOINT: ${{ inputs.s3-endpoint }}
+      S3_BUCKET: ${{ inputs.s3-bucket }}
+      S3_PREFIX: ${{ inputs.s3-prefix }}
+      PG_NETWORK: restore-rehearsal
+      PG_CONTAINER: restore-rehearsal-postgres
+
+    steps:
+      - name: Preflight -- required configuration present
+        run: |
+          set -euo pipefail
+
+          missing=()
+          for name in S3_ENDPOINT S3_BUCKET AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; do
+            [ -n "${!name:-}" ] || missing+=("${name}")
+          done
+
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Restore rehearsal is not configured. Names only:"
+            printf '  - %s\n' "${missing[@]}"
+            exit 1
+          fi
+
+          command -v aws >/dev/null 2>&1 || {
+            echo "::error::The AWS CLI is not on this runner."
+            exit 1
+          }
+
+      - name: Find and age-check the newest database backup
+        id: locate
+        env:
+          MAX_AGE_HOURS: ${{ inputs.max-age-hours }}
+        run: |
+          set -euo pipefail
+
+          listing="$(aws s3api list-objects-v2 \
+            --endpoint-url "${S3_ENDPOINT}" \
+            --bucket "${S3_BUCKET}" \
+            --prefix "${S3_PREFIX}/db/" \
+            --query 'sort_by(Contents, &LastModified)[-1].[Key,LastModified,Size]' \
+            --output text)"
+
+          if [ -z "${listing}" ] || [ "${listing}" = "None" ]; then
+            echo "::error::No database backup under ${S3_PREFIX}/db/ in ${S3_BUCKET}."
+            echo "The backup workflow has never succeeded, or it is writing a different prefix."
+            exit 1
+          fi
+
+          key="$(printf '%s' "${listing}" | cut -f1)"
+          modified="$(printf '%s' "${listing}" | cut -f2)"
+          size="$(printf '%s' "${listing}" | cut -f3)"
+
+          age_hours=$(( ( $(date -u +%s) - $(date -u -d "${modified}" +%s) ) / 3600 ))
+          echo "Newest backup: ${key} (${size} bytes, ${age_hours}h old)"
+
+          if [ "${size}" -le 0 ]; then
+            echo "::error::${key} is a zero-byte object."
+            exit 1
+          fi
+          if [ "${age_hours}" -gt "${MAX_AGE_HOURS}" ]; then
+            echo "::error::The newest off-host backup is ${age_hours}h old (limit ${MAX_AGE_HOURS}h)."
+            echo "The backup workflow is failing or is not running."
+            exit 1
+          fi
+
+          {
+            printf 'key=%s\n' "${key}"
+            printf 'size=%s\n' "${size}"
+            printf 'age-hours=%s\n' "${age_hours}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Download it and verify its checksum
+        env:
+          BACKUP_KEY: ${{ steps.locate.outputs.key }}
+          BACKUP_SIZE: ${{ steps.locate.outputs.size }}
+        run: |
+          set -euo pipefail
+          mkdir -p /home/runner/restore-rehearsal
+
+          aws s3api get-object \
+            --endpoint-url "${S3_ENDPOINT}" \
+            --bucket "${S3_BUCKET}" \
+            --key "${BACKUP_KEY}" \
+            /home/runner/restore-rehearsal/backup.dump > /dev/null
+
+          got="$(stat -c %s /home/runner/restore-rehearsal/backup.dump)"
+          if [ "${got}" != "${BACKUP_SIZE}" ]; then
+            echo "::error::Downloaded ${got} bytes, the object is ${BACKUP_SIZE}."
+            exit 1
+          fi
+
+          # backup_reusable.yml records the sha256 it computed on the runner, before the
+          # upload, as object metadata. Comparing it here closes the loop end to end: server
+          # -> runner -> bucket -> runner. An object stored by some other means has no such
+          # metadata, which is a reason to say so, not to fail.
+          expected="$(aws s3api head-object \
+            --endpoint-url "${S3_ENDPOINT}" --bucket "${S3_BUCKET}" --key "${BACKUP_KEY}" \
+            --query 'Metadata.sha256' --output text)"
+          actual="$(sha256sum /home/runner/restore-rehearsal/backup.dump | cut -d' ' -f1)"
+
+          if [ "${expected}" = "None" ] || [ -z "${expected}" ]; then
+            echo "::warning::${BACKUP_KEY} carries no sha256 metadata; skipped the end-to-end checksum."
+          elif [ "${expected}" != "${actual}" ]; then
+            echo "::error::${BACKUP_KEY}: checksum mismatch. The stored object differs from what was uploaded."
+            exit 1
+          else
+            echo "Checksum matches the value recorded at upload time."
+          fi
+
+      # A container rather than a `services:` block, so the client tools come from the same
+      # image as the server and cannot be an older pg_restore than the dump's format. It is
+      # attached to a private network and publishes no port: nothing outside this job can
+      # reach it, which is what makes trust authentication acceptable for a database that
+      # exists for ninety seconds.
+      - name: Start a throwaway Postgres
+        env:
+          POSTGRES_IMAGE: ${{ inputs.postgres-image }}
+        run: |
+          set -euo pipefail
+          docker network create "${PG_NETWORK}"
+          docker run -d --name "${PG_CONTAINER}" --network "${PG_NETWORK}" \
+            -e POSTGRES_HOST_AUTH_METHOD=trust \
+            -e POSTGRES_USER=rehearsal \
+            -e POSTGRES_DB=rehearsal \
+            "${POSTGRES_IMAGE}" > /dev/null
+
+          for _ in $(seq 1 60); do
+            if docker exec "${PG_CONTAINER}" pg_isready -U rehearsal -d rehearsal >/dev/null 2>&1; then
+              echo "Postgres is accepting connections."
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "::error::The throwaway Postgres never became ready."
+          docker logs "${PG_CONTAINER}" || true
+          exit 1
+
+      - name: Restore the dump
+        env:
+          POSTGRES_IMAGE: ${{ inputs.postgres-image }}
+        run: |
+          set -euo pipefail
+
+          # --no-owner/--no-privileges because the dump was taken that way; --exit-on-error so
+          # a restore that only half worked is a failure rather than a warning stream. Errors
+          # print in full: this is production schema, not production secrets.
+          docker run --rm --network "${PG_NETWORK}" \
+            -v /home/runner/restore-rehearsal:/dump:ro \
+            "${POSTGRES_IMAGE}" \
+            pg_restore \
+              --host "${PG_CONTAINER}" --username rehearsal --dbname rehearsal \
+              --no-owner --no-privileges --exit-on-error \
+              /dump/backup.dump
+
+          echo "pg_restore completed without error."
+
+      # The part that turns "a file exists" into "we can recover". Each assertion names a
+      # real failure: a dump of the wrong database, a schema-only dump, a dump taken before
+      # migrations ran, or a dump of an empty instance.
+      - name: Assert the restored database holds real data
+        env:
+          REQUIRED_TABLES: ${{ inputs.required-tables }}
+          MIN_USER_ROWS: ${{ inputs.min-user-rows }}
+          BACKUP_KEY: ${{ steps.locate.outputs.key }}
+          BACKUP_AGE_HOURS: ${{ steps.locate.outputs.age-hours }}
+        run: |
+          set -euo pipefail
+
+          q() {
+            docker exec "${PG_CONTAINER}" \
+              psql -U rehearsal -d rehearsal -t -A -c "$1"
+          }
+
+          # A table name is spliced into SQL below. It comes from a workflow input, not from
+          # any event payload, but a name that is not a plain identifier has no legitimate
+          # reason to be here and is rejected rather than quoted around.
+          for table in ${REQUIRED_TABLES}; do
+            printf '%s' "${table}" | grep -Eq '^[A-Za-z_][A-Za-z0-9_]*$' || {
+              echo "::error::required-tables holds a name that is not a plain identifier."
+              exit 1
+            }
+          done
+
+          numeric() { printf '%s' "$1" | grep -Eq '^-?[0-9]+$'; }
+
+          failures=()
+
+          for table in ${REQUIRED_TABLES}; do
+            exists="$(q "SELECT to_regclass('public.\"${table}\"') IS NOT NULL")"
+            if [ "${exists}" != "t" ]; then
+              failures+=("table \"${table}\" is missing from the restored database")
+            fi
+          done
+
+          migrations="$(q "SELECT count(*) FROM _prisma_migrations WHERE finished_at IS NOT NULL" 2>/dev/null || echo "0")"
+          numeric "${migrations}" || migrations="0"
+          if [ "${migrations}" -lt 1 ]; then
+            failures+=("_prisma_migrations holds no applied migration — the dump predates the schema")
+          else
+            echo "Applied migrations in the restore: ${migrations}"
+          fi
+
+          users="$(q "SELECT count(*) FROM \"User\"" 2>/dev/null || echo "-1")"
+          numeric "${users}" || users="-1"
+          if [ "${users}" -lt "${MIN_USER_ROWS}" ]; then
+            failures+=("\"User\" holds ${users} rows, expected at least ${MIN_USER_ROWS}")
+          else
+            echo "Rows in \"User\": ${users}"
+          fi
+
+          {
+            echo "### Restore rehearsal"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Object | \`${BACKUP_KEY}\` |"
+            echo "| Age | ${BACKUP_AGE_HOURS}h |"
+            echo "| Applied migrations | ${migrations} |"
+            echo "| Rows in \"User\" | ${users} |"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          if [ ${#failures[@]} -gt 0 ]; then
+            echo "::error::The backup restored, but the result is not a usable production database."
+            printf '  - %s\n' "${failures[@]}"
+            echo "| Verdict | **FAILED** |" >> "${GITHUB_STEP_SUMMARY}"
+            exit 1
+          fi
+
+          echo "| Verdict | restored and verified |" >> "${GITHUB_STEP_SUMMARY}"
+          echo "The newest off-host backup restores into a working database."
+
+      - name: Tear down
+        if: ${{ always() }}
+        run: |
+          docker rm -f "${PG_CONTAINER}" >/dev/null 2>&1 || true
+          docker network rm "${PG_NETWORK}" >/dev/null 2>&1 || true
+          rm -rf /home/runner/restore-rehearsal

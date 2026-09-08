@@ -122,8 +122,21 @@ services:
       - OAUTH_FACEBOOK_APP_ID
       - OAUTH_FACEBOOK_APP_SECRET
     volumes:
-      - ../apps/api/uploads:/app/apps/api/uploads
-      - ../apps/api/public:/app/apps/api/public
+      # The API's own upload root, and the only durable one. CMD runs from WORKDIR /app, so
+      # process.cwd() is /app and storage.config.ts puts every uploaded master, HLS ladder,
+      # cover and avatar under /app/storage. That path was mounted nowhere: the bytes lived in
+      # the container's writable layer and were destroyed by every `up -d` that recreated the
+      # container — i.e. by every deploy.
+      #
+      # The two mounts this replaces (../apps/api/uploads, ../apps/api/public) pointed at paths
+      # nothing in the API has ever written to. Docker created the empty host directories for
+      # them, which is why they looked like they held the uploads.
+      #
+      # A named volume rather than a bind mount, because the container is non-root (uid 1001):
+      # Docker seeds an empty named volume from the image directory and its ownership, so this
+      # needs no chown on the host. Read it with `docker compose exec api tar -cf - -C /app storage`,
+      # which is what infra/backup.sh does.
+      - api_storage:/app/storage
     depends_on:
       postgres:
         condition: service_healthy
@@ -274,6 +287,11 @@ volumes:
   postgres_data:
     driver: local
   redis_data:
+    driver: local
+  # Uploaded audio, HLS artifacts, covers and avatars. Backed up off-host by
+  # .github/workflows/backup.yml; see ADR-0033 for why this is a stopgap and
+  # STORAGE_DRIVER=s3 is the durable answer for the audio.
+  api_storage:
     driver: local
 
 networks:

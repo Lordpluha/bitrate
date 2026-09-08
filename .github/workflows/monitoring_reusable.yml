@@ -11,6 +11,29 @@ on:
         description: Max allowed backup age in hours
         required: true
         type: string
+      restore-rehearsal:
+        description: >-
+          Run the restore rehearsal against the off-host backup bucket. Only meaningful for a
+          target that backup.yml actually backs up, so callers turn it on for production only.
+        required: false
+        default: false
+        type: boolean
+      backup-s3-endpoint:
+        required: false
+        default: ''
+        type: string
+      backup-s3-bucket:
+        required: false
+        default: ''
+        type: string
+      backup-s3-region:
+        required: false
+        default: auto
+        type: string
+      backup-s3-prefix:
+        required: false
+        default: production
+        type: string
     secrets:
       monitor-host:
         description: Host for health and SSL checks
@@ -29,6 +52,11 @@ on:
         required: true
       backup-dir-secret:
         description: Explicit backup directory
+        required: false
+      backup-s3-access-key-id:
+        description: Read access to the off-host backup bucket, for the restore rehearsal
+        required: false
+      backup-s3-secret-access-key:
         required: false
 
 permissions:
@@ -67,3 +95,19 @@ jobs:
       deploy-path: ${{ secrets.deploy-path }}
       deploy-ssh-key: ${{ secrets.deploy-ssh-key }}
       backup-dir-secret: ${{ secrets.backup-dir-secret }}
+
+  # The `backup` job above proves a recent, non-empty file is on the server. This one proves
+  # the copy that is NOT on the server can actually be restored — which is the only claim
+  # that matters in the failure these backups exist for.
+  restore-rehearsal:
+    if: ${{ inputs.restore-rehearsal }}
+    uses: ./.github/workflows/monitoring_restore_reusable.yml
+    with:
+      s3-endpoint: ${{ inputs.backup-s3-endpoint }}
+      s3-bucket: ${{ inputs.backup-s3-bucket }}
+      s3-region: ${{ inputs.backup-s3-region }}
+      s3-prefix: ${{ inputs.backup-s3-prefix }}
+      max-age-hours: ${{ fromJSON(inputs.backup-max-age-hours) }}
+    secrets:
+      s3-access-key-id: ${{ secrets.backup-s3-access-key-id }}
+      s3-secret-access-key: ${{ secrets.backup-s3-secret-access-key }}

@@ -122,6 +122,8 @@ tasks:
 
   db:backup:
     desc: Dump the PREPROD database to backups/ — for production use prod:backup
+    # prod:backup is a real task now. It was referenced here for months without existing,
+    # which is why nothing has ever written a production dump.
     cmds:
       - cmd: mkdir -p backups
         platforms: [linux, darwin]
@@ -276,6 +278,73 @@ tasks:
       # A throwaway container from the same image needs nothing running but the database.
       - cmd: '{{.DC_PROD}} run --rm --no-TTY api pnpm --filter @bitrate/api run db:migration:deploy'
 
+
+  # ─────────────────────────────────────────
+  # Production backup and restore
+  #
+  # infra/backup.sh holds the logic; these only make it reachable from `task --list`,
+  # the same split monitor:* uses over infra/docker-monitor.sh. The script writes into
+  # backups/ and never uploads anywhere: getting the artifacts OFF this machine is
+  # .github/workflows/backup.yml's job, so the object-storage keys that can reach the
+  # backups never live on the box the backups exist to survive.
+  #
+  # These run on the server, from $HOME/bitrate, where the deploy workflow has already
+  # rendered .env and synced infra/.
+  # ─────────────────────────────────────────
+  prod:backup:
+    desc: Dump the PRODUCTION database (and storage/) into backups/, then prune old local copies
+    cmds:
+      - cmd: bash infra/backup.sh --retention-days {{.RETENTION_DAYS | default 7}}
+
+  prod:restore:
+    desc: Restore a production dump — DESTRUCTIVE, replaces current data. Pass FILE=backups/db-….dump
+    prompt: This overwrites the PRODUCTION database. Continue?
+    requires:
+      vars: [FILE]
+    cmds:
+      # --clean --if-exists drops each object before recreating it, so a restore over a
+      # populated database succeeds instead of failing on every existing table. Credentials
+      # come from the container's environment, never from this file.
+      #
+      # Custom-format dumps go through pg_restore, not psql: `psql < file` on a -Fc dump
+      # reads the binary archive as SQL and fails at the first byte.
+      - cmd: |
+          {{.DC_PROD}} exec -T postgres sh -c \
+            'pg_restore -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists --no-owner --no-privileges' \
+            < "{{.FILE}}"
+
+  # A one-time pair, needed exactly once: around the deploy that lands the api_storage
+  # volume added to infra/docker-compose.prod.yaml. Until that volume exists the API writes
+  # uploads to /app/storage inside the container's WRITABLE LAYER, so the `up -d` that
+  # recreates the container destroys them — including the one that introduces the volume,
+  # which starts a fresh container against an empty volume.
+  #
+  #   task prod:storage:rescue     <- BEFORE that deploy, while the old container still runs
+  #   ... deploy ...
+  #   task prod:storage:seed FILE=storage-rescue-….tar.gz
+  #
+  # tar through the container rather than `docker cp`: it works for a named volume and a
+  # bind mount alike, and it writes as the container's own non-root user, so the restored
+  # files come back owned by the account that has to write them. `docker cp` lands them
+  # root-owned and the API then cannot write into its own directories.
+  prod:storage:rescue:
+    desc: Archive /app/storage out of the running api container — run BEFORE the deploy that adds the volume
+    cmds:
+      - cmd: |
+          out="storage-rescue-$(date -u +%Y%m%dT%H%M%SZ).tar.gz"
+          {{.DC_PROD}} exec -T api tar -czf - -C /app storage > "$out"
+          ls -lh "$out"
+          echo "Keep this file. Restore it after the deploy with: task prod:storage:seed FILE=$out"
+
+  prod:storage:seed:
+    desc: Unpack a rescued storage archive back into the api container. Pass FILE=storage-rescue-….tar.gz
+    prompt: Unpack this archive over /app/storage in the running api container?
+    requires:
+      vars: [FILE]
+    cmds:
+      - cmd: |
+          {{.DC_PROD}} exec -T api tar -xzf - -C /app < "{{.FILE}}"
+      - cmd: '{{.DC_PROD}} exec -T api sh -c ''du -sh /app/storage'''
 
   prod:down:
     desc: Stop production stack

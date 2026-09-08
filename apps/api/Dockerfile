@@ -77,6 +77,14 @@ COPY apps/api/package.json ./apps/api/
 # Generate Prisma Client
 RUN DATABASE_URL="$PRISMA_GENERATE_ONLY_URL" pnpm --filter @bitrate/api run db:gen:prod
 
+# The runtime storage root. CMD runs `node apps/api/dist/src/main.js` from WORKDIR /app, so
+# process.cwd() is /app and apps/api/src/common/config/storage.config.ts resolves every upload
+# path under /app/storage — not under the apps/api/storage copied in above, which is seed data
+# read at a different path. Creating it here is what lets infra/docker-compose.prod.yaml mount a
+# named volume over it: Docker initialises an empty volume from the image directory, ownership
+# included, so the non-root user below can write to it with no chown on the host.
+RUN mkdir -p /app/storage/private /app/storage/public
+
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 --ingroup nodejs bitrateapi
