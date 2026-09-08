@@ -140,6 +140,36 @@ async findAll({ page, limit }: PaginationInput) {
 }
 ```
 
+## Prisma migrations — check every generated one for stray DROPs
+
+`prisma migrate dev` compares the database to `schema.prisma` and writes SQL to close the gap.
+Anything in the database that the schema **cannot express** therefore reads as drift, and Prisma
+drops it.
+
+This repository has four such objects: the GIN trigram indexes
+`Track_title_trgm_idx`, `Artist_username_trgm_idx`, `Album_title_trgm_idx` and
+`Playlist_title_trgm_idx`, created by raw SQL in
+`20260811120000_backend_platform_foundation` and backing search. Prisma's schema language has
+no syntax for a GIN trigram index, so **every generated migration wants to drop all four** —
+including ones about something else entirely, which is how it slips through review.
+
+Before committing a generated migration:
+
+```bash
+rg 'DROP INDEX' apps/api/prisma/migrations/<new-migration>/migration.sql
+```
+
+Delete any `DROP INDEX` you did not intend, then prove the chain still applies from empty:
+
+```bash
+# a throwaway database, not the one you develop against
+prisma migrate deploy
+psql -tAc "SELECT indexname FROM pg_indexes WHERE indexname LIKE '%trgm_idx'"
+```
+
+All four must be listed. A migration that silently drops them passes lint, types and the unit
+suite, and degrades search to sequential scans in production.
+
 ## BullMQ
 
 Jobs live **in the module that owns them**, not in a shared queue folder:

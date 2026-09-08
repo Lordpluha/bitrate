@@ -122,6 +122,50 @@ model ArtistSession {
   @@index([refresh_token])
 }
 
+enum StaffRole {
+  ADMIN
+  MODERATOR
+}
+
+model Staff {
+  id       String    @id @default(uuid(7)) @db.Uuid
+  email    String    @unique
+  username String    @unique
+  password String
+  role     StaffRole
+
+  twoFactorSecret     String?
+  twoFactorEnabled    Boolean   @default(false)
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+  deletedAt           DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  sessions  StaffSession[]
+  auditLogs AuditLog[]
+
+  @@index([email])
+  @@index([deletedAt])
+}
+
+model StaffSession {
+  id            String @id @default(uuid(7)) @db.Uuid
+  staffId       String @db.Uuid
+  access_token  String @unique
+  refresh_token String @unique
+
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@index([staffId])
+  @@index([access_token])
+  @@index([refresh_token])
+}
+
 enum TrackProcessingStatus {
   PROCESSING
   READY
@@ -749,6 +793,7 @@ model ModerationReport {
 model AuditLog {
   id         String   @id @default(uuid(7)) @db.Uuid
   userId     String?  @db.Uuid
+  staffId    String?  @db.Uuid
   action     String
   entityType String
   entityId   String?  @db.Uuid
@@ -756,8 +801,10 @@ model AuditLog {
   ipAddress  String?
   createdAt  DateTime @default(now())
 
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user  User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  staff Staff? @relation(fields: [staffId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt(sort: Desc)])
+  @@index([staffId, createdAt(sort: Desc)])
   @@index([entityType, entityId])
 }
