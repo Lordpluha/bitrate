@@ -25,14 +25,24 @@ and the listening surface exists to make the artist's work reach people.
 
 ```mermaid
 flowchart TD
-    subgraph incumbent["The incumbent model"]
-        direction TB
-        a1([Artist]) --> d1([Distributor]) --> p1([Streaming platform]) --> l1([Listener])
-    end
+    a1([Artist])
+    d1["Distributor"]
+    p1([Streaming platform])
+    l1([Listener])
+    m1["Marketing — the artist's<br/>own problem, unaided"]
+    s1([Social platforms])
+    an1["One analytics page<br/>per platform"]
+    r1["Royalty report,<br/>weeks to months later"]
+
+    a1 --> d1 --> p1 --> l1
+    a1 --> m1 --> s1 --> l1
+    p1 --> an1
+    p1 --> r1 --> a1
 ```
 
-The artist pays to enter, has no relationship with the platform, and receives a number once a
-quarter that they cannot influence.
+The pieces are all there. Nothing joins them: the artist pays to enter, runs the marketing
+alone, reads each platform's numbers separately, and receives a figure months later that
+they cannot trace back to anything they did.
 
 ```mermaid
 flowchart TD
@@ -60,7 +70,8 @@ artist, which is what makes the next release better than the last one.
 
 Note what this model implies: Bitrate is simultaneously a **competitor** to the incumbents on
 the listener side and a **supplier** to them on the artist side. That is not a conflict to
-resolve — it is the position, and it is available precisely because no incumbent can occupy it.
+resolve — it is the position. Whether it is *available* is a separate question, and there is
+direct evidence on it below.
 
 ## Who it is for
 
@@ -75,6 +86,13 @@ What they are **not**: signed artists (a label already does this), bedroom produ
 intent to release (no job to be done), and listeners (a different product with a different
 success metric).
 
+:::warning[This is a hypothesis written in the register of a definition]
+No artist has been interviewed. Every specific in the paragraph above — the skill level, the
+listener range, the absence of a manager, the intent to earn — was reasoned to, not observed.
+[Phase 1](./validation.md#phase-1--validation) exists to replace it with something learned, and
+the ICP shifting is a normal outcome of that, not a failure of it.
+:::
+
 ### The job to be done
 
 > "My track is finished. Help me release it, promote it, and understand what happened."
@@ -87,6 +105,28 @@ The three verbs matter in order. *Release* is the entry point and the thing they
 where every existing tool fails them — a dashboard of numbers is not an answer to "did that
 work, and what should I do next time".
 
+## Why now
+
+A strategy without a timing argument is a wish. Two things changed, and only one of them is
+solidly established:
+
+**Interpretation became affordable.** Explaining a set of numbers in plain language, per
+artist, per release, used to require a person. It is now a routine model call. That is the
+difference between "an analyst every artist cannot afford" and a product feature, and it is
+what makes [the AI layer](./product-backlog.md#bitrate-ai) a plausible product rather than a
+research project. This one is not in doubt.
+
+**Distribution became a commodity.** Getting a track onto the DSPs now costs roughly the price
+of a couple of coffees per year. When a capability gets that cheap it stops being a business
+on its own, and the value moves to whatever it does not cover — which here is everything
+before and after the upload. *Inferred from public pricing, not from anyone's financials;
+treat it as a working assumption.*
+
+The uncomfortable half of the timing argument: neither change is private to Bitrate. Both are
+equally available to every distributor that already has the artists. The window is one of
+attention and focus, not of exclusive access — which is an argument for moving deliberately,
+not for assuming there is time.
+
 ## Where Bitrate has a right to win
 
 Not on catalogue. Not on exclusives. Not on device integration. Those are bought with capital
@@ -94,15 +134,21 @@ Bitrate does not have, against companies who bought them a decade ago.
 
 The right to win is in three places:
 
-**1. The gap between tools.** An independent artist today uses a distributor, a spreadsheet,
-a design tool, four social platforms, an analytics page per platform, and a notes app. Nobody
-owns the *workflow* — only the pieces. Owning the workflow is a product problem, not a
-capital problem.
+**1. The gap between tools.** An independent artist assembles a release out of separate
+tools — a distributor, a design tool, several social platforms, an analytics page per
+platform, and something to track it all. Nobody owns the *workflow*; only the pieces. Owning
+a workflow is a product problem rather than a capital problem, which is what makes it
+reachable at this size.
 
 **2. Interpretation, not data.** Every platform shows numbers. None of them says *what
-happened, why, and what to do next*. That is the single most repeated complaint from
-independent artists, and it is exactly the shape of problem that current AI is genuinely good
-at.
+happened, why, and what to do next* — and that gap is the shape of problem current AI is
+genuinely good at.
+
+:::warning[Assumed, not established]
+That artists experience this as a top-rank problem is an assumption. Nobody has been asked.
+It is the first thing [phase 1](./validation.md#phase-1--validation) has to test, because if
+it is wrong this pillar goes with it.
+:::
 
 **3. The artist's own audience.** An artist who releases through Bitrate arrives with
 listeners. That is a listener-acquisition channel that costs nothing and that a pure streaming
@@ -122,6 +168,42 @@ competitor cannot copy without first becoming a distributor.
 Nobody occupies the whole line from *finished track* to *understood result*. That line is the
 product.
 
+:::note[Unverified as of 2026-09]
+This table was written from general knowledge, not from a review of each product. Every one
+of these companies ships changes continuously, and any cell could already be wrong. Re-check
+it before using it in a pitch, a pricing decision, or an argument about differentiation.
+:::
+
+### The one piece of hard evidence: Spotify tried this and retreated
+
+Spotify opened a direct-upload beta to independent artists in **September 2018** and shut it
+down on **30 July 2019**, under a year later. Hundreds of artists were on it. Their stated
+reasons were that monitoring the rights attached to distribution was more trouble than it was
+worth, and that they wanted to support their distributor partners instead. Participating
+artists were given about thirty days to move to a distributor or lose their placements, play
+counts and playlist positions.
+
+That single episode carries both halves of the strategy:
+
+**It is why the position is open.** The largest player in the industry built this, ran it, and
+walked away — not from lack of capability, but because the economics and the channel conflict
+did not suit them. A company whose customer is the listener and whose suppliers are the labels
+and distributors is structurally awkward here. That is a much better argument than "no
+incumbent can do it", which is not true and should not be claimed.
+
+**It is also the warning.** The reason they gave — rights complexity — is not a Spotify
+problem, it is the problem. It is the same thing
+[Law roadmap Gate 3](./law-roadmap.md#gate-3--distribution-to-the-dsps) is entirely about, and
+[Music business](./music-business.md#two-rights-in-every-recording) explains why: masters and
+compositions are separate rights with separate holders, split among contributors, varying by
+territory. Any plan here that treats rights as a later detail is repeating the thing that
+killed the last attempt.
+
+The corollary is a live risk to hold, not to dismiss: Spotify **could** re-enter, and has the
+distribution relationships to do it faster than last time. The defence is not that they cannot
+— it is the workflow, the interpretation layer and the artist relationship, none of which they
+would acquire by re-opening uploads.
+
 ## The staged path, not the frontal assault
 
 The mistake to avoid is arriving in 2027 with "Bitrate — the new Spotify" and asking people to
@@ -139,14 +221,17 @@ require no listener scale at all, which is the whole reason to run them first.
 
 ### Horizon
 
-| Horizon | What is true if it goes well |
-|---|---|
-| **Year 1** | A working release workflow, tens of artists who have completed a release through it, first revenue, and a validated answer to "why do they come back for the second release" |
-| **Year 3** | Distribution at real volume, the AI layer interpreting results rather than only displaying them, a listener surface worth visiting for the artists on it, sustainable unit economics |
-| **Year 5** | Autopilot as the default mode of use, a marketplace and plugin ecosystem around the core, and enough listener scale that the streaming surface stands on its own |
+These are gated, not scheduled. Each row becomes reachable only once the row above it is
+true, and the year labels are a rough sense of pace rather than a commitment:
 
-Treat year 3 and year 5 as direction, not as forecast. The only row with a plan behind it is
-year 1.
+| Horizon | What is true if it goes well | Cannot start until |
+|---|---|---|
+| **Year 1** | A working release workflow, tens of artists who completed a release through it, first revenue, and a validated answer to "why do they come back for the second release" | now |
+| **Year 3** | Distribution at real volume, the AI layer interpreting results rather than displaying them, a listener surface worth visiting for the artists on it, sustainable unit economics | artists return for a second release |
+| **Year 5** | Autopilot as the default mode of use, a marketplace and plugin ecosystem, and enough listener scale that the streaming surface stands alone | the AI layer's advice is accepted more often than overridden |
+
+Only the first row has a plan behind it. If the second row's gate is never reached, the third
+never becomes relevant — which is the point of writing the gate rather than the date.
 
 ## What Bitrate deliberately does not do
 
@@ -171,21 +256,62 @@ streaming as a recognised app category. The constraints are real but they are co
 existential:
 
 - The app must not present itself as an Apple product or imitate one.
-- In-app purchase rules apply, with an important exception: Apple operates a **Music Streaming
-  Services Entitlement** in the EEA that allows a qualifying music app to link out to its own
-  website for purchases. Qualifying requires that streaming is the app's principal function,
-  that it is categorised as Music, and that it is distributed in an EEA storefront.
-- Poland is inside the EEA, so an operator established there is in scope.
+- In-app purchase rules apply, with a real exception: Apple's **Music Streaming Services
+  Entitlement (EEA)** lets a qualifying music app link out to its own website for purchases.
 
-This materially changes the economics of a subscription and is worth designing for. It is also
-the area of Apple's rules that has changed most often in recent years, so **re-verify the
-entitlement's current terms before building any payment flow against it** — see
-[Law roadmap](./law-roadmap.md) and [Business model](./business-model.md).
+Qualifying is narrower than it first sounds. As of September 2026 the app must have music
+streaming as its *primary purpose*, must select **Music** as its primary App Store category,
+must be available on an **EEA storefront**, must **not** use the StoreKit External Link
+Account Entitlement, and must **not** take part in the Video or News Partner Programs. It is
+not automatic: it needs a submitted entitlement request from the Apple Developer Program
+Account Holder, naming the bundle ID, the website domain and the payment service provider,
+plus the entitlement enabled in Xcode and the required StoreKit APIs used.
+
+:::danger[This is not an escape from Apple's cut]
+An earlier draft of this page implied the entitlement removes Apple's commission. **It does
+not.** For developers not on the alternative EU terms, an external purchase still carries an
+initial acquisition fee, a Store Services fee that varies by tier, and the Core Technology
+Commission — together roughly **12–20% on initial purchases**, and a payment processor fee on
+top of that, which Apple's own flow would have absorbed.
+
+So the honest comparison is *12–20% plus PSP costs and a payment integration you build and
+support*, against *15–30% and none of that work*. That can still be worth it at volume, but it
+is a margin question with real engineering attached, not free money. It belongs in
+[unit economics](./business-model.md#unit-economics) before it belongs in a plan.
+:::
+
+Poland is inside the EEA, so an operator established there is in scope. This is the part of
+Apple's rules that has changed most often, and the fee structure above is specific to 2026, so
+**re-verify against Apple's own documentation before building any payment flow** rather than
+against this page.
 
 React Native does not obstruct any of this. Background playback, lock-screen controls, AirPlay
 and offline caching are all reachable; the parts that need depth get native modules. See
 [mobile rules](https://github.com/Lordpluha/bitrate/blob/master/.claude/rules/mobile-rules.md)
 for the state of that app, which is currently scaffolding.
+
+## What would falsify this
+
+Written so the evidence is recognisable when it shows up, and so this document can be wrong in
+a way somebody notices:
+
+- **Artists say releasing is not the painful part.** If phase 1 interviews put the real pain
+  somewhere else — making the music, finding collaborators, money up front — then the JTBD is
+  wrong and everything downstream of it is too.
+- **They want more streams, not more understanding.** If interpretation lands as a nice-to-have
+  next to "get me on a playlist", pillar 2 collapses and Bitrate is a marketing tool competing
+  with marketing tools.
+- **They will not pay for workflow, only for distribution.** Then the ceiling is distributor
+  pricing, and the [business model](./business-model.md) has to change shape rather than price.
+- **Rights handling proves as hard for Bitrate as it did for Spotify.** The
+  [precedent above](#the-one-piece-of-hard-evidence-spotify-tried-this-and-retreated) is a real
+  risk, not just a favourable anecdote. If Gate 3 turns out to be a multi-year problem, the
+  staged path stalls at step 1.
+- **An existing distributor ships the workflow first.** They already have the artists and the
+  delivery pipes; the [timing argument](#why-now) is explicitly not exclusive to Bitrate.
+
+None of these is fatal on its own. All of them are cheaper to discover in
+[phase 1](./validation.md#phase-1--validation) than in year two.
 
 ## The open question
 

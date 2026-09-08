@@ -8,7 +8,7 @@ The legal and compliance path, sequenced by the moment each obligation actually 
 covers four areas that are usually treated separately and should not be: **company and
 contracts**, **data protection**, **music rights**, and **platform liability**.
 
-:::warning Not legal advice
+:::warning[Not legal advice]
 This is an engineering document written to make the legal work *legible and sequenced* — so
 that a lawyer is engaged at the right moment with the right questions, and so that no gate is
 crossed by accident. It is not a substitute for counsel. Every item marked **counsel** must be
@@ -161,14 +161,26 @@ Triggered by the first payment from anyone, for anything.
 
 ### The Apple entitlement
 
-If an iOS app takes subscriptions, Apple's **Music Streaming Services Entitlement** for the
-EEA allows a qualifying app to link out to its own site for purchase — which changes the
-economics substantially. Qualifying requires that music streaming is the app's principal
-function, that it is categorised as Music, and that it is distributed in an EEA storefront.
-Poland is in scope.
+If an iOS app takes subscriptions, Apple's **Music Streaming Services Entitlement (EEA)** lets
+a qualifying app link out to its own site for purchase. Poland is in scope.
 
-Apple's rules in this area have changed repeatedly. **Re-verify the current terms at the
-moment the payment flow is designed**, not from this page.
+It is a contractual step, not a configuration one: as of September 2026 it requires an
+entitlement request submitted by the Apple Developer Program **Account Holder**, naming the
+bundle ID, the website domain and the payment service provider, and agreement to a separate
+addendum. Qualifying requires music streaming as the app's primary purpose, **Music** as its
+primary category, availability on an EEA storefront, no use of the StoreKit External Link
+Account Entitlement, and no participation in the Video or News Partner Programs.
+
+**It does not remove Apple's commission**, which is the assumption worth killing early. An
+external purchase still carries an initial acquisition fee, a tier-dependent Store Services
+fee, and the Core Technology Commission — roughly **12–20% on initial purchases** for
+developers not on the alternative EU terms, plus the payment processor fee that Apple's own
+flow would have absorbed. See [Business model](./business-model.md#unit-economics); the
+decision is a margin calculation, not a saving.
+
+Apple's rules here have changed repeatedly and the fee structure above is specific to 2026.
+**Re-verify against Apple's own documentation when the payment flow is designed**, not from
+this page.
 
 ---
 
