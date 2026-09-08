@@ -17,8 +17,8 @@ is the most expensive way to test a hypothesis. Use it last.
 
 If an assumption survives a conversation, test it with a prototype. If it survives the
 prototype, test it by doing the job manually. Only when it survives that does it deserve a
-system. Each rung costs roughly ten times the one below it, so the order is not a preference —
-it is the whole point.
+system. Each rung costs substantially more than the one below it — the units in the table are
+the point — so the order is not a preference.
 
 | Rung | Cost | Tests |
 |---|---|---|
@@ -50,16 +50,33 @@ flowchart TD
     p0 --> p1 --> p2 --> p3 --> p4 --> p5 --> p6
 ```
 
+### Where the project is now
+
+**Phase 0, blocked on one decision.** The written work exists; the
+[artist-first vs listener-first question](./vision.md#the-open-question) does not have an
+answer. Nobody has been interviewed, so every claim about the customer in this section is
+still reasoning rather than evidence.
+
+Two things are out of sequence and should not wait for their phase:
+[Law Gate 0](./law-roadmap.md#gate-0--the-site-is-publicly-reachable), because the site is
+already public, and the
+[defects in the tech roadmap](./tech-roadmap.md#defects-not-roadmap-items), because they are
+things that are already wrong rather than things to build.
+
 ### Phase 0 — Foundation
 
 **Question:** what is being built, for whom, and why would it win?
 
-Largely done, and it lives in this section: [vision and positioning](./vision.md),
+The written work is done and lives in this section: [vision and positioning](./vision.md),
 [the backlog](./product-backlog.md), and the [business model](./business-model.md) hypothesis.
 
 **Exit criterion:** the [dependency chain](./README.md#the-dependency-chain) can be stated in
 one paragraph without contradicting itself — and the
 [listener-first vs artist-first question](./vision.md#the-open-question) has been decided.
+
+**The phase is not finished**, because that second condition is unmet. Everything downstream
+assumes artist-first; until that is chosen deliberately and recorded as an ADR, phase 1 would
+be interviewing for a strategy that has not been picked.
 
 ### Phase 1 — Validation
 
@@ -99,10 +116,22 @@ Everything else in the backlog is explicitly out.
 
 **Question:** can Bitrate legally and operationally accept a real artist's release?
 
-This is where [Law roadmap](./law-roadmap.md) Gates 0 to 3 must actually be satisfied — the
-artist agreement, the distribution arrangement, the privacy policy and terms, and payments.
-Plus the analytics from [Stage 3](./tech-roadmap.md#stage-3--data-before-intelligence), because
-a launch that is not measured teaches nothing, and support.
+This is where [Law roadmap](./law-roadmap.md) Gates **1 to 3** must be satisfied — the artist
+agreement, the distribution arrangement, and payments. Plus the analytics from
+[Stage 3](./tech-roadmap.md#stage-3--data-before-intelligence), because a launch that is not
+measured teaches nothing, and support.
+
+:::danger[Gate 0 is not a phase 3 item — it is overdue now]
+An earlier draft folded Gate 0 into this phase. That is wrong and the error matters, because
+Gate 0 is triggered by the site being publicly reachable, which
+[it already is](https://bitrate.me). The registration form currently tells users they accept
+Bitrate's Terms and Privacy Policy, and neither document exists anywhere in the repository;
+the links are dead anchors and no acceptance is recorded.
+
+That is a live exposure on a deployed site, not preparation for a future launch. It does not
+wait for phase 3, and it does not wait for an artist. See
+[Gate 0](./law-roadmap.md#gate-0--the-site-is-publicly-reachable).
+:::
 
 **Exit criterion:** an artist can complete a release end to end, and nothing in that path is
 legally or operationally improvised.
@@ -141,7 +170,9 @@ team, funding. Everything here is premature before phase 5, however tempting.
 ## What is being tested at each layer
 
 Each [product layer](./README.md#the-four-layers) has one question that decides whether the
-layer above deserves to exist:
+next one deserves to be built. The rows are in **build order**, which is not the layer
+numbering — see
+[why those differ](./product-backlog.md#two-different-orderings-often-confused):
 
 | Layer | The question | Answered by |
 |---|---|---|
