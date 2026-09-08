@@ -74,21 +74,47 @@ Two properties of this chain shape the product:
 
 ## The money, honestly
 
-Per-stream payouts are roughly **€0.002–€0.004**, varying by platform, country and subscription
-tier. A useful and sobering arithmetic: a track needs somewhere near **300,000 streams** to
-produce about €1,000 of recording revenue — before the distributor's cut and before the
-composition side is settled separately.
+Per-stream payouts differ by platform far more than a single blended figure suggests. As of
+2026, in USD, since that is the currency the public figures are quoted in:
 
-Two conclusions follow, and they set the entire business model:
+| Platform | Per stream | Streams for ~$1,000 |
+|---|---|---|
+| Spotify | $0.003 – $0.005 | 200,000 – 330,000 |
+| Apple Music | $0.007 – $0.01 | 100,000 – 145,000 |
+
+Apple Music pays roughly double per stream, but Spotify's audience is several times larger, so
+total Spotify revenue usually still exceeds it. Both figures are before the distributor's cut
+and before the composition side is settled separately.
+
+:::danger[The threshold that hits this ICP hardest]
+Since April 2024 Spotify pays **nothing at all** on a track until it has accumulated **1,000
+streams in a rolling 12 months**. Below that line the per-stream rate is irrelevant, because
+the rate applies to zero.
+
+That falls directly on the artist Bitrate is built for — the one with
+[between zero and a few thousand listeners](./vision.md#who-it-is-for). For a meaningful share
+of them, streaming income is not small; it is **absent**. Any Bitrate surface that projects
+earnings has to model this threshold or it will quietly lie to exactly the users it was built
+to serve.
+:::
+
+Three conclusions follow, and they set the entire business model:
 
 **Streaming revenue alone does not sustain an independent artist.** Anyone claiming otherwise
 is selling something.
+
+**For the target artist it may not exist at all.** The 1,000-stream floor means the honest
+answer to "what will I earn" is often "nothing yet", and a product that says so plainly earns
+more trust than one that shows an encouraging graph.
 
 **Therefore Bitrate's value cannot be "we get you more streams".** It has to be about the whole
 economics of a release — the time it takes, what it costs, what else it can earn, and whether
 the artist learns anything they can use next time. That is why the
 [monetization model](./business-model.md) charges artists for the workflow rather than taking a
 position in their streaming income.
+
+These figures move. Re-check them before they appear in any artist-facing projection; the ones
+above were verified in September 2026.
 
 ## Distribution: the build-versus-partner decision
 

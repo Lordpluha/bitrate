@@ -39,7 +39,9 @@ rather than year three. That single fact is why the whole strategy is
 
 The reference points an artist already knows: distribution runs roughly €20–€30 a year for
 unlimited releases, or a per-release fee. Anything Bitrate charges is measured against that
-number whether or not the comparison is fair.
+number whether or not the comparison is fair. *Those figures are from general knowledge and
+were not checked against each provider's current pricing — verify before using them in a
+pricing decision.*
 
 A defensible starting shape:
 
