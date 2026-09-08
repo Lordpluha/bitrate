@@ -58,6 +58,28 @@ ships". CMAF has shipped. Decide the retirement path and stop paying for both.
 `continue-on-error: true`, and Trivy sets no exit code. All three report; none of them can fail
 a build. That is a reporting pipeline being mistaken for a control.
 
+**5. The backups are on the machine they protect, and the audio has none.** `task prod:backup`
+dumps the database into `$DEPLOY_PATH/backups` on the server itself. Nothing copies it
+anywhere else — there is no `aws s3 cp`, no `rclone`, no off-host rsync in the Taskfile or in
+any workflow. A disk failure or a lost host takes the database and its backups together, which
+makes them a copy rather than a backup.
+
+The monitoring job checks that the newest dump is recent and readable. **Nothing has ever
+restored one**, so what is verified is that a file exists, not that it contains a recoverable
+database.
+
+Worse, nothing backs up `uploads` at all — the directory production bind-mounts at
+`/app/apps/api/uploads`. Whether that matters depends on a value this repository cannot see:
+if production runs `STORAGE_DRIVER=s3` the audio is in object storage with its own durability,
+and if it runs the schema default of `local` then **the master recordings artists uploaded
+exist in exactly one place with no copy**. Establish which it is before anything else on this
+page, because it changes that sentence from a note into an emergency.
+
+This is the one defect where the failure is not recoverable by fixing code afterwards. A
+platform whose pitch is that artists entrust it with their masters cannot be the reason those
+masters are gone — and the [artist agreement](./law-roadmap.md#gate-3--distribution-to-the-dsps)
+will eventually say so in writing.
+
 One documentation drift remains: `apps/web-artists` has no Sentry dependency, so one of the
 two web apps reports nothing. (`PRODUCT.md` and the delivery roadmap used to describe search as
 "PostgreSQL FTS + GIN indexes"; both now say trigram, which is what the code does.)
@@ -78,6 +100,8 @@ and they currently are not.
 | Extract the transcode worker from the API process | FFmpeg currently runs three encode passes inside the same 512 MB container that serves HTTP. This is the single most likely cause of a production outage today |
 | Decide the storage driver for production | The default is `local`, which pins the API to one host. Which one production runs cannot be determined from the repository |
 | Sentry in `web-artists` | One of two web apps currently reports nothing |
+| Get a backup off the host, and restore one | Today's backups sit on the disk they protect and have never been restored |
+| Establish what production stores audio with | If it is the `local` default, the masters have no copy at all |
 
 **Extracting the worker is the load-bearing item.** It is what turns "one container that does
 everything" into something that can be scaled, and it is a prerequisite for every ingest-heavy

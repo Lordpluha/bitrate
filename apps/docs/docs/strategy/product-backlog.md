@@ -102,7 +102,7 @@ This is the zone the [vision](./vision.md) argues is the actual product.
 | Distribution | Sending a release to Spotify, Apple Music and other DSPs, as simply as possible |
 | Cross-platform Analytics | Results from every supported platform in one place |
 | Revenue Analytics | Earnings per release and where they came from |
-| Revenue Forecast | Projected earnings based on current trajectory |
+| Revenue Forecast | Projected earnings based on current trajectory — must model [the 1,000-stream floor](./music-business.md#the-money-honestly) or it will overstate income for exactly this ICP |
 | Career Timeline | Releases, audience, revenue, milestones and growth over a career |
 
 The first four are the MVP boundary. The last four require data that only exists *after*
