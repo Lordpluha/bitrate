@@ -23,7 +23,18 @@
       "ignore": ["src/**/index.ts"]
     },
     "apps/web-artists": {
-      "entry": ["src/router.tsx", "src/routes/**/*.tsx", "src/global.css", "vite.config.ts"],
+      "entry": [
+        "src/router.tsx",
+        "src/routes/**/*.tsx",
+        "src/global.css",
+        "src/**/*.unit-spec.ts",
+        "src/**/*.unit-spec.tsx",
+        "src/**/*.int-spec.ts",
+        "src/**/*.int-spec.tsx",
+        "tests/setup.ts",
+        "vite.config.ts",
+        "vitest.config.ts"
+      ],
       "ignore": ["env.schema.ts", "src/routeTree.gen.ts"]
     },
     "apps/web-player": {
