@@ -8,7 +8,7 @@ let refreshPromise: Promise<boolean> | null = null
 const retryRequests = new WeakMap<Request, Request>()
 
 export const apiBaseUrl = (
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+  import.meta.env.VITE_API_URL || 'http://localhost:3000'
 ).replace(/\/$/, '')
 
 async function refreshToken(): Promise<boolean> {

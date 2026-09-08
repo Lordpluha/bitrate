@@ -3,7 +3,7 @@
 import { toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ROUTES } from '@shared/routes/routes'
-import { useRouter } from 'next/navigation'
+import { useNavigate } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import {
@@ -52,13 +52,13 @@ const firstPasswordProblem = (password: string): string | null => {
  * reported before the visitor has chosen a password.
  */
 export const useRegistrationForm = () => {
-  const router = useRouter()
+  const navigate = useNavigate()
   const [step, setStep] = useState<RegistrationStep>('email')
 
   const { mutate: registerUser, isPending } = useRegistration({
     onSuccess: () => {
       toast.success('Registration completed successfully')
-      router.push(ROUTES.landing)
+      navigate({ to: ROUTES.landing })
     },
     onError: (error) => {
       if (error.message.toLowerCase().includes('already exists')) {

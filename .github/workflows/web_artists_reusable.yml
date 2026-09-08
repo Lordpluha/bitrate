@@ -84,7 +84,7 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-artists:buildcache,mode=max
             type=gha,mode=max,scope=web-artists
           build-args: |
-            NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
+            VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
           target: production
 
       - name: Build Web Artists Docker image (GHA cache export only)
@@ -101,5 +101,5 @@ jobs:
           cache-to: |
             type=gha,mode=max,scope=web-artists
           build-args: |
-            NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
+            VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
           target: production

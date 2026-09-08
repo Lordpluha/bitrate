@@ -2,8 +2,6 @@
 
 import { cn, Newspaper, YoutubeIcon } from '@bitrate/ui-react'
 import { ChevronLeft, X } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 interface Section {
@@ -135,7 +133,7 @@ export const MobileSubMenu = ({
                       )}
                     >
                       {group.sections?.map((item) => (
-                        <Link
+                        <a
                           className="flex flex-col gap-3 hover:opacity-80 transition-opacity"
                           href={item.href}
                           key={item.id}
@@ -176,10 +174,9 @@ export const MobileSubMenu = ({
                           ) : (
                             <>
                               <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-surface">
-                                <Image
+                                <img
                                   alt={item.title}
-                                  className="object-cover"
-                                  fill
+                                  className="absolute inset-0 h-full w-full object-cover"
                                   src={item.imageSrc}
                                 />
                               </div>
@@ -203,7 +200,7 @@ export const MobileSubMenu = ({
                               </div>
                             </>
                           )}
-                        </Link>
+                        </a>
                       ))}
                     </div>
                   </div>
@@ -235,7 +232,7 @@ export const MobileSubMenu = ({
                     </p>
 
                     {group.sections?.[0] && (
-                      <Link
+                      <a
                         className="hover:opacity-80 transition-opacity"
                         href={group.sections[0].href}
                         onClick={onFullClose}
@@ -247,12 +244,12 @@ export const MobileSubMenu = ({
                         >
                           {group.sections[0].title}
                         </h3>
-                      </Link>
+                      </a>
                     )}
 
                     <nav className={cn('flex flex-col gap-4')}>
                       {group.sections?.slice(1).map((section) => (
-                        <Link
+                        <a
                           className={cn(
                             'text-white text-2xl font-[700] hover:opacity-70 transition-opacity leading-snug',
                             'max-sm:text-xl',
@@ -262,7 +259,7 @@ export const MobileSubMenu = ({
                           onClick={onFullClose}
                         >
                           {section.title}
-                        </Link>
+                        </a>
                       ))}
                     </nav>
                   </div>

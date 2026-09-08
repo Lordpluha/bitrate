@@ -72,9 +72,11 @@ jobs:
               API_URL=${{ vars.API_URL || 'http://localhost:3000' }}
               NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
               NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://bitrate.me' }}
+          # web-artists is on Vite, which only exposes VITE_-prefixed variables to the bundle.
+          # The deployment variable keeps its shared name; the build arg carries this app's.
           - service: web-artists
             buildArgs: |
-              NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
+              VITE_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
 
     permissions:
       security-events: write
