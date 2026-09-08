@@ -38,6 +38,16 @@ Current workflow map for .github/workflows.
 - web_artists.yml — Web Artists pipeline entry workflow.
 - web_artists_reusable.yml — reusable implementation for Web Artists jobs.
 
+### Admin (admin.bitrate.me)
+- admin.yml — operator panel entry workflow. Path-filtered on `apps/admin/**` **and**
+  `packages/ui-react/**`: the Angular app renders none of that package's React components but
+  imports `@bitrate/ui-react/themes.css` as its design tokens, so a token change has to rebuild
+  this image.
+- admin_reusable.yml — ESLint (this app is on angular-eslint, **not** Biome, so `pnpm lint` at
+  the root does not cover it), `tsc --noEmit`, `ng test` (Vitest through `@angular/build:unit-test`
+  in jsdom), then the apps/admin/Dockerfile image build (`target: production` — nginx serving the
+  prebuilt SPA on 3005) and publish.
+
 ### Mobile
 - mobile.yml — Mobile pipeline entry workflow.
 - mobile_reusable.yml — Mobile orchestration reusable workflow.
@@ -81,7 +91,7 @@ procedures live in
   Derives the product version, creates `release/v<x.y.z>`, merges `master` into it, runs
   `changeset version`, lands one **signed** commit, runs the layer-1 gates, opens the pull request.
 - release_publish.yml / release_publish_reusable.yml — **the publish**. `on: push: branches:
-  [master]`. Tag, GitHub Release, five images, deploy, back-merge pull request — five `needs:`-
+  [master]`. Tag, GitHub Release, six images, deploy, back-merge pull request — five `needs:`-
   ordered jobs of one run.
 - release_images.yml / release_images_reusable.yml — **image rebuilds** for a version tag.
   `on: push: tags: ['v*']` plus `workflow_dispatch`.
@@ -104,7 +114,7 @@ human approves and merges the pull request
    |  release_publish.yml
    |    1. resolve          root package.json version; stop if v<version> is already a tag
    |    2. tag-and-release  annotated tag + GitHub Release, notes diffed from the previous v* tag
-   |    3. images           five images at :v<x.y.z>, :<sha>, :master
+   |    3. images           six images at :v<x.y.z>, :<sha>, :master
    |    4. deploy           production environment approval, then the server
    |    5. back-merge       PR backmerge/v<x.y.z> -> develop  (needs 2, NOT 4)
    v
@@ -134,10 +144,10 @@ human merges the back-merge PR, and develop carries the bumps again
   by travelling along a dependency edge. At the v1.0.0 cut the authored set was 33 major /
   34 minor / 59 patch across 74 changesets, while the resolved plan was 13 x major -- which is
   what the distinction costs when it is got wrong.
-- **A release rebuilds all five services, path filters and all.** `infra/docker-compose.prod.yaml`
+- **A release rebuilds all six services, path filters and all.** `infra/docker-compose.prod.yaml`
   pulls every service at one shared `${IMAGE_TAG}`, so a service that skipped its build would have
   no image under the version tag and `compose pull` would fail on it. That is why
-  `release_images_reusable.yml` exists at all rather than a tag trigger on the five per-app
+  `release_images_reusable.yml` exists at all rather than a tag trigger on the six per-app
   workflows: GitHub ANDs `on: push: paths:` with `on: push: tags:` inside one `push` block, so a tag
   trigger there would be path-filtered.
 - **The tag the publish run creates raises no `push: tags` event**, because it is created with
@@ -153,7 +163,7 @@ human merges the back-merge PR, and develop carries the bumps again
 
 **Nothing publishes to npm.** Every workspace is `"private": true` and `.changeset/config.json`
 sets `access: "restricted"`. The output of a release is version numbers, changelogs, tags, a GitHub
-Release and five images — there is no publish step missing.
+Release and six images — there is no publish step missing.
 
 `privatePackages.tag` in `.changeset/config.json` is what makes the per-workspace tags exist at all.
 Changesets defaults it to `false`, and with every workspace private that made `changeset tag` a
@@ -305,13 +315,13 @@ credential above never needs `DeleteObject` and a leaked key cannot destroy the 
 wrote. `prune-remote` exists for a provider with no lifecycle support and is off.
 
 ## Structure Summary
-- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, backup.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, backup.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 
 ## Published images
 
-The five app services in infra/docker-compose.prod.yaml pull from GHCR rather than building
+The six app services in infra/docker-compose.prod.yaml pull from GHCR rather than building
 on the VPS. The develop-branch reference for each:
 
 | Service | Image | Built by |
@@ -319,6 +329,7 @@ on the VPS. The develop-branch reference for each:
 | api | `ghcr.io/lordpluha/bitrate/api:develop` | api.yml |
 | web-player | `ghcr.io/lordpluha/bitrate/web-player:develop` | web_player.yml |
 | web-artists | `ghcr.io/lordpluha/bitrate/web-artists:develop` | web_artists.yml |
+| admin | `ghcr.io/lordpluha/bitrate/admin:develop` | admin.yml |
 | docs | `ghcr.io/lordpluha/bitrate/docs:develop` | docs.yml |
 | storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | storybook.yml |
 
@@ -342,6 +353,19 @@ Those live in one `env:` block per reusable workflow (`BUILD_*`), default to the
 production origins, and accept a `vars.*` override for forks and staging. Changing them
 requires rebuilding the image — a server-side environment variable cannot correct a value
 that is already in the bundle.
+
+The same is true of admin, one prefix further removed: Vite exposes only `VITE_*` and Angular's
+esbuild `define` only substitutes the names `angular.json` lists. **One** deployment variable,
+`vars.NEXT_PUBLIC_API_URL`, feeds all three; the per-app build-arg name is where it is mapped.
+
+| App | Build arg | Set in |
+|---|---|---|
+| web-player | `NEXT_PUBLIC_API_URL` | web_player_reusable.yml |
+| web-artists | `VITE_API_URL` | web_artists_reusable.yml |
+| admin | `NG_APP_API_URL` | admin_reusable.yml |
+
+`security_reusable.yml` repeats that mapping for the images it builds to scan; the two must
+stay consistent or a scan builds a differently-configured image than the one that ships.
 
 api, docs, and storybook take no environment-specific build args and are the same image in
 every environment.

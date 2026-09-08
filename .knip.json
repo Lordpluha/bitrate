@@ -67,6 +67,11 @@
         "vitest.config.ts"
       ],
       "ignoreDependencies": ["tsc-alias"]
+    },
+    "apps/admin": {
+      "entry": ["src/**/*.unit-spec.ts", "eslint.config.js"],
+      "ignore": ["src/**/index.ts", "src/styles.css", "src/app/shared/ui/**"],
+      "ignoreDependencies": ["@spartan-ng/cli", "@bitrate/ui-react"]
     }
   },
   "ignore": [

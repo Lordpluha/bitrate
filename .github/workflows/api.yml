@@ -2,7 +2,7 @@ name: "[api] Checks"
 
 # `master` is deliberately absent from the push trigger. Release builds do not
 # come through here at all: release_publish.yml and release_images.yml call this
-# app's *_reusable.yml directly, alongside the other four, because the production
+# app's *_reusable.yml directly, alongside the other five, because the production
 # compose file pulls every service at one shared ${IMAGE_TAG} and a path-filtered
 # build would leave a hole in the version tag. See ADR-0029.
 #
@@ -41,7 +41,7 @@ on:
       release-tag:
         description: >-
           Product version tag (`v1.4.0`) to publish this image under, in addition
-          to :master and :<sha>. Normally left empty: a release publishes all five
+          to :master and :<sha>. Normally left empty: a release publishes all six
           images through release_images_reusable.yml, not through this workflow.
         required: false
         default: ''
@@ -85,7 +85,7 @@ jobs:
     #
     # A release does not come through here -- release_publish.yml calls this
     # app's reusable workflow directly, at the merged tree, together with the
-    # other four. This mode is the hand-run escape hatch for rebuilding just this
+    # other five. This mode is the hand-run escape hatch for rebuilding just this
     # service's `:master` image.
     #
     # It used to be started by the version commit's push and gated on that

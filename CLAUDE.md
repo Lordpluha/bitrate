@@ -36,6 +36,7 @@ Main apps:
 - `apps/api` — NestJS API, Prisma/PostgreSQL, Redis, BullMQ, Socket.io.
 - `apps/web-player` — Next.js App Router frontend, Feature-Sliced Design.
 - `apps/web-artists` — TanStack Start artist-facing frontend (Vite + Nitro, FSD).
+- `apps/admin` — Angular 22 operator panel (zoneless SPA, spartan-ng, ESLint not Biome).
 - `packages/ui-react` — shared React component library, Tailwind v4, Base UI, shadcn-style components.
 - `packages/contracts` — generated OpenAPI TypeScript types.
 - `packages/ui-react` also owns the design system: the Tailwind `@theme` layers are written
@@ -62,6 +63,7 @@ current task; do not read every row's target file up front.
 | API module/controller/service/DTO/guard/error patterns | `.claude/rules/api-rules.md` |
 | web-player component/hook/store/route | `.claude/rules/web-player-rules.md` |
 | web-player — deep FSD layer/slice-anatomy/public-API rules | `.claude/rules/fsd-web-player.md` |
+| `apps/admin` — Angular 22 operator panel | `.claude/rules/admin-rules.md` |
 | `apps/mobile` — React Native + Expo | `.claude/rules/mobile-rules.md` |
 | `apps/desktop` — Tauri 2 + React/Vite | `.claude/rules/desktop-rules.md` |
 | Any test (API Jest, web-player/ui-react Vitest, Playwright E2E/screenshots) | `.claude/rules/testing.md` (routes to the `jest`/`vitest`/`playwright` skills) |

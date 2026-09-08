@@ -6,7 +6,7 @@ name: "[release] Publish and Ship Reusable"
 #                       whether this push to master is a release at all
 #   tag-and-release  -- annotated tag v<x.y.z> + a GitHub Release whose body is
 #                       assembled from the changelog entries changesets wrote
-#   images           -- the five service images at :v<x.y.z>, :<sha> and :master
+#   images           -- the six service images at :v<x.y.z>, :<sha> and :master
 #   deploy           -- production, behind the environment approval
 #   back-merge       -- a pull request putting master's bumps back on develop
 #
@@ -240,7 +240,7 @@ jobs:
           echo "::notice::Published GitHub Release ${TAG}."
 
   # ---------------------------------------------------------------------------
-  # The five images, at the merged tree.
+  # The six images, at the merged tree.
   # ---------------------------------------------------------------------------
   images:
     name: Images

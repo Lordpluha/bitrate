@@ -19,6 +19,7 @@ bitrate/
     api/          NestJS backend — @bitrate/api
     web-player/   Next.js App Router — @bitrate/web-player
     web-artists/  TanStack Start artist-facing frontend — @bitrate/web-artists
+    admin/        Angular 22 operator panel — @bitrate/admin
     desktop/      Tauri 2 + React — @bitrate/desktop
     mobile/       React Native + Expo — @bitrate/mobile
     docs/         Docusaurus 3 — @bitrate/docs

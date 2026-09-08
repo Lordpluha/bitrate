@@ -1,0 +1,130 @@
+name: "[admin] Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      push-image:
+        description: Push docker image
+        required: true
+        type: boolean
+      tags:
+        description: Docker tags (multiline)
+        required: true
+        type: string
+      timeout-minutes:
+        description: Job timeout in minutes
+        required: false
+        default: 20
+        type: number
+      run-lint:
+        description: Run the ESLint gate before the docker build
+        required: false
+        default: false
+        type: boolean
+      run-tests:
+        description: Run the admin typecheck and Vitest unit tests
+        required: false
+        default: false
+        type: boolean
+      cache-to-registry:
+        description: Export build cache to GHCR registry
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
+
+  # Angular's esbuild pipeline substitutes this through `define` at BUILD time, exactly the way
+  # `next build` inlines NEXT_PUBLIC_* and Vite inlines VITE_*: whatever is used here is what the
+  # published image talks to forever, and no runtime environment variable on the server can
+  # correct it afterwards.
+  #
+  # The deployment variable keeps the shared name NEXT_PUBLIC_API_URL; the mapping onto this
+  # app's own NG_APP_API_URL happens in the build arg below, the same way web-artists maps it
+  # onto VITE_API_URL. The repository declares no Actions variables, so the fallback is the value
+  # that actually applies; `vars.*` stays as the override hook for forks and a future staging
+  # environment.
+  BUILD_NG_APP_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://api.bitrate.me' }}
+
+jobs:
+  admin-checks:
+    name: Admin Build and Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # The composite action's default is Node 24, which satisfies both the repository's
+      # `engines: node >= 24` and Angular CLI 22's own `>= 22.22.3` floor. Do not pin this job
+      # lower than its neighbours to "match Angular" — the repository floor is the higher one.
+      - name: Setup Node.js and pnpm
+        if: ${{ inputs.run-lint || inputs.run-tests }}
+        uses: ./.github/actions/setup-node-pnpm
+
+      # This app is on ESLint (angular-eslint), not Biome: `pnpm lint` at the root does not
+      # cover it and `biome ci apps/admin` would check nothing. Its own script is the gate.
+      - name: Run admin lint
+        if: ${{ inputs.run-lint }}
+        run: pnpm --filter @bitrate/admin lint
+
+      - name: Run admin typecheck
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @bitrate/admin check-types
+
+      # `ng test` runs Vitest through @angular/build:unit-test in jsdom — no browser download.
+      # `--watch=false` is deliberately absent: the builder's watch option "Defaults to `true` in
+      # TTY environments and `false` otherwise", and an Actions step has no TTY.
+      - name: Run admin unit tests
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @bitrate/admin test
+
+      - name: Setup Docker + registries
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Admin Docker image (with registry cache export)
+        if: ${{ inputs.cache-to-registry }}
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./apps/admin/Dockerfile
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache
+            type=gha,scope=admin
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache,mode=max
+            type=gha,mode=max,scope=admin
+          build-args: |
+            NG_APP_API_URL=${{ env.BUILD_NG_APP_API_URL }}
+          target: production
+
+      - name: Build Admin Docker image (GHA cache export only)
+        if: ${{ !inputs.cache-to-registry }}
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./apps/admin/Dockerfile
+          push: ${{ inputs.push-image }}
+          tags: ${{ inputs.tags }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache
+            type=gha,scope=admin
+          cache-to: |
+            type=gha,mode=max,scope=admin
+          build-args: |
+            NG_APP_API_URL=${{ env.BUILD_NG_APP_API_URL }}
+          target: production

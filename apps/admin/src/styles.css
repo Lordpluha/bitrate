@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+
+/**
+ * The single source of design values for the whole product. `@bitrate/ui-react` is a React
+ * component library this app cannot use, but its themes.css is plain Tailwind v4 CSS with no
+ * JavaScript in it — so the tokens are shared even though the components are not. That is why
+ * the package sits in devDependencies here: it is consumed at build time, never at runtime.
+ */
+@import '@bitrate/ui-react/themes.css';
+
+@source "./";
+
+@theme {
+  /* Breakpoints, matching the artists portal and the web player. */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 650px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 991px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}

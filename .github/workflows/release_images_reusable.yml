@@ -1,14 +1,14 @@
 name: "[release] Release Images Reusable"
 
-# The five service images of one release, built from whatever ref the caller is
+# The six service images of one release, built from whatever ref the caller is
 # running at.
 #
-# All five are always built, path filters and all. That is required rather than
+# All six are always built, path filters and all. That is required rather than
 # wasteful: infra/docker-compose.prod.yaml pulls every service at one shared
 # ${IMAGE_TAG}, so a service that skipped its build would have no image under the
 # version tag and the deploy's `compose pull` would fail on it.
 #
-# This exists as a separate file, rather than as a tag trigger added to the five
+# This exists as a separate file, rather than as a tag trigger added to the six
 # per-app workflows, because GitHub ANDs `on: push: paths:` with `on: push:
 # tags:` inside a single `push` block -- so a tag trigger over there would be
 # path-filtered, which is meaningless. See ADR-0029.
@@ -55,8 +55,10 @@ permissions: {}
 # Every job below calls a workflow that declares `contents: read` + `packages:
 # write` for itself; a called workflow can never hold more than its caller
 # grants, so the same pair is granted per job here and nowhere wider.
-# `run-biome` and `run-tests` are off: the tree being built is the one develop's
-# own CI already checked, and the cut's layer-1 gates re-checked after the bump.
+# The static-analysis and test inputs are off on every job -- `run-biome` for the
+# Biome-covered apps, `run-lint` for admin, which is on ESLint instead: the tree
+# being built is the one develop's own CI already checked, and the cut's layer-1
+# gates re-checked after the bump.
 jobs:
   api:
     name: api
@@ -105,6 +107,22 @@ jobs:
         ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/web-artists:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
       timeout-minutes: 30
       run-biome: false
+
+  admin:
+    name: admin
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/admin_reusable.yml
+    with:
+      push-image: ${{ inputs.push-image }}
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:${{ inputs.image-tag }}
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:${{ github.sha }}
+        ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/admin:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
+      timeout-minutes: 30
+      run-lint: false
+      run-tests: false
 
   docs:
     name: docs
