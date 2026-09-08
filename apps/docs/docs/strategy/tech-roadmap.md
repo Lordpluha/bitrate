@@ -64,7 +64,7 @@ two web apps reports nothing. (`PRODUCT.md` and the delivery roadmap used to des
 
 ## Stage 1 — make the foundation honest
 
-**Gate:** before anything in [layer 2](./product-backlog.md#the-four-layers) is built.
+**Gate:** before anything in [layer 2](./product-backlog.md#two-different-orderings-often-confused) is built.
 
 This stage adds no features. It exists because every later stage assumes these things are true,
 and they currently are not.

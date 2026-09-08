@@ -59,6 +59,8 @@ const config: Config = {
   projectName: 'bitrate', // Usually your repo name.
 
   onBrokenLinks: 'throw',
+  /** Anchors only warn by default, so a renamed heading silently breaks every link to it. */
+  onBrokenAnchors: 'throw',
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you

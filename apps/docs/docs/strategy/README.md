@@ -64,8 +64,8 @@ is rarely a retention problem; it is usually a JTBD that was assumed rather than
 
 ## The four layers
 
-Bitrate is not one product. It is four, and they stack — each is only worth building once the
-one below it works:
+Bitrate is not one product. It is four, and they stack by **value** — where the product's worth
+compounds, and where the defensible part sits:
 
 | Layer | Promise to the user | State today |
 |---|---|---|
@@ -76,8 +76,16 @@ one below it works:
 
 The strategic thesis is that the value compounds upward and the moat lives at the top. Layer 1
 alone competes with incumbents on catalogue size, which is unwinnable. Layer 4 competes on
-something no incumbent is organised to offer, because their customer is the listener and their
-supplier is the label.
+something no incumbent is currently organised to offer, because their customer is the listener
+and their supplier is the label — a claim with
+[real evidence behind it](./vision.md#the-one-piece-of-hard-evidence-spotify-tried-this-and-retreated),
+and a real caveat.
+
+**This is not the build order.** Under [Option A](./vision.md#the-open-question) the Artist
+Workspace — layer 2 — is built first, and the Player is a supporting surface. The numbering says
+where each layer sits in the value stack, not when it gets built; the build order lives in
+[the backlog](./product-backlog.md#two-different-orderings-often-confused) and
+[Validation](./validation.md).
 
 The one-line version, which everything else should be tested against:
 

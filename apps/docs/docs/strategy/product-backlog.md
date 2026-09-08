@@ -10,23 +10,37 @@ it gets built is decided in [Validation](./validation.md), and what is actually 
 lives in the [delivery roadmap](../guides/roadmap.md).
 
 The single most damaging thing that can be done with this page is to treat it as a flat list of
-equally important work. It is not. It spans four product layers that stack, and a capability
-from layer 3 built before layer 2 works is waste, however good the idea is.
+equally important work. It is not.
 
 :::note[Where an idea goes]
 A new idea goes **here**, under a zone — not into the delivery roadmap and not into an app.
 Promotion out of this page happens when the validation gate for its layer has been passed.
 :::
 
-## The four layers
+## Two different orderings, often confused
 
-| Layer | Zone(s) | Gate before starting |
+The [four layers](./README.md#the-four-layers) are a **value stack**: how the product's worth
+compounds, and where the defensible part sits. They are *not* a build order, and reading them
+as one is the mistake this page most wants to prevent.
+
+Under [Option A](./vision.md#the-open-question) — the assumption the whole section runs on —
+the **Artist Workspace is built first**, and the Player is a supporting surface that makes an
+artist's page worth linking to. Numbering the Player as layer 1 describes where it sits in the
+value stack, not when it gets built.
+
+| Zone | Value layer | Cannot start until |
 |---|---|---|
-| **1. Player** | Player / Listener Experience, Social | The listener has a reason to return that does not depend on catalogue size |
-| **2. Artist Workspace** | Bitrate for Artists | Artists complete a release through Bitrate and come back for a second |
-| **3. Bitrate AI** | Bitrate AI | The workspace holds enough real release data for advice to be grounded |
-| **4. Autopilot** | Autopilot | The AI layer's recommendations are accepted more often than they are overridden |
-| **Ecosystem** | Marketplace, Platform | A core that is worth extending |
+| **Bitrate for Artists** | 2 — Artist Workspace | now; this is the MVP |
+| **Bitrate AI** | 3 | the workspace holds real releases with real results |
+| **Autopilot** | 4 | the AI layer's advice is accepted more often than overridden |
+| Player / Listener Experience | 1 — Player | the artist side earns a reason for listeners to arrive |
+| Social | 1 — Player | as above; Track Versions is the exception, see below |
+| Marketplace, Platform | Ecosystem | a core worth extending |
+
+So a capability from the AI zone built before the workspace works is waste, however good the
+idea. A capability from the Player zone built first is not waste — it is simply the other
+strategy, and choosing it means answering
+[the open question](./vision.md#the-open-question) differently.
 
 ## Player / Listener Experience
 
@@ -43,9 +57,17 @@ Promotion out of this page happens when the validation gate for its layer has be
 | Cross-device Queue | The current queue synchronised across devices |
 | Music Discovery Graph | Interactive exploration: artist → similar → influences → genres → releases |
 
-**Reality check.** Search (Postgres FTS) and listening history already exist server-side;
-recommendations do not exist in any form. "Smart Recommendations" and "AI Playlist Builder" are
-therefore not UI work — they are a new subsystem. See [Tech roadmap](./tech-roadmap.md).
+**Reality check.** Search and listening history exist server-side — the search is `pg_trgm`
+trigram similarity, not full-text. Recommendations are **not** missing entirely, which is the
+more awkward position: `/recommendations/feed`, related-artists and charts all exist as
+heuristic SQL over listening history. They rank by `popularity`, `playCount` and
+`monthlyListeners`, and
+[nothing writes those columns outside the seeder](./tech-roadmap.md#defects-not-roadmap-items),
+so on real data they sort by a constant.
+
+That makes "Smart Recommendations" cheaper than a new subsystem and more urgent than a feature:
+fix the counters first, then judge whether the heuristics are good enough before designing
+anything to replace them.
 
 ## Social
 
@@ -57,10 +79,12 @@ therefore not UI work — they are a new subsystem. See [Tech roadmap](./tech-ro
 | Artist Community | Listeners interacting with artists directly |
 | Track Versions | Demo, original, remix, remaster and master grouped as one track entity |
 
-**Track Versions is the strategically interesting one.** It is the feature that makes an artist
-page something an incumbent cannot reproduce: the incumbents model a track as a finished
-product, because that is what a label delivers to them. Modelling the *process* is only
-possible for a platform the artist uploads to directly.
+**Track Versions is the strategically interesting one**, and the one exception worth
+considering early despite sitting in the Player zone. Incumbents model a track as a finished
+product, because a finished product is what a label delivers to them. Modelling the *process*
+needs the artist to upload directly — which
+[Spotify tried and abandoned](./vision.md#the-one-piece-of-hard-evidence-spotify-tried-this-and-retreated).
+That is why the position is open, rather than proof that it cannot be taken back.
 
 It is also the one with a real data-model cost — it changes what a "track" is, which touches
 playback, playlists, library, search and analytics. Do not treat it as a social feature; treat
@@ -105,10 +129,19 @@ AI layer at all.
 | AI Release Plan | Builds the plan of action before and after a release |
 | AI Insights | Explains analytics in plain language: what happened → why → what to do |
 
-**AI Insights is the one to build first**, and it is deliberately the least ambitious. It needs
-no generation, no autonomy, and no new data — only the analytics the workspace already has. It
-is also the capability that maps most directly onto the complaint that motivates the whole
-zone: every platform shows numbers, none of them explains them.
+**AI Insights is the one to build first**, and it is deliberately the least ambitious: no
+generation, no autonomy, no new capability — only an explanation of numbers already collected.
+
+It still needs those numbers to exist, and today they do not. `ListeningHistory` records who
+played what and when, and not how much was listened, from where, or on what device, which is
+too thin to explain anything. That is
+[Stage 3 of the tech roadmap](./tech-roadmap.md#stage-3--data-before-intelligence) and a hard
+prerequisite, not a detail.
+
+It is also the capability resting most directly on
+[an assumption nobody has tested](./vision.md#where-bitrate-has-a-right-to-win) — that artists
+experience the missing explanation as a top-rank problem. If phase 1 says otherwise, this zone
+shrinks rather than leads.
 
 Note the boundary the [vision](./vision.md#what-bitrate-deliberately-does-not-do) sets: AI is
 applied to the release and the career, never to composing the music.
@@ -156,3 +189,10 @@ in the [delivery roadmap](../guides/roadmap.md) under "Future (2027+)". They are
 backlog because none of them serves
 [the job to be done](./vision.md#the-job-to-be-done). If the strategy changes so that they do,
 add them here with the reason attached.
+
+One wrinkle worth naming rather than leaving for someone to trip over: podcasts are **not**
+absent from the code. `Podcast`, `Episode` and `UserSavedEpisode` are already models in the
+Prisma schema, with no API or UI on top of them. Either the strategy is wrong to exclude
+podcasts, or that schema is speculative weight carried by every migration — and the second is
+the more likely reading. Decide it deliberately; do not let three unused models quietly become
+a commitment.
