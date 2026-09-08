@@ -1,0 +1,101 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Moderation queue</h1>
+    <p class="text-sm text-muted-foreground">{{ total() }} report(s) in the current filter.</p>
+  </header>
+
+  <div class="flex flex-wrap gap-2">
+    <button
+      hlmBtn
+      size="sm"
+      [variant]="filter() === null ? 'default' : 'outline'"
+      type="button"
+      (click)="setFilter(null)"
+    >
+      All
+    </button>
+    @for (status of statuses; track status) {
+      <button
+        hlmBtn
+        size="sm"
+        type="button"
+        [variant]="filter() === status ? 'default' : 'outline'"
+        (click)="setFilter(status)"
+      >
+        {{ status }}
+      </button>
+    }
+  </div>
+
+  @if (failure(); as message) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      {{ message }}
+    </p>
+  }
+
+  @if (loading()) {
+    <p class="text-sm text-muted-foreground">Loading…</p>
+  } @else if (reports().length === 0) {
+    <p class="text-sm text-muted-foreground">Nothing to review in this filter.</p>
+  } @else {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Reported content awaiting operator review
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Reported</th>
+            <th hlmTh scope="col">Reason</th>
+            <th hlmTh scope="col">Status</th>
+            <th hlmTh scope="col">Opened</th>
+            <th hlmTh scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (report of reports(); track report.id) {
+            <tr hlmTr>
+              <td hlmTd>{{ report.entityType }}</td>
+              <td hlmTd>{{ report.reason }}</td>
+              <td hlmTd>
+                <span hlmBadge variant="outline">{{ report.status }}</span>
+              </td>
+              <td hlmTd class="tabular-nums">{{ report.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td hlmTd>
+                <div class="flex gap-2">
+                  <button
+                    hlmBtn
+                    size="sm"
+                    variant="outline"
+                    type="button"
+                    (click)="advance(report, 'REVIEWING')"
+                  >
+                    Take
+                  </button>
+                  <button
+                    hlmBtn
+                    size="sm"
+                    variant="outline"
+                    type="button"
+                    (click)="advance(report, 'RESOLVED')"
+                  >
+                    Resolve
+                  </button>
+                  <button
+                    hlmBtn
+                    size="sm"
+                    variant="ghost"
+                    type="button"
+                    (click)="advance(report, 'REJECTED')"
+                  >
+                    Reject
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

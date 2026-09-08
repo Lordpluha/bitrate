@@ -212,6 +212,28 @@ services:
         reservations:
           memory: 256M
 
+  admin:
+    logging: *default-logging
+    image: ghcr.io/lordpluha/bitrate/admin:${IMAGE_TAG:-master}
+    build:
+      context: ..
+      dockerfile: ./apps/admin/Dockerfile
+      target: production
+      args:
+        - NG_APP_API_URL=${NEXT_PUBLIC_API_URL}
+    container_name: bitrate-admin-prod
+    restart: always
+    depends_on:
+      - api
+    networks:
+      - bitrate-network
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+
   # Static sites. Both serve a prebuilt bundle from nginx inside the container on 8080 and hold no
   # runtime state, so they need neither environment nor a dependency on the API.
   docs:
@@ -278,6 +300,7 @@ services:
       - api
       - web-player
       - web-artists
+      - admin
       - docs
       - storybook
     networks:

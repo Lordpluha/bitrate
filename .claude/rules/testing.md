@@ -18,6 +18,7 @@ patterns, and commands. Don't load all three for a change that touches one surfa
 |---|---|---|---|
 | `apps/api` — unit, integration, E2E | Jest | `.unit-spec.ts`, `.int-spec.ts`, `.e2e-spec.ts` | `jest` |
 | `apps/web-player`, `packages/ui-react` — unit, integration, snapshot, screenshot | Vitest | `.unit-spec.ts(x)`, `.int-spec.ts(x)`, `.snapshot-spec.ts(x)`, `.screenshot-spec.ts(x)` | `vitest` |
+| `apps/admin` — unit | Vitest via `@angular/build:unit-test` | `.unit-spec.ts` | — (see `.claude/rules/admin-rules.md`) |
 | `apps/web-player` — E2E, route screenshots; `packages/ui-react` — Chromium provider behind the `screenshot` Vitest project | Playwright | `.e2e-spec.ts`, `.screenshot-spec.ts(x)` | `playwright` |
 
 ## Picking the right layer

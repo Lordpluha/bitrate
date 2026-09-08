@@ -157,7 +157,33 @@ services:
       - bitrate-network
     command: pnpm --filter @bitrate/web-artists run dev
 
-  # Admin Panel (Kottster)
+  # Admin Panel (Angular SPA)
+  admin:
+    build:
+      context: ..
+      dockerfile: ./apps/admin/Dockerfile
+      target: development
+    container_name: bitrate-admin
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      # Angular inlines this at build time via `define`; in the dev target ng serve reads it
+      # from angular.json instead, so this is here for parity, not because it is consumed.
+      NG_APP_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+    ports:
+      - "${ADMIN_PORT:-3005}:3005"
+    volumes:
+      - ../apps/admin:/app/apps/admin
+      - ../packages:/app/packages
+      - /app/node_modules
+      - /app/apps/admin/node_modules
+      - /app/apps/admin/.angular
+    depends_on:
+      - api
+    networks:
+      - bitrate-network
+    command: pnpm --filter @bitrate/admin run dev
+
   # Mobile App (Expo Development Server)
   mobile:
     build:

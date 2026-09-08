@@ -40,6 +40,7 @@ how to apply it day to day.
 | [0032](./0032-artist-first.md) | Bitrate is artist-first; the listening surface supports it |
 | [0033](./0033-off-host-backups-and-object-storage.md) | Backups leave the host and are restore-rehearsed; audio moves to object storage |
 | [0034](./0034-artists-portal-on-tanstack-start.md) | The artists portal runs on TanStack Start, not Next.js |
+| [0035](./0035-admin-panel-on-angular.md) | The operator panel returns, on Angular, with its own data layer |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

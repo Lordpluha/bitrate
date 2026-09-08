@@ -14,6 +14,13 @@ Four CLI commands cover mechanical verification. Run from the monorepo root.
 
 ## The four commands
 
+> **Two lint gates, not one.** `apps/admin` (Angular) and `apps/mobile` (Expo) run ESLint
+> instead of Biome. Biome's language support is fixed at compile time and it cannot parse an
+> Angular template's semantics; ESLint is the only linter that accepts a third-party parser, which
+> is what `@angular-eslint/template-parser` is. Everything else in the monorepo is Biome. See
+> [ADR-0035](../../apps/docs/docs/architecture/0035-admin-panel-on-angular.md) and
+> `.claude/rules/admin-rules.md`.
+
 ### `pnpm lint`
 
 Runs `biome lint --error-on-warnings` in `api`, `web-player`, `web-artists`, and `ui-react`

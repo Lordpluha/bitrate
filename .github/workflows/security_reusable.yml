@@ -62,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [api, web-player, web-artists]
+        service: [api, web-player, web-artists, admin]
         # Each service declares only the build args its own Dockerfile consumes.
         # api needs none: apps/api/Dockerfile's ARGs already carry defaults.
         # Values mirror web_player_reusable.yml so there is one convention.
@@ -77,6 +77,12 @@ jobs:
           - service: web-artists
             buildArgs: |
               VITE_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
+          # admin is Angular, whose esbuild `define` substitutes NG_APP_-prefixed names at build
+          # time. Same mapping as web-artists directly above: one shared deployment variable,
+          # each app's own build-arg name. Keep the two lines consistent.
+          - service: admin
+            buildArgs: |
+              NG_APP_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
 
     permissions:
       security-events: write

@@ -38,6 +38,15 @@
   },
   "overrides": [
     {
+      "includes": ["apps/admin/**", "apps/mobile/**"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
+    },
+    {
       "includes": [".claude/skills/**"],
       "linter": {
         "enabled": false
