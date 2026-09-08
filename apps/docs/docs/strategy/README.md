@@ -81,7 +81,7 @@ and their supplier is the label — a claim with
 [real evidence behind it](./vision.md#the-one-piece-of-hard-evidence-spotify-tried-this-and-retreated),
 and a real caveat.
 
-**This is not the build order.** Under [Option A](./vision.md#the-open-question) the Artist
+**This is not the build order.** Under [Option A](./vision.md#the-decision-artist-first) the Artist
 Workspace — layer 2 — is built first, and the Player is a supporting surface. The numbering says
 where each layer sits in the value stack, not when it gets built; the build order lives in
 [the backlog](./product-backlog.md#two-different-orderings-often-confused) and
@@ -91,22 +91,18 @@ The one-line version, which everything else should be tested against:
 
 > **The artist makes music. Bitrate handles everything around it.**
 
-## An unresolved contradiction, stated on purpose
+## Settled: artist-first
 
-[`PRODUCT.md`](https://github.com/Lordpluha/bitrate/blob/master/PRODUCT.md) states that
-listeners are the primary audience and that "this is the audience the product's success is
-measured against". This section argues the opposite: that the artist side is where the
-defensible product is, and that the listener side is the surface which makes the artist side
-worth having.
+`PRODUCT.md` used to name listeners as the primary audience while this section argued for
+artists. That is decided — Bitrate is **artist-first**, recorded in
+[ADR-0032](../architecture/0032-artist-first.md), and `PRODUCT.md` now agrees.
 
-Both cannot be the primary audience. This is not an editing oversight and it should not be
-resolved by quietly rewriting one document — it is a real, open strategic decision, and it
-determines what gets built next. See [Vision](./vision.md#the-open-question) for the two
-options and what each costs.
+The artist is the customer; the listening surface exists to make an artist's work reach people.
+Success is measured in [completed releases](./metrics.md#the-north-star). The reasoning, and the
+risk accepted along with it, are in [Vision](./vision.md#the-decision-artist-first).
 
-Until it is settled, treat `PRODUCT.md` as binding for **design and copy decisions in the
-existing apps** (it describes what is actually there today) and this section as the argument
-for **what to build next**.
+Both documents remain useful for different things: `PRODUCT.md` describes what the existing apps
+actually are, and this section decides what to build next.
 
 ## How to use this section
 

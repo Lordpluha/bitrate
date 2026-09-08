@@ -52,10 +52,17 @@ flowchart TD
 
 ### Where the project is now
 
-**Phase 0, blocked on one decision.** The written work exists; the
-[artist-first vs listener-first question](./vision.md#the-open-question) does not have an
-answer. Nobody has been interviewed, so every claim about the customer in this section is
-still reasoning rather than evidence.
+**Phase 0 is complete; phase 1 is owed and being skipped deliberately.** The direction is
+decided — [artist-first, ADR-0032](../architecture/0032-artist-first.md) — which was the
+condition phase 0 was blocked on.
+
+What has *not* happened is phase 1. Nobody has been interviewed, so every claim about the
+customer in this section is still reasoning rather than evidence, and the decision was to build
+the artist workspace before closing that gap. That is a recorded, accepted risk rather than an
+oversight: see
+[the known risk](./vision.md#the-decision-artist-first). Interviews are reordered, not
+cancelled, and the cheapest moment to run them is alongside the first build rather than after
+it.
 
 Two things are out of sequence and should not wait for their phase:
 [Law Gate 0](./law-roadmap.md#gate-0--the-site-is-publicly-reachable), because the site is
@@ -72,11 +79,11 @@ The written work is done and lives in this section: [vision and positioning](./v
 
 **Exit criterion:** the [dependency chain](./README.md#the-dependency-chain) can be stated in
 one paragraph without contradicting itself — and the
-[listener-first vs artist-first question](./vision.md#the-open-question) has been decided.
+[listener-first vs artist-first question](./vision.md#the-decision-artist-first) has been
+decided.
 
-**The phase is not finished**, because that second condition is unmet. Everything downstream
-assumes artist-first; until that is chosen deliberately and recorded as an ADR, phase 1 would
-be interviewing for a strategy that has not been picked.
+**Both conditions are now met.** Artist-first is chosen and recorded in
+[ADR-0032](../architecture/0032-artist-first.md).
 
 ### Phase 1 — Validation
 
