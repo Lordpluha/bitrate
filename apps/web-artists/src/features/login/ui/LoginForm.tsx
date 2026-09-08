@@ -13,8 +13,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { apiBaseUrl } from '@shared/api'
 import { ROUTES } from '@shared/routes/routes'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useLogin } from '../api/useLogin'
 import { type LoginFormData, loginSchema } from '../validation'
@@ -25,11 +24,11 @@ const buttonStyles =
 const iconStyles = 'absolute left-4 top-1/2 -translate-y-1/2'
 
 export const LoginForm = () => {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { mutate: login, isPending } = useLogin({
     onSuccess: () => {
       toast.success('Logged in successfully')
-      router.push(ROUTES.landing)
+      navigate({ to: ROUTES.landing })
     },
     onError: () => {
       toast.error('Invalid email or password')
@@ -153,7 +152,7 @@ export const LoginForm = () => {
 
           <p className="text-lg text-center">
             Don't have an account?{' '}
-            <Link className="font-bold" href={ROUTES.auth.registration}>
+            <Link className="font-bold" to={ROUTES.auth.registration}>
               <br />
               Sign up.
             </Link>

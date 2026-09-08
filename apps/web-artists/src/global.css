@@ -1,10 +1,13 @@
 @import "tailwindcss";
 @import "@bitrate/ui-react/themes.css";
 
-@source "../";
-@source "../../node_modules/@bitrate/ui-react/src";
+@source "./";
+@source "../node_modules/@bitrate/ui-react/src";
 
 @theme {
+  /* Fonts — the League Spartan stylesheet is linked from __root.tsx head. */
+  --font-league-spartan: "League Spartan", ui-sans-serif, system-ui, sans-serif;
+
   /* Breakpoints */
   --breakpoint-xs: 480px;
   --breakpoint-sm: 650px;

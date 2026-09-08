@@ -3,7 +3,7 @@
 import { clientFetchClient } from '@shared/api/fetchClient'
 import { ROUTES } from '@shared/routes/routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { usePathname, useRouter } from 'next/navigation'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 
 const authQueryKeys = {
   all: ['auth'] as const,
@@ -11,8 +11,8 @@ const authQueryKeys = {
 }
 
 export function useAuth() {
-  const router = useRouter()
-  const pathname = usePathname()
+  const navigate = useNavigate()
+  const pathname = useLocation({ select: (location) => location.pathname })
   const queryClient = useQueryClient()
 
   const isAuthPage =
@@ -51,11 +51,11 @@ export function useAuth() {
     },
     onSuccess: () => {
       queryClient.setQueryData(authQueryKeys.artist(), null)
-      router.push(ROUTES.auth.login)
+      navigate({ to: ROUTES.auth.login })
     },
     onError: (error) => {
       console.error('Logout error:', error)
-      router.push(ROUTES.auth.login)
+      navigate({ to: ROUTES.auth.login })
     },
   })
 

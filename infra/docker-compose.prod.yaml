@@ -195,12 +195,12 @@ services:
       dockerfile: ./apps/web-artists/Dockerfile
       target: production
       args:
-        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - VITE_API_URL=${NEXT_PUBLIC_API_URL}
     container_name: bitrate-web-artists-prod
     restart: always
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      VITE_API_URL: ${NEXT_PUBLIC_API_URL}
     depends_on:
       - api
     networks:

@@ -23,8 +23,8 @@
       "ignore": ["src/**/index.ts"]
     },
     "apps/web-artists": {
-      "entry": ["src/app/**/*.tsx", "src/app/**/*.ts", "src/app/global.css"],
-      "ignore": ["env.schema.ts"]
+      "entry": ["src/router.tsx", "src/routes/**/*.tsx", "src/global.css", "vite.config.ts"],
+      "ignore": ["env.schema.ts", "src/routeTree.gen.ts"]
     },
     "apps/web-player": {
       "entry": [

@@ -134,7 +134,8 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: development
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+      # Vite видит только VITE_-префикс; общая с web-player переменная разворачивается здесь.
+      VITE_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
       PORT: 3002
     ports:
       - "${WEB_ARTISTS_PORT:-3004}:3002"

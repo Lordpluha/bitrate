@@ -9,7 +9,6 @@ import {
   XTwitter,
 } from '@bitrate/ui-react'
 import { SwitchLanguagesButton } from '@shared/ui'
-import Link from 'next/link'
 import footerData from '../config/footer-links.json'
 
 const appButtonComponents = {
@@ -72,25 +71,21 @@ export const Footer = () => {
                   {column.title}
                 </h3>
                 {column.links?.map((link) => (
-                  <Link
+                  <a
                     className="text-neutral-400 font-medium text-base hover:text-white"
                     href={link.href}
                     key={link.href}
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 ))}
                 {column.buttons?.map((button) => {
                   if (!isAppButtonType(button.type)) return null
                   const ButtonComponent = appButtonComponents[button.type]
                   return (
-                    <Link
-                      className="block"
-                      href={button.href}
-                      key={button.type}
-                    >
+                    <a className="block" href={button.href} key={button.type}>
                       <ButtonComponent className="w-42 h-14" />
-                    </Link>
+                    </a>
                   )
                 })}
               </div>
@@ -101,13 +96,13 @@ export const Footer = () => {
               if (!isSocialButtonType(social.icon)) return null
               const ButtonComponent = appButtonSocials[social.icon]
               return (
-                <Link
+                <a
                   className="border-solid border rounded-4xl border-neutral-400 hover:border-white transition duration-300 transform hover:scale-110"
                   href={social.href}
                   key={social.icon}
                 >
                   <ButtonComponent className="w-8 h-8 m-2" />
-                </Link>
+                </a>
               )
             })}
           </div>
@@ -119,28 +114,28 @@ export const Footer = () => {
             </div>
             <ul className="xs:gap-6 flex flex-row gap-3">
               <li>
-                <Link
+                <a
                   className="text-neutral-400 hover:text-white "
                   href="/#legal"
                 >
                   Legal
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
+                <a
                   className="text-neutral-400 hover:text-white"
                   href="/#privacy"
                 >
                   Privacy
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
+                <a
                   className="text-neutral-400 hover:text-white"
                   href="/#cookies"
                 >
                   Cookies
-                </Link>
+                </a>
               </li>
             </ul>
           </div>

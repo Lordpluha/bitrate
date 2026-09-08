@@ -4,7 +4,14 @@
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+    "includes": [
+      "**",
+      "!node_modules",
+      "!.output",
+      "!.tanstack",
+      "!dist",
+      "!build"
+    ]
   },
   "css": {
     "parser": {
@@ -40,10 +47,16 @@
       }
     },
     "domains": {
-      "next": "recommended",
       "react": "recommended"
     },
-    "includes": ["**", "!.next/**", "!out/**", "!build/**", "!next-env.d.ts"]
+    "includes": [
+      "**",
+      "!.output/**",
+      "!.tanstack/**",
+      "!out/**",
+      "!build/**",
+      "!src/routeTree.gen.ts"
+    ]
   },
   "javascript": {
     "formatter": { "quoteStyle": "single" },
