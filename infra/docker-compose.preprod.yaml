@@ -144,7 +144,9 @@ services:
       - ../packages:/app/packages
       - /app/node_modules
       - /app/apps/web-artists/node_modules
-      - /app/apps/web-artists/.next
+      # Vite's dep-optimizer cache, not Next's .next — the host bind-mount above would
+      # otherwise shadow it and the dev server would re-optimize on every container start.
+      - /app/apps/web-artists/node_modules/.vite
       - /app/packages/ui-react/node_modules
       - /app/packages/svgr/node_modules
       - /app/packages/vite-svgr/node_modules

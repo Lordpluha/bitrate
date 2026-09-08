@@ -35,7 +35,7 @@ Monorepo: Turborepo + pnpm, packages use the `@bitrate/` namespace.
 Main apps:
 - `apps/api` — NestJS API, Prisma/PostgreSQL, Redis, BullMQ, Socket.io.
 - `apps/web-player` — Next.js App Router frontend, Feature-Sliced Design.
-- `apps/web-artists` — Next.js artist-facing frontend, same stack as web-player.
+- `apps/web-artists` — TanStack Start artist-facing frontend (Vite + Nitro, FSD).
 - `packages/ui-react` — shared React component library, Tailwind v4, Base UI, shadcn-style components.
 - `packages/contracts` — generated OpenAPI TypeScript types.
 - `packages/ui-react` also owns the design system: the Tailwind `@theme` layers are written
