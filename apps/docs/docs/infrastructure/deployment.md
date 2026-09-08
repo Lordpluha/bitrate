@@ -20,7 +20,7 @@ publishes ports:
 |---|---|---|
 | `nginx` | TLS termination and routing | all of them — 80, 443 |
 | `web-player` | Next.js, port 3001 | the apex, and `www` by redirect |
-| `web-artists` | Next.js, port 3002 | `artists.` |
+| `web-artists` | TanStack Start, port 3002 | `artists.` |
 | `api` | NestJS, port 3000 | `api.` |
 | `docs` | Docusaurus build on nginx, port 8080 | `docs.` |
 | `storybook` | Storybook build on nginx, port 8080 | `ui.` |

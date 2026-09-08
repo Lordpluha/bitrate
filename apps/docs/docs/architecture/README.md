@@ -39,6 +39,7 @@ how to apply it day to day.
 | [0031](./0031-expand-docs-sync-scope.md) | Expand `/br-sync-docs` to root onboarding docs and `.claude/` self-consistency |
 | [0032](./0032-artist-first.md) | Bitrate is artist-first; the listening surface supports it |
 | [0033](./0033-off-host-backups-and-object-storage.md) | Backups leave the host and are restore-rehearsed; audio moves to object storage |
+| [0034](./0034-artists-portal-on-tanstack-start.md) | The artists portal runs on TanStack Start, not Next.js |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

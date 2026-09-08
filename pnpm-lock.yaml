@@ -41,6 +41,7 @@ overrides:
   sharp: ^0.35.1
   uuid@11: ^11.1.1
   ws@8: ^8.21.3
+  zod: 4.4.3
 
 importers:
 
@@ -185,7 +186,7 @@ importers:
         specifier: ^4.8.3
         version: 4.8.3
       zod:
-        specifier: ^4.4.3
+        specifier: 4.4.3
         version: 4.4.3
     devDependencies:
       '@biomejs/biome':
@@ -474,11 +475,11 @@ importers:
         specifier: ^1.18.0
         version: 1.18.0(react@19.2.7)
       openapi-fetch:
-        specifier: ^0.17.0
-        version: 0.17.0
+        specifier: ^0.15.2
+        version: 0.15.2
       openapi-react-query:
         specifier: ^0.5.4
-        version: 0.5.4(@tanstack/react-query@5.102.8(react@19.2.7))(openapi-fetch@0.17.0)
+        version: 0.5.4(@tanstack/react-query@5.102.8(react@19.2.7))(openapi-fetch@0.15.2)
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -492,8 +493,8 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       zod:
-        specifier: ^4.5.4
-        version: 4.5.4
+        specifier: 4.4.3
+        version: 4.4.3
     devDependencies:
       '@biomejs/biome':
         specifier: 2.5.0
@@ -619,7 +620,7 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
       zod:
-        specifier: ^4.4.3
+        specifier: 4.4.3
         version: 4.4.3
       zustand:
         specifier: ^5.0.8
@@ -822,7 +823,7 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
       zod:
-        specifier: ^4.4.3
+        specifier: 4.4.3
         version: 4.4.3
     devDependencies:
       '@biomejs/biome':
@@ -13143,7 +13144,7 @@ packages:
       '@nestjs/common': ^10.0.0 || ^11.0.0
       '@nestjs/swagger': ^7.4.2 || ^8.0.0 || ^11.0.0
       rxjs: ^7.0.0
-      zod: ^3.25.0 || ^4.0.0
+      zod: 4.4.3
     peerDependenciesMeta:
       '@nestjs/swagger':
         optional: true
@@ -13413,9 +13414,6 @@ packages:
 
   openapi-fetch@0.15.2:
     resolution: {integrity: sha512-rdYTzUmSsJevmNqg7fwUVGuKc2Gfb9h6ph74EVPkPfIGJaZTfqdIbJahtbJ3qg1LKinln30hqZniLnKpH0RJBg==}
-
-  openapi-fetch@0.17.0:
-    resolution: {integrity: sha512-PsbZR1wAPcG91eEthKhN+Zn92FMHxv+/faECIwjXdxfTODGSGegYv0sc1Olz+HYPvKOuoXfp+0pA2XVt2cI0Ig==}
 
   openapi-react-query@0.5.4:
     resolution: {integrity: sha512-V9lRiozjHot19/BYSgXYoyznDxDJQhEBSdi26+SJ0UqjMANLQhkni4XG+Z7e3Ag7X46ZLMrL9VxYkghU3QvbWg==}
@@ -17136,9 +17134,6 @@ packages:
 
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
-
-  zod@4.5.4:
-    resolution: {integrity: sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==}
 
   zustand@5.0.14:
     resolution: {integrity: sha512-/8tAspM5LMPr28b3fwLYrtdj77ECpfZviaP75CMTnwO8ISyaE4GDIG/9rDDYq/cH9D2Xw2A2RXglLInmVBQB/g==}
@@ -25056,7 +25051,7 @@ snapshots:
       jiti: 2.7.0
       magic-string: 0.30.21
       prettier: 3.8.4
-      zod: 4.5.4
+      zod: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -25070,7 +25065,7 @@ snapshots:
       '@tanstack/router-utils': 1.162.2
       chokidar: 5.0.0
       unplugin: 3.3.0(esbuild@0.27.3)(rolldown@1.2.6)(rollup@4.63.1)(vite@8.2.2(@types/node@25.9.3)(esbuild@0.27.3)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(yaml@2.9.0))(webpack@5.107.2(esbuild@0.27.3))
-      zod: 4.5.4
+      zod: 4.4.3
     optionalDependencies:
       '@tanstack/react-router': 1.170.33(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       vite: 8.2.2(@types/node@25.9.3)(esbuild@0.27.3)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(yaml@2.9.0)
@@ -25129,7 +25124,7 @@ snapshots:
       ufo: 1.6.4
       vitefu: 1.1.3(vite@8.2.2(@types/node@25.9.3)(esbuild@0.27.3)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(yaml@2.9.0))
       xmlbuilder2: 4.0.3
-      zod: 4.5.4
+      zod: 4.4.3
     optionalDependencies:
       vite: 8.2.2(@types/node@25.9.3)(esbuild@0.27.3)(jiti@2.7.0)(terser@5.51.2)(tsx@4.22.4)(yaml@2.9.0)
     transitivePeerDependencies:
@@ -31378,7 +31373,7 @@ snapshots:
       tinyglobby: 0.2.17
       unbash: 3.0.0
       yaml: 2.9.0
-      zod: 4.5.4
+      zod: 4.4.3
 
   knitwork@1.3.0: {}
 
@@ -33473,20 +33468,16 @@ snapshots:
     dependencies:
       openapi-typescript-helpers: 0.0.15
 
-  openapi-fetch@0.17.0:
-    dependencies:
-      openapi-typescript-helpers: 0.1.0
-
   openapi-react-query@0.5.4(@tanstack/react-query@5.101.0(react@19.2.7))(openapi-fetch@0.15.2):
     dependencies:
       '@tanstack/react-query': 5.101.0(react@19.2.7)
       openapi-fetch: 0.15.2
       openapi-typescript-helpers: 0.1.0
 
-  openapi-react-query@0.5.4(@tanstack/react-query@5.102.8(react@19.2.7))(openapi-fetch@0.17.0):
+  openapi-react-query@0.5.4(@tanstack/react-query@5.102.8(react@19.2.7))(openapi-fetch@0.15.2):
     dependencies:
       '@tanstack/react-query': 5.102.8(react@19.2.7)
-      openapi-fetch: 0.17.0
+      openapi-fetch: 0.15.2
       openapi-typescript-helpers: 0.1.0
 
   openapi-typescript-helpers@0.0.15: {}
@@ -37848,8 +37839,6 @@ snapshots:
       readable-stream: 4.7.0
 
   zod@4.4.3: {}
-
-  zod@4.5.4: {}
 
   zustand@5.0.14(@types/react@19.2.17)(immer@11.1.8)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)):
     optionalDependencies:
