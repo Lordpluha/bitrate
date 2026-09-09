@@ -1,0 +1,95 @@
+<aside
+  class="relative flex shrink-0 flex-col border-r border-border bg-card"
+  [style.width.px]="width()"
+  aria-label="Sections"
+>
+  <!-- Brand. The mark keeps its own gradient in every theme: a logo that restyles is a
+       different logo. Collapsed, the wordmark goes and the mark centres in the rail. -->
+  <a
+    class="flex h-16 shrink-0 items-center gap-2.5 border-b border-border px-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    [class.justify-center]="collapsed()"
+    [class.px-0]="collapsed()"
+    routerLink="/"
+  >
+    <img class="size-7 shrink-0" src="/logo.svg" alt="" width="28" height="28" />
+    @if (!collapsed()) {
+      <span class="flex min-w-0 flex-col leading-none">
+        <span class="truncate text-sm font-semibold text-card-foreground">Bitrate</span>
+        <span class="truncate text-xs text-muted-foreground">Operators</span>
+      </span>
+    } @else {
+      <span class="sr-only">Bitrate operators</span>
+    }
+  </a>
+
+  <nav class="flex-1 overflow-y-auto overflow-x-hidden px-2 py-3">
+    @for (section of sections; track section.label; let first = $first) {
+      <!-- Section caption when there is room for words; a hairline when there is not. A
+           caption cannot shrink to an icon, so collapsed mode swaps the device rather than
+           truncating it. -->
+      @if (collapsed()) {
+        @if (!first) {
+          <hr class="mx-2 my-2 border-border" />
+        }
+      } @else {
+        <p
+          class="px-3 pb-1 text-[0.6875rem] font-medium uppercase tracking-wider text-muted-foreground"
+          [class.pt-4]="!first"
+        >
+          {{ section.label }}
+        </p>
+      }
+
+      <ul class="space-y-0.5">
+        @for (item of section.items; track item.kind === 'link' ? item.path : item.id) {
+          <li><app-nav-item [item]="item" [collapsed]="collapsed()" /></li>
+        }
+      </ul>
+    }
+  </nav>
+
+  <div class="shrink-0 border-t border-border p-2">
+    <button
+      class="flex h-9 w-full items-center gap-3 rounded-md px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      [class.justify-center]="collapsed()"
+      [class.px-0]="collapsed()"
+      type="button"
+      [attr.aria-label]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+      (click)="toggle()"
+    >
+      <ng-icon
+        class="shrink-0 text-lg transition-transform"
+        name="lucidePanelLeft"
+        aria-hidden="true"
+        [class.rotate-180]="collapsed()"
+      />
+      @if (!collapsed()) {
+        <span class="truncate">Collapse</span>
+      }
+    </button>
+  </div>
+
+  <!-- The drag handle. `separator` with an orientation and value is what a screen reader
+       announces as resizable, and arrow keys are what it then tells the user to press. -->
+  <div
+    class="absolute inset-y-0 -right-1 w-2 cursor-col-resize touch-none focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring"
+    role="separator"
+    aria-orientation="vertical"
+    aria-label="Resize sidebar"
+    tabindex="0"
+    [attr.aria-valuenow]="width()"
+    [attr.aria-valuemin]="min"
+    [attr.aria-valuemax]="max"
+    (pointerdown)="startResize($event)"
+    (pointermove)="resize($event)"
+    (pointerup)="endResize($event)"
+    (pointercancel)="endResize($event)"
+    (dblclick)="reset()"
+    (keydown)="nudge($event)"
+  >
+    <span
+      class="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-transparent transition-colors"
+      [class.bg-primary]="dragging()"
+    ></span>
+  </div>
+</aside>
