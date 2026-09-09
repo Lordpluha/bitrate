@@ -1,15 +1,6 @@
 import type { Routes } from '@angular/router'
 import { requireStaffSession } from '@shared/api/auth.guard'
 
-/** Order matches how an operator's day runs: triage first, then the surfaces it points at. */
-export const NAV_ITEMS = [
-  { path: '/moderation', label: 'Moderation queue' },
-  { path: '/catalog', label: 'Catalog pipeline' },
-  { path: '/artists', label: 'Artists' },
-  { path: '/users', label: 'Listeners' },
-  { path: '/audit', label: 'Audit log' },
-] as const
-
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'moderation' },
   {
