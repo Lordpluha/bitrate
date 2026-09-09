@@ -7,7 +7,7 @@
 import './instrument'
 
 import { API_DOC_DESCRIPTION, API_DOC_TITLE, API_DOC_VERSION } from '@common/swagger'
-import { HttpStatus, VersioningType } from '@nestjs/common'
+import { HttpStatus, Logger, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import type { NestExpressApplication } from '@nestjs/platform-express'
@@ -148,4 +148,10 @@ async function bootstrap() {
   await app.listen(configService.getOrThrow('PORT'))
 }
 
-bootstrap()
+bootstrap().catch((error: unknown) => {
+  new Logger('Bootstrap').error(
+    'Fatal error during bootstrap',
+    error instanceof Error ? error.stack : error,
+  )
+  process.exit(1)
+})

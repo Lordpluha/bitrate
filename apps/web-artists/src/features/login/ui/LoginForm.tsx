@@ -28,7 +28,7 @@ export const LoginForm = () => {
   const { mutate: login, isPending } = useLogin({
     onSuccess: () => {
       toast.success('Logged in successfully')
-      navigate({ to: ROUTES.landing })
+      void navigate({ to: ROUTES.landing })
     },
     onError: () => {
       toast.error('Invalid email or password')

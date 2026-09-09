@@ -21,6 +21,55 @@ Four CLI commands cover mechanical verification. Run from the monorepo root.
 > [ADR-0035](../../apps/docs/docs/architecture/0035-admin-panel-on-angular.md) and
 > `.claude/rules/admin-rules.md`.
 
+### Unhandled-promise rules — `noFloatingPromises` / `noMisusedPromises`
+
+The root `biome.json`'s **top-level** `linter.rules.nursery` block enables
+`noFloatingPromises` and `noMisusedPromises` for the whole monorepo (`apps/api`,
+`apps/web-player`, `apps/web-artists`, `packages/ui-react`; `apps/admin` and `apps/mobile`
+are already lint-disabled for Biome entirely). Three things about this configuration are not
+obvious and have already caused real breakage once — read before touching it:
+
+1. **These rules exist only at root, top-level.** They were verified, on the pinned Biome
+   `2.5.0`, to produce **zero findings — silently — from every other placement**: a nested
+   workspace `biome.json` (all of them declare `"root": false`) cannot enable a type-aware
+   `nursery` rule regardless of whether it uses `extends`, and a root-level `overrides` entry
+   scoping the rules to one workspace glob also produces zero findings. Only the root file's
+   own top-level `linter.rules` block works, and it is inherited into every nested config
+   automatically. **Do not "clean up" this by moving the two rules into `apps/api/biome.json`
+   or into a root `overrides` block** — that exact refactor silently turns the check into a
+   no-op that still reports `Checked N files. No fixes applied.` with a green exit code.
+   Prove any future change to this still works by adding a file with a bare
+   `asyncFn()` call with no `await`/`.catch`/`void`, running `biome lint` on it, and
+   confirming it is reported — then delete the file.
+2. **A nested workspace config CAN turn an inherited rule off** (`"nursery": {
+   "noFloatingPromises": "off" }` in that workspace's own `biome.json`), even though it
+   cannot turn one on. That is the only lever available if a workspace ever needs to opt out.
+3. **These are `nursery` rules on a pinned exact Biome version (`2.5.0`)** — nursery rules
+   have no stability guarantee and can change behaviour or be renamed on the next Biome
+   bump. Re-verify both rules still fire as expected (per the bare-async-call check above)
+   whenever Biome is upgraded, before trusting a green `pnpm lint`.
+
+Fire-and-forget promises the rule genuinely can't distinguish from a real bug (e.g. a
+`Promise<T> | null` singleton tested for `null` with a plain `if (x)`, not a truthiness
+check on `x`'s resolved value) get a one-line `// biome-ignore lint/nursery/noMisusedPromises:
+<reason>` at the call site, not a rule-level suppression — see the `biome` skill.
+
+**These rules are expensive — budget for it.** They turn on Biome's type-inference scanner,
+which is why lint went from milliseconds to seconds. Measured on Biome `2.5.0` against
+`apps/web-player/src` (588 files), rules off vs on:
+
+| | peak RSS | wall |
+|---|---|---|
+| off | 80 MB | 0.13 s |
+| on | 1.34 GB | 6 s |
+
+That is ~17x the memory and ~46x the time. It is affordable — CI's own
+`biome ci apps/api packages/ui-react packages/contracts` (912 files) peaks at ~1.2 GB in 7 s,
+and a root `pnpm lint` across all six workspaces finishes in ~14 s — but the headroom is no
+longer generous. Do not run a full `pnpm lint` concurrently with a heavy test suite on a
+memory-constrained machine; the linter is the first thing the OOM killer takes, and it dies
+with a bare exit code `137` that looks nothing like a lint failure.
+
 ### `pnpm lint`
 
 Runs `biome lint --error-on-warnings` in `api`, `web-player`, `web-artists`, and `ui-react`
