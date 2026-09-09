@@ -51,11 +51,11 @@ export function useAuth() {
     },
     onSuccess: () => {
       queryClient.setQueryData(authQueryKeys.artist(), null)
-      navigate({ to: ROUTES.auth.login })
+      void navigate({ to: ROUTES.auth.login })
     },
     onError: (error) => {
       console.error('Logout error:', error)
-      navigate({ to: ROUTES.auth.login })
+      void navigate({ to: ROUTES.auth.login })
     },
   })
 

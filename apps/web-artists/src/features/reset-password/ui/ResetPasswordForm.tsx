@@ -58,7 +58,7 @@ export const ResetPasswordForm = () => {
       }
 
       toast.success('Password updated — please log in')
-      navigate({ to: ROUTES.auth.login })
+      void navigate({ to: ROUTES.auth.login })
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Reset failed'
       toast.error(message)

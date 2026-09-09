@@ -58,7 +58,7 @@ export const useRegistrationForm = () => {
   const { mutate: registerUser, isPending } = useRegistration({
     onSuccess: () => {
       toast.success('Registration completed successfully')
-      navigate({ to: ROUTES.landing })
+      void navigate({ to: ROUTES.landing })
     },
     onError: (error) => {
       if (error.message.toLowerCase().includes('already exists')) {

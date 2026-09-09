@@ -12,6 +12,7 @@ export const apiBaseUrl = (
 ).replace(/\/$/, '')
 
 async function refreshToken(): Promise<boolean> {
+  // biome-ignore lint/nursery/noMisusedPromises: null-check on the Promise<boolean> | null singleton, not a truthiness check on its resolved value
   if (refreshPromise) return refreshPromise
 
   refreshPromise = (async () => {
