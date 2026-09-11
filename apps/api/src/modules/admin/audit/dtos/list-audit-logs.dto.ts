@@ -1,10 +1,9 @@
+import { paginationQuerySchema } from '@common/pagination'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
-export const ListAdminAuditLogsQuerySchema = z
-  .object({
-    page: z.coerce.number().int().min(1).optional(),
-    limit: z.coerce.number().int().min(1).max(100).optional(),
+export const ListAdminAuditLogsQuerySchema = paginationQuerySchema
+  .extend({
     entityType: z.string().min(1).max(100).optional(),
     staffId: z.string().uuid().optional(),
     from: z.coerce.date().optional(),

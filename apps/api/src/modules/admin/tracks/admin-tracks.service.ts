@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { TrackUploadService } from '@modules/tracks'
 import { Injectable } from '@nestjs/common'
@@ -64,7 +65,12 @@ export class AdminTracksService {
   }
 
   /** Runs the find all operation, paginated, problem-first by default. */
-  async findAll({ page = 1, limit = 20, processingStatus, q }: ListTracksInput) {
+  async findAll({
+    page = DEFAULT_PAGE,
+    limit = DEFAULT_LIMIT,
+    processingStatus,
+    q,
+  }: ListTracksInput) {
     const where = this.buildWhere({ processingStatus, q })
     const rawWhere = this.buildRawWhere({ processingStatus, q })
     const skip = (page - 1) * limit
