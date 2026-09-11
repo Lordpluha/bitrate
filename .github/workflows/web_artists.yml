@@ -64,6 +64,9 @@ jobs:
       tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:pr-${{ github.sha }}
       timeout-minutes: 30
       run-biome: true
+      run-tests: true
+      run-e2e: true
+      run-screenshot: true
       cache-to-registry: true
 
   web-artists-develop:
@@ -76,6 +79,9 @@ jobs:
         ghcr.io/lordpluha/${{ github.event.repository.name }}/web-artists:develop-${{ github.sha }}
       timeout-minutes: 30
       run-biome: true
+      run-tests: true
+      run-e2e: true
+      run-screenshot: true
       cache-to-registry: true
 
   web-artists-master:
@@ -106,4 +112,7 @@ jobs:
         ${{ inputs.release-tag != '' && format('ghcr.io/lordpluha/{0}/web-artists:{1}', github.event.repository.name, inputs.release-tag) || '' }}
       timeout-minutes: 20
       run-biome: false
+      run-tests: true
+      run-e2e: true
+      run-screenshot: true
       cache-to-registry: true

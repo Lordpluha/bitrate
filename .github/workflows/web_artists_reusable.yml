@@ -21,6 +21,21 @@ on:
         required: false
         default: false
         type: boolean
+      run-tests:
+        description: Run web-artists typecheck and Vitest
+        required: false
+        default: true
+        type: boolean
+      run-e2e:
+        description: Run Playwright E2E
+        required: false
+        default: false
+        type: boolean
+      run-screenshot:
+        description: Run Playwright route screenshot regression
+        required: false
+        default: false
+        type: boolean
       cache-to-registry:
         description: Export build cache to GHCR registry
         required: false
@@ -54,12 +69,46 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Setup Node.js and pnpm
-        if: ${{ inputs.run-biome }}
+        if: ${{ inputs.run-biome || inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
         uses: ./.github/actions/setup-node-pnpm
 
       - name: Run Biome check
         if: ${{ inputs.run-biome }}
         run: pnpm exec biome ci apps/web-artists packages/ui-react packages/contracts
+
+      # The app typechecks and renders against ui-react's emitted dist/types, not its src,
+      # so a missing build fails on components that do exist.
+      - name: Build ui-react
+        if: ${{ inputs.run-tests || inputs.run-e2e || inputs.run-screenshot }}
+        run: pnpm --filter @bitrate/ui-react run build
+
+      - name: Run web-artists typecheck
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @bitrate/web-artists check-types
+
+      - name: Run web-artists unit and integration tests
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @bitrate/web-artists test
+
+      - name: Install Playwright Chromium
+        if: ${{ inputs.run-e2e || inputs.run-screenshot }}
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Run web-artists E2E tests
+        if: ${{ inputs.run-e2e }}
+        run: pnpm --filter @bitrate/web-artists test:e2e
+
+      - name: Run web-artists screenshot tests
+        if: ${{ inputs.run-screenshot }}
+        run: pnpm --filter @bitrate/web-artists test:screenshot
+
+      - name: Upload screenshot test failure artifacts
+        if: ${{ inputs.run-screenshot && failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-artists-screenshot-diffs
+          path: apps/web-artists/test-results/
+          retention-days: 7
 
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker

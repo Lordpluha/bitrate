@@ -11,6 +11,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "incremental": true,
     "ignoreDeprecations": "6.0",
@@ -21,7 +22,8 @@
       "@widgets/*": ["./src/widgets/*"],
       "@features/*": ["./src/features/*"],
       "@entities/*": ["./src/entities/*"],
-      "@shared/*": ["./src/shared/*"]
+      "@shared/*": ["./src/shared/*"],
+      "@tests/*": ["./tests/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.mts"],
