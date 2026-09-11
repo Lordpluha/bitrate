@@ -1,25 +1,31 @@
+import type { ApiSchemas } from '@bitrate/contracts'
 import { z } from 'zod'
+import { contractEnum } from './contract-union'
 
-/**
- * Hand-written rather than generated: `@bitrate/contracts` is produced from the running API's
- * Swagger, and these endpoints did not exist when this app was started. Revisit once the admin
- * module ships and the generator has something to read — see ADR-0035.
- */
+type StaffRole = ApiSchemas['StaffEntity']['role']
+
 /** Not exported: only `Staff.role` consumes it, through `staffSchema`. */
-const staffRoleSchema = z.enum(['ADMIN', 'MODERATOR'])
+const staffRoleSchema = contractEnum<StaffRole>()(['ADMIN', 'MODERATOR'])
+
+type ContractStaff = Pick<ApiSchemas['StaffEntity'], 'id' | 'email' | 'username' | 'role'>
 
 export const staffSchema = z.object({
   id: z.uuid(),
   email: z.email(),
   username: z.string(),
   role: staffRoleSchema,
-})
+}) satisfies z.ZodType<ContractStaff>
 
 export type Staff = z.infer<typeof staffSchema>
 
+/**
+ * The request body, so the contract's `LoginDto` is the shape and the messages are this app's.
+ * `z.email()` alone would answer "invalid email" for an untouched field, which is why the
+ * emptiness check comes first and pipes into it.
+ */
 export const loginRequestSchema = z.object({
   email: z.string().min(1, 'Email is required').pipe(z.email('Enter a valid email address')),
   password: z.string().min(1, 'Password is required'),
-})
+}) satisfies z.ZodType<ApiSchemas['LoginDto']>
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>

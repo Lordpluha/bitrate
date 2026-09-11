@@ -1,13 +1,18 @@
 import { DatePipe } from '@angular/common'
 import { Component, inject, signal } from '@angular/core'
-import { type ModerationReport, ModerationService, type ModerationStatus } from '@shared/api'
+import {
+  coveringTuple,
+  type ModerationReport,
+  ModerationService,
+  type ModerationStatus,
+} from '@shared/api'
 import { CollectionStatus, Paginator } from '@shared/components'
 import { createCollection } from '@shared/lib/collection'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmTableImports } from '@spartan-ng/helm/table'
 
-const STATUSES: readonly ModerationStatus[] = ['OPEN', 'REVIEWING', 'RESOLVED', 'REJECTED']
+const STATUSES = coveringTuple<ModerationStatus>()(['OPEN', 'REVIEWING', 'RESOLVED', 'REJECTED'])
 
 @Component({
   selector: 'app-moderation',

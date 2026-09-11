@@ -21,6 +21,28 @@ Four CLI commands cover mechanical verification. Run from the monorepo root.
 > [ADR-0035](../../apps/docs/docs/architecture/0035-admin-panel-on-angular.md) and
 > `.claude/rules/admin-rules.md`.
 
+### Keeping Biome out of the ESLint apps takes `files.includes`, not an override
+
+The root `biome.json` disables the linter and formatter for `apps/admin/**` and
+`apps/mobile/**` through `overrides`. That is **not enough to stop Biome parsing those files**,
+and the difference only shows up in the pre-commit hook: `biome check --staged` reported eight
+`Text expressions aren't supported` parse errors the first time an Angular template containing
+`{{ … }}` was staged, on a commit that changed no template syntax at all. Templates using only
+attribute bindings had staged cleanly for months, which is why this sat unnoticed.
+
+The exclusion that works is a root `files.includes`:
+
+```jsonc
+"files": { "ignoreUnknown": true, "includes": ["**", "!apps/admin/**", "!apps/mobile/**"] }
+```
+
+Declaring it has one knock-on effect worth knowing before you reach for it: every nested
+workspace config whose own `files.includes` starts with `**` then trips
+`lint/suspicious/noBiomeFirstException`, because two catch-alls in an extends chain are
+ambiguous. Biome's own safe fix — dropping the redundant `**` from the nested config — is
+correct and changes nothing: the four workspaces checked 530/101/604/376 files before and
+after.
+
 ### Unhandled-promise rules — `noFloatingPromises` / `noMisusedPromises`
 
 The root `biome.json`'s **top-level** `linter.rules.nursery` block enables

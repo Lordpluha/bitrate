@@ -1,3 +1,4 @@
+export * from './contract-union'
 export * from './artist.schema'
 export * from './audit.schema'
 export * from './moderation.schema'

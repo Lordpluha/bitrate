@@ -1,6 +1,11 @@
 import { DatePipe } from '@angular/common'
 import { Component, computed, inject, signal } from '@angular/core'
-import { type AdminTrack, CatalogService, type TrackProcessingStatus } from '@shared/api'
+import {
+  type AdminTrack,
+  CatalogService,
+  coveringTuple,
+  type TrackProcessingStatus,
+} from '@shared/api'
 import { CollectionStatus, Paginator } from '@shared/components'
 import { createCollection } from '@shared/lib/collection'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
@@ -8,7 +13,8 @@ import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
 import { HlmTableImports } from '@spartan-ng/helm/table'
 
-const STATUSES: readonly TrackProcessingStatus[] = ['FAILED', 'PROCESSING', 'READY']
+/** Problem-first, which is not the contract's order — the tuple only has to cover it. */
+const STATUSES = coveringTuple<TrackProcessingStatus>()(['FAILED', 'PROCESSING', 'READY'])
 
 /**
  * How long a track may sit in PROCESSING before it is worth an operator's attention. Not a
