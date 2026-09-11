@@ -13,8 +13,11 @@
     "check-types": "tsc --noEmit",
     "format": "pnpm exec biome format --write",
     "test": "pnpm test:unit && pnpm test:int",
-    "test:unit": "vitest run --project=unit",
-    "test:int": "vitest run --project=integration --passWithNoTests"
+    "test:unit": "vitest run --config=tests/configs/vitest.unit.config.ts",
+    "test:int": "vitest run --config=tests/configs/vitest.int.config.ts --passWithNoTests",
+    "test:e2e": "playwright test --config=tests/configs/playwright.e2e.config.ts",
+    "test:screenshot": "playwright test --config=tests/configs/playwright.screenshot.config.ts",
+    "test:screenshot:update": "playwright test --config=tests/configs/playwright.screenshot.config.ts --update-snapshots"
   },
   "dependencies": {
     "@bitrate/ui-react": "workspace:*",
@@ -35,10 +38,12 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
     "@bitrate/contracts": "workspace:*",
+    "@playwright/test": "^1.62.0",
     "@tailwindcss/vite": "^4.3.1",
     "@tanstack/nitro-v2-vite-plugin": "^1.155.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^25.9.3",
     "@types/react": "~19.2.17",
     "@types/react-dom": "~19.2.3",
