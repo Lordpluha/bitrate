@@ -65,6 +65,24 @@ export function AdminAuth(...roles: StaffRole[]) {
 }
 
 /**
+ * Narrows the role a single route accepts, below the floor its controller declares.
+ *
+ * Deliberately metadata-only: `AdminAuth` belongs on the controller class, where it attaches
+ * the guard and documents the cookie scheme once. Reaching for `AdminAuth` again on a method
+ * to change the roles applies `ApiCookieAuth` a second time, and the generated spec then lists
+ * the same requirement twice — `security: [{ cookie: [] }, { cookie: [] }]`. The guard reads
+ * roles with `getAllAndOverride`, so metadata alone is all a narrowing needs.
+ *
+ * Widening past the class floor is not possible this way and should not be: a route that needs
+ * more than its controller allows belongs on a different controller.
+ * @param roles Roles allowed on this route; must be a subset of the controller's.
+ * @returns Decorator setting only the required-roles metadata.
+ */
+export function StaffRoles(...roles: StaffRole[]) {
+  return SetMetadata(REQUIRED_ROLES, roles)
+}
+
+/**
  * Wraps AdminAuth for a refresh-token route: verifies the refresh cookie
  * instead of the access cookie, with no role restriction (the account itself
  * is the requirement).

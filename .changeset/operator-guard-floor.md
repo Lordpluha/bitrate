@@ -1,0 +1,5 @@
+---
+'@bitrate/api': patch
+---
+
+Moved the operator panel's staff guard from individual route handlers onto the controller classes, so that forgetting it produces a too-broad role rather than an unauthenticated endpoint. Three of the five admin controllers declared `@AdminAuth(...)` per method, which meant a handler added without the decorator would have answered to anyone who found the path — nothing would have caught it, since the existing integration specs stub the guard with a role check that lets a route carrying no role metadata straight through. Routes that need a narrower role now use a new metadata-only `@StaffRoles('ADMIN')`; reusing `@AdminAuth` for that would have applied `ApiCookieAuth` a second time and made the generated spec list the same requirement twice. The published contract is unchanged — a controller's generated `security` and response codes were checked to be identical before and after. A new spec walks the operator controllers found on disk and fails if any route lacks both a guard and role metadata, with the public surface named explicitly as one entry: the login route.

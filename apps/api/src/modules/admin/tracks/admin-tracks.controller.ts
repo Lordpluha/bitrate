@@ -1,4 +1,4 @@
-import { AdminAuth } from '@modules/admin-auth'
+import { AdminAuth, StaffRoles } from '@modules/admin-auth'
 import {
   Controller,
   Get,
@@ -17,12 +17,12 @@ import { type ListAdminTracksQueryDto, ListAdminTracksQuerySchema } from './dtos
 
 /** Operator-facing track processing pipeline. */
 @ApiTags('Admin Tracks')
+@AdminAuth('ADMIN', 'MODERATOR')
 @Controller({ path: 'admin/tracks', version: '1' })
 export class AdminTracksController {
   constructor(private readonly tracks: AdminTracksService) {}
 
   /** Runs the list tracks operation. Available to any staff role. */
-  @AdminAuth('ADMIN', 'MODERATOR')
   @ListTracksSwagger()
   @Get('')
   list(@Query(new ZodValidationPipe(ListAdminTracksQuerySchema)) query: ListAdminTracksQueryDto) {
@@ -30,7 +30,6 @@ export class AdminTracksController {
   }
 
   /** Runs the get track operation. Available to any staff role. */
-  @AdminAuth('ADMIN', 'MODERATOR')
   @GetTrackSwagger()
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: string) {
@@ -38,7 +37,7 @@ export class AdminTracksController {
   }
 
   /** Runs the reprocess operation. Requires the ADMIN role. */
-  @AdminAuth('ADMIN')
+  @StaffRoles('ADMIN')
   @ReprocessTrackSwagger()
   @HttpCode(HttpStatus.OK)
   @Post(':id/reprocess')

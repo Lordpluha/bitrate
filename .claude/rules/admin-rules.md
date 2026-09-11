@@ -57,6 +57,32 @@ Path aliases: `@app/*`, `@shared/*`, `@features/*`. No relative imports across t
 **File naming is Angular's**, not the repo's React convention: `moderation.ts`, `auth.service.ts`,
 `zod-validator.ts` — kebab-case, no PascalCase component files. Match what is already there.
 
+## API side: the guard is a floor on the class, never a per-method opt-in
+
+Every controller under `apps/api/src/modules/admin/` declares `@AdminAuth('ADMIN', 'MODERATOR')`
+**on the class**, between `@ApiTags` and `@Controller`. A route that needs less declares
+`@StaffRoles('ADMIN')` on the method.
+
+The reason is what each mistake costs. With the guard per method, a new handler someone forgets
+to decorate is a **completely unauthenticated operator endpoint** — it compiles, it lints, it
+type-checks, and the integration specs stub the guard with a role check that waves through any
+route carrying no role metadata. With the guard on the class, the same slip yields a route that
+is merely open to both staff roles. One is a breach; the other is a review comment.
+
+`StaffRoles` is metadata-only by design. `AdminAuth` also applies `ApiCookieAuth`, so using it
+twice on one route makes the generated spec list the requirement twice —
+`security: [{ cookie: [] }, { cookie: [] }]`. The guard resolves roles with
+`getAllAndOverride([handler, class])`, so metadata alone is all a narrowing needs. Verified: with
+the split, `DELETE /admin/users/{id}` generates `security=[{"cookie":[]}]` and responses
+`200,401,403,404` — byte-identical to what the per-method form produced, so this costs no
+contract regeneration.
+
+`apps/api/src/modules/admin/admin-auth-coverage.unit-spec.ts` enforces all of it. It discovers
+controllers on disk rather than through `AdminModule`, so a controller that exists is covered
+whether or not anyone remembered to register it, and it names the public routes explicitly —
+today only `AdminAuthController.login`, because that is how a session starts. Adding to that set
+is a line in a diff, which is the point.
+
 ## Data — no cache, on purpose
 
 `HttpClient` with `provideHttpClient(withFetch())`. Reads go through `httpResource` or a service
