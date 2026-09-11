@@ -69,13 +69,23 @@ type-checks, and the integration specs stub the guard with a role check that wav
 route carrying no role metadata. With the guard on the class, the same slip yields a route that
 is merely open to both staff roles. One is a breach; the other is a review comment.
 
-`StaffRoles` is metadata-only by design. `AdminAuth` also applies `ApiCookieAuth`, so using it
-twice on one route makes the generated spec list the requirement twice —
-`security: [{ cookie: [] }, { cookie: [] }]`. The guard resolves roles with
-`getAllAndOverride([handler, class])`, so metadata alone is all a narrowing needs. Verified: with
-the split, `DELETE /admin/users/{id}` generates `security=[{"cookie":[]}]` and responses
-`200,401,403,404` — byte-identical to what the per-method form produced, so this costs no
-contract regeneration.
+`StaffRoles` carries the role metadata and the 403 response, and deliberately not
+`ApiCookieAuth`. Both halves of that were learned the hard way, and both are invisible until the
+contract is regenerated:
+
+- Using `AdminAuth` twice on one route applies `ApiCookieAuth` twice, and the spec then lists the
+  same requirement twice — `security: [{ cookie: [] }, { cookie: [] }]`.
+- Leaving the 403 to the class does **not** work, because a method-level `ApiResponse` *replaces*
+  the class's for that status rather than merging. Omitting it rewrote the generated description
+  of every narrowed route from `Requires the ADMIN role / Insufficient staff role` down to the
+  first line alone — 16 lines of contract drift that only the `Verify generated API contracts` CI
+  step catches.
+
+So check the generated spec, not just the guard's behaviour: `security`, response codes **and
+their descriptions**. With the current split, `DELETE /admin/users/{id}` generates
+`security=[{"cookie":[]}]`, responses `200,401,403,404`, and the 403 description
+`"Requires the ADMIN role\n\nInsufficient staff role"` — identical to the per-method form, so
+this costs no contract regeneration.
 
 `apps/api/src/modules/admin/admin-auth-coverage.unit-spec.ts` enforces all of it. It discovers
 controllers on disk rather than through `AdminModule`, so a controller that exists is covered
