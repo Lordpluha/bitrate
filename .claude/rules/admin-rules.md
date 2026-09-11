@@ -28,7 +28,7 @@ to fill — they are concepts that do not exist in this app:
 | FSD layers (`views/`, `widgets/`, `entities/`) | Not used — `features/` + `shared/` only |
 | `'use client'` / Server Components | No server component model |
 | `@bitrate/ui-react` components | **Will not run** — React library |
-| `@bitrate/contracts` | Not used yet — see "Schemas" below |
+| `@bitrate/contracts` | **Used** for types — see "Schemas" below |
 | TanStack Query / `openapi-fetch` | Not used — see "Data" below |
 | Biome | This app uses ESLint + Prettier |
 | `<div>` with `onClick` | Angular templates, `(click)` on a real `<button>` |
@@ -103,15 +103,43 @@ Query or a hand-rolled cache without a new ADR.
 Auth is httpOnly cookies with a refresh-on-401 interceptor (`shared/api/auth.interceptor.ts`),
 mirroring what the artists portal does. Nothing reads or writes a token in JavaScript.
 
-## Schemas — hand-written zod, and why
+## Schemas — zod at runtime, the generated contract for types
 
-`@bitrate/contracts` is generated from the running API's Swagger, and the admin endpoints did not
-exist when this app started. So request and response shapes are **written by hand as zod schemas**
-in `shared/api/schemas/`, and types come from `z.infer`. Every response is `parse`d in the service
-before it reaches a component.
+Every response is `parse`d in the service before it reaches a component, and every schema in
+`shared/api/schemas/` is bound to the generated contract:
 
-This is a known trade: a hand-written schema can drift from the API and only `parse` will notice.
-When the admin module is in the generated contract, revisit it.
+```ts
+type ContractArtist = Pick<ApiSchemas['AdminArtistEntity'], 'id' | 'username' | …>
+
+export const adminArtistSchema = z.object({ … }) satisfies z.ZodType<ContractArtist>
+```
+
+Naming the slice as a `Pick` rather than mirroring the whole entity keeps the schema honest about
+what the UI actually reads, while a renamed or retyped field in the contract becomes a compile
+error here. `z.infer` stays the source of the exported type, so nothing downstream changes shape.
+
+This replaced fully hand-written schemas, which drifted exactly as predicted: the catalog page
+required `artistName` while the API had always sent `artistUsername`, so `parse` threw on every
+list load and the column rendered its em-dash fallback. `AdminAuditLogEntity.actorUsername` had
+already been caught the same way, by hand.
+
+**`satisfies` does not catch a narrower union.** A zod enum missing a member the contract declares
+is still assignable, so a status the API grows later type-checks cleanly and then throws inside
+`parse` — an empty screen in front of an operator. Build those lists with `contractEnum` /
+`coveringTuple` from `schemas/contract-union.ts`, which state the union and force the list to
+cover it. That applies to display-order lists in components too, not just schemas.
+
+Page envelopes are bound through the item type, because `Pick[]` is not assignable to the full
+entity array:
+
+```ts
+type ContractArtistPage = Omit<ApiSchemas['PaginatedAdminArtistsEntity'], 'data'> & {
+  data: ContractArtist[]
+}
+```
+
+`@bitrate/contracts` is a **devDependency** here: it ships types only, erased at build, like
+`@bitrate/ui-react` whose CSS is consumed at build time and whose components never run.
 
 `zod` is pinned repo-wide (see `.claude/rules/monorepo.md`). Do not raise it here.
 
