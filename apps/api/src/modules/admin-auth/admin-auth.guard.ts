@@ -75,11 +75,19 @@ export function AdminAuth(...roles: StaffRole[]) {
  *
  * Widening past the class floor is not possible this way and should not be: a route that needs
  * more than its controller allows belongs on a different controller.
+ *
+ * The 403 response is declared here and not left to the class, because a method-level
+ * `ApiResponse` replaces the class's for that status rather than merging with it. Dropping it
+ * silently rewrote the generated description of every narrowed route from "Requires the ADMIN
+ * role / Insufficient staff role" down to the first line alone.
  * @param roles Roles allowed on this route; must be a subset of the controller's.
- * @returns Decorator setting only the required-roles metadata.
+ * @returns Decorator setting the required-roles metadata and the role-failure response.
  */
 export function StaffRoles(...roles: StaffRole[]) {
-  return SetMetadata(REQUIRED_ROLES, roles)
+  return applyDecorators(
+    SetMetadata(REQUIRED_ROLES, roles),
+    ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Insufficient staff role' }),
+  )
 }
 
 /**
