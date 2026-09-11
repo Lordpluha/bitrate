@@ -1,0 +1,56 @@
+<main class="flex min-h-screen items-center justify-center p-8">
+  <form
+    class="w-full max-w-sm space-y-6 rounded-lg border border-border bg-card p-8"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+  >
+    <div class="space-y-1">
+      <h1 class="text-xl font-semibold text-card-foreground">Operator sign-in</h1>
+      <p class="text-sm text-muted-foreground">Bitrate staff accounts only.</p>
+    </div>
+
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    <div class="space-y-2">
+      <label hlmLabel for="email">Email</label>
+      <input
+        hlmInput
+        class="w-full"
+        id="email"
+        type="email"
+        autocomplete="username"
+        formControlName="email"
+        [attr.aria-invalid]="errorFor('email') !== null"
+        [attr.aria-describedby]="errorFor('email') ? 'email-error' : null"
+      />
+      @if (errorFor('email'); as message) {
+        <p class="text-sm text-destructive" id="email-error" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label hlmLabel for="password">Password</label>
+      <input
+        hlmInput
+        class="w-full"
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        formControlName="password"
+        [attr.aria-invalid]="errorFor('password') !== null"
+        [attr.aria-describedby]="errorFor('password') ? 'password-error' : null"
+      />
+      @if (errorFor('password'); as message) {
+        <p class="text-sm text-destructive" id="password-error" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <button hlmBtn class="w-full" type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Signing in…' : 'Sign in' }}
+    </button>
+  </form>
+</main>

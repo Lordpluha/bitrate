@@ -7,7 +7,8 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": true
+    "ignoreUnknown": true,
+    "includes": ["**", "!apps/admin", "!apps/mobile"]
   },
   "formatter": {
     "enabled": true,
@@ -18,7 +19,11 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended"
+      "preset": "recommended",
+      "nursery": {
+        "noFloatingPromises": "error",
+        "noMisusedPromises": "error"
+      }
     }
   },
   "javascript": {
@@ -37,6 +42,15 @@
     }
   },
   "overrides": [
+    {
+      "includes": ["apps/admin/**", "apps/mobile/**"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
+    },
     {
       "includes": [".claude/skills/**"],
       "linter": {

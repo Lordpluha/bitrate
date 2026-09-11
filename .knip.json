@@ -23,8 +23,19 @@
       "ignore": ["src/**/index.ts"]
     },
     "apps/web-artists": {
-      "entry": ["src/app/**/*.tsx", "src/app/**/*.ts", "src/app/global.css"],
-      "ignore": ["env.schema.ts"]
+      "entry": [
+        "src/router.tsx",
+        "src/routes/**/*.tsx",
+        "src/global.css",
+        "src/**/*.unit-spec.ts",
+        "src/**/*.unit-spec.tsx",
+        "src/**/*.int-spec.ts",
+        "src/**/*.int-spec.tsx",
+        "src/**/*.screenshot-spec.ts",
+        "tests/configs/*.ts",
+        "tests/e2e/**/*.e2e-spec.ts"
+      ],
+      "ignore": ["env.schema.ts", "src/routeTree.gen.ts"]
     },
     "apps/web-player": {
       "entry": [
@@ -33,12 +44,11 @@
         "src/app/global.css",
         "src/**/*.unit-spec.ts",
         "src/**/*.unit-spec.tsx",
-        "tests/**/*.int-spec.ts",
-        "tests/**/*.int-spec.tsx",
-        "tests/**/*.e2e-spec.ts",
-        "tests/**/*.screenshot-spec.ts",
+        "src/**/*.int-spec.ts",
+        "src/**/*.int-spec.tsx",
+        "src/**/*.screenshot-spec.ts",
         "tests/configs/*.ts",
-        "vitest.config.ts"
+        "tests/e2e/**/*.e2e-spec.ts"
       ],
       "ignore": ["env.schema.ts"]
     },
@@ -56,6 +66,11 @@
         "vitest.config.ts"
       ],
       "ignoreDependencies": ["tsc-alias"]
+    },
+    "apps/admin": {
+      "entry": ["src/**/*.unit-spec.ts", "eslint.config.js"],
+      "ignore": ["src/**/index.ts", "src/styles.css", "src/app/shared/ui/**"],
+      "ignoreDependencies": ["@spartan-ng/cli", "@bitrate/ui-react"]
     }
   },
   "ignore": [

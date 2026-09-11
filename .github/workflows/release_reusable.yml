@@ -612,7 +612,7 @@ jobs:
               "${VERSION}" "${BUMP}" "${OLD_VERSION}" "${CHANGESET_COUNT}"
             printf 'Merging this pull request is what starts the release. It raises a push event on `%s` ' "${TARGET_BRANCH}"
             printf 'authored by you, which runs `release_publish.yml`: tag `v%s`, a GitHub Release, ' "${VERSION}"
-            printf 'five images at `:v%s`, and the deploy behind the `production` approval.\n\n' "${VERSION}"
+            printf 'six images at `:v%s`, and the deploy behind the `production` approval.\n\n' "${VERSION}"
             printf -- '---\n\n## Changelog\n\n'
           } > "${body}"
 

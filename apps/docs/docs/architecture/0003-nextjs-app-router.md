@@ -1,6 +1,7 @@
 # ADR-0003: Next.js App Router
 
-Status: Accepted
+Status: Accepted — scope narrowed to `apps/web-player` by
+[ADR-0034](./0034-artists-portal-on-tanstack-start.md)
 
 Date: 2026-06-24
 

@@ -90,6 +90,16 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.artist
   }
 
+  /** Gets the staff (operator) account. */
+  get staff() {
+    return this.prisma.staff
+  }
+
+  /** Gets the staff session. */
+  get staffSession() {
+    return this.prisma.staffSession
+  }
+
   /** Gets the album. */
   get album() {
     return this.prisma.album

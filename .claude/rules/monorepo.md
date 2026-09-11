@@ -18,7 +18,8 @@ bitrate/
   apps/
     api/          NestJS backend — @bitrate/api
     web-player/   Next.js App Router — @bitrate/web-player
-    web-artists/  Next.js artist-facing frontend — @bitrate/web-artists
+    web-artists/  TanStack Start artist-facing frontend — @bitrate/web-artists
+    admin/        Angular 22 operator panel — @bitrate/admin
     desktop/      Tauri 2 + React — @bitrate/desktop
     mobile/       React Native + Expo — @bitrate/mobile
     docs/         Docusaurus 3 — @bitrate/docs
@@ -74,6 +75,38 @@ them visible until someone bumps them:
 | `openapi-react-query@0.5.4` (web-artists) | `openapi-fetch@^0.17.0` | `0.15.2` |
 | `@swc/core` (docs) | `@swc/helpers@>=0.5.17` | `0.5.15` |
 | `@swc/cli@0.8.1` (api) | `chokidar@^5.0.0` | `4.0.3` |
+
+### `zod` is pinned, and the caret is not enough
+
+Root `package.json` overrides `zod` to an exact `4.4.3`. Every workspace declares
+`^4.4.3`, but a caret happily resolves upward, and **`@hookform/resolvers@5.4.0` cannot type
+zod ≥ 4.5**: its `zodResolver` overloads check `_zod.version.minor`, so a 4.5 schema fails with
+`Type '4' is not assignable to type '5'` in `packages/ui-react` and anywhere else the resolver
+is used. Nothing in the source changes; only the resolved version does, which makes this break
+appear out of a plain `pnpm install` on an unrelated branch.
+
+Lifting the pin means bumping `@hookform/resolvers` first — `5.9.1` declares
+`zod: ^3.25.0 || ^4.0.0` and drops the minor check. Do the two together or not at all.
+
+`@tanstack/react-query` is pinned for the same reason, and its failure was the nastiest of the
+three. Raising it in **one** app left two copies resolved — 5.101.0 and 5.102.8 — and React
+context is per-copy, so `QueryClientProvider` set the client on one instance while every
+`useQuery` read from the other. The web player's login page died with **"No QueryClient set, use
+QueryClientProvider to set one"**, a message that points at the provider tree rather than at the
+dependency graph, and it survived `biome ci`, `check-types` and the whole unit suite — only the
+Playwright E2E caught it. Any library holding React context (`react-query`, `react-hook-form`, a
+theme provider) fails this way rather than loudly.
+
+```bash
+# what to look for before blaming the provider tree
+grep -oE "react-query@5\.[0-9.]+" pnpm-lock.yaml | sort -u   # more than one line is the bug
+```
+
+The same hazard applies to `openapi-fetch`, without a pin to protect it. `nodeLinker: hoisted`
+means one resolved version serves every workspace, so raising it in **one** app raises it for
+`web-player` too — and 0.17's stricter `paths` generics turn roughly thirty of that app's
+query hooks into `never`. That is why the unmet peer above is left visible rather than
+fixed in one app.
 
 ## Root scripts
 

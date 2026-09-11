@@ -1,0 +1,110 @@
+name: "[admin] Checks"
+
+# `master` is deliberately absent from the push trigger. Release builds do not
+# come through here at all: release_publish.yml and release_images.yml call this
+# app's *_reusable.yml directly, alongside the other five, because the production
+# compose file pulls every service at one shared ${IMAGE_TAG} and a path-filtered
+# build would leave a hole in the version tag. See ADR-0029.
+#
+# The `master` mode below is therefore only a hand-run escape hatch for
+# rebuilding this one service's `:master` image. `develop` is unchanged.
+#
+# packages/ui-react is in the filters even though this app renders no React: it
+# imports `@bitrate/ui-react/themes.css` as its single source of design tokens,
+# so a token change has to rebuild this image too.
+on:
+  push:
+    branches: [develop]
+    paths:
+      - 'apps/admin/**'
+      - 'packages/ui-react/**'
+      - '.github/workflows/admin.yml'
+      - '.github/workflows/admin_reusable.yml'
+  pull_request:
+    branches: [master, develop]
+    paths:
+      - 'apps/admin/**'
+      - 'packages/ui-react/**'
+      - '.github/workflows/admin.yml'
+      - '.github/workflows/admin_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: pr
+        type: choice
+        options:
+          - pr
+          - develop
+          - master
+      release-tag:
+        description: >-
+          Product version tag (`v1.4.0`) to publish this image under, in addition
+          to :master and :<sha>. Normally left empty: a release publishes all six
+          images through release_images_reusable.yml, not through this workflow.
+        required: false
+        default: ''
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  # A tag run is a release rebuild, so it must be as uncancellable as a master
+  # run: its image is the one a deploy may already be waiting for.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref_type != 'tag' }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  admin-pr:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/admin_reusable.yml
+    with:
+      push-image: false
+      tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:pr-${{ github.sha }}
+      timeout-minutes: 30
+      run-lint: true
+      run-tests: true
+      cache-to-registry: true
+
+  admin-develop:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/admin_reusable.yml
+    with:
+      push-image: true
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:develop-${{ github.sha }}
+      timeout-minutes: 30
+      run-lint: true
+      run-tests: true
+      cache-to-registry: true
+
+  admin-master:
+    # Release builds are dispatched, never pushed into existence.
+    #
+    # A release does not come through here -- release_publish.yml calls this
+    # app's reusable workflow directly, at the merged tree, together with the
+    # other five. This mode is the hand-run escape hatch for rebuilding just this
+    # service's `:master` image.
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
+    uses: ./.github/workflows/admin_reusable.yml
+    with:
+      push-image: true
+      # Three tags, and the third one is the rollback handle:
+      #   :master  -- moving convenience pointer, never a rollback target
+      #   :<sha>   -- immutable, but unreadable and not chronologically sortable
+      #   :v<x.y.z> -- immutable; what IMAGE_TAG is pinned to, and the rollback
+      #                handle. Empty unless release-tag was passed.
+      # The third line evaluates to an empty string on a hand-run master build;
+      # docker/build-push-action drops empty entries from a multiline tag list.
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:${{ github.sha }}
+        ${{ inputs.release-tag != '' && format('ghcr.io/lordpluha/{0}/admin:{1}', github.event.repository.name, inputs.release-tag) || '' }}
+      timeout-minutes: 20
+      run-lint: false
+      run-tests: false
+      cache-to-registry: true

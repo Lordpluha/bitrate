@@ -1,0 +1,27 @@
+@if (staff(); as operator) {
+  <div class="flex h-screen overflow-hidden">
+    <app-sidebar />
+
+    <div class="flex min-w-0 flex-1 flex-col">
+      <header
+        class="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-border px-6"
+      >
+        <div class="flex min-w-0 items-center gap-2.5">
+          <span class="truncate text-sm font-medium text-foreground">
+            {{ operator.username }}
+          </span>
+          <span hlmBadge variant="outline">{{ operator.role }}</span>
+        </div>
+
+        <button hlmBtn size="sm" variant="ghost" type="button" (click)="signOut()">
+          <ng-icon class="text-base" name="lucideLogOut" aria-hidden="true" />
+          Sign out
+        </button>
+      </header>
+
+      <main class="min-w-0 flex-1 overflow-y-auto"><router-outlet /></main>
+    </div>
+  </div>
+} @else {
+  <router-outlet />
+}

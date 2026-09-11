@@ -1,5 +1,5 @@
 import { Button, CheckMark, Pause, Unpause } from '@bitrate/ui-react'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 import { useReducer, useRef } from 'react'
 import config from '../config/video-config.json'
 
@@ -30,34 +30,31 @@ export const ArtistVideoCards = () => {
               </p>
               <ul className={ulCls}>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('release campaigns')}>
+                  <a className={linkCls} href={l('release campaigns')}>
                     Release campaigns
-                  </Link>{' '}
+                  </a>{' '}
                   makes your new release unmissable with a full-screen
                   recommendation.
                 </Description>
                 <Description accent={video.accent}>
-                  <Link
-                    className={linkCls}
-                    href={l('sponsored recommendations')}
-                  >
+                  <a className={linkCls} href={l('sponsored recommendations')}>
                     Sponsored recommendations
-                  </Link>{' '}
+                  </a>{' '}
                   promotes your music on the Bitrate home feed with a selected
                   headline.
                 </Description>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('algorithmic promotion')}>
+                  <a className={linkCls} href={l('algorithmic promotion')}>
                     Algorithmic promotion
-                  </Link>{' '}
+                  </a>{' '}
                   can give your music a boost in personalized playlists.
                 </Description>
                 <Description accent={video.accent}>
                   Share your upcoming tracks with the Bitrate editorial team
                   using{' '}
-                  <Link className={linkCls} href={l('playlist pitching')}>
+                  <a className={linkCls} href={l('playlist pitching')}>
                     playlist pitching
-                  </Link>
+                  </a>
                   .
                 </Description>
               </ul>
@@ -78,30 +75,30 @@ export const ArtistVideoCards = () => {
               </p>
               <ul className={ulCls}>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('short clips')}>
+                  <a className={linkCls} href={l('short clips')}>
                     Clips
-                  </Link>{' '}
+                  </a>{' '}
                   are short videos you create to connect with fans while keeping
                   your music front-and-center.
                 </Description>
                 <Description accent={video.accent}>
                   Add a{' '}
-                  <Link className={linkCls} href={l('looping visuals')}>
+                  <a className={linkCls} href={l('looping visuals')}>
                     A looping visual
-                  </Link>{' '}
+                  </a>{' '}
                   – a short, looping visual – to each of your tracks on Bitrate.
                 </Description>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('countdown pages')}>
+                  <a className={linkCls} href={l('countdown pages')}>
                     Countdown Pages
-                  </Link>{' '}
+                  </a>{' '}
                   help you get fans hyped for your upcoming album.
                 </Description>
                 <Description accent={video.accent}>
                   Your{' '}
-                  <Link className={linkCls} href={l('Artist Profile')}>
+                  <a className={linkCls} href={l('Artist Profile')}>
                     Artist Profile
-                  </Link>{' '}
+                  </a>{' '}
                   shows fans what you're all about.
                 </Description>
               </ul>
@@ -118,34 +115,31 @@ export const ArtistVideoCards = () => {
               <p className={paragraphCls}>
                 There are many ways to earn revenue as an artist on Bitrate.
                 While{' '}
-                <Link className={linkCls} href={l('royalty reporting')}>
+                <a className={linkCls} href={l('royalty reporting')}>
                   Royalty reporting
-                </Link>{' '}
+                </a>{' '}
                 is your source for data, resources, and transparency around
                 streaming royalties, here are some other opportunities to
                 explore.
               </p>
               <ul className={ulCls}>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('Sell and promote merch')}>
+                  <a className={linkCls} href={l('Sell and promote merch')}>
                     Sell and promote merch
-                  </Link>{' '}
+                  </a>{' '}
                   on Bitrate, because music and merch are better together.
                 </Description>
                 <Description accent={video.accent}>
                   List your{' '}
-                  <Link
-                    className={linkCls}
-                    href={l('concert and festival dates')}
-                  >
+                  <a className={linkCls} href={l('concert and festival dates')}>
                     concert and festival dates
-                  </Link>{' '}
+                  </a>{' '}
                   to make sure your fans never miss another show.
                 </Description>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('fan contributions')}>
+                  <a className={linkCls} href={l('fan contributions')}>
                     Fan contributions
-                  </Link>{' '}
+                  </a>{' '}
                   lets you collect tips, or rally listeners around a charitable
                   cause.
                 </Description>
@@ -166,25 +160,25 @@ export const ArtistVideoCards = () => {
               </p>
               <ul className={ulCls}>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('audience segments')}>
+                  <a className={linkCls} href={l('audience segments')}>
                     Audience segments
-                  </Link>{' '}
+                  </a>{' '}
                   allow you to better understand the breakdown of your audience.
                 </Description>
                 <Description accent={video.accent}>
                   Hone your marketing strategy with release engagement and{' '}
-                  <Link
+                  <a
                     className={linkCls}
                     href={l('listener conversion metrics')}
                   >
                     listener conversion metrics
-                  </Link>
+                  </a>
                   .
                 </Description>
                 <Description accent={video.accent}>
-                  <Link className={linkCls} href={l('fan surveys')}>
+                  <a className={linkCls} href={l('fan surveys')}>
                     Fan surveys
-                  </Link>{' '}
+                  </a>{' '}
                   is our ongoing report about fan behavior around the world.
                 </Description>
               </ul>
@@ -235,7 +229,7 @@ function VideoCard({
           </div>
           <div className="flex justify-center xs:justify-start mt-6">
             <Button asChild size="xl" variant={'artistCard'}>
-              <Link href="/">Explore Campaign Kit</Link>
+              <Link to="/">Explore Campaign Kit</Link>
             </Button>
           </div>
         </div>

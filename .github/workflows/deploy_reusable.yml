@@ -40,7 +40,7 @@ on:
         description: >-
           Space-separated workflow file names the await-images job polls for a run
           on this commit. Defaults to release_images.yml, which is what builds all
-          five images for a version tag. On the release path the deploy is a
+          six images for a version tag. On the release path the deploy is a
           `needs:` job of the publish run and this job is off entirely.
         required: false
         default: 'release_images.yml'
@@ -307,7 +307,7 @@ jobs:
       # Which published image tag every service is pulled at. ONE value for the
       # whole stack, because infra/docker-compose.prod.yaml writes
       # `image: ghcr.io/lordpluha/bitrate/<svc>:${IMAGE_TAG:-master}` for all
-      # five services -- rolling one service back independently is not something
+      # six services -- rolling one service back independently is not something
       # that compose file can express, and pretending otherwise would produce a
       # deploy that half-applies.
       #

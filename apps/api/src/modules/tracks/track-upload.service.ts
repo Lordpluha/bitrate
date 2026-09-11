@@ -211,4 +211,45 @@ export class TrackUploadService {
       throw error
     }
   }
+
+  /**
+   * Re-queues an existing track's stored source file for transcoding.
+   *
+   * Reuses the same audio-processing queue and job shape as a fresh upload —
+   * the raw source at `track.audioUrl` is never deleted after a successful
+   * conversion, so this re-inspects it and re-enqueues rather than creating a
+   * second queue.
+   * @throws NotFoundException when the track does not exist or was soft-deleted.
+   */
+  async reprocess(trackId: TrackEntity['id']) {
+    const track = await this.prisma.track.findFirst({
+      where: { id: trackId, deletedAt: null },
+    })
+    if (!track) throw new NotFoundException('Track not found')
+
+    const inputPath = this.configService.getOrThrow('storage').getTracksDir(track.audioUrl)
+    const metadata = await inspectAudioFile(inputPath)
+    const bitrates = getTargetBitrates(metadata.bitrate)
+
+    const updated = await this.prisma.track.update({
+      where: { id: trackId },
+      data: {
+        processingStatus: 'PROCESSING',
+        processingError: null,
+        processingStartedAt: null,
+        processingFinishedAt: null,
+      },
+    })
+
+    await this.enqueueAudioConversion({
+      trackId: track.id,
+      artistId: track.artistId,
+      sourceFileName: track.audioUrl,
+      inputPath,
+      bitrates,
+    })
+    await this.invalidateTrackCaches()
+
+    return updated
+  }
 }

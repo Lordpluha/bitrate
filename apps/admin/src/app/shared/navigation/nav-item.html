@@ -1,0 +1,66 @@
+@let node = item();
+
+@if (node.kind === 'link') {
+  <a
+    class="group relative flex h-10 items-center gap-3 rounded-md px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    [class.justify-center]="collapsed()"
+    [class.px-0]="collapsed()"
+    [routerLink]="node.path"
+    routerLinkActive="bg-muted text-foreground font-medium before:absolute before:inset-y-1.5 before:-left-2 before:w-0.5 before:rounded-full before:bg-primary"
+    [attr.title]="collapsed() ? node.label : null"
+  >
+    <ng-icon class="shrink-0 text-lg" [name]="node.icon" aria-hidden="true" />
+    @if (!collapsed()) {
+      <span class="truncate">{{ node.label }}</span>
+    } @else {
+      <span class="sr-only">{{ node.label }}</span>
+    }
+  </a>
+} @else {
+  <button
+    class="relative flex h-10 w-full items-center gap-3 rounded-md px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    [class.justify-center]="collapsed()"
+    [class.px-0]="collapsed()"
+    type="button"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="node.id + '-children'"
+    [attr.title]="collapsed() ? node.label : null"
+    (click)="toggle()"
+  >
+    <ng-icon class="shrink-0 text-lg" [name]="node.icon" aria-hidden="true" />
+    @if (!collapsed()) {
+      <span class="flex-1 truncate text-left">{{ node.label }}</span>
+      <ng-icon
+        class="shrink-0 text-base transition-transform"
+        name="lucideChevronRight"
+        aria-hidden="true"
+        [class.rotate-90]="open()"
+      />
+    } @else {
+      <span class="sr-only">{{ node.label }}</span>
+    }
+  </button>
+
+  @if (open() && !collapsed()) {
+    <!--
+      The guide line, not another icon column, is what says "subordinate". Children sit on the
+      same left edge as their parent's label so the eye follows one ruler down the list.
+    -->
+    <ul
+      class="ml-[1.4rem] mt-0.5 space-y-0.5 border-l border-border pl-3"
+      [id]="node.id + '-children'"
+    >
+      @for (child of node.children; track child.path) {
+        <li>
+          <a
+            class="relative flex h-9 items-center rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            [routerLink]="child.path"
+            routerLinkActive="bg-muted text-foreground font-medium before:absolute before:inset-y-1.5 before:-left-[0.8rem] before:w-0.5 before:rounded-full before:bg-primary"
+          >
+            <span class="truncate">{{ child.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+}

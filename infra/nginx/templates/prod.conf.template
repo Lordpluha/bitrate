@@ -13,7 +13,7 @@ server {
     # unrecognised Host with the stock welcome page — and, worse, swallowing ACME challenges for
     # any name not listed below, which is exactly when a new subdomain's first certificate fails.
     listen 80 default_server;
-    server_name ${DOMAIN} www.${DOMAIN} artists.${DOMAIN} api.${DOMAIN} docs.${DOMAIN} ui.${DOMAIN};
+    server_name ${DOMAIN} www.${DOMAIN} artists.${DOMAIN} admin.${DOMAIN} api.${DOMAIN} docs.${DOMAIN} ui.${DOMAIN};
 
     # Must stay reachable over plain HTTP — certbot renews through it.
     location /.well-known/acme-challenge/ {
@@ -84,6 +84,31 @@ server {
     add_header X-Content-Type-Options "nosniff" always;
 
     include /etc/nginx/snippets/artists-routes.conf;
+}
+
+# Operator panel on its own host. Same certificate as every other name on this site, so certbot
+# must be given admin.${DOMAIN} too. Not linked from anywhere public — it is staff-only.
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name admin.${DOMAIN};
+
+    ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
+    # DENY, not SAMEORIGIN: nothing should ever frame the operator panel.
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer" always;
+
+    include /etc/nginx/snippets/admin-routes.conf;
 }
 
 # API on its own host. There is no path route to it any more — one host, one application.

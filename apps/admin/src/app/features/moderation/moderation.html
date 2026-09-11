@@ -1,0 +1,140 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Moderation queue</h1>
+    <p class="text-sm text-muted-foreground">
+      Reports filed by listeners. Taking one marks it as being reviewed so two operators do not work
+      the same row.
+    </p>
+  </header>
+
+  <div class="flex flex-wrap gap-2">
+    <button
+      hlmBtn
+      size="sm"
+      type="button"
+      [variant]="filter() === null ? 'default' : 'outline'"
+      (click)="setFilter(null)"
+    >
+      All
+    </button>
+    @for (status of statuses; track status) {
+      <button
+        hlmBtn
+        size="sm"
+        type="button"
+        [variant]="filter() === status ? 'default' : 'outline'"
+        (click)="setFilter(status)"
+      >
+        {{ status }}
+      </button>
+    }
+  </div>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="Nothing to review in this filter."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Reported content awaiting operator review
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Reported</th>
+            <th hlmTh scope="col">Reason</th>
+            <th hlmTh scope="col">Status</th>
+            <th hlmTh scope="col">Opened</th>
+            <th hlmTh scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (report of collection.items(); track report.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <span class="block">{{ report.entityType }}</span>
+                <span class="font-mono text-xs text-muted-foreground">
+                  {{ report.entityId.slice(0, 8) }}
+                </span>
+              </td>
+              <td hlmTd>
+                <span class="block">{{ report.reason }}</span>
+                @if (report.details) {
+                  <span
+                    class="mt-1 block max-w-md truncate text-xs text-muted-foreground"
+                    [title]="report.details"
+                  >
+                    {{ report.details }}
+                  </span>
+                }
+              </td>
+              <td hlmTd>
+                <span
+                  hlmBadge
+                  [variant]="
+                    report.status === 'OPEN'
+                      ? 'destructive'
+                      : report.status === 'RESOLVED'
+                        ? 'default'
+                        : 'outline'
+                  "
+                >
+                  {{ report.status }}
+                </span>
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ report.createdAt | date: 'dd.MM.yyyy HH:mm' }}
+              </td>
+              <td hlmTd>
+                <div class="flex gap-2">
+                  <button
+                    hlmBtn
+                    size="sm"
+                    variant="outline"
+                    type="button"
+                    [disabled]="busyId() === report.id"
+                    (click)="advance(report, 'REVIEWING')"
+                  >
+                    Take
+                  </button>
+                  <button
+                    hlmBtn
+                    size="sm"
+                    variant="outline"
+                    type="button"
+                    [disabled]="busyId() === report.id"
+                    (click)="advance(report, 'RESOLVED')"
+                  >
+                    Resolve
+                  </button>
+                  <button
+                    hlmBtn
+                    size="sm"
+                    variant="ghost"
+                    type="button"
+                    [disabled]="busyId() === report.id"
+                    (click)="advance(report, 'REJECTED')"
+                  >
+                    Reject
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="collection.goTo($event)"
+    />
+  }
+</section>

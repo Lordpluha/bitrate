@@ -36,12 +36,12 @@ jobs:
     uses: ./.github/workflows/release_publish_reusable.yml
 
     # The union of what the called jobs need; each job inside narrows to its own
-    # subset, so the five image jobs never hold `contents: write` and the deploy
+    # subset, so the six image jobs never hold `contents: write` and the deploy
     # never holds `packages: write`.
     #
     #   contents: write       -- the annotated tag, the GitHub Release, and the
     #                            back-merge branch.
-    #   packages: write       -- the five images.
+    #   packages: write       -- the six images.
     #   pull-requests: write  -- the back-merge pull request.
     #   actions: read         -- deploy_reusable declares it for its image-wait
     #                            job. That job is off on this path (the images
