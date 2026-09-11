@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
@@ -28,7 +29,7 @@ export class AdminArtistsService {
   }
 
   /** Runs the find all operation, paginated and optionally filtered. */
-  async findAll({ page = 1, limit = 20, verified, q }: ListArtistsInput) {
+  async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, verified, q }: ListArtistsInput) {
     const where = this.buildWhere({ verified, q })
     const [data, total] = await Promise.all([
       this.prisma.artist.findMany({

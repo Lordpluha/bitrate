@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
@@ -26,7 +27,7 @@ export class AdminUsersService {
   }
 
   /** Runs the find all operation, paginated and optionally filtered. */
-  async findAll({ page = 1, limit = 20, q }: ListUsersInput) {
+  async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, q }: ListUsersInput) {
     const where = this.buildWhere({ q })
     const [data, total] = await Promise.all([
       this.prisma.user.findMany({

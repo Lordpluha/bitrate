@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { ModerationStatus } from '@prisma/client'
@@ -15,7 +16,7 @@ export class AdminModerationService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** Runs the find all operation, paginated and optionally filtered by status. */
-  async findAll({ page = 1, limit = 20, status }: ListReportsInput) {
+  async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, status }: ListReportsInput) {
     const where = status ? { status } : {}
     const [data, total] = await Promise.all([
       this.prisma.moderationReport.findMany({

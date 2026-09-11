@@ -1,9 +1,8 @@
+import { paginationQuerySchema } from '@common/pagination'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
-export const ListAdminUsersQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).optional(),
-  limit: z.coerce.number().int().min(1).max(100).optional(),
+export const ListAdminUsersQuerySchema = paginationQuerySchema.extend({
   q: z.string().min(1).max(255).optional(),
 })
 

@@ -1,3 +1,4 @@
+import { paginationQuerySchema } from '@common/pagination'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
@@ -10,9 +11,7 @@ const booleanQueryParam = z.preprocess((value) => {
   return value
 }, z.boolean())
 
-export const ListAdminArtistsQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).optional(),
-  limit: z.coerce.number().int().min(1).max(100).optional(),
+export const ListAdminArtistsQuerySchema = paginationQuerySchema.extend({
   verified: booleanQueryParam.optional(),
   q: z.string().min(1).max(255).optional(),
 })

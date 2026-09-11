@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { AuditLog, Prisma } from '@prisma/client'
@@ -32,7 +33,7 @@ export class AdminAuditService {
 
   /** Runs the find all operation, paginated, newest first. */
   async findAll(query: ListAdminAuditLogsQueryDto) {
-    const { page = 1, limit = 20 } = query
+    const { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT } = query
     const where = this.buildWhere(query)
 
     const [rows, total] = await Promise.all([
