@@ -135,9 +135,9 @@ human merges the back-merge PR, and develop carries the bumps again
   That is Route B, and it is forced: `master` requires one approving review and GitHub forbids
   approving your own pull request, so a human-opened release PR would need an admin bypass every
   time. The two commit statuses are the gate that replaces the suites, and they have to be
-  registered as required checks by an admin — `pnpm check:branch-protection --apply`. `GITHUB_TOKEN`
-  cannot do it (no `administration` scope) and the UI cannot either (its picker only offers checks
-  seen in the last seven days).
+  registered as required checks by an admin, against the branch-protection API by hand.
+  `GITHUB_TOKEN` cannot do it (no `administration` scope) and the UI cannot either (its picker only
+  offers checks seen in the last seven days).
 - **The version is derived from `.changesets[].releases[].type`, never `.releases[].type`.** The
   first is what a human wrote; the second is Changesets' resolved plan and includes the patch bumps
   it generates for *dependents*, so deriving from it would let a change inflate the product version
