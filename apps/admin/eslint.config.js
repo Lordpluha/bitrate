@@ -55,15 +55,127 @@ module.exports = tseslint.config(
   },
   {
     /**
-     * `src/app/shared/ui/**` is vendored spartan-ng source, copied in by `@spartan-ng/cli`, not
+     * `src/app/presentation/ui/**` is vendored spartan-ng source, copied in by `@spartan-ng/cli`, not
      * written here. It carries the library's own `hlm` prefix and its own export surface, so the
      * app's `app` prefix does not apply — treat it the way generated code is treated elsewhere in
      * the monorepo: reviewed on the way in, not linted to the app's conventions afterwards.
      */
-    files: ['src/app/shared/ui/**/*.ts'],
+    files: ['src/app/presentation/ui/**/*.ts'],
     rules: {
       '@angular-eslint/directive-selector': 'off',
       '@angular-eslint/component-selector': 'off',
+    },
+  },
+  /**
+   * The dependency rule, made mechanical.
+   *
+   * Clean architecture is only real if something fails when it is broken. Each block below names
+   * what that layer may *not* reach for; the pattern list covers both the path alias and a
+   * relative path that would sneak past it.
+   */
+  {
+    files: ['src/app/domain/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@angular/*',
+                '@application',
+                '@application/*',
+                '@infrastructure',
+                '@infrastructure/*',
+                '@presentation/*',
+                '@bitrate/*',
+                'zod',
+                'rxjs',
+                '**/application/**',
+                '**/infrastructure/**',
+                '**/presentation/**',
+              ],
+              message:
+                'domain/ depends on nothing. No framework, no zod, no generated contract, no outer layer — that is the whole point of the layer.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/app/application/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@angular/common/http',
+                '@angular/router',
+                '@angular/forms',
+                '@infrastructure',
+                '@infrastructure/*',
+                '@presentation/*',
+                '@bitrate/*',
+                'zod',
+                'rxjs',
+                '**/infrastructure/**',
+                '**/presentation/**',
+              ],
+              message:
+                'application/ orchestrates the domain through its ports. HTTP, routing, forms and the generated contract all live in infrastructure/ or presentation/.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/app/infrastructure/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@application',
+                '@application/*',
+                '@presentation/*',
+                '**/application/**',
+                '**/presentation/**',
+              ],
+              message:
+                'infrastructure/ implements domain ports. It is depended upon, and depends on nothing above the domain.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/app/presentation/**/*.ts'],
+    ignores: ['src/app/presentation/ui/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@infrastructure',
+                '@infrastructure/*',
+                '@bitrate/contracts',
+                '**/infrastructure/**',
+              ],
+              message:
+                'presentation/ talks to application use cases and domain types. Only app.config.ts wires an adapter.',
+            },
+          ],
+        },
+      ],
     },
   },
   {

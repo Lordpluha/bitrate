@@ -1,10 +1,13 @@
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http'
 import { type ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core'
 import { provideRouter, withComponentInputBinding } from '@angular/router'
-import { authInterceptor } from '@shared/api'
+import { authInterceptor, provideAdminInfrastructure } from '@infrastructure'
 import { routes } from './app.routes'
 
 /**
+ * The composition root. This file and `infrastructure.providers.ts` are the only places allowed
+ * to see every layer at once — the dependency rule holds because nothing else does.
+ *
  * No change-detection provider on purpose: this app was scaffolded zoneless, ships no `zone.js`,
  * and Angular 22 needs no opt-in for that. Do not add `provideZoneChangeDetection`.
  *
@@ -15,5 +18,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    provideAdminInfrastructure(),
   ],
 }
