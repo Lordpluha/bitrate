@@ -1,42 +1,43 @@
 import type { Routes } from '@angular/router'
-import { requireStaffSession } from '@shared/api/auth.guard'
+import { requireStaffSession } from '@presentation/guards'
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'moderation' },
   {
     path: 'login',
     title: 'Sign in · Bitrate operators',
-    loadComponent: () => import('@features/login/login').then((m) => m.LoginPage),
+    loadComponent: () => import('@presentation/pages/login/login').then((m) => m.LoginPage),
   },
   {
     path: 'moderation',
     title: 'Moderation queue · Bitrate operators',
     canActivate: [requireStaffSession],
-    loadComponent: () => import('@features/moderation/moderation').then((m) => m.ModerationQueue),
+    loadComponent: () =>
+      import('@presentation/pages/moderation/moderation').then((m) => m.ModerationQueue),
   },
   {
     path: 'catalog',
     title: 'Catalog pipeline · Bitrate operators',
     canActivate: [requireStaffSession],
-    loadComponent: () => import('@features/catalog/catalog').then((m) => m.CatalogPage),
+    loadComponent: () => import('@presentation/pages/catalog/catalog').then((m) => m.CatalogPage),
   },
   {
     path: 'artists',
     title: 'Artists · Bitrate operators',
     canActivate: [requireStaffSession],
-    loadComponent: () => import('@features/artists/artists').then((m) => m.ArtistsPage),
+    loadComponent: () => import('@presentation/pages/artists/artists').then((m) => m.ArtistsPage),
   },
   {
     path: 'users',
     title: 'Listeners · Bitrate operators',
     canActivate: [requireStaffSession],
-    loadComponent: () => import('@features/users/users').then((m) => m.UsersPage),
+    loadComponent: () => import('@presentation/pages/users/users').then((m) => m.UsersPage),
   },
   {
     path: 'audit',
     title: 'Audit log · Bitrate operators',
     canActivate: [requireStaffSession],
-    loadComponent: () => import('@features/audit/audit').then((m) => m.AuditPage),
+    loadComponent: () => import('@presentation/pages/audit/audit').then((m) => m.AuditPage),
   },
   { path: '**', redirectTo: '' },
 ]
