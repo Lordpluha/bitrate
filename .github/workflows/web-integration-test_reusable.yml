@@ -3,15 +3,38 @@ name: "[docker] Web Integration Test Reusable"
 on:
   workflow_call:
 
+permissions:
+  contents: read
+
 jobs:
   integration-test:
     name: Integration Tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
+    # Every variable in docker-compose.preprod.yaml is declared with a `:-default`, so the
+    # stack needs no env file to come up. These are the values CI pins deliberately, set as
+    # job-level environment so `docker compose` picks them up through shell interpolation in
+    # every step below.
+    #
+    # They are NOT written to a `.env` file: `-f infra/docker-compose.preprod.yaml` makes
+    # `infra/` the project directory, so compose looks for `infra/.env` and ignores a root
+    # one entirely. The step this replaced wrote a root `.env`, which compose never read.
+    #
+    # DATABASE_URL is absent on purpose — the compose file builds it from POSTGRES_USER /
+    # POSTGRES_PASSWORD / POSTGRES_DB rather than interpolating DATABASE_URL, so setting it
+    # here would do nothing. Pin the three parts instead; the `psql -U admin` and
+    # `bitrate_shadow` lookups further down depend on exactly these values.
+    env:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: bitrate
+      SHADOW_DATABASE_URL: postgresql://admin:admin@postgres:5432/bitrate_shadow
+      JWT_SECRET: test_secret_key_for_ci
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Free up disk space
         run: |
@@ -27,13 +50,6 @@ jobs:
 
           # Show available space
           df -h
-
-      - name: Create .env file
-        run: |
-          cp .env.example .env
-          echo "JWT_SECRET=test_secret_key_for_ci" >> .env
-          echo "DATABASE_URL=postgresql://admin:admin@postgres:5432/bitrate" >> .env
-          echo "SHADOW_DATABASE_URL=postgresql://admin:admin@postgres:5432/bitrate_shadow" >> .env
 
       - name: Build application images
         run: |

@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Checkout repository
         if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js and pnpm
         if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
@@ -71,7 +71,7 @@ jobs:
 
       - name: Upload native artifacts
         if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.artifact-prefix }}-${{ matrix.platform }}
           path: apps/desktop/src-tauri/target/release/bundle/**/*

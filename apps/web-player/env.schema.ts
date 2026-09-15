@@ -20,7 +20,9 @@ const optionalUrl = z.preprocess(
  * present depends on whether the build is producing a deployable artifact.
  */
 const baseEnvSchema = z.object({
-  NODE_ENV: z.enum(['local', 'development', 'production']).default('local'),
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
 
   // Public URLs
   NEXT_PUBLIC_API_URL: optionalUrl,
@@ -33,7 +35,8 @@ const baseEnvSchema = z.object({
   // NEXT_PUBLIC_POSTHOG_HOST: z.string().url().optional(),
 
   // Sentry
-  // NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
+  NEXT_PUBLIC_SENTRY_DSN: optionalUrl,
+  NEXT_PUBLIC_SENTRY_ENVIRONMENT: z.string().optional(),
 })
 
 /**

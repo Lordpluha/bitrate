@@ -24,8 +24,19 @@
     ],
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
+    /* Listed per layer rather than as a single `@*` catch-all. `@*` also matched
+       every scoped package — `@sentry/nextjs` resolved to `./src/sentry/nextjs`,
+       which broke `next.config.ts` outright and, when mapped into node_modules,
+       bypassed the package's own `exports` and pulled the server build into the
+       browser bundle. Both import styles in this app stay supported. */
     "paths": {
-      "@*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
+      "@entities/*": ["./src/entities/*"],
+      "@features/*": ["./src/features/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@views/*": ["./src/views/*"],
+      "@widgets/*": ["./src/widgets/*"]
     }
   },
   "include": [

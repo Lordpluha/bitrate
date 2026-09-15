@@ -68,7 +68,9 @@ When working with the project, follow these rules:
 ### For developers
 
 - ✅ Never commit `.env` files with real credentials
-- ✅ Use `.env.example` to document variables
+- ✅ Keep deploy and CI values in GitHub environment secrets and variables, never in a
+  committed file — a repository-root `.env` is not part of this project's setup
+- ✅ Document an app's variables in that app's own `.env.example`, values elided
 - ✅ Regularly update dependencies: `pnpm update`
 - ✅ Check for vulnerabilities: `pnpm audit`
 - ✅ Use pre-commit hooks to check for secrets

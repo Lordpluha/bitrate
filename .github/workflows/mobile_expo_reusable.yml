@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Docker Buildx
         uses: ./.github/actions/setup-docker
@@ -39,7 +39,7 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Expo Server
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/mobile/Dockerfile

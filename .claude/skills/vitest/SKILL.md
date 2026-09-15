@@ -120,6 +120,6 @@ Do not guess an API from memory. In order:
 ## Related rules and skills
 
 - `playwright` — the Chromium provider behind the `screenshot` project, plus web-player E2E.
-- `sp-tester` — the heavy specialist that writes/runs one focused spec end to end
-  and smoke-runs it; dispatched by `/sp-implement` by default, or invoke it directly via the
+- `br-tester` — the heavy specialist that writes/runs one focused spec end to end
+  and smoke-runs it; dispatched by `/br-implement` by default, or invoke it directly via the
   Agent tool.

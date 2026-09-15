@@ -77,7 +77,10 @@ Cross-slice imports at the same layer level are always forbidden.
 
 ## Path alias
 
-`"@*": ["./src/*"]` in `apps/web-player/tsconfig.json`. Every import uses `@/` prefix. No relative paths (`./`, `../`) across slice boundaries.
+`@/*` in `apps/web-player/tsconfig.json`, alongside one alias per layer (`@shared/*`,
+`@entities/*`, `@features/*`, `@widgets/*`, `@views/*`, `@app/*`). The former `@*` catch-all
+is gone — it matched scoped packages too. Every import uses the `@/` prefix. No relative
+paths (`./`, `../`) across slice boundaries.
 
 ```ts
 // Bad

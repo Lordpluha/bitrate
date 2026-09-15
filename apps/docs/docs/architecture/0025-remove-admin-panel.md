@@ -22,7 +22,7 @@ through it. Its one page targeted a Prisma implicit-relation join table, which P
 which is especially unsafe to write by hand.
 
 **It cost more than a single page is worth.** The panel required a dedicated agent
-(`sp-admin-developer`), a rule file, a skill, two CI workflows, a slot in three more, a service in
+(`br-admin-developer`), a rule file, a skill, two CI workflows, a slot in three more, a service in
 two compose stacks, an nginx upstream and route, and five required environment variables — and it
 was the only thing preventing the stack from starting without a Kottster API token.
 

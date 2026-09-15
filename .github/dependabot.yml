@@ -1,0 +1,136 @@
+# Version updates. Security updates run without this file; everything below is the
+# scheduled half that was missing, which is why the repository accumulated a large
+# advisory backlog with only a couple of Dependabot PRs to show for it.
+#
+# Everything is grouped and capped on purpose: this is a monorepo with 14 workspaces,
+# and one PR per dependency would bury the board.
+version: 2
+
+updates:
+  # A single pnpm-lock.yaml covers every workspace, so one npm entry is enough.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    # Only widen a manifest range when the range does not already admit the fix.
+    # PR #135 edited packages/ui-react/package.json to bump ^4.1.9 -> ^4.1.10, a range
+    # that already allowed 4.1.10; the real change was the lockfile pin. This keeps
+    # such updates lockfile-only.
+    versioning-strategy: increase-if-necessary
+    commit-message:
+      prefix: chore
+      prefix-development: chore
+      include: scope
+    groups:
+      # Families that release in lockstep. Splitting these produces PRs that cannot
+      # merge on their own: the packages peer-depend on each other by exact version,
+      # which is precisely how Dependabot PR #135 ended up unmergeable.
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+      nestjs:
+        patterns:
+          - "@nestjs/*"
+      next:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+          - "@next/*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      storybook:
+        patterns:
+          - "storybook"
+          - "@storybook/*"
+      expo:
+        patterns:
+          - "expo"
+          - "expo-*"
+          - "@expo/*"
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+      # Everything else, split only by dependency type.
+      production:
+        dependency-type: production
+        exclude-patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+          - "@nestjs/*"
+          - "expo"
+          - "expo-*"
+          - "@expo/*"
+      development:
+        dependency-type: development
+        exclude-patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "storybook"
+          - "@storybook/*"
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "@types/react"
+          - "@types/react-dom"
+
+  - package-ecosystem: cargo
+    directory: "/apps/desktop/src-tauri"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      cargo:
+        patterns:
+          - "*"
+
+  # Workflows plus the two composite actions, which live outside .github/workflows
+  # and are therefore not covered by the "/" directory alone.
+  - package-ecosystem: github-actions
+    directories:
+      - "/"
+      - "/.github/actions/setup-docker"
+      - "/.github/actions/setup-node-pnpm"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: ci
+      include: scope
+    groups:
+      actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: docker
+    directories:
+      - "/apps/api"
+      - "/apps/desktop"
+      - "/apps/docs"
+      - "/apps/mobile"
+      - "/apps/web-artists"
+      - "/apps/web-player"
+      - "/packages/ui-react"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      docker:
+        patterns:
+          - "*"

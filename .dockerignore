@@ -1,5 +1,11 @@
 # Docker related files
-.env
+# Root-relative patterns match only the context root, so a bare `.env` left apps/api/.env,
+# apps/api/.env.test, apps/mobile/.env and apps/web-player/.env.development in every build
+# context. They never reached a production image — the final stages copy named artifacts rather
+# than the tree — but they did land in the `COPY . .` layer of the build stage, which is exported
+# to the registry as build cache.
+**/.env
+**/.env.*
 nginx/logs/
 backups/
 
@@ -11,15 +17,24 @@ yarn-error.log
 pnpm-debug.log
 
 # Development
-.env*.local
-.env.development
 *.log
 
-# Build outputs
-dist/
-build/
-.next/
-out/
+# Build outputs. Prefixed with **/ for the same reason as the env files above: a root-relative
+# pattern matches only the context root, so a bare `.next/` left apps/*/.next and packages/*/dist
+# in the context. That shipped a local dev build into the production image and sent gigabytes of
+# artifacts to the daemon on every build — apps/ alone is 2.3 GB with them.
+**/dist/
+**/build/
+**/.next/
+**/out/
+**/coverage/
+**/.turbo/
+**/test-results/
+**/playwright-report/
+apps/desktop/src-tauri/target/
+graphify-out/
 
 # Keep example file
-!.env.example
+!**/.env.example
+!**/.env.sample
+!**/.env.template

@@ -52,7 +52,7 @@ services:
 
   api:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/api:develop
+    image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./apps/api/Dockerfile
@@ -86,6 +86,10 @@ services:
       - API_BASE_URL
       - METRICS_TOKEN
       - SENTRY_DSN
+      # Which release and which environment an event belongs to. Without them every error in
+      # Sentry is unattributed and a spike cannot be traced to the deploy that caused it.
+      - SENTRY_RELEASE
+      - SENTRY_ENVIRONMENT
       - SMTP_HOST
       - SMTP_PORT
       - SMTP_USER
@@ -99,9 +103,40 @@ services:
       - S3_SECRET_KEY
       - S3_PUBLIC_URL
       - S3_FORCE_PATH_STYLE
+      # Token lifetimes and cookie names. Absent here, the API fell back to its schema defaults, so
+      # changing any of them in .env had no effect on production at all.
+      - JWT_ACCESS_EXPIRES_IN
+      - JWT_REFRESH_EXPIRES_IN
+      - ACCESS_TOKEN_NAME
+      - REFRESH_TOKEN_NAME
+      # The parent domain the session cookies are scoped to, e.g. `.bitrate.me`. Without it the
+      # cookies are host-only on the API subdomain, so the web apps' route guards never see a
+      # session and every authenticated route redirects back to the login page.
+      - COOKIE_DOMAIN
+      - HEALTH_CHECK_TIMEOUT_MS
+      - DEV_MAIL_LOG_TOKENS
+      # Social sign-in. Without these four the Google and Facebook flows cannot work in production
+      # no matter what .env holds — nothing was passing them through.
+      - OAUTH_GOOGLE_CLIENT_ID
+      - OAUTH_GOOGLE_CLIENT_SECRET
+      - OAUTH_FACEBOOK_APP_ID
+      - OAUTH_FACEBOOK_APP_SECRET
     volumes:
-      - ../apps/api/uploads:/app/apps/api/uploads
-      - ../apps/api/public:/app/apps/api/public
+      # The API's own upload root, and the only durable one. CMD runs from WORKDIR /app, so
+      # process.cwd() is /app and storage.config.ts puts every uploaded master, HLS ladder,
+      # cover and avatar under /app/storage. That path was mounted nowhere: the bytes lived in
+      # the container's writable layer and were destroyed by every `up -d` that recreated the
+      # container — i.e. by every deploy.
+      #
+      # The two mounts this replaces (../apps/api/uploads, ../apps/api/public) pointed at paths
+      # nothing in the API has ever written to. Docker created the empty host directories for
+      # them, which is why they looked like they held the uploads.
+      #
+      # A named volume rather than a bind mount, because the container is non-root (uid 1001):
+      # Docker seeds an empty named volume from the image directory and its ownership, so this
+      # needs no chown on the host. Read it with `docker compose exec api tar -cf - -C /app storage`,
+      # which is what infra/backup.sh does.
+      - api_storage:/app/storage
     depends_on:
       postgres:
         condition: service_healthy
@@ -118,7 +153,7 @@ services:
 
   web-player:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/web-player:develop
+    image: ghcr.io/lordpluha/bitrate/web-player:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./apps/web-player/Dockerfile
@@ -127,6 +162,13 @@ services:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
         - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
         - API_URL=${API_URL:-http://api:3000}
+        # Sentry is baked in at build time — `next build` inlines the DSN into the client
+        # bundle, so a runtime variable would never reach the browser. Unset, the SDK
+        # starts disabled; the source's only DSN is this variable.
+        - NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN:-}
+        - NEXT_PUBLIC_SENTRY_ENVIRONMENT=${NEXT_PUBLIC_SENTRY_ENVIRONMENT:-production}
+        - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN:-}
+        - SENTRY_RELEASE=${SENTRY_RELEASE:-}
     container_name: bitrate-web-player-prod
     restart: always
     environment:
@@ -147,7 +189,7 @@ services:
 
   web-artists:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/web-artists:develop
+    image: ghcr.io/lordpluha/bitrate/web-artists:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./apps/web-artists/Dockerfile
@@ -174,7 +216,7 @@ services:
   # runtime state, so they need neither environment nor a dependency on the API.
   docs:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/docs:develop
+    image: ghcr.io/lordpluha/bitrate/docs:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./apps/docs/Dockerfile
@@ -192,7 +234,7 @@ services:
 
   storybook:
     logging: *default-logging
-    image: ghcr.io/lordpluha/bitrate/storybook:develop
+    image: ghcr.io/lordpluha/bitrate/storybook:${IMAGE_TAG:-master}
     build:
       context: ..
       dockerfile: ./packages/ui-react/Dockerfile
@@ -245,6 +287,11 @@ volumes:
   postgres_data:
     driver: local
   redis_data:
+    driver: local
+  # Uploaded audio, HLS artifacts, covers and avatars. Backed up off-host by
+  # .github/workflows/backup.yml; see ADR-0033 for why this is a stopgap and
+  # STORAGE_DRIVER=s3 is the durable answer for the audio.
+  api_storage:
     driver: local
 
 networks:

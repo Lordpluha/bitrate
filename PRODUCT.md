@@ -14,16 +14,26 @@ conventions, so native platform guidance applies to its design work when it begi
 
 ## Users
 
-**Listeners — primary.** People who want to play music: browse, search, build and manage
-playlists, like tracks/albums/playlists, follow artists, and return to what they were
-recently playing. Served by `apps/web-player` (Next.js, port 3001), later by the mobile and
-desktop apps. This is the audience the product's success is measured against.
+**Artists — primary, and almost entirely unbuilt.** Independent musicians publishing through
+the platform: upload tracks and metadata, maintain a public artist page, and eventually run a
+release end to end and read what happened. **This is the audience the product's success is
+measured against** — the metric is artists completing a release, not listener retention. Served
+by `apps/web-artists` (port 3002), which today implements only the auth surface: login,
+registration, forgot/reset password. Artists have their own credentials, OAuth, and account
+model, separate from listener accounts.
 
-**Artists — secondary, early.** Musicians publishing to the platform: upload tracks and
-metadata, maintain a public artist page, and (roadmap v0.6.0) read analytics on plays,
-followers, and geography. Served by `apps/web-artists` (port 3002), which today implements
-only the auth surface — login, registration, forgot/reset password. Artists have their own
-credentials, OAuth, and account model, separate from listener accounts.
+Note the gap between those two sentences. Artists are primary by decision
+([ADR-0032](apps/docs/docs/architecture/0032-artist-first.md)), not by present state — there is
+no artist product yet. Design work here is greenfield, and nothing about the existing artist
+surface should be read as established convention.
+
+**Listeners — the supporting surface, and the mature one.** People who want to play music:
+browse, search, build and manage playlists, like tracks/albums/playlists, follow artists, and
+return to what they were recently playing. Served by `apps/web-player` (Next.js, port 3001),
+later by the mobile and desktop apps. This is where nearly all the product that exists lives,
+and it stays the reference for how this product looks and behaves. Under the artist-first
+decision it exists to make an artist's page worth linking to — it is not where new investment
+goes, but it is not deprecated either.
 
 **Operators — internal.** Staff uploading catalog, managing artists and users, and
 moderating content. There is no operator surface today: the Kottster admin panel was removed
@@ -59,7 +69,8 @@ this question to be answered first, not assumed.
 - **Sessions are long and re-entrant.** People return to the same library, the same recents,
   the same liked songs. Continuity across visits matters more than first-run impact.
 - **The catalog is real audio.** Tracks are uploaded, processed through a BullMQ pipeline,
-  and streamed as HLS at 128/192/320 kbps Opus. Cover art, avatars, and audio are served as
+  and streamed as CMAF fragments over byte ranges at 128/192/320 kbps, with HLS retained as the
+  fallback for tracks encoded before CMAF (ADR-0020). Cover art, avatars, and audio are served as
   real media, not placeholders — `mediaUrl` helpers resolve and fall back on them.
 - **Two account worlds, one catalog.** Listener accounts and artist accounts are distinct
   (separate auth, separate apps). An artist page a listener browses is the public face of an
@@ -72,16 +83,17 @@ this question to be answered first, not assumed.
 **Shipped (roadmap-confirmed):**
 - JWT auth (access + refresh), OAuth 2.0 via Google and Facebook, for both listeners and
   artists; TOTP two-factor with QR and backup codes; email password recovery.
-- Audio upload and processing pipeline; HLS streaming at three bitrates; track and album
+- Audio upload and processing pipeline; CMAF/Range streaming at three bitrates; track and album
   CRUD; static file serving.
 - Like/unlike for tracks, albums, and playlists; follow/unfollow artists; listening history;
   playlist management with owner permissions.
-- Full-text search across tracks, artists, albums, and playlists (PostgreSQL FTS + GIN).
+- Fuzzy search across tracks, artists, albums, and playlists (PostgreSQL `pg_trgm`
+  trigram similarity plus `ILIKE`, with GIN trigram indexes — not full-text search).
 
 **Built but incomplete — UI lags the API.** Several capabilities exist server-side with the
 listener-facing UI still unbuilt: search page, artist page, album page, listening-history
 view, public user profiles, profile editing, follow-users, activity feed. Media player
-transport itself (play/pause/seek/next/prev, volume, progress, queue, shuffle, repeat, HLS
+transport itself (play/pause/seek/next/prev, volume, progress, queue, shuffle, repeat, adaptive
 quality switching) is the current v0.3.0 focus and not yet complete. Treat "the API supports
 it" as a reason a surface is worth designing, not as evidence it already works.
 
@@ -110,7 +122,7 @@ playback, equalizer, offline mode, podcasts/audiobooks, recommendations.
 
 ## Brand Commitments
 
-**The product is Bitrate — all-in-one for musicians.** [`apps/docs/docs/brand/brand.md`](apps/docs/docs/brand/brand.md) is the source of truth for
+**The product is Bitrate — all-in-one for musicians.** [`apps/docs/docs/brand/`](apps/docs/docs/brand/) is the source of truth for
 positioning, promise, tone, and the product decision filter; the sibling `design.md` translates
 it into design rules. Read those before making a naming, copy, or visual decision here — this section
 only records what binds the codebase.
@@ -119,13 +131,13 @@ Settled: the name **Bitrate**, the `@bitrate/*` package namespace, and the brand
 **Bitrate Purple `#7C3AED`** with three themes (dark, light, dim).
 
 Resemblance to the incumbent is not a requirement, a safety net, or a review criterion. The
-inherited Spotify-derivative surfaces — palette, logo, marketing copy carried over into
+inherited incumbent-derivative surfaces — palette, logo, marketing copy carried over into
 `apps/web-artists` — are being removed, not preserved. Deliberately still open per
 `design.md` §24: the final logo and mark, typography, the spacing scale, illustration and
 photography direction, motion tokens, and the icon family.
 
 The name remains subject to trademark, domain, and legal clearance before irreversible
-investment (`brand.md` §17), so identifiers that would claim a `bitrate.*` domain stay
+investment (`apps/docs/docs/brand/voice.md` § Naming), so identifiers that would claim a `bitrate.*` domain stay
 owner-namespaced for now.
 
 Author: Vladyslav Tesliuk (github.com/Lordpluha). MIT licensed.
@@ -133,11 +145,11 @@ Author: Vladyslav Tesliuk (github.com/Lordpluha). MIT licensed.
 ## Evidence on Hand
 
 **Real:**
-- Deployed web player — https://spotify-clone-web-olive.vercel.app/
-- Storybook for the shared component library —
-  https://bitrate-ui-git-develop-vladyslavs-projects-cc52700b.vercel.app/
-- Chromatic visual-review library — appId `68787858d0b6a0a00b0ca47f`
-- Live API + Swagger contract at `/swagger`; generated types in `@bitrate/contracts`
+- Deployed web player — https://bitrate.me, with the artists portal at https://artists.bitrate.me
+- Storybook for the shared component library — https://ui.bitrate.me
+- Documentation site — https://docs.bitrate.me
+- Live API at https://api.bitrate.me with the Swagger contract at `/swagger`; generated types in
+  `@bitrate/contracts`
 - Icon set and design tokens in `packages/ui-react/` (icons, palette, themes, typography)
 - Seeded development data with genuinely downloaded audio files and cover images
   (`apps/api/src/infra/seeds/`) — usable as realistic content in comps, though the artist
@@ -155,8 +167,10 @@ Author: Vladyslav Tesliuk (github.com/Lordpluha). MIT licensed.
 
 ## Product Principles
 
-1. **Playback is the product; everything else is navigation.** When a decision trades away
-   the immediacy or reliability of getting sound out of the speakers, it loses.
+1. **Within the player, playback is the product; everything else is navigation.** When a
+   decision trades away the immediacy or reliability of getting sound out of the speakers, it
+   loses. This governs the listening surface, not the company: the product Bitrate sells is the
+   artist's workflow ([ADR-0032](apps/docs/docs/architecture/0032-artist-first.md)).
 2. **Design for the return visit, not the first one.** Library, recents, and liked songs are
    where a real listener actually lives. A surface that only impresses on first load has
    optimized for the wrong session.

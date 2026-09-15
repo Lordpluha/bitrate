@@ -51,7 +51,9 @@ Route files under `app/` are thin adapters that render a view — see
   [ADR-0005](../../architecture/0005-client-state-zustand.md))
 - **React Hook Form** + **Zod** — forms (see
   [ADR-0007](../../architecture/0007-forms-react-hook-form-zod.md))
-- **hls.js** — adaptive audio streaming playback
+- **CMAF + MediaSource Extensions** — first-party adaptive playback over byte ranges
+  (see [ADR-0020](../../architecture/0020-cmaf-range-mse-playback.md))
+- **hls.js** — fallback playback for tracks with no CMAF renditions
 
 ## 🔧 API client
 

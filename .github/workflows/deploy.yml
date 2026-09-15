@@ -1,0 +1,108 @@
+name: "[platform] Deploy Production"
+
+# Dual trigger, per ADR-0029. Neither the build nor the deploy may depend on a
+# single mechanism having fired correctly, so production is reachable two ways:
+#
+#   push: tags ['v*']    a human pushes a version tag -> full deploy of that tag
+#   workflow_dispatch    an explicit image-tag, in full / redeploy / health-only
+#
+# On the RELEASE path neither fires, and that is deliberate. The tag
+# release_publish.yml creates is pushed with GITHUB_TOKEN, which raises no tag
+# event, so there the deploy is a `needs:` job of the publish run -- ordered by
+# the graph rather than by polling. These triggers are alive for the two cases
+# that are genuinely a human action: a hand-pushed tag, and a rollback.
+#
+# Because release_publish.yml has no tag trigger and this workflow has no master
+# trigger, no single event ever starts two deploys of the same thing.
+#
+# There is no push-to-master trigger, and its absence is not a loosened gate. It
+# used to guess which push to master was a release by matching the commit
+# subject, and only ever fired when a PAT wrote the version commit. The
+# `production` environment approval is untouched and still the last thing
+# between a run and the server -- see deploy_reusable.yml's `deploy` job.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Deploy mode"
+        required: true
+        default: full
+        type: choice
+        options:
+          # Wait for this ref's image runs, then render, deploy, migrate, probe.
+          - full
+          # Skip the image wait -- for redeploying images that already exist.
+          # This is the rollback mode.
+          - redeploy
+          # Probe production only. Touches nothing on the server.
+          - health-only
+      image-tag:
+        description: >-
+          Value of IMAGE_TAG on the server, i.e. which published image tag every
+          service is pulled at. Normally a stack release tag
+          (`v1.4.0`). Leave empty to derive it: the ref's own name when this
+          run is at a tag, otherwise `master`.
+        required: false
+        default: ''
+        type: string
+
+# Never cancel a deploy in flight: a half-applied `compose up` plus a cancelled
+# migration is worse than a queued second deploy. A future staging caller gets
+# its own group -- do not widen this one to cover both environments.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+# Nothing at workflow level; the one caller job below asks for exactly what the
+# called workflow's jobs need. The deploy pushes nothing and publishes nothing.
+permissions: {}
+
+jobs:
+  # One caller job, deliberately.
+  #
+  # `secrets: inherit` rather than an explicit eleven-secret mapping. This is
+  # forced, not preferred. Production configuration now lives at *environment*
+  # scope, and a job that calls a reusable workflow may not declare
+  # `environment:` -- GitHub allows only name/uses/with/secrets/needs/if/
+  # permissions/strategy/concurrency on such a job. This caller therefore has no
+  # environment, so `${{ secrets.JWT_SECRET }}` written here would resolve
+  # against repository scope and yield an empty string, and the deploy would
+  # succeed while starting the API with a blank signing key. Passing `inherit`
+  # moves secret resolution into the called workflow's `deploy` job, which does
+  # carry `environment:` and therefore sees the environment's values.
+  #
+  # The cost is real and deliberate: `inherit` exposes *every* repository secret
+  # to deploy_reusable.yml, not just the eleven the deploy consumes. That is
+  # acceptable only because the called workflow is in this same repository and
+  # is reviewed with this file; it would not be acceptable for a third-party or
+  # cross-repository reusable workflow.
+  production:
+    # No `if:`, and nothing is weakened by its absence. The old condition existed
+    # to tell a release push from an ordinary push to master; with no master
+    # trigger there is no such question, and every run of this workflow is
+    # somebody explicitly asking for a deploy of a named tag.
+    name: Production
+    uses: ./.github/workflows/deploy_reusable.yml
+
+    #   contents: read  -- check out infra/, the nginx templates and the Taskfile.
+    #   actions:  read  -- the await-images job reads this ref's run statuses.
+    #
+    # `read`, not `write`: this workflow is started, it never starts anything
+    # itself. No job in this repository holds `actions: write` any more.
+    permissions:
+      contents: read
+      actions: read
+    with:
+      environment: production
+      # On a tag push there is no `inputs` context at all, so every reference
+      # below reads as an empty string. Both booleans therefore have to name the
+      # push case explicitly rather than relying on a default: a bare
+      # `inputs.mode == 'full'` would evaluate false on a tag push and silently
+      # skip the wait for that tag's images.
+      wait-for-images: ${{ github.event_name == 'push' || inputs.mode == 'full' }}
+      run-deploy: ${{ github.event_name == 'push' || inputs.mode != 'health-only' }}
+      image-tag: ${{ inputs.image-tag }}
+    secrets: inherit

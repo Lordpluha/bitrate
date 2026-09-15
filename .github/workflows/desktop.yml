@@ -8,6 +8,14 @@ on:
       - '.github/workflows/desktop.yml'
       - '.github/workflows/desktop_native_reusable.yml'
       - '.github/workflows/desktop_docker_reusable.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop]
+    paths:
+      - 'apps/desktop/**'
+      - '.github/workflows/desktop.yml'
+      - '.github/workflows/desktop_native_reusable.yml'
+      - '.github/workflows/desktop_docker_reusable.yml'
   workflow_dispatch:
     inputs:
       mode:
@@ -31,7 +39,7 @@ on:
           - macos
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 permissions:
@@ -39,13 +47,19 @@ permissions:
   packages: write
 
 jobs:
+  # Linux only on a PR: it catches Rust and renderer breakage for a fraction of the cost
+  # of three release builds. The full matrix still runs on every push to develop below.
   desktop-pr-native:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr' }}
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
     uses: ./.github/workflows/desktop_native_reusable.yml
     with:
       artifact-prefix: desktop-pr
-      platform: ${{ github.event.inputs.platform }}
+      platform: ${{ github.event.inputs.platform || 'linux' }}
 
+  # Dispatch-only on purpose. desktop_docker_reusable.yml logs in to ghcr and exports a
+  # registry build cache unconditionally, and GITHUB_TOKEN is read-only on Dependabot and
+  # fork pull requests, so wiring this to `pull_request` fails on the cache export rather
+  # than on anything about the change under review.
   desktop-pr-docker:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr' }}
     uses: ./.github/workflows/desktop_docker_reusable.yml

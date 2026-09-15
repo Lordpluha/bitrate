@@ -1,0 +1,490 @@
+name: "[backup] Off-host Backup Reusable"
+
+# Takes the production backup and puts a copy somewhere the production host cannot reach.
+#
+# The split matters more than it looks. infra/backup.sh runs on the server and only writes
+# into <deploy path>/backups; this workflow streams those files to the runner and uploads
+# them from there. So the object-storage credentials that can write — and, if pruning is on,
+# delete — the backups never exist on the machine the backups are meant to survive. A host
+# that is lost, wiped, or compromised cannot take its own off-host copies with it.
+#
+# The script is piped in over stdin rather than run from the server's checkout, so the
+# version that runs is always the one in this commit, with no dependency on the last deploy
+# having synced infra/.
+
+on:
+  workflow_call:
+    inputs:
+      s3-endpoint:
+        description: >-
+          S3-compatible endpoint URL, e.g. https://<account>.r2.cloudflarestorage.com or
+          https://s3.eu-central-1.wasabisys.com. Any S3 API works; nothing here is AWS-specific.
+        required: true
+        type: string
+      s3-bucket:
+        description: Bucket the backups are written to. Not the media bucket.
+        required: true
+        type: string
+      s3-region:
+        description: Region label the signer uses. 'auto' is correct for Cloudflare R2.
+        required: false
+        default: auto
+        type: string
+      s3-prefix:
+        description: Key prefix inside the bucket, without a trailing slash.
+        required: false
+        default: production
+        type: string
+      local-retention-days:
+        description: Delete on-server artifacts older than this. 0 keeps them forever.
+        required: false
+        default: 7
+        type: number
+      remote-retention-days:
+        description: >-
+          Age at which an uploaded object is deleted, when prune-remote is on. Ignored
+          otherwise — a bucket lifecycle rule is the safer place to express this.
+        required: false
+        default: 30
+        type: number
+      prune-remote:
+        description: >-
+          Delete aged objects from the bucket after uploading. Off by default on purpose:
+          leaving it off means the credential needs no delete permission at all, so a leaked
+          key cannot destroy the backup history. Prefer a bucket lifecycle rule.
+        required: false
+        default: false
+        type: boolean
+      include-storage:
+        description: Also archive and upload the API's upload volume (audio, HLS, covers, avatars).
+        required: false
+        default: true
+        type: boolean
+      require-storage:
+        description: >-
+          Fail the run when the storage archive is missing or empty, rather than warning.
+          Turn on once uploads are known to be persisted.
+        required: false
+        default: false
+        type: boolean
+    secrets:
+      deploy-host:
+        required: true
+      deploy-user:
+        required: true
+      deploy-ssh-key:
+        required: true
+      deploy-path:
+        description: >-
+          Directory on the server holding infra/ and the rendered .env. Defaults to
+          $HOME/bitrate. Declared as a secret rather than an input purely so the caller can
+          reuse the DEPLOY_PATH the monitoring workflow already reads; it is not sensitive.
+        required: false
+      deploy-ssh-host-key:
+        description: >-
+          The server's public host key line. Absent, the key is scanned once at job start and
+          every later connection in the run is verified against it — weaker than pinning, but
+          still not StrictHostKeyChecking=no.
+        required: false
+      s3-access-key-id:
+        required: true
+      s3-secret-access-key:
+        required: true
+
+jobs:
+  backup:
+    name: Dump, ship off-host, verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    # Reads the repository to get infra/backup.sh. Writes nothing here.
+    permissions:
+      contents: read
+
+    env:
+      SSH_TARGET: bitrate-backup
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Names only. No value from any secret is ever printed by this workflow.
+      - name: Preflight -- required configuration present
+        env:
+          DEPLOY_HOST: ${{ secrets.deploy-host }}
+          DEPLOY_USER: ${{ secrets.deploy-user }}
+          DEPLOY_SSH_KEY: ${{ secrets.deploy-ssh-key }}
+          S3_ENDPOINT: ${{ inputs.s3-endpoint }}
+          S3_BUCKET: ${{ inputs.s3-bucket }}
+          S3_ACCESS_KEY_ID: ${{ secrets.s3-access-key-id }}
+          S3_SECRET_ACCESS_KEY: ${{ secrets.s3-secret-access-key }}
+        run: |
+          set -euo pipefail
+
+          missing=()
+          for name in DEPLOY_HOST DEPLOY_USER DEPLOY_SSH_KEY S3_ENDPOINT S3_BUCKET \
+                      S3_ACCESS_KEY_ID S3_SECRET_ACCESS_KEY; do
+            [ -n "${!name:-}" ] || missing+=("${name}")
+          done
+
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Backup configuration is incomplete. Nothing ran."
+            printf '  - %s\n' "${missing[@]}"
+            echo "See .github/workflows/README.md, section 'Backups', for where each one is set."
+            exit 1
+          fi
+
+          case "${S3_ENDPOINT}" in
+            https://*) ;;
+            *) echo "::error::S3_ENDPOINT must be an https:// URL."; exit 1 ;;
+          esac
+
+          command -v aws >/dev/null 2>&1 || {
+            echo "::error::The AWS CLI is not on this runner. It ships with the ubuntu images; has the label changed?"
+            exit 1
+          }
+          aws --version
+
+      # Same shape as deploy_reusable.yml: an ssh_config alias, StrictHostKeyChecking yes, and
+      # the key under $HOME rather than the workspace so no artifact or cache step can reach it.
+      - name: Install SSH key and pin the host key
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.deploy-ssh-key }}
+          DEPLOY_HOST: ${{ secrets.deploy-host }}
+          DEPLOY_USER: ${{ secrets.deploy-user }}
+          DEPLOY_SSH_HOST_KEY: ${{ secrets.deploy-ssh-host-key }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p /home/runner/.ssh
+
+          install -m 600 /dev/null /home/runner/.ssh/bitrate_backup
+          printf '%s\n' "${DEPLOY_SSH_KEY}" | tr -d '\r' > /home/runner/.ssh/bitrate_backup
+
+          install -m 600 /dev/null /home/runner/.ssh/config
+          {
+            printf 'Host bitrate-backup\n'
+            printf '  HostName %s\n' "${DEPLOY_HOST}"
+            printf '  User %s\n' "${DEPLOY_USER}"
+            printf '  IdentityFile /home/runner/.ssh/bitrate_backup\n'
+            printf '  IdentitiesOnly yes\n'
+            printf '  UserKnownHostsFile /home/runner/.ssh/known_hosts\n'
+            printf '  StrictHostKeyChecking yes\n'
+            printf '  BatchMode yes\n'
+            printf '  ConnectTimeout 15\n'
+            printf '  ServerAliveInterval 30\n'
+          } > /home/runner/.ssh/config
+
+          install -m 600 /dev/null /home/runner/.ssh/known_hosts
+          if [ -n "${DEPLOY_SSH_HOST_KEY}" ]; then
+            printf '%s\n' "${DEPLOY_SSH_HOST_KEY}" > /home/runner/.ssh/known_hosts
+            echo "Host key taken from the pinned value."
+          else
+            ssh-keyscan -T 15 -t ed25519,rsa "${DEPLOY_HOST}" > /home/runner/.ssh/known_hosts 2>/dev/null
+            [ -s /home/runner/.ssh/known_hosts ] || {
+              echo "::error::ssh-keyscan returned no host key for the backup host."
+              exit 1
+            }
+            echo "::warning::No pinned host key. It was scanned at job start (trust on first use)."
+          fi
+          # A host's public key is public information, not a secret.
+          ssh-keygen -lf /home/runner/.ssh/known_hosts
+
+      # infra/backup.sh writes its log to stderr and only `db=…` / `storage=…` to stdout, so
+      # this captures the paths without having to grep prose.
+      - name: Take the backup on the server
+        id: dump
+        env:
+          DEPLOY_PATH: ${{ secrets.deploy-path }}
+          LOCAL_RETENTION_DAYS: ${{ inputs.local-retention-days }}
+          INCLUDE_STORAGE: ${{ inputs.include-storage }}
+        run: |
+          set -euo pipefail
+
+          project="${DEPLOY_PATH:-\$HOME/bitrate}"
+
+          args="--retention-days ${LOCAL_RETENTION_DAYS}"
+          if [ "${INCLUDE_STORAGE}" != "true" ]; then
+            args="${args} --no-storage"
+          fi
+
+          # The remote side expands $HOME itself when DEPLOY_PATH is unset, which is why the
+          # default above is escaped rather than expanded on the runner.
+          set +e
+          # ${project} and ${args} are meant to be expanded here, on the runner. Only the
+          # escaped $HOME in the default is left for the remote shell to expand.
+          # shellcheck disable=SC2029
+          out="$(ssh "${SSH_TARGET}" "cd \"${project}\" && bash -s -- ${args}" < infra/backup.sh)"
+          status=$?
+          set -e
+
+          if [ "${status}" -ne 0 ]; then
+            echo "::error::The backup script failed on the server. Nothing was uploaded."
+            exit "${status}"
+          fi
+
+          db_path="$(printf '%s\n' "${out}" | sed -n 's/^db=//p' | tail -n1)"
+          storage_path="$(printf '%s\n' "${out}" | sed -n 's/^storage=//p' | tail -n1)"
+
+          if [ -z "${db_path}" ]; then
+            echo "::error::The backup script reported no database dump path."
+            exit 1
+          fi
+
+          # Every later step embeds these paths in a remote command. They are produced by our
+          # own script, but validating the shape here is what makes that embedding safe: the
+          # character class admits nothing a shell would treat as a metacharacter.
+          for p in "${db_path}" "${storage_path}"; do
+            [ -n "${p}" ] || continue
+            case "${p}" in
+              /*) ;;
+              *) echo "::error::Refusing a non-absolute artifact path."; exit 1 ;;
+            esac
+            printf '%s' "${p}" | grep -Eq '^[A-Za-z0-9._/-]+$' || {
+              echo "::error::Refusing an artifact path with unexpected characters."
+              exit 1
+            }
+          done
+
+          {
+            printf 'db-path=%s\n' "${db_path}"
+            printf 'storage-path=%s\n' "${storage_path}"
+          } >> "${GITHUB_OUTPUT}"
+
+          echo "Server produced: ${db_path} ${storage_path}"
+
+      # Pulled to the runner and checksummed on both sides before anything is uploaded, so a
+      # truncated transfer cannot become the copy that is trusted in a disaster.
+      - name: Stream the artifacts off the host
+        id: fetch
+        env:
+          DB_PATH: ${{ steps.dump.outputs.db-path }}
+          STORAGE_PATH: ${{ steps.dump.outputs.storage-path }}
+        run: |
+          set -euo pipefail
+          mkdir -p /home/runner/backup-staging
+
+          # Sets FETCHED_* in the caller's shell rather than echoing them. A function whose
+          # output is read through $(...) runs in a subshell, where `exit 1` ends only that
+          # subshell — the caller would carry on with empty values and upload nothing while
+          # reporting success.
+          fetch() {
+            remote="$1"
+            FETCHED_FILE="/home/runner/backup-staging/$(basename "${remote}")"
+
+            # ${remote} is expanded here on purpose. The previous step already proved it
+            # matches ^[A-Za-z0-9._/-]+$, so the single quotes it lands inside cannot be
+            # escaped out of.
+            # shellcheck disable=SC2029
+            remote_size="$(ssh "${SSH_TARGET}" "stat -c %s -- '${remote}'")"
+            # shellcheck disable=SC2029
+            remote_sha="$(ssh "${SSH_TARGET}" "sha256sum -- '${remote}'" | cut -d' ' -f1)"
+
+            # shellcheck disable=SC2029
+            ssh "${SSH_TARGET}" "cat -- '${remote}'" > "${FETCHED_FILE}"
+
+            FETCHED_SIZE="$(stat -c %s "${FETCHED_FILE}")"
+            FETCHED_SHA="$(sha256sum "${FETCHED_FILE}" | cut -d' ' -f1)"
+
+            if [ "${remote_size}" != "${FETCHED_SIZE}" ]; then
+              echo "::error::${remote}: ${remote_size} bytes on the server, ${FETCHED_SIZE} received."
+              exit 1
+            fi
+            if [ "${remote_sha}" != "${FETCHED_SHA}" ]; then
+              echo "::error::${remote}: checksum mismatch after transfer."
+              exit 1
+            fi
+          }
+
+          fetch "${DB_PATH}"
+          {
+            printf 'db-file=%s\n' "${FETCHED_FILE}"
+            printf 'db-size=%s\n' "${FETCHED_SIZE}"
+            printf 'db-sha=%s\n' "${FETCHED_SHA}"
+          } >> "${GITHUB_OUTPUT}"
+          echo "Database dump: ${FETCHED_SIZE} bytes, sha256 ${FETCHED_SHA}"
+
+          if [ -n "${STORAGE_PATH}" ]; then
+            fetch "${STORAGE_PATH}"
+            {
+              printf 'storage-file=%s\n' "${FETCHED_FILE}"
+              printf 'storage-size=%s\n' "${FETCHED_SIZE}"
+              printf 'storage-sha=%s\n' "${FETCHED_SHA}"
+            } >> "${GITHUB_OUTPUT}"
+            echo "Storage archive: ${FETCHED_SIZE} bytes, sha256 ${FETCHED_SHA}"
+          fi
+
+      - name: Upload to object storage and verify
+        id: upload
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.s3-access-key-id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.s3-secret-access-key }}
+          AWS_DEFAULT_REGION: ${{ inputs.s3-region }}
+          # AWS's SDKs began sending CRC32 trailing checksums by default; several
+          # S3-compatible services reject them. WHEN_REQUIRED restores the portable
+          # behaviour, and is why every upload below uses `s3api put-object` rather than
+          # `s3 cp` — the setting is not honoured on the `s3 cp` path in AWS CLI v2.
+          AWS_REQUEST_CHECKSUM_CALCULATION: WHEN_REQUIRED
+          AWS_RESPONSE_CHECKSUM_VALIDATION: WHEN_REQUIRED
+          S3_ENDPOINT: ${{ inputs.s3-endpoint }}
+          S3_BUCKET: ${{ inputs.s3-bucket }}
+          S3_PREFIX: ${{ inputs.s3-prefix }}
+          DB_FILE: ${{ steps.fetch.outputs.db-file }}
+          DB_SHA: ${{ steps.fetch.outputs.db-sha }}
+          DB_SIZE: ${{ steps.fetch.outputs.db-size }}
+          STORAGE_FILE: ${{ steps.fetch.outputs.storage-file }}
+          STORAGE_SHA: ${{ steps.fetch.outputs.storage-sha }}
+          STORAGE_SIZE: ${{ steps.fetch.outputs.storage-size }}
+        run: |
+          set -euo pipefail
+
+          # All three are empty when the previous step produced no storage archive. Naming
+          # them here keeps `set -u` and shellcheck satisfied without a suppression.
+          STORAGE_FILE="${STORAGE_FILE:-}"
+          STORAGE_SHA="${STORAGE_SHA:-}"
+          STORAGE_SIZE="${STORAGE_SIZE:-0}"
+
+          # s3api put-object is a single request, and S3 caps that at 5 GiB. Failing by name
+          # beats a partial object that looks like a backup.
+          MAX_BYTES=$(( 5 * 1024 * 1024 * 1024 ))
+
+          put() {
+            file="$1"; key="$2"; sha="$3"; size="$4"
+
+            if [ "${size}" -ge "${MAX_BYTES}" ]; then
+              echo "::error::${file} is ${size} bytes, over the 5 GiB single-request limit."
+              echo "Switch this step to a multipart upload before the next run."
+              exit 1
+            fi
+
+            aws s3api put-object \
+              --endpoint-url "${S3_ENDPOINT}" \
+              --bucket "${S3_BUCKET}" \
+              --key "${key}" \
+              --body "${file}" \
+              --metadata "sha256=${sha}" \
+              > /dev/null
+
+            uploaded="$(aws s3api head-object \
+              --endpoint-url "${S3_ENDPOINT}" \
+              --bucket "${S3_BUCKET}" \
+              --key "${key}" \
+              --query 'ContentLength' --output text)"
+
+            if [ "${uploaded}" != "${size}" ]; then
+              echo "::error::${key}: ${size} bytes uploaded, ${uploaded} bytes stored."
+              exit 1
+            fi
+
+            echo "  stored ${key} (${uploaded} bytes)"
+          }
+
+          db_key="${S3_PREFIX}/db/$(basename "${DB_FILE}")"
+          echo "Uploading the database dump."
+          put "${DB_FILE}" "${db_key}" "${DB_SHA}" "${DB_SIZE}"
+          printf 'db-key=%s\n' "${db_key}" >> "${GITHUB_OUTPUT}"
+
+          if [ -n "${STORAGE_FILE}" ]; then
+            storage_key="${S3_PREFIX}/storage/$(basename "${STORAGE_FILE}")"
+            echo "Uploading the storage archive."
+            put "${STORAGE_FILE}" "${storage_key}" "${STORAGE_SHA}" "${STORAGE_SIZE}"
+            printf 'storage-key=%s\n' "${storage_key}" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Report a missing storage archive
+        if: ${{ inputs.include-storage && steps.fetch.outputs.storage-file == '' }}
+        env:
+          REQUIRE_STORAGE: ${{ inputs.require-storage }}
+        run: |
+          set -euo pipefail
+          echo "The database is backed up. The API's uploads are NOT covered by this run."
+          echo "Either the api service was down, or /app/storage is empty because the"
+          echo "api_storage volume is not in effect on this deployment yet."
+          if [ "${REQUIRE_STORAGE}" = "true" ]; then
+            echo "::error::require-storage is on and no storage archive was produced."
+            exit 1
+          fi
+          echo "::warning::No storage archive was produced. Uploaded audio is not backed up."
+
+      # Off by default. When it is on, the credential needs DeleteObject, which is exactly the
+      # permission an attacker who reaches this key would want. A bucket lifecycle rule does
+      # the same job without ever handing that permission out.
+      - name: Prune aged objects
+        if: ${{ inputs.prune-remote }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.s3-access-key-id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.s3-secret-access-key }}
+          AWS_DEFAULT_REGION: ${{ inputs.s3-region }}
+          AWS_REQUEST_CHECKSUM_CALCULATION: WHEN_REQUIRED
+          AWS_RESPONSE_CHECKSUM_VALIDATION: WHEN_REQUIRED
+          S3_ENDPOINT: ${{ inputs.s3-endpoint }}
+          S3_BUCKET: ${{ inputs.s3-bucket }}
+          S3_PREFIX: ${{ inputs.s3-prefix }}
+          REMOTE_RETENTION_DAYS: ${{ inputs.remote-retention-days }}
+        run: |
+          set -euo pipefail
+
+          cutoff="$(date -u -d "${REMOTE_RETENTION_DAYS} days ago" +%Y-%m-%dT%H:%M:%S+00:00)"
+          echo "Deleting objects under ${S3_PREFIX}/ last modified before ${cutoff}."
+
+          # Never let a pruning bug empty the bucket: if the newest object is itself older
+          # than the cutoff, something is wrong with the clock or the schedule, not with the
+          # data, and deleting everything is the worst possible response.
+          newest="$(aws s3api list-objects-v2 \
+            --endpoint-url "${S3_ENDPOINT}" --bucket "${S3_BUCKET}" --prefix "${S3_PREFIX}/" \
+            --query 'sort_by(Contents, &LastModified)[-1].LastModified' --output text)"
+
+          if [ "${newest}" = "None" ] || [ -z "${newest}" ]; then
+            echo "Nothing stored under this prefix yet."
+            exit 0
+          fi
+          if [[ "${newest}" < "${cutoff}" ]]; then
+            echo "::error::Every object under ${S3_PREFIX}/ is older than the cutoff. Refusing to prune."
+            exit 1
+          fi
+
+          aws s3api list-objects-v2 \
+            --endpoint-url "${S3_ENDPOINT}" --bucket "${S3_BUCKET}" --prefix "${S3_PREFIX}/" \
+            --query "Contents[?LastModified<='${cutoff}'].Key" --output text \
+            | tr '\t' '\n' | grep -v '^$' | while read -r key; do
+              echo "  deleting ${key}"
+              aws s3api delete-object \
+                --endpoint-url "${S3_ENDPOINT}" --bucket "${S3_BUCKET}" --key "${key}" > /dev/null
+            done
+
+      - name: Summary
+        if: ${{ always() && steps.upload.outcome != 'skipped' }}
+        env:
+          S3_BUCKET: ${{ inputs.s3-bucket }}
+          DB_KEY: ${{ steps.upload.outputs.db-key }}
+          DB_SIZE: ${{ steps.fetch.outputs.db-size }}
+          STORAGE_KEY: ${{ steps.upload.outputs.storage-key }}
+          STORAGE_SIZE: ${{ steps.fetch.outputs.storage-size }}
+        run: |
+          set -euo pipefail
+          # These four arrive through this step's env: block and are empty when the step that
+          # would have set them was skipped. Naming them here keeps `set -u` and shellcheck
+          # both satisfied without a suppression.
+          DB_KEY="${DB_KEY:-—}"
+          DB_SIZE="${DB_SIZE:-—}"
+          STORAGE_KEY="${STORAGE_KEY:-not produced}"
+          STORAGE_SIZE="${STORAGE_SIZE:-—}"
+
+          {
+            echo "### Off-host backup"
+            echo
+            echo "| Artifact | Bucket key | Bytes |"
+            echo "|---|---|---|"
+            echo "| Database | \`${DB_KEY}\` | ${DB_SIZE} |"
+            echo "| Uploads | \`${STORAGE_KEY}\` | ${STORAGE_SIZE} |"
+            echo
+            echo "Bucket: \`${S3_BUCKET}\`. Restores are rehearsed by the monitoring workflow."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      # Runs even when an earlier step failed. The staging copies are plain-text production
+      # data on a shared-tenancy runner; they should not outlive the job by a step.
+      - name: Remove the key and the local copies
+        if: ${{ always() }}
+        run: |
+          rm -f /home/runner/.ssh/bitrate_backup /home/runner/.ssh/config
+          rm -rf /home/runner/backup-staging

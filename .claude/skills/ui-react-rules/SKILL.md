@@ -26,8 +26,8 @@ win.
 - Raw source art: `packages/ui-react/assets/` — `icons/` (SVG the svgr plugin compiles into
   `src/icons/svgr/` on `pnpm build`) and `images/` (raster files stories import as
   `@assets/images/...`). Nothing under `assets/` is shipped; it is build-time input only.
-- Token values: `packages/ui-react/tokens/tokens.json`; how they render:
-  hand-written `@theme` layers in `packages/ui-react/src/styles/`.
+- Design tokens: hand-written `@theme` layers in `packages/ui-react/src/styles/`. That CSS is
+  the source — there is no `tokens.json` and no generator (ADR-0023).
 
 Put a new SVG in `assets/icons/` and rebuild — never hand-write a file in `src/icons/svgr/`,
 it is regenerated on every build.
@@ -77,7 +77,7 @@ matrix. Export through the local barrel and `components/ui/index.ts`.
 - Component APIs are project-owned. Inspect the installed source before applying generic
   Base UI or Radix advice. For example, the current `Button` intentionally exposes
   `asChild` through the package's `Slot` helper.
-- Use design tokens generated from `packages/ui-react/tokens/tokens.json`.
+- Use the token-backed utilities the `@theme` layers in `src/styles/` produce.
 - Use `cn()` and CVA for variants.
 - Use icons from `@/icons` or the package's configured icon source before adding another
   icon library.

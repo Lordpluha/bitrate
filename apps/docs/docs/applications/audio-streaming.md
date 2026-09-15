@@ -3,13 +3,35 @@ sidebar_position: 4
 title: Audio streaming
 ---
 
-# HLS audio streaming
+# Audio streaming
 
-The web player uses HLS VOD with AAC audio in fragmented MP4 segments. The API generates
-128, 192, and 320 kbps variants when the source bitrate permits it. All renditions are encoded
-in one FFmpeg process with aligned segments of approximately four seconds.
+Playback runs on **CMAF over byte ranges, driven by MediaSource Extensions** — one
+fragmented-MP4 file per bitrate, indexed by byte range, played by a first-party loader with our
+own adaptive bitrate logic. See
+[ADR-0020](../architecture/0020-cmaf-range-mse-playback.md) for why, and for the encoding
+constraints that make renditions splice-compatible.
+
+HLS is still served, and still documented below, but it is the **fallback for tracks encoded
+before CMAF renditions existed** — not the primary path. `useManifestResolver` returns `null`
+when a track has no manifest, and that is the signal to fall back.
+
+The API produces 128, 192 and 320 kbps renditions when the source bitrate permits. All of them
+come out of one FFmpeg process with fragment boundaries aligned to whole AAC frames, so a
+fragment from one rendition is interchangeable with the same fragment of another — which is what
+lets the player switch bitrate mid-track without a gap.
 
 ## Endpoints
+
+The current path — a manifest describing the renditions and their fragment index, then range
+requests against the rendition itself:
+
+```text
+GET /api/v1/tracks/:trackId/manifest
+GET /api/v1/tracks/:trackId/cmaf/:bitrate
+Range: bytes=0-1048575
+```
+
+The HLS path, retained for tracks with no CMAF renditions:
 
 ```text
 GET /api/v1/tracks/stream/:trackId/hls/master.m3u8
@@ -20,17 +42,18 @@ GET /api/v1/tracks/stream/:trackId/hls/:bitrate/segment_00000.m4s
 
 All endpoints require the user access-token cookie. Cross-origin clients must send credentials.
 
-The legacy endpoint remains available as a fallback and supports standard byte ranges:
+The original whole-file endpoint remains and supports standard byte ranges:
 
 ```text
 GET /api/v1/tracks/stream/:trackId?bitrate=192&format=opus
 Range: bytes=0-1048575
 ```
 
-## Browser playback
+## Browser playback — the HLS fallback
 
-Safari uses native HLS through the media element. Chrome, Firefox, and Chromium-based desktop
-clients load `hls.js` on demand after a track is selected.
+Everything in this section describes the fallback path. Safari uses native HLS through the media
+element. Chrome, Firefox, and Chromium-based desktop clients load `hls.js` on demand after a
+track is selected.
 
 Important `hls.js` settings:
 

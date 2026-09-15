@@ -63,10 +63,14 @@ export async function resolvePath(inputPath, basePath) {
         }
       }
 
-      // Ищем пакет в workspace
+      // Ищем пакет в workspace.
+      // Шаблон используется как есть, без замены `*` на `**`: pnpm понимает под `apps/*` ровно
+      // каталоги пакетов, и glob с onlyDirectories возвращает именно их. Расширение до `**`
+      // заставляло обходить дерево вглубь — вместе с node_modules, где при hoisted-линкере лежат
+      // настоящие package.json, — и первым совпадением по имени могла оказаться вложенная копия
+      // пакета вместо исходника.
       for (const pattern of workspacePatterns) {
-        const searchPattern = pattern.replace('*', '**')
-        const packageDirs = await glob(searchPattern, {
+        const packageDirs = await glob(pattern, {
           cwd: workspaceRoot,
           absolute: true,
           onlyDirectories: true,

@@ -72,7 +72,7 @@ per-workspace versioning and `CHANGELOG.md` generation (`.changeset/config.json`
 `access: "restricted"`). Add a changeset whenever a change is user/behaviour-visible in an
 app or package, not for pure docs/rules/test-only/chore changes.
 
-The `sp-*-developer` agents and `sp-worker` (and `/sp-implement` when working in-session)
+The `br-*-developer` agents and `br-worker` (and `/br-implement` when working in-session)
 write the file directly —
 `pnpm changeset`'s interactive wizard is for humans; an agent just writes the markdown:
 

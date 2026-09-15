@@ -10,7 +10,7 @@ const booleanFromEnv = z.preprocess((value) => {
 /** The env schema value. */
 export const envSchema = z
   .object({
-    NODE_ENV: z.enum(['local', 'development', 'production', 'test']).default('local'),
+    NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     PORT: z.coerce.number().default(3000),
     TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(0),
     HEALTH_CHECK_TIMEOUT_MS: z.coerce.number().int().min(100).max(10_000).default(2_000),
@@ -39,6 +39,12 @@ export const envSchema = z
 
     ACCESS_TOKEN_NAME: z.string().min(1).default('access_token'),
     REFRESH_TOKEN_NAME: z.string().min(1).default('refresh_token'),
+    /**
+     * Parent domain the auth cookies are scoped to, e.g. `.bitrate.me`.
+     * Unset means host-only cookies, which is correct on localhost but leaves the
+     * web apps unable to read a session issued by the API on another subdomain.
+     */
+    COOKIE_DOMAIN: z.string().min(1).optional(),
     OAUTH_GOOGLE_CLIENT_ID: z.string().optional(),
     OAUTH_GOOGLE_CLIENT_SECRET: z.string().optional(),
     OAUTH_FACEBOOK_APP_ID: z.string().optional(),

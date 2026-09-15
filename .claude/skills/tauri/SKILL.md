@@ -134,4 +134,4 @@ Do not guess an API from memory. In order:
 ## Related
 
 - `.claude/rules/typescript.md`, `.claude/rules/code-principles.md` — the rules that apply.
-- `sp-desktop-developer` agent — owns this surface.
+- `br-desktop-developer` agent — owns this surface.

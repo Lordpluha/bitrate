@@ -32,7 +32,7 @@ assignees: []
 - [ ] PostgreSQL 16
 - [ ] Redis 7
 - [ ] Nginx
-- [ ] Monitoring tools (k6, Lighthouse, etc.)
+- [ ] Monitoring tools
 
 ### Configuration Files
 ```yaml
@@ -57,7 +57,6 @@ assignees: []
 ### Testing
 - [ ] Test locally with Docker
 - [ ] Test in CI/CD pipeline
-- [ ] Load testing (k6)
 - [ ] Security scanning (Trivy)
 
 ## ✅ Acceptance Criteria

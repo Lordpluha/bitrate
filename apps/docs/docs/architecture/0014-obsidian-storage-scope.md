@@ -20,11 +20,11 @@ and `.claude/rules/knowledge-base.md`) has three segments: `Decisions/`, `Ticket
 `graphify-out/obsidian/` — out of scope for this ADR.) The first pass committed everything
 in `obsidian/`. In practice:
 
-- `obsidian/Board/board.md` is fully regenerated wholesale by `/sp-sync-board` every run.
+- `obsidian/Board/board.md` is fully regenerated wholesale by `/br-sync-board` every run.
 - This repository is **public** on GitHub (`gh repo view` → `visibility: PUBLIC`).
 
 Committing `Board/board.md` means: every regeneration is a large, low-signal diff in
-`git log`/`git blame`; two developers running `/sp-sync-board` independently and both
+`git log`/`git blame`; two developers running `/br-sync-board` independently and both
 committing produces near-guaranteed merge conflicts in a file neither of them wrote by hand.
 
 `obsidian/Decisions/` and `obsidian/Tickets/` are different in kind: `Decisions/` is
@@ -36,16 +36,16 @@ and isn't cheaply regenerable.
 
 - `obsidian/Decisions/` and `obsidian/Tickets/` are **committed**.
 - `obsidian/Board/board.md` is **gitignored, local-only**, regenerated on demand
-  (`/sp-sync-board`).
-- Because `obsidian/Tickets/` is committed to a **public** repo, `/sp-sync-ticket` and
-  `/sp-sync-board` withhold the body of any issue/PR labeled `security`, `confidential`, or
+  (`/br-sync-board`).
+- Because `obsidian/Tickets/` is committed to a **public** repo, `/br-sync-ticket` and
+  `/br-sync-board` withhold the body of any issue/PR labeled `security`, `confidential`, or
   similar — they sync only metadata (number, title, status, URL, labels) for those, never
   the full text.
 
 ## Consequences
 
 - A fresh clone does not have `obsidian/Board/board.md` until someone runs
-  `/sp-sync-board` — it isn't "clone and go" the way `Decisions/`/`Tickets/` are. Accepted
+  `/br-sync-board` — it isn't "clone and go" the way `Decisions/`/`Tickets/` are. Accepted
   trade-off for not carrying a high-churn, fully-derived snapshot in git.
 - `git log`/`git blame`/clone size for `obsidian/` stay proportional to hand-authored +
   synced content.

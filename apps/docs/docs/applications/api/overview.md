@@ -81,7 +81,7 @@ http://localhost:3000/api/v1/artists
 
 ```
 storage/public/
-├── tracks/     # Аудио файлы (.opus, HLS сегменты)
+├── tracks/     # Аудио файлы (.opus, CMAF-фрагменты .mp4, HLS-сегменты)
 ├── covers/     # Обложки треков и альбомов
 └── avatars/    # Аватары пользователей и артистов
 ```
@@ -108,7 +108,7 @@ storage/public/
 | artists-auth | `/api/v1/artists/auth` | То же для артистов |
 | users | `/api/v1/users` | Профиль пользователя |
 | artists | `/api/v1/artists` | Страницы артистов, подписки |
-| tracks | `/api/v1/tracks` | Загрузка, HLS-стриминг, like |
+| tracks | `/api/v1/tracks` | Загрузка, CMAF/Range-стриминг (HLS — запасной путь), like |
 | albums | `/api/v1/albums` | Альбомы, like |
 | playlists | `/api/v1/playlists` | Плейлисты, треки в плейлисте |
 | search | `/api/v1/search` | Full-text поиск |

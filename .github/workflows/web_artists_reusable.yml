@@ -51,7 +51,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js and pnpm
         if: ${{ inputs.run-biome }}
@@ -71,7 +71,7 @@ jobs:
 
       - name: Build Web Artists Docker image (with registry cache export)
         if: ${{ inputs.cache-to-registry }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/web-artists/Dockerfile
@@ -89,7 +89,7 @@ jobs:
 
       - name: Build Web Artists Docker image (GHA cache export only)
         if: ${{ !inputs.cache-to-registry }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/web-artists/Dockerfile

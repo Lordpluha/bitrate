@@ -1,4 +1,4 @@
-import type { CookieOptions, Response } from 'express'
+import type { Response } from 'express'
 
 /** Holds the half-finished login while the user fetches their 2FA code. */
 const PENDING_2FA_COOKIE = 'pending_2fa_token'
@@ -12,17 +12,24 @@ const PENDING_2FA_MAX_AGE_MS = 10 * 60 * 1000
 /** An OAuth round trip should complete well inside five minutes. */
 const OAUTH_STATE_MAX_AGE_MS = 5 * 60 * 1000
 
-/** Shared hardening for every short-lived authentication cookie. */
-const baseOptions = (): CookieOptions => ({
-  httpOnly: true,
-  sameSite: 'lax',
-  secure: process.env.NODE_ENV === 'production',
-  path: '/',
-})
+/**
+ * Whether short-lived auth cookies set `secure`, read fresh on every call.
+ *
+ * Inlined as a literal `secure:` key at each `res.cookie()` call site below
+ * instead of spreading a shared options object — the spread hid both `httpOnly`
+ * and `secure` from static cookie-hardening analysis.
+ */
+const isProductionEnv = (): boolean => process.env.NODE_ENV === 'production'
 
 /** Stores the pending-2FA token that `2fa/verify-login` exchanges for a session. */
 export function setPendingTwoFactorCookie(res: Response, token: string): void {
-  res.cookie(PENDING_2FA_COOKIE, token, { ...baseOptions(), maxAge: PENDING_2FA_MAX_AGE_MS })
+  res.cookie(PENDING_2FA_COOKIE, token, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: isProductionEnv(),
+    path: '/',
+    maxAge: PENDING_2FA_MAX_AGE_MS,
+  })
 }
 
 /** Drops the pending-2FA token once the challenge is resolved. */
@@ -32,7 +39,13 @@ export function clearPendingTwoFactorCookie(res: Response): void {
 
 /** Stores the CSRF state an OAuth callback is required to echo back. */
 export function setOAuthStateCookie(res: Response, state: string): void {
-  res.cookie(OAUTH_STATE_COOKIE, state, { ...baseOptions(), maxAge: OAUTH_STATE_MAX_AGE_MS })
+  res.cookie(OAUTH_STATE_COOKIE, state, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: isProductionEnv(),
+    path: '/',
+    maxAge: OAUTH_STATE_MAX_AGE_MS,
+  })
 }
 
 /** Drops the OAuth state once the callback has been matched against it. */

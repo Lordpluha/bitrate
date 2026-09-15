@@ -41,7 +41,9 @@ templates are the canonical initial shape.
 
 ## Web-player: path aliases
 
-`apps/web-player/tsconfig.json` defines `"@*": ["./src/*"]`. Every import inside `apps/web-player/src/` uses `@/` prefix. No relative paths (`./`, `../`).
+`apps/web-player/tsconfig.json` defines `@/*` and one alias per FSD layer, not a `@*`
+catch-all — that catch-all also swallowed scoped package names. Every import inside
+`apps/web-player/src/` uses the `@/` prefix. No relative paths (`./`, `../`).
 
 ```ts
 // Bad

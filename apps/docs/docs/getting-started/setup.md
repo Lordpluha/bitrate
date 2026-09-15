@@ -65,14 +65,21 @@ It also runs `lefthook install` automatically (pre-commit, commit-msg, pre-push 
 
 ### 3. Environment Variables
 
-Copy the root `.env.example` for Docker Compose variables:
+Nothing to do for the Docker stacks — there is no repository-root env file. Every variable in
+`infra/docker-compose.dev.yaml` and `infra/docker-compose.preprod.yaml` carries a default, so
+they start on a clean checkout. Export a shell variable to override one:
 
 ```bash
-cp .env.example .env
+POSTGRES_PORT=5433 task infra:up
 ```
+
+To run a single app natively, copy that app's own template — `apps/api`, `apps/web-player` and
+`apps/web-artists` each ship one — into that app's `.env`. Deploy and CI values live in GitHub
+environment secrets and variables, not in any file.
 
 The API validates its own environment at startup via Zod (`apps/api/env.schema.ts`).
 Required variables: `DATABASE_URL`, `REDIS_HOST`, `REDIS_PORT`, `JWT_SECRET`, `WEB_HOST`.
+See [Environment variables](../guides/environment.md) for the full list.
 
 ### 4. Start Infrastructure
 
@@ -109,13 +116,23 @@ pnpm --filter @bitrate/api run db:seed
 pnpm dev
 ```
 
-This starts (via Turbo):
-- API on `http://localhost:3000`
-- Web Player on `http://localhost:3001`
-- Web Artists on `http://localhost:3002`
+This starts every app Turbo knows about. The full set of local addresses, including the ones that
+only appear once you start that app on its own:
+
+| Service | URL |
+|---|---|
+| API | `http://localhost:3000` |
+| Swagger | `http://localhost:3000/swagger` |
+| Web Player | `http://localhost:3001` |
+| Web Artists | `http://localhost:3002` |
+| Docs (Docusaurus) | `http://localhost:3003` |
+| Storybook | `http://localhost:6006` |
+| Mobile (Metro) | `http://localhost:8081` |
+| Desktop (Vite) | `http://localhost:1420` |
 
 These are the **native** ports. The Docker stack maps web-artists to `3004` — see
-[Docker](../infrastructure/docker.md).
+[Docker](../infrastructure/docker.md). For the deployed sites see
+[Deployment](../infrastructure/deployment.md).
 
 #### Individual Applications
 

@@ -92,7 +92,7 @@ sidebar_position: 1
 
 ## v0.9.0-additional
 - [x] Like / Unlike — tracks, albums, playlists
-- [x] Full-text search — tracks, artists, albums, playlists (PostgreSQL FTS + GIN indexes)
+- [x] Fuzzy search — tracks, artists, albums, playlists (PostgreSQL `pg_trgm` trigram + GIN)
 - [x] Listening history
 - [x] Follow / Unfollow artists
 - [x] Playlist management — add/remove tracks, owner permissions
@@ -115,11 +115,11 @@ sidebar_position: 1
 
 Delivered by [ADR-0024](../architecture/0024-rebrand-to-bitrate.md).
 
-- [x] New brand name & identity — Bitrate, defined in `brand.md` and `design.md`
+- [x] New brand name & identity — Bitrate, defined across `docs/brand/` and `design.md`
 - [x] Icons redesign — every raster icon is rasterised from the mark; see `design.md` §24
 - [ ] Wordmark & lockup — the mark has landed, the wordmark is still raster-only (`design.md` §25)
 - [x] Color scheme & design tokens update — Bitrate Purple `#7c3aed`, three themes
-- [x] Rename the package namespace from `@spotify/*` to `@bitrate/*`
+- [x] Rename the package namespace to `@bitrate/*`
 - [ ] New domain & SSL
 - [ ] OG images, favicons, metadata update
 - [x] Documentation & marketing materials update

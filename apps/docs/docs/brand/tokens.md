@@ -1,3 +1,7 @@
+---
+sidebar_position: 8
+---
+
 # Design tokens
 
 The Tailwind v4 `@theme` layers under `packages/ui-react/src/styles/` are the canonical

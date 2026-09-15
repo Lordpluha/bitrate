@@ -1,6 +1,14 @@
 # Multi-stage Dockerfile для API (NestJS + Prisma)
 
 # Stage 1: Base
+# prisma.config.ts resolves env('DATABASE_URL') when the config is *loaded*, not when a connection
+# is opened, so `prisma generate` fails outright without it. Generation only reads the schema, so
+# this is never dialled — and it is deliberately not credential-shaped, because the ARG that used
+# to sit here defaulted to a real-looking postgresql://admin:admin@postgres:5432/… that invited
+# someone to treat it as a working fallback. It is passed per-command rather than set as ENV so
+# that nothing lands in the published image's environment.
+ARG PRISMA_GENERATE_ONLY_URL="postgresql://unused:unused@127.0.0.1:5432/prisma-generate-only"
+
 FROM node:24-alpine AS base
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 WORKDIR /app
@@ -19,6 +27,8 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
 # Stage 3: Development
 FROM base AS development
+ARG PRISMA_GENERATE_ONLY_URL
+ENV DATABASE_URL=$PRISMA_GENERATE_ONLY_URL
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
@@ -27,12 +37,9 @@ EXPOSE 3000
 CMD ["pnpm", "--filter", "@bitrate/api", "run", "start:dev"]
 
 # Stage 4: Build
-#
-# No DATABASE_URL is set here on purpose. `prisma generate` never connects — prisma.config.ts wraps
-# the value in Prisma's lazy `env()`, resolved at connection time — and the ARG that used to feed
-# it was declared in `base`, which the later stages do not inherit, so every `ENV X=$X` below it
-# expanded to an empty string anyway.
 FROM base AS build
+ARG PRISMA_GENERATE_ONLY_URL
+ENV DATABASE_URL=$PRISMA_GENERATE_ONLY_URL
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
@@ -53,6 +60,7 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lock
 
 # Stage 6: Production
 FROM base AS production
+ARG PRISMA_GENERATE_ONLY_URL
 ENV NODE_ENV=production
 COPY --from=prod-dependencies /app/node_modules ./node_modules
 COPY --from=prod-dependencies /app/apps/api/node_modules ./apps/api/node_modules
@@ -67,7 +75,15 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
 
 # Generate Prisma Client
-RUN pnpm --filter @bitrate/api run db:gen:prod
+RUN DATABASE_URL="$PRISMA_GENERATE_ONLY_URL" pnpm --filter @bitrate/api run db:gen:prod
+
+# The runtime storage root. CMD runs `node apps/api/dist/src/main.js` from WORKDIR /app, so
+# process.cwd() is /app and apps/api/src/common/config/storage.config.ts resolves every upload
+# path under /app/storage — not under the apps/api/storage copied in above, which is seed data
+# read at a different path. Creating it here is what lets infra/docker-compose.prod.yaml mount a
+# named volume over it: Docker initialises an empty volume from the image directory, ownership
+# included, so the non-root user below can write to it with no chown on the host.
+RUN mkdir -p /app/storage/private /app/storage/public
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \

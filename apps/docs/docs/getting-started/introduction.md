@@ -4,7 +4,11 @@ sidebar_position: 1
 
 # Introduction
 
-**Bitrate** is a full-featured music streaming platform built from scratch using modern technologies. This project demonstrates best practices in monorepo architecture, microservices, and cross-platform development.
+**Bitrate** is an all-in-one platform for musicians: a listening surface, an artists portal,
+and the API behind both, in one Turborepo monorepo.
+
+For what the product is *for* — the vision, the roadmaps, and the sequencing behind them —
+start with [Strategy](../strategy/README.md). This page covers the codebase.
 
 ## 🎯 Project Overview
 
@@ -20,8 +24,8 @@ This is a comprehensive music streaming service including:
 
 ### Prerequisites
 
-- **Node.js** 20.0 or above
-- **pnpm** 10.28.1 or above
+- **Node.js** 24 or above (pinned by `engines`)
+- **pnpm** 10.30.3 exactly (pinned by `packageManager`)
 - **Docker** & Docker Compose (optional, for containerized development)
 - **PostgreSQL** 15+ (or use Docker)
 
@@ -35,9 +39,7 @@ cd bitrate
 # Install dependencies
 pnpm install
 
-# Set up environment variables
-cp .env.example .env
-
+# No env file needed — the local stack runs on the compose defaults
 # Start PostgreSQL + Redis (minimal local stack)
 docker-compose -f infra/docker-compose.dev.yaml up -d
 
@@ -55,10 +57,13 @@ pnpm --filter @bitrate/api db:seed
 pnpm dev
 
 # Or start individual apps
-pnpm --filter @bitrate/api start:dev      # Backend API
-pnpm --filter @bitrate/web-player dev     # Web player
-pnpm --filter @bitrate/mobile start       # Mobile app
-pnpm --filter @bitrate/desktop tauri dev  # Desktop app
+pnpm --filter @bitrate/api start:dev       # Backend API
+pnpm --filter @bitrate/web-player dev      # Web player
+pnpm --filter @bitrate/web-artists dev     # Artists portal
+pnpm --filter @bitrate/mobile start        # Mobile app
+pnpm --filter @bitrate/desktop tauri dev   # Desktop app
+pnpm --filter @bitrate/docs start          # This documentation site
+pnpm --filter @bitrate/ui-react storybook  # Component workshop
 ```
 
 ## 📖 Documentation Structure
@@ -70,14 +75,31 @@ pnpm --filter @bitrate/desktop tauri dev  # Desktop app
 
 ### Applications
 - **[Backend API](/docs/applications/api/overview)** - NestJS API documentation
-- **[Web Player](/docs/applications/web-player/overview)** - Next.js web app guide
+- **[Web Player](/docs/applications/web-player/overview)** - the listener-facing Next.js app, served at `bitrate.me`
+- **[Artists Portal](/docs/applications/web-artists/overview)** - where artists publish and track their music, at `artists.bitrate.me`
 - **[Mobile App](/docs/applications/mobile/overview)** - React Native development
 - **[Desktop App](/docs/applications/desktop/overview)** - Tauri desktop application
+
+Two more surfaces are published from this repository but have no guide of their own, because the
+sites are the documentation: this Docusaurus site at `docs.bitrate.me`, and the component workshop
+at [ui.bitrate.me](https://ui.bitrate.me) — every `@bitrate/ui-react` component, its variants and
+its accessibility notes.
 
 ### Advanced
 - **[CLI Tools](/docs/packages/cli-tools)** - Custom build tools and utilities
 - **[Deployment](/docs/infrastructure/deployment)** - Production deployment guide
 - **[API Reference](/docs/applications/api/reference)** - Complete API documentation
+
+### In the repository
+
+Documentation that lives next to the code rather than on this site:
+
+- **[Contributing](https://github.com/Lordpluha/bitrate/blob/develop/CONTRIBUTING.md)** - git workflow, commit conventions, the checks to run before a PR
+- **[Code style](https://github.com/Lordpluha/bitrate/blob/develop/CODE_STYLE.md)** - stable entry point for the enforced conventions
+- **[Architecture decisions](/docs/architecture/)** - why the repository uses its core patterns
+- **[Design system](/docs/brand/)** - brand, tokens, and the accessibility baseline
+- **[Agent layer](https://github.com/Lordpluha/bitrate/blob/develop/.claude/README.md)** - the repository-owned AI commands and specialists
+- **[CI/CD](https://github.com/Lordpluha/bitrate/blob/develop/.github/workflows/README.md)** - the GitHub Actions workflow map
 
 ### Project Planning
 - **[Roadmap](/docs/guides/roadmap)** - Development roadmap and milestones
@@ -92,9 +114,12 @@ pnpm --filter @bitrate/desktop tauri dev  # Desktop app
 - **WebSockets** - Real-time synchronization
 
 ### Frontend
-- **Next.js** - React framework with App Router
+- **Next.js** - React framework with App Router, organised by Feature-Sliced Design
 - **React 19** - UI library
-- **Tailwind CSS v4** - Utility-first CSS (Rust-based)
+- **Tailwind CSS v4** - utilities configured in CSS `@theme` layers, with no `tailwind.config.js`
+- **TanStack Query** - server state, typed from the generated OpenAPI contracts
+- **Zustand** - client state, with a shared persistence factory
+- **Base UI + `@bitrate/ui-react`** - the shared primitives and design system
 - **TypeScript** - Type safety across the stack
 
 ### Mobile & Desktop
@@ -106,8 +131,10 @@ pnpm --filter @bitrate/desktop tauri dev  # Desktop app
 - **pnpm workspaces** - Monorepo package management
 - **Turbo** - Incremental builds
 - **Biome** - Fast linting and formatting
-- **Docker** - Containerization
+- **Docker** - containerisation; production runs images built in CI rather than on the server
 - **GitHub Actions** - CI/CD pipelines
+- **Changesets** - versioning; a merge to `master` releases, and the release is what gets deployed
+- **nginx** - TLS termination and host routing for all six published domains
 
 ## 🎨 Key Features
 
@@ -133,7 +160,7 @@ We welcome contributions! Please see our [Contributing Guide](https://github.com
 
 ## 📝 License
 
-This project is licensed under the UNLICENSED license - see the [LICENSE](https://github.com/Lordpluha/bitrate/blob/develop/LICENSE) file for details.
+This project is licensed under the MIT license - see the [LICENSE](https://github.com/Lordpluha/bitrate/blob/develop/LICENSE) file for details.
 
 ## 🔗 Links
 

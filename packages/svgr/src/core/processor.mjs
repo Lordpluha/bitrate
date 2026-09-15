@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process'
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import { glob } from 'glob'
 import { convertSvgToComponent, generateIndexFile } from './converter.mjs'
@@ -63,7 +63,11 @@ export async function processSvgFiles(inputDir, outputDir, options = {}) {
     console.log('🔧 Formatting generated files with Biome...')
   }
   try {
-    execSync(`pnpm exec biome check --write "${outputDir}"`, {
+    // execFileSync, not execSync: the output directory is resolved from workspace configuration
+    // and reaches this call as a path. Interpolated into a shell string it would be one quote
+    // away from running whatever the rest of that path said; passed as its own argument it is
+    // never parsed by a shell at all.
+    execFileSync('pnpm', ['exec', 'biome', 'check', '--write', outputDir], {
       stdio: verbose ? 'inherit' : 'pipe',
     })
   } catch (_error) {

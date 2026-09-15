@@ -4,12 +4,12 @@ import { applyDecorators, BadRequestException, UseInterceptors } from '@nestjs/c
 import { FileFieldsInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 
+import { uploadDestination } from './track-media'
+
 /** Upload ceiling shared by the audio and cover parts of a track submission. */
 const MAX_UPLOAD_BYTES = 50 * 1024 * 1024
 
 /** Audio uploads stay private; covers are served publicly. */
-const AUDIO_DESTINATION = './storage/private/tracks'
-const COVER_DESTINATION = './storage/public/tracks/covers'
 
 const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
 const ALLOWED_COVER_TYPES = ['image/gif', 'image/jpeg', 'image/png', 'image/webp']
@@ -44,8 +44,7 @@ export const TrackFilesInterceptor = () =>
         {
           limits: { fileSize: MAX_UPLOAD_BYTES },
           storage: diskStorage({
-            destination: (_req, file, cb) =>
-              cb(null, file.fieldname === 'audio' ? AUDIO_DESTINATION : COVER_DESTINATION),
+            destination: (_req, file, cb) => cb(null, uploadDestination(file)),
             filename: (_req, file, cb) => cb(null, `${randomUUID()}${uploadExtension(file)}`),
           }),
           fileFilter: (_req, file, cb) => {

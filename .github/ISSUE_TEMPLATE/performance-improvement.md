@@ -71,7 +71,6 @@ assignees: []
 - [ ] Lighthouse
 - [ ] WebPageTest
 - [ ] Chrome DevTools
-- [ ] k6 load testing
 - [ ] Prisma query logging
 
 ### Monitoring
@@ -89,7 +88,6 @@ DEBUG=prisma:* pnpm dev
 
 ## 🧪 Testing
 - [ ] Lighthouse audit (score > 90)
-- [ ] k6 load test
 - [ ] Bundle size check
 - [ ] Database query profiling
 

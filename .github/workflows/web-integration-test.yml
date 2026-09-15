@@ -7,7 +7,6 @@ on:
       - 'docker-compose*.yaml'
       - 'infra/docker-compose*.yaml'
       - 'infra/nginx/**'
-      - '.env.example'
       - 'apps/api/**'
       - 'apps/web-player/**'
       - 'apps/web-artists/**'
@@ -20,7 +19,6 @@ on:
       - 'docker-compose*.yaml'
       - 'infra/docker-compose*.yaml'
       - 'infra/nginx/**'
-      - '.env.example'
       - 'apps/api/**'
       - 'apps/web-player/**'
       - 'apps/web-artists/**'
@@ -28,6 +26,9 @@ on:
       - '.github/workflows/web-integration-test_reusable.yml'
       - '.github/actions/setup-docker/**'
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   integration-test:

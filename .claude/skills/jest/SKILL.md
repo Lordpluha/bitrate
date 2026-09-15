@@ -190,7 +190,7 @@ Do not guess an API from memory. In order:
 ## Related rules and skills
 
 - `api-rules` — the module structure these specs test against.
-- `sp-tester` — the heavy specialist that writes/runs one focused spec end to end
-  and smoke-runs it; dispatched by `/sp-implement` by default, or invoke it directly via the
+- `br-tester` — the heavy specialist that writes/runs one focused spec end to end
+  and smoke-runs it; dispatched by `/br-implement` by default, or invoke it directly via the
   Agent tool. Prefer this skill when you just need the conventions to review or hand-write a
   spec yourself in-session (`--session`).

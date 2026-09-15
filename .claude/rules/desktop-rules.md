@@ -110,7 +110,7 @@ React function components, named exports, named React imports, named types in si
 positions, no production `any`. ≤100 logic lines per component file, ≤5 own declared props,
 ≤2 `useEffect`.
 
-Design values should trace back to `packages/ui-react/tokens/tokens.json`. No bridge exists yet — propose one
+Design values should trace back to the token roles in `packages/ui-react/src/styles/`. No bridge exists yet — propose one
 rather than scattering hex literals. API types come from `@bitrate/contracts`.
 
 ## Commands
@@ -129,5 +129,5 @@ builds and code signing are the user's to run.
 ## Related
 
 - `tauri` skill — invoke, capabilities, events, why Tauri 1 material misleads.
-- `sp-desktop-developer` — the agent that owns this app.
+- `br-desktop-developer` — the agent that owns this app.
 - `.claude/rules/typescript.md`, `.claude/rules/code-principles.md`.
