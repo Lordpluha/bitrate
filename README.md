@@ -126,23 +126,9 @@ stack, `Taskfile.yml` is the only interface to it. nginx terminates TLS for all 
 
 ## Verification
 
-```bash
-pnpm check:env
-```
-
-Checks that this machine can actually build the repository: every tool in
-[Requirements](#requirements) against its minimum, and every declared dependency of every
-workspace. It exits non-zero when something required is missing, and warns without failing when
-only optional tooling is absent.
-
-Narrow it to the projects you are working on:
-
-```bash
-pnpm check:env api ui-react   # only these two
-pnpm check:env --list         # the workspace names it accepts
-```
-
-The repository's own gates — lint, types, build, tests — are documented in
+Check this machine against [Requirements](#requirements) by hand — `node --version`,
+`pnpm --version`, `docker --version` — then `pnpm install` and let the workspace resolution
+report anything missing. The repository's own gates — lint, types, build, tests — are documented in
 [CONTRIBUTING.md](CONTRIBUTING.md), and the test layers in the
 [testing guide](https://docs.bitrate.me/docs/guides/testing).
 
