@@ -4,16 +4,16 @@ Use this guide when working in Claude Code on this repository.
 
 ## Defaults
 
-- Dispatch to the matching specialist for `/sp-create-task`, `/sp-implement`, `/sp-auto`,
-  `/sp-sync-docs` — and for ordinary tasks outside any command that touch application code
+- Dispatch to the matching specialist for `/br-create-task`, `/br-implement`, `/br-auto`,
+  `/br-sync-docs` — and for ordinary tasks outside any command that touch application code
   (see `CLAUDE.md`'s "Default to agent dispatch, even outside a command"). This is the
   default; it costs an extra agent round-trip per task.
 - Stay in the current session only when the user passes `--session` or explicitly asks to
   skip the agent.
 - Each specialist has a fixed model, set in its own agent frontmatter — not a per-invocation
-  choice: `sp-planner` → Fable; the five `sp-*-developer` agents and `sp-librarian` →
-  Sonnet; `sp-debugger`/`sp-reviewer`/`sp-tester`/`sp-devops`/`sp-worker` → Opus.
-  `sp-worker` delegates to the others, so a task run through it costs the orchestrator's
+  choice: `br-planner` → Fable; the five `br-*-developer` agents and `br-librarian` →
+  Sonnet; `br-debugger`/`br-reviewer`/`br-tester`/`br-devops`/`br-worker` → Opus.
+  `br-worker` delegates to the others, so a task run through it costs the orchestrator's
   tokens *plus* each specialist's — use it when you want one agent accountable end to end,
   not for a single-stage task.
   In-session (`--session`) work runs on whatever model the current Claude Code session is
@@ -68,14 +68,14 @@ Run full monorepo checks only before a commit/PR or when the changed surface jus
 
 Keep entrypoints broad and let them detect scope:
 
-- `/sp-create-task` reads the board and repo context, then drafts or restructures one
+- `/br-create-task` reads the board and repo context, then drafts or restructures one
   issue. It confirms before every GitHub mutation.
-- `/sp-implement` checks out the branch, then dispatches to a named specialist by default
-  (`sp-planner`, the matching `sp-*-developer`, `sp-debugger`, `sp-tester`, `sp-reviewer`,
-  `sp-devops`) — none of them have their own slash command. It may apply the `fsd`
+- `/br-implement` checks out the branch, then dispatches to a named specialist by default
+  (`br-planner`, the matching `br-*-developer`, `br-debugger`, `br-tester`, `br-reviewer`,
+  `br-devops`) — none of them have their own slash command. It may apply the `fsd`
   skill internally for new slices/components. It opens/updates the PR only after
   confirmation.
-- `/sp-auto` runs the unattended pipeline: one `sp-worker` per claimed issue in its own
+- `/br-auto` runs the unattended pipeline: one `br-worker` per claimed issue in its own
   worktree, with the dispatcher owning every GitHub action.
 - Ticket/board state is never mirrored to a file — query it live via `gh`/MCP whenever
   it's needed (see `.claude/rules/knowledge-base.md`).

@@ -25,8 +25,7 @@ bitrate/
 │   ├── vite-svgr/        # Vite plugin — SVG generation integrated into Vite build
 │   ├── svgr/             # SVG → typed React component converter
 │   ├── converter/        # Media/audio conversion utilities (FFmpeg wrapper)
-│   ├── ncs-parser/       # NCS (audio format) parser
-│   └── performance-test/ # K6 performance testing scenarios
+│   └── ncs-parser/       # NCS (audio format) parser
 │
 ├── infra/             # Docker Compose files + shell scripts
 │   ├── docker-compose.dev.yaml      # Minimal: postgres + redis
@@ -85,6 +84,31 @@ conventions built on top of it: `web-player-rules`
 **API client** (`src/shared/api/client/`):
 - `fetchClient.ts` — `openapi-fetch` with automatic JWT refresh middleware
 - `reactQueryClient.ts` — `openapi-react-query` wrapper
+
+## 📐 Architecture contracts
+
+The invariants every change is reviewed against. Each is owned by a rule file or an ADR, which is
+where the reasoning lives — this list is the summary, not the source.
+
+- **Web-player imports flow one way.** `app → views → widgets → features → entities → shared`,
+  never upward, and never sideways between slices of the same layer. Biome enforces it, so a
+  violation fails `pnpm lint` rather than review
+  ([ADR-0002](/docs/architecture/web-player-feature-sliced-design)).
+- **Next.js route files are adapters.** A `page.tsx` reads params and server data and renders a
+  view from `views/`; a full screen is never composed inside the route file
+  ([ADR-0010](/docs/architecture/next-routes-as-adapters)).
+- **API contracts are generated, not written.** Swagger decorators produce the OpenAPI document,
+  `@bitrate/contracts` is generated from it, and both web apps consume those types — so a backend
+  change that breaks a frontend shows up as a type error
+  ([ADR-0004](/docs/architecture/openapi-data-layer)).
+- **Server state is TanStack Query; client state is per-slice Zustand.** New client state belongs
+  to the slice that owns it, not to a global store
+  ([ADR-0005](/docs/architecture/client-state-zustand)).
+- **Shared React primitives and design tokens both live in `@bitrate/ui-react`.** The tokens are
+  hand-written Tailwind `@theme` layers, not generated output
+  ([ADR-0023](/docs/architecture/tokens-into-ui-react)).
+- **User-facing web UI targets WCAG 2.2 AA** — semantic controls, visible focus, keyboard
+  operation, reduced motion, and usable layout at 320 CSS px and 400% zoom.
 
 ## 🔄 Data Flow
 
@@ -295,7 +319,7 @@ graph LR
 
 - Per-app workflows: `api.yml`, `web_player.yml`, `mobile.yml`, `desktop.yml`
 - Shared reusable workflows: `*_reusable.yml`
-- Cross-cutting: `monitoring.yml`, `security.yml`, `performance.yml`, `release.yml`
+- Cross-cutting: `monitoring.yml`, `security.yml`, `release.yml`
 
 ```
 push/PR → build → test → lint → type-check → deploy
@@ -312,7 +336,16 @@ pnpm changeset          # describe change, select bump type
 pnpm changeset:version  # apply changesets → bump versions + CHANGELOG
 ```
 
-The `release.yml` GitHub Action creates "Version Packages" PRs automatically on push to `develop`.
+Releasing runs on `master`, not `develop`. Today `release.yml` is triggered by a push to `master`,
+consumes the pending changesets, bumps every changed workspace, writes its `CHANGELOG.md`, tags each
+bump, and creates one release tag; it then publishes a GitHub Release, dispatches the five image
+builds at that tag, and dispatches the deploy, which waits for one manual approval.
+
+That is being reworked. [ADR-0029](../architecture/0029-release-pr-merged-by-a-human.md) **proposes**
+cutting a release branch from `develop` into a pull request against `master`, so that a human's
+merge is what triggers the build and deploy, and tagging each release with the product's semantic
+version derived from the changesets it consumes. It is a proposal, not yet implemented — see
+[Deployment](/docs/infrastructure/deployment) for both the current and the proposed procedures.
 
 ---
 

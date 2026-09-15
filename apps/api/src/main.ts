@@ -1,3 +1,11 @@
+/**
+ * Sentry first, before anything else is imported. Its instrumentation patches modules as `init()`
+ * runs, so a module already loaded by an earlier import is never traced — Nest, Express and the
+ * Postgres driver among them. It sits in its own block because Biome sorts within blocks but keeps
+ * their order, and alphabetical sorting had previously placed this line below every other import.
+ */
+import './instrument'
+
 import { API_DOC_DESCRIPTION, API_DOC_TITLE, API_DOC_VERSION } from '@common/swagger'
 import { HttpStatus, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -11,8 +19,6 @@ import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'
 import { resolveTrustProxySetting } from './common/config/trusted-proxy.config'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
-
-import './instrument'
 
 /** Runs the bootstrap operation. */
 async function bootstrap() {

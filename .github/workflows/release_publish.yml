@@ -1,0 +1,62 @@
+name: "[release] Publish and Ship"
+
+# Stage 4 of the release chain (ADR-0029), and the claim the whole architecture
+# stands on:
+#
+#   a human merges the release pull request on github.com
+#     -> that merge is authenticated as that person, not as GITHUB_TOKEN
+#     -> so the push to master it produces DOES raise a push event
+#     -> which starts this workflow, with no PAT and no GitHub App
+#
+# The rule that made the original chain inert -- GitHub creates no workflow run
+# for an event authored by GITHUB_TOKEN -- simply does not apply to a human's
+# merge. That is why the release is shaped around a pull request.
+#
+# Every push to master runs this, but only a push that actually carries a release
+# does anything: the `resolve` job reads the product version out of the merged
+# tree's root package.json and stops if `v<version>` is already a tag. A hotfix
+# pushed straight to master therefore mints nothing, builds nothing and deploys
+# nothing -- without any workflow having to pattern-match a commit subject.
+on:
+  push:
+    branches: [master]
+
+# Never cancel a publish in flight. A cancelled run that has tagged but not built
+# leaves a version tag with no images behind it, which the deploy would then fail
+# to pull.
+concurrency:
+  group: release-publish
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  publish:
+    name: Publish
+    uses: ./.github/workflows/release_publish_reusable.yml
+
+    # The union of what the called jobs need; each job inside narrows to its own
+    # subset, so the five image jobs never hold `contents: write` and the deploy
+    # never holds `packages: write`.
+    #
+    #   contents: write       -- the annotated tag, the GitHub Release, and the
+    #                            back-merge branch.
+    #   packages: write       -- the five images.
+    #   pull-requests: write  -- the back-merge pull request.
+    #   actions: read         -- deploy_reusable declares it for its image-wait
+    #                            job. That job is off on this path (the images
+    #                            are `needs:` here), but a called workflow cannot
+    #                            hold more than its caller grants.
+    #
+    # No job anywhere holds `actions: write`. The dispatch design needed it twice.
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+      actions: read
+
+    # Production configuration lives at *environment* scope and a job that calls
+    # a reusable workflow may not declare `environment:`, so an explicit mapping
+    # here would resolve against repository scope and pass empty strings. See
+    # deploy.yml for the full reasoning.
+    secrets: inherit

@@ -9,10 +9,10 @@ metadata:
 
 # Architecture checklist
 
-Verification list walked by `sp-reviewer` (the heavy review specialist, auto-invoked by
-the `sp-*-developer` agents on diffs over 100 lines/5 files, or dispatched by
-`/sp-implement --review`).
-`/sp-implement --session` self-checks against this list in-session for smaller diffs, and
+Verification list walked by `br-reviewer` (the heavy review specialist, auto-invoked by
+the `br-*-developer` agents on diffs over 100 lines/5 files, or dispatched by
+`/br-implement --review`).
+`/br-implement --session` self-checks against this list in-session for smaller diffs, and
 human reviewers use it before merging. Each item states the rule, how to check it, and which
 file owns the full rationale.
 

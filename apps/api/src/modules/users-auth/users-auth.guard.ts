@@ -106,12 +106,14 @@ export class UserAuthGuard implements CanActivate {
     }
 
     try {
+      /**
+       * Only the token this route requires is verified. A co-present cookie of
+       * the other kind is never checked here — a client can always omit it, so
+       * verifying it added no guarantee and only rejected legitimate requests
+       * whose unrelated cookie happened to be stale.
+       */
       const token = tokenReq === 'access' ? access_token! : refresh_token!
       const payload: JWTPayload = await this.tokenService.verifyToken(token)
-
-      if (tokenReq === 'access' && refresh_token) {
-        await this.tokenService.verifyToken(refresh_token)
-      }
 
       if (payload.type !== 'user')
         throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)

@@ -93,6 +93,6 @@ commands are this repo's.
   the Chromium provider.
 - `api-rules` — the module structure Jest specs test against.
 - `web-player-rules` — the FSD slice structure Vitest specs test against.
-- `sp-tester` — the heavy specialist that writes/runs one focused spec end to end
-  and smoke-runs it, picking the framework from scope; dispatched by `/sp-implement`
+- `br-tester` — the heavy specialist that writes/runs one focused spec end to end
+  and smoke-runs it, picking the framework from scope; dispatched by `/br-implement`
   by default, or invoke it directly via the Agent tool.

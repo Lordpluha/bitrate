@@ -1,12 +1,26 @@
 import { open, rm } from 'node:fs/promises'
 import { basename } from 'node:path'
 import { detectAllowedImageMime } from '@common/utils/image'
+import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { BadRequestException, Logger } from '@nestjs/common'
 import { parseFile } from 'music-metadata'
 import { MAX_COVER_BYTES } from './track-audio.helpers'
 
 /** Bytes of an image header needed to recognise every allowed cover format. */
 const IMAGE_MAGIC_BYTES = 12
+
+/** Where the upload interceptor writes each kind of file. Server-owned, never client-supplied. */
+export const AUDIO_DESTINATION = './storage/private/tracks'
+
+export const COVER_DESTINATION = './storage/public/tracks/covers'
+
+/**
+ * The directory an uploaded file belongs in. `fieldname` only selects between two literals, so
+ * nothing from the request survives into the returned value.
+ */
+export function uploadDestination(file: Express.Multer.File): string {
+  return file.fieldname === 'audio' ? AUDIO_DESTINATION : COVER_DESTINATION
+}
 
 const logger = new Logger('TrackMedia', { timestamp: true })
 
@@ -52,7 +66,7 @@ export async function validateCoverFile(file: Express.Multer.File): Promise<void
   if (file.size > MAX_COVER_BYTES) throw new BadRequestException('Cover file is too large')
 
   const header = Buffer.alloc(IMAGE_MAGIC_BYTES)
-  const handle = await open(file.path, 'r')
+  const handle = await open(resolveSafeMulterPath(file, uploadDestination(file)), 'r')
   try {
     await handle.read(header, 0, header.length, 0)
   } finally {
@@ -68,7 +82,11 @@ export async function validateCoverFile(file: Express.Multer.File): Promise<void
 export async function cleanupUploadedFiles(
   files: Array<Express.Multer.File | undefined>,
 ): Promise<void> {
-  await Promise.all(files.flatMap((file) => (file ? [rm(file.path, { force: true })] : [])))
+  await Promise.all(
+    files.flatMap((file) =>
+      file ? [rm(resolveSafeMulterPath(file, uploadDestination(file)), { force: true })] : [],
+    ),
+  )
 }
 
 /**

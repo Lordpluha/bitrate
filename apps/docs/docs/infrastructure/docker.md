@@ -252,9 +252,14 @@ task db:backup
 docker compose -f infra/docker-compose.preprod.yaml exec -T postgres \
   psql -U admin bitrate < backups/backup.sql
 
-# Or via task:
-task db:restore -- backup_20260101_120000.sql
+# Or via task (FILE= is required — this task takes no positional argument):
+task db:restore FILE=backups/2026-01-01_120000.sql
 ```
+
+Production is separate: `task prod:backup` / `task prod:restore FILE=…` write and read
+`pg_dump --format=custom`, and a daily off-host copy is automated by
+`.github/workflows/backup.yml`. See
+[Deployment § 6](./deployment.md#6-backups).
 
 ### Clear All Data
 
@@ -278,11 +283,14 @@ task prod:up
 
 ### Environment Variables
 
-```bash
-# Create .env from example
-cp .env.example .env
-# Edit production values
-```
+The `dev` and `preprod` stacks default every variable, so they need no env file. `prod`
+defaults nothing on purpose — `DOMAIN`, `DATABASE_URL`, `JWT_SECRET`, `POSTGRES_*`,
+`REDIS_PASSWORD`, `WEB_HOST` and `NEXT_PUBLIC_*` come from the deploying environment
+(GitHub environment secrets in the deploy workflow, exported shell variables for a manual
+run). `docker compose -f infra/docker-compose.prod.yaml config` failing on `DOMAIN` outside
+a deploy is that guard working.
+
+See [Environment variables](../guides/environment.md) for where each value comes from.
 
 ## 🔒 Security
 
