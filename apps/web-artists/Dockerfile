@@ -56,14 +56,17 @@ RUN pnpm --filter @bitrate/web-artists run build
 FROM base AS production
 ENV NODE_ENV=production
 
-COPY --from=build /app/apps/web-artists/.output ./.output
-
-# Create non-root user
+# The user is created BEFORE anything is copied, because `COPY --chown=` resolves a named
+# owner against the image's /etc/passwd as it runs. Ownership then rides along on the copy
+# instead of being applied afterwards by `chown -R`, which is what the standalone chown used
+# to do — and a chown rewrites every file's metadata, so the layer it produces holds a second
+# complete copy of everything underneath it. Measured on this image: `COPY .output` 226 MB,
+# `RUN chown -R /app` another 226 MB for nothing.
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 --ingroup nodejs bitrateweb
+    adduser --system --uid 1001 --ingroup nodejs bitrateweb && \
+    chown bitrateweb:nodejs /app
 
-# Set ownership
-RUN chown -R bitrateweb:nodejs /app
+COPY --from=build --chown=bitrateweb:nodejs /app/apps/web-artists/.output ./.output
 
 USER bitrateweb
 

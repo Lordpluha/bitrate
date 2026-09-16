@@ -49,6 +49,7 @@ RUN pnpm --filter @bitrate/api run build
 
 # Stage 5: Production Dependencies
 FROM base AS prod-dependencies
+ARG PRISMA_GENERATE_ONLY_URL
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY scripts ./scripts
 COPY apps/api/package.json ./apps/api/
@@ -58,39 +59,56 @@ COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/ncs-parser/package.json ./packages/ncs-parser/
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lockfile
 
+# Prisma Client is generated here rather than in the production stage so that stage writes
+# nothing at all: every one of its layers is then a `COPY --chown`, and it needs no
+# `chown -R` to hand /app to the runtime user. The schema is copied after the install, so a
+# schema edit re-runs only the generate and leaves the install layer cached.
+COPY apps/api/prisma ./apps/api/prisma
+COPY apps/api/prisma.config.ts ./apps/api/prisma.config.ts
+RUN DATABASE_URL="$PRISMA_GENERATE_ONLY_URL" pnpm --filter @bitrate/api run db:gen:prod
+
 # Stage 6: Production
 FROM base AS production
-ARG PRISMA_GENERATE_ONLY_URL
 ENV NODE_ENV=production
-COPY --from=prod-dependencies /app/node_modules ./node_modules
-COPY --from=prod-dependencies /app/apps/api/node_modules ./apps/api/node_modules
-COPY --from=build /app/apps/api/dist ./apps/api/dist
-COPY apps/api/prisma ./apps/api/prisma
+
+# Created first so the `COPY --chown=` instructions below can resolve the name. Ownership then
+# rides along on each copy instead of being applied afterwards by a `chown -R /app`: a recursive
+# chown rewrites the metadata of every file it walks, so the layer it produces holds a second
+# complete copy of them — 482 MB of published bytes on v1.1.0, duplicating the 452 MB above it.
+# The chown that remains here is on /app itself, not -R, because WORKDIR created that directory
+# as root:root and the deleted `chown -R` had been handing it over as a side effect.
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 --ingroup nodejs bitrateapi && \
+    chown bitrateapi:nodejs /app
+
+# node_modules already carries the generated Prisma Client — see the prod-dependencies stage.
+COPY --from=prod-dependencies --chown=bitrateapi:nodejs /app/node_modules ./node_modules
+COPY --from=prod-dependencies --chown=bitrateapi:nodejs /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=build --chown=bitrateapi:nodejs /app/apps/api/dist ./apps/api/dist
+# `task prod:migrate` runs `prisma migrate deploy` in a throwaway container from this image, so
+# the migrations have to be here even though generation happened upstream.
+COPY --chown=bitrateapi:nodejs apps/api/prisma ./apps/api/prisma
 # Prisma looks for the config in the working directory, and schema.prisma declares no datasource
 # url — it comes from here. The TypeScript source, not the compiled output: tsc emits CommonJS
 # that Prisma's config loader rejects with "Failed to parse syntax of config file".
-COPY apps/api/prisma.config.ts ./apps/api/prisma.config.ts
-COPY apps/api/storage ./apps/api/storage
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/api/package.json ./apps/api/
+COPY --chown=bitrateapi:nodejs apps/api/prisma.config.ts ./apps/api/prisma.config.ts
+# public/ only. app.module.ts points ServeStaticModule at join(__dirname,'..','..','storage',
+# 'public') — /app/apps/api/storage/public — so that one subtree is load-bearing. The sibling
+# private/ is seeded audio: 823 MB on a developer checkout, and `apps/api/storage/.gitignore`
+# keeps all of it out of git, so a CI image never contained it and a locally built one did.
+COPY --chown=bitrateapi:nodejs apps/api/storage/public ./apps/api/storage/public
+COPY --chown=bitrateapi:nodejs package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY --chown=bitrateapi:nodejs apps/api/package.json ./apps/api/
 
-# Generate Prisma Client
-RUN DATABASE_URL="$PRISMA_GENERATE_ONLY_URL" pnpm --filter @bitrate/api run db:gen:prod
-
-# The runtime storage root. CMD runs `node apps/api/dist/src/main.js` from WORKDIR /app, so
-# process.cwd() is /app and apps/api/src/common/config/storage.config.ts resolves every upload
-# path under /app/storage — not under the apps/api/storage copied in above, which is seed data
-# read at a different path. Creating it here is what lets infra/docker-compose.prod.yaml mount a
-# named volume over it: Docker initialises an empty volume from the image directory, ownership
-# included, so the non-root user below can write to it with no chown on the host.
-RUN mkdir -p /app/storage/private /app/storage/public
-
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 --ingroup nodejs bitrateapi
-
-# Set ownership
-RUN chown -R bitrateapi:nodejs /app
+# The runtime storage root, and a different path from the seed directory above. CMD runs
+# `node apps/api/dist/src/main.js` from WORKDIR /app, so process.cwd() is /app and
+# apps/api/src/common/config/storage.config.ts resolves every upload path under /app/storage.
+# Creating it here is what lets infra/docker-compose.prod.yaml mount a named volume over it:
+# Docker initialises an empty volume from the image directory, ownership included, so the
+# non-root user needs no chown on the host. Two empty directories, so the recursive chown
+# scoped to them costs nothing.
+RUN mkdir -p /app/storage/private /app/storage/public \
+    && chown -R bitrateapi:nodejs /app/storage
 
 USER bitrateapi
 
