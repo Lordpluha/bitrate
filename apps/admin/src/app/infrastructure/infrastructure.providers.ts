@@ -2,6 +2,7 @@ import { type EnvironmentProviders, makeEnvironmentProviders } from '@angular/co
 import { ArtistRepository } from '@domain/artist'
 import { AuditRepository } from '@domain/audit'
 import { ModerationReportRepository } from '@domain/moderation'
+import { RoleRepository } from '@domain/role'
 import { StaffSessionRepository } from '@domain/staff'
 import { TrackRepository } from '@domain/track'
 import { UserRepository } from '@domain/user'
@@ -9,6 +10,7 @@ import { HttpArtistRepository } from './artists'
 import { HttpAuditRepository } from './audit'
 import { HttpTrackRepository } from './catalog'
 import { HttpModerationReportRepository } from './moderation'
+import { HttpRoleRepository } from './roles'
 import { HttpStaffSessionRepository } from './staff'
 import { HttpUserRepository } from './users'
 
@@ -23,6 +25,7 @@ export function provideAdminInfrastructure(): EnvironmentProviders {
     { provide: ArtistRepository, useClass: HttpArtistRepository },
     { provide: AuditRepository, useClass: HttpAuditRepository },
     { provide: ModerationReportRepository, useClass: HttpModerationReportRepository },
+    { provide: RoleRepository, useClass: HttpRoleRepository },
     { provide: StaffSessionRepository, useClass: HttpStaffSessionRepository },
     { provide: TrackRepository, useClass: HttpTrackRepository },
     { provide: UserRepository, useClass: HttpUserRepository },

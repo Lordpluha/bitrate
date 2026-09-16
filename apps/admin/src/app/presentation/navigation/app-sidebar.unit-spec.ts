@@ -50,7 +50,7 @@ describe('AppSidebar', () => {
     expect(host.textContent).toContain('Operations')
     expect(host.textContent).toContain('Accounts')
     expect(host.textContent).toContain('System')
-    expect(host.querySelectorAll('nav a')).toHaveLength(5)
+    expect(host.querySelectorAll('nav a')).toHaveLength(6)
   })
 
   /** The footer is pinned by `nav` taking the slack, not by absolute positioning. */
@@ -77,5 +77,35 @@ describe('AppSidebar', () => {
 
     expect(host.textContent).not.toContain('Catalog pipeline')
     expect(host.querySelectorAll('nav a')).toHaveLength(4)
+  })
+
+  it('hides Roles when the operator lacks roles:read', async () => {
+    TestBed.inject(SessionStore).set({
+      ...ADMIN_STAFF,
+      roleName: 'MODERATOR',
+      permissions: ['reports:read', 'artists:read', 'users:read', 'audit:read'],
+    })
+
+    const fixture = TestBed.createComponent(AppSidebar)
+    await fixture.whenStable()
+
+    const host = fixture.nativeElement as HTMLElement
+
+    expect(host.textContent).not.toContain('Roles')
+  })
+
+  it('shows Roles when the operator holds roles:read', async () => {
+    TestBed.inject(SessionStore).set({
+      ...ADMIN_STAFF,
+      roleName: 'MODERATOR',
+      permissions: ['roles:read'],
+    })
+
+    const fixture = TestBed.createComponent(AppSidebar)
+    await fixture.whenStable()
+
+    const host = fixture.nativeElement as HTMLElement
+
+    expect(host.textContent).toContain('Roles')
   })
 })
