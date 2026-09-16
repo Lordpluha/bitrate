@@ -12,4 +12,5 @@ export const ROUTE_PERMISSIONS: readonly { path: string; permission: Permission 
   { path: '/artists', permission: 'artists:read' },
   { path: '/users', permission: 'users:read' },
   { path: '/audit', permission: 'audit:read' },
+  { path: '/roles', permission: 'roles:read' },
 ]

@@ -46,5 +46,25 @@ export const routes: Routes = [
     canActivate: [requireStaffSession, requirePermission('audit:read')],
     loadComponent: () => import('@presentation/pages/audit/audit').then((m) => m.AuditPage),
   },
+  {
+    path: 'roles',
+    title: 'Roles · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('roles:read')],
+    loadComponent: () => import('@presentation/pages/roles/roles').then((m) => m.RolesPage),
+  },
+  {
+    path: 'roles/new',
+    title: 'New role · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('roles:write')],
+    loadComponent: () =>
+      import('@presentation/pages/roles/role-editor').then((m) => m.RoleEditorPage),
+  },
+  {
+    path: 'roles/:id',
+    title: 'Edit role · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('roles:read')],
+    loadComponent: () =>
+      import('@presentation/pages/roles/role-editor').then((m) => m.RoleEditorPage),
+  },
   { path: '**', redirectTo: '' },
 ]
