@@ -74,7 +74,7 @@ current task; do not read every row's target file up front.
 | Forms — React Hook Form + Zod | `.claude/rules/forms.md` |
 | SOLID/DRY/KISS, component size/props/decomposition limits | `.claude/rules/code-principles.md` |
 | Monorepo topology, Turborepo/pnpm scripts, env vars | `.claude/rules/monorepo.md` |
-| lint/type/format/knip failures | `.claude/rules/code-style.md` |
+| lint/type/format/knip failures; memory budget for verification runs | `.claude/rules/code-style.md` |
 | Commit message / branch naming | `.claude/rules/commit-style.md` |
 | Mechanical review checklist before opening/updating a PR | `.claude/rules/architecture-checklist.md` |
 | codebase exploration, working notes, decisions, GitHub ticket/board sync | `.claude/rules/knowledge-base.md` |
@@ -213,6 +213,12 @@ per-invocation choice.
 - Dispatch to a subagent by default (see "Default to agent dispatch, even outside a
   command" above); work in-session only when `--session` is passed or explicitly requested.
 - Keep logs short: pipe long command output through `head -200` or a focused `rg`.
+- Watch memory, not just tokens. Keep **10-15% of total RAM free at all times** — check
+  `MemAvailable` before anything heavy, and treat swap as spent, not as headroom. Run the
+  narrowest verification that proves the change, never a repo-wide lint concurrently with a
+  test suite, and bound the runners (`jest --runInBand`, `turbo --concurrency=2`) when
+  anything else heavy is running. Exit code `137` means the OOM killer, not a failing tool —
+  see `.claude/rules/code-style.md` § "Parallel review pass".
 - Before broad exploration of an unfamiliar area, try `graphify query "<question>"` first —
   it's faster than grepping across many files.
 - After a nontrivial investigation or mid-task decision that's durable enough to matter
@@ -271,7 +277,7 @@ interface for Docker, database, and monitoring workflows — there are no `pnpm 
 scripts, and `task` with no arguments lists everything:
 
 ```bash
-task infra:up      # postgres, postgres_test, redis, mailhog — nothing else
+task infra:up      # postgres, postgres_test, redis — nothing else
 pnpm dev           # apps natively
 
 task dev:up        # or: the whole stack in Docker

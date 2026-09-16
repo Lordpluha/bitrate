@@ -202,6 +202,63 @@ pnpm lint && pnpm check-types
 
 Zero errors is the baseline. A commit with linting or type errors will fail CI.
 
-## Parallel review pass
+## Parallel review pass — and the memory budget it has to fit in
 
-Lint, type checking, and Knip are independent and may run in parallel. Package tests can run alongside them when they do not share mutable infrastructure.
+Lint, type checking, and Knip are independent and *may* run in parallel. Package tests can run
+alongside them when they do not share mutable infrastructure. But parallelism here is bounded by
+RAM, not by cores, and overrunning it does not look like a resource problem — it looks like a
+broken toolchain.
+
+**Measure the scope before you widen it.** The numbers that matter are already known:
+`pnpm lint` peaks at ~1.34 GB per workspace because the unhandled-promise nursery rules turn on
+Biome's type-inference scanner (see above), and a full root `pnpm lint` walks six workspaces. Jest
+defaults to one worker per core minus one, and each API worker loads ts-jest plus a Nest module
+graph. Turborepo runs up to 10 tasks at once by default. Multiply those together on a developer
+laptop and the OOM killer takes whichever process is largest — usually the linter, which then dies
+with a bare exit code `137` that resembles nothing in Biome's output.
+
+**Hold a reserve of 10-15% of total RAM at all times.** That is the hard floor, not a target to
+spend down to: before starting anything heavy, check what is actually free, and if the command
+would eat into the reserve, narrow it or run it after the current one finishes rather than beside
+it.
+
+```bash
+awk '/MemTotal|MemAvailable/ {printf "%-14s %7.2f GiB\n", $1, $2/1048576}' /proc/meminfo
+free -m | awk '/^Mem:/ {printf "available %d MiB = %.0f%% of total\n", $7, $7*100/$2}'
+```
+
+Two things that rule depends on:
+
+- **`MemAvailable` is the number, not `free`.** Page cache counts as reclaimable and shows up as
+  used; a machine reporting 1.5 GiB free and 8 GiB available has 8 GiB.
+- **Swap is not headroom.** A run that "fits" only because pages spill to swap has already lost —
+  the build finishes minutes later and everything else on the machine crawls. Check swap
+  occupancy too: if it is already high, the reserve is thinner than `MemAvailable` suggests,
+  because the kernel has been evicting under pressure for a while.
+
+Rules that keep a verification pass inside the budget:
+
+- **Narrow before you parallelise.** `pnpm --filter @bitrate/api test` beats `pnpm test`, and a
+  single spec file beats the package. Run the exact file the change touches first; widen only
+  once it is green.
+- **For Biome, narrow the workspace, not the file list.** The type scanner walks the whole
+  project graph regardless of which paths you name, so passing six files changes nothing.
+  Measured on this repo: `pnpm exec biome check --write <six changed files>` from the root dies
+  with `Linter process terminated abnormally (possibly out of memory)`, while
+  `pnpm --filter @bitrate/api exec biome check --write src test` checks 522 files in 5 s. Always
+  reach for Biome through the workspace filter; a root invocation scopes the scanner to all six
+  workspaces at once.
+- **Never run a full `pnpm lint` concurrently with a test suite.** Sequence them with `&&`.
+  Two commands that each fit in memory do not necessarily fit together.
+- **Bound the runners explicitly when anything else heavy is running.** `jest --runInBand` (or
+  `--maxWorkers=2`), `vitest --no-file-parallelism`, `turbo --concurrency=2`. A serial run that
+  finishes is faster than a parallel one that gets killed and rerun.
+- **Read exit code `137` as "out of memory", not as a tool failure.** Do not re-run it hoping for
+  a different answer, and never report it as a lint or test failure — say the process was killed
+  and rerun it narrower.
+- **Cap the heap when a single Node process is the problem**, not the fan-out:
+  `NODE_OPTIONS=--max-old-space-size=2048`. Raising it is rarely the fix; shrinking the scope is.
+
+This applies to agents as much as to humans: an agent that fires a repo-wide lint, a full test
+suite, and a build in one turn is the most reliable way to produce an unexplainable `137` in a
+session with no other symptom.
