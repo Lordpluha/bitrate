@@ -1,146 +1,141 @@
-# Web Player — полный список для редизайна
+# Web Player — Complete Redesign Inventory
 
-Собрано напрямую из структуры `apps/web-player/src` (роуты + views + widgets + features).
-Ничего не выдумано — это реальные страницы и блоки, которые сейчас существуют в коде.
+Compiled directly from `apps/web-player/src` (routes, views, widgets, and features).
+This document describes existing product surfaces; it does not invent new functionality.
 
----
+## 1. Public pages (signed out, `(landing)` group)
 
-## 1. Публичные страницы (не залогинен, группа `(landing)`)
-
-1. **Landing / главная маркетинговая** — `/`
-2. **Login** — `/login` и `/auth/login` (два пути на один экран)
-3. **Login → 2FA** — `/login/2fa` и `/auth/login/2fa`
+1. **Landing / marketing home** — `/`
+2. **Login** — `/login` and `/auth/login` (two paths to the same screen)
+3. **Login → 2FA** — `/login/2fa` and `/auth/login/2fa`
 4. **Registration** — `/auth/registration`
 5. **Forgot password** — `/auth/forgot-password`
 6. **Reset password** — `/auth/reset-password`
 7. **Verify email** — `/verify-email`
 
-Плюс модалки поверх лендинга (не отдельные роуты, но отдельные экраны в дизайне):
+Landing overlays that require dedicated designs even though they are not routes:
+
 - **Login modal** (`AuthModal/LoginModal`)
-- **Sign up modal** (`AuthModal/SignUpModal`)
+- **Sign-up modal** (`AuthModal/SignUpModal`)
 
----
+## 2. Main application (signed in, `main` group)
 
-## 2. Основное приложение (залогинен, группа `main`)
-
-1. **Home / главная плеера** — `/main`
+1. **Home / player home** — `/main`
 2. **Search** — `/main/search`
-3. **Library (моя библиотека)** — `/main/library`
+3. **Library** — `/main/library`
 4. **Album** — `/main/album/[id]`
 5. **Artist** — `/main/artist/[id]`
 6. **Playlist** — `/main/playlist/[id]`
 7. **Liked Songs** — `/main/liked-songs`
 8. **Podcast** — `/main/podcast/[id]`
-9. **Queue (очередь воспроизведения)** — `/main/queue`
-10. **Lyrics (текст песни, полноэкранный)** — `/main/lyrics`
-11. **Recents (недавнее)** — `/main/recents`
-12. **Profile (публичный профиль пользователя)** — `/main/profile`
-13. **User (чужой профиль по id)** — `/main/user/[id]`
+9. **Queue** — `/main/queue`
+10. **Lyrics (full screen)** — `/main/lyrics`
+11. **Recents** — `/main/recents`
+12. **Profile (the listener's public profile)** — `/main/profile`
+13. **User (another listener's profile)** — `/main/user/[id]`
 14. **Preferences** — `/main/preferences`
 15. **Settings** — `/main/settings`
+16. **Offline** — `/offline` (outside the route groups)
 
-Отдельная страница вне групп:
-16. **Offline** — `/offline`
+## 3. Settings subsections
 
----
+All of these surfaces live inside `/main/settings`. The current application presents them as
+sections of one view, but each needs its own design state:
 
-## 3. Настройки — подэкраны (все внутри `/main/settings`, один view, много секций)
-
-Каждая секция — по сути отдельный "подэкран" в дизайне (аккордеон/таб):
-
-- Account settings (аккаунт)
-- Profile details (детали профиля + аватар)
-- Privacy settings (приватность)
-- Server / data privacy settings
-- Playback settings (воспроизведение)
-- Audio settings (аудио-качество)
+- Account settings
+- Profile details and avatar
+- Privacy settings
+- Server and data-privacy settings
+- Playback settings
+- Audio-quality settings
 - Video settings
-- Library display settings (вид библиотеки)
-- Equalizer preview (эквалайзер)
-- Active sessions (активные сессии/устройства)
-- Two-factor settings (2FA)
-- Subscription settings (подписка/план)
+- Library display settings
+- Equalizer preview
+- Active sessions and devices
+- Two-factor authentication
+- Subscription and plan settings
 
----
+## 4. Persistent widgets
 
-## 4. Постоянные виджеты (видны почти на каждом экране `/main/*`)
+These widgets appear on most `/main/*` screens:
 
-- **Header** (публичный, лендинг)
-- **MainHeader** (внутри приложения — поиск, аватар, навигация назад/вперёд)
-- **LeftSidebar** — библиотека:
-  - LibraryHeader, LibraryControls, LibraryTags
-  - LibraryMusicList / LibraryMusic (карточки), LibraryMusicSkeleton (лоадер)
-  - CreatePlaylistMenu, CreateMenuItem, CreatePlaylistActions
-  - MobileCreatePlaylistSheet (мобильный вариант создания плейлиста)
-- **RightSidebar** — контекст трека:
-  - NowPlaying / AboutArtist
-  - Credits
-  - CurrentPlaylist
-  - NextInQueue
-- **Player** (нижняя панель плеера) — самый сложный виджет:
-  - DesktopPlayerBar (десктоп)
-  - MiniPlayer / MiniPlayerControls / MiniPlayerTrackInfo (мобильный компакт)
-  - FloatingPlayerWindow / FloatingPlayerActions / FloatingPlayerProgress (плавающий/full-screen)
-  - NowPlayingView / NowPlayingHero / NowPlayingDetails / NowPlayingFooter (полноэкранный "сейчас играет")
-  - PlayerControls / PlayerActions / PlaybackProgress
-  - TrackInfo / TrackNavigationButton
-- **Footer** (лендинг)
-- **Plans / PremiumFeatures** (страница/блок тарифов)
-- **QRcode** (виджет для мобильного приложения / оплаты)
+- **Header** — public landing header.
+- **MainHeader** — application search, avatar, and back/forward navigation.
+- **LeftSidebar** — library navigation:
+  - `LibraryHeader`, `LibraryControls`, and `LibraryTags`;
+  - `LibraryMusicList`, `LibraryMusic`, and `LibraryMusicSkeleton`;
+  - `CreatePlaylistMenu`, `CreateMenuItem`, and `CreatePlaylistActions`;
+  - `MobileCreatePlaylistSheet` for the mobile playlist flow.
+- **RightSidebar** — current-track context:
+  - `NowPlaying` and `AboutArtist`;
+  - `Credits`;
+  - `CurrentPlaylist`;
+  - `NextInQueue`.
+- **Player** — the most complex persistent widget:
+  - `DesktopPlayerBar`;
+  - `MiniPlayer`, `MiniPlayerControls`, and `MiniPlayerTrackInfo`;
+  - `FloatingPlayerWindow`, `FloatingPlayerActions`, and `FloatingPlayerProgress`;
+  - `NowPlayingView`, `NowPlayingHero`, `NowPlayingDetails`, and `NowPlayingFooter`;
+  - `PlayerControls`, `PlayerActions`, and `PlaybackProgress`;
+  - `TrackInfo` and `TrackNavigationButton`.
+- **Footer** — public landing footer.
+- **Plans / PremiumFeatures** — plan and feature surface.
+- **QRcode** — mobile-app or payment handoff.
 
----
+## 5. Required non-route states
 
-## 5. Состояния, которые редизайн должен покрыть отдельно (не роуты, но обязательные экраны)
+- Empty library and empty playlist.
+- Loading and skeleton states, at minimum for `LibraryMusicList`.
+- Error and offline states; `/offline` already exists as a dedicated route.
+- Mobile layouts. `MiniPlayer` and `MobileCreatePlaylistSheet` are independent compositions,
+  not compressed desktop screens.
+- Dark, light, and dim themes; see the design-system section below.
 
-- Пустая библиотека / пустой плейлист (empty state)
-- Загрузка (skeleton) — как минимум для LibraryMusicList
-- Ошибка / offline (уже есть отдельная страница `/offline`)
-- Мобильная версия (реально самостоятельная раскладка — MiniPlayer, MobileCreatePlaylistSheet и т.д. — не просто "сжатый десктоп")
-- Тёмная / светлая / dim темы — см. раздел 6
+## 6. Design-system scope
 
----
+### Tokens
 
-## 6. Дизайн-система — что нужно определить/зафиксировать
+The current token source lives under `packages/ui-react/src/styles/` and uses handwritten
+Tailwind v4 `@theme` declarations.
 
-### Токены (сейчас `packages/ui-react/src/styles/`, hand-written Tailwind v4 `@theme`)
-- Палитра (`palette.css`) — базовые raw-цвета
-- Семантические роли (`themes/base.css`, `themes/global/*.css`, `themes/components/*.css`)
-- Темы: **dark** (дефолт), **light**, **dim** (низкоконтрастный тёмный)
-- Типографика (`typography.css`)
-- Layout / spacing (`layout.css`)
-- Анимации (`animations.css`)
+- Raw color palette: `palette.css`.
+- Semantic roles: `themes/base.css`, `themes/global/*.css`, and
+  `themes/components/*.css`.
+- Themes: **dark** (default), **light**, and **dim** (low-contrast dark).
+- Typography: `typography.css`.
+- Layout and spacing: `layout.css`.
+- Motion: `animations.css`.
 
-### Компоненты (`packages/ui-react`)
-Нужен полный визуальный аудит существующих примитивов — Button, Input/PasswordInput,
-Avatar, Badge, Card/Item, Table, Select, Switch, Dropdown/Menu, Dialog/Modal, Tooltip,
-Toast, Slider (для прогресса плеера и громкости), Skeleton.
+### Components
 
-### Формы
-- Login form (email + password), с полем 2FA-кода
-- Registration form (email step → password step, чек-лист требований к паролю)
-- Forgot / reset password
-- Profile details (аватар upload, drag&drop)
+Audit the existing `packages/ui-react` primitives: Button, Input, PasswordInput, Avatar, Badge,
+Card, Item, Table, Select, Switch, Dropdown/Menu, Dialog/Modal, Tooltip, Toast, Slider, and
+Skeleton. Progress and volume controls must use the same system.
 
-### Иконография
-- Плеер: play/pause, next/prev, shuffle, repeat (off/all/one), volume, queue, lyrics,
-  fullscreen/mini toggle
-- Библиотека: create playlist, filter/tags, sort
-- Настройки: по секции своя иконка
+### Forms
 
----
+- Login with email, password, and a 2FA-code state.
+- Registration with email and password steps plus a password-requirements checklist.
+- Forgot-password and reset-password flows.
+- Profile details with avatar upload and drag-and-drop states.
 
-## 7. Что нужно решить как продуктовые/UX-вопросы перед стартом редизайна
+### Iconography
 
-1. Остаётся ли разделение "публичный лендинг" vs "модалка логина поверх лендинга", или всё
-   переходит на отдельные страницы `/auth/login` и `/auth/registration`?
-2. Мобильный плеер — три режима (mini / floating / fullscreen NowPlaying) или сокращаем до двух?
-3. `/main/preferences` vs `/main/settings` — это два разных экрана или дубли, которые надо
-   объединить в редизайне?
-4. Тема **dim** — насколько отдельная от dark, или это просто регулировка яркости surface-токенов?
-5. Равноправны ли web-player и web-artists в новой дизайн-системе, или у web-player сейчас
-   приоритет (артист-портал отдельным заходом)?
+- Player: play/pause, next/previous, shuffle, repeat (off/all/one), volume, queue, lyrics, and
+  full-screen/mini toggles.
+- Library: create playlist, filters/tags, and sorting.
+- Settings: a distinct icon for each section.
 
----
+## 7. Product and UX decisions still required
 
-*Файл сгенерирован по факту структуры `apps/web-player/src` на develop.
-Дальше сюда можно добавлять референсы из Pencil-файлов (`pencil/*.pen`) и финальные макеты.*
+1. Keep both a public landing and a login modal, or consolidate authentication on
+   `/auth/login` and `/auth/registration`?
+2. Keep three mobile-player modes (mini, floating, and full-screen Now Playing), or reduce them
+   to two?
+3. Are `/main/preferences` and `/main/settings` distinct products or duplicates to consolidate?
+4. Is **dim** a distinct theme or a brightness adjustment of dark surface tokens?
+5. Do web-player and web-artists have equal design-system priority, or is web-player the current
+   primary product?
+
+This inventory reflects the `apps/web-player/src` structure on `develop`. Add approved Pencil
+references and final mockups here as the redesign progresses.
