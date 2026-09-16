@@ -1,3 +1,4 @@
+export * from './access'
 export * from './artist'
 export * from './audit'
 export * from './moderation'

@@ -1,3 +1,5 @@
+import type { Permission } from '@domain/access'
+
 /**
  * The panel's navigation, as data.
  *
@@ -24,6 +26,8 @@ export type NavLink = {
   path: string
   label: string
   icon: string
+  /** The item is hidden — not merely disabled — when the operator lacks this permission. */
+  permission: Permission
 }
 
 export type NavGroup = {
@@ -57,20 +61,34 @@ export const NAV_SECTIONS: readonly NavSection[] = [
         path: '/moderation',
         label: 'Moderation queue',
         icon: 'lucideFlag',
+        permission: 'reports:read',
       },
       {
         kind: 'link',
         path: '/catalog',
         label: 'Catalog pipeline',
         icon: 'lucideAudioLines',
+        permission: 'tracks:read',
       },
     ],
   },
   {
     label: 'Accounts',
     items: [
-      { kind: 'link', path: '/artists', label: 'Artists', icon: 'lucideMic' },
-      { kind: 'link', path: '/users', label: 'Listeners', icon: 'lucideUsers' },
+      {
+        kind: 'link',
+        path: '/artists',
+        label: 'Artists',
+        icon: 'lucideMic',
+        permission: 'artists:read',
+      },
+      {
+        kind: 'link',
+        path: '/users',
+        label: 'Listeners',
+        icon: 'lucideUsers',
+        permission: 'users:read',
+      },
     ],
   },
   {
@@ -81,6 +99,7 @@ export const NAV_SECTIONS: readonly NavSection[] = [
         path: '/audit',
         label: 'Audit log',
         icon: 'lucideScrollText',
+        permission: 'audit:read',
       },
     ],
   },

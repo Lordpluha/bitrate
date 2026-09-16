@@ -23,7 +23,7 @@
   </a>
 
   <nav class="flex-1 overflow-y-auto overflow-x-hidden px-2 py-3">
-    @for (section of sections; track section.label; let first = $first) {
+    @for (section of sections(); track section.label; let first = $first) {
       <!-- Section caption when there is room for words; a hairline when there is not. A
            caption cannot shrink to an icon, so collapsed mode swaps the device rather than
            truncating it. -->

@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common'
 import { Component, effect, inject, signal } from '@angular/core'
 import { AdvanceReportUseCase, ListReportsUseCase } from '@application/moderation'
+import { SessionStore } from '@application/session'
 import { type ModerationReport, type ModerationStatus } from '@domain/moderation'
 import { CollectionStatus, Paginator } from '@presentation/components'
 import { bindQueryState, createCollection } from '@presentation/state'
@@ -24,6 +25,8 @@ import { MODERATION_STATUSES, moderationQueryCodec } from './moderation.query'
 export class ModerationQueue {
   private readonly listReports = inject(ListReportsUseCase)
   private readonly advanceReport = inject(AdvanceReportUseCase)
+
+  protected readonly canAdvance = inject(SessionStore).can('reports:advance')
 
   protected readonly statuses = MODERATION_STATUSES
   protected readonly query = bindQueryState({ codec: moderationQueryCodec })

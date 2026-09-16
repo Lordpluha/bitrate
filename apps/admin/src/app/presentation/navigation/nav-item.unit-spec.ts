@@ -10,6 +10,7 @@ const link: NavLink = {
   path: '/moderation',
   label: 'Moderation queue',
   icon: 'lucideFlag',
+  permission: 'reports:read',
 }
 
 const group: NavGroup = {
@@ -18,8 +19,20 @@ const group: NavGroup = {
   label: 'Catalog',
   icon: 'lucideAudioLines',
   children: [
-    { kind: 'link', path: '/catalog', label: 'Pipeline', icon: 'lucideAudioLines' },
-    { kind: 'link', path: '/catalog/tracks', label: 'Tracks', icon: 'lucideAudioLines' },
+    {
+      kind: 'link',
+      path: '/catalog',
+      label: 'Pipeline',
+      icon: 'lucideAudioLines',
+      permission: 'tracks:read',
+    },
+    {
+      kind: 'link',
+      path: '/catalog/tracks',
+      label: 'Tracks',
+      icon: 'lucideAudioLines',
+      permission: 'tracks:read',
+    },
   ],
 }
 

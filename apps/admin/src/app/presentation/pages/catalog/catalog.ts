@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common'
 import { Component, computed, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { ListTracksUseCase, ReprocessTrackUseCase } from '@application/catalog'
+import { SessionStore } from '@application/session'
 import {
   isTrackStuck,
   type Track,
@@ -36,6 +37,8 @@ const SEARCH_DEBOUNCE_MS = 300
 export class CatalogPage {
   private readonly listTracks = inject(ListTracksUseCase)
   private readonly reprocessTrack = inject(ReprocessTrackUseCase)
+
+  protected readonly canReprocess = inject(SessionStore).can('tracks:reprocess')
 
   protected readonly statuses = CATALOG_STATUSES
   protected readonly query = bindQueryState({ codec: catalogQueryCodec })

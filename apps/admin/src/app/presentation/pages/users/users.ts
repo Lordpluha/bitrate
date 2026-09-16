@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common'
 import { Component, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
+import { SessionStore } from '@application/session'
 import { DeactivateUserUseCase, ListUsersUseCase } from '@application/users'
 import type { User } from '@domain/user'
 import { CollectionStatus, Paginator } from '@presentation/components'
@@ -31,6 +32,8 @@ const SEARCH_DEBOUNCE_MS = 300
 export class UsersPage {
   private readonly listUsers = inject(ListUsersUseCase)
   private readonly deactivateUser = inject(DeactivateUserUseCase)
+
+  protected readonly canDelete = inject(SessionStore).can('users:delete')
 
   protected readonly query = bindQueryState({ codec: usersQueryCodec })
   protected readonly draft = signal(this.query.state().query)
