@@ -15,8 +15,8 @@
       id="user-search"
       type="search"
       placeholder="Username or email"
-      [value]="query()"
-      (input)="query.set($any($event.target).value)"
+      [value]="draft()"
+      (input)="draft.set($any($event.target).value)"
     />
     <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
   </form>
@@ -90,7 +90,7 @@
       [pageCount]="collection.pageCount()"
       [total]="collection.total()"
       [disabled]="collection.loading()"
-      (goTo)="collection.goTo($event)"
+      (goTo)="goToPage($event)"
     />
   }
 </section>

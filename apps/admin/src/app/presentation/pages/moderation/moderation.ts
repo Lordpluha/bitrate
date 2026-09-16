@@ -1,16 +1,13 @@
 import { DatePipe } from '@angular/common'
-import { Component, inject, signal } from '@angular/core'
+import { Component, effect, inject, signal } from '@angular/core'
 import { AdvanceReportUseCase, ListReportsUseCase } from '@application/moderation'
 import { type ModerationReport, type ModerationStatus } from '@domain/moderation'
-import { coveringTuple } from '@domain/shared'
 import { CollectionStatus, Paginator } from '@presentation/components'
-import { createCollection } from '@presentation/state'
+import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-
-/** Every status is filterable, and `coveringTuple` is what keeps that true as the union grows. */
-const FILTERS = coveringTuple<ModerationStatus>()(['OPEN', 'REVIEWING', 'RESOLVED', 'REJECTED'])
+import { MODERATION_STATUSES, moderationQueryCodec } from './moderation.query'
 
 @Component({
   selector: 'app-moderation',
@@ -28,24 +25,32 @@ export class ModerationQueue {
   private readonly listReports = inject(ListReportsUseCase)
   private readonly advanceReport = inject(AdvanceReportUseCase)
 
-  protected readonly statuses = FILTERS
-  /** Opens first: the queue exists to be emptied, not browsed. */
-  protected readonly filter = signal<ModerationStatus | null>('OPEN')
+  protected readonly statuses = MODERATION_STATUSES
+  protected readonly query = bindQueryState({ codec: moderationQueryCodec })
   protected readonly busyId = signal<string | null>(null)
 
   protected readonly collection = createCollection<ModerationReport>({
     errorMessage: 'Could not load the moderation queue.',
     load: (page) =>
-      this.listReports.execute({ page, filter: { status: this.filter() ?? undefined } }),
+      this.listReports.execute({
+        page,
+        filter: { status: this.query.state().status ?? undefined },
+      }),
   })
 
   constructor() {
-    void this.collection.restart()
+    effect(() => {
+      const { page } = this.query.state()
+      void this.collection.show(page)
+    })
   }
 
-  protected async setFilter(status: ModerationStatus | null): Promise<void> {
-    this.filter.set(status)
-    await this.collection.restart()
+  protected setFilter(status: ModerationStatus | null): void {
+    this.query.patch({ status, page: 1 })
+  }
+
+  protected goToPage(page: number): void {
+    this.query.patch({ page })
   }
 
   protected async advance(report: ModerationReport, status: ModerationStatus): Promise<void> {

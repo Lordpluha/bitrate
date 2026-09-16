@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common'
-import { Component, inject, signal } from '@angular/core'
+import { Component, effect, inject, signal } from '@angular/core'
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import {
   DeactivateArtistUseCase,
   ListArtistsUseCase,
@@ -7,13 +8,16 @@ import {
 } from '@application/artists'
 import type { Artist } from '@domain/artist'
 import { CollectionStatus, Paginator } from '@presentation/components'
-import { createCollection } from '@presentation/state'
+import { bindQueryState, createCollection, type TriState } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
 import { HlmTableImports } from '@spartan-ng/helm/table'
+import { debounceTime, skip } from 'rxjs'
+import { artistsQueryCodec } from './artists.query'
 
-type VerifiedFilter = 'all' | 'verified' | 'unverified'
+/** How long to wait after the last keystroke before a text filter reaches the URL. */
+const SEARCH_DEBOUNCE_MS = 300
 
 @Component({
   selector: 'app-artists',
@@ -33,8 +37,8 @@ export class ArtistsPage {
   private readonly toggleVerificationUseCase = inject(ToggleArtistVerificationUseCase)
   private readonly deactivateArtist = inject(DeactivateArtistUseCase)
 
-  protected readonly query = signal('')
-  protected readonly verified = signal<VerifiedFilter>('all')
+  protected readonly query = bindQueryState({ codec: artistsQueryCodec })
+  protected readonly draft = signal(this.query.state().query)
   protected readonly busyId = signal<string | null>(null)
 
   protected readonly collection = createCollection<Artist>({
@@ -43,23 +47,42 @@ export class ArtistsPage {
       this.listArtists.execute({
         page,
         filter: {
-          query: this.query() || undefined,
-          verified: this.verified() === 'all' ? undefined : this.verified() === 'verified',
+          query: this.query.state().query || undefined,
+          verified:
+            this.query.state().verified === 'all'
+              ? undefined
+              : this.query.state().verified === 'verified',
         },
       }),
   })
 
   constructor() {
-    void this.collection.restart()
+    effect(() => {
+      const { page } = this.query.state()
+      void this.collection.show(page)
+    })
+
+    /** Keeps the box in sync with the URL, e.g. after back/forward changes the filter. */
+    effect(() => {
+      const { query: urlQuery } = this.query.state()
+      this.draft.set(urlQuery)
+    })
+
+    toObservable(this.draft)
+      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), skip(1), takeUntilDestroyed())
+      .subscribe((value) => this.query.patch({ query: value, page: 1 }, { replaceUrl: true }))
   }
 
-  protected async applyFilters(): Promise<void> {
-    await this.collection.restart()
+  protected applyFilters(): void {
+    this.query.patch({ query: this.draft(), page: 1 })
   }
 
-  protected async setVerifiedFilter(value: VerifiedFilter): Promise<void> {
-    this.verified.set(value)
-    await this.collection.restart()
+  protected setVerifiedFilter(value: TriState): void {
+    this.query.patch({ verified: value, page: 1 })
+  }
+
+  protected goToPage(page: number): void {
+    this.query.patch({ page })
   }
 
   protected async toggleVerification(artist: Artist): Promise<void> {
