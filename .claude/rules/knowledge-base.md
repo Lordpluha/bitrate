@@ -85,10 +85,11 @@ gh pr list --search "linked:<number>" --json number,title,state,url
 per-developer `gh auth refresh -s read:project,project`, not something the agent layer can
 grant itself.
 
-Only `/br-create-task`, `/br-implement`, and `/br-auto` mutate GitHub state (issue
-create/edit, board card moves, comments, PR create/edit), and only after explicit user
-confirmation for each mutating action — a prior approval never carries over to a later
-mutation in the same conversation. `/br-auto` is the one exception to per-action prompting:
+Only `/br-create-task`, `/br-implement`, `/br-auto`, and the `br-manager` agent mutate GitHub
+state (issue create/edit, board card moves, comments, PR create/edit), and only after explicit
+user confirmation for each mutating action — a prior approval never carries over to a later
+mutation in the same conversation. `br-manager` is interactive only and refuses to run under
+`/br-auto`; see [ADR-0037](../../apps/docs/docs/architecture/0037-br-manager-owns-tracker-state.md). `/br-auto` is the one exception to per-action prompting:
 starting it is the approval for the whole unattended cycle it describes. Its gate is the
 board's `Todo` column rather than the agent's judgement, so what a human puts in `Todo` is
 what the pipeline may take — bound the run with `--limit` and preview it with `--dry-run`.

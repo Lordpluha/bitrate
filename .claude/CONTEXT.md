@@ -51,15 +51,21 @@ are working in that technology. Rules say what this project requires; skills say
 technology works. *Avoid*: guide, playbook, helper.
 
 **Command** — a file under `.claude/commands/`, invoked by a human as `/br-<name>`. A command
-owns confirmation and every GitHub mutation; it dispatches the work to an agent.
+owns confirmation and its own GitHub mutations; it dispatches the work to an agent. The one
+agent that also mutates GitHub is **`br-manager`**, under the same per-action confirmation.
 
 **Agent** / **specialist** — a file under `.claude/agents/`, dispatched via the Agent tool.
-Pins its own model and effort. *Specialist* is the collective noun for the eleven agents that
-own one stage or one app. `br-worker` is the **orchestrator**: the one agent that dispatches
-other agents. *Avoid*: subagent (except when naming the tool parameter), bot.
+Pins its own model and effort. *Specialist* is the collective noun for the agents that own one
+stage or one app. `br-worker` is the **orchestrator**: the agent that dispatches other agents to
+build a task. `br-manager` dispatches `br-planner` too, but only to shape issues — it never
+orchestrates a task. *Avoid*: subagent (except when naming the tool parameter), bot.
 
 **Worker** — `br-worker` specifically, and only that. Not a generic word for an agent doing
 work.
+
+**Manager** — `br-manager` specifically: the tracker coordinator that owns whether a task has an
+issue, whether its PR is linked to that issue, and whether the card sits in the right column.
+It never judges code. Not a generic word for anyone coordinating work.
 
 **Mechanical pass** — `lint`, `check-types`, and (when files, exports, or dependencies
 changed) `knip`. "Green" means all of them exited zero. *Avoid*: the checks, CI stuff.
