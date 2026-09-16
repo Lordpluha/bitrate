@@ -40,17 +40,6 @@ services:
     networks:
       - bitrate-network
 
-  # Local SMTP capture. No real email leaves the development stack.
-  mailhog:
-    image: mailhog/mailhog:v1.0.1
-    container_name: bitrate-mailhog
-    restart: unless-stopped
-    ports:
-      - "${MAILHOG_SMTP_PORT:-1025}:1025"
-      - "${MAILHOG_UI_PORT:-8025}:8025"
-    networks:
-      - bitrate-network
-
   # Backend API (NestJS)
   api:
     build:
@@ -67,8 +56,9 @@ services:
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
       WEB_HOST: ${WEB_HOST:-http://localhost:3001}
-      SMTP_HOST: mailhog
-      SMTP_PORT: 1025
+      # No SMTP host, on purpose: MailService builds no transporter without one and logs the
+      # verification/reset link instead. Point SMTP_HOST at a real server to send for real.
+      DEV_MAIL_LOG_TOKENS: "true"
       EMAIL_FROM: no-reply@bitrate.local
       JWT_SECRET: ${JWT_SECRET:-change_me_in_production_secret}
       PORT: 3000
@@ -86,8 +76,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      mailhog:
-        condition: service_started
     networks:
       - bitrate-network
     command: pnpm --filter @bitrate/api run start:dev
