@@ -3128,6 +3128,47 @@ export interface components {
       /** @description Whether this permission is grantable only to the built-in `ADMIN` role by identity. */
       protected: boolean
     }
+    CreateRoleDto: {
+      name: string
+      description?: string
+      /** @default [] */
+      permissions: (
+        | 'reports:read'
+        | 'reports:advance'
+        | 'artists:read'
+        | 'artists:verify'
+        | 'artists:delete'
+        | 'tracks:read'
+        | 'tracks:reprocess'
+        | 'users:read'
+        | 'users:delete'
+        | 'audit:read'
+        | 'staff:read'
+        | 'staff:write'
+        | 'roles:read'
+        | 'roles:write'
+      )[]
+    }
+    UpdateRoleDto: {
+      name?: string
+      description?: string | null
+      permissions?: (
+        | 'reports:read'
+        | 'reports:advance'
+        | 'artists:read'
+        | 'artists:verify'
+        | 'artists:delete'
+        | 'tracks:read'
+        | 'tracks:reprocess'
+        | 'users:read'
+        | 'users:delete'
+        | 'audit:read'
+        | 'staff:read'
+        | 'staff:write'
+        | 'roles:read'
+        | 'roles:write'
+      )[]
+    }
     AdminStaffRoleEntity: {
       /** @description The id value. */
       id: string
@@ -3214,6 +3255,68 @@ export interface components {
       page: number
       /** @description The page size. */
       limit: number
+    }
+    CreateStaffDto: {
+      /** Format: email */
+      email: string
+      username: string
+      password: string
+      /** Format: uuid */
+      roleId: string
+      permissions?: (
+        | 'reports:read'
+        | 'reports:advance'
+        | 'artists:read'
+        | 'artists:verify'
+        | 'artists:delete'
+        | 'tracks:read'
+        | 'tracks:reprocess'
+        | 'users:read'
+        | 'users:delete'
+        | 'audit:read'
+        | 'staff:read'
+        | 'staff:write'
+        | 'roles:read'
+        | 'roles:write'
+      )[]
+    }
+    AssignStaffRoleDto: {
+      /** Format: uuid */
+      roleId: string
+      permissions?: (
+        | 'reports:read'
+        | 'reports:advance'
+        | 'artists:read'
+        | 'artists:verify'
+        | 'artists:delete'
+        | 'tracks:read'
+        | 'tracks:reprocess'
+        | 'users:read'
+        | 'users:delete'
+        | 'audit:read'
+        | 'staff:read'
+        | 'staff:write'
+        | 'roles:read'
+        | 'roles:write'
+      )[]
+    }
+    UpdateStaffPermissionsDto: {
+      permissions: (
+        | 'reports:read'
+        | 'reports:advance'
+        | 'artists:read'
+        | 'artists:verify'
+        | 'artists:delete'
+        | 'tracks:read'
+        | 'tracks:reprocess'
+        | 'users:read'
+        | 'users:delete'
+        | 'audit:read'
+        | 'staff:read'
+        | 'staff:write'
+        | 'roles:read'
+        | 'roles:write'
+      )[]
     }
   }
   responses: never
@@ -20747,7 +20850,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Function']
+        'application/json': components['schemas']['CreateRoleDto']
       }
     }
     responses: {
@@ -21340,7 +21443,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Function']
+        'application/json': components['schemas']['UpdateRoleDto']
       }
     }
     responses: {
@@ -21639,7 +21742,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Function']
+        'application/json': components['schemas']['CreateStaffDto']
       }
     }
     responses: {
@@ -22097,7 +22200,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Function']
+        'application/json': components['schemas']['AssignStaffRoleDto']
       }
     }
     responses: {
@@ -22260,7 +22363,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Function']
+        'application/json': components['schemas']['UpdateStaffPermissionsDto']
       }
     }
     responses: {
