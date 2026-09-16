@@ -3,6 +3,8 @@ import { Module } from '@nestjs/common'
 import { AdminArtistsModule } from './artists'
 import { AdminAuditModule } from './audit'
 import { AdminModerationModule } from './moderation'
+import { AdminRolesModule } from './roles'
+import { AdminStaffModule } from './staff'
 import { AdminTracksModule } from './tracks'
 import { AdminUsersModule } from './users'
 
@@ -15,6 +17,8 @@ import { AdminUsersModule } from './users'
     AdminUsersModule,
     AdminTracksModule,
     AdminAuditModule,
+    AdminRolesModule,
+    AdminStaffModule,
   ],
 })
 export class AdminModule {}
