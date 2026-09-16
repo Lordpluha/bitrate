@@ -16,6 +16,18 @@ const createJwtPayload = (overrides: { sub?: string; username?: string } = {}) =
   username: overrides.username ?? 'user',
 })
 
+/** The lockout window the service applies once the attempt threshold is reached. */
+const LOCK_DURATION_MS = 15 * 60 * 1000
+
+/** The attempt count at which an account is locked. */
+const MAX_LOGIN_ATTEMPTS = 5
+
+/** The row shape `recordFailedLogin` reads back after incrementing the counter. */
+type AttemptResult = {
+  failedLoginAttempts: number
+  lockedUntil: Date | null
+}
+
 describe('UserAuthService', () => {
   let service: UserAuthService
   let prisma: PrismaMock
@@ -43,6 +55,18 @@ describe('UserAuthService', () => {
 
     service = new UserAuthService(users, usersPrivate, jwt, prisma, token, mail)
   })
+
+  /** Stands in for the atomic increment, which returns the row's new counter value. */
+  const mockAttemptResult = (result: AttemptResult | null) => {
+    prisma.user.updateManyAndReturn.mockResolvedValue((result ? [result] : []) as never)
+  }
+
+  /** The deadline the service wrote, for an instant-level assertion. */
+  const writtenLockedUntil = (): Date | null => {
+    const call = prisma.user.updateMany.mock.calls.at(-1)?.[0]
+    const data = call?.data as { lockedUntil?: Date | null } | undefined
+    return data?.lockedUntil ?? null
+  }
 
   describe('registerUser', () => {
     it('should throw on existing email', async () => {
@@ -85,6 +109,7 @@ describe('UserAuthService', () => {
 
     it('should reject when user has no password (OAuth account)', async () => {
       usersPrivate.getByEmail.mockResolvedValue(buildUser({ password: null }))
+      mockAttemptResult({ failedLoginAttempts: 1, lockedUntil: null })
 
       await expect(service.loginUser('user@example.com', 'any')).rejects.toThrow(
         'Invalid credentials',
@@ -94,12 +119,12 @@ describe('UserAuthService', () => {
     it('should reject when password is invalid', async () => {
       usersPrivate.getByEmail.mockResolvedValue(buildUser({ password: 'hash' }))
       token.verifyPassword.mockResolvedValue(false)
-      prisma.executeRaw.mockResolvedValue(1)
+      mockAttemptResult({ failedLoginAttempts: 1, lockedUntil: null })
 
       await expect(service.loginUser('user@example.com', 'bad-pass')).rejects.toThrow(
         'Invalid credentials',
       )
-      expect(prisma.executeRaw).toHaveBeenCalledTimes(1)
+      expect(prisma.user.updateManyAndReturn).toHaveBeenCalledTimes(1)
       expect(prisma.user.update).not.toHaveBeenCalled()
     })
 
@@ -280,6 +305,70 @@ describe('UserAuthService', () => {
 
       expect(token.generateAccessToken).toHaveBeenCalledWith(user.id, user.username, 'user')
       expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
+    })
+  })
+  describe('failed login lockout', () => {
+    const failLogin = async () => {
+      usersPrivate.getByEmail.mockResolvedValue(buildUser({ id: 'user-1', password: 'hash' }))
+      token.verifyPassword.mockResolvedValue(false)
+      await expect(service.loginUser('user@example.com', 'bad-pass')).rejects.toThrow(
+        'Invalid credentials',
+      )
+    }
+
+    it('increments the attempt counter on every failure', async () => {
+      mockAttemptResult({ failedLoginAttempts: 1, lockedUntil: null })
+
+      await failLogin()
+
+      expect(prisma.user.updateManyAndReturn).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { failedLoginAttempts: { increment: 1 } },
+        select: { failedLoginAttempts: true, lockedUntil: true },
+      })
+    })
+
+    it('does not lock the account below the threshold', async () => {
+      mockAttemptResult({ failedLoginAttempts: MAX_LOGIN_ATTEMPTS - 1, lockedUntil: null })
+
+      await failLogin()
+
+      expect(prisma.user.updateMany).not.toHaveBeenCalled()
+    })
+
+    it('clears a stale lock while the count is below the threshold', async () => {
+      mockAttemptResult({ failedLoginAttempts: 1, lockedUntil: new Date() })
+
+      await failLogin()
+
+      expect(prisma.user.updateMany).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { lockedUntil: null },
+      })
+    })
+
+    it('locks the account for the lock duration once the threshold is reached', async () => {
+      mockAttemptResult({ failedLoginAttempts: MAX_LOGIN_ATTEMPTS, lockedUntil: null })
+      const before = Date.now()
+
+      await failLogin()
+
+      const lockedUntil = writtenLockedUntil()
+      expect(lockedUntil).toBeInstanceOf(Date)
+      /**
+       * The deadline is a real instant, not a wall-clock value that a timezone-dropping
+       * cast would have shifted. `loginUser` compares it against `new Date()`.
+       */
+      expect((lockedUntil as Date).getTime()).toBeGreaterThanOrEqual(before + LOCK_DURATION_MS)
+      expect((lockedUntil as Date).getTime()).toBeLessThanOrEqual(Date.now() + LOCK_DURATION_MS)
+    })
+
+    it('is a no-op when the account disappeared mid-request', async () => {
+      mockAttemptResult(null)
+
+      await failLogin()
+
+      expect(prisma.user.updateMany).not.toHaveBeenCalled()
     })
   })
 })
