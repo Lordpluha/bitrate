@@ -135,23 +135,28 @@ round-trip is pure overhead.
 | `/br-auto [--limit N] [--issue NNN] [--dry-run] [--recover-only]` | Unattended pipeline: poll the board's `Todo` column and drive each issue end to end — worktree, `br-worker`, commit, push, PR, board move, issue comment — with crash recovery. |
 | `/br-sync-docs [path] [--session]` | Find and (with confirmation) fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Dispatches discovery to `br-librarian`. Run periodically — see `.claude/rules/monorepo.md` § "Documentation ownership". |
 
-Eleven named specialists live under `.claude/agents/`. Four implementation agents split by
+Twelve named agents live under `.claude/agents/`. Four implementation agents split by
 app — `br-frontend-developer` (web-player, web-artists, ui-react), `br-backend-developer`
 (api), `br-mobile-developer`, `br-desktop-developer` — plus
 `br-planner`, `br-debugger`, `br-tester`, `br-reviewer` (dispatched by `/br-implement`),
 `br-devops` (CI/CD, Docker, infra, release tooling), `br-worker` (the orchestrator: owns a
 task 0→100%, delegates each stage to the agent that owns it, verifies the result itself
 rather than trusting reports, and reports back to the developer — interactively, or
-unattended under `/br-auto`), and `br-librarian` (read-only documentation-order discovery
-for `/br-sync-docs`).
+unattended under `/br-auto`), `br-manager` (the tracker coordinator beside `br-worker`: checks
+that a task has an issue before work starts and asks the developer when it does not, creates
+issues through `/br-create-task`, opens and links PRs, and keeps board cards true —
+interactive only), and `br-librarian` (read-only documentation-order discovery for
+`/br-sync-docs`).
 
 Every command and every specialist has access to any skill under `.claude/skills/` (not a
-restricted subset) — pick whichever the task calls for. `/br-create-task`, `/br-implement`
-and `/br-auto` mutate GitHub state (issues, board cards, comments, PRs) only after explicit
-confirmation for each action, executed at the command level (specialists never mutate GitHub
-or push/open a PR themselves; `br-worker` commits and pushes its own branch only, and the
-`/br-auto` dispatcher owns every outward-facing action) — a prior approval doesn't carry over
-to a later action in the same conversation. Ticket/board state itself is never mirrored to a
+restricted subset) — pick whichever the task calls for. `/br-create-task`, `/br-implement`,
+`/br-auto` and the `br-manager` agent mutate GitHub state (issues, board cards, comments, PRs)
+only after explicit confirmation for each action. `br-manager` is the one agent allowed to
+mutate GitHub, and only interactively; every other specialist never mutates GitHub or
+pushes/opens a PR itself, `br-worker` commits and pushes its own branch only, and under
+`/br-auto` the dispatcher owns every outward-facing action — see
+[ADR-0037](apps/docs/docs/architecture/0037-br-manager-owns-tracker-state.md). A prior approval
+doesn't carry over to a later action in the same conversation. Ticket/board state itself is never mirrored to a
 file — it's queried live via `gh`/MCP whenever it's needed (see
 `.claude/rules/knowledge-base.md` and
 [ADR-0016](apps/docs/docs/architecture/0016-live-github-queries.md)).
@@ -196,7 +201,7 @@ the strongest reasoning tier:
 |---|---|---|
 | Planning | Fable | low |
 | Development / implementation, documentation discovery | Sonnet | medium |
-| Debugging, testing, review, DevOps, orchestration (`br-worker`) | Opus | high |
+| Debugging, testing, review, DevOps, orchestration (`br-worker`), tracker coordination (`br-manager`) | Opus | high |
 
 All twelve specialists pin their model and effort in their own agent frontmatter (see
 `.claude/README.md`) — dispatching one always runs it on its assigned tier, not a
