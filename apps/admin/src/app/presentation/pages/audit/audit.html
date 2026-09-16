@@ -15,8 +15,8 @@
       id="audit-entity"
       type="search"
       placeholder="Entity type, e.g. Track"
-      [value]="entityType()"
-      (input)="entityType.set($any($event.target).value)"
+      [value]="draft()"
+      (input)="draft.set($any($event.target).value)"
     />
     <button hlmBtn size="sm" variant="outline" type="submit">Filter</button>
   </form>
@@ -75,7 +75,7 @@
       [pageCount]="collection.pageCount()"
       [total]="collection.total()"
       [disabled]="collection.loading()"
-      (goTo)="collection.goTo($event)"
+      (goTo)="goToPage($event)"
     />
   }
 </section>

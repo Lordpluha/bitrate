@@ -12,7 +12,7 @@
       hlmBtn
       size="sm"
       type="button"
-      [variant]="filter() === null ? 'default' : 'outline'"
+      [variant]="query.state().status === null ? 'default' : 'outline'"
       (click)="setFilter(null)"
     >
       All
@@ -22,7 +22,7 @@
         hlmBtn
         size="sm"
         type="button"
-        [variant]="filter() === status ? 'default' : 'outline'"
+        [variant]="query.state().status === status ? 'default' : 'outline'"
         (click)="setFilter(status)"
       >
         {{ status }}
@@ -134,7 +134,7 @@
       [pageCount]="collection.pageCount()"
       [total]="collection.total()"
       [disabled]="collection.loading()"
-      (goTo)="collection.goTo($event)"
+      (goTo)="goToPage($event)"
     />
   }
 </section>

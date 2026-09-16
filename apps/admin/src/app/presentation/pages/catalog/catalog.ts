@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common'
-import { Component, computed, inject, signal } from '@angular/core'
+import { Component, computed, effect, inject, signal } from '@angular/core'
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { ListTracksUseCase, ReprocessTrackUseCase } from '@application/catalog'
-import { coveringTuple } from '@domain/shared'
 import {
   isTrackStuck,
   type Track,
@@ -9,14 +9,16 @@ import {
   type TrackProcessingStatus,
 } from '@domain/track'
 import { CollectionStatus, Paginator } from '@presentation/components'
-import { createCollection } from '@presentation/state'
+import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
 import { HlmTableImports } from '@spartan-ng/helm/table'
+import { debounceTime, skip } from 'rxjs'
+import { CATALOG_STATUSES, catalogQueryCodec } from './catalog.query'
 
-/** Problem-first, which is not the union's order — `coveringTuple` only requires it be covered. */
-const STATUSES = coveringTuple<TrackProcessingStatus>()(['FAILED', 'PROCESSING', 'READY'])
+/** How long to wait after the last keystroke before a text filter reaches the URL. */
+const SEARCH_DEBOUNCE_MS = 300
 
 @Component({
   selector: 'app-catalog',
@@ -35,9 +37,9 @@ export class CatalogPage {
   private readonly listTracks = inject(ListTracksUseCase)
   private readonly reprocessTrack = inject(ReprocessTrackUseCase)
 
-  protected readonly statuses = STATUSES
-  protected readonly query = signal('')
-  protected readonly status = signal<TrackProcessingStatus | null>(null)
+  protected readonly statuses = CATALOG_STATUSES
+  protected readonly query = bindQueryState({ codec: catalogQueryCodec })
+  protected readonly draft = signal(this.query.state().query)
   protected readonly busyId = signal<string | null>(null)
 
   protected readonly collection = createCollection<Track>({
@@ -46,8 +48,8 @@ export class CatalogPage {
       this.listTracks.execute({
         page,
         filter: {
-          query: this.query() || undefined,
-          processingStatus: this.status() ?? undefined,
+          query: this.query.state().query || undefined,
+          processingStatus: this.query.state().status ?? undefined,
         },
       }),
   })
@@ -58,20 +60,36 @@ export class CatalogPage {
   )
 
   constructor() {
-    void this.collection.restart()
+    effect(() => {
+      const { page } = this.query.state()
+      void this.collection.show(page)
+    })
+
+    /** Keeps the box in sync with the URL, e.g. after back/forward changes the filter. */
+    effect(() => {
+      const { query: urlQuery } = this.query.state()
+      this.draft.set(urlQuery)
+    })
+
+    toObservable(this.draft)
+      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), skip(1), takeUntilDestroyed())
+      .subscribe((value) => this.query.patch({ query: value, page: 1 }, { replaceUrl: true }))
   }
 
   protected isStuck(track: Track): boolean {
     return isTrackStuck({ track })
   }
 
-  protected async setStatus(next: TrackProcessingStatus | null): Promise<void> {
-    this.status.set(next)
-    await this.collection.restart()
+  protected setStatus(next: TrackProcessingStatus | null): void {
+    this.query.patch({ status: next, page: 1 })
   }
 
-  protected async applyFilters(): Promise<void> {
-    await this.collection.restart()
+  protected applyFilters(): void {
+    this.query.patch({ query: this.draft(), page: 1 })
+  }
+
+  protected goToPage(page: number): void {
+    this.query.patch({ page })
   }
 
   protected async reprocess(track: Track): Promise<void> {

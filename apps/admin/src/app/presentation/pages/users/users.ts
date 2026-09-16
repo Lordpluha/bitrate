@@ -1,13 +1,19 @@
 import { DatePipe } from '@angular/common'
-import { Component, inject, signal } from '@angular/core'
+import { Component, effect, inject, signal } from '@angular/core'
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { DeactivateUserUseCase, ListUsersUseCase } from '@application/users'
 import type { User } from '@domain/user'
 import { CollectionStatus, Paginator } from '@presentation/components'
-import { createCollection } from '@presentation/state'
+import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
 import { HlmTableImports } from '@spartan-ng/helm/table'
+import { debounceTime, skip } from 'rxjs'
+import { usersQueryCodec } from './users.query'
+
+/** How long to wait after the last keystroke before a text filter reaches the URL. */
+const SEARCH_DEBOUNCE_MS = 300
 
 @Component({
   selector: 'app-users',
@@ -26,20 +32,39 @@ export class UsersPage {
   private readonly listUsers = inject(ListUsersUseCase)
   private readonly deactivateUser = inject(DeactivateUserUseCase)
 
-  protected readonly query = signal('')
+  protected readonly query = bindQueryState({ codec: usersQueryCodec })
+  protected readonly draft = signal(this.query.state().query)
   protected readonly busyId = signal<string | null>(null)
 
   protected readonly collection = createCollection<User>({
     errorMessage: 'Could not load users.',
-    load: (page) => this.listUsers.execute({ page, filter: { query: this.query() || undefined } }),
+    load: (page) =>
+      this.listUsers.execute({ page, filter: { query: this.query.state().query || undefined } }),
   })
 
   constructor() {
-    void this.collection.restart()
+    effect(() => {
+      const { page } = this.query.state()
+      void this.collection.show(page)
+    })
+
+    /** Keeps the box in sync with the URL, e.g. after back/forward changes the filter. */
+    effect(() => {
+      const { query: urlQuery } = this.query.state()
+      this.draft.set(urlQuery)
+    })
+
+    toObservable(this.draft)
+      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), skip(1), takeUntilDestroyed())
+      .subscribe((value) => this.query.patch({ query: value, page: 1 }, { replaceUrl: true }))
   }
 
-  protected async applyFilters(): Promise<void> {
-    await this.collection.restart()
+  protected applyFilters(): void {
+    this.query.patch({ query: this.draft(), page: 1 })
+  }
+
+  protected goToPage(page: number): void {
+    this.query.patch({ page })
   }
 
   protected async remove(user: User): Promise<void> {

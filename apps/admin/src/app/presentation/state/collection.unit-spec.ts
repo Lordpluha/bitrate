@@ -141,6 +141,68 @@ describe('createCollection', () => {
     })
   })
 
+  describe('stale responses', () => {
+    it('discards a slower response that resolves after a newer request already applied', async () => {
+      const deferred: { resolve: (value: Page<Row>) => void }[] = []
+      const load = vi.fn(
+        (requested: number) =>
+          new Promise<Page<Row>>((resolve) => {
+            deferred.push({ resolve })
+          }).then((result) => ({ ...result, page: requested })),
+      )
+      const collection = createCollection<Row>({ load, errorMessage: 'nope' })
+
+      const first = collection.show(1)
+      const second = collection.show(2)
+
+      /** The newer request (page 2) resolves first; the older one (page 1) lands after it. */
+      deferred[1]?.resolve(page({ items: [{ id: 'b' }], total: 2, page: 2 }))
+      await second
+      deferred[0]?.resolve(page({ items: [{ id: 'a' }], total: 1, page: 1 }))
+      await first
+
+      expect(collection.page()).toBe(2)
+      expect(collection.items()).toEqual([{ id: 'b' }])
+    })
+
+    it('discards a slower failure that rejects after a newer request already succeeded', async () => {
+      const deferred: { resolve?: (value: Page<Row>) => void; reject?: () => void }[] = []
+      const load = vi.fn(
+        () =>
+          new Promise<Page<Row>>((resolve, reject) => {
+            deferred.push({ resolve, reject })
+          }),
+      )
+      const collection = createCollection<Row>({ load, errorMessage: 'stale failure' })
+
+      const first = collection.show(1)
+      const second = collection.show(2)
+
+      deferred[1]?.resolve?.(page({ items: [{ id: 'b' }], total: 2, page: 2 }))
+      await second
+      deferred[0]?.reject?.()
+      await first
+
+      expect(collection.failure()).toBeNull()
+      expect(collection.items()).toEqual([{ id: 'b' }])
+      expect(collection.loading()).toBe(false)
+    })
+  })
+
+  describe('show', () => {
+    it('fetches a deep-linked page even before pageCount has grown past 1', async () => {
+      const load = vi.fn(async (requested: number) =>
+        page({ total: 45, page: requested, limit: 15 }),
+      )
+      const collection = createCollection<Row>({ load, errorMessage: 'nope' })
+
+      await collection.show(3)
+
+      expect(load).toHaveBeenCalledWith(3)
+      expect(collection.page()).toBe(3)
+    })
+  })
+
   it('lets a caller report a failure that did not come from loading', async () => {
     const collection = createCollection<Row>({ load: async () => page(), errorMessage: 'nope' })
     await collection.restart()

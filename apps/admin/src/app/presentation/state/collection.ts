@@ -21,6 +21,12 @@ export type Collection<TItem> = {
   goTo: (page: number) => Promise<void>
   /** Re-fetches from page one — use when a filter changes. */
   restart: () => Promise<void>
+  /**
+   * Fetches `page` unconditionally — no range check against `pageCount`, which is 1 before the
+   * first load and would otherwise silently drop a deep link to e.g. `?page=3`. The URL-driven
+   * load path uses this; `goTo` stays range-checked for in-page paginator clicks.
+   */
+  show: (page: number) => Promise<void>
   /** Replaces the failure message, e.g. when a mutation rather than a load failed. */
   fail: (message: string | null) => void
 }
@@ -49,21 +55,31 @@ export function createCollection<TItem>({
 
   const pageCount = computed(() => countPages({ total: total(), limit: limit() }))
 
+  /**
+   * Bumped on every call and captured per in-flight request, so a response that lands after a
+   * newer one was already issued — debounced typing, back/forward spam — is discarded instead
+   * of overwriting what the newer request already applied.
+   */
+  let requestId = 0
+
   async function fetchPage(next: number): Promise<void> {
+    const id = ++requestId
     loading.set(true)
     failure.set(null)
     try {
       const result = await load(next)
+      if (id !== requestId) return
       items.set(result.items)
       total.set(result.total)
       page.set(result.page)
       limit.set(result.limit)
     } catch {
+      if (id !== requestId) return
       failure.set(errorMessage)
       items.set([])
       total.set(0)
     } finally {
-      loading.set(false)
+      if (id === requestId) loading.set(false)
     }
   }
 
@@ -80,6 +96,7 @@ export function createCollection<TItem>({
       if (next < 1 || next > pageCount() || next === page()) return Promise.resolve()
       return fetchPage(next)
     },
+    show: (next: number) => fetchPage(next),
     fail: (message: string | null) => failure.set(message),
   }
 }
