@@ -1,4 +1,5 @@
-import { computed, Injectable, signal } from '@angular/core'
+import { computed, Injectable, type Signal, signal } from '@angular/core'
+import { hasPermission, type Permission } from '@domain/access'
 import type { Staff } from '@domain/staff'
 
 /**
@@ -17,5 +18,13 @@ export class SessionStore {
 
   set(staff: Staff | null): void {
     this.staff.set(staff)
+  }
+
+  /**
+   * Whether the signed-in operator may see/do something gated by `permission`. Cosmetic only —
+   * see `hasPermission`'s own doc for why. Signed out is always `false`.
+   */
+  can(permission: Permission): Signal<boolean> {
+    return computed(() => hasPermission({ staff: this.staff(), permission }))
   }
 }

@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucidePanelLeft } from '@ng-icons/lucide'
+import { SessionStore } from '@application/session'
+import { hasPermission } from '@domain/access'
 import { AppNavItem } from './nav-item'
-import { NAV_SECTIONS } from './nav.model'
+import { NAV_SECTIONS, type NavItem, type NavSection } from './nav.model'
 import { SIDEBAR_MAX, SIDEBAR_MIN, SidebarWidth } from './sidebar-width'
 
 /**
@@ -35,8 +37,36 @@ import { SIDEBAR_MAX, SIDEBAR_MIN, SidebarWidth } from './sidebar-width'
 })
 export class AppSidebar {
   private readonly sidebar = inject(SidebarWidth)
+  private readonly staff = inject(SessionStore).currentStaff
 
-  protected readonly sections = NAV_SECTIONS
+  /**
+   * Sections and items filtered to what the signed-in operator may see. A group with no visible
+   * children disappears with it, rather than showing an empty trigger.
+   */
+  protected readonly sections = computed<readonly NavSection[]>(() => {
+    const staff = this.staff()
+    const canSee = (item: NavItem): boolean =>
+      item.kind === 'link'
+        ? hasPermission({ staff, permission: item.permission })
+        : item.children.some((child) => hasPermission({ staff, permission: child.permission }))
+
+    return NAV_SECTIONS.map((section) => ({
+      ...section,
+      items: section.items
+        .filter(canSee)
+        .map((item) =>
+          item.kind === 'group'
+            ? {
+                ...item,
+                children: item.children.filter((child) =>
+                  hasPermission({ staff, permission: child.permission }),
+                ),
+              }
+            : item,
+        ),
+    })).filter((section) => section.items.length > 0)
+  })
+
   protected readonly width = this.sidebar.width
   protected readonly collapsed = this.sidebar.collapsed
   protected readonly min = SIDEBAR_MIN

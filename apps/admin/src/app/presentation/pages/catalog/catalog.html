@@ -119,7 +119,7 @@
                 }}
               </td>
               <td hlmTd>
-                @if (track.processingStatus !== 'READY') {
+                @if (track.processingStatus !== 'READY' && canReprocess()) {
                   <button
                     hlmBtn
                     size="sm"

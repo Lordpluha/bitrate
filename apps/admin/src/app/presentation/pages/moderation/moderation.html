@@ -90,38 +90,40 @@
                 {{ report.createdAt | date: 'dd.MM.yyyy HH:mm' }}
               </td>
               <td hlmTd>
-                <div class="flex gap-2">
-                  <button
-                    hlmBtn
-                    size="sm"
-                    variant="outline"
-                    type="button"
-                    [disabled]="busyId() === report.id"
-                    (click)="advance(report, 'REVIEWING')"
-                  >
-                    Take
-                  </button>
-                  <button
-                    hlmBtn
-                    size="sm"
-                    variant="outline"
-                    type="button"
-                    [disabled]="busyId() === report.id"
-                    (click)="advance(report, 'RESOLVED')"
-                  >
-                    Resolve
-                  </button>
-                  <button
-                    hlmBtn
-                    size="sm"
-                    variant="ghost"
-                    type="button"
-                    [disabled]="busyId() === report.id"
-                    (click)="advance(report, 'REJECTED')"
-                  >
-                    Reject
-                  </button>
-                </div>
+                @if (canAdvance()) {
+                  <div class="flex gap-2">
+                    <button
+                      hlmBtn
+                      size="sm"
+                      variant="outline"
+                      type="button"
+                      [disabled]="busyId() === report.id"
+                      (click)="advance(report, 'REVIEWING')"
+                    >
+                      Take
+                    </button>
+                    <button
+                      hlmBtn
+                      size="sm"
+                      variant="outline"
+                      type="button"
+                      [disabled]="busyId() === report.id"
+                      (click)="advance(report, 'RESOLVED')"
+                    >
+                      Resolve
+                    </button>
+                    <button
+                      hlmBtn
+                      size="sm"
+                      variant="ghost"
+                      type="button"
+                      [disabled]="busyId() === report.id"
+                      (click)="advance(report, 'REJECTED')"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                }
               </td>
             </tr>
           }

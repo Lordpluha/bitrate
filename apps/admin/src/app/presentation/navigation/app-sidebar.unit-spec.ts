@@ -1,8 +1,18 @@
 import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { provideRouter } from '@angular/router'
+import { SessionStore } from '@application/session'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { AppSidebar } from './app-sidebar'
+
+const ADMIN_STAFF = {
+  id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
+  email: 'ops@bitrate.me',
+  username: 'ops',
+  roleId: 'c1b1d2e3-4f5a-4b6c-8d7e-9f0a1b2c3d4e',
+  roleName: 'ADMIN',
+  permissions: [],
+}
 
 describe('AppSidebar', () => {
   beforeEach(() => {
@@ -11,6 +21,8 @@ describe('AppSidebar', () => {
     TestBed.configureTestingModule({
       providers: [provideZonelessChangeDetection(), provideRouter([])],
     })
+    /** ADMIN sees every guarded item by identity — see `hasPermission`. */
+    TestBed.inject(SessionStore).set(ADMIN_STAFF)
   })
 
   /**
@@ -49,5 +61,21 @@ describe('AppSidebar', () => {
     const nav = (fixture.nativeElement as HTMLElement).querySelector('nav')
 
     expect(nav?.classList.contains('flex-1')).toBe(true)
+  })
+
+  it('hides an item when the operator lacks its permission', async () => {
+    TestBed.inject(SessionStore).set({
+      ...ADMIN_STAFF,
+      roleName: 'MODERATOR',
+      permissions: ['reports:read', 'artists:read', 'users:read', 'audit:read'],
+    })
+
+    const fixture = TestBed.createComponent(AppSidebar)
+    await fixture.whenStable()
+
+    const host = fixture.nativeElement as HTMLElement
+
+    expect(host.textContent).not.toContain('Catalog pipeline')
+    expect(host.querySelectorAll('nav a')).toHaveLength(4)
   })
 })

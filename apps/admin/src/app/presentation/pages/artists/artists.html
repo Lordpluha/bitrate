@@ -81,17 +81,19 @@
               </td>
               <td hlmTd>
                 <div class="flex gap-2">
-                  <button
-                    hlmBtn
-                    size="sm"
-                    variant="outline"
-                    type="button"
-                    [disabled]="busyId() === artist.id"
-                    (click)="toggleVerification(artist)"
-                  >
-                    {{ artist.verified ? 'Unverify' : 'Verify' }}
-                  </button>
-                  @if (!artist.deactivatedAt) {
+                  @if (canVerify()) {
+                    <button
+                      hlmBtn
+                      size="sm"
+                      variant="outline"
+                      type="button"
+                      [disabled]="busyId() === artist.id"
+                      (click)="toggleVerification(artist)"
+                    >
+                      {{ artist.verified ? 'Unverify' : 'Verify' }}
+                    </button>
+                  }
+                  @if (!artist.deactivatedAt && canDelete()) {
                     <button
                       hlmBtn
                       size="sm"

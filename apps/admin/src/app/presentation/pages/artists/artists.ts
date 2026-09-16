@@ -6,6 +6,7 @@ import {
   ListArtistsUseCase,
   ToggleArtistVerificationUseCase,
 } from '@application/artists'
+import { SessionStore } from '@application/session'
 import type { Artist } from '@domain/artist'
 import { CollectionStatus, Paginator } from '@presentation/components'
 import { bindQueryState, createCollection, type TriState } from '@presentation/state'
@@ -36,6 +37,9 @@ export class ArtistsPage {
   private readonly listArtists = inject(ListArtistsUseCase)
   private readonly toggleVerificationUseCase = inject(ToggleArtistVerificationUseCase)
   private readonly deactivateArtist = inject(DeactivateArtistUseCase)
+
+  protected readonly canVerify = inject(SessionStore).can('artists:verify')
+  protected readonly canDelete = inject(SessionStore).can('artists:delete')
 
   protected readonly query = bindQueryState({ codec: artistsQueryCodec })
   protected readonly draft = signal(this.query.state().query)

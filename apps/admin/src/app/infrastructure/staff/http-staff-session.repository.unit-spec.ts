@@ -13,7 +13,9 @@ const staffResponse = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
   email: 'ops@bitrate.me',
   username: 'ops',
+  roleId: 'c1b1d2e3-4f5a-4b6c-8d7e-9f0a1b2c3d4e',
   role: 'ADMIN',
+  permissions: [],
 }
 
 const credentials = { email: 'ops@bitrate.me', password: 'correct-horse-battery' }
@@ -55,7 +57,7 @@ describe('HttpStaffSessionRepository', () => {
       await settle()
       http.expectOne(ME).flush(staffResponse)
 
-      await expect(signedIn).resolves.toMatchObject({ username: 'ops', role: 'ADMIN' })
+      await expect(signedIn).resolves.toMatchObject({ username: 'ops', roleName: 'ADMIN' })
     })
 
     it('rejects when the credentials are refused', async () => {
