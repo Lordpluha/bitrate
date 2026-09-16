@@ -12,7 +12,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { Prisma } from '@prisma/client'
 import type { JWTPayload } from '../tokens'
 import { TokenService } from '../tokens/token.service'
 import { UsersService } from '../users/users.service'
@@ -277,18 +276,28 @@ export class UserAuthService {
     await this.mail.sendEmailVerification(email, rawToken, username)
   }
 
+  /**
+   * Increments the failure counter and locks the account once it reaches
+   * MAX_LOGIN_ATTEMPTS. Typed writes rather than raw SQL: a bind parameter inside a raw
+   * `CASE ... ELSE NULL` carries no type, so Postgres resolved the whole expression to
+   * `text` and rejected the assignment to the `timestamp(3)` column (SQLSTATE 42804).
+   */
   private async recordFailedLogin(userId: string) {
-    const lockedUntil = new Date(Date.now() + UserAuthService.LOCK_DURATION_MS)
-    await this.prisma.executeRaw(Prisma.sql`
-      UPDATE "User"
-      SET
-        "failedLoginAttempts" = "failedLoginAttempts" + 1,
-        "lockedUntil" = CASE
-          WHEN "failedLoginAttempts" + 1 >= ${UserAuthService.MAX_LOGIN_ATTEMPTS}
-          THEN ${lockedUntil}
-          ELSE NULL
-        END
-      WHERE "id" = ${userId}::uuid
-    `)
+    const [updated] = await this.prisma.user.updateManyAndReturn({
+      where: { id: userId },
+      data: { failedLoginAttempts: { increment: 1 } },
+      select: { failedLoginAttempts: true, lockedUntil: true },
+    })
+    if (!updated) return
+
+    const locked = updated.failedLoginAttempts >= UserAuthService.MAX_LOGIN_ATTEMPTS
+    if (!locked && updated.lockedUntil === null) return
+
+    await this.prisma.user.updateMany({
+      where: { id: userId },
+      data: {
+        lockedUntil: locked ? new Date(Date.now() + UserAuthService.LOCK_DURATION_MS) : null,
+      },
+    })
   }
 }

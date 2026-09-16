@@ -2,7 +2,7 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import { TokenService } from '@modules/tokens/token.service'
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { Prisma, type Staff, type StaffSession } from '@prisma/client'
+import type { Staff, StaffSession } from '@prisma/client'
 import type { JWTPayload } from '../tokens'
 import { STAFF_SAFE_SELECT } from './staff.select'
 
@@ -127,18 +127,28 @@ export class AdminAuthService {
     return { access_token, refresh_token }
   }
 
+  /**
+   * Increments the failure counter and locks the account once it reaches
+   * MAX_LOGIN_ATTEMPTS. Typed writes rather than raw SQL: a bind parameter inside a raw
+   * `CASE ... ELSE NULL` carries no type, so Postgres resolved the whole expression to
+   * `text` and rejected the assignment to the `timestamp(3)` column (SQLSTATE 42804).
+   */
   private async recordFailedLogin(staffId: string) {
-    const lockedUntil = new Date(Date.now() + AdminAuthService.LOCK_DURATION_MS)
-    await this.prisma.executeRaw(Prisma.sql`
-      UPDATE "Staff"
-      SET
-        "failedLoginAttempts" = "failedLoginAttempts" + 1,
-        "lockedUntil" = CASE
-          WHEN "failedLoginAttempts" + 1 >= ${AdminAuthService.MAX_LOGIN_ATTEMPTS}
-          THEN ${lockedUntil}
-          ELSE NULL
-        END
-      WHERE "id" = ${staffId}::uuid
-    `)
+    const [updated] = await this.prisma.staff.updateManyAndReturn({
+      where: { id: staffId },
+      data: { failedLoginAttempts: { increment: 1 } },
+      select: { failedLoginAttempts: true, lockedUntil: true },
+    })
+    if (!updated) return
+
+    const locked = updated.failedLoginAttempts >= AdminAuthService.MAX_LOGIN_ATTEMPTS
+    if (!locked && updated.lockedUntil === null) return
+
+    await this.prisma.staff.updateMany({
+      where: { id: staffId },
+      data: {
+        lockedUntil: locked ? new Date(Date.now() + AdminAuthService.LOCK_DURATION_MS) : null,
+      },
+    })
   }
 }

@@ -46,6 +46,18 @@ const makeMailServiceMock = () =>
     sendArtistEmailVerification: jest.fn(),
   }) as unknown as jest.Mocked<MailService>
 
+/** The lockout window the service applies once the attempt threshold is reached. */
+const LOCK_DURATION_MS = 15 * 60 * 1000
+
+/** The attempt count at which an account is locked. */
+const MAX_LOGIN_ATTEMPTS = 5
+
+/** The row shape `recordFailedLogin` reads back after incrementing the counter. */
+type AttemptResult = {
+  failedLoginAttempts: number
+  lockedUntil: Date | null
+}
+
 describe('ArtistsAuthService', () => {
   let service: ArtistsAuthService
   let artists: jest.Mocked<ArtistsService>
@@ -65,6 +77,18 @@ describe('ArtistsAuthService', () => {
     mail = makeMailServiceMock()
     service = new ArtistsAuthService(artists, artistsPrivate, jwtService, prisma, token, mail)
   })
+
+  /** Stands in for the atomic increment, which returns the row's new counter value. */
+  const mockAttemptResult = (result: AttemptResult | null) => {
+    prisma.artist.updateManyAndReturn.mockResolvedValue((result ? [result] : []) as never)
+  }
+
+  /** The deadline the service wrote, for an instant-level assertion. */
+  const writtenLockedUntil = (): Date | null => {
+    const call = prisma.artist.updateMany.mock.calls.at(-1)?.[0]
+    const data = call?.data as { lockedUntil?: Date | null } | undefined
+    return data?.lockedUntil ?? null
+  }
 
   describe('registerArtist', () => {
     it('should throw ConflictException if email already exists', async () => {
@@ -113,12 +137,12 @@ describe('ArtistsAuthService', () => {
     it('should throw UnauthorizedException when password is wrong', async () => {
       artistsPrivate.findByEmail.mockResolvedValue(buildArtist({ password: 'hash' }) as never)
       token.verifyPassword.mockResolvedValue(false as never)
-      prisma.executeRaw.mockResolvedValue(1)
+      mockAttemptResult({ failedLoginAttempts: 1, lockedUntil: null })
 
       await expect(service.loginArtist('artist@example.com', 'wrong')).rejects.toThrow(
         UnauthorizedException,
       )
-      expect(prisma.executeRaw).toHaveBeenCalledTimes(1)
+      expect(prisma.artist.updateManyAndReturn).toHaveBeenCalledTimes(1)
       expect(prisma.artist.update).not.toHaveBeenCalled()
     })
 
@@ -209,6 +233,72 @@ describe('ArtistsAuthService', () => {
         artist.username,
       )
       expect(mail.sendPasswordReset).not.toHaveBeenCalled()
+    })
+  })
+  describe('failed login lockout', () => {
+    const failLogin = async () => {
+      artistsPrivate.findByEmail.mockResolvedValue(
+        buildArtist({ id: 'artist-1', password: 'hash' }) as never,
+      )
+      token.verifyPassword.mockResolvedValue(false as never)
+      await expect(service.loginArtist('artist@example.com', 'wrong')).rejects.toThrow(
+        UnauthorizedException,
+      )
+    }
+
+    it('increments the attempt counter on every failure', async () => {
+      mockAttemptResult({ failedLoginAttempts: 1, lockedUntil: null })
+
+      await failLogin()
+
+      expect(prisma.artist.updateManyAndReturn).toHaveBeenCalledWith({
+        where: { id: 'artist-1' },
+        data: { failedLoginAttempts: { increment: 1 } },
+        select: { failedLoginAttempts: true, lockedUntil: true },
+      })
+    })
+
+    it('does not lock the account below the threshold', async () => {
+      mockAttemptResult({ failedLoginAttempts: MAX_LOGIN_ATTEMPTS - 1, lockedUntil: null })
+
+      await failLogin()
+
+      expect(prisma.artist.updateMany).not.toHaveBeenCalled()
+    })
+
+    it('clears a stale lock while the count is below the threshold', async () => {
+      mockAttemptResult({ failedLoginAttempts: 1, lockedUntil: new Date() })
+
+      await failLogin()
+
+      expect(prisma.artist.updateMany).toHaveBeenCalledWith({
+        where: { id: 'artist-1' },
+        data: { lockedUntil: null },
+      })
+    })
+
+    it('locks the account for the lock duration once the threshold is reached', async () => {
+      mockAttemptResult({ failedLoginAttempts: MAX_LOGIN_ATTEMPTS, lockedUntil: null })
+      const before = Date.now()
+
+      await failLogin()
+
+      const lockedUntil = writtenLockedUntil()
+      expect(lockedUntil).toBeInstanceOf(Date)
+      /**
+       * The deadline is a real instant, not a wall-clock value that a timezone-dropping
+       * cast would have shifted. `loginArtist` compares it against `new Date()`.
+       */
+      expect((lockedUntil as Date).getTime()).toBeGreaterThanOrEqual(before + LOCK_DURATION_MS)
+      expect((lockedUntil as Date).getTime()).toBeLessThanOrEqual(Date.now() + LOCK_DURATION_MS)
+    })
+
+    it('is a no-op when the account disappeared mid-request', async () => {
+      mockAttemptResult(null)
+
+      await failLogin()
+
+      expect(prisma.artist.updateMany).not.toHaveBeenCalled()
     })
   })
 })
