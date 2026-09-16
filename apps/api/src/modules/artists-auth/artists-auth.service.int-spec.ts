@@ -98,6 +98,10 @@ describe('ArtistsAuthService (int)', () => {
   it('loginArtist should throw UnauthorizedException when password is wrong', async () => {
     artistsPrivateMock.findByEmail.mockResolvedValue(buildArtist({ password: 'correct' }) as never)
     tokenMock.verifyPassword.mockResolvedValue(false as never)
+    /** A failed login records the attempt; Prisma returns the updated rows as an array. */
+    prismaMock.artist.updateManyAndReturn.mockResolvedValue([
+      { failedLoginAttempts: 1, lockedUntil: null },
+    ] as never)
 
     await expect(service.loginArtist('a@example.com', 'wrong')).rejects.toThrow(
       UnauthorizedException,
