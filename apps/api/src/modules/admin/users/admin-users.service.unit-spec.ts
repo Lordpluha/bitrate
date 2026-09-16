@@ -40,6 +40,26 @@ describe('AdminUsersService', () => {
 
       expect(result).toEqual({ data: [], total: 0, page: 1, limit: 20 })
     })
+
+    it('orders by createdAt desc with an id tie-break when no sort is given', async () => {
+      prisma.user.findMany.mockResolvedValue([] as never)
+      prisma.user.count.mockResolvedValue(0)
+
+      await service.findAll({})
+
+      const call = prisma.user.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }])
+    })
+
+    it('orders by the chosen field with a matching-direction id tie-break', async () => {
+      prisma.user.findMany.mockResolvedValue([] as never)
+      prisma.user.count.mockResolvedValue(0)
+
+      await service.findAll({ sort: 'username', order: 'desc' })
+
+      const call = prisma.user.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ username: 'desc' }, { id: 'desc' }])
+    })
   })
 
   describe('findById', () => {

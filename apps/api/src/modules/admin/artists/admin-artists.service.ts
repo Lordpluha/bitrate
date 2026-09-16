@@ -1,13 +1,22 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
+import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import { ADMIN_ARTIST_SAFE_SELECT } from './artist.select'
-import type { UpdateArtistVerificationDto } from './dtos'
+import type { ADMIN_ARTISTS_SORT_FIELDS, UpdateArtistVerificationDto } from './dtos'
 import { ArtistNotFoundException } from './errors'
 
+/** One of the artist directory's allowed sort fields. */
+type AdminArtistsSortField = (typeof ADMIN_ARTISTS_SORT_FIELDS)[number]
+
 /** Input for listing operator-facing artists. */
-type ListArtistsInput = { page?: number; limit?: number; verified?: boolean; q?: string }
+type ListArtistsInput = {
+  page?: number
+  limit?: number
+  verified?: boolean
+  q?: string
+} & SortInput<AdminArtistsSortField>
 
 /** Handles the operator-facing artist directory. */
 @Injectable()
@@ -29,15 +38,23 @@ export class AdminArtistsService {
   }
 
   /** Runs the find all operation, paginated and optionally filtered. */
-  async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, verified, q }: ListArtistsInput) {
+  async findAll({
+    page = DEFAULT_PAGE,
+    limit = DEFAULT_LIMIT,
+    verified,
+    q,
+    sort,
+    order,
+  }: ListArtistsInput) {
     const where = this.buildWhere({ verified, q })
+    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
     const [data, total] = await Promise.all([
       this.prisma.artist.findMany({
         where,
         select: ADMIN_ARTIST_SAFE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        orderBy: orderBy as unknown as Prisma.ArtistOrderByWithRelationInput[],
       }),
       this.prisma.artist.count({ where }),
     ])

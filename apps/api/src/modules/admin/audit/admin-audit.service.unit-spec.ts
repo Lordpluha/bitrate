@@ -90,5 +90,25 @@ describe('AdminAuditService', () => {
 
       expect(result).toEqual({ data: [], total: 0, page: 5, limit: 20 })
     })
+
+    it('orders by createdAt desc with an id tie-break when no sort is given', async () => {
+      prisma.auditLog.findMany.mockResolvedValue([] as never)
+      prisma.auditLog.count.mockResolvedValue(0)
+
+      await service.findAll({})
+
+      const call = prisma.auditLog.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }])
+    })
+
+    it('orders by createdAt asc with a matching-direction id tie-break when sort is given', async () => {
+      prisma.auditLog.findMany.mockResolvedValue([] as never)
+      prisma.auditLog.count.mockResolvedValue(0)
+
+      await service.findAll({ sort: 'createdAt', order: 'asc' })
+
+      const call = prisma.auditLog.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ createdAt: 'asc' }, { id: 'asc' }])
+    })
   })
 })

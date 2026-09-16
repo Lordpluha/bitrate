@@ -38,6 +38,26 @@ describe('AdminModerationService', () => {
         expect.objectContaining({ where: { status: 'OPEN' }, skip: 5, take: 5 }),
       )
     })
+
+    it('orders by createdAt desc with an id tie-break when no sort is given', async () => {
+      prisma.moderationReport.findMany.mockResolvedValue([] as never)
+      prisma.moderationReport.count.mockResolvedValue(0)
+
+      await service.findAll({})
+
+      const call = prisma.moderationReport.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }])
+    })
+
+    it('orders by the chosen field with a matching-direction id tie-break', async () => {
+      prisma.moderationReport.findMany.mockResolvedValue([] as never)
+      prisma.moderationReport.count.mockResolvedValue(0)
+
+      await service.findAll({ sort: 'status', order: 'asc' })
+
+      const call = prisma.moderationReport.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ status: 'asc' }, { id: 'asc' }])
+    })
   })
 
   describe('findById', () => {

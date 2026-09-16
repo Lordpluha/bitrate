@@ -61,6 +61,21 @@ describe('AdminStaffController (int)', () => {
       expect(res.status).toBe(200)
     })
 
+    it('GET /admin/staff returns 400 for a sort field outside the allowlist', async () => {
+      const res = await request(app.getHttpServer()).get('/admin/staff').query({ sort: 'password' })
+
+      expect(res.status).toBe(400)
+      expect(service.findAll).not.toHaveBeenCalled()
+    })
+
+    it('GET /admin/staff returns 400 for an invalid order', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/admin/staff')
+        .query({ sort: 'username', order: 'sideways' })
+
+      expect(res.status).toBe(400)
+    })
+
     it('GET /admin/staff/:id returns 404 for a missing operator', async () => {
       service.findById.mockRejectedValue(new StaffNotFoundException('missing') as never)
 

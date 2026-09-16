@@ -1,12 +1,20 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
+import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
-import type { ModerationStatus } from '@prisma/client'
-import type { UpdateReportDto } from './dtos'
+import type { ModerationStatus, Prisma } from '@prisma/client'
+import type { ADMIN_REPORTS_SORT_FIELDS, UpdateReportDto } from './dtos'
 import { ReportNotFoundException } from './errors'
 
+/** One of the moderation queue's allowed sort fields. */
+type AdminReportsSortField = (typeof ADMIN_REPORTS_SORT_FIELDS)[number]
+
 /** Input for listing moderation reports. */
-type ListReportsInput = { page?: number; limit?: number; status?: ModerationStatus }
+type ListReportsInput = {
+  page?: number
+  limit?: number
+  status?: ModerationStatus
+} & SortInput<AdminReportsSortField>
 
 const RESOLVED_STATUSES: ModerationStatus[] = ['RESOLVED', 'REJECTED']
 
@@ -16,14 +24,21 @@ export class AdminModerationService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** Runs the find all operation, paginated and optionally filtered by status. */
-  async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, status }: ListReportsInput) {
+  async findAll({
+    page = DEFAULT_PAGE,
+    limit = DEFAULT_LIMIT,
+    status,
+    sort,
+    order,
+  }: ListReportsInput) {
     const where = status ? { status } : {}
+    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
     const [data, total] = await Promise.all([
       this.prisma.moderationReport.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        orderBy: orderBy as unknown as Prisma.ModerationReportOrderByWithRelationInput[],
       }),
       this.prisma.moderationReport.count({ where }),
     ])

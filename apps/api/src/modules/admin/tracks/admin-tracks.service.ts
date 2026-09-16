@@ -1,9 +1,14 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
+import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { TrackUploadService } from '@modules/tracks'
 import { Injectable } from '@nestjs/common'
 import { Prisma, type TrackProcessingStatus } from '@prisma/client'
+import type { ADMIN_TRACKS_SORT_FIELDS } from './dtos'
 import { TrackNotFoundException } from './errors'
+
+/** One of the track pipeline's allowed sort fields. */
+type AdminTracksSortField = (typeof ADMIN_TRACKS_SORT_FIELDS)[number]
 
 /** Input for listing operator-facing tracks. */
 type ListTracksInput = {
@@ -11,7 +16,7 @@ type ListTracksInput = {
   limit?: number
   processingStatus?: TrackProcessingStatus
   q?: string
-}
+} & SortInput<AdminTracksSortField>
 
 /** A row of the operator track list, with its primary artist's name resolved. */
 type AdminTrackRow = {
@@ -64,13 +69,21 @@ export class AdminTracksService {
     `
   }
 
-  /** Runs the find all operation, paginated, problem-first by default. */
+  /**
+   * Runs the find all operation, paginated. Problem-first by default via the raw-SQL `CASE`
+   * query described above; choosing a `sort` replaces that attention-first ordering with a
+   * plain Prisma `orderBy` on the chosen field instead — the two orderings are never merged.
+   */
   async findAll({
     page = DEFAULT_PAGE,
     limit = DEFAULT_LIMIT,
     processingStatus,
     q,
+    sort,
+    order,
   }: ListTracksInput) {
+    if (sort) return this.findAllSorted({ page, limit, processingStatus, q, sort, order })
+
     const where = this.buildWhere({ processingStatus, q })
     const rawWhere = this.buildRawWhere({ processingStatus, q })
     const skip = (page - 1) * limit
@@ -92,6 +105,33 @@ export class AdminTracksService {
     return { data, total, page, limit }
   }
 
+  /** The `sort`-driven path: a plain Prisma query, ordered by the chosen field with `id` as
+   * the stable tie-break — no raw SQL, no attention-first ordering. */
+  private async findAllSorted({
+    page = DEFAULT_PAGE,
+    limit = DEFAULT_LIMIT,
+    processingStatus,
+    q,
+    sort,
+    order,
+  }: ListTracksInput) {
+    const where = this.buildWhere({ processingStatus, q })
+    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+
+    const [tracks, total] = await Promise.all([
+      this.prisma.track.findMany({
+        where,
+        include: { artist: { select: { username: true } } },
+        orderBy: orderBy as unknown as Prisma.TrackOrderByWithRelationInput[],
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.track.count({ where }),
+    ])
+
+    return { data: tracks.map((track) => this.toRow(track)), total, page, limit }
+  }
+
   /** Fetches full rows for the given ids and restores the id order raw SQL computed. */
   private async hydrateOrdered(ids: string[]): Promise<AdminTrackRow[]> {
     if (ids.length === 0) return []
@@ -104,34 +144,25 @@ export class AdminTracksService {
 
     return ids.flatMap((id) => {
       const track = byId.get(id)
-      if (!track) return []
-      return [
-        {
-          id: track.id,
-          title: track.title,
-          artistId: track.artistId,
-          artistUsername: track.artist.username,
-          processingStatus: track.processingStatus,
-          processingError: track.processingError,
-          processingAttempts: track.processingAttempts,
-          processingStartedAt: track.processingStartedAt,
-          processingFinishedAt: track.processingFinishedAt,
-          deletedAt: track.deletedAt,
-          createdAt: track.createdAt,
-          updatedAt: track.updatedAt,
-        },
-      ]
+      return track ? [this.toRow(track)] : []
     })
   }
 
-  /** Runs the find by id operation. Excludes soft-deleted tracks. */
-  async findById(id: string): Promise<AdminTrackRow> {
-    const track = await this.prisma.track.findFirst({
-      where: { id, deletedAt: null },
-      include: { artist: { select: { username: true } } },
-    })
-    if (!track) throw new TrackNotFoundException(id)
-
+  /** Flattens a track (with its artist included) into the operator row shape. */
+  private toRow(track: {
+    id: string
+    title: string
+    artistId: string
+    artist: { username: string }
+    processingStatus: TrackProcessingStatus
+    processingError: string | null
+    processingAttempts: number
+    processingStartedAt: Date | null
+    processingFinishedAt: Date | null
+    deletedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+  }): AdminTrackRow {
     return {
       id: track.id,
       title: track.title,
@@ -146,6 +177,17 @@ export class AdminTracksService {
       createdAt: track.createdAt,
       updatedAt: track.updatedAt,
     }
+  }
+
+  /** Runs the find by id operation. Excludes soft-deleted tracks. */
+  async findById(id: string): Promise<AdminTrackRow> {
+    const track = await this.prisma.track.findFirst({
+      where: { id, deletedAt: null },
+      include: { artist: { select: { username: true } } },
+    })
+    if (!track) throw new TrackNotFoundException(id)
+
+    return this.toRow(track)
   }
 
   /**
