@@ -41,7 +41,7 @@ tasks:
   # Recommended for native app development
   # ─────────────────────────────────────────
   infra:up:
-    desc: Start infra only — postgres, postgres_test, redis, mailhog (~320 MB)
+    desc: Start infra only — postgres, postgres_test, redis (~310 MB)
     cmds:
       - cmd: '{{.DC_INFRA}} up -d'
 
@@ -266,6 +266,30 @@ tasks:
       - task: prod:migrate
       - cmd: '{{.DC_PROD}} up -d --no-build'
       - cmd: '{{.DC_PROD}} ps'
+      # Retention. Last, so the generation this deploy just replaced is what becomes a
+      # candidate. Nothing removed these before and the host kept every release forever: four
+      # generations in thirteen days took Docker to 64 GiB of a 250 GiB disk.
+      #
+      # Scoped to the bitrate repositories by name. NOT `docker image prune -a`, which takes
+      # every image with no container attached — including certbot/certbot, which has none
+      # between certificate renewals.
+      #
+      # A generation is an image ID, not a tag: one release is published as :v1.2.0, :<sha> and
+      # :master at once, so counting tags would spend the whole budget on the current release
+      # and delete the one to roll back to. `docker images` lists newest first, so awk keeps
+      # every tag of the two newest IDs per repository and prints the rest. `docker rmi` refuses
+      # an image a container is still using, which is the second net under this.
+      - cmd: |
+          docker images 'ghcr.io/lordpluha/bitrate/*' \
+            | awk 'NR > 1 && $1 != "<none>" { if (!seen[$1 "@" $3]++) n[$1]++; if (n[$1] > 2) print $1 ":" $2 }' \
+            | xargs -r -n1 docker rmi || true
+          docker image prune -f
+          # -a, not a bare prune with an age filter. Plain `docker builder prune` only takes
+          # unshared dangling records and reclaimed 0 B of the 3.086 GB sitting on the
+          # production host. Keeping any of it would be pointless anyway: this host deploys by
+          # pulling CI images (ADR-0027) and never builds, so no local cache entry is ever reused.
+          docker builder prune -af
+          docker system df
 
   prod:migrate:
     desc: Apply pending migrations to the production database
@@ -442,9 +466,14 @@ tasks:
     cmds:
       - cmd: node scripts/clean-dist.mjs
 
+  # A developer-machine sledgehammer. NOT for the production host: `-a` takes every image with
+  # no container attached, and certbot/certbot has none between certificate renewals — the next
+  # renewal would then have to pull at the moment a certificate is expiring. On a server the
+  # retention built into `prod:deploy` is the one to rely on; it is scoped to the bitrate
+  # repositories and keeps the generation to roll back to.
   prune:
-    desc: Remove all unused Docker images, containers and volumes
-    prompt: Remove all unused Docker resources?
+    desc: DEV MACHINES ONLY — remove all unused Docker images, containers and volumes
+    prompt: Remove ALL unused Docker resources? Never answer yes on the production host.
     cmds:
       - cmd: docker system prune -af
 
@@ -473,7 +502,7 @@ tasks:
   # Internal helpers (not listed)
   # ─────────────────────────────────────────
   # Default ports only — each is overridable in .env (API_PORT, WEB_PORT,
-  # WEB_ARTISTS_PORT, ADMIN_PORT, MAILHOG_UI_PORT). Profile-gated services
+  # WEB_ARTISTS_PORT, ADMIN_PORT). Profile-gated services
   # (docs :3003, desktop :1420, mobile :19000) are not started by dev:up.
   _print-urls:
     internal: true
