@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { AdminAuthGuard, REQUIRED_ROLES } from '@modules/admin-auth'
-import type { CanActivate, ExecutionContext, INestApplication } from '@nestjs/common'
+import { AdminAuthGuard, type Permission } from '@modules/admin-auth'
+import type { INestApplication } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { Test, type TestingModule } from '@nestjs/testing'
-import type { StaffRole } from '@prisma/client'
+import { StubAdminAuthGuard } from '@test/mocks/stub-admin-auth.guard'
 import request from 'supertest'
 
 /** `TrackUploadService` pulls in `music-metadata` via `track-media.ts`; that package
@@ -22,30 +22,7 @@ const makeServiceMock = () =>
     reprocess: jest.fn(),
   }) as unknown as jest.Mocked<AdminTracksService>
 
-/** Simulates the real guard's role check off the real `@AdminAuth(...)` metadata. */
-class StubAdminAuthGuard implements CanActivate {
-  constructor(
-    private readonly reflector: Reflector,
-    private readonly staffRole: StaffRole,
-  ) {}
-
-  canActivate(context: ExecutionContext) {
-    const roles = this.reflector.getAllAndOverride<StaffRole[]>(REQUIRED_ROLES, [
-      context.getHandler(),
-      context.getClass(),
-    ])
-    if (roles && roles.length > 0 && !roles.includes(this.staffRole)) {
-      return false
-    }
-    ;(context.switchToHttp().getRequest() as Record<string, unknown>).staff = {
-      id: 'staff-1',
-      role: this.staffRole,
-    }
-    return true
-  }
-}
-
-const buildApp = async (staffRole: StaffRole) => {
+const buildApp = async (permissions: Permission[]) => {
   const service = makeServiceMock()
   const reflector = new Reflector()
 
@@ -54,7 +31,7 @@ const buildApp = async (staffRole: StaffRole) => {
     providers: [{ provide: AdminTracksService, useValue: service }],
   })
     .overrideGuard(AdminAuthGuard)
-    .useValue(new StubAdminAuthGuard(reflector, staffRole))
+    .useValue(new StubAdminAuthGuard(reflector, permissions))
     .compile()
 
   const app = module.createNestApplication()
@@ -63,12 +40,12 @@ const buildApp = async (staffRole: StaffRole) => {
 }
 
 describe('AdminTracksController (int)', () => {
-  describe('as MODERATOR', () => {
+  describe('with tracks:read only', () => {
     let app: INestApplication
     let service: jest.Mocked<AdminTracksService>
 
     beforeAll(async () => {
-      ;({ app, service } = await buildApp('MODERATOR'))
+      ;({ app, service } = await buildApp(['tracks:read']))
     })
 
     afterAll(() => app.close())
@@ -101,7 +78,7 @@ describe('AdminTracksController (int)', () => {
       expect(res.status).toBe(404)
     })
 
-    it('POST /admin/tracks/:id/reprocess returns 403 — read-only role', async () => {
+    it('POST /admin/tracks/:id/reprocess returns 403 — missing tracks:reprocess', async () => {
       const res = await request(app.getHttpServer()).post(
         '/admin/tracks/f47ac10b-58cc-4372-a567-0e02b2c3d479/reprocess',
       )
@@ -117,12 +94,12 @@ describe('AdminTracksController (int)', () => {
     })
   })
 
-  describe('as ADMIN', () => {
+  describe('with tracks:reprocess', () => {
     let app: INestApplication
     let service: jest.Mocked<AdminTracksService>
 
     beforeAll(async () => {
-      ;({ app, service } = await buildApp('ADMIN'))
+      ;({ app, service } = await buildApp(['tracks:read', 'tracks:reprocess']))
     })
 
     afterAll(() => app.close())

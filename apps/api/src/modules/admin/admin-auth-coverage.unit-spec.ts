@@ -1,11 +1,15 @@
 import { readdirSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { describe, expect, it, jest } from '@jest/globals'
-import { AdminAuthGuard, REQUIRED_ROLES } from '@modules/admin-auth'
+import {
+  AdminAuthGuard,
+  PERMISSIONS,
+  type Permission,
+  REQUIRED_PERMISSION,
+} from '@modules/admin-auth'
 import type { Type } from '@nestjs/common'
 import { GUARDS_METADATA, PATH_METADATA } from '@nestjs/common/constants'
 import { Reflector } from '@nestjs/core'
-import type { StaffRole } from '@prisma/client'
 
 /** `TrackUploadService` pulls in `music-metadata` via `track-media.ts`; that package
  * cannot be resolved under Jest, so every spec that reaches it mocks it virtually. */
@@ -30,6 +34,38 @@ const OPERATOR_ROOTS = [join(__dirname), join(__dirname, '..', 'admin-auth')]
  * makes on purpose, in a diff, rather than by forgetting a decorator.
  */
 const PUBLIC_ROUTES = new Set(['AdminAuthController.login'])
+
+/**
+ * Routes that require only a staff session — no permission. `me`/`logout`/`refresh` act on the
+ * caller's own account and never gate on what it may do to anyone else's.
+ */
+const SESSION_ONLY_ROUTES = new Set([
+  'AdminAuthController.getMe',
+  'AdminAuthController.logout',
+  'AdminAuthController.refresh',
+])
+
+/**
+ * The permission every other route requires. Adding, removing, or renarrowing a route is a line
+ * in this table — a route missing from it, or a route whose decorator disagrees with it, fails
+ * the spec below.
+ */
+const ROUTE_PERMISSIONS: Record<string, Permission> = {
+  'AdminArtistsController.list': 'artists:read',
+  'AdminArtistsController.getById': 'artists:read',
+  'AdminArtistsController.updateVerification': 'artists:verify',
+  'AdminArtistsController.remove': 'artists:delete',
+  'AdminAuditController.list': 'audit:read',
+  'AdminModerationController.list': 'reports:read',
+  'AdminModerationController.getById': 'reports:read',
+  'AdminModerationController.update': 'reports:advance',
+  'AdminTracksController.list': 'tracks:read',
+  'AdminTracksController.getById': 'tracks:read',
+  'AdminTracksController.reprocess': 'tracks:reprocess',
+  'AdminUsersController.list': 'users:read',
+  'AdminUsersController.getById': 'users:read',
+  'AdminUsersController.remove': 'users:delete',
+}
 
 /** Controller files under the operator trees, found on disk rather than through the module graph. */
 function controllerFiles(root: string): string[] {
@@ -76,12 +112,14 @@ function routesOf(controller: Type): Route[] {
  * The guard is the whole access-control story for the operator surface, and a route that forgets
  * it fails open: it answers to anyone who finds the path, with no session. Nothing else catches
  * that — the controller compiles, lint passes, and the integration specs stub the guard with a
- * role check that lets a route carrying no role metadata straight through.
+ * permission check that lets a route carrying no permission metadata straight through.
  */
 describe('operator surface access control', () => {
   const reflector = new Reflector()
   const controllers = loadControllers()
-  const guarded = controllers.filter((controller) => controller.name !== 'AdminAuthController')
+  const allRoutes = controllers.flatMap(routesOf)
+  const guardedRoutes = allRoutes.filter((route) => !PUBLIC_ROUTES.has(route.id))
+  const permissionRoutes = guardedRoutes.filter((route) => !SESSION_ONLY_ROUTES.has(route.id))
 
   it('finds every operator controller on disk', () => {
     expect(controllers.map((controller) => controller.name).sort()).toEqual([
@@ -94,43 +132,49 @@ describe('operator surface access control', () => {
     ])
   })
 
-  it.each(controllers.flatMap(routesOf))('$id requires a staff session', (route) => {
-    if (PUBLIC_ROUTES.has(route.id)) return
-
+  it.each(guardedRoutes)('$id requires a staff session', (route) => {
     const guards: unknown[] =
       Reflect.getMetadata(GUARDS_METADATA, route.handler) ??
       Reflect.getMetadata(GUARDS_METADATA, route.controller) ??
       []
 
     expect(guards).toContain(AdminAuthGuard)
-    expect(
-      reflector.getAllAndOverride<StaffRole[]>(REQUIRED_ROLES, [route.handler, route.controller]),
-    ).toBeDefined()
   })
 
-  /**
-   * The class-level decorator is the floor, not decoration: it is what turns a forgotten
-   * method-level decorator into a too-broad role rather than an open endpoint.
-   */
   it.each(
-    guarded.map((controller) => ({ name: controller.name, controller })),
-  )('$name carries a class-level role floor', ({ controller }) => {
-    expect(Reflect.getMetadata(REQUIRED_ROLES, controller)).toEqual(['ADMIN', 'MODERATOR'])
-  })
-
-  /** And the floor still has to be narrowable, or it would be the wrong mechanism. */
-  it.each([
-    { id: 'AdminUsersController.remove' },
-    { id: 'AdminArtistsController.remove' },
-    { id: 'AdminArtistsController.updateVerification' },
-    { id: 'AdminTracksController.reprocess' },
-  ])('$id narrows the floor to ADMIN alone', ({ id }) => {
-    const route = controllers.flatMap(routesOf).find((candidate) => candidate.id === id)
+    Array.from(SESSION_ONLY_ROUTES, (id) => ({ id })),
+  )('$id carries no permission requirement', ({ id }) => {
+    const route = guardedRoutes.find((candidate) => candidate.id === id)
     expect(route).toBeDefined()
 
     const found = route as Route
     expect(
-      reflector.getAllAndOverride<StaffRole[]>(REQUIRED_ROLES, [found.handler, found.controller]),
-    ).toEqual(['ADMIN'])
+      reflector.getAllAndOverride<Permission | undefined>(REQUIRED_PERMISSION, [
+        found.handler,
+        found.controller,
+      ]),
+    ).toBeUndefined()
+  })
+
+  /**
+   * Every route that isn't public or session-only carries a permission from the catalogue,
+   * matching this file's table exactly — a route added to a controller without a matching table
+   * entry, or a decorator disagreeing with the table, fails here.
+   */
+  it('every permission-gated route matches the route → permission table exactly', () => {
+    expect(permissionRoutes.map((route) => route.id).sort()).toEqual(
+      Object.keys(ROUTE_PERMISSIONS).sort(),
+    )
+  })
+
+  it.each(permissionRoutes)('$id requires its cataloged permission', (route) => {
+    const required = reflector.getAllAndOverride<Permission | undefined>(REQUIRED_PERMISSION, [
+      route.handler,
+      route.controller,
+    ])
+
+    expect(required).toBeDefined()
+    expect(PERMISSIONS).toContain(required)
+    expect(required).toBe(ROUTE_PERMISSIONS[route.id])
   })
 })

@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { AdminAuthGuard, REQUIRED_ROLES } from '@modules/admin-auth'
-import type { CanActivate, ExecutionContext, INestApplication } from '@nestjs/common'
+import { AdminAuthGuard } from '@modules/admin-auth'
+import type { INestApplication } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { Test, type TestingModule } from '@nestjs/testing'
-import type { StaffRole } from '@prisma/client'
+import { StubAdminAuthGuard } from '@test/mocks/stub-admin-auth.guard'
 import request from 'supertest'
 import { buildAuditLog } from './__tests__/fixtures/admin-audit.fixtures'
 import { AdminAuditController } from './admin-audit.controller'
@@ -13,29 +13,6 @@ const makeServiceMock = () =>
   ({
     findAll: jest.fn(),
   }) as unknown as jest.Mocked<AdminAuditService>
-
-/** Simulates the real guard's role check off the real `@AdminAuth(...)` metadata. */
-class StubAdminAuthGuard implements CanActivate {
-  constructor(
-    private readonly reflector: Reflector,
-    private readonly staffRole: StaffRole,
-  ) {}
-
-  canActivate(context: ExecutionContext) {
-    const roles = this.reflector.getAllAndOverride<StaffRole[]>(REQUIRED_ROLES, [
-      context.getHandler(),
-      context.getClass(),
-    ])
-    if (roles && roles.length > 0 && !roles.includes(this.staffRole)) {
-      return false
-    }
-    ;(context.switchToHttp().getRequest() as Record<string, unknown>).staff = {
-      id: 'staff-1',
-      role: this.staffRole,
-    }
-    return true
-  }
-}
 
 describe('AdminAuditController (int)', () => {
   let app: INestApplication
@@ -50,7 +27,7 @@ describe('AdminAuditController (int)', () => {
       providers: [{ provide: AdminAuditService, useValue: service }],
     })
       .overrideGuard(AdminAuthGuard)
-      .useValue(new StubAdminAuthGuard(reflector, 'MODERATOR'))
+      .useValue(new StubAdminAuthGuard(reflector, ['audit:read']))
       .compile()
 
     app = module.createNestApplication()

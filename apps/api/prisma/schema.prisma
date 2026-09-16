@@ -122,17 +122,26 @@ model ArtistSession {
   @@index([refresh_token])
 }
 
-enum StaffRole {
-  ADMIN
-  MODERATOR
+model Role {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  name        String   @unique
+  description String?
+  builtIn     Boolean  @default(false)
+  permissions String[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  staff Staff[]
 }
 
 model Staff {
-  id       String    @id @default(uuid(7)) @db.Uuid
-  email    String    @unique
-  username String    @unique
-  password String
-  role     StaffRole
+  id          String   @id @default(uuid(7)) @db.Uuid
+  email       String   @unique
+  username    String   @unique
+  password    String
+  roleId      String   @db.Uuid
+  permissions String[] @default([])
 
   twoFactorSecret     String?
   twoFactorEnabled    Boolean   @default(false)
@@ -143,11 +152,13 @@ model Staff {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
+  role      Role           @relation(fields: [roleId], references: [id])
   sessions  StaffSession[]
   auditLogs AuditLog[]
 
   @@index([email])
   @@index([deletedAt])
+  @@index([roleId])
 }
 
 model StaffSession {

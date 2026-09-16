@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
-import type { Staff, StaffRole } from '@prisma/client'
+import type { Staff } from '@prisma/client'
+import { PERMISSIONS, type Permission } from '../access'
 
 /** Represents a staff operator, excluding secret material. */
 export class StaffEntity implements Omit<Staff, 'password' | 'twoFactorSecret'> {
@@ -15,9 +16,17 @@ export class StaffEntity implements Omit<Staff, 'password' | 'twoFactorSecret'> 
   @ApiProperty()
   username: string
 
-  /** The staff role value. */
-  @ApiProperty({ enum: ['ADMIN', 'MODERATOR'] })
-  role: StaffRole
+  /** The id of the role this operator was assigned — provenance/display only. */
+  @ApiProperty()
+  roleId: string
+
+  /** The name of the role this operator was assigned. Grants nothing by itself — see `permissions`. */
+  @ApiProperty()
+  role: string
+
+  /** The permissions actually held by this operator. */
+  @ApiProperty({ enum: PERMISSIONS, isArray: true })
+  permissions: Permission[]
 
   /** Whether two-factor authentication is enabled. */
   @ApiProperty()

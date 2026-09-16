@@ -1,8 +1,13 @@
 import 'dotenv/config'
+import { MODERATOR_TEMPLATE } from '@modules/admin-auth'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient, type StaffRole } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import * as argon2 from 'argon2'
 import { Pool } from 'pg'
+import { ensureBuiltInRoles } from './built-in-roles'
+
+/** The two built-in role names an operator may be seeded with. */
+type StaffRoleName = 'ADMIN' | 'MODERATOR'
 
 /**
  * Creates or updates the operator account the admin panel signs in with.
@@ -24,13 +29,13 @@ import { Pool } from 'pg'
  */
 
 const MIN_PASSWORD_LENGTH = 12
-const VALID_ROLES: readonly StaffRole[] = ['ADMIN', 'MODERATOR']
+const VALID_ROLES: readonly StaffRoleName[] = ['ADMIN', 'MODERATOR']
 
 type StaffSeedInput = {
   email: string
   username: string
   password: string
-  role: StaffRole
+  role: StaffRoleName
 }
 
 /** Reads and validates the seed input, or explains exactly what is missing and stops. */
@@ -38,7 +43,7 @@ function readInput(): StaffSeedInput {
   const email = process.env.ADMIN_EMAIL?.trim()
   const username = process.env.ADMIN_USERNAME?.trim()
   const password = process.env.ADMIN_PASSWORD
-  const role = (process.env.ADMIN_ROLE?.trim() || 'ADMIN') as StaffRole
+  const role = (process.env.ADMIN_ROLE?.trim() || 'ADMIN') as StaffRoleName
 
   const problems: string[] = []
 
@@ -95,13 +100,17 @@ async function main(): Promise<void> {
   const prisma = new PrismaClient({ adapter: new PrismaPg(pool) })
 
   try {
+    await ensureBuiltInRoles(prisma)
+
+    const roleRow = await prisma.role.findUniqueOrThrow({ where: { name: role } })
+    const permissions = role === 'ADMIN' ? [] : [...MODERATOR_TEMPLATE]
     const hashed = await argon2.hash(password, { type: argon2.argon2id })
 
     const existing = await prisma.staff.findUnique({ where: { email } })
 
     const staff = await prisma.staff.upsert({
       where: { email },
-      create: { email, username, password: hashed, role },
+      create: { email, username, password: hashed, roleId: roleRow.id, permissions },
       /**
        * Re-running with a changed password applies it, and clears any lockout from failed
        * attempts — which is the other reason to reach for this script.
@@ -109,7 +118,8 @@ async function main(): Promise<void> {
       update: {
         username,
         password: hashed,
-        role,
+        roleId: roleRow.id,
+        permissions,
         failedLoginAttempts: 0,
         lockedUntil: null,
         deletedAt: null,
@@ -117,7 +127,7 @@ async function main(): Promise<void> {
     })
 
     console.log(
-      `${existing ? 'Updated' : 'Created'} operator ${staff.email} (${staff.username}) as ${staff.role}.`,
+      `${existing ? 'Updated' : 'Created'} operator ${staff.email} (${staff.username}) as ${role}.`,
     )
   } finally {
     await prisma.$disconnect()

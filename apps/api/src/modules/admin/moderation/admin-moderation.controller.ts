@@ -1,4 +1,4 @@
-import { AdminAuth } from '@modules/admin-auth'
+import { AdminAuth, RequirePermission } from '@modules/admin-auth'
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -13,12 +13,13 @@ import {
 
 /** Operator-facing moderation report queue. */
 @ApiTags('Admin Moderation')
-@AdminAuth('ADMIN', 'MODERATOR')
+@AdminAuth()
 @Controller({ path: 'admin/moderation/reports', version: '1' })
 export class AdminModerationController {
   constructor(private readonly moderation: AdminModerationService) {}
 
   /** Runs the list reports operation. */
+  @RequirePermission('reports:read')
   @ListReportsSwagger()
   @Get('')
   list(@Query(new ZodValidationPipe(ListReportsQuerySchema)) query: ListReportsQueryDto) {
@@ -26,6 +27,7 @@ export class AdminModerationController {
   }
 
   /** Runs the get report operation. */
+  @RequirePermission('reports:read')
   @GetReportSwagger()
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: string) {
@@ -33,6 +35,7 @@ export class AdminModerationController {
   }
 
   /** Runs the update report operation. */
+  @RequirePermission('reports:advance')
   @UpdateReportSwagger()
   @Patch(':id')
   update(
