@@ -26,11 +26,7 @@
             ],
             "styles": [
               "src/styles.css"
-            ],
-            "define": {
-              "NG_APP_API_URL": "\"http://localhost:3000\"",
-              "NG_APP_AUTH_BYPASS": "false"
-            }
+            ]
           },
           "configurations": {
             "production": {
@@ -46,20 +42,12 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all",
-              "define": {
-                "NG_APP_API_URL": "\"http://localhost:3000\"",
-                "NG_APP_AUTH_BYPASS": "false"
-              }
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "define": {
-                "NG_APP_API_URL": "\"http://localhost:3000\"",
-                "NG_APP_AUTH_BYPASS": "true"
-              }
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -76,7 +64,6 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 3005,
             "host": "0.0.0.0"
           }
         },

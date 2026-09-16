@@ -225,6 +225,39 @@ and give the message element `role="alert"`.
 Signal Forms (`@angular/forms/signals`) exist in Angular 22 and are not used here. Angular's own
 guidance is that reactive forms remain the choice where production stability matters.
 
+## Configuration — `.env`, through a generated module
+
+Angular has **no `.env` support**: `@angular/build` never reads one, and `angular.json` is static
+JSON that does not interpolate environment variables. The bridge is
+`apps/admin/scripts/with-env.mjs`, which every package script runs first. It validates the
+environment and writes `src/app/infrastructure/http/env.generated.ts` — gitignored, imported by
+`api.config.ts`.
+
+Node loads the files, not a library: `--env-file-if-exists=.env --env-file-if-exists=.env.local`.
+**The later file wins and a real shell variable beats both** — the opposite of `apps/api`, where
+`ConfigModule`'s `envFilePath` array lets the *first* entry win. Do not assume one app's order
+applies to the other.
+
+| Variable | Needed by | Notes |
+|---|---|---|
+| `NG_APP_API_URL` | every script | Baked into the bundle at build time |
+| `ADMIN_PORT` | `dev`, `start` | Passed to `ng serve --port` |
+
+Three rules that are easy to get wrong:
+
+- **The generator has no fallback, deliberately.** A missing variable fails the script naming it,
+  rather than silently producing a bundle that points at `localhost`. That is why CI passes
+  `NG_APP_API_URL` as step-level `env:` on lint, typecheck and test, and why the Dockerfile's
+  `ARG NG_APP_API_URL` carries no default.
+- **`define` is not the mechanism any more, and must not come back.** The `unit-test` builder has
+  no `define` option — it inherits one from the `build` target — so a value configured for `build`
+  alone leaves specs with nothing. A generated module reaches build, serve, test and typecheck
+  identically.
+- **This is build-time configuration.** The value is inlined into the bundle exactly as
+  `next build` inlines `NEXT_PUBLIC_*`; setting it on a running container does nothing. Moving to
+  runtime configuration (a fetched `config.json`) is a real change with an entrypoint and an extra
+  request — it needs an ADR, not a quiet edit.
+
 ## Styling
 
 Tailwind v4 through `@tailwindcss/postcss`, with `@bitrate/ui-react/themes.css` imported in

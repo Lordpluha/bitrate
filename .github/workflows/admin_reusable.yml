@@ -40,7 +40,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
 
-  # Angular's esbuild pipeline substitutes this through `define` at BUILD time, exactly the way
+  # Angular bakes this into the bundle at BUILD time via scripts/with-env.mjs, exactly the way
   # `next build` inlines NEXT_PUBLIC_* and Vite inlines VITE_*: whatever is used here is what the
   # published image talks to forever, and no runtime environment variable on the server can
   # correct it afterwards.
@@ -71,12 +71,19 @@ jobs:
 
       # This app is on ESLint (angular-eslint), not Biome: `pnpm lint` at the root does not
       # cover it and `biome ci apps/admin` would check nothing. Its own script is the gate.
+      # Every admin script regenerates src/app/infrastructure/http/env.generated.ts from the
+      # environment first, and that generator has no fallback — the runner has no .env file, so
+      # NG_APP_API_URL has to arrive as a step environment variable or the step fails by design.
       - name: Run admin lint
         if: ${{ inputs.run-lint }}
+        env:
+          NG_APP_API_URL: ${{ env.BUILD_NG_APP_API_URL }}
         run: pnpm --filter @bitrate/admin lint
 
       - name: Run admin typecheck
         if: ${{ inputs.run-tests }}
+        env:
+          NG_APP_API_URL: ${{ env.BUILD_NG_APP_API_URL }}
         run: pnpm --filter @bitrate/admin check-types
 
       # `ng test` runs Vitest through @angular/build:unit-test in jsdom — no browser download.
@@ -84,6 +91,8 @@ jobs:
       # TTY environments and `false` otherwise", and an Actions step has no TTY.
       - name: Run admin unit tests
         if: ${{ inputs.run-tests }}
+        env:
+          NG_APP_API_URL: ${{ env.BUILD_NG_APP_API_URL }}
         run: pnpm --filter @bitrate/admin test
 
       - name: Setup Docker + registries
