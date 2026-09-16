@@ -11,14 +11,24 @@ export class HttpStaffSessionRepository extends StaffSessionRepository {
   private readonly http = inject(HttpClient)
   private readonly base = `${ADMIN_API}/auth`
 
+  /**
+   * Login answers 201 with **no body** — it only sets the two httpOnly cookies, which is what
+   * `AuthLoginSwagger` on the API documents. So the signed-in operator is read back from `/me`
+   * on the session those cookies just established. Parsing the login response instead threw a
+   * ZodError on an empty body and surfaced as "Sign-in failed" for correct credentials, while
+   * the cookies were already set — a reload let you straight in.
+   */
   override async signIn(credentials: Credentials): Promise<Staff> {
-    const response = await firstValueFrom(
-      this.http.post<unknown>(`${this.base}/login`, signInBodyDto.parse(credentials), {
+    await firstValueFrom(
+      this.http.post(`${this.base}/login`, signInBodyDto.parse(credentials), {
         withCredentials: true,
       }),
     )
 
-    return toStaff(staffDto.parse(response))
+    const staff = await this.currentStaff()
+    if (!staff) throw new Error('Signed in, but the session could not be read back from /me')
+
+    return staff
   }
 
   /**
