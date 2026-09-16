@@ -1,6 +1,6 @@
 ---
 name: Bitrate for Artists — Pencil
-description: Визуальная система статических макетов рабочего кабинета артиста.
+description: Visual system for static Bitrate artist-workspace designs.
 colors:
   color-primary: "#7C3AED"
   color-accent: "#A78BFA"
@@ -37,250 +37,127 @@ components:
 
 ## Overview
 
-**Creative North Star: "Унаследованная дизайн-система Bitrate"**
+**Creative North Star: Inherited Bitrate System**
 
-Спокойный рабочий кабинет: нейтральная оболочка, узнаваемый фиолетовый акцент,
-ясные состояния и конкретное следующее действие. Музыкальную индивидуальность
-несут обложки; интерфейс помогает управлять работой и не конкурирует с ними.
+A calm production workspace with neutral structure, recognizable purple actions, explicit status,
+and a clear next step. Artwork and music-production imagery carry personality; the interface helps
+the artist manage work without competing with the music.
 
-Это локальная запись существующего визуального мира, а не новая айдентика или
-спецификация реализованного приложения. Область действия — макеты этого каталога.
-Источник истины — `web-artist.pen`, включая исходные переменные и мастера;
-frontmatter фиксирует только базовый тёмный поднабор токенов. При расхождении
-сверяться с исходником через Pencil. Dim выбран как основной нейтральный режим;
-Dark остаётся контрастной альтернативой, Light — светлой.
+This document describes the system used by the static designs in this directory. It is not a new
+brand identity and it is not proof of implemented behavior. `web-artist.pen` is the source of truth
+for variables, masters, instances, layouts, and annotations. Dim is the primary neutral theme;
+dark is the higher-contrast alternative; light is the bright alternative.
 
-**Key Characteristics:**
+Key characteristics:
 
-- Нейтральные тёмные поверхности и фиолетовые действия.
-- Единая Poppins, читаемая иерархия и сдержанная плотность.
-- Статус сопровождается текстом; отсутствие данных обозначается явно.
-- На телефоне сохраняются содержание и следующий шаг.
+- Neutral surfaces and disciplined purple actions.
+- One coherent type hierarchy and moderate information density.
+- Status always includes a readable label; absent data is stated explicitly.
+- Mobile preserves content, decision order, and the next action.
+- Demo data and unavailable integrations are labelled honestly.
 
-Срез: 9 сентября 2026. Проверены статические снимки шести основных фреймов:
-`L017Y`, `bu2rk`, `pNeG9`, `R5LDZj`, `aA6Id`, `H3Itmt` в
-`../../output/artist-dashboard-v2/`; детально сверены desktop и mobile дашборды. Доска
-состояний `tWPhZ` в `../../output/artist-dashboard-states-v1/` и внешняя
-русская логическая заметка `rV3Rl` там же допущены к передаче после правок.
-Music-каталог `DhsgM` и его мобильная адаптация `JZHt8` проверены в
-`../../output/artist-music-v1/`; внешняя русская заметка — `S6fzq`.
-Согласование владельцем и проверка реализации остаются отдельной работой в
-[чек-листе](web-artist.md).
+See [web-artist.md](web-artist.md) for screen inventory, product logic, and QA status.
 
 ## Colors
 
-Фиолетовый выделяет действия и выбор на почти чёрном фоне с холодными серыми поверхностями.
+- **Primary:** `color-primary` for the main action and active selection;
+  `color-accent` for supporting links and secondary emphasis.
+- **Neutral:** `color-background` for the canvas, `color-card` for panels,
+  `color-border` for structure, `color-text` for primary content, and
+  `color-text-secondary` for metadata.
+- **Semantic:** success, warning, error, and information use the corresponding semantic variables
+  defined in the `.pen` source.
 
-- **Primary:** `color-primary` — заливка основных кнопок и акцент выбора;
-  `color-accent` — вторичные текстовые переходы и поддерживающие акценты.
-- **Neutral:** `color-background` — основание; `color-card` — панели;
-  `color-border` — границы и разделители; `color-text` — основной текст;
-  `color-text-secondary` — пояснения и метаданные.
-- Семантические предупреждения, ошибки, успех и информация используют
-  соответствующие роли исходной DS. Их полная палитра остаётся в `.pen`.
-
-**The Status Rule.** Смысл состояния передаётся подписью, при необходимости
-иконкой; цвет дополняет сообщение.
+**Status rule:** communicate state through a label and, when useful, an icon. Color reinforces the
+message but never carries it alone.
 
 ## Typography
 
-Poppins — наблюдаемая единая семья из `font-body`. Иерархия идёт от заголовка
-страницы к названию релиза, заголовкам секций, основному тексту и метаданным.
-Кнопочная подпись выделена насыщенностью; её точные параметры записаны в
-frontmatter. Полная шкала размеров и веса остаётся в исходной DS: отдельные
-размеры заголовков не превращаются здесь в новую глобальную шкалу.
+Poppins is the inherited interface family for this neutral source. Hierarchy runs from page title
+to release title, section title, body, label, and metadata. Button labels use stronger weight.
+Exact display sizes and weights remain in the Pencil variables and masters; this file does not
+create a second global scale.
 
-Видимый artist-интерфейс на английском. Русские пояснения находятся в отдельных
-редактируемых фреймах за границами UI. Это не свидетельство работающей локализации.
+All interface copy, component names, annotations, and product-logic notes are English. Language
+selection in a static mockup does not imply runtime localization.
 
 ## Layout
 
-Широкая оболочка разделяет постоянную навигацию, верхнюю панель и рабочую область.
-В проверенном desktop-фрейме (1440 × 1040) боковая панель занимает (248px),
-верхняя — (88px). Основная рабочая колонка шире вспомогательной; карточки
-группируют связанные задачи, а не изображают независимые рекламные блоки.
+- Desktop separates persistent navigation, top bar, primary workspace, and supporting context.
+- Use a wider primary column when one task owns the page; supporting cards must not compete with
+  the main action.
+- Mobile uses a single decision-oriented column and a modal navigation panel.
+- Tables become labelled rows or cards while retaining status, dates, ownership, and actions.
+- Filters, active sorting, applied scope, reset, and pagination remain visible around the result.
+- Images and media crop inside their containers and never create horizontal overflow.
+- Intermediate breakpoints must be verified in the implemented application.
 
-На проверенной ширине телефона (390px) содержимое выстроено в одну колонку,
-внешний отступ — `spacing.section`, промежутки между карточками — `spacing.stack`.
-Каталог становится компактными строками; навигация представлена закрытой
-оболочкой и отдельным открытым меню. Это образцы адаптации, не установленные
-CSS-breakpoints; промежуточные ширины и поведение прокрутки в браузере не проверены.
+## Elevation and depth
 
-При адаптации таблицы Music в мобильный список сохраняются название, версия и
-длительность, статус, Updated, Release, playback и контекстное действие. Управляющие
-вкладки, поиск, фильтры, активная сортировка и Reset остаются перед списком.
-
-При адаптации таблицы Releases в мобильный список сохраняются тип, количество,
-статус, Release, Updated и контекстное действие. Закреплённые фильтры сохраняют
-контекст применённого отбора, а в пустом отфильтрованном состоянии **Clear filters** остаётся вторичным действием.
-
-Конкретный порядок блоков дашборда, демонстрационные даты и наполнение описаны
-в [web-artist.md](web-artist.md), а не закреплены как правило для всех страниц.
-
-## Elevation & Depth
-
-В проверенных дашбордах глубину задают различие фона и поверхности, тонкие
-границы и разделители. Карточки не требуют заметной тени. Открытое мобильное
-меню — отдельное состояние оболочки; его затемнение и геометрия остаются в
-исходном фрейме. Тени и анимационные токены здесь не выводятся из статичных снимков.
+Create hierarchy through surface tone, one-pixel borders, spacing, and local contrast before using
+shadow. Large navigation regions, tab bars, and page containers should not appear to float above
+the product. Overlays may use a scrim and focused elevation, but must define close, Escape,
+click-away, focus-return, and scroll-lock behavior for implementation.
 
 ## Shapes
 
-Карточки имеют мягкое скругление `rounded.card`; основные кнопки — форму капсулы.
-Обложки обрезаны внутри своих контейнеров. Прямые разделители помогают читать
-списки и таблицы. Точный радиус прочих контролов наследуется от мастеров,
-а не унифицируется по случайному элементу дашборда.
+- Cards use the shared `rounded.card` radius.
+- Primary actions may use a pill shape when consistent with the component master.
+- Artwork and inserted imagery are clipped by their content bounds.
+- Straight separators support scan-heavy tables and lists.
+- Control radii come from masters rather than being inferred from individual screens.
 
 ## Components
 
-- **Основная кнопка:** мастер `BP7Z8`, капсула, параметры из frontmatter,
-  текстовое действие с функциональной иконкой Lucide. На узком экране
-  основные действия используют доступную ширину контейнера. На рабочем экране
-  насыщенный primary принадлежит действию текущего контекста; глобальное действие
-  становится secondary, если иначе возникает конкуренция двух равных CTA.
-- **Карточки:** нейтральная поверхность, тонкая граница, заголовок и связанное
-  содержание; разделители отделяют строки и действие от сведений о релизе.
-- **Навигация:** иконка и подпись; выбранный раздел отличается фиолетовой
-  поверхностью и контуром. Мобильная оболочка сохраняет вход в меню,
-  поиск, уведомления и создание релиза.
-- **Поиск:** спокойное поле в верхней панели desktop; на телефоне показана
-  точка входа. В Music локальный поиск и фильтры расположены перед каталогом;
-  результаты, открытые меню и интерактивный поиск пока не проверены.
-- **Статусы и строки каталога:** название релиза, краткие метаданные,
-  явная подпись состояния и точка перехода. Пять проверенных моментов
-  формируют устойчивую логику: **FIRST ENTRY** ведёт к созданию первого релиза;
-  **ALL CLEAR** сохраняет доступ к каталогу; **COLLECTING DATA** явно говорит о поступлении
-  данных и не подменяет их нулём; **LOADING** сохраняет постоянный каркас скелетона
-  в существующем `color-border`; **LOAD ERROR** объясняет, что сохранённая работа
-  не изменена, и даёт естественное восстановление через **Try again** и переход в Music.
-- **Общие паттерны:** таблица, фильтры, вкладки, загрузка, ошибка,
-  меню аккаунта, подтверждение и подсказка собраны в `H3Itmt`.
-  Это визуальные образцы, не реализованные интерактивные компоненты.
-- **Пошаговая загрузка:** сохраняет видимыми текущий шаг и черновик;
-  файл показывает явные состояния выбора, загрузки, обработки, ошибки и готовности.
-  Восстановимая ошибка даёт повтор или отмену, а заблокированный переход объясняет,
-  какое условие ещё не выполнено. Технические ограничения указывать только после подтверждения.
-- **Формы:** обязательность и optional-статус полей обозначены явно; ошибка показана
-  у связанного поля и не стирает введённые данные. Ошибка сохранения сохраняет форму
-  и даёт повтор; недоступный переход объясняет незаполненное обязательное условие.
-- **Final Review:** **Submit for review** отправляет релиз только на проверку Bitrate и не
-  означает доставку или публикацию на внешних площадках. При восстановимой ошибке
-  черновик и все введённые данные сохраняются, а повтор остаётся явным действием.
-- **Release Workspace:** во всех состояниях проверки сохраняет текущий статус, следующее
-  действие, выбранный мастер и историю переходов. **Approved** означает только
-  завершение проверки Bitrate; внешняя доставка остаётся отдельным этапом.
-- **Reviewer Feedback:** обязательное исправление содержит причину, связанное действие,
-  ответ и явный resolved-статус; только required change влияет на счётчик готовности.
-  Recommendation остаётся необязательной. Ошибка повторной отправки сохраняет ответы,
-  а resubmit возвращает релиз на внутреннюю проверку Bitrate, не публикует его.
-- **Release Tasks:** задача сохраняет название, статус, срок, ответственного и явную
-  блокирующую пометку. Ближайший срок сопровождается часовым поясом; отсутствие срока
-  показывается как No due date. Review blocker ведёт к связанному feedback и не означает,
-  что внешняя публикация или доставка уже настроена.
-- **Delivery:** план, готовность пакета и внешний handoff — разные состояния.
-  Дата всегда читается вместе с часовым поясом; Not connected, Pending и Unavailable
-  имеют собственное объяснение. Primary-действие не называется Submit, пока пользователь
-  не увидел готовый пакет и пока макет не подтверждает реальную интеграцию.
-- **Post-release:** Live on Bitrate не распространяется на внешние площадки.
-  Ссылка показывается только как Available, Pending или Unavailable; сигналы содержат
-  источник и время обновления. Follow-up задачи остаются действиями человека.
-- **Music Metadata:** track и release details сохраняют общий catalog context, но
-  редактируются отдельными вкладками. Required, Optional и Read only видны до ввода;
-  save error не стирает форму. Open workspace ведёт к задачам и feedback, а не
-  подменяет сохранение metadata. Неподтверждённые delivery-лимиты не показываются.
-- **Multi-track Order:** EP/Album имеет сохранённую draft sequence. Drag-and-drop
-  сопровождается Move up / Move down; нумерация меняется после Save order. Per-track
-  Needs details и Processing объясняют, почему Review остаётся недоступным.
-- **Music Lifecycle:** Draft, Uploading, Processing, Processing error, In review и
-  Published используют подпись, иконку, цвет и следующий шаг. Статусы макета остаются
-  иллюстративной моделью до сверки с реализацией.
-- **Archive & Delete:** Published release архивируется и может быть восстановлен;
-  analytics, comments, history и workspace сохраняются. Permanent delete доступен
-  только подходящему draft, называет точный объект и требует typed confirmation.
-- **Artist Profile:** публичные media/details, каталог и layout отделены от login,
-  security и billing. Preview показывает draft, но не подменяет Save. Featured release
-  выбирается из опубликованного каталога; недоступный listener-history block объясняет
-  границу между artist и listener profile. Ошибка сохранения сохраняет остальные поля.
-- **Verification:** это отдельный будущий процесс со статусами Not applied, Submitted,
-  Needs information и Approved. Badge не появляется до подтверждённого review;
-  неизвестные критерии не придумываются, а действие остаётся unavailable.
-- **Account Settings:** приватные email и sign-in methods не смешиваются с публичным
-  artist profile. Список провайдеров отражает только подтверждённую реализацию;
-  неподключённые варианты показываются как unavailable, а demo-данные подписываются.
-- **Security:** password, 2FA, recovery codes и active sessions — самостоятельные
-  сценарии. Чувствительное действие требует явного подтверждения, объясняет какие
-  сессии завершатся и оставляет понятный путь восстановления доступа.
-- **Notifications:** пользователь выбирает тип события отдельно от канала доставки.
-  In-app, Email и Push имеют собственные состояния; недоступный канал не маскируется,
-  а обязательное поведение security-сообщений следует фактической реализации.
-- **Appearance:** Dark, Light и Dim используют существующие theme tokens; выбранная
-  тема отличается от статического preview. Density меняет интервалы, но не скрывает
-  сведения. Language selector недоступен, пока runtime-локализация не реализована.
-- **Connected Services:** карточка сервиса всегда показывает состояние, доступы
-  и последствия disconnect. Connect не появляется для неподтверждённого провайдера;
-  internal review, social publishing и external delivery не смешиваются.
-- **Team & Safety:** роль и её границы видны до приглашения. Owner отдельно от Manager
-  и Viewer; pending invite не считается активным участником. Sign-out, deactivation
-  и deletion ведут в отдельный review, а не выполняются немедленно.
-- **Promotion Overview:** Draft, Scheduled, Active, Paused и Completed отражают
-  lifecycle кампании, не вероятность успеха. Reporting без подтверждённого источника
-  показывается как unavailable, а не как нулевой результат.
-- **Campaign Creation:** release, goal, audience, channels, timing и materials
-  проходят последовательный review. Continue меняет шаг, но не запускает кампанию;
-  paid spend требует отдельного budget/limit confirmation.
-- **AI-assisted Draft:** предложение строится только на видимом brief и metadata,
-  остаётся редактируемым и версионируемым. Regenerate сохраняет текущую редакцию;
-  Save не публикует, а final copy и channel подтверждает артист.
-- **Campaign Materials:** copy, approved artwork, destination и schedule остаются
-  редактируемыми до Review. Channel preview явно помечается как preview и не равен
-  реальному rendering или публикации; Save сохраняет только draft.
-- **Paid Promotion:** amount, daily cap, period и auto-renew повторяются в launch review.
-  Demo values не являются тарифом или рекомендацией. Без provider, billing source
-  и explicit consent запуск недоступен; неподтверждённый forecast не показывается.
-- **Campaign Reporting:** каждая метрика имеет definition, source, period, timezone
-  и updated time. External unavailable не подменяется нулём. Channel retry сохраняет
-  draft/schedule и не дублирует уже доставленное действие.
-- **Artist Analytics:** overview и release/track drill-down используют один evidence
-  contract: definition, source, period, timezone и updated time всегда читаются вместе.
-  Смена release/track scope пересчитывает все карточки, графики и таблицы в экране.
-- **Analytics Data States:** observed zero, no data yet, delayed update и load error —
-  разные состояния с отдельной причиной и следующим шагом. Recoverable error сохраняет
-  выбранные period, comparison, timezone, source и последнее валидное представление.
-- **Analytics Accessibility:** серия имеет подпись, значение и легенду; цвет усилен
-  формой и текстом. Те же значения доступны как таблица. Сравнение периодов допустимо
-  только для одинаковой длительности, источника и часового пояса.
-- **Revenue & Forecast:** это отдельный future-концепт. Recorded fact и estimated
-  forecast визуально и текстово разделены; без подтверждённого источника, модели,
-  входов, диапазона и ограничений значение остаётся Unavailable, а не нулём.
-- **Dashboard Performance Summary:** выбранный period, comparison, source, timezone
-  и freshness относятся ко всем показателям экрана. Сводка использует только
-  Bitrate-owned данные; внешние платформы и доход не подменяются demo-числами.
-  Current release задаёт рабочий контекст, Needs attention — ближайшие решения,
-  а каталог, даты и события остаются вторичным уровнем.
-- **Cross-theme QA:** `O45LSf` фиксирует визуальный parity Dark / Light / Dim,
-  Default / Hover / Focus / Pressed / Disabled и стресс-кейсы контента. Статус
-  не передаётся одним цветом. Матрица служит reference для реализации, но не
-  подтверждает keyboard runtime, измеренный WCAG contrast, motion или breakpoints.
-- **Global Search:** query и scope сохраняются при выборе результата. Каждый результат
-  сообщает тип объекта, контекст и естественное действие; selected preview ускоряет
-  оценку, но не заменяет переход. Keyboard hints остаются runtime-спецификацией.
-- **Notification Center:** событие всегда связано с объектом, временем и следующим
-  шагом. Action required отделяется от updates; unread имеет не только цветовой сигнал.
-  Mark all as read меняет read-state, но не удаляет историю.
-- **Row Context Actions:** меню зависит от lifecycle объекта. Routine, archive и
-  permanent delete визуально разделены; недоступное действие объясняется состоянием.
-  Mobile использует bottom sheet, а destructive flow требует отдельного review.
-- **Логотип:** использовать оригинальный мастер `OVOcb` из скопированной DS.
-  Его текущий lockup не объявляется окончательным глобальным wordmark бренда.
+- **Primary button:** one dominant action per decision context. A global action becomes secondary
+  when a local task already owns the primary emphasis.
+- **Secondary button:** outline or neutral surface for reversible or supporting actions.
+- **Status chip:** semantic label with consistent icon, padding, and vertical alignment.
+- **Card:** groups one task or one coherent set of information; it is not a generic decorative tile.
+- **Tabs:** centered labels, balanced padding, clear active state, and no layout jump.
+- **Table/list:** stable columns on desktop, labelled rows on mobile, and lifecycle-aware actions.
+- **Form field:** required, optional, read-only, focused, invalid, saving, and saved states are
+  distinct before the user enters data.
+- **Upload:** ready, drag-active, uploading, processing, complete, and recoverable-error states.
+- **Modal/sheet:** names the exact object and consequence; destructive confirmation remains separate
+  from routine actions.
+- **Search:** keeps query and scope visible and distinguishes selected preview from navigation.
+- **Notification:** includes event, object, time, state, and next action.
+- **Media insert:** explains music or production context and must not reduce content contrast.
 
-**The Evidence Rule.** Статический макет фиксирует внешний вид; работу переходов,
-hover, focus, disabled, клавиатуры, загрузки и анимации подтверждают отдельно.
+## Responsive behavior
 
-## Do's and Don'ts
+- Keep the same information and next action across desktop and mobile.
+- Recompose rather than scale down.
+- Use full-width mobile actions only when they improve the decision path.
+- Keep safe touch targets and visible focus requirements in the implementation handoff.
+- Do not place text over a busy image without a controlled fade or solid reading surface.
 
-- **Do** Наследовать переменные, мастера и оригинальный логотип из `.pen`.
-- **Do** Сохранять читаемость статуса, содержания и следующего действия при адаптации.
-- **Do** Обозначать отсутствие данных и демонстрационное наполнение явно.
-- **Don't** Подменять нейтральную оболочку декоративной неоновой сценой; обложки остаются самостоятельным музыкальным материалом.
-- **Don't** Выдавать макеты, демонстрационные числа и планируемые возможности за работающий продукт.
-- **Don't** Подменять выбранный нейтральный Dim контрастным Dark или переносить один поднабор значений между режимами без theme tokens.
+## Accessibility and integrity
+
+- Target WCAG 2.2 AA in implementation.
+- Never rely on color alone.
+- Preserve keyboard order and visible focus.
+- Respect reduced motion.
+- Use real labels and accessible names for icon-only controls.
+- Distinguish zero, no data, delayed data, and load error.
+- Distinguish draft save, internal review, approval, Bitrate publication, and external delivery.
+- Never present illustrative numbers, people, integrations, or AI output as live product data.
+
+## Do and do not
+
+Do:
+
+- Reuse variables, component masters, and original brand assets from the `.pen` source.
+- Preserve content hierarchy and status meaning during adaptation.
+- Label demo and unavailable states.
+- Keep music imagery specific to the screen's task.
+- Verify the implementation separately from the static design.
+
+Do not:
+
+- Replace the neutral workspace with an undifferentiated neon scene.
+- Invent provider limits, legal promises, performance data, or revenue.
+- Use the same decorative image across unrelated screens.
+- Treat static hover/focus examples as proof of runtime accessibility.
+- Apply one theme's literal values to another theme.

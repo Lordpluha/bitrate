@@ -1,25 +1,25 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-07T15:14:13Z",
-  "title": "Design System: Bitrate for Artists — Pencil",
+  "generatedAt": "2026-09-16T00:00:00Z",
+  "title": "Design System: Bitrate for Artists — Dark",
   "extensions": {
     "colorMeta": {
-      "color-primary": { "role": "primary", "displayName": "Фиолетовый Bitrate" },
-      "color-accent": { "role": "primary", "displayName": "Светлый фиолетовый акцент" },
-      "color-background": { "role": "neutral", "displayName": "Основание Dark" },
-      "color-card": { "role": "neutral", "displayName": "Поверхность панели Dark" },
-      "color-border": { "role": "neutral", "displayName": "Граница Dark" },
-      "color-text": { "role": "neutral", "displayName": "Основной текст Dark" },
-      "color-text-secondary": { "role": "neutral", "displayName": "Вторичный текст Dark" }
+      "color-primary": { "role": "primary", "displayName": "Bitrate Purple" },
+      "color-accent": { "role": "primary", "displayName": "Light Purple Accent" },
+      "color-background": { "role": "neutral", "displayName": "Midnight Canvas" },
+      "color-card": { "role": "neutral", "displayName": "Dark Panel Surface" },
+      "color-border": { "role": "neutral", "displayName": "Cool Structural Border" },
+      "color-text": { "role": "neutral", "displayName": "Primary Light Text" },
+      "color-text-secondary": { "role": "neutral", "displayName": "Secondary Light Text" }
     },
     "typographyMeta": {
       "body": {
-        "displayName": "Текст интерфейса",
-        "purpose": "Наблюдаемая семья font-body в Pencil; окончательная типографика бренда не утверждается."
+        "displayName": "Interface Text",
+        "purpose": "Poppins interface copy inherited from the dark Pencil system."
       },
       "label": {
-        "displayName": "Подпись основной кнопки",
-        "purpose": "Текст действия в исходном мастере BP7Z8."
+        "displayName": "Action Label",
+        "purpose": "Action text inherited from shared dark component masters."
       }
     },
     "shadows": [],
@@ -28,35 +28,35 @@
   },
   "components": [],
   "narrative": {
-    "northStar": "Унаследованная дизайн-система Bitrate",
-    "overview": "Спокойный рабочий кабинет: нейтральная оболочка, узнаваемый фиолетовый акцент, ясные состояния и конкретное следующее действие. Музыкальную индивидуальность несут обложки; интерфейс помогает управлять работой и не конкурирует с ними.\n\nЭто локальная запись существующего визуального мира, а не новая айдентика или спецификация реализованного приложения. Область действия — макеты этого каталога. Источник истины — `web-artist.pen`, включая исходные переменные и мастера; frontmatter фиксирует только используемый здесь поднабор Dark. При расхождении сверяться с исходником через Pencil. Dark пока предварительная рабочая тема; Light и Dim сохранены в исходной системе, но новые экраны в них не проверены.",
+    "northStar": "Midnight Control Room",
+    "overview": "A high-contrast production workspace with near-black neutral layers, disciplined purple actions, explicit semantic state, and workflow-specific music imagery. The .pen file remains the source of truth.",
     "keyCharacteristics": [
-      "Нейтральные тёмные поверхности и фиолетовые действия.",
-      "Единая Poppins, читаемая иерархия и сдержанная плотность.",
-      "Статус сопровождается текстом; отсутствие данных обозначается явно.",
-      "На телефоне сохраняются содержание и следующий шаг."
+      "Near-black structural surfaces with restrained purple emphasis.",
+      "Workflow-specific studio, waveform, patchbay, and spectrum imagery.",
+      "Status includes text and does not rely on color alone.",
+      "Mobile preserves the desktop decision order."
     ],
     "rules": [
       {
-        "name": "The Status Rule",
-        "body": "Смысл состояния передаётся подписью, при необходимости иконкой; цвет дополняет сообщение.",
+        "name": "The Contrast Rule",
+        "body": "Working content must remain readable before glow, texture, or image detail is added.",
         "section": "colors"
       },
       {
         "name": "The Evidence Rule",
-        "body": "Статический макет фиксирует внешний вид; работу переходов, hover, focus, disabled, клавиатуры, загрузки и анимации подтверждают отдельно.",
+        "body": "Static designs define intent; keyboard, focus, contrast, motion, and responsive behavior require runtime verification.",
         "section": "components"
       }
     ],
     "dos": [
-      "Do Наследовать переменные, мастера и оригинальный логотип из `.pen`.",
-      "Do Сохранять читаемость статуса, содержания и следующего действия при адаптации.",
-      "Do Обозначать отсутствие данных и демонстрационное наполнение явно."
+      "Reuse dark variables, masters, and original brand assets.",
+      "Integrate each music insert with the workflow it explains.",
+      "Keep one dominant action per decision context."
     ],
     "donts": [
-      "Don't Подменять нейтральную оболочку декоративной неоновой сценой; обложки остаются самостоятельным музыкальным материалом.",
-      "Don't Выдавать макеты, демонстрационные числа и планируемые возможности за работающий продукт.",
-      "Don't Считать Dark окончательно согласованной темой или переносить этот поднабор значений на Light и Dim."
+      "Do not cover working content with bright imagery.",
+      "Do not repeat one visual across unrelated screens.",
+      "Do not present concepts or demo data as shipped behavior."
     ]
   }
 }
