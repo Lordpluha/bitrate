@@ -1,14 +1,14 @@
+import { ENV } from './env.generated'
+
 /**
  * Base URL of the Bitrate API.
  *
- * Substituted at build time through `define` in `angular.json` — esbuild replaces the
- * `NG_APP_API_URL` global, so the value is baked into the bundle exactly like Vite inlines
- * `import.meta.env` in the artists portal. Setting it at container runtime does nothing.
+ * Comes from `NG_APP_API_URL` through `scripts/with-env.mjs`, which writes `env.generated.ts`
+ * from the `.env` chain before every build, serve, test and typecheck. There is no fallback on
+ * purpose: a missing value fails that script with a named variable, rather than silently
+ * shipping a bundle that points at localhost.
  */
-declare const NG_APP_API_URL: string
-
-export const API_BASE_URL: string =
-  typeof NG_APP_API_URL === 'string' ? NG_APP_API_URL.replace(/\/$/, '') : 'http://localhost:3000'
+export const API_BASE_URL: string = ENV.apiUrl.replace(/\/$/, '')
 
 /** Every operator endpoint hangs off this prefix. */
 export const ADMIN_API = `${API_BASE_URL}/api/v1/admin`

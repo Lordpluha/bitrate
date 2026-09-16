@@ -30,10 +30,12 @@ CMD ["pnpm", "--filter", "@bitrate/admin", "run", "dev"]
 
 # Stage 4: Build
 FROM base AS build
-# esbuild substitutes this at BUILD time through `define`, so it cannot be a runtime ENV in the
-# production stage. The deployment variable is the shared NEXT_PUBLIC_API_URL; compose and CI map
-# it to this app's name, the same way they do for the artists portal.
-ARG NG_APP_API_URL=http://localhost:3000
+# Baked into the bundle at BUILD time, so it cannot be a runtime ENV in the production stage. The
+# deployment variable is the shared NEXT_PUBLIC_API_URL; compose and CI map it to this app's name,
+# the same way they do for the artists portal. No default on purpose — an unset value fails the
+# build with a named variable instead of shipping an image that points at localhost.
+ARG NG_APP_API_URL
+ENV NG_APP_API_URL=${NG_APP_API_URL}
 ENV NODE_ENV=production
 
 COPY --from=dependencies /app/node_modules ./node_modules
@@ -41,10 +43,9 @@ COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
 
-# `--define` overrides angular.json's development default. The value must arrive as a JSON
-# string literal, hence the escaped quotes.
-RUN pnpm --filter @bitrate/admin exec ng build \
-      --define "NG_APP_API_URL=\"${NG_APP_API_URL}\""
+# `scripts/with-env.mjs` reads NG_APP_API_URL from the environment set above and writes the
+# generated config module before Angular runs. There is no .env file in the image.
+RUN pnpm --filter @bitrate/admin build
 
 # Stage 5: Production — static files behind nginx. There is no server to run: the app is an SPA
 # by decision (it sits entirely behind operator auth, so it has nothing to server-render).

@@ -4,15 +4,16 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "dev": "ng serve --port 3005 --host 0.0.0.0",
-    "build": "ng build",
-    "start": "ng serve --port 3005",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "env:gen": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs --generate-only",
+    "dev": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs serve --host 0.0.0.0",
+    "build": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs build",
+    "start": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs serve",
+    "lint": "pnpm env:gen && eslint .",
+    "lint:fix": "pnpm env:gen && eslint . --fix",
     "format": "prettier --write .",
-    "check-types": "tsc --noEmit -p tsconfig.app.json",
-    "test": "ng test",
-    "test:unit": "ng test"
+    "check-types": "pnpm env:gen && tsc --noEmit -p tsconfig.app.json",
+    "test": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs test",
+    "test:unit": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs test"
   },
   "dependencies": {
     "@angular/cdk": "^22.1.5",

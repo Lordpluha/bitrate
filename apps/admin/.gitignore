@@ -32,3 +32,7 @@ Thumbs.db
 
 # typescript
 *.tsbuildinfo
+
+# Written from the .env chain by scripts/with-env.mjs before every build, serve, test and
+# typecheck. Generated, never committed — see .env.example.
+/src/app/infrastructure/http/env.generated.ts
