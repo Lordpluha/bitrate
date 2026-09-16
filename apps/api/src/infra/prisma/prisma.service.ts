@@ -95,6 +95,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.staff
   }
 
+  /** Gets the operator role. */
+  get role() {
+    return this.prisma.role
+  }
+
   /** Gets the staff session. */
   get staffSession() {
     return this.prisma.staffSession

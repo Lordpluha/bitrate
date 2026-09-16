@@ -1,0 +1,5 @@
+---
+'@bitrate/api': minor
+---
+
+Laid the foundation for per-operator permissions, replacing the fixed `StaffRole` enum. Authorisation now lives on `Staff.permissions`, a string array checked against a code-owned catalogue (`reports:*`, `artists:*`, `tracks:*`, `users:*`, `audit:read`, plus the protected `staff:*`/`roles:*` reserved for the built-in ADMIN role); a `Role` row is a template copied onto an operator at assignment time and kept afterwards only as provenance/display via `Staff.roleId`. The built-in ADMIN role still passes every permission check by identity, and MODERATOR keeps its existing access through a template equal to every grantable permission. Every operator route now declares `@RequirePermission(...)` in place of the old `@StaffRoles(...)`/role-array form on `@AdminAuth()`, with the guard, coverage spec, and both seed scripts updated to match. The migration backfills every existing operator's `permissions` from their prior role so no account silently loses access on deploy. Staff/role management endpoints and the admin panel UI for any of this are not part of this change.

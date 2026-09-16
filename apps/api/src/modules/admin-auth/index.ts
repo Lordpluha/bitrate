@@ -1,3 +1,4 @@
+export * from './access'
 export * from './admin-auth.guard'
 export * from './admin-auth.module'
 export * from './admin-auth.service'

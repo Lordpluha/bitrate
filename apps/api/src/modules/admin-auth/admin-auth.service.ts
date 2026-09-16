@@ -4,6 +4,7 @@ import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@n
 import { JwtService } from '@nestjs/jwt'
 import type { Staff, StaffSession } from '@prisma/client'
 import type { JWTPayload } from '../tokens'
+import type { Permission } from './access'
 import { STAFF_SAFE_SELECT } from './staff.select'
 
 /** A completed staff sign-in: the token pair a session is built from. */
@@ -105,10 +106,14 @@ export class AdminAuthService {
 
   /** Returns the currently authenticated staff member, with secret material stripped. */
   async me(staffId: Staff['id']) {
-    return await this.prisma.staff.findFirst({
+    const staff = await this.prisma.staff.findFirst({
       where: { id: staffId, deletedAt: null },
       select: STAFF_SAFE_SELECT,
     })
+    if (!staff) return null
+
+    const { role, permissions, ...rest } = staff
+    return { ...rest, role: role.name, permissions: permissions as Permission[] }
   }
 
   private async issueSession(staff: Staff): Promise<StaffTokenPair> {

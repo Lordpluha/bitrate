@@ -4,6 +4,7 @@ import { ForbiddenException, UnauthorizedException } from '@nestjs/common'
 import type { Reflector } from '@nestjs/core'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildStaff, buildStaffSession } from './__tests__/fixtures/admin-auth.fixtures'
+import type { Permission } from './access'
 import { AdminAuthGuard } from './admin-auth.guard'
 import { UNAUTHORIZED_ERRORS } from './errors'
 
@@ -14,9 +15,11 @@ const makeTokenServiceMock = () =>
     getTokenName: jest.fn((type: string) => (type === 'access' ? 'access_token' : 'refresh_token')),
   }) as unknown as jest.Mocked<TokenService>
 
-const makeReflectorMock = (requirement: string, roles: string[] = []) =>
+const makeReflectorMock = (requirement: string, permission?: Permission) =>
   ({
-    getAllAndOverride: jest.fn((key: string) => (key === 'tokenRequirement' ? requirement : roles)),
+    getAllAndOverride: jest.fn((key: string) =>
+      key === 'tokenRequirement' ? requirement : permission,
+    ),
   }) as unknown as Reflector
 
 const makeContext = (cookies: Record<string, string>) => ({
@@ -88,14 +91,19 @@ describe('AdminAuthGuard', () => {
     )
   })
 
-  it('should throw ForbiddenException when the role is insufficient', async () => {
-    guard = new AdminAuthGuard(prisma, makeReflectorMock('access', ['ADMIN']), tokenService)
+  it('should throw ForbiddenException when the permission is missing', async () => {
+    guard = new AdminAuthGuard(prisma, makeReflectorMock('access', 'artists:delete'), tokenService)
     tokenService.verifyToken.mockResolvedValue({
       sub: 'staff-1',
       username: 'ops',
       type: 'staff',
     } as never)
-    prisma.staff.findFirst.mockResolvedValue(buildStaff({ role: 'MODERATOR' }) as never)
+    prisma.staff.findFirst.mockResolvedValue(
+      buildStaff({
+        role: { name: 'MODERATOR', builtIn: false },
+        permissions: ['artists:read'],
+      }) as never,
+    )
     prisma.staffSession.findFirst.mockResolvedValue(buildStaffSession() as never)
 
     await expect(guard.canActivate(makeContext({ access_token: 'at' }) as never)).rejects.toThrow(
@@ -103,13 +111,12 @@ describe('AdminAuthGuard', () => {
     )
   })
 
-  it('should return true and attach staff to request when auth succeeds', async () => {
-    guard = new AdminAuthGuard(
-      prisma,
-      makeReflectorMock('access', ['ADMIN', 'MODERATOR']),
-      tokenService,
-    )
-    const staff = buildStaff({ role: 'MODERATOR' })
+  it('should return true and attach staff to request when the permission is held', async () => {
+    guard = new AdminAuthGuard(prisma, makeReflectorMock('access', 'artists:read'), tokenService)
+    const staff = buildStaff({
+      role: { name: 'MODERATOR', builtIn: false },
+      permissions: ['artists:read'],
+    })
     const session = buildStaffSession()
     tokenService.verifyToken.mockResolvedValue({
       sub: 'staff-1',
@@ -130,6 +137,37 @@ describe('AdminAuthGuard', () => {
 
     expect(result).toBe(true)
     expect(req.staff).toBe(staff)
+  })
+
+  it('should let a built-in ADMIN pass any required permission', async () => {
+    guard = new AdminAuthGuard(prisma, makeReflectorMock('access', 'staff:write'), tokenService)
+    const staff = buildStaff({ role: { name: 'ADMIN', builtIn: true }, permissions: [] })
+    tokenService.verifyToken.mockResolvedValue({
+      sub: 'staff-1',
+      username: 'ops',
+      type: 'staff',
+    } as never)
+    prisma.staff.findFirst.mockResolvedValue(staff as never)
+    prisma.staffSession.findFirst.mockResolvedValue(buildStaffSession() as never)
+
+    const result = await guard.canActivate(makeContext({ access_token: 'at' }) as never)
+
+    expect(result).toBe(true)
+  })
+
+  it('should pass a session-only route with no permission metadata', async () => {
+    guard = new AdminAuthGuard(prisma, makeReflectorMock('access', undefined), tokenService)
+    tokenService.verifyToken.mockResolvedValue({
+      sub: 'staff-1',
+      username: 'ops',
+      type: 'staff',
+    } as never)
+    prisma.staff.findFirst.mockResolvedValue(buildStaff({ permissions: [] }) as never)
+    prisma.staffSession.findFirst.mockResolvedValue(buildStaffSession() as never)
+
+    const result = await guard.canActivate(makeContext({ access_token: 'at' }) as never)
+
+    expect(result).toBe(true)
   })
 
   it('should throw UnauthorizedException when token verification fails', async () => {

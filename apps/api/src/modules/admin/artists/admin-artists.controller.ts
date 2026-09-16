@@ -1,4 +1,4 @@
-import { AdminAuth, StaffRoles } from '@modules/admin-auth'
+import { AdminAuth, RequirePermission } from '@modules/admin-auth'
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
@@ -18,27 +18,29 @@ import {
 
 /** Operator-facing artist directory. */
 @ApiTags('Admin Artists')
-@AdminAuth('ADMIN', 'MODERATOR')
+@AdminAuth()
 @Controller({ path: 'admin/artists', version: '1' })
 export class AdminArtistsController {
   constructor(private readonly artists: AdminArtistsService) {}
 
-  /** Runs the list artists operation. Available to any staff role. */
+  /** Runs the list artists operation. */
+  @RequirePermission('artists:read')
   @ListArtistsSwagger()
   @Get('')
   list(@Query(new ZodValidationPipe(ListAdminArtistsQuerySchema)) query: ListAdminArtistsQueryDto) {
     return this.artists.findAll(query)
   }
 
-  /** Runs the get artist operation. Available to any staff role. */
+  /** Runs the get artist operation. */
+  @RequirePermission('artists:read')
   @GetArtistSwagger()
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: string) {
     return this.artists.findById(id)
   }
 
-  /** Runs the update verification operation. Requires the ADMIN role. */
-  @StaffRoles('ADMIN')
+  /** Runs the update verification operation. */
+  @RequirePermission('artists:verify')
   @UpdateArtistVerificationSwagger()
   @Patch(':id/verification')
   updateVerification(
@@ -48,8 +50,8 @@ export class AdminArtistsController {
     return this.artists.updateVerification(id, dto)
   }
 
-  /** Runs the soft-delete operation. Requires the ADMIN role. */
-  @StaffRoles('ADMIN')
+  /** Runs the soft-delete operation. */
+  @RequirePermission('artists:delete')
   @DeleteArtistSwagger()
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
