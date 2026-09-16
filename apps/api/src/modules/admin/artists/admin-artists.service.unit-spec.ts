@@ -42,6 +42,26 @@ describe('AdminArtistsService', () => {
       const call = prisma.artist.findMany.mock.calls[0]?.[0]
       expect(call?.where).toMatchObject({ deletedAt: null })
     })
+
+    it('orders by createdAt desc with an id tie-break when no sort is given', async () => {
+      prisma.artist.findMany.mockResolvedValue([] as never)
+      prisma.artist.count.mockResolvedValue(0)
+
+      await service.findAll({})
+
+      const call = prisma.artist.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }])
+    })
+
+    it('orders by the chosen field with a matching-direction id tie-break', async () => {
+      prisma.artist.findMany.mockResolvedValue([] as never)
+      prisma.artist.count.mockResolvedValue(0)
+
+      await service.findAll({ sort: 'monthlyListeners', order: 'asc' })
+
+      const call = prisma.artist.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ monthlyListeners: 'asc' }, { id: 'asc' }])
+    })
   })
 
   describe('findById', () => {

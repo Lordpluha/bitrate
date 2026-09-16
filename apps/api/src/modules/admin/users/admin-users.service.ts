@@ -1,12 +1,17 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
+import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
+import type { ADMIN_USERS_SORT_FIELDS } from './dtos'
 import { UserNotFoundException } from './errors'
 import { ADMIN_USER_SAFE_SELECT } from './user.select'
 
+/** One of the listener directory's allowed sort fields. */
+type AdminUsersSortField = (typeof ADMIN_USERS_SORT_FIELDS)[number]
+
 /** Input for listing operator-facing users. */
-type ListUsersInput = { page?: number; limit?: number; q?: string }
+type ListUsersInput = { page?: number; limit?: number; q?: string } & SortInput<AdminUsersSortField>
 
 /** Handles the operator-facing user directory. */
 @Injectable()
@@ -27,15 +32,16 @@ export class AdminUsersService {
   }
 
   /** Runs the find all operation, paginated and optionally filtered. */
-  async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, q }: ListUsersInput) {
+  async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, q, sort, order }: ListUsersInput) {
     const where = this.buildWhere({ q })
+    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
     const [data, total] = await Promise.all([
       this.prisma.user.findMany({
         where,
         select: ADMIN_USER_SAFE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        orderBy: orderBy as unknown as Prisma.UserOrderByWithRelationInput[],
       }),
       this.prisma.user.count({ where }),
     ])

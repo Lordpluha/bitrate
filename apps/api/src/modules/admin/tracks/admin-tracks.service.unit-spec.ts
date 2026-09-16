@@ -69,6 +69,29 @@ describe('AdminTracksService', () => {
 
       expect(result.data).toEqual([])
     })
+
+    it('goes through the raw-SQL problem-first query when no sort is given', async () => {
+      prisma.queryRaw.mockResolvedValue([] as never)
+      prisma.track.count.mockResolvedValue(0)
+
+      await service.findAll({})
+
+      expect(prisma.queryRaw).toHaveBeenCalledTimes(1)
+      expect(prisma.track.findMany).not.toHaveBeenCalled()
+    })
+
+    it('bypasses the raw-SQL query and orders by the chosen field when sort is given', async () => {
+      const track = buildTrackWithArtist({ id: 'track-1', title: 'B' }, 'dj-test')
+      prisma.track.findMany.mockResolvedValue([track] as never)
+      prisma.track.count.mockResolvedValue(1)
+
+      const result = await service.findAll({ sort: 'title', order: 'asc' })
+
+      expect(prisma.queryRaw).not.toHaveBeenCalled()
+      const call = prisma.track.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ title: 'asc' }, { id: 'asc' }])
+      expect(result.data[0]?.id).toBe('track-1')
+    })
   })
 
   describe('findById', () => {

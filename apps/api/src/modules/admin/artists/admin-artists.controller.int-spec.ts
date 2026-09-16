@@ -65,6 +65,23 @@ describe('AdminArtistsController (int)', () => {
       )
     })
 
+    it('GET /admin/artists returns 400 for a sort field outside the allowlist', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/admin/artists')
+        .query({ sort: 'password' })
+
+      expect(res.status).toBe(400)
+      expect(service.findAll).not.toHaveBeenCalled()
+    })
+
+    it('GET /admin/artists returns 400 for an invalid order', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/admin/artists')
+        .query({ sort: 'username', order: 'sideways' })
+
+      expect(res.status).toBe(400)
+    })
+
     it('GET /admin/artists/:id returns 404 for a missing artist', async () => {
       service.findById.mockRejectedValue(new ArtistNotFoundException('missing'))
 

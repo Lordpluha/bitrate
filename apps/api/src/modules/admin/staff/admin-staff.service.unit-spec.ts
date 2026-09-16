@@ -289,4 +289,26 @@ describe('AdminStaffService', () => {
       })
     })
   })
+
+  describe('findAll', () => {
+    it('orders by createdAt desc with an id tie-break when no sort is given', async () => {
+      prisma.staff.findMany.mockResolvedValue([] as never)
+      prisma.staff.count.mockResolvedValue(0)
+
+      await service.findAll({})
+
+      const call = prisma.staff.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }])
+    })
+
+    it('orders by the chosen field with a matching-direction id tie-break', async () => {
+      prisma.staff.findMany.mockResolvedValue([] as never)
+      prisma.staff.count.mockResolvedValue(0)
+
+      await service.findAll({ sort: 'email', order: 'asc' })
+
+      const call = prisma.staff.findMany.mock.calls[0]?.[0]
+      expect(call?.orderBy).toEqual([{ email: 'asc' }, { id: 'asc' }])
+    })
+  })
 })

@@ -68,6 +68,23 @@ describe('AdminTracksController (int)', () => {
       )
     })
 
+    it('GET /admin/tracks returns 400 for a sort field outside the allowlist', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/admin/tracks')
+        .query({ sort: 'processingError' })
+
+      expect(res.status).toBe(400)
+      expect(service.findAll).not.toHaveBeenCalled()
+    })
+
+    it('GET /admin/tracks returns 400 for an invalid order', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/admin/tracks')
+        .query({ sort: 'title', order: 'sideways' })
+
+      expect(res.status).toBe(400)
+    })
+
     it('GET /admin/tracks/:id returns 404 for a missing track', async () => {
       service.findById.mockRejectedValue(new TrackNotFoundException('missing'))
 

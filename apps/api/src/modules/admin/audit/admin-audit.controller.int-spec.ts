@@ -69,6 +69,21 @@ describe('AdminAuditController (int)', () => {
     expect(res.status).toBe(400)
   })
 
+  it('GET /admin/audit returns 400 for a sort field outside the allowlist', async () => {
+    const res = await request(app.getHttpServer()).get('/admin/audit').query({ sort: 'action' })
+
+    expect(res.status).toBe(400)
+    expect(service.findAll).not.toHaveBeenCalled()
+  })
+
+  it('GET /admin/audit returns 400 for an invalid order', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/admin/audit')
+      .query({ sort: 'createdAt', order: 'sideways' })
+
+    expect(res.status).toBe(400)
+  })
+
   it('GET /admin/audit returns an empty page beyond the data', async () => {
     service.findAll.mockResolvedValue({ data: [], total: 0, page: 5, limit: 20 } as never)
 

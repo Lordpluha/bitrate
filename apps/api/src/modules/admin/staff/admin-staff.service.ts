@@ -1,19 +1,28 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
+import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { assertGrantable, normalizePermissions, type Permission } from '@modules/admin-auth'
 import { TokenService } from '@modules/tokens/token.service'
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import { ADMIN_STAFF_SAFE_SELECT } from './admin-staff.select'
-import type { AssignStaffRoleDto, CreateStaffDto, UpdateStaffPermissionsDto } from './dtos'
+import type {
+  ADMIN_STAFF_SORT_FIELDS,
+  AssignStaffRoleDto,
+  CreateStaffDto,
+  UpdateStaffPermissionsDto,
+} from './dtos'
 import {
   LastAdminException,
   StaffNotFoundException,
   SuperAdminPermissionsException,
 } from './errors'
 
+/** One of the operator directory's allowed sort fields. */
+type AdminStaffSortField = (typeof ADMIN_STAFF_SORT_FIELDS)[number]
+
 /** Input for listing operators. */
-type ListStaffInput = { page?: number; limit?: number }
+type ListStaffInput = { page?: number; limit?: number } & SortInput<AdminStaffSortField>
 
 /** What decides the set an operator is granted on creation or reassignment. */
 type ResolveGrantedPermissionsInput = {
@@ -36,15 +45,16 @@ export class AdminStaffService {
   ) {}
 
   /** Runs the find all operation, paginated. */
-  async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT }: ListStaffInput) {
+  async findAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, sort, order }: ListStaffInput) {
     const where = { deletedAt: null } satisfies Prisma.StaffWhereInput
+    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
     const [data, total] = await Promise.all([
       this.prisma.staff.findMany({
         where,
         select: ADMIN_STAFF_SAFE_SELECT,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        orderBy: orderBy as unknown as Prisma.StaffOrderByWithRelationInput[],
       }),
       this.prisma.staff.count({ where }),
     ])
