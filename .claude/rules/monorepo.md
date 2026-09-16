@@ -32,7 +32,7 @@ bitrate/
     converter/        Media conversion utilities
     ncs-parser/       NCS audio format parser
   infra/
-    docker-compose.dev.yaml       infra only: postgres, postgres_test, redis, mailhog
+    docker-compose.dev.yaml       infra only: postgres, postgres_test, redis
     docker-compose.preprod.yaml   full stack — what every `task dev:*`/`db:*` targets
     docker-compose.prod.yaml      production stack
     docker-monitor.sh             health/resource/db/error reporting — see `task monitor:*`
@@ -135,7 +135,7 @@ arguments lists every task with its description; the groups are:
 
 | Group | Covers |
 |---|---|
-| `infra:*` | `docker-compose.dev.yaml` — postgres, postgres_test, redis, mailhog |
+| `infra:*` | `docker-compose.dev.yaml` — postgres, postgres_test, redis |
 | `dev:*` | `docker-compose.preprod.yaml` — the full app stack |
 | `prod:*` | `docker-compose.prod.yaml` |
 | `db:*` | Prisma inside the `api` container; `:native` variants run it on the host |
