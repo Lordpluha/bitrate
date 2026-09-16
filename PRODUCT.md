@@ -182,6 +182,36 @@ Author: Vladyslav Tesliuk (github.com/Lordpluha). MIT licensed.
 5. **Claim nothing the product cannot back.** With no users, no pricing, and no position
    decided, copy that implies scale, endorsement, or a market claim is a defect.
 
+## Confirmed Product Explorations
+
+These concepts were supplied by the product owner on 2026-09-04. They are product hypotheses
+and roadmap material, **not shipped capabilities**. Landing pages and demos may label them as
+concepts, previews, or planned directions, but must not present them as currently available.
+
+**Listener workspace:**
+- Constrained UI customization: listeners adjust density, panel arrangement, player emphasis,
+  and other safe design parameters instead of receiving one fixed interface.
+- A goal-driven playlist builder: the listener describes a purpose or mood, chooses whether to
+  start from liked songs, and completes a dynamically generated questionnaire capped at roughly
+  three to five steps. The system proposes small batches of candidate tracks; the listener ranks,
+  rejects, regenerates, and reorders them before a playlist is created. AI supports the decision
+  rather than appearing as a generic badge or replacing listener taste.
+- Playlist versioning, smart folders and tags, deeper search and listening statistics, a first-
+  class local library, friend taste histories, and cross-platform queues.
+- More experimental directions: an influence graph for exploring artist connections, timestamped
+  comments, demo/remaster/draft track versions, discovery filters such as “unknown artists”, and
+  collaborative rooms with real-time queue control.
+
+**Artist workspace:**
+- An AI release producer that reviews release readiness and suggests the next step without making
+  the creative decision; an AI-A&R assistant that surfaces plausible contexts for a track.
+- Assisted social posts and release marketing, simple delivery to streaming services, a services
+  marketplace, a career-progress timeline, and a community plugin ecosystem.
+- An opt-in autopilot that prepares and reminds about routine work while the artist confirms every
+  consequential action.
+- A release workspace combining track versions, tasks, deadlines, collaborators, publishing state,
+  post-release actions, cross-platform analytics, and clearly qualified revenue forecasting.
+
 ## Accessibility & Inclusion
 
 WCAG 2.2 Level AA is the repository target for user-facing web UI, and accessibility
