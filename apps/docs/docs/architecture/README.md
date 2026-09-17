@@ -43,6 +43,7 @@ how to apply it day to day.
 | [0035](./0035-admin-panel-on-angular.md) | The operator panel returns, on Angular, with its own data layer |
 | [0036](./0036-admin-clean-architecture.md) | The operator panel is layered as clean architecture |
 | [0037](./0037-br-manager-owns-tracker-state.md) | `br-manager` owns tracker state beside `br-worker` |
+| [0038](./0038-operator-permissions-roles-as-templates.md) | Operators hold permissions; roles are templates |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.
