@@ -13,7 +13,11 @@ type RoleWriteErrorMessageInput = {
  * two distinct API refusals the response body does not distinguish (see `to-role-write-error.ts`
  * in `infrastructure/roles`); `builtIn` is what lets this pick the right one.
  */
-export function roleWriteErrorMessage({ error, name, builtIn }: RoleWriteErrorMessageInput): string {
+export function roleWriteErrorMessage({
+  error,
+  name,
+  builtIn,
+}: RoleWriteErrorMessageInput): string {
   if (!(error instanceof RoleWriteError)) return 'Could not save this role.'
 
   switch (error.reason) {

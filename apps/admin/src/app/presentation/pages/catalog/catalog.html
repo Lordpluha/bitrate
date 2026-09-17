@@ -18,8 +18,8 @@
 
   @if (query.state().sort === null) {
     <p class="text-sm text-muted-foreground">
-      Ordered by what needs attention: failed tracks first, then the longest-stuck uploads.
-      Choosing a column below replaces this order; clearing it brings this order back.
+      Ordered by what needs attention: failed tracks first, then the longest-stuck uploads. Choosing
+      a column below replaces this order; clearing it brings this order back.
     </p>
   }
 
@@ -60,6 +60,28 @@
         </button>
       }
     </div>
+  </div>
+
+  <div class="flex gap-2" role="group" aria-label="Filter by take-down status">
+    @for (
+      option of [
+        { value: 'active', label: 'Active' },
+        { value: 'deactivated', label: 'Taken down' },
+        { value: 'all', label: 'All' },
+      ];
+      track option.value
+    ) {
+      <button
+        hlmBtn
+        size="sm"
+        [variant]="query.state().resourceStatus === option.value ? 'default' : 'outline'"
+        type="button"
+        [attr.aria-pressed]="query.state().resourceStatus === option.value"
+        (click)="setResourceStatus($any(option.value))"
+      >
+        {{ option.label }}
+      </button>
+    }
   </div>
 
   <app-collection-status
@@ -111,7 +133,19 @@
           @for (track of collection.items(); track track.id) {
             <tr hlmTr>
               <td hlmTd>
-                <span class="block">{{ track.title }}</span>
+                <a
+                  [routerLink]="['/catalog', track.id]"
+                  [fragment]="
+                    track.processingStatus === 'FAILED' || isStuck(track)
+                      ? 'processing-history'
+                      : undefined
+                  "
+                  class="hover:underline"
+                  >{{ track.title }}</a
+                >
+                @if (track.takenDownAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                }
                 @if (track.processingError) {
                   <span
                     class="mt-1 block max-w-md truncate text-xs text-destructive"
@@ -148,7 +182,7 @@
                 }}
               </td>
               <td hlmTd>
-                @if (track.processingStatus !== 'READY' && canReprocess()) {
+                @if (canReprocess() && reprocessible(track)) {
                   <button
                     hlmBtn
                     size="sm"

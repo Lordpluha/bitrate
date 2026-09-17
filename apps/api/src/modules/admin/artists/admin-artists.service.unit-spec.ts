@@ -1,16 +1,29 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
+import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
 import { buildAdminArtist, buildArtist } from './__tests__/fixtures/admin-artists.fixtures'
 import { AdminArtistsService } from './admin-artists.service'
-import { ArtistNotFoundException } from './errors'
+import {
+  ArtistAlreadyDeletedException,
+  ArtistNotDeletedException,
+  ArtistNotFoundException,
+} from './errors'
+
+const STAFF_ID = 'staff-1'
 
 describe('AdminArtistsService', () => {
   let service: AdminArtistsService
   let prisma: PrismaMock
+  let transaction: DeepMockProxy<Prisma.TransactionClient>
 
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
+    transaction = mockDeep<Prisma.TransactionClient>()
+    prisma.$transaction.mockImplementation((callback: unknown) =>
+      (callback as (client: Prisma.TransactionClient) => unknown)(transaction),
+    )
     service = new AdminArtistsService(prisma)
   })
 
@@ -62,6 +75,16 @@ describe('AdminArtistsService', () => {
       const call = prisma.artist.findMany.mock.calls[0]?.[0]
       expect(call?.orderBy).toEqual([{ monthlyListeners: 'asc' }, { id: 'asc' }])
     })
+
+    it('status=all drops the deletedAt filter entirely', async () => {
+      prisma.artist.findMany.mockResolvedValue([] as never)
+      prisma.artist.count.mockResolvedValue(0)
+
+      await service.findAll({ status: 'all' })
+
+      const call = prisma.artist.findMany.mock.calls[0]?.[0]
+      expect(call?.where).toEqual({})
+    })
   })
 
   describe('findById', () => {
@@ -71,11 +94,35 @@ describe('AdminArtistsService', () => {
       await expect(service.findById('missing')).rejects.toThrow(ArtistNotFoundException)
     })
 
-    it('returns the artist when found', async () => {
+    it('returns the artist with tracks/albums/session/report counts when found', async () => {
       const artist = buildAdminArtist()
       prisma.artist.findFirst.mockResolvedValue(artist as never)
+      prisma.track.count.mockResolvedValue(5)
+      prisma.album.count.mockResolvedValue(2)
+      prisma.artistSession.count.mockResolvedValue(1)
+      prisma.moderationReport.count.mockResolvedValue(0)
 
-      await expect(service.findById('artist-1')).resolves.toEqual(artist)
+      const result = await service.findById('artist-1')
+
+      expect(result).toMatchObject({
+        ...artist,
+        counts: { tracks: 5, albums: 2, activeSessions: 1, openReports: 0 },
+      })
+    })
+
+    it('does not filter deletedAt — a deactivated artist stays reachable by id', async () => {
+      const artist = buildAdminArtist({ deletedAt: new Date() })
+      prisma.artist.findFirst.mockResolvedValue(artist as never)
+      prisma.track.count.mockResolvedValue(0)
+      prisma.album.count.mockResolvedValue(0)
+      prisma.artistSession.count.mockResolvedValue(0)
+      prisma.moderationReport.count.mockResolvedValue(0)
+
+      await service.findById('artist-1')
+
+      expect(prisma.artist.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: 'artist-1' } }),
+      )
     })
   })
 
@@ -85,6 +132,14 @@ describe('AdminArtistsService', () => {
 
       await expect(service.updateVerification('missing', { verified: true })).rejects.toThrow(
         ArtistNotFoundException,
+      )
+    })
+
+    it('throws ArtistAlreadyDeletedException for a soft-deleted artist', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist({ deletedAt: new Date() }) as never)
+
+      await expect(service.updateVerification('artist-1', { verified: true })).rejects.toThrow(
+        ArtistAlreadyDeletedException,
       )
     })
 
@@ -107,18 +162,117 @@ describe('AdminArtistsService', () => {
     it('throws ArtistNotFoundException when the artist does not exist', async () => {
       prisma.artist.findFirst.mockResolvedValue(null)
 
-      await expect(service.softDelete('missing')).rejects.toThrow(ArtistNotFoundException)
+      await expect(service.softDelete('missing', STAFF_ID)).rejects.toThrow(ArtistNotFoundException)
     })
 
-    it('stamps deletedAt instead of physically deleting', async () => {
+    it('throws ArtistAlreadyDeletedException when the artist is already deleted', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist({ deletedAt: new Date() }) as never)
+
+      await expect(service.softDelete('artist-1', STAFF_ID)).rejects.toThrow(
+        ArtistAlreadyDeletedException,
+      )
+    })
+
+    /** A second concurrent take-down loses the `updateMany` race and must fail 409 — the same
+     * response as an already-deleted artist — instead of silently re-deleting. */
+    it('throws ArtistAlreadyDeletedException when a concurrent request wins the race', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist({ deletedAt: null }) as never)
+      transaction.artist.updateMany.mockResolvedValue({ count: 0 })
+
+      await expect(service.softDelete('artist-1', STAFF_ID)).rejects.toThrow(
+        ArtistAlreadyDeletedException,
+      )
+      expect(transaction.auditLog.create).not.toHaveBeenCalled()
+    })
+
+    it('stamps deletedAt, revokes sessions, and writes an audit row, in one transaction', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist({ deletedAt: null }) as never)
+      transaction.artist.updateMany.mockResolvedValue({ count: 1 })
+      transaction.artistSession.deleteMany.mockResolvedValue({ count: 3 } as never)
+      transaction.artist.findFirstOrThrow.mockResolvedValue(
+        buildAdminArtist({ deletedAt: new Date() }) as never,
+      )
+
+      await service.softDelete('artist-1', STAFF_ID, 'impersonation')
+
+      expect(transaction.artist.updateMany).toHaveBeenCalledWith({
+        where: { id: 'artist-1', deletedAt: null },
+        data: { deletedAt: expect.any(Date) },
+      })
+      expect(transaction.artistSession.deleteMany).toHaveBeenCalledWith({
+        where: { artistId: 'artist-1' },
+      })
+      expect(transaction.auditLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            action: 'admin-artists.delete',
+            metadata: expect.objectContaining({
+              reason: 'impersonation',
+              after: expect.objectContaining({ sessionsRevoked: 3 }),
+            }),
+          }),
+        }),
+      )
+    })
+  })
+
+  describe('restore', () => {
+    it('throws ArtistNotFoundException when the artist does not exist', async () => {
+      prisma.artist.findFirst.mockResolvedValue(null)
+
+      await expect(service.restore('missing', STAFF_ID)).rejects.toThrow(ArtistNotFoundException)
+    })
+
+    it('throws ArtistNotDeletedException when the artist is not deleted', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist({ deletedAt: null }) as never)
+
+      await expect(service.restore('artist-1', STAFF_ID)).rejects.toThrow(ArtistNotDeletedException)
+    })
+
+    /** A second concurrent restore loses the `updateMany` race and must fail 409, not 404. */
+    it('throws ArtistNotDeletedException when a concurrent request wins the race', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist({ deletedAt: new Date() }) as never)
+      transaction.artist.updateMany.mockResolvedValue({ count: 0 })
+
+      await expect(service.restore('artist-1', STAFF_ID)).rejects.toThrow(ArtistNotDeletedException)
+      expect(transaction.auditLog.create).not.toHaveBeenCalled()
+    })
+
+    it('clears deletedAt', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist({ deletedAt: new Date() }) as never)
+      transaction.artist.updateMany.mockResolvedValue({ count: 1 })
+      transaction.artist.findFirstOrThrow.mockResolvedValue(
+        buildAdminArtist({ deletedAt: null }) as never,
+      )
+
+      await service.restore('artist-1', STAFF_ID)
+
+      expect(transaction.artist.updateMany).toHaveBeenCalledWith({
+        where: { id: 'artist-1', deletedAt: { not: null } },
+        data: { deletedAt: null },
+      })
+    })
+  })
+
+  describe('revokeSessions', () => {
+    it('throws ArtistNotFoundException when the artist does not exist', async () => {
+      prisma.artist.findFirst.mockResolvedValue(null)
+
+      await expect(service.revokeSessions('missing', STAFF_ID)).rejects.toThrow(
+        ArtistNotFoundException,
+      )
+    })
+
+    it('deletes every session and returns the revoked count', async () => {
       prisma.artist.findFirst.mockResolvedValue(buildArtist() as never)
-      prisma.artist.update.mockResolvedValue(buildAdminArtist({ deletedAt: new Date() }) as never)
+      transaction.artistSession.deleteMany.mockResolvedValue({ count: 2 } as never)
 
-      await service.softDelete('artist-1')
+      const result = await service.revokeSessions('artist-1', STAFF_ID)
 
-      const call = prisma.artist.update.mock.calls[0]?.[0]
-      expect(call?.where).toEqual({ id: 'artist-1' })
-      expect(call?.data.deletedAt).toBeInstanceOf(Date)
+      expect(transaction.artistSession.deleteMany).toHaveBeenCalledWith({
+        where: { artistId: 'artist-1' },
+      })
+      expect(result).toEqual({ revoked: 2 })
     })
   })
 })

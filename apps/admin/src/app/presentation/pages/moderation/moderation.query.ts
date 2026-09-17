@@ -1,4 +1,8 @@
-import type { ModerationSortField, ModerationStatus } from '@domain/moderation'
+import type {
+  ModerationEntityType,
+  ModerationSortField,
+  ModerationStatus,
+} from '@domain/moderation'
 import { coveringTuple, type Sort } from '@domain/shared'
 import {
   createQueryCodec,
@@ -18,8 +22,19 @@ export const MODERATION_STATUSES = coveringTuple<ModerationStatus>()([
 
 export const MODERATION_SORT_FIELDS = coveringTuple<ModerationSortField>()(['createdAt', 'status'])
 
+export const MODERATION_ENTITY_TYPES = coveringTuple<ModerationEntityType>()([
+  'track',
+  'album',
+  'playlist',
+  'artist',
+  'podcast',
+  'episode',
+  'user',
+])
+
 export type ModerationQuery = {
   status: ModerationStatus | null
+  entityType: ModerationEntityType | null
   sort: Sort<ModerationSortField> | null
   page: number
 }
@@ -30,11 +45,15 @@ export type ModerationQuery = {
  * explicit `?status=all` token.
  */
 export const moderationQueryCodec: QueryCodec<ModerationQuery> = createQueryCodec<ModerationQuery>({
-  defaults: { status: 'OPEN', sort: null, page: 1 },
+  defaults: { status: 'OPEN', entityType: null, sort: null, page: 1 },
   fields: {
     status: {
       param: 'status',
       codec: enumParam({ members: MODERATION_STATUSES, default: 'OPEN', nullToken: 'all' }),
+    },
+    entityType: {
+      param: 'entityType',
+      codec: enumParam({ members: MODERATION_ENTITY_TYPES, default: null }),
     },
     sort: sortParam({ members: MODERATION_SORT_FIELDS }),
     page: { param: 'page', codec: intParam(1) },

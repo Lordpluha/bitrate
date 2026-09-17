@@ -1,5 +1,5 @@
-import type { Page, PageRequest } from '../shared/page'
-import type { Artist, ArtistFilter } from './artist'
+import type { Page, PageRequest, TakeDownInput } from '../shared'
+import type { Artist, ArtistDetail, ArtistFilter } from './artist'
 
 export type ListArtistsQuery = PageRequest & {
   filter: ArtistFilter
@@ -19,6 +19,11 @@ export type SetArtistVerificationInput = {
  */
 export abstract class ArtistRepository {
   abstract list(query: ListArtistsQuery): Promise<Page<Artist>>
+  abstract getById(id: string): Promise<ArtistDetail>
   abstract setVerification(input: SetArtistVerificationInput): Promise<Artist>
-  abstract deactivate(id: string): Promise<void>
+  /** Soft-deletes the account — the API also revokes its sessions. */
+  abstract deactivate(input: TakeDownInput): Promise<void>
+  abstract restore(input: TakeDownInput): Promise<void>
+  /** @returns How many sessions were revoked. */
+  abstract revokeSessions(input: TakeDownInput): Promise<number>
 }

@@ -26,9 +26,7 @@ describe('sortHeaderAriaSort', () => {
   })
 
   it('is "none" for a column that is not the one currently sorted', () => {
-    expect(sortHeaderAriaSort<Field>({ field: 'email', direction: 'asc' }, 'username')).toBe(
-      'none',
-    )
+    expect(sortHeaderAriaSort<Field>({ field: 'email', direction: 'asc' }, 'username')).toBe('none')
   })
 
   it('reflects ascending and descending for the sorted column', () => {

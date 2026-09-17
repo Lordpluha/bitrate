@@ -17,6 +17,7 @@ export type AuditSortField = 'createdAt'
 
 export type AuditFilter = {
   entityType?: string
+  entityId?: string
   sort?: Sort<AuditSortField>
 }
 

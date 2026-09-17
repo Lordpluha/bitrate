@@ -5,13 +5,20 @@ import {
   type ListReportsQuery,
   type ModerationReport,
   ModerationReportRepository,
+  type ReportDetail,
   type SetReportStatusInput,
 } from '@domain/moderation'
 import type { Page } from '@domain/shared'
 import { ADMIN_API } from '../http/api.config'
 import { fetchPage } from '../http/wire-page'
-import { reportDto, reportPageDto } from './report.dto'
-import { toModerationReport, toWireModerationSort, toWireModerationStatus } from './report.mapper'
+import { reportDetailDto, reportDto, reportPageDto } from './report.dto'
+import {
+  toModerationReport,
+  toReportDetail,
+  toWireModerationEntityType,
+  toWireModerationSort,
+  toWireModerationStatus,
+} from './report.mapper'
 
 @Injectable()
 export class HttpModerationReportRepository extends ModerationReportRepository {
@@ -26,12 +33,22 @@ export class HttpModerationReportRepository extends ModerationReportRepository {
       limit,
       filters: {
         status: filter.status === undefined ? undefined : toWireModerationStatus(filter.status),
+        entityType:
+          filter.entityType === undefined
+            ? undefined
+            : toWireModerationEntityType(filter.entityType),
         sort: filter.sort ? toWireModerationSort(filter.sort.field) : undefined,
         order: filter.sort?.direction,
       },
       schema: reportPageDto,
       toDomain: toModerationReport,
     })
+  }
+
+  override async getById(id: string): Promise<ReportDetail> {
+    const response = await firstValueFrom(this.http.get<unknown>(`${this.base}/${id}`))
+
+    return toReportDetail(reportDetailDto.parse(response))
   }
 
   override async setStatus({ id, status }: SetReportStatusInput): Promise<ModerationReport> {

@@ -4,7 +4,12 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { ListAuditEntriesUseCase } from '@application/audit'
 import { auditActorLabel, type AuditEntry, type AuditSortField } from '@domain/audit'
 import type { Sort } from '@domain/shared'
-import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
+import {
+  CollectionStatus,
+  Paginator,
+  SortHeader,
+  sortHeaderAriaSort,
+} from '@presentation/components'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -46,6 +51,7 @@ export class AuditPage {
         page,
         filter: {
           entityType: this.query.state().entityType || undefined,
+          entityId: this.query.state().entityId || undefined,
           sort: this.query.state().sort ?? undefined,
         },
       }),

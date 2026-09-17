@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import './bootstrap-env'
 import { MODERATOR_TEMPLATE } from '@modules/admin-auth'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
@@ -135,7 +135,14 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error: unknown) => {
-  console.error('Failed to seed the operator account:', error)
-  process.exit(1)
-})
+/**
+ * `require.main === module` is only true when this file is the process entrypoint, never when
+ * another module imports it — see `seed-admin.ts` for the same guard and why it matters for a
+ * seed entrypoint that would otherwise run `main()` as an import side effect.
+ */
+if (require.main === module) {
+  main().catch((error: unknown) => {
+    console.error('Failed to seed the operator account:', error)
+    process.exit(1)
+  })
+}

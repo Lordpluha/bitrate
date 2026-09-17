@@ -1,0 +1,9 @@
+---
+'@bitrate/api': minor
+'@bitrate/contracts': minor
+'@bitrate/admin': minor
+---
+
+Added `GET /admin/overview`, an aggregate operator landing summary behind a new `overview:read` permission: open/reviewing report counts, track pipeline counts by processing status with a stuck-upload count and its threshold, deactivated user/artist counts, signups and uploads in the trailing 7 days, and the 10 most recent audit log rows with the actor resolved. Signups and uploads are historical activity counts — a row counts if it was created inside the window, whether or not it was soft-deleted afterward — same rule for users, artists, and tracks. `overview:read` is add-only in the permission catalogue and not part of the built-in MODERATOR template — administrators reach it by identity, everyone else only once granted. The regenerated contract carries the new `AdminOverviewEntity` response shape and the `overview:read` permission literal.
+
+The operator panel's root route (`/`) is now this dashboard itself, gated by `overview:read`, replacing the old unconditional redirect to `/moderation` — sign-in now lands on `/` too, not a fixed screen. Every tile links to the matching filtered list where one already exists and the signed-in operator holds that list's own read permission (`/moderation`, `/catalog?status=FAILED`, and so on — the open-reports link omits `status=OPEN` since that is the moderation queue's own default); a tile whose target the operator can't reach renders as a plain count instead. Stuck tracks and deactivated accounts also render as plain counts for now, since the catalog has no "stuck" status filter and the users/artists lists have no deactivated filter yet. A new "Overview" link sits at the top of the sidebar with no section caption of its own, and an operator without `overview:read` who lands on `/` is sent to the first screen their permissions actually reach, same as any other denied route.

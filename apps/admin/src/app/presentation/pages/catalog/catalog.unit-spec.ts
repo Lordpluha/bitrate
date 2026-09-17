@@ -3,8 +3,16 @@ import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { provideRouter, type Routes } from '@angular/router'
 import { RouterTestingHarness } from '@angular/router/testing'
-import type { Page } from '@domain/shared'
-import { type ListTracksQuery, type Track, TrackRepository } from '@domain/track'
+import type { Page, TakeDownInput } from '@domain/shared'
+import {
+  type ListTracksQuery,
+  type ProbeTrackAudioInput,
+  type ProcessingAttempt,
+  type Track,
+  type TrackAudioSource,
+  type TrackDetail,
+  TrackRepository,
+} from '@domain/track'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CatalogPage } from './catalog'
 
@@ -18,6 +26,8 @@ function track(overrides: Partial<Track> = {}): Track {
     processingAttempts: 3,
     processingStartedAt: null,
     processingFinishedAt: null,
+    updatedAt: new Date('2026-09-01T09:59:00.000Z'),
+    takenDownAt: null,
     createdAt: new Date('2026-09-01T09:59:00.000Z'),
     ...overrides,
   }
@@ -30,7 +40,30 @@ class StubTrackRepository extends TrackRepository {
     return list(query)
   }
 
+  override getById(_id: string): Promise<TrackDetail> {
+    throw new Error('not used')
+  }
+
   override reprocess(_id: string): Promise<void> {
+    throw new Error('not used')
+  }
+
+  override takeDown(_input: TakeDownInput): Promise<void> {
+    throw new Error('not used')
+  }
+
+  override restore(_input: TakeDownInput): Promise<void> {
+    throw new Error('not used')
+  }
+
+  override listProcessingAttempts(
+    _trackId: string,
+    _page: number,
+  ): Promise<Page<ProcessingAttempt>> {
+    throw new Error('not used')
+  }
+
+  override probeAudio(_input: ProbeTrackAudioInput): Promise<TrackAudioSource> {
     throw new Error('not used')
   }
 }

@@ -1,5 +1,19 @@
-import type { ModerationReport, ModerationSortField, ModerationStatus } from '@domain/moderation'
-import type { ReportDto, WireModerationSortField, WireModerationStatus } from './report.dto'
+import type {
+  ModerationEntityType,
+  ModerationReport,
+  ModerationSortField,
+  ModerationStatus,
+  ModerationSubject,
+  ReportDetail,
+} from '@domain/moderation'
+import type {
+  ReportDetailDto,
+  ReportDto,
+  SubjectDto,
+  WireModerationEntityType,
+  WireModerationSortField,
+  WireModerationStatus,
+} from './report.dto'
 
 /** See `track.mapper.ts` — a status the API grows later is a compile error at this record. */
 const TO_DOMAIN_STATUS = {
@@ -32,6 +46,23 @@ export function toWireModerationSort(
   return TO_WIRE_SORT[field]
 }
 
+/** Same join, for the queue's `entityType` filter — a member the API drops is a compile error here. */
+const TO_WIRE_ENTITY_TYPE = {
+  track: 'track',
+  album: 'album',
+  playlist: 'playlist',
+  artist: 'artist',
+  podcast: 'podcast',
+  episode: 'episode',
+  user: 'user',
+} as const satisfies Record<ModerationEntityType, NonNullable<WireModerationEntityType>>
+
+export function toWireModerationEntityType(
+  entityType: ModerationEntityType,
+): NonNullable<WireModerationEntityType> {
+  return TO_WIRE_ENTITY_TYPE[entityType]
+}
+
 export function toModerationReport(dto: ReportDto): ModerationReport {
   return {
     id: dto.id,
@@ -43,5 +74,25 @@ export function toModerationReport(dto: ReportDto): ModerationReport {
     status: TO_DOMAIN_STATUS[dto.status],
     resolvedAt: dto.resolvedAt === null ? null : new Date(dto.resolvedAt),
     createdAt: new Date(dto.createdAt),
+  }
+}
+
+export function toModerationSubject(dto: SubjectDto | null): ModerationSubject | null {
+  if (dto === null) return null
+
+  return {
+    kind: dto.kind,
+    id: dto.id,
+    title: dto.title,
+    deletedAt: dto.deletedAt === null ? null : new Date(dto.deletedAt),
+    parentId: dto.parentId,
+  }
+}
+
+export function toReportDetail(dto: ReportDetailDto): ReportDetail {
+  return {
+    ...toModerationReport(dto),
+    subject: toModerationSubject(dto.subject),
+    siblingReports: dto.siblingReports.map(toModerationReport),
   }
 }

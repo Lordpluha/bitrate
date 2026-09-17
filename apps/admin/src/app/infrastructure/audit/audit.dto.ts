@@ -11,7 +11,8 @@ type ContractAuditEntry = Pick<
   'id' | 'action' | 'entityType' | 'entityId' | 'actorUsername' | 'ipAddress' | 'createdAt'
 >
 
-const auditEntryDto = z.object({
+/** Exported so `infrastructure/overview` can validate `recentActivity` rows without duplicating this shape. */
+export const auditEntryDto = z.object({
   id: z.uuid(),
   action: z.string(),
   entityType: z.string(),

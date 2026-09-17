@@ -1,5 +1,12 @@
-import type { Track, TrackProcessingStatus, TrackSortField } from '@domain/track'
-import type { TrackDto, WireProcessingStatus, WireTrackSortField } from './track.dto'
+import type { ResourceStatus } from '@domain/shared'
+import type { Track, TrackDetail, TrackProcessingStatus, TrackSortField } from '@domain/track'
+import type {
+  TrackDetailDto,
+  TrackDto,
+  WireProcessingStatus,
+  WireTrackSortField,
+  WireTrackStatus,
+} from './track.dto'
 
 /**
  * The seam that lets the domain declare its own status union without losing the contract
@@ -38,6 +45,17 @@ export function toWireTrackSort(field: TrackSortField): NonNullable<WireTrackSor
   return TO_WIRE_SORT[field]
 }
 
+/** See `artist.mapper.ts`'s `TO_WIRE_STATUS` — spelled out so a dropped member fails to compile. */
+const TO_WIRE_TAKE_DOWN_STATUS = {
+  active: 'active',
+  deactivated: 'deactivated',
+  all: 'all',
+} as const satisfies Record<ResourceStatus, NonNullable<WireTrackStatus>>
+
+export function toWireTrackStatus(status: ResourceStatus): NonNullable<WireTrackStatus> {
+  return TO_WIRE_TAKE_DOWN_STATUS[status]
+}
+
 export function toTrack(dto: TrackDto): Track {
   return {
     id: dto.id,
@@ -50,6 +68,20 @@ export function toTrack(dto: TrackDto): Track {
       dto.processingStartedAt === null ? null : new Date(dto.processingStartedAt),
     processingFinishedAt:
       dto.processingFinishedAt === null ? null : new Date(dto.processingFinishedAt),
+    updatedAt: new Date(dto.updatedAt),
+    takenDownAt: dto.deletedAt === null ? null : new Date(dto.deletedAt),
     createdAt: new Date(dto.createdAt),
+  }
+}
+
+export function toTrackDetail(dto: TrackDetailDto): TrackDetail {
+  return {
+    ...toTrack(dto),
+    artistId: dto.artistId,
+    audioFiles: dto.audioFiles,
+    artists: dto.artists,
+    genres: dto.genres,
+    albums: dto.albums,
+    openReportCount: dto.openReportCount,
   }
 }

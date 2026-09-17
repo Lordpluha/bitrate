@@ -3,15 +3,42 @@ import { convertAudio, convertAudioToCmaf, convertAudioToHls } from '@bitrate/co
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import * as Sentry from '@sentry/nestjs'
+import {
+  makeProcessingAttemptRecorderMock,
+  type PrismaMock,
+  prismaMock,
+  resetPrismaMock,
+} from '@test/mocks'
 import { buildJob, cmafResult, jobData } from './__tests__/fixtures/audio-processing.fixtures'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
+import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
+
+jest.mock('@sentry/nestjs', () => ({
+  captureException: jest.fn(),
+}))
 
 jest.mock('@bitrate/converter', () => ({
   convertAudio: jest.fn().mockResolvedValue(undefined as never),
   convertAudioToHls: jest.fn().mockResolvedValue(undefined as never),
   convertAudioToCmaf: jest.fn(),
 }))
+
+/** Builds an object shaped like `@bitrate/converter`'s `FfmpegError`, without importing it. */
+type FfmpegErrorOverrides = {
+  message: string
+  exitCode: number | null
+  signal: string | null
+  timedOut: boolean
+  stderrTail: string
+  args: string[]
+}
+
+function buildFfmpegError({ message, ...rest }: FfmpegErrorOverrides): Error {
+  const error = new Error(message)
+  error.name = 'FfmpegError'
+  return Object.assign(error, rest)
+}
 
 jest.mock('node:fs', () => ({
   createReadStream: jest.fn().mockReturnValue({ pipe: jest.fn() }),
@@ -42,6 +69,7 @@ describe('AudioProcessingConsumer', () => {
       PrismaService,
       Object,
       Function,
+      ProcessingAttemptRecorder,
     ])
     expect(Reflect.getMetadata('self:paramtypes', AudioProcessingConsumer)).toEqual(
       expect.arrayContaining([expect.objectContaining({ index: 1, param: STORAGE_SERVICE })]),
@@ -57,12 +85,18 @@ describe('AudioProcessingConsumer', () => {
   const deadLetterQueue = {
     add: jest.fn().mockResolvedValue(undefined as never),
   }
+  const recorder = makeProcessingAttemptRecorderMock()
 
   beforeEach(() => {
     jest.clearAllMocks()
     resetPrismaMock()
     prisma = prismaMock
-    consumer = new AudioProcessingConsumer(prisma, storage as never, deadLetterQueue as never)
+    consumer = new AudioProcessingConsumer(
+      prisma,
+      storage as never,
+      deadLetterQueue as never,
+      recorder,
+    )
     prisma.track.findUnique.mockResolvedValue({ id: 'track-1', audioUrl: 'track.mp3' } as never)
     prisma.track.update.mockResolvedValue({ id: 'track-1' } as never)
     prisma.track.updateMany.mockResolvedValue({ count: 1 } as never)
@@ -129,6 +163,19 @@ describe('AudioProcessingConsumer', () => {
       expect.stringContaining('/storage/.processing/track-1-job-1-1'),
       { recursive: true, force: true },
     )
+    expect(recorder.start).toHaveBeenCalledWith(
+      expect.objectContaining({
+        trackId: 'track-1',
+        jobId: 'job-1',
+        attempt: 1,
+        trigger: 'UPLOAD',
+      }),
+    )
+    expect(recorder.succeed).toHaveBeenCalledWith({
+      trackId: 'track-1',
+      jobId: 'job-1',
+      attempt: 1,
+    })
   })
 
   it('encodes CMAF renditions once and stores their byte index', async () => {
@@ -202,6 +249,55 @@ describe('AudioProcessingConsumer', () => {
       expect.stringContaining('/storage/.processing/track-1-job-1-1'),
       { recursive: true, force: true },
     )
+    expect(recorder.fail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        trackId: 'track-1',
+        jobId: 'job-1',
+        attempt: 1,
+        step: 'PROGRESSIVE_ENCODE',
+        willRetry: true,
+      }),
+    )
+  })
+
+  it('writes a FAILED attempt with step and stderr tail for a retryable FFmpeg failure', async () => {
+    const ffmpegError = buildFfmpegError({
+      message: 'ffmpeg exited',
+      exitCode: 1,
+      signal: null,
+      timedOut: false,
+      stderrTail: 'Invalid data found when processing input',
+      args: ['-i', '/storage/track.mp3'],
+    })
+    convertAudioMock.mockRejectedValueOnce(ffmpegError as never)
+    const job = buildJob('convert-audio', jobData)
+
+    await expect(consumer.process(job)).rejects.toThrow(ffmpegError)
+
+    expect(recorder.fail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        step: 'PROGRESSIVE_ENCODE',
+        willRetry: true,
+        error: ffmpegError,
+      }),
+    )
+  })
+
+  it('classifies a timed-out FFmpeg run as TIMEOUT', async () => {
+    const timeoutError = buildFfmpegError({
+      message: 'ffmpeg timed out',
+      exitCode: null,
+      signal: null,
+      timedOut: true,
+      stderrTail: '',
+      args: ['-i', '/storage/track.mp3'],
+    })
+    convertAudioMock.mockRejectedValueOnce(timeoutError as never)
+    const job = buildJob('convert-audio', jobData)
+
+    await expect(consumer.process(job)).rejects.toThrow(timeoutError)
+
+    expect(recorder.fail).toHaveBeenCalledWith(expect.objectContaining({ error: timeoutError }))
   })
 
   it('removes uploaded immutable objects when a newer source wins before publish', async () => {
@@ -219,6 +315,9 @@ describe('AudioProcessingConsumer', () => {
     expect(prisma.track.updateMany).not.toHaveBeenCalledWith(
       expect.objectContaining({ data: expect.objectContaining({ processingStatus: 'READY' }) }),
     )
+    expect(recorder.supersede).toHaveBeenCalledWith(
+      expect.objectContaining({ trackId: 'track-1', jobId: 'job-1', attempt: 1 }),
+    )
   })
 
   it('uses a conditional publish so a source changed during the transaction cannot become ready', async () => {
@@ -232,6 +331,9 @@ describe('AudioProcessingConsumer', () => {
       expect.stringMatching(/^tracks\/track-1\/generations\/[a-f0-9]{16}$/),
     )
     expect(deadLetterQueue.add).not.toHaveBeenCalled()
+    expect(recorder.supersede).toHaveBeenCalledWith(
+      expect.objectContaining({ trackId: 'track-1', jobId: 'job-1', attempt: 1, step: 'PUBLISH' }),
+    )
   })
 
   it('marks the current upload failed after all attempts are exhausted', async () => {
@@ -239,6 +341,7 @@ describe('AudioProcessingConsumer', () => {
       attemptsMade: 5,
       opts: { attempts: 5 },
     })
+    recorder.finalize.mockResolvedValueOnce('PROGRESSIVE_ENCODE' as never)
 
     await consumer.onFailed(job as never, new Error('permanent failure'))
 
@@ -257,6 +360,21 @@ describe('AudioProcessingConsumer', () => {
     expect(storage.deletePrefix).toHaveBeenCalledWith(
       expect.stringMatching(/^tracks\/track-1\/generations\/[a-f0-9]{16}$/),
     )
+    expect(recorder.finalize).toHaveBeenCalledWith(
+      expect.objectContaining({
+        trackId: 'track-1',
+        jobId: 'job-1',
+        attempt: 5,
+        deadLetterJobId: 'failed-job-1-5',
+      }),
+    )
+    expect(Sentry.captureException).toHaveBeenCalledTimes(1)
+    expect(Sentry.captureException).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({
+        fingerprint: ['audio-processing', 'UNKNOWN', 'PROGRESSIVE_ENCODE'],
+      }),
+    )
   })
 
   it('does not mark a newer upload failed when an old job exhausts retries', async () => {
@@ -270,5 +388,13 @@ describe('AudioProcessingConsumer', () => {
 
     expect(deadLetterQueue.add).not.toHaveBeenCalled()
     expect(storage.deletePrefix).not.toHaveBeenCalled()
+    expect(recorder.finalize).not.toHaveBeenCalled()
+    expect(Sentry.captureException).not.toHaveBeenCalled()
+  })
+
+  it('marks every RUNNING row for a stalled job STALLED', async () => {
+    await consumer.onStalled('job-9')
+
+    expect(recorder.markStalledByJob).toHaveBeenCalledWith('job-9')
   })
 })

@@ -44,7 +44,11 @@ export class LoginPage {
     this.submitting.set(true)
     try {
       await this.signIn.execute(this.form.getRawValue())
-      await this.router.navigate(['/moderation'])
+      /**
+       * `/` — the guarded root, `overview:read` — not a fixed screen: `requirePermission`
+       * sends an operator without that permission on to their first reachable route.
+       */
+      await this.router.navigate(['/'])
     } catch {
       this.failure.set('Sign-in failed. Check the address and password, then try again.')
     } finally {

@@ -63,6 +63,19 @@ and cannot be edited. Without this, a permission added in code would reach nobod
 administrators meant to grant it — and the only way to recover would be the seeder. For the same
 reason the built-in roles cannot be renamed: they are identified by name.
 
+### Built-in templates are seeded once
+
+Every boot runs `ensureBuiltInRoles`, which guarantees the built-in roles **exist** and nothing more.
+A missing role is created with its description and template; an existing one keeps both. The first
+version rewrote the stored permissions on every boot, so an administrator's edit to `MODERATOR`
+lasted exactly until the next restart, with nothing recorded to say it had been undone.
+
+The `MODERATOR` template is an **explicit list**, not the catalogue minus the protected permissions.
+Derived, every permission added in code joined the default moderator set without anyone deciding
+it should — a future `tracks:delete` included. Written out, a new permission reaches the template
+only through a deliberate edit to that list, and a unit spec fails if it ever holds a protected or
+unknown permission.
+
 ### Protected permissions, enforced in two places
 
 `staff:*` and `roles:*` can be held only through the built-in administrator. They are rejected by one

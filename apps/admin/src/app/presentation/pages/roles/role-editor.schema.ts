@@ -15,10 +15,9 @@ export const roleEditorSchema = z.object({
   description: z.string().max(500, 'Description must be 500 characters or fewer'),
   permissions: z
     .array(z.custom<Permission>())
-    .refine(
-      (permissions) => permissions.every((permission) => !PROTECTED_SET.has(permission)),
-      { message: 'A protected permission cannot be granted through a role template' },
-    ),
+    .refine((permissions) => permissions.every((permission) => !PROTECTED_SET.has(permission)), {
+      message: 'A protected permission cannot be granted through a role template',
+    }),
 })
 
 export type RoleEditorValues = z.infer<typeof roleEditorSchema>

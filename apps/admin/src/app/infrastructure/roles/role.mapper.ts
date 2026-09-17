@@ -9,15 +9,22 @@ const TO_DOMAIN_PERMISSION = {
   'artists:read': 'artists:read',
   'artists:verify': 'artists:verify',
   'artists:delete': 'artists:delete',
+  'artists:restore': 'artists:restore',
+  'artists:revoke-sessions': 'artists:revoke-sessions',
   'tracks:read': 'tracks:read',
   'tracks:reprocess': 'tracks:reprocess',
+  'tracks:delete': 'tracks:delete',
+  'tracks:restore': 'tracks:restore',
   'users:read': 'users:read',
   'users:delete': 'users:delete',
+  'users:restore': 'users:restore',
+  'users:revoke-sessions': 'users:revoke-sessions',
   'audit:read': 'audit:read',
   'staff:read': 'staff:read',
   'staff:write': 'staff:write',
   'roles:read': 'roles:read',
   'roles:write': 'roles:write',
+  'overview:read': 'overview:read',
 } as const satisfies Record<WirePermission, Permission>
 
 export function toRole(dto: RoleDto): Role {

@@ -144,11 +144,10 @@ describe('createCollection', () => {
   describe('stale responses', () => {
     it('discards a slower response that resolves after a newer request already applied', async () => {
       const deferred: { resolve: (value: Page<Row>) => void }[] = []
-      const load = vi.fn(
-        (requested: number) =>
-          new Promise<Page<Row>>((resolve) => {
-            deferred.push({ resolve })
-          }).then((result) => ({ ...result, page: requested })),
+      const load = vi.fn((requested: number) =>
+        new Promise<Page<Row>>((resolve) => {
+          deferred.push({ resolve })
+        }).then((result) => ({ ...result, page: requested })),
       )
       const collection = createCollection<Row>({ load, errorMessage: 'nope' })
 

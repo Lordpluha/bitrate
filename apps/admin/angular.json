@@ -24,9 +24,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ]
+            "styles": ["src/styles.css"]
           },
           "configurations": {
             "production": {
@@ -71,9 +69,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "tsconfig.spec.json",
-            "include": [
-              "src/**/*.unit-spec.ts"
-            ]
+            "include": ["src/**/*.unit-spec.ts"]
           }
         }
       }

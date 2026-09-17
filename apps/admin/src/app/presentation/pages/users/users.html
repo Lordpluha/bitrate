@@ -21,6 +21,28 @@
     <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
   </form>
 
+  <div class="flex gap-2" role="group" aria-label="Filter by status">
+    @for (
+      option of [
+        { value: 'active', label: 'Active' },
+        { value: 'deactivated', label: 'Deactivated' },
+        { value: 'all', label: 'All' },
+      ];
+      track option.value
+    ) {
+      <button
+        hlmBtn
+        size="sm"
+        [variant]="query.state().status === option.value ? 'default' : 'outline'"
+        type="button"
+        [attr.aria-pressed]="query.state().status === option.value"
+        (click)="setStatus($any(option.value))"
+      >
+        {{ option.label }}
+      </button>
+    }
+  </div>
+
   <app-collection-status
     [loading]="collection.loading()"
     [failure]="collection.failure()"
@@ -74,7 +96,9 @@
           @for (user of collection.items(); track user.id) {
             <tr hlmTr>
               <td hlmTd>
-                {{ user.username }}
+                <a [routerLink]="['/users', user.id]" class="hover:underline">{{
+                  user.username
+                }}</a>
                 @if (user.deactivatedAt) {
                   <span hlmBadge variant="destructive" class="ml-2">deactivated</span>
                 }

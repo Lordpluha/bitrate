@@ -26,6 +26,7 @@ bitrate/
   packages/
     ui-react/         Shared React component library — also owns the design tokens,
                       hand-written as Tailwind @theme layers in src/styles/
+    player/           Svelte 5 <bitrate-player> custom element — @bitrate/player
     contracts/        OpenAPI TypeScript types
     vite-svgr/        Vite SVG plugin
     svgr/             SVG → React converter
@@ -108,6 +109,26 @@ means one resolved version serves every workspace, so raising it in **one** app 
 query hooks into `never`. That is why the unmet peer above is left visible rather than
 fixed in one app.
 
+### Angular's Babel 8 is not everyone's `@babel/core`
+
+Angular 22 pins `@babel/core@8.0.1`. With `auto-install-peers`, pnpm hands that copy to any
+**unowned** `@babel/core` peer it re-resolves, and Babel-7 plugins then refuse to run. The fix is to
+own the peer in the consuming workspace, never to override Angular's pin: `apps/mobile` (Expo,
+`react-native-worklets`) and `apps/api` (`ts-jest` → `babel-jest`) both declare
+`@babel/core: ^7.29.0` for this reason. Neither is imported anywhere; do not remove either as
+unused.
+`apps/web-player`'s optional `next` peer is still unowned: a from-scratch resolve wires `next` to
+8.0.1, and the committed lockfile does not.
+
+The drift is sticky: once a lockfile records a floated peer, later installs keep it. When a change
+re-resolves unrelated workspaces, rebuild the lockfile from the last good one rather than trying to
+patch it:
+
+```bash
+git show HEAD:pnpm-lock.yaml > pnpm-lock.yaml && pnpm install --lockfile-only
+grep -cE "(^|[ ('])typescript@7\." pnpm-lock.yaml   # the repo is TS 6: expect 0
+```
+
 ## Root scripts
 
 | Command | What it does |
@@ -150,9 +171,11 @@ tasks never hardcode database credentials — they read `POSTGRES_USER`/`POSTGRE
 the container's own environment so an override in `.env` cannot silently break them.
 
 `check-types` runs in `api`, `desktop`, `mobile`, `docs`, `web-player`,
-`web-artists`, `ui-react`, `contracts`, and `ncs-parser`. The remaining packages
+`web-artists`, `ui-react`, `player`, `contracts`, and `ncs-parser`. The remaining packages
 (`converter`, `svgr`, `vite-svgr`) have no
 `tsconfig.json`, so there is nothing to check — that is deliberate, not a gap to fill.
+`player`'s `check-types` runs `svelte-check`, not `tsc --noEmit` — it is the only workspace
+that needs to type-check `.svelte` files, which plain `tsc` cannot parse.
 
 Both `check-types` and `test` declare `dependsOn: ["^build"]` in `turbo.json`, because
 `web-player` and `web-artists` resolve `@bitrate/ui-react` through its built

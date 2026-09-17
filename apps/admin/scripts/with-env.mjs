@@ -9,19 +9,23 @@
  * `build` target, so anything configured only for `build` leaves specs without a value. Writing a
  * small module instead reaches every command the same way.
  *
- * Env files are loaded by Node itself through `--env-file-if-exists` in the package scripts, where
- * a later file wins and a real shell variable beats them all.
+ * Env files are checked `.env.local` first, then `.env`, and a variable already set is never
+ * overwritten — so a real shell variable beats both files, and `.env.local` beats `.env`.
  *
- *     node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs serve
+ *     node scripts/with-env.mjs serve
  */
 
 import { spawnSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
+import { loadEnvFiles } from './load-env-files.mjs'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const GENERATED = resolve(ROOT, 'src/app/infrastructure/http/env.generated.ts')
+
+/** Checked in this order; the first file to define a variable wins. */
+const ENV_FILES = ['.env.local', '.env']
 
 /** Variables every command needs, with what to say when one is missing. */
 const REQUIRED = {
@@ -45,9 +49,7 @@ function readEnv(needsServeVars) {
     process.exit(1)
   }
 
-  return Object.fromEntries(
-    Object.keys(wanted).map((name) => [name, process.env[name].trim()]),
-  )
+  return Object.fromEntries(Object.keys(wanted).map((name) => [name, process.env[name].trim()]))
 }
 
 /** Writes the module the application imports, leaving it untouched when nothing changed. */
@@ -77,6 +79,7 @@ export const ENV = {
 
 const args = process.argv.slice(2)
 const generateOnly = args[0] === '--generate-only'
+loadEnvFiles({ root: ROOT, files: ENV_FILES })
 const env = readEnv(args[0] === 'serve')
 
 writeGenerated(env)

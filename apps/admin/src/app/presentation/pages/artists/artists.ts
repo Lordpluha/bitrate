@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common'
 import { Component, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
+import { RouterLink } from '@angular/router'
 import {
   DeactivateArtistUseCase,
   ListArtistsUseCase,
@@ -8,8 +9,13 @@ import {
 } from '@application/artists'
 import { SessionStore } from '@application/session'
 import type { Artist, ArtistSortField } from '@domain/artist'
-import type { Sort } from '@domain/shared'
-import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
+import type { ResourceStatus, Sort } from '@domain/shared'
+import {
+  CollectionStatus,
+  Paginator,
+  SortHeader,
+  sortHeaderAriaSort,
+} from '@presentation/components'
 import { bindQueryState, createCollection, type TriState } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -25,6 +31,7 @@ const SEARCH_DEBOUNCE_MS = 300
   selector: 'app-artists',
   imports: [
     DatePipe,
+    RouterLink,
     CollectionStatus,
     Paginator,
     SortHeader,
@@ -59,6 +66,7 @@ export class ArtistsPage {
             this.query.state().verified === 'all'
               ? undefined
               : this.query.state().verified === 'verified',
+          status: this.query.state().status,
           sort: this.query.state().sort ?? undefined,
         },
       }),
@@ -89,6 +97,10 @@ export class ArtistsPage {
     this.query.patch({ verified: value, page: 1 })
   }
 
+  protected setStatus(status: ResourceStatus): void {
+    this.query.patch({ status, page: 1 })
+  }
+
   protected setSort(next: Sort<ArtistSortField> | null): void {
     this.query.patch({ sort: next, page: 1 })
   }
@@ -112,7 +124,7 @@ export class ArtistsPage {
   protected async remove(artist: Artist): Promise<void> {
     this.busyId.set(artist.id)
     try {
-      await this.deactivateArtist.execute(artist)
+      await this.deactivateArtist.execute({ artist })
       await this.collection.reload()
     } catch {
       this.collection.fail(`Could not deactivate ${artist.username}.`)

@@ -12,6 +12,9 @@ vi.mock('ffmpeg-static', () => ({ default: '/fake/ffmpeg' }))
 
 import { convertAudioToHls } from './hls.mjs'
 
+/** The options object runFfmpeg always passes to execa for stderr capture. */
+const stderrCaptureOptions = { stderr: { transform: expect.any(Function), binary: true } }
+
 beforeEach(() => {
   vi.clearAllMocks()
   fsMocks.access.mockResolvedValue(undefined)
@@ -46,6 +49,7 @@ describe('convertAudioToHls', () => {
         '-master_pl_name',
         'master.m3u8',
       ]),
+      stderrCaptureOptions,
     )
     expect(result.masterPlaylist).toBe('/music/track.hls/master.m3u8')
   })
@@ -58,7 +62,28 @@ describe('convertAudioToHls', () => {
       timeoutMs: 600_000,
     })
 
-    expect(execaMock).toHaveBeenCalledWith('/fake/ffmpeg', expect.any(Array), { timeout: 600_000 })
+    expect(execaMock).toHaveBeenCalledWith('/fake/ffmpeg', expect.any(Array), {
+      ...stderrCaptureOptions,
+      timeout: 600_000,
+      forceKillAfterDelay: 5_000,
+    })
+  })
+
+  it('forwards stderr chunks to onLog', async () => {
+    execaMock.mockImplementationOnce(async (_bin, _args, options) => {
+      for (const generatorResult of options.stderr.transform(Buffer.from('progress'))) {
+        void generatorResult
+      }
+      return {}
+    })
+    const messages = []
+    await convertAudioToHls({
+      input: '/music/track.mp3',
+      outputDir: '/music/track.hls',
+      bitrates: ['192k'],
+      onLog: (message) => messages.push(message),
+    })
+    expect(messages).toEqual(['progress'])
   })
 
   it('rejects invalid bitrate syntax', async () => {

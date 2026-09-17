@@ -16,15 +16,22 @@ const wirePermissionDto = contractEnum<WirePermission>()([
   'artists:read',
   'artists:verify',
   'artists:delete',
+  'artists:restore',
+  'artists:revoke-sessions',
   'tracks:read',
   'tracks:reprocess',
+  'tracks:delete',
+  'tracks:restore',
   'users:read',
   'users:delete',
+  'users:restore',
+  'users:revoke-sessions',
   'audit:read',
   'staff:read',
   'staff:write',
   'roles:read',
   'roles:write',
+  'overview:read',
 ])
 
 type ContractRole = Pick<
@@ -56,7 +63,10 @@ export type RoleDto = z.infer<typeof roleDto>
 
 export const roleListDto = z.array(roleDto)
 
-type ContractRolePermission = Pick<ApiSchemas['RolePermissionEntity'], 'id' | 'heldBy' | 'protected'>
+type ContractRolePermission = Pick<
+  ApiSchemas['RolePermissionEntity'],
+  'id' | 'heldBy' | 'protected'
+>
 
 export const rolePermissionDto = z.object({
   id: wirePermissionDto,

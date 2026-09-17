@@ -39,8 +39,14 @@ describe('canEditRole', () => {
 
 describe('canRenameRole', () => {
   it('refuses any built-in role, with a reason', () => {
-    expect(canRenameRole(BUILT_IN_ADMIN)).toMatchObject({ allowed: false, reason: expect.any(String) })
-    expect(canRenameRole(BUILT_IN_MODERATOR)).toMatchObject({ allowed: false, reason: expect.any(String) })
+    expect(canRenameRole(BUILT_IN_ADMIN)).toMatchObject({
+      allowed: false,
+      reason: expect.any(String),
+    })
+    expect(canRenameRole(BUILT_IN_MODERATOR)).toMatchObject({
+      allowed: false,
+      reason: expect.any(String),
+    })
   })
 
   it('allows a custom role', () => {

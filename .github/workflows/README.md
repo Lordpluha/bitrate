@@ -62,6 +62,18 @@ Current workflow map for .github/workflows.
 - ui_react_reusable.yml — Biome plus unit, integration, snapshot, and Chromium screenshot
   projects.
 
+### Player (`<bitrate-player>`)
+- player.yml — checks-only entry workflow for packages/player; it publishes no image. Filtered
+  on the package **and** the root `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`,
+  `.npmrc` and `scripts/check-design-tokens.mjs`: a lockfile change can move this package's
+  Svelte/Vite/Playwright toolchain without touching its directory, and the token script scans it.
+- player_reusable.yml — six independent jobs, none gated on another: ESLint (this package is on
+  ESLint, **not** Biome), `svelte-check` + `tsc`, `check:tokens`, Vitest `unit` (jsdom) and `node`
+  (SSR import), Vitest `browser` in Chromium, and the Vite build. Chromium is installed through
+  the package's own `playwright` (`pnpm --filter @bitrate/player exec playwright install`) so its
+  revision matches the provider that drives it. No release gate runs Vitest, so nothing else
+  needs a browser.
+
 ### Storybook (ui.bitrate.me)
 - storybook.yml — Storybook image entry workflow, path-filtered on packages/ui-react.
 - storybook_reusable.yml — builds packages/ui-react/Dockerfile (target: production) and
@@ -315,7 +327,7 @@ credential above never needs `DeleteObject` and a leaked key cannot destroy the 
 wrote. `prune-remote` exists for a provider with no lifecycle support and is off.
 
 ## Structure Summary
-- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, backup.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, backup.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 

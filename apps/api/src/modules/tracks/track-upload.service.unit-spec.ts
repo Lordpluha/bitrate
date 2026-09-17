@@ -1,4 +1,4 @@
-import { open, rm } from 'node:fs/promises'
+import { open, rm, stat } from 'node:fs/promises'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
@@ -6,6 +6,7 @@ import type { ConfigService } from '@nestjs/config'
 import {
   makeCacheMock,
   makeConfigMock,
+  makeProcessingAttemptRecorderMock,
   makeQueueMock,
   mockTransaction,
   type PrismaMock,
@@ -39,10 +40,12 @@ jest.mock('node:fs/promises', () => ({
     close: jest.fn().mockResolvedValue(undefined as never),
   } as never),
   rm: jest.fn().mockResolvedValue(undefined as never),
+  stat: jest.fn().mockResolvedValue({ size: 4_096 } as never),
 }))
 
 const openMock = open as jest.MockedFunction<typeof open>
 const rmMock = rm as jest.MockedFunction<typeof rm>
+const statMock = stat as jest.MockedFunction<typeof stat>
 const parseFileMock = parseFile as jest.MockedFunction<typeof parseFile>
 
 describe('TrackUploadService', () => {
@@ -50,6 +53,7 @@ describe('TrackUploadService', () => {
   let prisma: PrismaMock
   let queue: jest.Mocked<Queue>
   let config: jest.Mocked<ConfigService>
+  const recorder = makeProcessingAttemptRecorderMock()
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -57,7 +61,7 @@ describe('TrackUploadService', () => {
     prisma = prismaMock
     queue = makeQueueMock()
     config = makeConfigMock()
-    service = new TrackUploadService(prisma, queue, config, makeCacheMock())
+    service = new TrackUploadService(prisma, queue, config, makeCacheMock(), recorder)
   })
 
   describe('create', () => {
@@ -79,6 +83,12 @@ describe('TrackUploadService', () => {
         expect.objectContaining({
           bitrates: ['128k'],
           sourceFileName: audioFile.filename,
+          trigger: 'UPLOAD',
+          input: expect.objectContaining({
+            bytes: audioFile.size,
+            bitrateKbps: 128,
+            durationSec: 100,
+          }),
         }),
         expect.objectContaining({
           attempts: 5,
@@ -118,6 +128,13 @@ describe('TrackUploadService', () => {
           processingError: 'Redis unavailable',
         }),
       })
+      expect(recorder.recordEnqueueFailure).toHaveBeenCalledWith(
+        expect.objectContaining({
+          trackId: track.id,
+          trigger: 'UPLOAD',
+          jobId: expect.stringContaining(audioFile.filename),
+        }),
+      )
     })
 
     it('should set cover to null when no cover file provided', async () => {
@@ -213,7 +230,11 @@ describe('TrackUploadService', () => {
       expect(prisma.trackFile.upsert).not.toHaveBeenCalled()
       expect(queue.add).toHaveBeenCalledWith(
         'convert-audio',
-        expect.objectContaining({ sourceFileName: audioFile.filename }),
+        expect.objectContaining({
+          sourceFileName: audioFile.filename,
+          trigger: 'REPLACE',
+          input: expect.objectContaining({ bytes: audioFile.size }),
+        }),
         expect.objectContaining({ attempts: 5 }),
       )
       expect(result).toBe(track)
@@ -244,6 +265,36 @@ describe('TrackUploadService', () => {
         { force: true },
       )
       expect(prisma.track.update).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('reprocess', () => {
+    it('re-enqueues the stored source with trigger REPROCESS and a fresh input probe', async () => {
+      const track = buildTrack()
+      prisma.track.findFirst.mockResolvedValue(track as never)
+      prisma.track.update.mockResolvedValue(track as never)
+      queue.add.mockResolvedValue({} as never)
+      statMock.mockResolvedValueOnce({ size: 9_000 } as never)
+
+      const result = await service.reprocess(track.id)
+
+      expect(queue.add).toHaveBeenCalledWith(
+        'convert-audio',
+        expect.objectContaining({
+          sourceFileName: track.audioUrl,
+          trigger: 'REPROCESS',
+          input: expect.objectContaining({ bytes: 9_000, bitrateKbps: 128, durationSec: 100 }),
+        }),
+        expect.objectContaining({ attempts: 5 }),
+      )
+      expect(result).toBe(track)
+    })
+
+    it('throws when the track does not exist or was soft-deleted', async () => {
+      prisma.track.findFirst.mockResolvedValue(null)
+
+      await expect(service.reprocess('missing-track')).rejects.toThrow(NotFoundException)
+      expect(queue.add).not.toHaveBeenCalled()
     })
   })
 })

@@ -11,6 +11,7 @@ export function ListAuditLogsSwagger() {
     ApiQuery({ name: 'page', required: false, type: Number }),
     ApiQuery({ name: 'limit', required: false, type: Number }),
     ApiQuery({ name: 'entityType', required: false, type: String }),
+    ApiQuery({ name: 'entityId', required: false, type: String, format: 'uuid' }),
     ApiQuery({ name: 'staffId', required: false, type: String, format: 'uuid' }),
     ApiQuery({ name: 'from', required: false, type: String, format: 'date-time' }),
     ApiQuery({ name: 'to', required: false, type: String, format: 'date-time' }),

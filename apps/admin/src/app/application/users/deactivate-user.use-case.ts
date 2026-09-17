@@ -1,6 +1,11 @@
 import { inject, Injectable } from '@angular/core'
 import { ActionNotAllowedError } from '@domain/shared'
-import { isUserActive, type User, UserRepository } from '@domain/user'
+import { canDeactivateUser, type User, UserRepository } from '@domain/user'
+
+export type DeactivateUserInput = {
+  user: User
+  reason?: string
+}
 
 @Injectable({ providedIn: 'root' })
 export class DeactivateUserUseCase {
@@ -9,11 +14,12 @@ export class DeactivateUserUseCase {
   /**
    * @throws {ActionNotAllowedError} When the account is already deactivated.
    */
-  async execute(user: User): Promise<void> {
-    if (!isUserActive(user)) {
-      throw new ActionNotAllowedError(`${user.username} is already deactivated.`)
+  async execute({ user, reason }: DeactivateUserInput): Promise<void> {
+    const decision = canDeactivateUser(user)
+    if (!decision.allowed) {
+      throw new ActionNotAllowedError(decision.reason)
     }
 
-    await this.users.deactivate(user.id)
+    await this.users.deactivate({ id: user.id, reason })
   }
 }

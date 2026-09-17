@@ -7,6 +7,7 @@ import type { Permission } from '@domain/access'
  * the first one (in nav order) they can actually reach — see that guard for why.
  */
 export const ROUTE_PERMISSIONS: readonly { path: string; permission: Permission }[] = [
+  { path: '/', permission: 'overview:read' },
   { path: '/moderation', permission: 'reports:read' },
   { path: '/catalog', permission: 'tracks:read' },
   { path: '/artists', permission: 'artists:read' },

@@ -4,6 +4,7 @@ import {
   type ListReportsQuery,
   type ModerationReport,
   ModerationReportRepository,
+  type ReportDetail,
   type SetReportStatusInput,
 } from '@domain/moderation'
 import type { Page } from '@domain/shared'
@@ -13,6 +14,10 @@ const setStatus = vi.fn<(input: SetReportStatusInput) => Promise<ModerationRepor
 
 class StubReportRepository extends ModerationReportRepository {
   override list(_query: ListReportsQuery): Promise<Page<ModerationReport>> {
+    throw new Error('not used')
+  }
+
+  override getById(_id: string): Promise<ReportDetail> {
     throw new Error('not used')
   }
 

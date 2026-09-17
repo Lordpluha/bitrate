@@ -12,15 +12,22 @@ export type Permission =
   | 'artists:read'
   | 'artists:verify'
   | 'artists:delete'
+  | 'artists:restore'
+  | 'artists:revoke-sessions'
   | 'tracks:read'
   | 'tracks:reprocess'
+  | 'tracks:delete'
+  | 'tracks:restore'
   | 'users:read'
   | 'users:delete'
+  | 'users:restore'
+  | 'users:revoke-sessions'
   | 'audit:read'
   | 'staff:read'
   | 'staff:write'
   | 'roles:read'
   | 'roles:write'
+  | 'overview:read'
 
 /** Every permission the API can grant, stated once so a missing member is a compile error. */
 export const PERMISSIONS = coveringTuple<Permission>()([
@@ -29,15 +36,22 @@ export const PERMISSIONS = coveringTuple<Permission>()([
   'artists:read',
   'artists:verify',
   'artists:delete',
+  'artists:restore',
+  'artists:revoke-sessions',
   'tracks:read',
   'tracks:reprocess',
+  'tracks:delete',
+  'tracks:restore',
   'users:read',
   'users:delete',
+  'users:restore',
+  'users:revoke-sessions',
   'audit:read',
   'staff:read',
   'staff:write',
   'roles:read',
   'roles:write',
+  'overview:read',
 ])
 
 /**

@@ -2,7 +2,14 @@ import type { Routes } from '@angular/router'
 import { requirePermission, requireStaffSession } from '@presentation/guards'
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'moderation' },
+  {
+    path: '',
+    pathMatch: 'full',
+    title: 'Overview · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('overview:read')],
+    loadComponent: () =>
+      import('@presentation/pages/overview/overview').then((m) => m.OverviewPage),
+  },
   {
     path: 'login',
     title: 'Sign in · Bitrate operators',
@@ -23,10 +30,24 @@ export const routes: Routes = [
       import('@presentation/pages/moderation/moderation').then((m) => m.ModerationQueue),
   },
   {
+    path: 'moderation/:id',
+    title: 'Report · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('reports:read')],
+    loadComponent: () =>
+      import('@presentation/pages/moderation/report-detail').then((m) => m.ReportDetailPage),
+  },
+  {
     path: 'catalog',
     title: 'Catalog pipeline · Bitrate operators',
     canActivate: [requireStaffSession, requirePermission('tracks:read')],
     loadComponent: () => import('@presentation/pages/catalog/catalog').then((m) => m.CatalogPage),
+  },
+  {
+    path: 'catalog/:id',
+    title: 'Track · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('tracks:read')],
+    loadComponent: () =>
+      import('@presentation/pages/catalog/track-detail').then((m) => m.TrackDetailPage),
   },
   {
     path: 'artists',
@@ -35,10 +56,24 @@ export const routes: Routes = [
     loadComponent: () => import('@presentation/pages/artists/artists').then((m) => m.ArtistsPage),
   },
   {
+    path: 'artists/:id',
+    title: 'Artist · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('artists:read')],
+    loadComponent: () =>
+      import('@presentation/pages/artists/artist-detail').then((m) => m.ArtistDetailPage),
+  },
+  {
     path: 'users',
     title: 'Listeners · Bitrate operators',
     canActivate: [requireStaffSession, requirePermission('users:read')],
     loadComponent: () => import('@presentation/pages/users/users').then((m) => m.UsersPage),
+  },
+  {
+    path: 'users/:id',
+    title: 'Listener · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('users:read')],
+    loadComponent: () =>
+      import('@presentation/pages/users/user-detail').then((m) => m.UserDetailPage),
   },
   {
     path: 'audit',

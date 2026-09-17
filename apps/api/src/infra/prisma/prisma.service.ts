@@ -120,6 +120,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.trackFile
   }
 
+  /** Gets per-attempt audio-processing log rows. */
+  get trackProcessingAttempt() {
+    return this.prisma.trackProcessingAttempt
+  }
+
   /** Gets the listening history. */
   get listeningHistory() {
     return this.prisma.listeningHistory

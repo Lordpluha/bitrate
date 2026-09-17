@@ -1,4 +1,6 @@
 export * from './api.config'
 export * from './auth.interceptor'
 export * from './contract-union'
+export * from './take-down.dto'
+export * from './to-resource-write-error'
 export * from './wire-page'

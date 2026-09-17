@@ -1,5 +1,11 @@
-import type { Artist, ArtistSortField } from '@domain/artist'
-import type { ArtistDto, WireArtistSortField } from './artist.dto'
+import type { ResourceStatus } from '@domain/shared'
+import type { Artist, ArtistDetail, ArtistSortField } from '@domain/artist'
+import type {
+  ArtistDetailDto,
+  ArtistDto,
+  WireArtistSortField,
+  WireArtistStatus,
+} from './artist.dto'
 
 /**
  * See `track.mapper.ts`'s `TO_WIRE_STATUS` — spelled out rather than returned as-is, so a sort
@@ -17,6 +23,16 @@ export function toWireArtistSort(field: ArtistSortField): NonNullable<WireArtist
   return TO_WIRE_SORT[field]
 }
 
+const TO_WIRE_STATUS = {
+  active: 'active',
+  deactivated: 'deactivated',
+  all: 'all',
+} as const satisfies Record<ResourceStatus, NonNullable<WireArtistStatus>>
+
+export function toWireArtistStatus(status: ResourceStatus): NonNullable<WireArtistStatus> {
+  return TO_WIRE_STATUS[status]
+}
+
 /**
  * Transport shape to domain shape. Two things happen here and nowhere else: ISO strings become
  * `Date`s, and the API's `deletedAt` becomes the panel's `deactivatedAt`.
@@ -31,5 +47,12 @@ export function toArtist(dto: ArtistDto): Artist {
     country: dto.country,
     createdAt: new Date(dto.createdAt),
     deactivatedAt: dto.deletedAt === null ? null : new Date(dto.deletedAt),
+  }
+}
+
+export function toArtistDetail(dto: ArtistDetailDto): ArtistDetail {
+  return {
+    ...toArtist(dto),
+    counts: dto.counts,
   }
 }

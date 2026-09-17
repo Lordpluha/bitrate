@@ -8,13 +8,19 @@ import request from 'supertest'
 import { buildAdminUser } from './__tests__/fixtures/admin-users.fixtures'
 import { AdminUsersController } from './admin-users.controller'
 import { AdminUsersService } from './admin-users.service'
-import { UserNotFoundException } from './errors'
+import {
+  UserAlreadyDeletedException,
+  UserNotDeletedException,
+  UserNotFoundException,
+} from './errors'
 
 const makeServiceMock = () =>
   ({
     findAll: jest.fn(),
     findById: jest.fn(),
     softDelete: jest.fn(),
+    restore: jest.fn(),
+    revokeSessions: jest.fn(),
   }) as unknown as jest.Mocked<AdminUsersService>
 
 const buildApp = async (permissions: Permission[]) => {
@@ -49,6 +55,8 @@ describe('AdminUsersController (int)', () => {
       service.findAll.mockReset()
       service.findById.mockReset()
       service.softDelete.mockReset()
+      service.restore.mockReset()
+      service.revokeSessions.mockReset()
     })
 
     it('GET /admin/users returns 200', async () => {
@@ -65,6 +73,13 @@ describe('AdminUsersController (int)', () => {
 
     it('GET /admin/users returns 400 for a sort field outside the allowlist', async () => {
       const res = await request(app.getHttpServer()).get('/admin/users').query({ sort: 'password' })
+
+      expect(res.status).toBe(400)
+      expect(service.findAll).not.toHaveBeenCalled()
+    })
+
+    it('GET /admin/users returns 400 for an invalid status', async () => {
+      const res = await request(app.getHttpServer()).get('/admin/users').query({ status: 'bogus' })
 
       expect(res.status).toBe(400)
       expect(service.findAll).not.toHaveBeenCalled()
@@ -97,6 +112,24 @@ describe('AdminUsersController (int)', () => {
       expect(service.softDelete).not.toHaveBeenCalled()
     })
 
+    it('POST /admin/users/:id/restore returns 403 — missing users:restore', async () => {
+      const res = await request(app.getHttpServer()).post(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479/restore',
+      )
+
+      expect(res.status).toBe(403)
+      expect(service.restore).not.toHaveBeenCalled()
+    })
+
+    it('POST /admin/users/:id/sessions/revoke returns 403 — missing users:revoke-sessions', async () => {
+      const res = await request(app.getHttpServer()).post(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479/sessions/revoke',
+      )
+
+      expect(res.status).toBe(403)
+      expect(service.revokeSessions).not.toHaveBeenCalled()
+    })
+
     it('GET /admin/users/:id returns 400 for a non-UUID id', async () => {
       const res = await request(app.getHttpServer()).get('/admin/users/not-a-uuid')
 
@@ -104,30 +137,131 @@ describe('AdminUsersController (int)', () => {
     })
   })
 
-  describe('with users:delete', () => {
+  describe('with users:delete, users:restore, users:revoke-sessions', () => {
     let app: INestApplication
     let service: jest.Mocked<AdminUsersService>
 
     beforeAll(async () => {
-      ;({ app, service } = await buildApp(['users:read', 'users:delete']))
+      ;({ app, service } = await buildApp([
+        'users:read',
+        'users:delete',
+        'users:restore',
+        'users:revoke-sessions',
+      ]))
     })
 
     afterAll(() => app.close())
 
     beforeEach(() => {
       service.softDelete.mockReset()
+      service.restore.mockReset()
+      service.revokeSessions.mockReset()
     })
 
-    it('DELETE /admin/users/:id returns 200 and soft-deletes', async () => {
+    it('DELETE /admin/users/:id returns 200 and forwards the optional reason', async () => {
       const user = buildAdminUser({ deletedAt: new Date() })
       service.softDelete.mockResolvedValue(user as never)
+
+      const res = await request(app.getHttpServer())
+        .delete('/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479')
+        .send({ reason: 'terms violation' })
+
+      expect(res.status).toBe(200)
+      expect(service.softDelete).toHaveBeenCalledWith(
+        'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+        'staff-1',
+        'terms violation',
+        expect.any(Object),
+      )
+    })
+
+    it('DELETE /admin/users/:id returns 200 with no body — stays backward compatible', async () => {
+      service.softDelete.mockResolvedValue(buildAdminUser({ deletedAt: new Date() }) as never)
 
       const res = await request(app.getHttpServer()).delete(
         '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479',
       )
 
       expect(res.status).toBe(200)
-      expect(service.softDelete).toHaveBeenCalledWith('f47ac10b-58cc-4372-a567-0e02b2c3d479')
+      expect(service.softDelete).toHaveBeenCalledWith(
+        'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+        'staff-1',
+        undefined,
+        expect.any(Object),
+      )
+    })
+
+    it('DELETE /admin/users/:id returns 409 when already deleted', async () => {
+      service.softDelete.mockRejectedValue(
+        new UserAlreadyDeletedException('f47ac10b-58cc-4372-a567-0e02b2c3d479'),
+      )
+
+      const res = await request(app.getHttpServer()).delete(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479',
+      )
+
+      expect(res.status).toBe(409)
+    })
+
+    it('POST /admin/users/:id/restore returns 200', async () => {
+      service.restore.mockResolvedValue(buildAdminUser({ deletedAt: null }) as never)
+
+      const res = await request(app.getHttpServer()).post(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479/restore',
+      )
+
+      expect(res.status).toBe(200)
+    })
+
+    it('POST /admin/users/:id/restore returns 409 when not deleted', async () => {
+      service.restore.mockRejectedValue(
+        new UserNotDeletedException('f47ac10b-58cc-4372-a567-0e02b2c3d479'),
+      )
+
+      const res = await request(app.getHttpServer()).post(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479/restore',
+      )
+
+      expect(res.status).toBe(409)
+    })
+
+    it('POST /admin/users/:id/sessions/revoke returns 200 with the revoked count', async () => {
+      service.revokeSessions.mockResolvedValue({ revoked: 3 })
+
+      const res = await request(app.getHttpServer()).post(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479/sessions/revoke',
+      )
+
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual({ revoked: 3 })
+    })
+
+    it('POST /admin/users/:id/sessions/revoke returns 404 for a missing user', async () => {
+      service.revokeSessions.mockRejectedValue(new UserNotFoundException('missing'))
+
+      const res = await request(app.getHttpServer()).post(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479/sessions/revoke',
+      )
+
+      expect(res.status).toBe(404)
+    })
+
+    it('DELETE /admin/users/:id returns 400 for an empty reason', async () => {
+      const res = await request(app.getHttpServer())
+        .delete('/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479')
+        .send({ reason: '' })
+
+      expect(res.status).toBe(400)
+      expect(service.softDelete).not.toHaveBeenCalled()
+    })
+
+    it('DELETE /admin/users/:id returns 400 for a non-string reason', async () => {
+      const res = await request(app.getHttpServer())
+        .delete('/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479')
+        .send({ reason: 42 })
+
+      expect(res.status).toBe(400)
+      expect(service.softDelete).not.toHaveBeenCalled()
     })
   })
 })

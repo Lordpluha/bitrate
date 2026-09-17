@@ -30,6 +30,29 @@
     }
   </div>
 
+  <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by content type">
+    <button
+      hlmBtn
+      size="sm"
+      type="button"
+      [variant]="query.state().entityType === null ? 'default' : 'outline'"
+      (click)="setEntityType(null)"
+    >
+      All types
+    </button>
+    @for (entityType of entityTypes; track entityType) {
+      <button
+        hlmBtn
+        size="sm"
+        type="button"
+        [variant]="query.state().entityType === entityType ? 'default' : 'outline'"
+        (click)="setEntityType(entityType)"
+      >
+        {{ entityType }}
+      </button>
+    }
+  </div>
+
   <app-collection-status
     [loading]="collection.loading()"
     [failure]="collection.failure()"
@@ -74,7 +97,9 @@
           @for (report of collection.items(); track report.id) {
             <tr hlmTr>
               <td hlmTd>
-                <span class="block">{{ report.entityType }}</span>
+                <a [routerLink]="['/moderation', report.id]" class="block hover:underline">{{
+                  report.entityType
+                }}</a>
                 <span class="font-mono text-xs text-muted-foreground">
                   {{ report.entityId.slice(0, 8) }}
                 </span>

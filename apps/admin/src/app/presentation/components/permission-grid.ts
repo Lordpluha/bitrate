@@ -57,9 +57,7 @@ export class PermissionGrid {
 
   protected toggle(permission: Permission, checked: boolean): void {
     const current = this.selected()
-    const next = checked
-      ? [...current, permission]
-      : current.filter((held) => held !== permission)
+    const next = checked ? [...current, permission] : current.filter((held) => held !== permission)
 
     this.selectedChange.emit(next)
   }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { trackPageDto } from './track.dto'
+import { trackDetailDto, trackPageDto } from './track.dto'
 
 /**
  * The schema this app got wrong: it required `artistName` while the API had always sent
@@ -16,6 +16,8 @@ const apiRow = {
   processingAttempts: 0,
   processingStartedAt: '2026-09-01T10:00:00.000Z',
   processingFinishedAt: '2026-09-01T10:02:00.000Z',
+  deletedAt: null,
+  updatedAt: '2026-09-01T10:02:00.000Z',
   createdAt: '2026-09-01T09:59:00.000Z',
 }
 
@@ -59,5 +61,57 @@ describe('trackPageDto', () => {
     const wrong = { ...apiRow, processingAttempts: '0' }
 
     expect(() => trackPageDto.parse({ ...apiPage, data: [wrong] })).toThrow()
+  })
+
+  it('keeps a taken-down track with its deletedAt timestamp', () => {
+    const takenDown = { ...apiRow, deletedAt: '2026-09-10T08:00:00.000Z' }
+
+    const parsed = trackPageDto.parse({ ...apiPage, data: [takenDown] })
+
+    expect(parsed.data[0]?.deletedAt).toBe('2026-09-10T08:00:00.000Z')
+  })
+})
+
+const detailRow = {
+  ...apiRow,
+  artistId: '3f2504e0-4f89-41d3-9a0c-0305e82c3305',
+  audioFiles: [
+    {
+      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3306',
+      format: 'opus',
+      bitrate: 192,
+      codec: 'opus',
+      size: 5_242_880,
+    },
+  ],
+  artists: [
+    {
+      artistId: '3f2504e0-4f89-41d3-9a0c-0305e82c3305',
+      username: 'dj-test',
+      isPrimary: true,
+      position: 0,
+    },
+  ],
+  genres: [{ id: '3f2504e0-4f89-41d3-9a0c-0305e82c3307', name: 'House', slug: 'house' }],
+  albums: [],
+  openReportCount: 0,
+}
+
+describe('trackDetailDto', () => {
+  it('accepts the detail shape the API actually returns', () => {
+    const parsed = trackDetailDto.parse(detailRow)
+
+    expect(parsed.audioFiles[0]?.format).toBe('opus')
+    expect(parsed.artists[0]?.isPrimary).toBe(true)
+  })
+
+  it('rejects a processing status it does not handle', () => {
+    expect(() => trackDetailDto.parse({ ...detailRow, processingStatus: 'QUEUED' })).toThrow()
+  })
+
+  it('rejects a rendition missing its bitrate', () => {
+    const { bitrate: _bitrate, ...withoutBitrate } = detailRow.audioFiles[0] ?? {}
+
+    expect(() => trackDetailDto.parse({ ...detailRow, audioFiles: [withoutBitrate] })).toThrow()
   })
 })

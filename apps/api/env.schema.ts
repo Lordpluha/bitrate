@@ -80,6 +80,14 @@ export const envSchema = z
     S3_PUBLIC_URL: z.string().url().optional(),
     S3_FORCE_PATH_STYLE: z.coerce.boolean().default(true),
 
+    /**
+     * Whether `AudioProcessingConsumer`'s BullMQ worker actually claims and runs jobs.
+     * Defaults on for the real API process. A seed entrypoint that boots the full
+     * `AppModule` (`src/infra/seeds/seed.ts`) sets this to `false` before importing it
+     * (see `bootstrap-env.ts`) so a `db:seed` run does not race its own conversion jobs.
+     */
+    AUDIO_PROCESSING_WORKER_ENABLED: booleanFromEnv.default(true),
+
     // CDN
     // CDN_URL: z.string().url().optional(),
 

@@ -14,14 +14,24 @@ const BUILT_IN_ROLES = [
   {
     name: 'MODERATOR',
     description:
-      'Built-in operator role. Holds every grantable permission except staff and role administration.',
+      'Built-in operator role. Holds moderation, catalog, and user-management permissions ' +
+      '(reports, artists, tracks, users, audit); excludes staff and role administration and the ' +
+      'overview dashboard.',
     permissions: [...MODERATOR_TEMPLATE] as string[],
   },
 ] as const
 
 /**
- * Idempotently upserts the built-in ADMIN and MODERATOR roles by name, so a restored dump or a
- * freshly migrated database always has both. Safe to call on every boot.
+ * Guarantees the built-in ADMIN and MODERATOR roles exist, so a restored dump or a freshly
+ * migrated database always has both. Safe to call on every boot.
+ *
+ * Only a missing role is seeded with its description and template. An existing role keeps its
+ * description and permissions — both are editable through `PATCH /admin/roles/:id`, and
+ * rewriting them here would silently revert an administrator's edits on every restart. The
+ * update branch only re-asserts `builtIn`, which is the role's identity and not editable.
+ * The call qualifies as a Prisma database upsert — one unique field in `where`, the same value in
+ * `create`, a flat `update` — so it runs as `INSERT … ON CONFLICT` and two instances booting at
+ * once cannot race into a unique-constraint error. Keep it in that shape.
  */
 export async function ensureBuiltInRoles(prisma: RoleWriteClient): Promise<void> {
   for (const role of BUILT_IN_ROLES) {
@@ -33,11 +43,7 @@ export async function ensureBuiltInRoles(prisma: RoleWriteClient): Promise<void>
         builtIn: true,
         permissions: role.permissions,
       },
-      update: {
-        description: role.description,
-        builtIn: true,
-        permissions: role.permissions,
-      },
+      update: { builtIn: true },
     })
   }
 }

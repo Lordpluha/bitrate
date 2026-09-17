@@ -1,5 +1,5 @@
 import type { ParamMap } from '@angular/router'
-import type { Sort } from '@domain/shared'
+import type { ResourceStatus, Sort } from '@domain/shared'
 
 /** Encodes and decodes one filter/page value against one query-string parameter. */
 export type ParamCodec<TValue> = {
@@ -144,6 +144,18 @@ export function triStateParam(): ParamCodec<TriState> {
   return {
     decode: (raw) => (raw === 'verified' || raw === 'unverified' ? raw : 'all'),
     encode: (value) => (value === 'all' ? null : value),
+  }
+}
+
+/**
+ * The active/deactivated/all status filter shared by every soft-deletable resource list.
+ * `active` is the default and is never sent — same convention as `TriState`'s `all`, kept as a
+ * separate codec because `ResourceStatus`'s default member is not the "no filter" member.
+ */
+export function resourceStatusParam(): ParamCodec<ResourceStatus> {
+  return {
+    decode: (raw) => (raw === 'deactivated' || raw === 'all' ? raw : 'active'),
+    encode: (value) => (value === 'active' ? null : value),
   }
 }
 

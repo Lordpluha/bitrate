@@ -1,3 +1,4 @@
+import { ADMIN_RESOURCE_STATUSES } from '@modules/admin/shared'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiQuery, ApiResponse, getSchemaPath } from '@nestjs/swagger'
 import { ADMIN_USERS_SORT_FIELDS } from '../../dtos'
@@ -10,6 +11,7 @@ export function ListUsersSwagger() {
     ApiOperation({ summary: 'List users' }),
     ApiQuery({ name: 'page', required: false, type: Number }),
     ApiQuery({ name: 'limit', required: false, type: Number }),
+    ApiQuery({ name: 'status', required: false, enum: ADMIN_RESOURCE_STATUSES }),
     ApiQuery({ name: 'q', required: false, type: String, description: 'Search username/email' }),
     ApiQuery({ name: 'sort', required: false, enum: ADMIN_USERS_SORT_FIELDS }),
     ApiQuery({ name: 'order', required: false, enum: ['asc', 'desc'] }),

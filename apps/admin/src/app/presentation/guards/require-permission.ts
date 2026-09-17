@@ -14,11 +14,13 @@ import { ROUTE_PERMISSIONS } from './route-permissions'
  * sent every operator to `/no-access` on every refresh, administrators included. So it restores
  * the session itself when needed — sharing the in-flight `/me` request, not issuing a second.
  *
- * A denial never redirects to `/`: the root route redirects to `moderation`, so an operator
- * without `reports:read` sent to `/` would bounce back here forever. Instead it looks (in nav
- * order, via `ROUTE_PERMISSIONS`) for the first guarded route the operator *can* reach and sends
- * them there; with none reachable it sends them to `/no-access`, which is gated only by
- * `requireStaffSession` and can therefore never itself trigger another redirect.
+ * `/` is itself a guarded route now (the overview dashboard, `overview:read`), not a redirect to
+ * `moderation`. On denial this guard looks (in nav order, via `ROUTE_PERMISSIONS`) for the first
+ * guarded route the operator *can* reach and sends them there — the route just denied can never
+ * be the match, since `can()` already found it `false` for this operator, so the search never
+ * bounces back to the route it started from. With none reachable it sends them to `/no-access`,
+ * which is gated only by `requireStaffSession` and can therefore never itself trigger another
+ * redirect.
  */
 export const requirePermission = (permission: Permission): CanActivateFn => {
   return async () => {

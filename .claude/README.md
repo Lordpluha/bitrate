@@ -26,7 +26,7 @@ directly by name via the Agent tool:
 | Agent | Model | Effort | Role |
 |---|---|---|---|
 | `br-planner` | Fable | low | Decomposes a non-trivial task into ordered steps before any code is written. Plan-only. |
-| `br-frontend-developer` | Sonnet | medium | `apps/web-player`, `apps/web-artists`, `packages/ui-react` — Next.js + FSD + Tailwind v4. Auto-invokes `br-reviewer` on substantial diffs. |
+| `br-frontend-developer` | Sonnet | medium | `apps/web-player`, `apps/web-artists`, `packages/ui-react` — Next.js + FSD + Tailwind v4 — and `packages/player` — Svelte 5 `<bitrate-player>` custom element. Auto-invokes `br-reviewer` on substantial diffs. |
 | `br-backend-developer` | Sonnet | medium | `apps/api` — NestJS, Prisma, BullMQ, Socket.io. Owns the Swagger-decorator and thin-controller rules. |
 | `br-mobile-developer` | Sonnet | medium | `apps/mobile` — React Native + Expo. Flags conventions this scaffolded app has not established. |
 | `br-desktop-developer` | Sonnet | medium | `apps/desktop` — Tauri 2 shell + React renderer. Owns the capability/CSP boundary. |

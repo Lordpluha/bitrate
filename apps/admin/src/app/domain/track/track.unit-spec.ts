@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   canReprocess,
+  canRestoreTrack,
+  canTakeDownTrack,
   isTrackStuck,
   STUCK_AFTER_MS,
   type Track,
@@ -19,6 +21,8 @@ function track(overrides: Partial<Track> = {}): Track {
     processingAttempts: 0,
     processingStartedAt: NOW,
     processingFinishedAt: null,
+    updatedAt: NOW,
+    takenDownAt: null,
     createdAt: NOW,
     ...overrides,
   }
@@ -37,8 +41,16 @@ describe('isTrackStuck', () => {
     expect(isTrackStuck({ track: track({ processingStartedAt: started }), now: NOW })).toBe(true)
   })
 
-  it('is false for a track that never started, however old', () => {
-    const never = track({ processingStartedAt: null })
+  it('falls back to updatedAt for a track that never recorded a start, and is stuck once that is old', () => {
+    const staleUpdate = new Date(NOW.getTime() - STUCK_AFTER_MS - 1000)
+    const never = track({ processingStartedAt: null, updatedAt: staleUpdate })
+
+    expect(isTrackStuck({ track: never, now: NOW })).toBe(true)
+  })
+
+  it('is false for a track with no start but a recent updatedAt', () => {
+    const recentUpdate = new Date(NOW.getTime() - STUCK_AFTER_MS + 1000)
+    const never = track({ processingStartedAt: null, updatedAt: recentUpdate })
 
     expect(isTrackStuck({ track: never, now: NOW })).toBe(false)
   })
@@ -73,5 +85,38 @@ describe('canReprocess', () => {
   it('allows a failed or in-flight track', () => {
     expect(canReprocess(track({ processingStatus: 'FAILED' }))).toBe(true)
     expect(canReprocess(track({ processingStatus: 'PROCESSING' }))).toBe(true)
+  })
+
+  it('refuses a taken-down track even while still marked FAILED', () => {
+    const takenDown = track({ processingStatus: 'FAILED', takenDownAt: NOW })
+
+    expect(canReprocess(takenDown)).toBe(false)
+  })
+})
+
+describe('canTakeDownTrack', () => {
+  it('allows taking down a track that is not taken down', () => {
+    expect(canTakeDownTrack(track()).allowed).toBe(true)
+  })
+
+  it('refuses a track that is already taken down', () => {
+    const decision = canTakeDownTrack(track({ takenDownAt: NOW }))
+
+    expect(decision).toEqual({
+      allowed: false,
+      reason: expect.stringContaining('already taken down'),
+    })
+  })
+})
+
+describe('canRestoreTrack', () => {
+  it('allows restoring a taken-down track', () => {
+    expect(canRestoreTrack(track({ takenDownAt: NOW })).allowed).toBe(true)
+  })
+
+  it('refuses a track that is not taken down', () => {
+    const decision = canRestoreTrack(track())
+
+    expect(decision).toEqual({ allowed: false, reason: expect.stringContaining('not taken down') })
   })
 })

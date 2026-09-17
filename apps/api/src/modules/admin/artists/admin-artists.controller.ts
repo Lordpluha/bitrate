@@ -1,5 +1,24 @@
-import { AdminAuth, RequirePermission } from '@modules/admin-auth'
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Query } from '@nestjs/common'
+import {
+  AuditContext,
+  type AuditContextValue,
+  TakeDownReasonDto,
+  TakeDownReasonSchema,
+} from '@modules/admin/shared'
+import type { AuthenticatedStaff } from '@modules/admin-auth'
+import { AdminAuth, CurrentStaff, RequirePermission } from '@modules/admin-auth'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminArtistsService } from './admin-artists.service'
@@ -7,6 +26,8 @@ import {
   DeleteArtistSwagger,
   GetArtistSwagger,
   ListArtistsSwagger,
+  RestoreArtistSwagger,
+  RevokeArtistSessionsSwagger,
   UpdateArtistVerificationSwagger,
 } from './decorators'
 import {
@@ -54,7 +75,40 @@ export class AdminArtistsController {
   @RequirePermission('artists:delete')
   @DeleteArtistSwagger()
   @Delete(':id')
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.artists.softDelete(id)
+  remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @Body(new ZodValidationPipe(TakeDownReasonSchema.optional())) body: TakeDownReasonDto = {},
+    @AuditContext() auditContext: AuditContextValue = {},
+  ) {
+    return this.artists.softDelete(id, staff.id, body.reason, auditContext)
+  }
+
+  /** Runs the restore operation. */
+  @RequirePermission('artists:restore')
+  @RestoreArtistSwagger()
+  @HttpCode(HttpStatus.OK)
+  @Post(':id/restore')
+  restore(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @Body(new ZodValidationPipe(TakeDownReasonSchema.optional())) body: TakeDownReasonDto = {},
+    @AuditContext() auditContext: AuditContextValue = {},
+  ) {
+    return this.artists.restore(id, staff.id, body.reason, auditContext)
+  }
+
+  /** Runs the revoke sessions operation. */
+  @RequirePermission('artists:revoke-sessions')
+  @RevokeArtistSessionsSwagger()
+  @HttpCode(HttpStatus.OK)
+  @Post(':id/sessions/revoke')
+  revokeSessions(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @Body(new ZodValidationPipe(TakeDownReasonSchema.optional())) body: TakeDownReasonDto = {},
+    @AuditContext() auditContext: AuditContextValue = {},
+  ) {
+    return this.artists.revokeSessions(id, staff.id, body.reason, auditContext)
   }
 }

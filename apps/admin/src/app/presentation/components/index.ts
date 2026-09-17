@@ -1,4 +1,6 @@
 export * from './collection-status'
+export * from './confirm-action'
 export * from './paginator'
 export * from './permission-grid'
 export * from './sort-header'
+export * from './track-audio-player'

@@ -47,10 +47,26 @@ describe('AppSidebar', () => {
 
     const host = fixture.nativeElement as HTMLElement
 
+    expect(host.textContent).toContain('Overview')
     expect(host.textContent).toContain('Operations')
     expect(host.textContent).toContain('Accounts')
     expect(host.textContent).toContain('System')
-    expect(host.querySelectorAll('nav a')).toHaveLength(7)
+    expect(host.querySelectorAll('nav a')).toHaveLength(8)
+  })
+
+  /**
+   * The Overview section has one link, itself labelled "Overview" — a caption above it would say
+   * the same word twice. `nav.model.ts` omits `label` for that section on purpose.
+   */
+  it('renders no caption above the single-item Overview section', async () => {
+    const fixture = TestBed.createComponent(AppSidebar)
+    await fixture.whenStable()
+
+    const host = fixture.nativeElement as HTMLElement
+    const captions = Array.from(host.querySelectorAll('nav > p')).map((p) => p.textContent?.trim())
+
+    expect(captions).not.toContain('Overview')
+    expect(captions).toEqual(expect.arrayContaining(['Operations', 'Accounts', 'System']))
   })
 
   /** The footer is pinned by `nav` taking the slack, not by absolute positioning. */
@@ -137,5 +153,35 @@ describe('AppSidebar', () => {
     const host = fixture.nativeElement as HTMLElement
 
     expect(host.textContent).toContain('Staff')
+  })
+
+  it('hides Overview when the operator lacks overview:read', async () => {
+    TestBed.inject(SessionStore).set({
+      ...ADMIN_STAFF,
+      roleName: 'MODERATOR',
+      permissions: ['reports:read'],
+    })
+
+    const fixture = TestBed.createComponent(AppSidebar)
+    await fixture.whenStable()
+
+    const host = fixture.nativeElement as HTMLElement
+
+    expect(host.textContent).not.toContain('Overview')
+  })
+
+  it('shows Overview when the operator holds overview:read', async () => {
+    TestBed.inject(SessionStore).set({
+      ...ADMIN_STAFF,
+      roleName: 'MODERATOR',
+      permissions: ['overview:read'],
+    })
+
+    const fixture = TestBed.createComponent(AppSidebar)
+    await fixture.whenStable()
+
+    const host = fixture.nativeElement as HTMLElement
+
+    expect(host.textContent).toContain('Overview')
   })
 })

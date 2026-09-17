@@ -21,15 +21,22 @@ const wirePermissionDto = contractEnum<StaffMemberWirePermission>()([
   'artists:read',
   'artists:verify',
   'artists:delete',
+  'artists:restore',
+  'artists:revoke-sessions',
   'tracks:read',
   'tracks:reprocess',
+  'tracks:delete',
+  'tracks:restore',
   'users:read',
   'users:delete',
+  'users:restore',
+  'users:revoke-sessions',
   'audit:read',
   'staff:read',
   'staff:write',
   'roles:read',
   'roles:write',
+  'overview:read',
 ])
 
 type ContractStaffMemberRole = Pick<

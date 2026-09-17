@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { roleEditorSchema } from './role-editor.schema'
 
-function values(overrides: Partial<{ name: string; description: string; permissions: string[] }> = {}) {
+function values(
+  overrides: Partial<{ name: string; description: string; permissions: string[] }> = {},
+) {
   return { name: 'Catalog reviewer', description: '', permissions: [], ...overrides }
 }
 

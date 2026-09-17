@@ -1,8 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
-import { DeleteRoleUseCase, ListPermissionCatalogueUseCase, ListRolesUseCase } from '@application/roles'
+import {
+  DeleteRoleUseCase,
+  ListPermissionCatalogueUseCase,
+  ListRolesUseCase,
+} from '@application/roles'
 import { SessionStore } from '@application/session'
-import { canDeleteRole, type PermissionCatalogueEntry, type Role, type RolePolicyDecision } from '@domain/role'
+import {
+  canDeleteRole,
+  type PermissionCatalogueEntry,
+  type Role,
+  type RolePolicyDecision,
+} from '@domain/role'
 import { ActionNotAllowedError } from '@domain/shared'
 import { CollectionStatus } from '@presentation/components'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'

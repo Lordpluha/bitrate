@@ -59,4 +59,85 @@ describe('HttpArtistRepository.list', () => {
     expect(request.request.params.has('order')).toBe(false)
     request.flush(PAGE_RESPONSE)
   })
+
+  it('sends the status filter when it is set', () => {
+    void repository.list({ page: 1, filter: { status: 'deactivated' } })
+
+    const request = http.expectOne(
+      (req) => req.url === BASE && req.params.get('status') === 'deactivated',
+    )
+    request.flush(PAGE_RESPONSE)
+  })
+})
+
+describe('HttpArtistRepository take-down writes', () => {
+  let repository: ArtistRepository
+  let http: HttpTestingController
+
+  beforeEach(() => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ArtistRepository, useClass: HttpArtistRepository },
+      ],
+    })
+
+    repository = TestBed.inject(ArtistRepository)
+    http = TestBed.inject(HttpTestingController)
+  })
+
+  afterEach(() => http.verify())
+
+  it('sends a DELETE with the trimmed reason in the body', () => {
+    void repository.deactivate({ id: 'a1', reason: '  rights claim  ' })
+
+    const request = http.expectOne(`${BASE}/a1`)
+    expect(request.request.method).toBe('DELETE')
+    expect(request.request.body).toEqual({ reason: 'rights claim' })
+    request.flush({})
+  })
+
+  it('omits the reason key entirely when none is given', () => {
+    void repository.deactivate({ id: 'a1' })
+
+    const request = http.expectOne(`${BASE}/a1`)
+    expect(request.request.body).not.toHaveProperty('reason')
+    request.flush({})
+  })
+
+  it('restores with a POST to /restore', () => {
+    void repository.restore({ id: 'a1' })
+
+    const request = http.expectOne(`${BASE}/a1/restore`)
+    expect(request.request.method).toBe('POST')
+    request.flush({})
+  })
+
+  it('revokes sessions and resolves the revoked count', async () => {
+    const result = repository.revokeSessions({ id: 'a1' })
+
+    const request = http.expectOne(`${BASE}/a1/sessions/revoke`)
+    expect(request.request.method).toBe('POST')
+    request.flush({ revoked: 3 })
+
+    await expect(result).resolves.toBe(3)
+  })
+
+  it('maps a 409 on deactivate to already-deactivated', async () => {
+    const result = repository.deactivate({ id: 'a1' })
+
+    http.expectOne(`${BASE}/a1`).flush(null, { status: 409, statusText: 'Conflict' })
+
+    await expect(result).rejects.toMatchObject({ reason: 'already-deactivated' })
+  })
+
+  it('maps a 409 on restore to not-deactivated', async () => {
+    const result = repository.restore({ id: 'a1' })
+
+    http.expectOne(`${BASE}/a1/restore`).flush(null, { status: 409, statusText: 'Conflict' })
+
+    await expect(result).rejects.toMatchObject({ reason: 'not-deactivated' })
+  })
 })

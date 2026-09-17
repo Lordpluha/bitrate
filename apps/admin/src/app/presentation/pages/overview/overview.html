@@ -1,0 +1,70 @@
+<section class="space-y-6 p-8">
+  <header class="flex flex-wrap items-start justify-between gap-4">
+    <div class="space-y-1">
+      <h1 class="text-xl font-semibold text-foreground">Overview</h1>
+      <p class="text-sm text-muted-foreground">
+        What needs a decision right now, and what the operator team has been doing.
+      </p>
+    </div>
+    <button
+      hlmBtn
+      size="sm"
+      variant="outline"
+      type="button"
+      [disabled]="loading()"
+      (click)="reload()"
+    >
+      Reload
+    </button>
+  </header>
+
+  <!-- `isEmpty` is always `false` here: `buildOverviewTiles` returns all 9 tiles once `overview`
+       is set, and while it is still `null` `loading` is `true` — so this screen never reaches
+       CollectionStatus's empty state. Passed explicitly to satisfy its required input. A failed
+       reload keeps whatever tiles are already on screen and adds this alert above them, rather
+       than clearing them. -->
+  <app-collection-status
+    [loading]="loading()"
+    [failure]="failure()"
+    [isEmpty]="false"
+    emptyMessage="Nothing to show yet."
+  />
+
+  @if (tiles().length > 0) {
+    <h2 id="dashboard-summary-heading" class="sr-only">Dashboard summary</h2>
+    <ul
+      class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      aria-labelledby="dashboard-summary-heading"
+    >
+      @for (tile of tiles(); track tile.id) {
+        <li>
+          <app-overview-tile [tile]="tile" />
+        </li>
+      }
+    </ul>
+
+    <section aria-labelledby="recent-activity-heading" class="space-y-3">
+      <h2 id="recent-activity-heading" class="text-sm font-semibold text-foreground">
+        Recent operator actions
+      </h2>
+
+      @if (overview()!.recentActivity.length > 0) {
+        <ul class="divide-y divide-border rounded-md border border-border">
+          @for (entry of overview()!.recentActivity; track entry.id) {
+            <li class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 text-sm">
+              <span class="flex items-center gap-2">
+                <span hlmBadge variant="outline">{{ entry.action }}</span>
+                <span class="text-muted-foreground">{{ actorLabel(entry) }}</span>
+              </span>
+              <span class="tabular-nums text-xs text-muted-foreground">
+                {{ entry.createdAt | date: 'dd.MM.yyyy HH:mm' }}
+              </span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="text-sm text-muted-foreground">No recent operator actions.</p>
+      }
+    </section>
+  }
+</section>

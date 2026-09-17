@@ -1,5 +1,6 @@
 import { paginationQuerySchema } from '@common/pagination'
 import { sortQuerySchema } from '@common/sort'
+import { adminResourceStatusSchema } from '@modules/admin/shared'
 import type { Prisma } from '@prisma/client'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
@@ -19,6 +20,7 @@ export const ListAdminTracksQuerySchema = paginationQuerySchema
   .merge(sortQuerySchema(ADMIN_TRACKS_SORT_FIELDS))
   .extend({
     processingStatus: z.enum(TRACK_PROCESSING_STATUSES).optional(),
+    status: adminResourceStatusSchema.optional(),
     q: z.string().min(1).max(255).optional(),
   })
 
