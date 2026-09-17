@@ -1,0 +1,88 @@
+<section class="space-y-6 p-8">
+  <header class="flex items-center justify-between gap-4">
+    <div class="space-y-1">
+      <h1 class="text-xl font-semibold text-foreground">Staff</h1>
+      <p class="text-sm text-muted-foreground">
+        Operators and what they can do. Permissions live on the operator — assigning a role copies
+        its template, then the two can drift.
+      </p>
+    </div>
+    @if (canWrite()) {
+      <a hlmBtn size="sm" routerLink="/staff/new">New operator</a>
+    }
+  </header>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No operators yet."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Operators
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Operator</th>
+            <th hlmTh scope="col">Email</th>
+            <th hlmTh scope="col">Role</th>
+            <th hlmTh scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (member of collection.items(); track member.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a [routerLink]="['/staff', member.id]" class="text-primary hover:underline">
+                  {{ member.username }}
+                </a>
+                @if (member.deactivatedAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">deactivated</span>
+                }
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ member.email }}</td>
+              <td hlmTd>
+                {{ member.role.name }}
+                @if (divergenceLabel(member); as label) {
+                  <span hlmBadge variant="secondary" class="ml-2">{{ label }}</span>
+                }
+              </td>
+              <td hlmTd>
+                @if (!member.deactivatedAt && canWrite()) {
+                  @if (deactivation(member); as decision) {
+                    @if (decision.allowed) {
+                      <button
+                        hlmBtn
+                        size="sm"
+                        variant="ghost"
+                        type="button"
+                        [disabled]="busyId() === member.id"
+                        (click)="remove(member)"
+                      >
+                        Deactivate
+                      </button>
+                    } @else {
+                      <span class="text-xs text-muted-foreground">{{ decision.reason }}</span>
+                    }
+                  }
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</section>

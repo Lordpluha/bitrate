@@ -66,5 +66,25 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@presentation/pages/roles/role-editor').then((m) => m.RoleEditorPage),
   },
+  {
+    path: 'staff',
+    title: 'Staff · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('staff:read')],
+    loadComponent: () => import('@presentation/pages/staff/staff').then((m) => m.StaffPage),
+  },
+  {
+    path: 'staff/new',
+    title: 'New operator · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('staff:write')],
+    loadComponent: () =>
+      import('@presentation/pages/staff/staff-create').then((m) => m.StaffCreatePage),
+  },
+  {
+    path: 'staff/:id',
+    title: 'Operator · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('staff:read')],
+    loadComponent: () =>
+      import('@presentation/pages/staff/staff-detail').then((m) => m.StaffDetailPage),
+  },
   { path: '**', redirectTo: '' },
 ]

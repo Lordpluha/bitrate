@@ -1,3 +1,7 @@
+export * from './http-staff-member.repository'
 export * from './http-staff-session.repository'
+export * from './staff-member.dto'
+export * from './staff-member.mapper'
 export * from './staff.dto'
 export * from './staff.mapper'
+export * from './to-staff-write-error'
