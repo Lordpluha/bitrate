@@ -36,7 +36,16 @@
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
-            <th hlmTh scope="col">When</th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'createdAt')">
+              <app-sort-header
+                [field]="'createdAt'"
+                label="When"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                When
+              </app-sort-header>
+            </th>
             <th hlmTh scope="col">Who</th>
             <th hlmTh scope="col">Action</th>
             <th hlmTh scope="col">Entity</th>

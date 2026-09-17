@@ -1,5 +1,5 @@
-import type { Track, TrackProcessingStatus } from '@domain/track'
-import type { TrackDto, WireProcessingStatus } from './track.dto'
+import type { Track, TrackProcessingStatus, TrackSortField } from '@domain/track'
+import type { TrackDto, WireProcessingStatus, WireTrackSortField } from './track.dto'
 
 /**
  * The seam that lets the domain declare its own status union without losing the contract
@@ -25,6 +25,17 @@ const TO_WIRE_STATUS = {
 
 export function toWireProcessingStatus(status: TrackProcessingStatus): WireProcessingStatus {
   return TO_WIRE_STATUS[status]
+}
+
+/** Same join as `TO_WIRE_STATUS`, for the catalog's `sort` query parameter. */
+const TO_WIRE_SORT = {
+  createdAt: 'createdAt',
+  title: 'title',
+  processingStatus: 'processingStatus',
+} as const satisfies Record<TrackSortField, NonNullable<WireTrackSortField>>
+
+export function toWireTrackSort(field: TrackSortField): NonNullable<WireTrackSortField> {
+  return TO_WIRE_SORT[field]
 }
 
 export function toTrack(dto: TrackDto): Track {

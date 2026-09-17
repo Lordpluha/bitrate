@@ -1,9 +1,10 @@
 import type { Permission } from '@domain/access'
-import type { StaffMember, StaffMemberRole } from '@domain/staff'
+import type { StaffMember, StaffMemberRole, StaffSortField } from '@domain/staff'
 import type {
   StaffMemberDto,
   StaffMemberRoleDto,
   StaffMemberWirePermission,
+  WireStaffSortField,
 } from './staff-member.dto'
 
 /** See `staff.mapper.ts` — a permission the API grows later is a compile error at this record. */
@@ -23,6 +24,17 @@ const TO_DOMAIN_PERMISSION = {
   'roles:read': 'roles:read',
   'roles:write': 'roles:write',
 } as const satisfies Record<StaffMemberWirePermission, Permission>
+
+/** See `artist.mapper.ts`'s `TO_WIRE_SORT`. */
+const TO_WIRE_SORT = {
+  username: 'username',
+  email: 'email',
+  createdAt: 'createdAt',
+} as const satisfies Record<StaffSortField, NonNullable<WireStaffSortField>>
+
+export function toWireStaffSort(field: StaffSortField): NonNullable<WireStaffSortField> {
+  return TO_WIRE_SORT[field]
+}
 
 function toStaffMemberRole(dto: StaffMemberRoleDto): StaffMemberRole {
   return {

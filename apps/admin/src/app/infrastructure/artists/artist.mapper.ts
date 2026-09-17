@@ -1,5 +1,21 @@
-import type { Artist } from '@domain/artist'
-import type { ArtistDto } from './artist.dto'
+import type { Artist, ArtistSortField } from '@domain/artist'
+import type { ArtistDto, WireArtistSortField } from './artist.dto'
+
+/**
+ * See `track.mapper.ts`'s `TO_WIRE_STATUS` — spelled out rather than returned as-is, so a sort
+ * field the API drops later is a compile error here instead of a 400 an operator's click
+ * triggers.
+ */
+const TO_WIRE_SORT = {
+  username: 'username',
+  email: 'email',
+  createdAt: 'createdAt',
+  monthlyListeners: 'monthlyListeners',
+} as const satisfies Record<ArtistSortField, NonNullable<WireArtistSortField>>
+
+export function toWireArtistSort(field: ArtistSortField): NonNullable<WireArtistSortField> {
+  return TO_WIRE_SORT[field]
+}
 
 /**
  * Transport shape to domain shape. Two things happen here and nowhere else: ISO strings become

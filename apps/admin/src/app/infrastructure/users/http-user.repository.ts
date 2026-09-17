@@ -6,7 +6,7 @@ import { type ListUsersQuery, type User, UserRepository } from '@domain/user'
 import { ADMIN_API } from '../http/api.config'
 import { fetchPage } from '../http/wire-page'
 import { userPageDto } from './user.dto'
-import { toUser } from './user.mapper'
+import { toUser, toWireUserSort } from './user.mapper'
 
 @Injectable()
 export class HttpUserRepository extends UserRepository {
@@ -19,7 +19,11 @@ export class HttpUserRepository extends UserRepository {
       url: this.base,
       page,
       limit,
-      filters: { q: filter.query },
+      filters: {
+        q: filter.query,
+        sort: filter.sort ? toWireUserSort(filter.sort.field) : undefined,
+        order: filter.sort?.direction,
+      },
       schema: userPageDto,
       toDomain: toUser,
     })

@@ -3,8 +3,9 @@ import { Component, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { SessionStore } from '@application/session'
 import { DeactivateUserUseCase, ListUsersUseCase } from '@application/users'
-import type { User } from '@domain/user'
-import { CollectionStatus, Paginator } from '@presentation/components'
+import type { Sort } from '@domain/shared'
+import type { User, UserSortField } from '@domain/user'
+import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -22,6 +23,7 @@ const SEARCH_DEBOUNCE_MS = 300
     DatePipe,
     CollectionStatus,
     Paginator,
+    SortHeader,
     HlmBadgeImports,
     HlmButtonImports,
     HlmInputImports,
@@ -34,6 +36,7 @@ export class UsersPage {
   private readonly deactivateUser = inject(DeactivateUserUseCase)
 
   protected readonly canDelete = inject(SessionStore).can('users:delete')
+  protected readonly ariaSort = sortHeaderAriaSort<UserSortField>
 
   protected readonly query = bindQueryState({ codec: usersQueryCodec })
   protected readonly draft = signal(this.query.state().query)
@@ -42,7 +45,13 @@ export class UsersPage {
   protected readonly collection = createCollection<User>({
     errorMessage: 'Could not load users.',
     load: (page) =>
-      this.listUsers.execute({ page, filter: { query: this.query.state().query || undefined } }),
+      this.listUsers.execute({
+        page,
+        filter: {
+          query: this.query.state().query || undefined,
+          sort: this.query.state().sort ?? undefined,
+        },
+      }),
   })
 
   constructor() {
@@ -64,6 +73,10 @@ export class UsersPage {
 
   protected applyFilters(): void {
     this.query.patch({ query: this.draft(), page: 1 })
+  }
+
+  protected setSort(next: Sort<UserSortField> | null): void {
+    this.query.patch({ sort: next, page: 1 })
   }
 
   protected goToPage(page: number): void {

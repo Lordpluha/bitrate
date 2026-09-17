@@ -1,5 +1,10 @@
+import type { Sort } from '../shared/sort'
+
 /** See `TrackProcessingStatus` for why this union is declared here and not imported. */
 export type ModerationStatus = 'OPEN' | 'REVIEWING' | 'RESOLVED' | 'REJECTED'
+
+/** The columns the moderation queue can be ordered by. */
+export type ModerationSortField = 'createdAt' | 'status'
 
 /** A report a listener filed against some piece of content. */
 export type ModerationReport = {
@@ -16,6 +21,7 @@ export type ModerationReport = {
 
 export type ModerationFilter = {
   status?: ModerationStatus
+  sort?: Sort<ModerationSortField>
 }
 
 type AdvanceInput = {

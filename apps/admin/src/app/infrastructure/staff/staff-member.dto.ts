@@ -1,6 +1,11 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
 import { z } from 'zod'
 import { contractEnum } from '../http/contract-union'
+
+/** See `WireArtistSortField` — read from the operation, not an entity field. */
+export type WireStaffSortField = NonNullable<
+  ApiPaths['/api/v1/admin/staff']['get']['parameters']['query']
+>['sort']
 
 /**
  * The permission union as the API declares it for the operator directory. See

@@ -19,7 +19,7 @@ import {
   staffMemberPageDto,
   updateStaffPermissionsBodyDto,
 } from './staff-member.dto'
-import { toStaffMember } from './staff-member.mapper'
+import { toStaffMember, toWireStaffSort } from './staff-member.mapper'
 import { toStaffWriteError } from './to-staff-write-error'
 
 /**
@@ -31,12 +31,16 @@ export class HttpStaffRepository extends StaffRepository {
   private readonly http = inject(HttpClient)
   private readonly base = `${ADMIN_API}/staff`
 
-  override list({ page, limit }: ListStaffQuery): Promise<Page<StaffMember>> {
+  override list({ page, limit, filter = {} }: ListStaffQuery): Promise<Page<StaffMember>> {
     return fetchPage({
       http: this.http,
       url: this.base,
       page,
       limit,
+      filters: {
+        sort: filter.sort ? toWireStaffSort(filter.sort.field) : undefined,
+        order: filter.sort?.direction,
+      },
       schema: staffMemberPageDto,
       toDomain: toStaffMember,
     })

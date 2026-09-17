@@ -47,8 +47,26 @@
           <tr hlmTr>
             <th hlmTh scope="col">Reported</th>
             <th hlmTh scope="col">Reason</th>
-            <th hlmTh scope="col">Status</th>
-            <th hlmTh scope="col">Opened</th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'status')">
+              <app-sort-header
+                [field]="'status'"
+                label="Status"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Status
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'createdAt')">
+              <app-sort-header
+                [field]="'createdAt'"
+                label="Opened"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Opened
+              </app-sort-header>
+            </th>
             <th hlmTh scope="col">Actions</th>
           </tr>
         </thead>

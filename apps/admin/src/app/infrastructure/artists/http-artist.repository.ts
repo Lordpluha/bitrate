@@ -11,7 +11,7 @@ import type { Page } from '@domain/shared'
 import { ADMIN_API } from '../http/api.config'
 import { fetchPage } from '../http/wire-page'
 import { artistDto, artistPageDto } from './artist.dto'
-import { toArtist } from './artist.mapper'
+import { toArtist, toWireArtistSort } from './artist.mapper'
 
 @Injectable()
 export class HttpArtistRepository extends ArtistRepository {
@@ -24,7 +24,12 @@ export class HttpArtistRepository extends ArtistRepository {
       url: this.base,
       page,
       limit,
-      filters: { q: filter.query, verified: filter.verified },
+      filters: {
+        q: filter.query,
+        verified: filter.verified,
+        sort: filter.sort ? toWireArtistSort(filter.sort.field) : undefined,
+        order: filter.sort?.direction,
+      },
       schema: artistPageDto,
       toDomain: toArtist,
     })

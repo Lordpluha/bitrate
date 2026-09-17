@@ -1,4 +1,5 @@
 import type { Permission } from '@domain/access'
+import type { Sort } from '../shared/sort'
 
 /**
  * The role assigned to an operator, embedded so the panel can compute divergence from
@@ -31,8 +32,13 @@ export type StaffMember = {
   createdAt: Date
 }
 
+/** The columns the operator directory can be ordered by. */
+export type StaffSortField = 'username' | 'email' | 'createdAt'
+
 /**
- * No server-side filter exists for the operator directory today (only pagination and, in a
- * later stage, sorting) — kept so `ListStaffQuery` has a shape ready to grow into.
+ * No server-side text/status filter exists for the operator directory today — only pagination
+ * and sorting — so this carries `sort` alone rather than staying the empty shape it used to be.
  */
-export type StaffFilter = Record<string, never>
+export type StaffFilter = {
+  sort?: Sort<StaffSortField>
+}

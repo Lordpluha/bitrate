@@ -1,4 +1,5 @@
 import type { ParamMap } from '@angular/router'
+import type { Sort } from '@domain/shared'
 
 /** Encodes and decodes one filter/page value against one query-string parameter. */
 export type ParamCodec<TValue> = {
@@ -7,13 +8,31 @@ export type ParamCodec<TValue> = {
   encode: (value: TValue) => string | null
 }
 
-type QueryFieldSpec<TValue> = {
+/** The common case: one field, one query-string parameter. */
+type SingleParamFieldSpec<TValue> = {
   param: string
   codec: ParamCodec<TValue>
 }
 
+/**
+ * A field spread across more than one query-string parameter — `sortParam`'s `sort`/`dir`
+ * pair, which must be decoded and validated together rather than independently.
+ */
+type MultiParamFieldSpec<TValue> = {
+  decode: (params: ParamMap) => TValue
+  encode: (value: TValue) => Record<string, string>
+}
+
+type QueryFieldSpec<TValue> = SingleParamFieldSpec<TValue> | MultiParamFieldSpec<TValue>
+
 type QueryFieldSpecs<T> = {
   [K in keyof T]: QueryFieldSpec<T[K]>
+}
+
+function isSingleParamSpec<TValue>(
+  spec: QueryFieldSpec<TValue>,
+): spec is SingleParamFieldSpec<TValue> {
+  return 'param' in spec
 }
 
 /** Decodes a screen's whole query state from the URL, and serialises it back for navigation. */
@@ -44,15 +63,23 @@ export function createQueryCodec<T extends Record<string, unknown>>({
     decode: (params) => {
       const state = { ...defaults }
       for (const key of keys) {
-        state[key] = fields[key].codec.decode(params.get(fields[key].param))
+        const spec = fields[key]
+        state[key] = isSingleParamSpec(spec)
+          ? spec.codec.decode(params.get(spec.param))
+          : spec.decode(params)
       }
       return state
     },
     serialize: (state) => {
       const query: Record<string, string> = {}
       for (const key of keys) {
-        const encoded = fields[key].codec.encode(state[key])
-        if (encoded !== null) query[fields[key].param] = encoded
+        const spec = fields[key]
+        if (isSingleParamSpec(spec)) {
+          const encoded = spec.codec.encode(state[key])
+          if (encoded !== null) query[spec.param] = encoded
+        } else {
+          Object.assign(query, spec.encode(state[key]))
+        }
       }
       return query
     },
@@ -117,5 +144,34 @@ export function triStateParam(): ParamCodec<TriState> {
   return {
     decode: (raw) => (raw === 'verified' || raw === 'unverified' ? raw : 'all'),
     encode: (value) => (value === 'all' ? null : value),
+  }
+}
+
+type SortParamInput<TField extends string> = {
+  /** The full sortable-column union as a tuple — build it with `coveringTuple`. */
+  members: readonly TField[]
+}
+
+/**
+ * A column sort spread across two query-string parameters, `sort` and `dir`, decoded together
+ * rather than independently: an unrecognised field, a missing or unrecognised direction, or a
+ * `dir` with no `sort` all decode to `null` — "no sort", the API's own default order — rather
+ * than reaching the API with a value it would answer with a 400.
+ */
+export function sortParam<TField extends string>({
+  members,
+}: SortParamInput<TField>): MultiParamFieldSpec<Sort<TField> | null> {
+  return {
+    decode: (params) => {
+      const field = params.get('sort')
+      const direction = params.get('dir')
+      if (field === null || !(members as readonly string[]).includes(field)) return null
+      if (direction !== 'asc' && direction !== 'desc') return null
+      return { field: field as TField, direction }
+    },
+    encode: (value): Record<string, string> => {
+      if (value === null) return {}
+      return { sort: value.field, dir: value.direction }
+    },
   }
 }

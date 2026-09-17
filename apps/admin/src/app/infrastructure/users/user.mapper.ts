@@ -1,5 +1,16 @@
-import type { User } from '@domain/user'
-import type { UserDto } from './user.dto'
+import type { User, UserSortField } from '@domain/user'
+import type { UserDto, WireUserSortField } from './user.dto'
+
+/** See `artist.mapper.ts`'s `TO_WIRE_SORT`. */
+const TO_WIRE_SORT = {
+  username: 'username',
+  email: 'email',
+  createdAt: 'createdAt',
+} as const satisfies Record<UserSortField, NonNullable<WireUserSortField>>
+
+export function toWireUserSort(field: UserSortField): NonNullable<WireUserSortField> {
+  return TO_WIRE_SORT[field]
+}
 
 export function toUser(dto: UserDto): User {
   return {

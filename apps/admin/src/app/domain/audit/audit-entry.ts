@@ -1,3 +1,5 @@
+import type { Sort } from '../shared/sort'
+
 /** One recorded operator action. Read-only everywhere — nothing in this panel writes one. */
 export type AuditEntry = {
   id: string
@@ -10,8 +12,12 @@ export type AuditEntry = {
   createdAt: Date
 }
 
+/** The audit log only ever sorts by when an action happened. */
+export type AuditSortField = 'createdAt'
+
 export type AuditFilter = {
   entityType?: string
+  sort?: Sort<AuditSortField>
 }
 
 /** Shown for entries the platform wrote itself, which carry no operator. */

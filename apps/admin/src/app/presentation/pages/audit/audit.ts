@@ -2,8 +2,9 @@ import { DatePipe } from '@angular/common'
 import { Component, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { ListAuditEntriesUseCase } from '@application/audit'
-import { auditActorLabel, type AuditEntry } from '@domain/audit'
-import { CollectionStatus, Paginator } from '@presentation/components'
+import { auditActorLabel, type AuditEntry, type AuditSortField } from '@domain/audit'
+import type { Sort } from '@domain/shared'
+import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -21,6 +22,7 @@ const SEARCH_DEBOUNCE_MS = 300
     DatePipe,
     CollectionStatus,
     Paginator,
+    SortHeader,
     HlmBadgeImports,
     HlmButtonImports,
     HlmInputImports,
@@ -32,6 +34,7 @@ export class AuditPage {
   private readonly listEntries = inject(ListAuditEntriesUseCase)
 
   protected readonly actorLabel = auditActorLabel
+  protected readonly ariaSort = sortHeaderAriaSort<AuditSortField>
   protected readonly query = bindQueryState({ codec: auditQueryCodec })
   protected readonly draft = signal(this.query.state().entityType)
 
@@ -41,7 +44,10 @@ export class AuditPage {
     load: (page) =>
       this.listEntries.execute({
         page,
-        filter: { entityType: this.query.state().entityType || undefined },
+        filter: {
+          entityType: this.query.state().entityType || undefined,
+          sort: this.query.state().sort ?? undefined,
+        },
       }),
   })
 
@@ -64,6 +70,10 @@ export class AuditPage {
 
   protected applyFilters(): void {
     this.query.patch({ entityType: this.draft(), page: 1 })
+  }
+
+  protected setSort(next: Sort<AuditSortField> | null): void {
+    this.query.patch({ sort: next, page: 1 })
   }
 
   protected goToPage(page: number): void {

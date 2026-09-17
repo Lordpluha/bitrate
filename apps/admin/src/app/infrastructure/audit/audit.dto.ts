@@ -1,5 +1,10 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
 import { z } from 'zod'
+
+/** See `WireArtistSortField` — read from the operation, not an entity field. */
+export type WireAuditSortField = NonNullable<
+  ApiPaths['/api/v1/admin/audit']['get']['parameters']['query']
+>['sort']
 
 type ContractAuditEntry = Pick<
   ApiSchemas['AdminAuditLogEntity'],

@@ -1,9 +1,14 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
 import { z } from 'zod'
 import { contractEnum } from '../http/contract-union'
 
 /** The union as the API declares it. The domain declares its own; the mapper joins them. */
 export type WireProcessingStatus = ApiSchemas['AdminTrackEntity']['processingStatus']
+
+/** See `WireArtistSortField` — read from the operation, not an entity field. */
+export type WireTrackSortField = NonNullable<
+  ApiPaths['/api/v1/admin/tracks']['get']['parameters']['query']
+>['sort']
 
 const processingStatusDto = contractEnum<WireProcessingStatus>()(['PROCESSING', 'READY', 'FAILED'])
 

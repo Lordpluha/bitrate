@@ -1,3 +1,5 @@
+import type { Sort } from '../shared/sort'
+
 /** An artist account as the operator panel understands it. */
 export type Artist = {
   id: string
@@ -14,10 +16,17 @@ export type Artist = {
   deactivatedAt: Date | null
 }
 
+/**
+ * The columns the artist list can be ordered by. Bound to the contract's `sort` query
+ * parameter in `infrastructure/artists/artist.mapper.ts` through an exhaustive record.
+ */
+export type ArtistSortField = 'username' | 'email' | 'createdAt' | 'monthlyListeners'
+
 /** What an operator can narrow the artist list by. */
 export type ArtistFilter = {
   query?: string
   verified?: boolean
+  sort?: Sort<ArtistSortField>
 }
 
 export function isArtistActive(artist: Artist): boolean {

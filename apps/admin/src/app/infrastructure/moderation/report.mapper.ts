@@ -1,5 +1,5 @@
-import type { ModerationReport, ModerationStatus } from '@domain/moderation'
-import type { ReportDto, WireModerationStatus } from './report.dto'
+import type { ModerationReport, ModerationSortField, ModerationStatus } from '@domain/moderation'
+import type { ReportDto, WireModerationSortField, WireModerationStatus } from './report.dto'
 
 /** See `track.mapper.ts` — a status the API grows later is a compile error at this record. */
 const TO_DOMAIN_STATUS = {
@@ -18,6 +18,18 @@ const TO_WIRE_STATUS = {
 
 export function toWireModerationStatus(status: ModerationStatus): WireModerationStatus {
   return TO_WIRE_STATUS[status]
+}
+
+/** Same join as `TO_WIRE_STATUS`, for the queue's `sort` query parameter. */
+const TO_WIRE_SORT = {
+  createdAt: 'createdAt',
+  status: 'status',
+} as const satisfies Record<ModerationSortField, NonNullable<WireModerationSortField>>
+
+export function toWireModerationSort(
+  field: ModerationSortField,
+): NonNullable<WireModerationSortField> {
+  return TO_WIRE_SORT[field]
 }
 
 export function toModerationReport(dto: ReportDto): ModerationReport {
