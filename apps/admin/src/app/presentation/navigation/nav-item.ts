@@ -8,6 +8,7 @@ import {
   lucideKeyRound,
   lucideMic,
   lucideScrollText,
+  lucideUserCog,
   lucideUsers,
 } from '@ng-icons/lucide'
 import type { NavItem } from './nav.model'
@@ -33,6 +34,7 @@ import type { NavItem } from './nav.model'
       lucideKeyRound,
       lucideMic,
       lucideScrollText,
+      lucideUserCog,
       lucideUsers,
     }),
   ],

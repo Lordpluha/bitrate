@@ -108,6 +108,13 @@ export const NAV_SECTIONS: readonly NavSection[] = [
         icon: 'lucideKeyRound',
         permission: 'roles:read',
       },
+      {
+        kind: 'link',
+        path: '/staff',
+        label: 'Staff',
+        icon: 'lucideUserCog',
+        permission: 'staff:read',
+      },
     ],
   },
 ]
