@@ -50,12 +50,12 @@ apps/admin/
       <area>/               zod DTO + mapper + the HTTP adapter for one port
       infrastructure.providers.ts   binds every port to its adapter
     presentation/
-      pages/<screen>/       <screen>.ts + <screen>.html
-      components/           CollectionStatus, Paginator
+      pages/<screen>/       <screen>.ts + <screen>.html + <screen>.query.ts
+      components/           CollectionStatus, Paginator, PermissionGrid, SortHeader
       navigation/           sidebar
       forms/                zodValidator bridge
-      guards/               requireStaffSession
-      state/                createCollection
+      guards/               requireStaffSession, requirePermission
+      state/                createCollection, bindQueryState, query codecs
       ui/                   vendored spartan-ng source
     app.ts                  shell: sidebar + router-outlet
     app.routes.ts           lazy routes, guards
@@ -117,43 +117,64 @@ Same shape every time, inward first:
    and the adapter; register it in `infrastructure.providers.ts`.
 4. `presentation/pages/<screen>/` — the component and template, injecting use cases and driving a
    `createCollection`.
-5. A lazy route in `app.routes.ts` with `canActivate: [requireStaffSession]`.
+5. A lazy route in `app.routes.ts` with
+   `canActivate: [requireStaffSession, requirePermission('<resource>:read')]`, the path added to
+   `ROUTE_PERMISSIONS`, and a sidebar item carrying the same permission. A path like `<screen>/new`
+   is declared **before** `<screen>/:id`, or `new` is captured as an id.
 
-## API side: the guard is a floor on the class, never a per-method opt-in
+**Guards in one `canActivate` array run concurrently.** Angular invokes every guard at once and only
+prioritises their results in array order, so a guard can never assume an earlier one has finished.
+`requirePermission` reads `SessionStore`, which `requireStaffSession` fills asynchronously from
+`/me`; when it read the store synchronously, every operator — administrators included — landed on
+the no-access page after every refresh. It now restores the session itself, and concurrent restores
+share one `/me` request. A spec that seeds the store before activating a guard cannot catch this;
+test guard composition with an empty store and a repository that resolves on a later turn.
 
-Every controller under `apps/api/src/modules/admin/` declares `@AdminAuth('ADMIN', 'MODERATOR')`
-**on the class**, between `@ApiTags` and `@Controller`. A route that needs less declares
-`@StaffRoles('ADMIN')` on the method.
+Hiding a control with `SessionStore.can()` is cosmetic. The API enforces every request.
 
-The reason is what each mistake costs. With the guard per method, a new handler someone forgets
-to decorate is a **completely unauthenticated operator endpoint** — it compiles, it lints, it
-type-checks, and the integration specs stub the guard with a role check that waves through any
-route carrying no role metadata. With the guard on the class, the same slip yields a route that
-is merely open to both staff roles. One is a breach; the other is a review comment.
+## API side: a session floor on the class, a permission on every route
 
-`StaffRoles` carries the role metadata and the 403 response, and deliberately not
-`ApiCookieAuth`. Both halves of that were learned the hard way, and both are invisible until the
-contract is regenerated:
+Authorisation is by **permission**, not role — see
+[ADR-0038](../../apps/docs/docs/architecture/0038-operator-permissions-roles-as-templates.md).
+Permissions live on the operator (`Staff.permissions`); a role is only a template copied at
+assignment and guarantees nothing at request time.
 
-- Using `AdminAuth` twice on one route applies `ApiCookieAuth` twice, and the spec then lists the
-  same requirement twice — `security: [{ cookie: [] }, { cookie: [] }]`.
-- Leaving the 403 to the class does **not** work, because a method-level `ApiResponse` *replaces*
-  the class's for that status rather than merging. Omitting it rewrote the generated description
-  of every narrowed route from `Requires the ADMIN role / Insufficient staff role` down to the
-  first line alone — 16 lines of contract drift that only the `Verify generated API contracts` CI
-  step catches.
+Every controller under `apps/api/src/modules/admin/` declares `@AdminAuth()` **on the class**,
+between `@ApiTags` and `@Controller`, with no arguments. Every route declares
+`@RequirePermission('<resource>:<action>')` from the catalogue in
+`apps/api/src/modules/admin-auth/access/permissions.ts`.
 
-So check the generated spec, not just the guard's behaviour: `security`, response codes **and
-their descriptions**. With the current split, `DELETE /admin/users/{id}` generates
-`security=[{"cookie":[]}]`, responses `200,401,403,404`, and the 403 description
-`"Requires the ADMIN role\n\nInsufficient staff role"` — identical to the per-method form, so
-this costs no contract regeneration.
+The floor stays on the class for what each mistake costs. With the guard per method, a handler
+someone forgets to decorate is a **completely unauthenticated operator endpoint** — it compiles,
+lints and type-checks. With the guard on the class, the same slip yields a route open to any staff
+session. One is a breach; the other is a review comment — and the coverage spec below turns it into a
+failing test.
 
-`apps/api/src/modules/admin/admin-auth-coverage.unit-spec.ts` enforces all of it. It discovers
-controllers on disk rather than through `AdminModule`, so a controller that exists is covered
-whether or not anyone remembered to register it, and it names the public routes explicitly —
-today only `AdminAuthController.login`, because that is how a session starts. Adding to that set
-is a line in a diff, which is the point.
+`@RequirePermission` carries the permission metadata and a 403 response naming the permission, and
+deliberately not `ApiCookieAuth`. Three lessons, all invisible until the contract is regenerated:
+
+- **`ApiCookieAuth` applied twice** — once from the class decorator and once from a method decorator
+  — lists the same requirement twice in the generated spec: `security: [{ cookie: [] }, { cookie: [] }]`.
+- **A method-level `ApiResponse` replaces the class's for that status** rather than merging. Leaving
+  a status to the class rewrote the generated description of every narrowed route; only the
+  `Verify generated API contracts` CI step caught the drift.
+- **Declare `ApiBody({ type: XDto })` explicitly on every write route.** Controllers import DTOs as
+  types, which erases them; without an explicit `ApiBody`, Swagger reads the body type from
+  decorator metadata, finds `Function`, and the contract types the body as `Record<string, never>`.
+  Five role and staff routes shipped that way before being fixed, and the panel had to hand-write
+  unbound request DTOs against them.
+
+`apps/api/src/modules/admin/admin-auth-coverage.unit-spec.ts` enforces the floor and the permissions.
+It discovers controllers on disk rather than through `AdminModule`, so a controller that exists is
+covered whether or not anyone registered it. It names the public routes (`AdminAuthController.login`)
+and the session-only routes (`getMe`, `logout`, `refresh`) explicitly, and pins every other route to
+its permission in a table. Changing a route's permission is therefore a visible line in a diff, and
+removing one fails the spec.
+
+Two rules about stored permissions: they are **added and deprecated, never renamed**, because a
+rename is a data migration on every operator's array; and `staff:*` / `roles:*` are protected,
+grantable to no one, and rejected by `assertGrantable` in both the role-template and the
+per-operator write path.
 
 ## Data — no cache, on purpose
 
@@ -195,7 +216,7 @@ cover it, so this applies to component-level lists as much as to schemas.
 
 A union the **domain** declares is bound to the contract a third way: an exhaustive
 `satisfies Record<WireX, DomainX>` in that area's mapper. That is what makes it safe for
-`TrackProcessingStatus`, `ModerationStatus` and `StaffRole` to be written out in `domain/`
+`TrackProcessingStatus`, `ModerationStatus` and `Permission` to be written out in `domain/`
 instead of imported — a member the API grows later is a compile error at one record rather than
 a `parse` failure in front of an operator.
 
@@ -212,6 +233,35 @@ type ContractArtistPage = Omit<ApiSchemas['PaginatedAdminArtistsEntity'], 'data'
 `@bitrate/ui-react` whose CSS is consumed at build time and whose components never run.
 
 `zod` is pinned repo-wide (see `.claude/rules/monorepo.md`). Do not raise it here.
+
+## List state lives in the URL
+
+A list screen's filters, page and sort are in its query string, and **the URL is the single source of
+truth**. An action calls `patch(...)` from `bindQueryState` (`presentation/state/query-state.ts`),
+which navigates; an effect decodes the resulting `queryParamMap` and loads. Nothing in the load path
+writes the URL, so there is no feedback loop to guard. The decoded state signal compares by its
+*serialised* form, so a navigation that produces the same canonical query string never reloads.
+
+Each screen owns a `<screen>.query.ts` with its codec (`presentation/state/query-codec.ts`):
+
+- **Defaults are omitted.** An untouched screen has a clean URL, and `page` is dropped at 1.
+  Moderation is the exception: its default status is `OPEN`, so "all" is the explicit `status=all`.
+- **Garbage decodes to the default.** A hand-edited `?page=abc`, an unknown status, or a sort field
+  outside the endpoint's allowlist decodes as though it were absent. A sort is decoded from `sort` and
+  `dir` together, so `dir` alone is no sort. Nothing outside an allowlist ever reaches the API, which
+  would answer with a 400 and an error on screen.
+- **History follows intent.** A discrete change — a filter button, a page, a sort — adds a history
+  entry. Typing in a search box uses `replaceUrl`, debounced, so keystrokes do not fill history.
+- **A filter or sort change resets `page` to 1 in the same `patch`.** One navigation, one load.
+
+`createCollection` discards a response from a superseded request, so an older answer cannot overwrite
+a newer one under rapid navigation, and `show(page)` loads a deep-linked page before the page count is
+known.
+
+Sort-field unions are written in `domain/` and bound in the mapper to the **operation's query
+parameter** type from the contract, so a field the API drops is a compile error. The catalog's
+unsorted order puts tracks needing attention first, and says so on screen; choosing a sort replaces
+that order and clearing it restores it.
 
 ## Forms — Reactive Forms plus the zod bridge
 
@@ -290,6 +340,11 @@ into both `tsconfig.spec.json` and the builder's `include`, not Angular's defaul
 A spec that only covers the happy path is not finished. Whatever can realistically fail gets a
 case: a rejected mutation, a schema mismatch, a failed guard, an empty list.
 
+**The builder shares one `TestBed` across spec files.** A spec that configures `TestBed` after another
+has instantiated it throws, so call `TestBed.resetTestingModule()` before `configureTestingModule`.
+With `RouterTestingHarness`, `Location.back()` has no real history to replay; assert the navigation
+options you pass (`replaceUrl`) rather than emulating the back button.
+
 ## Commands
 
 ```bash
@@ -308,5 +363,6 @@ builds.
 
 - [ADR-0035](../../apps/docs/docs/architecture/0035-admin-panel-on-angular.md) — the stack decision and what it costs.
 - [ADR-0036](../../apps/docs/docs/architecture/0036-admin-clean-architecture.md) — the layering and why ports are abstract classes.
+- [ADR-0038](../../apps/docs/docs/architecture/0038-operator-permissions-roles-as-templates.md) — operators hold permissions; roles are templates.
 - `.claude/rules/typescript.md`, `.claude/rules/code-principles.md`, `.claude/rules/code-style.md`.
 - `apps/docs/docs/brand/a11y.md` — the accessibility contract.

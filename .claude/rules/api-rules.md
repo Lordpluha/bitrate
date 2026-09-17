@@ -77,6 +77,30 @@ getById(@Param('id', ParseUUIDPipe) id: string) {
 
 Re-export all decorators from `decorators/index.ts`.
 
+### Declare the request body explicitly, and keep injected classes as values
+
+Two failures that pass lint, types and every unit spec, because none of them read decorator
+metadata:
+
+- **Every write route's Swagger decorator declares `ApiBody({ type: XDto })`.** Controllers usually
+  import a `createZodDto` class as a type (`import { type CreateRoleDto }`), which erases it. Swagger
+  then reads the body from the parameter's decorator metadata, finds `Function`, and the generated
+  contract types the body as `Record<string, never>` — clients cannot bind to it. Importing the DTO
+  as a value in the decorator file, where it is used as one, fixes it and survives Biome.
+- **Biome's `useImportType` autofix breaks dependency injection.** It turns a constructor-injected
+  class into `import type`, NestJS then has no runtime reference to resolve, and the provider fails at
+  boot. Restore the value import with a one-line `biome-ignore lint/style/useImportType` naming the
+  reason, as `admin-auth.module.ts` does. Never accept the type-only import on an injected class.
+
+### Sort parameters are an allowlist bound to the model
+
+A list endpoint that sorts takes `sort` and `order` from `sortQuerySchema(fields)` in
+`@common/sort`. The allowlist is the security boundary — a value outside it is a 400 before any query
+runs — and it is declared with `satisfies readonly Prisma.<Model>ScalarFieldEnum[]`. Services cast the
+resolved `orderBy` to Prisma's type and unit specs mock Prisma, so without that binding a renamed
+column compiles, passes every test, and fails only at runtime. Every sort appends `id` as a stable
+tie-break, and a request without `sort` must order exactly as it did before.
+
 ## DTOs with nestjs-zod
 
 ```ts
