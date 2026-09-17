@@ -52,11 +52,51 @@
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
-            <th hlmTh scope="col">Artist</th>
-            <th hlmTh scope="col">Email</th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'username')">
+              <app-sort-header
+                [field]="'username'"
+                label="Artist"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Artist
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'email')">
+              <app-sort-header
+                [field]="'email'"
+                label="Email"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Email
+              </app-sort-header>
+            </th>
             <th hlmTh scope="col">Verified</th>
-            <th hlmTh scope="col">Monthly listeners</th>
-            <th hlmTh scope="col">Joined</th>
+            <th
+              hlmTh
+              scope="col"
+              [attr.aria-sort]="ariaSort(query.state().sort, 'monthlyListeners')"
+            >
+              <app-sort-header
+                [field]="'monthlyListeners'"
+                label="Monthly listeners"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Monthly listeners
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'createdAt')">
+              <app-sort-header
+                [field]="'createdAt'"
+                label="Joined"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Joined
+              </app-sort-header>
+            </th>
             <th hlmTh scope="col">Actions</th>
           </tr>
         </thead>

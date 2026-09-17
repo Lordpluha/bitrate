@@ -1,5 +1,14 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
 import { z } from 'zod'
+
+/**
+ * The `sort` query parameter's own union, read from the operation directly — it is not an
+ * entity field, so no `Pick` on `AdminArtistEntity` would reach it. `ArtistSortField` is the
+ * domain's own union; the mapper joins the two through an exhaustive record.
+ */
+export type WireArtistSortField = NonNullable<
+  ApiPaths['/api/v1/admin/artists']['get']['parameters']['query']
+>['sort']
 
 /**
  * The slice of the artist entity this panel reads. Naming it as a `Pick` rather than mirroring

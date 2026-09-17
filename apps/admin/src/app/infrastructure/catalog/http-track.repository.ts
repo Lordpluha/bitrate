@@ -6,7 +6,7 @@ import { type ListTracksQuery, type Track, TrackRepository } from '@domain/track
 import { ADMIN_API } from '../http/api.config'
 import { fetchPage } from '../http/wire-page'
 import { trackPageDto } from './track.dto'
-import { toTrack, toWireProcessingStatus } from './track.mapper'
+import { toTrack, toWireProcessingStatus, toWireTrackSort } from './track.mapper'
 
 @Injectable()
 export class HttpTrackRepository extends TrackRepository {
@@ -25,6 +25,8 @@ export class HttpTrackRepository extends TrackRepository {
           filter.processingStatus === undefined
             ? undefined
             : toWireProcessingStatus(filter.processingStatus),
+        sort: filter.sort ? toWireTrackSort(filter.sort.field) : undefined,
+        order: filter.sort?.direction,
       },
       schema: trackPageDto,
       toDomain: toTrack,

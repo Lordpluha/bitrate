@@ -3,13 +3,15 @@ import { Component, computed, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { ListTracksUseCase, ReprocessTrackUseCase } from '@application/catalog'
 import { SessionStore } from '@application/session'
+import type { Sort } from '@domain/shared'
 import {
   isTrackStuck,
   type Track,
   trackNeedsAttention,
   type TrackProcessingStatus,
+  type TrackSortField,
 } from '@domain/track'
-import { CollectionStatus, Paginator } from '@presentation/components'
+import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -27,6 +29,7 @@ const SEARCH_DEBOUNCE_MS = 300
     DatePipe,
     CollectionStatus,
     Paginator,
+    SortHeader,
     HlmBadgeImports,
     HlmButtonImports,
     HlmInputImports,
@@ -41,6 +44,7 @@ export class CatalogPage {
   protected readonly canReprocess = inject(SessionStore).can('tracks:reprocess')
 
   protected readonly statuses = CATALOG_STATUSES
+  protected readonly ariaSort = sortHeaderAriaSort<TrackSortField>
   protected readonly query = bindQueryState({ codec: catalogQueryCodec })
   protected readonly draft = signal(this.query.state().query)
   protected readonly busyId = signal<string | null>(null)
@@ -53,6 +57,7 @@ export class CatalogPage {
         filter: {
           query: this.query.state().query || undefined,
           processingStatus: this.query.state().status ?? undefined,
+          sort: this.query.state().sort ?? undefined,
         },
       }),
   })
@@ -85,6 +90,10 @@ export class CatalogPage {
 
   protected setStatus(next: TrackProcessingStatus | null): void {
     this.query.patch({ status: next, page: 1 })
+  }
+
+  protected setSort(next: Sort<TrackSortField> | null): void {
+    this.query.patch({ sort: next, page: 1 })
   }
 
   protected applyFilters(): void {

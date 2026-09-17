@@ -7,8 +7,9 @@ import {
   ToggleArtistVerificationUseCase,
 } from '@application/artists'
 import { SessionStore } from '@application/session'
-import type { Artist } from '@domain/artist'
-import { CollectionStatus, Paginator } from '@presentation/components'
+import type { Artist, ArtistSortField } from '@domain/artist'
+import type { Sort } from '@domain/shared'
+import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
 import { bindQueryState, createCollection, type TriState } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -26,6 +27,7 @@ const SEARCH_DEBOUNCE_MS = 300
     DatePipe,
     CollectionStatus,
     Paginator,
+    SortHeader,
     HlmBadgeImports,
     HlmButtonImports,
     HlmInputImports,
@@ -40,6 +42,7 @@ export class ArtistsPage {
 
   protected readonly canVerify = inject(SessionStore).can('artists:verify')
   protected readonly canDelete = inject(SessionStore).can('artists:delete')
+  protected readonly ariaSort = sortHeaderAriaSort<ArtistSortField>
 
   protected readonly query = bindQueryState({ codec: artistsQueryCodec })
   protected readonly draft = signal(this.query.state().query)
@@ -56,6 +59,7 @@ export class ArtistsPage {
             this.query.state().verified === 'all'
               ? undefined
               : this.query.state().verified === 'verified',
+          sort: this.query.state().sort ?? undefined,
         },
       }),
   })
@@ -83,6 +87,10 @@ export class ArtistsPage {
 
   protected setVerifiedFilter(value: TriState): void {
     this.query.patch({ verified: value, page: 1 })
+  }
+
+  protected setSort(next: Sort<ArtistSortField> | null): void {
+    this.query.patch({ sort: next, page: 1 })
   }
 
   protected goToPage(page: number): void {

@@ -1,6 +1,13 @@
 import { convertToParamMap } from '@angular/router'
 import { describe, expect, it } from 'vitest'
-import { createQueryCodec, enumParam, intParam, stringParam, triStateParam } from './query-codec'
+import {
+  createQueryCodec,
+  enumParam,
+  intParam,
+  sortParam,
+  stringParam,
+  triStateParam,
+} from './query-codec'
 
 type Status = 'OPEN' | 'REVIEWING' | 'RESOLVED'
 
@@ -95,5 +102,42 @@ describe('triStateParam', () => {
   it('omits "all", the default, from the URL', () => {
     expect(param.encode('all')).toBeNull()
     expect(param.encode('verified')).toBe('verified')
+  })
+})
+
+type SortField = 'username' | 'email'
+
+describe('sortParam', () => {
+  const spec = sortParam<SortField>({ members: ['username', 'email'] })
+
+  it('round-trips a sort through decode/encode as the sort and dir parameters', () => {
+    const value = { field: 'username' as const, direction: 'asc' as const }
+
+    expect(spec.encode(value)).toEqual({ sort: 'username', dir: 'asc' })
+    expect(spec.decode(convertToParamMap({ sort: 'username', dir: 'asc' }))).toEqual(value)
+  })
+
+  it('omits both parameters when unset', () => {
+    expect(spec.encode(null)).toEqual({})
+  })
+
+  it('decodes no sort/dir at all as unset', () => {
+    expect(spec.decode(convertToParamMap({}))).toBeNull()
+  })
+
+  it('decodes a field outside the allowlist as unset', () => {
+    expect(spec.decode(convertToParamMap({ sort: 'password', dir: 'asc' }))).toBeNull()
+  })
+
+  it('decodes an unrecognised direction as unset', () => {
+    expect(spec.decode(convertToParamMap({ sort: 'username', dir: 'sideways' }))).toBeNull()
+  })
+
+  it('decodes dir with no sort as unset', () => {
+    expect(spec.decode(convertToParamMap({ dir: 'asc' }))).toBeNull()
+  })
+
+  it('decodes sort with no dir as unset', () => {
+    expect(spec.decode(convertToParamMap({ sort: 'username' }))).toBeNull()
   })
 })

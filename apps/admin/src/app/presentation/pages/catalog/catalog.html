@@ -16,6 +16,13 @@
     </p>
   }
 
+  @if (query.state().sort === null) {
+    <p class="text-sm text-muted-foreground">
+      Ordered by what needs attention: failed tracks first, then the longest-stuck uploads.
+      Choosing a column below replaces this order; clearing it brings this order back.
+    </p>
+  }
+
   <div class="flex flex-wrap items-center gap-3">
     <form class="flex gap-2" (ngSubmit)="applyFilters()">
       <label class="sr-only" for="track-search">Search tracks</label>
@@ -70,9 +77,31 @@
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
-            <th hlmTh scope="col">Track</th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'title')">
+              <app-sort-header
+                [field]="'title'"
+                label="Track"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Track
+              </app-sort-header>
+            </th>
             <th hlmTh scope="col">Artist</th>
-            <th hlmTh scope="col">State</th>
+            <th
+              hlmTh
+              scope="col"
+              [attr.aria-sort]="ariaSort(query.state().sort, 'processingStatus')"
+            >
+              <app-sort-header
+                [field]="'processingStatus'"
+                label="State"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                State
+              </app-sort-header>
+            </th>
             <th hlmTh scope="col">Attempts</th>
             <th hlmTh scope="col">Started</th>
             <th hlmTh scope="col">Actions</th>

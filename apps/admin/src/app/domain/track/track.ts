@@ -1,3 +1,5 @@
+import type { Sort } from '../shared/sort'
+
 /**
  * Declared here rather than imported from `@bitrate/contracts`, so this layer depends on nothing
  * generated. The binding is not lost: `infrastructure/catalog` maps the contract's union onto
@@ -5,6 +7,15 @@
  * the mapper instead of an empty screen in front of an operator.
  */
 export type TrackProcessingStatus = 'PROCESSING' | 'READY' | 'FAILED'
+
+/**
+ * The columns the catalog can be ordered by. See `ArtistSortField` for the same binding, done
+ * here in `infrastructure/catalog/track.mapper.ts`.
+ *
+ * Choosing any sort replaces the attention-first default below — the API documents this, and
+ * `catalog.html` says so plainly whenever `sort` is unset.
+ */
+export type TrackSortField = 'createdAt' | 'title' | 'processingStatus'
 
 /** A track and the state of its upload pipeline. */
 export type Track = {
@@ -23,6 +34,7 @@ export type Track = {
 export type TrackFilter = {
   query?: string
   processingStatus?: TrackProcessingStatus
+  sort?: Sort<TrackSortField>
 }
 
 /**

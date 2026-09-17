@@ -11,7 +11,7 @@ import type { Page } from '@domain/shared'
 import { ADMIN_API } from '../http/api.config'
 import { fetchPage } from '../http/wire-page'
 import { reportDto, reportPageDto } from './report.dto'
-import { toModerationReport, toWireModerationStatus } from './report.mapper'
+import { toModerationReport, toWireModerationSort, toWireModerationStatus } from './report.mapper'
 
 @Injectable()
 export class HttpModerationReportRepository extends ModerationReportRepository {
@@ -26,6 +26,8 @@ export class HttpModerationReportRepository extends ModerationReportRepository {
       limit,
       filters: {
         status: filter.status === undefined ? undefined : toWireModerationStatus(filter.status),
+        sort: filter.sort ? toWireModerationSort(filter.sort.field) : undefined,
+        order: filter.sort?.direction,
       },
       schema: reportPageDto,
       toDomain: toModerationReport,

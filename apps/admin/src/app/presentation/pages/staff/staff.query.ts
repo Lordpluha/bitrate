@@ -1,11 +1,23 @@
-import { createQueryCodec, intParam, type QueryCodec } from '@presentation/state'
+import type { StaffSortField } from '@domain/staff'
+import { coveringTuple, type Sort } from '@domain/shared'
+import { createQueryCodec, intParam, sortParam, type QueryCodec } from '@presentation/state'
 
-export type StaffQuery = { page: number }
+export const STAFF_SORT_FIELDS = coveringTuple<StaffSortField>()([
+  'username',
+  'email',
+  'createdAt',
+])
 
-/** No filter yet — sortable/filterable columns are a later stage, for every list at once. */
-export const staffQueryCodec: QueryCodec<StaffQuery> = createQueryCodec({
-  defaults: { page: 1 },
+export type StaffQuery = {
+  sort: Sort<StaffSortField> | null
+  page: number
+}
+
+/** No text/status filter yet — sorting is what this stage adds. */
+export const staffQueryCodec: QueryCodec<StaffQuery> = createQueryCodec<StaffQuery>({
+  defaults: { sort: null, page: 1 },
   fields: {
+    sort: sortParam({ members: STAFF_SORT_FIELDS }),
     page: { param: 'page', codec: intParam(1) },
   },
 })

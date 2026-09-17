@@ -27,8 +27,26 @@
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
-            <th hlmTh scope="col">Operator</th>
-            <th hlmTh scope="col">Email</th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'username')">
+              <app-sort-header
+                [field]="'username'"
+                label="Operator"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Operator
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'email')">
+              <app-sort-header
+                [field]="'email'"
+                label="Email"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Email
+              </app-sort-header>
+            </th>
             <th hlmTh scope="col">Role</th>
             <th hlmTh scope="col">Actions</th>
           </tr>

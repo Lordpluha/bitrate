@@ -5,7 +5,7 @@ import type { Page } from '@domain/shared'
 import { ADMIN_API } from '../http/api.config'
 import { fetchPage } from '../http/wire-page'
 import { auditEntryPageDto } from './audit.dto'
-import { toAuditEntry } from './audit.mapper'
+import { toAuditEntry, toWireAuditSort } from './audit.mapper'
 
 @Injectable()
 export class HttpAuditRepository extends AuditRepository {
@@ -18,7 +18,11 @@ export class HttpAuditRepository extends AuditRepository {
       url: this.base,
       page,
       limit,
-      filters: { entityType: filter.entityType },
+      filters: {
+        entityType: filter.entityType,
+        sort: filter.sort ? toWireAuditSort(filter.sort.field) : undefined,
+        order: filter.sort?.direction,
+      },
       schema: auditEntryPageDto,
       toDomain: toAuditEntry,
     })

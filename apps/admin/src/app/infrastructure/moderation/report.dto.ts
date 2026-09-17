@@ -1,9 +1,14 @@
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
 import { z } from 'zod'
 import { contractEnum } from '../http/contract-union'
 
 /** The union as the API declares it. The domain declares its own; the mapper joins them. */
 export type WireModerationStatus = ApiSchemas['AdminModerationReportEntity']['status']
+
+/** See `WireArtistSortField` — read from the operation, not an entity field. */
+export type WireModerationSortField = NonNullable<
+  ApiPaths['/api/v1/admin/moderation/reports']['get']['parameters']['query']
+>['sort']
 
 const moderationStatusDto = contractEnum<WireModerationStatus>()([
   'OPEN',
