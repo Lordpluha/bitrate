@@ -13,38 +13,54 @@ describe('UsersPrivateService', () => {
     service = new UsersPrivateService(prisma)
   })
 
-  it('findById should call prisma without omit', async () => {
+  it('findById should filter deletedAt', async () => {
     const user = buildUser()
-    prisma.user.findUniqueOrThrow.mockResolvedValue(user)
+    prisma.user.findFirst.mockResolvedValue(user)
 
     const result = await service.findById('user-1')
 
-    expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledWith({
-      where: { id: 'user-1' },
+    expect(prisma.user.findFirst).toHaveBeenCalledWith({
+      where: { id: 'user-1', deletedAt: null },
     })
     expect(result).toBe(user)
   })
 
-  it('getByEmail should call prisma', async () => {
+  it('findById should resolve null for a soft-deleted user', async () => {
+    prisma.user.findFirst.mockResolvedValue(null)
+
+    const result = await service.findById('user-1')
+
+    expect(result).toBeNull()
+  })
+
+  it('getByEmail should filter deletedAt', async () => {
     const user = buildUser()
     prisma.user.findFirst.mockResolvedValue(user)
 
     const result = await service.getByEmail('user@example.com')
 
     expect(prisma.user.findFirst).toHaveBeenCalledWith({
-      where: { email: 'user@example.com' },
+      where: { email: 'user@example.com', deletedAt: null },
     })
     expect(result).toBe(user)
   })
 
-  it('getByUsername should call prisma', async () => {
+  it('getByEmail should resolve null for a soft-deleted account, same as a missing one', async () => {
+    prisma.user.findFirst.mockResolvedValue(null)
+
+    const result = await service.getByEmail('deleted@example.com')
+
+    expect(result).toBeNull()
+  })
+
+  it('getByUsername should filter deletedAt', async () => {
     const user = buildUser()
     prisma.user.findFirst.mockResolvedValue(user)
 
     const result = await service.getByUsername('user')
 
     expect(prisma.user.findFirst).toHaveBeenCalledWith({
-      where: { username: 'user' },
+      where: { username: 'user', deletedAt: null },
     })
     expect(result).toBe(user)
   })

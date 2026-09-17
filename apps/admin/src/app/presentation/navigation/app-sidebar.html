@@ -23,20 +23,20 @@
   </a>
 
   <nav class="flex-1 overflow-y-auto overflow-x-hidden px-2 py-3">
-    @for (section of sections(); track section.label; let first = $first) {
-      <!-- Section caption when there is room for words; a hairline when there is not. A
-           caption cannot shrink to an icon, so collapsed mode swaps the device rather than
-           truncating it. -->
+    @for (section of sections(); track $index; let first = $first) {
+      <!-- Section caption when there is room for words and the section declares one; a hairline
+           when there is not, or when it has none. A caption cannot shrink to an icon, so
+           collapsed mode swaps the device rather than truncating it. -->
       @if (collapsed()) {
         @if (!first) {
           <hr class="mx-2 my-2 border-border" />
         }
-      } @else {
+      } @else if (section.label; as label) {
         <p
           class="px-3 pb-1 text-[0.6875rem] font-medium uppercase tracking-wider text-muted-foreground"
           [class.pt-4]="!first"
         >
-          {{ section.label }}
+          {{ label }}
         </p>
       }
 

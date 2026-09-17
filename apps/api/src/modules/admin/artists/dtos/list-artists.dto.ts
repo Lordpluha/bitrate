@@ -1,5 +1,6 @@
 import { paginationQuerySchema } from '@common/pagination'
 import { sortQuerySchema } from '@common/sort'
+import { adminResourceStatusSchema } from '@modules/admin/shared'
 import type { Prisma } from '@prisma/client'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
@@ -25,6 +26,7 @@ export const ListAdminArtistsQuerySchema = paginationQuerySchema
   .merge(sortQuerySchema(ADMIN_ARTISTS_SORT_FIELDS))
   .extend({
     verified: booleanQueryParam.optional(),
+    status: adminResourceStatusSchema.optional(),
     q: z.string().min(1).max(255).optional(),
   })
 

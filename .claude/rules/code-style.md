@@ -14,12 +14,14 @@ Four CLI commands cover mechanical verification. Run from the monorepo root.
 
 ## The four commands
 
-> **Two lint gates, not one.** `apps/admin` (Angular) and `apps/mobile` (Expo) run ESLint
-> instead of Biome. Biome's language support is fixed at compile time and it cannot parse an
-> Angular template's semantics; ESLint is the only linter that accepts a third-party parser, which
-> is what `@angular-eslint/template-parser` is. Everything else in the monorepo is Biome. See
-> [ADR-0035](../../apps/docs/docs/architecture/0035-admin-panel-on-angular.md) and
-> `.claude/rules/admin-rules.md`.
+> **Two lint gates, not one.** `apps/admin` (Angular), `apps/mobile` (Expo), and
+> `packages/player` (Svelte) run ESLint instead of Biome. Biome's language support is fixed at
+> compile time and it cannot parse an Angular template's or a `.svelte` file's semantics;
+> ESLint is the only linter that accepts a third-party parser, which is what
+> `@angular-eslint/template-parser` and `eslint-plugin-svelte` are. Everything else in the
+> monorepo is Biome. See [ADR-0035](../../apps/docs/docs/architecture/0035-admin-panel-on-angular.md),
+> [ADR-0039](../../apps/docs/docs/architecture/0039-player-as-svelte-custom-element-package.md),
+> `.claude/rules/admin-rules.md`, and `.claude/rules/player-rules.md`.
 
 ### Keeping Biome out of the ESLint apps takes `files.includes`, not an override
 
@@ -33,8 +35,15 @@ attribute bindings had staged cleanly for months, which is why this sat unnotice
 The exclusion that works is a root `files.includes`:
 
 ```jsonc
-"files": { "ignoreUnknown": true, "includes": ["**", "!apps/admin/**", "!apps/mobile/**"] }
+"files": {
+  "ignoreUnknown": true,
+  "includes": ["**", "!apps/admin", "!apps/mobile", "!packages/player"]
+}
 ```
+
+`packages/player` joined this exclusion the same way — `files.includes`, plus the same
+`overrides` entry for belt-and-suspenders clarity — when it was added; see
+`.claude/rules/player-rules.md`.
 
 Declaring it has one knock-on effect worth knowing before you reach for it: every nested
 workspace config whose own `files.includes` starts with `**` then trips
@@ -146,7 +155,9 @@ Config: `biome.json` at repo root — 2-space indent, single quotes, no semicolo
 
 Runs `tsc --noEmit` (via Turborepo) in every workspace that declares the script: `api`,
 `desktop`, `mobile`, `docs`, `web-player`, `web-artists`, `ui-react`, `contracts`,
-`ncs-parser`. Each uses its own `tsconfig.json`:
+`ncs-parser`. `player` also declares the script but runs `svelte-check` instead of plain
+`tsc`, because `.svelte` files need Svelte's own type-checker. Each uses its own
+`tsconfig.json`:
 
 - `apps/api` — `strictNullChecks: true`, `noUncheckedIndexedAccess: true` (no `noImplicitAny`)
 - `apps/web-player` — `strict: true`, `noUncheckedIndexedAccess: true`
@@ -235,6 +246,24 @@ Two things that rule depends on:
   the build finishes minutes later and everything else on the machine crawls. Check swap
   occupancy too: if it is already high, the reserve is thinner than `MemAvailable` suggests,
   because the kernel has been evicting under pressure for a while.
+
+### Hard limits for agent runs
+
+The reserve above was not enough on its own: on 2026-09-17 parallel agents each checked
+`MemAvailable`, each saw 20-30 %, and together they drove the machine into sustained swapping (swap 99 % full) and took the Claude Code
+process down with them. Agents therefore work to stricter numbers than a human at a terminal:
+
+| Check before a heavy command | Limit |
+|---|---|
+| `MemAvailable` | **≥ 25 %** of total, or wait |
+| Active swapping — `vmstat 1 5`, columns `si`/`so` | **0 in most samples**. Sustained non-zero means the kernel is paging under pressure right now: single spec files only — no build, no full suite, no Angular test run. Swap *occupancy* alone is not the signal: pages stay in swap long after RAM frees up, so "swap 65 % full" with `si`/`so` at 0 is a quiet machine |
+| Other heavy commands running (`pgrep -af 'jest\|vitest\|svelte-check\|tsc \|ng (test\|build)\|nest build\|biome (check\|ci\|lint)\|prisma (generate\|migrate)\|playwright test\|knip'`) | **none**; wait for them |
+| Node heap | `NODE_OPTIONS=--max-old-space-size=2048` on jest, tsc, `prisma generate` and the Angular builder |
+| A server an agent starts (e.g. an API instance for contract generation) | always under `timeout 300`, killed by PID, and `pgrep` confirms it is gone before the report |
+
+An orchestrating session runs **at most one verification-heavy agent at a time**. Read-only agents
+(planning, review without test runs) may run beside it; two implementation agents may not, even in
+unrelated directories — their builds and test runs land on the same RAM.
 
 Rules that keep a verification pass inside the budget:
 

@@ -102,16 +102,10 @@ describe('bindQueryState', () => {
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate')
 
     host.query.patch({ page: 2 })
-    expect(navigate).toHaveBeenLastCalledWith(
-      [],
-      expect.objectContaining({ replaceUrl: false }),
-    )
+    expect(navigate).toHaveBeenLastCalledWith([], expect.objectContaining({ replaceUrl: false }))
 
     host.query.patch({ q: 'ang' }, { replaceUrl: true })
-    expect(navigate).toHaveBeenLastCalledWith(
-      [],
-      expect.objectContaining({ replaceUrl: true }),
-    )
+    expect(navigate).toHaveBeenLastCalledWith([], expect.objectContaining({ replaceUrl: true }))
   })
 
   it('patch navigates to a canonical, default-omitting query string', async () => {

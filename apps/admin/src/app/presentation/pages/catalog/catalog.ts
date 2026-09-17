@@ -1,17 +1,24 @@
 import { DatePipe } from '@angular/common'
 import { Component, computed, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
+import { RouterLink } from '@angular/router'
 import { ListTracksUseCase, ReprocessTrackUseCase } from '@application/catalog'
 import { SessionStore } from '@application/session'
-import type { Sort } from '@domain/shared'
+import type { ResourceStatus, Sort } from '@domain/shared'
 import {
+  canReprocess as trackCanBeReprocessed,
   isTrackStuck,
   type Track,
   trackNeedsAttention,
   type TrackProcessingStatus,
   type TrackSortField,
 } from '@domain/track'
-import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
+import {
+  CollectionStatus,
+  Paginator,
+  SortHeader,
+  sortHeaderAriaSort,
+} from '@presentation/components'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -27,6 +34,7 @@ const SEARCH_DEBOUNCE_MS = 300
   selector: 'app-catalog',
   imports: [
     DatePipe,
+    RouterLink,
     CollectionStatus,
     Paginator,
     SortHeader,
@@ -57,6 +65,7 @@ export class CatalogPage {
         filter: {
           query: this.query.state().query || undefined,
           processingStatus: this.query.state().status ?? undefined,
+          status: this.query.state().resourceStatus,
           sort: this.query.state().sort ?? undefined,
         },
       }),
@@ -88,8 +97,16 @@ export class CatalogPage {
     return isTrackStuck({ track })
   }
 
+  protected reprocessible(track: Track): boolean {
+    return trackCanBeReprocessed(track)
+  }
+
   protected setStatus(next: TrackProcessingStatus | null): void {
     this.query.patch({ status: next, page: 1 })
+  }
+
+  protected setResourceStatus(next: ResourceStatus): void {
+    this.query.patch({ resourceStatus: next, page: 1 })
   }
 
   protected setSort(next: Sort<TrackSortField> | null): void {

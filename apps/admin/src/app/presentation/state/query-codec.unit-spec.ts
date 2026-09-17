@@ -4,6 +4,7 @@ import {
   createQueryCodec,
   enumParam,
   intParam,
+  resourceStatusParam,
   sortParam,
   stringParam,
   triStateParam,
@@ -102,6 +103,25 @@ describe('triStateParam', () => {
   it('omits "all", the default, from the URL', () => {
     expect(param.encode('all')).toBeNull()
     expect(param.encode('verified')).toBe('verified')
+  })
+})
+
+describe('resourceStatusParam', () => {
+  const param = resourceStatusParam()
+
+  it('decodes a missing or unknown value as "active"', () => {
+    expect(param.decode(null)).toBe('active')
+    expect(param.decode('bogus')).toBe('active')
+  })
+
+  it('decodes "deactivated" and "all" as themselves', () => {
+    expect(param.decode('deactivated')).toBe('deactivated')
+    expect(param.decode('all')).toBe('all')
+  })
+
+  it('omits "active", the default, from the URL', () => {
+    expect(param.encode('active')).toBeNull()
+    expect(param.encode('deactivated')).toBe('deactivated')
   })
 })
 

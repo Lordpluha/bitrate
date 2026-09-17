@@ -35,6 +35,28 @@
         </button>
       }
     </div>
+
+    <div class="flex gap-2" role="group" aria-label="Filter by status">
+      @for (
+        option of [
+          { value: 'active', label: 'Active' },
+          { value: 'deactivated', label: 'Deactivated' },
+          { value: 'all', label: 'All' },
+        ];
+        track option.value
+      ) {
+        <button
+          hlmBtn
+          size="sm"
+          [variant]="query.state().status === option.value ? 'default' : 'outline'"
+          type="button"
+          [attr.aria-pressed]="query.state().status === option.value"
+          (click)="setStatus($any(option.value))"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
   </div>
 
   <app-collection-status
@@ -104,7 +126,9 @@
           @for (artist of collection.items(); track artist.id) {
             <tr hlmTr>
               <td hlmTd>
-                {{ artist.username }}
+                <a [routerLink]="['/artists', artist.id]" class="hover:underline">{{
+                  artist.username
+                }}</a>
                 @if (artist.deactivatedAt) {
                   <span hlmBadge variant="destructive" class="ml-2">deactivated</span>
                 }
@@ -121,7 +145,7 @@
               </td>
               <td hlmTd>
                 <div class="flex gap-2">
-                  @if (canVerify()) {
+                  @if (canVerify() && !artist.deactivatedAt) {
                     <button
                       hlmBtn
                       size="sm"

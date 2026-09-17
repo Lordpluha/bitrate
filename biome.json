@@ -8,7 +8,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!apps/admin", "!apps/mobile"]
+    "includes": ["**", "!apps/admin", "!apps/mobile", "!packages/player"]
   },
   "formatter": {
     "enabled": true,
@@ -43,7 +43,7 @@
   },
   "overrides": [
     {
-      "includes": ["apps/admin/**", "apps/mobile/**"],
+      "includes": ["apps/admin/**", "apps/mobile/**", "packages/player/**"],
       "linter": {
         "enabled": false
       },

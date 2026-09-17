@@ -5,7 +5,12 @@ import { DeactivateStaffUseCase, ListStaffUseCase } from '@application/staff'
 import type { RolePolicyDecision } from '@domain/role'
 import { ActionNotAllowedError, type Sort } from '@domain/shared'
 import { canDeactivate, type StaffMember, type StaffSortField } from '@domain/staff'
-import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
+import {
+  CollectionStatus,
+  Paginator,
+  SortHeader,
+  sortHeaderAriaSort,
+} from '@presentation/components'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'

@@ -1,11 +1,17 @@
 import { DatePipe } from '@angular/common'
 import { Component, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
+import { RouterLink } from '@angular/router'
 import { SessionStore } from '@application/session'
 import { DeactivateUserUseCase, ListUsersUseCase } from '@application/users'
-import type { Sort } from '@domain/shared'
+import type { ResourceStatus, Sort } from '@domain/shared'
 import type { User, UserSortField } from '@domain/user'
-import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
+import {
+  CollectionStatus,
+  Paginator,
+  SortHeader,
+  sortHeaderAriaSort,
+} from '@presentation/components'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -21,6 +27,7 @@ const SEARCH_DEBOUNCE_MS = 300
   selector: 'app-users',
   imports: [
     DatePipe,
+    RouterLink,
     CollectionStatus,
     Paginator,
     SortHeader,
@@ -49,6 +56,7 @@ export class UsersPage {
         page,
         filter: {
           query: this.query.state().query || undefined,
+          status: this.query.state().status,
           sort: this.query.state().sort ?? undefined,
         },
       }),
@@ -75,6 +83,10 @@ export class UsersPage {
     this.query.patch({ query: this.draft(), page: 1 })
   }
 
+  protected setStatus(status: ResourceStatus): void {
+    this.query.patch({ status, page: 1 })
+  }
+
   protected setSort(next: Sort<UserSortField> | null): void {
     this.query.patch({ sort: next, page: 1 })
   }
@@ -86,7 +98,7 @@ export class UsersPage {
   protected async remove(user: User): Promise<void> {
     this.busyId.set(user.id)
     try {
-      await this.deactivateUser.execute(user)
+      await this.deactivateUser.execute({ user })
       await this.collection.reload()
     } catch {
       this.collection.fail(`Could not deactivate ${user.username}.`)

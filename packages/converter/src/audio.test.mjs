@@ -15,6 +15,9 @@ vi.mock('ffmpeg-static', () => ({ default: '/fake/ffmpeg' }))
 // ── Import under test (uses mocked modules) ────────────────────────────────
 import { convertAudio } from './audio.mjs'
 
+/** The options object runFfmpeg always passes to execa for stderr capture. */
+const stderrCaptureOptions = { stderr: { transform: expect.any(Function), binary: true } }
+
 // ── Defaults reset before every test ──────────────────────────────────────
 beforeEach(() => {
   vi.clearAllMocks()
@@ -83,7 +86,11 @@ describe('convertAudio', () => {
   describe('FFmpeg arguments', () => {
     it('passes the fake ffmpeg binary path to execa', async () => {
       await convertAudio({ input: '/a.mp3' })
-      expect(execaMock).toHaveBeenCalledWith('/fake/ffmpeg', expect.any(Array))
+      expect(execaMock).toHaveBeenCalledWith(
+        '/fake/ffmpeg',
+        expect.any(Array),
+        stderrCaptureOptions,
+      )
     })
 
     it('passes -i with the input path', async () => {
@@ -91,6 +98,7 @@ describe('convertAudio', () => {
       expect(execaMock).toHaveBeenCalledWith(
         expect.anything(),
         expect.arrayContaining(['-i', '/my/track.mp3']),
+        stderrCaptureOptions,
       )
     })
 
@@ -99,6 +107,7 @@ describe('convertAudio', () => {
       expect(execaMock).toHaveBeenCalledWith(
         expect.anything(),
         expect.arrayContaining(['-c:a', 'libopus']),
+        stderrCaptureOptions,
       )
     })
 
@@ -107,6 +116,7 @@ describe('convertAudio', () => {
       expect(execaMock).toHaveBeenCalledWith(
         expect.anything(),
         expect.arrayContaining(['-b:a', '192k']),
+        stderrCaptureOptions,
       )
     })
 
@@ -115,6 +125,7 @@ describe('convertAudio', () => {
       expect(execaMock).toHaveBeenCalledWith(
         expect.anything(),
         expect.arrayContaining(['-vbr', 'off']),
+        stderrCaptureOptions,
       )
     })
 
@@ -123,6 +134,7 @@ describe('convertAudio', () => {
       expect(execaMock).toHaveBeenCalledWith(
         expect.anything(),
         expect.arrayContaining(['-vbr', 'on']),
+        stderrCaptureOptions,
       )
     })
 
@@ -131,6 +143,7 @@ describe('convertAudio', () => {
       expect(execaMock).toHaveBeenCalledWith(
         expect.anything(),
         expect.arrayContaining(['-application', 'voip']),
+        stderrCaptureOptions,
       )
     })
 
@@ -139,19 +152,26 @@ describe('convertAudio', () => {
       expect(execaMock).toHaveBeenCalledWith(
         expect.anything(),
         expect.arrayContaining(['-compression_level', '7']),
+        stderrCaptureOptions,
       )
     })
 
     it('passes an FFmpeg timeout when requested', async () => {
       await convertAudio({ input: '/a.mp3', timeoutMs: 600_000 })
       expect(execaMock).toHaveBeenCalledWith('/fake/ffmpeg', expect.any(Array), {
+        ...stderrCaptureOptions,
         timeout: 600_000,
+        forceKillAfterDelay: 5_000,
       })
     })
 
     it('passes -y to allow overwriting the output file', async () => {
       await convertAudio({ input: '/a.mp3' })
-      expect(execaMock).toHaveBeenCalledWith(expect.anything(), expect.arrayContaining(['-y']))
+      expect(execaMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.arrayContaining(['-y']),
+        stderrCaptureOptions,
+      )
     })
 
     it('suppresses ffmpeg banner output', async () => {
@@ -159,6 +179,7 @@ describe('convertAudio', () => {
       expect(execaMock).toHaveBeenCalledWith(
         expect.anything(),
         expect.arrayContaining(['-hide_banner', '-loglevel', 'error']),
+        stderrCaptureOptions,
       )
     })
   })
@@ -180,9 +201,26 @@ describe('convertAudio', () => {
       expect(result.outputSize).toContain('KB')
     })
 
-    it('wraps ffmpeg failures in a descriptive error', async () => {
-      execaMock.mockRejectedValueOnce(new Error('codec not found'))
-      await expect(convertAudio({ input: '/a.mp3' })).rejects.toThrow('FFmpeg error')
+    it('propagates an FfmpegError on ffmpeg failure', async () => {
+      const execaError = Object.assign(new Error('codec not found'), { exitCode: 1 })
+      execaMock.mockRejectedValueOnce(execaError)
+      await expect(convertAudio({ input: '/a.mp3' })).rejects.toMatchObject({
+        name: 'FfmpegError',
+        exitCode: 1,
+      })
+    })
+  })
+
+  describe('onLog', () => {
+    it('receives the conversion banner and completion messages', async () => {
+      const messages = []
+      await convertAudio({ input: '/a.mp3', onLog: (message) => messages.push(message) })
+      expect(messages.some((message) => message.includes('Converting audio'))).toBe(true)
+      expect(messages.some((message) => message.includes('Conversion complete'))).toBe(true)
+    })
+
+    it('defaults to a no-op when omitted', async () => {
+      await expect(convertAudio({ input: '/a.mp3' })).resolves.toBeDefined()
     })
   })
 

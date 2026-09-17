@@ -1,8 +1,11 @@
 import { paginationQuerySchema } from '@common/pagination'
 import { sortQuerySchema } from '@common/sort'
+import { MODERATION_ENTITY_TYPES } from '@modules/moderation'
 import type { Prisma } from '@prisma/client'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
+
+export { MODERATION_ENTITY_TYPES }
 
 export const MODERATION_STATUSES = ['OPEN', 'REVIEWING', 'RESOLVED', 'REJECTED'] as const
 
@@ -18,6 +21,7 @@ export const ListReportsQuerySchema = paginationQuerySchema
   .merge(sortQuerySchema(ADMIN_REPORTS_SORT_FIELDS))
   .extend({
     status: z.enum(MODERATION_STATUSES).optional(),
+    entityType: z.enum(MODERATION_ENTITY_TYPES).optional(),
   })
 
 export class ListReportsQueryDto extends createZodDto(ListReportsQuerySchema) {}

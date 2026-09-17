@@ -82,6 +82,17 @@ describe('AdminAuditService', () => {
       )
     })
 
+    it('applies the entityId filter', async () => {
+      prisma.auditLog.findMany.mockResolvedValue([] as never)
+      prisma.auditLog.count.mockResolvedValue(0)
+
+      await service.findAll({ entityId: 'track-1' })
+
+      expect(prisma.auditLog.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { entityId: 'track-1' } }),
+      )
+    })
+
     it('returns an empty page for a page beyond the data', async () => {
       prisma.auditLog.findMany.mockResolvedValue([] as never)
       prisma.auditLog.count.mockResolvedValue(0)

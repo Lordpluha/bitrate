@@ -193,6 +193,16 @@ describe('UserAuthService', () => {
 
       await expect(service.refresh('refresh-token')).rejects.toThrow('Invalid refresh token')
     })
+
+    /** `UsersService.findById` now filters `deletedAt`, so a soft-deleted user resolves to
+     * `null` rather than throwing — refresh must still refuse with the same generic error. */
+    it('should reject a soft-deleted user', async () => {
+      jwt.verifyAsync.mockResolvedValue(createJwtPayload())
+      users.findById.mockResolvedValue(null)
+
+      await expect(service.refresh('refresh-token')).rejects.toThrow('Invalid refresh token')
+      expect(prisma.userSession.updateMany).not.toHaveBeenCalled()
+    })
   })
 
   describe('logout', () => {
@@ -305,6 +315,16 @@ describe('UserAuthService', () => {
 
       expect(token.generateAccessToken).toHaveBeenCalledWith(user.id, user.username, 'user')
       expect(result).toEqual({ access_token: 'access-token', refresh_token: 'refresh-token' })
+    })
+
+    /** `UsersPrivateService.findById` filters `deletedAt`, so a user soft-deleted between
+     * requesting the 2FA challenge and completing it resolves to `null` here — this must
+     * refuse with the same generic error `loginUser` uses, not issue a session. */
+    it('should reject a soft-deleted account with a generic error', async () => {
+      usersPrivate.findById.mockResolvedValue(null)
+
+      await expect(service.completeTwoFactorLogin('user-1')).rejects.toThrow('Invalid credentials')
+      expect(prisma.userSession.create).not.toHaveBeenCalled()
     })
   })
   describe('failed login lockout', () => {

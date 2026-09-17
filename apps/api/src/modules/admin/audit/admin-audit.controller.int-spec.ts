@@ -69,6 +69,27 @@ describe('AdminAuditController (int)', () => {
     expect(res.status).toBe(400)
   })
 
+  it('GET /admin/audit returns 400 for a non-UUID entityId', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/admin/audit')
+      .query({ entityId: 'not-a-uuid' })
+
+    expect(res.status).toBe(400)
+  })
+
+  it('GET /admin/audit accepts a valid entityId filter', async () => {
+    service.findAll.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
+
+    const res = await request(app.getHttpServer())
+      .get('/admin/audit')
+      .query({ entityId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479' })
+
+    expect(res.status).toBe(200)
+    expect(service.findAll).toHaveBeenCalledWith(
+      expect.objectContaining({ entityId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479' }),
+    )
+  })
+
   it('GET /admin/audit returns 400 for a sort field outside the allowlist', async () => {
     const res = await request(app.getHttpServer()).get('/admin/audit').query({ sort: 'action' })
 

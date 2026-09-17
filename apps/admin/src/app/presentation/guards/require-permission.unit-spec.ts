@@ -107,6 +107,12 @@ describe('requirePermission on a cold page load', () => {
         provideZonelessChangeDetection(),
         provideRouter([
           {
+            path: '',
+            pathMatch: 'full',
+            component: BlankComponent,
+            canActivate: [requireStaffSession, requirePermission('overview:read')],
+          },
+          {
             path: 'moderation',
             component: BlankComponent,
             canActivate: [requireStaffSession, requirePermission('reports:read')],
@@ -133,5 +139,65 @@ describe('requirePermission on a cold page load', () => {
     await router.navigateByUrl('/moderation')
 
     expect(SlowStaffSessionRepository.calls).toBe(1)
+  })
+})
+
+/**
+ * A MODERATOR holding `reports:read` but not the new `overview:read` cannot land on the root
+ * dashboard route — the same cold-load, empty-store composition as above, restored with a
+ * narrower permission set.
+ */
+describe('requirePermission — a MODERATOR without overview:read on a cold page load', () => {
+  @Component({ selector: 'app-blank', template: '' })
+  class BlankComponent {}
+
+  class ModeratorWithoutOverviewRepository extends StaffSessionRepository {
+    override async signIn(): Promise<Staff> {
+      throw new Error('not used')
+    }
+
+    /** Resolves on a later turn, like the real `/me` request. */
+    override currentStaff(): Promise<Staff | null> {
+      return new Promise((resolve) =>
+        setTimeout(() => resolve({ ...STAFF, permissions: ['reports:read'] }), 0),
+      )
+    }
+
+    override async signOut(): Promise<void> {
+      throw new Error('not used')
+    }
+  }
+
+  beforeEach(() => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter([
+          {
+            path: '',
+            pathMatch: 'full',
+            component: BlankComponent,
+            canActivate: [requireStaffSession, requirePermission('overview:read')],
+          },
+          {
+            path: 'moderation',
+            component: BlankComponent,
+            canActivate: [requireStaffSession, requirePermission('reports:read')],
+          },
+          { path: 'no-access', component: BlankComponent, canActivate: [requireStaffSession] },
+          { path: 'login', component: BlankComponent },
+        ]),
+        { provide: StaffSessionRepository, useClass: ModeratorWithoutOverviewRepository },
+      ],
+    })
+  })
+
+  it('lands on moderation instead of looping back to the denied root route', async () => {
+    const router = TestBed.inject(Router)
+
+    await router.navigateByUrl('/')
+
+    expect(router.url).toBe('/moderation')
   })
 })

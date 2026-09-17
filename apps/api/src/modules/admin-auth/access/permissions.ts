@@ -8,15 +8,22 @@ export const PERMISSIONS = [
   'artists:read',
   'artists:verify',
   'artists:delete',
+  'artists:restore',
+  'artists:revoke-sessions',
   'tracks:read',
   'tracks:reprocess',
+  'tracks:delete',
+  'tracks:restore',
   'users:read',
   'users:delete',
+  'users:restore',
+  'users:revoke-sessions',
   'audit:read',
   'staff:read',
   'staff:write',
   'roles:read',
   'roles:write',
+  'overview:read',
 ] as const
 
 /** A single permission id from the catalogue. */
@@ -33,9 +40,22 @@ export const PROTECTED_PERMISSIONS = [
   'roles:write',
 ] as const
 
-const PROTECTED_PERMISSION_SET = new Set<Permission>(PROTECTED_PERMISSIONS)
-
-/** Every permission minus {@link PROTECTED_PERMISSIONS} — the built-in MODERATOR role's template. */
-export const MODERATOR_TEMPLATE: Permission[] = PERMISSIONS.filter(
-  (permission) => !PROTECTED_PERMISSION_SET.has(permission),
-)
+/**
+ * The built-in MODERATOR role's template, written out rather than derived from
+ * {@link PERMISSIONS}: a permission added to the catalogue reaches administrators by identity and
+ * nobody else, so joining this template is a deliberate edit, never a side effect. Holds no
+ * {@link PROTECTED_PERMISSIONS}. Only seeds the role on first boot — an administrator's later
+ * edits to the stored template are kept.
+ */
+export const MODERATOR_TEMPLATE: readonly Permission[] = [
+  'reports:read',
+  'reports:advance',
+  'artists:read',
+  'artists:verify',
+  'artists:delete',
+  'tracks:read',
+  'tracks:reprocess',
+  'users:read',
+  'users:delete',
+  'audit:read',
+]

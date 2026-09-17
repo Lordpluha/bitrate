@@ -19,9 +19,10 @@ export class AdminAuditService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** Builds the shared `where` clause for listing and counting. */
-  private buildWhere({ entityType, staffId, from, to }: ListAdminAuditLogsQueryDto) {
+  private buildWhere({ entityType, entityId, staffId, from, to }: ListAdminAuditLogsQueryDto) {
     return {
       ...(entityType && { entityType }),
+      ...(entityId && { entityId }),
       ...(staffId && { staffId }),
       ...((from || to) && {
         createdAt: {
@@ -30,6 +31,15 @@ export class AdminAuditService {
         },
       }),
     } satisfies Prisma.AuditLogWhereInput
+  }
+
+  /** Returns the `limit` most recent audit log rows, actor resolved — for the overview dashboard. */
+  async findRecent(limit: number): Promise<AdminAuditLogRow[]> {
+    const rows = await this.prisma.auditLog.findMany({
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      take: limit,
+    })
+    return this.resolveActors(rows)
   }
 
   /** Runs the find all operation, paginated, newest first. */

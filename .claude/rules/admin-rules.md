@@ -283,10 +283,18 @@ JSON that does not interpolate environment variables. The bridge is
 environment and writes `src/app/infrastructure/http/env.generated.ts` — gitignored, imported by
 `api.config.ts`.
 
-Node loads the files, not a library: `--env-file-if-exists=.env --env-file-if-exists=.env.local`.
-**The later file wins and a real shell variable beats both** — the opposite of `apps/api`, where
-`ConfigModule`'s `envFilePath` array lets the *first* entry win. Do not assume one app's order
-applies to the other.
+The script checks **`.env.local` first, then `.env`**, and never overwrites a variable that is
+already set (`scripts/load-env-files.mjs`, parsed with Node's own `util.parseEnv`). So a real shell
+variable beats both files, and `.env.local` beats `.env`.
+
+The order lives in the script, not in `node --env-file-if-exists` flags, on purpose: Node lets the
+*last* flag win, so listing the files in priority order as flags would silently invert it. If you move
+loading back to flags, list them in reverse priority — and prefer not to.
+
+**`apps/api` has the opposite file priority.** Its `ConfigModule` lists
+`envFilePath: ['.env', '.env.local', …]` and lets the *first* entry win, so there `.env` overrides
+`.env.local` — a value set only in `.env.local` is ignored whenever `.env` also defines it. Do not
+assume either app's order applies to the other.
 
 | Variable | Needed by | Notes |
 |---|---|---|

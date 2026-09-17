@@ -71,6 +71,16 @@
       "entry": ["src/**/*.unit-spec.ts", "eslint.config.js"],
       "ignore": ["src/**/index.ts", "src/styles.css", "src/app/presentation/ui/**"],
       "ignoreDependencies": ["@spartan-ng/cli", "@bitrate/ui-react"]
+    },
+    "packages/player": {
+      "entry": [
+        "src/index.ts",
+        "src/contract/index.ts",
+        "src/engine/index.ts",
+        "src/**/*.unit-spec.ts",
+        "src/**/*.node-spec.ts",
+        "src/**/*.browser-spec.ts"
+      ]
     }
   },
   "ignore": [

@@ -52,18 +52,16 @@ export class AppSidebar {
 
     return NAV_SECTIONS.map((section) => ({
       ...section,
-      items: section.items
-        .filter(canSee)
-        .map((item) =>
-          item.kind === 'group'
-            ? {
-                ...item,
-                children: item.children.filter((child) =>
-                  hasPermission({ staff, permission: child.permission }),
-                ),
-              }
-            : item,
-        ),
+      items: section.items.filter(canSee).map((item) =>
+        item.kind === 'group'
+          ? {
+              ...item,
+              children: item.children.filter((child) =>
+                hasPermission({ staff, permission: child.permission }),
+              ),
+            }
+          : item,
+      ),
     })).filter((section) => section.items.length > 0)
   })
 

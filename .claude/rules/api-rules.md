@@ -90,7 +90,19 @@ metadata:
 - **Biome's `useImportType` autofix breaks dependency injection.** It turns a constructor-injected
   class into `import type`, NestJS then has no runtime reference to resolve, and the provider fails at
   boot. Restore the value import with a one-line `biome-ignore lint/style/useImportType` naming the
-  reason, as `admin-auth.module.ts` does. Never accept the type-only import on an injected class.
+  reason, as `admin-auth.module.ts` does. Never accept the type-only import on an injected class. A
+  mocked unit spec cannot catch this — it never asks Nest to resolve the real DI graph — which is
+  exactly why `apps/api/src/modules/app-boot/app-boot.int-spec.ts` exists: it compiles the real
+  `AppModule` with only network-touching providers overridden, so an unresolved dependency anywhere
+  in the app fails in seconds. Extend its overrides, don't bypass the spec, when a new module needs
+  one.
+- **A hand-written `ApiQuery` list drifts from its zod query schema silently.** Nothing re-derives
+  the decorator's params from the DTO, so adding a field to a list `z.object(...)` (or removing
+  one) without touching the matching `ApiQuery` calls compiles, lints and passes every other spec
+  — the generated contract simply omits or invents a query param no client can see. A list
+  controller's query schema and its Swagger decorator's declared `ApiQuery` names are covered by
+  `apps/api/src/modules/admin/admin-list-query-coverage.unit-spec.ts`, which fails on any mismatch;
+  extend its table when adding a new admin list route.
 
 ### Sort parameters are an allowlist bound to the model
 

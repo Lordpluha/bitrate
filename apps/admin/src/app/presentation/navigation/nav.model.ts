@@ -28,6 +28,11 @@ export type NavLink = {
   icon: string
   /** The item is hidden — not merely disabled — when the operator lacks this permission. */
   permission: Permission
+  /**
+   * `true` only for `/` — `routerLinkActive`'s default containment check would otherwise mark
+   * every route "active" for a link to the root path, since every path descends from it.
+   */
+  exact?: boolean
 }
 
 export type NavGroup = {
@@ -42,8 +47,12 @@ export type NavGroup = {
 export type NavItem = NavLink | NavGroup
 
 export type NavSection = {
-  /** Shown as the block caption. Hidden when the sidebar is collapsed. */
-  label: string
+  /**
+   * Shown as the block caption, when present. Hidden when the sidebar is collapsed. Omit it for
+   * a lone-item section whose own link label would just repeat it, e.g. "Overview" atop a single
+   * "Overview" link.
+   */
+  label?: string
   items: NavItem[]
 }
 
@@ -53,6 +62,19 @@ export type NavSection = {
  * because it is the only read-only surface — nothing there is an action.
  */
 export const NAV_SECTIONS: readonly NavSection[] = [
+  {
+    /** No caption: its one link is already labelled "Overview" — a caption above it would repeat it. */
+    items: [
+      {
+        kind: 'link',
+        path: '/',
+        label: 'Overview',
+        icon: 'lucideLayoutDashboard',
+        permission: 'overview:read',
+        exact: true,
+      },
+    ],
+  },
   {
     label: 'Operations',
     items: [

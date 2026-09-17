@@ -4,11 +4,7 @@
  * transport-shaped object.
  */
 export type RoleWriteFailureReason =
-  | 'duplicate-name'
-  | 'not-allowed'
-  | 'in-use'
-  | 'not-found'
-  | 'unknown'
+  'duplicate-name' | 'not-allowed' | 'in-use' | 'not-found' | 'unknown'
 
 /** Thrown by `RoleRepository.create` / `.update` / `.delete` when the API refuses the write. */
 export class RoleWriteError extends Error {

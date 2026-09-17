@@ -1,5 +1,7 @@
+export { resolveRange } from './cmaf-range'
 export * from './dtos'
 export * from './entities'
+export { CMAF_CONTENT_TYPE, CMAF_FORMAT, UnsatisfiableRangeError } from './track-playback.types'
 export * from './track-upload.service'
 export * from './tracks.module'
 export * from './types'

@@ -1,24 +1,36 @@
 import { DatePipe } from '@angular/common'
 import { Component, effect, inject, signal } from '@angular/core'
+import { RouterLink } from '@angular/router'
 import { AdvanceReportUseCase, ListReportsUseCase } from '@application/moderation'
 import { SessionStore } from '@application/session'
 import {
+  type ModerationEntityType,
   type ModerationReport,
   type ModerationSortField,
   type ModerationStatus,
 } from '@domain/moderation'
 import type { Sort } from '@domain/shared'
-import { CollectionStatus, Paginator, SortHeader, sortHeaderAriaSort } from '@presentation/components'
+import {
+  CollectionStatus,
+  Paginator,
+  SortHeader,
+  sortHeaderAriaSort,
+} from '@presentation/components'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmTableImports } from '@spartan-ng/helm/table'
-import { MODERATION_STATUSES, moderationQueryCodec } from './moderation.query'
+import {
+  MODERATION_ENTITY_TYPES,
+  MODERATION_STATUSES,
+  moderationQueryCodec,
+} from './moderation.query'
 
 @Component({
   selector: 'app-moderation',
   imports: [
     DatePipe,
+    RouterLink,
     CollectionStatus,
     Paginator,
     SortHeader,
@@ -35,6 +47,7 @@ export class ModerationQueue {
   protected readonly canAdvance = inject(SessionStore).can('reports:advance')
 
   protected readonly statuses = MODERATION_STATUSES
+  protected readonly entityTypes = MODERATION_ENTITY_TYPES
   protected readonly ariaSort = sortHeaderAriaSort<ModerationSortField>
   protected readonly query = bindQueryState({ codec: moderationQueryCodec })
   protected readonly busyId = signal<string | null>(null)
@@ -46,6 +59,7 @@ export class ModerationQueue {
         page,
         filter: {
           status: this.query.state().status ?? undefined,
+          entityType: this.query.state().entityType ?? undefined,
           sort: this.query.state().sort ?? undefined,
         },
       }),
@@ -60,6 +74,10 @@ export class ModerationQueue {
 
   protected setFilter(status: ModerationStatus | null): void {
     this.query.patch({ status, page: 1 })
+  }
+
+  protected setEntityType(entityType: ModerationEntityType | null): void {
+    this.query.patch({ entityType, page: 1 })
   }
 
   protected setSort(next: Sort<ModerationSortField> | null): void {

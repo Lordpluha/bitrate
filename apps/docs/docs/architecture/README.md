@@ -44,6 +44,7 @@ how to apply it day to day.
 | [0036](./0036-admin-clean-architecture.md) | The operator panel is layered as clean architecture |
 | [0037](./0037-br-manager-owns-tracker-state.md) | `br-manager` owns tracker state beside `br-worker` |
 | [0038](./0038-operator-permissions-roles-as-templates.md) | Operators hold permissions; roles are templates |
+| [0039](./0039-player-as-svelte-custom-element-package.md) | The player becomes a Svelte custom-element package |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

@@ -20,6 +20,7 @@ patterns, and commands. Don't load all three for a change that touches one surfa
 | `apps/web-player`, `packages/ui-react` — unit, integration, snapshot, screenshot | Vitest | `.unit-spec.ts(x)`, `.int-spec.ts(x)`, `.snapshot-spec.ts(x)`, `.screenshot-spec.ts(x)` | `vitest` |
 | `apps/admin` — unit | Vitest via `@angular/build:unit-test` | `.unit-spec.ts` | — (see `.claude/rules/admin-rules.md`) |
 | `apps/web-player` — E2E, route screenshots; `packages/ui-react` — Chromium provider behind the `screenshot` Vitest project | Playwright | `.e2e-spec.ts`, `.screenshot-spec.ts(x)` | `playwright` |
+| `packages/player` — engine/contract unit (jsdom), element in Chromium | Vitest | `.unit-spec.ts`, `.browser-spec.ts` | `svelte` (see `.claude/rules/player-rules.md`) |
 
 ## Picking the right layer
 

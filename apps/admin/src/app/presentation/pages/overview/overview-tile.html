@@ -1,0 +1,24 @@
+@let node = tile();
+@let link = visibleLink();
+
+@if (link) {
+  <a
+    class="block rounded-lg border border-border bg-card p-4 transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    [routerLink]="link.path"
+    [queryParams]="link.queryParams"
+  >
+    <span class="block text-2xl font-semibold tabular-nums text-foreground">{{ node.value }}</span>
+    <span class="mt-1 block text-sm text-muted-foreground">{{ node.label }}</span>
+    @if (node.hint) {
+      <span class="mt-0.5 block text-xs text-muted-foreground">{{ node.hint }}</span>
+    }
+  </a>
+} @else {
+  <div class="rounded-lg border border-border bg-card p-4">
+    <span class="block text-2xl font-semibold tabular-nums text-foreground">{{ node.value }}</span>
+    <span class="mt-1 block text-sm text-muted-foreground">{{ node.label }}</span>
+    @if (node.hint) {
+      <span class="mt-0.5 block text-xs text-muted-foreground">{{ node.hint }}</span>
+    }
+  </div>
+}

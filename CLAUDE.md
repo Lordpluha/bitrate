@@ -38,6 +38,9 @@ Main apps:
 - `apps/web-artists` — TanStack Start artist-facing frontend (Vite + Nitro, FSD).
 - `apps/admin` — Angular 22 operator panel (zoneless SPA, spartan-ng, ESLint not Biome).
 - `packages/ui-react` — shared React component library, Tailwind v4, Base UI, shadcn-style components.
+- `packages/player` — Svelte 5 package compiling to the `<bitrate-player>` custom element,
+  planned to be consumed by web-player, admin, web-artists, and third parties via an iframe
+  embed (see ADR-0039; no app consumes it yet as of the E0 package skeleton).
 - `packages/contracts` — generated OpenAPI TypeScript types.
 - `packages/ui-react` also owns the design system: the Tailwind `@theme` layers are written
   by hand in `src/styles/` — there is no token generator and no `tokens.json`.
@@ -66,6 +69,7 @@ current task; do not read every row's target file up front.
 | `apps/admin` — Angular 22 operator panel | `.claude/rules/admin-rules.md` |
 | `apps/mobile` — React Native + Expo | `.claude/rules/mobile-rules.md` |
 | `apps/desktop` — Tauri 2 + React/Vite | `.claude/rules/desktop-rules.md` |
+| `packages/player` — Svelte 5 `<bitrate-player>` custom element | `.claude/rules/player-rules.md` |
 | Any test (API Jest, web-player/ui-react Vitest, Playwright E2E/screenshots) | `.claude/rules/testing.md` (routes to the `jest`/`vitest`/`playwright` skills) |
 | ui-react/shadcn primitives | the `ui-react-rules` skill (project overrides) + the `shadcn` skill (generic reference) |
 | React components — deep hooks/state/a11y/routing conventions | `.claude/rules/react.md` |
@@ -111,6 +115,7 @@ never misses one.
 | React/Next.js performance | `vercel-react-best-practices` | `react.md` |
 | Expo / React Native (`apps/mobile`) | `expo` | `mobile-rules.md` |
 | Tauri 2 (`apps/desktop`) | `tauri` | `desktop-rules.md` |
+| Svelte 5 + custom elements (`packages/player`) | `svelte` | `player-rules.md` |
 | Jest (API tests) | `jest` | `testing.md` |
 | Vitest (web-player, ui-react) | `vitest` | `testing.md` |
 | Playwright (E2E, screenshots) | `playwright` | `testing.md` |
@@ -223,7 +228,9 @@ per-invocation choice.
   narrowest verification that proves the change, never a repo-wide lint concurrently with a
   test suite, and bound the runners (`jest --runInBand`, `turbo --concurrency=2`) when
   anything else heavy is running. Exit code `137` means the OOM killer, not a failing tool —
-  see `.claude/rules/code-style.md` § "Parallel review pass".
+  see `.claude/rules/code-style.md` § "Parallel review pass". Agents work to stricter numbers
+  (≥ 25 % available, no sustained swapping in `vmstat`, one heavy command and one verification-heavy agent at a
+  time, capped Node heap, servers under `timeout`) — § "Hard limits for agent runs".
 - Before broad exploration of an unfamiliar area, try `graphify query "<question>"` first —
   it's faster than grepping across many files.
 - After a nontrivial investigation or mid-task decision that's durable enough to matter

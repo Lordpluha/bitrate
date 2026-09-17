@@ -51,9 +51,7 @@ describe('HttpRoleRepository', () => {
   it('maps a duplicate-name conflict on create to RoleWriteError', async () => {
     const created = repository.create({ name: 'Catalog reviewer', permissions: [] })
 
-    http
-      .expectOne(BASE)
-      .flush(null, { status: 409, statusText: 'Conflict' })
+    http.expectOne(BASE).flush(null, { status: 409, statusText: 'Conflict' })
 
     const error = await created.catch((caught: unknown) => caught)
 
@@ -103,10 +101,10 @@ describe('HttpRoleRepository', () => {
   it('lists the permission catalogue, keeping an unheld protected permission', async () => {
     const catalogue = repository.listPermissionCatalogue()
 
-    http
-      .expectOne(`${BASE}/permissions`)
-      .flush([{ id: 'staff:write', heldBy: 0, protected: true }])
+    http.expectOne(`${BASE}/permissions`).flush([{ id: 'staff:write', heldBy: 0, protected: true }])
 
-    await expect(catalogue).resolves.toEqual([{ permission: 'staff:write', heldBy: 0, protected: true }])
+    await expect(catalogue).resolves.toEqual([
+      { permission: 'staff:write', heldBy: 0, protected: true },
+    ])
   })
 })

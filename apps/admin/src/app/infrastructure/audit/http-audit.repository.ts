@@ -20,6 +20,7 @@ export class HttpAuditRepository extends AuditRepository {
       limit,
       filters: {
         entityType: filter.entityType,
+        entityId: filter.entityId,
         sort: filter.sort ? toWireAuditSort(filter.sort.field) : undefined,
         order: filter.sort?.direction,
       },

@@ -174,6 +174,34 @@ jest.mock('qrcode', () => ({ toDataURL: jest.fn() }))
 import { TwoFactorService } from './two-factor.service'
 ```
 
+## CLI / seed entrypoints never run their `main()` on import
+
+A script under `src/infra/seeds/` (or any other CLI-shaped entrypoint) must not execute its
+`main()` as a side effect of being imported. `seed-admin.unit-spec.ts` imports `seed-admin.ts`
+to unit-test its environment guard; a bare `main().catch(...)` at module scope would run that
+`main()` — and everything it does (load `.env.local` via `bootstrap-env`, open a real Prisma
+connection) — the moment Jest loads the spec file, before any test body runs. Depending on which
+environment happened to be loaded, that either seeds fixtures into a real database or calls
+`process.exit(1)` and kills the whole unit run.
+
+Two things fix this, together:
+
+- **Testable logic lives in a side-effect-free module** the entrypoint and its spec both import
+  (`seed-admin.guard.ts` next to `seed-admin.ts`) — no top-level `bootstrap-env` import, no
+  Prisma, no `process.exit`, so importing it for a spec is inert.
+- **The entrypoint only calls `main()` under `require.main === module`** (this repo's seeds run
+  through `ts-node` with `"module": "commonjs"`, where that check is valid):
+  ```ts
+  if (require.main === module) {
+    main().catch((error: unknown) => {
+      console.error('Failed:', error)
+      process.exit(1)
+    })
+  }
+  ```
+  That condition is only true when Node loaded the file as the process entrypoint, never when
+  another module — including a spec — `require`s/imports it.
+
 ## When this skill does not cover it
 
 Do not guess an API from memory. In order:

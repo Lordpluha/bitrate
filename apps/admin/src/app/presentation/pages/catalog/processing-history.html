@@ -1,0 +1,84 @@
+<div class="space-y-3">
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0 && !showLegacyError()"
+    emptyMessage="No processing attempts recorded yet."
+  />
+
+  @if (showLegacyError()) {
+    <div class="rounded-md border border-border p-3">
+      <p class="text-xs text-muted-foreground">Last recorded error (before history was kept)</p>
+      <p class="text-sm text-destructive">{{ legacyError() }}</p>
+    </div>
+  }
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Processing attempts for this track, newest first
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Attempt</th>
+            <th hlmTh scope="col">Trigger</th>
+            <th hlmTh scope="col">Status</th>
+            <th hlmTh scope="col">Step</th>
+            <th hlmTh scope="col">Duration</th>
+            <th hlmTh scope="col">Error</th>
+            <th hlmTh scope="col">Worker</th>
+            <th hlmTh scope="col">Started</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (attempt of collection.items(); track attempt.id) {
+            <tr hlmTr>
+              <td hlmTd class="tabular-nums">{{ attempt.attempt }} / {{ attempt.maxAttempts }}</td>
+              <td hlmTd>{{ attempt.trigger }}</td>
+              <td hlmTd>
+                <span hlmBadge [variant]="badgeVariant(attempt)">{{ label(attempt) }}</span>
+                @if (runningTooLong(attempt)) {
+                  <span hlmBadge variant="destructive" class="ml-1">taking a while</span>
+                }
+              </td>
+              <td hlmTd>
+                {{ attempt.failedStep ?? '—' }}
+                @if (attempt.stepDetail) {
+                  <span class="text-muted-foreground"> ({{ attempt.stepDetail }})</span>
+                }
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">{{ duration(attempt) }}</td>
+              <td hlmTd class="max-w-xs whitespace-normal">
+                @if (attempt.errorCode) {
+                  <p class="text-xs text-destructive">{{ attempt.errorCode }}</p>
+                  <p class="text-xs text-muted-foreground">{{ attempt.errorMessage }}</p>
+                  @if (retryLabel(attempt); as retry) {
+                    <p class="text-xs text-muted-foreground">{{ retry }}</p>
+                  }
+                  @if (showDiagnostics(attempt)) {
+                    <app-processing-attempt-diagnostics [attempt]="attempt" />
+                  }
+                } @else {
+                  <span class="text-muted-foreground">—</span>
+                }
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ attempt.workerHost }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ attempt.startedAt | date: 'dd.MM HH:mm' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</div>

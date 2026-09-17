@@ -125,7 +125,9 @@ export class RoleEditorPage {
   private async load(): Promise<void> {
     try {
       const catalogue = await this.listPermissionCatalogue.execute()
-      this.heldBy.set(Object.fromEntries(catalogue.map((entry) => [entry.permission, entry.heldBy])))
+      this.heldBy.set(
+        Object.fromEntries(catalogue.map((entry) => [entry.permission, entry.heldBy])),
+      )
 
       if (this.roleId === null) return
 

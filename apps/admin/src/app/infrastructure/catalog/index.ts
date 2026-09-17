@@ -1,3 +1,5 @@
 export * from './http-track.repository'
+export * from './processing-attempt.dto'
+export * from './processing-attempt.mapper'
 export * from './track.dto'
 export * from './track.mapper'

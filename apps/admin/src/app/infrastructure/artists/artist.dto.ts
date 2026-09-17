@@ -10,6 +10,11 @@ export type WireArtistSortField = NonNullable<
   ApiPaths['/api/v1/admin/artists']['get']['parameters']['query']
 >['sort']
 
+/** The `status` query parameter's own union, read from the operation directly. */
+export type WireArtistStatus = NonNullable<
+  ApiPaths['/api/v1/admin/artists']['get']['parameters']['query']
+>['status']
+
 /**
  * The slice of the artist entity this panel reads. Naming it as a `Pick` rather than mirroring
  * the whole entity keeps the DTO honest about what the UI depends on, while a renamed or retyped
@@ -50,3 +55,39 @@ export const artistPageDto = z.object({
   page: z.number().int(),
   limit: z.number().int(),
 }) satisfies z.ZodType<ContractArtistPage>
+
+type ContractArtistCounts = ApiSchemas['AdminArtistCountsEntity']
+
+const artistCountsDto = z.object({
+  tracks: z.number().int(),
+  albums: z.number().int(),
+  activeSessions: z.number().int(),
+  openReports: z.number().int(),
+}) satisfies z.ZodType<ContractArtistCounts>
+
+type ContractArtistDetail = Pick<
+  ApiSchemas['AdminArtistDetailEntity'],
+  | 'id'
+  | 'username'
+  | 'email'
+  | 'verified'
+  | 'monthlyListeners'
+  | 'country'
+  | 'createdAt'
+  | 'deletedAt'
+  | 'counts'
+>
+
+export const artistDetailDto = z.object({
+  id: z.uuid(),
+  username: z.string(),
+  email: z.email(),
+  verified: z.boolean(),
+  monthlyListeners: z.number().int(),
+  country: z.string().nullable(),
+  createdAt: z.iso.datetime(),
+  deletedAt: z.iso.datetime().nullable(),
+  counts: artistCountsDto,
+}) satisfies z.ZodType<ContractArtistDetail>
+
+export type ArtistDetailDto = z.infer<typeof artistDetailDto>

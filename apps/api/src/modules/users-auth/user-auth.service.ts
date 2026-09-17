@@ -103,6 +103,8 @@ export class UserAuthService {
   /** Runs the complete two factor login operation. */
   async completeTwoFactorLogin(userId: string) {
     const user = await this.usersPrivate.findById(userId)
+    if (!user) throw new UnauthorizedException({ message: 'Invalid credentials' })
+
     const access_token = await this.token.generateAccessToken(user.id, user.username, 'user')
     const refresh_token = await this.token.generateRefreshToken(user.id, user.username, 'user')
 
@@ -125,6 +127,8 @@ export class UserAuthService {
         secret: process.env.JWT_SECRET,
       })
       const user = await this.users.findById(payload.sub)
+      if (!user) throw new UnauthorizedException('Invalid refresh token')
+
       const access_token = await this.token.generateAccessToken(user.id, user.username, 'user')
       const next_refresh_token = await this.token.generateRefreshToken(
         user.id,

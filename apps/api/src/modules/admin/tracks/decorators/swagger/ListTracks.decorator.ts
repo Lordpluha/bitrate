@@ -1,3 +1,4 @@
+import { ADMIN_RESOURCE_STATUSES } from '@modules/admin/shared'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiQuery, ApiResponse, getSchemaPath } from '@nestjs/swagger'
 import { ADMIN_TRACKS_SORT_FIELDS, TRACK_PROCESSING_STATUSES } from '../../dtos'
@@ -16,6 +17,7 @@ export function ListTracksSwagger() {
     ApiQuery({ name: 'page', required: false, type: Number }),
     ApiQuery({ name: 'limit', required: false, type: Number }),
     ApiQuery({ name: 'processingStatus', required: false, enum: TRACK_PROCESSING_STATUSES }),
+    ApiQuery({ name: 'status', required: false, enum: ADMIN_RESOURCE_STATUSES }),
     ApiQuery({ name: 'q', required: false, type: String, description: 'Search by title' }),
     ApiQuery({ name: 'sort', required: false, enum: ADMIN_TRACKS_SORT_FIELDS }),
     ApiQuery({ name: 'order', required: false, enum: ['asc', 'desc'] }),

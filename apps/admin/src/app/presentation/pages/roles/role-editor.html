@@ -55,7 +55,9 @@
           [attr.aria-describedby]="errorFor('description') ? 'role-description-error' : null"
         />
         @if (errorFor('description'); as message) {
-          <p class="text-sm text-destructive" id="role-description-error" role="alert">{{ message }}</p>
+          <p class="text-sm text-destructive" id="role-description-error" role="alert">
+            {{ message }}
+          </p>
         }
       </div>
 

@@ -66,6 +66,12 @@ Check: grep for `from '@modules/<name>/[^']+'` (three-segment paths) — any mat
 Check: grep for `return { error:` or `return { message:` in service/controller files. Flag any non-exception error return.
 → `.claude/rules/api-rules.md` § "Errors"
 
+**API-5 — A list route's `ApiQuery` set matches its zod query schema's fields exactly.**
+Check: `pnpm --filter @bitrate/api test -- admin-list-query-coverage` (or the equivalent spec for
+a non-admin list route) — any mismatch IS a violation. A new list endpoint's query schema needs a
+matching coverage case.
+→ `.claude/rules/api-rules.md` § "Declare the request body explicitly, and keep injected classes as values"
+
 ## TypeScript rules
 
 **TS-1 — Named types in all signature positions — no inline `{ ... }` shapes or unnamed literal unions.**
@@ -245,6 +251,45 @@ coverage percentage is never the justification.
 Check: `rg -l 'toThrow|rejects|toBeInvalid' <changed spec files>`; for a changed spec with no
 match, confirm from the diff that the code under test genuinely cannot fail.
 → `.claude/rules/testing.md` § "Coverage — depth before percentage"
+
+## Player rules (`packages/player`)
+
+**Player-1 — The contract stays Svelte-free.**
+`src/contract/**` imports no `svelte`, no `.svelte` file, nothing under `element/` or
+`embed/`, and none of the package's own `@bitrate/player`/`@bitrate/player/element`/
+`@bitrate/player/engine` entries, at runtime — static or dynamic (`import type`/`export
+type` are fine).
+Check: `pnpm --filter @bitrate/player lint` (the `@typescript-eslint/no-restricted-imports`
++ `no-restricted-syntax` override) and `pnpm --filter @bitrate/player test:unit`
+(`src/contract/__tests__/contract-boundary.unit-spec.ts`, which survives an ESLint config
+regression the first check would miss). Probe checklist — every shape both gates must catch,
+verified with `eslint --stdin --stdin-filename src/contract/probe.ts` (no probe file left on
+disk) and the scanner's own unit spec on the equivalent string:
+`import { a } from '../element'`, `export { a } from '../element'`, `import 'svelte'`,
+`await import('svelte')`, `from '../element/index'` (no trailing slash), `from 'svelte'`,
+`from './Foo.svelte'`, `from '@bitrate/player'` — every one a FAIL if missed. The one shape
+that must **not** fail: `import type … from 'svelte'`.
+→ `.claude/rules/player-rules.md` § "The contract stays Svelte-free"
+
+**Player-2 — The engine takes an injected transport, never a host global.**
+`src/engine/**` does not read `process.env`, `NEXT_PUBLIC_*`, `import.meta.env`, or branch on
+`window`/`document` at module scope; whatever it needs (fetch implementation, base URL,
+logger) arrives through constructor/factory injection from the host.
+Check: `rg -n 'process\.env|NEXT_PUBLIC_|import\.meta\.env' packages/player/src/engine` — any
+match is a FAIL.
+→ `.claude/rules/player-rules.md` § "The engine takes an injected transport — no host globals"
+
+**Player-3 — The default/element entries stay importable with no `customElements` registry.**
+`src/element/index.ts` never statically imports the compiled `.svelte` component — only a
+dynamic `import()`, and only from inside `defineBitratePlayer()`, after the SSR guard has
+already confirmed a registry exists. A static top-level import of a `customElement`-compiled
+component throws `TypeError: Class extends value undefined is not a constructor or null` the
+moment the module is evaluated in Node, before any guard runs.
+Check: `pnpm --filter @bitrate/player test:node` (a real Node environment — no DOM, no
+`customElements` — importing the default and `/element` entries and asserting neither
+throws); then `pnpm --filter @bitrate/player build && node -e "import('./dist/esm/index.js')"`
+from `packages/player/` must resolve, not throw.
+→ `.claude/rules/player-rules.md` § "SSR guard and `defineBitratePlayer()`"
 
 ## Mechanical pass commands
 

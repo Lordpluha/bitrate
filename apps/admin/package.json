@@ -4,16 +4,16 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "env:gen": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs --generate-only",
-    "dev": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs serve --host 0.0.0.0",
-    "build": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs build",
-    "start": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs serve",
+    "env:gen": "node scripts/with-env.mjs --generate-only",
+    "dev": "node scripts/with-env.mjs serve --host 0.0.0.0",
+    "build": "node scripts/with-env.mjs build",
+    "start": "node scripts/with-env.mjs serve",
     "lint": "pnpm env:gen && eslint .",
     "lint:fix": "pnpm env:gen && eslint . --fix",
     "format": "prettier --write .",
     "check-types": "pnpm env:gen && tsc --noEmit -p tsconfig.app.json",
-    "test": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs test",
-    "test:unit": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/with-env.mjs test"
+    "test": "node scripts/with-env.mjs test",
+    "test:unit": "node scripts/with-env.mjs test"
   },
   "dependencies": {
     "@angular/cdk": "^22.1.5",

@@ -1,3 +1,4 @@
+import type { ResourceStatus } from '../shared/resource-status'
 import type { Sort } from '../shared/sort'
 
 /** An artist account as the operator panel understands it. */
@@ -16,6 +17,17 @@ export type Artist = {
   deactivatedAt: Date | null
 }
 
+/** Activity counts shown on the artist detail page. */
+export type ArtistCounts = {
+  tracks: number
+  albums: number
+  activeSessions: number
+  openReports: number
+}
+
+/** An artist's full detail view — the directory row plus activity counts. */
+export type ArtistDetail = Artist & { counts: ArtistCounts }
+
 /**
  * The columns the artist list can be ordered by. Bound to the contract's `sort` query
  * parameter in `infrastructure/artists/artist.mapper.ts` through an exhaustive record.
@@ -26,6 +38,7 @@ export type ArtistSortField = 'username' | 'email' | 'createdAt' | 'monthlyListe
 export type ArtistFilter = {
   query?: string
   verified?: boolean
+  status?: ResourceStatus
   sort?: Sort<ArtistSortField>
 }
 

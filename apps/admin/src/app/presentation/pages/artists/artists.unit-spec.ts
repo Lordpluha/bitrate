@@ -7,10 +7,11 @@ import { RouterTestingHarness } from '@angular/router/testing'
 import {
   type Artist,
   ArtistRepository,
+  type ArtistDetail,
   type ListArtistsQuery,
   type SetArtistVerificationInput,
 } from '@domain/artist'
-import type { Page } from '@domain/shared'
+import type { Page, TakeDownInput } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistsPage } from './artists'
 
@@ -36,11 +37,23 @@ class StubArtistRepository extends ArtistRepository {
     return list(query)
   }
 
+  override getById(_id: string): Promise<ArtistDetail> {
+    throw new Error('not used')
+  }
+
   override setVerification(_input: SetArtistVerificationInput): Promise<Artist> {
     throw new Error('not used')
   }
 
-  override deactivate(_id: string): Promise<void> {
+  override deactivate(_input: TakeDownInput): Promise<void> {
+    throw new Error('not used')
+  }
+
+  override restore(_input: TakeDownInput): Promise<void> {
+    throw new Error('not used')
+  }
+
+  override revokeSessions(_input: TakeDownInput): Promise<number> {
     throw new Error('not used')
   }
 }
@@ -71,9 +84,7 @@ describe('ArtistsPage', () => {
     await harness.fixture.whenStable()
     expect(list).toHaveBeenCalledTimes(1)
 
-    harness.routeNativeElement
-      ?.querySelector<HTMLButtonElement>('app-sort-header button')
-      ?.click()
+    harness.routeNativeElement?.querySelector<HTMLButtonElement>('app-sort-header button')?.click()
     await harness.fixture.whenStable()
 
     const location = TestBed.inject(Location)

@@ -1,4 +1,4 @@
-import type { Track } from '@prisma/client'
+import type { Track, TrackProcessingAttempt } from '@prisma/client'
 
 /** Builds a full track record for tests (mirrors the Prisma model shape). */
 export const buildTrack = (overrides: Partial<Track> = {}): Track => ({
@@ -41,6 +41,18 @@ export const buildTrackWithArtist = (
   artist: { username: artistUsername },
 })
 
+/** Builds a track joined with the full detail `include` shape `findById` now queries. */
+export const buildTrackWithDetail = (
+  overrides: Partial<Track> = {},
+  artistUsername = 'dj-test',
+) => ({
+  ...buildTrackWithArtist(overrides, artistUsername),
+  audioFiles: [],
+  artists: [],
+  genres: [],
+  albums: [],
+})
+
 /** Builds the operator-facing (flattened) row shape returned by `AdminTracksService`. */
 export const buildAdminTrackRow = (overrides: Partial<Track> = {}, artistUsername = 'dj-test') => {
   const track = buildTrack(overrides)
@@ -59,3 +71,44 @@ export const buildAdminTrackRow = (overrides: Partial<Track> = {}, artistUsernam
     updatedAt: track.updatedAt,
   }
 }
+
+/** Builds a full `TrackProcessingAttempt` record for tests. */
+export const buildTrackProcessingAttempt = (
+  overrides: Partial<TrackProcessingAttempt> = {},
+): TrackProcessingAttempt => ({
+  id: 'attempt-1',
+  trackId: 'track-1',
+  sourceFileName: 'source.opus',
+  jobId: 'job-1',
+  attempt: 1,
+  maxAttempts: 5,
+  trigger: 'UPLOAD',
+  status: 'SUCCEEDED',
+  willRetry: false,
+  deadLetterJobId: null,
+  startedAt: new Date(),
+  finishedAt: new Date(),
+  durationMs: 1000,
+  lastProgress: 100,
+  failedStep: null,
+  stepDetail: null,
+  errorCode: null,
+  errorName: null,
+  errorMessage: null,
+  errorStack: null,
+  retryable: null,
+  commandSummary: null,
+  stderrTail: null,
+  exitCode: null,
+  signal: null,
+  inputBytes: null,
+  inputCodec: null,
+  inputContainer: null,
+  inputBitrateKbps: null,
+  inputDurationSec: null,
+  workerHost: 'worker-1',
+  workerPid: 1234,
+  workerRelease: null,
+  createdAt: new Date(),
+  ...overrides,
+})
