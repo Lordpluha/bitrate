@@ -26,7 +26,7 @@ directly by name via the Agent tool:
 | Agent | Model | Effort | Role |
 |---|---|---|---|
 | `br-planner` | Fable | low | Decomposes a non-trivial task into ordered steps before any code is written. Plan-only. |
-| `br-frontend-developer` | Sonnet | medium | `apps/web-player`, `apps/web-artists`, `packages/ui-react` — Next.js + FSD + Tailwind v4. Auto-invokes `br-reviewer` on substantial diffs. |
+| `br-frontend-developer` | Sonnet | medium | `apps/web-player`, `apps/web-artists`, `packages/ui-react` — Next.js + FSD + Tailwind v4 — and `packages/player` — Svelte 5 `<bitrate-player>` custom element. Auto-invokes `br-reviewer` on substantial diffs. |
 | `br-backend-developer` | Sonnet | medium | `apps/api` — NestJS, Prisma, BullMQ, Socket.io. Owns the Swagger-decorator and thin-controller rules. |
 | `br-mobile-developer` | Sonnet | medium | `apps/mobile` — React Native + Expo. Flags conventions this scaffolded app has not established. |
 | `br-desktop-developer` | Sonnet | medium | `apps/desktop` — Tauri 2 shell + React renderer. Owns the capability/CSP boundary. |
@@ -36,6 +36,7 @@ directly by name via the Agent tool:
 | `br-devops` | Opus | high | `.github/workflows`, `.github/actions`, `infra/`, `turbo.json`, `lefthook.yml`, Changesets release. Reviews its own diff for permissions, secrets, and injection. |
 | `br-worker` | Opus | high | Orchestrator. Owns a task 0→100%: clarifies it (`/grill-me`), plans it, delegates each stage to the owning agent, re-verifies every claim, reports to the developer. Interactive, or unattended under `/br-auto` inside a worktree. |
 | `br-librarian` | Sonnet | medium | Keeps `.claude/`, `.changeset/`, `apps/docs/`, and `PRODUCT.md` in order. Read-only — never edits. |
+| `br-manager` | Opus | high | Tracker coordinator beside `br-worker`. Checks a task has an issue before work starts and asks the developer when it does not; creates issues via `/br-create-task` (with `br-planner` for large efforts), opens and links PRs, keeps board cards true. Confirms every GitHub mutation individually. Interactive only. |
 
 Model and effort are both fixed per agent in its own frontmatter, not chosen per invocation:
 light, fast-turnaround planning on Fable at low effort; routine implementation and
@@ -49,11 +50,16 @@ entrypoint that dispatches to its matching specialist/specialists by default (se
 command's own file for its routing table). Every specialist that finds/proposes rather than
 executes (`br-planner`, `br-librarian`) hands its findings back to the orchestrating command,
 which confirms with the user and performs the mutation/fix itself — specialists never push,
-open a PR, move a board card, or edit a doc file on their own. The one deliberate exception is
-`br-worker`, which commits and pushes its own branch inside its own worktree when running
-unattended; even it never touches GitHub state, which the `/br-auto` dispatcher owns.
-`br-worker` is also the one agent that dispatches other agents — it is an orchestrator, not
-a peer of the specialists it delegates to.
+open a PR, move a board card, or edit a doc file on their own. There are two deliberate
+exceptions. `br-worker` commits and pushes its own branch inside its own worktree when running
+unattended, and never touches GitHub state. `br-manager` is the one agent that mutates GitHub —
+issues, PRs, and board cards — and does so only interactively, confirming each action on its
+own, exactly as the commands do; it never pushes and refuses to run under `/br-auto`, whose
+dispatcher owns GitHub there
+([ADR-0037](../apps/docs/docs/architecture/0037-br-manager-owns-tracker-state.md)).
+`br-worker` is the agent that orchestrates a task — it is an orchestrator, not a peer of the
+specialists it delegates to; `br-manager` also dispatches `br-planner`, but only to shape
+issues.
 
 ## Large or vague efforts — `grill-me` and `wayfinder`
 

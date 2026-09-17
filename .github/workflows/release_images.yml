@@ -1,6 +1,6 @@
 name: "[release] Release Images"
 
-# Rebuild the five service images for a release tag.
+# Rebuild the six service images for a release tag.
 #
 # Dual trigger, which is Cal.com's shape in release-docker.yaml: neither the
 # build nor the deploy may depend on a single mechanism having fired correctly.
@@ -32,7 +32,7 @@ on:
         default: ''
         type: string
       dry_run:
-        description: Build all five images without pushing any of them.
+        description: Build all six images without pushing any of them.
         required: false
         default: false
         type: boolean

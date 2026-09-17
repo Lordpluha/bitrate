@@ -1,5 +1,4 @@
 import { Pause, Spinner, Unpause, Volume, VolumeMute } from '@bitrate/ui-react'
-import Image from 'next/image'
 import { memo } from 'react'
 import type config from '../config/video-config.json'
 import { useVideoSlidePlayback } from '../model/useVideoSlidePlayback'
@@ -82,11 +81,9 @@ export const VideoSlide = memo(function VideoSlide({
         style={{ aspectRatio: '300 / 530' }}
         tabIndex={0}
       >
-        <Image
+        <img
           alt={item.title}
-          className={`z-0 object-cover transition-opacity duration-200 ${shouldHidePoster ? 'opacity-0' : 'opacity-100'}`}
-          fill
-          sizes="(min-width: 1024px) 20vw, (min-width: 640px) 42vw, 68vw"
+          className={`absolute inset-0 z-0 h-full w-full object-cover transition-opacity duration-200 ${shouldHidePoster ? 'opacity-0' : 'opacity-100'}`}
           src={posterSrc}
         />
 
@@ -170,7 +167,7 @@ export const VideoSlide = memo(function VideoSlide({
           <span className="text-sm text-white text-opacity-30 font-semibold">
             {item.title}
           </span>
-          <Image
+          <img
             alt={`${item.title} avatar`}
             className="h-7 w-7 rounded-full object-cover"
             height={28}

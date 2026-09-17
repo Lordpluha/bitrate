@@ -14,40 +14,48 @@ describe('UsersService', () => {
     service = new UsersService(prisma)
   })
 
-  it('findById should call prisma with omit', async () => {
+  it('findById should filter deletedAt and select the public projection', async () => {
     const user = buildUser()
-    prisma.user.findUniqueOrThrow.mockResolvedValue(user)
+    prisma.user.findFirst.mockResolvedValue(user)
 
     const result = await service.findById('user-1')
 
-    expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledWith({
-      where: { id: 'user-1' },
+    expect(prisma.user.findFirst).toHaveBeenCalledWith({
+      where: { id: 'user-1', deletedAt: null },
       select: PUBLIC_USER_SELECT,
     })
     expect(result).toBe(user)
   })
 
-  it('getByEmail should call prisma with omit password', async () => {
+  it('findById should resolve null for a soft-deleted user, not throw', async () => {
+    prisma.user.findFirst.mockResolvedValue(null)
+
+    const result = await service.findById('user-1')
+
+    expect(result).toBeNull()
+  })
+
+  it('getByEmail should filter deletedAt and omit password', async () => {
     const user = buildUser()
     prisma.user.findFirst.mockResolvedValue(user)
 
     const result = await service.getByEmail('user@example.com')
 
     expect(prisma.user.findFirst).toHaveBeenCalledWith({
-      where: { email: 'user@example.com' },
+      where: { email: 'user@example.com', deletedAt: null },
       select: { id: true },
     })
     expect(result).toBe(user)
   })
 
-  it('getByUsername should call prisma with omit password and email', async () => {
+  it('getByUsername should filter deletedAt and omit password and email', async () => {
     const user = buildUser()
     prisma.user.findFirst.mockResolvedValue(user)
 
     const result = await service.getByUsername('user')
 
     expect(prisma.user.findFirst).toHaveBeenCalledWith({
-      where: { username: 'user' },
+      where: { username: 'user', deletedAt: null },
       select: PUBLIC_USER_SELECT,
     })
     expect(result).toBe(user)

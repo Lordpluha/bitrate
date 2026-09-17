@@ -18,20 +18,22 @@ bitrate/
   apps/
     api/          NestJS backend — @bitrate/api
     web-player/   Next.js App Router — @bitrate/web-player
-    web-artists/  Next.js artist-facing frontend — @bitrate/web-artists
+    web-artists/  TanStack Start artist-facing frontend — @bitrate/web-artists
+    admin/        Angular 22 operator panel — @bitrate/admin
     desktop/      Tauri 2 + React — @bitrate/desktop
     mobile/       React Native + Expo — @bitrate/mobile
     docs/         Docusaurus 3 — @bitrate/docs
   packages/
     ui-react/         Shared React component library — also owns the design tokens,
                       hand-written as Tailwind @theme layers in src/styles/
+    player/           Svelte 5 <bitrate-player> custom element — @bitrate/player
     contracts/        OpenAPI TypeScript types
     vite-svgr/        Vite SVG plugin
     svgr/             SVG → React converter
     converter/        Media conversion utilities
     ncs-parser/       NCS audio format parser
   infra/
-    docker-compose.dev.yaml       infra only: postgres, postgres_test, redis, mailhog
+    docker-compose.dev.yaml       infra only: postgres, postgres_test, redis
     docker-compose.preprod.yaml   full stack — what every `task dev:*`/`db:*` targets
     docker-compose.prod.yaml      production stack
     docker-monitor.sh             health/resource/db/error reporting — see `task monitor:*`
@@ -75,6 +77,58 @@ them visible until someone bumps them:
 | `@swc/core` (docs) | `@swc/helpers@>=0.5.17` | `0.5.15` |
 | `@swc/cli@0.8.1` (api) | `chokidar@^5.0.0` | `4.0.3` |
 
+### `zod` is pinned, and the caret is not enough
+
+Root `package.json` overrides `zod` to an exact `4.4.3`. Every workspace declares
+`^4.4.3`, but a caret happily resolves upward, and **`@hookform/resolvers@5.4.0` cannot type
+zod ≥ 4.5**: its `zodResolver` overloads check `_zod.version.minor`, so a 4.5 schema fails with
+`Type '4' is not assignable to type '5'` in `packages/ui-react` and anywhere else the resolver
+is used. Nothing in the source changes; only the resolved version does, which makes this break
+appear out of a plain `pnpm install` on an unrelated branch.
+
+Lifting the pin means bumping `@hookform/resolvers` first — `5.9.1` declares
+`zod: ^3.25.0 || ^4.0.0` and drops the minor check. Do the two together or not at all.
+
+`@tanstack/react-query` is pinned for the same reason, and its failure was the nastiest of the
+three. Raising it in **one** app left two copies resolved — 5.101.0 and 5.102.8 — and React
+context is per-copy, so `QueryClientProvider` set the client on one instance while every
+`useQuery` read from the other. The web player's login page died with **"No QueryClient set, use
+QueryClientProvider to set one"**, a message that points at the provider tree rather than at the
+dependency graph, and it survived `biome ci`, `check-types` and the whole unit suite — only the
+Playwright E2E caught it. Any library holding React context (`react-query`, `react-hook-form`, a
+theme provider) fails this way rather than loudly.
+
+```bash
+# what to look for before blaming the provider tree
+grep -oE "react-query@5\.[0-9.]+" pnpm-lock.yaml | sort -u   # more than one line is the bug
+```
+
+The same hazard applies to `openapi-fetch`, without a pin to protect it. `nodeLinker: hoisted`
+means one resolved version serves every workspace, so raising it in **one** app raises it for
+`web-player` too — and 0.17's stricter `paths` generics turn roughly thirty of that app's
+query hooks into `never`. That is why the unmet peer above is left visible rather than
+fixed in one app.
+
+### Angular's Babel 8 is not everyone's `@babel/core`
+
+Angular 22 pins `@babel/core@8.0.1`. With `auto-install-peers`, pnpm hands that copy to any
+**unowned** `@babel/core` peer it re-resolves, and Babel-7 plugins then refuse to run. The fix is to
+own the peer in the consuming workspace, never to override Angular's pin: `apps/mobile` (Expo,
+`react-native-worklets`) and `apps/api` (`ts-jest` → `babel-jest`) both declare
+`@babel/core: ^7.29.0` for this reason. Neither is imported anywhere; do not remove either as
+unused.
+`apps/web-player`'s optional `next` peer is still unowned: a from-scratch resolve wires `next` to
+8.0.1, and the committed lockfile does not.
+
+The drift is sticky: once a lockfile records a floated peer, later installs keep it. When a change
+re-resolves unrelated workspaces, rebuild the lockfile from the last good one rather than trying to
+patch it:
+
+```bash
+git show HEAD:pnpm-lock.yaml > pnpm-lock.yaml && pnpm install --lockfile-only
+grep -cE "(^|[ ('])typescript@7\." pnpm-lock.yaml   # the repo is TS 6: expect 0
+```
+
 ## Root scripts
 
 | Command | What it does |
@@ -102,7 +156,7 @@ arguments lists every task with its description; the groups are:
 
 | Group | Covers |
 |---|---|
-| `infra:*` | `docker-compose.dev.yaml` — postgres, postgres_test, redis, mailhog |
+| `infra:*` | `docker-compose.dev.yaml` — postgres, postgres_test, redis |
 | `dev:*` | `docker-compose.preprod.yaml` — the full app stack |
 | `prod:*` | `docker-compose.prod.yaml` |
 | `db:*` | Prisma inside the `api` container; `:native` variants run it on the host |
@@ -117,9 +171,11 @@ tasks never hardcode database credentials — they read `POSTGRES_USER`/`POSTGRE
 the container's own environment so an override in `.env` cannot silently break them.
 
 `check-types` runs in `api`, `desktop`, `mobile`, `docs`, `web-player`,
-`web-artists`, `ui-react`, `contracts`, and `ncs-parser`. The remaining packages
+`web-artists`, `ui-react`, `player`, `contracts`, and `ncs-parser`. The remaining packages
 (`converter`, `svgr`, `vite-svgr`) have no
 `tsconfig.json`, so there is nothing to check — that is deliberate, not a gap to fill.
+`player`'s `check-types` runs `svelte-check`, not `tsc --noEmit` — it is the only workspace
+that needs to type-check `.svelte` files, which plain `tsc` cannot parse.
 
 Both `check-types` and `test` declare `dependsOn: ["^build"]` in `turbo.json`, because
 `web-player` and `web-artists` resolve `@bitrate/ui-react` through its built

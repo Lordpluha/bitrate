@@ -1,3 +1,4 @@
+import { stat } from 'node:fs/promises'
 import type { AppConfig } from '@common/config'
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
@@ -5,15 +6,19 @@ import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   AUDIO_PROCESSING_JOB_OPTIONS,
   AUDIO_PROCESSING_QUEUE,
+  type ConvertAudioJobInputProbe,
 } from '@infra/queues/audio-processing.queue'
 import type { ArtistEntity } from '@modules/artists'
 import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import type { TrackProcessingTrigger } from '@prisma/client'
 import type { Queue } from 'bullmq'
 import type { CreateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
+import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 import { getTargetBitrates } from './track-audio.helpers'
+import type { AudioMetadata } from './track-media'
 import {
   cleanupUploadedFiles,
   inspectAudioFile,
@@ -28,6 +33,19 @@ type EnqueueConversionInput = {
   sourceFileName: string
   inputPath: string
   bitrates: string[]
+  trigger: TrackProcessingTrigger
+  input: ConvertAudioJobInputProbe
+}
+
+/** Builds the job's input probe from a metadata read plus the source file's byte size. */
+function toInputProbe(metadata: AudioMetadata, bytes: number): ConvertAudioJobInputProbe {
+  return {
+    bytes,
+    codec: metadata.codec,
+    container: metadata.container,
+    bitrateKbps: metadata.bitrate,
+    durationSec: metadata.duration,
+  }
 }
 
 /** Accepts artist uploads, persists them, and queues the transcoding ladder. */
@@ -39,6 +57,7 @@ export class TrackUploadService {
     @InjectQueue(AUDIO_PROCESSING_QUEUE) private readonly audioQueue: Queue,
     private readonly configService: ConfigService<AppConfig>,
     private readonly cache: CacheService,
+    private readonly recorder: ProcessingAttemptRecorder,
   ) {}
 
   /** The logger value. */
@@ -51,7 +70,10 @@ export class TrackUploadService {
     sourceFileName,
     inputPath,
     bitrates,
+    trigger,
+    input,
   }: EnqueueConversionInput) {
+    const jobId = `convert-audio-${trackId}-${sourceFileName}`
     try {
       await this.audioQueue.add(
         'convert-audio',
@@ -63,8 +85,10 @@ export class TrackUploadService {
           outputDir: this.configService.getOrThrow('storage').getTracksDir(),
           format: 'opus',
           bitrates,
+          trigger,
+          input,
         },
-        { ...AUDIO_PROCESSING_JOB_OPTIONS, jobId: `convert-audio-${trackId}-${sourceFileName}` },
+        { ...AUDIO_PROCESSING_JOB_OPTIONS, jobId },
       )
     } catch (error) {
       await this.prisma.track.update({
@@ -75,6 +99,7 @@ export class TrackUploadService {
           processingFinishedAt: new Date(),
         },
       })
+      await this.recorder.recordEnqueueFailure({ trackId, sourceFileName, jobId, trigger, error })
       throw error
     }
   }
@@ -121,6 +146,8 @@ export class TrackUploadService {
         sourceFileName: audioFile.filename,
         inputPath,
         bitrates,
+        trigger: 'UPLOAD',
+        input: toInputProbe(metadata, audioFile.size),
       })
       this.logger.log(`Queued audio conversion for track ID: ${track.id}`)
       await this.invalidateTrackCaches()
@@ -194,6 +221,8 @@ export class TrackUploadService {
           sourceFileName: audioFile.filename,
           inputPath,
           bitrates,
+          trigger: 'REPLACE',
+          input: toInputProbe(metadata, audioFile.size),
         })
       }
       if (coverFile && existingTrack.cover !== coverFile.filename) {
@@ -210,5 +239,49 @@ export class TrackUploadService {
       if (!persisted) await cleanupUploadedFiles([audioFile, coverFile])
       throw error
     }
+  }
+
+  /**
+   * Re-queues an existing track's stored source file for transcoding.
+   *
+   * Reuses the same audio-processing queue and job shape as a fresh upload —
+   * the raw source at `track.audioUrl` is never deleted after a successful
+   * conversion, so this re-inspects it and re-enqueues rather than creating a
+   * second queue.
+   * @throws NotFoundException when the track does not exist or was soft-deleted.
+   */
+  async reprocess(trackId: TrackEntity['id']) {
+    const track = await this.prisma.track.findFirst({
+      where: { id: trackId, deletedAt: null },
+    })
+    if (!track) throw new NotFoundException('Track not found')
+
+    const inputPath = this.configService.getOrThrow('storage').getTracksDir(track.audioUrl)
+    const metadata = await inspectAudioFile(inputPath)
+    const bitrates = getTargetBitrates(metadata.bitrate)
+    const sourceStats = await stat(inputPath)
+
+    const updated = await this.prisma.track.update({
+      where: { id: trackId },
+      data: {
+        processingStatus: 'PROCESSING',
+        processingError: null,
+        processingStartedAt: null,
+        processingFinishedAt: null,
+      },
+    })
+
+    await this.enqueueAudioConversion({
+      trackId: track.id,
+      artistId: track.artistId,
+      sourceFileName: track.audioUrl,
+      inputPath,
+      bitrates,
+      trigger: 'REPROCESS',
+      input: toInputProbe(metadata, sourceStats.size),
+    })
+    await this.invalidateTrackCaches()
+
+    return updated
   }
 }

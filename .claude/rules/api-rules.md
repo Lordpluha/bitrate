@@ -77,6 +77,42 @@ getById(@Param('id', ParseUUIDPipe) id: string) {
 
 Re-export all decorators from `decorators/index.ts`.
 
+### Declare the request body explicitly, and keep injected classes as values
+
+Two failures that pass lint, types and every unit spec, because none of them read decorator
+metadata:
+
+- **Every write route's Swagger decorator declares `ApiBody({ type: XDto })`.** Controllers usually
+  import a `createZodDto` class as a type (`import { type CreateRoleDto }`), which erases it. Swagger
+  then reads the body from the parameter's decorator metadata, finds `Function`, and the generated
+  contract types the body as `Record<string, never>` — clients cannot bind to it. Importing the DTO
+  as a value in the decorator file, where it is used as one, fixes it and survives Biome.
+- **Biome's `useImportType` autofix breaks dependency injection.** It turns a constructor-injected
+  class into `import type`, NestJS then has no runtime reference to resolve, and the provider fails at
+  boot. Restore the value import with a one-line `biome-ignore lint/style/useImportType` naming the
+  reason, as `admin-auth.module.ts` does. Never accept the type-only import on an injected class. A
+  mocked unit spec cannot catch this — it never asks Nest to resolve the real DI graph — which is
+  exactly why `apps/api/src/modules/app-boot/app-boot.int-spec.ts` exists: it compiles the real
+  `AppModule` with only network-touching providers overridden, so an unresolved dependency anywhere
+  in the app fails in seconds. Extend its overrides, don't bypass the spec, when a new module needs
+  one.
+- **A hand-written `ApiQuery` list drifts from its zod query schema silently.** Nothing re-derives
+  the decorator's params from the DTO, so adding a field to a list `z.object(...)` (or removing
+  one) without touching the matching `ApiQuery` calls compiles, lints and passes every other spec
+  — the generated contract simply omits or invents a query param no client can see. A list
+  controller's query schema and its Swagger decorator's declared `ApiQuery` names are covered by
+  `apps/api/src/modules/admin/admin-list-query-coverage.unit-spec.ts`, which fails on any mismatch;
+  extend its table when adding a new admin list route.
+
+### Sort parameters are an allowlist bound to the model
+
+A list endpoint that sorts takes `sort` and `order` from `sortQuerySchema(fields)` in
+`@common/sort`. The allowlist is the security boundary — a value outside it is a 400 before any query
+runs — and it is declared with `satisfies readonly Prisma.<Model>ScalarFieldEnum[]`. Services cast the
+resolved `orderBy` to Prisma's type and unit specs mock Prisma, so without that binding a renamed
+column compiles, passes every test, and fails only at runtime. Every sort appends `id` as a stable
+tie-break, and a request without `sort` must order exactly as it did before.
+
 ## DTOs with nestjs-zod
 
 ```ts
@@ -139,6 +175,36 @@ async findAll({ page, limit }: PaginationInput) {
   return { data, total, page, limit }
 }
 ```
+
+## Prisma migrations — check every generated one for stray DROPs
+
+`prisma migrate dev` compares the database to `schema.prisma` and writes SQL to close the gap.
+Anything in the database that the schema **cannot express** therefore reads as drift, and Prisma
+drops it.
+
+This repository has four such objects: the GIN trigram indexes
+`Track_title_trgm_idx`, `Artist_username_trgm_idx`, `Album_title_trgm_idx` and
+`Playlist_title_trgm_idx`, created by raw SQL in
+`20260811120000_backend_platform_foundation` and backing search. Prisma's schema language has
+no syntax for a GIN trigram index, so **every generated migration wants to drop all four** —
+including ones about something else entirely, which is how it slips through review.
+
+Before committing a generated migration:
+
+```bash
+rg 'DROP INDEX' apps/api/prisma/migrations/<new-migration>/migration.sql
+```
+
+Delete any `DROP INDEX` you did not intend, then prove the chain still applies from empty:
+
+```bash
+# a throwaway database, not the one you develop against
+prisma migrate deploy
+psql -tAc "SELECT indexname FROM pg_indexes WHERE indexname LIKE '%trgm_idx'"
+```
+
+All four must be listed. A migration that silently drops them passes lint, types and the unit
+suite, and degrades search to sequential scans in production.
 
 ## BullMQ
 

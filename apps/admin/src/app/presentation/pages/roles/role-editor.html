@@ -1,0 +1,90 @@
+<section class="mx-auto max-w-2xl space-y-6 p-8">
+  <header class="space-y-1">
+    <a routerLink="/roles" class="text-sm text-muted-foreground hover:underline">&larr; Roles</a>
+    <h1 class="text-xl font-semibold text-foreground">
+      {{ roleId === null ? 'New role' : (role()?.name ?? 'Role') }}
+      @if (role()?.builtIn) {
+        <span hlmBadge variant="outline" class="ml-2 align-middle">built-in</span>
+      }
+    </h1>
+    <p class="text-sm text-muted-foreground">
+      Assigning this template copies its permissions onto an operator. Editing it later does not
+      change anyone already assigned it.
+    </p>
+  </header>
+
+  @if (loading()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else {
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
+      @if (!renamable() && roleId !== null) {
+        <p class="text-sm text-muted-foreground">A built-in role's name cannot be changed.</p>
+      }
+
+      <div class="space-y-2">
+        <label hlmLabel for="role-name">Name</label>
+        <input
+          hlmInput
+          class="w-full"
+          id="role-name"
+          type="text"
+          formControlName="name"
+          [attr.aria-invalid]="errorFor('name') !== null"
+          [attr.aria-describedby]="errorFor('name') ? 'role-name-error' : null"
+        />
+        @if (errorFor('name'); as message) {
+          <p class="text-sm text-destructive" id="role-name-error" role="alert">{{ message }}</p>
+        }
+      </div>
+
+      <div class="space-y-2">
+        <label hlmLabel for="role-description">Description</label>
+        <input
+          hlmInput
+          class="w-full"
+          id="role-description"
+          type="text"
+          formControlName="description"
+          [attr.aria-invalid]="errorFor('description') !== null"
+          [attr.aria-describedby]="errorFor('description') ? 'role-description-error' : null"
+        />
+        @if (errorFor('description'); as message) {
+          <p class="text-sm text-destructive" id="role-description-error" role="alert">
+            {{ message }}
+          </p>
+        }
+      </div>
+
+      <div class="space-y-2">
+        <span class="text-sm font-medium text-foreground">Permissions</span>
+        <app-permission-grid
+          [selected]="form.controls.permissions.value"
+          [heldBy]="heldBy()"
+          [hideProtected]="true"
+          [disabled]="form.controls.permissions.disabled"
+          (selectedChange)="setPermissions($event)"
+        />
+      </div>
+
+      @if (form.disabled) {
+        <p class="text-sm text-muted-foreground">
+          @if (!canWrite()) {
+            You do not have permission to change roles.
+          } @else {
+            The built-in ADMIN role always holds every permission and cannot be edited.
+          }
+        </p>
+      } @else {
+        <button hlmBtn type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Saving…' : 'Save role' }}
+        </button>
+      }
+    </form>
+  }
+</section>

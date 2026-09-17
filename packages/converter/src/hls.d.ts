@@ -4,6 +4,7 @@ export interface ConvertAudioToHlsOptions {
   bitrates: string[]
   segmentDuration?: number
   timeoutMs?: number
+  onLog?: (message: string) => void
 }
 
 export interface ConvertAudioToHlsResult {

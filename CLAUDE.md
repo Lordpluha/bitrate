@@ -35,8 +35,12 @@ Monorepo: Turborepo + pnpm, packages use the `@bitrate/` namespace.
 Main apps:
 - `apps/api` — NestJS API, Prisma/PostgreSQL, Redis, BullMQ, Socket.io.
 - `apps/web-player` — Next.js App Router frontend, Feature-Sliced Design.
-- `apps/web-artists` — Next.js artist-facing frontend, same stack as web-player.
+- `apps/web-artists` — TanStack Start artist-facing frontend (Vite + Nitro, FSD).
+- `apps/admin` — Angular 22 operator panel (zoneless SPA, spartan-ng, ESLint not Biome).
 - `packages/ui-react` — shared React component library, Tailwind v4, Base UI, shadcn-style components.
+- `packages/player` — Svelte 5 package compiling to the `<bitrate-player>` custom element,
+  planned to be consumed by web-player, admin, web-artists, and third parties via an iframe
+  embed (see ADR-0039; no app consumes it yet as of the E0 package skeleton).
 - `packages/contracts` — generated OpenAPI TypeScript types.
 - `packages/ui-react` also owns the design system: the Tailwind `@theme` layers are written
   by hand in `src/styles/` — there is no token generator and no `tokens.json`.
@@ -62,8 +66,10 @@ current task; do not read every row's target file up front.
 | API module/controller/service/DTO/guard/error patterns | `.claude/rules/api-rules.md` |
 | web-player component/hook/store/route | `.claude/rules/web-player-rules.md` |
 | web-player — deep FSD layer/slice-anatomy/public-API rules | `.claude/rules/fsd-web-player.md` |
+| `apps/admin` — Angular 22 operator panel | `.claude/rules/admin-rules.md` |
 | `apps/mobile` — React Native + Expo | `.claude/rules/mobile-rules.md` |
 | `apps/desktop` — Tauri 2 + React/Vite | `.claude/rules/desktop-rules.md` |
+| `packages/player` — Svelte 5 `<bitrate-player>` custom element | `.claude/rules/player-rules.md` |
 | Any test (API Jest, web-player/ui-react Vitest, Playwright E2E/screenshots) | `.claude/rules/testing.md` (routes to the `jest`/`vitest`/`playwright` skills) |
 | ui-react/shadcn primitives | the `ui-react-rules` skill (project overrides) + the `shadcn` skill (generic reference) |
 | React components — deep hooks/state/a11y/routing conventions | `.claude/rules/react.md` |
@@ -72,7 +78,7 @@ current task; do not read every row's target file up front.
 | Forms — React Hook Form + Zod | `.claude/rules/forms.md` |
 | SOLID/DRY/KISS, component size/props/decomposition limits | `.claude/rules/code-principles.md` |
 | Monorepo topology, Turborepo/pnpm scripts, env vars | `.claude/rules/monorepo.md` |
-| lint/type/format/knip failures | `.claude/rules/code-style.md` |
+| lint/type/format/knip failures; memory budget for verification runs | `.claude/rules/code-style.md` |
 | Commit message / branch naming | `.claude/rules/commit-style.md` |
 | Mechanical review checklist before opening/updating a PR | `.claude/rules/architecture-checklist.md` |
 | codebase exploration, working notes, decisions, GitHub ticket/board sync | `.claude/rules/knowledge-base.md` |
@@ -109,6 +115,7 @@ never misses one.
 | React/Next.js performance | `vercel-react-best-practices` | `react.md` |
 | Expo / React Native (`apps/mobile`) | `expo` | `mobile-rules.md` |
 | Tauri 2 (`apps/desktop`) | `tauri` | `desktop-rules.md` |
+| Svelte 5 + custom elements (`packages/player`) | `svelte` | `player-rules.md` |
 | Jest (API tests) | `jest` | `testing.md` |
 | Vitest (web-player, ui-react) | `vitest` | `testing.md` |
 | Playwright (E2E, screenshots) | `playwright` | `testing.md` |
@@ -133,23 +140,28 @@ round-trip is pure overhead.
 | `/br-auto [--limit N] [--issue NNN] [--dry-run] [--recover-only]` | Unattended pipeline: poll the board's `Todo` column and drive each issue end to end — worktree, `br-worker`, commit, push, PR, board move, issue comment — with crash recovery. |
 | `/br-sync-docs [path] [--session]` | Find and (with confirmation) fix drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Dispatches discovery to `br-librarian`. Run periodically — see `.claude/rules/monorepo.md` § "Documentation ownership". |
 
-Eleven named specialists live under `.claude/agents/`. Four implementation agents split by
+Twelve named agents live under `.claude/agents/`. Four implementation agents split by
 app — `br-frontend-developer` (web-player, web-artists, ui-react), `br-backend-developer`
 (api), `br-mobile-developer`, `br-desktop-developer` — plus
 `br-planner`, `br-debugger`, `br-tester`, `br-reviewer` (dispatched by `/br-implement`),
 `br-devops` (CI/CD, Docker, infra, release tooling), `br-worker` (the orchestrator: owns a
 task 0→100%, delegates each stage to the agent that owns it, verifies the result itself
 rather than trusting reports, and reports back to the developer — interactively, or
-unattended under `/br-auto`), and `br-librarian` (read-only documentation-order discovery
-for `/br-sync-docs`).
+unattended under `/br-auto`), `br-manager` (the tracker coordinator beside `br-worker`: checks
+that a task has an issue before work starts and asks the developer when it does not, creates
+issues through `/br-create-task`, opens and links PRs, and keeps board cards true —
+interactive only), and `br-librarian` (read-only documentation-order discovery for
+`/br-sync-docs`).
 
 Every command and every specialist has access to any skill under `.claude/skills/` (not a
-restricted subset) — pick whichever the task calls for. `/br-create-task`, `/br-implement`
-and `/br-auto` mutate GitHub state (issues, board cards, comments, PRs) only after explicit
-confirmation for each action, executed at the command level (specialists never mutate GitHub
-or push/open a PR themselves; `br-worker` commits and pushes its own branch only, and the
-`/br-auto` dispatcher owns every outward-facing action) — a prior approval doesn't carry over
-to a later action in the same conversation. Ticket/board state itself is never mirrored to a
+restricted subset) — pick whichever the task calls for. `/br-create-task`, `/br-implement`,
+`/br-auto` and the `br-manager` agent mutate GitHub state (issues, board cards, comments, PRs)
+only after explicit confirmation for each action. `br-manager` is the one agent allowed to
+mutate GitHub, and only interactively; every other specialist never mutates GitHub or
+pushes/opens a PR itself, `br-worker` commits and pushes its own branch only, and under
+`/br-auto` the dispatcher owns every outward-facing action — see
+[ADR-0037](apps/docs/docs/architecture/0037-br-manager-owns-tracker-state.md). A prior approval
+doesn't carry over to a later action in the same conversation. Ticket/board state itself is never mirrored to a
 file — it's queried live via `gh`/MCP whenever it's needed (see
 `.claude/rules/knowledge-base.md` and
 [ADR-0016](apps/docs/docs/architecture/0016-live-github-queries.md)).
@@ -194,7 +206,7 @@ the strongest reasoning tier:
 |---|---|---|
 | Planning | Fable | low |
 | Development / implementation, documentation discovery | Sonnet | medium |
-| Debugging, testing, review, DevOps, orchestration (`br-worker`) | Opus | high |
+| Debugging, testing, review, DevOps, orchestration (`br-worker`), tracker coordination (`br-manager`) | Opus | high |
 
 All twelve specialists pin their model and effort in their own agent frontmatter (see
 `.claude/README.md`) — dispatching one always runs it on its assigned tier, not a
@@ -211,6 +223,14 @@ per-invocation choice.
 - Dispatch to a subagent by default (see "Default to agent dispatch, even outside a
   command" above); work in-session only when `--session` is passed or explicitly requested.
 - Keep logs short: pipe long command output through `head -200` or a focused `rg`.
+- Watch memory, not just tokens. Keep **10-15% of total RAM free at all times** — check
+  `MemAvailable` before anything heavy, and treat swap as spent, not as headroom. Run the
+  narrowest verification that proves the change, never a repo-wide lint concurrently with a
+  test suite, and bound the runners (`jest --runInBand`, `turbo --concurrency=2`) when
+  anything else heavy is running. Exit code `137` means the OOM killer, not a failing tool —
+  see `.claude/rules/code-style.md` § "Parallel review pass". Agents work to stricter numbers
+  (≥ 25 % available, no sustained swapping in `vmstat`, one heavy command and one verification-heavy agent at a
+  time, capped Node heap, servers under `timeout`) — § "Hard limits for agent runs".
 - Before broad exploration of an unfamiliar area, try `graphify query "<question>"` first —
   it's faster than grepping across many files.
 - After a nontrivial investigation or mid-task decision that's durable enough to matter
@@ -269,7 +289,7 @@ interface for Docker, database, and monitoring workflows — there are no `pnpm 
 scripts, and `task` with no arguments lists everything:
 
 ```bash
-task infra:up      # postgres, postgres_test, redis, mailhog — nothing else
+task infra:up      # postgres, postgres_test, redis — nothing else
 pnpm dev           # apps natively
 
 task dev:up        # or: the whole stack in Docker

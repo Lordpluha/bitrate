@@ -122,10 +122,103 @@ model ArtistSession {
   @@index([refresh_token])
 }
 
+model Role {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  name        String   @unique
+  description String?
+  builtIn     Boolean  @default(false)
+  permissions String[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  staff Staff[]
+}
+
+model Staff {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  email       String   @unique
+  username    String   @unique
+  password    String
+  roleId      String   @db.Uuid
+  permissions String[] @default([])
+
+  twoFactorSecret     String?
+  twoFactorEnabled    Boolean   @default(false)
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+  deletedAt           DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  role      Role           @relation(fields: [roleId], references: [id])
+  sessions  StaffSession[]
+  auditLogs AuditLog[]
+
+  @@index([email])
+  @@index([deletedAt])
+  @@index([roleId])
+}
+
+model StaffSession {
+  id            String @id @default(uuid(7)) @db.Uuid
+  staffId       String @db.Uuid
+  access_token  String @unique
+  refresh_token String @unique
+
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@index([staffId])
+  @@index([access_token])
+  @@index([refresh_token])
+}
+
 enum TrackProcessingStatus {
   PROCESSING
   READY
   FAILED
+}
+
+enum TrackProcessingTrigger {
+  UPLOAD
+  REPLACE
+  REPROCESS
+}
+
+enum TrackProcessingAttemptStatus {
+  RUNNING
+  SUCCEEDED
+  FAILED
+  SUPERSEDED
+  STALLED
+}
+
+enum TrackProcessingStep {
+  CLAIM
+  PREPARE_TEMP
+  PROGRESSIVE_ENCODE
+  HLS_ENCODE
+  HLS_VALIDATE
+  CMAF_ENCODE
+  UPLOAD
+  PUBLISH
+  CLEANUP
+}
+
+enum TrackProcessingErrorCode {
+  FFMPEG_EXIT
+  FFMPEG_SIGNAL
+  TIMEOUT
+  INVALID_INPUT
+  EMPTY_OUTPUT
+  STORAGE
+  DATABASE
+  STALLED
+  UNKNOWN
 }
 
 model Track {
@@ -164,7 +257,8 @@ model Track {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  audioFiles       TrackFile[]
+  audioFiles           TrackFile[]
+  processingAttemptsLog TrackProcessingAttempt[]
   albums           AlbumTrack[]
   playlists        PlaylistTrack[]
   likedBy          UserLikedTrack[]
@@ -208,6 +302,58 @@ model TrackFile {
   @@unique([trackId, format, bitrate])
   @@index([trackId])
   @@index([format])
+}
+
+// One row per BullMQ attempt of the audio-processing pipeline. Successes are compact;
+// failures carry the redacted step/error detail the operator panel needs. Retention is
+// pruned on write to the newest 25 rows per track — see ADR-0040.
+model TrackProcessingAttempt {
+  id             String  @id @default(uuid(7)) @db.Uuid
+  trackId        String  @db.Uuid
+  sourceFileName String // the generation this attempt encoded
+  jobId          String
+  attempt        Int // 1-based, = job.attemptsMade + 1 at start
+  maxAttempts    Int
+  trigger        TrackProcessingTrigger
+
+  status          TrackProcessingAttemptStatus @default(RUNNING)
+  willRetry       Boolean                       @default(false) // FAILED and BullMQ will try again
+  deadLetterJobId String? // set on the exhausted attempt
+
+  startedAt    DateTime  @default(now())
+  finishedAt   DateTime?
+  durationMs   Int?
+  lastProgress Int       @default(0)
+
+  failedStep TrackProcessingStep?
+  stepDetail String? // e.g. "192k" for a per-bitrate step
+
+  errorCode      TrackProcessingErrorCode?
+  errorName      String? // constructor name
+  errorMessage   String?                    @db.Text // redacted, <= 2 KB
+  errorStack     String?                    @db.Text // redacted, <= 8 KB
+  retryable      Boolean?
+  commandSummary String?                    @db.Text // ffmpeg argv, paths redacted, <= 2 KB
+  stderrTail     String?                    @db.Text // redacted, <= 16 KB (last bytes)
+  exitCode       Int?
+  signal         String?
+
+  inputBytes       Int?
+  inputCodec       String?
+  inputContainer   String?
+  inputBitrateKbps Int?
+  inputDurationSec Int?
+
+  workerHost    String
+  workerPid     Int
+  workerRelease String? // SENTRY_RELEASE, null in dev
+
+  createdAt DateTime @default(now())
+
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@index([trackId, startedAt(sort: Desc)])
+  @@index([jobId, attempt])
 }
 
 model Artist {
@@ -749,6 +895,7 @@ model ModerationReport {
 model AuditLog {
   id         String   @id @default(uuid(7)) @db.Uuid
   userId     String?  @db.Uuid
+  staffId    String?  @db.Uuid
   action     String
   entityType String
   entityId   String?  @db.Uuid
@@ -756,8 +903,10 @@ model AuditLog {
   ipAddress  String?
   createdAt  DateTime @default(now())
 
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user  User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  staff Staff? @relation(fields: [staffId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt(sort: Desc)])
+  @@index([staffId, createdAt(sort: Desc)])
   @@index([entityType, entityId])
 }

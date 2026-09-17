@@ -1,0 +1,212 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Catalog pipeline</h1>
+    <p class="text-sm text-muted-foreground">
+      Uploads move through processing and can be slow or fail. Failed and long-running tracks are
+      listed first.
+    </p>
+  </header>
+
+  @if (needsAttention() > 0) {
+    <p
+      class="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+    >
+      {{ needsAttention() }} track(s) on this page failed or have been processing for over half an
+      hour.
+    </p>
+  }
+
+  @if (query.state().sort === null) {
+    <p class="text-sm text-muted-foreground">
+      Ordered by what needs attention: failed tracks first, then the longest-stuck uploads. Choosing
+      a column below replaces this order; clearing it brings this order back.
+    </p>
+  }
+
+  <div class="flex flex-wrap items-center gap-3">
+    <form class="flex gap-2" (ngSubmit)="applyFilters()">
+      <label class="sr-only" for="track-search">Search tracks</label>
+      <input
+        hlmInput
+        class="w-64"
+        id="track-search"
+        type="search"
+        placeholder="Track title"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+      />
+      <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
+    </form>
+
+    <div class="flex gap-2">
+      <button
+        hlmBtn
+        size="sm"
+        type="button"
+        [variant]="query.state().status === null ? 'default' : 'outline'"
+        (click)="setStatus(null)"
+      >
+        All
+      </button>
+      @for (option of statuses; track option) {
+        <button
+          hlmBtn
+          size="sm"
+          type="button"
+          [variant]="query.state().status === option ? 'default' : 'outline'"
+          (click)="setStatus(option)"
+        >
+          {{ option }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="flex gap-2" role="group" aria-label="Filter by take-down status">
+    @for (
+      option of [
+        { value: 'active', label: 'Active' },
+        { value: 'deactivated', label: 'Taken down' },
+        { value: 'all', label: 'All' },
+      ];
+      track option.value
+    ) {
+      <button
+        hlmBtn
+        size="sm"
+        [variant]="query.state().resourceStatus === option.value ? 'default' : 'outline'"
+        type="button"
+        [attr.aria-pressed]="query.state().resourceStatus === option.value"
+        (click)="setResourceStatus($any(option.value))"
+      >
+        {{ option.label }}
+      </button>
+    }
+  </div>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No tracks match this filter."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Tracks and their processing state
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'title')">
+              <app-sort-header
+                [field]="'title'"
+                label="Track"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Track
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col">Artist</th>
+            <th
+              hlmTh
+              scope="col"
+              [attr.aria-sort]="ariaSort(query.state().sort, 'processingStatus')"
+            >
+              <app-sort-header
+                [field]="'processingStatus'"
+                label="State"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                State
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col">Attempts</th>
+            <th hlmTh scope="col">Started</th>
+            <th hlmTh scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (track of collection.items(); track track.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a
+                  [routerLink]="['/catalog', track.id]"
+                  [fragment]="
+                    track.processingStatus === 'FAILED' || isStuck(track)
+                      ? 'processing-history'
+                      : undefined
+                  "
+                  class="hover:underline"
+                  >{{ track.title }}</a
+                >
+                @if (track.takenDownAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                }
+                @if (track.processingError) {
+                  <span
+                    class="mt-1 block max-w-md truncate text-xs text-destructive"
+                    [title]="track.processingError"
+                  >
+                    {{ track.processingError }}
+                  </span>
+                }
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ track.artistUsername }}</td>
+              <td hlmTd>
+                <span
+                  hlmBadge
+                  [variant]="
+                    track.processingStatus === 'FAILED'
+                      ? 'destructive'
+                      : track.processingStatus === 'READY'
+                        ? 'default'
+                        : 'outline'
+                  "
+                >
+                  {{ track.processingStatus }}
+                </span>
+                @if (isStuck(track)) {
+                  <span hlmBadge variant="destructive" class="ml-2">stuck</span>
+                }
+              </td>
+              <td hlmTd class="tabular-nums">{{ track.processingAttempts }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{
+                  track.processingStartedAt
+                    ? (track.processingStartedAt | date: 'dd.MM HH:mm')
+                    : '—'
+                }}
+              </td>
+              <td hlmTd>
+                @if (canReprocess() && reprocessible(track)) {
+                  <button
+                    hlmBtn
+                    size="sm"
+                    variant="outline"
+                    type="button"
+                    [disabled]="busyId() === track.id"
+                    (click)="reprocess(track)"
+                  >
+                    Reprocess
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</section>

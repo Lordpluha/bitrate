@@ -1,0 +1,127 @@
+<section class="mx-auto max-w-2xl space-y-8 p-8">
+  <header class="space-y-1">
+    <a routerLink="/staff" class="text-sm text-muted-foreground hover:underline">&larr; Staff</a>
+    @if (loading()) {
+      <h1 class="text-xl font-semibold text-foreground">Operator</h1>
+    } @else if (member(); as m) {
+      <h1 class="text-xl font-semibold text-foreground">
+        {{ m.username }}
+        @if (m.role.name === builtInAdminRoleName) {
+          <span hlmBadge variant="outline" class="ml-2 align-middle">built-in administrator</span>
+        }
+        @if (m.deactivatedAt) {
+          <span hlmBadge variant="destructive" class="ml-2 align-middle">deactivated</span>
+        }
+      </h1>
+      <p class="text-sm text-muted-foreground">{{ m.email }}</p>
+    }
+  </header>
+
+  @if (loading()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else if (member(); as m) {
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Permissions</h2>
+      @if (divergenceLabel(m); as label) {
+        <span hlmBadge variant="secondary">{{ label }}</span>
+      }
+
+      @if (m.role.name === builtInAdminRoleName) {
+        <p class="text-sm text-muted-foreground">
+          All permissions — built-in administrator. This cannot be edited individually.
+        </p>
+      } @else {
+        <app-permission-grid
+          [selected]="permissions()"
+          [hideProtected]="true"
+          [disabled]="!editable(m)"
+          (selectedChange)="setPermissions($event)"
+        />
+        @if (editable(m)) {
+          <button
+            hlmBtn
+            size="sm"
+            type="button"
+            [disabled]="savingPermissions()"
+            (click)="savePermissions()"
+          >
+            {{ savingPermissions() ? 'Saving…' : 'Save permissions' }}
+          </button>
+        }
+      }
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Role</h2>
+      <p class="text-sm text-muted-foreground">
+        Reassigning replaces this operator's current permissions with the new role's template — any
+        override made here or on the permissions above is discarded.
+      </p>
+      @if (canWrite()) {
+        <select
+          hlmInput
+          class="w-full max-w-xs"
+          [value]="selectedRoleId()"
+          (change)="onSelectRole($any($event.target).value)"
+        >
+          @for (role of roles(); track role.id) {
+            <option [value]="role.id">{{ role.name }}</option>
+          }
+        </select>
+        <div>
+          <button
+            hlmBtn
+            size="sm"
+            type="button"
+            [disabled]="reassigning() || selectedRoleId() === m.role.id"
+            (click)="confirmReassign()"
+          >
+            {{ reassigning() ? 'Reassigning…' : 'Reassign role' }}
+          </button>
+        </div>
+      }
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Deactivate</h2>
+      @if (m.deactivatedAt) {
+        <p class="text-sm text-muted-foreground">This operator is already deactivated.</p>
+      } @else if (canWrite()) {
+        @if (deactivation(m); as decision) {
+          @if (!decision.allowed) {
+            <p class="text-sm text-muted-foreground">{{ decision.reason }}</p>
+          } @else if (!confirmingDeactivate()) {
+            <button hlmBtn size="sm" variant="ghost" type="button" (click)="armDeactivate()">
+              Deactivate
+            </button>
+          } @else {
+            <p class="text-sm text-destructive" role="alert">
+              Deactivate {{ m.username }}? This revokes their sessions immediately.
+            </p>
+            <div class="flex gap-2">
+              <button
+                hlmBtn
+                size="sm"
+                variant="destructive"
+                type="button"
+                [disabled]="deactivating()"
+                (click)="deactivate()"
+              >
+                {{ deactivating() ? 'Deactivating…' : 'Yes, deactivate' }}
+              </button>
+              <button hlmBtn size="sm" variant="outline" type="button" (click)="cancelDeactivate()">
+                Cancel
+              </button>
+            </div>
+          }
+        }
+      }
+    </section>
+  }
+</section>

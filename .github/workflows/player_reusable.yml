@@ -1,0 +1,117 @@
+name: "[player] Reusable"
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+# Every job is independent and none is gated on another, so one red check never hides the
+# result of the rest. None needs a build first: the specs import from src/, and the package
+# has no workspace dependency for `^build` to produce.
+jobs:
+  lint:
+    name: Player ESLint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      # Biome cannot parse .svelte files, so biome.json excludes this package through
+      # files.includes and `biome ci` would check nothing here. ESLint is the gate.
+      - name: Run ESLint
+        run: pnpm --filter @bitrate/player lint
+
+  check-types:
+    name: Player Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      # svelte-check for src (plain tsc cannot parse .svelte), then tsc over the specs.
+      - name: Run svelte-check and tsc
+        run: pnpm --filter @bitrate/player check-types
+
+  tokens:
+    name: Player Design Tokens
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      # The player styles its shadow root with var(--color-*) tokens, so the script checks it
+      # for hardcoded hex literals. It walks every root at once; the job is here so that a
+      # player-only change is covered.
+      - name: Fail on hardcoded colours
+        run: pnpm check:tokens
+
+  unit:
+    name: Player Unit and Node Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run unit tests (jsdom)
+        run: pnpm --filter @bitrate/player test:unit
+
+      # A real server environment with no DOM and no customElements: proves the package can be
+      # imported from a Next.js or Nitro server bundle, which jsdom cannot.
+      - name: Run node tests (SSR import)
+        run: pnpm --filter @bitrate/player test:node
+
+  browser:
+    name: Player Browser Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      # Installed through the player's own `playwright` so the browser revision matches the
+      # version its Vitest provider drives, whatever version is hoisted to the root.
+      - name: Install Playwright Chromium
+        run: pnpm --filter @bitrate/player exec playwright install chromium --with-deps
+
+      - name: Run browser tests (Chromium)
+        run: pnpm --filter @bitrate/player test:browser
+
+  build:
+    name: Player Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Build the custom element and declarations
+        run: pnpm --filter @bitrate/player build

@@ -34,6 +34,7 @@ The app or package name:
 | `desktop` | `apps/desktop/` |
 | `mobile` | `apps/mobile/` |
 | `ui-react` | `packages/ui-react/` |
+| `player` | `packages/player/` |
 | `contracts` | `packages/contracts/` |
 | `converter` | `packages/converter/` |
 | `docs` | `apps/docs/` |
