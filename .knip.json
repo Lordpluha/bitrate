@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "$schema": "https://unpkg.com/knip@6/schema.json",
   "tags": ["-lintignore"],
   "workspaces": {
     ".": {
@@ -65,7 +65,11 @@
         "src/**/*.screenshot-spec.tsx",
         "vitest.config.ts"
       ],
-      "ignoreDependencies": ["tsc-alias"]
+      "ignoreDependencies": ["tsc-alias"],
+      "storybook": {
+        "config": [".storybook/{main,preview,manager}.@(ts|tsx)"],
+        "stories": ["src/**/*.stories.@(ts|tsx|mdx)", "src/**/*.mdx"]
+      }
     },
     "apps/admin": {
       "entry": ["src/**/*.unit-spec.ts", "eslint.config.js"],
@@ -88,7 +92,6 @@
     ".br-scratch/**",
     ".claude/**",
     "**/*.module.css",
-    "**/*.stories.tsx",
     "**/*.test.tsx",
     "**/dist/**",
     "**/.next/**",
