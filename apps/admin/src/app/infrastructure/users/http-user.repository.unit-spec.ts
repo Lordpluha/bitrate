@@ -99,4 +99,35 @@ describe('HttpUserRepository', () => {
 
     await expect(result).rejects.toMatchObject({ reason: 'not-found' })
   })
+
+  it('fetches a page of listening history for the given listener', async () => {
+    const result = repository.listListeningHistory('u1', 1)
+
+    const request = http.expectOne((req) => req.url === `${BASE}/u1/listening-history`)
+    expect(request.request.params.get('page')).toBe('1')
+    request.flush({
+      data: [
+        {
+          id: 'a1b2c3d4-4f89-41d3-9a0c-0305e82c3301',
+          listenedAt: '2026-09-17T12:00:00.000Z',
+          trackId: 'a1b2c3d4-4f89-41d3-9a0c-0305e82c3302',
+          trackTitle: 'Test Track',
+          artistUsername: 'dj-test',
+        },
+      ],
+      total: 1,
+      page: 1,
+      limit: 10,
+    })
+
+    await expect(result).resolves.toMatchObject({ total: 1 })
+  })
+
+  it('rejects when the listening-history response fails schema validation', async () => {
+    const result = repository.listListeningHistory('u1', 1)
+
+    http.expectOne((req) => req.url === `${BASE}/u1/listening-history`).flush({ data: [] })
+
+    await expect(result).rejects.toThrow()
+  })
 })

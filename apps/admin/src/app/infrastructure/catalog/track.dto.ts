@@ -22,6 +22,7 @@ type ContractTrack = Pick<
   | 'id'
   | 'title'
   | 'artistUsername'
+  | 'cover'
   | 'processingStatus'
   | 'processingError'
   | 'processingAttempts'
@@ -36,6 +37,7 @@ const trackDto = z.object({
   id: z.uuid(),
   title: z.string(),
   artistUsername: z.string(),
+  cover: z.string().nullable(),
   processingStatus: processingStatusDto,
   processingError: z.string().nullable(),
   processingAttempts: z.number().int(),
@@ -101,6 +103,7 @@ type ContractTrackDetail = Pick<
   | 'title'
   | 'artistId'
   | 'artistUsername'
+  | 'cover'
   | 'processingStatus'
   | 'processingError'
   | 'processingAttempts'
@@ -121,6 +124,7 @@ export const trackDetailDto = z.object({
   title: z.string(),
   artistId: z.uuid(),
   artistUsername: z.string(),
+  cover: z.string().nullable(),
   processingStatus: processingStatusDto,
   processingError: z.string().nullable(),
   processingAttempts: z.number().int(),

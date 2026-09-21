@@ -140,4 +140,71 @@ describe('HttpArtistRepository take-down writes', () => {
 
     await expect(result).rejects.toMatchObject({ reason: 'not-deactivated' })
   })
+
+  it('fetches a page of tracks for the given artist', async () => {
+    const result = repository.listTracks('a1', 1)
+
+    const request = http.expectOne((req) => req.url === `${BASE}/a1/tracks`)
+    expect(request.request.params.get('page')).toBe('1')
+    request.flush({
+      data: [
+        {
+          id: 'a1b2c3d4-4f89-41d3-9a0c-0305e82c3301',
+          title: 'Test Track',
+          cover: null,
+          processingStatus: 'READY',
+          playCount: 1,
+          deletedAt: null,
+          createdAt: '2026-09-01T00:00:00.000Z',
+        },
+      ],
+      total: 1,
+      page: 1,
+      limit: 10,
+    })
+
+    await expect(result).resolves.toMatchObject({ total: 1 })
+  })
+
+  it('rejects when the tracks response fails schema validation', async () => {
+    const result = repository.listTracks('a1', 1)
+
+    http.expectOne((req) => req.url === `${BASE}/a1/tracks`).flush({ data: [] })
+
+    await expect(result).rejects.toThrow()
+  })
+
+  it('fetches a page of albums for the given artist', async () => {
+    const result = repository.listAlbums('a1', 1)
+
+    const request = http.expectOne((req) => req.url === `${BASE}/a1/albums`)
+    expect(request.request.params.get('page')).toBe('1')
+    request.flush({
+      data: [
+        {
+          id: 'a1b2c3d4-4f89-41d3-9a0c-0305e82c3302',
+          title: 'Test Album',
+          cover: null,
+          type: 'ALBUM',
+          totalTracks: 8,
+          releaseDate: null,
+          deletedAt: null,
+          createdAt: '2026-09-01T00:00:00.000Z',
+        },
+      ],
+      total: 1,
+      page: 1,
+      limit: 10,
+    })
+
+    await expect(result).resolves.toMatchObject({ total: 1 })
+  })
+
+  it('rejects when the albums response fails schema validation', async () => {
+    const result = repository.listAlbums('a1', 1)
+
+    http.expectOne((req) => req.url === `${BASE}/a1/albums`).flush({ data: [] })
+
+    await expect(result).rejects.toThrow()
+  })
 })

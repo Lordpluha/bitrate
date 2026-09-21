@@ -1,44 +1,9 @@
-<div class="flex flex-wrap items-center gap-3">
-  @if (renditions().length > 1) {
-    <label class="flex items-center gap-2 text-sm text-muted-foreground">
-      Quality
-      <select
-        [class]="selectClass"
-        [value]="effectiveBitrate()"
-        [disabled]="preparing()"
-        (change)="onQualityChange($any($event.target).value)"
-      >
-        @for (file of renditions(); track file.id) {
-          <option [value]="file.bitrate">{{ label(file) }}</option>
-        }
-      </select>
-    </label>
-  }
-
-  <button
-    hlmBtn
-    size="sm"
-    variant="outline"
-    type="button"
-    [disabled]="preparing() || effectiveBitrate() === null"
-    [attr.aria-pressed]="playing()"
-    (click)="onPlayPause()"
-  >
-    {{ preparing() ? 'Preparing…' : playPauseLabel() }}
-  </button>
-
-  <audio
-    #audio
-    controls
-    preload="none"
-    [hidden]="sourceBitrate() === null"
-    [attr.aria-label]="'Audio for ' + track().title"
-    (error)="onMediaError()"
-    (play)="playing.set(true)"
-    (pause)="playing.set(false)"
-  ></audio>
-</div>
-
-@if (error(); as message) {
-  <p class="mt-2 text-sm text-destructive" role="alert">{{ message }}</p>
+@if (elementReady()) {
+  <bitrate-player
+    [renditions]="renditions()"
+    [trackTitle]="track().title"
+    [artist]="track().artistUsername"
+    [coverUrl]="track().coverUrl ?? ''"
+    [resolveSource]="resolveSource"
+  ></bitrate-player>
 }

@@ -1,6 +1,7 @@
 import { ActionNotAllowedError, ResourceWriteError } from '@domain/shared'
 
-type ResourceWriteAction = 'deactivate' | 'reprocess' | 'restore' | 'revoke sessions for' | 'take down'
+type ResourceWriteAction =
+  'deactivate' | 'reprocess' | 'restore' | 'revoke sessions for' | 'take down'
 
 /**
  * What kind of write refused the request, for the two `ResourceWriteError` reasons whose wording

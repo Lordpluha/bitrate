@@ -1,3 +1,4 @@
+export * from './charts'
 export * from './collection-status'
 export * from './confirm-action'
 export * from './paginator'

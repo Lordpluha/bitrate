@@ -1,0 +1,51 @@
+<div class="space-y-3">
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No albums published yet."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Albums, newest first
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Album</th>
+            <th hlmTh scope="col">Type</th>
+            <th hlmTh scope="col">Tracks</th>
+            <th hlmTh scope="col">Released</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (album of collection.items(); track album.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                {{ album.title }}
+                @if (album.takenDownAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                }
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ album.type }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">{{ album.totalTracks }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ album.releaseDate ? (album.releaseDate | date: 'dd.MM.yyyy') : '—' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</div>

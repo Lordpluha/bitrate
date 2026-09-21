@@ -2,11 +2,20 @@ import { HttpClient } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { firstValueFrom } from 'rxjs'
 import type { Page, TakeDownInput } from '@domain/shared'
-import { type ListUsersQuery, type User, type UserDetail, UserRepository } from '@domain/user'
+import {
+  LISTENING_HISTORY_PAGE_SIZE,
+  type ListUsersQuery,
+  type ListeningHistoryEntry,
+  type User,
+  type UserDetail,
+  UserRepository,
+} from '@domain/user'
 import { ADMIN_API } from '../http/api.config'
 import { buildTakeDownBody, revokeSessionsResultDto } from '../http/take-down.dto'
 import { toResourceWriteError } from '../http/to-resource-write-error'
 import { fetchPage } from '../http/wire-page'
+import { listeningHistoryPageDto } from './listening-history.dto'
+import { toListeningHistoryEntry } from './listening-history.mapper'
 import { userDetailDto, userPageDto } from './user.dto'
 import { toUser, toUserDetail, toWireUserSort, toWireUserStatus } from './user.mapper'
 
@@ -62,5 +71,19 @@ export class HttpUserRepository extends UserRepository {
     )
 
     return revokeSessionsResultDto.parse(response).revoked
+  }
+
+  override listListeningHistory(
+    userId: string,
+    page: number,
+  ): Promise<Page<ListeningHistoryEntry>> {
+    return fetchPage({
+      http: this.http,
+      url: `${this.base}/${userId}/listening-history`,
+      page,
+      limit: LISTENING_HISTORY_PAGE_SIZE,
+      schema: listeningHistoryPageDto,
+      toDomain: toListeningHistoryEntry,
+    })
   }
 }

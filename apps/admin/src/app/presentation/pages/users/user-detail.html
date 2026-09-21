@@ -1,4 +1,4 @@
-<section class="mx-auto max-w-2xl space-y-8 p-8">
+<section class="w-full space-y-8 p-8">
   <header class="space-y-1">
     <a routerLink="/users" class="text-sm text-muted-foreground hover:underline"
       >&larr; Listeners</a
@@ -77,6 +77,13 @@
       >
         View audit history &rarr;
       </a>
+    </section>
+
+    <section aria-labelledby="listening-history-heading" class="space-y-3">
+      <h2 id="listening-history-heading" class="text-lg font-semibold text-foreground">
+        Listening history
+      </h2>
+      <app-listening-history [userId]="userId" />
     </section>
 
     <section class="space-y-3">

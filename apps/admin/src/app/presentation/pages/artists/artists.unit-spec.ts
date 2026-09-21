@@ -6,6 +6,8 @@ import { provideRouter, type Routes } from '@angular/router'
 import { RouterTestingHarness } from '@angular/router/testing'
 import {
   type Artist,
+  type ArtistAlbum,
+  type ArtistTrack,
   ArtistRepository,
   type ArtistDetail,
   type ListArtistsQuery,
@@ -54,6 +56,14 @@ class StubArtistRepository extends ArtistRepository {
   }
 
   override revokeSessions(_input: TakeDownInput): Promise<number> {
+    throw new Error('not used')
+  }
+
+  override listTracks(_artistId: string, _page: number): Promise<Page<ArtistTrack>> {
+    throw new Error('not used')
+  }
+
+  override listAlbums(_artistId: string, _page: number): Promise<Page<ArtistAlbum>> {
     throw new Error('not used')
   }
 }

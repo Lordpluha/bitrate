@@ -1,5 +1,6 @@
 import type { Page, PageRequest, TakeDownInput } from '../shared'
 import type { Artist, ArtistDetail, ArtistFilter } from './artist'
+import type { ArtistAlbum, ArtistTrack } from './artist-publications'
 
 export type ListArtistsQuery = PageRequest & {
   filter: ArtistFilter
@@ -26,4 +27,8 @@ export abstract class ArtistRepository {
   abstract restore(input: TakeDownInput): Promise<void>
   /** @returns How many sessions were revoked. */
   abstract revokeSessions(input: TakeDownInput): Promise<number>
+  /** Newest first. */
+  abstract listTracks(artistId: string, page: number): Promise<Page<ArtistTrack>>
+  /** Newest first. */
+  abstract listAlbums(artistId: string, page: number): Promise<Page<ArtistAlbum>>
 }

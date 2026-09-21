@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { API_BASE_URL } from '../http/api.config'
 import type { TrackDetailDto, TrackDto } from './track.dto'
 import { toTrack, toTrackDetail, toWireTrackStatus } from './track.mapper'
 
@@ -6,6 +7,7 @@ const dto: TrackDto = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
   title: 'Night Drive',
   artistUsername: 'dj-test',
+  cover: null,
   processingStatus: 'READY',
   processingError: null,
   processingAttempts: 0,
@@ -30,6 +32,24 @@ describe('toTrack', () => {
 
   it('carries updatedAt through as a Date', () => {
     expect(toTrack(dto).updatedAt).toBeInstanceOf(Date)
+  })
+
+  it('keeps a null cover as null rather than an empty or broken URL', () => {
+    expect(toTrack(dto).coverUrl).toBeNull()
+  })
+
+  it('joins a bare cover filename into the static URL the API serves it at', () => {
+    const track = toTrack({ ...dto, cover: 'abc123.png' })
+
+    expect(track.coverUrl).toBe(`${API_BASE_URL}/static/tracks/covers/abc123.png`)
+  })
+
+  it('URL-encodes a filename that needs escaping', () => {
+    const track = toTrack({ ...dto, cover: 'my cover (final).png' })
+
+    expect(track.coverUrl).toBe(
+      `${API_BASE_URL}/static/tracks/covers/${encodeURIComponent('my cover (final).png')}`,
+    )
   })
 })
 

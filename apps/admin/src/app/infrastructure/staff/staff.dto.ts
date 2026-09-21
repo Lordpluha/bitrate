@@ -49,8 +49,8 @@ export const staffDto = z.object({
 
 export type StaffDto = z.infer<typeof staffDto>
 
-/** The request body, so the contract's `LoginDto` stays the shape that goes over the wire. */
+/** The request body, so the contract's `AdminLoginDto` stays the shape that goes over the wire. */
 export const signInBodyDto = z.object({
   email: z.string(),
   password: z.string(),
-}) satisfies z.ZodType<ApiSchemas['LoginDto']>
+}) satisfies z.ZodType<ApiSchemas['AdminLoginDto']>

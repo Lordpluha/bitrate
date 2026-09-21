@@ -17,6 +17,7 @@ const DETAIL_RESPONSE = {
   title: 'Night Drive',
   artistId: '3f2504e0-4f89-41d3-9a0c-0305e82c3302',
   artistUsername: 'dj-test',
+  cover: null,
   processingStatus: 'READY',
   processingError: null,
   processingAttempts: 1,

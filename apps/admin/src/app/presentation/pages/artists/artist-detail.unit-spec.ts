@@ -4,6 +4,8 @@ import { provideRouter } from '@angular/router'
 import {
   DeactivateArtistUseCase,
   GetArtistUseCase,
+  ListArtistAlbumsUseCase,
+  ListArtistTracksUseCase,
   RestoreArtistUseCase,
   RevokeArtistSessionsUseCase,
   ToggleArtistVerificationUseCase,
@@ -50,6 +52,18 @@ function create(): void {
       { provide: RestoreArtistUseCase, useValue: { execute: vi.fn() } },
       { provide: RevokeArtistSessionsUseCase, useValue: { execute: vi.fn() } },
       { provide: ToggleArtistVerificationUseCase, useValue: { execute: vi.fn() } },
+      {
+        provide: ListArtistTracksUseCase,
+        useValue: {
+          execute: vi.fn().mockResolvedValue({ items: [], total: 0, page: 1, limit: 10 }),
+        },
+      },
+      {
+        provide: ListArtistAlbumsUseCase,
+        useValue: {
+          execute: vi.fn().mockResolvedValue({ items: [], total: 0, page: 1, limit: 10 }),
+        },
+      },
     ],
   })
   /** ADMIN holds every permission by identity — see `hasPermission`. */

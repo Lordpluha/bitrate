@@ -22,6 +22,8 @@ import {
 } from '@presentation/pages/shared/resource-write-error.message'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
+import { ArtistAlbums } from './artist-albums'
+import { ArtistTracks } from './artist-tracks'
 
 /** The one action armed at a time — at most one confirm panel is ever open. */
 type ArmedAction = 'deactivate' | 'restore' | 'revoke-sessions' | null
@@ -33,7 +35,14 @@ type ArmedAction = 'deactivate' | 'restore' | 'revoke-sessions' | null
  */
 @Component({
   selector: 'app-artist-detail',
-  imports: [RouterLink, ConfirmAction, HlmBadgeImports, HlmButtonImports],
+  imports: [
+    RouterLink,
+    ConfirmAction,
+    ArtistTracks,
+    ArtistAlbums,
+    HlmBadgeImports,
+    HlmButtonImports,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './artist-detail.html',
 })

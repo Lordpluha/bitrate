@@ -20,6 +20,7 @@ import {
 } from '@presentation/pages/shared/resource-write-error.message'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
+import { ListeningHistory } from './listening-history'
 
 /** The one action armed at a time — at most one confirm panel is ever open. */
 type ArmedAction = 'deactivate' | 'restore' | 'revoke-sessions' | null
@@ -31,7 +32,7 @@ type ArmedAction = 'deactivate' | 'restore' | 'revoke-sessions' | null
  */
 @Component({
   selector: 'app-user-detail',
-  imports: [RouterLink, ConfirmAction, HlmBadgeImports, HlmButtonImports],
+  imports: [RouterLink, ConfirmAction, ListeningHistory, HlmBadgeImports, HlmButtonImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './user-detail.html',
 })
