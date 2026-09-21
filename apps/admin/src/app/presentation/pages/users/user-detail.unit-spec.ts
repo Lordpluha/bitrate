@@ -5,6 +5,7 @@ import { SessionStore } from '@application/session'
 import {
   DeactivateUserUseCase,
   GetUserUseCase,
+  ListListeningHistoryUseCase,
   RestoreUserUseCase,
   RevokeUserSessionsUseCase,
 } from '@application/users'
@@ -56,6 +57,12 @@ function create(): void {
       { provide: DeactivateUserUseCase, useValue: { execute: deactivate } },
       { provide: RestoreUserUseCase, useValue: { execute: restore } },
       { provide: RevokeUserSessionsUseCase, useValue: { execute: revokeSessions } },
+      {
+        provide: ListListeningHistoryUseCase,
+        useValue: {
+          execute: vi.fn().mockResolvedValue({ items: [], total: 0, page: 1, limit: 10 }),
+        },
+      },
     ],
   })
   /** ADMIN holds every permission by identity — see `hasPermission`. */

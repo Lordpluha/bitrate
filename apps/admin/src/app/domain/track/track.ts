@@ -25,6 +25,8 @@ export type Track = {
   id: string
   title: string
   artistUsername: string
+  /** Absolute URL to the track's cover image, joined from the stored filename. `null` with none. */
+  coverUrl: string | null
   processingStatus: TrackProcessingStatus
   processingError: string | null
   processingAttempts: number
@@ -85,7 +87,10 @@ export type TrackAudioSource = {
   bitrate: number
 }
 
-/** The single format this panel plays natively — see `.claude/rules/admin-rules.md` § "Styling" sibling decisions and the plan's Decisions section for why only CMAF is served. */
+/**
+ * The single format this panel plays: fMP4/AAC with the index up front plays natively through
+ * `<audio src>` in Chrome, Firefox and Safari, while Ogg/Opus fails in Safari and HLS needs hls.js.
+ */
 const LISTENABLE_FORMAT = 'cmaf'
 
 /**

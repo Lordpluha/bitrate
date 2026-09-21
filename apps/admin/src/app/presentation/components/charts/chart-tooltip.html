@@ -1,0 +1,33 @@
+@let data = state();
+
+<div
+  class="pointer-events-none absolute top-1 z-10 w-max max-w-48 -translate-x-1/2 rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md"
+  [style.left]="left()"
+  aria-hidden="true"
+>
+  <p class="font-semibold text-foreground">{{ data.category }}</p>
+
+  <ul class="mt-1 space-y-1">
+    @for (row of data.rows; track row.id) {
+      <li class="flex items-center gap-1.5">
+        <span
+          class="h-0.5 w-3 shrink-0 rounded-full"
+          [style.backgroundColor]="'var(' + row.colorVar + ')'"
+        ></span>
+        <span class="text-muted-foreground">{{ row.label }}</span>
+        <span class="ml-auto font-semibold tabular-nums text-foreground">{{
+          format(row.value)
+        }}</span>
+      </li>
+    }
+  </ul>
+
+  @if (data.total !== null) {
+    <p class="mt-1 flex items-center gap-1.5 border-t border-border pt-1">
+      <span class="text-muted-foreground">Total</span>
+      <span class="ml-auto font-semibold tabular-nums text-foreground">{{
+        format(data.total)
+      }}</span>
+    </p>
+  }
+</div>

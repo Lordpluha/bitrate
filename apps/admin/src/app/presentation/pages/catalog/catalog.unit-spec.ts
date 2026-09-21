@@ -21,6 +21,7 @@ function track(overrides: Partial<Track> = {}): Track {
     id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
     title: 'Night Drive',
     artistUsername: 'dj-test',
+    coverUrl: null,
     processingStatus: 'FAILED',
     processingError: 'timed out',
     processingAttempts: 3,

@@ -2,9 +2,13 @@ import { HttpClient } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { firstValueFrom } from 'rxjs'
 import {
+  ARTIST_ALBUMS_PAGE_SIZE,
+  ARTIST_TRACKS_PAGE_SIZE,
   type Artist,
   ArtistRepository,
+  type ArtistAlbum,
   type ArtistDetail,
+  type ArtistTrack,
   type ListArtistsQuery,
   type SetArtistVerificationInput,
 } from '@domain/artist'
@@ -13,6 +17,8 @@ import { ADMIN_API } from '../http/api.config'
 import { buildTakeDownBody, revokeSessionsResultDto } from '../http/take-down.dto'
 import { toResourceWriteError } from '../http/to-resource-write-error'
 import { fetchPage } from '../http/wire-page'
+import { artistAlbumPageDto, artistTrackPageDto } from './artist-publications.dto'
+import { toArtistAlbum, toArtistTrack } from './artist-publications.mapper'
 import { artistDetailDto, artistDto, artistPageDto } from './artist.dto'
 import { toArtist, toArtistDetail, toWireArtistSort, toWireArtistStatus } from './artist.mapper'
 
@@ -77,5 +83,27 @@ export class HttpArtistRepository extends ArtistRepository {
     )
 
     return revokeSessionsResultDto.parse(response).revoked
+  }
+
+  override listTracks(artistId: string, page: number): Promise<Page<ArtistTrack>> {
+    return fetchPage({
+      http: this.http,
+      url: `${this.base}/${artistId}/tracks`,
+      page,
+      limit: ARTIST_TRACKS_PAGE_SIZE,
+      schema: artistTrackPageDto,
+      toDomain: toArtistTrack,
+    })
+  }
+
+  override listAlbums(artistId: string, page: number): Promise<Page<ArtistAlbum>> {
+    return fetchPage({
+      http: this.http,
+      url: `${this.base}/${artistId}/albums`,
+      page,
+      limit: ARTIST_ALBUMS_PAGE_SIZE,
+      schema: artistAlbumPageDto,
+      toDomain: toArtistAlbum,
+    })
   }
 }

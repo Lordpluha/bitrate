@@ -57,4 +57,30 @@ describe('HttpOverviewRepository', () => {
 
     await expect(summary).rejects.toThrow()
   })
+
+  it('fetches the series with the requested window as a query parameter', () => {
+    void repository.getSeries(7)
+
+    const request = http.expectOne((req) => req.url === `${BASE}/series`)
+
+    expect(request.request.params.get('days')).toBe('7')
+    request.flush({
+      from: '2026-09-10',
+      to: '2026-09-17',
+      days: 7,
+      uploads: [],
+      signups: [],
+      listens: [],
+      reports: [],
+      reportsByStatus: { open: 0, reviewing: 0, resolved: 0, rejected: 0 },
+    })
+  })
+
+  it('rejects the series request when the response fails schema validation', async () => {
+    const series = repository.getSeries(30)
+
+    http.expectOne((req) => req.url === `${BASE}/series`).flush({ days: 30 })
+
+    await expect(series).rejects.toThrow()
+  })
 })

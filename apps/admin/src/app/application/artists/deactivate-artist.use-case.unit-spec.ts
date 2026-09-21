@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   type Artist,
+  type ArtistAlbum,
+  type ArtistTrack,
   ArtistRepository,
   type ArtistDetail,
   type ListArtistsQuery,
@@ -35,6 +37,14 @@ class StubArtistRepository extends ArtistRepository {
   }
 
   override revokeSessions(_input: TakeDownInput): Promise<number> {
+    throw new Error('not used')
+  }
+
+  override listTracks(_artistId: string, _page: number): Promise<Page<ArtistTrack>> {
+    throw new Error('not used')
+  }
+
+  override listAlbums(_artistId: string, _page: number): Promise<Page<ArtistAlbum>> {
     throw new Error('not used')
   }
 }

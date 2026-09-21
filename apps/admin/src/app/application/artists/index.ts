@@ -1,5 +1,7 @@
 export * from './deactivate-artist.use-case'
 export * from './get-artist.use-case'
+export * from './list-artist-albums.use-case'
+export * from './list-artist-tracks.use-case'
 export * from './list-artists.use-case'
 export * from './restore-artist.use-case'
 export * from './revoke-artist-sessions.use-case'

@@ -1,4 +1,4 @@
-<section class="mx-auto max-w-2xl space-y-8 p-8">
+<section class="w-full space-y-8 p-8">
   <header class="space-y-1">
     <a routerLink="/artists" class="text-sm text-muted-foreground hover:underline"
       >&larr; Artists</a
@@ -68,6 +68,16 @@
       >
         View audit history &rarr;
       </a>
+    </section>
+
+    <section aria-labelledby="artist-tracks-heading" class="space-y-3">
+      <h2 id="artist-tracks-heading" class="text-lg font-semibold text-foreground">Tracks</h2>
+      <app-artist-tracks [artistId]="artistId" />
+    </section>
+
+    <section aria-labelledby="artist-albums-heading" class="space-y-3">
+      <h2 id="artist-albums-heading" class="text-lg font-semibold text-foreground">Albums</h2>
+      <app-artist-albums [artistId]="artistId" />
     </section>
 
     <section class="space-y-3">

@@ -5,7 +5,13 @@ import { TestBed } from '@angular/core/testing'
 import { provideRouter, type Routes } from '@angular/router'
 import { RouterTestingHarness } from '@angular/router/testing'
 import type { Page, TakeDownInput } from '@domain/shared'
-import { type ListUsersQuery, type User, type UserDetail, UserRepository } from '@domain/user'
+import {
+  type ListeningHistoryEntry,
+  type ListUsersQuery,
+  type User,
+  type UserDetail,
+  UserRepository,
+} from '@domain/user'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UsersPage } from './users'
 
@@ -42,6 +48,13 @@ class StubUserRepository extends UserRepository {
   }
 
   override revokeSessions(_input: TakeDownInput): Promise<number> {
+    throw new Error('not used')
+  }
+
+  override listListeningHistory(
+    _userId: string,
+    _page: number,
+  ): Promise<Page<ListeningHistoryEntry>> {
     throw new Error('not used')
   }
 }

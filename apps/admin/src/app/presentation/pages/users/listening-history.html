@@ -1,0 +1,48 @@
+<div class="space-y-3">
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No listening history recorded yet."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Listening history, newest first
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Track</th>
+            <th hlmTh scope="col">Artist</th>
+            <th hlmTh scope="col">Listened</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (entry of collection.items(); track entry.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a [routerLink]="['/catalog', entry.trackId]" class="hover:underline">{{
+                  entry.trackTitle
+                }}</a>
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ entry.artistUsername }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ entry.listenedAt | date: 'dd.MM.yyyy HH:mm' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</div>

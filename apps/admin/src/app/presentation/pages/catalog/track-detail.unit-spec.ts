@@ -29,6 +29,7 @@ function detail(overrides: Partial<TrackDetail> = {}): TrackDetail {
     title: 'Night Drive',
     artistId: '9f2504e0-4f89-41d3-9a0c-0305e82c3302',
     artistUsername: 'dj-test',
+    coverUrl: null,
     processingStatus: 'READY',
     processingError: null,
     processingAttempts: 1,

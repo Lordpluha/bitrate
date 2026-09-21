@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import {
+  canListen,
   canReprocess,
   canRestoreTrack,
   canTakeDownTrack,
   isTrackStuck,
+  listenableRenditions,
   STUCK_AFTER_MS,
   type Track,
+  type TrackAudioFile,
+  type TrackDetail,
   trackNeedsAttention,
 } from './track'
 
@@ -16,6 +20,7 @@ function track(overrides: Partial<Track> = {}): Track {
     id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
     title: 'Night Drive',
     artistUsername: 'dj-test',
+    coverUrl: null,
     processingStatus: 'PROCESSING',
     processingError: null,
     processingAttempts: 0,
@@ -24,6 +29,30 @@ function track(overrides: Partial<Track> = {}): Track {
     updatedAt: NOW,
     takenDownAt: null,
     createdAt: NOW,
+    ...overrides,
+  }
+}
+
+function audioFile(overrides: Partial<TrackAudioFile> = {}): TrackAudioFile {
+  return {
+    id: `file-${overrides.format ?? 'cmaf'}-${overrides.bitrate ?? 128}`,
+    format: 'cmaf',
+    bitrate: 128,
+    codec: 'mp4a.40.2',
+    size: 1024,
+    ...overrides,
+  }
+}
+
+function trackDetail(overrides: Partial<TrackDetail> = {}): TrackDetail {
+  return {
+    ...track({ processingStatus: 'READY' }),
+    artistId: '9b2e1c4a-7d6f-4e3a-8c21-5f0a1b2c3d4e',
+    audioFiles: [audioFile()],
+    artists: [],
+    genres: [],
+    albums: [],
+    openReportCount: 0,
     ...overrides,
   }
 }
@@ -118,5 +147,65 @@ describe('canRestoreTrack', () => {
     const decision = canRestoreTrack(track())
 
     expect(decision).toEqual({ allowed: false, reason: expect.stringContaining('not taken down') })
+  })
+})
+
+describe('canListen', () => {
+  it('allows a READY track with a CMAF rendition', () => {
+    expect(canListen(trackDetail())).toEqual({ allowed: true })
+  })
+
+  it('still allows a taken-down track, so an operator can review what was reported', () => {
+    expect(canListen(trackDetail({ takenDownAt: NOW })).allowed).toBe(true)
+  })
+
+  it.each(['PROCESSING', 'FAILED'] as const)('refuses a %s track with a reason', (status) => {
+    const decision = canListen(trackDetail({ processingStatus: status }))
+
+    expect(decision).toEqual({
+      allowed: false,
+      reason: expect.stringContaining('has not finished processing'),
+    })
+  })
+
+  it('refuses a READY track whose only renditions are Opus and HLS', () => {
+    const decision = canListen(
+      trackDetail({
+        audioFiles: [audioFile({ format: 'opus', bitrate: 320 }), audioFile({ format: 'hls' })],
+      }),
+    )
+
+    expect(decision).toEqual({
+      allowed: false,
+      reason: expect.stringContaining('has no playable rendition'),
+    })
+  })
+
+  it('refuses a READY track with no renditions at all', () => {
+    expect(canListen(trackDetail({ audioFiles: [] })).allowed).toBe(false)
+  })
+})
+
+describe('listenableRenditions', () => {
+  it('keeps only CMAF renditions, highest bitrate first', () => {
+    const detail = trackDetail({
+      audioFiles: [
+        audioFile({ bitrate: 128 }),
+        audioFile({ bitrate: 320 }),
+        audioFile({ format: 'opus', bitrate: 320 }),
+        audioFile({ bitrate: 192 }),
+      ],
+    })
+
+    const renditions = listenableRenditions(detail)
+
+    expect(renditions.map((file) => file.bitrate)).toEqual([320, 192, 128])
+    expect(renditions.every((file) => file.format === 'cmaf')).toBe(true)
+  })
+
+  it('is empty when the track has no CMAF rendition', () => {
+    const detail = trackDetail({ audioFiles: [audioFile({ format: 'opus', bitrate: 320 })] })
+
+    expect(listenableRenditions(detail)).toEqual([])
   })
 })
