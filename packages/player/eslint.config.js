@@ -40,8 +40,15 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.svelte'],
+    /**
+     * `.svelte.ts`/`.svelte.js` modules (runes usable outside a `.svelte` file, e.g.
+     * `player-state.svelte.ts`) hit the same `eslint-plugin-svelte` base config block as
+     * `.svelte` files and need the same TypeScript-parser override — without it, TS-only
+     * syntax like an inline `type` import specifier fails to parse. See the `svelte` skill.
+     */
+    files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
     languageOptions: {
+      globals: globals.browser,
       parserOptions: {
         parser: tseslint.parser,
       },
