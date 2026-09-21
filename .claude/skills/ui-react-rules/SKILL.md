@@ -21,7 +21,7 @@ win.
 - Component barrel: `packages/ui-react/src/components/ui/index.ts`
 - Package barrel: `packages/ui-react/src/index.ts`
 - Class helper: `cn` from `packages/ui-react/src/lib/utils.ts`
-- Primitive library: Base UI (`@base-ui-components/react`)
+- Primitive library: Base UI (`@base-ui/react`)
 - Consumer import: `import { Button } from '@bitrate/ui-react'`
 - Raw source art: `packages/ui-react/assets/` — `icons/` (SVG the svgr plugin compiles into
   `src/icons/svgr/` on `pnpm build`) and `images/` (raster files stories import as

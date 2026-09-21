@@ -30,6 +30,17 @@
       "Bash(gh repo view*)",
       "Bash(gh auth status*)",
       "Bash(gh api -X GET *)",
+      "Bash(gh run list*)",
+      "Bash(gh run view*)",
+      "Bash(gh pr checks*)",
+      "Bash(gh pr diff*)",
+      "Bash(flatpak-spawn --host gh run list*)",
+      "Bash(flatpak-spawn --host gh run view*)",
+      "Bash(flatpak-spawn --host gh pr checks*)",
+      "Bash(flatpak-spawn --host gh pr diff*)",
+      "Bash(.claude/scripts/auto/br-pr.sh create*)",
+      "Bash(.claude/scripts/auto/br-pr.sh update*)",
+      "Bash(.claude/scripts/auto/br-pr.sh comment*)",
       "Bash(.claude/scripts/auto/br-worktree.sh *)",
       "Bash(.claude/scripts/auto/br-pr.sh state*)",
       "Bash(.claude/scripts/auto/br-pr.sh notes*)",
@@ -185,5 +196,6 @@
   },
   "enabledPlugins": {
     "mattpocock-skills@claude-plugins-official": true
-  }
+  },
+  "enableAllProjectMcpServers": true
 }

@@ -1,6 +1,15 @@
 ---
 name: testing
 description: Compact router across this repo's three test stacks — Jest (apps/api), Vitest (apps/web-player, packages/ui-react), and Playwright (E2E + screenshots). States which stack owns which surface/suffix; each stack's full conventions, patterns, and commands live in its own skill. Use whenever writing, running, or reviewing any *.unit-spec/*.int-spec/*.e2e-spec/*.snapshot-spec/*.screenshot-spec file, or deciding which test layer a change needs.
+globs:
+  - "**/*.unit-spec.*"
+  - "**/*.int-spec.*"
+  - "**/*.snapshot-spec.*"
+  - "**/*.screenshot-spec.*"
+  - "**/*.e2e-spec.*"
+  - "**/*.spec.ts"
+  - "apps/*/tests/**"
+  - "apps/api/test/**"
 metadata:
   version: "1.0.0"
   type: reference

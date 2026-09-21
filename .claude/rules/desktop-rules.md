@@ -1,6 +1,8 @@
 ---
 name: desktop-rules
 description: Tauri 2 + React/Vite rules for apps/desktop — what does not transfer from the web player, the Rust/renderer command boundary and typed invoke wrappers, the capabilities permission model, and the disabled CSP that must be set before this app ships. Use whenever writing or reviewing a file under apps/desktop/, adding a native command, or changing tauri.conf.json or a capability file.
+globs:
+  - "apps/desktop/**"
 license: MIT
 metadata:
   author: lordpluha

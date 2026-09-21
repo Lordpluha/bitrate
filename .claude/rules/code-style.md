@@ -1,6 +1,8 @@
 ---
 name: code-style
 description: How to run and interpret the monorepo's mechanical gates — pnpm lint, pnpm format, pnpm check-types, pnpm knip — and how to fix common Biome/tsc violations. Use before any commit or PR, whenever lint/type-check/build fails, or whenever asked to "fix the lint errors", "why is check-types failing", or "clean up unused exports".
+globs:
+  - "**/*"
 metadata:
   version: "1.0.0"
   type: reference

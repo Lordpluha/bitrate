@@ -1,3 +1,14 @@
+---
+name: admin-rules
+description: Angular 22 operator panel rules for apps/admin — clean-architecture layering (domain/application/infrastructure/presentation), Spartan/Angular conventions, and what does not carry over from the web player. Use whenever writing or reviewing any file under apps/admin/.
+globs:
+  - "apps/admin/**"
+license: MIT
+metadata:
+  author: lordpluha
+  version: "1.0.0"
+---
+
 # Admin rules — apps/admin (Angular 22, operator panel)
 
 Read before writing any file in `apps/admin/`. Pair with the `angular` framework docs; this file
@@ -104,7 +115,7 @@ The boundaries are four `@typescript-eslint/no-restricted-imports` blocks in `es
 one per layer, each listing the path alias **and** a `**/<layer>/**` pattern so a relative path
 cannot slip past. If you change them, prove they still fire the way
 `.claude/rules/code-style.md` demands of the Biome nursery rules: write a file that violates the
-boundary, run `npx eslint` on it, confirm it is reported, then delete it. A boundary rule that
+boundary, run `pnpm --filter @bitrate/admin exec eslint` on it, confirm it is reported, then delete it. A boundary rule that
 silently matches nothing is worse than no rule, because it reads like protection.
 
 ## Adding a screen

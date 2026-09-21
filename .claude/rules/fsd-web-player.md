@@ -1,6 +1,8 @@
 ---
 name: fsd-web-player
 description: Feature-Sliced Design for apps/web-player/src — the layer order imports may flow in, the cross-layer permission matrix, slice anatomy, the public-API barrel rule, and when a primitive should be lifted down the stack. Use whenever adding a file, creating a slice, moving code between slices, or resolving a layer-boundary question in the web player.
+globs:
+  - "apps/web-player/src/**"
 license: MIT
 metadata:
   author: lordpluha

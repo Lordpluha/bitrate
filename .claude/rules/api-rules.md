@@ -1,6 +1,8 @@
 ---
 name: api-rules
 description: NestJS API quick reference for apps/api — module anatomy, the decorators/ Swagger rule, nestjs-zod DTOs, Prisma injection, BullMQ queues, guards, and HttpException error handling. Use whenever writing or reviewing a controller, service, module, guard, DTO, or Swagger decorator under apps/api/, or whenever asked to add an endpoint, queue job, or auth guard to the API.
+globs:
+  - "apps/api/**"
 metadata:
   version: "1.0.0"
   type: reference

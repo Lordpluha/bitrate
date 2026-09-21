@@ -1,6 +1,10 @@
 ---
 name: commit-style
 description: Conventional Commits without a ticket prefix — the type and scope vocabulary, summary rules, when a change needs a changeset and which bump it gets, branch naming, and the mechanical enforcement through commitlint and Lefthook. Use whenever composing a commit message, naming a branch, or deciding whether a change needs a changeset.
+globs:
+  - ".changeset/**"
+  - "commitlint.config.js"
+  - ".cz-config.js"
 license: MIT
 metadata:
   author: lordpluha

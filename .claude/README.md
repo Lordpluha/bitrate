@@ -129,7 +129,7 @@ agent round-trip for a task small enough that dispatch is pure overhead.
 | Path | Purpose |
 |------|---------|
 | `TOKEN_BUDGET.md` | Token-saving workflow for Claude Code: current-session commands, narrow scope, short logs. |
-| `rules/` | Project convention docs, one file per concern. Read by agents and humans. |
+| `rules/` | Project convention docs, one file per concern. Read by agents and humans. Each file's frontmatter carries `globs:` — the paths that rule governs; the Rule Index in `CLAUDE.md` mirrors them in its **Paths** column. Match the files you are touching against those globs and read only the rules that hit. An empty `globs: []` means the rule has no path scope and applies at commit or PR time. |
 | `skills/` | Workflow/tool skills only. |
 | `agents/` | Eleven named specialists: `br-planner`, `br-frontend-developer`, `br-backend-developer`, `br-mobile-developer`, `br-desktop-developer`, `br-debugger`, `br-tester`, `br-reviewer`, `br-devops` (`/br-implement`); `br-worker` (`/br-auto`); `br-librarian` (`/br-sync-docs`). |
 | `scripts/auto/` | `br-worktree.sh` and `br-pr.sh` — the worktree/branch lifecycle and `gh` wrapper the `/br-auto` pipeline is built on. |

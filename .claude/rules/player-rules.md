@@ -1,3 +1,14 @@
+---
+name: player-rules
+description: Svelte 5 custom-element rules for packages/player — the <bitrate-player> element, its three subpath exports, the contract/engine split, and how consumers embed it. Use whenever writing or reviewing any file under packages/player/.
+globs:
+  - "packages/player/**"
+license: MIT
+metadata:
+  author: lordpluha
+  version: "1.0.0"
+---
+
 # Player rules — packages/player (Svelte 5 custom element)
 
 Read before writing any file in `packages/player/`. Pair with the `svelte` skill, which covers
@@ -7,14 +18,14 @@ Svelte 5 framework mechanics; this file is project law. The decision behind the 
 ## What this package is
 
 The audio player, extracted from `apps/web-player` into a standalone package that compiles to
-the `<bitrate-player>` custom element (Web Component). It is **planned** to be consumed at
-build time by `apps/web-player` (Next.js App Router), `apps/admin` (Angular), `apps/web-artists`
-(TanStack Start), and — through an iframe embed, deployed independently of the other three —
-by third parties; ADR-0039's E0 stage delivers only the package skeleton, its tooling, and its
-enforced internal boundaries, with no real UI and no consumer wired up yet (see the ADR's
-"Consequences"). One package, three subpath exports, one framework: Svelte 5. The playback
-engine itself is plain TypeScript, not Svelte, and lives inside this same package rather than
-being extracted to its own — see "The engine stays TypeScript" below.
+the `<bitrate-player>` custom element (Web Component). It is consumed at build time by
+`apps/admin` (Angular) as of ADR-0039's E1 stage, and **planned** to be consumed the same way
+by `apps/web-player` (Next.js App Router) and `apps/web-artists` (TanStack Start), plus —
+through an iframe embed, deployed independently of the other three — by third parties; see
+the ADR's "Consequences" and its E1 status update. One package, three subpath exports, one
+framework: Svelte 5. The playback engine itself is plain TypeScript, not Svelte, and lives
+inside this same package rather than being extracted to its own — see "The engine stays
+TypeScript" below.
 
 ## What does NOT apply here
 
@@ -43,7 +54,7 @@ first-party UI.
 
 ```
 packages/player/
-  src/engine/index.ts    framework-free playback engine — plain TypeScript, empty until E1
+  src/engine/index.ts    framework-free playback engine — plain TypeScript, implemented in E1
   src/contract/index.ts  types, event names, a thin client, the React JSX augmentation
   src/element/index.ts   the <bitrate-player> element — guarded define + defineBitratePlayer()
   src/index.ts           default entry — re-exports element/index.ts (registers on import)
@@ -93,8 +104,7 @@ scanner's own unit spec on the equivalent string: `import { a } from '../element
 
 ## The engine takes an injected transport — no host globals
 
-`src/engine/index.ts` is empty in E0 and filled in E1, but the constraint is fixed now: the
-engine never reads a host global directly — no `process.env`, no `NEXT_PUBLIC_*`, no
+`src/engine/index.ts` is implemented (E1); the engine never reads a host global directly — no `process.env`, no `NEXT_PUBLIC_*`, no
 `import.meta.env`, no `window` feature-detection baked in at the top level. It receives
 whatever it needs — a fetch implementation, a base URL, a logger — through constructor/factory
 injection from the host. Three consuming apps (Next.js, Angular, TanStack Start on Nitro) each

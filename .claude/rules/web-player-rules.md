@@ -1,6 +1,8 @@
 ---
 name: web-player-rules
 description: Next.js App Router + FSD quick reference for apps/web-player — layer anatomy, the openapi-fetch/React Query API client, Zustand state, Server vs Client components, and the ROUTES routing convention. Use whenever writing or reviewing a component, hook, store, or route file under apps/web-player/src/, or whenever asked to add a page, feature, or piece of client state to the web player.
+globs:
+  - "apps/web-player/src/**"
 metadata:
   version: "1.0.0"
   type: reference

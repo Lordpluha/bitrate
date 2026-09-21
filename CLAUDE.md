@@ -38,9 +38,9 @@ Main apps:
 - `apps/web-artists` — TanStack Start artist-facing frontend (Vite + Nitro, FSD).
 - `apps/admin` — Angular 22 operator panel (zoneless SPA, spartan-ng, ESLint not Biome).
 - `packages/ui-react` — shared React component library, Tailwind v4, Base UI, shadcn-style components.
-- `packages/player` — Svelte 5 package compiling to the `<bitrate-player>` custom element,
-  planned to be consumed by web-player, admin, web-artists, and third parties via an iframe
-  embed (see ADR-0039; no app consumes it yet as of the E0 package skeleton).
+- `packages/player` — Svelte 5 package compiling to the `<bitrate-player>` custom element.
+  Consumed by `apps/admin` as of ADR-0039's E1 stage; still planned for web-player,
+  web-artists, and third parties via an iframe embed.
 - `packages/contracts` — generated OpenAPI TypeScript types.
 - `packages/ui-react` also owns the design system: the Tailwind `@theme` layers are written
   by hand in `src/styles/` — there is no token generator and no `tokens.json`.
@@ -60,28 +60,33 @@ each — so a scan of it (cheap: titles + one-liners, not full file contents) ne
 applicable rule. Read the row's file in full only when its scope actually applies to the
 current task; do not read every row's target file up front.
 
-| Scope | Read |
-|---|---|
-| **Any change under `apps/`/`packages/` (read first)** | `.claude/rules/project-conventions.md` |
-| API module/controller/service/DTO/guard/error patterns | `.claude/rules/api-rules.md` |
-| web-player component/hook/store/route | `.claude/rules/web-player-rules.md` |
-| web-player — deep FSD layer/slice-anatomy/public-API rules | `.claude/rules/fsd-web-player.md` |
-| `apps/admin` — Angular 22 operator panel | `.claude/rules/admin-rules.md` |
-| `apps/mobile` — React Native + Expo | `.claude/rules/mobile-rules.md` |
-| `apps/desktop` — Tauri 2 + React/Vite | `.claude/rules/desktop-rules.md` |
-| `packages/player` — Svelte 5 `<bitrate-player>` custom element | `.claude/rules/player-rules.md` |
-| Any test (API Jest, web-player/ui-react Vitest, Playwright E2E/screenshots) | `.claude/rules/testing.md` (routes to the `jest`/`vitest`/`playwright` skills) |
-| ui-react/shadcn primitives | the `ui-react-rules` skill (project overrides) + the `shadcn` skill (generic reference) |
-| React components — deep hooks/state/a11y/routing conventions | `.claude/rules/react.md` |
-| TypeScript — named types, no `any`, imports, file naming, TSDoc | `.claude/rules/typescript.md` |
-| Styling — Tailwind v4, tokens, CVA, `cn()` | `.claude/rules/styling.md` |
-| Forms — React Hook Form + Zod | `.claude/rules/forms.md` |
-| SOLID/DRY/KISS, component size/props/decomposition limits | `.claude/rules/code-principles.md` |
-| Monorepo topology, Turborepo/pnpm scripts, env vars | `.claude/rules/monorepo.md` |
-| lint/type/format/knip failures; memory budget for verification runs | `.claude/rules/code-style.md` |
-| Commit message / branch naming | `.claude/rules/commit-style.md` |
-| Mechanical review checklist before opening/updating a PR | `.claude/rules/architecture-checklist.md` |
-| codebase exploration, working notes, decisions, GitHub ticket/board sync | `.claude/rules/knowledge-base.md` |
+| Scope | Paths | Read |
+|---|---|---|
+| **Any change under `apps/`/`packages/` (read first)** | `apps/**`, `packages/**` | `.claude/rules/project-conventions.md` |
+| API module/controller/service/DTO/guard/error patterns | `apps/api/**` | `.claude/rules/api-rules.md` |
+| web-player component/hook/store/route | `apps/web-player/src/**` | `.claude/rules/web-player-rules.md` |
+| web-player — deep FSD layer/slice-anatomy/public-API rules | `apps/web-player/src/**` | `.claude/rules/fsd-web-player.md` |
+| `apps/admin` — Angular 22 operator panel | `apps/admin/**` | `.claude/rules/admin-rules.md` |
+| `apps/mobile` — React Native + Expo | `apps/mobile/**` | `.claude/rules/mobile-rules.md` |
+| `apps/desktop` — Tauri 2 + React/Vite | `apps/desktop/**` | `.claude/rules/desktop-rules.md` |
+| `packages/player` — Svelte 5 `<bitrate-player>` custom element | `packages/player/**` | `.claude/rules/player-rules.md` |
+| Any test (API Jest, web-player/ui-react Vitest, Playwright E2E/screenshots) | `**/*-spec.*`, `apps/api/test/**` | `.claude/rules/testing.md` (routes to the `jest`/`vitest`/`playwright` skills) |
+| ui-react/shadcn primitives | `packages/ui-react/**` | the `ui-react-rules` skill (project overrides) + the `shadcn` skill (generic reference) |
+| React components — deep hooks/state/a11y/routing conventions | `apps/web-player/src/**/*.tsx`, `packages/ui-react/src/**/*.tsx` | `.claude/rules/react.md` |
+| TypeScript — named types, no `any`, imports, file naming, TSDoc | `apps/**/*.ts(x)`, `packages/**/*.ts(x)` | `.claude/rules/typescript.md` |
+| Styling — Tailwind v4, tokens, CVA, `cn()` | `**/*.tsx`, `**/*.css` | `.claude/rules/styling.md` |
+| Forms — React Hook Form + Zod | `apps/web-player/src/**/*.tsx` | `.claude/rules/forms.md` |
+| SOLID/DRY/KISS, component size/props/decomposition limits | `apps/**/*.tsx`, `packages/**/*.tsx` | `.claude/rules/code-principles.md` |
+| Monorepo topology, Turborepo/pnpm scripts, env vars | `package.json`, `turbo.json`, `pnpm-workspace.yaml`, `Taskfile.yml`, `infra/**` | `.claude/rules/monorepo.md` |
+| lint/type/format/knip failures; memory budget for verification runs | `**/*` | `.claude/rules/code-style.md` |
+| Commit message / branch naming | `.changeset/**`, commit message | `.claude/rules/commit-style.md` |
+| Mechanical review checklist before opening/updating a PR | — (PR-time) | `.claude/rules/architecture-checklist.md` |
+| codebase exploration, working notes, decisions, GitHub ticket/board sync | — (exploration/tickets) | `.claude/rules/knowledge-base.md` |
+
+The **Paths** column mirrors the `globs:` field in each rule file's frontmatter — the
+authoritative copy lives there. Match the files you are about to touch against it and read
+only the rules whose globs those files hit; a row with `—` has no path scope and applies at
+commit or PR time instead.
 
 `/br-implement` reads this whole table (not each target file) as its mandatory first step —
 see each developer agent's Step 0, e.g. `.claude/agents/br-frontend-developer.md`.
@@ -125,6 +130,21 @@ never misses one.
 | Codebase graph / exploration | `graphify` | `knowledge-base.md` |
 | UI design, audit, polish | `impeccable`, `web-design-guidelines` | `styling.md` |
 | Documentation prose | `writing-guidelines` | — |
+
+## MCP servers
+
+`.mcp.json` wires six project-scoped servers; `.claude/settings.json` sets
+`enableAllProjectMcpServers`, so they start without a per-session prompt. All six are
+optional — if one fails to start, fall back to the CLI or UI it wraps.
+
+| Server | Command | Use it for |
+| --- | --- | --- |
+| `shadcn` | `pnpm dlx shadcn@latest mcp` | Registry search and component install before hand-rolling UI — pairs with the `shadcn` and `ui-react-rules` skills. |
+| `playwright` | `pnpm dlx @playwright/mcp@latest` | Driving a real browser for E2E and screenshot work in `apps/web-player` / `apps/web-artists`. |
+| `chrome-devtools` | `pnpm dlx chrome-devtools-mcp@latest` | Network, console and performance traces on a running page — CMAF/MSE playback debugging. |
+| `prisma` | `pnpm --filter @bitrate/api exec prisma mcp` | Schema and migration work in `apps/api`; runs in that workspace so `prisma.config.ts` and its env loading apply. |
+| `storybook` | `http://localhost:6006/mcp` | The ui-kit catalogue: which components, variants and stories already exist. Served by `@storybook/addon-mcp` — needs `pnpm --filter @bitrate/ui-react storybook` running, otherwise the server is simply absent. |
+| `sentry` | `https://mcp.sentry.dev/mcp` | Issues, stack traces and releases for the API and web player. Remote server, OAuth on first use — no token in the repo. |
 
 ## Commands
 
@@ -309,6 +329,11 @@ or via `flatpak-spawn --host` (see "Sandbox" above).
   cross-slice imports go through public `index.ts` barrels.
 - API: controllers are thin, Prisma lives in services, Swagger decorators live in
   `decorators/`, not inline in controllers.
+- UI: **use the existing components from the ui-kit** (`@bitrate/ui-react`) — search its
+  exports (and `.claude/templates/ui-kit/` for the scaffold) before writing any new
+  component; add a new one only when nothing there fits, and put it in the ui-kit rather
+  than inside an app. Query the catalogue through the `storybook` MCP server, or the
+  `shadcn` MCP registry for a primitive the kit does not have yet.
 - UI: no hardcoded hex colors; use token-backed Tailwind utilities and `cn()` from
   `@bitrate/ui-react`.
 - Routes: use `ROUTES`, not inline path strings.

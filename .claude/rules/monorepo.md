@@ -1,6 +1,14 @@
 ---
 name: monorepo
 description: Turborepo + pnpm topology and cross-package tooling — the workspace layout, why pnpm only, the root script table and what each gate actually enforces, the Taskfile as the single Docker interface, asset pipelines, cross-package imports, and environment variables. Use whenever adding a workspace, changing a root script or turbo.json, running the Docker/database workflows, or asking where something lives.
+globs:
+  - "package.json"
+  - "pnpm-workspace.yaml"
+  - "turbo.json"
+  - "Taskfile.yml"
+  - "apps/*/package.json"
+  - "packages/*/package.json"
+  - "infra/**"
 license: MIT
 metadata:
   author: lordpluha
