@@ -1,4 +1,4 @@
-import { Tooltip as TooltipPrimitive } from '@base-ui-components/react'
+import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip'
 import { type ComponentProps, isValidElement } from 'react'
 
 import { cn } from '@/lib/utils'
