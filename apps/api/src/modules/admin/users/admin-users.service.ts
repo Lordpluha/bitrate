@@ -1,4 +1,4 @@
-import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
+import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
@@ -105,6 +105,47 @@ export class AdminUsersService {
         reportsFiled: reportsFiledCount,
         activeSessions: activeSessionCount,
       },
+    }
+  }
+
+  /**
+   * Runs the list listening history operation, newest first. Deliberately does not filter
+   * `deletedAt` — a deactivated listener's history stays reachable, matching {@link findById}.
+   * An empty history is a valid empty page, not a 404; a missing user is.
+   */
+  async findListeningHistory(
+    id: string,
+    { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT }: PaginationInput,
+  ) {
+    const existing = await this.prisma.user.findFirst({ where: { id } })
+    if (!existing) throw new UserNotFoundException(id)
+
+    const [rows, total] = await Promise.all([
+      this.prisma.listeningHistory.findMany({
+        where: { userId: id },
+        select: {
+          id: true,
+          listenedAt: true,
+          track: { select: { id: true, title: true, artist: { select: { username: true } } } },
+        },
+        orderBy: [{ listenedAt: 'desc' }, { id: 'desc' }],
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.listeningHistory.count({ where: { userId: id } }),
+    ])
+
+    return {
+      data: rows.map((row) => ({
+        id: row.id,
+        listenedAt: row.listenedAt,
+        trackId: row.track.id,
+        trackTitle: row.track.title,
+        artistUsername: row.track.artist.username,
+      })),
+      total,
+      page,
+      limit,
     }
   }
 

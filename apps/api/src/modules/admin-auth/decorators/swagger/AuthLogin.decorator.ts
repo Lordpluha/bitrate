@@ -1,13 +1,13 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { LoginDto } from '../../dtos'
+import { AdminLoginDto } from '../../dtos'
 
 /** Runs the auth login swagger operation. */
 export function AuthLoginSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Staff login' }),
     ApiConsumes('application/json'),
-    ApiBody({ type: LoginDto }),
+    ApiBody({ type: AdminLoginDto }),
     ApiResponse({
       status: HttpStatus.CREATED,
       description: 'Logged in — sets access_token and refresh_token cookies, no body.',

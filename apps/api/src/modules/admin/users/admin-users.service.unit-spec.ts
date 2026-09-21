@@ -145,6 +145,63 @@ describe('AdminUsersService', () => {
     })
   })
 
+  describe('findListeningHistory', () => {
+    it('throws UserNotFoundException when the user does not exist', async () => {
+      prisma.user.findFirst.mockResolvedValue(null)
+
+      await expect(service.findListeningHistory('missing', {})).rejects.toThrow(
+        UserNotFoundException,
+      )
+    })
+
+    it('returns an empty page for a user with no history — not a 404', async () => {
+      prisma.user.findFirst.mockResolvedValue(buildUser() as never)
+      prisma.listeningHistory.findMany.mockResolvedValue([] as never)
+      prisma.listeningHistory.count.mockResolvedValue(0)
+
+      const result = await service.findListeningHistory('user-1', {})
+
+      expect(result).toEqual({ data: [], total: 0, page: 1, limit: 20 })
+    })
+
+    it('flattens each row to its track identity, newest first', async () => {
+      prisma.user.findFirst.mockResolvedValue(buildUser() as never)
+      prisma.listeningHistory.findMany.mockResolvedValue([
+        {
+          id: 'lh-1',
+          listenedAt: new Date('2026-09-17T00:00:00.000Z'),
+          track: { id: 'track-1', title: 'Track One', artist: { username: 'artist-one' } },
+        },
+      ] as never)
+      prisma.listeningHistory.count.mockResolvedValue(1)
+
+      const result = await service.findListeningHistory('user-1', { page: 2, limit: 5 })
+
+      expect(result).toEqual({
+        data: [
+          {
+            id: 'lh-1',
+            listenedAt: new Date('2026-09-17T00:00:00.000Z'),
+            trackId: 'track-1',
+            trackTitle: 'Track One',
+            artistUsername: 'artist-one',
+          },
+        ],
+        total: 1,
+        page: 2,
+        limit: 5,
+      })
+      expect(prisma.listeningHistory.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { userId: 'user-1' },
+          skip: 5,
+          take: 5,
+          orderBy: [{ listenedAt: 'desc' }, { id: 'desc' }],
+        }),
+      )
+    })
+  })
+
   describe('softDelete', () => {
     it('throws UserNotFoundException when the user does not exist', async () => {
       prisma.user.findFirst.mockResolvedValue(null)

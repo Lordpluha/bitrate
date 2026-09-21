@@ -1,14 +1,23 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  getSchemaPath,
+} from '@nestjs/swagger'
 
-import { LoginDto } from '../../dtos'
+import { ArtistLoginDto } from '../../dtos'
+import { TwoFactorRequiredEntity } from '../../entities'
 
 /** Runs the auth login swagger operation. */
 export function AuthLoginSwagger() {
   return applyDecorators(
+    ApiExtraModels(TwoFactorRequiredEntity),
     ApiOperation({ summary: 'Artist login' }),
     ApiConsumes('application/json'),
-    ApiBody({ type: LoginDto }),
+    ApiBody({ type: ArtistLoginDto }),
     ApiResponse({
       status: HttpStatus.CREATED,
       description:
@@ -26,6 +35,7 @@ export function AuthLoginSwagger() {
       },
       content: {
         'application/json': {
+          schema: { $ref: getSchemaPath(TwoFactorRequiredEntity) },
           examples: {
             twoFactorRequired: {
               summary: '2FA required',

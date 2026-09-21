@@ -1857,6 +1857,47 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/artists/{id}/tracks': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the list artist tracks operation. Permission is `artists:read` — this is a sub-view of
+     *     the artist detail page (the same permission that already backs its `counts.tracks`), not
+     *     the global track-management surface behind `tracks:read`.
+     */
+    get: operations['AdminArtistsController_listTracks_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/artists/{id}/albums': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the list artist albums operation. Permission is `artists:read`, for the same reason
+     *     as {@link listTracks}.
+     */
+    get: operations['AdminArtistsController_listAlbums_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/artists/{id}/verification': {
     parameters: {
       query?: never
@@ -1938,6 +1979,23 @@ export interface paths {
     post?: never
     /** Runs the soft-delete operation. */
     delete: operations['AdminUsersController_remove_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/users/{id}/listening-history': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list listening history operation. */
+    get: operations['AdminUsersController_listListeningHistory_v1']
+    put?: never
+    post?: never
+    delete?: never
     options?: never
     head?: never
     patch?: never
@@ -2256,6 +2314,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/overview/series': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the get overview series operation.
+     * @description Zero-filled daily series over a trailing window of UTC calendar days, defaulting to 30 and capped at 365.
+     */
+    get: operations['AdminOverviewController_getSeries_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -2309,14 +2387,26 @@ export interface components {
       /** @description Whether two-factor authentication is switched on. */
       twoFactorEnabled: boolean
     }
-    LoginDto: {
+    TwoFactorRequiredEntity: {
       /**
-       * @description Staff email
-       * @example ops@bitrate.app
+       * @description Always true — signals the client must complete the 2FA challenge.
+       * @example true
+       */
+      requires2fa: boolean
+      /**
+       * @description Short-lived token identifying the pending login, submitted with the 2FA code.
+       * @example eyJhbGciOiJIUzI1NiJ9...
+       */
+      pendingToken: string
+    }
+    UserLoginDto: {
+      /**
+       * @description User email
+       * @example user@example.com
        */
       email: string
       /**
-       * @description Staff password
+       * @description User password
        * @example password123
        */
       password: string
@@ -2363,6 +2453,18 @@ export interface components {
     ResendEmailVerificationDto: {
       /** Format: email */
       email: string
+    }
+    UserTwoFactorSetupEntity: {
+      /**
+       * @description Base64 data URL of a QR code encoding the TOTP enrollment URI, ready to render in an `<img>`.
+       * @example data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
+       */
+      qrCodeDataUrl: string
+      /**
+       * @description The raw TOTP secret, for manual entry when the user cannot scan the QR code.
+       * @example JBSWY3DPEHPK3PXP
+       */
+      manualCode: string
     }
     TwoFactorCodeDto: {
       /**
@@ -2552,7 +2654,89 @@ export interface components {
       /** @description Social profile metadata. */
       socials: Record<string, never> | null
     }
-    Function: Record<string, never>
+    UpdateArtistDto: {
+      /** @description The username value. */
+      username?: string
+      /** @description The bio value. */
+      bio?: string
+      /** @description The avatar value. */
+      avatar?: string
+      /** @description The background image value. */
+      backgroundImage?: string
+    }
+    ArtistFollowersCountEntity: {
+      /** @description The artist's current follower count. */
+      followers: number
+    }
+    FollowedArtistEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The username value. */
+      username: string
+      /** @description The bio value. */
+      bio: string | null
+      /** @description The avatar value. */
+      avatar: string | null
+      /** @description The background image value. */
+      backgroundImage: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description Whether the artist profile is verified. */
+      verified: boolean
+      /** @description Cached monthly listener count. */
+      monthlyListeners: number
+      /** @description Artist country code. */
+      country: string | null
+      /** @description Social profile metadata. */
+      socials: Record<string, never> | null
+      /** @description Aggregate counters for this artist. */
+      _count: components['schemas']['ArtistFollowersCountEntity']
+      /**
+       * Format: date-time
+       * @description When the current user started following this artist.
+       */
+      followedAt: string
+    }
+    ArtistWithFollowersCountEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The username value. */
+      username: string
+      /** @description The bio value. */
+      bio: string | null
+      /** @description The avatar value. */
+      avatar: string | null
+      /** @description The background image value. */
+      backgroundImage: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description Whether the artist profile is verified. */
+      verified: boolean
+      /** @description Cached monthly listener count. */
+      monthlyListeners: number
+      /** @description Artist country code. */
+      country: string | null
+      /** @description Social profile metadata. */
+      socials: Record<string, never> | null
+      /** @description Aggregate counters for this artist. */
+      _count: components['schemas']['ArtistFollowersCountEntity']
+    }
     TrackEntity: {
       /** @description The id value. */
       id: string
@@ -2747,6 +2931,145 @@ export interface components {
        */
       deletedAt: string | null
     }
+    PlaylistTrackEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The audio url value. */
+      audioUrl: string
+      /** @description The cover value. */
+      cover: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /** @description The artist id value. */
+      artistId: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description The duration value. */
+      duration: number | null
+      /**
+       * Format: date-time
+       * @description The release date value.
+       */
+      releaseDate: string | null
+      /** @description The lyrics value. */
+      lyrics: string | null
+      /**
+       * @description The processing status value.
+       * @enum {string}
+       */
+      processingStatus: 'PROCESSING' | 'READY' | 'FAILED'
+      /** @description The processing error value. */
+      processingError: string | null
+      /** @description The processing attempts value. */
+      processingAttempts: number
+      /**
+       * Format: date-time
+       * @description The processing started at value.
+       */
+      processingStartedAt: string | null
+      /**
+       * Format: date-time
+       * @description The processing finished at value.
+       */
+      processingFinishedAt: string | null
+      /** @description 1 = legacy HLS pipeline, 2 = single-file CMAF + Range index (ADR-0020). */
+      playbackVersion: number
+      /** @description Fragment timescale shared by every CMAF rendition; null on legacy tracks. */
+      fragmentTimescale: number | null
+      /** @description Track duration in fragment ticks; null on legacy tracks. */
+      durationTicks: number | null
+      /** @description Whether the track contains explicit content. */
+      explicit: boolean
+      /** @description Popularity score used by discovery and charts. */
+      popularity: number
+      /** @description Number of recorded plays. */
+      playCount: number
+      /** @description International Standard Recording Code. */
+      isrc: string | null
+      /** @description Optional short preview URL. */
+      previewUrl: string | null
+      /** @description Position within an album disc. */
+      trackNumber: number | null
+      /** @description Disc number within an album. */
+      discNumber: number
+      /** @description ISO language code when known. */
+      language: string | null
+      /**
+       * Format: date-time
+       * @description Soft deletion timestamp.
+       */
+      deletedAt: string | null
+      /** @description The id of the row joining this track to the playlist. */
+      playlistTrackId: string
+      /** @description The track's 1-based position within the playlist. */
+      position: number
+      /**
+       * Format: date-time
+       * @description When the track was added to the playlist.
+       */
+      addedAt: string
+      /** @description The id of the user who added the track, when known. */
+      addedById: string | null
+    }
+    PlaylistOwnerEntity: {
+      /** @description The owning user's id. */
+      id: string
+      /** @description The owning user's username. */
+      username: string
+      /** @description The owning user's avatar URL. */
+      avatar: string | null
+    }
+    PlaylistDetailEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The cover value. */
+      cover: string
+      /** @description The description value. */
+      description: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /** @description The user id value. */
+      userId: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description The is public value. */
+      isPublic: boolean
+      /** @description Whether collaborators may modify the playlist. */
+      collaborative: boolean
+      /** @description Cached number of users following the playlist. */
+      followersCount: number
+      /**
+       * Format: date-time
+       * @description Soft deletion timestamp.
+       */
+      deletedAt: string | null
+      /** @description The playlist's tracks, in position order. */
+      tracks: components['schemas']['PlaylistTrackEntity'][]
+      /** @description The playlist's owner. */
+      user: components['schemas']['PlaylistOwnerEntity']
+    }
+    UpdatePlaylistDto: {
+      /** @description Playlist title */
+      title: string
+      /** @example user123 */
+      description?: string
+    }
     AddTracksDto: {
       /** @description Array of track IDs to add */
       trackIds: string[]
@@ -2826,6 +3149,18 @@ export interface components {
        */
       expiresAt: string
     }
+    ArtistLoginDto: {
+      /**
+       * @description Artist email
+       * @example artist@example.com
+       */
+      email: string
+      /**
+       * @description User password
+       * @example password123
+       */
+      password: string
+    }
     ArtistForgotPasswordDto: {
       /**
        * @description The email value.
@@ -2839,6 +3174,119 @@ export interface components {
     ResendArtistEmailDto: {
       /** Format: email */
       email: string
+    }
+    ArtistTwoFactorSetupEntity: {
+      /**
+       * @description Base64 data URL of a QR code encoding the TOTP enrollment URI, ready to render in an `<img>`.
+       * @example data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
+       */
+      qrCodeDataUrl: string
+      /**
+       * @description The raw TOTP secret, for manual entry when the artist cannot scan the QR code.
+       * @example JBSWY3DPEHPK3PXP
+       */
+      manualCode: string
+    }
+    SearchResultEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The subtitle value. */
+      subtitle: string | null
+      /** @description The image value. */
+      image: string | null
+      /**
+       * @description Which bucket this result came from.
+       * @enum {string}
+       */
+      type: 'tracks' | 'artists' | 'albums' | 'playlists'
+      /** @description Full-text search relevance rank. */
+      rank: number
+      /** @description The owning artist's id, when the result is artist-scoped. */
+      artistId: string | null
+      /** @description The owning user's id, when the result is user-scoped. */
+      ownerId: string | null
+    }
+    SearchResultsByTypeEntity: {
+      /** @description Matching tracks. */
+      tracks: components['schemas']['SearchResultEntity'][]
+      /** @description Matching artists. */
+      artists: components['schemas']['SearchResultEntity'][]
+      /** @description Matching albums. */
+      albums: components['schemas']['SearchResultEntity'][]
+      /** @description Matching playlists. */
+      playlists: components['schemas']['SearchResultEntity'][]
+    }
+    SearchTotalsByTypeEntity: {
+      /** @description Matching track count. */
+      tracks: number
+      /** @description Matching artist count. */
+      artists: number
+      /** @description Matching album count. */
+      albums: number
+      /** @description Matching playlist count. */
+      playlists: number
+    }
+    SearchResponseEntity: {
+      /** @description Results grouped by bucket. */
+      data: components['schemas']['SearchResultsByTypeEntity']
+      /** @description Result count per bucket. */
+      totals: components['schemas']['SearchTotalsByTypeEntity']
+      /** @description Total results across every bucket. */
+      total: number
+      /** @description Current page, shared across every bucket. */
+      page: number
+      /** @description Page size, shared across every bucket. */
+      limit: number
+      /** @description Maximum results returned in each bucket. */
+      limitPerType: number
+      /** @description The single highest-ranked result across every bucket, when any results were found. */
+      topResult: components['schemas']['SearchResultEntity'] | null
+    }
+    HistoryEntryRecordedEntity: {
+      /** @description The id of the new listening history row. */
+      id: string
+      /**
+       * Format: date-time
+       * @description When the listen was recorded.
+       */
+      listenedAt: string
+    }
+    HistoryTrackArtistEntity: {
+      /** @description The artist's id. */
+      id: string
+      /** @description The artist's username. */
+      username: string
+      /** @description The artist's avatar URL. */
+      avatar: string | null
+    }
+    HistoryTrackEntity: {
+      /** @description The track's id. */
+      id: string
+      /** @description The track's title. */
+      title: string
+      /** @description The track's cover URL. */
+      cover: string | null
+      /** @description The track's duration in seconds. */
+      duration: number | null
+      /** @description The owning artist's id. */
+      artistId: string
+      /** @description The owning artist's summary. */
+      artist: components['schemas']['HistoryTrackArtistEntity']
+    }
+    HistoryEntryEntity: {
+      /** @description The id of the most recent listen for this track. */
+      id: string
+      /**
+       * Format: date-time
+       * @description When the track was last listened to.
+       */
+      listenedAt: string
+      /** @description The listened track's id. */
+      trackId: string
+      /** @description The listened track's summary. */
+      track: components['schemas']['HistoryTrackEntity']
     }
     UpdateSettingsDto: {
       language?: string
@@ -2960,6 +3408,18 @@ export interface components {
        * @description The expires at value.
        */
       expiresAt: string
+    }
+    AdminLoginDto: {
+      /**
+       * @description Staff email
+       * @example ops@bitrate.app
+       */
+      email: string
+      /**
+       * @description Staff password
+       * @example password123
+       */
+      password: string
     }
     AdminModerationReportEntity: {
       /** @description The id value. */
@@ -3193,6 +3653,84 @@ export interface components {
       /** @description Activity counts for this artist. */
       counts: components['schemas']['AdminArtistCountsEntity']
     }
+    AdminArtistTrackEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /**
+       * @description The stored cover image's filename, or `null`. See `AdminTrackEntity.cover` for the URL
+       *     convention this follows.
+       */
+      cover?: string | null
+      /**
+       * @description The processing status value.
+       * @enum {string}
+       */
+      processingStatus: 'PROCESSING' | 'READY' | 'FAILED'
+      /** @description Total play count. */
+      playCount: number
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+    }
+    PaginatedAdminArtistTracksEntity: {
+      /** @description The tracks on this page. */
+      data: components['schemas']['AdminArtistTrackEntity'][]
+      /** @description The total number of tracks matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    AdminArtistAlbumEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The stored cover image's filename, or `null`. */
+      cover?: string | null
+      /**
+       * @description The album type value.
+       * @enum {string}
+       */
+      type: 'ALBUM' | 'SINGLE' | 'EP' | 'COMPILATION'
+      /** @description How many tracks the album lists. */
+      totalTracks: number
+      /**
+       * Format: date-time
+       * @description Release date, or `null` if unset.
+       */
+      releaseDate?: string | null
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+    }
+    PaginatedAdminArtistAlbumsEntity: {
+      /** @description The albums on this page. */
+      data: components['schemas']['AdminArtistAlbumEntity'][]
+      /** @description The total number of albums matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
     UpdateArtistVerificationDto: {
       verified: boolean
     }
@@ -3309,6 +3847,31 @@ export interface components {
       /** @description Activity counts for this user. */
       counts: components['schemas']['AdminUserCountsEntity']
     }
+    AdminListeningHistoryEntryEntity: {
+      /** @description The listening-history row's id. */
+      id: string
+      /**
+       * Format: date-time
+       * @description When the listen was recorded.
+       */
+      listenedAt: string
+      /** @description The listened track's id. */
+      trackId: string
+      /** @description The listened track's title. */
+      trackTitle: string
+      /** @description The track's primary artist username. */
+      artistUsername: string
+    }
+    PaginatedAdminListeningHistoryEntity: {
+      /** @description The listening-history rows on this page. */
+      data: components['schemas']['AdminListeningHistoryEntryEntity'][]
+      /** @description The total number of listening-history rows for this user. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
     AdminTrackEntity: {
       /** @description The id value. */
       id: string
@@ -3318,6 +3881,13 @@ export interface components {
       artistId: string
       /** @description The primary artist's display name — avoids an N+1 lookup on the operator screen. */
       artistUsername: string
+      /**
+       * @description The stored cover image's filename (a storage key, not a URL) — e.g. `"abc123.png"`. Public
+       *     covers live under `storage/public/tracks/covers/`, served by the API at
+       *     `/static/tracks/covers/<cover>`; a consumer must build that URL itself. `null` when the
+       *     track has no cover.
+       */
+      cover?: string | null
       /**
        * @description The processing status value.
        * @enum {string}
@@ -3412,6 +3982,13 @@ export interface components {
       artistId: string
       /** @description The primary artist's display name — avoids an N+1 lookup on the operator screen. */
       artistUsername: string
+      /**
+       * @description The stored cover image's filename (a storage key, not a URL) — e.g. `"abc123.png"`. Public
+       *     covers live under `storage/public/tracks/covers/`, served by the API at
+       *     `/static/tracks/covers/<cover>`; a consumer must build that URL itself. `null` when the
+       *     track has no cover.
+       */
+      cover?: string | null
       /**
        * @description The processing status value.
        * @enum {string}
@@ -3989,6 +4566,72 @@ export interface components {
       last7Days: components['schemas']['AdminOverviewLast7DaysEntity']
       /** @description The 10 most recent operator actions, actor resolved. */
       recentActivity: components['schemas']['AdminAuditLogEntity'][]
+    }
+    AdminOverviewUploadsPointEntity: {
+      /** @description The UTC calendar day this point covers, as `YYYY-MM-DD`. */
+      date: string
+      /** @description Tracks created on this day. */
+      uploaded: number
+      /** @description Of those, how many are currently `READY`. */
+      ready: number
+      /** @description Of those, how many are currently `FAILED`. */
+      failed: number
+      /**
+       * @description Of those, how many are currently `PROCESSING` and past the stuck cut (see
+       *     `AdminOverviewTracksEntity.stuckAfterMs`) — evaluated at query time, not at end of day.
+       */
+      stuck: number
+    }
+    AdminOverviewSignupsPointEntity: {
+      /** @description The UTC calendar day this point covers, as `YYYY-MM-DD`. */
+      date: string
+      /** @description New listener accounts created on this day. */
+      listeners: number
+      /** @description New artist accounts created on this day. */
+      artists: number
+    }
+    AdminOverviewListensPointEntity: {
+      /** @description The UTC calendar day this point covers, as `YYYY-MM-DD`. */
+      date: string
+      /** @description Listening-history rows recorded on this day. */
+      count: number
+    }
+    AdminOverviewReportsPointEntity: {
+      /** @description The UTC calendar day this point covers, as `YYYY-MM-DD`. */
+      date: string
+      /** @description Reports filed on this day. */
+      count: number
+    }
+    AdminOverviewReportsByStatusEntity: {
+      /** @description Reports awaiting a first look. */
+      open: number
+      /** @description Reports a moderator has picked up. */
+      reviewing: number
+      /** @description Reports closed with action taken. */
+      resolved: number
+      /** @description Reports closed with no action taken. */
+      rejected: number
+    }
+    AdminOverviewSeriesEntity: {
+      /** @description The oldest day in the window, inclusive, as `YYYY-MM-DD`. */
+      from: string
+      /** @description The newest (today, UTC) day in the window, inclusive, as `YYYY-MM-DD`. */
+      to: string
+      /**
+       * @description How many calendar days the window covers — `uploads`/`signups`/`listens`/`reports` each
+       *     have exactly this many entries.
+       */
+      days: number
+      /** @description Daily uploads, by processing outcome. */
+      uploads: components['schemas']['AdminOverviewUploadsPointEntity'][]
+      /** @description Daily new accounts, by account type. */
+      signups: components['schemas']['AdminOverviewSignupsPointEntity'][]
+      /** @description Daily listens, across every user. */
+      listens: components['schemas']['AdminOverviewListensPointEntity'][]
+      /** @description Daily newly filed moderation reports. */
+      reports: components['schemas']['AdminOverviewReportsPointEntity'][]
+      /** @description The current (not windowed) distribution of every report across its statuses. */
+      reportsByStatus: components['schemas']['AdminOverviewReportsByStatusEntity']
     }
   }
   responses: never
@@ -4816,7 +5459,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['LoginDto']
+        'application/json': components['schemas']['UserLoginDto']
       }
     }
     responses: {
@@ -4828,7 +5471,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': unknown
+          'application/json': components['schemas']['TwoFactorRequiredEntity']
         }
       }
       /** @description Validation error */
@@ -6249,12 +6892,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': {
-            /** @description Base64 data URL of QR code image */
-            qrCodeDataUrl?: string
-            /** @description TOTP secret for manual entry into authenticator app */
-            manualCode?: string
-          }
+          'application/json': components['schemas']['UserTwoFactorSetupEntity']
         }
       }
       /** @description 2FA is already enabled */
@@ -8401,10 +9039,18 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Function']
+        'application/json': components['schemas']['UpdateArtistDto']
       }
     }
     responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SafeArtistEntity']
+        }
+      }
       /** @description Unauthorized */
       401: {
         headers: {
@@ -8755,7 +9401,14 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': {
+            data: components['schemas']['FollowedArtistEntity'][]
+            total: number
+            page: number
+            limit: number
+          }
+        }
       }
       /**
        * @description Unauthorized
@@ -8888,7 +9541,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['ArtistWithFollowersCountEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -9028,7 +9683,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['ArtistWithFollowersCountEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -9915,7 +10572,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'multipart/form-data': components['schemas']['Function']
+        'multipart/form-data': components['schemas']['CreateTrackDto']
       }
     }
     responses: {
@@ -10370,14 +11027,18 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'audio/mp4': string
+        }
       }
       /** @description Requested byte range */
       206: {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'audio/mp4': string
+        }
       }
       /** @description Unauthorized */
       401: {
@@ -10513,7 +11174,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['TrackEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -10653,7 +11316,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['TrackEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -11030,7 +11695,14 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': {
+            data: components['schemas']['PlaylistEntity'][]
+            total: number
+            page: number
+            limit: number
+          }
+        }
       }
       /**
        * @description Unauthorized
@@ -11163,14 +11835,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['PlaylistEntity'] & {
-            tracks?: components['schemas']['TrackEntity'][]
-            user?: {
-              id?: string
-              username?: string
-              avatar?: string | null
-            }
-          }
+          'application/json': components['schemas']['PlaylistDetailEntity']
         }
       }
       /** @description Method not allowed */
@@ -11270,7 +11935,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Function']
+        'application/json': components['schemas']['UpdatePlaylistDto']
       }
     }
     responses: {
@@ -11421,7 +12086,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['PlaylistEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -11565,7 +12232,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['PlaylistDetailEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -11707,7 +12376,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['PlaylistDetailEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -11847,7 +12518,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['PlaylistEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -11989,7 +12662,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['PlaylistEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -12593,7 +13268,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['AlbumEntity']
+        }
       }
       /** @description Unauthorized */
       401: {
@@ -12722,7 +13399,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['AlbumEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -12862,7 +13541,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['AlbumEntity']
+        }
       }
       /**
        * @description Unauthorized
@@ -12987,7 +13668,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['LoginDto']
+        'application/json': components['schemas']['ArtistLoginDto']
       }
     }
     responses: {
@@ -12999,7 +13680,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': unknown
+          'application/json': components['schemas']['TwoFactorRequiredEntity']
         }
       }
       /** @description Validation error */
@@ -13621,13 +14302,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Successfully logged out */
+      /** @description The signed-in artist account */
       200: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['SafeUserEntity']
+          'application/json': components['schemas']['SafeArtistEntity']
         }
       }
       /** @description Unauthorized */
@@ -14177,12 +14858,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': {
-            /** @description Base64 data URL of QR code image */
-            qrCodeDataUrl?: string
-            /** @description TOTP secret for manual entry into authenticator app */
-            manualCode?: string
-          }
+          'application/json': components['schemas']['ArtistTwoFactorSetupEntity']
         }
       }
       /** @description 2FA is already enabled */
@@ -15141,7 +15817,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['SearchResponseEntity']
+        }
       }
       /** @description Method not allowed */
       405: {
@@ -15485,7 +16163,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': components['schemas']['HistoryEntryRecordedEntity']
+        }
       }
       /** @description Unauthorized */
       401: {
@@ -15742,7 +16422,14 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': {
+            data: components['schemas']['HistoryEntryEntity'][]
+            total: number
+            page: number
+            limit: number
+          }
+        }
       }
       /** @description Unauthorized */
       401: {
@@ -18869,7 +19556,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['LoginDto']
+        'application/json': components['schemas']['AdminLoginDto']
       }
     }
     responses: {
@@ -20231,6 +20918,302 @@ export interface operations {
       }
     }
   }
+  AdminArtistsController_listTracks_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'active' | 'deactivated' | 'all'
+      }
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of the artist's tracks */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminArtistTracksEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the artists:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Artist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminArtistsController_listAlbums_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'active' | 'deactivated' | 'all'
+      }
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of the artist's albums */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminArtistAlbumsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the artists:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Artist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   AdminArtistsController_updateVerification_v1: {
     parameters: {
       query?: never
@@ -21133,6 +22116,153 @@ export interface operations {
       }
     }
   }
+  AdminUsersController_listListeningHistory_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+      }
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of the user's listening history */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminListeningHistoryEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the users:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   AdminUsersController_restore_v1: {
     parameters: {
       query?: never
@@ -21904,16 +23034,26 @@ export interface operations {
       /** @description Whole rendition file */
       200: {
         headers: {
+          /** @description Always `bytes` */
+          'Accept-Ranges'?: string
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'audio/mp4': string
+        }
       }
       /** @description Requested byte range */
       206: {
         headers: {
+          /** @description Always `bytes` */
+          'Accept-Ranges'?: string
+          /** @description The served byte window, e.g. `bytes 929-100915/205821` */
+          'Content-Range'?: string
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'audio/mp4': string
+        }
       }
       /** @description Unauthorized */
       401: {
@@ -21968,9 +23108,13 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Requested byte range is not satisfiable */
+      /** @description Requested byte range is not satisfiable — no body */
       416: {
         headers: {
+          /** @description Always `bytes` */
+          'Accept-Ranges'?: string
+          /** @description The satisfiable range, e.g. `bytes *\/205821` */
+          'Content-Range'?: string
           [name: string]: unknown
         }
         content?: never
@@ -22061,9 +23205,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Rendition headers */
+      /** @description Rendition headers — HEAD response, no body */
       200: {
         headers: {
+          /** @description Always `bytes` */
+          'Accept-Ranges'?: string
+          /** @description Size in bytes of the rendition file */
+          'Content-Length'?: string
           [name: string]: unknown
         }
         content?: never
@@ -24607,6 +25755,150 @@ export interface operations {
         content: {
           'application/json': components['schemas']['AdminOverviewEntity']
         }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the overview:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminOverviewController_getSeries_v1: {
+    parameters: {
+      query?: {
+        /** @description Window size in UTC calendar days. Default 30, max 365. */
+        days?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminOverviewSeriesEntity']
+        }
+      }
+      /** @description Invalid or out-of-range `days` */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Unauthorized */
       401: {

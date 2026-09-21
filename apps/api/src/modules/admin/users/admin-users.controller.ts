@@ -24,11 +24,17 @@ import { AdminUsersService } from './admin-users.service'
 import {
   DeleteUserSwagger,
   GetUserSwagger,
+  ListListeningHistorySwagger,
   ListUsersSwagger,
   RestoreUserSwagger,
   RevokeUserSessionsSwagger,
 } from './decorators'
-import { type ListAdminUsersQueryDto, ListAdminUsersQuerySchema } from './dtos'
+import {
+  type ListAdminUsersQueryDto,
+  ListAdminUsersQuerySchema,
+  type ListListeningHistoryQueryDto,
+  ListListeningHistoryQuerySchema,
+} from './dtos'
 
 /** Operator-facing user directory. */
 @ApiTags('Admin Users')
@@ -51,6 +57,18 @@ export class AdminUsersController {
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: string) {
     return this.users.findById(id)
+  }
+
+  /** Runs the list listening history operation. */
+  @RequirePermission('users:read')
+  @ListListeningHistorySwagger()
+  @Get(':id/listening-history')
+  listListeningHistory(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query(new ZodValidationPipe(ListListeningHistoryQuerySchema))
+    query: ListListeningHistoryQueryDto,
+  ) {
+    return this.users.findListeningHistory(id, query)
   }
 
   /** Runs the soft-delete operation. */

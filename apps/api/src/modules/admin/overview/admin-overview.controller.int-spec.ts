@@ -27,6 +27,7 @@ const OVERVIEW_RESPONSE = {
 const makeServiceMock = () =>
   ({
     getOverview: jest.fn(),
+    getSeries: jest.fn(),
   }) as unknown as jest.Mocked<AdminOverviewService>
 
 const buildApp = async (permissions: Permission[]) => {
@@ -75,6 +76,7 @@ describe('AdminOverviewController (int)', () => {
 
     beforeEach(() => {
       service.getOverview.mockReset()
+      service.getSeries.mockReset()
     })
 
     it('GET /admin/overview returns 200 with the aggregate summary', async () => {
@@ -84,6 +86,46 @@ describe('AdminOverviewController (int)', () => {
 
       expect(res.status).toBe(200)
       expect(res.body).toEqual(OVERVIEW_RESPONSE)
+    })
+
+    it('GET /admin/overview/series returns 200 and forwards `days`', async () => {
+      const seriesResponse = {
+        from: '2026-08-19',
+        to: '2026-09-17',
+        days: 30,
+        uploads: [],
+        signups: [],
+        listens: [],
+        reports: [],
+        reportsByStatus: { open: 0, reviewing: 0, resolved: 0, rejected: 0 },
+      }
+      service.getSeries.mockResolvedValue(seriesResponse as never)
+
+      const res = await request(app.getHttpServer())
+        .get('/admin/overview/series')
+        .query({ days: 30 })
+
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual(seriesResponse)
+      expect(service.getSeries).toHaveBeenCalledWith(30)
+    })
+
+    it('GET /admin/overview/series returns 400 for a `days` of 0', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/admin/overview/series')
+        .query({ days: 0 })
+
+      expect(res.status).toBe(400)
+      expect(service.getSeries).not.toHaveBeenCalled()
+    })
+
+    it('GET /admin/overview/series returns 400 for a `days` above the max', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/admin/overview/series')
+        .query({ days: 366 })
+
+      expect(res.status).toBe(400)
+      expect(service.getSeries).not.toHaveBeenCalled()
     })
   })
 

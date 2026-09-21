@@ -25,7 +25,9 @@ import { AdminArtistsService } from './admin-artists.service'
 import {
   DeleteArtistSwagger,
   GetArtistSwagger,
+  ListArtistAlbumsSwagger,
   ListArtistsSwagger,
+  ListArtistTracksSwagger,
   RestoreArtistSwagger,
   RevokeArtistSessionsSwagger,
   UpdateArtistVerificationSwagger,
@@ -33,6 +35,10 @@ import {
 import {
   type ListAdminArtistsQueryDto,
   ListAdminArtistsQuerySchema,
+  type ListArtistAlbumsQueryDto,
+  ListArtistAlbumsQuerySchema,
+  type ListArtistTracksQueryDto,
+  ListArtistTracksQuerySchema,
   type UpdateArtistVerificationDto,
   UpdateArtistVerificationSchema,
 } from './dtos'
@@ -58,6 +64,33 @@ export class AdminArtistsController {
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: string) {
     return this.artists.findById(id)
+  }
+
+  /**
+   * Runs the list artist tracks operation. Permission is `artists:read` — this is a sub-view of
+   * the artist detail page (the same permission that already backs its `counts.tracks`), not
+   * the global track-management surface behind `tracks:read`.
+   */
+  @RequirePermission('artists:read')
+  @ListArtistTracksSwagger()
+  @Get(':id/tracks')
+  listTracks(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query(new ZodValidationPipe(ListArtistTracksQuerySchema)) query: ListArtistTracksQueryDto,
+  ) {
+    return this.artists.findTracks(id, query)
+  }
+
+  /** Runs the list artist albums operation. Permission is `artists:read`, for the same reason
+   * as {@link listTracks}. */
+  @RequirePermission('artists:read')
+  @ListArtistAlbumsSwagger()
+  @Get(':id/albums')
+  listAlbums(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query(new ZodValidationPipe(ListArtistAlbumsQuerySchema)) query: ListArtistAlbumsQueryDto,
+  ) {
+    return this.artists.findAlbums(id, query)
   }
 
   /** Runs the update verification operation. */

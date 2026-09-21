@@ -48,11 +48,11 @@ describe('AdminTracksService', () => {
   describe('findAll', () => {
     it('hydrates rows in the id order the raw query returned, with artist usernames attached', async () => {
       const failed = buildTrackWithArtist(
-        { id: 'track-failed', processingStatus: 'FAILED' },
+        { id: 'track-failed', processingStatus: 'FAILED', cover: 'failed-cover.png' },
         'dj-failed',
       )
       const ready = buildTrackWithArtist(
-        { id: 'track-ready', processingStatus: 'READY' },
+        { id: 'track-ready', processingStatus: 'READY', cover: null },
         'dj-ready',
       )
 
@@ -66,6 +66,8 @@ describe('AdminTracksService', () => {
       expect(result.total).toBe(2)
       expect(result.data.map((row) => row.id)).toEqual(['track-failed', 'track-ready'])
       expect(result.data[0]?.artistUsername).toBe('dj-failed')
+      expect(result.data[0]?.cover).toBe('failed-cover.png')
+      expect(result.data[1]?.cover).toBeNull()
     })
 
     it('returns an empty page without querying findMany when no ids match', async () => {
@@ -163,7 +165,7 @@ describe('AdminTracksService', () => {
     })
 
     it('returns the detail shape — renditions, credits, genres, albums, open report count', async () => {
-      const track = buildTrackWithDetail({ id: 'track-1' }, 'dj-test')
+      const track = buildTrackWithDetail({ id: 'track-1', cover: 'track-1.png' }, 'dj-test')
       prisma.track.findFirst.mockResolvedValue(track as never)
       prisma.moderationReport.count.mockResolvedValue(3)
 
@@ -172,6 +174,17 @@ describe('AdminTracksService', () => {
       expect(result.artistUsername).toBe('dj-test')
       expect(result.audioFiles).toEqual([])
       expect(result.openReportCount).toBe(3)
+      expect(result.cover).toBe('track-1.png')
+    })
+
+    it('returns cover: null for a track with no cover image', async () => {
+      const track = buildTrackWithDetail({ id: 'track-1', cover: null }, 'dj-test')
+      prisma.track.findFirst.mockResolvedValue(track as never)
+      prisma.moderationReport.count.mockResolvedValue(0)
+
+      const result = await service.findById('track-1')
+
+      expect(result.cover).toBeNull()
     })
 
     it('does not filter deletedAt — a soft-deleted track stays reachable by id', async () => {

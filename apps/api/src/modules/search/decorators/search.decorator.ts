@@ -1,5 +1,6 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
+import { SearchResponseEntity } from '../entities'
 
 export function SearchSwagger() {
   return applyDecorators(
@@ -23,6 +24,7 @@ export function SearchSwagger() {
       status: 200,
       description:
         'Results grouped and paginated independently per type; totals contains each bucket count',
+      type: SearchResponseEntity,
     }),
   )
 }

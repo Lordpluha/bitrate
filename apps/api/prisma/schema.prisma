@@ -679,6 +679,7 @@ model ListeningHistory {
 
   @@index([userId, listenedAt(sort: Desc)])
   @@index([trackId])
+  @@index([listenedAt])
 }
 
 model UserSettings {
