@@ -234,6 +234,28 @@ services:
         reservations:
           memory: 64M
 
+  cloudflared:
+    logging: *default-logging
+    image: cloudflare/cloudflared:latest
+    container_name: bitrate-admin-cloudflared-prod
+    restart: always
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+      - --token
+      - ${CLOUDFLARE_TUNNEL_TOKEN:?CLOUDFLARE_TUNNEL_TOKEN is required}
+    depends_on:
+      - admin
+    networks:
+      - bitrate-network
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 32M
+
   # Static sites. Both serve a prebuilt bundle from nginx inside the container on 8080 and hold no
   # runtime state, so they need neither environment nor a dependency on the API.
   docs:
