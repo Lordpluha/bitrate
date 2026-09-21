@@ -126,6 +126,76 @@ describe('AdminArtistsService', () => {
     })
   })
 
+  describe('findTracks', () => {
+    it('throws ArtistNotFoundException when the artist does not exist', async () => {
+      prisma.artist.findFirst.mockResolvedValue(null)
+
+      await expect(service.findTracks('missing', {})).rejects.toThrow(ArtistNotFoundException)
+    })
+
+    it('returns an empty page for an artist with no tracks', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist() as never)
+      prisma.track.findMany.mockResolvedValue([] as never)
+      prisma.track.count.mockResolvedValue(0)
+
+      const result = await service.findTracks('artist-1', {})
+
+      expect(result).toEqual({ data: [], total: 0, page: 1, limit: 20 })
+    })
+
+    it('scopes the query to the artist id, newest first with an id tie-break', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist() as never)
+      prisma.track.findMany.mockResolvedValue([] as never)
+      prisma.track.count.mockResolvedValue(0)
+
+      await service.findTracks('artist-1', { page: 2, limit: 5 })
+
+      expect(prisma.track.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { artistId: 'artist-1', deletedAt: null },
+          skip: 5,
+          take: 5,
+          orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        }),
+      )
+    })
+  })
+
+  describe('findAlbums', () => {
+    it('throws ArtistNotFoundException when the artist does not exist', async () => {
+      prisma.artist.findFirst.mockResolvedValue(null)
+
+      await expect(service.findAlbums('missing', {})).rejects.toThrow(ArtistNotFoundException)
+    })
+
+    it('returns an empty page for an artist with no albums', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist() as never)
+      prisma.album.findMany.mockResolvedValue([] as never)
+      prisma.album.count.mockResolvedValue(0)
+
+      const result = await service.findAlbums('artist-1', {})
+
+      expect(result).toEqual({ data: [], total: 0, page: 1, limit: 20 })
+    })
+
+    it('scopes the query to the artist id, newest first with an id tie-break', async () => {
+      prisma.artist.findFirst.mockResolvedValue(buildArtist() as never)
+      prisma.album.findMany.mockResolvedValue([] as never)
+      prisma.album.count.mockResolvedValue(0)
+
+      await service.findAlbums('artist-1', { page: 2, limit: 5 })
+
+      expect(prisma.album.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { artistId: 'artist-1', deletedAt: null },
+          skip: 5,
+          take: 5,
+          orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        }),
+      )
+    })
+  })
+
   describe('updateVerification', () => {
     it('throws ArtistNotFoundException when the artist does not exist', async () => {
       prisma.artist.findFirst.mockResolvedValue(null)

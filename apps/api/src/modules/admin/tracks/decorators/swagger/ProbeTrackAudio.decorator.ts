@@ -18,7 +18,17 @@ export function ProbeTrackAudioSwagger() {
       description: 'Rendition kbps; defaults to the highest available CMAF rendition',
     }),
     ApiProduces('audio/mp4'),
-    ApiResponse({ status: HttpStatus.OK, description: 'Rendition headers' }),
+    ApiResponse({
+      status: HttpStatus.OK,
+      description: 'Rendition headers — HEAD response, no body',
+      headers: {
+        'Accept-Ranges': { description: 'Always `bytes`', schema: { type: 'string' } },
+        'Content-Length': {
+          description: 'Size in bytes of the rendition file',
+          schema: { type: 'string' },
+        },
+      },
+    }),
     ApiResponse({
       status: HttpStatus.NOT_FOUND,
       description: 'Track missing, not READY, or has no CMAF rendition at the requested bitrate',

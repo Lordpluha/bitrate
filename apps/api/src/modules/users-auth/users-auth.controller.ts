@@ -34,7 +34,6 @@ import {
 } from './decorators'
 import {
   ForgotPasswordSchema,
-  LoginDto,
   LoginSchema,
   RegistrationDto,
   RegistrationSchema,
@@ -47,6 +46,7 @@ import {
   TwoFactorVerifyLoginDto,
   TwoFactorVerifyLoginSchema,
   UserForgotPasswordDto,
+  UserLoginDto,
   VerifyEmailDto,
   VerifyEmailSchema,
 } from './dtos'
@@ -73,7 +73,7 @@ export class UsersAuthController {
   @AuthLoginSwagger()
   @Post('login')
   async login(
-    @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
+    @Body(new ZodValidationPipe(LoginSchema)) loginDto: UserLoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.loginUser(loginDto.email, loginDto.password)

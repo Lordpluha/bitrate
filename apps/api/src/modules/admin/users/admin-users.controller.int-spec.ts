@@ -18,6 +18,7 @@ const makeServiceMock = () =>
   ({
     findAll: jest.fn(),
     findById: jest.fn(),
+    findListeningHistory: jest.fn(),
     softDelete: jest.fn(),
     restore: jest.fn(),
     revokeSessions: jest.fn(),
@@ -54,6 +55,7 @@ describe('AdminUsersController (int)', () => {
     beforeEach(() => {
       service.findAll.mockReset()
       service.findById.mockReset()
+      service.findListeningHistory.mockReset()
       service.softDelete.mockReset()
       service.restore.mockReset()
       service.revokeSessions.mockReset()
@@ -134,6 +136,52 @@ describe('AdminUsersController (int)', () => {
       const res = await request(app.getHttpServer()).get('/admin/users/not-a-uuid')
 
       expect(res.status).toBe(400)
+    })
+
+    it('GET /admin/users/:id/listening-history returns 200 with a page of history', async () => {
+      const entry = {
+        id: 'lh-1',
+        listenedAt: new Date('2026-09-17T00:00:00.000Z'),
+        trackId: 'track-1',
+        trackTitle: 'Track One',
+        artistUsername: 'artist-one',
+      }
+      service.findListeningHistory.mockResolvedValue({
+        data: [entry],
+        total: 1,
+        page: 1,
+        limit: 20,
+      })
+
+      const res = await request(app.getHttpServer()).get(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479/listening-history',
+      )
+
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual(
+        JSON.parse(JSON.stringify({ data: [entry], total: 1, page: 1, limit: 20 })),
+      )
+    })
+
+    it('GET /admin/users/:id/listening-history returns an empty page for a user with no history', async () => {
+      service.findListeningHistory.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 })
+
+      const res = await request(app.getHttpServer()).get(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479/listening-history',
+      )
+
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual({ data: [], total: 0, page: 1, limit: 20 })
+    })
+
+    it('GET /admin/users/:id/listening-history returns 404 for a missing user', async () => {
+      service.findListeningHistory.mockRejectedValue(new UserNotFoundException('missing'))
+
+      const res = await request(app.getHttpServer()).get(
+        '/admin/users/f47ac10b-58cc-4372-a567-0e02b2c3d479/listening-history',
+      )
+
+      expect(res.status).toBe(404)
     })
   })
 

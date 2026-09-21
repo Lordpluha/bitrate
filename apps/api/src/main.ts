@@ -64,6 +64,7 @@ async function bootstrap() {
     .setDescription(API_DOC_DESCRIPTION)
     .setVersion(API_DOC_VERSION)
     .addServer(`http://localhost:${configService.getOrThrow('PORT')}`, 'Local server')
+    .addServer('https://api.bitrate.me', 'Deployed server')
     .addOAuth2({
       type: 'oauth2',
       flows: {
@@ -80,7 +81,7 @@ async function bootstrap() {
       name: configService.getOrThrow('ACCESS_TOKEN_NAME'),
       description: `HttpOnly cookies: ${configService.getOrThrow('ACCESS_TOKEN_NAME')} and ${configService.getOrThrow('REFRESH_TOKEN_NAME')}`,
     })
-    .setContact('Lordpluha', 'https://github.com/Lordpluha', 'vladislavteslyukofficial@gmail.com')
+    .setContact('Lordpluha', 'https://github.com/Lordpluha', 'tesluakevlad@gmail.com')
     // Global server errors
     .addGlobalResponse({
       status: HttpStatus.INTERNAL_SERVER_ERROR,

@@ -9,6 +9,8 @@
   },
   "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib)/)"],
   "moduleNameMapper": {
+    "^@sentry/nestjs$": "<rootDir>/../test/mocks/sentry-nestjs.ts",
+    "^@sentry/nestjs/setup$": "<rootDir>/../test/mocks/sentry-nestjs-setup.ts",
     "^src/(.*)$": "<rootDir>/$1",
     "^@modules/(.*)$": "<rootDir>/modules/$1",
     "^@infra/(.*)$": "<rootDir>/infra/$1",

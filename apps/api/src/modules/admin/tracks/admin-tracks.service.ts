@@ -37,6 +37,7 @@ type AdminTrackRow = {
   title: string
   artistId: string
   artistUsername: string
+  cover: string | null
   processingStatus: TrackProcessingStatus
   processingError: string | null
   processingAttempts: number
@@ -216,6 +217,7 @@ export class AdminTracksService {
     title: string
     artistId: string
     artist: { username: string }
+    cover: string | null
     processingStatus: TrackProcessingStatus
     processingError: string | null
     processingAttempts: number
@@ -230,6 +232,7 @@ export class AdminTracksService {
       title: track.title,
       artistId: track.artistId,
       artistUsername: track.artist.username,
+      cover: track.cover,
       processingStatus: track.processingStatus,
       processingError: track.processingError,
       processingAttempts: track.processingAttempts,

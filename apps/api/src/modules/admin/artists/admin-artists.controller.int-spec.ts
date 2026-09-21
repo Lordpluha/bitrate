@@ -18,6 +18,8 @@ const makeServiceMock = () =>
   ({
     findAll: jest.fn(),
     findById: jest.fn(),
+    findTracks: jest.fn(),
+    findAlbums: jest.fn(),
     updateVerification: jest.fn(),
     softDelete: jest.fn(),
     restore: jest.fn(),
@@ -55,8 +57,61 @@ describe('AdminArtistsController (int)', () => {
     beforeEach(() => {
       service.findAll.mockReset()
       service.findById.mockReset()
+      service.findTracks.mockReset()
+      service.findAlbums.mockReset()
       service.updateVerification.mockReset()
       service.softDelete.mockReset()
+    })
+
+    it('GET /admin/artists/:id/tracks returns 200 with a page of tracks', async () => {
+      service.findTracks.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 })
+
+      const res = await request(app.getHttpServer()).get(
+        '/admin/artists/f47ac10b-58cc-4372-a567-0e02b2c3d479/tracks',
+      )
+
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual({ data: [], total: 0, page: 1, limit: 20 })
+    })
+
+    it('GET /admin/artists/:id/tracks returns 404 for a missing artist', async () => {
+      service.findTracks.mockRejectedValue(new ArtistNotFoundException('missing'))
+
+      const res = await request(app.getHttpServer()).get(
+        '/admin/artists/f47ac10b-58cc-4372-a567-0e02b2c3d479/tracks',
+      )
+
+      expect(res.status).toBe(404)
+    })
+
+    it('GET /admin/artists/:id/tracks returns 400 for an invalid status', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/admin/artists/f47ac10b-58cc-4372-a567-0e02b2c3d479/tracks')
+        .query({ status: 'bogus' })
+
+      expect(res.status).toBe(400)
+      expect(service.findTracks).not.toHaveBeenCalled()
+    })
+
+    it('GET /admin/artists/:id/albums returns 200 with a page of albums', async () => {
+      service.findAlbums.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 })
+
+      const res = await request(app.getHttpServer()).get(
+        '/admin/artists/f47ac10b-58cc-4372-a567-0e02b2c3d479/albums',
+      )
+
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual({ data: [], total: 0, page: 1, limit: 20 })
+    })
+
+    it('GET /admin/artists/:id/albums returns 404 for a missing artist', async () => {
+      service.findAlbums.mockRejectedValue(new ArtistNotFoundException('missing'))
+
+      const res = await request(app.getHttpServer()).get(
+        '/admin/artists/f47ac10b-58cc-4372-a567-0e02b2c3d479/albums',
+      )
+
+      expect(res.status).toBe(404)
     })
 
     it('GET /admin/artists returns 200', async () => {

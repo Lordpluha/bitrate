@@ -1,5 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
+import { TrackEntity } from '../../entities'
 
 /** Runs the get track by id swagger operation. */
 export function GetTrackByIdSwagger() {
@@ -8,7 +9,7 @@ export function GetTrackByIdSwagger() {
     ApiParam({ name: 'id', type: 'string', format: 'uuid', description: 'Track ID' }),
     ApiResponse({
       status: HttpStatus.OK,
-      schema: { $ref: '#/components/schemas/TrackEntity' },
+      type: TrackEntity,
     }),
     ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Track not found' }),
   )

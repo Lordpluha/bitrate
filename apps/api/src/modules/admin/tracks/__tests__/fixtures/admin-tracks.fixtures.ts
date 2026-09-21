@@ -61,6 +61,7 @@ export const buildAdminTrackRow = (overrides: Partial<Track> = {}, artistUsernam
     title: track.title,
     artistId: track.artistId,
     artistUsername,
+    cover: track.cover,
     processingStatus: track.processingStatus,
     processingError: track.processingError,
     processingAttempts: track.processingAttempts,

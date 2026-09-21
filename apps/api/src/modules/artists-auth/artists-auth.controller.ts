@@ -37,8 +37,8 @@ import {
 } from './decorators'
 import {
   ArtistForgotPasswordDto,
+  type ArtistLoginDto,
   ForgotPasswordSchema,
-  type LoginDto,
   LoginSchema,
   type RegistrationDto,
   RegistrationSchema,
@@ -73,7 +73,7 @@ export class AuthController {
   @AuthLoginSwagger()
   @Post('login')
   async login(
-    @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
+    @Body(new ZodValidationPipe(LoginSchema)) loginDto: ArtistLoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.artistAuthService.loginArtist(loginDto.email, loginDto.password)

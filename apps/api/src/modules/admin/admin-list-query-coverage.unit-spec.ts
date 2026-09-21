@@ -1,17 +1,26 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import { AdminArtistsController } from '@modules/admin/artists/admin-artists.controller'
-import { ListAdminArtistsQuerySchema } from '@modules/admin/artists/dtos'
+import {
+  ListAdminArtistsQuerySchema,
+  ListArtistAlbumsQuerySchema,
+  ListArtistTracksQuerySchema,
+} from '@modules/admin/artists/dtos'
 import { AdminAuditController } from '@modules/admin/audit/admin-audit.controller'
 import { ListAdminAuditLogsQuerySchema } from '@modules/admin/audit/dtos'
 import { AdminModerationController } from '@modules/admin/moderation/admin-moderation.controller'
 import { ListReportsQuerySchema } from '@modules/admin/moderation/dtos'
+import { AdminOverviewController } from '@modules/admin/overview/admin-overview.controller'
+import { GetOverviewSeriesQuerySchema } from '@modules/admin/overview/dtos'
 import { AdminTracksController } from '@modules/admin/tracks/admin-tracks.controller'
 import {
   ListAdminTracksQuerySchema,
   ListProcessingAttemptsQuerySchema,
 } from '@modules/admin/tracks/dtos'
 import { AdminUsersController } from '@modules/admin/users/admin-users.controller'
-import { ListAdminUsersQuerySchema } from '@modules/admin/users/dtos'
+import {
+  ListAdminUsersQuerySchema,
+  ListListeningHistoryQuerySchema,
+} from '@modules/admin/users/dtos'
 import type { Type } from '@nestjs/common'
 import type { ZodType } from 'zod'
 
@@ -72,6 +81,30 @@ const LIST_ROUTES: ListRouteCase[] = [
     controller: AdminAuditController,
     handlerName: 'list',
     schema: ListAdminAuditLogsQuerySchema,
+  },
+  {
+    name: 'AdminArtistsController.listTracks',
+    controller: AdminArtistsController,
+    handlerName: 'listTracks',
+    schema: ListArtistTracksQuerySchema,
+  },
+  {
+    name: 'AdminArtistsController.listAlbums',
+    controller: AdminArtistsController,
+    handlerName: 'listAlbums',
+    schema: ListArtistAlbumsQuerySchema,
+  },
+  {
+    name: 'AdminUsersController.listListeningHistory',
+    controller: AdminUsersController,
+    handlerName: 'listListeningHistory',
+    schema: ListListeningHistoryQuerySchema,
+  },
+  {
+    name: 'AdminOverviewController.getSeries',
+    controller: AdminOverviewController,
+    handlerName: 'getSeries',
+    schema: GetOverviewSeriesQuerySchema,
   },
   {
     name: 'AdminTracksController.listProcessingAttempts',

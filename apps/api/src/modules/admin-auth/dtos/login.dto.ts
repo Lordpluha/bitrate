@@ -11,7 +11,7 @@ export const LoginSchema = z.object({
 })
 
 /** Represents the staff login dto. */
-export class LoginDto {
+export class AdminLoginDto {
   /** The email value. */
   @ApiProperty({ description: 'Staff email', example: 'ops@bitrate.app' })
   email: string

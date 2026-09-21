@@ -31,15 +31,40 @@ export function StreamTrackAudioSwagger() {
       description: 'Inclusive byte window, e.g. `bytes=929-100915`',
     }),
     ApiProduces('audio/mp4'),
-    ApiResponse({ status: HttpStatus.OK, description: 'Whole rendition file' }),
-    ApiResponse({ status: HttpStatus.PARTIAL_CONTENT, description: 'Requested byte range' }),
+    ApiResponse({
+      status: HttpStatus.OK,
+      description: 'Whole rendition file',
+      content: { 'audio/mp4': { schema: { type: 'string', format: 'binary' } } },
+      headers: {
+        'Accept-Ranges': { description: 'Always `bytes`', schema: { type: 'string' } },
+      },
+    }),
+    ApiResponse({
+      status: HttpStatus.PARTIAL_CONTENT,
+      description: 'Requested byte range',
+      content: { 'audio/mp4': { schema: { type: 'string', format: 'binary' } } },
+      headers: {
+        'Accept-Ranges': { description: 'Always `bytes`', schema: { type: 'string' } },
+        'Content-Range': {
+          description: 'The served byte window, e.g. `bytes 929-100915/205821`',
+          schema: { type: 'string' },
+        },
+      },
+    }),
     ApiResponse({
       status: HttpStatus.NOT_FOUND,
       description: 'Track missing, not READY, or has no CMAF rendition at the requested bitrate',
     }),
     ApiResponse({
       status: HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE,
-      description: 'Requested byte range is not satisfiable',
+      description: 'Requested byte range is not satisfiable — no body',
+      headers: {
+        'Accept-Ranges': { description: 'Always `bytes`', schema: { type: 'string' } },
+        'Content-Range': {
+          description: 'The satisfiable range, e.g. `bytes */205821`',
+          schema: { type: 'string' },
+        },
+      },
     }),
   )
 }

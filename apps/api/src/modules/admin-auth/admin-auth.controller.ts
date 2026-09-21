@@ -13,7 +13,7 @@ import {
   AuthMeSwagger,
   AuthRefreshSwagger,
 } from './decorators'
-import { type LoginDto, LoginSchema } from './dtos'
+import { type AdminLoginDto, LoginSchema } from './dtos'
 import { StaffEntity, StaffSessionEntity } from './entities'
 import type { AdminAuthRequest } from './types'
 
@@ -32,7 +32,7 @@ export class AdminAuthController {
   @AuthLoginSwagger()
   @Post('login')
   async login(
-    @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
+    @Body(new ZodValidationPipe(LoginSchema)) loginDto: AdminLoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const tokens = await this.adminAuthService.loginStaff(loginDto.email, loginDto.password)

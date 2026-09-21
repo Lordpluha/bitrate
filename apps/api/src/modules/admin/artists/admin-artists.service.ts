@@ -1,4 +1,4 @@
-import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
+import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
@@ -119,6 +119,83 @@ export class AdminArtistsService {
       data: { verified: dto.verified },
       select: ADMIN_ARTIST_SAFE_SELECT,
     })
+  }
+
+  /** Runs the list artist tracks operation, newest first with a stable `id` tie-break. */
+  async findTracks(
+    artistId: string,
+    {
+      page = DEFAULT_PAGE,
+      limit = DEFAULT_LIMIT,
+      status,
+    }: PaginationInput & { status?: AdminResourceStatus },
+  ) {
+    const existing = await this.prisma.artist.findFirst({ where: { id: artistId } })
+    if (!existing) throw new ArtistNotFoundException(artistId)
+
+    const where = {
+      artistId,
+      ...this.buildStatusWhere(status),
+    } satisfies Prisma.TrackWhereInput
+
+    const [data, total] = await Promise.all([
+      this.prisma.track.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          cover: true,
+          processingStatus: true,
+          playCount: true,
+          deletedAt: true,
+          createdAt: true,
+        },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.track.count({ where }),
+    ])
+    return { data, total, page, limit }
+  }
+
+  /** Runs the list artist albums operation, newest first with a stable `id` tie-break. */
+  async findAlbums(
+    artistId: string,
+    {
+      page = DEFAULT_PAGE,
+      limit = DEFAULT_LIMIT,
+      status,
+    }: PaginationInput & { status?: AdminResourceStatus },
+  ) {
+    const existing = await this.prisma.artist.findFirst({ where: { id: artistId } })
+    if (!existing) throw new ArtistNotFoundException(artistId)
+
+    const where = {
+      artistId,
+      ...this.buildStatusWhere(status),
+    } satisfies Prisma.AlbumWhereInput
+
+    const [data, total] = await Promise.all([
+      this.prisma.album.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          cover: true,
+          type: true,
+          totalTracks: true,
+          releaseDate: true,
+          deletedAt: true,
+          createdAt: true,
+        },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.album.count({ where }),
+    ])
+    return { data, total, page, limit }
   }
 
   /**
