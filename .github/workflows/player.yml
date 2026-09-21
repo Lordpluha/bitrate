@@ -22,7 +22,7 @@ on:
       - '.github/workflows/player_reusable.yml'
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [develop]
+    branches: [develop, master]
     paths:
       - 'packages/player/**'
       - 'package.json'

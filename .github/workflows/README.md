@@ -26,6 +26,21 @@ Current workflow map for .github/workflows.
 
 ## Workflow Quick Review
 
+### Monorepo gates (every PR)
+- monorepo.yml — repository-wide gates. `pull_request` into develop/master with **no path
+  filter**, plus a push filter on the shared toolchain (root manifests, `turbo.json`,
+  `biome.json`, `.knip.json`, `tsconfig*`, `Taskfile.yml`, `scripts/**`) and
+  `workflow_dispatch` with a switch per gate.
+- monorepo_reusable.yml — three independent jobs: `pnpm lint`, `pnpm check-types`, `pnpm knip`.
+  This is the only workflow that runs knip outside the release cut, and the only one a
+  root-config-only change triggers at all — every other check workflow is path-filtered to one
+  app or package.
+
+### SVGR tooling packages
+- tooling_packages.yml — entry workflow for packages/svgr and packages/vite-svgr, path-filtered
+  to those two. They ship no image, but packages/ui-react builds through them.
+- tooling_packages_reusable.yml — Biome on both packages, then both test suites.
+
 ### API
 - api.yml — API pipeline entry workflow.
 - api_reusable.yml — reusable implementation for API jobs.
