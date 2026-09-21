@@ -20,18 +20,24 @@ import {
   REPORT_STATUS_CATEGORIES,
   seriesCategories,
   signupsChartDescription,
+  signupsChartHeadline,
   signupsChartSeries,
   uploadsChartDescription,
+  uploadsChartHeadline,
   uploadsChartSeries,
 } from './overview-series.adapter'
+import {
+  buildAccountDeactivationStatus,
+  buildReportsStatus,
+  buildTrackPipelineStatus,
+} from './overview-status'
+import { OverviewStatusStrip } from './overview-status-strip'
 import { overviewQueryCodec } from './overview.query'
-import { OverviewTileCard } from './overview-tile'
-import { buildOverviewTiles } from './overview-tiles'
 
-/** The operator landing dashboard: aggregate counts, then daily-activity charts. */
+/** The operator landing dashboard: daily-activity charts, each carrying the counts that belong to it. */
 @Component({
   selector: 'app-overview',
-  imports: [CollectionStatus, OverviewTileCard, BarChart, LineChart, HlmButtonImports],
+  imports: [CollectionStatus, OverviewStatusStrip, BarChart, LineChart, HlmButtonImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './overview.html',
 })
@@ -50,9 +56,19 @@ export class OverviewPage {
   protected readonly seriesLoading = signal(true)
   protected readonly seriesFailure = signal<string | null>(null)
 
-  protected readonly tiles = computed(() => {
+  protected readonly trackPipelineStatus = computed(() => {
     const current = this.overview()
-    return current ? buildOverviewTiles(current) : []
+    return current ? buildTrackPipelineStatus(current) : []
+  })
+
+  protected readonly reportsStatus = computed(() => {
+    const current = this.overview()
+    return current ? buildReportsStatus(current) : []
+  })
+
+  protected readonly accountDeactivationStatus = computed(() => {
+    const current = this.overview()
+    return current ? buildAccountDeactivationStatus(current) : []
   })
 
   protected readonly categories = computed(() => {
@@ -77,6 +93,24 @@ export class OverviewPage {
 
   protected readonly signupsDescription = computed(() =>
     signupsChartDescription(this.currentSeries()),
+  )
+  /**
+   * `null` whenever the series isn't cleanly loaded — while it's loading, after a failed
+   * request, or (the fallback series) before the first request resolves — never a stale value
+   * from a previous range or a `0` standing in for "unknown".
+   */
+  protected readonly signupsHeadline = computed(() =>
+    this.seriesLoading() || this.seriesFailure() ? null : signupsChartHeadline(this.currentSeries()),
+  )
+  protected readonly uploadsHeadline = computed(() =>
+    this.seriesLoading() || this.seriesFailure() ? null : uploadsChartHeadline(this.currentSeries()),
+  )
+
+  /** Shown in a chart card's own plot area when its series request failed — the header,
+   *  description and any status strip stay visible regardless; see `BarChart`/`LineChart`'s
+   *  `loading`/`failure` inputs. */
+  protected readonly chartFailure = computed(() =>
+    this.seriesFailure() ? 'Could not load this chart.' : null,
   )
   protected readonly listensDescription = computed(() =>
     listensChartDescription(this.currentSeries()),

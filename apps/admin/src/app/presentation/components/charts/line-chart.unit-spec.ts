@@ -177,4 +177,42 @@ describe('LineChart', () => {
     expect(host.querySelector('svg')).toBeNull()
     expect(host.textContent).toContain('No data for this range.')
   })
+
+  it('shows a headline value beside the title when one is given', () => {
+    const { fixture, host } = create(SERIES)
+    fixture.componentRef.setInput('headline', { value: '9', label: 'New accounts, 7d' })
+    fixture.detectChanges()
+
+    expect(host.textContent).toContain('9')
+    expect(host.textContent).toContain('New accounts, 7d')
+  })
+
+  it('renders no headline block when none is given', () => {
+    const { host } = create(SERIES)
+    const figcaptionRow = host.querySelector('figure > div')
+
+    expect(figcaptionRow?.children.length).toBe(1)
+  })
+
+  it('shows a loading message and no plot, description and figcaption still visible', () => {
+    const { fixture, host } = create(SERIES)
+    fixture.componentRef.setInput('loading', true)
+    fixture.detectChanges()
+
+    expect(host.querySelector('svg')).toBeNull()
+    expect(host.textContent).toContain('Loading')
+    expect(host.querySelector('figcaption')?.textContent).toContain('New accounts per day')
+  })
+
+  it('shows a failure alert instead of the plot, description and figcaption still visible', () => {
+    const { fixture, host } = create(SERIES)
+    fixture.componentRef.setInput('failure', 'Could not load this chart.')
+    fixture.detectChanges()
+
+    expect(host.querySelector('svg')).toBeNull()
+    expect(host.querySelector('[role="alert"]')?.textContent).toContain(
+      'Could not load this chart.',
+    )
+    expect(host.querySelector('figcaption')?.textContent).toContain('New accounts per day')
+  })
 })

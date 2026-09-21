@@ -84,7 +84,7 @@ describe('OverviewPage', () => {
     harness = await RouterTestingHarness.create()
   })
 
-  it('renders every tile in a list, with a link where the target list can filter for it', async () => {
+  it('folds each status count into its chart card, with a link where the target list can filter for it', async () => {
     execute.mockResolvedValue(overview())
 
     const host = await harness.navigateByUrl('/', OverviewPage)
@@ -93,19 +93,30 @@ describe('OverviewPage', () => {
     expect(host).not.toBeNull()
     const root = harness.routeNativeElement as HTMLElement
 
-    expect(root.querySelectorAll('ul > li').length).toBeGreaterThanOrEqual(9)
-    expect(root.textContent).toContain('Open reports')
+    expect(root.querySelectorAll('app-overview-status-strip').length).toBe(3)
+    expect(root.textContent).toContain('Open')
     expect(root.textContent).toContain('Failed tracks')
-    expect(root.textContent).toContain('Stuck tracks')
+    expect(root.textContent).toContain('Stuck')
 
-    const openReportsLink = Array.from(root.querySelectorAll('a')).find((a) =>
-      a.textContent?.includes('Open reports'),
+    const openReportsLink = Array.from(root.querySelectorAll('a')).find(
+      (a) => a.getAttribute('href') === '/moderation',
     )
     /** `OPEN` is the moderation codec's own default, so the canonical link carries no query params. */
-    expect(openReportsLink?.getAttribute('href')).toBe('/moderation')
+    expect(openReportsLink).not.toBeUndefined()
   })
 
-  it('gives the tile grid an accessible heading, and keeps h1 -> h2 order', async () => {
+  it('renders no standalone tile grid — the summary numbers live inside the charts', async () => {
+    execute.mockResolvedValue(overview())
+
+    await harness.navigateByUrl('/', OverviewPage)
+    await harness.fixture.whenStable()
+
+    const root = harness.routeNativeElement as HTMLElement
+
+    expect(root.querySelector('[aria-labelledby="dashboard-summary-heading"]')).toBeNull()
+  })
+
+  it('keeps h1 -> h2 heading order', async () => {
     execute.mockResolvedValue(overview())
 
     await harness.navigateByUrl('/', OverviewPage)
@@ -117,10 +128,18 @@ describe('OverviewPage', () => {
 
     expect(h1?.textContent).toContain('Overview')
     expect(headings.map((heading) => heading.tagName)[0]).toBe('H1')
+  })
 
-    const grid = root.querySelector('ul[aria-labelledby="dashboard-summary-heading"]')
-    expect(grid).not.toBeNull()
-    expect(document.getElementById('dashboard-summary-heading')).not.toBeNull()
+  it('shows a headline total on the signups and uploads charts, following the selected range', async () => {
+    execute.mockResolvedValue(overview())
+
+    await harness.navigateByUrl('/', OverviewPage)
+    await harness.fixture.whenStable()
+
+    const root = harness.routeNativeElement as HTMLElement
+
+    expect(root.textContent).toContain('New accounts, 30d')
+    expect(root.textContent).toContain('Uploads, 30d')
   })
 
   it('shows a failure message when the load rejects, instead of throwing', async () => {
@@ -136,7 +155,7 @@ describe('OverviewPage', () => {
     )
   })
 
-  it('keeps the previously loaded tiles on screen when a reload fails, alongside the alert', async () => {
+  it('keeps the previously loaded status counts on screen when a reload fails, alongside the alert', async () => {
     execute.mockResolvedValueOnce(overview())
 
     await harness.navigateByUrl('/', OverviewPage)
@@ -154,8 +173,8 @@ describe('OverviewPage', () => {
     expect(root.querySelector('[role="alert"]')?.textContent).toContain(
       'Could not load the dashboard.',
     )
-    expect(root.textContent).toContain('Open reports')
-    expect(root.querySelectorAll('ul > li').length).toBeGreaterThanOrEqual(9)
+    expect(root.textContent).toContain('Open')
+    expect(root.querySelectorAll('app-overview-status-strip').length).toBe(3)
   })
 
   it('renders the activity charts once the series loads, with the range summary', async () => {
@@ -199,5 +218,67 @@ describe('OverviewPage', () => {
     const root = harness.routeNativeElement as HTMLElement
 
     expect(root.textContent).toContain('Could not load the activity charts.')
+  })
+
+  it('keeps every status strip, with its links, when the series request fails — a different request', async () => {
+    execute.mockResolvedValue(overview())
+    executeSeries.mockReset()
+    executeSeries.mockRejectedValue(new Error('network down'))
+
+    await harness.navigateByUrl('/', OverviewPage)
+    await harness.fixture.whenStable()
+
+    const root = harness.routeNativeElement as HTMLElement
+
+    expect(root.querySelectorAll('app-overview-status-strip').length).toBe(3)
+    expect(root.textContent).toContain('Open')
+    expect(root.textContent).toContain('Failed tracks')
+    expect(root.textContent).toContain('Stuck')
+    expect(root.textContent).toContain('Deactivated listeners')
+
+    const openReportsLink = Array.from(root.querySelectorAll('a')).find(
+      (a) => a.getAttribute('href') === '/moderation',
+    )
+    expect(openReportsLink).not.toBeUndefined()
+
+    const failedTracksLink = Array.from(root.querySelectorAll('a')).find((a) =>
+      a.textContent?.includes('Failed tracks'),
+    )
+    expect(failedTracksLink?.getAttribute('href')).toBe('/catalog?status=FAILED')
+  })
+
+  it('shows no headline on the signups/uploads charts when the series request fails', async () => {
+    execute.mockResolvedValue(overview())
+    executeSeries.mockReset()
+    executeSeries.mockRejectedValue(new Error('network down'))
+
+    await harness.navigateByUrl('/', OverviewPage)
+    await harness.fixture.whenStable()
+
+    const root = harness.routeNativeElement as HTMLElement
+
+    expect(root.textContent).not.toContain('New accounts, ')
+    expect(root.textContent).not.toContain('Uploads, ')
+  })
+
+  it('keeps every status strip visible, with no headline, while the series is still loading', async () => {
+    execute.mockResolvedValue(overview())
+    executeSeries.mockReset()
+    executeSeries.mockImplementation(() => new Promise(() => undefined))
+
+    await harness.navigateByUrl('/', OverviewPage)
+    await harness.fixture.whenStable()
+
+    const root = harness.routeNativeElement as HTMLElement
+
+    expect(root.querySelectorAll('app-overview-status-strip').length).toBe(3)
+    expect(root.textContent).toContain('Open')
+    expect(root.textContent).toContain('Stuck')
+    const openReportsLink = Array.from(root.querySelectorAll('a')).find(
+      (a) => a.getAttribute('href') === '/moderation',
+    )
+    expect(openReportsLink).not.toBeUndefined()
+    expect(root.textContent).not.toContain('New accounts, ')
+    expect(root.textContent).not.toContain('Uploads, ')
   })
 })

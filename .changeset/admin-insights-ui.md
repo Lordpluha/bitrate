@@ -16,4 +16,9 @@ unit — plus a deliberate grid grouping the two reports charts together instead
 chart alone in the row. Fixed two more reported defects: axis-label text now stays a constant
 size across every chart instead of scaling with each card's column width, chart cards in the
 same row now share a uniform height, and a hover tooltip near a card's edge can no longer widen
-the page and trigger an extra horizontal scrollbar.
+the page and trigger an extra horizontal scrollbar. The standalone grid of nine raw number
+tiles above the charts was removed: each count that duplicated a chart (signups, uploads) now
+shows as a range-following headline total in that chart's own header, and every current-state
+count with no time series (the track pipeline's failed/processing/stuck, moderation's
+open/reviewing, and deactivated listener/artist counts) moved into a compact, still-linked
+status strip inside the chart card it belongs to.

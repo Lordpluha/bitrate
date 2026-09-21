@@ -82,7 +82,17 @@
       "WebFetch(domain:vitest.dev)",
       "WebFetch(domain:playwright.dev)",
       "WebFetch(domain:reactnative.dev)",
-      "WebFetch(domain:knexjs.org)"
+      "WebFetch(domain:knexjs.org)",
+      "Bash(pnpm test*)",
+      "Bash(rtk grep *)",
+      "Bash(rtk git status*)",
+      "Bash(rtk git diff*)",
+      "Bash(rtk git log*)",
+      "Bash(ss -ltnp*)",
+      "Bash(vmstat *)",
+      "Bash(curl -s http://localhost:*)",
+      "Bash(curl -sS http://localhost:*)",
+      "Bash(pnpm --filter @bitrate/api exec prisma migrate status*)"
     ],
     "deny": [
       "Read(./.env)",
@@ -129,6 +139,14 @@
     ],
     "additionalDirectories": ["/tmp"]
   },
+  "enabledMcpjsonServers": [
+    "shadcn",
+    "playwright",
+    "chrome-devtools",
+    "prisma",
+    "storybook",
+    "sentry"
+  ],
   "hooks": {
     "PreToolUse": [
       {
@@ -146,15 +164,6 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-guard.sh\" search"
-          }
-        ]
-      },
-      {
-        "matcher": "Read|Glob",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-guard.sh\" read"
           }
         ]
       }
@@ -195,7 +204,28 @@
     ]
   },
   "enabledPlugins": {
-    "mattpocock-skills@claude-plugins-official": true
+    "mattpocock-skills@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "sentry@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "andrej-karpathy-skills@karpathy-skills": true
   },
-  "enableAllProjectMcpServers": true
+  "extraKnownMarketplaces": {
+    "karpathy-skills": {
+      "source": {
+        "source": "github",
+        "repo": "forrestchang/andrej-karpathy-skills"
+      }
+    }
+  }
 }
