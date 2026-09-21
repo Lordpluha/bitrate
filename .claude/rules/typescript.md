@@ -1,6 +1,11 @@
 ---
 name: typescript
 description: TypeScript conventions for every .ts and .tsx in apps/ and packages/ — compiler strictness, named types in signature positions, the ban on any and suppression comments, the single-object parameter pattern in web-player, import and file-naming rules, TSDoc style, and test placement. Use whenever writing or reviewing TypeScript anywhere in the repository.
+globs:
+  - "apps/**/*.ts"
+  - "apps/**/*.tsx"
+  - "packages/**/*.ts"
+  - "packages/**/*.tsx"
 license: MIT
 metadata:
   author: lordpluha

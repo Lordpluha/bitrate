@@ -1,6 +1,9 @@
 ---
 name: project-conventions
 description: READ THIS FIRST — canonical cross-cutting conventions for the bitrate monorepo, covering FSD layering in web-player, NestJS module structure in the API, TypeScript/React patterns, import rules, the Swagger-decorators-in-decorators/ rule, testing layers, and commit style. Use whenever writing, reviewing, or planning any change under apps/ or packages/, especially at the start of a task, before reaching for a narrower app/package rules reference.
+globs:
+  - "apps/**"
+  - "packages/**"
 metadata:
   version: "1.0.0"
   type: reference

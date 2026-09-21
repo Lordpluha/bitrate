@@ -1,6 +1,8 @@
 ---
 name: forms
 description: React Hook Form + Zod conventions for apps/web-player — where a schema lives so it is never duplicated, zodResolver setup, register versus Controller, mapping server validation errors onto fields, field arrays, async validation, and the accessibility contract every field must meet. Use whenever writing or reviewing a form, a validation schema, or a field component in the web player.
+globs:
+  - "apps/web-player/src/**/*.tsx"
 license: MIT
 metadata:
   author: lordpluha

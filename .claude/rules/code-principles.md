@@ -1,6 +1,9 @@
 ---
 name: code-principles
 description: "SOLID, DRY and KISS as they apply to this codebase, plus the hard limits that follow from them: 100 logic lines per .tsx, 5 own declared props, and where each extracted concern belongs when a component outgrows them. Use whenever writing or reviewing a React component, deciding how to split one, or judging whether an abstraction earns its place."
+globs:
+  - "apps/**/*.tsx"
+  - "packages/**/*.tsx"
 license: MIT
 metadata:
   author: lordpluha

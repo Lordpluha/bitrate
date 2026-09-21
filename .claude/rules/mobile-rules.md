@@ -1,6 +1,8 @@
 ---
 name: mobile-rules
 description: React Native + Expo rules for apps/mobile — the web-player conventions that do not exist here, kebab-case file naming, the path alias rooted at the app itself, and the three app.json settings (New Architecture, typed routes, React Compiler) that constrain what you may add. Use whenever writing or reviewing a screen, navigator, or native surface under apps/mobile/.
+globs:
+  - "apps/mobile/**"
 license: MIT
 metadata:
   author: lordpluha

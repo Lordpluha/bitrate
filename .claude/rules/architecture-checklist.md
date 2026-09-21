@@ -1,6 +1,7 @@
 ---
 name: architecture-checklist
 description: The mechanical review checklist walked before a PR — FSD layering, NestJS controller/Swagger rules, TypeScript and React conventions, state ownership, design-token usage, code-principle limits, forms, and test depth, each with the exact command or grep that proves it. Use when reviewing a diff, preparing to open or update a PR, or deciding whether a change is finished.
+globs: []          # no path scope — applies at PR/commit time, not per-file
 license: MIT
 metadata:
   author: lordpluha

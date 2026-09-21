@@ -1,6 +1,7 @@
 ---
 name: knowledge-base
 description: How this repo's codebase-navigation tool (graphify) works, and how GitHub ticket/board state is queried live rather than mirrored to files. Use before deep exploration of an unfamiliar area, whenever graphify-out/ exists, or when working with /br-create-task, /br-implement, or /br-auto.
+globs: []          # no path scope — applies at PR/commit time, not per-file
 metadata:
   version: "1.0.0"
   type: reference

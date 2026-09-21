@@ -1,6 +1,9 @@
 ---
 name: react
 description: React conventions for apps/web-player/src — function components with named exports, the Server versus Client component boundary, hook rules and the wrapping convention for third-party hooks, the two-useEffect budget, Zustand and React Query ownership, the accessibility baseline, and routing through ROUTES. Use whenever writing or reviewing a .tsx file in the web player.
+globs:
+  - "apps/web-player/src/**/*.tsx"
+  - "packages/ui-react/src/**/*.tsx"
 license: MIT
 metadata:
   author: lordpluha

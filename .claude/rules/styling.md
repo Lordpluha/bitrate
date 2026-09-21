@@ -1,6 +1,11 @@
 ---
 name: styling
 description: "Tailwind v4 + design tokens for the web apps — the hand-written @theme layers that are the token source, where each semantic role lives, the cn() plus CVA recipe, and the forbidden patterns that lint clean but silently break theming (Tailwind's built-in colour scales and the dark: variant). Use whenever writing or reviewing markup that sets className, adding a design token, or when a utility class appears to do nothing."
+globs:
+  - "apps/web-player/src/**/*.tsx"
+  - "apps/web-artists/src/**/*.tsx"
+  - "packages/ui-react/src/**/*.tsx"
+  - "**/*.css"
 license: MIT
 metadata:
   author: lordpluha
