@@ -22,7 +22,7 @@ import { axisTicks, chartMax, hasData, maxLabelsForWidth, thinnedLabelIndexes } 
 import { ChartTooltip } from './chart-tooltip'
 import type { ChartTooltipRow, ChartTooltipState } from './chart-tooltip.types'
 import { trackChartWidth } from './chart-width'
-import type { ChartSeriesValues } from './chart.types'
+import type { ChartHeadline, ChartSeriesValues } from './chart.types'
 
 /**
  * A grouped or stacked bar chart, hand-written SVG. Used both for a date-series (uploads by
@@ -44,6 +44,12 @@ export class BarChart {
   readonly series = input.required<ChartSeriesValues[]>()
   readonly stacked = input(false)
   readonly emptyMessage = input('No data for this range.')
+  readonly headline = input<ChartHeadline | null>(null)
+  /** When set, the plot area shows this state instead of the data — the header, description and
+   *  any projected content (a status strip) stay visible regardless, so a chart that carries a
+   *  current-state count never loses it just because its own series request is slow or failed. */
+  readonly loading = input(false)
+  readonly failure = input<string | null>(null)
 
   protected readonly plotHost = viewChild<ElementRef<HTMLElement>>('plotHost')
   protected readonly width = trackChartWidth(this.plotHost)

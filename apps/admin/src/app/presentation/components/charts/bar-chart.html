@@ -1,12 +1,26 @@
 @let data = series();
 @let activeIndex = hover.activeIndex();
 @let tooltipState = tooltip();
+@let head = headline();
 
 <figure class="flex h-full flex-col rounded-lg border border-border bg-card p-4">
-  <figcaption class="text-sm font-semibold text-foreground">{{ title() }}</figcaption>
+  <div class="flex flex-wrap items-start justify-between gap-2">
+    <figcaption class="text-sm font-semibold text-foreground">{{ title() }}</figcaption>
+    @if (head) {
+      <div class="text-right">
+        <span class="block text-lg font-semibold tabular-nums text-foreground">{{ head.value }}</span>
+        <span class="block text-[11px] text-muted-foreground">{{ head.label }}</span>
+      </div>
+    }
+  </div>
   <p class="mt-0.5 min-h-8 text-xs text-muted-foreground">{{ description() }}</p>
+  <ng-content />
 
-  @if (hasPoints()) {
+  @if (loading()) {
+    <p class="mt-3 text-sm text-muted-foreground">Loading…</p>
+  } @else if (failure(); as message) {
+    <p class="mt-3 text-sm text-destructive" role="alert">{{ message }}</p>
+  } @else if (hasPoints()) {
     <div class="relative mt-3 overflow-hidden" #plotHost>
       <svg class="w-full" [style.height.px]="height" [attr.viewBox]="'0 0 ' + width() + ' ' + height" aria-hidden="true">
         @for (tick of yTicks(); track tick) {

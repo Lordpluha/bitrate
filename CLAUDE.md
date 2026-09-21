@@ -21,6 +21,11 @@ and cross-file relationships.
   `graphify-out/graph.json` exists. Use `graphify path "<A>" "<B>"` for relationships and
   `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph,
   usually much smaller than `GRAPH_REPORT.md` or raw grep output.
+- `.claude/hooks/graphify-guard.sh` reminds you of this on shell searches. It is **advisory** —
+  it prints context and lets the call through. It used to run on every `Read` and `Glob` too,
+  which meant a reminder on each file opened, including files a task already knew it needed;
+  that entry was removed. Opening a named file to edit or debug it never needed the graph
+  first, and a notice labelled mandatory that fires on everything teaches everyone to skip it.
 - If `graphify-out/wiki/index.md` exists, use it for broad navigation instead of raw source
   browsing.
 - Read `graphify-out/GRAPH_REPORT.md` only for broad architecture review or when
@@ -133,9 +138,15 @@ never misses one.
 
 ## MCP servers
 
-`.mcp.json` wires six project-scoped servers; `.claude/settings.json` sets
-`enableAllProjectMcpServers`, so they start without a per-session prompt. All six are
-optional — if one fails to start, fall back to the CLI or UI it wraps.
+`.mcp.json` wires six project-scoped servers, and `.claude/settings.json` approves them by
+name in `enabledMcpjsonServers`, so they start without a per-session prompt. The list is
+deliberate rather than `enableAllProjectMcpServers`: adding a server to `.mcp.json` should be
+a visible line in a review, not something that auto-connects because it landed in the file.
+
+All six are optional — if one fails to start, fall back to the CLI or UI it wraps. Two fail
+routinely and that is expected, not a problem to chase: `storybook` is absent unless the
+catalogue is running locally, and `sentry` stays unauthorized until someone completes its
+OAuth in an interactive session (`/mcp`).
 
 | Server | Command | Use it for |
 | --- | --- | --- |
@@ -261,25 +272,30 @@ For detailed guidance, prefer the smallest relevant file under `.claude/rules/*.
 `.claude/README.md` for the full command layer and `.claude/TOKEN_BUDGET.md` for more
 token-saving rules.
 
-## Sandbox: host tools via `flatpak-spawn`
+## Host tools: check, don't assume
 
-This project is often opened from VS Code installed as a **Flatpak**, so the shell tools run
-in the `com.visualstudio.code` sandbox whose `/usr` is the Flatpak runtime's, not the host's.
-Consequences worth knowing before concluding a tool is missing:
+`gh`, `docker` and `graphify` are host-installed tools whose availability depends on how the
+editor was launched. **Probe once (`command -v <tool>`) rather than reasoning about it** —
+both of the following are real and neither is the default:
 
-- `gh`, `docker`, and `graphify` are installed on the host but **not usable directly here**.
-  `command -v gh` failing does not mean the user lacks it, and `graphify` is worse than
-  missing: its launcher resolves but dies with `ModuleNotFoundError` because its uv venv is
-  outside the sandbox. Reach all three with `flatpak-spawn --host <tool> …`.
-  `.claude/scripts/auto/br-pr.sh` and `.claude/hooks/graphify-guard.sh` do this
-  automatically and report which transport they used.
-- So the mandated `graphify query "<question>"` above is
-  `flatpak-spawn --host graphify query "<question>"` in this environment.
-- The repo is shared with the host, but **sandbox `/tmp` is not**. Any file handed to a host
-  command must live inside the repo — use the gitignored `.br-scratch/`, never the session
-  scratchpad, for PR bodies and issue comments.
-- `pnpm`, `node`, `git`, and `rg` all resolve normally; only host-installed system tools are
-  affected.
+- **Launched normally**, the tools resolve directly and are called as themselves. This is the
+  common case; `graphify query "<question>"` is exactly that command.
+- **Launched from VS Code installed as a Flatpak**, the shell runs inside the
+  `com.visualstudio.code` sandbox, whose `/usr` belongs to the Flatpak runtime. There the same
+  tools are absent — and `graphify` is worse than absent: its launcher resolves but dies with
+  `ModuleNotFoundError`, because its uv venv lives outside the sandbox. Reach them with
+  `flatpak-spawn --host <tool> …`. `.claude/scripts/auto/br-pr.sh` and
+  `.claude/hooks/graphify-guard.sh` already try both and report which transport won, so call
+  those rather than hand-rolling the fallback.
+
+Two consequences that only apply inside the sandbox: the repository is shared with the host
+but **`/tmp` is not**, so any file handed to a host command must live inside the repo (use the
+gitignored `.br-scratch/`, never the session scratchpad, for PR bodies and issue comments);
+and `pnpm`, `node`, `git` and `rg` resolve in both cases, so a failure there is a real failure.
+
+If `gh` is missing in both transports, say so plainly: the ticket, board and PR half of this
+workflow (`br-manager`, `/br-auto`, `br-pr.sh`) cannot run, and no MCP server substitutes for
+it today.
 
 ## Shell commands
 

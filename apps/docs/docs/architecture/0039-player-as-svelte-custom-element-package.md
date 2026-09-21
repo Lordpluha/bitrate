@@ -102,6 +102,13 @@ because it is the only target whose host page this repository does not control.
   stage delivers the package skeleton, its build/lint/test tooling, and the enforced
   package-internal boundaries, with no engine code and no real UI yet.
 
+**Status update (E1, scoped to `apps/admin`).** The engine (`src/engine/index.ts`) and the
+real `<bitrate-player>` UI (`src/element/BitratePlayer.svelte`) are implemented, and
+`apps/admin`'s `TrackAudioPlayer` consumes the package as a build-time workspace dependency,
+replacing its native `<audio>` element. `apps/web-player` and `apps/web-artists` have not
+adopted the package yet; the engine migration off `apps/web-player`'s in-app player (the
+`/engine` subpath's stated purpose) remains a separate, not-yet-started effort.
+
 ## Alternatives considered
 
 - **A React package, mounted into each host via `react-dom/client`.** Works cleanly for

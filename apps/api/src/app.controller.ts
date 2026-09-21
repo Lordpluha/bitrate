@@ -1,5 +1,6 @@
 import { timingSafeEqual } from 'node:crypto'
 import type { AppConfig } from '@common/config'
+import { API_DOC_TITLE } from '@common/swagger'
 import { CacheService } from '@infra/cache/cache.service'
 import { MetricsService, PROMETHEUS_CONTENT_TYPE } from '@infra/observability/metrics.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -22,7 +23,7 @@ import { SkipThrottle } from '@nestjs/throttler'
 import * as Sentry from '@sentry/nestjs'
 
 /** Represents the app controller. */
-@ApiTags('Welcome')
+@ApiTags('System')
 @Controller({ version: '1' })
 export class AppController {
   private readonly logger = new Logger(AppController.name)
@@ -38,7 +39,7 @@ export class AppController {
   /** Runs the get welcome operation. */
   @Get()
   getWelcome(): string {
-    return `Welcome to ${process.env.npm_package_name}!`
+    return `Welcome to ${API_DOC_TITLE}!`
   }
 
   /** Runs the get health operation. */

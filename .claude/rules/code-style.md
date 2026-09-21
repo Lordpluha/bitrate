@@ -215,6 +215,33 @@ pnpm lint && pnpm check-types
 
 Zero errors is the baseline. A commit with linting or type errors will fail CI.
 
+## `rtk` compresses command output — and when to turn that off
+
+A `PreToolUse` hook rewrites shell commands through `rtk` (a local CLI proxy; `rtk gain` prints
+its own savings analytics), which summarises their output before it reaches the model. It earns
+its place: measured over 10 417 commands, it removed 58.5 % of the tokens those commands would
+otherwise have produced —
+**97 % on `jest` runs, 94 % on ESLint, 90 % on Vitest**, where the output is hundreds of
+near-identical lines and three of them matter. Leave it on for ordinary runs.
+
+The saving is lossy by definition, and there are runs where the lost part is the point:
+
+- **Debugging a specific failure** — you need the actual assertion diff and stack, not a tally
+  of how many specs failed.
+- **Reading a coverage report** or any output you intend to parse.
+- **Any redirection to a file.** This is the one that has already cost a session: an agent ran
+  a coverage pass with the output redirected, got it truncated at 2000 characters, and the
+  written log file was corrupted with it.
+
+In those three cases run the command through `rtk proxy <cmd>`, which passes the raw output
+through untouched. That is the whole rule — narrow the exception to the run that needs it
+rather than disabling the hook, because the hook's biggest win is on exactly the test commands
+this repo runs most.
+
+One thing `rtk proxy` is not: an entry for `permissions.allow`. It executes whatever command
+follows it, so allowlisting it allowlists everything. `rtk grep` and the read-only `rtk git`
+subcommands are allowlisted; `rtk proxy` prompts, and should.
+
 ## Parallel review pass — and the memory budget it has to fit in
 
 Lint, type checking, and Knip are independent and *may* run in parallel. Package tests can run

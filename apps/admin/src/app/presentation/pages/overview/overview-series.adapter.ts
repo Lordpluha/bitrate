@@ -1,5 +1,5 @@
 import type { OverviewSeries } from '@domain/overview'
-import type { ChartSeriesValues } from '@presentation/components'
+import { type ChartHeadline, type ChartSeriesValues, formatChartValue } from '@presentation/components'
 
 /** Short day-of-month labels for the charts' sr-only tables, e.g. "18 Sep". */
 export function seriesCategories(series: OverviewSeries): string[] {
@@ -88,6 +88,27 @@ export function reportsByStatusChartSeries(series: OverviewSeries): ChartSeriesV
 }
 
 export const REPORT_STATUS_CATEGORIES = ['Open', 'Reviewing', 'Resolved', 'Rejected']
+
+/**
+ * The signups chart's headline: total new accounts (listener + artist) summed over the whole
+ * selected range, not just the latest day — the range control already lets an operator narrow the
+ * window, so the headline follows it rather than a fixed trailing-7-day count.
+ *
+ * `null` for the loading-placeholder series (`days === 0`), never `0` — a real range from the API
+ * always has `days > 0`.
+ */
+export function signupsChartHeadline(series: OverviewSeries): ChartHeadline | null {
+  if (series.days === 0) return null
+  const total = series.signups.reduce((sum, point) => sum + point.listeners + point.artists, 0)
+  return { value: formatChartValue(total), label: `New accounts, ${series.days}d` }
+}
+
+/** The uploads chart's headline: total tracks uploaded over the selected range, same convention. */
+export function uploadsChartHeadline(series: OverviewSeries): ChartHeadline | null {
+  if (series.days === 0) return null
+  const total = series.uploads.reduce((sum, point) => sum + point.uploaded, 0)
+  return { value: formatChartValue(total), label: `Uploads, ${series.days}d` }
+}
 
 /** What each chart counts, over what window, and in what unit — shown under its caption. */
 export function signupsChartDescription(series: OverviewSeries): string {

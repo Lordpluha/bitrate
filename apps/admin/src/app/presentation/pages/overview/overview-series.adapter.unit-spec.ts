@@ -9,8 +9,10 @@ import {
   reportsChartSeries,
   seriesCategories,
   signupsChartDescription,
+  signupsChartHeadline,
   signupsChartSeries,
   uploadsChartDescription,
+  uploadsChartHeadline,
   uploadsChartSeries,
 } from './overview-series.adapter'
 
@@ -117,5 +119,41 @@ describe('rangeSummary', () => {
     const empty = series({ signups: [], listens: [] })
 
     expect(rangeSummary(empty)).toContain('0 new accounts')
+  })
+})
+
+describe('signupsChartHeadline', () => {
+  it('sums listeners and artists across the whole range, labelled with the range length', () => {
+    const headline = signupsChartHeadline(series())
+
+    expect(headline).toEqual({ value: '3', label: 'New accounts, 7d' })
+  })
+
+  it('is null for the loading-placeholder series, never "0"', () => {
+    expect(signupsChartHeadline(series({ days: 0, signups: [] }))).toBeNull()
+  })
+
+  it('reports zero for a real, loaded range with no signups', () => {
+    const headline = signupsChartHeadline(
+      series({
+        signups: [
+          { date: new Date('2026-09-17T00:00:00.000Z'), listeners: 0, artists: 0 },
+        ],
+      }),
+    )
+
+    expect(headline).toEqual({ value: '0', label: 'New accounts, 7d' })
+  })
+})
+
+describe('uploadsChartHeadline', () => {
+  it('sums the daily uploaded total across the whole range, labelled with the range length', () => {
+    const headline = uploadsChartHeadline(series())
+
+    expect(headline).toEqual({ value: '4', label: 'Uploads, 7d' })
+  })
+
+  it('is null for the loading-placeholder series, never "0"', () => {
+    expect(uploadsChartHeadline(series({ days: 0, uploads: [] }))).toBeNull()
   })
 })

@@ -35,6 +35,17 @@ const makeController = (overrides?: {
   return { controller: new AppController(prisma, cache, metrics, storage, config), metrics }
 }
 
+describe('AppController welcome', () => {
+  it('greets with the real API name, not an npm-injected variable', () => {
+    const { controller } = makeController()
+
+    const welcome = controller.getWelcome()
+
+    expect(welcome).toBe('Welcome to Bitrate API!')
+    expect(welcome).not.toContain('undefined')
+  })
+})
+
 describe('AppController health', () => {
   it('returns a generic liveness response without checking dependencies', () => {
     const postgres = jest.fn(async () => true)

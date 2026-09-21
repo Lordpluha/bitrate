@@ -144,6 +144,13 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
     customSiteTitle: API_DOC_TITLE,
+    swaggerOptions: {
+      filter: true,
+      docExpansion: 'none',
+      tagsSorter: 'alpha',
+      operationsSorter: 'alpha',
+      persistAuthorization: true,
+    },
   })
 
   await app.listen(configService.getOrThrow('PORT'))

@@ -9,3 +9,13 @@ export type ChartSeriesValues = {
   colorVar: string
   values: number[]
 }
+
+/**
+ * A single summary number shown in a chart card's header, beside its title — the total (or
+ * latest value; each caller states which) for the metric the chart already plots. `null` when
+ * the chart has no range loaded yet, so a headline never reads "0" for missing data.
+ */
+export type ChartHeadline = {
+  value: string
+  label: string
+}
