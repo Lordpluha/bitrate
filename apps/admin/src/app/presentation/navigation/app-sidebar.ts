@@ -7,6 +7,7 @@ import { hasPermission } from '@domain/access'
 import { AppNavItem } from './nav-item'
 import { NAV_SECTIONS, type NavItem, type NavSection } from './nav.model'
 import { SIDEBAR_MAX, SIDEBAR_MIN, SidebarWidth } from './sidebar-width'
+import { AppThemeToggle } from './theme-toggle'
 
 /**
  * The operator panel's rail: brand, sections, and a drag handle.
@@ -18,7 +19,7 @@ import { SIDEBAR_MAX, SIDEBAR_MIN, SidebarWidth } from './sidebar-width'
  */
 @Component({
   selector: 'app-sidebar',
-  imports: [AppNavItem, NgIcon, RouterLink],
+  imports: [AppNavItem, AppThemeToggle, NgIcon, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideIcons({ lucidePanelLeft })],
   /**

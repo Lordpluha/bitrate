@@ -1,3 +1,5 @@
 export * from './app-sidebar'
 export * from './nav.model'
 export * from './sidebar-width'
+export * from './theme-store'
+export * from './theme-toggle'
