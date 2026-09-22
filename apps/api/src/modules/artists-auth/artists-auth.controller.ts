@@ -29,6 +29,8 @@ import {
   AuthRefreshSwagger,
   AuthRegistrationSwagger,
   AuthResetPasswordSwagger,
+  AuthVerifyEmailResendSwagger,
+  AuthVerifyEmailSwagger,
   EmailAvailabilitySwagger,
   TwoFactorDisableSwagger,
   TwoFactorEnableSwagger,
@@ -155,6 +157,7 @@ export class AuthController {
     await this.artistAuthService.resetPassword(dto.token, dto.password)
   }
 
+  @AuthVerifyEmailSwagger()
   @HttpCode(200)
   @Post('verify-email')
   async verifyEmail(
@@ -163,6 +166,7 @@ export class AuthController {
     await this.artistAuthService.verifyEmail(dto.token)
   }
 
+  @AuthVerifyEmailResendSwagger()
   @HttpCode(200)
   @Post('verify-email/resend')
   async resendEmail(
