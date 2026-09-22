@@ -18,7 +18,6 @@ import helmet from 'helmet'
 import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'
 import { resolveTrustProxySetting } from './common/config/trusted-proxy.config'
-import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 
 /** Runs the bootstrap operation. */
 async function bootstrap() {
@@ -44,7 +43,8 @@ async function bootstrap() {
     }),
   )
   app.use(cookieParser())
-  app.useGlobalFilters(new HttpExceptionFilter())
+  // HttpExceptionFilter is registered as an APP_FILTER provider in AppModule — it needs
+  // I18nService injected, which `new HttpExceptionFilter()` here could not supply.
 
   // Add global prefix /api to all routes except static files and swagger
   app.setGlobalPrefix('api')

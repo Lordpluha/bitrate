@@ -1,6 +1,11 @@
 import { randomBytes } from 'node:crypto'
 import type { LoginResult } from '@common/auth.types'
 import { MailService } from '@infra/mail/mail.service'
+import {
+  DEFAULT_MAIL_LOCALE,
+  type MailLocale,
+  resolveMailLocale,
+} from '@infra/mail/templates/mail-locale'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { UsersPrivateService } from '@modules/users/users.private.service'
 import {
@@ -35,13 +40,19 @@ export class UserAuthService {
     private mail: MailService,
   ) {}
 
-  /** Runs the register user operation. */
-  async registerUser(registrationDto: RegistrationDto) {
+  /**
+   * Runs the register user operation. `acceptLanguage` is the raw request header value —
+   * the only point in the account's lifetime this reads it. From here on the stored
+   * `locale` column, not a live request, drives every transactional email.
+   */
+  async registerUser(registrationDto: RegistrationDto, acceptLanguage?: string) {
     const user = await this.users.getByEmail(registrationDto.email)
 
     if (user) {
       throw new ConflictException('User with this email already exists')
     }
+
+    const locale = resolveMailLocale(acceptLanguage?.split(',')[0]?.split('-')[0])
 
     const createdUser = await this.users.create({
       username: registrationDto.username,
@@ -50,9 +61,15 @@ export class UserAuthService {
       avatar: null,
       description: null,
       updatedAt: new Date(),
+      locale,
     })
 
-    await this.issueEmailVerification(createdUser.id, createdUser.email, createdUser.username)
+    await this.issueEmailVerification(
+      createdUser.id,
+      createdUser.email,
+      createdUser.username,
+      locale,
+    )
     return { requiresEmailVerification: true as const }
   }
 
@@ -187,7 +204,12 @@ export class UserAuthService {
       data: { userId: user.id, token: this.token.hashToken(rawToken), expiresAt },
     })
 
-    await this.mail.sendPasswordReset(user.email, rawToken, user.username)
+    await this.mail.sendPasswordReset(
+      user.email,
+      rawToken,
+      user.username,
+      resolveMailLocale(user.locale),
+    )
   }
 
   /** Runs the reset password operation. */
@@ -232,7 +254,12 @@ export class UserAuthService {
   async resendEmailVerification(email: string) {
     const user = await this.usersPrivate.getByEmail(email)
     if (!user || user.emailVerifiedAt) return
-    await this.issueEmailVerification(user.id, user.email, user.username)
+    await this.issueEmailVerification(
+      user.id,
+      user.email,
+      user.username,
+      resolveMailLocale(user.locale),
+    )
   }
 
   /** Lists active sessions without exposing token hashes. */
@@ -262,7 +289,12 @@ export class UserAuthService {
     })
   }
 
-  private async issueEmailVerification(userId: string, email: string, username: string) {
+  private async issueEmailVerification(
+    userId: string,
+    email: string,
+    username: string,
+    locale: MailLocale = DEFAULT_MAIL_LOCALE,
+  ) {
     const rawToken = randomBytes(32).toString('hex')
     await this.prisma.$transaction([
       this.prisma.userEmailVerification.deleteMany({ where: { userId } }),
@@ -274,7 +306,7 @@ export class UserAuthService {
         },
       }),
     ])
-    await this.mail.sendEmailVerification(email, rawToken, username)
+    await this.mail.sendEmailVerification(email, rawToken, username, locale)
   }
 
   private async recordFailedLogin(userId: string) {
