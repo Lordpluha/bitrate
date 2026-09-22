@@ -48,7 +48,9 @@
     }
   </nav>
 
-  <div class="shrink-0 border-t border-border p-2">
+  <div class="shrink-0 space-y-1 border-t border-border p-2">
+    <app-theme-toggle [collapsed]="collapsed()" />
+
     <button
       class="flex h-9 w-full items-center gap-3 rounded-md px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
       [class.justify-center]="collapsed()"
