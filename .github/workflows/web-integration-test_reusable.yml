@@ -5,6 +5,20 @@ on:
 
 permissions:
   contents: read
+  # Read-only, and only for one thing: docker/build-push-action pulls the GHCR
+  # `cache/<app>:buildcache` refs below. Without a packages scope the token 403s on that pull,
+  # BuildKit downgrades a cache-from failure to a warning rather than an error, and the job
+  # silently falls back to the cold build this change exists to remove. The caller
+  # (web-integration-test.yml) grants the same scope — a called workflow can only narrow the
+  # caller's permissions, never widen them.
+  packages: read
+
+# Must match api_reusable.yml, web_player_reusable.yml and web_artists_reusable.yml exactly.
+# A different IMAGE_PREFIX would not fail the job; it would quietly address a second cache lane
+# that nothing ever warms.
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
 
 jobs:
   integration-test:
@@ -32,6 +46,14 @@ jobs:
       SHADOW_DATABASE_URL: postgresql://admin:admin@postgres:5432/bitrate_shadow
       JWT_SECRET: test_secret_key_for_ci
 
+      # Compose derives the project name from the project directory, which is `infra/` because
+      # every command below passes `-f infra/docker-compose.preprod.yaml`. Pinning it changes
+      # nothing about today's behaviour (`docker compose config --images` already prints
+      # `infra-api` / `infra-web-player` / `infra-web-artists`) and turns the image names the
+      # build steps tag into a stated contract rather than a derivation a directory rename
+      # would silently break.
+      COMPOSE_PROJECT_NAME: infra
+
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -51,9 +73,85 @@ jobs:
           # Show available space
           df -h
 
-      - name: Build application images
-        run: |
-          docker compose -f infra/docker-compose.preprod.yaml build api web-player web-artists
+      # After the prune, so `--volumes` cannot take the builder's cache out from under it.
+      - name: Setup Docker + registries
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      # The three steps below replace a single `docker compose build api web-player web-artists`.
+      # Compose has no cache backend at all, and the prune above wipes the runner's local layers,
+      # so that command was a cold build of three images on every PR. buildx can read the cache
+      # the per-app jobs (api-pr, web-player-pr, web-artists-pr) maintain; compose cannot.
+      #
+      # `target: development`, NOT the `production` the sibling workflows build. That is
+      # deliberate: infra/docker-compose.preprod.yaml declares `target: development` for all
+      # three services, mounts the working tree over /app, and runs `start:dev` / `next dev`.
+      # A production image carries `pnpm install --prod` node_modules and no Nest or Next CLI,
+      # so the compose `command:` would not start and the `db:gen` / `prisma db seed` steps
+      # further down would fail.
+      #
+      # The cache still hits despite the different target, because `base` and `dependencies`
+      # are shared stages and `dependencies` is the `pnpm install --frozen-lockfile` that
+      # dominates every one of these builds. For apps/api the `development` and `build` stages
+      # are instruction-for-instruction identical through `RUN ... db:gen`, so that entire
+      # chain resolves against the production lane's cache.
+      #
+      # There is deliberately no `cache-to`. The shared refs hold a production-target manifest;
+      # a `mode=max` export from a development-target build would replace it, and the next
+      # api-pr would then re-run `pnpm build` and `pnpm install --prod` from scratch. This job
+      # reads that lane and never writes it.
+      #
+      # `load: true` plus `tags:` puts each image into the local daemon under exactly the name
+      # compose resolves for that service — `<project>-<service>`, since none of the three
+      # declares an `image:`. That is what lets `up --no-build` below start them.
+      - name: Build API image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./apps/api/Dockerfile
+          push: false
+          load: true
+          target: development
+          tags: ${{ env.COMPOSE_PROJECT_NAME }}-api:latest
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache
+            type=gha,scope=api
+
+      - name: Build Web Player image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./apps/web-player/Dockerfile
+          push: false
+          load: true
+          target: development
+          tags: ${{ env.COMPOSE_PROJECT_NAME }}-web-player:latest
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache
+            type=gha,scope=web-player
+
+      # No build-args on either Next.js image, unlike the sibling workflows. Their args feed the
+      # `build` stage, which bakes NEXT_PUBLIC_* into a static bundle; the `development` stage
+      # declares no ARG at all and `next dev` reads those values at runtime from the compose
+      # `environment:` block. Passing them here would warn about an unconsumed build-arg and
+      # change nothing in the image — and it would pull SENTRY_AUTH_TOKEN into a job that has
+      # no release artifact to attach source maps to.
+      - name: Build Web Artists image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./apps/web-artists/Dockerfile
+          push: false
+          load: true
+          target: development
+          tags: ${{ env.COMPOSE_PROJECT_NAME }}-web-artists:latest
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-artists:buildcache
+            type=gha,scope=web-artists
 
       - name: Start services
         run: |
@@ -65,9 +163,13 @@ jobs:
           timeout 60 bash -c 'until docker compose -f infra/docker-compose.preprod.yaml exec -T postgres pg_isready -U admin; do sleep 1; done'
           docker compose -f infra/docker-compose.preprod.yaml exec -T redis redis-cli ping
 
+      # `--no-build` is the guard on the tagging contract above: compose only builds a service
+      # whose image is missing, so a tag that no longer matches would otherwise be an invisible
+      # 11-minute rebuild instead of a failure. Here it stops immediately and says which image
+      # it could not find.
       - name: Start application services
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml up -d api web-player web-artists
+          docker compose -f infra/docker-compose.preprod.yaml up -d --no-build api web-player web-artists
           sleep 20
 
       - name: Check container status
