@@ -17,9 +17,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger'
 import { SkipThrottle } from '@nestjs/throttler'
 import * as Sentry from '@sentry/nestjs'
+import {
+  GetHealthSwagger,
+  GetLivenessSwagger,
+  GetReadinessSwagger,
+  GetWelcomeSwagger,
+} from './decorators'
 
 /** Represents the app controller. */
 @ApiTags('Welcome')
@@ -36,12 +42,14 @@ export class AppController {
   ) {}
 
   /** Runs the get welcome operation. */
+  @GetWelcomeSwagger()
   @Get()
   getWelcome(): string {
     return `Welcome to ${process.env.npm_package_name}!`
   }
 
   /** Runs the get health operation. */
+  @GetHealthSwagger()
   @Get('health')
   @SkipThrottle()
   @Header('Cache-Control', 'no-store')
@@ -50,6 +58,7 @@ export class AppController {
   }
 
   /** Returns a dependency-free liveness signal. */
+  @GetLivenessSwagger()
   @Get('health/live')
   @SkipThrottle()
   @Header('Cache-Control', 'no-store')
@@ -58,6 +67,7 @@ export class AppController {
   }
 
   /** Returns a bounded, topology-free dependency readiness signal. */
+  @GetReadinessSwagger()
   @Get('health/ready')
   @SkipThrottle()
   @Header('Cache-Control', 'no-store')
@@ -85,7 +95,8 @@ export class AppController {
     return { status: 'ok' as const }
   }
 
-  /** Runs the get error operation. */
+  /** Deliberately throws to verify Sentry wiring; 404s in production. */
+  @ApiExcludeEndpoint()
   @Get('/debug-sentry')
   getError() {
     if (process.env.NODE_ENV === 'production') throw new NotFoundException()
@@ -98,7 +109,8 @@ export class AppController {
     throw new Error('My first Sentry error!')
   }
 
-  /** Returns Prometheus-compatible process metrics. */
+  /** Returns Prometheus-compatible process metrics; bearer-token protected. */
+  @ApiExcludeEndpoint()
   @Get('metrics')
   @SkipThrottle()
   @Header('Content-Type', PROMETHEUS_CONTENT_TYPE)
