@@ -53,6 +53,10 @@ jobs:
         if: ${{ inputs.run-biome }}
         run: pnpm exec biome ci apps/api packages/contracts
 
+      - name: Check i18n dictionary drift
+        if: ${{ inputs.run-biome }}
+        run: pnpm --filter @bitrate/api run check:i18n
+
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker
         with:
