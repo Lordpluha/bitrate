@@ -109,17 +109,34 @@ jobs:
         if: ${{ inputs.run-tests }}
         run: pnpm --filter @bitrate/web-player test
 
+      # Pull-request runs only. On `develop`, on a release rebuild, and on a
+      # hand-dispatched run there is no base ref to diff against and no reason to
+      # narrow anything: those keep running the complete suites. When this step
+      # is skipped its outputs are empty strings, and every `!= 'false'` below
+      # therefore falls through to the full run.
+      - name: Select impacted Playwright specs
+        id: select-playwright
+        if: ${{ github.event_name == 'pull_request' && (inputs.run-e2e || inputs.run-screenshot) }}
+        env:
+          SNIFFLER_BASE_REF: ${{ github.event.pull_request.base.sha }}
+          SNIFFLER_HEAD_REF: ${{ github.sha }}
+        run: node apps/web-player/scripts/select-playwright-tests.mjs
+
       - name: Install Playwright Chromium
-        if: ${{ inputs.run-e2e || inputs.run-screenshot }}
+        if: ${{ (inputs.run-e2e || inputs.run-screenshot) && steps.select-playwright.outputs.any != 'false' }}
         run: pnpm exec playwright install chromium --with-deps
 
       - name: Run web-player E2E tests
-        if: ${{ inputs.run-e2e }}
-        run: pnpm --filter @bitrate/web-player test:e2e
+        if: ${{ inputs.run-e2e && steps.select-playwright.outputs.e2e != 'false' }}
+        env:
+          PLAYWRIGHT_E2E_FILTERS: ${{ steps.select-playwright.outputs.e2e-args }}
+        run: pnpm --filter @bitrate/web-player test:e2e $PLAYWRIGHT_E2E_FILTERS
 
       - name: Run web-player screenshot tests
-        if: ${{ inputs.run-screenshot }}
-        run: pnpm --filter @bitrate/web-player test:screenshot
+        if: ${{ inputs.run-screenshot && steps.select-playwright.outputs.screenshot != 'false' }}
+        env:
+          PLAYWRIGHT_SCREENSHOT_FILTERS: ${{ steps.select-playwright.outputs.screenshot-args }}
+        run: pnpm --filter @bitrate/web-player test:screenshot $PLAYWRIGHT_SCREENSHOT_FILTERS
 
       - name: Upload screenshot test failure artifacts
         if: ${{ inputs.run-screenshot && failure() }}

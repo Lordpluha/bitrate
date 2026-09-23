@@ -45,6 +45,15 @@ patterns, and commands. Don't load all three for a change that touches one surfa
 A change can span more than one row — e.g. a new API endpoint plus the web-player feature
 consuming it needs both a Jest spec and a Vitest spec.
 
+**A new `apps/web-player` Playwright spec is also declared in
+`apps/web-player/.sniffler/test-map.json`**, listing the route files it exercises. On a pull
+request that app's two Playwright suites are narrowed to the specs the diff can reach
+(`apps/web-player/scripts/select-playwright-tests.mjs`, via
+[sniffler](https://github.com/callstackincubator/sniffler)); a spec the map does not name is
+never selected, so the selector checks map against disk and falls back to the full suite —
+loudly — until the two agree. Locally, `pnpm --filter @bitrate/web-player test:select` prints
+what a diff would select. See `.github/workflows/README.md` § "Web Player".
+
 ## Coverage — depth before percentage
 
 A change is covered when its **failure modes** are exercised, not when a percentage moves.
