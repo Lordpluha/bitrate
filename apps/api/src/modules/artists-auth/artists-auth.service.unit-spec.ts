@@ -231,8 +231,25 @@ describe('ArtistsAuthService', () => {
         artist.email,
         expect.any(String),
         artist.username,
+        'en',
       )
       expect(mail.sendPasswordReset).not.toHaveBeenCalled()
+    })
+
+    it("sends the reset email in the artist's stored locale, not a request header", async () => {
+      const artist = buildArtist({ id: 'artist-1', locale: 'uk' })
+      artistsPrivate.findByEmail.mockResolvedValue(artist as never)
+      token.hashToken.mockReturnValue('hashed-token')
+      prisma.artistPasswordReset.create.mockResolvedValue({} as never)
+
+      await service.forgotPassword(artist.email)
+
+      expect(mail.sendArtistPasswordReset).toHaveBeenCalledWith(
+        artist.email,
+        expect.any(String),
+        artist.username,
+        'uk',
+      )
     })
   })
   describe('failed login lockout', () => {

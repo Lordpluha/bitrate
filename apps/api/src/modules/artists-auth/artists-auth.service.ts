@@ -1,6 +1,11 @@
 import { randomBytes } from 'node:crypto'
 import type { LoginResult } from '@common/auth.types'
 import { MailService } from '@infra/mail/mail.service'
+import {
+  DEFAULT_MAIL_LOCALE,
+  type MailLocale,
+  resolveMailLocale,
+} from '@infra/mail/templates/mail-locale'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { ArtistEntity } from '@modules/artists'
 import { ArtistsPrivateService } from '@modules/artists/artists.private.service'
@@ -195,7 +200,12 @@ export class ArtistsAuthService {
       data: { artistId: artist.id, token: this.token.hashToken(rawToken), expiresAt },
     })
 
-    await this.mail.sendArtistPasswordReset(artist.email, rawToken, artist.username)
+    await this.mail.sendArtistPasswordReset(
+      artist.email,
+      rawToken,
+      artist.username,
+      resolveMailLocale(artist.locale),
+    )
   }
 
   /** Runs the reset password operation. */
@@ -240,10 +250,20 @@ export class ArtistsAuthService {
   async resendEmailVerification(email: string) {
     const artist = await this.artistsPrivate.findByEmail(email)
     if (!artist || artist.emailVerifiedAt) return
-    await this.issueEmailVerification(artist.id, artist.email, artist.username)
+    await this.issueEmailVerification(
+      artist.id,
+      artist.email,
+      artist.username,
+      resolveMailLocale(artist.locale),
+    )
   }
 
-  private async issueEmailVerification(artistId: string, email: string, username: string) {
+  private async issueEmailVerification(
+    artistId: string,
+    email: string,
+    username: string,
+    locale: MailLocale = DEFAULT_MAIL_LOCALE,
+  ) {
     const rawToken = randomBytes(32).toString('hex')
     await this.prisma.$transaction([
       this.prisma.artistEmailVerification.deleteMany({ where: { artistId } }),
@@ -255,7 +275,7 @@ export class ArtistsAuthService {
         },
       }),
     ])
-    await this.mail.sendArtistEmailVerification(email, rawToken, username)
+    await this.mail.sendArtistEmailVerification(email, rawToken, username, locale)
   }
 
   /**

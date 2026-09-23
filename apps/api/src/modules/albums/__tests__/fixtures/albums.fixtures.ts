@@ -48,5 +48,6 @@ export const buildArtist = (
   country: null,
   socials: null,
   deletedAt: null,
+  locale: 'en',
   ...overrides,
 })
