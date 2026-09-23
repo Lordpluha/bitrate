@@ -16,7 +16,7 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { ApiTags } from '@nestjs/swagger'
 import type { Request, Response } from 'express'
-import { StreamSignedStorageObjectSwagger } from './decorators'
+import { GetImagePresignedUrlSwagger, StreamSignedStorageObjectSwagger } from './decorators'
 import { LocalStorageService } from './local-storage.service'
 import { verifySignedStorageToken } from './signed-storage-token'
 import type { StorageObjectStream } from './storage.types'
@@ -37,6 +37,7 @@ export class StorageController {
   ) {}
 
   /** Returns a short-lived direct URL for a private cover or profile image. */
+  @GetImagePresignedUrlSwagger()
   @UserAuth()
   @Get('images/presigned-url')
   async getImageUrl(@Query('key') key?: string) {
