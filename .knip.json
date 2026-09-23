@@ -48,9 +48,11 @@
         "src/**/*.int-spec.tsx",
         "src/**/*.screenshot-spec.ts",
         "tests/configs/*.ts",
-        "tests/e2e/**/*.e2e-spec.ts"
+        "tests/e2e/**/*.e2e-spec.ts",
+        "scripts/select-playwright-tests.mjs"
       ],
-      "ignore": ["env.schema.ts"]
+      "ignore": ["env.schema.ts"],
+      "ignoreDependencies": ["sniffler"]
     },
     "packages/ui-react": {
       "entry": [

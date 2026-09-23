@@ -1,0 +1,54 @@
+[
+  {
+    "test": "tests/e2e/landing/landing.e2e-spec.ts",
+    "dependsOn": [
+      "tests/e2e/landing/landing.e2e-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/error.tsx",
+      "src/app/global-error.tsx",
+      "src/app/not-found.tsx",
+      "src/app/(landing)/layout.tsx",
+      "src/app/(landing)/page.tsx"
+    ]
+  },
+  {
+    "test": "tests/e2e/auth/auth.e2e-spec.ts",
+    "dependsOn": [
+      "tests/e2e/auth/auth.e2e-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/error.tsx",
+      "src/app/global-error.tsx",
+      "src/app/not-found.tsx",
+      "src/app/(landing)/layout.tsx",
+      "src/app/(landing)/auth/layout.tsx",
+      "src/app/(landing)/auth/(banner)/layout.tsx",
+      "src/app/(landing)/auth/(banner)/login/page.tsx",
+      "src/app/(landing)/auth/(banner)/registration/page.tsx",
+      "src/app/(landing)/auth/forgot-password/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/LandingView/ui/LandingView.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/LandingView/ui/LandingView.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/(landing)/layout.tsx",
+      "src/app/(landing)/page.tsx"
+    ]
+  },
+  {
+    "test": "src/views/LoginView/ui/LoginView.screenshot-spec.ts",
+    "dependsOn": [
+      "src/views/LoginView/ui/LoginView.screenshot-spec.ts",
+      "src/app/layout.tsx",
+      "src/app/_provider.tsx",
+      "src/app/(landing)/layout.tsx",
+      "src/app/(landing)/auth/layout.tsx",
+      "src/app/(landing)/auth/(banner)/layout.tsx",
+      "src/app/(landing)/auth/(banner)/login/page.tsx"
+    ]
+  }
+]
