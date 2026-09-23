@@ -81,3 +81,11 @@ backups/
 
 # ACME challenge webroot for certbot
 infra/nginx/certbot-webroot/
+
+# sniffler's derived output. The tool is configured and run from apps/web-player
+# (see apps/web-player/.sniffler/config.json), which ignores its own copies; this
+# catches a stray run started from the repository root, whose cache is a ~50k-line
+# generated artifact that must never be committed.
+.sniffler/cache.json
+.sniffler/diagnostics.json
+.sniffler/tsconfig.generated.json

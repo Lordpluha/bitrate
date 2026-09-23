@@ -49,6 +49,25 @@ Current workflow map for .github/workflows.
 - web_player.yml — Web Player pipeline entry workflow.
 - web_player_reusable.yml — Biome, typecheck, Vitest, Playwright E2E, and Docker build.
 
+  On a `pull_request` run — and **only** there — the `Select impacted Playwright specs`
+  step narrows the two Playwright suites to the specs the diff can reach, through
+  [sniffler](https://github.com/callstackincubator/sniffler) and
+  `apps/web-player/scripts/select-playwright-tests.mjs`. The `develop`, release-rebuild
+  and hand-dispatched runs skip that step entirely and keep running everything; a
+  skipped step's outputs are empty strings, and each downstream `!= 'false'` gate reads
+  that as "run it".
+
+  **The selector fails open.** An unresolvable base ref, a sniffler crash, an
+  unparseable answer, a changed file the import graph cannot model (a lockfile, CSS, any
+  other workspace), or a spec on disk missing from `apps/web-player/.sniffler/test-map.json`
+  all end in the full suite plus a `::warning::` naming the reason. It never reports
+  "nothing to run" because something went wrong — only after a clean analysis of a diff
+  that is entirely web-player TypeScript.
+
+  **A new Playwright spec must be added to `apps/web-player/.sniffler/test-map.json`,**
+  listing the route files it exercises. Until it is, every PR falls back to the full
+  suite and says so in the log.
+
 ### Web Artists
 - web_artists.yml — Web Artists pipeline entry workflow.
 - web_artists_reusable.yml — reusable implementation for Web Artists jobs.
