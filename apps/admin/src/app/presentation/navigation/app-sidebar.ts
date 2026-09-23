@@ -9,6 +9,7 @@ import { AppLocaleToggle } from './locale-toggle'
 import { AppNavItem } from './nav-item'
 import { NAV_SECTIONS, type NavItem, type NavSection } from './nav.model'
 import { SIDEBAR_MAX, SIDEBAR_MIN, SidebarWidth } from './sidebar-width'
+import { AppThemeToggle } from './theme-toggle'
 
 /**
  * The operator panel's rail: brand, sections, and a drag handle.
@@ -20,7 +21,7 @@ import { SIDEBAR_MAX, SIDEBAR_MIN, SidebarWidth } from './sidebar-width'
  */
 @Component({
   selector: 'app-sidebar',
-  imports: [AppLocaleToggle, AppNavItem, NgIcon, RouterLink, TranslocoPipe],
+  imports: [AppLocaleToggle, AppNavItem, AppThemeToggle, NgIcon, RouterLink, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideIcons({ lucidePanelLeft })],
   /**
