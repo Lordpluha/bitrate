@@ -9,10 +9,11 @@ import {
 } from '@nestjs/common'
 import { SentryExceptionCaptured } from '@sentry/nestjs'
 import type { Request, Response } from 'express'
-// biome-ignore lint/style/useImportType: I18nService is constructor-injected — a type-only
-// import erases the runtime reference Nest needs to resolve it, and the filter fails to
-// boot with "Nest can't resolve dependencies... argument Function at index [0]".
-import type { I18nService } from 'nestjs-i18n'
+// I18nService is constructor-injected — a type-only import erases the runtime reference Nest
+// needs to resolve it, and the filter fails to boot with "Nest can't resolve dependencies...
+// argument Function at index [0]".
+// biome-ignore lint/style/useImportType: constructor-injected — NestJS DI needs the real class reference at runtime, not a type-only import.
+import { I18nService } from 'nestjs-i18n'
 import { resolveRequestLocale } from '../../i18n/resolve-request-locale'
 import { getRequestId } from '../http/request-context'
 
