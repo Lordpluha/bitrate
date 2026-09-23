@@ -65,7 +65,7 @@
               </td>
               <td hlmTd class="text-muted-foreground">{{ attempt.workerHost }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">
-                {{ attempt.startedAt | date: 'dd.MM HH:mm' }}
+                {{ attempt.startedAt | localizedDate: 'dd.MM HH:mm' }}
               </td>
             </tr>
           }

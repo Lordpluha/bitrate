@@ -6,6 +6,8 @@ import type { ArtistTrack } from '@domain/artist'
 import type { Page } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistTracks } from './artist-tracks'
+import { TranslocoTestingModule } from '@jsverse/transloco'
+import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 
 function track(overrides: Partial<ArtistTrack> = {}): ArtistTrack {
   return {
@@ -25,6 +27,12 @@ const execute = vi.fn<() => Promise<Page<ArtistTrack>>>()
 function create() {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
+    imports: [
+      TranslocoTestingModule.forRoot({
+        langs: { en: {}, uk: {} },
+        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+      }),
+    ],
     providers: [
       provideZonelessChangeDetection(),
       provideRouter([]),

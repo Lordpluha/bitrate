@@ -13,7 +13,8 @@
     "format": "prettier --write .",
     "check-types": "pnpm env:gen && tsc --noEmit -p tsconfig.app.json",
     "test": "node scripts/with-env.mjs test",
-    "test:unit": "node scripts/with-env.mjs test"
+    "test:unit": "node scripts/with-env.mjs test",
+    "check:i18n": "node scripts/check-i18n-keys.mjs"
   },
   "dependencies": {
     "@angular/cdk": "^22.1.5",

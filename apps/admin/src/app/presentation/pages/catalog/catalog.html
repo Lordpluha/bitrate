@@ -177,7 +177,7 @@
               <td hlmTd class="tabular-nums text-muted-foreground">
                 {{
                   track.processingStartedAt
-                    ? (track.processingStartedAt | date: 'dd.MM HH:mm')
+                    ? (track.processingStartedAt | localizedDate: 'dd.MM HH:mm')
                     : '—'
                 }}
               </td>

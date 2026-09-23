@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
+import { TranslocoPipe } from '@jsverse/transloco'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucidePanelLeft } from '@ng-icons/lucide'
 import { SessionStore } from '@application/session'
@@ -8,7 +9,6 @@ import { AppLocaleToggle } from './locale-toggle'
 import { AppNavItem } from './nav-item'
 import { NAV_SECTIONS, type NavItem, type NavSection } from './nav.model'
 import { SIDEBAR_MAX, SIDEBAR_MIN, SidebarWidth } from './sidebar-width'
-import { AppThemeToggle } from './theme-toggle'
 
 /**
  * The operator panel's rail: brand, sections, and a drag handle.
@@ -20,7 +20,7 @@ import { AppThemeToggle } from './theme-toggle'
  */
 @Component({
   selector: 'app-sidebar',
-  imports: [AppLocaleToggle, AppNavItem, AppThemeToggle, NgIcon, RouterLink],
+  imports: [AppLocaleToggle, AppNavItem, NgIcon, RouterLink, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideIcons({ lucidePanelLeft })],
   /**

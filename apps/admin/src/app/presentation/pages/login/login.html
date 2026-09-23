@@ -5,8 +5,8 @@
     (ngSubmit)="submit()"
   >
     <div class="space-y-1">
-      <h1 class="text-xl font-semibold text-card-foreground">Operator sign-in</h1>
-      <p class="text-sm text-muted-foreground">Bitrate staff accounts only.</p>
+      <h1 class="text-xl font-semibold text-card-foreground">{{ 'login.title' | transloco }}</h1>
+      <p class="text-sm text-muted-foreground">{{ 'login.subtitle' | transloco }}</p>
     </div>
 
     @if (failure(); as message) {
@@ -16,7 +16,7 @@
     }
 
     <div class="space-y-2">
-      <label hlmLabel for="email">Email</label>
+      <label hlmLabel for="email">{{ 'login.email' | transloco }}</label>
       <input
         hlmInput
         class="w-full"
@@ -33,7 +33,7 @@
     </div>
 
     <div class="space-y-2">
-      <label hlmLabel for="password">Password</label>
+      <label hlmLabel for="password">{{ 'login.password' | transloco }}</label>
       <input
         hlmInput
         class="w-full"
@@ -50,7 +50,7 @@
     </div>
 
     <button hlmBtn class="w-full" type="submit" [disabled]="submitting()">
-      {{ submitting() ? 'Signing in…' : 'Sign in' }}
+      {{ (submitting() ? 'login.submitting' : 'login.submit') | transloco }}
     </button>
   </form>
 </main>
