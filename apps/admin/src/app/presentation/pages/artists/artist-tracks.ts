@@ -1,9 +1,9 @@
-import { DatePipe } from '@angular/common'
 import { ChangeDetectionStrategy, Component, effect, inject, input, untracked } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ListArtistTracksUseCase } from '@application/artists'
 import type { ArtistTrack } from '@domain/artist'
 import { CollectionStatus, Paginator } from '@presentation/components'
+import { LocalizedDatePipe } from '@presentation/pipes'
 import { createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmTableImports } from '@spartan-ng/helm/table'
@@ -14,7 +14,14 @@ import { HlmTableImports } from '@spartan-ng/helm/table'
  */
 @Component({
   selector: 'app-artist-tracks',
-  imports: [DatePipe, RouterLink, CollectionStatus, Paginator, HlmBadgeImports, HlmTableImports],
+  imports: [
+    LocalizedDatePipe,
+    RouterLink,
+    CollectionStatus,
+    Paginator,
+    HlmBadgeImports,
+    HlmTableImports,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './artist-tracks.html',
 })

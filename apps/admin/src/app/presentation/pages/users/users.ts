@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common'
 import { Component, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { RouterLink } from '@angular/router'
@@ -12,6 +11,7 @@ import {
   SortHeader,
   sortHeaderAriaSort,
 } from '@presentation/components'
+import { LocalizedDatePipe } from '@presentation/pipes'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -26,7 +26,7 @@ const SEARCH_DEBOUNCE_MS = 300
 @Component({
   selector: 'app-users',
   imports: [
-    DatePipe,
+    LocalizedDatePipe,
     RouterLink,
     CollectionStatus,
     Paginator,

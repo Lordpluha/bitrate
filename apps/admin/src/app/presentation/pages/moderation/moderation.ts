@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common'
 import { Component, effect, inject, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { AdvanceReportUseCase, ListReportsUseCase } from '@application/moderation'
@@ -16,6 +15,7 @@ import {
   SortHeader,
   sortHeaderAriaSort,
 } from '@presentation/components'
+import { LocalizedDatePipe } from '@presentation/pipes'
 import { bindQueryState, createCollection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -29,7 +29,7 @@ import {
 @Component({
   selector: 'app-moderation',
   imports: [
-    DatePipe,
+    LocalizedDatePipe,
     RouterLink,
     CollectionStatus,
     Paginator,

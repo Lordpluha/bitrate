@@ -130,7 +130,7 @@
                 </span>
               </td>
               <td hlmTd class="tabular-nums text-muted-foreground">
-                {{ report.createdAt | date: 'dd.MM.yyyy HH:mm' }}
+                {{ report.createdAt | localizedDate: 'dd.MM.yyyy HH:mm' }}
               </td>
               <td hlmTd>
                 @if (canAdvance()) {

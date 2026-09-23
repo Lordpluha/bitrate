@@ -47,7 +47,7 @@
               </td>
               <td hlmTd class="tabular-nums text-muted-foreground">{{ track.playCount }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">
-                {{ track.createdAt | date: 'dd.MM.yyyy' }}
+                {{ track.createdAt | localizedDate: 'dd.MM.yyyy' }}
               </td>
             </tr>
           }

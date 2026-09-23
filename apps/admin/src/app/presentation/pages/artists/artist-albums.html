@@ -32,7 +32,7 @@
               <td hlmTd class="text-muted-foreground">{{ album.type }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">{{ album.totalTracks }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">
-                {{ album.releaseDate ? (album.releaseDate | date: 'dd.MM.yyyy') : '—' }}
+                {{ album.releaseDate ? (album.releaseDate | localizedDate: 'dd.MM.yyyy') : '—' }}
               </td>
             </tr>
           }
