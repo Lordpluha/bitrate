@@ -10,16 +10,20 @@
  * i18n-key equivalent of `scripts/check-design-tokens.mjs`: a source scan that catches what the
  * mechanical gates (lint/types/tests) structurally cannot.
  *
- * Two extraction patterns, because this codebase carries keys two ways:
+ * Three extraction patterns, because this codebase carries keys three ways:
  *  - Direct: `'nav.overview' | transloco`, `translate('login.failure')`,
  *    `translateSignal('locale.ariaLabel', ...)`, and a ternary of two literal keys piped through
  *    `transloco` (`(a() ? 'x.y' : 'x.z') | transloco`).
- *  - Indirect: a `label`/`label?` object-literal property in a `.ts` data file (e.g.
+ *  - Indirect (`label`): a `label`/`label?` object-literal property in a `.ts` data file (e.g.
  *    `nav.model.ts`) holding a key string rather than display text — every such property in this
  *    codebase carries a `A '<prefix>.*' transloco key` TSDoc note, which is what this script's
- *    KEY_LIKE pattern is standing in for. A string here is only ever treated as a key candidate
- *    when it matches the dotted-path shape; plain display text (no dot, or containing a space)
- *    is never mistaken for one.
+ *    KEY_LIKE pattern is standing in for.
+ *  - Indirect (lookup table): a `const X: Record<SomeUnion, string> = { ... }` whose values are
+ *    keys, fed to `translateSignal(this.someComputedKey)` rather than a literal — e.g.
+ *    `theme-toggle.ts`'s `THEME_LABEL_KEY`. Every string value inside such a block is a
+ *    candidate key.
+ * A string is only ever treated as a key candidate when it matches the dotted-path shape; plain
+ * display text (no dot, or containing a space) is never mistaken for one.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -55,6 +59,10 @@ const TERNARY_PATTERN = /\?\s*'([a-zA-Z][a-zA-Z0-9.]*)'\s*:\s*'([a-zA-Z][a-zA-Z0
 /** `label: 'nav.foo'` / `label?: 'nav.foo'` in a data file — see the file header. */
 const LABEL_PROPERTY_PATTERN = /\blabel\??:\s*'([a-zA-Z][a-zA-Z0-9.]*)'/g
 
+/** `const X: Record<SomeUnion, string> = { ... }` — a key lookup table, not display text. */
+const RECORD_KEY_TABLE_PATTERN = /:\s*Record<[^>]+,\s*string>\s*=\s*\{([\s\S]*?)\n\}/g
+const QUOTED_STRING_PATTERN = /'([a-zA-Z][a-zA-Z0-9.]*)'/g
+
 function extractKeys(source) {
   const keys = new Set()
 
@@ -67,6 +75,11 @@ function extractKeys(source) {
   }
   for (const match of source.matchAll(LABEL_PROPERTY_PATTERN)) {
     if (KEY_LIKE.test(match[1])) keys.add(match[1])
+  }
+  for (const tableMatch of source.matchAll(RECORD_KEY_TABLE_PATTERN)) {
+    for (const valueMatch of tableMatch[1].matchAll(QUOTED_STRING_PATTERN)) {
+      if (KEY_LIKE.test(valueMatch[1])) keys.add(valueMatch[1])
+    }
   }
 
   return keys

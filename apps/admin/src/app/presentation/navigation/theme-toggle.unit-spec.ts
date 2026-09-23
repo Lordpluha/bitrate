@@ -1,12 +1,31 @@
 import { provideZonelessChangeDetection } from '@angular/core'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TranslocoTestingModule } from '@jsverse/transloco'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { DEFAULT_LOCALE, LOCALES } from './locale-store'
 import { THEMES, ThemeStore } from './theme-store'
 import { AppThemeToggle } from './theme-toggle'
 
+const themeEn = {
+  theme: {
+    dark: 'Dark theme',
+    light: 'Light theme',
+    dim: 'Dim theme',
+    ariaLabel: '{{label}}. Activate to switch theme.',
+  },
+}
+
 async function render(collapsed = false): Promise<ComponentFixture<AppThemeToggle>> {
   TestBed.resetTestingModule()
-  TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] })
+  TestBed.configureTestingModule({
+    imports: [
+      TranslocoTestingModule.forRoot({
+        langs: { en: themeEn, uk: themeEn },
+        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+      }),
+    ],
+    providers: [provideZonelessChangeDetection()],
+  })
 
   const fixture = TestBed.createComponent(AppThemeToggle)
   fixture.componentRef.setInput('collapsed', collapsed)

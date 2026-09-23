@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core'
+import { translateSignal } from '@jsverse/transloco'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideContrast, lucideMoon, lucideSun } from '@ng-icons/lucide'
 import { type Theme, ThemeStore } from './theme-store'
@@ -9,10 +10,11 @@ const THEME_ICON: Record<Theme, string> = {
   dim: 'lucideContrast',
 }
 
-const THEME_LABEL: Record<Theme, string> = {
-  dark: 'Dark theme',
-  light: 'Light theme',
-  dim: 'Dim theme',
+/** A `theme.*` transloco key, not display text — see `theme-toggle.html`. */
+const THEME_LABEL_KEY: Record<Theme, string> = {
+  dark: 'theme.dark',
+  light: 'theme.light',
+  dim: 'theme.dim',
 }
 
 /**
@@ -34,8 +36,12 @@ export class AppThemeToggle {
   readonly collapsed = input(false)
 
   protected readonly icon = computed(() => THEME_ICON[this.store.theme()])
-  protected readonly label = computed(() => THEME_LABEL[this.store.theme()])
-  protected readonly ariaLabel = computed(() => `${this.label()}. Activate to switch theme.`)
+  private readonly labelKey = computed(() => THEME_LABEL_KEY[this.store.theme()])
+  protected readonly label = translateSignal(this.labelKey)
+  protected readonly ariaLabel = translateSignal(
+    'theme.ariaLabel',
+    computed(() => ({ label: this.label() })),
+  )
 
   protected cycle(): void {
     this.store.cycle()
