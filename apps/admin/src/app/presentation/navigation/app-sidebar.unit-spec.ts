@@ -19,11 +19,25 @@ const ADMIN_STAFF = {
 describe('AppSidebar', () => {
   beforeEach(() => {
     localStorage.clear()
+    const navEn = {
+      nav: {
+        overview: 'Overview',
+        moderation: 'Moderation queue',
+        catalog: 'Catalog pipeline',
+        artists: 'Artists',
+        users: 'Listeners',
+        audit: 'Audit log',
+        roles: 'Roles',
+        staff: 'Staff',
+        section: { operations: 'Operations', accounts: 'Accounts', system: 'System' },
+      },
+    }
+
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
       imports: [
         TranslocoTestingModule.forRoot({
-          langs: { en: {}, uk: {} },
+          langs: { en: navEn, uk: navEn },
           translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
         }),
       ],

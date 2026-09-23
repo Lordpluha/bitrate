@@ -16,6 +16,8 @@ import {
 import type { Page, TakeDownInput } from '@domain/shared'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistsPage } from './artists'
+import { TranslocoTestingModule } from '@jsverse/transloco'
+import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 
 function artist(overrides: Partial<Artist> = {}): Artist {
   return {
@@ -79,6 +81,12 @@ describe('ArtistsPage', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
       providers: [
         provideZonelessChangeDetection(),
         provideRouter(routes),

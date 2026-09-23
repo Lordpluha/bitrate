@@ -5,12 +5,14 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { DEFAULT_LOCALE, LOCALES, LocaleStore } from './locale-store'
 import { AppLocaleToggle } from './locale-toggle'
 
+const localeEn = { locale: { ariaLabel: '{{label}}. Activate to switch language.' } }
+
 async function render(collapsed = false): Promise<ComponentFixture<AppLocaleToggle>> {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
     imports: [
       TranslocoTestingModule.forRoot({
-        langs: { en: {}, uk: {} },
+        langs: { en: localeEn, uk: localeEn },
         translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
       }),
     ],

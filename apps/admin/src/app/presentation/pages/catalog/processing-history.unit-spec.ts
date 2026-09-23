@@ -5,6 +5,8 @@ import type { Page } from '@domain/shared'
 import type { ProcessingAttempt } from '@domain/track'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ProcessingHistory } from './processing-history'
+import { TranslocoTestingModule } from '@jsverse/transloco'
+import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 
 function attempt(overrides: Partial<ProcessingAttempt> = {}): ProcessingAttempt {
   return {
@@ -51,6 +53,12 @@ const execute = vi.fn<() => Promise<Page<ProcessingAttempt>>>()
 function create() {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
+    imports: [
+      TranslocoTestingModule.forRoot({
+        langs: { en: {}, uk: {} },
+        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+      }),
+    ],
     providers: [
       provideZonelessChangeDetection(),
       { provide: ListProcessingAttemptsUseCase, useValue: { execute } },

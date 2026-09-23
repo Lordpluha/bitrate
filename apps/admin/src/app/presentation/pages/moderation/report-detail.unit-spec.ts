@@ -6,6 +6,8 @@ import { SessionStore } from '@application/session'
 import type { ReportDetail } from '@domain/moderation'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ReportDetailPage } from './report-detail'
+import { TranslocoTestingModule } from '@jsverse/transloco'
+import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -45,6 +47,12 @@ const advanceReport = vi.fn<() => Promise<ReportDetail>>()
 function create(): void {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
+    imports: [
+      TranslocoTestingModule.forRoot({
+        langs: { en: {}, uk: {} },
+        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+      }),
+    ],
     providers: [
       provideZonelessChangeDetection(),
       provideRouter([]),

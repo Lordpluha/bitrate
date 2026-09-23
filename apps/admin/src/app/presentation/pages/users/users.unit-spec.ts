@@ -14,6 +14,8 @@ import {
 } from '@domain/user'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UsersPage } from './users'
+import { TranslocoTestingModule } from '@jsverse/transloco'
+import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 
 function user(overrides: Partial<User> = {}): User {
   return {
@@ -70,6 +72,12 @@ describe('UsersPage', () => {
 
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
       providers: [
         provideZonelessChangeDetection(),
         provideRouter(routes),

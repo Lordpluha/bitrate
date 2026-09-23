@@ -1,9 +1,9 @@
-import { DatePipe } from '@angular/common'
 import { ChangeDetectionStrategy, Component, effect, inject, input, untracked } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { ListListeningHistoryUseCase } from '@application/users'
 import type { ListeningHistoryEntry } from '@domain/user'
 import { CollectionStatus, Paginator } from '@presentation/components'
+import { LocalizedDatePipe } from '@presentation/pipes'
 import { createCollection } from '@presentation/state'
 import { HlmTableImports } from '@spartan-ng/helm/table'
 
@@ -13,7 +13,7 @@ import { HlmTableImports } from '@spartan-ng/helm/table'
  */
 @Component({
   selector: 'app-listening-history',
-  imports: [DatePipe, RouterLink, CollectionStatus, Paginator, HlmTableImports],
+  imports: [LocalizedDatePipe, RouterLink, CollectionStatus, Paginator, HlmTableImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './listening-history.html',
 })

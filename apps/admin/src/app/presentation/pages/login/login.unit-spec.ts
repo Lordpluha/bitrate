@@ -3,8 +3,22 @@ import { TestBed } from '@angular/core/testing'
 import { Router } from '@angular/router'
 import { SignInUseCase } from '@application/session'
 import type { Staff } from '@domain/staff'
+import { TranslocoTestingModule } from '@jsverse/transloco'
+import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { LoginPage } from './login'
+
+const loginEn = {
+  login: {
+    title: 'Operator sign-in',
+    subtitle: 'Bitrate staff accounts only.',
+    email: 'Email',
+    password: 'Password',
+    submit: 'Sign in',
+    submitting: 'Signing in…',
+    failure: 'Sign-in failed. Check the address and password, then try again.',
+  },
+}
 
 const STAFF: Staff = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -21,6 +35,12 @@ const navigate = vi.fn<() => Promise<boolean>>()
 function create() {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
+    imports: [
+      TranslocoTestingModule.forRoot({
+        langs: { en: loginEn, uk: loginEn },
+        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+      }),
+    ],
     providers: [
       provideZonelessChangeDetection(),
       { provide: SignInUseCase, useValue: { execute } },

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core'
 import { RouterLink, RouterLinkActive } from '@angular/router'
+import { TranslocoPipe } from '@jsverse/transloco'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import {
   lucideAudioLines,
@@ -25,7 +26,7 @@ import type { NavItem } from './nav.model'
  */
 @Component({
   selector: 'app-nav-item',
-  imports: [RouterLink, RouterLinkActive, NgIcon],
+  imports: [RouterLink, RouterLinkActive, NgIcon, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     provideIcons({

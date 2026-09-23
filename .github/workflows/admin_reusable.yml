@@ -86,6 +86,14 @@ jobs:
           NG_APP_API_URL: ${{ env.BUILD_NG_APP_API_URL }}
         run: pnpm --filter @bitrate/admin check-types
 
+      # Catches a Transloco key referenced in src/ with no entry in en.json/uk.json, or a key
+      # the two translation files disagree on. Transloco resolves a missing key to an empty
+      # string at runtime with no build or test failure, so this is the only gate that would
+      # catch it. See apps/admin/scripts/check-i18n-keys.mjs.
+      - name: Check admin i18n keys
+        if: ${{ inputs.run-tests }}
+        run: pnpm --filter @bitrate/admin check:i18n
+
       # `ng test` runs Vitest through @angular/build:unit-test in jsdom — no browser download.
       # `--watch=false` is deliberately absent: the builder's watch option "Defaults to `true` in
       # TTY environments and `false` otherwise", and an Actions step has no TTY.

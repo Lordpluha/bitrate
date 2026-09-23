@@ -24,6 +24,7 @@ import type { Permission } from '@domain/access'
 export type NavLink = {
   kind: 'link'
   path: string
+  /** A `nav.*` transloco key, not display text — see `app-sidebar.html`/`nav-item.html`. */
   label: string
   icon: string
   /** The item is hidden — not merely disabled — when the operator lacks this permission. */
@@ -39,6 +40,7 @@ export type NavGroup = {
   kind: 'group'
   /** Stable id, used as the collapse-state key. */
   id: string
+  /** A `nav.*` transloco key, not display text. */
   label: string
   icon: string
   children: NavLink[]
@@ -48,9 +50,9 @@ export type NavItem = NavLink | NavGroup
 
 export type NavSection = {
   /**
-   * Shown as the block caption, when present. Hidden when the sidebar is collapsed. Omit it for
-   * a lone-item section whose own link label would just repeat it, e.g. "Overview" atop a single
-   * "Overview" link.
+   * A `nav.section.*` transloco key, shown as the block caption when present. Hidden when the
+   * sidebar is collapsed. Omit it for a lone-item section whose own link label would just repeat
+   * it, e.g. "Overview" atop a single "Overview" link.
    */
   label?: string
   items: NavItem[]
@@ -68,7 +70,7 @@ export const NAV_SECTIONS: readonly NavSection[] = [
       {
         kind: 'link',
         path: '/',
-        label: 'Overview',
+        label: 'nav.overview',
         icon: 'lucideLayoutDashboard',
         permission: 'overview:read',
         exact: true,
@@ -76,64 +78,64 @@ export const NAV_SECTIONS: readonly NavSection[] = [
     ],
   },
   {
-    label: 'Operations',
+    label: 'nav.section.operations',
     items: [
       {
         kind: 'link',
         path: '/moderation',
-        label: 'Moderation queue',
+        label: 'nav.moderation',
         icon: 'lucideFlag',
         permission: 'reports:read',
       },
       {
         kind: 'link',
         path: '/catalog',
-        label: 'Catalog pipeline',
+        label: 'nav.catalog',
         icon: 'lucideAudioLines',
         permission: 'tracks:read',
       },
     ],
   },
   {
-    label: 'Accounts',
+    label: 'nav.section.accounts',
     items: [
       {
         kind: 'link',
         path: '/artists',
-        label: 'Artists',
+        label: 'nav.artists',
         icon: 'lucideMic',
         permission: 'artists:read',
       },
       {
         kind: 'link',
         path: '/users',
-        label: 'Listeners',
+        label: 'nav.users',
         icon: 'lucideUsers',
         permission: 'users:read',
       },
     ],
   },
   {
-    label: 'System',
+    label: 'nav.section.system',
     items: [
       {
         kind: 'link',
         path: '/audit',
-        label: 'Audit log',
+        label: 'nav.audit',
         icon: 'lucideScrollText',
         permission: 'audit:read',
       },
       {
         kind: 'link',
         path: '/roles',
-        label: 'Roles',
+        label: 'nav.roles',
         icon: 'lucideKeyRound',
         permission: 'roles:read',
       },
       {
         kind: 'link',
         path: '/staff',
-        label: 'Staff',
+        label: 'nav.staff',
         icon: 'lucideUserCog',
         permission: 'staff:read',
       },

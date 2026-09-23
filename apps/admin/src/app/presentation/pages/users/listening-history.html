@@ -29,7 +29,7 @@
               </td>
               <td hlmTd class="text-muted-foreground">{{ entry.artistUsername }}</td>
               <td hlmTd class="tabular-nums text-muted-foreground">
-                {{ entry.listenedAt | date: 'dd.MM.yyyy HH:mm' }}
+                {{ entry.listenedAt | localizedDate: 'dd.MM.yyyy HH:mm' }}
               </td>
             </tr>
           }

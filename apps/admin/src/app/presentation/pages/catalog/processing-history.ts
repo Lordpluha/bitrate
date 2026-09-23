@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common'
 import { ChangeDetectionStrategy, Component, effect, inject, input, untracked } from '@angular/core'
 import { ListProcessingAttemptsUseCase } from '@application/catalog'
 import {
@@ -9,6 +8,7 @@ import {
   type TrackProcessingStatus,
 } from '@domain/track'
 import { CollectionStatus, Paginator } from '@presentation/components'
+import { LocalizedDatePipe } from '@presentation/pipes'
 import { createCollection } from '@presentation/state'
 import { HlmBadgeImports, type BadgeVariants } from '@spartan-ng/helm/badge'
 import { HlmTableImports } from '@spartan-ng/helm/table'
@@ -31,7 +31,7 @@ const BADGE_VARIANT: Record<ProcessingAttempt['status'], NonNullable<BadgeVarian
 @Component({
   selector: 'app-processing-history',
   imports: [
-    DatePipe,
+    LocalizedDatePipe,
     CollectionStatus,
     Paginator,
     HlmBadgeImports,

@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { SignInUseCase } from '@application/session'
+import { translate, TranslocoPipe } from '@jsverse/transloco'
 import { zodErrorMessage, zodValidator } from '@presentation/forms'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
@@ -10,7 +11,13 @@ import { credentialsSchema } from './credentials.schema'
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, HlmButtonImports, HlmInputImports, HlmLabelImports],
+  imports: [
+    ReactiveFormsModule,
+    HlmButtonImports,
+    HlmInputImports,
+    HlmLabelImports,
+    TranslocoPipe,
+  ],
   templateUrl: './login.html',
 })
 export class LoginPage {
@@ -50,7 +57,7 @@ export class LoginPage {
        */
       await this.router.navigate(['/'])
     } catch {
-      this.failure.set('Sign-in failed. Check the address and password, then try again.')
+      this.failure.set(translate('login.failure'))
     } finally {
       this.submitting.set(false)
     }

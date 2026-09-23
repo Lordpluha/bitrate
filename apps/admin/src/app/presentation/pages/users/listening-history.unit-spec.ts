@@ -6,6 +6,8 @@ import type { Page } from '@domain/shared'
 import type { ListeningHistoryEntry } from '@domain/user'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ListeningHistory } from './listening-history'
+import { TranslocoTestingModule } from '@jsverse/transloco'
+import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
 
 function entry(overrides: Partial<ListeningHistoryEntry> = {}): ListeningHistoryEntry {
   return {
@@ -23,6 +25,12 @@ const execute = vi.fn<() => Promise<Page<ListeningHistoryEntry>>>()
 function create() {
   TestBed.resetTestingModule()
   TestBed.configureTestingModule({
+    imports: [
+      TranslocoTestingModule.forRoot({
+        langs: { en: {}, uk: {} },
+        translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+      }),
+    ],
     providers: [
       provideZonelessChangeDetection(),
       provideRouter([]),
