@@ -24,20 +24,24 @@ import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { BullModule } from '@nestjs/bullmq'
 import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { SentryModule } from '@sentry/nestjs/setup'
 import type { Redis } from 'ioredis'
+import { I18nModule } from 'nestjs-i18n'
 import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
 import { PathTraversalMiddleware, RequestIdMiddleware } from './common'
 import { API_RATE_LIMITS, appConfigs } from './common/config'
+import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 import { HttpCacheInterceptor } from './common/interceptors/http-cache.interceptor'
+import { i18nOptions } from './i18n/i18n.config'
 
 @Module({
   imports: [
     SentryModule.forRoot(),
+    I18nModule.forRoot(i18nOptions),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.local', '.env.production', '.env.development'],
@@ -109,6 +113,7 @@ import { HttpCacheInterceptor } from './common/interceptors/http-cache.intercept
     { provide: APP_INTERCEPTOR, useClass: MetricsInterceptor },
     { provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor },
     { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
   ],
 })
 export class AppModule implements NestModule {

@@ -1,8 +1,9 @@
 import type { AppConfig } from '@common/config'
-import { escapeHtml } from '@common/utils/html'
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import * as nodemailer from 'nodemailer'
+import { DEFAULT_MAIL_LOCALE, type MailLocale } from './templates/mail-locale'
+import { MAIL_TEMPLATES } from './templates/registry'
 
 /** Represents the mail service. */
 @Injectable()
@@ -34,23 +35,39 @@ export class MailService {
     }
   }
 
-  /** Runs the send password reset operation. */
-  sendPasswordReset(to: string, token: string, username: string) {
+  /**
+   * Sends a password-reset link, in the recipient's stored locale. Callers pass `locale`
+   * explicitly — this method never reads `Accept-Language`, since a password-reset mail is
+   * often sent from a BullMQ job with no request context at all.
+   */
+  sendPasswordReset(
+    to: string,
+    token: string,
+    username: string,
+    locale: MailLocale = DEFAULT_MAIL_LOCALE,
+  ) {
     return this.sendPasswordResetForHost(
       to,
       token,
       username,
       this.config.getOrThrow('web').userHost,
+      locale,
     )
   }
 
-  /** Sends an artist password reset to the artist frontend. */
-  sendArtistPasswordReset(to: string, token: string, username: string) {
+  /** Sends an artist password reset to the artist frontend, in the recipient's stored locale. */
+  sendArtistPasswordReset(
+    to: string,
+    token: string,
+    username: string,
+    locale: MailLocale = DEFAULT_MAIL_LOCALE,
+  ) {
     return this.sendPasswordResetForHost(
       to,
       token,
       username,
       this.config.getOrThrow('web').artistHost,
+      locale,
     )
   }
 
@@ -59,6 +76,7 @@ export class MailService {
     token: string,
     username: string,
     webHost: string,
+    locale: MailLocale,
   ) {
     const resetUrl = `${webHost}/reset-password?token=${encodeURIComponent(token)}`
 
@@ -68,25 +86,23 @@ export class MailService {
     }
 
     const from = this.config.getOrThrow('mail').from
-
-    await this.transporter.sendMail({
-      from,
-      to,
-      subject: 'Reset your password',
-      html: `
-        <h2>Hi, ${escapeHtml(username)}</h2>
-        <p>You requested a password reset. Click the link below to set a new password:</p>
-        <p><a href="${escapeHtml(resetUrl)}">${escapeHtml(resetUrl)}</a></p>
-        <p>This link expires in <strong>1 hour</strong>.</p>
-        <p>If you didn't request this, you can safely ignore this email.</p>
-      `,
+    const { subject, html } = MAIL_TEMPLATES[locale].passwordReset({
+      username,
+      url: resetUrl,
     })
+
+    await this.transporter.sendMail({ from, to, subject, html })
 
     this.logger.log(`Password reset email sent to ${to}`)
   }
 
-  /** Sends a user email-verification link. */
-  async sendEmailVerification(to: string, token: string, username: string) {
+  /** Sends a user email-verification link, in the recipient's stored locale. */
+  async sendEmailVerification(
+    to: string,
+    token: string,
+    username: string,
+    locale: MailLocale = DEFAULT_MAIL_LOCALE,
+  ) {
     const verificationUrl = `${this.config.getOrThrow('web').userHost}/verify-email?token=${encodeURIComponent(token)}`
 
     if (!this.transporter) {
@@ -95,33 +111,33 @@ export class MailService {
     }
 
     const from = this.config.getOrThrow('mail').from
-    await this.transporter.sendMail({
-      from,
-      to,
-      subject: 'Verify your email',
-      html: `
-        <h2>Hi, ${escapeHtml(username)}</h2>
-        <p>Confirm your email address to finish creating your account:</p>
-        <p><a href="${escapeHtml(verificationUrl)}">${escapeHtml(verificationUrl)}</a></p>
-        <p>This link expires in <strong>24 hours</strong>.</p>
-      `,
+    const { subject, html } = MAIL_TEMPLATES[locale].emailVerification({
+      username,
+      url: verificationUrl,
     })
+
+    await this.transporter.sendMail({ from, to, subject, html })
   }
 
-  /** Sends an artist email-verification link. */
-  async sendArtistEmailVerification(to: string, token: string, username: string) {
+  /** Sends an artist email-verification link, in the recipient's stored locale. */
+  async sendArtistEmailVerification(
+    to: string,
+    token: string,
+    username: string,
+    locale: MailLocale = DEFAULT_MAIL_LOCALE,
+  ) {
     const verificationUrl = `${this.config.getOrThrow('web').artistHost}/verify-email?token=${encodeURIComponent(token)}`
     if (!this.transporter) {
       this.handleUndelivered('Artist email verification', to, verificationUrl)
       return
     }
     const from = this.config.getOrThrow('mail').from
-    await this.transporter.sendMail({
-      from,
-      to,
-      subject: 'Verify your artist email',
-      html: `<h2>Hi, ${escapeHtml(username)}</h2><p><a href="${escapeHtml(verificationUrl)}">Verify your email</a></p><p>This link expires in 24 hours.</p>`,
+    const { subject, html } = MAIL_TEMPLATES[locale].emailVerification({
+      username,
+      url: verificationUrl,
     })
+
+    await this.transporter.sendMail({ from, to, subject, html })
   }
 
   private handleUndelivered(kind: string, to: string, url: string) {

@@ -24,6 +24,10 @@ model User {
   lockedUntil         DateTime?
   deletedAt           DateTime?
 
+  /// Transactional-email and (future) UI locale, set at registration from Accept-Language.
+  /// Never derived from a live request after that — see apps/api/src/infra/mail/templates.
+  locale String @default("en")
+
   sessions            UserSession[]
   passwordResets      UserPasswordReset[]
   emailVerifications  UserEmailVerification[]
@@ -376,6 +380,9 @@ model Artist {
   country             String?
   socials             Json?
   deletedAt           DateTime?
+
+  /// Transactional-email locale, set at registration from Accept-Language. See User.locale.
+  locale String @default("en")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

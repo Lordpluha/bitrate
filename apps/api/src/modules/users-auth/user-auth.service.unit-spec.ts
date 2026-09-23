@@ -254,6 +254,24 @@ describe('UserAuthService', () => {
         user.email,
         expect.any(String),
         user.username,
+        'en',
+      )
+    })
+
+    it("sends the reset email in the user's stored locale, not a request header", async () => {
+      const user = buildUser({ email: 'uk-user@example.com', locale: 'uk' })
+      usersPrivate.getByEmail.mockResolvedValue(user)
+      token.hashToken.mockReturnValue('hashed-token')
+      prisma.userPasswordReset.deleteMany.mockResolvedValue({ count: 0 })
+      prisma.userPasswordReset.create.mockResolvedValue({} as never)
+
+      await service.forgotPassword('uk-user@example.com')
+
+      expect(mail.sendPasswordReset).toHaveBeenCalledWith(
+        user.email,
+        expect.any(String),
+        user.username,
+        'uk',
       )
     })
   })
