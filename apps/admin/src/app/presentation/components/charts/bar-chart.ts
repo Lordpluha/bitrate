@@ -35,6 +35,8 @@ import type { ChartHeadline, ChartSeriesValues } from './chart.types'
   selector: 'app-bar-chart',
   imports: [ChartTooltip],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  /** See `LineChart`'s identical `host` — the same unstyled-custom-element gap applies here. */
+  host: { class: 'block' },
   templateUrl: './bar-chart.html',
 })
 export class BarChart {

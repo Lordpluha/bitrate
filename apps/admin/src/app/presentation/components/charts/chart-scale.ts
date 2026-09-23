@@ -88,36 +88,18 @@ export function xPosition(index: number, count: number, plotWidth: number, offse
 }
 
 /**
- * Per-index hover-region widths for a line chart's pointer overlay, in plot-relative pixels
- * (index 0's region starts at 0, the last region ends at `plotWidth`).
- *
- * A line chart's points sit edge-to-edge (`xPosition` divides by `count - 1`), not in `count`
- * equal slices — dividing the hover overlay into `count` equal `flex-1` buttons put a region
- * boundary at the wrong place for every index but the first and last, so the tooltip and the
- * highlighted point tracked a position visibly offset from the cursor, worse toward each edge.
- * Boundaries here fall at the midpoint between each pair of adjacent points instead, so the
- * region under the cursor always matches the point nearest to it.
+ * Maps a category index onto the horizontal axis at the centre of its own `1/count` slice —
+ * the same convention `computeBarGroups`'s `centerX` uses, and what a `count`-way `flex-1`
+ * hover overlay actually divides the plot into. `xPosition` (edge-to-edge, dividing by
+ * `count - 1`) put line-chart points at a different set of x-coordinates than an equal-slice
+ * hover overlay, so no single hover-region scheme could align both exactly — shrinking the
+ * edge regions to compensate only moved the mismatch into the interior instead of removing
+ * it. This function is what makes the two agree by construction: a point and its hover region
+ * now share the same centre.
  */
-export function pointHoverWidths(count: number, plotWidth: number): number[] {
-  if (count <= 0) return []
-  if (count === 1) return [plotWidth]
-
-  const centers = Array.from({ length: count }, (_, index) => xPosition(index, count, plotWidth))
-  const boundaries = [0]
-  for (let index = 1; index < count; index++) {
-    const previous = centers[index - 1] ?? 0
-    const current = centers[index] ?? 0
-    boundaries.push((previous + current) / 2)
-  }
-  boundaries.push(plotWidth)
-
-  const widths: number[] = []
-  for (let index = 0; index < count; index++) {
-    const start = boundaries[index] ?? 0
-    const end = boundaries[index + 1] ?? plotWidth
-    widths.push(end - start)
-  }
-  return widths
+export function segmentCenterX(index: number, count: number, plotWidth: number, offsetLeft = 0): number {
+  if (count <= 0) return offsetLeft
+  return offsetLeft + (index + 0.5) * (plotWidth / count)
 }
 
 /**

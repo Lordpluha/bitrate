@@ -21,10 +21,9 @@ import {
   axisTicks,
   hasData,
   maxLabelsForWidth,
-  pointHoverWidths,
+  segmentCenterX,
   seriesMax,
   thinnedLabelIndexes,
-  xPosition,
   yPosition,
 } from './chart-scale'
 import { ChartTooltip } from './chart-tooltip'
@@ -42,6 +41,13 @@ import type { ChartHeadline, ChartSeriesValues } from './chart.types'
   selector: 'app-line-chart',
   imports: [ChartTooltip],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  /**
+   * Without this the host is an unstyled custom element — `display: inline` — so its
+   * `h-full` figure resolves against an `auto` height everywhere except inside a grid, which
+   * blockifies and stretches a direct child regardless of its own `display`. A card placed
+   * anywhere else (a future non-grid layout) would silently collapse to its content height.
+   */
+  host: { class: 'block' },
   templateUrl: './line-chart.html',
 })
 export class LineChart {
@@ -75,14 +81,6 @@ export class LineChart {
     thinnedLabelIndexes(this.categories().length, maxLabelsForWidth(this.width())),
   )
 
-  /**
-   * Per-index hover-region pixel widths, centred on each point rather than an equal `1/count`
-   * slice — see `pointHoverWidths` for why the two differ for a line chart's edge-to-edge points.
-   */
-  protected readonly hoverWidths = computed(() =>
-    pointHoverWidths(this.categories().length, this.plotWidth()),
-  )
-
   protected readonly hover = new ChartHoverState()
   protected readonly tooltip = computed<ChartTooltipState | null>(() => {
     const index = this.hover.activeIndex()
@@ -113,14 +111,8 @@ export class LineChart {
     return this.categories()[index] ?? ''
   }
 
-  protected xLabelAnchor(index: number): 'start' | 'middle' | 'end' {
-    if (index === 0) return 'start'
-    if (index === this.categories().length - 1) return 'end'
-    return 'middle'
-  }
-
   protected pointX(index: number): number {
-    return xPosition(index, this.categories().length, this.plotWidth(), CHART_PADDING_LEFT)
+    return segmentCenterX(index, this.categories().length, this.plotWidth(), CHART_PADDING_LEFT)
   }
 
   protected pointY(value: number): number {
