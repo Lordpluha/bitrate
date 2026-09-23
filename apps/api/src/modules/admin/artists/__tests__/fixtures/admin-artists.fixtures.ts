@@ -19,6 +19,7 @@ export const buildArtist = (overrides: Partial<Artist> = {}): Artist => ({
   country: null,
   socials: null,
   deletedAt: null,
+  locale: 'en',
   createdAt: new Date(),
   updatedAt: new Date(),
   ...overrides,
