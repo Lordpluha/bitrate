@@ -1,0 +1,54 @@
+[
+  {
+    "test": "apps/web-player/tests/e2e/landing/landing.e2e-spec.ts",
+    "dependsOn": [
+      "apps/web-player/tests/e2e/landing/landing.e2e-spec.ts",
+      "apps/web-player/src/app/layout.tsx",
+      "apps/web-player/src/app/_provider.tsx",
+      "apps/web-player/src/app/error.tsx",
+      "apps/web-player/src/app/global-error.tsx",
+      "apps/web-player/src/app/not-found.tsx",
+      "apps/web-player/src/app/(landing)/layout.tsx",
+      "apps/web-player/src/app/(landing)/page.tsx"
+    ]
+  },
+  {
+    "test": "apps/web-player/tests/e2e/auth/auth.e2e-spec.ts",
+    "dependsOn": [
+      "apps/web-player/tests/e2e/auth/auth.e2e-spec.ts",
+      "apps/web-player/src/app/layout.tsx",
+      "apps/web-player/src/app/_provider.tsx",
+      "apps/web-player/src/app/error.tsx",
+      "apps/web-player/src/app/global-error.tsx",
+      "apps/web-player/src/app/not-found.tsx",
+      "apps/web-player/src/app/(landing)/layout.tsx",
+      "apps/web-player/src/app/(landing)/auth/layout.tsx",
+      "apps/web-player/src/app/(landing)/auth/(banner)/layout.tsx",
+      "apps/web-player/src/app/(landing)/auth/(banner)/login/page.tsx",
+      "apps/web-player/src/app/(landing)/auth/(banner)/registration/page.tsx",
+      "apps/web-player/src/app/(landing)/auth/forgot-password/page.tsx"
+    ]
+  },
+  {
+    "test": "apps/web-player/src/views/LandingView/ui/LandingView.screenshot-spec.ts",
+    "dependsOn": [
+      "apps/web-player/src/views/LandingView/ui/LandingView.screenshot-spec.ts",
+      "apps/web-player/src/app/layout.tsx",
+      "apps/web-player/src/app/_provider.tsx",
+      "apps/web-player/src/app/(landing)/layout.tsx",
+      "apps/web-player/src/app/(landing)/page.tsx"
+    ]
+  },
+  {
+    "test": "apps/web-player/src/views/LoginView/ui/LoginView.screenshot-spec.ts",
+    "dependsOn": [
+      "apps/web-player/src/views/LoginView/ui/LoginView.screenshot-spec.ts",
+      "apps/web-player/src/app/layout.tsx",
+      "apps/web-player/src/app/_provider.tsx",
+      "apps/web-player/src/app/(landing)/layout.tsx",
+      "apps/web-player/src/app/(landing)/auth/layout.tsx",
+      "apps/web-player/src/app/(landing)/auth/(banner)/layout.tsx",
+      "apps/web-player/src/app/(landing)/auth/(banner)/login/page.tsx"
+    ]
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "source": {
+    "roots": ["apps/web-player/src", "apps/web-player/tests"],
+    "ignore": [
+      "**/*.unit-spec.*",
+      "**/*.int-spec.*",
+      "**/*.snapshot-spec.*",
+      "**/__tests__/**"
+    ]
+  },
+  "resolver": {
+    "tsconfig": "apps/web-player/tsconfig.json"
+  },
+  "tests": {
+    "manifest": ".sniffler/test-map.json",
+    "runAllWhenChanged": [
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml",
+      "package.json",
+      ".npmrc",
+      "turbo.json",
+      ".sniffler/config.json",
+      ".sniffler/test-map.json",
+      "scripts/select-playwright-tests.mjs",
+      ".github/workflows/web_player.yml",
+      ".github/workflows/web_player_reusable.yml",
+      "apps/web-player/package.json",
+      "apps/web-player/tsconfig.json",
+      "apps/web-player/next.config.ts",
+      "apps/web-player/postcss.config.mjs",
+      "apps/web-player/tests/configs/playwright.e2e.config.ts",
+      "apps/web-player/tests/configs/playwright.screenshot.config.ts",
+      "**/*.css",
+      "packages/ui-react/**",
+      "packages/contracts/**"
+    ]
+  },
+  "cache": {
+    "path": ".sniffler/cache.json"
+  },
+  "output": {
+    "format": "json"
+  }
+}

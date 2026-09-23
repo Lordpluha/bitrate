@@ -48,3 +48,10 @@ node_modules/
 # Next 16 writes these on `next dev`; regenerated, not ours to track.
 /AGENTS.md
 /CLAUDE.md
+
+# sniffler. config.json and test-map.json are source; everything else here is
+# derived on every run — the graph cache, and the comment-free copy of the path
+# aliases that scripts/select-playwright-tests.mjs regenerates from tsconfig.json.
+/.sniffler/cache.json
+/.sniffler/diagnostics.json
+/.sniffler/tsconfig.generated.json
