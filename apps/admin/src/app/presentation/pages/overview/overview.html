@@ -65,7 +65,7 @@
          slow `getSeries` call never hides a status strip's counts — they come from `overview()`,
          a different request. -->
     <div class="space-y-4">
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
         <app-line-chart
           title="New accounts per day"
           [description]="signupsDescription()"
@@ -100,7 +100,7 @@
         <app-overview-status-strip [items]="trackPipelineStatus()" urgentId="tracks-stuck" />
       </app-bar-chart>
 
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div class="grid grid-cols-1 items-start gap-4 sm:grid-cols-3">
         <div class="sm:col-span-2">
           <app-bar-chart
             title="Reports filed per day"

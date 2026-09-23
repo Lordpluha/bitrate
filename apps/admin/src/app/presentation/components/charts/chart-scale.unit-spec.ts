@@ -5,7 +5,7 @@ import {
   hasData,
   maxLabelsForWidth,
   niceCeiling,
-  pointHoverWidths,
+  segmentCenterX,
   seriesMax,
   stackedMax,
   thinnedLabelIndexes,
@@ -107,32 +107,31 @@ describe('xPosition', () => {
   })
 })
 
-describe('pointHoverWidths', () => {
-  it('sums to the full plot width, so the overlay has no gaps or overhang', () => {
-    const widths = pointHoverWidths(4, 300)
-
-    expect(widths.reduce((sum, width) => sum + width, 0)).toBeCloseTo(300)
+describe('segmentCenterX', () => {
+  it('centres each index in its own equal 1/count slice of the width', () => {
+    // A count-way `flex-1` hover overlay divides the plot into four 75-wide slices for a
+    // width of 300; this must land each point at the centre of its own slice — 37.5, 112.5,
+    // 187.5, 262.5 — so a hover region and its point always agree by construction.
+    expect(segmentCenterX(0, 4, 300)).toBe(37.5)
+    expect(segmentCenterX(1, 4, 300)).toBe(112.5)
+    expect(segmentCenterX(2, 4, 300)).toBe(187.5)
+    expect(segmentCenterX(3, 4, 300)).toBe(262.5)
   })
 
-  it('centres each region on its point rather than dividing into equal count-based slices', () => {
-    // Points sit edge-to-edge (xPosition divides by count - 1): at 0, 100, 200, 300 for a
-    // plot width of 300 and 4 categories. Boundaries fall at the midpoints — 50, 150, 250 —
-    // not at the equal-quarter marks (75, 150, 225) a naive `flex-1` split would use.
-    const widths = pointHoverWidths(4, 300)
-
-    expect(widths).toEqual([50, 100, 100, 50])
+  it('centres a single category in the middle of the full width', () => {
+    expect(segmentCenterX(0, 1, 300)).toBe(150)
   })
 
-  it('gives a single category the entire width, centred on its one point', () => {
-    expect(pointHoverWidths(1, 300)).toEqual([300])
+  it('offsets by a left padding when given one', () => {
+    expect(segmentCenterX(0, 4, 300, 40)).toBe(77.5)
   })
 
-  it('returns nothing for an empty range', () => {
-    expect(pointHoverWidths(0, 300)).toEqual([])
-  })
-
-  it('handles a zero-width plot without producing negative widths', () => {
-    expect(pointHoverWidths(3, 0)).toEqual([0, 0, 0])
+  it('never places the first or last point flush against the plot edge', () => {
+    // Unlike xPosition (edge-to-edge), the first point sits half a slice in from 0 and the
+    // last sits half a slice back from plotWidth — the whole point of the segment-centre
+    // convention is that no point touches the axis boundary.
+    expect(segmentCenterX(0, 5, 300)).toBeGreaterThan(0)
+    expect(segmentCenterX(4, 5, 300)).toBeLessThan(300)
   })
 })
 

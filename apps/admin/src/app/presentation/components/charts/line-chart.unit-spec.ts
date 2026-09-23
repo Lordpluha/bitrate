@@ -96,7 +96,12 @@ describe('LineChart', () => {
   it('thins x-axis labels using the chart width, never a hardcoded category count', () => {
     const manyCategories = Array.from({ length: 30 }, (_, index) => `Day ${index}`)
     const manySeries: ChartSeriesValues[] = [
-      { id: 'listeners', label: 'Listeners', colorVar: '--color-chart-1', values: manyCategories.map(() => 1) },
+      {
+        id: 'listeners',
+        label: 'Listeners',
+        colorVar: '--color-chart-1',
+        values: manyCategories.map(() => 1),
+      },
     ]
     const { host } = create(manySeries, manyCategories)
     const svg = host.querySelector('svg')
@@ -126,19 +131,22 @@ describe('LineChart', () => {
   })
 
   /**
-   * Points sit edge-to-edge, so the first and last hover region — bounded on one side by the
-   * midpoint to their one neighbour, and on the other by the plot edge — are each exactly half
-   * the width of an interior region's two-neighbour span. An equal `flex-1` split (the previous,
-   * broken behaviour) would give every button the same width regardless of position.
+   * Every hover button is an equal `flex-1` slice of the plot, and every point sits at
+   * `segmentCenterX` — the centre of that same equal slice (see `chart-scale.ts`) — so a
+   * hover region and the point it activates share a centre by construction. Points used to
+   * sit edge-to-edge instead (`xPosition`, dividing by `count - 1`), which put every point at
+   * a different x-coordinate than an equal-slice `flex-1` overlay already divided the plot
+   * into, and no amount of resizing the overlay's regions could fully reconcile the two.
    */
-  it('sizes the first and last hover regions to half an interior region, not an equal share', () => {
+  it('gives every hover button an equal flex-1 share, matching the equal slice each point centres in', () => {
     const { host } = create(SERIES)
     const buttons = Array.from(host.querySelectorAll('.absolute.inset-0.flex > button'))
-    const widths = buttons.map((button) => Number.parseFloat((button as HTMLElement).style.width))
 
-    expect(widths[0]).toBeGreaterThan(0)
-    expect(widths[0]).toBeCloseTo((widths[1] ?? 0) / 2)
-    expect(widths.at(-1)).toBeCloseTo((widths[1] ?? 0) / 2)
+    expect(buttons.length).toBe(SERIES[0]?.values.length)
+    for (const button of buttons) {
+      expect(button.className).toContain('flex-1')
+      expect((button as HTMLElement).style.width).toBe('')
+    }
   })
 
   it('shows a tooltip with the exact values on hover, and clears it on pointer leave', async () => {
