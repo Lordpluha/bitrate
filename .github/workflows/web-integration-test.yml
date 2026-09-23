@@ -29,6 +29,10 @@ on:
 
 permissions:
   contents: read
+  # The called workflow's image builds pull the GHCR `cache/<app>:buildcache` refs the per-app
+  # jobs maintain. A called workflow can only narrow what the caller grants, so the scope has to
+  # be declared here too — same shape as monitoring.yml. Read-only: nothing here publishes.
+  packages: read
 
 jobs:
   integration-test:
