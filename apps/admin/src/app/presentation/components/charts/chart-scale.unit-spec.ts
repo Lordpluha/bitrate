@@ -5,6 +5,7 @@ import {
   hasData,
   maxLabelsForWidth,
   niceCeiling,
+  pointHoverWidths,
   seriesMax,
   stackedMax,
   thinnedLabelIndexes,
@@ -103,6 +104,35 @@ describe('xPosition', () => {
   it('offsets by a left padding when given one', () => {
     expect(xPosition(0, 3, 100, 40)).toBe(40)
     expect(xPosition(2, 3, 100, 40)).toBe(140)
+  })
+})
+
+describe('pointHoverWidths', () => {
+  it('sums to the full plot width, so the overlay has no gaps or overhang', () => {
+    const widths = pointHoverWidths(4, 300)
+
+    expect(widths.reduce((sum, width) => sum + width, 0)).toBeCloseTo(300)
+  })
+
+  it('centres each region on its point rather than dividing into equal count-based slices', () => {
+    // Points sit edge-to-edge (xPosition divides by count - 1): at 0, 100, 200, 300 for a
+    // plot width of 300 and 4 categories. Boundaries fall at the midpoints — 50, 150, 250 —
+    // not at the equal-quarter marks (75, 150, 225) a naive `flex-1` split would use.
+    const widths = pointHoverWidths(4, 300)
+
+    expect(widths).toEqual([50, 100, 100, 50])
+  })
+
+  it('gives a single category the entire width, centred on its one point', () => {
+    expect(pointHoverWidths(1, 300)).toEqual([300])
+  })
+
+  it('returns nothing for an empty range', () => {
+    expect(pointHoverWidths(0, 300)).toEqual([])
+  })
+
+  it('handles a zero-width plot without producing negative widths', () => {
+    expect(pointHoverWidths(3, 0)).toEqual([0, 0, 0])
   })
 })
 

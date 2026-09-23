@@ -114,7 +114,8 @@
         @for (category of categories(); track category; let i = $index) {
           <button
             type="button"
-            class="h-full flex-1 cursor-crosshair rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="h-full shrink-0 cursor-crosshair rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            [style.width.px]="hoverWidths()[i]"
             [attr.aria-label]="tooltipLabel(i)"
             (pointerenter)="hover.activate(i)"
             (pointermove)="hover.activate(i)"
