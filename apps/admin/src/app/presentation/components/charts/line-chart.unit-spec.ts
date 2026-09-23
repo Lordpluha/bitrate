@@ -125,6 +125,22 @@ describe('LineChart', () => {
     }
   })
 
+  /**
+   * Points sit edge-to-edge, so the first and last hover region — bounded on one side by the
+   * midpoint to their one neighbour, and on the other by the plot edge — are each exactly half
+   * the width of an interior region's two-neighbour span. An equal `flex-1` split (the previous,
+   * broken behaviour) would give every button the same width regardless of position.
+   */
+  it('sizes the first and last hover regions to half an interior region, not an equal share', () => {
+    const { host } = create(SERIES)
+    const buttons = Array.from(host.querySelectorAll('.absolute.inset-0.flex > button'))
+    const widths = buttons.map((button) => Number.parseFloat((button as HTMLElement).style.width))
+
+    expect(widths[0]).toBeGreaterThan(0)
+    expect(widths[0]).toBeCloseTo((widths[1] ?? 0) / 2)
+    expect(widths.at(-1)).toBeCloseTo((widths[1] ?? 0) / 2)
+  })
+
   it('shows a tooltip with the exact values on hover, and clears it on pointer leave', async () => {
     const { fixture, host } = create(SERIES)
     const button = host.querySelectorAll('button')[1]

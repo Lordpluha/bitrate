@@ -21,6 +21,7 @@ import {
   axisTicks,
   hasData,
   maxLabelsForWidth,
+  pointHoverWidths,
   seriesMax,
   thinnedLabelIndexes,
   xPosition,
@@ -72,6 +73,14 @@ export class LineChart {
   private readonly max = computed(() => this.yTicks().at(-1) ?? 1)
   protected readonly xLabelIndexes = computed(() =>
     thinnedLabelIndexes(this.categories().length, maxLabelsForWidth(this.width())),
+  )
+
+  /**
+   * Per-index hover-region pixel widths, centred on each point rather than an equal `1/count`
+   * slice — see `pointHoverWidths` for why the two differ for a line chart's edge-to-edge points.
+   */
+  protected readonly hoverWidths = computed(() =>
+    pointHoverWidths(this.categories().length, this.plotWidth()),
   )
 
   protected readonly hover = new ChartHoverState()
