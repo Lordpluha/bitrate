@@ -1,6 +1,7 @@
 export * from './access'
 export * from './artist'
 export * from './audit'
+export * from './locale'
 export * from './moderation'
 export * from './role'
 export * from './shared'

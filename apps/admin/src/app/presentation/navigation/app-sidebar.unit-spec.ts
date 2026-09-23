@@ -2,8 +2,10 @@ import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { provideRouter } from '@angular/router'
 import { SessionStore } from '@application/session'
+import { TranslocoTestingModule } from '@jsverse/transloco'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { AppSidebar } from './app-sidebar'
+import { DEFAULT_LOCALE, LOCALES } from './locale-store'
 
 const ADMIN_STAFF = {
   id: '3f2504e0-4f89-41d3-9a0c-0305e82c3301',
@@ -19,6 +21,12 @@ describe('AppSidebar', () => {
     localStorage.clear()
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
       providers: [provideZonelessChangeDetection(), provideRouter([])],
     })
     /** ADMIN sees every guarded item by identity — see `hasPermission`. */

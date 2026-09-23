@@ -107,14 +107,14 @@
               <td hlmTd>
                 @if (user.emailVerifiedAt) {
                   <span class="tabular-nums text-muted-foreground">
-                    {{ user.emailVerifiedAt | date: 'dd.MM.yyyy' }}
+                    {{ user.emailVerifiedAt | localizedDate: 'dd.MM.yyyy' }}
                   </span>
                 } @else {
                   <span hlmBadge variant="outline">pending</span>
                 }
               </td>
               <td hlmTd class="tabular-nums text-muted-foreground">
-                {{ user.createdAt | date: 'dd.MM.yyyy' }}
+                {{ user.createdAt | localizedDate: 'dd.MM.yyyy' }}
               </td>
               <td hlmTd>
                 @if (!user.deactivatedAt && canDelete()) {

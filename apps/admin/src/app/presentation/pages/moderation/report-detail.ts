@@ -1,9 +1,9 @@
-import { DatePipe } from '@angular/common'
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import { AdvanceReportUseCase, GetReportUseCase } from '@application/moderation'
 import { SessionStore } from '@application/session'
 import { canAdvanceTo, type ModerationStatus, type ReportDetail } from '@domain/moderation'
+import { LocalizedDatePipe } from '@presentation/pipes'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 
@@ -25,7 +25,7 @@ const SUBJECT_ROUTES: Readonly<Record<string, (id: string) => readonly [string, 
 
 @Component({
   selector: 'app-report-detail',
-  imports: [DatePipe, RouterLink, HlmBadgeImports, HlmButtonImports],
+  imports: [LocalizedDatePipe, RouterLink, HlmBadgeImports, HlmButtonImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './report-detail.html',
 })

@@ -19,7 +19,7 @@
         </span>
       </h1>
       <p class="text-sm text-muted-foreground">
-        Filed {{ r.createdAt | date: 'dd.MM.yyyy HH:mm' }} · reporter
+        Filed {{ r.createdAt | localizedDate: 'dd.MM.yyyy HH:mm' }} · reporter
         {{ r.reporterId.slice(0, 8) }}
       </p>
     }
@@ -77,7 +77,7 @@
             <li>
               <a [routerLink]="['/moderation', sibling.id]" class="text-sm hover:underline">
                 {{ sibling.reason }} — {{ sibling.status }} ({{
-                  sibling.createdAt | date: 'dd.MM.yyyy'
+                  sibling.createdAt | localizedDate: 'dd.MM.yyyy'
                 }})
               </a>
             </li>
