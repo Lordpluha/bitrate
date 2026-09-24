@@ -3,7 +3,7 @@
   "rootDir": "../src",
   "testEnvironment": "node",
   "maxWorkers": 1,
-  "testMatch": ["<rootDir>/modules/**/*.int-spec.ts"],
+  "testMatch": ["<rootDir>/modules/**/*.int-spec.ts", "<rootDir>/infra/**/*.int-spec.ts"],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
