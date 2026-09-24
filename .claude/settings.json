@@ -96,9 +96,7 @@
     ],
     "deny": [
       "Read(./.env)",
-      "Read(./.env.*)",
       "Read(//**/.env)",
-      "Read(//**/.env.*)",
       "Read(//proc/*/environ)",
       "Read(//**/.ssh/**)",
       "Read(//**/.aws/**)",
@@ -111,9 +109,6 @@
       "Read(//**/*.pem)",
       "Read(//**/*.p12)",
       "Read(//**/*.keystore)",
-      "Bash(cat .env*)",
-      "Bash(cat */.env*)",
-      "Bash(cat **/.env*)",
       "Bash(cat ~/.ssh/*)",
       "Bash(cat ~/.aws/*)",
       "Bash(env)",
@@ -121,8 +116,6 @@
       "Bash(gh auth token*)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
-      "Bash(git reset --hard*)",
-      "Bash(git clean -fd*)",
       "Read(./node_modules/**)",
       "Read(./dist/**)",
       "Read(./build/**)",
@@ -150,20 +143,12 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Read|Edit|Write|MultiEdit",
+        "matcher": "Read|Edit|Write|MultiEdit|NotebookEdit|Grep|Glob|Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-env-access.sh\""
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-guard.sh\" search"
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-env-access.sh\"",
+            "timeout": 10
           }
         ]
       }
@@ -174,7 +159,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/format-on-edit.sh\""
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/format-on-edit.sh\"",
+            "timeout": 20
           }
         ]
       },

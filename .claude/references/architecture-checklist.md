@@ -1,20 +1,8 @@
----
-name: architecture-checklist
-description: The mechanical review checklist walked before a PR — FSD layering, NestJS controller/Swagger rules, TypeScript and React conventions, state ownership, design-token usage, code-principle limits, forms, and test depth, each with the exact command or grep that proves it. Use when reviewing a diff, preparing to open or update a PR, or deciding whether a change is finished.
-globs: []          # no path scope — applies at PR/commit time, not per-file
-license: MIT
-metadata:
-  author: lordpluha
-  version: "1.0.0"
----
-
 # Architecture checklist
 
-Verification list walked by `br-reviewer` (the heavy review specialist, auto-invoked by
-the `br-*-developer` agents on diffs over 100 lines/5 files, or dispatched by
-`/br-implement --review`).
-`/br-implement --session` self-checks against this list in-session for smaller diffs, and
-human reviewers use it before merging. Each item states the rule, how to check it, and which
+Use the sections matching the diff for an in-session review before a PR. Request
+`br-reviewer` for independent review or material risk, not a line/file-count threshold.
+Human reviewers may use the same checklist before merging. Each item states the rule, how to check it, and which
 file owns the full rationale.
 
 ## FSD rules (web-player)
@@ -53,71 +41,71 @@ Check: `git diff --name-only | grep 'apps/web-player/src/\(features\|entities\|w
 
 **API-1 — Swagger decorators are in `decorators/` — never inline in controllers.**
 Check: grep for `@ApiOperation\|@ApiResponse\|@ApiParam\|@ApiBody\|@ApiQuery` directly in `*.controller.ts` files. Any match outside a decorator factory is a FAIL.
-→ `.claude/rules/api-rules.md` § "Swagger decorator pattern"
+→ `.claude/references/api-rules-guide.md` § "Swagger decorator pattern"
 
 **API-2 — Controllers are thin — no Prisma, no business logic.**
 Check: grep for `this.prisma` or `PrismaService` in `*.controller.ts` files. Any match is a FAIL.
-→ `.claude/rules/api-rules.md` § "Controllers — thin by design"
+→ `.claude/references/api-rules-guide.md` § "Controllers — thin by design"
 
 **API-3 — Cross-module imports go through the module's `index.ts` barrel.**
 Check: grep for `from '@modules/<name>/[^']+'` (three-segment paths) — any match outside the module itself is a FAIL.
-→ `.claude/rules/api-rules.md` § "Path aliases (apps/api)"
+→ `.claude/references/api-rules-guide.md` § "Path aliases (apps/api)"
 
 **API-4 — Errors thrown are NestJS HttpExceptions, not manual response objects.**
 Check: grep for `return { error:` or `return { message:` in service/controller files. Flag any non-exception error return.
-→ `.claude/rules/api-rules.md` § "Errors"
+→ `.claude/references/api-rules-guide.md` § "Errors"
 
 **API-5 — A list route's `ApiQuery` set matches its zod query schema's fields exactly.**
 Check: `pnpm --filter @bitrate/api test -- admin-list-query-coverage` (or the equivalent spec for
 a non-admin list route) — any mismatch IS a violation. A new list endpoint's query schema needs a
 matching coverage case.
-→ `.claude/rules/api-rules.md` § "Declare the request body explicitly, and keep injected classes as values"
+→ `.claude/references/api-rules-guide.md` § "Declare the request body explicitly, and keep injected classes as values"
 
 ## TypeScript rules
 
 **TS-1 — Named types in all signature positions — no inline `{ ... }` shapes or unnamed literal unions.**
 Check: semantic pass. Grep for `: {` in function parameter positions as a signal. `Record<K, V>` and built-in generics are fine. For literal unions: `grep -rn ": '[^']*' | '[^']*'" apps/web-player/src --include="*.ts" --include="*.tsx"` — any inline literal union in a signature is a FAIL.
-→ `.claude/rules/typescript.md` § "Named types"
+→ `.claude/references/typescript-guide.md` § "Named types"
 
 **TS-2 — React: named imports only — no `React.` namespace access.**
 Check: `grep -r "React\." apps/web-player/src --include="*.tsx" --include="*.ts"` — any match for `React.useState`, `React.useEffect`, etc. is a FAIL.
-→ `.claude/rules/typescript.md` § "React imports"
+→ `.claude/references/typescript-guide.md` § "React imports"
 
 **TS-3 — No relative imports crossing module/slice boundaries.**
 Check: `grep -r "from '\.\." apps/web-player/src` and `grep -r "from '\.\." apps/api/src` — must return nothing across boundaries (within the same file's directory is OK in API).
-→ `.claude/rules/typescript.md` § "Imports"
+→ `.claude/references/typescript-guide.md` § "Imports"
 
 **TS-4 — No `//` line comments in `apps/web-player/src/` — TSDoc `/** */` only.**
 Check: `grep -rn "^\s*//" apps/web-player/src --include="*.ts" --include="*.tsx"` — any match outside generated files is a FAIL.
-→ `.claude/rules/typescript.md` § "TSDoc style"
+→ `.claude/references/typescript-guide.md` § "TSDoc style"
 
 **TS-5 — No `any` or TypeScript suppression shortcuts in changed production source.**
 Check: `rg -n '\bany\b|@ts-ignore|@ts-expect-error' <changed-source-files>`. Review
 legitimate third-party declaration boundaries; production `@ts-ignore` is always a FAIL.
-→ `.claude/rules/typescript.md` § "No `any` and no suppression shortcuts"
+→ `.claude/references/typescript-guide.md` § "No `any` and no suppression shortcuts"
 
 **TS-6 — Role suffix and test placement match the owning runner.**
-Check changed files against `.claude/rules/typescript.md` § "File naming" and "Test
+Check changed files against `.claude/references/typescript-guide.md` § "File naming" and "Test
 placement". A spec in a directory its runner does not discover is a FAIL.
 
 ## React rules (web-player)
 
 **React-1 — `'use client'` boundary is as deep as possible.**
 Check: semantic pass. A component using `'use client'` that could be a Server Component (no hooks, no browser API) is a review signal.
-→ `.claude/rules/react.md` § "Server vs Client components"
+→ `.claude/references/react-guide.md` § "Server vs Client components"
 
 **React-2 — Interactive elements use semantic HTML.**
 Check: grep for `<div onClick\|<span onClick` in `.tsx` files — any match is a FAIL.
-→ `.claude/rules/react.md` § "Accessibility baseline"
+→ `.claude/references/react-guide.md` § "Accessibility baseline"
 
 **React-3 — `ROUTES` constant used for all navigation — no inline path strings.**
 Check: `grep -r 'href="/' apps/web-player/src` and `grep -r "router.push('" apps/web-player/src` — any match is a FAIL.
-→ `.claude/rules/react.md` § "Routing"
+→ `.claude/references/react-guide.md` § "Routing"
 
 **React-4 — Route files are adapters; full screen composition lives in `views/`.**
 Check changed `app/**/page.tsx` files for large local component trees, feature orchestration,
 or duplicated business logic. They may read params/server data and render a view.
-→ `.claude/rules/react.md` § "Routing", ADR-0010
+→ `.claude/references/react-guide.md` § "Routing", ADR-0010
 
 **React-5 — Accessibility baseline is preserved.**
 Check labels, semantic controls, keyboard operation, focus restoration, reduced motion,
@@ -128,11 +116,11 @@ target size, and 320px/400%-zoom reflow for changed UI.
 
 **State-1 — New client state uses an owning-slice Zustand store; no new Redux slices.**
 Check changed files for new `createSlice` usage and concrete stores under `shared/store/`.
-→ `.claude/rules/react.md` § "State management"
+→ `.claude/references/react-guide.md` § "State management"
 
 **State-2 — Server state stays in React Query.**
 Check for API fetching in `useEffect` or duplicated API data copied into Zustand.
-→ `.claude/rules/react.md` § "State management"
+→ `.claude/references/react-guide.md` § "State management"
 
 **State-3 — Persisted/auth-bound stores follow the target migration contract.**
 Persist narrowly with `partialize`; expose `reset()` for auth-bound state; do not claim the
@@ -143,7 +131,7 @@ shared factory/registry exists until implemented.
 
 **Quality-1 — No hardcoded hex colors in `.tsx` or `.css` outside the token layer.**
 Check: `grep -rn "#[0-9a-fA-F]\{3,8\}" apps/web-player/src --include="*.tsx" --include="*.css"`.
-→ `.claude/rules/styling.md` § "Forbidden patterns"
+→ `.claude/references/styling-guide.md` § "Forbidden patterns"
 
 **Quality-2 — Commit message follows Conventional Commits format.**
 Check: `git log --oneline -5` — headers must match `<type>(<scope>): <summary>`.
@@ -151,7 +139,7 @@ Check: `git log --oneline -5` — headers must match `<type>(<scope>): <summary>
 
 **Quality-3 — No new unused files, exports, or dependencies.**
 Check: `pnpm knip`. Verify framework/generated false positives before suppressing them.
-→ `.claude/rules/code-style.md` § "`pnpm knip`"
+→ `.claude/references/verification.md` § "`pnpm knip`"
 
 **Quality-4 — Generated sources are regenerated, not hand-edited.**
 For token, icon, and OpenAPI contract changes, inspect the source and generated diff together.
@@ -166,7 +154,7 @@ keys, event names, and CSS custom-property names.
 Check: for each renamed string literal in the diff, grep the *old* value across the whole repo.
 A remaining hit in a file the diff did not touch is a FAIL. Where the rename changes a persisted
 key, confirm the old value is either migrated or explicitly swept.
-→ `.claude/rules/typescript.md` § "Constants — no magic values"
+→ `.claude/references/typescript-guide.md` § "Constants — no magic values"
 
 **Quality-5 — A changeset exists for any user/behaviour-visible change.**
 Check: `git diff --name-only -- .changeset/` (or `ls .changeset/*.md`) has a new file when
@@ -180,32 +168,26 @@ diffs.
 Check: semantic pass. A component that fetches, transforms, and renders is three responsibilities — split them. A component that copies logic from another is DRY violation — extract.
 → `.claude/rules/code-principles.md` § "SOLID", "DRY", "Component decomposition"
 
-**Principles-2 — ≤ 100 logic lines per `.tsx`.**
-Check: `find apps/web-player/src -name "*.tsx" | xargs wc -l | awk '$1 > 130' | sort -rn` — any file over 130 total lines is a review signal. Count logic lines manually (exclude blanks + comments).
-→ `.claude/rules/code-principles.md` § "Component size"
-
-**Principles-3 — ≤ 5 own declared props per component.**
-Check: semantic pass. Inspect the `<Component>Props` type — count only the fields declared directly (not inherited `HTMLAttributes` or `VariantProps`). Over 5 with no TSDoc justification is a FAIL.
-→ `.claude/rules/code-principles.md` § "Props"
-
-**Principles-4 — ≤ 2 `useEffect` calls per component.**
-Check: `grep -c "useEffect(" <file>.tsx` — any file with > 2 matches is a review signal. Verify the actual count in the component body.
-→ `.claude/rules/react.md` § "useEffect budget"
+**Principles-2/3/4 — Review complexity, props and effects.**
+Around 100 logic lines, more than 5 own props or more than 2 effects prompt a semantic
+review. Explain retain/split in the review; counts alone do not fail the change and do not
+require comments in production source. Preserve cohesive public contracts and avoid
+unrelated refactoring. `.claude/rules/code-principles.md` owns this policy.
 
 ## Style rules (web-player)
 
 **Style-1 — All `className` merges use `cn()` from `@bitrate/ui-react`.**
 Check: grep for template literals with class strings — `className={\`.*\`}` — any concatenation outside `cn()` is a FAIL.
-→ `.claude/rules/styling.md` § "Forbidden patterns"
+→ `.claude/references/styling-guide.md` § "Forbidden patterns"
 
 **Style-2 — Variant components use CVA, never raw string concatenation.**
 Check: semantic pass. A component with multiple visual variants that doesn't use `cva(...)` is a review signal.
-→ `.claude/rules/styling.md` § "The cn() + CVA recipe"
+→ `.claude/references/styling-guide.md` § "The cn() + CVA recipe"
 
 **Style-4 — No Tailwind built-in colour scale, and no `dark:` variant.**
 `slate`/`gray`/`zinc`/`stone`/`amber`/`yellow`/`lime`/`emerald`/`teal`/`cyan`/`sky`/`indigo`/`violet`/`fuchsia`/`pink`/`rose` bypass the token pipeline entirely — they lint clean but the theme switch cannot reach them. `dark:` compiles to a `prefers-color-scheme` media query here, so it follows the OS rather than the app's theme class.
 Check: `pnpm check:tokens` — any finding IS a violation. Also grep changed files for `dark:`.
-→ `.claude/rules/styling.md` § "Why stock Tailwind colours are worse than a hex literal"
+→ `.claude/references/styling-guide.md` § "Why stock Tailwind colours are worse than a hex literal"
 
 **Style-3 — Responsive UI and interaction details follow the token/a11y contract.**
 Check mobile stacking, full-width controls, focus visibility, target size, popup width,
@@ -270,7 +252,7 @@ disk) and the scanner's own unit spec on the equivalent string:
 `await import('svelte')`, `from '../element/index'` (no trailing slash), `from 'svelte'`,
 `from './Foo.svelte'`, `from '@bitrate/player'` — every one a FAIL if missed. The one shape
 that must **not** fail: `import type … from 'svelte'`.
-→ `.claude/rules/player-rules.md` § "The contract stays Svelte-free"
+→ `.claude/references/player-rules-guide.md` § "The contract stays Svelte-free"
 
 **Player-2 — The engine takes an injected transport, never a host global.**
 `src/engine/**` does not read `process.env`, `NEXT_PUBLIC_*`, `import.meta.env`, or branch on
@@ -278,7 +260,7 @@ that must **not** fail: `import type … from 'svelte'`.
 logger) arrives through constructor/factory injection from the host.
 Check: `rg -n 'process\.env|NEXT_PUBLIC_|import\.meta\.env' packages/player/src/engine` — any
 match is a FAIL.
-→ `.claude/rules/player-rules.md` § "The engine takes an injected transport — no host globals"
+→ `.claude/references/player-rules-guide.md` § "The engine takes an injected transport — no host globals"
 
 **Player-3 — The default/element entries stay importable with no `customElements` registry.**
 `src/element/index.ts` never statically imports the compiled `.svelte` component — only a
@@ -290,7 +272,7 @@ Check: `pnpm --filter @bitrate/player test:node` (a real Node environment — no
 `customElements` — importing the default and `/element` entries and asserting neither
 throws); then `pnpm --filter @bitrate/player build && node -e "import('./dist/esm/index.js')"`
 from `packages/player/` must resolve, not throw.
-→ `.claude/rules/player-rules.md` § "SSR guard and `defineBitratePlayer()`"
+→ `.claude/references/player-rules-guide.md` § "SSR guard and `defineBitratePlayer()`"
 
 ## Mechanical pass commands
 

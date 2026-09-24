@@ -1,6 +1,6 @@
 ---
 name: jest
-description: Jest testing conventions for apps/api — unit specs with jest-mock-extended, integration specs with NestJS TestingModule + supertest, E2E specs against real Postgres/Redis, fixture builders, and guard overrides. Use whenever writing or reviewing a *.unit-spec.ts, *.int-spec.ts, or *.e2e-spec.ts file, or whenever asked to "write a test for" a NestJS controller/service.
+description: "Write or review API Jest unit, integration and E2E specs using NestJS mocks, fixtures and guard overrides."
 metadata:
   version: "1.0.0"
   type: reference
@@ -219,6 +219,6 @@ Do not guess an API from memory. In order:
 
 - `api-rules` — the module structure these specs test against.
 - `br-tester` — the heavy specialist that writes/runs one focused spec end to end
-  and smoke-runs it; dispatched by `/br-implement` by default, or invoke it directly via the
+  and smoke-runs it; use for a separate test task when isolation adds value, or invoke it directly via the
   Agent tool. Prefer this skill when you just need the conventions to review or hand-write a
   spec yourself in-session (`--session`).

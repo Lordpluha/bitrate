@@ -1,6 +1,6 @@
 ---
 name: react-query
-description: Data-layer conventions for web-player and web-artists — the openapi-fetch client, the openapi-react-query wrapper, wrapping generated hooks in project hooks, query keys, invalidation after mutations, and server-vs-client fetching. Use when adding or changing any API call, query hook, mutation, or cache invalidation in a Next.js app.
+description: "Add or debug API queries, mutations and cache invalidation in web-player or web-artists using OpenAPI clients and project hooks."
 license: MIT
 metadata:
   author: lordpluha

@@ -1,7 +1,7 @@
 ---
 name: mobile-rules
 description: React Native + Expo rules for apps/mobile — the web-player conventions that do not exist here, kebab-case file naming, the path alias rooted at the app itself, and the three app.json settings (New Architecture, typed routes, React Compiler) that constrain what you may add. Use whenever writing or reviewing a screen, navigator, or native surface under apps/mobile/.
-globs:
+paths:
   - "apps/mobile/**"
 license: MIT
 metadata:
@@ -41,8 +41,8 @@ exist:
 | Biome | This app uses `eslint-config-expo` |
 
 Rules that **do** apply: `.claude/rules/typescript.md`, `.claude/rules/code-principles.md`,
-and the framework-agnostic parts of `.claude/rules/react.md` (hooks rules, ≤100 logic lines,
-≤5 own props, ≤2 `useEffect`).
+and React hook correctness. Component size, props and effects prompt review under
+`code-principles.md`; they do not force decomposition. Do not load web React recipes.
 
 ## Structure
 

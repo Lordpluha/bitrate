@@ -26,7 +26,7 @@ how to apply it day to day.
 | [0018](./0018-consolidate-agents-into-claude.md) | Consolidate `.agents/`/`AGENTS.md` into `.claude/` only |
 | [0019](./0019-remove-obsidian-export-convenience.md) | Remove the `graphify:obsidian` convenience wrapper |
 | [0020](./0020-cmaf-range-mse-playback.md) | Single-file CMAF + Range index + MSE for audio playback |
-| [0021](./0021-default-agent-dispatch.md) | Default to agent dispatch across all commands and ordinary tasks |
+| [0021](./0021-default-agent-dispatch.md) | Mandatory dispatch (superseded by ADR-0040) |
 | [0022](./0022-app-scoped-agent-roster.md) | App-scoped developer agents, unattended `/br-auto` pipeline, retire `br-ticket` |
 | [0023](./0023-tokens-into-ui-react.md) | Hand-write the design tokens as CSS; retire the token generator |
 | [0024](./0024-rebrand-to-bitrate.md) | Rebrand the project from spotify-clone to Bitrate |
@@ -45,6 +45,10 @@ how to apply it day to day.
 | [0037](./0037-br-manager-owns-tracker-state.md) | `br-manager` owns tracker state beside `br-worker` |
 | [0038](./0038-operator-permissions-roles-as-templates.md) | Operators hold permissions; roles are templates |
 | [0039](./0039-player-as-svelte-custom-element-package.md) | The player becomes a Svelte custom-element package |
+| [0040](./0040-context-and-delegation-budget.md) | Scoped instructions, task-based delegation and routine Sonnet defaults |
+| [0041](./0041-grill-me-before-large-tasks.md) | Required grill-me interview and confirmed plan before large tasks |
+| [0042](./0042-hooks-and-on-demand-workflows.md) | One-operation hook approvals, scoped formatting and on-demand verification/review/TDD |
+| [0045](./0045-scoped-instructions-and-bounded-execution.md) | Scoped rules, canonical specs and serialized verification |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

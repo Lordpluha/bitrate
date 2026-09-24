@@ -42,12 +42,12 @@ do, the card is what colleagues plan around.
 *issue* for the tracked record, *task* for the unit of agent work.
 
 **Rule** — a file under `.claude/rules/`. **Project law**: conventions this codebase
-enforces, listed exhaustively in `CLAUDE.md`'s Rule Index. A rule is read because its scope
+enforces, scoped by `paths` in its frontmatter. A rule is read because its scope
 matches the task. *Avoid*: guideline, standard, convention doc.
 
 **Skill** — a directory under `.claude/skills/` holding a `SKILL.md`. A **recipe** for one
-technology or workflow, listed in `CLAUDE.md`'s Skill Index. A skill is loaded because you
-are working in that technology. Rules say what this project requires; skills say how the
+technology or workflow, discovered through its description. Load a skill when its workflow
+is needed, including the required `grill-me` interview before large tasks. Rules say what this project requires; skills say how the
 technology works. *Avoid*: guide, playbook, helper.
 
 **Command** — a file under `.claude/commands/`, invoked by a human as `/br-<name>`. A command

@@ -1,6 +1,6 @@
 ---
 name: fsd
-description: Canonical FSD slice scaffolding — explains why implement and .claude/templates own the initial shape of every new feature/, entity/, widget/, or views/ slice in the Next.js web player, and every new UI component in packages/ui-react, what each generated tree looks like (including the model/{schemas,dtos,responses} split and the client/server API class pair), and when to add real API methods or Zustand state versus leaving them out. Use whenever asked to create a new feature, entity, widget, or view slice in apps/web-player, a new component in packages/ui-react, or before hand-rolling any of those directories by hand.
+description: "Scaffold web-player FSD slices or ui-react components from project templates; choose API/state structure. Next.js slice templates apply only to web-player."
 metadata:
   version: "1.0.0"
   type: workflow

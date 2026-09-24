@@ -1,14 +1,3 @@
----
-name: knowledge-base
-description: How this repo's codebase-navigation tool (graphify) works, and how GitHub ticket/board state is queried live rather than mirrored to files. Use before deep exploration of an unfamiliar area, whenever graphify-out/ exists, or when working with /br-create-task, /br-implement, or /br-auto.
-globs: []          # no path scope — applies at PR/commit time, not per-file
-metadata:
-  version: "1.0.0"
-  type: reference
-  author: lordpluha
-license: MIT
----
-
 # Knowledge base — graphify + live GitHub state
 
 This repo has no working-notes vault — durable decisions go straight into ADRs under
@@ -98,12 +87,12 @@ what the pipeline may take — bound the run with `--limit` and preview it with 
 | Command | What it does |
 |---|---|
 | `/br-create-task "<idea>"` | Reads the whole board + repo context, then drafts or restructures one issue that fits the work already planned. Confirms before every mutation. |
-| `/br-implement "<task>"` | Checks out the branch, dispatches to a specialist by default, writes the code, then open/update the PR (confirm before pushing). |
+| `/br-implement "<task>"` | Implements in-session, delegates a bounded task when useful, verifies and prepares the PR (confirm before pushing). |
 | `/br-auto` | Unattended: claims issues from the board's `Todo` column into worktrees, runs `br-worker` on each, then owns the PR, board move, and issue comment. |
-| `/br-sync-docs` | Dispatches discovery to `br-librarian`, finds/fixes drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Read-mostly, confirms fixes. |
+| `/br-sync-docs` | Audits scoped changes in-session, optionally delegates a broad audit to `br-librarian`, finds/fixes drift across `.claude/`, `.changeset/`, `apps/docs/`, `PRODUCT.md`, and root onboarding docs. Read-mostly, confirms fixes. |
 
-All four dispatch to an agent by default now — see
-[ADR-0021](../../apps/docs/docs/architecture/0021-default-agent-dispatch.md).
+Ordinary work runs in-session; `/br-auto` retains explicit worker orchestration — see
+[ADR-0040](../../apps/docs/docs/architecture/0040-context-and-delegation-budget.md).
 
 ## Durable decisions go to ADRs, not a notes vault
 

@@ -1,6 +1,6 @@
 ---
 name: playwright
-description: Playwright conventions for web-player E2E specs and route screenshots, plus the Vitest-Browser-Mode Chromium provider used for co-located ui-react screenshot specs. Use whenever writing or reviewing a *.e2e-spec.ts, *.screenshot-spec.ts(x) file, or whenever asked to add an E2E flow, route screenshot, or component screenshot test.
+description: "Write or debug web-player Playwright E2E/route screenshots and ui-react Vitest browser screenshot tests."
 metadata:
   version: "1.0.0"
   type: reference
@@ -161,5 +161,5 @@ Do not guess an API from memory. In order:
 
 - `vitest` — the unit/integration projects screenshot specs sit alongside.
 - `br-tester` — the heavy specialist that writes/runs one focused E2E/screenshot
-  spec end to end and smoke-runs it; dispatched by `/br-implement` by default, or invoke it
+  spec end to end and smoke-runs it; use for a separate test task when isolation adds value, or invoke it
   directly via the Agent tool.
