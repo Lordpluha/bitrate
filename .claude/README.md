@@ -9,6 +9,12 @@ pass `--session` to keep a task in the current session instead. This applies to 
 tasks outside any command too — see `CLAUDE.md`'s "Default to agent dispatch, even outside a
 command". See `TOKEN_BUDGET.md` for the cost trade-off this implies.
 
+## Requirements
+
+Start with [How to AI](../README.md#how-to-ai) for the required Python/Bash/Claude Code
+runtime, Linux/WSL2 resource-check boundary, plugin setup and optional tools. Application
+development prerequisites are listed separately in [How to develop](../README.md#how-to-develop).
+
 ## Commands
 
 | Command | Args | What it does |

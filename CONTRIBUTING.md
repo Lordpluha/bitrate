@@ -18,6 +18,9 @@ Thank you for your interest in the project! We welcome any contribution — whet
 
 ## 🚀 Getting Started
 
+Choose the appropriate [README setup path](README.md#how-to-start) and check
+[development requirements](README.md#how-to-develop) before installing dependencies.
+
 Planned and in-flight work lives on the [Projects board](https://github.com/users/Lordpluha/projects/6); pick something from `Todo`
 or open an issue before starting anything substantial.
 
@@ -29,7 +32,7 @@ or open an issue before starting anything substantial.
    ```
 3. **Install dependencies**:
    ```bash
-   pnpm install
+   SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install
    ```
 4. **Create a branch** for your changes:
    ```bash
@@ -310,6 +313,8 @@ Test files follow the runner owned by their package. See
 ---
 
 ## 🤖 Agent Workflow
+
+Runtime and optional-tool requirements are in [How to AI](README.md#how-to-ai).
 
 The optional repository agent layer lives under [`.claude/`](.claude/). Project agents use
 the same rules as human contributors:
