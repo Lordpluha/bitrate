@@ -3,7 +3,7 @@
 import { clientFetchClient } from '@shared/api/client'
 import { ensureOkResponse } from '@shared/api/errors'
 import { apiQueryKeys } from '@shared/api/queryKeys'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import {
   type SearchResult,
   searchHistorySchema,
@@ -147,18 +147,3 @@ export const useSearchHistory = (page = 1, limit = 10, enabled = true) =>
     enabled,
     staleTime: 60 * 1000,
   })
-
-export const useClearSearchHistory = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: async () => {
-      const { response } = await clientFetchClient.DELETE(
-        '/api/v1/search/history',
-      )
-      ensureOkResponse(response, 'Failed to clear search history')
-    },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: apiQueryKeys.search.all }),
-  })
-}

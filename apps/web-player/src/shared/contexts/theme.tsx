@@ -9,7 +9,7 @@ import {
   useEffect,
 } from 'react'
 
-export type ThemeContextType = {
+type ThemeContextType = {
   theme: Theme
   setTheme: (theme: Theme) => void
 }

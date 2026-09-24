@@ -44,7 +44,7 @@ type ContractStaffMemberRole = Pick<
   'id' | 'name' | 'permissions'
 >
 
-export const staffMemberRoleDto = z.object({
+const staffMemberRoleDto = z.object({
   id: z.uuid(),
   name: z.string(),
   permissions: z.array(wirePermissionDto),

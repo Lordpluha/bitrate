@@ -12,6 +12,3 @@ export const UNAUTHORIZED_ERRORS = {
   USER_NOT_FOUND: 'errors.auth.user_not_found',
   SESSION_NOT_FOUND: 'errors.auth.session_not_found',
 } as const
-
-/** Defines the auth error type. */
-export type AuthErrorType = (typeof UNAUTHORIZED_ERRORS)[keyof typeof UNAUTHORIZED_ERRORS]

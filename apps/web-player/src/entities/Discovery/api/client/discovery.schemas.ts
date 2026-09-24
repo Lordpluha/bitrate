@@ -6,7 +6,7 @@ const paginationSchema = z.object({
   total: z.number(),
 })
 
-export const browseCategorySchema = z.object({
+const browseCategorySchema = z.object({
   _count: z.object({
     albums: z.number(),
     artists: z.number(),
@@ -24,7 +24,7 @@ export const browseCategoriesSchema = paginationSchema.extend({
   data: z.array(browseCategorySchema),
 })
 
-export const discoveryPlaylistSchema = z.object({
+const discoveryPlaylistSchema = z.object({
   _count: z.object({ tracks: z.number() }).optional(),
   cover: z.string().nullable(),
   description: z.string().nullable(),
@@ -44,7 +44,7 @@ export const categoryPlaylistsSchema = paginationSchema.extend({
   data: z.array(discoveryPlaylistSchema),
 })
 
-export const discoveryTrackSchema = z.object({
+const discoveryTrackSchema = z.object({
   artist: z
     .object({
       avatar: z.string().nullable(),
@@ -63,7 +63,7 @@ export const chartsSchema = paginationSchema.extend({
   data: z.array(discoveryTrackSchema),
 })
 
-export const discoveryFeedItemSchema = z
+const discoveryFeedItemSchema = z
   .object({
     artist: z
       .object({
@@ -102,7 +102,7 @@ export const topTracksSchema = paginationSchema.extend({
   data: z.array(discoveryTrackSchema.extend({ plays: z.number() })),
 })
 
-export const topArtistSchema = z.object({
+const topArtistSchema = z.object({
   avatar: z.string().nullable(),
   backgroundImage: z.string().nullable().optional(),
   bio: z.string().nullable(),
@@ -119,4 +119,3 @@ export type BrowseCategoryResponse = z.infer<typeof browseCategorySchema>
 export type DiscoveryFeedItem = z.infer<typeof discoveryFeedItemSchema>
 export type DiscoveryPlaylist = z.infer<typeof discoveryPlaylistSchema>
 export type DiscoveryTrack = z.infer<typeof discoveryTrackSchema>
-export type TopArtist = z.infer<typeof topArtistSchema>

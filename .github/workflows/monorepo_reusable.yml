@@ -28,6 +28,11 @@ on:
 permissions:
   contents: read
 
+# Static checks generate config/client code but never connect to these services.
+env:
+  NG_APP_API_URL: http://localhost:3000
+  DATABASE_URL: postgresql://test:test@localhost:5432/test
+
 jobs:
   lint:
     if: ${{ inputs.run-lint }}

@@ -1,6 +1,5 @@
 'use client'
 
-import type { ApiSchemas } from '@bitrate/contracts'
 import {
   clientFetchClient,
   fetchWithAuthRefresh,
@@ -23,7 +22,6 @@ import {
 } from './userResponse.schema'
 
 export type SafeUser = PublicUser
-export type UpdateUserPayload = ApiSchemas['UpdateUserDto']
 
 export const mergePublicUserIntoAuthUser = (
   current: unknown,
@@ -51,21 +49,6 @@ export const useUsers = ({ username, page = 1, limit = 10 }: UseUsersParams) =>
     {
       enabled: username.trim().length > 0,
       select: (data) => publicUsersResponseSchema.parse(data),
-    },
-  )
-
-export const useUserByUsername = (username?: string) =>
-  useQuery(
-    'get',
-    '/api/v1/users/username/{username}',
-    {
-      params: {
-        path: { username: username ?? '' },
-      },
-    },
-    {
-      enabled: !!username,
-      select: (data) => publicUserResponseSchema.parse(data),
     },
   )
 

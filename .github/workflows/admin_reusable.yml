@@ -69,8 +69,12 @@ jobs:
         if: ${{ inputs.run-lint || inputs.run-tests }}
         uses: ./.github/actions/setup-node-pnpm
 
-      # This app is on ESLint (angular-eslint), not Biome: `pnpm lint` at the root does not
-      # cover it and `biome ci apps/admin` would check nothing. Its own script is the gate.
+      - name: Build admin workspace dependencies
+        if: ${{ inputs.run-tests }}
+        run: pnpm exec turbo run build --filter='@bitrate/admin^...'
+
+      # This app uses ESLint (angular-eslint); `biome ci apps/admin` would check nothing.
+      # The monorepo lint task and this job both run its own script.
       # Every admin script regenerates src/app/infrastructure/http/env.generated.ts from the
       # environment first, and that generator has no fallback — the runner has no .env file, so
       # NG_APP_API_URL has to arrive as a step environment variable or the step fails by design.

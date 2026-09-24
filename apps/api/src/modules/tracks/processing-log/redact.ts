@@ -1,5 +1,5 @@
 /** Which end of an over-limit string survives truncation. */
-export type RedactKeep = 'head' | 'tail'
+type RedactKeep = 'head' | 'tail'
 
 /** Options for `redactProcessingText`. */
 export type RedactProcessingTextOptions = {

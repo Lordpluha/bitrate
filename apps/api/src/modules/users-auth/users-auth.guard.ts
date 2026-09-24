@@ -21,7 +21,7 @@ import { UNAUTHORIZED_ERRORS } from './errors/unauthorized.errors'
 /** Defines the token requirement. */
 export type TokenRequirement = 'access' | 'refresh'
 /** The token requirement value. */
-export const TOKEN_REQUIREMENT = 'tokenRequirement'
+const TOKEN_REQUIREMENT = 'tokenRequirement'
 
 function extractAuthCookies(request: Request, tokenService: TokenService) {
   const accessToken = request.cookies?.[tokenService.getTokenName('access')] as string | undefined

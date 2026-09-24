@@ -13,7 +13,7 @@ export const libraryTabs: Array<{
   { id: 'history', label: 'Recently Played' },
 ]
 
-export const getTimestamp = (value?: string | null) =>
+const getTimestamp = (value?: string | null) =>
   value ? new Date(value).getTime() || 0 : 0
 
 export const includesQuery = (value: string | undefined, query: string) =>

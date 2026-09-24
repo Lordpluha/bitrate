@@ -1,7 +1,7 @@
 import type { Permission } from './permissions'
 
 /** The staff shape {@link hasPermission} needs — a slice of the authenticated staff record. */
-export type PermissionCheckStaff = {
+type PermissionCheckStaff = {
   permissions: string[]
   role: { name: string; builtIn: boolean }
 }

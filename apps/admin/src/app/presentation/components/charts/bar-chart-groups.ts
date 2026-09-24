@@ -5,7 +5,7 @@ import type { ChartSeriesValues } from './chart.types'
 const GROUP_GAP = 0.15
 
 /** One rendered bar. */
-export type BarRect = {
+type BarRect = {
   x: number
   y: number
   width: number

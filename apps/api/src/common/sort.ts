@@ -3,7 +3,7 @@ import { z } from 'zod'
 /** The two directions a sortable list endpoint accepts. */
 export type SortOrder = 'asc' | 'desc'
 
-export const sortOrderSchema = z.enum(['asc', 'desc'])
+const sortOrderSchema = z.enum(['asc', 'desc'])
 
 /**
  * Builds the `sort`/`order` query pair for a sortable list endpoint. `fields` is the
@@ -49,5 +49,33 @@ export function buildSortOrderBy<Field extends string>(
   fallback: readonly Record<string, SortOrder>[],
 ): readonly Record<string, SortOrder>[] {
   if (!sort) return fallback
-  return [{ [sort]: order }, { id: order }]
+  // Keep property names literal even when this helper is called without DTO validation.
+  // The endpoint schemas further restrict which of these fields each resource accepts.
+  let primary: Record<string, SortOrder>
+  switch (sort) {
+    case 'username':
+      primary = { username: order }
+      break
+    case 'email':
+      primary = { email: order }
+      break
+    case 'createdAt':
+      primary = { createdAt: order }
+      break
+    case 'title':
+      primary = { title: order }
+      break
+    case 'processingStatus':
+      primary = { processingStatus: order }
+      break
+    case 'monthlyListeners':
+      primary = { monthlyListeners: order }
+      break
+    case 'status':
+      primary = { status: order }
+      break
+    default:
+      throw new Error('Unsupported sort field')
+  }
+  return [primary, { id: order }]
 }

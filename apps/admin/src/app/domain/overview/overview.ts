@@ -1,7 +1,7 @@
 import type { AuditEntry } from '../audit/audit-entry'
 
 /** Open moderation report counts, by status. */
-export type OverviewReportCounts = {
+type OverviewReportCounts = {
   open: number
   reviewing: number
 }
@@ -13,7 +13,7 @@ export type OverviewReportCounts = {
  * `domain/track/track.ts`'s `STUCK_AFTER_MS` for why the catalog list still keeps a local copy
  * for `isTrackStuck`, and why this response is the authoritative one for the dashboard tile.
  */
-export type OverviewTrackCounts = {
+type OverviewTrackCounts = {
   processing: number
   ready: number
   failed: number
@@ -22,13 +22,13 @@ export type OverviewTrackCounts = {
 }
 
 /** Deactivated (soft-deleted) account counts. */
-export type OverviewDeactivatedCounts = {
+type OverviewDeactivatedCounts = {
   users: number
   artists: number
 }
 
 /** Activity in the trailing 7 days. */
-export type OverviewLast7Days = {
+type OverviewLast7Days = {
   signups: number
   uploads: number
 }

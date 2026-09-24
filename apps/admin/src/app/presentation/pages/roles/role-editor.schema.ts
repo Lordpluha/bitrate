@@ -19,5 +19,3 @@ export const roleEditorSchema = z.object({
       message: 'A protected permission cannot be granted through a role template',
     }),
 })
-
-export type RoleEditorValues = z.infer<typeof roleEditorSchema>

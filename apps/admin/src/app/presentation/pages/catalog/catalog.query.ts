@@ -18,7 +18,7 @@ export const CATALOG_STATUSES = coveringTuple<TrackProcessingStatus>()([
 ])
 
 /** Not the wire's declared order — only what `coveringTuple` requires: every member present. */
-export const CATALOG_SORT_FIELDS = coveringTuple<TrackSortField>()([
+const CATALOG_SORT_FIELDS = coveringTuple<TrackSortField>()([
   'createdAt',
   'title',
   'processingStatus',

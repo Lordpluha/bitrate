@@ -29,7 +29,7 @@ const readOverride = (): boolean | null => {
 }
 
 /** True when playback tracing should be printed. */
-export const isPlayerLogEnabled = (): boolean =>
+const isPlayerLogEnabled = (): boolean =>
   readOverride() ?? process.env.NODE_ENV === 'development'
 
 /** Formats bytes as KB with one decimal, the scale fragments actually land in. */

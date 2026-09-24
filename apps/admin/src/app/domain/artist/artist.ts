@@ -18,7 +18,7 @@ export type Artist = {
 }
 
 /** Activity counts shown on the artist detail page. */
-export type ArtistCounts = {
+type ArtistCounts = {
   tracks: number
   albums: number
   activeSessions: number

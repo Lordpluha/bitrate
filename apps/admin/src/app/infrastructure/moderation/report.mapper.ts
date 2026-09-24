@@ -77,7 +77,7 @@ export function toModerationReport(dto: ReportDto): ModerationReport {
   }
 }
 
-export function toModerationSubject(dto: SubjectDto | null): ModerationSubject | null {
+function toModerationSubject(dto: SubjectDto | null): ModerationSubject | null {
   if (dto === null) return null
 
   return {

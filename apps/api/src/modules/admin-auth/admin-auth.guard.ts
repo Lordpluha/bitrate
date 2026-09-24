@@ -24,9 +24,9 @@ import type { AdminAuthRequest } from './types'
 type StaffRequest = Request & Partial<AdminAuthRequest>
 
 /** Defines the token requirement. */
-export type TokenRequirement = 'access' | 'refresh'
+type TokenRequirement = 'access' | 'refresh'
 /** The token requirement value. */
-export const TOKEN_REQUIREMENT = 'tokenRequirement'
+const TOKEN_REQUIREMENT = 'tokenRequirement'
 
 /**
  * Requires an authenticated staff session. This is the floor, not the whole story: it belongs

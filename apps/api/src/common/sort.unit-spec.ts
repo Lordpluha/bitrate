@@ -31,11 +31,28 @@ describe('buildSortOrderBy', () => {
     expect(buildSortOrderBy({}, fallback)).toBe(fallback)
   })
 
-  it('orders by the chosen field with a matching-direction id tie-break', () => {
-    expect(buildSortOrderBy({ sort: 'username', order: 'desc' }, fallback)).toEqual([
-      { username: 'desc' },
+  it.each([
+    'username',
+    'email',
+    'createdAt',
+    'title',
+    'processingStatus',
+    'monthlyListeners',
+    'status',
+  ])('orders by %s with a matching-direction id tie-break', (sort) => {
+    expect(buildSortOrderBy({ sort, order: 'desc' }, fallback)).toEqual([
+      { [sort]: 'desc' },
       { id: 'desc' },
     ])
+  })
+
+  it.each([
+    '__proto__',
+    'constructor',
+    'prototype',
+    'password',
+  ])('rejects unsafe or unsupported field %s', (sort) => {
+    expect(() => buildSortOrderBy({ sort }, fallback)).toThrow('Unsupported sort field')
   })
 
   it('defaults order to asc when only sort is given', () => {
