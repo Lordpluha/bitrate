@@ -79,7 +79,7 @@ the launcher/evidence helpers do not create commits or change the index.
 The user approved this continuation with “Давай приступим к этапам 1-3”. Recorded the
 fresh-session baseline, audited skill/plugin discovery costs, shortened local descriptions
 and startup instructions, and resolved duplicate Context7/graphify/memory guidance.
-[Token audit](../../../../.claude/TOKEN_BUDGET.md) owns the measurements and comparison
+[Token audit](https://github.com/Lordpluha/bitrate/blob/develop/.claude/TOKEN_BUDGET.md) owns the measurements and comparison
 procedure. Protection/formatter hooks remain; only the conflicting graphify search
 reminder was unregistered. Global originals have an external backup. AC-8 remains partial
 until scoped loading and comparable real usage are observed. The user supplied the

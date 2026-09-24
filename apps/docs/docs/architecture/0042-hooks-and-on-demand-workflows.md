@@ -31,4 +31,4 @@ decisions remain in scoped rules and skills. Hooks are bounded tool-call checks,
 OS sandbox; Codex does not automatically run Claude hooks. Resource measurements are
 snapshots, not locks. Native prompt behavior and UI discovery require interactive clients.
 Tests use temporary repositories and orphan worktrees without creating commits.
-See [.claude/references/hook-policy.md](../../../../.claude/references/hook-policy.md).
+See [.claude/references/hook-policy.md](https://github.com/Lordpluha/bitrate/blob/develop/.claude/references/hook-policy.md).
