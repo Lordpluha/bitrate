@@ -103,7 +103,7 @@ Two things worth knowing when actually querying:
 Prometheus reads `infra/observability/prometheus/prometheus.yml` as a static bind mount — it
 does not interpolate `${VAR}` from the shell environment the way Compose interpolates the
 compose YAML itself. The scrape config's bearer token is therefore the literal string
-`dev-metrics-token`, matching `docker-compose.preprod.yaml`'s `api` service's own
+`dev-metrics-token-local-only-0001`, matching `docker-compose.preprod.yaml`'s `api` service's own
 `METRICS_TOKEN` default — a fixed, non-secret local-dev value, the same spirit as this whole
 file's `admin`/`admin` Postgres/Redis credentials. If you override `METRICS_TOKEN` for the
 `api` service, update `prometheus.yml`'s hardcoded value too, or the scrape starts failing

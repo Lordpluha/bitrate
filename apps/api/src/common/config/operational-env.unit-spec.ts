@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { describe, expect, it } from '@jest/globals'
 import { envSchema } from '../../../env.schema'
 
@@ -9,6 +11,19 @@ const requiredEnv = {
 }
 
 describe('operational environment schema', () => {
+  it('accepts the local Compose metrics token and matches the Prometheus credential', () => {
+    const root = resolve(__dirname, '../../../../..')
+    const compose = readFileSync(resolve(root, 'infra/docker-compose.preprod.yaml'), 'utf8')
+    const prometheus = readFileSync(
+      resolve(root, 'infra/observability/prometheus/prometheus.yml'),
+      'utf8',
+    )
+    const token = compose.match(/METRICS_TOKEN: \$\{METRICS_TOKEN:-([^}]+)\}/)?.[1]
+    expect(token).toBeDefined()
+    expect(envSchema.parse({ ...requiredEnv, METRICS_TOKEN: token }).METRICS_TOKEN).toBe(token)
+    expect(prometheus.match(/^\s+credentials: (\S+)$/m)?.[1]).toBe(token)
+  })
+
   it('does not trust forwarding headers by default', () => {
     expect(envSchema.parse(requiredEnv).TRUST_PROXY_HOPS).toBe(0)
   })

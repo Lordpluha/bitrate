@@ -11,7 +11,7 @@ scrape_configs:
   # Prometheus reads this file as a static bind mount — it does not interpolate `${VAR}` from
   # the environment the way Compose does with the compose YAML itself, so this cannot read
   # METRICS_TOKEN from .env the way infra/docker-compose.preprod.yaml's api service does.
-  # `dev-metrics-token` is the api service's own METRICS_TOKEN default in that file (see the
+  # `dev-metrics-token-local-only-0001` is the api service's own METRICS_TOKEN default in that file (see the
   # api service's environment block) — a fixed, non-secret local-dev value, in keeping with
   # this whole file's admin/admin-style preprod defaults. Overriding METRICS_TOKEN for the api
   # service without updating this value breaks the scrape with 401s, silently (Prometheus logs
@@ -20,7 +20,7 @@ scrape_configs:
   - job_name: bitrate-api
     metrics_path: /api/v1/metrics
     authorization:
-      credentials: dev-metrics-token
+      credentials: dev-metrics-token-local-only-0001
     static_configs:
       - targets: ["api:3000"]
 
