@@ -2,6 +2,7 @@ import { join } from 'node:path'
 import { REDIS_CLIENT } from '@infra/cache/cache.constants'
 import { CacheModule } from '@infra/cache/cache.module'
 import { AuditInterceptor } from '@infra/observability/audit.interceptor'
+import { loggerOptions } from '@infra/observability/logger.config'
 import { MetricsInterceptor } from '@infra/observability/metrics.interceptor'
 import { MetricsService } from '@infra/observability/metrics.service'
 import { RedisThrottlerStorage } from '@infra/observability/redis-throttler.storage'
@@ -30,6 +31,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { SentryModule } from '@sentry/nestjs/setup'
 import type { Redis } from 'ioredis'
 import { I18nModule } from 'nestjs-i18n'
+import { LoggerModule } from 'nestjs-pino'
 import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
 import { PathTraversalMiddleware, RequestIdMiddleware } from './common'
@@ -41,6 +43,7 @@ import { i18nOptions } from './i18n/i18n.config'
 @Module({
   imports: [
     SentryModule.forRoot(),
+    LoggerModule.forRoot(loggerOptions),
     I18nModule.forRoot(i18nOptions),
     ConfigModule.forRoot({
       isGlobal: true,

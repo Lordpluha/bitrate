@@ -235,6 +235,43 @@ tasks:
       - cmd: '{{.DC_DEV}} logs -f desktop'
 
   # ─────────────────────────────────────────
+  # Observability — Prometheus + Grafana. See ADR-0044 and infra/observability/README.md.
+  # Entirely optional, local-machine-only: nothing here starts with a plain `task dev:up`.
+  # ─────────────────────────────────────────
+  observability:up:
+    desc: Start Prometheus + Grafana + Loki + exporters in Docker
+    cmds:
+      - cmd: >-
+          {{.DC_DEV}} --profile observability up -d
+          prometheus grafana grafana-cloudflared postgres-exporter redis-exporter
+          node-exporter cadvisor loki alloy
+      - cmd: echo "Open Grafana at http://localhost:${GRAFANA_PORT:-3006} (admin / your GRAFANA_ADMIN_PASSWORD)"
+      - cmd: echo "Open Prometheus at http://localhost:${PROMETHEUS_PORT:-9090}"
+      - cmd: echo "Loki logs are queried through Grafana Explore, not a direct URL"
+
+  # `down` ignores --profile when removing services — same caveat as mobile:down/desktop:down —
+  # so this stops and removes each named service instead of running `down`.
+  observability:down:
+    desc: Stop and remove the observability services only
+    cmds:
+      - cmd: >-
+          {{.DC_DEV}} --profile observability stop
+          prometheus grafana grafana-cloudflared postgres-exporter redis-exporter
+          node-exporter cadvisor loki alloy
+      - cmd: >-
+          {{.DC_DEV}} --profile observability rm -f
+          prometheus grafana grafana-cloudflared postgres-exporter redis-exporter
+          node-exporter cadvisor loki alloy
+
+  observability:logs:
+    desc: Tail every observability service's logs
+    cmds:
+      - cmd: >-
+          {{.DC_DEV}} --profile observability logs -f
+          prometheus grafana grafana-cloudflared postgres-exporter redis-exporter
+          node-exporter cadvisor loki alloy
+
+  # ─────────────────────────────────────────
   # Production
   # ─────────────────────────────────────────
   prod:up:

@@ -14,6 +14,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
 import helmet from 'helmet'
+import { Logger as PinoLogger } from 'nestjs-pino'
 
 import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'
@@ -21,7 +22,8 @@ import { resolveTrustProxySetting } from './common/config/trusted-proxy.config'
 
 /** Runs the bootstrap operation. */
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true })
+  app.useLogger(app.get(PinoLogger))
   const configService = app.get<ConfigService<AppConfig>>(ConfigService)
   const { userHost, artistHost } = configService.getOrThrow('web')
   app.set('trust proxy', resolveTrustProxySetting(configService.getOrThrow('TRUST_PROXY_HOPS')))
