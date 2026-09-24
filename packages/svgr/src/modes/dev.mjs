@@ -26,7 +26,7 @@ export async function dev(inputDir, outputDir, options = {}) {
     { recursive: true, persistent: true },
     async (eventType, filename) => {
       // Игнорируем не-SVG файлы
-      if (!filename || !filename.endsWith('.svg')) {
+      if (!filename?.endsWith('.svg')) {
         return
       }
 
