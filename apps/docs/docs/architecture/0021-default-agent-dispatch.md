@@ -1,6 +1,6 @@
 # ADR-0021: Default to agent dispatch across all commands and ordinary tasks
 
-Status: Accepted — the default-to-dispatch principle stands; the roster it names is superseded by [ADR-0022](./0022-app-scoped-agent-roster.md)
+Status: Superseded by [ADR-0040](./0040-context-and-delegation-budget.md); roster history remains in [ADR-0022](./0022-app-scoped-agent-roster.md)
 
 Date: 2026-07-30
 

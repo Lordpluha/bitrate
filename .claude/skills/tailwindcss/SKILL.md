@@ -1,6 +1,6 @@
 ---
 name: tailwindcss
-description: Tailwind v4 conventions for this monorepo — CSS-first @theme configuration with no tailwind.config.js, token-backed utilities from @bitrate/ui-react, cn() merging, CVA variants, and the v3 patterns that no longer work. Use when writing or reviewing any className, adding a design token, or when a utility class silently does nothing.
+description: "Write or debug Tailwind v4 utilities, tokens, cn() composition and CVA variants; check v3 migration differences."
 license: MIT
 metadata:
   author: lordpluha

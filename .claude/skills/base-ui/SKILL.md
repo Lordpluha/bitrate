@@ -1,6 +1,6 @@
 ---
 name: base-ui
-description: Base UI primitive conventions for packages/ui-react — the parts/anatomy pattern, render props and composition, controlled vs uncontrolled state, portals and z-index, and accessibility guarantees you must not undo. Use when building or changing a ui-react component on top of @base-ui/react, or when a popup, dialog, or menu misbehaves.
+description: "Build or debug Base UI primitives in packages/ui-react: composition, state, portals and accessibility."
 license: MIT
 metadata:
   author: lordpluha

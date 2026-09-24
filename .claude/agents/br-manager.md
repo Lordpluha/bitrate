@@ -1,9 +1,9 @@
 ---
 name: br-manager
-description: Tracker coordinator for bitrate — owns the GitHub side of a task while br-worker owns the code side. Checks whether a task is tracked by an issue before work starts and, when it is not, asks the developer whether the scope is right and whether to create one. Creates issues through /br-create-task (with br-planner for large efforts), opens and links PRs to their issues, moves board cards, and finds drift between issues, PRs, and the board. Every GitHub mutation is confirmed individually. Interactive only — never runs under /br-auto, whose dispatcher owns GitHub there.
+description: "Coordinate an explicitly requested interactive tracker workflow: issues, PRs and board state. Confirm each GitHub mutation. Never run under /br-auto or act as a mandatory preflight for ordinary code edits."
 tools: Read, Glob, Bash, Write, Agent, AskUserQuestion, Skill
-model: opus
-effort: high
+model: sonnet
+effort: medium
 author: lordpluha
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: web-player-rules
 description: Next.js App Router + FSD quick reference for apps/web-player — layer anatomy, the openapi-fetch/React Query API client, Zustand state, Server vs Client components, and the ROUTES routing convention. Use whenever writing or reviewing a component, hook, store, or route file under apps/web-player/src/, or whenever asked to add a page, feature, or piece of client state to the web player.
-globs:
+paths:
   - "apps/web-player/src/**"
 metadata:
   version: "1.0.0"
@@ -12,8 +12,7 @@ license: MIT
 
 # Web-player rules — Next.js App Router + FSD
 
-Quick reference for `apps/web-player/`. Read `project-conventions` first for the
-cross-cutting picture; this file goes one level deeper on the web player specifically.
+Requirements specific to `apps/web-player/`; do not reread rules already in context.
 For the FSD layer table, the cross-layer import permission matrix, the public-API barrel
 rule, and when to lift code down the stack, see `.claude/rules/fsd-web-player.md` — this
 file doesn't restate that, only what's specific to web-player beyond FSD itself: the API
@@ -101,3 +100,11 @@ Use `ROUTES` at every `<Link href={...}>` and `router.push(...)` — never inlin
 - `vitest`, `playwright` skills — test layers for this app; `testing.md` routes
   between them.
 - `project-conventions` — the cross-cutting rules this file specializes.
+
+First-party web-player functions use a single destructured object with a named input type.
+Exceptions: zero-arg functions, type predicates, variadic utilities and externally owned
+callback signatures. This convention does not apply to other workspaces.
+For form changes load `forms.md` explicitly, regardless of the component filename.
+
+Use TSDoc blocks for first-party TypeScript comments rather than line comments;
+see `.claude/references/typescript-guide.md` for the workspace-specific convention.

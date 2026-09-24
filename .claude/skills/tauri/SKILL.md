@@ -1,6 +1,6 @@
 ---
 name: tauri
-description: Tauri 2 conventions for apps/desktop — the Rust/renderer boundary and typed invoke wrappers, the capabilities permission model, CSP, state management across the boundary, and why Tauri 1 material online does not apply. Use when adding a native command, changing tauri.conf.json or a capability file, or when invoke fails or an asset will not load.
+description: "Build or debug Tauri 2 native commands, typed invoke, capabilities, CSP and Rust/renderer integration in apps/desktop."
 license: MIT
 metadata:
   author: lordpluha

@@ -1,6 +1,6 @@
 ---
 name: ui-react-rules
-description: Project conventions for the packages/ui-react component library — where component source, barrels, and config live, the search-before-adding workflow, Base UI as the primitive library, and where the generic shadcn skill's defaults are overridden. Use whenever adding, searching for, or modifying a UI component in packages/ui-react, or whenever the generic shadcn skill's guidance conflicts with this package's existing source.
+description: "Add, find or modify packages/ui-react components; apply project layout, Base UI and overrides of generic shadcn guidance."
 metadata:
   version: "1.0.0"
   type: reference

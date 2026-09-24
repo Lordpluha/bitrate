@@ -1,6 +1,6 @@
 ---
 name: svelte
-description: Svelte 5 runes and custom-element mode conventions for packages/player — props vs attributes, $host() for dispatching events, shadow DOM, prop reflection, and CSS injected into the shadow root. Use when writing or reviewing a .svelte file, changing <svelte:options>, or when a custom-element prop/attribute/event does not behave as expected.
+description: "Write or debug Svelte 5 player custom elements: runes, props/attributes, events and shadow DOM."
 ---
 
 # Svelte 5 + custom elements
