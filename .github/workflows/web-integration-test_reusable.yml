@@ -24,7 +24,8 @@ jobs:
   integration-test:
     name: Integration Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Cold image builds took 18 minutes before service startup in the failing run.
+    timeout-minutes: 35
 
     # Every variable in docker-compose.preprod.yaml is declared with a `:-default`, so the
     # stack needs no env file to come up. These are the values CI pins deliberately, set as
@@ -218,7 +219,7 @@ jobs:
           docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='bitrate_shadow'" | grep -q 1 || \
             docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE bitrate_shadow;"
           docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @bitrate/api run db:gen
-          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @bitrate/api run db:migration:start
+          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @bitrate/api run db:migration:deploy
 
       - name: Seed database
         run: |

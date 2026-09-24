@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 
 /** Mirrors the `TrackProcessingErrorCode` Prisma enum without importing the generated type. */
-export type ProcessingErrorCode =
+type ProcessingErrorCode =
   | 'FFMPEG_EXIT'
   | 'FFMPEG_SIGNAL'
   | 'TIMEOUT'

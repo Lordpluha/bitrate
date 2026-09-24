@@ -13,7 +13,7 @@ export type User = {
 }
 
 /** Activity counts shown on the listener detail page. */
-export type UserCounts = {
+type UserCounts = {
   playlists: number
   likedTracks: number
   listeningHistory: number

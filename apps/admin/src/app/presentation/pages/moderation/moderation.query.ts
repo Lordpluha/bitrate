@@ -20,7 +20,7 @@ export const MODERATION_STATUSES = coveringTuple<ModerationStatus>()([
   'REJECTED',
 ])
 
-export const MODERATION_SORT_FIELDS = coveringTuple<ModerationSortField>()(['createdAt', 'status'])
+const MODERATION_SORT_FIELDS = coveringTuple<ModerationSortField>()(['createdAt', 'status'])
 
 export const MODERATION_ENTITY_TYPES = coveringTuple<ModerationEntityType>()([
   'track',

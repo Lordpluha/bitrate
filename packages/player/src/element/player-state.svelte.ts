@@ -143,5 +143,3 @@ export function createPlayerEngineState(input: CreatePlayerEngineStateInput) {
     onMuteToggle,
   }
 }
-
-export type PlayerEngineState = ReturnType<typeof createPlayerEngineState>

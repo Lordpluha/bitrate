@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalEnv": ["NG_APP_API_URL"],
   "globalDependencies": ["biome.json", ".npmrc"],
   "globalPassThroughEnv": [
     "SKIP_GRAPHIFY_INSTALL",

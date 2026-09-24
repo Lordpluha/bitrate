@@ -49,7 +49,7 @@ export type TrackAudioFile = {
 }
 
 /** One artist credited on a track. */
-export type TrackArtistCredit = {
+type TrackArtistCredit = {
   artistId: string
   username: string
   isPrimary: boolean
@@ -57,14 +57,14 @@ export type TrackArtistCredit = {
 }
 
 /** A genre attached to a track. */
-export type TrackGenre = {
+type TrackGenre = {
   id: string
   name: string
   slug: string
 }
 
 /** An album a track appears on. */
-export type TrackAlbum = {
+type TrackAlbum = {
   id: string
   title: string
   trackNumber: number

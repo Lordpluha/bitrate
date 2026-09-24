@@ -27,7 +27,7 @@ export type OverviewReportsPoint = {
 }
 
 /** The current (not windowed) distribution of every report across its statuses. */
-export type OverviewReportsByStatus = {
+type OverviewReportsByStatus = {
   open: number
   reviewing: number
   resolved: number

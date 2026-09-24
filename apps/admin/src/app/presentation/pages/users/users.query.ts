@@ -9,7 +9,7 @@ import {
   type QueryCodec,
 } from '@presentation/state'
 
-export const USERS_SORT_FIELDS = coveringTuple<UserSortField>()(['username', 'email', 'createdAt'])
+const USERS_SORT_FIELDS = coveringTuple<UserSortField>()(['username', 'email', 'createdAt'])
 
 export type UsersQuery = {
   query: string

@@ -36,6 +36,13 @@ Current workflow map for .github/workflows.
   root-config-only change triggers at all — every other check workflow is path-filtered to one
   app or package.
 
+Knip's explicit entries include package source exports, platform-specific mobile files, CSS,
+service workers, and tests invoked through compiled JavaScript. Storybook loads only
+`main.ts` as configuration; its JSX preview is scanned as an entry. The narrow dependency
+exceptions cover Knip's Docusaurus search-theme name expansion and its assumption that every
+Expo app installs `expo-updates`. Playwright comes from the test workspaces; EAS is installed
+by the Expo workflow action.
+
 ### SVGR tooling packages
 - tooling_packages.yml — entry workflow for packages/svgr and packages/vite-svgr, path-filtered
   to those two. They ship no image, but packages/ui-react builds through them.

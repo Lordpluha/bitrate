@@ -5,7 +5,7 @@
     ".": {
       "entry": [".cz-config.js"],
       "ignore": [".cz-config.js"],
-      "ignoreBinaries": ["biome"]
+      "ignoreBinaries": ["biome", "playwright"]
     },
     "apps/api": {
       "entry": [
@@ -49,13 +49,15 @@
         "src/**/*.screenshot-spec.ts",
         "tests/configs/*.ts",
         "tests/e2e/**/*.e2e-spec.ts",
-        "scripts/select-playwright-tests.mjs"
+        "scripts/select-playwright-tests.mjs",
+        "public/sw.js"
       ],
       "ignore": ["env.schema.ts"],
       "ignoreDependencies": ["sniffler"]
     },
     "packages/ui-react": {
       "entry": [
+        "src/index.ts",
         "src/**/index.css",
         "src/**/*.unit-spec.ts",
         "src/**/*.unit-spec.tsx",
@@ -65,11 +67,12 @@
         "src/**/*.snapshot-spec.tsx",
         "src/**/*.screenshot-spec.ts",
         "src/**/*.screenshot-spec.tsx",
-        "vitest.config.ts"
+        "vitest.config.ts",
+        ".storybook/preview.tsx"
       ],
       "ignoreDependencies": ["tsc-alias"],
       "storybook": {
-        "config": [".storybook/{main,preview,manager}.@(ts|tsx)"],
+        "config": [".storybook/main.ts"],
         "stories": ["src/**/*.stories.@(ts|tsx|mdx)", "src/**/*.mdx"]
       }
     },
@@ -87,6 +90,24 @@
         "src/**/*.node-spec.ts",
         "src/**/*.browser-spec.ts"
       ]
+    },
+    "apps/docs": {
+      "entry": ["src/css/custom.css"],
+      "ignoreDependencies": [
+        "@easyops-cn/docusaurus-search-local",
+        "@easyops-cn/docusaurus-theme-docusaurus-search-local"
+      ]
+    },
+    "apps/mobile": {
+      "entry": ["components/**/*.ios.tsx", "hooks/**/*.web.ts"],
+      "ignoreBinaries": ["eas"],
+      "ignoreDependencies": ["expo-updates"]
+    },
+    "packages/converter": {
+      "entry": ["src/ffmpeg-process.d.ts"]
+    },
+    "packages/ncs-parser": {
+      "entry": ["src/main.ts", "tests/*.test.ts"]
     }
   },
   "ignore": [

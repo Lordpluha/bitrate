@@ -25,5 +25,3 @@ export const staffCreateSchema = z.object({
       message: 'A protected permission cannot be granted',
     }),
 })
-
-export type StaffCreateValues = z.infer<typeof staffCreateSchema>

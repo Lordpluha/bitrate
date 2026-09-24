@@ -7,6 +7,3 @@ export const UNAUTHORIZED_ERRORS = {
   STAFF_NOT_FOUND: 'Staff not found',
   SESSION_NOT_FOUND: 'Session not found',
 } as const
-
-/** Defines the auth error type. */
-export type AuthErrorType = (typeof UNAUTHORIZED_ERRORS)[keyof typeof UNAUTHORIZED_ERRORS]

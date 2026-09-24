@@ -1,6 +1,6 @@
 import { StaffWriteError } from '@domain/staff'
 
-export type StaffWriteOperation = 'create' | 'assign-role' | 'update-permissions' | 'deactivate'
+type StaffWriteOperation = 'create' | 'assign-role' | 'update-permissions' | 'deactivate'
 
 type StaffWriteErrorMessageInput = {
   error: unknown

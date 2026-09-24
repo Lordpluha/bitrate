@@ -23,7 +23,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get health operation. */
+    /**
+     * Runs the get health operation.
+     * @description Alias for `/health/ready`. Prefer `/health/live` or `/health/ready` directly.
+     */
     get: operations['AppController_getHealth_v1']
     put?: never
     post?: never
@@ -40,7 +43,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Returns a dependency-free liveness signal. */
+    /**
+     * Returns a dependency-free liveness signal.
+     * @description Answers immediately with no dependency checks. An orchestrator restarts the container when this stops responding; it never fails because a downstream dependency is down — that is `/health/ready`.
+     */
     get: operations['AppController_getLiveness_v1']
     put?: never
     post?: never
@@ -57,42 +63,11 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Returns a bounded, topology-free dependency readiness signal. */
+    /**
+     * Returns a bounded, topology-free dependency readiness signal.
+     * @description Checks Postgres, Redis and storage in parallel, each bounded by `HEALTH_CHECK_TIMEOUT_MS`. An orchestrator stops routing traffic to this instance while it fails — unlike `/health/live`, this is expected to fail when a dependency is degraded.
+     */
     get: operations['AppController_getReadiness_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/debug-sentry': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** Runs the get error operation. */
-    get: operations['AppController_getError_v1']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/api/v1/metrics': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** Returns Prometheus-compatible process metrics. */
-    get: operations['AppController_getMetrics_v1']
     put?: never
     post?: never
     delete?: never
@@ -108,7 +83,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Returns a short-lived direct URL for a private cover or profile image. */
+    /**
+     * Returns a short-lived direct URL for a private cover or profile image.
+     * @description `key` must match a cover (`tracks|albums|playlists/<id>/cover.<ext>`) or profile image (`artists|users/<id>/(avatar|background).<ext>`) storage key. The URL expires after 900 seconds.
+     */
     get: operations['StorageController_getImageUrl_v1']
     put?: never
     post?: never
@@ -283,7 +261,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Reissues a verification email without exposing account existence. */
+    /**
+     * Reissues a verification email without exposing account existence.
+     * @description Never reveals whether the email belongs to an account, and is a no-op when the account is already verified.
+     */
     post: operations['UsersAuthController_resendEmailVerification_v1']
     delete?: never
     options?: never
@@ -298,7 +279,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Lists the current user's active sessions. */
+    /**
+     * Lists the current user's active sessions.
+     * @description Each session carries a `current` flag marking the session making this request.
+     */
     get: operations['UsersAuthController_getSessions_v1']
     put?: never
     post?: never
@@ -555,7 +539,9 @@ export interface paths {
     }
     get?: never
     put?: never
+    /** Follow a user */
     post: operations['UsersController_follow_v1']
+    /** Unfollow a user */
     delete: operations['UsersController_unfollow_v1']
     options?: never
     head?: never
@@ -569,6 +555,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /** List the users the caller follows */
     get: operations['UsersController_following_v1']
     put?: never
     post?: never
@@ -691,7 +678,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get hls master playlist operation. */
+    /**
+     * Runs the get hls master playlist operation.
+     * @description Returns `application/vnd.apple.mpegurl`, listing every available bitrate variant.
+     */
     get: operations['TracksController_getHlsMasterPlaylist_v1']
     put?: never
     post?: never
@@ -708,7 +698,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Runs the get hls asset operation. */
+    /**
+     * Runs the get hls asset operation.
+     * @description Segments are served with an immutable cache header; the variant `.m3u8` playlist is not.
+     */
     get: operations['TracksController_getHlsAsset_v1']
     put?: never
     post?: never
@@ -1140,6 +1133,7 @@ export interface paths {
     }
     get?: never
     put?: never
+    /** Verify the artist's email address */
     post: operations['AuthController_verifyEmail_v1']
     delete?: never
     options?: never
@@ -1156,6 +1150,10 @@ export interface paths {
     }
     get?: never
     put?: never
+    /**
+     * Resend the artist email verification message
+     * @description Never reveals whether the email belongs to an account, and is a no-op when the account is already verified.
+     */
     post: operations['AuthController_resendEmail_v1']
     delete?: never
     options?: never
@@ -1338,9 +1336,11 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /** List the caller's search history */
     get: operations['SearchController_getHistory_v1']
     put?: never
     post?: never
+    /** Clear the caller's search history */
     delete: operations['SearchController_clearHistory_v1']
     options?: never
     head?: never
@@ -1390,6 +1390,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /** List browse categories */
     get: operations['DiscoveryController_categories_v1']
     put?: never
     post?: never
@@ -1406,6 +1407,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /** List playlists in a browse category */
     get: operations['DiscoveryController_categoryPlaylists_v1']
     put?: never
     post?: never
@@ -1422,6 +1424,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /**
+     * Get the home feed
+     * @description Anonymous callers get genre-agnostic sections. An authenticated caller gets tracks weighted toward their most-listened genres, plus an "On Repeat" section built from their own recent top tracks.
+     */
     get: operations['DiscoveryController_feed_v1']
     put?: never
     post?: never
@@ -1438,6 +1444,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /**
+     * List artists related to a given artist
+     * @description Ranked by shared genres first, then monthly listeners and verification status.
+     */
     get: operations['DiscoveryController_relatedArtists_v1']
     put?: never
     post?: never
@@ -1454,6 +1464,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /**
+     * Get the tracks chart
+     * @description `global` and `country` cover the last 28 days; `viral` covers the last 7. `country` requires the `country` query param (ISO country name, case-insensitive).
+     */
     get: operations['DiscoveryController_charts_v1']
     put?: never
     post?: never
@@ -1470,6 +1484,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /**
+     * Get the caller's top tracks
+     * @description `short` covers 28 days, `medium` covers 180 days, `long` covers roughly 10 years.
+     */
     get: operations['DiscoveryController_topTracks_v1']
     put?: never
     post?: never
@@ -1486,6 +1504,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /**
+     * Get the caller's top artists
+     * @description `short` covers 28 days, `medium` covers 180 days, `long` covers roughly 10 years.
+     */
     get: operations['DiscoveryController_topArtists_v1']
     put?: never
     post?: never
@@ -1502,7 +1524,15 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /**
+     * Get the caller's settings
+     * @description Returns the settings row for the authenticated user, creating it with defaults on first read.
+     */
     get: operations['MeController_getSettings_v1']
+    /**
+     * Update the caller's settings
+     * @description Every field is optional; only the fields present in the body are changed.
+     */
     put: operations['MeController_updateSettings_v1']
     post?: never
     delete?: never
@@ -1518,7 +1548,15 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /**
+     * Get the caller's player state
+     * @description Includes the active device, the current track, and the ordered queue.
+     */
     get: operations['MeController_getPlayer_v1']
+    /**
+     * Update the caller's player state
+     * @description Upserts the player state row. `deviceId` must belong to the caller and `currentTrackId` must be a ready track.
+     */
     put: operations['MeController_updatePlayer_v1']
     post?: never
     delete?: never
@@ -1535,6 +1573,10 @@ export interface paths {
       cookie?: never
     }
     get?: never
+    /**
+     * Replace the caller's play queue
+     * @description Deletes the existing queue and recreates it in the given order. All ids must resolve to ready, undeleted tracks.
+     */
     put: operations['MeController_updateQueue_v1']
     post?: never
     delete?: never
@@ -1550,8 +1592,13 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /** List the caller's playback devices */
     get: operations['MeController_devices_v1']
     put?: never
+    /**
+     * Register or update a playback device
+     * @description With `id` set, updates a device the caller owns. Without `id`, creates a new one. Setting `isActive` deactivates every other device for the caller.
+     */
     post: operations['MeController_upsertDevice_v1']
     delete?: never
     options?: never
@@ -1569,6 +1616,7 @@ export interface paths {
     get?: never
     put?: never
     post?: never
+    /** Remove one of the caller's playback devices */
     delete: operations['MeController_removeDevice_v1']
     options?: never
     head?: never
@@ -1582,6 +1630,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /** List the caller's notifications */
     get: operations['MeController_notifications_v1']
     put?: never
     post?: never
@@ -1599,6 +1648,7 @@ export interface paths {
       cookie?: never
     }
     get?: never
+    /** Mark a notification as read */
     put: operations['MeController_readNotification_v1']
     post?: never
     delete?: never
@@ -1615,6 +1665,7 @@ export interface paths {
       cookie?: never
     }
     get?: never
+    /** Mark every one of the caller's notifications as read */
     put: operations['MeController_readAll_v1']
     post?: never
     delete?: never
@@ -1630,6 +1681,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /**
+     * Get the caller's subscription
+     * @description Returns the most recent active subscription, or `{ plan: "FREE", status: "ACTIVE" }` when the caller has none.
+     */
     get: operations['MeController_subscription_v1']
     put?: never
     post?: never
@@ -1646,6 +1701,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /** List podcasts */
     get: operations['PodcastsController_getAll_v1']
     put?: never
     post?: never
@@ -1662,6 +1718,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /** Get a podcast by id, with its episodes */
     get: operations['PodcastsController_getById_v1']
     put?: never
     post?: never
@@ -1678,6 +1735,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
+    /** List the caller's saved episodes */
     get: operations['PodcastsController_saved_v1']
     put?: never
     post?: never
@@ -1695,8 +1753,10 @@ export interface paths {
       cookie?: never
     }
     get?: never
+    /** Save an episode to the caller's library */
     put: operations['PodcastsController_save_v1']
     post?: never
+    /** Remove an episode from the caller's library */
     delete: operations['PodcastsController_unsave_v1']
     options?: never
     head?: never
@@ -1712,6 +1772,10 @@ export interface paths {
     }
     get?: never
     put?: never
+    /**
+     * File a moderation report
+     * @description Reporting the same entity again while an earlier report is still active returns that report instead of creating a duplicate. Rate-limited per reporter.
+     */
     post: operations['ModerationController_create_v1']
     delete?: never
     options?: never
@@ -2529,6 +2593,8 @@ export interface components {
        * @description Soft deletion timestamp.
        */
       deletedAt: string | null
+      /** @description Transactional-email locale, set at registration from Accept-Language. */
+      locale: string
     }
     SafeUserEntity: {
       /** @description The id value. */
@@ -2623,6 +2689,8 @@ export interface components {
        * @description Soft deletion timestamp.
        */
       deletedAt: string | null
+      /** @description Transactional-email locale, set at registration from Accept-Language. */
+      locale: string
     }
     SafeArtistEntity: {
       /** @description The id value. */
@@ -4651,6 +4719,15 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description A plain-text welcome string */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': string
+        }
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -4747,6 +4824,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description All dependencies are reachable */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -4789,7 +4873,7 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Service unavailable */
+      /** @description One or more dependencies (Postgres, Redis, storage) failed or timed out */
       503: {
         headers: {
           [name: string]: unknown
@@ -4841,6 +4925,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description The process is up */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -4935,6 +5026,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description Every dependency is reachable */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -4977,7 +5075,7 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Service unavailable */
+      /** @description One or more dependencies failed or timed out */
       503: {
         headers: {
           [name: string]: unknown
@@ -5017,205 +5115,14 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
-      }
-    }
-  }
-  AppController_getError_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  AppController_getMetrics_v1: {
-    parameters: {
-      query?: never
-      header: {
-        authorization: string
-      }
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Method not allowed */
-      405: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Request timeout */
-      408: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Too many requests */
-      429: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Internal server error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Not implemented */
-      501: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Bad gateway */
-      502: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Service unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Gateway timeout */
-      504: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description HTTP version not supported */
-      505: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Insufficient storage */
-      507: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      /** @description Loop detected */
-      508: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      default: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': string
-        }
       }
     }
   }
   StorageController_getImageUrl_v1: {
     parameters: {
-      query?: {
-        key?: string
+      query: {
+        /** @description The storage object key */
+        key: string
       }
       header?: never
       path?: never
@@ -5223,7 +5130,25 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description The presigned URL and its expiry in seconds */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unsupported image storage key */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -5233,20 +5158,27 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
         }
+      }
+      /** @description Image not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -5742,16 +5674,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -5870,16 +5802,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -5998,16 +5930,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -6335,6 +6267,20 @@ export interface operations {
       }
     }
     responses: {
+      /** @description Email verified */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Invalid or expired verification token */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -6433,6 +6379,13 @@ export interface operations {
       }
     }
     responses: {
+      /** @description Verification email sent, if applicable */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -6527,7 +6480,18 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Active sessions, most recent first */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -6537,16 +6501,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -6646,7 +6610,18 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Every other session revoked */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -6656,16 +6631,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -6767,7 +6742,25 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Session revoked */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Session not found, or does not belong to the caller */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -6777,16 +6770,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -6916,16 +6909,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -7057,16 +7050,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -7198,16 +7191,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -7982,16 +7975,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -8335,16 +8328,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -8447,13 +8440,32 @@ export interface operations {
       query?: never
       header?: never
       path: {
+        /** @description User id to follow */
         id: string
       }
       cookie?: never
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Now following the user */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Cannot follow yourself */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -8463,20 +8475,27 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
         }
+      }
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -8568,13 +8587,25 @@ export interface operations {
       query?: never
       header?: never
       path: {
+        /** @description User id to unfollow */
         id: string
       }
       cookie?: never
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description No longer following the user */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -8584,16 +8615,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -8696,7 +8727,18 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description A page of followed users */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -8706,16 +8748,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -9061,16 +9103,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -9183,16 +9225,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -9424,16 +9466,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -9559,16 +9601,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -9701,16 +9743,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -9948,16 +9990,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -10052,11 +10094,21 @@ export interface operations {
     parameters: {
       query?: never
       header?: never
-      path?: never
+      path: {
+        /** @description Track ID */
+        id: string
+      }
       cookie?: never
     }
     requestBody?: never
     responses: {
+      /** @description The master playlist */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Unauthorized */
       401: {
         headers: {
@@ -10067,20 +10119,27 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
         }
+      }
+      /** @description Track not found, or its HLS stream is not ready */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -10172,13 +10231,24 @@ export interface operations {
       query?: never
       header?: never
       path: {
+        /** @description Rendition kbps */
         bitrate: number
+        /** @description Playlist or segment filename */
         asset: string
+        /** @description Track ID */
+        id: string
       }
       cookie?: never
     }
     requestBody?: never
     responses: {
+      /** @description The requested asset bytes */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Unauthorized */
       401: {
         headers: {
@@ -10189,20 +10259,27 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
         }
+      }
+      /** @description Track, rendition, or asset not found, or the track is not ready */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -10339,16 +10416,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -10599,16 +10676,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -10766,16 +10843,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -10896,16 +10973,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -11050,16 +11127,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -11192,16 +11269,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -11334,16 +11411,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -11578,16 +11655,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -11718,16 +11795,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -11962,16 +12039,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -12104,16 +12181,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -12250,16 +12327,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -12394,16 +12471,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -12536,16 +12613,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -12680,16 +12757,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -12926,16 +13003,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -13153,16 +13230,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -13282,16 +13359,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -13417,16 +13494,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -13559,16 +13636,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -14065,16 +14142,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -14193,16 +14270,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -14321,16 +14398,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -14660,6 +14737,20 @@ export interface operations {
       }
     }
     responses: {
+      /** @description Email verified */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Invalid or expired verification token */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -14758,6 +14849,13 @@ export interface operations {
       }
     }
     responses: {
+      /** @description Verification email sent, if applicable */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -14882,16 +14980,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -15023,16 +15121,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -15164,16 +15262,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -15918,7 +16016,18 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description A page of past searches, most recent first */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -15928,16 +16037,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -16037,7 +16146,18 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Search history cleared */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -16047,16 +16167,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -16177,16 +16297,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -16305,16 +16425,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -16441,16 +16561,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -16567,16 +16687,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -16679,6 +16799,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description A page of genres, sorted alphabetically */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -16772,12 +16899,27 @@ export interface operations {
       }
       header?: never
       path: {
+        /** @description The category (genre) slug */
         slug: string
       }
       cookie?: never
     }
     requestBody?: never
     responses: {
+      /** @description A page of public playlists, most-followed first */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Category not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -16872,6 +17014,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description An ordered list of feed sections */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -16960,6 +17109,7 @@ export interface operations {
   DiscoveryController_relatedArtists_v1: {
     parameters: {
       query?: {
+        /** @description Maximum related artists to return (1-50, default 12) */
         limit?: number
       }
       header?: never
@@ -16970,6 +17120,27 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description Related artists */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Limit out of range */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Artist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -17058,10 +17229,12 @@ export interface operations {
   DiscoveryController_charts_v1: {
     parameters: {
       query?: {
+        /** @description Required when scope is country */
         country?: string
         page?: number
         limit?: number
-        scope?: unknown
+        /** @description Chart scope (default global) */
+        scope?: 'global' | 'viral' | 'country'
       }
       header?: never
       path?: never
@@ -17069,6 +17242,20 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description A ranked page of tracks with play counts */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Invalid scope, or country scope missing the country param */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -17159,7 +17346,8 @@ export interface operations {
       query?: {
         page?: number
         limit?: number
-        range?: unknown
+        /** @description Listening window (default medium) */
+        range?: 'short' | 'medium' | 'long'
       }
       header?: never
       path?: never
@@ -17167,7 +17355,25 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description A ranked page of the caller’s top tracks */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Invalid time range */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -17177,16 +17383,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -17282,7 +17488,8 @@ export interface operations {
       query?: {
         page?: number
         limit?: number
-        range?: unknown
+        /** @description Listening window (default medium) */
+        range?: 'short' | 'medium' | 'long'
       }
       header?: never
       path?: never
@@ -17290,7 +17497,25 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description A ranked page of the caller’s top artists */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Invalid time range */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -17300,16 +17525,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -17409,30 +17634,19 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description The settings row */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
-        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -17532,30 +17746,26 @@ export interface operations {
       }
     }
     responses: {
-      /** @description Unauthorized */
+      /** @description The updated settings row */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Validation error */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
-        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -17651,30 +17861,19 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description The player state, or null if none exists yet */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
-        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -17774,30 +17973,26 @@ export interface operations {
       }
     }
     responses: {
-      /** @description Unauthorized */
+      /** @description The updated player state */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Device does not belong to the caller, or track is not ready for playback */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
-        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -17899,30 +18094,26 @@ export interface operations {
       }
     }
     responses: {
-      /** @description Unauthorized */
+      /** @description The player state with the new queue */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Queue contains unavailable tracks */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
-        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -18020,30 +18211,19 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Devices ordered active-first, then by last seen */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
-        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -18145,30 +18325,26 @@ export interface operations {
       }
     }
     responses: {
-      /** @description Unauthorized */
+      /** @description The created or updated device */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
+        content?: never
+      }
+      /** @description Device id does not belong to the caller */
+      404: {
+        headers: {
+          [name: string]: unknown
         }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -18179,6 +18355,13 @@ export interface operations {
       }
       /** @description Request timeout */
       408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Device is already active */
+      409: {
         headers: {
           [name: string]: unknown
         }
@@ -18268,30 +18451,26 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Device removed */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
+        content?: never
+      }
+      /** @description Device not found */
+      404: {
+        headers: {
+          [name: string]: unknown
         }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -18390,30 +18569,19 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description A page of notifications newest-first, plus the total unread count */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
-        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -18511,30 +18679,26 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Notification marked read */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
+        content?: never
+      }
+      /** @description Notification not found */
+      404: {
+        headers: {
+          [name: string]: unknown
         }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -18630,30 +18794,19 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description All notifications marked read */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
-        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -18749,30 +18902,19 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description The subscription */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
-        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -18866,6 +19008,7 @@ export interface operations {
       query?: {
         page?: number
         limit?: number
+        /** @description Case-insensitive title search */
         q?: string
       }
       header?: never
@@ -18874,6 +19017,13 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description A page of podcasts with their episode count */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -18962,7 +19112,9 @@ export interface operations {
   PodcastsController_getById_v1: {
     parameters: {
       query?: {
+        /** @description Episodes page */
         page?: number
+        /** @description Episodes page size */
         limit?: number
       }
       header?: never
@@ -18973,6 +19125,20 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description The podcast with a page of its episodes */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
       /** @description Method not allowed */
       405: {
         headers: {
@@ -19070,7 +19236,18 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description A page of saved episodes, each carrying a savedAt timestamp */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -19080,16 +19257,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -19185,13 +19362,25 @@ export interface operations {
       query?: never
       header?: never
       path: {
+        /** @description Episode id */
         id: string
       }
       cookie?: never
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Episode saved */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -19201,20 +19390,27 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
         }
+      }
+      /** @description Episode not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -19306,13 +19502,25 @@ export interface operations {
       query?: never
       header?: never
       path: {
+        /** @description Episode id */
         id: string
       }
       cookie?: never
     }
     requestBody?: never
     responses: {
-      /** @description Unauthorized */
+      /** @description Episode removed from the library */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Missing or invalid session
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -19322,16 +19530,16 @@ export interface operations {
             /** @example 401 */
             statusCode?: number
             /**
-             * @example Invalid or expired token
+             * @example errors.auth.invalid_or_expired_token
              * @enum {string}
              */
             message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
           }
@@ -19435,30 +19643,33 @@ export interface operations {
       }
     }
     responses: {
-      /** @description Unauthorized */
+      /** @description The report (new or the existing active one) */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Cannot report your own account */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Missing or invalid session */
       401: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': {
-            /** @example 401 */
-            statusCode?: number
-            /**
-             * @example Invalid or expired token
-             * @enum {string}
-             */
-            message?:
-              | 'Access token required'
-              | 'Refresh token required'
-              | 'Invalid token requirement'
-              | 'Invalid or expired token'
-              | 'User not found'
-              | 'Session not found'
-            /** @example Unauthorized */
-            error?: string
-          }
+        content?: never
+      }
+      /** @description Reportable target not found */
+      404: {
+        headers: {
+          [name: string]: unknown
         }
+        content?: never
       }
       /** @description Method not allowed */
       405: {
@@ -19474,7 +19685,7 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Too many requests */
+      /** @description Too many moderation reports */
       429: {
         headers: {
           [name: string]: unknown

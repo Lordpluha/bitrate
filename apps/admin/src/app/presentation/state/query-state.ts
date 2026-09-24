@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { map } from 'rxjs'
 import type { QueryCodec } from './query-codec'
 
-export type PatchOptions = {
+type PatchOptions = {
   /** Text-filter keystrokes use this so every character does not land in browser history. */
   replaceUrl?: boolean
 }

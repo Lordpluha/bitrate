@@ -31,7 +31,7 @@ const mediaFallbacks: Record<MediaFallbackKind, string> = {
   user: fallbackUserAvatar,
 }
 
-export const getApiBaseUrl = () =>
+const getApiBaseUrl = () =>
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? ''
 
 const staticMediaProxyPrefix = '/api-media'
@@ -46,7 +46,7 @@ const getProxiedStaticMediaUrl = (path: string) => {
   return `${staticMediaProxyPrefix}${normalizedPath}`
 }
 
-export const getStaticMediaUrl = (
+const getStaticMediaUrl = (
   value: string | null | undefined,
   folder: StaticMediaFolder,
   fallback: string,
@@ -96,8 +96,7 @@ export const getStaticMediaUrl = (
   )
 }
 
-export const getMediaFallback = (kind: MediaFallbackKind) =>
-  mediaFallbacks[kind]
+const getMediaFallback = (kind: MediaFallbackKind) => mediaFallbacks[kind]
 
 export const getPlaylistCoverUrl = (value: string | null | undefined) =>
   getStaticMediaUrl(value, 'playlists/covers', getMediaFallback('playlist'))

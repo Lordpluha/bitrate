@@ -1,6 +1,6 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 
-export type TrackDirection = 'next' | 'prev'
+type TrackDirection = 'next' | 'prev'
 export type PlayerTrack = ApiSchemas['TrackEntity']
 export type RepeatMode = 'off' | 'all' | 'one'
 
@@ -9,7 +9,7 @@ export type QueuedTrack = {
   track: PlayerTrack
 }
 
-export type PlayPlaylistInput = {
+type PlayPlaylistInput = {
   currentPlaylistId: string | null
   currentPlaylistName: string | null
   startTrack: PlayerTrack

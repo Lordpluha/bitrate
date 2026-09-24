@@ -1,15 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { z } from 'zod'
-
-/** The create artist schema value. */
-export const CreateArtistSchema = z.object({
-  email: z.string().email({ message: 'Invalid email format' }),
-  password: z
-    .string()
-    .min(6, { message: 'Password must be at least 6 characters long' })
-    .max(32, { message: 'Password must not exceed 32 characters' }),
-  username: z.string().min(3, { message: 'Username must be at least 3 characters long' }),
-})
 
 /** Represents the create artist dto. */
 export class CreateArtistDto {

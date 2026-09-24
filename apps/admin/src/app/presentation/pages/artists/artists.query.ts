@@ -11,7 +11,7 @@ import {
   type TriState,
 } from '@presentation/state'
 
-export const ARTISTS_SORT_FIELDS = coveringTuple<ArtistSortField>()([
+const ARTISTS_SORT_FIELDS = coveringTuple<ArtistSortField>()([
   'username',
   'email',
   'createdAt',

@@ -12,6 +12,8 @@ FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY scripts ./scripts
 COPY apps/admin/package.json ./apps/admin/
+COPY packages/player/package.json ./packages/player/
+COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/svgr/package.json ./packages/svgr/
 COPY packages/svgr/bin ./packages/svgr/bin
@@ -45,7 +47,7 @@ COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
 
 # `scripts/with-env.mjs` reads NG_APP_API_URL from the environment set above and writes the
 # generated config module before Angular runs. There is no .env file in the image.
-RUN pnpm --filter @bitrate/admin build
+RUN pnpm exec turbo run build --filter=@bitrate/admin
 
 # Stage 5: Production — static files behind nginx. There is no server to run: the app is an SPA
 # by decision (it sits entirely behind operator auth, so it has nothing to server-render).

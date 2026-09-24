@@ -8,7 +8,7 @@ import {
   type QueryCodec,
 } from '@presentation/state'
 
-export const AUDIT_SORT_FIELDS = coveringTuple<AuditSortField>()(['createdAt'])
+const AUDIT_SORT_FIELDS = coveringTuple<AuditSortField>()(['createdAt'])
 
 export type AuditQuery = {
   entityType: string

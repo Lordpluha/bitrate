@@ -2,7 +2,7 @@
  * Fragment entry as stored in the manifest: `[startTicks, durationTicks, offset, length]`.
  * Offsets are absolute byte positions inside the rendition file.
  */
-export type ManifestFragment = readonly [
+type ManifestFragment = readonly [
   startTicks: number,
   durationTicks: number,
   offset: number,

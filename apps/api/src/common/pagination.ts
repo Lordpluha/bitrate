@@ -26,13 +26,6 @@ export const paginationQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(MAX_LIMIT).optional(),
 })
 
-export type PaginatedResponse<T> = {
-  data: T[]
-  total: number
-  page: number
-  limit: number
-}
-
 export function normalizePagination(page = DEFAULT_PAGE, limit = DEFAULT_LIMIT) {
   if (!Number.isInteger(page) || page < 1) {
     throw new BadRequestException('Page must be a positive integer')
