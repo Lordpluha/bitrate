@@ -14,7 +14,6 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ../docker/postgres/initdb:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d bitrate"]
       interval: 10s
@@ -73,10 +72,11 @@ services:
     volumes:
       - ../apps/api:/app/apps/api
       - ../packages:/app/packages
-      - ../apps/api/uploads:/app/apps/api/uploads
       - ../apps/api/public:/app/apps/api/public
       - /app/node_modules
       - /app/apps/api/node_modules
+      # Keep container-generated output off the host (native builds clean this directory).
+      - /app/apps/api/dist
     depends_on:
       postgres:
         condition: service_healthy

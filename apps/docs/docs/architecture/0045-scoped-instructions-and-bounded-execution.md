@@ -45,6 +45,6 @@ discovery. Live Claude behavior and provider usage require interactive follow-up
 - Full lint/types/tests after each edit: redundant work and resource contention.
 - Duplicate specifications/memory journals: conflicting sources of task truth.
 
-See [execution policy](../../../../.claude/references/execution-policy.md),
-[spec workflow](../../../../.claude/references/spec-workflow.md) and
-[platform options](../../../../.claude/references/claude-platform.md).
+See [execution policy](https://github.com/Lordpluha/bitrate/blob/develop/.claude/references/execution-policy.md),
+[spec workflow](https://github.com/Lordpluha/bitrate/blob/develop/.claude/references/spec-workflow.md) and
+[platform options](https://github.com/Lordpluha/bitrate/blob/develop/.claude/references/claude-platform.md).
