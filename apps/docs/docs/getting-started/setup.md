@@ -8,41 +8,18 @@ Complete guide to setting up your development environment for Bitrate.
 
 ## 📋 Prerequisites
 
-Before you begin, ensure you have the following installed:
+Requirements are separated by workflow in the [repository README](https://github.com/Lordpluha/bitrate#how-to-start):
 
-### Required
+- **Docker stack:** Git, Docker Engine 24+ with Compose v2, and Task v3. Host Node.js and
+  Python are not required for this path; use `task init` after cloning.
+- **Native development:** Node.js **>=24** (`.nvmrc` selects v24), pnpm **10.30.3 exactly**
+  (`package.json#packageManager`), and Git. Docker/Task provide the local API infrastructure.
+- **Claude Code assistance:** additional runtime and optional integration requirements are
+  in [How to AI](https://github.com/Lordpluha/bitrate#how-to-ai). They are not application prerequisites.
 
-- **Node.js** 20.0+ ([Download](https://nodejs.org/))
-  ```bash
-  node --version  # Should be v20.0.0 or higher
-  ```
-
-- **pnpm** 10.30.3+ ([Installation](https://pnpm.io/installation))
-  ```bash
-  npm install -g pnpm@10.30.3
-  pnpm --version
-  ```
-
-- **Git** ([Download](https://git-scm.com/downloads))
-  ```bash
-  git --version
-  ```
-
-### Recommended
-
-- **Docker Desktop** ([Download](https://www.docker.com/products/docker-desktop/))
-  - For running PostgreSQL and Redis locally
-
-- **task (go-task)** ([Installation](https://taskfile.dev/installation/))
-  - Cross-platform task runner (replaces Makefile)
-  - Available via `winget`, `brew`, `scoop`, or binary download
-
-- **VSCode** ([Download](https://code.visualstudio.com/))
-  - Recommended extensions:
-    - Biome
-    - Prisma
-    - Tailwind CSS IntelliSense
-    - Docker
+The instructions below use the native development path unless marked Docker. Check
+`node --version`, `pnpm --version`, `docker compose version` and `task --version` first.
+Use a Bash/WSL shell for the environment-variable prefixes in these examples.
 
 ## 🚀 Initial Setup
 
@@ -56,12 +33,14 @@ cd bitrate
 ### 2. Install Dependencies
 
 ```bash
-# Install all dependencies for the monorepo
-pnpm install
+# Install workspace dependencies without optional Graphify/RTK setup
+SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install
 ```
 
 This will install dependencies for all apps and packages defined in `pnpm-workspace.yaml`.
 It also runs `lefthook install` automatically (pre-commit, commit-msg, pre-push hooks).
+The two flags skip only the optional AI-tool installers; keep them on subsequent installs
+if you do not want Graphify or global RTK setup.
 
 ### 3. Environment Variables
 
