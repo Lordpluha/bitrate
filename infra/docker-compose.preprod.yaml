@@ -67,7 +67,7 @@ services:
       # (infra/observability/prometheus/prometheus.yml, which hardcodes this same default —
       # it cannot read .env) couldn't scrape it at all. Fixed dev-only value, same spirit as
       # this file's admin/admin Postgres credentials.
-      METRICS_TOKEN: ${METRICS_TOKEN:-dev-metrics-token}
+      METRICS_TOKEN: ${METRICS_TOKEN:-dev-metrics-token-local-only-0001}
     ports:
       - "${API_PORT:-3000}:3000"
     volumes:
