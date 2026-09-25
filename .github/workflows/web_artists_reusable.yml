@@ -74,7 +74,7 @@ jobs:
 
       - name: Run Biome check
         if: ${{ inputs.run-biome }}
-        run: pnpm exec biome ci apps/web-artists packages/ui-react packages/contracts
+        run: pnpm exec biome ci apps/web-artists packages/ui-react packages/tailwind packages/contracts
 
       # The app typechecks and renders against ui-react's emitted dist/types, not its src,
       # so a missing build fails on components that do exist.
@@ -131,6 +131,8 @@ jobs:
             type=gha,scope=web-artists
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-artists:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           build-args: |
             VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
           target: production
@@ -148,6 +150,8 @@ jobs:
             type=gha,scope=web-artists
           cache-to: |
             type=gha,mode=max,scope=web-artists
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           build-args: |
             VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
           target: production

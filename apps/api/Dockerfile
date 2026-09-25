@@ -10,6 +10,10 @@
 ARG PRISMA_GENERATE_ONLY_URL="postgresql://unused:unused@127.0.0.1:5432/prisma-generate-only"
 
 FROM node:24-alpine AS base
+# Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
+# write. TURBO_TOKEN is the credential and arrives per RUN via --mount=type=secret, so it
+# never lands in an image layer.
+ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 WORKDIR /app
 
@@ -36,8 +40,12 @@ RUN pnpm --filter @bitrate/api run db:gen
 # Built here, not left to `prestart:dev`: throwaway `docker compose run` commands (migrations,
 # `prisma db seed`) never go through that pnpm lifecycle hook, and the CI overlay strips the
 # `../packages` bind mount that would otherwise supply a host-built dist. Without this, any
-# runtime import of @bitrate/ncs-parser in such a container hits MODULE_NOT_FOUND.
-RUN pnpm --filter @bitrate/ncs-parser run build
+# runtime import of @bitrate/ncs-parser in such a container hits MODULE_NOT_FOUND. Routed
+# through turbo, not a plain pnpm script, so an unchanged package restores dist/ from the
+# remote cache; the secret mount is optional, so a build without TURBO_TOKEN just runs
+# uncached.
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/ncs-parser
 EXPOSE 3000
 CMD ["pnpm", "--filter", "@bitrate/api", "run", "start:dev"]
 
@@ -49,8 +57,12 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
 RUN pnpm --filter @bitrate/api run db:gen
-RUN pnpm --filter @bitrate/ncs-parser run build
-RUN pnpm --filter @bitrate/api run build
+# turbo builds @bitrate/ncs-parser first via dependsOn: ["^build"], then @bitrate/api — one
+# call in place of the two separate pnpm filters, and either step restores from the remote
+# cache when its own inputs are unchanged. The secret mount is optional, so a build without
+# TURBO_TOKEN — a fork PR, a local docker build — just runs uncached.
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/api
 
 # Stage 5: Production Dependencies
 FROM base AS prod-dependencies

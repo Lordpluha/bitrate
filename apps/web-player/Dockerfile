@@ -8,6 +8,10 @@ ENV PATH=$PNPM_HOME:$PATH
 # them from inside a container, so skip the ~40-80s `pnpm exec biome` formatting pass. See
 # packages/svgr/src/core/processor.mjs.
 ENV SVGR_SKIP_FORMAT=true
+# Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
+# write. TURBO_TOKEN is the credential and arrives per RUN below via --mount=type=secret, so
+# it never lands in an image layer.
+ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
@@ -34,7 +38,8 @@ COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/nod
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
 COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 # CI runs the development image without host build output.
-RUN pnpm --filter @bitrate/ui-react run build
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/ui-react
 EXPOSE 3001
 CMD ["pnpm", "--filter", "@bitrate/web-player", "run", "dev"]
 
@@ -70,9 +75,14 @@ COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/nod
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
 COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 
-# Build приложения
-RUN pnpm --filter @bitrate/ui-react run build
-RUN pnpm --filter @bitrate/web-player run build
+# Build приложения. Routed through turbo, not a plain pnpm script, so an unchanged source
+# tree (and unchanged build-time env below) restores dist/.next from the remote cache
+# instead of rerunning the build; the secret mount is optional, so a build without
+# TURBO_TOKEN — a fork PR, a local docker build — just runs uncached.
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/ui-react
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/web-player
 
 # Stage 5: Production
 #

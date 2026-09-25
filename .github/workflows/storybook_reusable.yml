@@ -70,6 +70,8 @@ jobs:
             type=gha,scope=storybook
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           target: production
 
       # PR-scoped registry cache, not type=gha: GHA's cache API writes the same content ~10x
@@ -92,4 +94,6 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook-pr-${{ github.event.pull_request.number }}:buildcache
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook-pr-${{ github.event.pull_request.number }}:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           target: production

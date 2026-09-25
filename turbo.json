@@ -13,7 +13,29 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "build/**", ".docusaurus/**"]
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "build/**",
+        ".docusaurus/**",
+        ".output/**"
+      ],
+      "env": [
+        "NODE_ENV",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_SITE_URL",
+        "API_URL",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_SENTRY_ENVIRONMENT",
+        "ENFORCE_DEPLOY_ENV",
+        "VITE_API_URL"
+      ],
+      "passThroughEnv": ["SENTRY_AUTH_TOKEN", "SENTRY_RELEASE"]
+    },
+    "storybook:build": {
+      "dependsOn": ["^build"],
+      "outputs": ["storybook-static/**"]
     },
     "lint": {
       "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/__snapshots__/**", "!**/__screenshots__/**"],

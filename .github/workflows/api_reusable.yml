@@ -77,6 +77,8 @@ jobs:
             type=gha,scope=api
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           target: production
 
   api-tests:

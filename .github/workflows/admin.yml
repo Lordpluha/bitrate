@@ -19,6 +19,7 @@ on:
     paths:
       - 'apps/admin/**'
       - 'packages/tailwind/**'
+      - 'turbo.json'
       - '.github/workflows/admin.yml'
       - '.github/workflows/admin_reusable.yml'
   pull_request:
@@ -26,6 +27,7 @@ on:
     paths:
       - 'apps/admin/**'
       - 'packages/tailwind/**'
+      - 'turbo.json'
       - '.github/workflows/admin.yml'
       - '.github/workflows/admin_reusable.yml'
   workflow_dispatch:
