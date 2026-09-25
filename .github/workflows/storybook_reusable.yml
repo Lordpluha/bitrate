@@ -70,7 +70,6 @@ jobs:
             type=gha,scope=storybook
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook:buildcache,mode=max
-            type=gha,mode=max,scope=storybook
           target: production
 
       - name: Build Storybook Docker image (GHA cache export only)

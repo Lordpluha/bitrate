@@ -78,7 +78,6 @@ jobs:
             type=gha,scope=docs
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache,mode=max
-            type=gha,mode=max,scope=docs
           target: production
 
       - name: Build Docs Docker image (GHA cache export only)

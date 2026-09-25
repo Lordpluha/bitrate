@@ -4,6 +4,10 @@
 FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
+# Generated files here are rebuilt fresh and bundled immediately — nobody reads or commits
+# them from inside a container, so skip the ~40-80s `pnpm exec biome` formatting pass. See
+# packages/svgr/src/core/processor.mjs.
+ENV SVGR_SKIP_FORMAT=true
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
