@@ -78,6 +78,8 @@ jobs:
             type=gha,scope=docs
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           target: production
 
       # PR builds (cache-to-registry: false) never write the canonical docs:buildcache ref —
@@ -104,4 +106,6 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs-pr-${{ github.event.pull_request.number }}:buildcache
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs-pr-${{ github.event.pull_request.number }}:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           target: production

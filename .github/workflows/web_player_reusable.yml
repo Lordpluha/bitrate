@@ -91,7 +91,7 @@ jobs:
 
       - name: Run Biome check
         if: ${{ inputs.run-biome }}
-        run: pnpm exec biome ci apps/web-player packages/ui-react packages/contracts
+        run: pnpm exec biome ci apps/web-player packages/ui-react packages/tailwind packages/contracts
 
       - name: Build ui-react
         if: ${{ inputs.run-tests }}
@@ -167,6 +167,8 @@ jobs:
             type=gha,scope=web-player
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           build-args: |
             API_URL=${{ env.BUILD_API_URL }}
             NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
@@ -197,6 +199,8 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player-pr-${{ github.event.pull_request.number }}:buildcache
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player-pr-${{ github.event.pull_request.number }}:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           build-args: |
             API_URL=${{ env.BUILD_API_URL }}
             NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}

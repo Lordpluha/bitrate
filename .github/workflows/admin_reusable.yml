@@ -128,6 +128,8 @@ jobs:
             type=gha,scope=admin
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           build-args: |
             NG_APP_API_URL=${{ env.BUILD_NG_APP_API_URL }}
           target: production
@@ -145,6 +147,8 @@ jobs:
             type=gha,scope=admin
           cache-to: |
             type=gha,mode=max,scope=admin
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           build-args: |
             NG_APP_API_URL=${{ env.BUILD_NG_APP_API_URL }}
           target: production

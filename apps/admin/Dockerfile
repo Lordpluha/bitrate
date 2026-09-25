@@ -4,6 +4,10 @@
 FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
+# Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
+# write. TURBO_TOKEN is the credential and arrives per RUN below via --mount=type=secret, so
+# it never lands in an image layer.
+ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
@@ -44,7 +48,10 @@ COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
 
 # `scripts/with-env.mjs` reads NG_APP_API_URL from the environment set above and writes the
 # generated config module before Angular runs. There is no .env file in the image.
-RUN pnpm exec turbo run build --filter=@bitrate/admin
+# The secret mount is optional (required=false is the default), so a build without
+# TURBO_TOKEN — a fork PR, a local docker build — just runs uncached.
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/admin
 
 # Stage 5: Production — static files behind nginx. There is no server to run: the app is an SPA
 # by decision (it sits entirely behind operator auth, so it has nothing to server-render).
