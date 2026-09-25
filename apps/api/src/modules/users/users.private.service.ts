@@ -9,30 +9,29 @@ export class UsersPrivateService {
   /** Creates a new instance. */
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Runs the find by id operation. */
+  /**
+   * Runs the find by id operation. Filters `deletedAt` — a soft-deleted user must not be
+   * resolvable through this internal lookup, mirroring `ArtistsPrivateService.findById`.
+   */
   async findById(id: UserEntity['id']) {
-    return await this.prisma.user.findUniqueOrThrow({
-      where: {
-        id,
-      },
+    return await this.prisma.user.findFirst({
+      where: { id, deletedAt: null },
     })
   }
 
-  /** Runs the get by email operation. */
+  /** Runs the get by email operation. Filters `deletedAt` — see `findById`. Used by login,
+   * password reset, and email-verification flows so a soft-deleted account is treated exactly
+   * like a nonexistent one, never leaking its take-down state. */
   async getByEmail(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
+      where: { email, deletedAt: null },
     })
   }
 
-  /** Runs the get by username operation. */
+  /** Runs the get by username operation. Filters `deletedAt` — see `findById`. */
   async getByUsername(username: UserEntity['username']) {
     return await this.prisma.user.findFirst({
-      where: {
-        username,
-      },
+      where: { username, deletedAt: null },
     })
   }
 

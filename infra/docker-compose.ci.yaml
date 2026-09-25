@@ -1,0 +1,20 @@
+# Overlay for integration checks: run the image contents from a clean checkout.
+# Local bind mounts hide workspace links/build output and turn Nest's dist directory
+# into a mount point that deleteOutDir cannot remove.
+services:
+  postgres:
+    container_name: !reset null
+  redis:
+    container_name: !reset null
+  api:
+    container_name: !reset null
+    restart: "no"
+    volumes: !reset []
+  web-player:
+    container_name: !reset null
+    restart: "no"
+    volumes: !reset []
+  web-artists:
+    container_name: !reset null
+    restart: "no"
+    volumes: !reset []

@@ -11,6 +11,15 @@ import {
   Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import {
+  GetCategoriesSwagger,
+  GetCategoryPlaylistsSwagger,
+  GetChartsSwagger,
+  GetFeedSwagger,
+  GetRelatedArtistsSwagger,
+  GetTopArtistsSwagger,
+  GetTopTracksSwagger,
+} from './decorators'
 import { DiscoveryService } from './discovery.service'
 import { PersonalTopService, type TimeRange } from './personal-top.service'
 
@@ -22,6 +31,7 @@ export class DiscoveryController {
     private readonly personalTop: PersonalTopService,
   ) {}
 
+  @GetCategoriesSwagger()
   @Get('browse/categories')
   categories(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
@@ -30,6 +40,7 @@ export class DiscoveryController {
     return this.discovery.getCategories(page, limit)
   }
 
+  @GetCategoryPlaylistsSwagger()
   @Get('browse/categories/:slug/playlists')
   categoryPlaylists(
     @Param('slug') slug: string,
@@ -39,12 +50,14 @@ export class DiscoveryController {
     return this.discovery.getCategoryPlaylists(slug, page, limit)
   }
 
+  @GetFeedSwagger()
   @OptionalUserAuth()
   @Get('recommendations/feed')
   feed(@Req() req: OptionalUserAuthRequest) {
     return this.discovery.getFeed(req.user?.id)
   }
 
+  @GetRelatedArtistsSwagger()
   @Get('recommendations/related-artists/:artistId')
   relatedArtists(
     @Param('artistId', ParseUUIDPipe) artistId: string,
@@ -53,6 +66,7 @@ export class DiscoveryController {
     return this.discovery.getRelatedArtists(artistId, limit)
   }
 
+  @GetChartsSwagger()
   @Get('charts/tracks')
   charts(
     @Query('scope') scope = 'global',
@@ -66,6 +80,7 @@ export class DiscoveryController {
     return this.discovery.getCharts(scope as 'global' | 'viral' | 'country', country, page, limit)
   }
 
+  @GetTopTracksSwagger()
   @UserAuth()
   @Get('me/top/tracks')
   topTracks(
@@ -78,6 +93,7 @@ export class DiscoveryController {
     return this.personalTop.getTopTracks(req.user.id, range as TimeRange, page, limit)
   }
 
+  @GetTopArtistsSwagger()
   @UserAuth()
   @Get('me/top/artists')
   topArtists(

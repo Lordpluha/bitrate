@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
-import { execa } from 'execa'
 import ffmpegPath from 'ffmpeg-static'
+import { runFfmpeg } from './ffmpeg-process.mjs'
 
 /**
  * Convert audio file to OGG Opus format
@@ -12,6 +12,7 @@ import ffmpegPath from 'ffmpeg-static'
  * @param {boolean} [options.vbr=false] - Enable Variable Bitrate (default: CBR)
  * @param {string} [options.application='audio'] - Application type: audio, voip, lowdelay
  * @param {number} [options.timeoutMs] - Optional FFmpeg timeout in milliseconds
+ * @param {(message: string) => void} [options.onLog] - Optional log sink (default: no-op)
  * @returns {Promise<{input: string, output: string, inputSize: string, outputSize: string}>}
  */
 export async function convertAudio({
@@ -22,6 +23,7 @@ export async function convertAudio({
   vbr = false,
   application = 'audio',
   timeoutMs,
+  onLog = () => {},
 }) {
   if (!ffmpegPath) {
     throw new Error('FFmpeg binary not found. Ensure ffmpeg-static is installed correctly.')
@@ -40,9 +42,7 @@ export async function convertAudio({
   // Validate bitrate
   const validBitrates = ['64k', '96k', '128k', '192k', '256k', '320k']
   if (!validBitrates.includes(bitrate)) {
-    console.warn(
-      `⚠️  Warning: Unusual bitrate "${bitrate}". Common values: ${validBitrates.join(', ')}`,
-    )
+    onLog(`⚠️  Warning: Unusual bitrate "${bitrate}". Common values: ${validBitrates.join(', ')}`)
   }
 
   // Validate quality
@@ -60,12 +60,12 @@ export async function convertAudio({
     throw new Error(`Invalid application type. Must be one of: ${validApplications.join(', ')}`)
   }
 
-  console.log('🎵 Converting audio to OGG Opus...')
-  console.log(`   Input:  ${input}`)
-  console.log(`   Output: ${outputPath}`)
-  console.log(`   Bitrate: ${bitrate} ${vbr ? 'VBR' : 'CBR'}`)
-  console.log(`   Quality: ${quality}/10`)
-  console.log(`   Application: ${application}`)
+  onLog('🎵 Converting audio to OGG Opus...')
+  onLog(`   Input:  ${input}`)
+  onLog(`   Output: ${outputPath}`)
+  onLog(`   Bitrate: ${bitrate} ${vbr ? 'VBR' : 'CBR'}`)
+  onLog(`   Quality: ${quality}/10`)
+  onLog(`   Application: ${application}`)
 
   // Build FFmpeg args
   const vbrFlag = vbr ? 'on' : 'off'
@@ -89,31 +89,23 @@ export async function convertAudio({
     outputPath,
   ]
 
-  try {
-    if (timeoutMs === undefined) {
-      await execa(ffmpegPath, args)
-    } else {
-      await execa(ffmpegPath, args, { timeout: timeoutMs })
-    }
+  await runFfmpeg(args, { ffmpegPath, timeoutMs, onLog })
 
-    // Get file sizes
-    const inputStats = await fs.stat(input)
-    const outputStats = await fs.stat(outputPath)
-    const inputSize = formatBytes(inputStats.size)
-    const outputSize = formatBytes(outputStats.size)
+  // Get file sizes
+  const inputStats = await fs.stat(input)
+  const outputStats = await fs.stat(outputPath)
+  const inputSize = formatBytes(inputStats.size)
+  const outputSize = formatBytes(outputStats.size)
 
-    console.log('✅ Conversion complete!')
-    console.log(`   Input size:  ${inputSize}`)
-    console.log(`   Output size: ${outputSize}`)
+  onLog('✅ Conversion complete!')
+  onLog(`   Input size:  ${inputSize}`)
+  onLog(`   Output size: ${outputSize}`)
 
-    return {
-      input,
-      output: outputPath,
-      inputSize,
-      outputSize,
-    }
-  } catch (error) {
-    throw new Error(`FFmpeg error: ${error.message}`)
+  return {
+    input,
+    output: outputPath,
+    inputSize,
+    outputSize,
   }
 }
 

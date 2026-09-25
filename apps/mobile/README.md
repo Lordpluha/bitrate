@@ -13,8 +13,8 @@ React Native + Expo mobile app for Bitrate. Runs on Android, iOS, and web (via r
 
 ## Requirements
 
-- Node.js >= 20
-- pnpm >= 10
+- Node.js >= 24
+- pnpm 10.30.3 (repository pin; see [development requirements](../../README.md#how-to-develop))
 - For Android: Android Studio + JDK 17
 - For iOS (macOS only): Xcode + CocoaPods
 - For physical device: [Expo Go](https://expo.dev/go)
@@ -23,7 +23,7 @@ React Native + Expo mobile app for Bitrate. Runs on Android, iOS, and web (via r
 
 ```bash
 # From repo root — installs all workspace deps
-pnpm install
+SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install
 
 # Start Metro bundler
 pnpm --filter @bitrate/mobile start

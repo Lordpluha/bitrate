@@ -1,0 +1,114 @@
+<section class="space-y-8 p-8">
+  <header class="flex items-center justify-between gap-4">
+    <div class="space-y-1">
+      <h1 class="text-xl font-semibold text-foreground">Roles</h1>
+      <p class="text-sm text-muted-foreground">
+        Role templates. Assigning one copies its permissions onto an operator — editing a template
+        later does not reach anyone already assigned it.
+      </p>
+    </div>
+    @if (canWrite()) {
+      <a hlmBtn size="sm" routerLink="/roles/new">New role</a>
+    }
+  </header>
+
+  <app-collection-status
+    [loading]="loading()"
+    [failure]="failure()"
+    [isEmpty]="roles().length === 0"
+    emptyMessage="No roles yet."
+  />
+
+  @if (roles().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Role templates
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Role</th>
+            <th hlmTh scope="col">Holders</th>
+            <th hlmTh scope="col">Divergent</th>
+            <th hlmTh scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (role of roles(); track role.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a [routerLink]="['/roles', role.id]" class="text-primary hover:underline">{{
+                  role.name
+                }}</a>
+                @if (role.builtIn) {
+                  <span hlmBadge variant="outline" class="ml-2">built-in</span>
+                }
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">{{ role.holders }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">{{ role.divergentHolders }}</td>
+              <td hlmTd>
+                @if (canWrite()) {
+                  @if (deletion(role); as decision) {
+                    @if (decision.allowed) {
+                      <button
+                        hlmBtn
+                        size="sm"
+                        variant="ghost"
+                        type="button"
+                        [disabled]="busyId() === role.id"
+                        (click)="remove(role)"
+                      >
+                        Delete
+                      </button>
+                    } @else {
+                      <span class="text-xs text-muted-foreground">{{ decision.reason }}</span>
+                    }
+                  }
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <section class="space-y-3">
+    <h2 class="text-lg font-semibold text-foreground">Permission catalogue</h2>
+    <p class="text-sm text-muted-foreground">
+      Every permission a template can grant, and how many active operators hold it today.
+    </p>
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Every permission, with how many operators hold it
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Permission</th>
+            <th hlmTh scope="col">Held by</th>
+            <th hlmTh scope="col">Protected</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (entry of catalogue(); track entry.permission) {
+            <tr hlmTr>
+              <td hlmTd>{{ entry.permission }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ entry.heldBy }}
+                @if (entry.heldBy === 0 && !entry.protected) {
+                  <span hlmBadge variant="outline" class="ml-2">unheld</span>
+                }
+              </td>
+              <td hlmTd>
+                @if (entry.protected) {
+                  <span hlmBadge variant="secondary">protected</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>

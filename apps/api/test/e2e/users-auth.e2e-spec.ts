@@ -75,6 +75,53 @@ describe('UsersAuth (e2e)', () => {
       .expect(401)
   })
 
+  it('POST /auth/login should count a failed attempt and lock at the threshold', async () => {
+    const runId = makeRunId()
+    const creds = {
+      email: `lock_${runId}@example.com`,
+      password: 'pass123',
+      username: `lock_${runId}`,
+    }
+
+    await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)
+    await verifyUserEmail(prisma, creds.email)
+
+    /** A wrong password for an account that exists is the only path that writes the lockout. */
+    await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: creds.email, password: 'wrong-password' })
+      .expect(401)
+
+    const afterFirst = await prisma.user.findFirst({ where: { email: creds.email } })
+    expect(afterFirst?.failedLoginAttempts).toBe(1)
+    expect(afterFirst?.lockedUntil).toBeNull()
+
+    for (let attempt = 0; attempt < 4; attempt++) {
+      await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({ email: creds.email, password: 'wrong-password' })
+        .expect(401)
+    }
+
+    const locked = await prisma.user.findFirst({ where: { email: creds.email } })
+    expect(locked?.failedLoginAttempts).toBe(5)
+    expect(locked?.lockedUntil).toBeInstanceOf(Date)
+
+    /**
+     * The deadline must be the intended instant. A wall-clock value stored without its
+     * offset would leave a remaining window shifted by the machine's timezone.
+     */
+    const remainingMs = (locked?.lockedUntil as Date).getTime() - Date.now()
+    expect(remainingMs).toBeGreaterThan(14 * 60 * 1000)
+    expect(remainingMs).toBeLessThanOrEqual(15 * 60 * 1000)
+
+    /** A locked account is refused even with the right password. */
+    await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: creds.email, password: creds.password })
+      .expect(429)
+  })
+
   it('GET /auth/me should return 401 without auth cookies', async () => {
     await request(app.getHttpServer()).get('/auth/me').expect(401)
   })

@@ -4,7 +4,7 @@ import type { ApiPaths } from '@bitrate/contracts'
 import { cookies } from 'next/headers'
 import createClient from 'openapi-fetch'
 
-export const serverFetchClient = createClient<ApiPaths>({
+const serverFetchClient = createClient<ApiPaths>({
   baseUrl: process.env.API_URL,
   headers: {
     'Content-Type': 'application/json',

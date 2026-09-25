@@ -14,7 +14,8 @@
     "dev": "concurrently \"pnpm run buildWatch\" \"pnpm run devStart\"",
     "prepublishOnly": "pnpm run clean && pnpm run build && pnpm run format",
     "test": "tsc -p tests/tsconfig.test.json && node --enable_source_maps tests/dist/tests/main.test.js",
-    "testCache": "tsc -p tests/tsconfig.test.json && node --enable_source_maps tests/dist/tests/cache.test.js"
+    "testCache": "tsc -p tests/tsconfig.test.json && node --enable_source_maps tests/dist/tests/cache.test.js",
+    "format": "biome format --write"
   },
   "author": "Lordpluha",
   "devDependencies": {

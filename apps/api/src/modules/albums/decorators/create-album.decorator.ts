@@ -1,5 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { AlbumEntity } from '../entities'
 
 /** Runs the create album swagger operation. */
 export function CreateAlbumSwagger() {
@@ -7,9 +8,7 @@ export function CreateAlbumSwagger() {
     ApiOperation({ summary: 'Create a new album' }),
     ApiResponse({
       status: HttpStatus.OK,
-      schema: {
-        $ref: '#/components/schemas/AlbumEntity',
-      },
+      type: AlbumEntity,
     }),
   )
 }

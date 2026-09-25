@@ -1,0 +1,22 @@
+import { applyDecorators, HttpStatus } from '@nestjs/common'
+import { ApiOperation, ApiResponse } from '@nestjs/swagger'
+
+/** Runs the auth refresh swagger operation. */
+export function AuthRefreshSwagger() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Refresh staff access token' }),
+    ApiResponse({
+      status: HttpStatus.CREATED,
+      description: 'Token refreshed',
+      headers: {
+        'Set-Cookie': {
+          description: 'HttpOnly cookies: access_token and refresh_token',
+          schema: {
+            type: 'string',
+            example: 'access_token=<jwt>; HttpOnly; Path=/; SameSite=Lax;',
+          },
+        },
+      },
+    }),
+  )
+}

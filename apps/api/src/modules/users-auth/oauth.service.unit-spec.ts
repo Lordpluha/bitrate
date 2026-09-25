@@ -41,4 +41,47 @@ describe('OAuthService', () => {
       },
     })
   })
+
+  describe('findOrCreateUserAndLogin', () => {
+    const call = (provider: string, profile: { id: string; email: string; name: string }) => {
+      const findOrCreateUserAndLogin = Reflect.get(service, 'findOrCreateUserAndLogin') as (
+        provider: string,
+        profile: { id: string; email: string; name: string },
+      ) => Promise<unknown>
+      return findOrCreateUserAndLogin.call(service, provider, profile)
+    }
+
+    /** A linked OAuth account whose user was soft-deleted after the link was created must not
+     * be handed a fresh session — the same account state `UserAuthGuard` rejects per request. */
+    it('rejects when the linked account is soft-deleted', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue({
+        id: 'link-1',
+        provider: 'google',
+        providerAccountId: 'google-1',
+        userId: 'user-1',
+        createdAt: new Date(),
+        user: { id: 'user-1', username: 'user', twoFactorEnabled: false, deletedAt: new Date() },
+      } as never)
+
+      await expect(
+        call('google', { id: 'google-1', email: 'user@example.com', name: 'User' }),
+      ).rejects.toThrow('Invalid credentials')
+      expect(prisma.userSession.create).not.toHaveBeenCalled()
+    })
+
+    /** A soft-deleted account's email is free to re-register through OAuth, matching every
+     * other lookup this module makes — it must not be reused as if it were still active. */
+    it('excludes a soft-deleted account when checking for an existing email', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue(null)
+      prisma.user.findFirst.mockResolvedValue(null)
+
+      await call('google', { id: 'google-2', email: 'user@example.com', name: 'User' }).catch(
+        () => undefined,
+      )
+
+      expect(prisma.user.findFirst).toHaveBeenCalledWith({
+        where: { email: 'user@example.com', deletedAt: null },
+      })
+    })
+  })
 })

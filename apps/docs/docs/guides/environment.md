@@ -268,7 +268,6 @@ Metro, а не конфигурация приложения.
 | `API_PORT` · `WEB_PORT` · `WEB_ARTISTS_PORT` · `DOCS_PORT` · `DESKTOP_PORT` | preprod | Проброс портов |
 | `MOBILE_HOST` · `MOBILE_METRO_PORT` · `MOBILE_METRO_UI_PORT` · `MOBILE_WEB_PORT` · `MOBILE_DEVTOOLS_PORT` | preprod | Сервисы Expo за профилем |
 | `NGINX_HTTP_PORT` · `NGINX_HTTPS_PORT` | preprod | Порты reverse-proxy |
-| `MAILHOG_SMTP_PORT` · `MAILHOG_UI_PORT` | dev, preprod | Порты MailHog |
 
 ## Пустое значение — не то же самое, что отсутствие
 

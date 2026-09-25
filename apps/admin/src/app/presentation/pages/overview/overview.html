@@ -1,0 +1,127 @@
+<section class="space-y-6 p-8">
+  <header class="flex flex-wrap items-start justify-between gap-4">
+    <div class="space-y-1">
+      <h1 class="text-xl font-semibold text-foreground">Overview</h1>
+      <p class="text-sm text-muted-foreground">
+        What needs a decision right now, and what's been happening across the platform.
+      </p>
+    </div>
+    <button
+      hlmBtn
+      size="sm"
+      variant="outline"
+      type="button"
+      [disabled]="loading()"
+      (click)="reload()"
+    >
+      Reload
+    </button>
+  </header>
+
+  <!-- `isEmpty` is always `false` here: the status counts folded into the charts below render as
+       soon as `overview` is set, and while it is still `null` `loading` is `true` — so this
+       screen never reaches CollectionStatus's empty state. Passed explicitly to satisfy its
+       required input. A failed reload keeps the charts' status counts already on screen and adds
+       this alert above them, rather than clearing them. -->
+  <app-collection-status
+    [loading]="loading()"
+    [failure]="failure()"
+    [isEmpty]="false"
+    emptyMessage="Nothing to show yet."
+  />
+
+  <section aria-labelledby="activity-charts-heading" class="space-y-3">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <h2 id="activity-charts-heading" class="text-sm font-semibold text-foreground">Activity</h2>
+      <div class="flex gap-2" role="group" aria-label="Chart range">
+        @for (option of rangeOptions; track option) {
+          <button
+            hlmBtn
+            size="sm"
+            [variant]="range.state().days === option ? 'default' : 'outline'"
+            type="button"
+            [attr.aria-pressed]="range.state().days === option"
+            (click)="setRange(option)"
+          >
+            {{ option }}d
+          </button>
+        }
+      </div>
+    </div>
+
+    <app-collection-status
+      [loading]="seriesLoading()"
+      [failure]="seriesFailure()"
+      [isEmpty]="false"
+      emptyMessage="Nothing to show yet."
+    />
+
+    @if (summary()) {
+      <p class="text-sm text-muted-foreground">{{ summary() }}</p>
+    }
+
+    <!-- Rendered as soon as `overview()` has loaded, independent of the series request below: a
+         chart's own `[loading]`/`[failure]` input governs only its plot area, so a failed or
+         slow `getSeries` call never hides a status strip's counts — they come from `overview()`,
+         a different request. -->
+    <div class="space-y-4">
+      <div class="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
+        <app-line-chart
+          title="New accounts per day"
+          [description]="signupsDescription()"
+          [categories]="categories()"
+          [series]="signupsSeries()"
+          [headline]="signupsHeadline()"
+          [loading]="seriesLoading()"
+          [failure]="chartFailure()"
+        >
+          <app-overview-status-strip [items]="accountDeactivationStatus()" />
+        </app-line-chart>
+        <app-line-chart
+          title="Listens per day"
+          [description]="listensDescription()"
+          [categories]="categories()"
+          [series]="listensSeries()"
+          [loading]="seriesLoading()"
+          [failure]="chartFailure()"
+        />
+      </div>
+
+      <app-bar-chart
+        title="Uploads by outcome"
+        [description]="uploadsDescription()"
+        [categories]="categories()"
+        [series]="uploadsSeries()"
+        [stacked]="true"
+        [headline]="uploadsHeadline()"
+        [loading]="seriesLoading()"
+        [failure]="chartFailure()"
+      >
+        <app-overview-status-strip [items]="trackPipelineStatus()" urgentId="tracks-stuck" />
+      </app-bar-chart>
+
+      <div class="grid grid-cols-1 items-start gap-4 sm:grid-cols-3">
+        <div class="sm:col-span-2">
+          <app-bar-chart
+            title="Reports filed per day"
+            [description]="reportsDescription()"
+            [categories]="categories()"
+            [series]="reportsSeries()"
+            [loading]="seriesLoading()"
+            [failure]="chartFailure()"
+          />
+        </div>
+        <app-bar-chart
+          title="Reports by current status"
+          [description]="reportsByStatusDescription"
+          [categories]="reportStatusCategories"
+          [series]="reportsByStatusSeries()"
+          [loading]="seriesLoading()"
+          [failure]="chartFailure()"
+        >
+          <app-overview-status-strip [items]="reportsStatus()" />
+        </app-bar-chart>
+      </div>
+    </div>
+  </section>
+</section>

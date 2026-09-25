@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@bitrate/ui-react/themes.css";
+@import "@bitrate/tailwind/themes.css";
 @import "./brand-colors.css";
 
 @source "../";
@@ -10,7 +10,7 @@
 
 @theme {
   /*
-   * Breakpoints — these SHADOW the set in @bitrate/ui-react's layout.css, and three of the
+   * Breakpoints — these SHADOW the set in @bitrate/tailwind's layout.css, and three of the
    * six differ (xs 480 vs 320, sm 650 vs 640, lg 1025 vs 1024). A ui-react component's `sm:`
    * therefore breaks at a different width here than it does in Storybook. Unreconciled.
    */

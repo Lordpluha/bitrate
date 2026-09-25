@@ -6,7 +6,7 @@ const paginatedSchema = z.object({
   total: z.number(),
 })
 
-export const podcastSchema = z.object({
+const podcastSchema = z.object({
   _count: z.object({ episodes: z.number() }).optional(),
   cover: z.string().nullable(),
   createdAt: z.string(),
@@ -19,7 +19,7 @@ export const podcastSchema = z.object({
   updatedAt: z.string(),
 })
 
-export const episodeSchema = z.object({
+const episodeSchema = z.object({
   audioUrl: z.string(),
   cover: z.string().nullable(),
   createdAt: z.string(),
@@ -51,5 +51,4 @@ export const savedEpisodesSchema = paginatedSchema.extend({
 })
 
 export type Episode = z.infer<typeof episodeSchema>
-export type Podcast = z.infer<typeof podcastSchema>
 export type SavedEpisode = z.infer<typeof savedEpisodesSchema>['data'][number]
