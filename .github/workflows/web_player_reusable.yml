@@ -167,7 +167,6 @@ jobs:
             type=gha,scope=web-player
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache,mode=max
-            type=gha,mode=max,scope=web-player
           build-args: |
             API_URL=${{ env.BUILD_API_URL }}
             NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}

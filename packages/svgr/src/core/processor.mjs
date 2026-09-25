@@ -58,20 +58,29 @@ export async function processSvgFiles(inputDir, outputDir, options = {}) {
   // Генерация index файла
   await generateIndexFile(components, outputDir)
 
-  // Автоматическое форматирование сгенерированных файлов
-  if (verbose) {
-    console.log('🔧 Formatting generated files with Biome...')
-  }
-  try {
-    // execFileSync, not execSync: the output directory is resolved from workspace configuration
-    // and reaches this call as a path. Interpolated into a shell string it would be one quote
-    // away from running whatever the rest of that path said; passed as its own argument it is
-    // never parsed by a shell at all.
-    execFileSync('pnpm', ['exec', 'biome', 'check', '--write', outputDir], {
-      stdio: verbose ? 'inherit' : 'pipe',
-    })
-  } catch (_error) {
-    console.warn('⚠️  Biome formatting failed, files may need manual formatting')
+  // Docker/CI builds regenerate these files fresh on every build and bundle them immediately —
+  // nothing reads or commits that output, so the ~40-80s `pnpm exec biome` subprocess spawn is
+  // pure overhead there. Formatting still matters when a developer runs this locally to commit
+  // regenerated icons, so it stays on by default; SVGR_SKIP_FORMAT=true opts out.
+  if (process.env.SVGR_SKIP_FORMAT === 'true') {
+    if (verbose) {
+      console.log('⏭️  Skipping Biome formatting (SVGR_SKIP_FORMAT=true)')
+    }
+  } else {
+    if (verbose) {
+      console.log('🔧 Formatting generated files with Biome...')
+    }
+    try {
+      // execFileSync, not execSync: the output directory is resolved from workspace
+      // configuration and reaches this call as a path. Interpolated into a shell string it
+      // would be one quote away from running whatever the rest of that path said; passed as
+      // its own argument it is never parsed by a shell at all.
+      execFileSync('pnpm', ['exec', 'biome', 'check', '--write', outputDir], {
+        stdio: verbose ? 'inherit' : 'pipe',
+      })
+    } catch (_error) {
+      console.warn('⚠️  Biome formatting failed, files may need manual formatting')
+    }
   }
 
   console.log(`✅ Generated ${components.length} components in ${outputDir}`)

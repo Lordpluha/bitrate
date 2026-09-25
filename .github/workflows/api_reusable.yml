@@ -77,7 +77,6 @@ jobs:
             type=gha,scope=api
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache,mode=max
-            type=gha,mode=max,scope=api
           target: production
 
   api-tests:

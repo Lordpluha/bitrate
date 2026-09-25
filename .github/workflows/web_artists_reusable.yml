@@ -131,7 +131,6 @@ jobs:
             type=gha,scope=web-artists
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-artists:buildcache,mode=max
-            type=gha,mode=max,scope=web-artists
           build-args: |
             VITE_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
           target: production

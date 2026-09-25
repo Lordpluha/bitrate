@@ -128,7 +128,6 @@ jobs:
             type=gha,scope=admin
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache,mode=max
-            type=gha,mode=max,scope=admin
           build-args: |
             NG_APP_API_URL=${{ env.BUILD_NG_APP_API_URL }}
           target: production
