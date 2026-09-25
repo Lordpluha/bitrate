@@ -72,7 +72,14 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook:buildcache,mode=max
           target: production
 
-      - name: Build Storybook Docker image (GHA cache export only)
+      # PR-scoped registry cache, not type=gha: GHA's cache API writes the same content ~10x
+      # slower than a registry push (measured on this repo's own builds: ~23s via registry vs
+      # ~270s via GHA for equivalent layers) — mostly the dependencies-stage pnpm store, exactly
+      # the layer worth caching between commits on the same PR. Never touches the canonical
+      # storybook:buildcache ref that develop/master maintain — a PR that never merges just
+      # leaves one unused cache image behind, same as any other stale PR image tag already
+      # accumulating in this registry.
+      - name: Build Storybook Docker image (PR-scoped registry cache)
         if: ${{ !inputs.cache-to-registry }}
         uses: docker/build-push-action@v7
         with:
@@ -82,7 +89,7 @@ jobs:
           tags: ${{ inputs.tags }}
           cache-from: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook:buildcache
-            type=gha,scope=storybook
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook-pr-${{ github.event.pull_request.number }}:buildcache
           cache-to: |
-            type=gha,mode=max,scope=storybook
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook-pr-${{ github.event.pull_request.number }}:buildcache,mode=max
           target: production
