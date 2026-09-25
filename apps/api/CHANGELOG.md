@@ -1,5 +1,219 @@
 # @bitrate/api
 
+## 1.1.0
+
+### Minor Changes
+
+- 0ab550c: Added three operator-panel API surfaces: a zero-filled daily time-series endpoint
+  (`GET /admin/overview/series`) covering uploads/processing outcome, signups, listens, and
+  moderation reports over a configurable trailing window; a paginated listening-history
+  endpoint for a user (`GET /admin/users/:id/listening-history`); and paginated tracks/albums
+  endpoints for an artist's publications (`GET /admin/artists/:id/tracks`,
+  `GET /admin/artists/:id/albums`). Playlists are user-owned in this schema, not artist-owned,
+  so no artist-scoped playlist endpoint was added. Also adds a `ListeningHistory.listenedAt`
+  index backing the new daily listens aggregation.
+- 43c90ca: Added `GET /admin/overview`, an aggregate operator landing summary behind a new `overview:read` permission: open/reviewing report counts, track pipeline counts by processing status with a stuck-upload count and its threshold, deactivated user/artist counts, signups and uploads in the trailing 7 days, and the 10 most recent audit log rows with the actor resolved. Signups and uploads are historical activity counts — a row counts if it was created inside the window, whether or not it was soft-deleted afterward — same rule for users, artists, and tracks. `overview:read` is add-only in the permission catalogue and not part of the built-in MODERATOR template — administrators reach it by identity, everyone else only once granted. The regenerated contract carries the new `AdminOverviewEntity` response shape and the `overview:read` permission literal.
+
+  The operator panel's root route (`/`) is now this dashboard itself, gated by `overview:read`, replacing the old unconditional redirect to `/moderation` — sign-in now lands on `/` too, not a fixed screen. Every tile links to the matching filtered list where one already exists and the signed-in operator holds that list's own read permission (`/moderation`, `/catalog?status=FAILED`, and so on — the open-reports link omits `status=OPEN` since that is the moderation queue's own default); a tile whose target the operator can't reach renders as a plain count instead. Stuck tracks and deactivated accounts also render as plain counts for now, since the catalog has no "stuck" status filter and the users/artists lists have no deactivated filter yet. A new "Overview" link sits at the top of the sidebar with no section caption of its own, and an operator without `overview:read` who lands on `/` is sent to the first screen their permissions actually reach, same as any other denied route.
+
+- 43c90ca: Extended the operator surface's tracks, users, artists, moderation, and audit endpoints with the
+  detail views and take-down workflow the admin panel needs:
+
+  - Tracks, users, and artists each gain a `status=active|deactivated|all` list filter, a
+    `DELETE`/`restore` pair (`tracks:delete`/`tracks:restore`, `users:restore`,
+    `artists:restore`), and — for users and artists — `POST /:id/sessions/revoke`
+    (`users:revoke-sessions`, `artists:revoke-sessions`) that deletes every active session for the
+    account. **Access ends on the account's next request, not on token refresh** — every guarded
+    route looks the session up by its hashed token on every request, so a revoked or taken-down
+    session is rejected the moment it is next presented. An **already-open WebSocket connection is
+    unaffected until it disconnects on its own** — the socket guard rejects a deleted account only
+    at connect time; evicting a live connection on take-down is a known limitation, not covered by
+    this change. Taking a track/user/artist down also revokes its account's sessions in the same
+    transaction, and a repeated `DELETE`/`restore` (or `POST /reprocess` on a taken-down track,
+    or `PATCH` verification on a taken-down artist) now answers **409 Conflict**, not 404 — a
+    concurrent second request loses the same race. Every destructive/restorative write accepts an
+    optional `{ reason?: string }` body (trimmed, 1–500 chars), recorded in an audit row alongside
+    the affected id's before/after state — in the same transaction as the mutation. The existing
+    `DELETE /admin/users/:id` and `/admin/artists/:id` routes stay backward compatible: the body is
+    optional.
+  - Fixed a security gap in the listener account surface: a soft-deleted user's cookies kept
+    working. `UserAuthGuard`/`OptionalUserAuthGuard` now scope every session lookup to
+    `deletedAt: null`, `UsersService`/`UsersPrivateService` do the same for every by-id/email/
+    username lookup, and every entry point that can mint a session for a listener — password
+    login, 2FA completion, refresh, and Google/Facebook OAuth — now refuses a soft-deleted account
+    with the same generic "Invalid credentials" error a nonexistent account gets, never revealing
+    the account's take-down state. `WsUserAuthGuard` rejects a soft-deleted user at connect for the
+    same reason (see the live-socket limitation above). Artists already had this coverage through
+    `ArtistsPrivateService`/`ArtistsService`, which this change did not need to touch.
+  - Every admin list route's `ApiQuery` declarations now match its zod query schema exactly — the
+    `status` filter had never been documented on tracks/users/artists, nor `entityType` on
+    moderation reports, nor `entityId` on audit logs, despite each already being accepted and
+    validated. A new coverage spec (`admin-list-query-coverage.unit-spec.ts`) fails the build if a
+    future list route's documented params and validated params ever diverge again.
+  - `GET /admin/tracks/:id`, `/admin/users/:id`, and `/admin/artists/:id` no longer exclude
+    soft-deleted rows — an operator can now review a deactivated account or taken-down track before
+    deciding whether to restore it. Track detail adds its audio renditions, artist credits, genres,
+    albums, and open report count; user detail adds playlist/liked-track/listening-history/reports-
+    filed/active-session counts (playlist counts now exclude soft-deleted playlists); artist detail
+    adds track/album/active-session/open-report counts.
+  - `GET /admin/moderation/reports/:id` now resolves the reported entity (track, album, playlist,
+    artist, podcast, episode, or user) to a linkable subject with its title, deletion state, and —
+    for an episode — its parent podcast id. `subject` is always present in the response and
+    `nullable` rather than optional. The list endpoint gains an `entityType` filter. `GET
+/admin/audit` gains an `entityId` filter.
+  - Fixed a blind spot in the operator dashboard's stuck-track count: a track a worker never
+    dequeued has `processingStartedAt: null` forever, so it never crossed the stuck threshold. The
+    count now falls back to `updatedAt` when `processingStartedAt` is null.
+  - Track delete/restore now return the same operator row shape (`AdminTrackEntity`, with the
+    artist's username resolved) their Swagger contract promises, instead of the raw Prisma row —
+    which leaked internal columns such as `audioUrl`, `lyrics`, and `isrc`.
+  - The operator panel adds listener detail (`/users/:id`) and artist detail (`/artists/:id`)
+    pages: activity counts, a link to the account's filtered audit history, and — gated by the
+    matching permission and hidden when not applicable — deactivate, restore, and revoke-sessions
+    actions, each behind an inline confirm step with an optional reason (trimmed, up to 500
+    characters; an empty reason is never sent). Artist detail also hides/disables verification
+    once the account is deactivated, since the API now refuses that write with a 409. Both list
+    screens gain an Active/Deactivated/All status filter (defaulting to Active and omitted from a
+    clean URL) and now link each row's name to its detail page; the dashboard's "Deactivated
+    listeners"/"Deactivated artists" tiles link to the matching filtered list.
+  - The operator panel adds track detail (`/catalog/:id`) and moderation report detail
+    (`/moderation/:id`) pages, following the same pattern. Track detail shows processing state
+    (with the stuck badge), attempts/started/finished, the last recorded error, stored renditions
+    (format/bitrate/codec/size), artist credits, genres, albums, and open report count, plus
+    gated Reprocess / Take down / Restore actions (reprocess is hidden once a track is taken
+    down) and a "Processing history" placeholder section a follow-up change fills in. Report
+    detail shows the reporter, details, and status, with the resolved subject linked to its own
+    panel page when one exists (track, artist, user) or rendered as plain text otherwise (album,
+    playlist, podcast, episode — an episode also shows its parent podcast id), a "Subject no
+    longer exists" message for a null subject, and other reports on the same subject, each
+    linking to its own detail page. The catalog list gains an Active/Taken down/All filter
+    (separate from the existing processing-status filter) and now links each row's title to its
+    detail page and shows a "taken down" badge; the moderation queue gains an entity-type filter
+    and now links each row to its detail page. The dashboard's "Stuck tracks" tile stays
+    unlinked — the catalog has no filter for it yet. `isTrackStuck` now matches the API's own
+    rule exactly: it falls back to `updatedAt` when a track never recorded a `processingStartedAt`,
+    instead of reading such a track as fresh forever.
+  - The service-level audit row a take-down/restore/revoke-sessions mutation writes now carries the
+    same `requestId` (in `metadata.requestId`) and `ipAddress` as the generic row `AuditInterceptor`
+    writes for the same request, so the two can be joined. A new `@AuditContext()` param decorator
+    reads both off the request the same way the interceptor does. `before`/`after` snapshots now
+    serialise `Date` fields with `.toISOString()` instead of relying on Prisma's `JSON.stringify` at
+    write time, and `writeTakeDownAudit`'s `metadata` is built as a properly typed
+    `Prisma.InputJsonObject` with no `as` cast.
+
+- 0ab550c: The admin track list and detail responses now expose `cover`, the track's stored cover image filename, so the operator panel can render the track's actual artwork instead of a placeholder. `<bitrate-player>` in the track detail page now shows the track's real cover art, joined from the stored filename to the API's static URL, instead of its built-in placeholder.
+- 43c90ca: Added `GET /admin/tracks/:id/audio` and `HEAD /admin/tracks/:id/audio`, staff-only endpoints (`tracks:read`) that stream a READY track's highest-bitrate CMAF rendition — or the one named by `?bitrate=` — for operator playback, honoring an inclusive `bytes=` Range with 200/206/416 responses. A taken-down (soft-deleted) READY track stays playable so an operator can review it before deciding whether to restore it; a track that is missing, not READY, or has no CMAF rendition at the requested bitrate returns 404. The `HEAD` route returns the same headers with no body and no storage round-trip, so a client can probe session/rendition availability before assigning `src`. The regenerated contract carries the new `/api/v1/admin/tracks/{id}/audio` path.
+
+  The operator panel's track detail page now plays a READY track, taken-down ones included, with a quality selector when several CMAF renditions exist. Playback never starts on its own, probes the session before assigning a source so an expired access token is refreshed first, and stops when the operator leaves the page.
+
+- 011e415: Added English/Ukrainian internationalisation to the API: error and validation responses are
+  now translated by the global exception filter based on `Accept-Language` (falling back to
+  English for an unsupported language), and transactional password-reset/email-verification
+  mail renders in the recipient's own stored `locale` rather than the request that triggered
+  it. `User` and `Artist` gained a `locale` column (default `en`), set at registration from
+  `Accept-Language`. A CI check now fails the build on any drift between the `en`/`uk`
+  dictionaries, or a translation key referenced in source but defined in neither.
+- 0ab550c: Every API response that returns a body now declares a real, type-checked schema instead of a hand-written `$ref` string or no schema at all, so the generated OpenAPI contract no longer carries dangling references or untyped response bodies — new entities were added for the playlist detail, search, history, follow/unfollow, and 2FA-required-at-login shapes, and the artist "get current authenticated artist" endpoint was corrected to type its response as the artist entity it actually returns instead of the wrong user entity. The three modules that each declared their own `LoginDto` — admin, artist, and user auth — were renamed to `AdminLoginDto`, `ArtistLoginDto`, and `UserLoginDto`, clearing the "Duplicate DTO detected" warning Nest logged at startup and fixing two of the three login endpoints, which had been documented in the generated contract with the wrong request body shape. The admin panel's staff sign-in request DTO now binds to the renamed `AdminLoginDto` contract key. The 2FA-enrollment response (QR code and manual secret) is now a named `UserTwoFactorSetupEntity`/`ArtistTwoFactorSetupEntity` instead of an inline anonymous schema, and the admin audio stream/probe endpoints now declare their binary `audio/mp4` body and `Accept-Ranges`/`Content-Range` headers explicitly instead of relying on a bare `ApiProduces` with no schema.
+- d2bfd92: Added `sort`/`order` query parameters to the six paginated operator-facing list endpoints
+  (`/admin/artists`, `/admin/audit`, `/admin/moderation/reports`, `/admin/tracks`,
+  `/admin/users`, `/admin/staff`), each backed by an explicit per-resource field allowlist
+  that rejects any other value with a 400. Omitting `sort` keeps each endpoint's existing
+  ordering unchanged, including the track pipeline's attention-first (failed/stuck-first)
+  default — choosing a `sort` on that endpoint replaces it with a plain ordering instead.
+- 6a48275: Gave operators an interface again, for the first time since the Kottster panel was deleted. The API grew a `Staff` identity kept deliberately separate from `User` — `ADMIN`/`MODERATOR` roles, its own session model, no self-registration and no OAuth — behind `POST /api/v1/admin/auth/login`, `/refresh`, `/logout` and `GET /me`, guarded by a new `@AdminAuth(...roles)` decorator. `AuditLog` finally has a writer: the existing global audit interceptor now recognises a staff actor, so every operator mutation records who did what and from where instead of filing it as anonymous.
+
+  Four operator surfaces sit behind that: the moderation queue, which finally reads the `ModerationReport` rows the API had been collecting with nothing to read them; artist management with verification and soft delete; listener management; the catalog pipeline, listing tracks by processing state with failures and longest-stuck uploads first, and a reprocess action that reuses the existing audio-processing queue rather than adding a second one; and a read-only audit log with each row's actor resolved to a username server-side. Every mutation requires `ADMIN`; reads are open to `MODERATOR` as well. No response includes a password or two-factor secret, and lists exclude soft-deleted rows by default.
+
+  The panel itself is `apps/admin`, an Angular 22 zoneless SPA on spartan-ng, served at `admin.<domain>` behind `X-Frame-Options: DENY`. It goes through the API rather than around it, which was the condition ADR-0025 set for any replacement. Its data layer diverges from the other frontends on purpose and at some cost — `HttpClient` instead of `openapi-fetch`, no query cache at all, and request and response shapes written by hand as zod schemas because the generated contract could not describe endpoints that did not exist when the app was started.
+
+  One thing worth knowing before the next migration: `prisma migrate dev` wanted to drop the four GIN trigram indexes that back search, because `schema.prisma` has no syntax for them and Prisma therefore reads them as drift. They were removed from the generated SQL by hand and the whole chain was replayed against an empty database to prove the indexes survive. Every future generated migration will want to drop them again — see `.claude/rules/api-rules.md`.
+
+- efcc52c: Laid the foundation for per-operator permissions, replacing the fixed `StaffRole` enum. Authorisation now lives on `Staff.permissions`, a string array checked against a code-owned catalogue (`reports:*`, `artists:*`, `tracks:*`, `users:*`, `audit:read`, plus the protected `staff:*`/`roles:*` reserved for the built-in ADMIN role); a `Role` row is a template copied onto an operator at assignment time and kept afterwards only as provenance/display via `Staff.roleId`. The built-in ADMIN role still passes every permission check by identity, and MODERATOR keeps its existing access through a template equal to every grantable permission. Every operator route now declares `@RequirePermission(...)` in place of the old `@StaffRoles(...)`/role-array form on `@AdminAuth()`, with the guard, coverage spec, and both seed scripts updated to match. The migration backfills every existing operator's `permissions` from their prior role so no account silently loses access on deploy. Staff/role management endpoints and the admin panel UI for any of this are not part of this change.
+- 4bc7da4: Added the operator-facing role-template and staff-management API: `/admin/roles` (list/get with
+  per-role active-operator `holders` and `divergentHolders` counts, `/admin/roles/permissions` for
+  the full permission catalogue with a `heldBy` count per permission, create/edit/delete of
+  non-`ADMIN` role templates) and `/admin/staff` (list/get, create an operator, reassign its role,
+  replace its own permission set, and deactivate it — deactivation also revokes every session for
+  that operator in the same transaction). Assigning a role copies its current template onto the
+  operator; editing a template afterwards does not reach operators already assigned it. The
+  built-in `ADMIN` role can never be edited or deleted and its own `permissions` are always `[]`;
+  the built-in `MODERATOR` template may be edited but not renamed. An operation that would leave
+  zero active operators holding the built-in `ADMIN` role is rejected. Every permission change
+  (creation, role reassignment, or a direct permission edit) writes its own detailed audit row —
+  before/after/added/removed — inside the same transaction as the write, alongside the generic row
+  the global audit interceptor already records for every mutating request.
+- 43c90ca: Added a durable per-attempt processing log for the audio pipeline
+  (`TrackProcessingAttempt`, one row per BullMQ attempt — successes compact, failures carrying
+  the redacted step/error detail) and the operator endpoint that reads it:
+  `GET /admin/tracks/:id/processing-attempts` (`tracks:read`, newest first, paginated,
+  404 for an unknown id, reachable for a soft-deleted track). `@bitrate/converter`'s FFmpeg
+  calls now run through a bounded stderr ring buffer and throw a typed `FfmpegError` carrying
+  `exitCode`/`signal`/`timedOut`/`stderrTail`, which the API classifies and redacts before
+  persisting. The operator panel's track detail page (`/catalog/:id`) now has a "Processing
+  history" section reading that endpoint — a table of attempts with their trigger, outcome
+  badge, failed step, duration, error code/message, `willRetry`/`retryable` wording, and worker
+  host, with a keyboard-operable diagnostics disclosure (command line, stderr tail, stack, and
+  a clipboard "Copy diagnostics" action) on any attempt that has detail to show. A track stuck
+  processing or with a failed row on the catalog list, and its own detail page, now link to
+  this section directly. The failed/stuck take-down and restore conflict messages on the track
+  detail page now say "taken down" instead of the account-oriented "deactivated" wording they
+  borrowed from the users/artists screens.
+
+### Patch Changes
+
+- 43c90ca: Added `pnpm --filter @bitrate/api db:seed:admin`, an additive and idempotent fixture script that
+  creates the stuck/failed tracks, moderation reports across every status and entity type,
+  deactivated users/artists, an unreferenced genre, extra staff and roles, and audit history the
+  admin panel's coverage work is verified against. Never clears existing data and unconditionally
+  refuses to run with `NODE_ENV=production` — fixture data has no legitimate production use, so
+  unlike `db:seed:staff` this refusal has no override. It also refuses to run against a
+  non-local `DATABASE_URL` host (anything other than `localhost`/`127.0.0.1`/`::1` or the
+  `postgres`/`postgres_test` Docker service names) unless `ADMIN_FIXTURES_ALLOW_REMOTE_DB=true` is
+  set — production is refused either way, with no override.
+
+  `db:seed`, `db:seed:staff`, and `db:seed:admin` now load `.env` then `.env.local` — the same
+  first-file-wins order `apps/api`'s own `ConfigModule` uses — instead of a bare `dotenv/config`
+  that only reads `.env`. `apps/api` ships no `.env` by default, only `.env.local`, so all three
+  previously required `DATABASE_URL` to be inlined by hand.
+
+- e13c38d: Collapsed the operator list endpoints' pagination onto the constants the rest of the API already uses. Each of the five `list-*.dto.ts` files restated `page` and `limit` verbatim, with the ceiling written out as a literal `100` five times, while `apps/api/src/common/pagination.ts` had owned `MAX_LIMIT` all along for the ten non-admin modules that call `normalizePagination`. That file now also exports a `paginationQuerySchema` built from those constants, which the five DTOs extend, and the five services take their defaults from `DEFAULT_PAGE`/`DEFAULT_LIMIT` instead of repeating `1` and `20`. The schema deliberately declares no `.default()`, because that would publish a default into the OpenAPI document and move the generated contract; the query parameters this produces were captured before and after the change and are byte-identical. A new spec pins the bound through a resource schema rather than the shared one, since what is worth asserting is that extending does not lose it — checked by mutation, where a local `.max(50)` override fails it.
+- de2a6ff: Fixed the root welcome endpoint answering "Welcome to undefined!" in production by greeting
+  with the API's own name instead of an npm-injected variable that only exists when the process
+  is started through a script runner, renamed the health/metrics/debug controller's Swagger tag
+  from the misleading "Welcome" to "System", and enabled the Swagger UI's tag filter plus a
+  deterministic sort order so operators can navigate the growing route list.
+- 43c90ca: Edits to the built-in MODERATOR role's permissions and description now survive an API restart;
+  boot only creates a built-in role that is missing. The MODERATOR template is an explicit list, so a
+  permission added to the catalogue no longer joins it without a deliberate change.
+- e2cfd82: Added Swagger `@ApiOperation` documentation (or an explicit `@ApiExcludeEndpoint`) to every route that was missing it — 46 routes across `me`, `discovery`, `podcasts`, `app.controller`, `users-auth`, `users`, `artists-auth`, `search`, `tracks`, `moderation`, and `infra/storage` — and corrected two artist-auth summaries that were copy-pasted from the user-auth wording. Added a unit spec (`swagger-operation-coverage.unit-spec.ts`) that walks every controller on disk and fails if a route is undocumented again.
+- 4cbf8a9: Uploaded audio, HLS artifacts, covers and avatars now survive a production deploy. The API writes them under its working directory, which in the production image is `/app`, and `/app/storage` was mounted nowhere — the bytes lived in the container's writable layer and were destroyed by every `docker compose up -d` that recreated the container. The two mounts the production compose file declared, `../apps/api/uploads` and `../apps/api/public`, pointed at paths nothing in the API has ever written to. The image now creates `/app/storage` so a named volume mounted over it inherits the non-root user's ownership without a chown on the host, and the production stack mounts that volume. Existing uploads are only recoverable from the running container and must be rescued with `task prod:storage:rescue` before the deploy that lands this; see ADR-0033.
+- 69bb943: Restricted API sort keys to supported fields, restored admin builds with their workspace dependencies, and refreshed the generated contract to match the API.
+- 704e27e: Fixed failed sign-ins returning 500 instead of 401 on all three authentication surfaces. The
+  lockout bookkeeping ran a raw `UPDATE ... SET "lockedUntil" = CASE ... ELSE NULL END`, where
+  neither branch carried a type, so PostgreSQL resolved the expression to `text` and refused to
+  assign it to the `timestamp(3)` column (SQLSTATE 42804). Every wrong password therefore crashed
+  before the account could be locked, which also meant the brute-force lockout had never actually
+  engaged. The three services now do the same work with typed Prisma writes — an atomic counter
+  increment followed by a conditional deadline write — and an end-to-end spec exercises the
+  counter, the lockout threshold, and the deadline it stores.
+- e1a9c20: The three application production images shrank by between 35% and 94%. The web player now
+  builds with Next.js standalone output file tracing, so its image carries the traced server
+  instead of the whole hoisted production dependency tree, and its container runs `node
+server.js` directly rather than two nested pnpm wrappers. Every production stage applies
+  ownership through `COPY --chown` instead of a trailing recursive `chown`, which had been
+  writing a second complete copy of the application tree into its own layer. The API image no
+  longer copies the seeded audio under `apps/api/storage/private`, keeping only the `public`
+  subtree its static file handler actually serves. Measured locally: web player 4.44 GB to
+  265 MB, API 3.88 GB to 1.9 GB, web artists 637 MB to 412 MB.
+- 2747e7a: `apps/api` now logs structured JSON via `nestjs-pino` instead of plain text through the built-in NestJS logger — existing `new Logger(context)` call sites are unaffected, only the output format and the addition of automatic per-request logging (excluding the Prometheus-scraped `/metrics` route) change. No public route, response shape or auth behavior changed.
+- 2747e7a: `GET /metrics` is now backed by `prom-client` instead of a hand-rolled counter — it still serves the same route with the same bearer-token gate, but now also reports process memory, CPU and event-loop lag alongside the existing per-route HTTP request count and duration, and the duration metric is a proper histogram in seconds rather than a cumulative-milliseconds counter. No client of this route is known to exist yet, so this is not expected to be a breaking change in practice.
+- 80908cf: Moved the operator panel's staff guard from individual route handlers onto the controller classes, so that forgetting it produces a too-broad role rather than an unauthenticated endpoint. Three of the five admin controllers declared `@AdminAuth(...)` per method, which meant a handler added without the decorator would have answered to anyone who found the path — nothing would have caught it, since the existing integration specs stub the guard with a role check that lets a route carrying no role metadata straight through. Routes that need a narrower role now use a new `@StaffRoles('ADMIN')`, which carries the role metadata and the 403 response but not the cookie scheme: reusing `@AdminAuth` for a narrowing applies `ApiCookieAuth` a second time and makes the generated spec list the same requirement twice, while leaving the 403 to the controller class drops it, because a method-level response declaration replaces the class's for that status rather than merging with it. The published contract is unchanged — `security`, the response codes and their descriptions were all checked to be identical before and after. A new spec walks the operator controllers found on disk and fails if any route lacks both a guard and role metadata, with the public surface named explicitly as one entry: the login route.
+- 24ec805: Made a bootstrap failure log the error and exit with a non-zero status instead of relying on
+  Node's default unhandled-rejection behaviour, as part of enabling Biome's floating/misused
+  promise lint rules.
+- Updated dependencies [43c90ca]
+  - @bitrate/converter@2.1.0
+
 ## 1.0.1
 
 ### Patch Changes
