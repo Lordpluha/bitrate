@@ -26,7 +26,7 @@ win.
 - Raw source art: `packages/ui-react/assets/` — `icons/` (SVG the svgr plugin compiles into
   `src/icons/svgr/` on `pnpm build`) and `images/` (raster files stories import as
   `@assets/images/...`). Nothing under `assets/` is shipped; it is build-time input only.
-- Design tokens: hand-written `@theme` layers in `packages/ui-react/src/styles/`. That CSS is
+- Design tokens: hand-written `@theme` layers in `packages/tailwind/src/`. That CSS is
   the source — there is no `tokens.json` and no generator (ADR-0023).
 
 Put a new SVG in `assets/icons/` and rebuild — never hand-write a file in `src/icons/svgr/`,

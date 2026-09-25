@@ -5,14 +5,14 @@ Read only the section needed for this task. The scoped rule
 
 # Styling conventions — web-player
 
-Tailwind v4 + `@bitrate/ui-react` design tokens + CVA + `cn()`. Read before writing any styled markup, any new component, or anything that sets `className`. For the token pipeline, see `.claude/rules/monorepo.md` § "Asset generation pipelines".
+Tailwind v4 + `@bitrate/tailwind` design tokens + CVA + `cn()`. Read before writing any styled markup, any new component, or anything that sets `className`. For the token pipeline, see `.claude/rules/monorepo.md` § "Asset generation pipelines".
 
 ## Stack at a glance
 
 | Concern | Choice |
 |---|---|
 | Utility engine | Tailwind v4 via `@tailwindcss/postcss` — no `tailwind.config.js` |
-| Token layer | Hand-written `@theme` layers in `@bitrate/ui-react`, imported through `themes.css` |
+| Token layer | Hand-written `@theme` layers in `@bitrate/tailwind`, imported through `themes.css` |
 | Class merging | `cn(...inputs)` from `@bitrate/ui-react` — wraps `clsx` + `tailwind-merge` |
 | Variant component pattern | CVA (`class-variance-authority`) via `cva(...)` factory |
 | Animations | `motion` (Motion for React) |
@@ -20,22 +20,22 @@ Tailwind v4 + `@bitrate/ui-react` design tokens + CVA + `cn()`. Read before writ
 
 ## Design tokens
 
-All design values are declared as Tailwind v4 `@theme` layers in `packages/ui-react/src/styles/`. That CSS is the source — there is no generator, no `tokens.json`, and nothing to re-run. Import it in the app root:
+All design values are declared as Tailwind v4 `@theme` layers in `packages/tailwind/src/`. That CSS is the source — there is no generator, no `tokens.json`, and nothing to re-run. Import it in the app root:
 
 ```css
 /* apps/web-player/src/app/global.css */
-@import "@bitrate/ui-react/themes.css";
+@import "@bitrate/tailwind/themes.css";
 ```
 
 **One import, not many.** `themes.css` is a barrel: it `@import`s `palette.css`,
 `typography.css`, `layout.css`, `animations.css`, and every semantic-role part-file under
 `themes/`, and declares no colour of its own. It is also the *only* stylesheet the package
-exports: `@bitrate/ui-react/styles/palette.css` is not in the package's `exports` map and
+exports: `@bitrate/tailwind/src/palette.css` is not in the package's `exports` map and
 fails with `MODULE_NOT_FOUND`.
 
 ### Where a role lives
 
-Semantic roles are split across part-files under `packages/ui-react/src/styles/themes/`,
+Semantic roles are split across part-files under `packages/tailwind/src/themes/`,
 one group per file, each carrying **both** the default dark declarations and its
 `:root.light` overrides:
 
@@ -53,11 +53,11 @@ workflow — save the file and Tailwind picks the change up.
 
 | Edit | Where |
 |---|---|
-| A raw colour value or a new scale | `src/styles/palette.css` |
-| A semantic role's value in each theme | the part-file that owns it under `src/styles/themes/` |
+| A raw colour value or a new scale | `packages/tailwind/src/palette.css` |
+| A semantic role's value in each theme | the part-file that owns it under `packages/tailwind/src/themes/` |
 | A new role | add it to **both** the `@theme` block and the `:root.light` block of one part-file |
 | The brand primary or a surface value | `themes/base.css` — Bitrate Purple `#7c3aed` is `--color-purple-500`, aliased by `--color-primary` |
-| A new part-file | create it, then add one `@import` line to `src/styles/themes.css` |
+| A new part-file | create it, then add one `@import` line to `packages/tailwind/src/themes.css` |
 
 Three invariants have no tool enforcing them any more, so they are on you:
 

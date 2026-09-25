@@ -1,12 +1,11 @@
 @import 'tailwindcss';
 
 /**
- * The single source of design values for the whole product. `@bitrate/ui-react` is a React
- * component library this app cannot use, but its themes.css is plain Tailwind v4 CSS with no
- * JavaScript in it — so the tokens are shared even though the components are not. That is why
- * the package sits in devDependencies here: it is consumed at build time, never at runtime.
+ * The single source of design values for the whole product. `@bitrate/tailwind` is plain
+ * Tailwind v4 CSS with no JavaScript in it, so it has nothing this app cannot use — that is
+ * why it sits in devDependencies here: it is consumed at build time, never at runtime.
  */
-@import '@bitrate/ui-react/themes.css';
+@import '@bitrate/tailwind/themes.css';
 
 @source "./";
 

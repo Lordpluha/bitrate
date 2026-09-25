@@ -9,22 +9,23 @@ name: "[admin] Checks"
 # The `master` mode below is therefore only a hand-run escape hatch for
 # rebuilding this one service's `:master` image. `develop` is unchanged.
 #
-# packages/ui-react is in the filters even though this app renders no React: it
-# imports `@bitrate/ui-react/themes.css` as its single source of design tokens,
-# so a token change has to rebuild this image too.
+# packages/tailwind is in the filters even though this app renders no React: it
+# imports `@bitrate/tailwind/themes.css` as its single source of design tokens,
+# so a token change has to rebuild this image too. It does not depend on
+# packages/ui-react at all — nothing in this app can use a React component.
 on:
   push:
     branches: [develop]
     paths:
       - 'apps/admin/**'
-      - 'packages/ui-react/**'
+      - 'packages/tailwind/**'
       - '.github/workflows/admin.yml'
       - '.github/workflows/admin_reusable.yml'
   pull_request:
     branches: [master, develop]
     paths:
       - 'apps/admin/**'
-      - 'packages/ui-react/**'
+      - 'packages/tailwind/**'
       - '.github/workflows/admin.yml'
       - '.github/workflows/admin_reusable.yml'
   workflow_dispatch:

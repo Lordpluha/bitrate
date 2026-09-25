@@ -15,10 +15,6 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
     },
-    "./themes.css": {
-      "style": "./src/styles/themes.css",
-      "default": "./src/styles/themes.css"
-    },
     "./src": {
       "default": "./src/index.ts"
     }
@@ -82,6 +78,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
+    "@bitrate/tailwind": "workspace:*",
     "@hookform/resolvers": "^5.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
