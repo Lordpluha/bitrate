@@ -4,10 +4,6 @@
 FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
-# Generated files here (via the ui-react dependency turbo pulls in) are rebuilt fresh and
-# bundled immediately — nobody reads or commits them from inside a container, so skip the
-# ~40-80s `pnpm exec biome` formatting pass. See packages/svgr/src/core/processor.mjs.
-ENV SVGR_SKIP_FORMAT=true
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
@@ -18,10 +14,7 @@ COPY scripts ./scripts
 COPY apps/admin/package.json ./apps/admin/
 COPY packages/player/package.json ./packages/player/
 COPY packages/contracts/package.json ./packages/contracts/
-COPY packages/ui-react/package.json ./packages/ui-react/
-COPY packages/svgr/package.json ./packages/svgr/
-COPY packages/svgr/bin ./packages/svgr/bin
-COPY packages/vite-svgr/package.json ./packages/vite-svgr/
+COPY packages/tailwind/package.json ./packages/tailwind/
 COPY turbo.json ./
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
@@ -31,8 +24,6 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
-COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
-COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 EXPOSE 3005
 CMD ["pnpm", "--filter", "@bitrate/admin", "run", "dev"]
 
@@ -50,8 +41,6 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
-COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
-COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 
 # `scripts/with-env.mjs` reads NG_APP_API_URL from the environment set above and writes the
 # generated config module before Angular runs. There is no .env file in the image.

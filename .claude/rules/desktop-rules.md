@@ -112,7 +112,7 @@ React function components, named exports, named React imports, named types in si
 positions, no production `any`. Component size, props and effects are review signals
 owned by `code-principles.md`, not automatic failure thresholds.
 
-Design values should trace back to the token roles in `packages/ui-react/src/styles/`. No bridge exists yet — propose one
+Design values should trace back to the token roles in `packages/tailwind/src/`. No bridge exists yet — propose one
 rather than scattering hex literals. API types come from `@bitrate/contracts`.
 
 ## Commands

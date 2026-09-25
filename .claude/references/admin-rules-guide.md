@@ -323,7 +323,7 @@ Three rules that are easy to get wrong:
 
 ## Styling
 
-Tailwind v4 through `@tailwindcss/postcss`, with `@bitrate/ui-react/themes.css` imported in
+Tailwind v4 through `@tailwindcss/postcss`, with `@bitrate/tailwind/themes.css` imported in
 `src/styles.css` as the token source. That package is a **devDependency**: its CSS is consumed at
 build time, its components never at runtime.
 
