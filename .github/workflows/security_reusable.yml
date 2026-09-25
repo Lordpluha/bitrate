@@ -131,3 +131,5 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-results-${{ matrix.service }}.sarif
+          # Keep the original service-only identity when build arguments change.
+          category: .github/workflows/security.yml:docker-security-scan/service:${{ matrix.service }}
