@@ -27,6 +27,9 @@ COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
+COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
+# CI runs the development image without host build output.
+RUN pnpm --filter @bitrate/ui-react run build
 EXPOSE 3001
 CMD ["pnpm", "--filter", "@bitrate/web-player", "run", "dev"]
 

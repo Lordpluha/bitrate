@@ -90,7 +90,8 @@ jobs:
       #
       # `target: development`, NOT the `production` the sibling workflows build. That is
       # deliberate: infra/docker-compose.preprod.yaml declares `target: development` for all
-      # three services, mounts the working tree over /app, and runs `start:dev` / `next dev`.
+      # three services and runs `start:dev` / `next dev`. The CI overlay removes local
+      # bind mounts so generated package output and dependency links come from the images.
       # A production image carries `pnpm install --prod` node_modules and no Nest or Next CLI,
       # so the compose `command:` would not start and the `db:gen` / `prisma db seed` steps
       # further down would fail.
@@ -156,13 +157,13 @@ jobs:
 
       - name: Start services
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml up -d postgres redis
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml up -d postgres redis
           sleep 10
 
       - name: Wait for services
         run: |
-          timeout 60 bash -c 'until docker compose -f infra/docker-compose.preprod.yaml exec -T postgres pg_isready -U admin; do sleep 1; done'
-          docker compose -f infra/docker-compose.preprod.yaml exec -T redis redis-cli ping
+          timeout 60 bash -c 'until docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres pg_isready -U admin; do sleep 1; done'
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T redis redis-cli ping
 
       # `--no-build` is the guard on the tagging contract above: compose only builds a service
       # whose image is missing, so a tag that no longer matches would otherwise be an invisible
@@ -170,15 +171,15 @@ jobs:
       # it could not find.
       - name: Start application services
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml up -d --no-build api web-player web-artists
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml up -d --no-build api web-player web-artists
           sleep 20
 
       - name: Check container status
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml ps
-          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 api
-          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 web-player
-          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 web-artists
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml ps
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=50 api
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=50 web-player
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=50 web-artists
 
       - name: Run health checks
         run: |
@@ -186,7 +187,7 @@ jobs:
             echo "=== Health check attempt $i/30 ==="
 
             # Check API health endpoint
-            if curl -sf http://localhost:3000/api/v1/health; then
+            if curl --fail --silent --show-error --max-time 10 http://localhost:3000/api/v1/health; then
               echo "✅ API is healthy"
               API_OK=1
             else
@@ -194,16 +195,18 @@ jobs:
               API_OK=0
             fi
 
-            # Check Web - run inside container (curl not guaranteed on host)
-            if docker compose -f infra/docker-compose.preprod.yaml exec -T web-player node -e "const req=require('http').get('http://localhost:3001', (r)=>{console.log('Web status:', r.statusCode); process.exit(0);}); req.on('error', (e)=>{console.error('Web error:', e.message); process.exit(1);});"; then
-              echo "✅ Web is healthy"
-              WEB_OK=1
-            else
-              echo "❌ Web health check failed"
-              WEB_OK=0
-            fi
+            WEB_OK=1
+            for target in web-player:3001 web-artists:3002; do
+              service="${target%:*}"
+              port="${target#*:}"
+              if docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T "$service" node -e "const req=require('http').get('http://127.0.0.1:$port', (r)=>{console.log('$service status:', r.statusCode); process.exit(r.statusCode >= 200 && r.statusCode < 400 ? 0 : 1);}); req.setTimeout(10000, ()=>req.destroy(new Error('Health check timed out'))); req.on('error', (e)=>{console.error(e.message); process.exit(1);});"; then
+                echo "✅ $service is healthy"
+              else
+                echo "❌ $service health check failed"
+                WEB_OK=0
+              fi
+            done
 
-            # All healthy?
             if [ "$API_OK" = "1" ] && [ "$WEB_OK" = "1" ]; then
               echo "✅ All services are healthy"
               exit 0
@@ -216,25 +219,25 @@ jobs:
 
       - name: Run database migrations
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='bitrate_shadow'" | grep -q 1 || \
-            docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE bitrate_shadow;"
-          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @bitrate/api run db:gen
-          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @bitrate/api run db:migration:deploy
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='bitrate_shadow'" | grep -q 1 || \
+            docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE bitrate_shadow;"
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T api pnpm --filter @bitrate/api run db:gen
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T api pnpm --filter @bitrate/api run db:migration:deploy
 
       - name: Seed database
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml exec -T api sh -c "cd apps/api && pnpm prisma db seed"
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T api sh -c "cd apps/api && pnpm prisma db seed"
 
       - name: Show container logs on failure
         if: failure()
         run: |
           echo "=== API Logs ==="
-          docker compose -f infra/docker-compose.preprod.yaml logs api
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs api
           echo "=== Web Logs ==="
-          docker compose -f infra/docker-compose.preprod.yaml logs web-player
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs web-player web-artists
           echo "=== Postgres Logs ==="
-          docker compose -f infra/docker-compose.preprod.yaml logs postgres
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs postgres
 
       - name: Cleanup
         if: always()
-        run: docker compose -f infra/docker-compose.preprod.yaml down -v
+        run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml down -v

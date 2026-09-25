@@ -128,7 +128,10 @@ by the Expo workflow action.
 
 ### Integration Tests (Docker Compose)
 - web-integration-test.yml — integration tests for PR and push (develop/master) + workflow_dispatch.
-- web-integration-test_reusable.yml — reusable integration test scenario.
+- web-integration-test_reusable.yml — reusable integration test scenario. It combines
+  `infra/docker-compose.preprod.yaml` with `infra/docker-compose.ci.yaml` to run the image
+  contents without developer bind mounts. Development images build `ui-react` before
+  startup; health checks require successful HTTP responses from both web apps and the API.
 
 ### Release (changesets)
 

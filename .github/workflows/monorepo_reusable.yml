@@ -76,6 +76,9 @@ jobs:
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
 
+      - name: Generate admin environment module
+        run: pnpm --filter @bitrate/admin env:gen
+
       # Knip resolves entry points per workspace from .knip.json; a workspace added to
       # pnpm-workspace.yaml but not to that file is itself part of what this catches.
       - name: Run knip
