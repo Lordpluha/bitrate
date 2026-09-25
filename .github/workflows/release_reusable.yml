@@ -545,7 +545,15 @@ jobs:
       # Biome formats package.json. `changeset version` rewrites those files with
       # its own formatter, and a disagreement would otherwise land as a lint
       # failure on the next unrelated pull request.
+      #
+      # apps/admin's `lint`/`check-types`/`build` all run `env:gen` first, which
+      # regenerates env.generated.ts from the environment and exits non-zero if
+      # NG_APP_API_URL is unset -- there is no fallback, by design (see
+      # admin_reusable.yml). The value only has to be present, never reached: it
+      # is the same placeholder admin_reusable.yml falls back to.
       - name: "Gate: pnpm lint"
+        env:
+          NG_APP_API_URL: https://api.bitrate.me
         run: pnpm lint
 
       # apps/api's `precheck-types` runs `prisma generate`, which loads
@@ -558,6 +566,7 @@ jobs:
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
+          NG_APP_API_URL: https://api.bitrate.me
         run: pnpm check-types
 
 
@@ -568,6 +577,7 @@ jobs:
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
+          NG_APP_API_URL: https://api.bitrate.me
         run: pnpm build
 
       - name: Report the gates as a commit status
