@@ -6,5 +6,5 @@ export { dev } from './modes/dev.mjs'
 export { resolvePath } from './utils/resolve-path.mjs'
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  runCli()
+  void runCli()
 }

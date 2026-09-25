@@ -29,6 +29,8 @@ import {
   AuthRefreshSwagger,
   AuthRegistrationSwagger,
   AuthResetPasswordSwagger,
+  AuthVerifyEmailResendSwagger,
+  AuthVerifyEmailSwagger,
   EmailAvailabilitySwagger,
   TwoFactorDisableSwagger,
   TwoFactorEnableSwagger,
@@ -37,8 +39,8 @@ import {
 } from './decorators'
 import {
   ArtistForgotPasswordDto,
+  type ArtistLoginDto,
   ForgotPasswordSchema,
-  type LoginDto,
   LoginSchema,
   type RegistrationDto,
   RegistrationSchema,
@@ -73,7 +75,7 @@ export class AuthController {
   @AuthLoginSwagger()
   @Post('login')
   async login(
-    @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
+    @Body(new ZodValidationPipe(LoginSchema)) loginDto: ArtistLoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.artistAuthService.loginArtist(loginDto.email, loginDto.password)
@@ -155,6 +157,7 @@ export class AuthController {
     await this.artistAuthService.resetPassword(dto.token, dto.password)
   }
 
+  @AuthVerifyEmailSwagger()
   @HttpCode(200)
   @Post('verify-email')
   async verifyEmail(
@@ -163,6 +166,7 @@ export class AuthController {
     await this.artistAuthService.verifyEmail(dto.token)
   }
 
+  @AuthVerifyEmailResendSwagger()
   @HttpCode(200)
   @Post('verify-email/resend')
   async resendEmail(

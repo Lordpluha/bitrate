@@ -11,7 +11,7 @@ import {
   Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { SearchSwagger } from './decorators'
+import { ClearSearchHistorySwagger, GetSearchHistorySwagger, SearchSwagger } from './decorators'
 import { SearchService } from './search.service'
 import { ALL_SEARCH_TYPES, type SearchType } from './search.types'
 
@@ -51,6 +51,7 @@ export class SearchController {
     })
   }
 
+  @GetSearchHistorySwagger()
   @UserAuth()
   @Get('history')
   getHistory(
@@ -62,6 +63,7 @@ export class SearchController {
     return this.searchService.getHistory(req.user.id, pagination.page, pagination.limit)
   }
 
+  @ClearSearchHistorySwagger()
   @UserAuth()
   @Delete('history')
   clearHistory(@Req() req: UserAuthRequest) {

@@ -1,0 +1,5 @@
+---
+'@bitrate/api': patch
+---
+
+Collapsed the operator list endpoints' pagination onto the constants the rest of the API already uses. Each of the five `list-*.dto.ts` files restated `page` and `limit` verbatim, with the ceiling written out as a literal `100` five times, while `apps/api/src/common/pagination.ts` had owned `MAX_LIMIT` all along for the ten non-admin modules that call `normalizePagination`. That file now also exports a `paginationQuerySchema` built from those constants, which the five DTOs extend, and the five services take their defaults from `DEFAULT_PAGE`/`DEFAULT_LIMIT` instead of repeating `1` and `20`. The schema deliberately declares no `.default()`, because that would publish a default into the OpenAPI document and move the generated contract; the query parameters this produces were captured before and after the change and are byte-identical. A new spec pins the bound through a resource schema rather than the shared one, since what is worth asserting is that extending does not lose it — checked by mutation, where a local `.max(50)` override fails it.

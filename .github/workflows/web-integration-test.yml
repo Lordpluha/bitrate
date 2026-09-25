@@ -10,6 +10,7 @@ on:
       - 'apps/api/**'
       - 'apps/web-player/**'
       - 'apps/web-artists/**'
+      - 'turbo.json'
       - '.github/workflows/web-integration-test.yml'
       - '.github/workflows/web-integration-test_reusable.yml'
       - '.github/actions/setup-docker/**'
@@ -22,6 +23,7 @@ on:
       - 'apps/api/**'
       - 'apps/web-player/**'
       - 'apps/web-artists/**'
+      - 'turbo.json'
       - '.github/workflows/web-integration-test.yml'
       - '.github/workflows/web-integration-test_reusable.yml'
       - '.github/actions/setup-docker/**'
@@ -29,6 +31,10 @@ on:
 
 permissions:
   contents: read
+  # The called workflow's image builds pull the GHCR `cache/<app>:buildcache` refs the per-app
+  # jobs maintain. A called workflow can only narrow what the caller grants, so the scope has to
+  # be declared here too — same shape as monitoring.yml. Read-only: nothing here publishes.
+  packages: read
 
 jobs:
   integration-test:

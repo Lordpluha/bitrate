@@ -1,3 +1,28 @@
 {
-  "mcpServers": {}
+  "mcpServers": {
+    "shadcn": {
+      "command": "pnpm",
+      "args": ["dlx", "shadcn@latest", "mcp"]
+    },
+    "playwright": {
+      "command": "pnpm",
+      "args": ["dlx", "@playwright/mcp@latest"]
+    },
+    "chrome-devtools": {
+      "command": "pnpm",
+      "args": ["dlx", "chrome-devtools-mcp@latest"]
+    },
+    "prisma": {
+      "command": "pnpm",
+      "args": ["--filter", "@bitrate/api", "exec", "prisma", "mcp"]
+    },
+    "storybook": {
+      "type": "http",
+      "url": "http://localhost:6006/mcp"
+    },
+    "sentry": {
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp"
+    }
+  }
 }

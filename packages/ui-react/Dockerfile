@@ -11,6 +11,10 @@
 FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
+# Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
+# write. TURBO_TOKEN is the credential and arrives per RUN below via --mount=type=secret, so
+# it never lands in an image layer.
+ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
@@ -20,9 +24,14 @@ COPY . .
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile --filter @bitrate/ui-react...
 
 # The library build first: the svgr plugin generates src/icons/svgr/ during it, and the stories
-# import those components.
-RUN pnpm --filter @bitrate/ui-react run build
-RUN NODE_ENV=production pnpm --filter @bitrate/ui-react run storybook:build
+# import those components. Routed through turbo, not a plain pnpm script, so an unchanged
+# source tree restores dist/ (and the ~9s SVGR regen) from the remote cache instead of
+# rerunning it; the secret mount is optional (required=false is the default), so a build
+# without TURBO_TOKEN — a fork PR, a local docker build — just runs uncached.
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/ui-react
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    NODE_ENV=production pnpm exec turbo run storybook:build --filter=@bitrate/ui-react
 
 # Stage 3: Production
 FROM nginx:1.27-alpine AS production

@@ -1,6 +1,6 @@
 ---
 name: br-librarian
-description: Heavy specialist documentation-order agent for bitrate — keeps four documentation surfaces consistent with each other and with the repo: .claude/ (rules, commands, agents, skills), .changeset/ (pending changesets vs the actual diff), apps/docs/ (Docusaurus, ADRs, brand), and PRODUCT.md (the impeccable product-context artifact). Read-only: reports findings with proposed fixes, never edits a file or rewrites an ADR itself. Dispatched by /br-sync-docs by default, or invoked directly via the Agent tool.
+description: "Audit a broad documentation scope independently when requested or justified. Report inconsistencies and proposed fixes without editing files or rewriting historical ADR decisions."
 tools: Read, Glob, Bash, Skill
 model: sonnet
 effort: medium
@@ -13,9 +13,9 @@ the repository actually contains. You do not edit anything — you report findin
 proposed fix per finding; the orchestrating command confirms with the user and applies the
 confirmed fixes.
 
-This is the isolated specialist mode, dispatched by `/br-sync-docs` by default, or invoked
-directly via the Agent tool as `br-librarian`. Pass `--session` on `/br-sync-docs` to work
-in-session instead.
+Use this specialist for a bounded task when separate investigation, isolation or review
+adds value. Ordinary work stays in-session. Return results to the caller; do not push or
+mutate GitHub. See `CLAUDE.md` for delegation and worktree policy.
 
 Documentation drifts silently and cheaply: nothing fails when a table row points at a
 deleted file, so nobody notices until an agent reads the stale row and acts on it. That is
@@ -33,7 +33,7 @@ and `writing-guidelines` for prose quality on a page you are already flagging.
 
 | Surface | What "in order" means |
 |---|---|
-| **`.claude/`** | `CLAUDE.md`'s Rule Index / Commands / Model-tier tables match the actual files under `rules/`, `commands/`, `agents/`; `.claude/README.md` matches `skills/` and the agent roster; no orphan files, no dangling rows |
+| **`.claude/`** | `CLAUDE.md`'s loading/delegation policy matches `paths`, reference links, commands and agent frontmatter; `.claude/README.md` matches `skills/` and the agent roster; no orphan files, no dangling rows |
 | **`.changeset/`** | A pending changeset exists for every user/behaviour-visible workspace change on the branch, names every touched workspace, and uses a defensible bump; no changeset for a pure docs/test/chore diff |
 | **`apps/docs/`** | Docusaurus pages, ADRs and brand docs describe the repo as it is; no page restates structure a `.claude/rules/*.md` or ADR already owns; the ADR index matches the ADR files |
 | **`PRODUCT.md`** | The impeccable product-context artifact still matches the real app roster, roadmap, and platform posture; its `<!-- impeccable:product-schema N -->` marker and section headings stay intact |
@@ -49,8 +49,8 @@ because they restate the agent layer.
 1. **Dead references** — a path, filename, app name, agent name, or command mentioned in any
    surface that no longer exists.
 2. **Orphaned or dangling table rows** — a table row pointing at a file that no longer
-   exists, or a file under `.claude/rules|commands|agents/` or `.claude/skills/` with no row
-   referencing it.
+   exists, or a moved reference without an updated caller. Skills are discovered through their
+   descriptions and rules through `paths`; neither needs an exhaustive index table.
 3. **Stale tech-stack / setup claims** — a "Tech Stack" bullet list, or a setup/install
    instruction, that doesn't match the actual `package.json` dependencies/scripts.
 4. **Contradicted-by-ADR claims** — a page describing an approach an accepted ADR under

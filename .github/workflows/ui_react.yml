@@ -5,13 +5,17 @@ on:
     branches: [develop, master]
     paths:
       - 'packages/ui-react/**'
+      - 'packages/tailwind/**'
+      - 'turbo.json'
       - '.github/workflows/ui_react.yml'
       - '.github/workflows/ui_react_reusable.yml'
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [develop]
+    branches: [develop, master]
     paths:
       - 'packages/ui-react/**'
+      - 'packages/tailwind/**'
+      - 'turbo.json'
       - '.github/workflows/ui_react.yml'
       - '.github/workflows/ui_react_reusable.yml'
   workflow_dispatch:

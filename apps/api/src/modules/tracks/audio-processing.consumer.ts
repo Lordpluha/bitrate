@@ -10,15 +10,17 @@ import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Inject, Logger } from '@nestjs/common'
+import * as Sentry from '@sentry/nestjs'
 import type { Job, Queue } from 'bullmq'
 import { StaleAudioJobError } from './audio-artifact.types'
-import { uploadArtifacts } from './audio-artifact-storage'
-import { generateCmaf, generateHls, prepareVariants, validateHls } from './audio-encoding'
+import { type ConversionStepContext, runConversionPhases } from './audio-processing.phases'
+import { isAudioProcessingWorkerAutorunEnabled } from './audio-processing.worker-autorun'
 import { getAudioGenerationRoot } from './audio-storage-keys'
-import { publishTrackFiles } from './audio-track-publication'
-
-/** Progress checkpoints reported once encoding has finished. */
-const PROGRESS = { hlsReady: 92, cmafReady: 94, uploaded: 98, done: 100 } as const
+import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
+import { classifyProcessingError, errorMessageOf } from './processing-log/classify'
+import { PROCESSING_LOG_LIMITS } from './processing-log/limits'
+import { processingLogSuffix } from './processing-log/log-context'
+import { redactProcessingText } from './processing-log/redact'
 
 /** Represents the audio processing consumer. */
 @Processor(AUDIO_PROCESSING_QUEUE, {
@@ -26,6 +28,7 @@ const PROGRESS = { hlsReady: 92, cmafReady: 94, uploaded: 98, done: 100 } as con
   lockDuration: 600_000,
   stalledInterval: 30_000,
   maxStalledCount: 2,
+  autorun: isAudioProcessingWorkerAutorunEnabled(),
 })
 export class AudioProcessingConsumer extends WorkerHost {
   /** Creates a new instance. */
@@ -36,6 +39,8 @@ export class AudioProcessingConsumer extends WorkerHost {
     private readonly storage: StorageService,
     @InjectQueue(AUDIO_PROCESSING_DEAD_LETTER_QUEUE)
     private readonly deadLetterQueue: Queue<ConvertAudioJob>,
+    @Inject(ProcessingAttemptRecorder)
+    private readonly recorder: ProcessingAttemptRecorder,
   ) {
     super()
   }
@@ -86,83 +91,91 @@ export class AudioProcessingConsumer extends WorkerHost {
     if (job.name !== 'convert-audio') return
     if (!(await this.claimJob(job))) return
 
-    const { trackId, sourceFileName, outputDir, format, bitrates } = job.data
-    const processingRoot = join(outputDir, '.processing')
-    const temporaryRoot = join(
-      processingRoot,
-      `${trackId}-${String(job.id)}-${job.attemptsMade + 1}`,
-    )
+    const { trackId, sourceFileName, outputDir } = job.data
+    const jobId = String(job.id)
+    const attempt = job.attemptsMade + 1
+    const maxAttempts = job.opts.attempts ?? 1
+    const trigger = job.data.trigger ?? 'UPLOAD'
 
-    await this.cleanupOrphanedTemporaryDirs(processingRoot, trackId, String(job.id))
+    const processingRoot = join(outputDir, '.processing')
+    const temporaryRoot = join(processingRoot, `${trackId}-${jobId}-${attempt}`)
+
+    await this.cleanupOrphanedTemporaryDirs(processingRoot, trackId, jobId)
     await rm(temporaryRoot, { recursive: true, force: true })
     await mkdir(temporaryRoot, { recursive: true })
 
+    await this.recorder.start({
+      trackId,
+      sourceFileName,
+      jobId,
+      attempt,
+      maxAttempts,
+      trigger,
+      input: job.data.input,
+    })
+
+    const ctx: ConversionStepContext = { step: 'PREPARE_TEMP' }
+
     try {
-      /** Phase 1: encode progressive Opus variants. */
-      const variants = await prepareVariants(job, temporaryRoot)
-      if (!(await this.isStillCurrent(job))) {
-        this.logger.warn(`Discarding stale conversion result from job ${job.id}`)
-        return
-      }
-
-      /**
-       * Phase 2: generate one aligned multi-bitrate HLS package.
-       * Superseded by the CMAF package below; kept until the CMAF path ships. See ADR-0020.
-       */
-      const temporaryHlsPath = join(temporaryRoot, 'hls')
-      await generateHls(job, temporaryHlsPath, bitrates)
-      await validateHls(temporaryHlsPath, bitrates)
-      await job.updateProgress(PROGRESS.hlsReady)
-
-      /** Phase 3: encode the single-file CMAF renditions and build their byte index. */
-      const generationRoot = getAudioGenerationRoot(trackId, sourceFileName)
-      const cmafPackage = await generateCmaf(generationRoot, job, temporaryRoot, bitrates)
-      await job.updateProgress(PROGRESS.cmafReady)
-
-      /** Phase 4: upload the progressive fallback, HLS package and CMAF renditions. */
-      await uploadArtifacts({
+      const outcome = await runConversionPhases(ctx, {
+        job,
+        temporaryRoot,
         storage: this.storage,
-        generationRoot,
-        variants,
-        temporaryHlsPath,
-        cmafPackage,
-      })
-      await job.updateProgress(PROGRESS.uploaded)
-
-      if (!(await this.isStillCurrent(job))) {
-        await this.storage.deletePrefix(generationRoot)
-        this.logger.warn(`Removed stale uploaded generation from job ${job.id}`)
-        return
-      }
-
-      /** Phase 5: persist TrackFile records + mark READY. */
-      await publishTrackFiles({
         prisma: this.prisma,
+        recorder: this.recorder,
         trackId,
         sourceFileName,
-        format,
-        variants,
-        cmafPackage,
+        jobId,
+        attempt,
+        isStillCurrent: (currentJob) => this.isStillCurrent(currentJob),
       })
 
-      await job.updateProgress(PROGRESS.done)
+      if (outcome === 'SUPERSEDED') {
+        this.logger.warn(
+          `Discarded superseded audio generation from job ${job.id} ${processingLogSuffix({ trackId, jobId, attempt, step: ctx.step })}`,
+        )
+        return
+      }
+
+      await this.recorder.succeed({ trackId, jobId, attempt })
       this.logger.log(
         `Audio conversion + storage upload completed for track ${trackId}, job ${job.id}`,
       )
     } catch (error) {
       if (error instanceof StaleAudioJobError) {
         await this.storage.deletePrefix(getAudioGenerationRoot(trackId, sourceFileName))
+        await this.recorder.supersede({ trackId, jobId, attempt, step: ctx.step })
         this.logger.warn(`Discarded superseded audio generation from job ${job.id}`)
         return
       }
 
+      const willRetry = attempt < maxAttempts
+      await this.recorder.fail({
+        trackId,
+        jobId,
+        attempt,
+        step: ctx.step,
+        stepDetail: ctx.stepDetail,
+        error,
+        willRetry,
+      })
       await this.markAttemptFailed(
         job,
-        error instanceof Error ? error.message : 'Unknown conversion error',
+        redactProcessingText(errorMessageOf(error), {
+          keep: 'head',
+          maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
+        }),
       )
       throw error
     } finally {
-      await rm(temporaryRoot, { recursive: true, force: true })
+      try {
+        await rm(temporaryRoot, { recursive: true, force: true })
+      } catch (cleanupError) {
+        this.logger.error(
+          `Failed to clean up temporary directory for job ${job.id} ${processingLogSuffix({ trackId, jobId, attempt, step: 'CLEANUP' })}`,
+          cleanupError instanceof Error ? cleanupError.stack : undefined,
+        )
+      }
     }
   }
 
@@ -174,11 +187,18 @@ export class AudioProcessingConsumer extends WorkerHost {
     const maxAttempts = job.opts.attempts ?? 1
     if (job.attemptsMade < maxAttempts) return
 
+    const jobId = String(job.id)
+    const attempt = job.attemptsMade
+    const deadLetterJobId = `failed-${jobId}-${job.attemptsMade}`
+
     const failed = await this.prisma.track.updateMany({
       where: { id: job.data.trackId, audioUrl: job.data.sourceFileName },
       data: {
         processingStatus: 'FAILED',
-        processingError: error.message,
+        processingError: redactProcessingText(error.message, {
+          keep: 'head',
+          maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
+        }),
         processingFinishedAt: new Date(),
       },
     })
@@ -196,20 +216,43 @@ export class AudioProcessingConsumer extends WorkerHost {
     }
 
     await this.deadLetterQueue.add('convert-audio-failed', job.data, {
-      jobId: `failed-${String(job.id)}-${job.attemptsMade}`,
+      jobId: deadLetterJobId,
       removeOnComplete: 500,
       removeOnFail: 1_000,
     })
+
+    const failedStep = await this.recorder.finalize({
+      trackId: job.data.trackId,
+      sourceFileName: job.data.sourceFileName,
+      jobId,
+      attempt,
+      deadLetterJobId,
+      error,
+    })
+
+    const classified = classifyProcessingError(error)
+    Sentry.captureException(error, {
+      tags: {
+        trackId: job.data.trackId,
+        jobId,
+        step: failedStep ?? 'unknown',
+        errorCode: classified.code,
+        trigger: job.data.trigger ?? 'UPLOAD',
+      },
+      fingerprint: ['audio-processing', classified.code, failedStep ?? 'unknown'],
+    })
+
     this.logger.error(
-      `Audio conversion permanently failed for track ${job.data.trackId}`,
+      `Audio conversion permanently failed for track ${job.data.trackId} ${processingLogSuffix({ trackId: job.data.trackId, jobId, attempt, errorCode: classified.code })}`,
       error.stack,
     )
   }
 
   /** Runs the on stalled operation. */
   @OnWorkerEvent('stalled')
-  onStalled(jobId: string) {
+  async onStalled(jobId: string) {
     this.logger.warn(`Audio conversion job ${jobId} stalled and will be recovered by BullMQ`)
+    await this.recorder.markStalledByJob(jobId)
   }
 
   /** Removes temporary directories left behind by earlier attempts of this job. */

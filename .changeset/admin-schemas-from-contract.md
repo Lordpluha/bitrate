@@ -1,0 +1,5 @@
+---
+'@bitrate/admin': patch
+---
+
+Bound the operator panel's zod schemas to the generated API contract, which immediately found a broken page. The catalog required `artistName` while the API has always sent `artistUsername`, so every list load threw inside `parse` and the artist column rendered its em-dash fallback; the audit log had already lost `actorName` versus `actorUsername` the same way, found by hand. Each schema now declares the slice of the entity it reads as a `Pick` of the contract type and asserts it with `satisfies`, so a renamed or retyped field is a compile error rather than a runtime failure in front of an operator, while zod stays the runtime guard and `z.infer` stays the source of the exported types. Status lists needed more than `satisfies`, which accepts a narrower union than the contract declares — a status the API grows later would have type-checked cleanly and then thrown on parse — so they are built through `contractEnum`/`coveringTuple`, which force the list to cover the union, in components as well as schemas. `@bitrate/contracts` joins the app as a devDependency, since it contributes types only.

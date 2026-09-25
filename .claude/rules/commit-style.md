@@ -1,6 +1,10 @@
 ---
 name: commit-style
 description: Conventional Commits without a ticket prefix — the type and scope vocabulary, summary rules, when a change needs a changeset and which bump it gets, branch naming, and the mechanical enforcement through commitlint and Lefthook. Use whenever composing a commit message, naming a branch, or deciding whether a change needs a changeset.
+paths:
+  - ".changeset/**"
+  - "commitlint.config.js"
+  - ".cz-config.js"
 license: MIT
 metadata:
   author: lordpluha
@@ -34,6 +38,7 @@ The app or package name:
 | `desktop` | `apps/desktop/` |
 | `mobile` | `apps/mobile/` |
 | `ui-react` | `packages/ui-react/` |
+| `player` | `packages/player/` |
 | `contracts` | `packages/contracts/` |
 | `converter` | `packages/converter/` |
 | `docs` | `apps/docs/` |
@@ -110,6 +115,35 @@ fix/player-state-on-end
 chore/bump-ui-react
 ```
 
+## Commit and pull-request size
+
+**A commit is sized by what it changes, not by how many files it touches.** The rule is that
+each commit stands on its own: checked out alone, the repository builds and its tests pass.
+That is what actually forbids a dump of unrelated edits, and it is checkable — `git rebase
+--exec` runs the gates over a range, and a bisect is only meaningful when every commit is
+green.
+
+**A file count is a bad proxy, in both directions.** A regenerated
+`packages/contracts/src/api/v1.ts` is one file and nine hundred lines that a reviewer must
+read carefully. Renaming a DTO across three auth modules touches forty-seven files and is
+one idea, reviewable in minutes — and split into arbitrary ten-file commits, every
+intermediate commit fails to compile, because the class is renamed in one place and its
+consumers in another. A cap per commit buys nothing there and costs bisectability.
+
+For a pull request:
+
+- **One logical change per PR.** A second idea gets a second PR, however small its diff.
+- **Fifty changed files is a soft signal**, not a limit: at that size, say in the description
+  why the change is still one idea. Generated output does not count toward it — the
+  contract, test snapshots, `pnpm-lock.yaml`.
+- **Two hundred files is the hard ceiling**, and a sweep that genuinely exceeds it (a
+  rename, a linter migration, a regeneration) says so in its title and description rather
+  than being split into parts that do not stand alone.
+
+An earlier proposal capped a commit at ten files. It is recorded here as rejected so it is
+not reintroduced: it would have forced the DTO rename above into five commits, four of them
+broken, while leaving the thousand-line generated file unexamined.
+
 ## Repo-style preflight
 
 Before proposing a commit header:
@@ -127,3 +161,8 @@ Before proposing a commit header:
 - Commitlint validates the header through Lefthook.
 - Header limit is 72 characters; body lines stay within the repository's 100-column style.
 - Never bypass the hook merely to land a malformed message.
+- Size is reviewed, not hooked. A pre-commit file-count check would fire on exactly the
+  sweeps that are legitimately large and never on the one-file diff that needs the most
+  attention, so the ceiling above is a review instruction. What a hook can check is the
+  claim that each commit stands alone: `git rebase --exec 'pnpm lint && pnpm check-types'`
+  over the branch's range, run before opening the PR.

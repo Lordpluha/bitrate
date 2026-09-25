@@ -1,0 +1,15 @@
+{
+  "name": "@bitrate/tailwind",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    "./themes.css": {
+      "style": "./src/themes.css",
+      "default": "./src/themes.css"
+    }
+  }
+}

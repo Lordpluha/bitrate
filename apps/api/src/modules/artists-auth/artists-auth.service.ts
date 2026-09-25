@@ -1,6 +1,11 @@
 import { randomBytes } from 'node:crypto'
 import type { LoginResult } from '@common/auth.types'
 import { MailService } from '@infra/mail/mail.service'
+import {
+  DEFAULT_MAIL_LOCALE,
+  type MailLocale,
+  resolveMailLocale,
+} from '@infra/mail/templates/mail-locale'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { ArtistEntity } from '@modules/artists'
 import { ArtistsPrivateService } from '@modules/artists/artists.private.service'
@@ -15,7 +20,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { type ArtistSession, Prisma } from '@prisma/client'
+import type { ArtistSession } from '@prisma/client'
 import type { JWTPayload } from '../tokens'
 import type { RegistrationDto } from './dtos'
 import type { ArtistSessionEntity } from './entities'
@@ -195,7 +200,12 @@ export class ArtistsAuthService {
       data: { artistId: artist.id, token: this.token.hashToken(rawToken), expiresAt },
     })
 
-    await this.mail.sendArtistPasswordReset(artist.email, rawToken, artist.username)
+    await this.mail.sendArtistPasswordReset(
+      artist.email,
+      rawToken,
+      artist.username,
+      resolveMailLocale(artist.locale),
+    )
   }
 
   /** Runs the reset password operation. */
@@ -240,10 +250,20 @@ export class ArtistsAuthService {
   async resendEmailVerification(email: string) {
     const artist = await this.artistsPrivate.findByEmail(email)
     if (!artist || artist.emailVerifiedAt) return
-    await this.issueEmailVerification(artist.id, artist.email, artist.username)
+    await this.issueEmailVerification(
+      artist.id,
+      artist.email,
+      artist.username,
+      resolveMailLocale(artist.locale),
+    )
   }
 
-  private async issueEmailVerification(artistId: string, email: string, username: string) {
+  private async issueEmailVerification(
+    artistId: string,
+    email: string,
+    username: string,
+    locale: MailLocale = DEFAULT_MAIL_LOCALE,
+  ) {
     const rawToken = randomBytes(32).toString('hex')
     await this.prisma.$transaction([
       this.prisma.artistEmailVerification.deleteMany({ where: { artistId } }),
@@ -255,21 +275,31 @@ export class ArtistsAuthService {
         },
       }),
     ])
-    await this.mail.sendArtistEmailVerification(email, rawToken, username)
+    await this.mail.sendArtistEmailVerification(email, rawToken, username, locale)
   }
 
+  /**
+   * Increments the failure counter and locks the account once it reaches
+   * MAX_LOGIN_ATTEMPTS. Typed writes rather than raw SQL: a bind parameter inside a raw
+   * `CASE ... ELSE NULL` carries no type, so Postgres resolved the whole expression to
+   * `text` and rejected the assignment to the `timestamp(3)` column (SQLSTATE 42804).
+   */
   private async recordFailedLogin(artistId: string) {
-    const lockedUntil = new Date(Date.now() + ArtistsAuthService.LOCK_DURATION_MS)
-    await this.prisma.executeRaw(Prisma.sql`
-      UPDATE "Artist"
-      SET
-        "failedLoginAttempts" = "failedLoginAttempts" + 1,
-        "lockedUntil" = CASE
-          WHEN "failedLoginAttempts" + 1 >= ${ArtistsAuthService.MAX_LOGIN_ATTEMPTS}
-          THEN ${lockedUntil}
-          ELSE NULL
-        END
-      WHERE "id" = ${artistId}::uuid
-    `)
+    const [updated] = await this.prisma.artist.updateManyAndReturn({
+      where: { id: artistId },
+      data: { failedLoginAttempts: { increment: 1 } },
+      select: { failedLoginAttempts: true, lockedUntil: true },
+    })
+    if (!updated) return
+
+    const locked = updated.failedLoginAttempts >= ArtistsAuthService.MAX_LOGIN_ATTEMPTS
+    if (!locked && updated.lockedUntil === null) return
+
+    await this.prisma.artist.updateMany({
+      where: { id: artistId },
+      data: {
+        lockedUntil: locked ? new Date(Date.now() + ArtistsAuthService.LOCK_DURATION_MS) : null,
+      },
+    })
   }
 }

@@ -98,12 +98,17 @@ function resolve(value: string, variables: Map<string, string>): string | null {
   return null
 }
 
-const paletteCss = import.meta.glob('./palette.css', {
+/* The token source lives in @bitrate/tailwind now, which exports only the bundled
+   themes.css — nothing a doc page can introspect file-by-file. These reach past that
+   export into the sibling package's raw source, the same way this file always read its
+   own package's src directly; Vite's import.meta.glob resolves relative patterns outside
+   the package root without issue, it just can't take a bare specifier. */
+const paletteCss = import.meta.glob('../../../tailwind/src/palette.css', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
-const themeCss = import.meta.glob('./themes/**/*.css', {
+const themeCss = import.meta.glob('../../../tailwind/src/themes/**/*.css', {
   query: '?raw',
   import: 'default',
   eager: true,
@@ -157,7 +162,7 @@ export function readThemeGroups(): { themes: string[]; groups: TokenGroup[] } {
   const groups = parsed.map(({ path, css, dark, light }) => {
     const header = readHeader(css)
     return {
-      file: path.replace('./themes/', 'themes/'),
+      file: path.replace('../../../tailwind/src/themes/', 'themes/'),
       title: header.title ?? path,
       description: header.description,
       roles: [...dark.entries()].map(([variable, entry]) => ({

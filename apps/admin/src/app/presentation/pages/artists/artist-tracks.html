@@ -1,0 +1,66 @@
+<div class="space-y-3">
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No tracks published yet."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Tracks, newest first
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Track</th>
+            <th hlmTh scope="col">State</th>
+            <th hlmTh scope="col">Plays</th>
+            <th hlmTh scope="col">Uploaded</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (track of collection.items(); track track.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a [routerLink]="['/catalog', track.id]" class="hover:underline">{{
+                  track.title
+                }}</a>
+                @if (track.takenDownAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                }
+              </td>
+              <td hlmTd>
+                <span
+                  hlmBadge
+                  [variant]="
+                    track.processingStatus === 'FAILED'
+                      ? 'destructive'
+                      : track.processingStatus === 'READY'
+                        ? 'default'
+                        : 'outline'
+                  "
+                >
+                  {{ track.processingStatus }}
+                </span>
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">{{ track.playCount }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ track.createdAt | localizedDate: 'dd.MM.yyyy' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</div>

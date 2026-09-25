@@ -1,6 +1,6 @@
 ---
 name: turborepo
-description: Turborepo pipeline conventions for this monorepo — the task graph in turbo.json, dependsOn and ^build semantics, caching and why a task misses cache, filtering with --filter, and adding a package to the graph. Use when adding a workspace, changing turbo.json, or when a build runs in the wrong order, rebuilds every time, or uses a stale artifact.
+description: "Change workspace task graphs or diagnose Turborepo ordering, filtering, caching and stale artifacts."
 license: MIT
 metadata:
   author: lordpluha
@@ -102,5 +102,5 @@ Do not guess an API from memory. In order:
 ## Related
 
 - `.claude/rules/monorepo.md` — topology, root scripts, asset generation pipelines.
-- `.claude/rules/code-style.md` — the mechanical pass these tasks back.
+- `.claude/references/verification.md` — the mechanical pass these tasks back.
 - `changesets` skill — versioning across the same workspace graph.

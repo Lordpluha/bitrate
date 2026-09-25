@@ -26,6 +26,28 @@ Current workflow map for .github/workflows.
 
 ## Workflow Quick Review
 
+### Monorepo gates (every PR)
+- monorepo.yml — repository-wide gates. `pull_request` into develop/master with **no path
+  filter**, plus a push filter on the shared toolchain (root manifests, `turbo.json`,
+  `biome.json`, `.knip.json`, `tsconfig*`, `Taskfile.yml`, `scripts/**`) and
+  `workflow_dispatch` with a switch per gate.
+- monorepo_reusable.yml — three independent jobs: `pnpm lint`, `pnpm check-types`, `pnpm knip`.
+  This is the only workflow that runs knip outside the release cut, and the only one a
+  root-config-only change triggers at all — every other check workflow is path-filtered to one
+  app or package.
+
+Knip's explicit entries include package source exports, platform-specific mobile files, CSS,
+service workers, and tests invoked through compiled JavaScript. Storybook loads only
+`main.ts` as configuration; its JSX preview is scanned as an entry. The narrow dependency
+exceptions cover Knip's Docusaurus search-theme name expansion and its assumption that every
+Expo app installs `expo-updates`. Playwright comes from the test workspaces; EAS is installed
+by the Expo workflow action.
+
+### SVGR tooling packages
+- tooling_packages.yml — entry workflow for packages/svgr and packages/vite-svgr, path-filtered
+  to those two. They ship no image, but packages/ui-react builds through them.
+- tooling_packages_reusable.yml — Biome on both packages, then both test suites.
+
 ### API
 - api.yml — API pipeline entry workflow.
 - api_reusable.yml — reusable implementation for API jobs.
@@ -34,9 +56,38 @@ Current workflow map for .github/workflows.
 - web_player.yml — Web Player pipeline entry workflow.
 - web_player_reusable.yml — Biome, typecheck, Vitest, Playwright E2E, and Docker build.
 
+  On a `pull_request` run — and **only** there — the `Select impacted Playwright specs`
+  step narrows the two Playwright suites to the specs the diff can reach, through
+  [sniffler](https://github.com/callstackincubator/sniffler) and
+  `apps/web-player/scripts/select-playwright-tests.mjs`. The `develop`, release-rebuild
+  and hand-dispatched runs skip that step entirely and keep running everything; a
+  skipped step's outputs are empty strings, and each downstream `!= 'false'` gate reads
+  that as "run it".
+
+  **The selector fails open.** An unresolvable base ref, a sniffler crash, an
+  unparseable answer, a changed file the import graph cannot model (a lockfile, CSS, any
+  other workspace), or a spec on disk missing from `apps/web-player/.sniffler/test-map.json`
+  all end in the full suite plus a `::warning::` naming the reason. It never reports
+  "nothing to run" because something went wrong — only after a clean analysis of a diff
+  that is entirely web-player TypeScript.
+
+  **A new Playwright spec must be added to `apps/web-player/.sniffler/test-map.json`,**
+  listing the route files it exercises. Until it is, every PR falls back to the full
+  suite and says so in the log.
+
 ### Web Artists
 - web_artists.yml — Web Artists pipeline entry workflow.
 - web_artists_reusable.yml — reusable implementation for Web Artists jobs.
+
+### Admin (admin.bitrate.me)
+- admin.yml — operator panel entry workflow. Path-filtered on `apps/admin/**` **and**
+  `packages/ui-react/**`: the Angular app renders none of that package's React components but
+  imports `@bitrate/ui-react/themes.css` as its design tokens, so a token change has to rebuild
+  this image.
+- admin_reusable.yml — ESLint (this app is on angular-eslint, **not** Biome, so `pnpm lint` at
+  the root does not cover it), `tsc --noEmit`, `ng test` (Vitest through `@angular/build:unit-test`
+  in jsdom), then the apps/admin/Dockerfile image build (`target: production` — nginx serving the
+  prebuilt SPA on 3005) and publish.
 
 ### Mobile
 - mobile.yml — Mobile pipeline entry workflow.
@@ -52,6 +103,18 @@ Current workflow map for .github/workflows.
 - ui_react_reusable.yml — Biome plus unit, integration, snapshot, and Chromium screenshot
   projects.
 
+### Player (`<bitrate-player>`)
+- player.yml — checks-only entry workflow for packages/player; it publishes no image. Filtered
+  on the package **and** the root `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`,
+  `.npmrc` and `scripts/check-design-tokens.mjs`: a lockfile change can move this package's
+  Svelte/Vite/Playwright toolchain without touching its directory, and the token script scans it.
+- player_reusable.yml — six independent jobs, none gated on another: ESLint (this package is on
+  ESLint, **not** Biome), `svelte-check` + `tsc`, `check:tokens`, Vitest `unit` (jsdom) and `node`
+  (SSR import), Vitest `browser` in Chromium, and the Vite build. Chromium is installed through
+  the package's own `playwright` (`pnpm --filter @bitrate/player exec playwright install`) so its
+  revision matches the provider that drives it. No release gate runs Vitest, so nothing else
+  needs a browser.
+
 ### Storybook (ui.bitrate.me)
 - storybook.yml — Storybook image entry workflow, path-filtered on packages/ui-react.
 - storybook_reusable.yml — builds packages/ui-react/Dockerfile (target: production) and
@@ -65,7 +128,10 @@ Current workflow map for .github/workflows.
 
 ### Integration Tests (Docker Compose)
 - web-integration-test.yml — integration tests for PR and push (develop/master) + workflow_dispatch.
-- web-integration-test_reusable.yml — reusable integration test scenario.
+- web-integration-test_reusable.yml — reusable integration test scenario. It combines
+  `infra/docker-compose.preprod.yaml` with `infra/docker-compose.ci.yaml` to run the image
+  contents without developer bind mounts. Development images build `ui-react` before
+  startup; health checks require successful HTTP responses from both web apps and the API.
 
 ### Release (changesets)
 
@@ -81,7 +147,7 @@ procedures live in
   Derives the product version, creates `release/v<x.y.z>`, merges `master` into it, runs
   `changeset version`, lands one **signed** commit, runs the layer-1 gates, opens the pull request.
 - release_publish.yml / release_publish_reusable.yml — **the publish**. `on: push: branches:
-  [master]`. Tag, GitHub Release, five images, deploy, back-merge pull request — five `needs:`-
+  [master]`. Tag, GitHub Release, six images, deploy, back-merge pull request — five `needs:`-
   ordered jobs of one run.
 - release_images.yml / release_images_reusable.yml — **image rebuilds** for a version tag.
   `on: push: tags: ['v*']` plus `workflow_dispatch`.
@@ -104,7 +170,7 @@ human approves and merges the pull request
    |  release_publish.yml
    |    1. resolve          root package.json version; stop if v<version> is already a tag
    |    2. tag-and-release  annotated tag + GitHub Release, notes diffed from the previous v* tag
-   |    3. images           five images at :v<x.y.z>, :<sha>, :master
+   |    3. images           six images at :v<x.y.z>, :<sha>, :master
    |    4. deploy           production environment approval, then the server
    |    5. back-merge       PR backmerge/v<x.y.z> -> develop  (needs 2, NOT 4)
    v
@@ -125,19 +191,19 @@ human merges the back-merge PR, and develop carries the bumps again
   That is Route B, and it is forced: `master` requires one approving review and GitHub forbids
   approving your own pull request, so a human-opened release PR would need an admin bypass every
   time. The two commit statuses are the gate that replaces the suites, and they have to be
-  registered as required checks by an admin — `pnpm check:branch-protection --apply`. `GITHUB_TOKEN`
-  cannot do it (no `administration` scope) and the UI cannot either (its picker only offers checks
-  seen in the last seven days).
+  registered as required checks by an admin, against the branch-protection API by hand.
+  `GITHUB_TOKEN` cannot do it (no `administration` scope) and the UI cannot either (its picker only
+  offers checks seen in the last seven days).
 - **The version is derived from `.changesets[].releases[].type`, never `.releases[].type`.** The
   first is what a human wrote; the second is Changesets' resolved plan and includes the patch bumps
   it generates for *dependents*, so deriving from it would let a change inflate the product version
   by travelling along a dependency edge. At the v1.0.0 cut the authored set was 33 major /
   34 minor / 59 patch across 74 changesets, while the resolved plan was 13 x major -- which is
   what the distinction costs when it is got wrong.
-- **A release rebuilds all five services, path filters and all.** `infra/docker-compose.prod.yaml`
+- **A release rebuilds all six services, path filters and all.** `infra/docker-compose.prod.yaml`
   pulls every service at one shared `${IMAGE_TAG}`, so a service that skipped its build would have
   no image under the version tag and `compose pull` would fail on it. That is why
-  `release_images_reusable.yml` exists at all rather than a tag trigger on the five per-app
+  `release_images_reusable.yml` exists at all rather than a tag trigger on the six per-app
   workflows: GitHub ANDs `on: push: paths:` with `on: push: tags:` inside one `push` block, so a tag
   trigger there would be path-filtered.
 - **The tag the publish run creates raises no `push: tags` event**, because it is created with
@@ -153,7 +219,7 @@ human merges the back-merge PR, and develop carries the bumps again
 
 **Nothing publishes to npm.** Every workspace is `"private": true` and `.changeset/config.json`
 sets `access: "restricted"`. The output of a release is version numbers, changelogs, tags, a GitHub
-Release and five images — there is no publish step missing.
+Release and six images — there is no publish step missing.
 
 `privatePackages.tag` in `.changeset/config.json` is what makes the per-workspace tags exist at all.
 Changesets defaults it to `false`, and with every workspace private that made `changeset tag` a
@@ -305,13 +371,13 @@ credential above never needs `DeleteObject` and a leaked key cannot destroy the 
 wrote. `prune-remote` exists for a provider with no lifecycle support and is off.
 
 ## Structure Summary
-- Entry workflows: api.yml, desktop.yml, docs.yml, mobile.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, backup.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, backup.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 
 ## Published images
 
-The five app services in infra/docker-compose.prod.yaml pull from GHCR rather than building
+The six app services in infra/docker-compose.prod.yaml pull from GHCR rather than building
 on the VPS. The develop-branch reference for each:
 
 | Service | Image | Built by |
@@ -319,6 +385,7 @@ on the VPS. The develop-branch reference for each:
 | api | `ghcr.io/lordpluha/bitrate/api:develop` | api.yml |
 | web-player | `ghcr.io/lordpluha/bitrate/web-player:develop` | web_player.yml |
 | web-artists | `ghcr.io/lordpluha/bitrate/web-artists:develop` | web_artists.yml |
+| admin | `ghcr.io/lordpluha/bitrate/admin:develop` | admin.yml |
 | docs | `ghcr.io/lordpluha/bitrate/docs:develop` | docs.yml |
 | storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | storybook.yml |
 
@@ -342,6 +409,19 @@ Those live in one `env:` block per reusable workflow (`BUILD_*`), default to the
 production origins, and accept a `vars.*` override for forks and staging. Changing them
 requires rebuilding the image — a server-side environment variable cannot correct a value
 that is already in the bundle.
+
+The same is true of admin, one prefix further removed: Vite exposes only `VITE_*` and Angular's
+esbuild `define` only substitutes the names `angular.json` lists. **One** deployment variable,
+`vars.NEXT_PUBLIC_API_URL`, feeds all three; the per-app build-arg name is where it is mapped.
+
+| App | Build arg | Set in |
+|---|---|---|
+| web-player | `NEXT_PUBLIC_API_URL` | web_player_reusable.yml |
+| web-artists | `VITE_API_URL` | web_artists_reusable.yml |
+| admin | `NG_APP_API_URL` | admin_reusable.yml |
+
+`security_reusable.yml` repeats that mapping for the images it builds to scan; the two must
+stay consistent or a scan builds a differently-configured image than the one that ships.
 
 api, docs, and storybook take no environment-specific build args and are the same image in
 every environment.

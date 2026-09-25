@@ -18,6 +18,9 @@ Thank you for your interest in the project! We welcome any contribution — whet
 
 ## 🚀 Getting Started
 
+Choose the appropriate [README setup path](README.md#how-to-start) and check
+[development requirements](README.md#how-to-develop) before installing dependencies.
+
 Planned and in-flight work lives on the [Projects board](https://github.com/users/Lordpluha/projects/6); pick something from `Todo`
 or open an issue before starting anything substantial.
 
@@ -29,7 +32,7 @@ or open an issue before starting anything substantial.
    ```
 3. **Install dependencies**:
    ```bash
-   pnpm install
+   SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install
    ```
 4. **Create a branch** for your changes:
    ```bash
@@ -311,6 +314,16 @@ Test files follow the runner owned by their package. See
 
 ## 🤖 Agent Workflow
 
+Runtime and optional-tool requirements are in [How to AI](README.md#how-to-ai).
+
+The project configures Claude Code; other coding clients are individual developer choices.
+Large tasks use the [canonical specification workflow](.claude/references/spec-workflow.md).
+Component size, props and effect counts prompt review rather than automatic decomposition.
+Run heavy verification through `python3 -B .claude/scripts/run-heavy.py -- <command> <args...>`
+to serialize participating checks across worktrees. See [execution policy](.claude/references/execution-policy.md)
+for evidence reuse and [platform options](.claude/references/claude-platform.md) for optional
+Teams, memory, plugins and LSP. No extra client/proxy/team setup is required.
+
 The optional repository agent layer lives under [`.claude/`](.claude/). Project agents use
 the same rules as human contributors:
 
@@ -325,22 +338,24 @@ Ticket and board state aren't mirrored anywhere — these commands query GitHub 
 `gh`/MCP) whenever they need it. That requires the `gh` CLI, authenticated, with the
 `read:project` scope for board access (`gh auth refresh -s read:project,project`).
 
-All four commands dispatch to an agent by default now. `/br-implement` routes to the
-specialist that owns the surface: `br-frontend-developer` (web-player, web-artists,
-ui-react), `br-backend-developer` (api), `br-mobile-developer`, `br-desktop-developer`,
-or `br-devops` (CI, Docker, infra, release) — plus `br-planner` for
-plans, `br-debugger` for bug fixes, `br-tester` for tests, and `br-reviewer` for review
-(also auto-invoked on large diffs). `/br-sync-docs` routes to `br-librarian`; `/br-auto`
-runs `br-worker` in its own git worktree per issue. Pass `--session` on any of them to
-work in the current session instead. None of the specialists have their own slash command;
-each command is the single entrypoint that dispatches to its own. This also applies to
-ordinary tasks outside any command — see `CLAUDE.md`'s "Default to agent dispatch, even
-outside a command".
+Ordinary tasks and scoped `/br-implement` or `/br-sync-docs` work run in-session.
+Delegate bounded work when specialist depth, isolation or independent review adds value;
+`--session` explicitly disables delegation. `/br-implement --review` requests independent
+review, or disclosed in-session review when combined with `--session`. Routine tests and
+planning do not require separate agents. `/br-auto` remains the explicit unattended
+pipeline with a worker in each task worktree.
+
+See [the agent roster](.claude/README.md) and
+[ADR-0040](apps/docs/docs/architecture/0040-context-and-delegation-budget.md) for scoped
+instruction loading, model defaults and the delegation policy. Worktree isolation,
+user-state protection and verification requirements still apply.
 
 For an effort too large or too vague for one command, install `mattpocock-skills`
-(`claude plugin install mattpocock-skills`): `/grill-me` interviews the idea into shape
-before planning, and `/wayfinder` charts a multi-session effort as decision tickets on the
-tracker.
+(`claude plugin install mattpocock-skills`). Every large task starts with the `grill-me`
+interview (automatically through its underlying `grilling` skill), followed by a plan and
+explicit user confirmation before implementation. This applies to clear large requests too;
+reuse an already confirmed plan for unchanged scope. `/wayfinder` is optional for
+multi-session efforts. See `.claude/references/large-task-planning.md`.
 
 Agents confirm before every mutating GitHub action (board card moves, issue comments,
 `git push`, PR create/edit) — a prior approval in a conversation does not carry over to a

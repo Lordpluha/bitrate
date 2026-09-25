@@ -1,6 +1,5 @@
 import { Button } from '@bitrate/ui-react'
-import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 import config from '../config/artist-blog.json'
 
 export const ArtistBlog = () => {
@@ -16,14 +15,12 @@ export const ArtistBlog = () => {
               className={`group flex flex-col ${index < 2 ? 'lg:col-span-3' : 'lg:col-span-2'}`}
               key={item.href}
             >
-              <Link className="flex flex-col gap-4" href={item.href}>
+              <a className="flex flex-col gap-4" href={item.href}>
                 <div className="relative w-full aspect-video overflow-hidden">
-                  <Image
+                  <img
                     alt={item.titleImage}
-                    className="object-cover transform transition-transform duration-300 group-hover:scale-105"
-                    fill
+                    className="absolute inset-0 h-full w-full object-cover transform transition-transform duration-300 group-hover:scale-105"
                     loading={index === 0 ? 'eager' : 'lazy'}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     src={item.imageSrc}
                   />
                 </div>
@@ -33,7 +30,7 @@ export const ArtistBlog = () => {
                 <p className="xs:block text-base text-black font-normal hidden">
                   {item.description}
                 </p>
-              </Link>
+              </a>
             </article>
           ))}
         </div>
@@ -56,7 +53,7 @@ export const ArtistBlog = () => {
               size="lg"
               variant={'ghost'}
             >
-              <Link href="/">Get started</Link>
+              <Link to="/">Get started</Link>
             </Button>
           </div>
         </div>

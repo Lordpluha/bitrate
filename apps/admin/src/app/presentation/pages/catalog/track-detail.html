@@ -1,0 +1,239 @@
+<section class="w-full space-y-8 p-8">
+  <header class="space-y-1">
+    <a routerLink="/catalog" class="text-sm text-muted-foreground hover:underline"
+      >&larr; Catalog pipeline</a
+    >
+    @if (loading()) {
+      <h1 class="text-xl font-semibold text-foreground">Track</h1>
+    } @else if (track(); as t) {
+      <h1 class="text-xl font-semibold text-foreground">
+        {{ t.title }}
+        <span
+          hlmBadge
+          [variant]="
+            t.processingStatus === 'FAILED'
+              ? 'destructive'
+              : t.processingStatus === 'READY'
+                ? 'default'
+                : 'outline'
+          "
+          class="ml-2 align-middle"
+        >
+          {{ t.processingStatus }}
+        </span>
+        @if (isStuck(t)) {
+          <span hlmBadge variant="destructive" class="ml-2 align-middle">stuck</span>
+        }
+        @if (t.takenDownAt) {
+          <span hlmBadge variant="destructive" class="ml-2 align-middle">taken down</span>
+        }
+      </h1>
+      <p class="text-sm text-muted-foreground">
+        by
+        <a [routerLink]="['/artists', t.artistId]" class="hover:underline">{{
+          t.artistUsername
+        }}</a>
+      </p>
+      @if (listenable(t)) {
+        <app-track-audio-player [track]="t" />
+      }
+    }
+  </header>
+
+  @if (loading()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else if (notFound()) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      This track could not be found.
+    </p>
+  } @else if (track(); as t) {
+    @if (status(); as message) {
+      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
+        {{ message }}
+      </p>
+    }
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Processing</h2>
+      <dl class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Attempts</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">
+            {{ t.processingAttempts }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Started</dt>
+          <dd class="text-sm tabular-nums text-foreground">
+            {{ t.processingStartedAt ? t.processingStartedAt.toLocaleString() : '—' }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Finished</dt>
+          <dd class="text-sm tabular-nums text-foreground">
+            {{ t.processingFinishedAt ? t.processingFinishedAt.toLocaleString() : '—' }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Open reports</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">
+            {{ t.openReportCount }}
+          </dd>
+        </div>
+      </dl>
+      @if (t.processingError) {
+        <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {{ t.processingError }}
+        </p>
+      }
+      @if (t.openReportCount > 0) {
+        <a
+          [routerLink]="['/moderation']"
+          [queryParams]="{ entityType: 'track' }"
+          class="text-sm text-muted-foreground hover:underline"
+        >
+          View reports naming this track &rarr;
+        </a>
+      }
+      <a
+        [routerLink]="['/audit']"
+        [queryParams]="{ entityType: 'admin-tracks', entityId: t.id }"
+        class="block text-sm text-muted-foreground hover:underline"
+      >
+        View audit history &rarr;
+      </a>
+    </section>
+
+    <section id="processing-history" class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Processing history</h2>
+      <app-processing-history
+        [trackId]="t.id"
+        [legacyStatus]="t.processingStatus"
+        [legacyError]="t.processingError"
+      />
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Renditions</h2>
+      @if (t.audioFiles.length === 0) {
+        <p class="text-sm text-muted-foreground">No stored renditions.</p>
+      } @else {
+        <ul class="space-y-1 text-sm text-foreground">
+          @for (file of t.audioFiles; track file.id) {
+            <li>
+              {{ file.format }} · {{ file.bitrate }} kbps
+              @if (file.codec) {
+                · {{ file.codec }}
+              }
+              @if (file.size !== null) {
+                · {{ (file.size / 1024 / 1024).toFixed(1) }} MB
+              }
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Credits</h2>
+      <ul class="space-y-1 text-sm text-foreground">
+        @for (credit of t.artists; track credit.artistId) {
+          <li>
+            <a [routerLink]="['/artists', credit.artistId]" class="hover:underline">{{
+              credit.username
+            }}</a>
+            @if (credit.isPrimary) {
+              <span hlmBadge variant="outline" class="ml-2">primary</span>
+            }
+          </li>
+        }
+      </ul>
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Genres</h2>
+      @if (t.genres.length === 0) {
+        <p class="text-sm text-muted-foreground">No genres attached.</p>
+      } @else {
+        <div class="flex flex-wrap gap-2">
+          @for (genre of t.genres; track genre.id) {
+            <span hlmBadge variant="outline">{{ genre.name }}</span>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Albums</h2>
+      @if (t.albums.length === 0) {
+        <p class="text-sm text-muted-foreground">Not on any album.</p>
+      } @else {
+        <ul class="space-y-1 text-sm text-foreground">
+          @for (album of t.albums; track album.id) {
+            <li>{{ album.title }} — disc {{ album.discNumber }}, track {{ album.trackNumber }}</li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
+
+      @if (canReprocessTrack() && reprocessible(t)) {
+        <button
+          hlmBtn
+          size="sm"
+          variant="outline"
+          type="button"
+          [disabled]="reprocessing()"
+          (click)="reprocess()"
+        >
+          {{ reprocessing() ? 'Queuing…' : 'Reprocess' }}
+        </button>
+      }
+
+      @if (canTakeDown() && takeDownable(t)) {
+        @if (armed() === 'take-down') {
+          <app-confirm-action
+            consequence="Take down &quot;{{
+              t.title
+            }}&quot;? It stops appearing in listener apps until restored."
+            confirmLabel="Yes, take down"
+            [pending]="pending()"
+            (confirmed)="confirm($event)"
+            (cancelled)="arm(null)"
+          />
+        } @else {
+          <button hlmBtn size="sm" variant="ghost" type="button" (click)="arm('take-down')">
+            Take down
+          </button>
+        }
+      }
+
+      @if (canRestore() && restorable(t)) {
+        @if (armed() === 'restore') {
+          <app-confirm-action
+            consequence="Restore &quot;{{ t.title }}&quot;? It becomes visible again immediately."
+            confirmLabel="Yes, restore"
+            [pending]="pending()"
+            (confirmed)="confirm($event)"
+            (cancelled)="arm(null)"
+          />
+        } @else {
+          <button hlmBtn size="sm" variant="outline" type="button" (click)="arm('restore')">
+            Restore
+          </button>
+        }
+      }
+
+      @if (!reprocessible(t) && !takeDownable(t) && !restorable(t)) {
+        <p class="text-sm text-muted-foreground">No actions available.</p>
+      }
+    </section>
+  }
+</section>

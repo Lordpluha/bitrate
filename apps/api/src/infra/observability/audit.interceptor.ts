@@ -13,6 +13,7 @@ const AUDITED_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE'])
 type AuditableRequest = Request & {
   user?: { id: string }
   artist?: { id: string }
+  staff?: { id: string }
 }
 
 const toEntityType = (controllerName: string) =>
@@ -43,7 +44,9 @@ export class AuditInterceptor implements NestInterceptor {
         ? { type: 'user' as const, id: request.user.id }
         : request.artist
           ? { type: 'artist' as const, id: request.artist.id }
-          : { type: 'anonymous' as const }
+          : request.staff
+            ? { type: 'staff' as const, id: request.staff.id }
+            : { type: 'anonymous' as const }
       const entityType = toEntityType(context.getClass()?.name ?? '')
       const handlerName = context.getHandler()?.name || 'unknown'
       const entityId = Object.values(request.params ?? {}).find(
@@ -55,6 +58,7 @@ export class AuditInterceptor implements NestInterceptor {
       await this.prisma.auditLog.create({
         data: {
           userId: actor.type === 'user' ? actor.id : undefined,
+          staffId: actor.type === 'staff' ? actor.id : undefined,
           action: `${entityType}.${handlerName}`,
           entityType,
           entityId,

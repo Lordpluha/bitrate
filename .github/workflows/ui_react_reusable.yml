@@ -36,7 +36,7 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
 
       - name: Run Biome check
-        run: pnpm exec biome ci packages/ui-react
+        run: pnpm exec biome ci packages/ui-react packages/tailwind
 
   tokens:
     name: UI React Design Tokens

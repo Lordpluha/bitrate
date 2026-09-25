@@ -10,6 +10,7 @@ import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import type { Queue } from 'bullmq'
 import { buildAudioFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
+import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 import { TrackStreamingService } from './track-streaming.service'
 import { TrackUploadService } from './track-upload.service'
 import { TracksService } from './tracks.service'
@@ -77,6 +78,14 @@ describe('TracksService (int)', () => {
             exists: jest.fn(),
             getPresignedUrl: jest.fn(),
           },
+        },
+        /**
+         * `TrackUploadService` records a failed enqueue through the recorder, which owns its
+         * own Prisma writes and Sentry reporting — neither belongs in this spec's subject.
+         */
+        {
+          provide: ProcessingAttemptRecorder,
+          useValue: { recordEnqueueFailure: jest.fn() },
         },
       ],
     }).compile()

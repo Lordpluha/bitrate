@@ -4,6 +4,7 @@ import { Body, Controller, Post, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
 import { ZodValidationPipe } from 'nestjs-zod'
+import { CreateReportSwagger } from './decorators'
 import { CreateReportDto, CreateReportSchema } from './moderation.dto'
 import { ModerationService } from './moderation.service'
 
@@ -13,6 +14,7 @@ import { ModerationService } from './moderation.service'
 export class ModerationController {
   constructor(private readonly moderation: ModerationService) {}
 
+  @CreateReportSwagger()
   @Post('reports')
   @Throttle({ default: { ttl: 60_000, limit: 5 } })
   create(

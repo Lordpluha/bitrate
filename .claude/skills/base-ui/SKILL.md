@@ -1,6 +1,6 @@
 ---
 name: base-ui
-description: Base UI primitive conventions for packages/ui-react — the parts/anatomy pattern, render props and composition, controlled vs uncontrolled state, portals and z-index, and accessibility guarantees you must not undo. Use when building or changing a ui-react component on top of @base-ui-components/react, or when a popup, dialog, or menu misbehaves.
+description: "Build or debug Base UI primitives in packages/ui-react: composition, state, portals and accessibility."
 license: MIT
 metadata:
   author: lordpluha
@@ -9,7 +9,7 @@ metadata:
 
 # Base UI — the unstyled primitive layer
 
-`@base-ui-components/react` provides unstyled, accessible primitives. This repo styles them
+`@base-ui/react` provides unstyled, accessible primitives. This repo styles them
 with Tailwind v4 tokens and CVA in `packages/ui-react`; the primitives own behaviour,
 keyboard interaction, focus management, and ARIA. **Base UI is the primitive library here —
 not Radix.** Check what a neighbouring component already does before introducing a different
@@ -20,7 +20,7 @@ pattern.
 Every primitive is a set of composable parts, not one component with many props:
 
 ```tsx
-import { Select } from '@base-ui-components/react/select'
+import { Select } from '@base-ui/react/select'
 
 <Select.Root value={value} onValueChange={setValue}>
   <Select.Trigger className={cn(triggerVariants())}>
@@ -106,10 +106,10 @@ means the transition is on the wrong part.
 
 Do not guess an API from memory. In order:
 
-1. **Read the installed version.** `node_modules/@base-ui-components/react` is what this repo actually runs; the
+1. **Read the installed version.** `node_modules/@base-ui/react` is what this repo actually runs; the
    docs site describes the latest release, which may not be it.
    ```bash
-   node -p "require('@base-ui-components/react/package.json').version"
+   node -p "require('@base-ui/react/package.json').version"
    ```
 2. **Then the official docs:** https://base-ui.com/react/overview/quick-start — match them to the version you just read.
 3. **If both are silent, say so in your report** rather than inventing an API. Here that

@@ -1,5 +1,4 @@
 import { ArrowDownIcon, Pause, Unpause } from '@bitrate/ui-react'
-import Link from 'next/link'
 import { useReducer, useRef } from 'react'
 
 import videoYtConfig from '../config/bgVideo-config.json'
@@ -62,7 +61,7 @@ export const ArtistHero = () => {
 
           <div className="lg:flex-row lg:gap-6 flex flex-col gap-2 w-full">
             {navLinksData.navLinks.map((link) => (
-              <Link
+              <a
                 className="relative group overflow-hidden p-4 text-xl text-balance font-bold rounded-md bg-white text-black
                   sm:text-xl md:text-2xl xl:text-[34px]
                   lg:rounded-none lg:bg-transparent lg:border-t lg:text-white lg:mix-blend-screen"
@@ -77,7 +76,7 @@ export const ArtistHero = () => {
                   {link.title}
                   <ArrowDownIcon className="lg:block w-8 h-8 hidden mt-8" />
                 </span>
-              </Link>
+              </a>
             ))}
           </div>
         </div>

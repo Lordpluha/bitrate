@@ -1,0 +1,12 @@
+# See ADR-0046. No dashboard is vendored for this one — the grill-me interview settled on
+# Explore-only for logs (ad-hoc LogQL, not a steady-state panel) — but Explore still needs a
+# datasource to query against.
+apiVersion: 1
+
+datasources:
+  - name: Loki
+    uid: loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    editable: false

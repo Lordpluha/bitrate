@@ -4,9 +4,10 @@ import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { UserEntity } from '@modules/users'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import type { Artist } from '@prisma/client'
 import type { TrackEntity } from './entities'
+import { TrackNotFoundException } from './errors'
 
 /** Filters accepted by the public track listing. */
 type FindAllTracksInput = PaginationInput & Pick<Partial<TrackEntity>, 'artistId' | 'title'>
@@ -54,7 +55,7 @@ export class TracksService {
       const track = await this.prisma.track.findFirst({
         where: { id: trackId, processingStatus: 'READY', deletedAt: null },
       })
-      if (!track) throw new NotFoundException('Track not found')
+      if (!track) throw new TrackNotFoundException(trackId)
       await this.prisma.userLikedTrack.upsert({
         where: { userId_trackId: { userId, trackId } },
         update: {},
@@ -63,7 +64,7 @@ export class TracksService {
       await this.cache.invalidate(NS.TRACKS)
       return track
     } catch (error: unknown) {
-      if (isPrismaP2025(error)) throw new NotFoundException('Track not found')
+      if (isPrismaP2025(error)) throw new TrackNotFoundException(trackId)
       throw error
     }
   }
@@ -74,12 +75,12 @@ export class TracksService {
       const track = await this.prisma.track.findFirst({
         where: { id: trackId, deletedAt: null },
       })
-      if (!track) throw new NotFoundException('Track not found')
+      if (!track) throw new TrackNotFoundException(trackId)
       await this.prisma.userLikedTrack.deleteMany({ where: { userId, trackId } })
       await this.cache.invalidate(NS.TRACKS)
       return track
     } catch (error: unknown) {
-      if (isPrismaP2025(error)) throw new NotFoundException('Track not found')
+      if (isPrismaP2025(error)) throw new TrackNotFoundException(trackId)
       throw error
     }
   }

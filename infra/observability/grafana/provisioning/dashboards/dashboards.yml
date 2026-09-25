@@ -1,0 +1,16 @@
+# Loads every vendored dashboard JSON in ../../dashboards/ at container start. `editable:
+# true` because these are a starting point (per ADR-0044), not something the developer is
+# expected to leave untouched — Grafana keeps hand-edits in its own SQLite store, not the
+# vendored file, so editing in the UI never dirties the source JSON.
+apiVersion: 1
+
+providers:
+  - name: Bitrate observability
+    orgId: 1
+    folder: Bitrate
+    type: file
+    disableDeletion: false
+    editable: true
+    updateIntervalSeconds: 30
+    options:
+      path: /var/lib/grafana/dashboards

@@ -1,0 +1,6 @@
+export * from './CreateRole.decorator'
+export * from './DeleteRole.decorator'
+export * from './GetRole.decorator'
+export * from './ListRolePermissions.decorator'
+export * from './ListRoles.decorator'
+export * from './UpdateRole.decorator'

@@ -1,6 +1,8 @@
 ---
 name: mobile-rules
 description: React Native + Expo rules for apps/mobile — the web-player conventions that do not exist here, kebab-case file naming, the path alias rooted at the app itself, and the three app.json settings (New Architecture, typed routes, React Compiler) that constrain what you may add. Use whenever writing or reviewing a screen, navigator, or native surface under apps/mobile/.
+paths:
+  - "apps/mobile/**"
 license: MIT
 metadata:
   author: lordpluha
@@ -39,8 +41,8 @@ exist:
 | Biome | This app uses `eslint-config-expo` |
 
 Rules that **do** apply: `.claude/rules/typescript.md`, `.claude/rules/code-principles.md`,
-and the framework-agnostic parts of `.claude/rules/react.md` (hooks rules, ≤100 logic lines,
-≤5 own props, ≤2 `useEffect`).
+and React hook correctness. Component size, props and effects prompt review under
+`code-principles.md`; they do not force decomposition. Do not load web React recipes.
 
 ## Structure
 
@@ -90,7 +92,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme'
 React Native `StyleSheet`, flexbox only, `flexDirection` defaults to `column`, no cascade.
 Theme values live in `constants/theme.ts` and are read through `useThemeColor`.
 
-There is **no bridge to the design tokens yet** (the token roles in `packages/ui-react/src/styles/`). Until one exists, extend
+There is **no bridge to the design tokens yet** (the token roles in `packages/tailwind/src/`). Until one exists, extend
 `constants/theme.ts` rather than scattering raw hex literals through components, and flag in
 your report that the bridge is still missing.
 
