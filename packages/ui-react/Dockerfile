@@ -11,10 +11,6 @@
 FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
-# Generated files here are rebuilt fresh and bundled immediately — nobody reads or commits
-# them from inside a container, so skip the ~40-80s `pnpm exec biome` formatting pass. See
-# packages/svgr/src/core/processor.mjs.
-ENV SVGR_SKIP_FORMAT=true
 # Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
 # write. TURBO_TOKEN is the credential and arrives per RUN below via --mount=type=secret, so
 # it never lands in an image layer.
