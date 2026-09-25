@@ -27,6 +27,8 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
+COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
+COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 EXPOSE 3005
 CMD ["pnpm", "--filter", "@bitrate/admin", "run", "dev"]
 
@@ -44,6 +46,8 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /pnpm/store /pnpm/store
 COPY . .
 COPY --from=dependencies /app/apps/admin/node_modules ./apps/admin/node_modules
+COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
+COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 
 # `scripts/with-env.mjs` reads NG_APP_API_URL from the environment set above and writes the
 # generated config module before Angular runs. There is no .env file in the image.
