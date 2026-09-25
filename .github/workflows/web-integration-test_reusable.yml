@@ -165,6 +165,22 @@ jobs:
           timeout 60 bash -c 'until docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres pg_isready -U admin; do sleep 1; done'
           docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T redis redis-cli ping
 
+      # Before `api` ever starts: AdminAuthModule's OnModuleInit (apps/api/src/modules/admin-auth/
+      # admin-auth.module.ts) calls ensureBuiltInRoles() on every boot, unconditionally, to repair
+      # a restored dump missing its built-in roles. That query needs the schema to already exist —
+      # run against a throwaway container via `run --rm`, not `exec`, since the long-running `api`
+      # service isn't up yet at this point and exec requires a running container.
+      - name: Run database migrations
+        run: |
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='bitrate_shadow'" | grep -q 1 || \
+            docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE bitrate_shadow;"
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml run --rm -T api pnpm --filter @bitrate/api run db:gen
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml run --rm -T api pnpm --filter @bitrate/api run db:migration:deploy
+
+      - name: Seed database
+        run: |
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml run --rm -T api sh -c "cd apps/api && pnpm prisma db seed"
+
       # `--no-build` is the guard on the tagging contract above: compose only builds a service
       # whose image is missing, so a tag that no longer matches would otherwise be an invisible
       # 11-minute rebuild instead of a failure. Here it stops immediately and says which image
@@ -216,17 +232,6 @@ jobs:
           done
           echo "❌ Services failed to become healthy"
           exit 1
-
-      - name: Run database migrations
-        run: |
-          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='bitrate_shadow'" | grep -q 1 || \
-            docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE bitrate_shadow;"
-          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T api pnpm --filter @bitrate/api run db:gen
-          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T api pnpm --filter @bitrate/api run db:migration:deploy
-
-      - name: Seed database
-        run: |
-          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T api sh -c "cd apps/api && pnpm prisma db seed"
 
       - name: Show container logs on failure
         if: failure()
