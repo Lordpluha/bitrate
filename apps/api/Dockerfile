@@ -33,6 +33,11 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
 RUN pnpm --filter @bitrate/api run db:gen
+# Built here, not left to `prestart:dev`: throwaway `docker compose run` commands (migrations,
+# `prisma db seed`) never go through that pnpm lifecycle hook, and the CI overlay strips the
+# `../packages` bind mount that would otherwise supply a host-built dist. Without this, any
+# runtime import of @bitrate/ncs-parser in such a container hits MODULE_NOT_FOUND.
+RUN pnpm --filter @bitrate/ncs-parser run build
 EXPOSE 3000
 CMD ["pnpm", "--filter", "@bitrate/api", "run", "start:dev"]
 
