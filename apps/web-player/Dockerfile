@@ -29,13 +29,25 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 FROM base AS development
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /pnpm/store /pnpm/store
-COPY . .
 COPY --from=dependencies /app/apps/web-player/node_modules ./apps/web-player/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
 COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
+
+# Only what `turbo run build --filter=@bitrate/ui-react` touches — its own source plus its
+# workspace deps (tailwind; vite-svgr, which itself depends on svgr) — resolved from src, not
+# dist, per each package's own exports. Kept ahead of the full `COPY . .` below so a change to
+# this app's own source, or to any other app/package, does not invalidate this layer and force
+# a cold ui-react rebuild on every unrelated PR.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY packages/ui-react ./packages/ui-react
+COPY packages/tailwind ./packages/tailwind
+COPY packages/vite-svgr ./packages/vite-svgr
+COPY packages/svgr ./packages/svgr
 # CI runs the development image without host build output.
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/ui-react
+
+COPY . .
 EXPOSE 3001
 CMD ["pnpm", "--filter", "@bitrate/web-player", "run", "dev"]
 
