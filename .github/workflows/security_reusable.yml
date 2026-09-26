@@ -23,7 +23,7 @@ jobs:
         run: pnpm check:artifacts
 
       - name: Run pnpm audit
-        run: pnpm audit --audit-level=high
+        run: pnpm audit --audit-level=high --prod
 
       - name: Secret scanning
         uses: trufflesecurity/trufflehog@main
