@@ -12,6 +12,7 @@
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
+      "bitrate-typecheck": "./.types-refs/index.d.ts",
       "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
@@ -33,6 +34,7 @@
     "build": "pnpm clean && vite build",
     "dev": "vite build --watch",
     "check-types": "tsc --noEmit",
+    "generate-types": "tsc -b tsconfig.refs.json",
     "test": "vitest run --project=unit --project=integration --project=snapshot",
     "test:watch": "vitest --project=unit --project=integration --project=snapshot",
     "test:unit": "vitest run --project=unit --reporter=verbose",

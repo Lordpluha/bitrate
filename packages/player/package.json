@@ -13,11 +13,13 @@
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
+      "bitrate-typecheck": "./.types-refs/index.d.ts",
       "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.js",
       "default": "./dist/esm/index.js"
     },
     "./contract": {
+      "bitrate-typecheck": "./.types-refs/contract/index.d.ts",
       "types": "./dist/types/contract/index.d.ts",
       "import": "./dist/esm/contract/index.js",
       "default": "./dist/esm/contract/index.js"
@@ -38,6 +40,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "check-types": "svelte-check --tsconfig ./tsconfig.json && tsc --noEmit -p tsconfig.spec.json",
+    "generate-types": "tsc -b tsconfig.refs.json",
     "test": "vitest run --project=unit --project=node --project=browser",
     "test:unit": "vitest run --project=unit --reporter=verbose",
     "test:node": "vitest run --project=node --reporter=verbose",

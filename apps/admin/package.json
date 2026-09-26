@@ -11,7 +11,8 @@
     "lint": "pnpm env:gen && eslint .",
     "lint:fix": "pnpm env:gen && eslint . --fix",
     "format": "prettier --write .",
-    "check-types": "pnpm env:gen && tsc --noEmit -p tsconfig.app.json",
+    "generate-types": "pnpm env:gen && tsc -b tsconfig.check-types.json",
+    "check-types": "pnpm env:gen && tsc -b tsconfig.check-types.json",
     "test": "node scripts/with-env.mjs test",
     "test:unit": "node scripts/with-env.mjs test",
     "check:i18n": "node scripts/check-i18n-keys.mjs"

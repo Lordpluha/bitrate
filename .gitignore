@@ -76,6 +76,10 @@ FRONTEND_BACKLOG.md
 # `pnpm check-types` regenerates this. Only packages/contracts emits one outside dist/.
 *.tsbuildinfo
 
+# Declaration-only composite output for ui-react/ncs-parser (tsconfig.refs.json), read by
+# consumers' tsconfig.check-types.json via `paths` so check-types never needs a full build.
+.types-refs/
+
 # Database dumps from `task db:backup`
 backups/
 

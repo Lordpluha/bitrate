@@ -83,7 +83,7 @@ async function bootstrap() {
       name: configService.getOrThrow('ACCESS_TOKEN_NAME'),
       description: `HttpOnly cookies: ${configService.getOrThrow('ACCESS_TOKEN_NAME')} and ${configService.getOrThrow('REFRESH_TOKEN_NAME')}`,
     })
-    .setContact('Lordpluha', 'https://github.com/Lordpluha', 'tesluakevlad@gmail.com')
+    .setContact('Lordpluha', 'https://github.com/Lordpluha', 'vladyslav.tesliuk.official@gmail.com')
     // Global server errors
     .addGlobalResponse({
       status: HttpStatus.INTERNAL_SERVER_ERROR,

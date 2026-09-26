@@ -21,7 +21,7 @@ The security of our users is our top priority. If you have discovered a vulnerab
 Instead:
 
 1. **Email:** Send a detailed description of the vulnerability to:
-   - 📧 **vladislavteslyukofficial@gmail.com**
+   - 📧 **vladyslav.tesliuk.official@gmail.com**
 
 2. **GitHub Security Advisories** (recommended):
    - Go to the [Security](https://github.com/Lordpluha/bitrate/security) tab
@@ -159,7 +159,7 @@ We are grateful to security researchers who help make the project safer.
 ## 📞 Contacts
 
 - **Vladyslav Tesliuk** (Lead Developer)
-  - Email: vladislavteslyukofficial@gmail.com
+  - Email: vladyslav.tesliuk.official@gmail.com
   - GitHub: [@Lordpluha](https://github.com/Lordpluha)
 
 ---
