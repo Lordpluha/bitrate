@@ -1,9 +1,13 @@
-# Multi-stage Dockerfile для Web (Next.js)
+# Multi-stage Dockerfile для Web Artists (TanStack Start + Vite)
 
 # Stage 1: Base
 FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
+# Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
+# write. TURBO_TOKEN is the credential and arrives per RUN below via --mount=type=secret, so
+# it never lands in an image layer.
+ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
@@ -12,6 +16,7 @@ FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY scripts ./scripts
 COPY apps/web-artists/package.json ./apps/web-artists/
+COPY packages/tailwind/package.json ./packages/tailwind/
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/svgr/package.json ./packages/svgr/
 COPY packages/svgr/bin ./packages/svgr/bin
@@ -24,16 +29,35 @@ RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 FROM base AS development
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /pnpm/store /pnpm/store
-COPY . .
 COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/node_modules
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
+COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
+
+# Only what `turbo run build --filter=@bitrate/ui-react` touches — its own source plus its
+# workspace deps (tailwind; vite-svgr, which itself depends on svgr) — resolved from src, not
+# dist, per each package's own exports. Kept ahead of the full `COPY . .` below so a change to
+# this app's own source, or to any other app/package, does not invalidate this layer and force
+# a cold ui-react rebuild on every unrelated PR.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY packages/ui-react ./packages/ui-react
+COPY packages/tailwind ./packages/tailwind
+COPY packages/vite-svgr ./packages/vite-svgr
+COPY packages/svgr ./packages/svgr
+# CI runs the development image without host build output.
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/ui-react
+
+COPY . .
 EXPOSE 3002
 CMD ["pnpm", "--filter", "@bitrate/web-artists", "run", "dev"]
 
 # Stage 4: Build
 FROM base AS build
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+# Vite inlines import.meta.env at BUILD time, so this must be an ARG here, not a runtime ENV in
+# the production stage. The deployment variable is still called NEXT_PUBLIC_API_URL (shared with
+# apps/web-player); the mapping to this app's VITE_ name happens in compose and CI.
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
 ENV NODE_ENV=production
 
 COPY --from=dependencies /app/node_modules ./node_modules
@@ -43,45 +67,40 @@ COPY --from=dependencies /app/apps/web-artists/node_modules ./apps/web-artists/n
 COPY --from=dependencies /app/packages/ui-react/node_modules ./packages/ui-react/node_modules
 COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-svgr/node_modules
 
-# Build приложения
-RUN pnpm --filter @bitrate/ui-react run build
-RUN pnpm --filter @bitrate/web-artists run build
+# Build приложения. Routed through turbo, not a plain pnpm script, so an unchanged source
+# tree restores dist/.output from the remote cache instead of rerunning the build; the
+# secret mount is optional, so a build without TURBO_TOKEN — a fork PR, a local docker
+# build — just runs uncached.
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/ui-react
+RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    pnpm exec turbo run build --filter=@bitrate/web-artists
 
-# Stage 5: Production Dependencies
-FROM base AS prod-dependencies
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY scripts ./scripts
-COPY apps/web-artists/package.json ./apps/web-artists/
-COPY packages/ui-react/package.json ./packages/ui-react/
-COPY packages/contracts/package.json ./packages/contracts/
-RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lockfile
-
-# Stage 6: Production
+# Stage 5: Production
+# Nitro emits a self-contained bundle in .output — server, static assets and the runtime deps it
+# needs — so there is no prod-dependencies stage and no node_modules to copy.
 FROM base AS production
 ENV NODE_ENV=production
 
-COPY --from=prod-dependencies /app/node_modules ./node_modules
-COPY --from=prod-dependencies /app/apps/web-artists/node_modules ./apps/web-artists/node_modules
-COPY --from=build /app/apps/web-artists/.next ./apps/web-artists/.next
-COPY --from=build /app/apps/web-artists/public ./apps/web-artists/public
-COPY apps/web-artists/next.config.ts ./apps/web-artists/
-COPY apps/web-artists/package.json ./apps/web-artists/
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-
-# Create non-root user
+# The user is created BEFORE anything is copied, because `COPY --chown=` resolves a named
+# owner against the image's /etc/passwd as it runs. Ownership then rides along on the copy
+# instead of being applied afterwards by `chown -R`, which is what the standalone chown used
+# to do — and a chown rewrites every file's metadata, so the layer it produces holds a second
+# complete copy of everything underneath it. Measured on this image: `COPY .output` 226 MB,
+# `RUN chown -R /app` another 226 MB for nothing.
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 --ingroup nodejs bitrateweb
+    adduser --system --uid 1001 --ingroup nodejs bitrateweb && \
+    chown bitrateweb:nodejs /app
 
-# Set ownership
-RUN chown -R bitrateweb:nodejs /app
+COPY --from=build --chown=bitrateweb:nodejs /app/apps/web-artists/.output ./.output
 
 USER bitrateweb
 
 EXPOSE 3002
+ENV PORT=3002
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   # Anything below 500 counts: the root path answers 307 to /auth/login because the artists
   # portal is behind auth, so demanding exactly 200 marked a working server unhealthy forever.
   CMD node -e "require('http').get('http://localhost:3002', (r) => {process.exit(r.statusCode < 500 ? 0 : 1)}).on('error', () => process.exit(1))"
 
-WORKDIR /app/apps/web-artists
-CMD ["pnpm", "start", "--port", "3002"]
+CMD ["node", ".output/server/index.mjs"]

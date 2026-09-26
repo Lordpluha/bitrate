@@ -1,0 +1,19 @@
+# Provisions the one datasource every vendored dashboard in ../dashboards/ points at.
+#
+# `uid: prometheus` is not cosmetic — every vendored dashboard JSON had its datasource
+# placeholder (`${DS_PROMETHEUS}` / `${ds_prometheus}` / `${DS_PROM}`, three different
+# spellings across the five dashboards) rewritten to the literal string "prometheus" at
+# vendoring time, since Grafana's file-based dashboard provisioning does not resolve the
+# `__inputs` template variables the dashboard-exchange JSON format uses — that substitution
+# only happens through the manual "import" UI flow. Changing this UID without re-patching
+# every dashboard file breaks all of them at once.
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false

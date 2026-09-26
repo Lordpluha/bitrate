@@ -29,7 +29,7 @@ const playlistUserResponseSchema = z.object({
   username: z.string(),
 })
 
-export const playlistResponseSchema = z.object({
+const playlistResponseSchema = z.object({
   cover: z.string().nullable(),
   createdAt: z.string(),
   description: z.string().nullable(),
@@ -46,7 +46,7 @@ export const playlistWithRelationsResponseSchema =
     user: playlistUserResponseSchema.optional(),
   })
 
-export const playlistsResponseSchema = arrayOrPaginated(
+const playlistsResponseSchema = arrayOrPaginated(
   playlistWithRelationsResponseSchema,
 )
 

@@ -41,7 +41,7 @@ tasks:
   # Recommended for native app development
   # ─────────────────────────────────────────
   infra:up:
-    desc: Start infra only — postgres, postgres_test, redis, mailhog (~320 MB)
+    desc: Start infra only — postgres, postgres_test, redis (~310 MB)
     cmds:
       - cmd: '{{.DC_INFRA}} up -d'
 
@@ -122,6 +122,8 @@ tasks:
 
   db:backup:
     desc: Dump the PREPROD database to backups/ — for production use prod:backup
+    # prod:backup is a real task now. It was referenced here for months without existing,
+    # which is why nothing has ever written a production dump.
     cmds:
       - cmd: mkdir -p backups
         platforms: [linux, darwin]
@@ -233,6 +235,43 @@ tasks:
       - cmd: '{{.DC_DEV}} logs -f desktop'
 
   # ─────────────────────────────────────────
+  # Observability — Prometheus + Grafana. See ADR-0044 and infra/observability/README.md.
+  # Entirely optional, local-machine-only: nothing here starts with a plain `task dev:up`.
+  # ─────────────────────────────────────────
+  observability:up:
+    desc: Start Prometheus + Grafana + Loki + exporters in Docker
+    cmds:
+      - cmd: >-
+          {{.DC_DEV}} --profile observability up -d
+          prometheus grafana grafana-cloudflared postgres-exporter redis-exporter
+          node-exporter cadvisor loki alloy
+      - cmd: echo "Open Grafana at http://localhost:${GRAFANA_PORT:-3006} (admin / your GRAFANA_ADMIN_PASSWORD)"
+      - cmd: echo "Open Prometheus at http://localhost:${PROMETHEUS_PORT:-9090}"
+      - cmd: echo "Loki logs are queried through Grafana Explore, not a direct URL"
+
+  # `down` ignores --profile when removing services — same caveat as mobile:down/desktop:down —
+  # so this stops and removes each named service instead of running `down`.
+  observability:down:
+    desc: Stop and remove the observability services only
+    cmds:
+      - cmd: >-
+          {{.DC_DEV}} --profile observability stop
+          prometheus grafana grafana-cloudflared postgres-exporter redis-exporter
+          node-exporter cadvisor loki alloy
+      - cmd: >-
+          {{.DC_DEV}} --profile observability rm -f
+          prometheus grafana grafana-cloudflared postgres-exporter redis-exporter
+          node-exporter cadvisor loki alloy
+
+  observability:logs:
+    desc: Tail every observability service's logs
+    cmds:
+      - cmd: >-
+          {{.DC_DEV}} --profile observability logs -f
+          prometheus grafana grafana-cloudflared postgres-exporter redis-exporter
+          node-exporter cadvisor loki alloy
+
+  # ─────────────────────────────────────────
   # Production
   # ─────────────────────────────────────────
   prod:up:
@@ -264,6 +303,30 @@ tasks:
       - task: prod:migrate
       - cmd: '{{.DC_PROD}} up -d --no-build'
       - cmd: '{{.DC_PROD}} ps'
+      # Retention. Last, so the generation this deploy just replaced is what becomes a
+      # candidate. Nothing removed these before and the host kept every release forever: four
+      # generations in thirteen days took Docker to 64 GiB of a 250 GiB disk.
+      #
+      # Scoped to the bitrate repositories by name. NOT `docker image prune -a`, which takes
+      # every image with no container attached — including certbot/certbot, which has none
+      # between certificate renewals.
+      #
+      # A generation is an image ID, not a tag: one release is published as :v1.2.0, :<sha> and
+      # :master at once, so counting tags would spend the whole budget on the current release
+      # and delete the one to roll back to. `docker images` lists newest first, so awk keeps
+      # every tag of the two newest IDs per repository and prints the rest. `docker rmi` refuses
+      # an image a container is still using, which is the second net under this.
+      - cmd: |
+          docker images 'ghcr.io/lordpluha/bitrate/*' \
+            | awk 'NR > 1 && $1 != "<none>" { if (!seen[$1 "@" $3]++) n[$1]++; if (n[$1] > 2) print $1 ":" $2 }' \
+            | xargs -r -n1 docker rmi || true
+          docker image prune -f
+          # -a, not a bare prune with an age filter. Plain `docker builder prune` only takes
+          # unshared dangling records and reclaimed 0 B of the 3.086 GB sitting on the
+          # production host. Keeping any of it would be pointless anyway: this host deploys by
+          # pulling CI images (ADR-0027) and never builds, so no local cache entry is ever reused.
+          docker builder prune -af
+          docker system df
 
   prod:migrate:
     desc: Apply pending migrations to the production database
@@ -276,6 +339,73 @@ tasks:
       # A throwaway container from the same image needs nothing running but the database.
       - cmd: '{{.DC_PROD}} run --rm --no-TTY api pnpm --filter @bitrate/api run db:migration:deploy'
 
+
+  # ─────────────────────────────────────────
+  # Production backup and restore
+  #
+  # infra/backup.sh holds the logic; these only make it reachable from `task --list`,
+  # the same split monitor:* uses over infra/docker-monitor.sh. The script writes into
+  # backups/ and never uploads anywhere: getting the artifacts OFF this machine is
+  # .github/workflows/backup.yml's job, so the object-storage keys that can reach the
+  # backups never live on the box the backups exist to survive.
+  #
+  # These run on the server, from $HOME/bitrate, where the deploy workflow has already
+  # rendered .env and synced infra/.
+  # ─────────────────────────────────────────
+  prod:backup:
+    desc: Dump the PRODUCTION database (and storage/) into backups/, then prune old local copies
+    cmds:
+      - cmd: bash infra/backup.sh --retention-days {{.RETENTION_DAYS | default 7}}
+
+  prod:restore:
+    desc: Restore a production dump — DESTRUCTIVE, replaces current data. Pass FILE=backups/db-….dump
+    prompt: This overwrites the PRODUCTION database. Continue?
+    requires:
+      vars: [FILE]
+    cmds:
+      # --clean --if-exists drops each object before recreating it, so a restore over a
+      # populated database succeeds instead of failing on every existing table. Credentials
+      # come from the container's environment, never from this file.
+      #
+      # Custom-format dumps go through pg_restore, not psql: `psql < file` on a -Fc dump
+      # reads the binary archive as SQL and fails at the first byte.
+      - cmd: |
+          {{.DC_PROD}} exec -T postgres sh -c \
+            'pg_restore -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists --no-owner --no-privileges' \
+            < "{{.FILE}}"
+
+  # A one-time pair, needed exactly once: around the deploy that lands the api_storage
+  # volume added to infra/docker-compose.prod.yaml. Until that volume exists the API writes
+  # uploads to /app/storage inside the container's WRITABLE LAYER, so the `up -d` that
+  # recreates the container destroys them — including the one that introduces the volume,
+  # which starts a fresh container against an empty volume.
+  #
+  #   task prod:storage:rescue     <- BEFORE that deploy, while the old container still runs
+  #   ... deploy ...
+  #   task prod:storage:seed FILE=storage-rescue-….tar.gz
+  #
+  # tar through the container rather than `docker cp`: it works for a named volume and a
+  # bind mount alike, and it writes as the container's own non-root user, so the restored
+  # files come back owned by the account that has to write them. `docker cp` lands them
+  # root-owned and the API then cannot write into its own directories.
+  prod:storage:rescue:
+    desc: Archive /app/storage out of the running api container — run BEFORE the deploy that adds the volume
+    cmds:
+      - cmd: |
+          out="storage-rescue-$(date -u +%Y%m%dT%H%M%SZ).tar.gz"
+          {{.DC_PROD}} exec -T api tar -czf - -C /app storage > "$out"
+          ls -lh "$out"
+          echo "Keep this file. Restore it after the deploy with: task prod:storage:seed FILE=$out"
+
+  prod:storage:seed:
+    desc: Unpack a rescued storage archive back into the api container. Pass FILE=storage-rescue-….tar.gz
+    prompt: Unpack this archive over /app/storage in the running api container?
+    requires:
+      vars: [FILE]
+    cmds:
+      - cmd: |
+          {{.DC_PROD}} exec -T api tar -xzf - -C /app < "{{.FILE}}"
+      - cmd: '{{.DC_PROD}} exec -T api sh -c ''du -sh /app/storage'''
 
   prod:down:
     desc: Stop production stack
@@ -373,9 +503,14 @@ tasks:
     cmds:
       - cmd: node scripts/clean-dist.mjs
 
+  # A developer-machine sledgehammer. NOT for the production host: `-a` takes every image with
+  # no container attached, and certbot/certbot has none between certificate renewals — the next
+  # renewal would then have to pull at the moment a certificate is expiring. On a server the
+  # retention built into `prod:deploy` is the one to rely on; it is scoped to the bitrate
+  # repositories and keeps the generation to roll back to.
   prune:
-    desc: Remove all unused Docker images, containers and volumes
-    prompt: Remove all unused Docker resources?
+    desc: DEV MACHINES ONLY — remove all unused Docker images, containers and volumes
+    prompt: Remove ALL unused Docker resources? Never answer yes on the production host.
     cmds:
       - cmd: docker system prune -af
 
@@ -404,7 +539,7 @@ tasks:
   # Internal helpers (not listed)
   # ─────────────────────────────────────────
   # Default ports only — each is overridable in .env (API_PORT, WEB_PORT,
-  # WEB_ARTISTS_PORT, ADMIN_PORT, MAILHOG_UI_PORT). Profile-gated services
+  # WEB_ARTISTS_PORT, ADMIN_PORT). Profile-gated services
   # (docs :3003, desktop :1420, mobile :19000) are not started by dev:up.
   _print-urls:
     internal: true
@@ -413,7 +548,7 @@ tasks:
       - cmd: echo "Services:"
       - cmd: echo "  API     -> http://localhost:3000"
       - cmd: echo "  Web     -> http://localhost:3001"
-      - cmd: echo "  Admin   -> http://localhost:3002"
       - cmd: echo "  Artists -> http://localhost:3004"
+      - cmd: echo "  Admin   -> http://localhost:3005"
       - cmd: echo "  Mail    -> http://localhost:8025"
       - cmd: echo "  Swagger -> http://localhost:3000/swagger"

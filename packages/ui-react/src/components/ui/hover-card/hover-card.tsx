@@ -1,4 +1,4 @@
-import { PreviewCard as HoverCardPrimitive } from '@base-ui-components/react'
+import { PreviewCard as HoverCardPrimitive } from '@base-ui/react/preview-card'
 import { type ComponentProps, isValidElement } from 'react'
 
 import { cn } from '@/lib/utils'

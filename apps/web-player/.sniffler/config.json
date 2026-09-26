@@ -1,0 +1,29 @@
+{
+  "source": {
+    "roots": ["src", "tests"],
+    "ignore": ["**/*.unit-spec.*", "**/*.int-spec.*", "**/*.snapshot-spec.*"]
+  },
+  "resolver": {
+    "tsconfig": ".sniffler/tsconfig.generated.json"
+  },
+  "tests": {
+    "manifest": ".sniffler/test-map.json",
+    "runAllWhenChanged": [
+      "package.json",
+      "tsconfig.json",
+      "next.config.ts",
+      "postcss.config.mjs",
+      ".sniffler/config.json",
+      ".sniffler/test-map.json",
+      "tests/configs/playwright.e2e.config.ts",
+      "tests/configs/playwright.screenshot.config.ts",
+      "**/*.css"
+    ]
+  },
+  "cache": {
+    "path": ".sniffler/cache.json"
+  },
+  "output": {
+    "format": "json"
+  }
+}

@@ -11,6 +11,7 @@ const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '')
 
 async function refreshToken(): Promise<boolean> {
   /** A refresh is already in flight — reuse its promise. */
+  // biome-ignore lint/nursery/noMisusedPromises: null-check on the Promise<boolean> | null singleton, not a truthiness check on its resolved value
   if (refreshPromise) {
     return refreshPromise
   }

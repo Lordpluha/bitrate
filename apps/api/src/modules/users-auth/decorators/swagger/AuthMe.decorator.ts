@@ -1,3 +1,4 @@
+import { SelfUserEntity } from '@modules/users'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 
@@ -8,9 +9,7 @@ export function AuthMeSwagger() {
     ApiResponse({
       status: HttpStatus.OK,
       description: 'The signed-in account, including its own email and two-factor state',
-      schema: {
-        $ref: '#/components/schemas/SelfUserEntity',
-      },
+      type: SelfUserEntity,
     }),
   )
 }

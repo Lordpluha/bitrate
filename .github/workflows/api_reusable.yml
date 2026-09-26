@@ -53,6 +53,10 @@ jobs:
         if: ${{ inputs.run-biome }}
         run: pnpm exec biome ci apps/api packages/contracts
 
+      - name: Check i18n dictionary drift
+        if: ${{ inputs.run-biome }}
+        run: pnpm --filter @bitrate/api run check:i18n
+
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker
         with:
@@ -73,7 +77,8 @@ jobs:
             type=gha,scope=api
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache,mode=max
-            type=gha,mode=max,scope=api
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           target: production
 
   api-tests:

@@ -1,6 +1,6 @@
 ---
 name: zod
-description: Zod schema conventions across the monorepo — nestjs-zod DTOs in apps/api, form schemas and runtime-validated API responses in web-player, where a schema lives so it is not duplicated, and inferring types instead of hand-writing them. Use when writing or changing any Zod schema, a createZodDto DTO, a zodResolver form, or a response validator.
+description: "Create or update Zod schemas, nestjs-zod DTOs, form resolvers and response validators; reuse schemas and inferred types."
 license: MIT
 metadata:
   author: lordpluha

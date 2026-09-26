@@ -1,0 +1,47 @@
+# See ADR-0044. Every target here is a service in the `observability` Compose profile of
+# infra/docker-compose.preprod.yaml — this file is never used outside that profile.
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # The API's own process + HTTP metrics (prom-client — see apps/api/src/infra/observability/
+  # metrics.service.ts). Bearer-token gated, same as a real client of GET /metrics would need.
+  #
+  # Prometheus reads this file as a static bind mount — it does not interpolate `${VAR}` from
+  # the environment the way Compose does with the compose YAML itself, so this cannot read
+  # METRICS_TOKEN from .env the way infra/docker-compose.preprod.yaml's api service does.
+  # `dev-metrics-token-local-only-0001` is the api service's own METRICS_TOKEN default in that file (see the
+  # api service's environment block) — a fixed, non-secret local-dev value, in keeping with
+  # this whole file's admin/admin-style preprod defaults. Overriding METRICS_TOKEN for the api
+  # service without updating this value breaks the scrape with 401s, silently (Prometheus logs
+  # it as a normal failed scrape, not a startup error) — that is the one thing to remember if
+  # this token is ever changed.
+  - job_name: bitrate-api
+    metrics_path: /api/v1/metrics
+    authorization:
+      credentials: dev-metrics-token-local-only-0001
+    static_configs:
+      - targets: ["api:3000"]
+
+  - job_name: postgres
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
+
+  - job_name: redis
+    static_configs:
+      - targets: ["redis-exporter:9121"]
+
+  # Per-container CPU/memory/network — see ADR-0044 for why this and node-exporter are both
+  # present rather than either alone.
+  - job_name: cadvisor
+    static_configs:
+      - targets: ["cadvisor:8080"]
+
+  # Host-level CPU/memory/disk — network-interface figures here reflect this container's own
+  # veth, not the host's real traffic; see node-exporter's own comment in
+  # docker-compose.preprod.yaml for why, and use cadvisor's per-container network panels for
+  # real network load instead.
+  - job_name: node
+    static_configs:
+      - targets: ["node-exporter:9100"]

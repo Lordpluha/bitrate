@@ -107,7 +107,7 @@ pnpm -F @bitrate/ui-react clean
 - **Next.js 15**
 - **TailwindCSS**
 - **shadcn/ui** (component style)
-- **Base UI** (`@base-ui-components/react`)
+- **Base UI** (`@base-ui/react`)
 - **Lucide Icons**
 
 > If you want to use predefined stories from @shadcn/ui - https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry preview (https://registry.lloydrichards.dev/storybook/?path=/docs/design-typography--docs&globals=backgrounds.grid:!true)

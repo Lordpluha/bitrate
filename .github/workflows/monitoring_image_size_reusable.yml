@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [api, web-player, web-artists]
+        service: [api, web-player, web-artists, admin]
 
     steps:
       - uses: actions/checkout@v7

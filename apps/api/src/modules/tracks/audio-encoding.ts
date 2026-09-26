@@ -31,6 +31,7 @@ async function validateAudioVariant(audioPath: string): Promise<void> {
 export async function prepareVariants(
   job: Job<ConvertAudioJob>,
   temporaryRoot: string,
+  onBitrateStart?: (bitrate: string) => void,
 ): Promise<PreparedVariant[]> {
   const { inputPath, format, bitrates, sourceFileName, trackId } = job.data
   const { convertAudio } = await import('@bitrate/converter')
@@ -38,6 +39,7 @@ export async function prepareVariants(
   const prepared: PreparedVariant[] = []
 
   for (const [index, bitrate] of bitrates.entries()) {
+    onBitrateStart?.(bitrate)
     const bitrateValue = parseBitrateLabel(bitrate)
     const temporaryAudioPath = join(temporaryRoot, `audio_${bitrate}.${format}`)
 

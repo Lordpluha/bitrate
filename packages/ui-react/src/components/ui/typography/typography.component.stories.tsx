@@ -9,6 +9,7 @@ import { Typography, type TypographyProps } from './typography'
  */
 const meta = {
   title: 'ui/Typography',
+  component: Typography,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },
 } satisfies Meta<PropsWithChildren<TypographyProps>>

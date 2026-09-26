@@ -252,9 +252,14 @@ task db:backup
 docker compose -f infra/docker-compose.preprod.yaml exec -T postgres \
   psql -U admin bitrate < backups/backup.sql
 
-# Or via task:
-task db:restore -- backup_20260101_120000.sql
+# Or via task (FILE= is required — this task takes no positional argument):
+task db:restore FILE=backups/2026-01-01_120000.sql
 ```
+
+Production is separate: `task prod:backup` / `task prod:restore FILE=…` write and read
+`pg_dump --format=custom`, and a daily off-host copy is automated by
+`.github/workflows/backup.yml`. See
+[Deployment § 6](./deployment.md#6-backups).
 
 ### Clear All Data
 

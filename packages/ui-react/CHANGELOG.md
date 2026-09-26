@@ -1,5 +1,15 @@
 # @bitrate/ui-react
 
+## 1.1.0
+
+### Minor Changes
+
+- d1f8e04: Migrated the Avatar, DropdownMenu, HoverCard, Popover, Select, Separator, and Tooltip primitives from the deprecated `@base-ui-components/react@1.0.0-rc.0` to its renamed, now-stable successor `@base-ui/react@1.8.0`, switching each component to the package's per-primitive subpath imports (e.g. `@base-ui/react/select`). The primitives' anatomy was unchanged across the rename, so no component API changed; a handful of internal DOM details these primitives render for accessibility (portal focus guards, generated element `id`s, and new `data-base-ui-*` trigger markers) moved to the upstream 1.8 implementation, and the affected snapshot baselines were updated to match.
+
+### Patch Changes
+
+- d1f8e04: Bumped `@tanstack/react-query`/`@tanstack/react-query-devtools` from 5.101.0 to 5.103.1 and `lucide-react` from 1.18.0 to 1.47.0 across the web apps and the shared component library, keeping a single resolved copy of each in the lockfile. The `Spinner` and loading `Button` now render an additional `lucide-loader-2` class alongside `lucide-loader-circle` on the loading icon, a cosmetic side effect of the lucide-react upgrade with no visible change.
+
 ## 1.0.0
 
 ### Major Changes

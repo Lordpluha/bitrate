@@ -48,7 +48,7 @@ secrets в `$HOME/bitrate/.env` с правами 600, и запускается
 деплоя на целевой машине, а не файл репозитория. То, что `config` падает на `DOMAIN` вне
 деплоя, — работающая защита, а не баг.
 
-:::warning Корневой `.env` compose всё равно не прочитает
+:::warning[Корневой `.env` compose всё равно не прочитает]
 При `-f infra/...` директорией проекта становится `infra/`, поэтому compose ищет `infra/.env`
 и корневой файл игнорирует полностью. Положенный в корень `.env` — включая созданный шагом
 CI — не даёт **ничего**. Для CI задавай значения через `env:` на уровне job или step:
@@ -249,7 +249,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 `EXPO_DEVTOOLS_LISTEN_ADDRESS` и `REACT_NATIVE_PACKAGER_HOSTNAME` — это служебные настройки
 Metro, а не конфигурация приложения.
 
-:::note `.env` в `apps/mobile` не в игноре
+:::note[`.env` в `apps/mobile` не в игноре]
 `apps/mobile/.gitignore` исключает только `.env*.local`, поэтому лежащий там `.env` попадёт в
 коммит при первом `git add`. Для публичных `EXPO_PUBLIC_*` это безвредно, но секрету в этом
 файле не место — в бандл он всё равно попал бы открытым текстом.
@@ -268,7 +268,6 @@ Metro, а не конфигурация приложения.
 | `API_PORT` · `WEB_PORT` · `WEB_ARTISTS_PORT` · `DOCS_PORT` · `DESKTOP_PORT` | preprod | Проброс портов |
 | `MOBILE_HOST` · `MOBILE_METRO_PORT` · `MOBILE_METRO_UI_PORT` · `MOBILE_WEB_PORT` · `MOBILE_DEVTOOLS_PORT` | preprod | Сервисы Expo за профилем |
 | `NGINX_HTTP_PORT` · `NGINX_HTTPS_PORT` | preprod | Порты reverse-proxy |
-| `MAILHOG_SMTP_PORT` · `MAILHOG_UI_PORT` | dev, preprod | Порты MailHog |
 
 ## Пустое значение — не то же самое, что отсутствие
 

@@ -1,5 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
+import { SafeArtistEntity } from '../../entities'
 
 /** Runs the get artist by id swagger operation. */
 export function GetArtistByIdSwagger() {
@@ -8,7 +9,7 @@ export function GetArtistByIdSwagger() {
     ApiParam({ name: 'id', description: 'Artist ID (UUID)', type: 'string', format: 'uuid' }),
     ApiResponse({
       status: HttpStatus.OK,
-      schema: { $ref: '#/components/schemas/SafeArtistEntity' },
+      type: SafeArtistEntity,
     }),
   )
 }

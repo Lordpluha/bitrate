@@ -1,6 +1,6 @@
 ---
 name: tailwindcss
-description: Tailwind v4 conventions for this monorepo — CSS-first @theme configuration with no tailwind.config.js, token-backed utilities from @bitrate/ui-react, cn() merging, CVA variants, and the v3 patterns that no longer work. Use when writing or reviewing any className, adding a design token, or when a utility class silently does nothing.
+description: "Write or debug Tailwind v4 utilities, tokens, cn() composition and CVA variants; check v3 migration differences."
 license: MIT
 metadata:
   author: lordpluha
@@ -15,8 +15,8 @@ including the v3 habits that fail silently here.
 ## There is no `tailwind.config.js`
 
 Tailwind v4 is configured in CSS. The tokens are hand-written in
-`packages/ui-react/src/styles/*.css`, which register `@theme` blocks — that CSS is the source,
-not build output (see [ADR-0023](../../../apps/docs/docs/architecture/0023-tokens-into-ui-react.md)). Every token in `@theme` becomes a utility automatically:
+`packages/tailwind/src/*.css`, which register `@theme` blocks — that CSS is the source,
+not build output (see [ADR-0023](../../../apps/docs/docs/architecture/0023-tokens-into-ui-react.md) and [ADR-0047](../../../apps/docs/docs/architecture/0047-tailwind-tokens-into-own-package.md)). Every token in `@theme` becomes a utility automatically:
 
 ```css
 @theme {
@@ -27,23 +27,23 @@ not build output (see [ADR-0023](../../../apps/docs/docs/architecture/0023-token
 ```
 
 **A `tailwind.config.js` appearing in this repo is a red flag**, not a fix. To add a design
-value, declare it in the `@theme` layer that owns it under `packages/ui-react/src/styles/`.
+value, declare it in the `@theme` layer that owns it under `packages/tailwind/src/`.
 That CSS is the source: there is no generator and nothing to re-run.
 
 The app imports the generated stylesheets at its root:
 
 ```css
 /* apps/web-player/src/app/global.css */
-@import "@bitrate/ui-react/themes.css";
+@import "@bitrate/tailwind/themes.css";
 ```
 
 **One import, not many.** `themes.css` is a barrel: it `@import`s `palette.css`,
 `typography.css`, `layout.css`, `animations.css`, and every semantic-role part-file under
 `themes/`, and declares no colour of its own. It is also the *only* stylesheet the package
-exports: `@bitrate/ui-react/styles/palette.css` is not in the package's `exports` map and
+exports: `@bitrate/tailwind/src/palette.css` is not in the package's `exports` map and
 fails with `MODULE_NOT_FOUND`.
 
-Semantic roles live in one part-file each under `styles/themes/` (`base.css`,
+Semantic roles live in one part-file each under `packages/tailwind/src/themes/` (`base.css`,
 `global/*.css`, `components/*.css`), every part carrying both the dark declarations and its
 `:root.light` overrides. A role's value is written in the part-file itself; which part-file
 owns a role is simply the file it is declared in — see

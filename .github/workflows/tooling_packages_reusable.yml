@@ -1,0 +1,54 @@
+name: "[tooling] SVGR Packages Reusable"
+
+# packages/svgr and packages/vite-svgr are the SVG-to-React generator and its Vite plugin.
+# They ship no image and no app, but packages/ui-react builds through them, so a break here
+# surfaces as a confusing ui-react build failure. Both carry their own tests; nothing ran them.
+
+on:
+  workflow_call:
+    inputs:
+      run-biome:
+        description: Run biome check on both packages
+        required: false
+        default: true
+        type: boolean
+      run-tests:
+        description: Run both packages' test suites
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  biome:
+    if: ${{ inputs.run-biome }}
+    name: SVGR Biome
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run Biome check
+        run: pnpm exec biome ci packages/svgr packages/vite-svgr
+
+  tests:
+    if: ${{ always() && inputs.run-tests && (!inputs.run-biome || needs.biome.result == 'success') }}
+    needs: biome
+    name: SVGR Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run tests
+        run: pnpm --filter @bitrate/svgr --filter @bitrate/vite-svgr run test

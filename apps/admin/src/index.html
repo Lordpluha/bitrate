@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bitrate operators</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!--
+      No-flash theme boot. Runs before Angular's bundle loads so the first paint already
+      matches the stored theme, instead of flashing dark (the class-less default) and then
+      swapping. Keep the storage key and theme list in sync with `ThemeStore`
+      (presentation/navigation/theme-store.ts) — nothing wires the two together mechanically.
+    -->
+    <script>
+      ;(function () {
+        try {
+          var THEMES = ['dark', 'light', 'dim']
+          var stored = localStorage.getItem('bitrate.admin.theme')
+          var theme = THEMES.indexOf(stored) !== -1 ? stored : 'dark'
+          document.documentElement.classList.add(theme)
+        } catch (e) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

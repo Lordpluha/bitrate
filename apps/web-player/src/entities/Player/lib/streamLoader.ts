@@ -189,5 +189,3 @@ export class StreamLoader {
     this.mediaSource.endOfStream()
   }
 }
-
-export { toRangeHeader } from '@/entities/Player/lib/fragmentIndex'

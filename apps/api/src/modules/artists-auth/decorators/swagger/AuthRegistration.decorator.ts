@@ -6,7 +6,7 @@ import { RegistrationDto } from '../../dtos'
 /** Runs the auth registration swagger operation. */
 export function AuthRegistrationSwagger() {
   return applyDecorators(
-    ApiOperation({ summary: 'User registration' }),
+    ApiOperation({ summary: 'Artist registration' }),
     ApiConsumes('application/json'),
     ApiBody({ type: RegistrationDto }),
     ApiResponse({

@@ -78,10 +78,22 @@ jobs:
             type=gha,scope=docs
           cache-to: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache,mode=max
-            type=gha,mode=max,scope=docs
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           target: production
 
-      - name: Build Docs Docker image (GHA cache export only)
+      # PR builds (cache-to-registry: false) never write the canonical docs:buildcache ref —
+      # a PR that never merges would otherwise leave abandoned layers there, and concurrent PRs
+      # writing to the same ref race each other (a real "blob not found" was seen from exactly
+      # this kind of race). type=gha was the original stand-in, but GHA's cache API writes the
+      # same content roughly 10x slower than a registry push does (measured on this repo's own
+      # apps: ~23s via registry vs ~270s via GHA for equivalent layers) — mostly the
+      # dependencies-stage pnpm store, which is exactly the layer worth caching between commits
+      # on the same PR. A PR-scoped registry tag gets registry's write speed without touching
+      # the canonical ref: nothing outside this PR ever reads cache/docs-pr-<N>:buildcache, and
+      # an abandoned PR just leaves an unused image behind (no different from any other stale
+      # PR image tag already accumulating in this registry).
+      - name: Build Docs Docker image (PR-scoped registry cache)
         if: ${{ !inputs.cache-to-registry }}
         uses: docker/build-push-action@v7
         with:
@@ -91,7 +103,9 @@ jobs:
           tags: ${{ inputs.tags }}
           cache-from: |
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache
-            type=gha,scope=docs
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs-pr-${{ github.event.pull_request.number }}:buildcache
           cache-to: |
-            type=gha,mode=max,scope=docs
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs-pr-${{ github.event.pull_request.number }}:buildcache,mode=max
+          secrets: |
+            turbo_token=${{ secrets.TURBO_TOKEN }}
           target: production

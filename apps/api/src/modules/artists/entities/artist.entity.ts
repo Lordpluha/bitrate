@@ -78,4 +78,8 @@ export class ArtistEntity implements Artist {
   /** Soft deletion timestamp. */
   @ApiProperty({ nullable: true })
   deletedAt: Date | null
+
+  /** Transactional-email locale, set at registration from Accept-Language. */
+  @ApiProperty()
+  locale: string
 }

@@ -1,4 +1,4 @@
-import type { Meta as DefaultMeta } from '@storybook/react'
+import type { Meta as DefaultMeta } from '@storybook/react-vite'
 import type { ComponentProps, ComponentType } from 'react'
 
 type UnionToIntersection<T> = (T extends unknown ? (arg: T) => void : never) extends (

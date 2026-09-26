@@ -1,0 +1,147 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Listeners</h1>
+    <p class="text-sm text-muted-foreground">
+      Listener accounts. Deactivating sets a deletion date and keeps the row — playlists and history
+      are not erased here.
+    </p>
+  </header>
+
+  <form class="flex gap-2" (ngSubmit)="applyFilters()">
+    <label class="sr-only" for="user-search">Search listeners</label>
+    <input
+      hlmInput
+      class="w-64"
+      id="user-search"
+      type="search"
+      placeholder="Username or email"
+      [value]="draft()"
+      (input)="draft.set($any($event.target).value)"
+    />
+    <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
+  </form>
+
+  <div class="flex gap-2" role="group" aria-label="Filter by status">
+    @for (
+      option of [
+        { value: 'active', label: 'Active' },
+        { value: 'deactivated', label: 'Deactivated' },
+        { value: 'all', label: 'All' },
+      ];
+      track option.value
+    ) {
+      <button
+        hlmBtn
+        size="sm"
+        [variant]="query.state().status === option.value ? 'default' : 'outline'"
+        type="button"
+        [attr.aria-pressed]="query.state().status === option.value"
+        (click)="setStatus($any(option.value))"
+      >
+        {{ option.label }}
+      </button>
+    }
+  </div>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No listeners match this search."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Listener accounts
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'username')">
+              <app-sort-header
+                [field]="'username'"
+                label="Listener"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Listener
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'email')">
+              <app-sort-header
+                [field]="'email'"
+                label="Email"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Email
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col">Email confirmed</th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'createdAt')">
+              <app-sort-header
+                [field]="'createdAt'"
+                label="Joined"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Joined
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (user of collection.items(); track user.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a [routerLink]="['/users', user.id]" class="hover:underline">{{
+                  user.username
+                }}</a>
+                @if (user.deactivatedAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">deactivated</span>
+                }
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ user.email }}</td>
+              <td hlmTd>
+                @if (user.emailVerifiedAt) {
+                  <span class="tabular-nums text-muted-foreground">
+                    {{ user.emailVerifiedAt | localizedDate: 'dd.MM.yyyy' }}
+                  </span>
+                } @else {
+                  <span hlmBadge variant="outline">pending</span>
+                }
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ user.createdAt | localizedDate: 'dd.MM.yyyy' }}
+              </td>
+              <td hlmTd>
+                @if (!user.deactivatedAt && canDelete()) {
+                  <button
+                    hlmBtn
+                    size="sm"
+                    variant="ghost"
+                    type="button"
+                    [disabled]="busyId() === user.id"
+                    (click)="remove(user)"
+                  >
+                    Deactivate
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</section>

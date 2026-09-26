@@ -1,6 +1,6 @@
 ---
 name: expo
-description: Expo and React Native conventions for apps/mobile — expo-router file-based routing, the native-vs-web boundary (what from the web stack does NOT work here), styling without Tailwind, Reanimated, and the build/run commands. Use when writing a screen, navigation, or native surface in apps/mobile, or before assuming a web-player pattern transfers.
+description: "Build screens, navigation and native features in apps/mobile using Expo and React Native conventions."
 license: MIT
 metadata:
   author: lordpluha
@@ -43,7 +43,8 @@ This is the section that saves the most time. None of these exist in React Nativ
 
 The rules that **do** apply: `.claude/rules/typescript.md`,
 `.claude/rules/code-principles.md`, and the framework-agnostic parts of
-`.claude/rules/react.md` (hooks rules, ≤100 logic lines, ≤5 props, ≤2 `useEffect`).
+React hook correctness. Size/props/effects follow the review signals in
+`.claude/rules/code-principles.md`; web React recipes do not apply.
 
 ## Routing — `expo-router`
 
@@ -63,7 +64,7 @@ two navigators competing for the same stack is a hard bug to unpick.
 ## Styling
 
 `StyleSheet.create` (or whatever the app has established — check first). Design values should
-trace back to the token roles in `packages/ui-react/src/styles/`; if no bridge exists for this app yet, say so rather than
+trace back to the token roles in `packages/tailwind/src/`; if no bridge exists for this app yet, say so rather than
 scattering raw hex literals.
 
 React Native's layout is flexbox-only, `flexDirection` defaults to `column` (not `row`), and

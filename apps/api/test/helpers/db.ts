@@ -14,7 +14,7 @@ export const resetUsersDatabase = async (prisma: PrismaService) => {
 }
 
 /** The reset tracks database value. */
-export const resetTracksDatabase = async (prisma: PrismaService) => {
+const resetTracksDatabase = async (prisma: PrismaService) => {
   await prisma.track.deleteMany()
   await prisma.trackFile.deleteMany()
 }

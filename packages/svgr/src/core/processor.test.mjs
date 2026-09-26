@@ -6,7 +6,7 @@ import { processSvgFiles } from './processor.mjs'
 
 // Biome is not available in test environment — stub it out
 vi.mock('node:child_process', () => ({
-  execSync: vi.fn(),
+  execFileSync: vi.fn(),
 }))
 
 const MONOCHROME_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -112,5 +112,54 @@ describe('processSvgFiles', () => {
     await processSvgFiles(inputDir, outputDir)
 
     expect(fs.existsSync(outputDir)).toBe(true)
+  })
+
+  describe('source-hash cache', () => {
+    it('skips regeneration on a second run with unchanged SVGs', async () => {
+      fs.writeFileSync(path.join(inputDir, 'arrow.svg'), MONOCHROME_SVG)
+
+      await processSvgFiles(inputDir, outputDir)
+      const firstRun = fs.readFileSync(path.join(outputDir, 'Arrow.tsx'), 'utf-8')
+
+      // A file that only a real regeneration would remove — proves the second call
+      // never touched the directory.
+      fs.writeFileSync(path.join(outputDir, 'untouched.marker'), 'still here')
+
+      await processSvgFiles(inputDir, outputDir)
+
+      expect(fs.existsSync(path.join(outputDir, 'untouched.marker'))).toBe(true)
+      expect(fs.readFileSync(path.join(outputDir, 'Arrow.tsx'), 'utf-8')).toBe(firstRun)
+    })
+
+    it('regenerates when an SVG file changes after a cached run', async () => {
+      fs.writeFileSync(path.join(inputDir, 'arrow.svg'), MONOCHROME_SVG)
+      await processSvgFiles(inputDir, outputDir)
+
+      fs.writeFileSync(path.join(inputDir, 'logo.svg'), MULTICOLOR_SVG)
+      await processSvgFiles(inputDir, outputDir)
+
+      expect(fs.existsSync(path.join(outputDir, 'Logo.tsx'))).toBe(true)
+    })
+
+    it('regenerates when colorVarNames changes even if the SVGs did not', async () => {
+      fs.writeFileSync(path.join(inputDir, 'logo.svg'), MULTICOLOR_SVG)
+      await processSvgFiles(inputDir, outputDir, { colorVarNames: ['primaryColor'] })
+
+      await processSvgFiles(inputDir, outputDir, { colorVarNames: ['primaryColor', 'bgColor'] })
+
+      const content = fs.readFileSync(path.join(outputDir, 'Logo.tsx'), 'utf-8')
+      expect(content).toContain('bgColor')
+    })
+
+    it('writes a cache manifest alongside the generated components', async () => {
+      fs.writeFileSync(path.join(inputDir, 'arrow.svg'), MONOCHROME_SVG)
+
+      await processSvgFiles(inputDir, outputDir)
+
+      const manifestPath = path.join(outputDir, '.svgr-cache.json')
+      expect(fs.existsSync(manifestPath)).toBe(true)
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+      expect(manifest.hash).toMatch(/^[0-9a-f]{64}$/)
+    })
   })
 })

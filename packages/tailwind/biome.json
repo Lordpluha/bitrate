@@ -1,0 +1,17 @@
+{
+  "root": false,
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+  "extends": ["../../biome.json"],
+  "css": {
+    "parser": {
+      "tailwindDirectives": true,
+      "cssModules": false
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  }
+}
