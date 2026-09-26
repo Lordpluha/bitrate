@@ -1,7 +1,0 @@
----
-'@bitrate/api': minor
-'@bitrate/contracts': minor
-'@bitrate/admin': patch
----
-
-Every API response that returns a body now declares a real, type-checked schema instead of a hand-written `$ref` string or no schema at all, so the generated OpenAPI contract no longer carries dangling references or untyped response bodies — new entities were added for the playlist detail, search, history, follow/unfollow, and 2FA-required-at-login shapes, and the artist "get current authenticated artist" endpoint was corrected to type its response as the artist entity it actually returns instead of the wrong user entity. The three modules that each declared their own `LoginDto` — admin, artist, and user auth — were renamed to `AdminLoginDto`, `ArtistLoginDto`, and `UserLoginDto`, clearing the "Duplicate DTO detected" warning Nest logged at startup and fixing two of the three login endpoints, which had been documented in the generated contract with the wrong request body shape. The admin panel's staff sign-in request DTO now binds to the renamed `AdminLoginDto` contract key. The 2FA-enrollment response (QR code and manual secret) is now a named `UserTwoFactorSetupEntity`/`ArtistTwoFactorSetupEntity` instead of an inline anonymous schema, and the admin audio stream/probe endpoints now declare their binary `audio/mp4` body and `Accept-Ranges`/`Content-Range` headers explicitly instead of relying on a bare `ApiProduces` with no schema.

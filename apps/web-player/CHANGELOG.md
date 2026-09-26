@@ -1,5 +1,24 @@
 # @bitrate/web-player
 
+## 1.1.1
+
+### Patch Changes
+
+- d1f8e04: Bumped `@tanstack/react-query`/`@tanstack/react-query-devtools` from 5.101.0 to 5.103.1 and `lucide-react` from 1.18.0 to 1.47.0 across the web apps and the shared component library, keeping a single resolved copy of each in the lockfile. The `Spinner` and loading `Button` now render an additional `lucide-loader-2` class alongside `lucide-loader-circle` on the loading icon, a cosmetic side effect of the lucide-react upgrade with no visible change.
+- f769029: Restored workspace dependency links in admin Docker builds and included the shared UI build in development web images so they run from a clean checkout.
+- e1a9c20: The three application production images shrank by between 35% and 94%. The web player now
+  builds with Next.js standalone output file tracing, so its image carries the traced server
+  instead of the whole hoisted production dependency tree, and its container runs `node
+server.js` directly rather than two nested pnpm wrappers. Every production stage applies
+  ownership through `COPY --chown` instead of a trailing recursive `chown`, which had been
+  writing a second complete copy of the application tree into its own layer. The API image no
+  longer copies the seeded audio under `apps/api/storage/private`, keeping only the `public`
+  subtree its static file handler actually serves. Measured locally: web player 4.44 GB to
+  265 MB, API 3.88 GB to 1.9 GB, web artists 637 MB to 412 MB.
+- Updated dependencies [d1f8e04]
+- Updated dependencies [d1f8e04]
+  - @bitrate/ui-react@1.1.0
+
 ## 1.1.0
 
 ### Minor Changes
