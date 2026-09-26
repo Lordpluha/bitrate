@@ -18,7 +18,7 @@ export type SingleRelease = {
   track: TrackEntity
 }
 
-export type DiscographyRelease = AlbumRelease | SingleRelease
+type DiscographyRelease = AlbumRelease | SingleRelease
 
 export const COLLAPSED_RELEASE_COUNT = 6
 

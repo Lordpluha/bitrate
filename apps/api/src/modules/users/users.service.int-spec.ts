@@ -26,40 +26,48 @@ describe('UsersService (int)', () => {
     expect(service).toBeDefined()
   })
 
-  it('findById should project only public fields', async () => {
+  it('findById should filter deletedAt and project only public fields', async () => {
     const user = buildUser()
-    prismaMock.user.findUniqueOrThrow.mockResolvedValue(user as never)
+    prismaMock.user.findFirst.mockResolvedValue(user as never)
 
     const result = await service.findById('user-1')
 
-    expect(prismaMock.user.findUniqueOrThrow).toHaveBeenCalledWith({
-      where: { id: 'user-1' },
+    expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
+      where: { id: 'user-1', deletedAt: null },
       select: PUBLIC_USER_SELECT,
     })
     expect(result).toEqual(user)
   })
 
-  it('getByEmail should look up the id only', async () => {
+  it('findById should resolve null, not throw, for a soft-deleted user', async () => {
+    prismaMock.user.findFirst.mockResolvedValue(null)
+
+    const result = await service.findById('user-1')
+
+    expect(result).toBeNull()
+  })
+
+  it('getByEmail should filter deletedAt and look up the id only', async () => {
     const user = buildUser()
     prismaMock.user.findFirst.mockResolvedValue(user as never)
 
     const result = await service.getByEmail('user@example.com')
 
     expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
-      where: { email: 'user@example.com' },
+      where: { email: 'user@example.com', deletedAt: null },
       select: { id: true },
     })
     expect(result).toEqual(user)
   })
 
-  it('getByUsername should project only public fields', async () => {
+  it('getByUsername should filter deletedAt and project only public fields', async () => {
     const user = buildUser()
     prismaMock.user.findFirst.mockResolvedValue(user as never)
 
     const result = await service.getByUsername('user')
 
     expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
-      where: { username: 'user' },
+      where: { username: 'user', deletedAt: null },
       select: PUBLIC_USER_SELECT,
     })
     expect(result).toEqual(user)

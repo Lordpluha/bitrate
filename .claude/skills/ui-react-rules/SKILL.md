@@ -1,6 +1,6 @@
 ---
 name: ui-react-rules
-description: Project conventions for the packages/ui-react component library — where component source, barrels, and config live, the search-before-adding workflow, Base UI as the primitive library, and where the generic shadcn skill's defaults are overridden. Use whenever adding, searching for, or modifying a UI component in packages/ui-react, or whenever the generic shadcn skill's guidance conflicts with this package's existing source.
+description: "Add, find or modify packages/ui-react components; apply project layout, Base UI and overrides of generic shadcn guidance."
 metadata:
   version: "1.0.0"
   type: reference
@@ -21,12 +21,12 @@ win.
 - Component barrel: `packages/ui-react/src/components/ui/index.ts`
 - Package barrel: `packages/ui-react/src/index.ts`
 - Class helper: `cn` from `packages/ui-react/src/lib/utils.ts`
-- Primitive library: Base UI (`@base-ui-components/react`)
+- Primitive library: Base UI (`@base-ui/react`)
 - Consumer import: `import { Button } from '@bitrate/ui-react'`
 - Raw source art: `packages/ui-react/assets/` — `icons/` (SVG the svgr plugin compiles into
   `src/icons/svgr/` on `pnpm build`) and `images/` (raster files stories import as
   `@assets/images/...`). Nothing under `assets/` is shipped; it is build-time input only.
-- Design tokens: hand-written `@theme` layers in `packages/ui-react/src/styles/`. That CSS is
+- Design tokens: hand-written `@theme` layers in `packages/tailwind/src/`. That CSS is
   the source — there is no `tokens.json` and no generator (ADR-0023).
 
 Put a new SVG in `assets/icons/` and rebuild — never hand-write a file in `src/icons/svgr/`,

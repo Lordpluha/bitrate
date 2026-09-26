@@ -20,7 +20,7 @@ const historyTrackResponseSchema = z.object({
   title: z.string(),
 })
 
-export const listeningHistoryEntrySchema = z.object({
+const listeningHistoryEntrySchema = z.object({
   id: z.string(),
   listenedAt: z.string(),
   track: historyTrackResponseSchema,

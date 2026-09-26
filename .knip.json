@@ -1,11 +1,11 @@
 {
-  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "$schema": "https://unpkg.com/knip@6/schema.json",
   "tags": ["-lintignore"],
   "workspaces": {
     ".": {
       "entry": [".cz-config.js"],
       "ignore": [".cz-config.js"],
-      "ignoreBinaries": ["biome"]
+      "ignoreBinaries": ["biome", "playwright"]
     },
     "apps/api": {
       "entry": [
@@ -23,8 +23,19 @@
       "ignore": ["src/**/index.ts"]
     },
     "apps/web-artists": {
-      "entry": ["src/app/**/*.tsx", "src/app/**/*.ts", "src/app/global.css"],
-      "ignore": ["env.schema.ts"]
+      "entry": [
+        "src/router.tsx",
+        "src/routes/**/*.tsx",
+        "src/global.css",
+        "src/**/*.unit-spec.ts",
+        "src/**/*.unit-spec.tsx",
+        "src/**/*.int-spec.ts",
+        "src/**/*.int-spec.tsx",
+        "src/**/*.screenshot-spec.ts",
+        "tests/configs/*.ts",
+        "tests/e2e/**/*.e2e-spec.ts"
+      ],
+      "ignore": ["env.schema.ts", "src/routeTree.gen.ts"]
     },
     "apps/web-player": {
       "entry": [
@@ -33,17 +44,20 @@
         "src/app/global.css",
         "src/**/*.unit-spec.ts",
         "src/**/*.unit-spec.tsx",
-        "tests/**/*.int-spec.ts",
-        "tests/**/*.int-spec.tsx",
-        "tests/**/*.e2e-spec.ts",
-        "tests/**/*.screenshot-spec.ts",
+        "src/**/*.int-spec.ts",
+        "src/**/*.int-spec.tsx",
+        "src/**/*.screenshot-spec.ts",
         "tests/configs/*.ts",
-        "vitest.config.ts"
+        "tests/e2e/**/*.e2e-spec.ts",
+        "scripts/select-playwright-tests.mjs",
+        "public/sw.js"
       ],
-      "ignore": ["env.schema.ts"]
+      "ignore": ["env.schema.ts"],
+      "ignoreDependencies": ["sniffler"]
     },
     "packages/ui-react": {
       "entry": [
+        "src/index.ts",
         "src/**/index.css",
         "src/**/*.unit-spec.ts",
         "src/**/*.unit-spec.tsx",
@@ -53,9 +67,47 @@
         "src/**/*.snapshot-spec.tsx",
         "src/**/*.screenshot-spec.ts",
         "src/**/*.screenshot-spec.tsx",
-        "vitest.config.ts"
+        "vitest.config.ts",
+        ".storybook/preview.tsx"
       ],
-      "ignoreDependencies": ["tsc-alias"]
+      "ignoreDependencies": ["tsc-alias"],
+      "storybook": {
+        "config": [".storybook/main.ts"],
+        "stories": ["src/**/*.stories.@(ts|tsx|mdx)", "src/**/*.mdx"]
+      }
+    },
+    "apps/admin": {
+      "entry": ["src/**/*.unit-spec.ts", "eslint.config.js"],
+      "ignore": ["src/**/index.ts", "src/styles.css", "src/app/presentation/ui/**"],
+      "ignoreDependencies": ["@spartan-ng/cli", "@bitrate/tailwind"]
+    },
+    "packages/player": {
+      "entry": [
+        "src/index.ts",
+        "src/contract/index.ts",
+        "src/engine/index.ts",
+        "src/**/*.unit-spec.ts",
+        "src/**/*.node-spec.ts",
+        "src/**/*.browser-spec.ts"
+      ]
+    },
+    "apps/docs": {
+      "entry": ["src/css/custom.css"],
+      "ignoreDependencies": [
+        "@easyops-cn/docusaurus-search-local",
+        "@easyops-cn/docusaurus-theme-docusaurus-search-local"
+      ]
+    },
+    "apps/mobile": {
+      "entry": ["components/**/*.ios.tsx", "hooks/**/*.web.ts"],
+      "ignoreBinaries": ["eas"],
+      "ignoreDependencies": ["expo-updates"]
+    },
+    "packages/converter": {
+      "entry": ["src/ffmpeg-process.d.ts"]
+    },
+    "packages/ncs-parser": {
+      "entry": ["src/main.ts", "tests/*.test.ts"]
     }
   },
   "ignore": [
@@ -63,7 +115,6 @@
     ".br-scratch/**",
     ".claude/**",
     "**/*.module.css",
-    "**/*.stories.tsx",
     "**/*.test.tsx",
     "**/dist/**",
     "**/.next/**",

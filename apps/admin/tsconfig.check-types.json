@@ -1,0 +1,11 @@
+{
+  /* Used only by `pnpm check-types` — never by ng build. Resolves `@bitrate/player` via its
+     own "bitrate-typecheck" export condition (see packages/player/package.json) instead of
+     duplicating app path aliases here. */
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "customConditions": ["bitrate-typecheck"]
+  },
+  "references": [{ "path": "../../packages/player/tsconfig.refs.json" }]
+}

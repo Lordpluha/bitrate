@@ -5,12 +5,27 @@ on:
 
 permissions:
   contents: read
+  # Read-only, and only for one thing: docker/build-push-action pulls the GHCR
+  # `cache/<app>:buildcache` refs below. Without a packages scope the token 403s on that pull,
+  # BuildKit downgrades a cache-from failure to a warning rather than an error, and the job
+  # silently falls back to the cold build this change exists to remove. The caller
+  # (web-integration-test.yml) grants the same scope — a called workflow can only narrow the
+  # caller's permissions, never widen them.
+  packages: read
+
+# Must match api_reusable.yml, web_player_reusable.yml and web_artists_reusable.yml exactly.
+# A different IMAGE_PREFIX would not fail the job; it would quietly address a second cache lane
+# that nothing ever warms.
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
 
 jobs:
   integration-test:
     name: Integration Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Cold image builds took 18 minutes before service startup in the failing run.
+    timeout-minutes: 35
 
     # Every variable in docker-compose.preprod.yaml is declared with a `:-default`, so the
     # stack needs no env file to come up. These are the values CI pins deliberately, set as
@@ -32,6 +47,14 @@ jobs:
       SHADOW_DATABASE_URL: postgresql://admin:admin@postgres:5432/bitrate_shadow
       JWT_SECRET: test_secret_key_for_ci
 
+      # Compose derives the project name from the project directory, which is `infra/` because
+      # every command below passes `-f infra/docker-compose.preprod.yaml`. Pinning it changes
+      # nothing about today's behaviour (`docker compose config --images` already prints
+      # `infra-api` / `infra-web-player` / `infra-web-artists`) and turns the image names the
+      # build steps tag into a stated contract rather than a derivation a directory rename
+      # would silently break.
+      COMPOSE_PROJECT_NAME: infra
+
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -51,31 +74,128 @@ jobs:
           # Show available space
           df -h
 
-      - name: Build application images
-        run: |
-          docker compose -f infra/docker-compose.preprod.yaml build api web-player web-artists
+      # After the prune, so `--volumes` cannot take the builder's cache out from under it.
+      - name: Setup Docker + registries
+        uses: ./.github/actions/setup-docker
+        with:
+          ghcr: "true"
+          ghcr-registry: ${{ env.REGISTRY }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+
+      # The three steps below replace a single `docker compose build api web-player web-artists`.
+      # Compose has no cache backend at all, and the prune above wipes the runner's local layers,
+      # so that command was a cold build of three images on every PR. buildx can read the cache
+      # the per-app jobs (api-pr, web-player-pr, web-artists-pr) maintain; compose cannot.
+      #
+      # `target: development`, NOT the `production` the sibling workflows build. That is
+      # deliberate: infra/docker-compose.preprod.yaml declares `target: development` for all
+      # three services and runs `start:dev` / `next dev`. The CI overlay removes local
+      # bind mounts so generated package output and dependency links come from the images.
+      # A production image carries `pnpm install --prod` node_modules and no Nest or Next CLI,
+      # so the compose `command:` would not start and the `db:gen` / `prisma db seed` steps
+      # further down would fail.
+      #
+      # The cache still hits despite the different target, because `base` and `dependencies`
+      # are shared stages and `dependencies` is the `pnpm install --frozen-lockfile` that
+      # dominates every one of these builds. For apps/api the `development` and `build` stages
+      # are instruction-for-instruction identical through `RUN ... db:gen`, so that entire
+      # chain resolves against the production lane's cache.
+      #
+      # There is deliberately no `cache-to`. The shared refs hold a production-target manifest;
+      # a `mode=max` export from a development-target build would replace it, and the next
+      # api-pr would then re-run `pnpm build` and `pnpm install --prod` from scratch. This job
+      # reads that lane and never writes it.
+      #
+      # `load: true` plus `tags:` puts each image into the local daemon under exactly the name
+      # compose resolves for that service — `<project>-<service>`, since none of the three
+      # declares an `image:`. That is what lets `up --no-build` below start them.
+      - name: Build API image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./apps/api/Dockerfile
+          push: false
+          load: true
+          target: development
+          tags: ${{ env.COMPOSE_PROJECT_NAME }}-api:latest
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache
+            type=gha,scope=api
+
+      - name: Build Web Player image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./apps/web-player/Dockerfile
+          push: false
+          load: true
+          target: development
+          tags: ${{ env.COMPOSE_PROJECT_NAME }}-web-player:latest
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache
+            type=gha,scope=web-player
+
+      # No build-args on either Next.js image, unlike the sibling workflows. Their args feed the
+      # `build` stage, which bakes NEXT_PUBLIC_* into a static bundle; the `development` stage
+      # declares no ARG at all and `next dev` reads those values at runtime from the compose
+      # `environment:` block. Passing them here would warn about an unconsumed build-arg and
+      # change nothing in the image — and it would pull SENTRY_AUTH_TOKEN into a job that has
+      # no release artifact to attach source maps to.
+      - name: Build Web Artists image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./apps/web-artists/Dockerfile
+          push: false
+          load: true
+          target: development
+          tags: ${{ env.COMPOSE_PROJECT_NAME }}-web-artists:latest
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-artists:buildcache
+            type=gha,scope=web-artists
 
       - name: Start services
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml up -d postgres redis
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml up -d postgres redis
           sleep 10
 
       - name: Wait for services
         run: |
-          timeout 60 bash -c 'until docker compose -f infra/docker-compose.preprod.yaml exec -T postgres pg_isready -U admin; do sleep 1; done'
-          docker compose -f infra/docker-compose.preprod.yaml exec -T redis redis-cli ping
+          timeout 60 bash -c 'until docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres pg_isready -U admin; do sleep 1; done'
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T redis redis-cli ping
 
+      # Before `api` ever starts: AdminAuthModule's OnModuleInit (apps/api/src/modules/admin-auth/
+      # admin-auth.module.ts) calls ensureBuiltInRoles() on every boot, unconditionally, to repair
+      # a restored dump missing its built-in roles. That query needs the schema to already exist —
+      # run against a throwaway container via `run --rm`, not `exec`, since the long-running `api`
+      # service isn't up yet at this point and exec requires a running container.
+      - name: Run database migrations
+        run: |
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='bitrate_shadow'" | grep -q 1 || \
+            docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE bitrate_shadow;"
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml run --rm -T api pnpm --filter @bitrate/api run db:gen
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml run --rm -T api pnpm --filter @bitrate/api run db:migration:deploy
+
+      - name: Seed database
+        run: |
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml run --rm -T api sh -c "cd apps/api && pnpm prisma db seed"
+
+      # `--no-build` is the guard on the tagging contract above: compose only builds a service
+      # whose image is missing, so a tag that no longer matches would otherwise be an invisible
+      # 11-minute rebuild instead of a failure. Here it stops immediately and says which image
+      # it could not find.
       - name: Start application services
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml up -d api web-player web-artists
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml up -d --no-build api web-player web-artists
           sleep 20
 
       - name: Check container status
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml ps
-          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 api
-          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 web-player
-          docker compose -f infra/docker-compose.preprod.yaml logs --tail=50 web-artists
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml ps
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=50 api
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=50 web-player
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=50 web-artists
 
       - name: Run health checks
         run: |
@@ -83,7 +203,7 @@ jobs:
             echo "=== Health check attempt $i/30 ==="
 
             # Check API health endpoint
-            if curl -sf http://localhost:3000/api/v1/health; then
+            if curl --fail --silent --show-error --max-time 10 http://localhost:3000/api/v1/health; then
               echo "✅ API is healthy"
               API_OK=1
             else
@@ -91,16 +211,18 @@ jobs:
               API_OK=0
             fi
 
-            # Check Web - run inside container (curl not guaranteed on host)
-            if docker compose -f infra/docker-compose.preprod.yaml exec -T web-player node -e "const req=require('http').get('http://localhost:3001', (r)=>{console.log('Web status:', r.statusCode); process.exit(0);}); req.on('error', (e)=>{console.error('Web error:', e.message); process.exit(1);});"; then
-              echo "✅ Web is healthy"
-              WEB_OK=1
-            else
-              echo "❌ Web health check failed"
-              WEB_OK=0
-            fi
+            WEB_OK=1
+            for target in web-player:3001 web-artists:3002; do
+              service="${target%:*}"
+              port="${target#*:}"
+              if docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml exec -T "$service" node -e "const req=require('http').get('http://127.0.0.1:$port', (r)=>{console.log('$service status:', r.statusCode); process.exit(r.statusCode >= 200 && r.statusCode < 400 ? 0 : 1);}); req.setTimeout(10000, ()=>req.destroy(new Error('Health check timed out'))); req.on('error', (e)=>{console.error(e.message); process.exit(1);});"; then
+                echo "✅ $service is healthy"
+              else
+                echo "❌ $service health check failed"
+                WEB_OK=0
+              fi
+            done
 
-            # All healthy?
             if [ "$API_OK" = "1" ] && [ "$WEB_OK" = "1" ]; then
               echo "✅ All services are healthy"
               exit 0
@@ -111,27 +233,16 @@ jobs:
           echo "❌ Services failed to become healthy"
           exit 1
 
-      - name: Run database migrations
-        run: |
-          docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='bitrate_shadow'" | grep -q 1 || \
-            docker compose -f infra/docker-compose.preprod.yaml exec -T postgres psql -U admin -d postgres -c "CREATE DATABASE bitrate_shadow;"
-          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @bitrate/api run db:gen
-          docker compose -f infra/docker-compose.preprod.yaml exec -T api pnpm --filter @bitrate/api run db:migration:start
-
-      - name: Seed database
-        run: |
-          docker compose -f infra/docker-compose.preprod.yaml exec -T api sh -c "cd apps/api && pnpm prisma db seed"
-
       - name: Show container logs on failure
         if: failure()
         run: |
           echo "=== API Logs ==="
-          docker compose -f infra/docker-compose.preprod.yaml logs api
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs api
           echo "=== Web Logs ==="
-          docker compose -f infra/docker-compose.preprod.yaml logs web-player
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs web-player web-artists
           echo "=== Postgres Logs ==="
-          docker compose -f infra/docker-compose.preprod.yaml logs postgres
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs postgres
 
       - name: Cleanup
         if: always()
-        run: docker compose -f infra/docker-compose.preprod.yaml down -v
+        run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml down -v

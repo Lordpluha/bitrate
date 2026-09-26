@@ -7,22 +7,23 @@
 import './instrument'
 
 import { API_DOC_DESCRIPTION, API_DOC_TITLE, API_DOC_VERSION } from '@common/swagger'
-import { HttpStatus, VersioningType } from '@nestjs/common'
+import { HttpStatus, Logger, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import type { NestExpressApplication } from '@nestjs/platform-express'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
 import helmet from 'helmet'
+import { Logger as PinoLogger } from 'nestjs-pino'
 
 import { AppModule } from './app.module'
 import type { AppConfig } from './common/config'
 import { resolveTrustProxySetting } from './common/config/trusted-proxy.config'
-import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 
 /** Runs the bootstrap operation. */
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true })
+  app.useLogger(app.get(PinoLogger))
   const configService = app.get<ConfigService<AppConfig>>(ConfigService)
   const { userHost, artistHost } = configService.getOrThrow('web')
   app.set('trust proxy', resolveTrustProxySetting(configService.getOrThrow('TRUST_PROXY_HOPS')))
@@ -44,7 +45,8 @@ async function bootstrap() {
     }),
   )
   app.use(cookieParser())
-  app.useGlobalFilters(new HttpExceptionFilter())
+  // HttpExceptionFilter is registered as an APP_FILTER provider in AppModule — it needs
+  // I18nService injected, which `new HttpExceptionFilter()` here could not supply.
 
   // Add global prefix /api to all routes except static files and swagger
   app.setGlobalPrefix('api')
@@ -64,6 +66,7 @@ async function bootstrap() {
     .setDescription(API_DOC_DESCRIPTION)
     .setVersion(API_DOC_VERSION)
     .addServer(`http://localhost:${configService.getOrThrow('PORT')}`, 'Local server')
+    .addServer('https://api.bitrate.me', 'Deployed server')
     .addOAuth2({
       type: 'oauth2',
       flows: {
@@ -80,7 +83,7 @@ async function bootstrap() {
       name: configService.getOrThrow('ACCESS_TOKEN_NAME'),
       description: `HttpOnly cookies: ${configService.getOrThrow('ACCESS_TOKEN_NAME')} and ${configService.getOrThrow('REFRESH_TOKEN_NAME')}`,
     })
-    .setContact('Lordpluha', 'https://github.com/Lordpluha', 'vladislavteslyukofficial@gmail.com')
+    .setContact('Lordpluha', 'https://github.com/Lordpluha', 'vladyslav.tesliuk.official@gmail.com')
     // Global server errors
     .addGlobalResponse({
       status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -143,9 +146,22 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
     customSiteTitle: API_DOC_TITLE,
+    swaggerOptions: {
+      filter: true,
+      docExpansion: 'none',
+      tagsSorter: 'alpha',
+      operationsSorter: 'alpha',
+      persistAuthorization: true,
+    },
   })
 
   await app.listen(configService.getOrThrow('PORT'))
 }
 
-bootstrap()
+bootstrap().catch((error: unknown) => {
+  new Logger('Bootstrap').error(
+    'Fatal error during bootstrap',
+    error instanceof Error ? error.stack : error,
+  )
+  process.exit(1)
+})

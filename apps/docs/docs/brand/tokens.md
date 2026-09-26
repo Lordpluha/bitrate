@@ -4,7 +4,7 @@ sidebar_position: 8
 
 # Design tokens
 
-The Tailwind v4 `@theme` layers under `packages/ui-react/src/styles/` are the canonical
+The Tailwind v4 `@theme` layers under `packages/tailwind/src/` are the canonical
 source for palette, themes, typography, spacing, radii, borders, shadows, breakpoints,
 opacity, containers, aspect ratios, and z-index values. They are written by hand — there is
 no generator and no intermediate `tokens.json`.
@@ -12,7 +12,7 @@ no generator and no intermediate `tokens.json`.
 ## Layout
 
 ```text
-packages/ui-react/src/styles/
+packages/tailwind/src/
   palette.css        raw colour scales — no semantic meaning
   typography.css     families, sizes, weights, line-heights, tracking
   layout.css         spacing, radii, borders, shadows, breakpoints, z-index

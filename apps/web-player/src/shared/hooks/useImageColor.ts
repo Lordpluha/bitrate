@@ -99,7 +99,7 @@ export function useImageColor(src: string | undefined): RGB {
     let cancelled = false
 
     /** First attempt uses crossOrigin, which needs CORS headers on the server. */
-    tryLoad(src, true)
+    void tryLoad(src, true)
       .then((rgb) => {
         if (cancelled) return
         /** Fall back to a non-CORS load: the image may already be cached. */

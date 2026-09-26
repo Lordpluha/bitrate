@@ -58,4 +58,8 @@ export class UserEntity implements User {
   /** Soft deletion timestamp. */
   @ApiProperty({ nullable: true })
   deletedAt: Date | null
+
+  /** Transactional-email locale, set at registration from Accept-Language. */
+  @ApiProperty()
+  locale: string
 }

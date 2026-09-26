@@ -97,7 +97,7 @@ describe('UserAuthGuard', () => {
     }
 
     tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
-    prisma.user.findUnique.mockResolvedValue(buildUser({ id: 'user-1' }))
+    prisma.user.findFirst.mockResolvedValue(buildUser({ id: 'user-1' }))
     prisma.userSession.findFirst.mockResolvedValue(
       buildUserSession({
         userId: 'user-1',
@@ -131,7 +131,7 @@ describe('UserAuthGuard', () => {
       if (token === 'expired-refresh-token') return Promise.reject(new Error('expired'))
       return Promise.resolve({ sub: 'user-1', username: 'user', type: 'user' })
     })
-    prisma.user.findUnique.mockResolvedValue(buildUser({ id: 'user-1' }))
+    prisma.user.findFirst.mockResolvedValue(buildUser({ id: 'user-1' }))
     prisma.userSession.findFirst.mockResolvedValue(
       buildUserSession({
         userId: 'user-1',
@@ -155,11 +155,35 @@ describe('UserAuthGuard', () => {
     }
 
     tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
-    prisma.user.findUnique.mockResolvedValue(null)
+    prisma.user.findFirst.mockResolvedValue(null)
 
     await expect(guard.canActivate(createHttpContext(req))).rejects.toThrow(
       UNAUTHORIZED_ERRORS.USER_NOT_FOUND,
     )
+  })
+
+  /**
+   * A soft-deleted user's request must be rejected the same request it's deactivated in —
+   * not merely on next login. The guard looks the user up by id scoped to `deletedAt: null`
+   * on every request, so a deleted account never passes even with a still-valid session row.
+   */
+  it('should reject when user is soft-deleted', async () => {
+    reflector.getAllAndOverride.mockReturnValue('access')
+
+    const req = mockDeep<Request>()
+    req.cookies = { access_token: 'access-token' }
+
+    tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
+    // A soft-deleted user is excluded by the guard's `deletedAt: null` filter, so the lookup
+    // resolves to null exactly as a genuinely missing user would.
+    prisma.user.findFirst.mockResolvedValue(null)
+
+    await expect(guard.canActivate(createHttpContext(req))).rejects.toThrow(
+      UNAUTHORIZED_ERRORS.USER_NOT_FOUND,
+    )
+    expect(prisma.user.findFirst).toHaveBeenCalledWith({
+      where: { id: 'user-1', deletedAt: null },
+    })
   })
 
   it('should reject when token verification fails', async () => {

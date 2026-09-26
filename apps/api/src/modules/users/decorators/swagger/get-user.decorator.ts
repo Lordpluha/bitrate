@@ -1,5 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { SafeUserEntity } from '../../entities'
 
 /** Runs the get user swagger operation. */
 export function GetUserSwagger() {
@@ -9,9 +10,7 @@ export function GetUserSwagger() {
     ApiResponse({
       status: HttpStatus.OK,
       description: 'User retrieved successfully',
-      schema: {
-        $ref: '#/components/schemas/SafeUserEntity',
-      },
+      type: SafeUserEntity,
     }),
   )
 }

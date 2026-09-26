@@ -4,6 +4,11 @@ export default defineConfig({
   testDir: '../../src',
   testMatch: '**/*.screenshot-spec.ts',
   fullyParallel: false,
+  /**
+   * Not redundant next to `fullyParallel: false`: that flag only serialises tests *within* a
+   * file, while separate spec files still race across workers for the one dev server.
+   */
+  workers: 1,
   forbidOnly: !!process.env.CI,
   reporter: process.env.CI ? 'github' : 'list',
   expect: {

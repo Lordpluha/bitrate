@@ -20,6 +20,7 @@ export interface ConvertAudioToCmafOptions {
   bitrates: number[]
   fragmentFrames?: number
   timeoutMs?: number
+  onLog?: (message: string) => void
 }
 
 export interface ConvertAudioToCmafResult {

@@ -1,4 +1,4 @@
-import { Select as SelectPrimitive } from '@base-ui-components/react'
+import { Select as SelectPrimitive } from '@base-ui/react/select'
 import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 import type { ComponentProps } from 'react'
 
@@ -149,8 +149,6 @@ export {
   SelectGroup,
   SelectItem,
   SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
   SelectValue,

@@ -56,6 +56,7 @@ describe('WsUserAuthGuard', () => {
       createdAt: new Date(),
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     })
+    prisma.user.findFirst.mockResolvedValue({ id: 'user-1' } as never)
 
     const client = {
       handshake: {
@@ -70,6 +71,38 @@ describe('WsUserAuthGuard', () => {
     expect(result).toBe(true)
     expect(client.userId).toBe('user-1')
     expect(client.username).toBe('user')
+  })
+
+  /** A soft-deleted user is rejected at connect even with a live session row — the take-down
+   * revokes stored sessions, but this guards the narrow window where a stale/replayed session
+   * still matches by hash. Already-open sockets are unaffected until they disconnect; that is
+   * a documented limitation, not a bug this guard is meant to close. */
+  it('should reject when the user is soft-deleted', async () => {
+    tokenService.verifyToken.mockResolvedValue({ sub: 'user-1', username: 'user', type: 'user' })
+    tokenService.hashToken.mockReturnValue('hashed-token')
+    prisma.userSession.findFirst.mockResolvedValue({
+      id: 'session-1',
+      userId: 'user-1',
+      access_token: 'hashed-token',
+      refresh_token: 'hashed-refresh',
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    })
+    prisma.user.findFirst.mockResolvedValue(null)
+
+    const client = {
+      handshake: {
+        headers: {
+          cookie: 'access_token=access-token',
+        },
+      },
+    } as Socket
+
+    await expect(guard.canActivate(createWsContext(client))).rejects.toThrow('Unauthorized')
+    expect(prisma.user.findFirst).toHaveBeenCalledWith({
+      where: { id: 'user-1', deletedAt: null },
+      select: { id: true },
+    })
   })
 
   it('should reject when token invalid', async () => {

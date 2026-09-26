@@ -189,7 +189,7 @@ Music artwork already introduces substantial visual diversity. The product shell
 
 The palette is locked: **Bitrate Purple `#7c3aed`** as the primary, with secondary blue and
 semantic green/amber/red, across three themes — dark (default), light, and dim. The values live
-in `packages/ui-react/src/styles/`; [`tokens.md`](./tokens.md) owns how they are organised and
+in `packages/tailwind/src/`; [`tokens.md`](./tokens.md) owns how they are organised and
 [`bitrate-brand-board.png`](./bitrate-brand-board.png) is the board they came from. Do not
 restate a hex here.
 

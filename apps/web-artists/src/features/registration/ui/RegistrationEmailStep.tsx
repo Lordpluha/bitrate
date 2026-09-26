@@ -2,7 +2,7 @@
 
 import { Button, Input, Typography } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes/routes'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 import type { UseFormReturn } from 'react-hook-form'
 import type { RegistrationFormData } from '../validation/RegistrationForm.validation'
 import { SocialAuthButtons } from './SocialAuthButtons'
@@ -47,7 +47,7 @@ export const RegistrationEmailStep = ({
 
       <p className="text-lg text-center">
         Already have an account?{' '}
-        <Link className="font-bold" href={ROUTES.auth.login}>
+        <Link className="font-bold" to={ROUTES.auth.login}>
           <br />
           Log in.
         </Link>

@@ -13,6 +13,13 @@ import {
   Req,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import {
+  GetPodcastByIdSwagger,
+  GetPodcastsSwagger,
+  GetSavedEpisodesSwagger,
+  SaveEpisodeSwagger,
+  UnsaveEpisodeSwagger,
+} from './decorators'
 import { PodcastsService } from './podcasts.service'
 
 @ApiTags('Podcasts')
@@ -20,6 +27,7 @@ import { PodcastsService } from './podcasts.service'
 export class PodcastsController {
   constructor(private readonly podcasts: PodcastsService) {}
 
+  @GetPodcastsSwagger()
   @Get('podcasts')
   getAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
@@ -29,6 +37,7 @@ export class PodcastsController {
     return this.podcasts.getAll(page, limit, query)
   }
 
+  @GetPodcastByIdSwagger()
   @Get('podcasts/:id')
   getById(
     @Param('id', ParseUUIDPipe) id: string,
@@ -38,6 +47,7 @@ export class PodcastsController {
     return this.podcasts.getById(id, page, limit)
   }
 
+  @GetSavedEpisodesSwagger()
   @UserAuth()
   @Get('me/episodes')
   saved(
@@ -48,6 +58,7 @@ export class PodcastsController {
     return this.podcasts.getSavedEpisodes(req.user.id, page, limit)
   }
 
+  @SaveEpisodeSwagger()
   @UserAuth()
   @HttpCode(204)
   @Put('me/episodes/:id')
@@ -55,6 +66,7 @@ export class PodcastsController {
     return this.podcasts.saveEpisode(req.user.id, id)
   }
 
+  @UnsaveEpisodeSwagger()
   @UserAuth()
   @HttpCode(204)
   @Delete('me/episodes/:id')

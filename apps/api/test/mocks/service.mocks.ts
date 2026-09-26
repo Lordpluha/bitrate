@@ -1,6 +1,7 @@
 import type { CacheService } from '@infra/cache/cache.service'
 import type { StorageService } from '@infra/storage/storage.types'
 import { jest } from '@jest/globals'
+import type { ProcessingAttemptRecorder } from '@modules/tracks/processing-attempt.recorder'
 import type { ConfigService } from '@nestjs/config'
 import type { Queue } from 'bullmq'
 import type { PrismaMock } from './prisma.mock'
@@ -48,3 +49,15 @@ export const mockTransaction = (prisma: PrismaMock) =>
   prisma.$transaction.mockImplementation((fn: unknown) => {
     if (typeof fn === 'function') return (fn as (p: typeof prisma) => unknown)(prisma)
   })
+
+/** A `ProcessingAttemptRecorder` whose methods resolve without ever touching Prisma. */
+export const makeProcessingAttemptRecorderMock = () =>
+  ({
+    start: jest.fn().mockResolvedValue(undefined as never),
+    succeed: jest.fn().mockResolvedValue(undefined as never),
+    fail: jest.fn().mockResolvedValue(undefined as never),
+    supersede: jest.fn().mockResolvedValue(undefined as never),
+    markStalledByJob: jest.fn().mockResolvedValue(undefined as never),
+    finalize: jest.fn().mockResolvedValue(undefined as never),
+    recordEnqueueFailure: jest.fn().mockResolvedValue(undefined as never),
+  }) as unknown as jest.Mocked<ProcessingAttemptRecorder>

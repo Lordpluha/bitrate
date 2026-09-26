@@ -1,0 +1,44 @@
+name: "[tooling] SVGR Packages"
+
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'packages/svgr/**'
+      - 'packages/vite-svgr/**'
+      - '.github/workflows/tooling_packages.yml'
+      - '.github/workflows/tooling_packages_reusable.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop, master]
+    paths:
+      - 'packages/svgr/**'
+      - 'packages/vite-svgr/**'
+      - '.github/workflows/tooling_packages.yml'
+      - '.github/workflows/tooling_packages_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      run-biome:
+        description: "Run Biome check"
+        required: false
+        default: true
+        type: boolean
+      run-tests:
+        description: "Run tests"
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+
+jobs:
+  svgr:
+    uses: ./.github/workflows/tooling_packages_reusable.yml
+    with:
+      run-biome: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-biome'] == 'true' || github.event_name != 'workflow_dispatch' }}
+      run-tests: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-tests'] == 'true' || github.event_name != 'workflow_dispatch' }}

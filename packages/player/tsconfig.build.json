@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "outDir": ".types",
+    "rootDir": "src",
+    "skipLibCheck": true
+  },
+  "include": ["src", "src/**/*"],
+  "exclude": ["**/*.unit-spec.*", "**/*.browser-spec.*", "**/__tests__/**"]
+}

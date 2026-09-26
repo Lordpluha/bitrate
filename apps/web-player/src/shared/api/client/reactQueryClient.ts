@@ -4,19 +4,7 @@ import createClient from 'openapi-react-query'
 
 import { clientFetchClient } from './fetchClient'
 
-export const rqClient = createClient(clientFetchClient)
-const {
-  useQuery,
-  useMutation,
-  useInfiniteQuery,
-  queryOptions,
-  useSuspenseQuery,
-} = rqClient
+const rqClient = createClient(clientFetchClient)
+const { useQuery, useMutation, queryOptions } = rqClient
 
-export {
-  queryOptions,
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useSuspenseQuery,
-}
+export { queryOptions, useMutation, useQuery }

@@ -24,7 +24,7 @@ export const ACTIVE_BUFFER_SECONDS = 30
  * The next track only needs enough to start instantly. Prefetching a full
  * window would compete for bandwidth with the track actually playing.
  */
-export const PREFETCH_BUFFER_SECONDS = 8
+const PREFETCH_BUFFER_SECONDS = 8
 
 /**
  * Attaches the single-file CMAF path to a slot: a MediaSource driven by our own

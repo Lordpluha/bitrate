@@ -1,5 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
+import { TrackManifestEntity } from '../../entities'
 
 /** Runs the get track manifest swagger operation. */
 export function GetTrackManifestSwagger() {
@@ -13,7 +14,7 @@ export function GetTrackManifestSwagger() {
     ApiParam({ name: 'id', type: 'string', format: 'uuid', description: 'Track ID' }),
     ApiResponse({
       status: HttpStatus.OK,
-      schema: { $ref: '#/components/schemas/TrackManifestEntity' },
+      type: TrackManifestEntity,
     }),
     ApiResponse({
       status: HttpStatus.NOT_FOUND,

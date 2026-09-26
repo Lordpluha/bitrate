@@ -1,0 +1,9 @@
+@if (elementReady()) {
+  <bitrate-player
+    [renditions]="renditions()"
+    [trackTitle]="track().title"
+    [artist]="track().artistUsername"
+    [coverUrl]="track().coverUrl ?? ''"
+    [resolveSource]="resolveSource"
+  ></bitrate-player>
+}

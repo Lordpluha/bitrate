@@ -14,7 +14,6 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ../docker/postgres/initdb:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d bitrate"]
       interval: 10s
@@ -40,17 +39,6 @@ services:
     networks:
       - bitrate-network
 
-  # Local SMTP capture. No real email leaves the development stack.
-  mailhog:
-    image: mailhog/mailhog:v1.0.1
-    container_name: bitrate-mailhog
-    restart: unless-stopped
-    ports:
-      - "${MAILHOG_SMTP_PORT:-1025}:1025"
-      - "${MAILHOG_UI_PORT:-8025}:8025"
-    networks:
-      - bitrate-network
-
   # Backend API (NestJS)
   api:
     build:
@@ -67,27 +55,33 @@ services:
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
       WEB_HOST: ${WEB_HOST:-http://localhost:3001}
-      SMTP_HOST: mailhog
-      SMTP_PORT: 1025
+      # No SMTP host, on purpose: MailService builds no transporter without one and logs the
+      # verification/reset link instead. Point SMTP_HOST at a real server to send for real.
+      DEV_MAIL_LOG_TOKENS: "true"
       EMAIL_FROM: no-reply@bitrate.local
       JWT_SECRET: ${JWT_SECRET:-change_me_in_production_secret}
       PORT: 3000
+      # Gates GET /metrics — see AppController.assertMetricsAccess. Without any value the
+      # route 404s even on this internal network, so the observability profile's Prometheus
+      # (infra/observability/prometheus/prometheus.yml, which hardcodes this same default —
+      # it cannot read .env) couldn't scrape it at all. Fixed dev-only value, same spirit as
+      # this file's admin/admin Postgres credentials.
+      METRICS_TOKEN: ${METRICS_TOKEN:-dev-metrics-token-local-only-0001}
     ports:
       - "${API_PORT:-3000}:3000"
     volumes:
       - ../apps/api:/app/apps/api
       - ../packages:/app/packages
-      - ../apps/api/uploads:/app/apps/api/uploads
       - ../apps/api/public:/app/apps/api/public
       - /app/node_modules
       - /app/apps/api/node_modules
+      # Keep container-generated output off the host (native builds clean this directory).
+      - /app/apps/api/dist
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-      mailhog:
-        condition: service_started
     networks:
       - bitrate-network
     command: pnpm --filter @bitrate/api run start:dev
@@ -134,7 +128,8 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: development
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+      # Vite видит только VITE_-префикс; общая с web-player переменная разворачивается здесь.
+      VITE_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
       PORT: 3002
     ports:
       - "${WEB_ARTISTS_PORT:-3004}:3002"
@@ -143,7 +138,9 @@ services:
       - ../packages:/app/packages
       - /app/node_modules
       - /app/apps/web-artists/node_modules
-      - /app/apps/web-artists/.next
+      # Vite's dep-optimizer cache, not Next's .next — the host bind-mount above would
+      # otherwise shadow it and the dev server would re-optimize on every container start.
+      - /app/apps/web-artists/node_modules/.vite
       - /app/packages/ui-react/node_modules
       - /app/packages/svgr/node_modules
       - /app/packages/vite-svgr/node_modules
@@ -154,7 +151,33 @@ services:
       - bitrate-network
     command: pnpm --filter @bitrate/web-artists run dev
 
-  # Admin Panel (Kottster)
+  # Admin Panel (Angular SPA)
+  admin:
+    build:
+      context: ..
+      dockerfile: ./apps/admin/Dockerfile
+      target: development
+    container_name: bitrate-admin
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      # Angular inlines this at build time via `define`; in the dev target ng serve reads it
+      # from angular.json instead, so this is here for parity, not because it is consumed.
+      NG_APP_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+    ports:
+      - "${ADMIN_PORT:-3005}:3005"
+    volumes:
+      - ../apps/admin:/app/apps/admin
+      - ../packages:/app/packages
+      - /app/node_modules
+      - /app/apps/admin/node_modules
+      - /app/apps/admin/.angular
+    depends_on:
+      - api
+    networks:
+      - bitrate-network
+    command: pnpm --filter @bitrate/admin run dev
+
   # Mobile App (Expo Development Server)
   mobile:
     build:
@@ -240,6 +263,208 @@ services:
     profiles:
       - docs
 
+  # ─────────────────────────────────────────
+  # Observability — Prometheus + Grafana. See ADR-0044. Local-machine-only, entirely optional:
+  # nothing here starts with a plain `task dev:up`; `task observability:up` is required.
+  # ─────────────────────────────────────────
+
+  # Scrapes every target below. 127.0.0.1-bound on purpose — this is the raw TSDB, never meant
+  # to leave the machine. Grafana is the human-facing surface; see its own comment.
+  prometheus:
+    image: prom/prometheus:v3.0.1
+    container_name: bitrate-prometheus
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "127.0.0.1:${PROMETHEUS_PORT:-9090}:9090"
+    networks:
+      - bitrate-network
+    profiles:
+      - observability
+
+  # The only piece of this stack meant to be reachable at all — see grafana-cloudflared below.
+  # GF_SECURITY_ADMIN_PASSWORD has no default: an empty/missing value here is a Grafana that
+  # starts with no usable password, not a silently-insecure "admin"/"admin" — set
+  # GRAFANA_ADMIN_PASSWORD in .env before starting this profile.
+  grafana:
+    image: grafana/grafana:11.3.1
+    container_name: bitrate-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "127.0.0.1:${GRAFANA_PORT:-3006}:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - bitrate-network
+    profiles:
+      - observability
+
+  # A tunnel dedicated to Grafana, deliberately not admin's prod tunnel/token (different
+  # compose file, different environment — see ADR-0044's Alternatives). Creating the tunnel
+  # itself and setting CLOUDFLARE_TUNNEL_TOKEN_GRAFANA is a manual step on the developer's own
+  # Cloudflare Zero Trust account; see infra/observability/README.md. Without a real token this
+  # container exits immediately — expected, not a bug, until that step is done.
+  grafana-cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: bitrate-grafana-cloudflared
+    restart: unless-stopped
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+      - --token
+      - ${CLOUDFLARE_TUNNEL_TOKEN_GRAFANA:-}
+    depends_on:
+      - grafana
+    networks:
+      - bitrate-network
+    profiles:
+      - observability
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: bitrate-postgres-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bitrate-network
+    profiles:
+      - observability
+
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.62.0
+    container_name: bitrate-redis-exporter
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - bitrate-network
+    profiles:
+      - observability
+
+  # Host-level CPU/memory/disk/network — the official image's documented pattern: mount the
+  # host's /proc, /sys and / read-only and point the exporter at those paths instead of its
+  # own container's, or it would report the container's tiny namespace instead of the host.
+  #
+  # Stays on bitrate-network, not network_mode: host. CPU/memory/disk figures
+  # (/proc/stat, /proc/meminfo, mounted filesystems) are global kernel state, not
+  # per-namespace, so the bind mount alone reports the real host numbers for those. Only
+  # /proc/net/dev (network interfaces) is genuinely per network-namespace, so this
+  # container's own network-panel numbers reflect its own near-idle veth, not the host's
+  # real traffic. host networking would fix that, but a node-exporter bound to a real host
+  # interface is then reachable from the LAN, not just this Docker network — and there is no
+  # way to keep it Prometheus-reachable while LAN-unreachable at the same time under host
+  # networking (127.0.0.1-only would also block Prometheus, which arrives via the bridge
+  # gateway, not loopback). cAdvisor's per-container network panels already answer "network
+  # load per service", which is what was actually asked for — that trade was not worth
+  # taking for this exporter's own interface panel alone.
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: bitrate-node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --path.rootfs=/rootfs
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+    networks:
+      - bitrate-network
+    profiles:
+      - observability
+
+  # Per-container CPU/memory/network — what actually answers "load per service" that
+  # node-exporter's host-wide view cannot. `privileged: true` and the /dev/kmsg device are
+  # cAdvisor's own documented requirements for full kernel-level metric access, not something
+  # this repo is adding beyond what upstream's own compose example uses.
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: bitrate-cadvisor
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    networks:
+      - bitrate-network
+    profiles:
+      - observability
+
+  # Log aggregation — see ADR-0046. Fed by alloy below, never pushed to directly. Filesystem
+  # storage (TSDB index + local chunk store), same spirit as prometheus_data/grafana_data
+  # above — no S3/GCS, single-node local stack, nothing to federate. 127.0.0.1-bound like
+  # prometheus: only grafana and alloy need to reach it, both over bitrate-network.
+  loki:
+    image: grafana/loki:3.7.8
+    container_name: bitrate-loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/loki-config.yaml
+    volumes:
+      - ./observability/loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - loki_data:/loki
+    ports:
+      - "127.0.0.1:${LOKI_PORT:-3100}:3100"
+    networks:
+      - bitrate-network
+    profiles:
+      - observability
+
+  # Reads api + nginx's Docker container logs via the Docker Engine API and ships them to loki
+  # above — see infra/observability/alloy/config.alloy for the pipeline (container filter and
+  # the JSON stage that turns nestjs-pino's fields into Loki labels for api specifically).
+  # Grafana Alloy, not Promtail: Promtail is deprecated/removed upstream — see config.alloy's
+  # own header comment. 127.0.0.1-bound port is Alloy's own debug UI (live component/pipeline
+  # state), not needed by anything else in this stack.
+  alloy:
+    image: grafana/alloy:v1.19.2
+    container_name: bitrate-alloy
+    restart: unless-stopped
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - --disable-reporting
+      - /etc/alloy/config.alloy
+    volumes:
+      - ./observability/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - alloy_data:/var/lib/alloy/data
+    ports:
+      - "127.0.0.1:${ALLOY_PORT:-12345}:12345"
+    depends_on:
+      - loki
+    networks:
+      - bitrate-network
+    profiles:
+      - observability
+
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
@@ -265,6 +490,14 @@ volumes:
   postgres_data:
     driver: local
   redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  loki_data:
+    driver: local
+  alloy_data:
     driver: local
 
 networks:

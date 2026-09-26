@@ -27,12 +27,32 @@ pnpm-debug.log
 **/build/
 **/.next/
 **/out/
+# Nitro's bundle for apps/web-artists. Measured at 217 MB on a developer checkout, and a stale
+# copy of it landed in the build stage's `COPY . .` right before the real build overwrote it.
+**/.output/
 **/coverage/
 **/.turbo/
 **/test-results/
 **/playwright-report/
 apps/desktop/src-tauri/target/
 graphify-out/
+
+# The repository history. Nothing in any Dockerfile reads it, and at 31 GB on a developer
+# checkout it was the build context: `docker build` transferred 11.7 GB before this line existed
+# and had not finished. A CI checkout is shallow, so this mattered locally first — but a shallow
+# .git still carries every blob of the checked-out tree and still reaches the daemon for nothing.
+.git/
+
+# Developer-local scratch space and agent tooling. None of it is read by a build.
+.br-scratch/
+.claude/
+.impeccable/
+
+# Seeded media for apps/api. The directory's own .gitignore keeps everything but the .gitkeep
+# placeholders out of git, so CI never sees it — but a developer checkout carries 823 MB of
+# downloaded tracks here and apps/api/Dockerfile copies the tree wholesale. The runtime storage
+# root is /app/storage (a named volume), which is a different path entirely.
+apps/api/storage/private/
 
 # Keep example file
 !**/.env.example

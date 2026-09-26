@@ -26,6 +26,8 @@ import { Throttle } from '@nestjs/throttler'
 import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import {
+  GetHlsAssetSwagger,
+  GetHlsMasterPlaylistSwagger,
   GetTrackByIdSwagger,
   GetTrackManifestSwagger,
   LikeTrackSwagger,
@@ -79,6 +81,7 @@ export class TracksController {
   }
 
   /** Runs the get hls master playlist operation. */
+  @GetHlsMasterPlaylistSwagger()
   @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 600 } })
   @Get('stream/:id/hls/master.m3u8')
@@ -95,6 +98,7 @@ export class TracksController {
   }
 
   /** Runs the get hls asset operation. */
+  @GetHlsAssetSwagger()
   @UserAuth()
   @Throttle({ default: { ttl: 60_000, limit: 1_200 } })
   @Get('stream/:id/hls/:bitrate/:asset')

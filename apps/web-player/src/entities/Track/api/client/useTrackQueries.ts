@@ -109,18 +109,6 @@ export const getAllLikedTracks = async () => {
     .map(withPlayableUrl)
 }
 
-export const useTrack = (trackId?: string) =>
-  useQuery(
-    'get',
-    '/api/v1/tracks/{id}',
-    { params: { path: { id: trackId ?? '' } } },
-    {
-      enabled: !!trackId,
-      select: (track) =>
-        track ? withPlayableUrl(normalizeTrackResponse(track)) : track,
-    },
-  )
-
 export const useLikedTracks = (
   page = 1,
   limit = 100,

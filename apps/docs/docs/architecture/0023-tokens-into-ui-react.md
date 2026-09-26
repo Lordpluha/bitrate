@@ -1,6 +1,6 @@
 # ADR-0023: Hand-write the design tokens as CSS; retire the token generator
 
-Status: Accepted
+Status: Accepted (package location superseded by [ADR-0047](./0047-tailwind-tokens-into-own-package.md); the hand-written-CSS and file-layout reasoning below still applies)
 
 Date: 2026-08-29
 

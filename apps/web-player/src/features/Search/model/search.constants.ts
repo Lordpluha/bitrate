@@ -8,7 +8,7 @@ export const searchTypes: WebPlayerSearchType[] = [
   'playlists',
 ]
 
-export const browseImages = [
+const browseImages = [
   '/images/browse/browse-music.jpeg',
   '/images/browse/browse-podcasts.jpeg',
   '/images/browse/browse-liveevents.jpg',

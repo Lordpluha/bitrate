@@ -1,8 +1,6 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import Image from 'next/image'
-import Link from 'next/link'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import type { ResourceGroup } from './SubMenuContent.types'
 
@@ -66,7 +64,7 @@ export const ResourcesContent = memo(({ data }: ResourcesContentProps) => {
                   className="text-5xl text-neutral-400 font-bold"
                   key={item.id}
                 >
-                  <Link
+                  <a
                     className={cn(
                       'link-underline',
                       'transition-colors duration-300',
@@ -81,14 +79,14 @@ export const ResourcesContent = memo(({ data }: ResourcesContentProps) => {
                     onMouseLeave={handleLeave}
                   >
                     {item.title}
-                  </Link>
+                  </a>
                 </h4>
               ) : (
                 <h5
                   className="text-2xl text-neutral-400 font-bold"
                   key={item.id}
                 >
-                  <Link
+                  <a
                     className={cn(
                       'link-underline',
                       'transition-colors duration-300',
@@ -103,7 +101,7 @@ export const ResourcesContent = memo(({ data }: ResourcesContentProps) => {
                     onMouseLeave={handleLeave}
                   >
                     {item.title}
-                  </Link>
+                  </a>
                 </h5>
               )
             })}
@@ -129,11 +127,9 @@ export const ResourcesContent = memo(({ data }: ResourcesContentProps) => {
               )}
               key={img.id}
             >
-              <Image
+              <img
                 alt={img.title}
-                className="object-cover"
-                fill
-                priority
+                className="absolute inset-0 h-full w-full object-cover"
                 src={img.imageSrc}
               />
             </div>

@@ -1,6 +1,6 @@
 import { getApiUrl } from '@shared/utils/mediaUrl'
 
-export const activeOAuthProviders = ['google', 'facebook'] as const
+const activeOAuthProviders = ['google', 'facebook'] as const
 
 export type ActiveOAuthProvider = (typeof activeOAuthProviders)[number]
 

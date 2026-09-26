@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto'
 const GENERATION_HASH_LENGTH = 16
 
 /** Returns an opaque, path-safe identifier for one immutable source upload. */
-export function getAudioGeneration(sourceFileName: string): string {
+function getAudioGeneration(sourceFileName: string): string {
   return createHash('sha256').update(sourceFileName).digest('hex').slice(0, GENERATION_HASH_LENGTH)
 }
 

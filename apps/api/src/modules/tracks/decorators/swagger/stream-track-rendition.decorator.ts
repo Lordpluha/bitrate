@@ -17,8 +17,16 @@ export function StreamTrackRenditionSwagger() {
       required: false,
       description: 'Inclusive byte window, e.g. `bytes=929-100915`',
     }),
-    ApiResponse({ status: HttpStatus.OK, description: 'Whole rendition file' }),
-    ApiResponse({ status: HttpStatus.PARTIAL_CONTENT, description: 'Requested byte range' }),
+    ApiResponse({
+      status: HttpStatus.OK,
+      description: 'Whole rendition file',
+      content: { 'audio/mp4': { schema: { type: 'string', format: 'binary' } } },
+    }),
+    ApiResponse({
+      status: HttpStatus.PARTIAL_CONTENT,
+      description: 'Requested byte range',
+      content: { 'audio/mp4': { schema: { type: 'string', format: 'binary' } } },
+    }),
     ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Rendition not found' }),
   )
 }

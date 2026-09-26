@@ -10,7 +10,7 @@ on:
       - '.github/workflows/desktop_docker_reusable.yml'
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [develop]
+    branches: [develop, master]
     paths:
       - 'apps/desktop/**'
       - '.github/workflows/desktop.yml'

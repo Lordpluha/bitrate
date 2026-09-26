@@ -4,7 +4,7 @@ import type { ApiSchemas } from '@bitrate/contracts'
 import { createContext, type ReactNode, useContext } from 'react'
 import { useAuth } from './useAuth'
 
-type Artist = ApiSchemas['SafeUserEntity']
+type Artist = ApiSchemas['SafeArtistEntity']
 
 interface AuthContextType {
   artist: Artist | undefined

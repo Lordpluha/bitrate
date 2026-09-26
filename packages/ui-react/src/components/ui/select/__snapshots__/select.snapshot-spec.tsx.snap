@@ -6,6 +6,7 @@ exports[`Select snapshots > matches snapshot — closed trigger 1`] = `
   aria-haspopup="listbox"
   class="flex h-10 w-full items-center justify-between rounded-md border border-overlay-trigger-border bg-overlay-trigger-surface px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
   data-placeholder=""
+  id="base-ui-_r_0_"
   role="combobox"
   tabindex="0"
   type="button"
@@ -36,16 +37,19 @@ exports[`Select snapshots > matches snapshot — closed trigger 1`] = `
 `;
 
 exports[`Select snapshots > matches snapshot — open state 1`] = `
-<div>
+<div
+  data-base-ui-inert=""
+>
   <button
-    aria-controls="base-ui-_r_2_-list"
+    aria-controls="base-ui-_r_3_-list"
     aria-expanded="true"
     aria-haspopup="listbox"
     class="flex h-10 w-full items-center justify-between rounded-md border border-overlay-trigger-border bg-overlay-trigger-surface px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-    data-base-ui-inert=""
     data-placeholder=""
     data-popup-open=""
+    data-popup-side="bottom"
     data-pressed=""
+    id="base-ui-_r_3_"
     role="combobox"
     tabindex="0"
     type="button"
@@ -75,33 +79,26 @@ exports[`Select snapshots > matches snapshot — open state 1`] = `
   </button>
   <span
     aria-hidden="true"
-    data-base-ui-inert=""
-    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px;"
-    tabindex="-1"
-  />
-  <span
     data-base-ui-focus-guard=""
     data-type="outside"
-    role="button"
-    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    style="clip-path: inset(50%); overflow: hidden; white-space: nowrap; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px; position: fixed; top: 0px; left: 0px;"
     tabindex="0"
   />
   <span
-    aria-owns="_r_4_"
-    data-base-ui-inert=""
+    aria-owns="_r_6_"
     style="clip-path: inset(50%); position: fixed; top: 0px; left: 0px;"
   />
   <span
+    aria-hidden="true"
     data-base-ui-focus-guard=""
     data-type="outside"
-    role="button"
-    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    style="clip-path: inset(50%); overflow: hidden; white-space: nowrap; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px; position: fixed; top: 0px; left: 0px;"
     tabindex="0"
   />
   <input
     aria-hidden="true"
-    data-base-ui-inert=""
-    style="clip: rect(0px); overflow: hidden; white-space: nowrap; position: fixed; top: 0px; left: 0px; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px;"
+    id="base-ui-_r_3_-hidden-input"
+    style="clip-path: inset(50%); overflow: hidden; white-space: nowrap; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px; position: fixed; top: 0px; left: 0px;"
     tabindex="-1"
     value=""
   />

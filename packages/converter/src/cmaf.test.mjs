@@ -59,6 +59,9 @@ const fileHandle = (data, reportedSize = data.length) => ({
   close: vi.fn().mockResolvedValue(undefined),
 })
 
+/** The options object runFfmpeg always passes to execa for stderr capture. */
+const stderrCaptureOptions = { stderr: { transform: expect.any(Function), binary: true } }
+
 beforeEach(() => {
   vi.clearAllMocks()
   fsMocks.access.mockResolvedValue(undefined)
@@ -184,7 +187,11 @@ describe('convertAudioToCmaf', () => {
       timeoutMs: 600_000,
     })
 
-    expect(execaMock).toHaveBeenCalledWith('/fake/ffmpeg', expect.any(Array), { timeout: 600_000 })
+    expect(execaMock).toHaveBeenCalledWith('/fake/ffmpeg', expect.any(Array), {
+      ...stderrCaptureOptions,
+      timeout: 600_000,
+      forceKillAfterDelay: 5_000,
+    })
   })
 
   it('indexes a multi-gigabyte rendition without reading the media payload into memory', async () => {

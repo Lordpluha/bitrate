@@ -11,9 +11,12 @@ const getAllowedOrigins = (): CorsOptions['origin'] => {
     /^http:\/\/localhost(:\d+)?$/, // Any localhost with optional port
   ]
 
-  const { userHost, artistHost } = resolveWebHosts()
+  const { userHost, artistHost, adminHost } = resolveWebHosts()
+  const configuredOrigins = [userHost, artistHost, adminHost].filter((origin): origin is string =>
+    Boolean(origin),
+  )
 
-  return [...new Set([userHost, artistHost]), ...baseOrigins]
+  return [...new Set(configuredOrigins), ...baseOrigins]
 }
 
 /**

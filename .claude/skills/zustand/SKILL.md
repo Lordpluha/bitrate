@@ -1,6 +1,6 @@
 ---
 name: zustand
-description: Zustand store conventions for web-player — createPersistedStore, where a store lives in the FSD tree, selector discipline, partialize for persistence, and the auth reset registry. Use when adding or changing a Zustand store, a store selector, persisted client state, or when a component re-renders on unrelated store changes.
+description: "Add or debug web-player Zustand stores, selectors, persistence and auth resets using project FSD conventions."
 license: MIT
 metadata:
   author: lordpluha

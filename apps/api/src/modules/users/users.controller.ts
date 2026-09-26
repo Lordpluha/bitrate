@@ -28,10 +28,13 @@ import { diskStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
 import * as z from 'zod'
 import {
+  FollowUserSwagger,
+  GetFollowingSwagger,
   GetUserByUsernameSwagger,
   GetUserSwagger,
   GetUsersSwagger,
   PutUserSwagger,
+  UnfollowUserSwagger,
   UploadAvatarSwagger,
 } from './decorators'
 import { UpdateUserDto, UpdateUserSchema } from './dtos'
@@ -144,6 +147,7 @@ export class UsersController {
     }
   }
 
+  @FollowUserSwagger()
   @UserAuth()
   @HttpCode(204)
   @Post(':id/follow')
@@ -151,6 +155,7 @@ export class UsersController {
     return this.usersService.followUser((req.user as UserEntity).id, id)
   }
 
+  @UnfollowUserSwagger()
   @UserAuth()
   @HttpCode(204)
   @Delete(':id/follow')
@@ -158,6 +163,7 @@ export class UsersController {
     return this.usersService.unfollowUser((req.user as UserEntity).id, id)
   }
 
+  @GetFollowingSwagger()
   @UserAuth()
   @Get('me/following')
   following(

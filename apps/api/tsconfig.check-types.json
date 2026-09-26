@@ -1,0 +1,17 @@
+{
+  /* Used only by `pnpm check-types` — never by nest build. TS does not merge `paths`
+     across `extends`, so this must mirror tsconfig.json's `paths` verbatim plus the
+     override below; keep both in sync when app aliases change. */
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "@modules/*": ["src/modules/*"],
+      "@infra/*": ["src/infra/*"],
+      "@common/*": ["src/common/*"],
+      "@test/*": ["test/*"],
+      "@bitrate/ncs-parser": ["../../packages/ncs-parser/.types-refs/main.d.ts"]
+    }
+  },
+  "references": [{ "path": "../../packages/ncs-parser/tsconfig.refs.json" }]
+}

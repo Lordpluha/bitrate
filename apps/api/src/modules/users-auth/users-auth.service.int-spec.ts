@@ -101,6 +101,10 @@ describe('UserAuthService (int)', () => {
   it('loginUser should throw UnauthorizedException when password is wrong', async () => {
     usersPrivateMock.getByEmail.mockResolvedValue(buildUser({ password: 'correct' }) as never)
     tokenMock.verifyPassword.mockResolvedValue(false as never)
+    /** A failed login records the attempt; Prisma returns the updated rows as an array. */
+    prismaMock.user.updateManyAndReturn.mockResolvedValue([
+      { failedLoginAttempts: 1, lockedUntil: null },
+    ] as never)
 
     await expect(service.loginUser('u@example.com', 'wrong')).rejects.toThrow(UnauthorizedException)
   })

@@ -1,5 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { AlbumEntity } from '../entities'
 
 /** Runs the delete album swagger operation. */
 export function DeleteAlbumSwagger() {
@@ -10,6 +11,7 @@ export function DeleteAlbumSwagger() {
     }),
     ApiResponse({
       status: HttpStatus.OK,
+      type: AlbumEntity,
     }),
   )
 }

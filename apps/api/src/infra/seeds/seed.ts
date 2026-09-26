@@ -1,11 +1,11 @@
+import './bootstrap-env'
+import { existsSync, mkdirSync } from 'node:fs'
+import { join } from 'node:path'
 import { faker } from '@faker-js/faker'
 import type { INestApplicationContext } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
-import 'dotenv/config'
-import { existsSync, mkdirSync } from 'node:fs'
-import { join } from 'node:path'
 import { Pool } from 'pg'
 import { AppModule } from '../../app.module'
 import { TokenService } from '../../modules/tokens/token.service'
@@ -115,8 +115,14 @@ async function main() {
   }
 }
 
-// Запускаем seeding
-main().catch((error) => {
-  console.error('Unhandled error:', error)
-  process.exit(1)
-})
+/**
+ * `require.main === module` is only true when this file is the process entrypoint, never when
+ * another module imports it — see `seed-admin.ts` for the same guard and why it matters for a
+ * seed entrypoint that would otherwise run `main()` as an import side effect.
+ */
+if (require.main === module) {
+  main().catch((error) => {
+    console.error('Unhandled error:', error)
+    process.exit(1)
+  })
+}

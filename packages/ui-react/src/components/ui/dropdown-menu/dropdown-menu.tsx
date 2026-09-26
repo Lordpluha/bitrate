@@ -1,4 +1,4 @@
-import { Menu } from '@base-ui-components/react'
+import { Menu } from '@base-ui/react/menu'
 import { Check, ChevronRight, Circle } from 'lucide-react'
 import { type ComponentProps, isValidElement } from 'react'
 

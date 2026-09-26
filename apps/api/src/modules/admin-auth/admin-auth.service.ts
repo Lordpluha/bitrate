@@ -1,0 +1,159 @@
+import { PrismaService } from '@infra/prisma/prisma.service'
+import { TokenService } from '@modules/tokens/token.service'
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import type { Staff, StaffSession } from '@prisma/client'
+import type { JWTPayload } from '../tokens'
+import type { Permission } from './access'
+import { STAFF_SAFE_SELECT } from './staff.select'
+
+/** A completed staff sign-in: the token pair a session is built from. */
+type StaffTokenPair = {
+  access_token: string
+  refresh_token: string
+}
+
+/** Represents the admin (staff) auth service. */
+@Injectable()
+export class AdminAuthService {
+  private static readonly MAX_LOGIN_ATTEMPTS = 5
+  private static readonly LOCK_DURATION_MS = 15 * 60 * 1000
+
+  /** Creates a new instance. */
+  constructor(
+    private jwtService: JwtService,
+    private prisma: PrismaService,
+    private token: TokenService,
+  ) {}
+
+  /** Runs the login staff operation. There is no self-registration — accounts are provisioned manually. */
+  async loginStaff(email: Staff['email'], password: string): Promise<StaffTokenPair> {
+    const staff = await this.prisma.staff.findFirst({ where: { email, deletedAt: null } })
+    if (staff?.lockedUntil && staff.lockedUntil > new Date()) {
+      throw new HttpException('Account is temporarily locked', HttpStatus.TOO_MANY_REQUESTS)
+    }
+
+    const passwordValid = staff && (await this.token.verifyPassword(password, staff.password))
+    if (!passwordValid) {
+      if (staff) await this.recordFailedLogin(staff.id)
+      throw new UnauthorizedException({ message: 'Invalid credentials' })
+    }
+
+    if (staff.failedLoginAttempts > 0 || staff.lockedUntil) {
+      await this.prisma.staff.update({
+        where: { id: staff.id },
+        data: { failedLoginAttempts: 0, lockedUntil: null },
+      })
+    }
+
+    return await this.issueSession(staff)
+  }
+
+  /** Runs the refresh operation. */
+  async refresh(refresh_token: string): Promise<StaffTokenPair> {
+    try {
+      const payload = await this.jwtService.verifyAsync<JWTPayload>(refresh_token, {
+        secret: process.env.JWT_SECRET,
+      })
+      const staff = await this.prisma.staff.findFirst({
+        where: { id: payload.sub, deletedAt: null },
+      })
+      if (!staff) throw new UnauthorizedException('Invalid refresh token')
+
+      const access_token = await this.token.generateAccessToken(staff.id, staff.username, 'staff')
+      const next_refresh_token = await this.token.generateRefreshToken(
+        staff.id,
+        staff.username,
+        'staff',
+      )
+
+      const updatedSessions = await this.prisma.staffSession.updateMany({
+        where: {
+          staffId: staff.id,
+          refresh_token: this.token.hashToken(refresh_token),
+        },
+        data: {
+          access_token: this.token.hashToken(access_token),
+          refresh_token: this.token.hashToken(next_refresh_token),
+          expiresAt: this.token.getRefreshTokenExpiresAt(),
+        },
+      })
+
+      if (updatedSessions.count !== 1) {
+        throw new UnauthorizedException('Invalid refresh token')
+      }
+
+      return { access_token, refresh_token: next_refresh_token }
+    } catch {
+      throw new UnauthorizedException('Invalid refresh token')
+    }
+  }
+
+  /** Runs the logout operation. */
+  async logout(staffId: StaffSession['staffId'], access_token: StaffSession['access_token']) {
+    const staff = await this.prisma.staff.findFirst({ where: { id: staffId, deletedAt: null } })
+    if (!staff) {
+      throw new UnauthorizedException('Invalid access token')
+    }
+
+    await this.prisma.staffSession.deleteMany({
+      where: {
+        staffId: staff.id,
+        access_token: this.token.hashToken(access_token),
+      },
+    })
+  }
+
+  /** Returns the currently authenticated staff member, with secret material stripped. */
+  async me(staffId: Staff['id']) {
+    const staff = await this.prisma.staff.findFirst({
+      where: { id: staffId, deletedAt: null },
+      select: STAFF_SAFE_SELECT,
+    })
+    if (!staff) return null
+
+    const { role, permissions, ...rest } = staff
+    return { ...rest, role: role.name, permissions: permissions as Permission[] }
+  }
+
+  private async issueSession(staff: Staff): Promise<StaffTokenPair> {
+    const access_token = await this.token.generateAccessToken(staff.id, staff.username, 'staff')
+    const refresh_token = await this.token.generateRefreshToken(staff.id, staff.username, 'staff')
+
+    await this.prisma.staffSession.create({
+      data: {
+        access_token: this.token.hashToken(access_token),
+        refresh_token: this.token.hashToken(refresh_token),
+        staffId: staff.id,
+        expiresAt: this.token.getRefreshTokenExpiresAt(),
+      },
+    })
+
+    return { access_token, refresh_token }
+  }
+
+  /**
+   * Increments the failure counter and locks the account once it reaches
+   * MAX_LOGIN_ATTEMPTS. Typed writes rather than raw SQL: a bind parameter inside a raw
+   * `CASE ... ELSE NULL` carries no type, so Postgres resolved the whole expression to
+   * `text` and rejected the assignment to the `timestamp(3)` column (SQLSTATE 42804).
+   */
+  private async recordFailedLogin(staffId: string) {
+    const [updated] = await this.prisma.staff.updateManyAndReturn({
+      where: { id: staffId },
+      data: { failedLoginAttempts: { increment: 1 } },
+      select: { failedLoginAttempts: true, lockedUntil: true },
+    })
+    if (!updated) return
+
+    const locked = updated.failedLoginAttempts >= AdminAuthService.MAX_LOGIN_ATTEMPTS
+    if (!locked && updated.lockedUntil === null) return
+
+    await this.prisma.staff.updateMany({
+      where: { id: staffId },
+      data: {
+        lockedUntil: locked ? new Date(Date.now() + AdminAuthService.LOCK_DURATION_MS) : null,
+      },
+    })
+  }
+}

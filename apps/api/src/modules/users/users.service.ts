@@ -11,12 +11,13 @@ export class UsersService {
   /** Creates a new instance. */
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Runs the find by id operation. */
+  /**
+   * Runs the find by id operation. Filters `deletedAt` — a soft-deleted account's public
+   * profile is not reachable, mirroring `ArtistsService.findById`.
+   */
   async findById(id: UserEntity['id']) {
-    return await this.prisma.user.findUniqueOrThrow({
-      where: {
-        id,
-      },
+    return await this.prisma.user.findFirst({
+      where: { id, deletedAt: null },
       select: PUBLIC_USER_SELECT,
     })
   }
@@ -34,22 +35,18 @@ export class UsersService {
     })
   }
 
-  /** Runs the get by email operation. */
+  /** Runs the get by email operation. Filters `deletedAt` — see `findById`. */
   async getByEmail(email: UserEntity['email']) {
     return await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
+      where: { email, deletedAt: null },
       select: { id: true },
     })
   }
 
-  /** Runs the get by username operation. */
+  /** Runs the get by username operation. Filters `deletedAt` — see `findById`. */
   async getByUsername(username: UserEntity['username']) {
     return await this.prisma.user.findFirst({
-      where: {
-        username,
-      },
+      where: { username, deletedAt: null },
       select: PUBLIC_USER_SELECT,
     })
   }

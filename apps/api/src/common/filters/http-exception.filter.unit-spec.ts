@@ -1,12 +1,35 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common'
+import { mockDeep } from 'jest-mock-extended'
+import type { I18nService } from 'nestjs-i18n'
+import enErrors from '../../i18n/en/errors.json'
+import ukErrors from '../../i18n/uk/errors.json'
 import { HttpExceptionFilter } from './http-exception.filter'
 
-const makeHost = (method = 'GET', url = '/test', requestId?: string) => {
+type JsonNode = string | { [key: string]: JsonNode }
+
+const DICTIONARIES: Record<string, JsonNode> = { en: enErrors, uk: ukErrors }
+
+/** Resolves a dotted key ("errors.generic.access_denied") against one of the real dictionaries. */
+function lookup(lang: string, key: string): string | undefined {
+  const path = key.replace(/^errors\./, '').split('.')
+  let node: JsonNode | undefined = DICTIONARIES[lang] ?? DICTIONARIES.en
+  for (const segment of path) {
+    node = typeof node === 'object' && node !== null ? node[segment] : undefined
+  }
+  return typeof node === 'string' ? node : undefined
+}
+
+const makeHost = (
+  method = 'GET',
+  url = '/test',
+  requestId?: string,
+  headers: Record<string, string> = {},
+) => {
   const json = jest.fn()
   const status = jest.fn().mockReturnValue({ json })
   const response = { status } as never
-  const request = { method, url, requestId } as never
+  const request = { method, url, requestId, headers, query: {} } as never
 
   return {
     switchToHttp: () => ({
@@ -18,8 +41,23 @@ const makeHost = (method = 'GET', url = '/test', requestId?: string) => {
   }
 }
 
+/**
+ * A translate mock backed by the real `en`/`uk` dictionaries, so this spec also proves the
+ * dictionaries themselves resolve — not just that the filter calls `translate()`. Falls back
+ * to `defaultValue` for an unknown language or a missing key, exactly like `nestjs-i18n`.
+ */
+const makeI18n = () => {
+  const i18n = mockDeep<I18nService>()
+  i18n.translate.mockImplementation((key, options) => {
+    const opts = options as { lang?: string; defaultValue?: string } | undefined
+    const resolved = opts?.lang ? lookup(opts.lang, String(key)) : undefined
+    return resolved ?? opts?.defaultValue ?? String(key)
+  })
+  return i18n
+}
+
 describe('HttpExceptionFilter', () => {
-  const filter = new HttpExceptionFilter()
+  const filter = new HttpExceptionFilter(makeI18n())
 
   it('should handle HttpException with string response', () => {
     const host = makeHost()
@@ -143,6 +181,65 @@ describe('HttpExceptionFilter', () => {
     expect(host.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR)
     expect(host.json).toHaveBeenCalledWith(
       expect.objectContaining({ message: 'An unexpected error occurred' }),
+    )
+  })
+})
+
+describe('HttpExceptionFilter i18n', () => {
+  const filter = new HttpExceptionFilter(makeI18n())
+
+  it('translates a message key into Ukrainian for Accept-Language: uk', () => {
+    const host = makeHost('GET', '/test', undefined, { 'accept-language': 'uk' })
+    const exception = new NotFoundException('errors.track.not_found')
+
+    filter.catch(exception, host as never)
+
+    expect(host.json).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Трек {id} не знайдено' }),
+    )
+  })
+
+  it('answers in English with no Accept-Language header', () => {
+    const host = makeHost()
+    const exception = new NotFoundException('errors.track.not_found')
+
+    filter.catch(exception, host as never)
+
+    expect(host.json).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Track {id} not found' }),
+    )
+  })
+
+  it('falls back to English for an unsupported Accept-Language', () => {
+    const host = makeHost('GET', '/test', undefined, { 'accept-language': 'de' })
+    const exception = new NotFoundException('errors.auth.session_not_found')
+
+    filter.catch(exception, host as never)
+
+    expect(host.json).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Session not found' }),
+    )
+  })
+
+  it('leaves a message untranslated when it is not a dictionary key', () => {
+    const host = makeHost('GET', '/test', undefined, { 'accept-language': 'uk' })
+    const exception = new NotFoundException('Some literal message a service forgot to key')
+
+    filter.catch(exception, host as never)
+
+    expect(host.json).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Some literal message a service forgot to key' }),
+    )
+  })
+
+  it('falls back to the raw key when it exists in no dictionary at all', () => {
+    const host = makeHost('GET', '/test', undefined, { 'accept-language': 'en' })
+    const exception = new NotFoundException('errors.does.not_exist')
+
+    filter.catch(exception, host as never)
+
+    expect(host.json).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'errors.does.not_exist' }),
     )
   })
 })

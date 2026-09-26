@@ -198,16 +198,17 @@ independently useful, because it is what makes the release PR's diff an honest m
 #### Registering the required checks
 
 `GITHUB_TOKEN` cannot edit branch protection — a workflow's `permissions:` block has no
-`administration` scope, and that is correct. A repository admin can, from their own machine, and
-`pnpm check:branch-protection --apply` (`scripts/check-branch-protection.mjs`) does exactly that:
-it reports by default, adds only the missing contexts, and uses the narrow
-`PATCH .../protection/required_status_checks` endpoint so it cannot silently reset a rule it does
-not mention. The GitHub UI *cannot* do this — its picker only offers checks it has seen in the last
+`administration` scope, and that is correct. A repository admin can, from their own machine, with the narrow
+`PATCH .../protection/required_status_checks` endpoint so no other protection setting is touched —
+the exact call is in the
+[deployment guide](../infrastructure/deployment.md#one-time-setup). Read the endpoint first and
+send the existing contexts back with the new ones: it replaces the list rather than appending to
+it. The GitHub UI *cannot* do this — its picker only offers checks it has seen in the last
 seven days, and these have never run.
 
 The two contexts are `bitrate/release-gates` and `bitrate/release-version`. They are named in one
-place in the workflow and one place in the script, and renaming either without the other turns the
-gate off silently.
+place in the workflow and once in the branch's protection settings, and renaming either without the
+other turns the gate off silently.
 
 ### The release tag is the product's semantic version, derived from the changesets
 
@@ -556,7 +557,7 @@ The part of that worth stating separately, because it removes an argument people
 commit whether or not any `pull_request` run ever existed.** So both contexts can be made required
 checks on `master` and will be satisfied by layer 1 alone — which is exactly what makes Route B
 safe. See [Registering the required checks](#registering-the-required-checks); the workflow cannot
-do it, and `pnpm check:branch-protection --apply` is how an admin does.
+do it, and an admin does it against the API by hand.
 
 #### Layer 2 — who opens the pull request
 
@@ -722,7 +723,7 @@ pipeline. `defaults` does not propagate into called reusable workflows, so each 
   would produce a release branch that cannot be merged.
 - **Two commit statuses must be registered as required checks by an admin.**
   `bitrate/release-gates` and `bitrate/release-version`. `GITHUB_TOKEN` cannot do it and should not
-  be able to; `pnpm check:branch-protection --apply` does it in one command.
+  be able to; an admin registers them against the API once, per the deployment guide.
 - **The release PR's diff is the release manifest.** The new product version, the workspace bumps
   and the changelog prose, all reviewable before anything is minted. Nothing in the previous design
   was reviewable before it happened.

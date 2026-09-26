@@ -1,0 +1,85 @@
+name: "[monorepo] Gates Reusable"
+
+# The repository-wide mechanical gates from CLAUDE.md § Non-Negotiables and
+# .claude/rules/code-style.md: lint, types, knip. Every other check workflow is scoped to one
+# app or package by a path filter, which leaves two holes this one fills — a change to the
+# root toolchain (biome.json, .knip.json, turbo.json, tsconfig, Taskfile) matched no filter at
+# all, and `pnpm knip` ran only during the release cut, long after the PR that broke it.
+
+on:
+  workflow_call:
+    inputs:
+      run-lint:
+        description: Run pnpm lint (turbo run lint)
+        required: false
+        default: true
+        type: boolean
+      run-types:
+        description: Run pnpm check-types
+        required: false
+        default: true
+        type: boolean
+      run-knip:
+        description: Run pnpm knip
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+# Static checks generate config/client code but never connect to these services.
+env:
+  NG_APP_API_URL: http://localhost:3000
+  DATABASE_URL: postgresql://test:test@localhost:5432/test
+
+jobs:
+  lint:
+    if: ${{ inputs.run-lint }}
+    name: Monorepo Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run lint
+        run: pnpm lint
+
+  types:
+    if: ${{ inputs.run-types }}
+    name: Monorepo Types
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Run type check
+        run: pnpm check-types
+
+  knip:
+    if: ${{ inputs.run-knip }}
+    name: Monorepo Knip
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Generate admin environment module
+        run: pnpm --filter @bitrate/admin env:gen
+
+      # Knip resolves entry points per workspace from .knip.json; a workspace added to
+      # pnpm-workspace.yaml but not to that file is itself part of what this catches.
+      - name: Run knip
+        run: pnpm knip

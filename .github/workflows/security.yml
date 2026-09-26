@@ -3,6 +3,11 @@ name: "[monorepo] Security Checks"
 on:
   push:
     branches: [develop, master]
+  # A vulnerable dependency or a committed secret is cheapest to catch before the merge,
+  # not on the push that follows it.
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop, master]
   schedule:
     - cron: '0 0 * * 0'
   workflow_dispatch:

@@ -1,6 +1,6 @@
 ---
 name: nestjs
-description: NestJS framework conventions for apps/api — dependency injection and provider scope, module wiring and circular imports, the guard/interceptor/pipe/filter execution order, lifecycle hooks, and testing seams. Use when adding or changing a NestJS module, provider, guard, interceptor, pipe, or exception filter, or when a provider fails to resolve. For module folder layout and the Swagger-decorator rule, read .claude/rules/api-rules.md first — this skill covers framework mechanics that rule does not.
+description: "Add or debug NestJS modules, providers, guards, interceptors, pipes and filters in apps/api. API rules own folder layout; this skill covers framework mechanics."
 license: MIT
 metadata:
   author: lordpluha

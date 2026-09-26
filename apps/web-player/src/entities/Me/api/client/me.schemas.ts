@@ -17,7 +17,7 @@ export const updateMeSettingsSchema = meSettingsSchema
   .omit({ updatedAt: true, userId: true })
   .partial()
 
-export const notificationSchema = z.object({
+const notificationSchema = z.object({
   body: z.string(),
   createdAt: z.coerce.date(),
   id: z.string(),
@@ -48,8 +48,4 @@ export const subscriptionSchema = z.object({
   updatedAt: z.coerce.date().optional(),
   userId: z.string(),
 })
-
-export type MeSettings = z.infer<typeof meSettingsSchema>
-export type Notification = z.infer<typeof notificationSchema>
-export type Subscription = z.infer<typeof subscriptionSchema>
 export type UpdateMeSettings = z.infer<typeof updateMeSettingsSchema>

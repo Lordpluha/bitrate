@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger'
 import { z } from 'zod'
 
 /** The create playlist schema value. */
@@ -12,20 +11,5 @@ export const CreatePlaylistSchema = z.object({
 export type CreatePlaylistDto = {
   title: string
   description?: string
-  isPublic?: boolean
-}
-
-/** Represents the create playlist dto class. */
-export class CreatePlaylistDtoClass {
-  /** The title value. */
-  @ApiProperty({ description: 'Playlist title' })
-  title: string
-
-  /** The description value. */
-  @ApiProperty({ description: 'Playlist description', required: false })
-  description?: string
-
-  /** The is public value. */
-  @ApiProperty({ description: 'Whether the playlist is public', required: false, default: false })
   isPublic?: boolean
 }

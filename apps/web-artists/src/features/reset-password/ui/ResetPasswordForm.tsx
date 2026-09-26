@@ -4,7 +4,7 @@ import { Button, Input, Typography, toast } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { apiBaseUrl } from '@shared/api'
 import { ROUTES } from '@shared/routes/routes'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -20,10 +20,12 @@ const schema = z
 
 type FormData = z.infer<typeof schema>
 
+type ResetPasswordSearch = { token?: string }
+
 export const ResetPasswordForm = () => {
-  const router = useRouter()
-  const params = useSearchParams()
-  const token = params?.get('token') || ''
+  const navigate = useNavigate()
+  const search = useSearch({ strict: false }) as ResetPasswordSearch
+  const token = search.token || ''
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -56,7 +58,7 @@ export const ResetPasswordForm = () => {
       }
 
       toast.success('Password updated — please log in')
-      router.push(ROUTES.auth.login)
+      void navigate({ to: ROUTES.auth.login })
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Reset failed'
       toast.error(message)

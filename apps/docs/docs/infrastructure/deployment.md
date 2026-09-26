@@ -20,7 +20,7 @@ publishes ports:
 |---|---|---|
 | `nginx` | TLS termination and routing | all of them — 80, 443 |
 | `web-player` | Next.js, port 3001 | the apex, and `www` by redirect |
-| `web-artists` | Next.js, port 3002 | `artists.` |
+| `web-artists` | TanStack Start, port 3002 | `artists.` |
 | `api` | NestJS, port 3000 | `api.` |
 | `docs` | Docusaurus build on nginx, port 8080 | `docs.` |
 | `storybook` | Storybook build on nginx, port 8080 | `ui.` |
@@ -202,21 +202,19 @@ only way to change it is to rebuild.
 The same asymmetry explains why editing `.env` on the server looks like it works and then quietly
 stops working: the next deploy overwrites the file from GitHub.
 
-`scripts/sync-env-to-github.sh` uploads an existing env file in one pass. It pipes each value into
-`gh` on stdin rather than passing it as an argument — arguments are visible to anyone who can run
-`ps` — prints names only, and lists any name its classification does not cover, since such a name
-would silently vanish from the rendered file.
+Upload values with `gh` one at a time, piping each on **stdin** rather than passing it as an
+argument — an argument is visible to anyone who can run `ps`:
 
 ```bash
-./scripts/sync-env-to-github.sh                      # dry run against production
-./scripts/sync-env-to-github.sh --apply
-./scripts/sync-env-to-github.sh --env staging --apply
+printf '%s' "$VALUE" | gh secret set JWT_SECRET --env production
+printf '%s' "$VALUE" | gh variable set WEB_HOST --env production
 ```
 
 The environment must exist first, and its required reviewer has to be added by hand — `gh` can
-create neither. After writing, the script re-reads the environment and names anything that did not
-land: a missing required value aborts the next deploy loudly, but a missing optional one just
-reverts to a schema default without saying so.
+create neither. Re-read the environment afterwards (`gh secret list --env production`,
+`gh variable list --env production`) and check every name the deploy expects is there: a missing
+required value aborts the next deploy loudly, but a missing optional one just reverts to a schema
+default without saying so.
 
 A compose `--env-file` is not a shell file: compose interpolates `${...}` inside it and treats
 ` #` as the start of a comment, so a password containing `$` or ` #` is corrupted rather than
@@ -463,14 +461,16 @@ statuses, and branch protection matches required checks by *context name*. Until
 registered, nothing stops a release pull request merging with a failed gate:
 
 ```bash
-pnpm check:branch-protection            # report only — shows what would change
-pnpm check:branch-protection --apply    # register them
+gh api -X PATCH repos/:owner/:repo/branches/master/protection/required_status_checks \
+  -f 'checks[][context]=bitrate/release-gates' \
+  -f 'checks[][context]=bitrate/release-version'
 ```
 
-That adds exactly two contexts, `bitrate/release-gates` and `bitrate/release-version`, and touches
-no other protection setting. **The GitHub UI cannot do this**: its picker only offers checks it has
-seen in the last seven days, and these have never run. The script uses the API, which has no such
-restriction.
+Send the branch's existing contexts along with the two new ones — the endpoint replaces the list
+rather than appending to it, so read it first with
+`gh api repos/:owner/:repo/branches/master/protection/required_status_checks`. **The GitHub UI
+cannot do this**: its picker only offers checks it has seen in the last seven days, and these have
+never run. The API has no such restriction.
 
 **Give the `production` environment a required reviewer.** `environment: production` in a workflow
 blocks nothing by itself. Go to **Settings → Environments → production** and add one, or the deploy

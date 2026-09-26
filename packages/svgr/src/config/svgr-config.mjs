@@ -49,7 +49,7 @@ export const ${variables.componentName} = (${variables.props}) => (
       name: 'prefixIds',
       params: {
         prefix: (_node, info) => {
-          if (!info || !info.path) {
+          if (!info?.path) {
             return 'svg'
           }
 

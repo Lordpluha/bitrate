@@ -161,12 +161,18 @@ export class OAuthService {
     })
 
     if (existing) {
+      if (existing.user.deletedAt)
+        throw new UnauthorizedException({ message: 'Invalid credentials' })
       return this.sessionOrPending(existing.user)
     }
 
     // If an account with this email already has a password, refuse auto-linking.
     // The user must log in with their password first and link from profile settings.
-    const existingUser = await this.prisma.user.findFirst({ where: { email: profile.email } })
+    // `deletedAt: null` — a soft-deleted account's email is treated as free, matching every
+    // other lookup this module makes; see `UserAuthGuard` for the request-time half.
+    const existingUser = await this.prisma.user.findFirst({
+      where: { email: profile.email, deletedAt: null },
+    })
     if (existingUser?.password) {
       throw new ConflictException(
         'An account with this email already exists. Log in with your password to link OAuth.',

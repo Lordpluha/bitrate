@@ -11,6 +11,7 @@ import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { AudioGateway } from './audio.gateway'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
+import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 import { TrackPlaybackService } from './track-playback.service'
 import { TrackStreamingService } from './track-streaming.service'
 import { TrackUploadService } from './track-upload.service'
@@ -25,6 +26,7 @@ import { TracksService } from './tracks.service'
     TrackPlaybackService,
     AudioGateway,
     AudioProcessingConsumer,
+    ProcessingAttemptRecorder,
   ],
   controllers: [TracksController],
   imports: [

@@ -21,7 +21,7 @@ import { UNAUTHORIZED_ERRORS } from './errors/unauthorized.errors'
 /** Defines the token requirement. */
 export type TokenRequirement = 'access' | 'refresh'
 /** The token requirement value. */
-export const TOKEN_REQUIREMENT = 'tokenRequirement'
+const TOKEN_REQUIREMENT = 'tokenRequirement'
 
 function extractAuthCookies(request: Request, tokenService: TokenService) {
   const accessToken = request.cookies?.[tokenService.getTokenName('access')] as string | undefined
@@ -118,7 +118,9 @@ export class UserAuthGuard implements CanActivate {
       if (payload.type !== 'user')
         throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 
-      const user = await this.prisma.user.findUnique({ where: { id: payload.sub } })
+      const user = await this.prisma.user.findFirst({
+        where: { id: payload.sub, deletedAt: null },
+      })
       if (!user) throw new UnauthorizedException(UNAUTHORIZED_ERRORS.USER_NOT_FOUND)
 
       const session = await this.prisma.userSession.findFirst({
@@ -167,7 +169,9 @@ export class OptionalUserAuthGuard implements CanActivate {
       const payload: JWTPayload = await this.tokenService.verifyToken(access_token)
       if (payload.type !== 'user') return true
 
-      const user = await this.prisma.user.findUnique({ where: { id: payload.sub } })
+      const user = await this.prisma.user.findFirst({
+        where: { id: payload.sub, deletedAt: null },
+      })
       if (!user) return true
 
       const session = await this.prisma.userSession.findFirst({

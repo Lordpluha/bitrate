@@ -13,7 +13,7 @@ bitrate/
 ├── apps/              # Applications
 │   ├── api/          # Backend API (NestJS)
 │   ├── web-player/   # Web app (Next.js App Router, Feature-Sliced Design)
-│   ├── web-artists/  # Artists web app (Next.js)
+│   ├── web-artists/  # Artists web app (TanStack Start)
 │   ├── mobile/       # Mobile app (React Native + Expo)
 │   ├── desktop/      # Desktop app (Tauri 2 + React)
 │   └── docs/         # Documentation (Docusaurus 3)
@@ -175,7 +175,8 @@ graph TD
 
 | Package | Depends On | Used By |
 |---------|-----------|---------|
-| `@bitrate/ui-react` | — | web-player, mobile, desktop |
+| `@bitrate/ui-react` | `@bitrate/tailwind` | web-player, mobile, desktop |
+| `@bitrate/tailwind` | — | ui-react, web-player, web-artists, admin |
 | `@bitrate/contracts` | — | api, web-player, mobile, desktop |
 | `@bitrate/converter` | — | api |
 | `@bitrate/vite-svgr` | `@bitrate/svgr` | ui-react (build-time SVG generation) |
@@ -184,10 +185,10 @@ graph TD
 ## 🎨 Design Token Pipeline
 
 The design values are hand-written Tailwind v4 `@theme` layers under
-`packages/ui-react/src/styles/` — there is no generator and no `tokens.json`:
+`packages/tailwind/src/` — there is no generator and no `tokens.json`:
 
 ```
-ui-react/src/styles/
+tailwind/src/
   ├─ palette.css       raw colour scales
   ├─ layout.css        spacing, radii, shadows, breakpoints, z-index
   ├─ typography.css    families, sizes, weights

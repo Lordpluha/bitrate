@@ -1,0 +1,109 @@
+<section class="w-full space-y-6 p-8">
+  <header class="space-y-1">
+    <a routerLink="/staff" class="text-sm text-muted-foreground hover:underline">&larr; Staff</a>
+    <h1 class="text-xl font-semibold text-foreground">New operator</h1>
+    <p class="text-sm text-muted-foreground">
+      Choosing a role copies its permissions below as a starting point — adjust them before saving
+      and that adjusted set is what this operator gets, not the template.
+    </p>
+  </header>
+
+  @if (failure(); as message) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      {{ message }}
+    </p>
+  }
+
+  <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="space-y-2">
+      <label hlmLabel for="staff-email">Email</label>
+      <input
+        hlmInput
+        class="w-full"
+        id="staff-email"
+        type="email"
+        autocomplete="off"
+        formControlName="email"
+        [attr.aria-invalid]="errorFor('email') !== null"
+        [attr.aria-describedby]="errorFor('email') ? 'staff-email-error' : null"
+      />
+      @if (errorFor('email'); as message) {
+        <p class="text-sm text-destructive" id="staff-email-error" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label hlmLabel for="staff-username">Username</label>
+      <input
+        hlmInput
+        class="w-full"
+        id="staff-username"
+        type="text"
+        autocomplete="off"
+        formControlName="username"
+        [attr.aria-invalid]="errorFor('username') !== null"
+        [attr.aria-describedby]="errorFor('username') ? 'staff-username-error' : null"
+      />
+      @if (errorFor('username'); as message) {
+        <p class="text-sm text-destructive" id="staff-username-error" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label hlmLabel for="staff-password">Password</label>
+      <input
+        hlmInput
+        class="w-full"
+        id="staff-password"
+        type="password"
+        autocomplete="new-password"
+        formControlName="password"
+        [attr.aria-invalid]="errorFor('password') !== null"
+        [attr.aria-describedby]="errorFor('password') ? 'staff-password-error' : null"
+      />
+      @if (errorFor('password'); as message) {
+        <p class="text-sm text-destructive" id="staff-password-error" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label hlmLabel for="staff-role">Role</label>
+      <select
+        hlmInput
+        class="w-full"
+        id="staff-role"
+        [value]="form.controls.roleId.value"
+        [attr.aria-invalid]="errorFor('roleId') !== null"
+        [attr.aria-describedby]="errorFor('roleId') ? 'staff-role-error' : null"
+        (change)="onRoleChange($any($event.target).value)"
+      >
+        <option value="" disabled>{{ loadingRoles() ? 'Loading roles…' : 'Choose a role' }}</option>
+        @for (role of roles(); track role.id) {
+          <option [value]="role.id">
+            {{ role.name }}{{ role.name === 'ADMIN' ? ' — grants every permission' : '' }}
+          </option>
+        }
+      </select>
+      @if (errorFor('roleId'); as message) {
+        <p class="text-sm text-destructive" id="staff-role-error" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <span class="text-sm font-medium text-foreground">Permissions</span>
+      <p class="text-sm text-muted-foreground">
+        Starts as the chosen role's template. Change anything here and that becomes an override sent
+        instead of the template.
+      </p>
+      <app-permission-grid
+        [selected]="form.controls.permissions.value"
+        [hideProtected]="true"
+        (selectedChange)="setPermissions($event)"
+      />
+    </div>
+
+    <button hlmBtn type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Creating…' : 'Create operator' }}
+    </button>
+  </form>
+</section>

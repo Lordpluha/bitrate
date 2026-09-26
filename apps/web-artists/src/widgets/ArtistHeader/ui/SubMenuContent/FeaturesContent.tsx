@@ -1,7 +1,6 @@
 'use client'
 
 import { cn } from '@bitrate/ui-react'
-import Link from 'next/link'
 import { memo } from 'react'
 import type { SubmenuGroup } from './SubMenuContent.types'
 
@@ -20,7 +19,7 @@ export const FeaturesContent = memo(({ data }: FeaturesContentProps) => {
             <ul className="mt-4 space-y-2">
               {group.sections.map((section, idx) => (
                 <li className={cn('mb-4 font-bold')} key={section.title}>
-                  <Link
+                  <a
                     className={cn(
                       'link-underline text-white',
                       idx === 0 && 'text-4xl',
@@ -28,7 +27,7 @@ export const FeaturesContent = memo(({ data }: FeaturesContentProps) => {
                     href={section.href}
                   >
                     {section.title}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>

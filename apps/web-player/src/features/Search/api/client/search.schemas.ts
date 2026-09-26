@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 /** The type names the API labels results with. */
-export type SearchResultType = 'albums' | 'artists' | 'playlists' | 'tracks'
+type SearchResultType = 'albums' | 'artists' | 'playlists' | 'tracks'
 
 /**
  * Accepts either the plural type name the API actually sends ("playlists") or
@@ -12,7 +12,7 @@ export type SearchResultType = 'albums' | 'artists' | 'playlists' | 'tracks'
  * something therefore rendered as "No results found", while one that found
  * nothing looked perfectly healthy.
  */
-export const searchResultTypeSchema = z
+const searchResultTypeSchema = z
   .enum([
     'album',
     'albums',
@@ -30,7 +30,7 @@ export const searchResultTypeSchema = z
         : (`${value}s` as SearchResultType),
   )
 
-export const searchResultSchema = z.object({
+const searchResultSchema = z.object({
   artistId: z.string().nullable(),
   id: z.string(),
   image: z.string().nullable(),
@@ -66,7 +66,7 @@ export const searchResponseSchema = z.object({
   }),
 })
 
-export const searchHistoryItemSchema = z.object({
+const searchHistoryItemSchema = z.object({
   entityId: z.string().nullable(),
   entityType: z.string().nullable(),
   id: z.string(),
@@ -81,6 +81,4 @@ export const searchHistorySchema = z.object({
   page: z.number(),
   total: z.number(),
 })
-
-export type SearchHistoryItem = z.infer<typeof searchHistoryItemSchema>
 export type SearchResult = z.infer<typeof searchResultSchema>

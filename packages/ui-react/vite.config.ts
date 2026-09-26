@@ -42,6 +42,13 @@ export default defineConfig({
        dist/types (vite-plugin-dts), which is why `pnpm clean` runs first; see
        scripts/clean-dist.mjs. */
     emptyOutDir: true,
+    /* Vite's own default turns this off for a --watch build (`pnpm dev`), on the assumption
+       that `--watch` means a dev server iterating against unminified output. This package's
+       `dev` script is `vite build --watch` — its dist/ is what every consuming app's own dev
+       server resolves `@bitrate/ui-react` to, including icons — so an unminified watch build
+       is still a real, consumed artifact, not a throwaway one. Forced on unconditionally
+       rather than left to that mode-dependent default. */
+    minify: true,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
     },
@@ -55,6 +62,11 @@ export default defineConfig({
           preserveModules: true,
           preserveModulesRoot: 'src',
           entryFileNames: '[name].js',
+          /* Vite's own `minify: true` still leaves ES-format library output with
+             `codegen: false` — names get mangled but whitespace/structure survive. This
+             overrides that per-format default so the ESM output is fully compacted too,
+             the same as CJS gets from that default already. */
+          minify: true,
         },
         {
           format: 'cjs',
@@ -62,6 +74,7 @@ export default defineConfig({
           preserveModules: true,
           preserveModulesRoot: 'src',
           entryFileNames: '[name].js',
+          minify: true,
         },
       ],
     },

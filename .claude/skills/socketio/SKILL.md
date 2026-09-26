@@ -1,6 +1,6 @@
 ---
 name: socketio
-description: Socket.io gateway conventions for apps/api — gateway structure, authentication on connect, rooms, emitting from a service, and the scaling constraint. Use when adding or changing a WebSocket gateway, a real-time event, or when events reach the wrong clients or stop working behind more than one API instance.
+description: "Add or debug Socket.io gateways, authentication, rooms, events and multi-instance delivery in apps/api."
 license: MIT
 metadata:
   author: lordpluha

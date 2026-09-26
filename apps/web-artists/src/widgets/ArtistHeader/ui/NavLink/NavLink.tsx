@@ -1,5 +1,4 @@
 import { ArrowrightIcon, cn } from '@bitrate/ui-react'
-import Link from 'next/link'
 import links from '../../config/nav-links.json'
 
 import '../SubMenuContent/submenu-animation.css'
@@ -97,7 +96,7 @@ export const NavLinks = ({
 
         if (link.href && !hasSubmenu) {
           return (
-            <Link
+            <a
               className={linkClassName}
               href={link.href}
               key={link.title}
@@ -106,7 +105,7 @@ export const NavLinks = ({
               onMouseEnter={() => handleMouseEnter(link)}
             >
               {link.title}
-            </Link>
+            </a>
           )
         }
 

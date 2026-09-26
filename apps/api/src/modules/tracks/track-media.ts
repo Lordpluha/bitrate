@@ -10,9 +10,9 @@ import { MAX_COVER_BYTES } from './track-audio.helpers'
 const IMAGE_MAGIC_BYTES = 12
 
 /** Where the upload interceptor writes each kind of file. Server-owned, never client-supplied. */
-export const AUDIO_DESTINATION = './storage/private/tracks'
+const AUDIO_DESTINATION = './storage/private/tracks'
 
-export const COVER_DESTINATION = './storage/public/tracks/covers'
+const COVER_DESTINATION = './storage/public/tracks/covers'
 
 /**
  * The directory an uploaded file belongs in. `fieldname` only selects between two literals, so
