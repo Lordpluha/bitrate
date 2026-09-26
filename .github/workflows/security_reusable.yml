@@ -24,7 +24,6 @@ jobs:
 
       - name: Run pnpm audit
         run: pnpm audit --audit-level=high
-        continue-on-error: true
 
       - name: Secret scanning
         uses: trufflesecurity/trufflehog@main
@@ -33,7 +32,6 @@ jobs:
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
           extra_args: --only-verified
-        continue-on-error: true
 
   codeql:
     name: CodeQL
