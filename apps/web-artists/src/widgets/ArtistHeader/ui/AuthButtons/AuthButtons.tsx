@@ -3,7 +3,7 @@
 import { cn } from '@bitrate/ui-react'
 import { useAuthContext } from '@shared/hooks'
 import { ROUTES } from '@shared/routes/routes'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 
 interface AuthButtonsProps {
   variant?: 'default' | 'burger'
@@ -46,7 +46,7 @@ export const AuthButtons = ({
           'transform hover:scale-105 transition duration-300 ease-in-out',
           isBurger && 'text-base w-full py-3 px-12',
         )}
-        href={ROUTES.auth.registration}
+        to={ROUTES.auth.registration}
       >
         Get access
       </Link>

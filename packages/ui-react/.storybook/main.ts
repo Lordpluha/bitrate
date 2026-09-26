@@ -8,7 +8,13 @@ const __dirname = dirname(__filename)
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(ts|tsx)'],
-  addons: [getAbsolutePath('@storybook/addon-docs'), getAbsolutePath('@storybook/addon-a11y')],
+  addons: [
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@storybook/addon-a11y'),
+    // Serves the story catalogue over MCP at http://localhost:6006/mcp while
+    // `pnpm --filter @bitrate/ui-react storybook` is running — see .mcp.json.
+    getAbsolutePath('@storybook/addon-mcp'),
+  ],
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {},

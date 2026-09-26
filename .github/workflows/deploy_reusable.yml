@@ -40,7 +40,7 @@ on:
         description: >-
           Space-separated workflow file names the await-images job polls for a run
           on this commit. Defaults to release_images.yml, which is what builds all
-          five images for a version tag. On the release path the deploy is a
+          six images for a version tag. On the release path the deploy is a
           `needs:` job of the publish run and this job is off entirely.
         required: false
         default: 'release_images.yml'
@@ -307,7 +307,7 @@ jobs:
       # Which published image tag every service is pulled at. ONE value for the
       # whole stack, because infra/docker-compose.prod.yaml writes
       # `image: ghcr.io/lordpluha/bitrate/<svc>:${IMAGE_TAG:-master}` for all
-      # five services -- rolling one service back independently is not something
+      # six services -- rolling one service back independently is not something
       # that compose file can express, and pretending otherwise would produce a
       # deploy that half-applies.
       #
@@ -398,6 +398,7 @@ jobs:
           WEB_HOST: ${{ vars.WEB_HOST }}
           USER_WEB_HOST: ${{ vars.USER_WEB_HOST }}
           ARTIST_WEB_HOST: ${{ vars.ARTIST_WEB_HOST }}
+          ADMIN_WEB_HOST: ${{ vars.ADMIN_WEB_HOST }}
           API_BASE_URL: ${{ vars.API_BASE_URL }}
           API_URL: ${{ vars.API_URL }}
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
@@ -434,6 +435,7 @@ jobs:
           SENTRY_ENVIRONMENT: ${{ inputs.environment }}
           IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          CLOUDFLARE_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -452,12 +454,13 @@ jobs:
             REDIS_HOST REDIS_PASSWORD
             DATABASE_URL JWT_SECRET
             JWT_ACCESS_EXPIRES_IN JWT_REFRESH_EXPIRES_IN
+            CLOUDFLARE_TUNNEL_TOKEN
           "
 
           # Every name the rendered file may carry. Checked below for characters a
           # compose env file cannot represent.
           optional="
-            USER_WEB_HOST ARTIST_WEB_HOST API_BASE_URL API_URL
+            USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_BASE_URL API_URL
             REDIS_PORT SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_FROM
             ACCESS_TOKEN_NAME REFRESH_TOKEN_NAME COOKIE_DOMAIN STORAGE_DRIVER
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
@@ -645,6 +648,7 @@ jobs:
           WEB_HOST: ${{ vars.WEB_HOST }}
           USER_WEB_HOST: ${{ vars.USER_WEB_HOST }}
           ARTIST_WEB_HOST: ${{ vars.ARTIST_WEB_HOST }}
+          ADMIN_WEB_HOST: ${{ vars.ADMIN_WEB_HOST }}
           API_BASE_URL: ${{ vars.API_BASE_URL }}
           API_URL: ${{ vars.API_URL }}
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
@@ -692,6 +696,7 @@ jobs:
           IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
           RENDERED_FROM: ${{ github.sha }}
           ENVIRONMENT_NAME: ${{ inputs.environment }}
+          CLOUDFLARE_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -715,6 +720,11 @@ jobs:
             # Read by infra/docker-compose.prod.yaml for every app service.
             req IMAGE_TAG
 
+            printf '\n# --- Cloudflare ---\n'
+            # The cloudflared service carries no profile gate, so it is always part
+            # of `docker compose ... pull`/`up` for this stack -- required, not optional.
+            req CLOUDFLARE_TUNNEL_TOKEN
+
             printf '\n# --- Runtime ---\n'
             req NODE_ENV
             req PORT
@@ -726,6 +736,7 @@ jobs:
             req WEB_HOST
             opt USER_WEB_HOST
             opt ARTIST_WEB_HOST
+            opt ADMIN_WEB_HOST
             opt API_BASE_URL
             opt API_URL
             req NEXT_PUBLIC_API_URL

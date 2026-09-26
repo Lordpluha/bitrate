@@ -6,6 +6,7 @@ export interface ConvertAudioOptions {
   vbr?: boolean
   application?: 'audio' | 'voip' | 'lowdelay'
   timeoutMs?: number
+  onLog?: (message: string) => void
 }
 
 export interface ConvertAudioResult {

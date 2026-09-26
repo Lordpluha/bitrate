@@ -90,6 +90,21 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.artist
   }
 
+  /** Gets the staff (operator) account. */
+  get staff() {
+    return this.prisma.staff
+  }
+
+  /** Gets the operator role. */
+  get role() {
+    return this.prisma.role
+  }
+
+  /** Gets the staff session. */
+  get staffSession() {
+    return this.prisma.staffSession
+  }
+
   /** Gets the album. */
   get album() {
     return this.prisma.album
@@ -103,6 +118,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   /** Gets the track file. */
   get trackFile() {
     return this.prisma.trackFile
+  }
+
+  /** Gets per-attempt audio-processing log rows. */
+  get trackProcessingAttempt() {
+    return this.prisma.trackProcessingAttempt
   }
 
   /** Gets the listening history. */

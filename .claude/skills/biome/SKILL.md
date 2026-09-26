@@ -1,6 +1,6 @@
 ---
 name: biome
-description: Biome lint and format conventions for this monorepo — the root config and per-workspace overrides, safe vs unsafe fixes, the FSD import-boundary rules enforced through noRestrictedImports, and how to handle a rule you genuinely need to disable. Use when fixing a lint failure, changing a biome.json, or when formatting fights you.
+description: "Fix Biome lint/format failures or change its configuration and import boundaries in this monorepo."
 license: MIT
 metadata:
   author: lordpluha
@@ -9,11 +9,12 @@ metadata:
 
 # Biome — lint + format
 
-One tool for both, replacing ESLint and Prettier. Config is layered: `biome.json` at the
-root, extended by per-workspace configs (`apps/api/`, `apps/web-player/`,
+Biome handles lint and formatting in the workspaces configured for it. Config is layered:
+`biome.json` at the root, extended by per-workspace configs (`apps/api/`, `apps/web-player/`,
 `apps/web-artists/`, `packages/ui-react/`, `packages/contracts/`, `packages/ncs-parser/`).
 
-`apps/mobile` is the exception — it uses `eslint-config-expo`, not Biome.
+`apps/admin`, `apps/mobile` and `packages/player` use ESLint, not Biome.
+Admin/player format with Prettier; mobile has no configured formatter.
 
 ## Commands
 
@@ -29,9 +30,9 @@ pnpm exec biome check --write --unsafe .    # also applies unsafe fixes — revi
 fixes can change semantics, so `--unsafe` is a thing you run deliberately and then read the
 diff of, never a reflex.
 
-A `format-on-edit` hook runs `biome format --write` after every Edit/Write
-(`.claude/hooks/format-on-edit.sh`), so formatting should never be something you fix by
-hand.
+The post-edit hook selects the workspace formatter and edits only the touched file,
+including in linked worktrees. Missing tools/failures are reported; shell writes need an
+explicit formatting pass. See `.claude/references/hook-policy.md`.
 
 ## Style the config enforces
 
@@ -101,6 +102,6 @@ Do not guess an API from memory. In order:
 
 ## Related
 
-- `.claude/rules/code-style.md` — the four mechanical commands and their pass/fail contract.
+- `.claude/references/verification.md` — the four mechanical commands and their pass/fail contract.
 - `.claude/rules/fsd-web-player.md` — the layer rules `noRestrictedImports` encodes.
 - `.claude/rules/typescript.md` — `any`, suppression, and naming rules.

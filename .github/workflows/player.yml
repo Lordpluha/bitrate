@@ -1,0 +1,47 @@
+name: "[player] Checks"
+
+# packages/player compiles to the <bitrate-player> custom element (ADR-0039). It publishes no
+# image, so this is checks only, like ui_react.yml.
+#
+# The root files are in the filters on purpose. A lockfile or manifest change can re-resolve
+# the Svelte/Vite/Playwright toolchain under this package without touching packages/player at
+# all, and `check:tokens` scans packages/player/src, so a change to its script has to be
+# proven against this package too. That is also the only workflow that runs `check:tokens`
+# on a player-only change: ui_react.yml's copy is filtered to packages/ui-react.
+on:
+  push:
+    branches: [develop, master]
+    paths:
+      - 'packages/player/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.npmrc'
+      - 'scripts/check-design-tokens.mjs'
+      - '.github/workflows/player.yml'
+      - '.github/workflows/player_reusable.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop, master]
+    paths:
+      - 'packages/player/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.npmrc'
+      - 'scripts/check-design-tokens.mjs'
+      - '.github/workflows/player.yml'
+      - '.github/workflows/player_reusable.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+# Check out, install, lint, test, build. Nothing is published and no token is needed.
+permissions:
+  contents: read
+
+jobs:
+  player:
+    uses: ./.github/workflows/player_reusable.yml

@@ -1,0 +1,35 @@
+<ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2 border-t border-border pt-3">
+  @for (item of items(); track item.id) {
+    @let link = visibleLink(item);
+    @let urgent = item.id === urgentId();
+
+    <li>
+      @if (link) {
+        <a
+          class="block rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          [class.text-destructive]="urgent"
+          [routerLink]="link.path"
+          [queryParams]="link.queryParams"
+        >
+          <span class="block text-sm font-semibold tabular-nums" [class.text-foreground]="!urgent">{{
+            item.value
+          }}</span>
+          <span class="block text-xs" [class.text-muted-foreground]="!urgent">{{ item.label }}</span>
+          @if (item.hint) {
+            <span class="block text-[11px] text-muted-foreground">{{ item.hint }}</span>
+          }
+        </a>
+      } @else {
+        <div [class.text-destructive]="urgent">
+          <span class="block text-sm font-semibold tabular-nums" [class.text-foreground]="!urgent">{{
+            item.value
+          }}</span>
+          <span class="block text-xs" [class.text-muted-foreground]="!urgent">{{ item.label }}</span>
+          @if (item.hint) {
+            <span class="block text-[11px] text-muted-foreground">{{ item.hint }}</span>
+          }
+        </div>
+      }
+    </li>
+  }
+</ul>

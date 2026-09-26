@@ -1,6 +1,6 @@
 ---
 name: changesets
-description: Changesets versioning conventions for this monorepo — when a change needs one, the bump rubric, writing the file directly instead of using the wizard, multi-workspace changes, and the release workflow that consumes them. Use when adding a changeset, deciding a bump type, or when a PR is flagged for a missing changeset.
+description: "Choose version bumps, write changesets and diagnose release or missing-changeset checks."
 license: MIT
 metadata:
   author: lordpluha
@@ -82,7 +82,7 @@ belong there.
 ## Gotchas
 
 - **A missing changeset is caught late.** `Quality-5` in
-  `.claude/rules/architecture-checklist.md` is the review gate; nothing fails at commit time.
+  `.claude/references/architecture-checklist.md` is the review gate; nothing fails at commit time.
   Write it as part of the change, not as a follow-up.
 - **Naming a workspace that did not change** inflates its version and pollutes its changelog.
 - **The slug is not the summary.** `.changeset/fix-thing.md` with an empty body produces an
@@ -106,5 +106,5 @@ Do not guess an API from memory. In order:
 ## Related
 
 - `.claude/rules/commit-style.md` § "Changesets" — the canonical rule.
-- `.claude/rules/architecture-checklist.md` — Quality-5, the review gate.
+- `.claude/references/architecture-checklist.md` — Quality-5, the review gate.
 - `turborepo` skill — the workspace graph being versioned.

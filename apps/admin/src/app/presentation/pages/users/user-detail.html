@@ -1,0 +1,149 @@
+<section class="w-full space-y-8 p-8">
+  <header class="space-y-1">
+    <a routerLink="/users" class="text-sm text-muted-foreground hover:underline"
+      >&larr; Listeners</a
+    >
+    @if (loading()) {
+      <h1 class="text-xl font-semibold text-foreground">Listener</h1>
+    } @else if (user(); as u) {
+      <h1 class="text-xl font-semibold text-foreground">
+        {{ u.username }}
+        @if (u.deactivatedAt) {
+          <span hlmBadge variant="destructive" class="ml-2 align-middle">deactivated</span>
+        } @else {
+          <span hlmBadge variant="outline" class="ml-2 align-middle">active</span>
+        }
+      </h1>
+      <p class="text-sm text-muted-foreground">{{ u.email }}</p>
+    }
+  </header>
+
+  @if (loading()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else if (notFound()) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      This listener could not be found.
+    </p>
+  } @else if (user(); as u) {
+    @if (status(); as message) {
+      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
+        {{ message }}
+      </p>
+    }
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Activity</h2>
+      <dl class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Playlists</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">
+            {{ u.counts.playlists }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Liked tracks</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">
+            {{ u.counts.likedTracks }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Listening history</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">
+            {{ u.counts.listeningHistory }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Reports filed</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">
+            {{ u.counts.reportsFiled }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Active sessions</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">
+            {{ u.counts.activeSessions }}
+          </dd>
+        </div>
+      </dl>
+      <a
+        [routerLink]="['/audit']"
+        [queryParams]="{ entityType: 'admin-users', entityId: u.id }"
+        class="text-sm text-muted-foreground hover:underline"
+      >
+        View audit history &rarr;
+      </a>
+    </section>
+
+    <section aria-labelledby="listening-history-heading" class="space-y-3">
+      <h2 id="listening-history-heading" class="text-lg font-semibold text-foreground">
+        Listening history
+      </h2>
+      <app-listening-history [userId]="userId" />
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
+
+      @if (canRevokeSessions() && revocation(u).allowed) {
+        @if (armed() === 'revoke-sessions') {
+          <app-confirm-action
+            consequence="Revoke every active session for {{
+              u.username
+            }}? They will be signed out on their next request."
+            confirmLabel="Yes, revoke sessions"
+            [pending]="pending()"
+            (confirmed)="confirm($event)"
+            (cancelled)="arm(null)"
+          />
+        } @else {
+          <button hlmBtn size="sm" variant="outline" type="button" (click)="arm('revoke-sessions')">
+            Revoke sessions
+          </button>
+        }
+      }
+
+      @if (canDeactivate() && deactivation(u).allowed) {
+        @if (armed() === 'deactivate') {
+          <app-confirm-action
+            consequence="Deactivate {{
+              u.username
+            }}? This signs them out and blocks sign-in until restored."
+            confirmLabel="Yes, deactivate"
+            [pending]="pending()"
+            (confirmed)="confirm($event)"
+            (cancelled)="arm(null)"
+          />
+        } @else {
+          <button hlmBtn size="sm" variant="ghost" type="button" (click)="arm('deactivate')">
+            Deactivate
+          </button>
+        }
+      }
+
+      @if (canRestore() && restoration(u).allowed) {
+        @if (armed() === 'restore') {
+          <app-confirm-action
+            consequence="Restore {{ u.username }}? This reinstates sign-in immediately."
+            confirmLabel="Yes, restore"
+            [pending]="pending()"
+            (confirmed)="confirm($event)"
+            (cancelled)="arm(null)"
+          />
+        } @else {
+          <button hlmBtn size="sm" variant="outline" type="button" (click)="arm('restore')">
+            Restore
+          </button>
+        }
+      }
+
+      @if (!deactivation(u).allowed && !restoration(u).allowed) {
+        <p class="text-sm text-muted-foreground">No actions available.</p>
+      }
+    </section>
+  }
+</section>

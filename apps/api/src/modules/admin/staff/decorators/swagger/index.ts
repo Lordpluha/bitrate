@@ -1,0 +1,6 @@
+export * from './AssignStaffRole.decorator'
+export * from './CreateStaff.decorator'
+export * from './DeleteStaff.decorator'
+export * from './GetStaff.decorator'
+export * from './ListStaff.decorator'
+export * from './UpdateStaffPermissions.decorator'

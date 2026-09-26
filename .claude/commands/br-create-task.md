@@ -1,8 +1,18 @@
 ---
-description: Read the whole GitHub Projects board and repository context, then draft a detailed, correctly-scoped issue — or restructure an existing one — that fits the work already on the board instead of duplicating or contradicting it. Never creates or edits a GitHub issue without explicit confirmation.
+description: "Research related issues and code, then draft or refine a scoped issue. Confirm GitHub mutations."
 argument-hint: "\"<idea or issue number>\" [--update NNN] [--epic] [--dry-run]"
 author: lordpluha
 ---
+
+Before a large effort, follow `.claude/references/large-task-planning.md`: run the
+`grill-me` interview in the user-facing session, then present the plan for confirmation.
+Reuse an already completed interview and confirmed scope. Read-only fact gathering can
+support the interview; do not begin the planned mutations or implementation beforehand.
+
+
+Read `.claude/references/knowledge-base.md` for tracker/ADR work; consult
+`.claude/CONTEXT.md` only when terminology is needed.
+
 
 You turn a loose idea into a task that fits the board. The value here is **not** filling in a
 template — it is knowing what is already planned, what has already been decided, and what the
@@ -36,37 +46,16 @@ Board access additionally needs the `read:project` scope
 explicitly in your output that board columns were unavailable, rather than silently omitting
 them.
 
-## Step 1 — Load the board and the repo's shape
+## Step 1 — Find relevant work
 
-Do all of this before forming any opinion about the task:
-
-```bash
-# Every open issue, with labels and body — this is the duplicate-detection corpus
-gh issue list --state open --limit 200 --json number,title,labels,assignees,url,body
-
-# Recently closed work — what was already done, and what was rejected and why
-gh issue list --state closed --limit 60 --json number,title,labels,closedAt,url
-
-# The board itself: its status field's options, and what sits in each column
-# Project 6, owner Lordpluha — https://github.com/users/Lordpluha/projects/6
-gh project field-list 6 --owner Lordpluha --format json
-gh project item-list 6 --owner Lordpluha --format json --limit 200
-
-# Open PRs — work in flight that a new task could collide with
-gh pr list --state open --json number,title,headRefName,url
-```
-
-Then orient in the code the idea touches. Prefer one `graphify query "<question>"` over
-grepping many files; fall back to narrow `rg` under the specific app.
-
-Finally, read the decisions that constrain the idea:
-
-```bash
-ls apps/docs/docs/architecture/*.md
-```
-
-An ADR that already settled this question changes the task — either the task is unnecessary,
-or it is a proposal to supersede that ADR, which is a much bigger thing and must say so.
+Start with the supplied issue and its direct links, or focused issue searches using the
+feature's terms/workspace. Request short metadata first; read bodies/comments only for
+related candidates. Include relevant closed issues when checking prior decisions.
+Expand to a broader board query only when dependencies, duplicates or project state
+cannot be established from those results. Report incomplete searches honestly.
+Read board field options only when a planned board operation needs them; do not fetch
+all issue bodies or a complete repository inventory by default.
+Use `.claude/references/spec-workflow.md` and the specification template for large tasks.
 
 ## Step 2 — Classify against what exists
 

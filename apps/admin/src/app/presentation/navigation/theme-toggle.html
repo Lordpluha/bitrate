@@ -1,0 +1,16 @@
+<button
+  class="flex h-9 w-full items-center gap-3 rounded-md px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+  [class.justify-center]="collapsed()"
+  [class.px-0]="collapsed()"
+  type="button"
+  [attr.aria-label]="ariaLabel()"
+  [attr.title]="collapsed() ? label() : null"
+  (click)="cycle()"
+>
+  <ng-icon class="shrink-0 text-lg" [name]="icon()" aria-hidden="true" />
+  @if (!collapsed()) {
+    <span class="truncate">{{ label() }}</span>
+  } @else {
+    <span class="sr-only">{{ label() }}</span>
+  }
+</button>

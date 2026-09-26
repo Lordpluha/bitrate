@@ -22,7 +22,7 @@ const fetchSavedEpisodesPage = async (page: number, limit: number) => {
   return savedEpisodesSchema.parse(data)
 }
 
-export const dedupeSavedEpisodes = (episodes: SavedEpisode[]) =>
+const dedupeSavedEpisodes = (episodes: SavedEpisode[]) =>
   Array.from(new Map(episodes.map((episode) => [episode.id, episode])).values())
 
 export const usePodcasts = (page = 1, limit = 20, query?: string) =>

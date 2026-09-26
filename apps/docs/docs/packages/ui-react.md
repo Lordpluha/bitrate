@@ -128,7 +128,7 @@ pnpm build
 
 ```tsx
 // app/layout.tsx
-import '@bitrate/ui-react/themes.css'
+import '@bitrate/tailwind/themes.css'
 
 // components/MyComponent.tsx
 import { Button } from '@bitrate/ui-react'

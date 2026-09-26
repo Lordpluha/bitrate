@@ -82,17 +82,19 @@ $ pnpm run test:cov
 
 ## Development email verification
 
-Registration requires email verification. The preferred local/CI setup is a real test SMTP
-transport such as MailHog, configured through `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`,
-`SMTP_PASS`, and `EMAIL_FROM`.
+Registration requires email verification, and there are exactly two ways to get the link —
+a real SMTP server, or the log. There is deliberately no third: a local mail-catcher container
+(this repository ran MailHog until it was removed) is a whole extra service to keep alive for
+something a log line already answers.
 
-`task dev:up` starts MailHog automatically; delivered messages are visible at
-`http://localhost:8025`. For a natively running API, `task infra:up` exposes SMTP on port `1025`;
-set `SMTP_HOST=localhost`, `SMTP_PORT=1025`, and `EMAIL_FROM=no-reply@bitrate.local`.
+**Locally: the log.** Leave `SMTP_HOST` unset and set `DEV_MAIL_LOG_TOKENS=true`.
+`MailService` builds no transporter without a host, so it prints the complete verification/reset
+URL; open that URL in the matching user or
+artist frontend to finish the flow. Without the flag the API logs only that mail went
+unsent, with no link — which is a safe default, not a bug.
 
-For isolated local development only, set `DEV_MAIL_LOG_TOKENS=true`. When SMTP is unavailable,
-the API then prints the complete verification/reset URL; open that URL in the matching user or
-artist frontend to finish the flow. The flag is opt-in, defaults to `false`, and environment
+**Anywhere real: SMTP.** Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` and
+`EMAIL_FROM` and mail is sent for real. The flag is opt-in, defaults to `false`, and environment
 validation rejects it when `NODE_ENV=production`. CI/E2E must use an SMTP transport and must not
 depend on token logging.
 

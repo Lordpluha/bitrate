@@ -1,6 +1,8 @@
 ---
 name: desktop-rules
 description: Tauri 2 + React/Vite rules for apps/desktop — what does not transfer from the web player, the Rust/renderer command boundary and typed invoke wrappers, the capabilities permission model, and the disabled CSP that must be set before this app ships. Use whenever writing or reviewing a file under apps/desktop/, adding a native command, or changing tauri.conf.json or a capability file.
+paths:
+  - "apps/desktop/**"
 license: MIT
 metadata:
   author: lordpluha
@@ -107,10 +109,10 @@ never "fix" a loading failure by keeping it null or adding `unsafe-inline`.
 ## Renderer conventions
 
 React function components, named exports, named React imports, named types in signature
-positions, no production `any`. ≤100 logic lines per component file, ≤5 own declared props,
-≤2 `useEffect`.
+positions, no production `any`. Component size, props and effects are review signals
+owned by `code-principles.md`, not automatic failure thresholds.
 
-Design values should trace back to the token roles in `packages/ui-react/src/styles/`. No bridge exists yet — propose one
+Design values should trace back to the token roles in `packages/tailwind/src/`. No bridge exists yet — propose one
 rather than scattering hex literals. API types come from `@bitrate/contracts`.
 
 ## Commands

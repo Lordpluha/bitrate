@@ -1,0 +1,39 @@
+<div class="space-y-2 rounded-md border border-destructive/30 bg-destructive/5 p-3">
+  <p class="text-sm text-destructive" role="alert">{{ consequence() }}</p>
+
+  <div class="space-y-1">
+    <label hlmLabel for="confirm-action-reason">Reason (optional)</label>
+    <textarea
+      id="confirm-action-reason"
+      class="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-md border bg-transparent px-2.5 py-1.5 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+      rows="2"
+      [attr.maxlength]="maxLength"
+      [disabled]="pending()"
+      [value]="reason()"
+      (input)="setReason($any($event.target).value)"
+    ></textarea>
+  </div>
+
+  <div class="flex gap-2">
+    <button
+      hlmBtn
+      size="sm"
+      variant="destructive"
+      type="button"
+      [disabled]="pending()"
+      (click)="onConfirm()"
+    >
+      {{ pending() ? 'Working…' : confirmLabel() }}
+    </button>
+    <button
+      hlmBtn
+      size="sm"
+      variant="outline"
+      type="button"
+      [disabled]="pending()"
+      (click)="cancelled.emit()"
+    >
+      Cancel
+    </button>
+  </div>
+</div>

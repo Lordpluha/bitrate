@@ -1,6 +1,6 @@
 ---
 name: bullmq
-description: BullMQ job queue conventions for apps/api — where consumers and producers live, registering a queue, job options (retries, backoff, idempotency), and testing a consumer. Use when adding or changing a background job, a @Processor consumer, or a queue registration, or when a job retries forever or runs twice.
+description: "Add or debug BullMQ jobs, consumers, queue registration, retries and idempotency in apps/api."
 license: MIT
 metadata:
   author: lordpluha

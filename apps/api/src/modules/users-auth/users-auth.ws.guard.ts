@@ -48,6 +48,19 @@ export class WsUserAuthGuard implements CanActivate {
         throw new WsException('Session not found or revoked')
       }
 
+      /**
+       * Rejected at connect time only — a soft-deleted user whose socket is already open when
+       * the take-down happens stays connected until it disconnects on its own. Evicting live
+       * sockets on take-down is a known limitation, tracked in the changeset for this fix.
+       */
+      const user = await this.prisma.user.findFirst({
+        where: { id: payload.sub, deletedAt: null },
+        select: { id: true },
+      })
+      if (!user) {
+        throw new WsException('Session not found or revoked')
+      }
+
       client.userId = payload.sub
       client.username = payload.username
 

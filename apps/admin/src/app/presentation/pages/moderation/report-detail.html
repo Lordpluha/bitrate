@@ -1,0 +1,111 @@
+<section class="w-full space-y-8 p-8">
+  <header class="space-y-1">
+    <a routerLink="/moderation" class="text-sm text-muted-foreground hover:underline"
+      >&larr; Moderation queue</a
+    >
+    @if (loading()) {
+      <h1 class="text-xl font-semibold text-foreground">Report</h1>
+    } @else if (report(); as r) {
+      <h1 class="text-xl font-semibold text-foreground">
+        {{ r.reason }}
+        <span
+          hlmBadge
+          [variant]="
+            r.status === 'OPEN' ? 'destructive' : r.status === 'RESOLVED' ? 'default' : 'outline'
+          "
+          class="ml-2 align-middle"
+        >
+          {{ r.status }}
+        </span>
+      </h1>
+      <p class="text-sm text-muted-foreground">
+        Filed {{ r.createdAt | localizedDate: 'dd.MM.yyyy HH:mm' }} · reporter
+        {{ r.reporterId.slice(0, 8) }}
+      </p>
+    }
+  </header>
+
+  @if (loading()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else if (notFound()) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      This report could not be found.
+    </p>
+  } @else if (report(); as r) {
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    @if (r.details) {
+      <section class="space-y-1">
+        <h2 class="text-lg font-semibold text-foreground">Details</h2>
+        <p class="text-sm text-foreground">{{ r.details }}</p>
+      </section>
+    }
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Reported content</h2>
+      @if (r.subject; as subject) {
+        <div class="space-y-1 rounded-md border border-border p-3">
+          <p class="text-sm text-foreground">
+            <span class="text-xs uppercase text-muted-foreground">{{ subject.kind }}</span>
+            @if (subjectLink(subject.kind, subject.id); as link) {
+              <a [routerLink]="link" class="ml-2 hover:underline">{{ subject.title }}</a>
+            } @else {
+              <span class="ml-2">{{ subject.title }}</span>
+            }
+            @if (subject.deletedAt) {
+              <span hlmBadge variant="destructive" class="ml-2">deleted</span>
+            }
+          </p>
+          @if (subject.kind === 'episode' && subject.parentId) {
+            <p class="text-xs text-muted-foreground">Podcast: {{ subject.parentId }}</p>
+          }
+        </div>
+      } @else {
+        <p class="text-sm text-muted-foreground">Subject no longer exists.</p>
+      }
+    </section>
+
+    @if (r.siblingReports.length > 0) {
+      <section class="space-y-2">
+        <h2 class="text-lg font-semibold text-foreground">Other reports on this subject</h2>
+        <ul class="space-y-1">
+          @for (sibling of r.siblingReports; track sibling.id) {
+            <li>
+              <a [routerLink]="['/moderation', sibling.id]" class="text-sm hover:underline">
+                {{ sibling.reason }} — {{ sibling.status }} ({{
+                  sibling.createdAt | localizedDate: 'dd.MM.yyyy'
+                }})
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
+      @if (canAdvance()) {
+        <div class="flex gap-2">
+          @for (target of targets; track target.status) {
+            @if (advanceable(r, target.status)) {
+              <button
+                hlmBtn
+                size="sm"
+                variant="outline"
+                type="button"
+                [disabled]="pending()"
+                (click)="advance(target.status)"
+              >
+                {{ target.label }}
+              </button>
+            }
+          }
+        </div>
+      }
+    </section>
+  }
+</section>

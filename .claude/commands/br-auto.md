@@ -1,5 +1,5 @@
 ---
-description: Poll the Projects board's Todo column and drive each issue end to end — branch, implement, commit, push, PR, board move, issue comment — across parallel workers. Resumes anything a previous run left half-finished and picks up issues a reviewer sent back for rework.
+description: "Run the explicitly requested unattended issue-to-PR pipeline, resuming work and handling rework within approved scope."
 argument-hint: "[--limit N] [--issue NNN] [--dry-run] [--recover-only]"
 author: lordpluha
 ---
@@ -31,7 +31,7 @@ Edit this block to retune the pipeline; nothing else hardcodes these values.
 | Repository | `Lordpluha/bitrate` |
 | Projects board | number `6`, owner `Lordpluha` (user project) — https://github.com/users/Lordpluha/projects/6 |
 | Status column | the board's `Status` single-select field |
-| Parallel workers | 3 (override with `--limit N`) |
+| Parallel workers | 1 (override with `--limit N` for explicitly requested parallel work) |
 | Base branch | `develop` |
 | Scripts | `.claude/scripts/auto/br-worktree.sh`, `.claude/scripts/auto/br-pr.sh` |
 
@@ -48,7 +48,7 @@ dedicated opt-in label, so two safeguards carry the weight a label would have ca
 
 - **Stage 3 refuses vague issues.** No acceptance criteria means `BLOCKED_REASON:
   clarification`, not a guess. That check is what keeps a broad candidate set safe.
-- **`--limit` bounds the blast radius** (default 3), and `--dry-run` shows the full plan and
+- **`--limit` bounds the blast radius** (default 1), and `--dry-run` shows the full plan and
   classification without touching anything. Run `--dry-run` first on any board you have not
   run this against before.
 
@@ -92,7 +92,7 @@ something this command can grant itself.
 
 | Flag | Effect |
 |---|---|
-| `--limit N` | Max concurrent workers (default 3) |
+| `--limit N` | Max concurrent workers (default 1) |
 | `--issue NNN` | Process exactly this issue, skipping the poll and the `Todo`-column gate |
 | `--dry-run` | Print the plan and classification table, change nothing anywhere |
 | `--recover-only` | Run stage 2 only; do not take on new issues |
@@ -180,16 +180,21 @@ issues, oldest first. Before claiming each one:
 - Skip an issue with no acceptance criteria **and** a one-line title; that is a
   `clarification` block, not work. With no gate label this check is doing real safety work,
   so apply it strictly rather than charitably.
-- Skip anything whose body has no acceptance criteria **and** whose title is a one-liner;
-  that is a `clarification` block, not work.
 
 Then, per issue, in this order:
 
 1. `gh issue view NNN --json number,title,body,labels,comments,url` for the full description
    and comments — acceptance criteria usually live there, not in the title.
+   **Planning gate, before intake mutations:** classify scope, load the canonical spec
+   (issue body, or its linked local spec) and the user's recorded confirmation. For a large
+   task require completed grill-me decisions and the approved plan. For logic/API/bugs
+   require agreed observable behavior/public seams. Missing evidence means
+   `BLOCKED_REASON: planning`: report in this session without moving the card, claiming a
+   worktree, installing dependencies or dispatching a worker. `--issue` does not bypass it.
+   Evidence is the actual conversation/approved spec, not an invented approval flag.
 2. Move the board card to `In progress`. **Move before creating the worktree**: the column
-   change is what removes the issue from every other run's candidate set, so it is the real
-   claim.
+   change makes the intent visible to other dispatchers. The helper acquires the atomic
+   local lock; the board transition alone is not a concurrency lock.
 3. Pick the Conventional Commits branch type from the issue's labels — this repo's real
    type labels are `bug` → `fix`, `feature` → `feat`, `docs` → `docs`, otherwise `chore`.
    (Scope labels `api`, `web-player`, `web-artists`, `mobile`, `desktop`, `ui`,
@@ -204,15 +209,20 @@ Then, per issue, in this order:
 
 ## Stage 4 — rework
 
-An issue a reviewer sent back. The reviewer's comments are the new specification, and they
+Before adopting a worktree or moving a card, read feedback and compare it with the
+approved spec. Materially changed behavior/scope requires the same planning gate as intake.
+Existing approval remains valid for corrections within the agreed behavior.
+
+An issue a reviewer sent back. The reviewer's comments inform the specification, and they
 usually live on the PR rather than the issue, so gather both:
 
 ```bash
 .claude/scripts/auto/br-pr.sh notes <branch>       # unresolved review threads first
-.claude/scripts/auto/br-worktree.sh adopt NNN      # re-attach a worktree to the branch
 gh issue view NNN --json comments
 ```
 
+After collecting feedback and passing the planning gate, run
+`br-worktree.sh adopt NNN` to re-attach the task worktree.
 Move the card to `In progress` **before** dispatching the worker, so the board never shows
 an issue as waiting on review while an agent is editing its code. From `Code review` or
 `Reopened` this is a single move; do not leave it sitting in `Reopened` while work is
@@ -223,20 +233,25 @@ anywhere, do not guess — post an issue comment asking what needs changing and 
 
 ## Stage 5 — dispatch and completion
 
-Spawn one `br-worker` per issue via the Agent tool, **all in one message** so they run
-concurrently, `run_in_background: true`. Pass `MODE`, `ISSUE`, `TITLE`, `BODY`, `WORKTREE`,
-`BRANCH`, and `FEEDBACK` in rework mode.
+Reuse the planning evidence collected before claim/rework. Revalidate only if the scope
+changed; do not repeat the interview. Pass the canonical specification and acceptance IDs.
 
-`br-worker` is an orchestrator, not a single-stage implementer: it plans the issue, delegates
-each stage to the specialist that owns that surface, and re-verifies their claims before
-reporting. Passing `WORKTREE` is what puts it in `unattended` mode, where it never asks a
+Spawn one `br-worker` per issue via the Agent tool, up to the selected limit. The default
+is one worker. With explicit parallel slots, dispatch independent issues together using
+`run_in_background: true`; serialize heavy checks through `run-heavy.py`. Pass `MODE`, `ISSUE`, `TITLE`, `BODY`, `WORKTREE`,
+`BRANCH`, `PLANNING_CONTEXT` for large tasks, and `FEEDBACK` in rework mode.
+
+`br-worker` owns the outcome and implements ordinary stages itself. Delegate only a
+bounded independent task with a concrete benefit; no mandatory specialist chain.
+Reuse valid verification evidence for unchanged inputs; each handoff follows
+`.claude/references/execution-policy.md`. Passing `WORKTREE` selects `unattended` mode,
+where it never asks a
 question and blocks instead — so an issue that turns out to be ambiguous comes back as
 `BLOCKED_REASON: clarification` rather than stalling. Your job is unchanged: you own every
 GitHub action, it owns the code.
 
-Do not use the Agent tool's `isolation: worktree` — the worktree is already prepared off a
-freshly fetched `origin/develop`, while `isolation` would branch from the session's current
-dirty HEAD.
+Reuse the prepared task worktree rather than requesting another `isolation: worktree`.
+A new isolated checkout may use a different base and loses the prepared task context.
 
 Handle each worker as its report arrives, not after all of them finish.
 
@@ -310,6 +325,7 @@ that it is ready again.
 
 | `BLOCKED_REASON` | Issue comment |
 |---|---|
+| `planning` | missing approved specification/plan or agreed behavior; needs interactive planning |
 | `intent` | both options spelled out — what the issue's literal remedy does, what its goal actually needs, and the worker's recommendation. Tag the author; this is a product decision, not a technical one |
 | `clarification`, `scope` | the worker's specific question |
 | `blocked` | the missing dependency |

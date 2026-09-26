@@ -30,6 +30,17 @@
       "Bash(gh repo view*)",
       "Bash(gh auth status*)",
       "Bash(gh api -X GET *)",
+      "Bash(gh run list*)",
+      "Bash(gh run view*)",
+      "Bash(gh pr checks*)",
+      "Bash(gh pr diff*)",
+      "Bash(flatpak-spawn --host gh run list*)",
+      "Bash(flatpak-spawn --host gh run view*)",
+      "Bash(flatpak-spawn --host gh pr checks*)",
+      "Bash(flatpak-spawn --host gh pr diff*)",
+      "Bash(.claude/scripts/auto/br-pr.sh create*)",
+      "Bash(.claude/scripts/auto/br-pr.sh update*)",
+      "Bash(.claude/scripts/auto/br-pr.sh comment*)",
       "Bash(.claude/scripts/auto/br-worktree.sh *)",
       "Bash(.claude/scripts/auto/br-pr.sh state*)",
       "Bash(.claude/scripts/auto/br-pr.sh notes*)",
@@ -71,13 +82,21 @@
       "WebFetch(domain:vitest.dev)",
       "WebFetch(domain:playwright.dev)",
       "WebFetch(domain:reactnative.dev)",
-      "WebFetch(domain:knexjs.org)"
+      "WebFetch(domain:knexjs.org)",
+      "Bash(pnpm test*)",
+      "Bash(rtk grep *)",
+      "Bash(rtk git status*)",
+      "Bash(rtk git diff*)",
+      "Bash(rtk git log*)",
+      "Bash(ss -ltnp*)",
+      "Bash(vmstat *)",
+      "Bash(curl -s http://localhost:*)",
+      "Bash(curl -sS http://localhost:*)",
+      "Bash(pnpm --filter @bitrate/api exec prisma migrate status*)"
     ],
     "deny": [
       "Read(./.env)",
-      "Read(./.env.*)",
       "Read(//**/.env)",
-      "Read(//**/.env.*)",
       "Read(//proc/*/environ)",
       "Read(//**/.ssh/**)",
       "Read(//**/.aws/**)",
@@ -90,9 +109,6 @@
       "Read(//**/*.pem)",
       "Read(//**/*.p12)",
       "Read(//**/*.keystore)",
-      "Bash(cat .env*)",
-      "Bash(cat */.env*)",
-      "Bash(cat **/.env*)",
       "Bash(cat ~/.ssh/*)",
       "Bash(cat ~/.aws/*)",
       "Bash(env)",
@@ -100,8 +116,6 @@
       "Bash(gh auth token*)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
-      "Bash(git reset --hard*)",
-      "Bash(git clean -fd*)",
       "Read(./node_modules/**)",
       "Read(./dist/**)",
       "Read(./build/**)",
@@ -118,32 +132,23 @@
     ],
     "additionalDirectories": ["/tmp"]
   },
+  "enabledMcpjsonServers": [
+    "shadcn",
+    "playwright",
+    "chrome-devtools",
+    "prisma",
+    "storybook",
+    "sentry"
+  ],
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Read|Edit|Write|MultiEdit",
+        "matcher": "Read|Edit|Write|MultiEdit|NotebookEdit|Grep|Glob|Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-env-access.sh\""
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-guard.sh\" search"
-          }
-        ]
-      },
-      {
-        "matcher": "Read|Glob",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-guard.sh\" read"
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-env-access.sh\"",
+            "timeout": 10
           }
         ]
       }
@@ -154,7 +159,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/format-on-edit.sh\""
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/format-on-edit.sh\"",
+            "timeout": 20
           }
         ]
       },
@@ -184,6 +190,28 @@
     ]
   },
   "enabledPlugins": {
-    "mattpocock-skills@claude-plugins-official": true
+    "mattpocock-skills@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "sentry@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "andrej-karpathy-skills@karpathy-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "karpathy-skills": {
+      "source": {
+        "source": "github",
+        "repo": "forrestchang/andrej-karpathy-skills"
+      }
+    }
   }
 }

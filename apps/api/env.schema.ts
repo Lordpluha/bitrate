@@ -18,6 +18,7 @@ export const envSchema = z
     WEB_HOST: z.url(),
     USER_WEB_HOST: z.url().optional(),
     ARTIST_WEB_HOST: z.url().optional(),
+    ADMIN_WEB_HOST: z.url().optional(),
 
     // Storage driver — selects which StorageService implementation is bound at boot
     STORAGE_DRIVER: z.enum(['s3', 'local']).default('local'),
@@ -79,6 +80,14 @@ export const envSchema = z
     S3_SECRET_KEY: z.string().min(1).optional(),
     S3_PUBLIC_URL: z.string().url().optional(),
     S3_FORCE_PATH_STYLE: z.coerce.boolean().default(true),
+
+    /**
+     * Whether `AudioProcessingConsumer`'s BullMQ worker actually claims and runs jobs.
+     * Defaults on for the real API process. A seed entrypoint that boots the full
+     * `AppModule` (`src/infra/seeds/seed.ts`) sets this to `false` before importing it
+     * (see `bootstrap-env.ts`) so a `db:seed` run does not race its own conversion jobs.
+     */
+    AUDIO_PROCESSING_WORKER_ENABLED: booleanFromEnv.default(true),
 
     // CDN
     // CDN_URL: z.string().url().optional(),
