@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-16T00:00:00Z",
+  "title": "Design System: Bitrate for Artists — Pencil",
+  "extensions": {
+    "colorMeta": {
+      "color-primary": { "role": "primary", "displayName": "Bitrate Purple" },
+      "color-accent": { "role": "primary", "displayName": "Light Purple Accent" },
+      "color-background": { "role": "neutral", "displayName": "Neutral Canvas" },
+      "color-card": { "role": "neutral", "displayName": "Panel Surface" },
+      "color-border": { "role": "neutral", "displayName": "Structural Border" },
+      "color-text": { "role": "neutral", "displayName": "Primary Text" },
+      "color-text-secondary": { "role": "neutral", "displayName": "Secondary Text" }
+    },
+    "typographyMeta": {
+      "body": {
+        "displayName": "Interface Text",
+        "purpose": "The interface family observed in the Pencil source; this does not redefine final brand typography."
+      },
+      "label": {
+        "displayName": "Primary Action Label",
+        "purpose": "Action text inherited from the shared component masters."
+      }
+    },
+    "shadows": [],
+    "motion": [],
+    "breakpoints": []
+  },
+  "components": [],
+  "narrative": {
+    "northStar": "Inherited Bitrate System",
+    "overview": "A calm production workspace with neutral structure, recognizable purple actions, explicit status, and a clear next step. Artwork and music-production imagery carry personality while the interface helps the artist manage work without competing with the music. This metadata describes static designs; the .pen file remains the source of truth.",
+    "keyCharacteristics": [
+      "Neutral surfaces and disciplined purple actions.",
+      "A coherent type hierarchy and moderate information density.",
+      "Status includes text; absent data is stated explicitly.",
+      "Mobile preserves content and the next action."
+    ],
+    "rules": [
+      {
+        "name": "The Status Rule",
+        "body": "Communicate state through a label and, when useful, an icon. Color reinforces the message but never carries it alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Evidence Rule",
+        "body": "Static designs define visual intent. Transitions, hover, focus, disabled, keyboard, loading, responsive behavior, and motion require separate runtime verification.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Reuse variables, masters, and original brand assets from the .pen source.",
+      "Preserve status meaning, content, and the next action during adaptation.",
+      "Label absent data and illustrative content explicitly."
+    ],
+    "donts": [
+      "Do not replace the neutral workspace with an undifferentiated neon scene.",
+      "Do not present static designs, demo numbers, or planned capabilities as shipped product.",
+      "Do not copy literal token values between dark, light, and dim themes."
+    ]
+  }
+}

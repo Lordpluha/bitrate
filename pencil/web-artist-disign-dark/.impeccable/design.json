@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-16T00:00:00Z",
+  "title": "Design System: Bitrate for Artists — Dark",
+  "extensions": {
+    "colorMeta": {
+      "color-primary": { "role": "primary", "displayName": "Bitrate Purple" },
+      "color-accent": { "role": "primary", "displayName": "Light Purple Accent" },
+      "color-background": { "role": "neutral", "displayName": "Midnight Canvas" },
+      "color-card": { "role": "neutral", "displayName": "Dark Panel Surface" },
+      "color-border": { "role": "neutral", "displayName": "Cool Structural Border" },
+      "color-text": { "role": "neutral", "displayName": "Primary Light Text" },
+      "color-text-secondary": { "role": "neutral", "displayName": "Secondary Light Text" }
+    },
+    "typographyMeta": {
+      "body": {
+        "displayName": "Interface Text",
+        "purpose": "Poppins interface copy inherited from the dark Pencil system."
+      },
+      "label": {
+        "displayName": "Action Label",
+        "purpose": "Action text inherited from shared dark component masters."
+      }
+    },
+    "shadows": [],
+    "motion": [],
+    "breakpoints": []
+  },
+  "components": [],
+  "narrative": {
+    "northStar": "Midnight Control Room",
+    "overview": "A high-contrast production workspace with near-black neutral layers, disciplined purple actions, explicit semantic state, and workflow-specific music imagery. The .pen file remains the source of truth.",
+    "keyCharacteristics": [
+      "Near-black structural surfaces with restrained purple emphasis.",
+      "Workflow-specific studio, waveform, patchbay, and spectrum imagery.",
+      "Status includes text and does not rely on color alone.",
+      "Mobile preserves the desktop decision order."
+    ],
+    "rules": [
+      {
+        "name": "The Contrast Rule",
+        "body": "Working content must remain readable before glow, texture, or image detail is added.",
+        "section": "colors"
+      },
+      {
+        "name": "The Evidence Rule",
+        "body": "Static designs define intent; keyboard, focus, contrast, motion, and responsive behavior require runtime verification.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Reuse dark variables, masters, and original brand assets.",
+      "Integrate each music insert with the workflow it explains.",
+      "Keep one dominant action per decision context."
+    ],
+    "donts": [
+      "Do not cover working content with bright imagery.",
+      "Do not repeat one visual across unrelated screens.",
+      "Do not present concepts or demo data as shipped behavior."
+    ]
+  }
+}
