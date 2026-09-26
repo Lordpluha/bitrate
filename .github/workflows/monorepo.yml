@@ -1,0 +1,58 @@
+name: "[monorepo] Gates"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop, master]
+  # On a push these gates are only worth the minutes when the shared toolchain itself moved;
+  # per-app workflows already cover their own sources.
+  push:
+    branches: [develop, master]
+    paths:
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'turbo.json'
+      - 'biome.json'
+      - '.knip.json'
+      - 'tsconfig*.json'
+      - 'Taskfile.yml'
+      - 'lefthook.yml'
+      - 'commitlint.config.js'
+      - '.npmrc'
+      - '.nvmrc'
+      - 'scripts/**'
+      - '.github/workflows/monorepo.yml'
+      - '.github/workflows/monorepo_reusable.yml'
+  workflow_dispatch:
+    inputs:
+      run-lint:
+        description: "Run pnpm lint"
+        required: false
+        default: true
+        type: boolean
+      run-types:
+        description: "Run pnpm check-types"
+        required: false
+        default: true
+        type: boolean
+      run-knip:
+        description: "Run pnpm knip"
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    uses: ./.github/workflows/monorepo_reusable.yml
+    with:
+      run-lint: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-lint'] == 'true' || github.event_name != 'workflow_dispatch' }}
+      run-types: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-types'] == 'true' || github.event_name != 'workflow_dispatch' }}
+      run-knip: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-knip'] == 'true' || github.event_name != 'workflow_dispatch' }}

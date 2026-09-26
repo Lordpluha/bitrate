@@ -10,10 +10,10 @@ export const LoginSchema = z.object({
     .max(32, { message: 'Password must not exceed 32 characters' }),
 })
 
-/** Represents the login dto. */
-export class LoginDto {
+/** Represents the artist login dto. */
+export class ArtistLoginDto {
   /** The email value. */
-  @ApiProperty({ description: 'User email', example: 'user@example.com' })
+  @ApiProperty({ description: 'Artist email', example: 'artist@example.com' })
   email: string
 
   /** The password value. */

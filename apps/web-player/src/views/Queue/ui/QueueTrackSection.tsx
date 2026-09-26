@@ -1,7 +1,7 @@
 import type { TrackEntity } from '@entities/Track'
 import { QueueTrackRow } from './QueueTrackRow'
 
-export type QueueTrackEntry = {
+type QueueTrackEntry = {
   index?: number
   isActive?: boolean
   key: string

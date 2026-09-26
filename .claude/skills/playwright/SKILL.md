@@ -1,6 +1,6 @@
 ---
 name: playwright
-description: Playwright conventions for web-player E2E specs and route screenshots, plus the Vitest-Browser-Mode Chromium provider used for co-located ui-react screenshot specs. Use whenever writing or reviewing a *.e2e-spec.ts, *.screenshot-spec.ts(x) file, or whenever asked to add an E2E flow, route screenshot, or component screenshot test.
+description: "Write or debug web-player Playwright E2E/route screenshots and ui-react Vitest browser screenshot tests."
 metadata:
   version: "1.0.0"
   type: reference
@@ -94,6 +94,44 @@ Filter further with `-t "<title>"`. Baselines are written to the component's
 Use the update command only after confirming the visual change is intentional. Review the
 resulting image diff before accepting it.
 
+## SSR apps: wait for hydration before typing
+
+`apps/web-artists` renders on the server, so a Playwright spec that types immediately after
+`page.goto()` writes into markup React has not adopted yet — and hydration then resets the
+input to the value React rendered, silently discarding it. The failure names nothing useful:
+a field you just filled answers **"Email is required"**.
+
+Measured on the login route, the whole sequence inside one test:
+
+```text
+hydratedBefore: false    afterFill: "artist-at-bitrate"
+afterWait:      ""       hydratedAfter: true
+```
+
+Waiting for visible text does not fix it, because that text came from the server too — a
+`toBeVisible()` on the page heading passes long before the bundle runs. `networkidle` is not a
+fix either; it says nothing about whether React has attached.
+
+Navigate through `gotoHydrated` (`apps/web-artists/tests/support/hydration.ts`, aliased
+`@tests/*`) instead of `page.goto`. It polls for the fiber key React attaches to every host
+node, which is the first moment the DOM is observably React's:
+
+```ts
+import { gotoHydrated } from '@tests/support/hydration'
+
+await gotoHydrated(page, '/login')
+await page.getByLabel('Email Address').fill('artist-at-bitrate')
+```
+
+A click-only spec can pass without it and still be racing: an un-hydrated `<form>` submits
+natively and navigates away. Use the helper for every navigation in this app, not only the
+ones that type.
+
+The hazard is not specific to TanStack Start: Next.js renders client components into the HTML
+too, so `apps/web-player` can race the same way. It has not been observed there, and no
+equivalent helper exists yet — if a web-player spec ever fails with a message describing a
+field as empty right after filling it, this is the first thing to rule out.
+
 ## Stability rules
 
 - Render a bounded subject, not the whole document.
@@ -123,5 +161,5 @@ Do not guess an API from memory. In order:
 
 - `vitest` — the unit/integration projects screenshot specs sit alongside.
 - `br-tester` — the heavy specialist that writes/runs one focused E2E/screenshot
-  spec end to end and smoke-runs it; dispatched by `/br-implement` by default, or invoke it
+  spec end to end and smoke-runs it; use for a separate test task when isolation adds value, or invoke it
   directly via the Agent tool.

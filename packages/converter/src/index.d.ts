@@ -6,6 +6,7 @@ export interface ConvertAudioOptions {
   vbr?: boolean
   application?: 'audio' | 'voip' | 'lowdelay'
   timeoutMs?: number
+  onLog?: (message: string) => void
 }
 
 export interface ConvertAudioResult {
@@ -39,6 +40,7 @@ export interface ConvertAudioToHlsOptions {
   bitrates: string[]
   segmentDuration?: number
   timeoutMs?: number
+  onLog?: (message: string) => void
 }
 
 export interface ConvertAudioToHlsResult {
@@ -57,3 +59,6 @@ export type {
   ConvertAudioToCmafResult,
 } from './cmaf'
 export { convertAudioToCmaf } from './cmaf'
+
+export type { FfmpegErrorDetails, RunFfmpegOptions, RunFfmpegResult } from './ffmpeg-process'
+export { FfmpegError, runFfmpeg } from './ffmpeg-process'

@@ -1,5 +1,28 @@
 # @bitrate/web-artists
 
+## 1.1.0
+
+### Minor Changes
+
+- 7cbe380: Moved the artists portal off Next.js App Router onto TanStack Start with server rendering. Routes now live in `src/routes/`, and metadata and icons are declared in the root route's head instead of Next's file conventions. The edge `middleware.ts` was dropped rather than ported: its `PROTECTED_PREFIXES` list was empty, so it redirected nobody, and porting a no-op would have shipped dead code — what it knew about the guard (server-side cookie read, the `REFRESH_TOKEN_NAME` default, the `?next=` redirect) is written down in the app README for whoever builds the dashboard. Three things changed underneath that are easy to miss: the client reads `VITE_API_URL` because Vite only exposes `VITE_`-prefixed variables to the bundle and inlines them at build time, so the deployment variable is mapped at the Dockerfile, compose and CI boundary while keeping its shared `NEXT_PUBLIC_API_URL` name for the web player; nginx now proxies `/assets/` rather than `/_next/static/`, without which every stylesheet and chunk would have gone through the page rate limit; and the Nitro Vite plugin is what turns the build into a runnable server, since plain `vite build` emits a fetch handler that exits immediately under `node`. Validation moved from zod 3 to zod 4 using `.pipe(z.email())` rather than the deprecated `.email()` chain, which keeps an empty field answering "Email is required" instead of "invalid email", and the portal gained its first tests: four layers behind four independent configs — 18 Vitest unit cases, 9 integration cases, 4 Playwright route flows and 4 visual baselines, over half of them negative paths. The screenshot layer runs against the production build rather than the dev server, so no devtools overlay is baked into a reference image, and every Playwright spec navigates through a helper that waits for hydration: Start streams real markup, so a field is typable seconds before React owns it and hydration then discards whatever was typed — which surfaces as "Email is required" on an address you just filled. The portal also gained a real 404 page: Next answered an unknown path with its own built-in screen, so one was never written down here, and TanStack Router has none worth shipping — it warns on the first miss and renders a bare paragraph. And `pnpm start` now pins PORT=3002; without it Nitro defaults to 3000 and the portal quietly takes the API's port.
+
+### Patch Changes
+
+- d1f8e04: Bumped `@tanstack/react-query`/`@tanstack/react-query-devtools` from 5.101.0 to 5.103.1 and `lucide-react` from 1.18.0 to 1.47.0 across the web apps and the shared component library, keeping a single resolved copy of each in the lockfile. The `Spinner` and loading `Button` now render an additional `lucide-loader-2` class alongside `lucide-loader-circle` on the loading icon, a cosmetic side effect of the lucide-react upgrade with no visible change.
+- f769029: Restored workspace dependency links in admin Docker builds and included the shared UI build in development web images so they run from a clean checkout.
+- e1a9c20: The three application production images shrank by between 35% and 94%. The web player now
+  builds with Next.js standalone output file tracing, so its image carries the traced server
+  instead of the whole hoisted production dependency tree, and its container runs `node
+server.js` directly rather than two nested pnpm wrappers. Every production stage applies
+  ownership through `COPY --chown` instead of a trailing recursive `chown`, which had been
+  writing a second complete copy of the application tree into its own layer. The API image no
+  longer copies the seeded audio under `apps/api/storage/private`, keeping only the `public`
+  subtree its static file handler actually serves. Measured locally: web player 4.44 GB to
+  265 MB, API 3.88 GB to 1.9 GB, web artists 637 MB to 412 MB.
+- Updated dependencies [d1f8e04]
+- Updated dependencies [d1f8e04]
+  - @bitrate/ui-react@1.1.0
+
 ## 1.0.1
 
 ### Patch Changes

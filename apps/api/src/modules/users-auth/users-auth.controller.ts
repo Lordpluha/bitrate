@@ -21,12 +21,17 @@ import { ZodValidationPipe } from 'nestjs-zod'
 import { TokenService } from '../tokens/token.service'
 import {
   AuthForgotPasswordSwagger,
+  AuthGetSessionsSwagger,
   AuthLoginSwagger,
   AuthLogoutSwagger,
   AuthMeSwagger,
   AuthRefreshSwagger,
   AuthRegistrationSwagger,
   AuthResetPasswordSwagger,
+  AuthRevokeOtherSessionsSwagger,
+  AuthRevokeSessionSwagger,
+  AuthVerifyEmailResendSwagger,
+  AuthVerifyEmailSwagger,
   TwoFactorDisableSwagger,
   TwoFactorEnableSwagger,
   TwoFactorSetupSwagger,
@@ -34,7 +39,6 @@ import {
 } from './decorators'
 import {
   ForgotPasswordSchema,
-  LoginDto,
   LoginSchema,
   RegistrationDto,
   RegistrationSchema,
@@ -47,6 +51,7 @@ import {
   TwoFactorVerifyLoginDto,
   TwoFactorVerifyLoginSchema,
   UserForgotPasswordDto,
+  UserLoginDto,
   VerifyEmailDto,
   VerifyEmailSchema,
 } from './dtos'
@@ -73,7 +78,7 @@ export class UsersAuthController {
   @AuthLoginSwagger()
   @Post('login')
   async login(
-    @Body(new ZodValidationPipe(LoginSchema)) loginDto: LoginDto,
+    @Body(new ZodValidationPipe(LoginSchema)) loginDto: UserLoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.loginUser(loginDto.email, loginDto.password)
@@ -143,6 +148,7 @@ export class UsersAuthController {
   }
 
   /** Confirms a newly registered user's email address. */
+  @AuthVerifyEmailSwagger()
   @HttpCode(200)
   @Post('verify-email')
   async verifyEmail(@Body(new ZodValidationPipe(VerifyEmailSchema)) dto: VerifyEmailDto) {
@@ -150,6 +156,7 @@ export class UsersAuthController {
   }
 
   /** Reissues a verification email without exposing account existence. */
+  @AuthVerifyEmailResendSwagger()
   @HttpCode(200)
   @Post('verify-email/resend')
   async resendEmailVerification(
@@ -159,6 +166,7 @@ export class UsersAuthController {
   }
 
   /** Lists the current user's active sessions. */
+  @AuthGetSessionsSwagger()
   @UserAuth()
   @Get('sessions')
   getSessions(@Req() req: UserAuthRequest) {
@@ -167,6 +175,7 @@ export class UsersAuthController {
   }
 
   /** Revokes an individual session owned by the current user. */
+  @AuthRevokeSessionSwagger()
   @UserAuth()
   @Delete('sessions/:id')
   async revokeSession(@Req() req: UserAuthRequest, @Param('id', ParseUUIDPipe) id: string) {
@@ -174,6 +183,7 @@ export class UsersAuthController {
   }
 
   /** Revokes every session except the current browser session. */
+  @AuthRevokeOtherSessionsSwagger()
   @UserAuth()
   @Delete('sessions')
   async revokeOtherSessions(@Req() req: UserAuthRequest) {

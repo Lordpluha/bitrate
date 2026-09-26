@@ -1,6 +1,7 @@
 import { UploadAvatarDto } from '@modules/users'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { SafeUserEntity } from '../../entities'
 
 /** Runs the upload avatar swagger operation. */
 export function UploadAvatarSwagger() {
@@ -15,9 +16,7 @@ export function UploadAvatarSwagger() {
     ApiResponse({
       status: HttpStatus.OK,
       description: 'Avatar uploaded successfully',
-      schema: {
-        $ref: '#/components/schemas/SafeUserEntity',
-      },
+      type: SafeUserEntity,
     }),
     ApiResponse({
       status: HttpStatus.UNPROCESSABLE_ENTITY,

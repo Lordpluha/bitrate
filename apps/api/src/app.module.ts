@@ -2,11 +2,13 @@ import { join } from 'node:path'
 import { REDIS_CLIENT } from '@infra/cache/cache.constants'
 import { CacheModule } from '@infra/cache/cache.module'
 import { AuditInterceptor } from '@infra/observability/audit.interceptor'
+import { loggerOptions } from '@infra/observability/logger.config'
 import { MetricsInterceptor } from '@infra/observability/metrics.interceptor'
 import { MetricsService } from '@infra/observability/metrics.service'
 import { RedisThrottlerStorage } from '@infra/observability/redis-throttler.storage'
 import { PrismaModule } from '@infra/prisma/prisma.module'
 import { StorageModule } from '@infra/storage/storage.module'
+import { AdminModule } from '@modules/admin'
 import { AlbumsModule } from '@modules/albums/albums.module'
 import { ArtistsModule } from '@modules/artists/artists.module'
 import { ArtistsAuthModule } from '@modules/artists-auth/artists-auth.module'
@@ -23,20 +25,26 @@ import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { BullModule } from '@nestjs/bullmq'
 import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { SentryModule } from '@sentry/nestjs/setup'
 import type { Redis } from 'ioredis'
+import { I18nModule } from 'nestjs-i18n'
+import { LoggerModule } from 'nestjs-pino'
 import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
 import { PathTraversalMiddleware, RequestIdMiddleware } from './common'
 import { API_RATE_LIMITS, appConfigs } from './common/config'
+import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 import { HttpCacheInterceptor } from './common/interceptors/http-cache.interceptor'
+import { i18nOptions } from './i18n/i18n.config'
 
 @Module({
   imports: [
     SentryModule.forRoot(),
+    LoggerModule.forRoot(loggerOptions),
+    I18nModule.forRoot(i18nOptions),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.local', '.env.production', '.env.development'],
@@ -99,6 +107,7 @@ import { HttpCacheInterceptor } from './common/interceptors/http-cache.intercept
     MeModule,
     PodcastsModule,
     ModerationModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [
@@ -107,6 +116,7 @@ import { HttpCacheInterceptor } from './common/interceptors/http-cache.intercept
     { provide: APP_INTERCEPTOR, useClass: MetricsInterceptor },
     { provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor },
     { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
   ],
 })
 export class AppModule implements NestModule {

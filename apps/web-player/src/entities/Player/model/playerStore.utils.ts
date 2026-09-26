@@ -31,7 +31,7 @@ export const createQueuedTrack = (track: PlayerTrack): QueuedTrack => ({
   track,
 })
 
-export const resolveCurrentIndex = (
+const resolveCurrentIndex = (
   playlist: PlayerTrack[],
   currentTrack: PlayerTrack,
   currentTrackIndex: number,

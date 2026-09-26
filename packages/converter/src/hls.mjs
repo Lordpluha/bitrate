@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import { join } from 'node:path'
-import { execa } from 'execa'
 import ffmpegPath from 'ffmpeg-static'
+import { runFfmpeg } from './ffmpeg-process.mjs'
 
 /**
  * Convert an audio file into a multi-bitrate HLS VOD stream with fragmented MP4 segments.
@@ -11,6 +11,7 @@ import ffmpegPath from 'ffmpeg-static'
  * @param {string[]} options.bitrates
  * @param {number} [options.segmentDuration=4]
  * @param {number} [options.timeoutMs] - Optional FFmpeg timeout in milliseconds
+ * @param {(message: string) => void} [options.onLog] - Optional log sink (default: no-op)
  * @returns {Promise<{masterPlaylist: string, outputDir: string}>}
  */
 export async function convertAudioToHls({
@@ -19,6 +20,7 @@ export async function convertAudioToHls({
   bitrates,
   segmentDuration = 4,
   timeoutMs,
+  onLog = () => {},
 }) {
   if (!ffmpegPath) {
     throw new Error('FFmpeg binary not found. Ensure ffmpeg-static is installed correctly.')
@@ -105,14 +107,6 @@ export async function convertAudioToHls({
     join(outputDir, '%v', 'index.m3u8'),
   ]
 
-  try {
-    if (timeoutMs === undefined) {
-      await execa(ffmpegPath, args)
-    } else {
-      await execa(ffmpegPath, args, { timeout: timeoutMs })
-    }
-    return { masterPlaylist, outputDir }
-  } catch (error) {
-    throw new Error(`FFmpeg HLS error: ${error instanceof Error ? error.message : error}`)
-  }
+  await runFfmpeg(args, { ffmpegPath, timeoutMs, onLog })
+  return { masterPlaylist, outputDir }
 }

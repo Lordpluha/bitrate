@@ -1,0 +1,61 @@
+name: "[platform] Off-host Backup"
+
+# Daily production backup with an off-host copy. Deliberately NOT bound to the `production`
+# GitHub Environment: that environment gates on a human reviewer, and a backup that waits for
+# an approval at 03:00 is a backup that does not happen. Its configuration is therefore
+# repository-scoped, like the monitoring workflow's.
+#
+# The restore side lives in monitoring.yml — a backup nobody has restored is a file, not a
+# backup.
+
+on:
+  schedule:
+    # 03:17 UTC. Off the hour because every scheduler on GitHub is busiest there, and
+    # scheduled runs are queued rather than guaranteed at the minute.
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      include-storage:
+        description: Also archive the API's upload volume
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  # Never two backups at once: both would run pg_dump against the same server.
+  # No cancel-in-progress — a half-finished backup is worse than a queued one.
+  group: backup-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  production:
+    uses: ./.github/workflows/backup_reusable.yml
+    permissions:
+      contents: read
+    with:
+      s3-endpoint: ${{ vars.BACKUP_S3_ENDPOINT }}
+      s3-bucket: ${{ vars.BACKUP_S3_BUCKET }}
+      s3-region: ${{ vars.BACKUP_S3_REGION || 'auto' }}
+      s3-prefix: ${{ vars.BACKUP_S3_PREFIX || 'production' }}
+      local-retention-days: 7
+      # Retention in the bucket is a lifecycle rule, set once on the bucket itself. Leaving
+      # it there means this workflow's credential never needs DeleteObject, so a leak of it
+      # cannot destroy the history it just wrote. Flip prune-remote on only for a provider
+      # with no lifecycle support.
+      prune-remote: false
+      include-storage: ${{ github.event_name != 'workflow_dispatch' || inputs.include-storage }}
+      # Left off until the api_storage volume from infra/docker-compose.prod.yaml has been
+      # deployed and an upload has been confirmed to land in it. Until then a missing
+      # storage archive is expected, and failing on it would train everyone to ignore red.
+      require-storage: false
+    secrets:
+      deploy-host: ${{ secrets.SERVER_HOST }}
+      deploy-user: ${{ secrets.SERVER_USER }}
+      deploy-ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      deploy-path: ${{ secrets.DEPLOY_PATH }}
+      deploy-ssh-host-key: ${{ secrets.SERVER_SSH_HOST_KEY }}
+      s3-access-key-id: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+      s3-secret-access-key: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}

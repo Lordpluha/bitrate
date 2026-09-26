@@ -1,6 +1,6 @@
 ---
 name: vitest
-description: Vitest conventions for web-player and ui-react — the unit/integration/snapshot/screenshot projects, file placement and suffixes, mocking with vi.mock, and single-file smoke-run commands. Use whenever writing or reviewing a *.unit-spec, *.int-spec, *.snapshot-spec, or *.screenshot-spec file in apps/web-player or packages/ui-react, or whenever asked to "write a Vitest test" or "test this component".
+description: "Write or review web-player and ui-react Vitest unit, integration, snapshot and screenshot specs; select projects and mocks."
 metadata:
   version: "1.0.0"
   type: reference
@@ -121,5 +121,5 @@ Do not guess an API from memory. In order:
 
 - `playwright` — the Chromium provider behind the `screenshot` project, plus web-player E2E.
 - `br-tester` — the heavy specialist that writes/runs one focused spec end to end
-  and smoke-runs it; dispatched by `/br-implement` by default, or invoke it directly via the
+  and smoke-runs it; use for a separate test task when isolation adds value, or invoke it directly via the
   Agent tool.

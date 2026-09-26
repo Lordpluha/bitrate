@@ -1,5 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { PlaylistEntity } from '../entities'
 
 /** Runs the create playlist swagger operation. */
 export function CreatePlaylistSwagger() {
@@ -8,7 +9,7 @@ export function CreatePlaylistSwagger() {
     ApiResponse({
       status: HttpStatus.CREATED,
       description: 'Playlist created',
-      schema: { $ref: '#/components/schemas/PlaylistEntity' },
+      type: PlaylistEntity,
     }),
     ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Not authenticated' }),
   )

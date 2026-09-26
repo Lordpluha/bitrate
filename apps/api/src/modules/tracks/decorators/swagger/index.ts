@@ -1,3 +1,5 @@
+export * from './get-hls-asset.decorator'
+export * from './get-hls-master-playlist.decorator'
 export * from './get-liked-tracks.decorator'
 export * from './get-track-by-id.decorator'
 export * from './get-track-manifest.decorator'

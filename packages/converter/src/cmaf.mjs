@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import { join } from 'node:path'
-import { execa } from 'execa'
 import ffmpegPath from 'ffmpeg-static'
+import { runFfmpeg } from './ffmpeg-process.mjs'
 import { assertAlignedRenditions, buildFragmentIndexFromFile } from './mp4-index.mjs'
 
 /** AAC-LC always encodes 1024 samples per frame. */
@@ -35,6 +35,7 @@ const framesToMicroseconds = (frames) =>
  * @param {number[]} options.bitrates - kbps, e.g. [128, 192, 320]
  * @param {number} [options.fragmentFrames=192]
  * @param {number} [options.timeoutMs]
+ * @param {(message: string) => void} [options.onLog] - Optional log sink (default: no-op)
  * @returns {Promise<{outputDir: string, timescale: number, durationTicks: number, renditions: {bitrate: number, path: string, size: number, initRange: [number, number], indexRange: [number, number], fragments: {startTicks: number, durationTicks: number, offset: number, length: number}[]}[]}>}
  */
 export async function convertAudioToCmaf({
@@ -43,6 +44,7 @@ export async function convertAudioToCmaf({
   bitrates,
   fragmentFrames = DEFAULT_FRAGMENT_FRAMES,
   timeoutMs,
+  onLog = () => {},
 }) {
   if (!ffmpegPath) {
     throw new Error('FFmpeg binary not found. Ensure ffmpeg-static is installed correctly.')
@@ -109,15 +111,7 @@ export async function convertAudioToCmaf({
     )
   }
 
-  try {
-    if (timeoutMs === undefined) {
-      await execa(ffmpegPath, args)
-    } else {
-      await execa(ffmpegPath, args, { timeout: timeoutMs })
-    }
-  } catch (error) {
-    throw new Error(`FFmpeg CMAF error: ${error instanceof Error ? error.message : error}`)
-  }
+  await runFfmpeg(args, { ffmpegPath, timeoutMs, onLog })
 
   const renditions = []
 

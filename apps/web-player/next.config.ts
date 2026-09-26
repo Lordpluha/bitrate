@@ -1,3 +1,4 @@
+import { join } from 'node:path'
 import { withSentryConfig } from '@sentry/nextjs/config'
 import type { NextConfig } from 'next'
 import { parseWebEnv } from './env.schema'
@@ -13,6 +14,19 @@ const apiBaseUrl =
   ) ?? 'http://localhost:3000'
 
 const nextConfig = {
+  /**
+   * Trace the server and its dependencies into `.next/standalone` so the production image
+   * carries only what a request actually reaches. Before this the image copied the whole
+   * hoisted `node_modules` out of a `prod-dependencies` stage — 1.97 GB on the deployed
+   * artifact, and every byte of it duplicated again by the `chown -R` that followed.
+   */
+  output: 'standalone',
+  /**
+   * Tracing defaults to the directory holding this file, which in a pnpm workspace stops
+   * short of the hoisted root `node_modules` and of `packages/ui-react`. Pointing it at the
+   * repository root is what makes the traced bundle complete rather than merely small.
+   */
+  outputFileTracingRoot: join(__dirname, '..', '..'),
   experimental: {
     staleTimes: {
       dynamic: 60,

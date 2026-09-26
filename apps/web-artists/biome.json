@@ -1,10 +1,21 @@
 {
   "root": false,
   "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
-  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+    "includes": [
+      "!node_modules",
+      "!.output",
+      "!.tanstack",
+      "!dist",
+      "!build",
+      "!src/routeTree.gen.ts"
+    ]
   },
   "css": {
     "parser": {
@@ -31,8 +42,12 @@
         "useJsxKeyInIterable": "error",
         "noUnusedFunctionParameters": "warn"
       },
-      "security": { "noDangerouslySetInnerHtmlWithChildren": "error" },
-      "style": { "useBlockStatements": "off" },
+      "security": {
+        "noDangerouslySetInnerHtmlWithChildren": "error"
+      },
+      "style": {
+        "useBlockStatements": "off"
+      },
       "suspicious": {
         "noCommentText": "error",
         "noDuplicateJsxProps": "error",
@@ -40,13 +55,21 @@
       }
     },
     "domains": {
-      "next": "recommended",
       "react": "recommended"
     },
-    "includes": ["**", "!.next/**", "!out/**", "!build/**", "!next-env.d.ts"]
+    "includes": [
+      "**",
+      "!.output/**",
+      "!.tanstack/**",
+      "!out/**",
+      "!build/**",
+      "!src/routeTree.gen.ts"
+    ]
   },
   "javascript": {
-    "formatter": { "quoteStyle": "single" },
+    "formatter": {
+      "quoteStyle": "single"
+    },
     "globals": [
       "onnotificationclose",
       "onbackgroundfetchfail",

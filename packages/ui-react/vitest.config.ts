@@ -1,4 +1,5 @@
 import path, { resolve } from 'node:path'
+import { svgrPlugin } from '@bitrate/vite-svgr'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { playwright } from '@vitest/browser-playwright'
@@ -9,12 +10,24 @@ const alias = {
   '@assets': resolve(__dirname, 'assets'),
 }
 
+/* src/icons/svgr is generated and committed, but the source-hash cache in
+   packages/svgr only skips regeneration when the SVGs are unchanged — a local edit still
+   needs to reach these files before a spec imports them. Each of these projects is its own
+   Vite instance with no config inherited from vite.config.ts, so each needs its own copy of
+   this plugin rather than relying on build/dev/Storybook having already run it. */
+const icons = () =>
+  svgrPlugin({
+    input: './assets/icons',
+    output: 'src/icons/svgr',
+    variables: ['primaryColor', 'secondaryColor'],
+  })
+
 export default defineConfig({
   plugins: [react()],
   test: {
     projects: [
       {
-        plugins: [react()],
+        plugins: [icons(), react()],
         resolve: { alias },
         test: {
           name: 'unit',
@@ -25,7 +38,7 @@ export default defineConfig({
         },
       },
       {
-        plugins: [react()],
+        plugins: [icons(), react()],
         resolve: { alias },
         test: {
           name: 'integration',
@@ -36,7 +49,7 @@ export default defineConfig({
         },
       },
       {
-        plugins: [react()],
+        plugins: [icons(), react()],
         resolve: { alias },
         test: {
           name: 'snapshot',
@@ -47,7 +60,7 @@ export default defineConfig({
         },
       },
       {
-        plugins: [tailwindcss(), react()],
+        plugins: [icons(), tailwindcss(), react()],
         resolve: { alias },
         test: {
           name: 'screenshot',

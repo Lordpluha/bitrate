@@ -1,0 +1,62 @@
+// See ADR-0046. Grafana Alloy, not Promtail: Promtail was deprecated in Loki 3.0 and removed
+// as of Loki 3.7.3 — Alloy is Grafana's current, actively maintained agent for the same job.
+// The grill-me interview settled on "Promtail" by name before this was checked against
+// current docs; this is that correction, made during implementation, not a silent swap.
+
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+
+  // Server-side filter — only the two containers the interview settled on (api + nginx) are
+  // even listed by the Docker Engine API, not merely dropped after the fact.
+  filter {
+    name   = "name"
+    values = ["bitrate-api", "bitrate-nginx"]
+  }
+}
+
+discovery.relabel "containers" {
+  targets = discovery.docker.containers.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+}
+
+loki.source.docker "containers" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.containers.output
+  forward_to = [loki.process.containers.receiver]
+}
+
+loki.process "containers" {
+  // Unwraps Docker's own JSON log envelope — applies to both containers regardless of what's
+  // inside it.
+  stage.docker {}
+
+  // apps/api/src/infra/observability/logger.config.ts makes the api container log JSON lines
+  // (nestjs-pino) — lift level/msg out as real Loki labels so they're filterable the same way
+  // any other label is, instead of living only inside an opaque JSON blob. nginx's own
+  // combined-format access log is untouched by this block; LogQL's line filters (|= "...")
+  // still work on it as plain text.
+  stage.match {
+    selector = "{container=\"bitrate-api\"}"
+
+    stage.json {
+      expressions = { level = "level", msg = "msg" }
+    }
+
+    stage.labels {
+      values = { level = "level" }
+    }
+  }
+
+  forward_to = [loki.write.loki.receiver]
+}
+
+loki.write "loki" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

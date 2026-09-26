@@ -1,6 +1,6 @@
 ---
 name: storybook
-description: Storybook conventions for packages/ui-react — where stories live, CSF3 story shape, the a11y and docs addons, token/theme stories, and how stories relate to the four co-located Vitest projects. Use when adding or changing a *.stories.tsx file, or when documenting a ui-react component.
+description: "Add or update ui-react CSF3 stories, component documentation, accessibility checks and token/theme stories."
 license: MIT
 metadata:
   author: lordpluha
@@ -34,7 +34,7 @@ packages/ui-react/src/components/ui/<name>/
 ```
 
 `.stories.tsx` is **required** for a new component — it is checked by `FSD-5` in
-`.claude/rules/architecture-checklist.md`. Token/foundation stories live beside what they
+`.claude/references/architecture-checklist.md`. Token/foundation stories live beside what they
 document (`src/styles/radius.stories.tsx`, `spacing.stories.tsx`, `shadow.stories.tsx`).
 
 ### The colour stories read the CSS — do not hand-list tokens
@@ -142,4 +142,4 @@ Do not guess an API from memory. In order:
 - `ui-react-rules` skill — where components live, search-before-adding, Base UI.
 - `vitest` skill — the four co-located spec projects.
 - `playwright` skill — the Chromium provider behind screenshot specs.
-- `.claude/rules/architecture-checklist.md` — FSD-5, the required component file set.
+- `.claude/references/architecture-checklist.md` — FSD-5, the required component file set.

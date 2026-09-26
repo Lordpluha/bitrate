@@ -20,7 +20,7 @@ publishes ports:
 |---|---|---|
 | `nginx` | TLS termination and routing | all of them — 80, 443 |
 | `web-player` | Next.js, port 3001 | the apex, and `www` by redirect |
-| `web-artists` | Next.js, port 3002 | `artists.` |
+| `web-artists` | TanStack Start, port 3002 | `artists.` |
 | `api` | NestJS, port 3000 | `api.` |
 | `docs` | Docusaurus build on nginx, port 8080 | `docs.` |
 | `storybook` | Storybook build on nginx, port 8080 | `ui.` |
@@ -202,21 +202,19 @@ only way to change it is to rebuild.
 The same asymmetry explains why editing `.env` on the server looks like it works and then quietly
 stops working: the next deploy overwrites the file from GitHub.
 
-`scripts/sync-env-to-github.sh` uploads an existing env file in one pass. It pipes each value into
-`gh` on stdin rather than passing it as an argument — arguments are visible to anyone who can run
-`ps` — prints names only, and lists any name its classification does not cover, since such a name
-would silently vanish from the rendered file.
+Upload values with `gh` one at a time, piping each on **stdin** rather than passing it as an
+argument — an argument is visible to anyone who can run `ps`:
 
 ```bash
-./scripts/sync-env-to-github.sh                      # dry run against production
-./scripts/sync-env-to-github.sh --apply
-./scripts/sync-env-to-github.sh --env staging --apply
+printf '%s' "$VALUE" | gh secret set JWT_SECRET --env production
+printf '%s' "$VALUE" | gh variable set WEB_HOST --env production
 ```
 
 The environment must exist first, and its required reviewer has to be added by hand — `gh` can
-create neither. After writing, the script re-reads the environment and names anything that did not
-land: a missing required value aborts the next deploy loudly, but a missing optional one just
-reverts to a schema default without saying so.
+create neither. Re-read the environment afterwards (`gh secret list --env production`,
+`gh variable list --env production`) and check every name the deploy expects is there: a missing
+required value aborts the next deploy loudly, but a missing optional one just reverts to a schema
+default without saying so.
 
 A compose `--env-file` is not a shell file: compose interpolates `${...}` inside it and treats
 ` #` as the start of a comment, so a password containing `$` or ` #` is corrupted rather than
@@ -350,14 +348,30 @@ certificate, or a missing certificate at `/etc/letsencrypt/live/<DOMAIN>/`.
 
 ## 6. Backups
 
+Production backups are automated and off-host. `.github/workflows/backup.yml` runs daily: the
+server dumps the database with `infra/backup.sh`, the runner streams the result off over SSH and
+uploads it to S3-compatible object storage, and the monitoring workflow restores the newest
+object into a throwaway Postgres and asserts on the data that comes back. The object-storage
+credentials live only in GitHub, never on the server. Setup — bucket, secret names, and the
+one-time rescue of the existing uploads — is in
+[ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md); the secret table is in
+[`.github/workflows/README.md` § Backups](https://github.com/Lordpluha/bitrate/blob/develop/.github/workflows/README.md).
+
+By hand, on the server, from `$HOME/bitrate`:
+
 ```bash
-task db:backup                     # dump to backups/
-task db:restore FILE=backups/2026-09-02_120000.sql
+task prod:backup                          # dump + storage archive into backups/, prune old ones
+task prod:restore FILE=backups/db-20260908T031711Z.dump
 ```
 
-`db:restore` is destructive and asks for confirmation. Copy dumps off the machine — a snapshot
-of a volume with a running Postgres is not a consistent backup, so volume snapshots are a second
-line of defence, not a substitute.
+`prod:restore` is destructive and asks for confirmation. It uses `pg_restore`, because
+`prod:backup` writes `pg_dump --format=custom`; piping a custom-format dump into `psql` fails at
+the first byte.
+
+For the preprod stack, `task db:backup` / `task db:restore FILE=…` write and read plain SQL.
+
+A snapshot of a volume with a running Postgres is not a consistent backup, so volume snapshots
+are a second line of defence, not a substitute.
 
 ## 7. Releasing
 
@@ -382,6 +396,8 @@ gh run watch "$(gh run list --workflow=release.yml --limit 1 \
 
 # 3. Read the release pull request, then approve and merge it.
 #    The bot is its author, so your approval counts — no --admin needed here.
+#    WAIT for the checks first — see the warning below.
+gh pr checks <n> --watch
 gh pr diff <n> && gh pr review <n> --approve && gh pr merge <n> --merge
 
 # 4. The merge starts the publish run on its own: tag, GitHub Release, five images, deploy.
@@ -394,6 +410,20 @@ gh run view <run id> --web        # Review deployments -> Approve
 # 6. Merge the back-merge pull request the publish run opens into develop.
 gh pr merge <n> --merge
 ```
+
+:::warning[Do not merge before the checks report]
+`gh pr checks` immediately after the cut reports only the two commit statuses the cut itself
+posts — `bitrate/release-gates` and `bitrate/release-version`. The per-surface workflow runs
+(`[api] Checks`, `[web-player] Checks`, the integration test) take another minute to register,
+so a summary reading "Passed: 2, Failed: 0" means *two things have reported*, not *CI is green*.
+
+Merging at that moment also deletes the head branch, which terminates every in-flight
+`pull_request` run on it. Those runs then show as **failed with zero jobs** — they never
+executed a step. That failure is an artefact of the merge, not a signal about the code, and it
+destroys the evidence you would have wanted.
+
+Use `--watch`, or read the same commit's runs on `develop`, which are unaffected by the merge.
+:::
 
 Then check the result yourself rather than trusting the run's own health job:
 
@@ -431,14 +461,16 @@ statuses, and branch protection matches required checks by *context name*. Until
 registered, nothing stops a release pull request merging with a failed gate:
 
 ```bash
-pnpm check:branch-protection            # report only — shows what would change
-pnpm check:branch-protection --apply    # register them
+gh api -X PATCH repos/:owner/:repo/branches/master/protection/required_status_checks \
+  -f 'checks[][context]=bitrate/release-gates' \
+  -f 'checks[][context]=bitrate/release-version'
 ```
 
-That adds exactly two contexts, `bitrate/release-gates` and `bitrate/release-version`, and touches
-no other protection setting. **The GitHub UI cannot do this**: its picker only offers checks it has
-seen in the last seven days, and these have never run. The script uses the API, which has no such
-restriction.
+Send the branch's existing contexts along with the two new ones — the endpoint replaces the list
+rather than appending to it, so read it first with
+`gh api repos/:owner/:repo/branches/master/protection/required_status_checks`. **The GitHub UI
+cannot do this**: its picker only offers checks it has seen in the last seven days, and these have
+never run. The API has no such restriction.
 
 **Give the `production` environment a required reviewer.** `environment: production` in a workflow
 blocks nothing by itself. Go to **Settings → Environments → production** and add one, or the deploy
@@ -856,7 +888,7 @@ gh workflow run deploy.yml \
 
 Then approve the run at the `production` environment, exactly as for a normal deploy.
 
-:::warning This needs the tag policy from § One-time setup
+:::warning[This needs the tag policy from § One-time setup]
 
 Deploying at a tag works only once `v*` is on the `production` environment's allowed-ref list.
 Without it the job is refused by environment policy **before any step runs** — two seconds, no log,

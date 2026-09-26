@@ -62,5 +62,3 @@ export const useManifestResolver = () => {
     [queryClient],
   )
 }
-
-export type ManifestResolver = ReturnType<typeof useManifestResolver>
