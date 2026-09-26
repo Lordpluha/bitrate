@@ -18,6 +18,7 @@ export const envSchema = z
     WEB_HOST: z.url(),
     USER_WEB_HOST: z.url().optional(),
     ARTIST_WEB_HOST: z.url().optional(),
+    ADMIN_WEB_HOST: z.url().optional(),
 
     // Storage driver — selects which StorageService implementation is bound at boot
     STORAGE_DRIVER: z.enum(['s3', 'local']).default('local'),
