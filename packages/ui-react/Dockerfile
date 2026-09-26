@@ -8,7 +8,7 @@
 # missing one fails the COPY rather than the install, which is a confusing place to find out.
 
 # Stage 1: Base
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 # Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
@@ -34,7 +34,7 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     NODE_ENV=production pnpm exec turbo run storybook:build --filter=@bitrate/ui-react
 
 # Stage 3: Production
-FROM nginx:1.27-alpine AS production
+FROM nginx:1.31-alpine AS production
 COPY --from=build /app/packages/ui-react/storybook-static /usr/share/nginx/html
 COPY infra/nginx/static-site.conf /etc/nginx/nginx.conf
 RUN chown -R nginx:nginx /usr/share/nginx/html
