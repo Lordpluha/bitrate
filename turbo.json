@@ -50,10 +50,18 @@
       "cache": false
     },
     "check-types": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["generate-types"],
       "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/__snapshots__/**", "!**/__screenshots__/**"],
       "outputs": []
     },
+    "generate-types": {
+      "dependsOn": ["^generate-types"],
+      "outputs": [".types-refs/**"]
+    },
+    "@bitrate/web-player#generate-types": { "outputs": [] },
+    "@bitrate/web-artists#generate-types": { "outputs": [] },
+    "@bitrate/api#generate-types": { "outputs": [] },
+    "@bitrate/admin#generate-types": { "outputs": [] },
     "dev": {
       "cache": false
     }
