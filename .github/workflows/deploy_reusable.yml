@@ -434,6 +434,7 @@ jobs:
           SENTRY_ENVIRONMENT: ${{ inputs.environment }}
           IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          CLOUDFLARE_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -452,6 +453,7 @@ jobs:
             REDIS_HOST REDIS_PASSWORD
             DATABASE_URL JWT_SECRET
             JWT_ACCESS_EXPIRES_IN JWT_REFRESH_EXPIRES_IN
+            CLOUDFLARE_TUNNEL_TOKEN
           "
 
           # Every name the rendered file may carry. Checked below for characters a
@@ -692,6 +694,7 @@ jobs:
           IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
           RENDERED_FROM: ${{ github.sha }}
           ENVIRONMENT_NAME: ${{ inputs.environment }}
+          CLOUDFLARE_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -714,6 +717,11 @@ jobs:
             printf '# --- Images ---\n'
             # Read by infra/docker-compose.prod.yaml for every app service.
             req IMAGE_TAG
+
+            printf '\n# --- Cloudflare ---\n'
+            # The cloudflared service carries no profile gate, so it is always part
+            # of `docker compose ... pull`/`up` for this stack -- required, not optional.
+            req CLOUDFLARE_TUNNEL_TOKEN
 
             printf '\n# --- Runtime ---\n'
             req NODE_ENV
