@@ -57,7 +57,7 @@ Instances of abusive, harassing, or otherwise unacceptable behavior may be repor
 **Contact for reports:**
 
 - **Vladyslav Tesliuk** (Lead Maintainer)
-  - 📧 Email: vladislavteslyukofficial@gmail.com
+  - 📧 Email: vladyslav.tesliuk.official@gmail.com
   - 🐙 GitHub: [@Lordpluha](https://github.com/Lordpluha)
 
 All complaints will be reviewed and investigated **confidentially** and promptly. Maintainers are obligated to maintain confidentiality with regard to the reporter of an incident.
