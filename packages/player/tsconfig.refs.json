@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "outDir": ".types-refs",
+    "tsBuildInfoFile": ".types-refs/tsconfig.refs.tsbuildinfo",
+    "rootDir": "src",
+    "skipLibCheck": true
+  }
+}

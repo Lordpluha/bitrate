@@ -1,0 +1,10 @@
+{
+  /* Used only by `pnpm check-types` — never by next/webpack. Resolves `@bitrate/ui-react`
+     via its own "bitrate-typecheck" export condition (see packages/ui-react/package.json)
+     instead of duplicating app path aliases here. */
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "customConditions": ["bitrate-typecheck"]
+  },
+  "references": [{ "path": "../../packages/ui-react/tsconfig.refs.json" }]
+}
