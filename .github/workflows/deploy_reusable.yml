@@ -398,6 +398,7 @@ jobs:
           WEB_HOST: ${{ vars.WEB_HOST }}
           USER_WEB_HOST: ${{ vars.USER_WEB_HOST }}
           ARTIST_WEB_HOST: ${{ vars.ARTIST_WEB_HOST }}
+          ADMIN_WEB_HOST: ${{ vars.ADMIN_WEB_HOST }}
           API_BASE_URL: ${{ vars.API_BASE_URL }}
           API_URL: ${{ vars.API_URL }}
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
@@ -459,7 +460,7 @@ jobs:
           # Every name the rendered file may carry. Checked below for characters a
           # compose env file cannot represent.
           optional="
-            USER_WEB_HOST ARTIST_WEB_HOST API_BASE_URL API_URL
+            USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_BASE_URL API_URL
             REDIS_PORT SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_FROM
             ACCESS_TOKEN_NAME REFRESH_TOKEN_NAME COOKIE_DOMAIN STORAGE_DRIVER
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
@@ -647,6 +648,7 @@ jobs:
           WEB_HOST: ${{ vars.WEB_HOST }}
           USER_WEB_HOST: ${{ vars.USER_WEB_HOST }}
           ARTIST_WEB_HOST: ${{ vars.ARTIST_WEB_HOST }}
+          ADMIN_WEB_HOST: ${{ vars.ADMIN_WEB_HOST }}
           API_BASE_URL: ${{ vars.API_BASE_URL }}
           API_URL: ${{ vars.API_URL }}
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
@@ -734,6 +736,7 @@ jobs:
             req WEB_HOST
             opt USER_WEB_HOST
             opt ARTIST_WEB_HOST
+            opt ADMIN_WEB_HOST
             opt API_BASE_URL
             opt API_URL
             req NEXT_PUBLIC_API_URL
