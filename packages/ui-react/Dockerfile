@@ -8,7 +8,7 @@
 # missing one fails the COPY rather than the install, which is a confusing place to find out.
 
 # Stage 1: Base
-FROM node:26-alpine AS base
+FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 # Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
