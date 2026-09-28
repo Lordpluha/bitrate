@@ -25,19 +25,19 @@ describe('TwoFactorService', () => {
   let service: TwoFactorService
   let prisma: PrismaMock
   let jwt: DeepMockProxy<JwtService>
-  let config: DeepMockProxy<ConfigService>
+  let config: jest.Mocked<ConfigService>
 
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
 
     jwt = mockDeep<JwtService>()
-    config = mockDeep<ConfigService>()
+    config = {
+      get: jest.fn(),
+      getOrThrow: jest.fn(() => 'test-secret'),
+    } as unknown as jest.Mocked<ConfigService>
 
     mockReset(jwt)
-    mockReset(config)
-
-    config.getOrThrow.mockReturnValue('test-secret' as never)
 
     service = new TwoFactorService(prisma, jwt, config)
   })
