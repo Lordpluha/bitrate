@@ -253,6 +253,7 @@ describe('LineChart', () => {
 
   it('measures the plot even when it first appears after the loading state', async () => {
     const observed: { element: Element; callback: ResizeObserverCallback }[] = []
+    let disconnects = 0
     vi.stubGlobal(
       'ResizeObserver',
       class {
@@ -260,7 +261,9 @@ describe('LineChart', () => {
         observe(element: Element): void {
           observed.push({ element, callback: this.callback })
         }
-        disconnect(): void {}
+        disconnect(): void {
+          disconnects += 1
+        }
       },
     )
 
@@ -293,6 +296,9 @@ describe('LineChart', () => {
 
       const viewBox = host.querySelector('svg')?.getAttribute('viewBox')
       expect(viewBox).toBe('0 0 900 200')
+
+      fixture.destroy()
+      expect(disconnects).toBeGreaterThan(0)
     } finally {
       vi.unstubAllGlobals()
     }
