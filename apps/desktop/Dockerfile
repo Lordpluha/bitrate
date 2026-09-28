@@ -2,7 +2,7 @@
 # Используется в основном для CI/CD и кросс-компиляции
 
 # Stage 1: Base
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 WORKDIR /app
 
