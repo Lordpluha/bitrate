@@ -3,7 +3,7 @@
 
 # Stage 1: Base
 FROM node:24-alpine AS base
-RUN corepack enable && corepack prepare pnpm@12.6.0 --activate
+RUN corepack enable && corepack prepare pnpm@12.7.0 --activate
 WORKDIR /app
 
 # Stage 2: Dependencies (Node.js)
@@ -72,7 +72,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs
 
 # Установка pnpm
-RUN corepack enable && corepack prepare pnpm@12.6.0 --activate
+RUN corepack enable && corepack prepare pnpm@12.7.0 --activate
 
 # Установка Tauri CLI
 RUN cargo install tauri-cli

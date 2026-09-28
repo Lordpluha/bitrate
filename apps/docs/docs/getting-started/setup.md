@@ -12,7 +12,7 @@ Requirements are separated by workflow in the [repository README](https://github
 
 - **Docker stack:** Git, Docker Engine 24+ with Compose v2, and Task v3. Host Node.js and
   Python are not required for this path; use `task init` after cloning.
-- **Native development:** Node.js **>=24** (`.nvmrc` selects v24), pnpm **12.6.0 exactly**
+- **Native development:** Node.js **>=24** (`.nvmrc` selects v24), pnpm **12.7.0 exactly**
   (`package.json#packageManager`), and Git. Docker/Task provide the local API infrastructure.
 - **Claude Code assistance:** additional runtime and optional integration requirements are
   in [How to AI](https://github.com/Lordpluha/bitrate#how-to-ai). They are not application prerequisites.
