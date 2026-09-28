@@ -14,7 +14,7 @@ FROM node:24-alpine AS base
 # write. TURBO_TOKEN is the credential and arrives per RUN via --mount=type=secret, so it
 # never lands in an image layer.
 ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
-RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
+RUN corepack enable && corepack prepare pnpm@12.6.0 --activate
 WORKDIR /app
 
 # Stage 2: Dependencies
