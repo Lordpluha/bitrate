@@ -4,7 +4,13 @@ sidebar_position: 1
 
 # Roadmap
 
-> Last updated: June 21, 2026
+> Last updated: September 28, 2026
+
+Each `vX.Y.Z-slug` section mirrors a GitHub milestone. The version number names a theme, not a
+release order: `v0.6.0` (artist dashboard) is scheduled ahead of `v0.5.0` (mobile), which waits
+for the Player V2 redesign. Milestone due dates on GitHub are the schedule; this page is the scope.
+Whether a milestone belongs on the roadmap at all is decided in
+[Tech roadmap](../strategy/tech-roadmap.md).
 
 ---
 
@@ -50,9 +56,31 @@ sidebar_position: 1
 - [x] Manage artists & users
 - [x] Content moderation
 
+The operator panel is now the Angular `apps/admin` ([ADR-0035](../architecture/0035-admin-panel-on-angular.md)).
+
+---
+
+## v0.4.5-player-v2-redesign
+
+Tracked in [#234](https://github.com/Lordpluha/bitrate/issues/234). Due 2026-12-23.
+Stages the migration [ADR-0039](../architecture/0039-player-as-svelte-custom-element-package.md) left open.
+
+- [ ] New visual design — desktop bar, mini player, floating window, now-playing view
+- [ ] Style-variant API on `@bitrate/player` (`PlayerChrome` is declared but unused today)
+- [ ] Migrate `apps/web-player`'s playback engine onto `@bitrate/player`
+- [ ] Implement the new design on all four player surfaces
+- [ ] Adopt the updated variant in admin's `TrackAudioPlayer`
+- [ ] Feature additions and optimization pass
+- [ ] Regression pass across web-player and admin
+
 ---
 
 ## v0.5.0-mobile-beta
+
+Tracked in [#225](https://github.com/Lordpluha/bitrate/issues/225). Due 2027-04-30.
+Starts once the Player V2 design ships (`v0.4.5`); `apps/mobile` is still the untouched Expo scaffold.
+
+- [ ] Bootstrap conventions — API client, state layer, design-token bridge, tests
 - [ ] Auth screens
 - [ ] Main feed + player
 - [ ] Search
@@ -63,21 +91,84 @@ sidebar_position: 1
 
 ---
 
-## v0.6.0-artists-app
-- [ ] Artist public pages (bio, discography, top tracks)
-- [ ] Artist upload flow (track + metadata + cover)
-- [ ] Artist analytics dashboard (plays, followers, geography)
-- [ ] Artist verification system
-- [ ] Fan engagement tools
+## v0.6.0-beta-artists-app
+
+Tracked in [#241](https://github.com/Lordpluha/bitrate/issues/241). Due 2026-12-31. `apps/web-artists`
+ships marketing and auth only; the authenticated dashboard is scoped from the MVP boundary in
+[Product backlog](../strategy/product-backlog.md) and Stage 2 of the [Tech roadmap](../strategy/tech-roadmap.md).
+Screens must be confirmed against the received designs before each item starts.
+
+- [ ] Auth-gated dashboard shell / layout route guard
+- [ ] Rights & contributor model, ISRC/UPC identifiers (API)
+- [ ] Artist-account RBAC for release collaboration (API)
+- [ ] Release Workspace
+- [ ] Release Roadmap
+- [ ] Release Tasks
+- [ ] Distribution adapter and delivery state machine — one DSP partner first
+- [ ] Cross-platform analytics *(beyond MVP)*
+- [ ] Revenue analytics and forecast *(beyond MVP, needs a billing backend)*
+- [ ] Career timeline *(beyond MVP)*
 
 ---
 
-## v0.7.0-monitoring
-- [ ] Structured logging & log aggregation
-- [ ] Sentry alerting & performance monitoring
-- [ ] Admin analytics (user growth, content metrics)
+## v0.7.0-monitoring-admin-panel-diagrams
+- [x] Prometheus, Grafana and Loki in the preprod stack ([ADR-0044](../architecture/0044-observability-stack-prometheus-grafana.md), [ADR-0046](../architecture/0046-loki-log-aggregation.md)); prod is deliberately excluded
+- [ ] Metrics and logging gaps: `status_class` labels, `bitrate_api_` prefix, body redaction, request-id correlation (#172, #173)
+- [ ] Instrument Prisma, Redis, BullMQ and the audio pipeline (#174)
+- [ ] Grafana alert rules and purpose-built dashboards (#177); observability stack in prod (#175)
+- [ ] Sentry in `web-artists` (#130) and browser telemetry (#178)
 - [ ] CI/CD improvements (deployment automation, security scanning)
-- [ ] Business diagrams in admin panel
+- [x] Admin analytics overview (KPI tiles and time series)
+- [ ] Drill-down analytics — see `v0.7.7`
+
+---
+
+## v0.7.4-worker-extraction-and-graceful-shutdown
+
+Tracked in [#206](https://github.com/Lordpluha/bitrate/issues/206) and #179. Due 2026-11-13.
+Delivers the "extract the transcode worker" item of [Tech roadmap](../strategy/tech-roadmap.md) Stage 1.
+This is one deliberate split, not a step toward microservices.
+
+- [ ] Graceful shutdown with readiness gating and job draining (#179)
+- [ ] Design the worker process boundary and job contract
+- [ ] Extract transcode logic into a standalone worker process (`AUDIO_PROCESSING_WORKER_ENABLED` already exists)
+- [ ] Run the worker as a separate deployed service
+- [ ] Health checks and monitoring for the worker
+- [ ] Staged rollout with a documented rollback
+
+---
+
+## v0.7.5-resilience-and-replication
+- [ ] API replicas behind nginx (#182) — needs graceful shutdown
+- [ ] Timeouts, retries and circuit breakers (#180)
+- [ ] Queue retry policy, DLQ and stall recovery (#181) — mostly in place; the operator DLQ view and stuck-track reaper remain
+- [ ] Defined degraded-mode UX for every failure state (#183)
+- [ ] PostgreSQL hot standby (#184), WAL archiving and PITR (#185)
+- [ ] Failover runbook and recovery drill (#186)
+
+---
+
+## v0.7.6-admin-themes-and-i18n
+- [x] Dark / light / dim themes in the operator panel
+- [x] EN + UK API errors, validation and emails
+- [x] Admin i18n infrastructure (Transloco, locale toggle, `Accept-Language`)
+- [ ] Extract remaining admin screen strings into `en` / `uk` dictionaries (#187)
+
+---
+
+## v0.7.7-admin-feature-expansion
+
+Tracked in [#212](https://github.com/Lordpluha/bitrate/issues/212). Due 2027-03-05.
+Follows the staged operator-panel plan; overview, detail pages and take-down/restore already shipped.
+
+- [ ] Vendored `dialog`, `select`, `tabs`, `toast` primitives
+- [ ] Genres CRUD with guarded delete
+- [ ] Albums, public playlists and podcasts — list, detail, take-down and restore
+- [ ] ADR addendum: operator panel resource coverage
+- [ ] Bulk actions on moderation, catalog and users
+- [ ] CSV export for operator lists
+- [ ] Drill-down analytics on the Overview dashboard
+- [ ] Notifications and Settings pages — deliberately parked until a notifications / billing backend exists
 
 ---
 
@@ -173,7 +264,7 @@ Delivered by [ADR-0024](../architecture/0024-rebrand-to-bitrate.md).
 - [ ] Smart speakers (Alexa, Google Assistant)
 
 ### Scale
-- [ ] Microservices migration
+- [ ] Microservices migration — deliberately not planned; only the transcode worker is split out (`v0.7.4`), see [Tech roadmap](../strategy/tech-roadmap.md)
 - [ ] CDN for audio & static assets
 - [ ] Database sharding & read replicas
 - [ ] Auto-scaling & 99.99% uptime
@@ -185,3 +276,4 @@ Delivered by [ADR-0024](../architecture/0024-rebrand-to-bitrate.md).
 - 2026-01-11: Initial roadmap
 - 2026-06-14: Updated dates; added Taskfile.yml, Changesets, infra/ migration
 - 2026-06-21: Simplified to plain todo; updated completed items
+- 2026-09-28: Added v0.4.5 (Player V2), v0.7.4 (worker extraction), v0.7.7 (admin expansion); rescoped v0.6.0, v0.7.0, v0.7.5, v0.7.6 to their milestones; documented that version numbers name themes, not release order

@@ -18,7 +18,14 @@ import {
 } from './chart-layout'
 import { formatChartValue } from './chart-format'
 import { ChartHoverState } from './chart-hover-state'
-import { axisTicks, chartMax, hasData, maxLabelsForWidth, thinnedLabelIndexes } from './chart-scale'
+import {
+  axisTicks,
+  chartMax,
+  finiteValue,
+  hasData,
+  maxLabelsForWidth,
+  thinnedLabelIndexes,
+} from './chart-scale'
 import { ChartTooltip } from './chart-tooltip'
 import type { ChartTooltipRow, ChartTooltipState } from './chart-tooltip.types'
 import { trackChartWidth } from './chart-width'
@@ -95,7 +102,7 @@ export class BarChart {
       id: item.id,
       label: item.label,
       colorVar: item.colorVar,
-      value: item.values[index] ?? 0,
+      value: finiteValue(item.values[index]),
     }))
     const total = this.stacked() ? rows.reduce((sum, row) => sum + row.value, 0) : null
 
@@ -123,13 +130,17 @@ export class BarChart {
     return formatChartValue(tick)
   }
 
+  protected cellValue(item: ChartSeriesValues, index: number): string {
+    return formatChartValue(finiteValue(item.values[index]))
+  }
+
   protected axisBottomY(): number {
     return CHART_HEIGHT - CHART_PADDING_BOTTOM
   }
 
   protected tooltipLabel(index: number): string {
     const parts = this.series().map(
-      (item) => `${item.label} ${formatChartValue(item.values[index] ?? 0)}`,
+      (item) => `${item.label} ${this.cellValue(item, index)}`,
     )
     return `${this.categories()[index] ?? ''}: ${parts.join(', ')}`
   }
