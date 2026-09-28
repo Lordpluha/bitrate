@@ -41,29 +41,7 @@ COPY . .
 WORKDIR /app/apps/desktop
 RUN pnpm run build
 
-# Stage 4: Development с VNC для GUI (опционально)
-FROM base AS development-vnc
-RUN apk add --no-cache \
-    chromium \
-    xvfb \
-    x11vnc \
-    fluxbox \
-    supervisor
-
-COPY --from=node-dependencies /app/node_modules ./node_modules
-COPY . .
-
-# VNC настройка
-ENV DISPLAY=:99
-EXPOSE 5900 3000
-
-# Supervisor конфигурация для Xvfb и VNC
-RUN mkdir -p /var/log/supervisor
-COPY apps/desktop/docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
-# Stage 5: Development (только веб-сервер для разработки UI)
+# Stage 4: Development (только веб-сервер для разработки UI)
 FROM base AS development
 COPY --from=node-dependencies /app/node_modules ./node_modules
 COPY . .
@@ -72,7 +50,7 @@ EXPOSE 1420
 WORKDIR /app/apps/desktop
 CMD ["pnpm", "run", "dev"]
 
-# Stage 6: CI/CD Build (для автоматической сборки)
+# Stage 5: CI/CD Build (для автоматической сборки)
 FROM rustlang/rust:nightly-slim AS ci-build
 
 # Установка зависимостей для разных платформ

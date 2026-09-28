@@ -61,15 +61,6 @@ docker compose --profile desktop up -d desktop
 # Open http://localhost:1420
 ```
 
-**Full GUI via VNC (browser-based):**
-```bash
-cd apps/desktop
-docker compose -f docker-compose.vnc.yml up --build
-# Open http://localhost:6080/vnc.html  (password: bitrate)
-```
-
-See [VNC-README.md](VNC-README.md) for VNC setup details.
-
 ## Build
 
 ```bash
