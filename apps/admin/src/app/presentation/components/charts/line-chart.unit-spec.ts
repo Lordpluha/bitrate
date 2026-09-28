@@ -1,6 +1,6 @@
 import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { LineChart } from './line-chart'
 import type { ChartSeriesValues } from './chart.types'
 
@@ -184,6 +184,14 @@ describe('LineChart', () => {
     expect(buttons[0]?.getAttribute('aria-label')).toContain('Listeners')
   })
 
+  it('contains its visually-hidden table, so it cannot stretch the page past the layout', () => {
+    const { host } = create(SERIES)
+    const figure = host.querySelector('figure')
+
+    expect(figure?.className).toContain('relative')
+    expect(figure?.className).toContain('overflow-hidden')
+  })
+
   it('carries the full data in a visually-hidden table, one row per category', () => {
     const { host } = create(SERIES)
     const rows = host.querySelectorAll('table.sr-only tbody tr')
@@ -200,6 +208,21 @@ describe('LineChart', () => {
 
     expect(host.querySelector('svg')).toBeNull()
     expect(host.textContent).toContain('No data for this range.')
+  })
+
+  it('never writes NaN into the drawing when a value is missing', () => {
+    const withGap: ChartSeriesValues[] = [
+      {
+        id: 'listeners',
+        label: 'Listeners',
+        colorVar: '--color-chart-1',
+        values: [1, Number.NaN, 2],
+      },
+    ]
+    const { host } = create(withGap)
+
+    expect(host.querySelector('polyline')?.getAttribute('points')).not.toContain('NaN')
+    expect(host.querySelector('table.sr-only')?.textContent).not.toContain('NaN')
   })
 
   it('shows a headline value beside the title when one is given', () => {
@@ -226,6 +249,59 @@ describe('LineChart', () => {
     expect(host.querySelector('svg')).toBeNull()
     expect(host.textContent).toContain('Loading')
     expect(host.querySelector('figcaption')?.textContent).toContain('New accounts per day')
+  })
+
+  it('measures the plot even when it first appears after the loading state', async () => {
+    const observed: { element: Element; callback: ResizeObserverCallback }[] = []
+    let disconnects = 0
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor(private readonly callback: ResizeObserverCallback) {}
+        observe(element: Element): void {
+          observed.push({ element, callback: this.callback })
+        }
+        disconnect(): void {
+          disconnects += 1
+        }
+      },
+    )
+
+    try {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] })
+      const fixture = TestBed.createComponent(LineChart)
+      fixture.componentRef.setInput('title', 'New accounts per day')
+      fixture.componentRef.setInput('description', 'Accounts.')
+      fixture.componentRef.setInput('categories', ['15 Sep', '16 Sep', '17 Sep'])
+      fixture.componentRef.setInput('series', SERIES)
+      fixture.componentRef.setInput('loading', true)
+      fixture.detectChanges()
+      await fixture.whenStable()
+
+      fixture.componentRef.setInput('loading', false)
+      fixture.detectChanges()
+      await fixture.whenStable()
+
+      const host = fixture.nativeElement as HTMLElement
+      const plot = host.querySelector('figure > div.relative')
+      const entry = observed.find((item) => item.element === plot)
+      expect(entry).toBeDefined()
+
+      entry?.callback(
+        [{ contentRect: { width: 900 } } as ResizeObserverEntry],
+        {} as ResizeObserver,
+      )
+      fixture.detectChanges()
+
+      const viewBox = host.querySelector('svg')?.getAttribute('viewBox')
+      expect(viewBox).toBe('0 0 900 200')
+
+      fixture.destroy()
+      expect(disconnects).toBeGreaterThan(0)
+    } finally {
+      vi.unstubAllGlobals()
+    }
   })
 
   it('shows a failure alert instead of the plot, description and figcaption still visible', () => {
