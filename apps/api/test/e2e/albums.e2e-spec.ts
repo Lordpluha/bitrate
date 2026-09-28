@@ -5,6 +5,9 @@ import request from 'supertest'
 import { verifyArtistEmail } from '../helpers/db'
 import { closeE2eApp, createE2eApp } from './e2e-app'
 
+// Well-formed v4 UUID that matches no album; ParseUUIDPipe rejects ids without a valid version.
+const MISSING_ALBUM_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'
+
 const makeRunId = () => Math.random().toString(36).slice(2, 8)
 
 let app: INestApplication
@@ -135,7 +138,7 @@ describe('AlbumsController (e2e)', () => {
 
   it('GET /albums/:id should return empty body for missing album', async () => {
     const response = await request(app.getHttpServer())
-      .get('/albums/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
+      .get(`/albums/${MISSING_ALBUM_ID}`)
       .expect(200)
 
     expect(response.body).toEqual({})
@@ -145,7 +148,7 @@ describe('AlbumsController (e2e)', () => {
     const { cookies } = await registerAndLoginArtist()
 
     await request(app.getHttpServer())
-      .put('/albums/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
+      .put(`/albums/${MISSING_ALBUM_ID}`)
       .set('Cookie', cookies)
       .send({ title: 'Updated Album' })
       .expect(404)
@@ -157,14 +160,12 @@ describe('AlbumsController (e2e)', () => {
 
   it('PUT /albums/:id should reject without auth', async () => {
     await request(app.getHttpServer())
-      .put('/albums/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
+      .put(`/albums/${MISSING_ALBUM_ID}`)
       .send({ title: 'Should Fail' })
       .expect(401)
   })
 
   it('DELETE /albums/:id should reject without auth', async () => {
-    await request(app.getHttpServer())
-      .delete('/albums/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
-      .expect(401)
+    await request(app.getHttpServer()).delete(`/albums/${MISSING_ALBUM_ID}`).expect(401)
   })
 })
