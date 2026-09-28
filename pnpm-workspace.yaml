@@ -4,6 +4,9 @@ packages:
 
 nodeLinker: hoisted
 autoInstallPeers: true
+# pnpm 11+ defaults to "install": pnpm exec/run re-installs when node_modules looks stale. The
+# Docker stages copy only part of the workspace on purpose, so that would prune their node_modules.
+verifyDepsBeforeRun: false
 
 publicHoistPattern:
   - "*react*"
