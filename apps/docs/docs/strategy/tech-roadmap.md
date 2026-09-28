@@ -112,10 +112,22 @@ and they currently are not.
 everything" into something that can be scaled, and it is a prerequisite for every ingest-heavy
 capability in later stages.
 
+**Tracking (2026-09-28).** The worker extraction is milestone `v0.7.4-worker-extraction-and-graceful-shutdown`
+([#206](https://github.com/Lordpluha/bitrate/issues/206)), scheduled first because it is the outage risk
+above. It reuses the existing `AUDIO_PROCESSING_WORKER_ENABLED` switch and adds a worker-only entrypoint,
+a separate deployed service, health checks and a staged rollout. It stays one deliberate split — see
+[what not to build](#what-not-to-build). Sentry in `web-artists` is [#130](https://github.com/Lordpluha/bitrate/issues/130);
+`web-artists` runs TanStack Start, so `@sentry/nextjs` does not apply there.
+
 ## Stage 2 — the artist workspace
 
 **Gate:** [Phase 2 of validation](./validation.md) — the release workflow is the thing being
 built.
+
+**Status (2026-09-28).** Work on this stage has been started ahead of the gate, as a deliberate
+product decision: the `web-artists` designs exist and a teammate owns the app. The scope is
+milestone `v0.6.0-beta-artists-app` ([#241](https://github.com/Lordpluha/bitrate/issues/241)); the four
+MVP-boundary items and the backend prerequisites below come first, everything after them is deferred.
 
 | Work | Notes |
 |---|---|
