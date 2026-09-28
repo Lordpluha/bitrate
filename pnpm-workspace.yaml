@@ -3,3 +3,85 @@ packages:
   - packages/*
 
 nodeLinker: hoisted
+autoInstallPeers: true
+
+publicHoistPattern:
+  - "*react*"
+  - "*@react-navigation*"
+  - "*expo-router*"
+
+overrides:
+  "react": "19.3.0"
+  "react-dom": "19.3.0"
+  "@types/react": "~19.3.0"
+  "@types/react-dom": "~19.3.0"
+  "esbuild": "0.27.3"
+  "tar": "^7.5.22"
+  "browserslist": "^4.28.9"
+  "fast-uri": "^3.1.7"
+  "multer": "^2.2.0"
+  "nanoid": "^3.3.18"
+  "shell-quote": "^1.9.0"
+  "socket.io-parser": "^4.2.7"
+  "svgo": "^3.3.5"
+  "dompurify": "^3.4.14"
+  "http-proxy-middleware": "^2.0.10"
+  "mermaid": "^11.17.2"
+  "qs": "^6.16.0"
+  "valibot": "^1.4.2"
+  "webpack-dev-server": "^5.2.6"
+  "body-parser@1": "^1.20.6"
+  "body-parser@2": "^2.3.0"
+  "brace-expansion@1": "^1.1.18"
+  "brace-expansion@2": "^2.1.4"
+  "brace-expansion@5": "^5.0.9"
+  "js-yaml@3": "^3.15.2"
+  "js-yaml@4": "^4.3.2"
+  "undici@6": "^6.28.1"
+  "undici@7": "^7.29.1"
+  "ajv@8": "^8.20.0"
+  "hono": "^4.12.34"
+  "mysql2": "^3.23.1"
+  "picomatch@4": "^4.0.7"
+  "postcss@8": "^8.5.28"
+  "sharp": "^0.35.1"
+  "uuid@11": "^11.1.1"
+  "ws@8": "^8.21.3"
+  "zod": "4.4.3"
+  "@tanstack/react-query": "5.103.1"
+  "@tanstack/react-query-devtools": "5.103.1"
+
+allowBuilds:
+  "@compodoc/compodoc": true
+  "@nestjs/core": true
+  "@parcel/watcher": true
+  "@prisma/engines": true
+  "@scarf/scarf": true
+  "@sentry/cli": true
+  "@sentry/node-cpu-profiler": true
+  "@swc/core": true
+  "argon2": true
+  "aws-sdk": true
+  "better-sqlite3": true
+  "core-js": true
+  "esbuild": true
+  "ffmpeg-static": true
+  "lefthook": true
+  "msgpackr-extract": true
+  "prisma": true
+  "sharp": true
+  "unrs-resolver": true
+  # Not built under pnpm 10 either; pnpm 12 fails the install unless the choice is explicit.
+  "lmdb": false
+  "nx": false
+
+peerDependencyRules:
+  allowedVersions:
+    "openapi-typescript>typescript": "6"
+    "tsconfck>typescript": "6"
+    "i18next>typescript": "6"
+    "@expo/require-utils>typescript": "6"
+    "nestjs-zod>@nestjs/common": "12"
+    "nestjs-zod>@nestjs/swagger": "12"
+    "@sentry/nestjs>@nestjs/common": "12"
+    "@sentry/nestjs>@nestjs/core": "12"

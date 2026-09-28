@@ -63,7 +63,7 @@ curl -X GET 'http://localhost:3001/api/v1/tracks/123' \
 
 ## 🌍 Environment
 - **Node.js**: `v22.x.x` (run `node -v`)
-- **pnpm**: `10.27.0` (run `pnpm -v`)
+- **pnpm**: `12.6.0` (run `pnpm -v`)
 - **PostgreSQL**: `16.x` (run `docker ps`)
 - **Redis**: `7.x`
 - **OS**: [Windows | macOS | Linux]
