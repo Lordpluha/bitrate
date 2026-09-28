@@ -150,6 +150,14 @@ describe('BarChart', () => {
     expect(host.textContent).not.toContain('Total')
   })
 
+  it('contains its visually-hidden table, so it cannot stretch the page past the layout', () => {
+    const { host } = create({ series: STACKED_SERIES })
+    const figure = host.querySelector('figure')
+
+    expect(figure?.className).toContain('relative')
+    expect(figure?.className).toContain('overflow-hidden')
+  })
+
   it('carries the full data in a visually-hidden table, one row per category', () => {
     const { host } = create({ series: STACKED_SERIES })
     const rows = host.querySelectorAll('table.sr-only tbody tr')

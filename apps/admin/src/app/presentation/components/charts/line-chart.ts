@@ -19,6 +19,7 @@ import { formatChartValue } from './chart-format'
 import { ChartHoverState } from './chart-hover-state'
 import {
   axisTicks,
+  finiteValue,
   hasData,
   maxLabelsForWidth,
   segmentCenterX,
@@ -93,7 +94,7 @@ export class LineChart {
       id: item.id,
       label: item.label,
       colorVar: item.colorVar,
-      value: item.values[index] ?? 0,
+      value: finiteValue(item.values[index]),
     }))
 
     return { category, rows, total: null, xPercent: (this.pointX(index) / this.width()) * 100 }
@@ -116,11 +117,15 @@ export class LineChart {
   }
 
   protected pointY(value: number): number {
-    return yPosition(value, this.max(), CHART_PLOT_HEIGHT, CHART_PADDING_TOP)
+    return yPosition(finiteValue(value), this.max(), CHART_PLOT_HEIGHT, CHART_PADDING_TOP)
   }
 
   protected linePoints(values: number[]): string {
     return values.map((value, index) => `${this.pointX(index)},${this.pointY(value)}`).join(' ')
+  }
+
+  protected cellValue(item: ChartSeriesValues, index: number): string {
+    return formatChartValue(finiteValue(item.values[index]))
   }
 
   protected axisBottomY(): number {
@@ -129,7 +134,7 @@ export class LineChart {
 
   protected tooltipLabel(index: number): string {
     const parts = this.series().map(
-      (item) => `${item.label} ${formatChartValue(item.values[index] ?? 0)}`,
+      (item) => `${item.label} ${this.cellValue(item, index)}`,
     )
     return `${this.xLabel(index)}: ${parts.join(', ')}`
   }
