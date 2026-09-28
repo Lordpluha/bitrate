@@ -46,6 +46,15 @@ describe('stackedMax', () => {
   it('returns the largest per-index sum across every series', () => {
     expect(stackedMax(SERIES)).toBe(6)
   })
+
+  it('counts a missing (non-finite) value as zero instead of discarding the whole category', () => {
+    const withGap: ChartSeriesValues[] = [
+      { id: 'a', label: 'A', colorVar: '--color-chart-1', values: [Number.NaN, 1] },
+      { id: 'b', label: 'B', colorVar: '--color-chart-2', values: [4, 1] },
+    ]
+
+    expect(stackedMax(withGap)).toBe(4)
+  })
 })
 
 describe('chartMax', () => {
@@ -157,6 +166,10 @@ describe('thinnedLabelIndexes', () => {
     expect(indexes[0]).toBe(0)
     expect(indexes.at(-1)).toBe(29)
     expect(indexes.length).toBeLessThanOrEqual(6)
+  })
+
+  it('drops the stride label that would sit right next to the always-kept last label', () => {
+    expect(thinnedLabelIndexes(30, 10)).toEqual([0, 4, 8, 12, 16, 20, 24, 29])
   })
 
   it('returns nothing for an empty range', () => {
