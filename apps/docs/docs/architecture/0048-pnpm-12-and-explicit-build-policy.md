@@ -30,6 +30,11 @@ decision about where settings live stands. Only its pinned version is superseded
 denies. `lmdb` and `nx` were never built under pnpm 10, so they are set to `false`. A new
 dependency with a build script must be added to the map with a deliberate `true` or `false`.
 
+`verifyDepsBeforeRun` is `false`. pnpm 11 changed its default to `install`, so `pnpm exec` and
+`pnpm run` re-install when `node_modules` looks stale. The Dockerfile stages that copy only part of
+the workspace then pruned nearly every package and failed in the root `postinstall`, whose `scripts/`
+directory is not in that stage. `false` is the pnpm 10 behavior.
+
 `turbo.json`'s `globalDependencies` lists `pnpm-workspace.yaml` next to `.npmrc`, so a cache is not
 reused across a change to `overrides` or `allowBuilds`.
 
@@ -39,6 +44,8 @@ has confirmed that it holds nothing but those settings.
 
 ## Consequences
 
+- pnpm 11 also raised `minimumReleaseAge` to one day. A re-resolution will not pick up a version
+  published in the last 24 hours. The existing lockfile is unaffected.
 - The first install with pnpm 12 in an existing checkout rebuilds `node_modules`. In a non-TTY
   context that aborts with `ERR_PNPM_ABORTED_REMOVE_MODULES_DIR` unless `CI` is set.
 - `pnpm-lock.yaml` gains a leading YAML document (`packageManagerDependencies`) that records the
