@@ -1,4 +1,5 @@
 import { CHART_PADDING_LEFT, CHART_PADDING_TOP, CHART_PLOT_HEIGHT } from './chart-layout'
+import { finiteValue } from './chart-scale'
 import type { ChartSeriesValues } from './chart.types'
 
 /** Fraction of each category's width left as a gap around its bar(s). */
@@ -47,7 +48,7 @@ export function computeBarGroups(
     let stackTop = CHART_PADDING_TOP + CHART_PLOT_HEIGHT
 
     const rects = series.map((one, seriesIndex) => {
-      const value = one.values[index] ?? 0
+      const value = finiteValue(one.values[index])
       const barHeight = max > 0 ? (value / max) * CHART_PLOT_HEIGHT : 0
       const x = stacked ? groupX : groupX + seriesIndex * barWidth
       let y: number
