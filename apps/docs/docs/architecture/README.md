@@ -49,6 +49,7 @@ how to apply it day to day.
 | [0041](./0041-grill-me-before-large-tasks.md) | Required grill-me interview and confirmed plan before large tasks |
 | [0042](./0042-hooks-and-on-demand-workflows.md) | One-operation hook approvals, scoped formatting and on-demand verification/review/TDD |
 | [0045](./0045-scoped-instructions-and-bounded-execution.md) | Scoped rules, canonical specs and serialized verification |
+| [0048](./0048-pnpm-12-and-explicit-build-policy.md) | pnpm 12.7.0, settings in `pnpm-workspace.yaml`, explicit `allowBuilds` policy |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

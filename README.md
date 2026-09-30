@@ -76,7 +76,7 @@ workflow. See [the setup guide](apps/docs/docs/getting-started/setup.md) for oth
 |---|---|---|
 | Git | 2.x | Branches, commits and hooks |
 | Node.js | >=24; `.nvmrc` selects v24 | Run workspace tools and native application servers |
-| pnpm | **10.30.3**, pinned in `package.json` | Install the workspace and run scripts |
+| pnpm | **12.7.0**, pinned in `package.json` | Install the workspace and run scripts |
 | Docker Compose + Task | As above, when using local API infrastructure | PostgreSQL/Redis and database tasks |
 | Bash and standard shell utilities | For repository shell scripts and hooks; WSL2 on Windows for these commands | Local automation |
 
@@ -88,7 +88,7 @@ this workspace; the package lockfile is `pnpm-lock.yaml`.
 nvm install
 nvm use
 
-npm install --global pnpm@10.30.3
+npm install --global pnpm@12.7.0
 node --version
 pnpm --version
 
