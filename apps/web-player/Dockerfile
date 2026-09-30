@@ -70,17 +70,17 @@ ARG NEXT_PUBLIC_SITE_URL
 ARG API_URL
 # Sentry. The DSN is inlined into the browser bundle at build time, so it must
 # arrive as a build arg — a runtime-only value never reaches the client. The
-# auth token is a build secret and only enables the source map upload.
+# auth token only enables the source map upload and never reaches the bundle,
+# so it arrives via --mount=type=secret below instead of ARG/ENV, which would
+# otherwise bake it into the image's layer history.
 ARG NEXT_PUBLIC_SENTRY_DSN
 ARG NEXT_PUBLIC_SENTRY_ENVIRONMENT
-ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_RELEASE
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 ENV API_URL=${API_URL}
 ENV NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN}
 ENV NEXT_PUBLIC_SENTRY_ENVIRONMENT=${NEXT_PUBLIC_SENTRY_ENVIRONMENT}
-ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 ENV SENTRY_RELEASE=${SENTRY_RELEASE}
 ENV NODE_ENV=production
 # This image is the deployable artifact, so the deployment URLs above are
@@ -102,6 +102,7 @@ COPY --from=dependencies /app/packages/vite-svgr/node_modules ./packages/vite-sv
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/ui-react
 RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
+    --mount=type=secret,id=sentry_auth_token,env=SENTRY_AUTH_TOKEN \
     pnpm exec turbo run build --filter=@bitrate/web-player
 
 # Stage 5: Production
