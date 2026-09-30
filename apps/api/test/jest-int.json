@@ -5,9 +5,10 @@
   "maxWorkers": 1,
   "testMatch": ["<rootDir>/modules/**/*.int-spec.ts", "<rootDir>/infra/**/*.int-spec.ts"],
   "transform": {
+    "node_modules/@nestjs/.+\\.js$": "<rootDir>/../test/esm-deps.transformer.cjs",
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib)/)"],
+  "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib|@nestjs)/)"],
   "moduleNameMapper": {
     "^@sentry/nestjs$": "<rootDir>/../test/mocks/sentry-nestjs.ts",
     "^@sentry/nestjs/setup$": "<rootDir>/../test/mocks/sentry-nestjs-setup.ts",

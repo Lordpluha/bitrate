@@ -14,7 +14,7 @@ ENV PATH=$PNPM_HOME:$PATH
 # write. TURBO_TOKEN is the credential and arrives per RUN via --mount=type=secret, so it
 # never lands in an image layer.
 ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
-RUN corepack enable && corepack prepare pnpm@10.27.0 --activate && pnpm config set store-dir /pnpm/store
+RUN corepack enable && corepack prepare pnpm@12.7.0 --activate && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
 # Stage 2: Development
@@ -40,7 +40,7 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     NODE_ENV=production pnpm exec turbo run build --filter=@bitrate/docs
 
 # Stage 4: Production
-FROM nginx:1.27-alpine AS production
+FROM nginx:1.29-alpine AS production
 COPY --from=build /app/apps/docs/build /usr/share/nginx/html
 COPY infra/nginx/static-site.conf /etc/nginx/nginx.conf
 RUN chown -R nginx:nginx /usr/share/nginx/html

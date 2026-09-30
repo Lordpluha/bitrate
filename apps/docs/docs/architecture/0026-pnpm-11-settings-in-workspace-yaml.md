@@ -1,6 +1,7 @@
 # ADR-0026: pnpm 11 and `pnpm-workspace.yaml` as the only home for pnpm settings
 
-Status: Accepted
+Status: Accepted — the settings decision stands; the pinned version (11.25.0) is superseded by
+[ADR-0048](./0048-pnpm-12-and-explicit-build-policy.md), which also applies the move.
 
 Date: 2026-09-03
 

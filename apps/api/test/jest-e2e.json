@@ -6,9 +6,10 @@
   "setupFiles": ["<rootDir>/test/jest.setup.ts"],
   "testMatch": ["<rootDir>/test/e2e/**/*.e2e-spec.ts"],
   "transform": {
+    "node_modules/@nestjs/.+\\.js$": "<rootDir>/test/esm-deps.transformer.cjs",
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib)/)"],
+  "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib|@nestjs)/)"],
   "moduleNameMapper": {
     "^src/(.*)$": "<rootDir>/src/$1",
     "^@modules/(.*)$": "<rootDir>/src/modules/$1",

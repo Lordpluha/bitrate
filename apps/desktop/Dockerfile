@@ -3,7 +3,7 @@
 
 # Stage 1: Base
 FROM node:24-alpine AS base
-RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
+RUN corepack enable && corepack prepare pnpm@12.7.0 --activate
 WORKDIR /app
 
 # Stage 2: Dependencies (Node.js)
@@ -11,6 +11,23 @@ FROM base AS node-dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY scripts ./scripts
 COPY apps/desktop/package.json ./apps/desktop/
+# pnpm's frozen-lockfile check validates every workspace importer in pnpm-lock.yaml has a
+# package.json on disk, not just the ones this app depends on — so every workspace member's
+# package.json has to be copied here, even packages this image never installs code from.
+COPY apps/admin/package.json ./apps/admin/
+COPY apps/api/package.json ./apps/api/
+COPY apps/docs/package.json ./apps/docs/
+COPY apps/mobile/package.json ./apps/mobile/
+COPY apps/web-artists/package.json ./apps/web-artists/
+COPY apps/web-player/package.json ./apps/web-player/
+COPY packages/contracts/package.json ./packages/contracts/
+COPY packages/converter/package.json ./packages/converter/
+COPY packages/ncs-parser/package.json ./packages/ncs-parser/
+COPY packages/player/package.json ./packages/player/
+COPY packages/svgr/package.json ./packages/svgr/
+COPY packages/tailwind/package.json ./packages/tailwind/
+COPY packages/ui-react/package.json ./packages/ui-react/
+COPY packages/vite-svgr/package.json ./packages/vite-svgr/
 COPY turbo.json ./
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
@@ -41,29 +58,7 @@ COPY . .
 WORKDIR /app/apps/desktop
 RUN pnpm run build
 
-# Stage 4: Development с VNC для GUI (опционально)
-FROM base AS development-vnc
-RUN apk add --no-cache \
-    chromium \
-    xvfb \
-    x11vnc \
-    fluxbox \
-    supervisor
-
-COPY --from=node-dependencies /app/node_modules ./node_modules
-COPY . .
-
-# VNC настройка
-ENV DISPLAY=:99
-EXPOSE 5900 3000
-
-# Supervisor конфигурация для Xvfb и VNC
-RUN mkdir -p /var/log/supervisor
-COPY apps/desktop/docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
-# Stage 5: Development (только веб-сервер для разработки UI)
+# Stage 4: Development (только веб-сервер для разработки UI)
 FROM base AS development
 COPY --from=node-dependencies /app/node_modules ./node_modules
 COPY . .
@@ -72,7 +67,7 @@ EXPOSE 1420
 WORKDIR /app/apps/desktop
 CMD ["pnpm", "run", "dev"]
 
-# Stage 6: CI/CD Build (для автоматической сборки)
+# Stage 5: CI/CD Build (для автоматической сборки)
 FROM rustlang/rust:nightly-slim AS ci-build
 
 # Установка зависимостей для разных платформ
@@ -94,7 +89,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs
 
 # Установка pnpm
-RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
+RUN corepack enable && corepack prepare pnpm@12.7.0 --activate
 
 # Установка Tauri CLI
 RUN cargo install tauri-cli
