@@ -22,6 +22,18 @@ COPY packages/svgr/package.json ./packages/svgr/
 COPY packages/svgr/bin ./packages/svgr/bin
 COPY packages/vite-svgr/package.json ./packages/vite-svgr/
 COPY packages/contracts/package.json ./packages/contracts/
+# pnpm's frozen-lockfile check validates every workspace importer in pnpm-lock.yaml has a
+# package.json on disk, not just the ones this app depends on — so every workspace member's
+# package.json has to be copied here, even packages this image never installs code from.
+COPY apps/admin/package.json ./apps/admin/
+COPY apps/api/package.json ./apps/api/
+COPY apps/desktop/package.json ./apps/desktop/
+COPY apps/docs/package.json ./apps/docs/
+COPY apps/mobile/package.json ./apps/mobile/
+COPY apps/web-artists/package.json ./apps/web-artists/
+COPY packages/converter/package.json ./packages/converter/
+COPY packages/ncs-parser/package.json ./packages/ncs-parser/
+COPY packages/player/package.json ./packages/player/
 COPY turbo.json ./
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
