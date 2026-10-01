@@ -58,7 +58,7 @@ export const SignUpModal = ({
                 Register
               </Button>
               <SocialsAuthDivider />
-              <AuthModalGoogleButton />
+              <AuthModalGoogleButton accepted={form.watch('acceptLegal')} />
               <p className="text-center text-base text-text-contrast">
                 Already have an account?{' '}
                 {onSwitchToLogin ? (

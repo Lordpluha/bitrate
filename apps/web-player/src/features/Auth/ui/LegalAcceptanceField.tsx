@@ -1,14 +1,7 @@
-import {
-  Checkbox,
-  FormField,
-  FormItem,
-  FormMessage,
-  Label,
-} from '@bitrate/ui-react'
+import { Checkbox, FormField, FormItem, FormMessage } from '@bitrate/ui-react'
 import type { RegistrationFormData } from '@entities/User'
-import { ROUTES } from '@shared/routes'
-import Link from 'next/link'
 import type { Control } from 'react-hook-form'
+import { LegalConsentLabel } from './LegalConsentLabel'
 
 type LegalAcceptanceFieldProps = {
   control: Control<RegistrationFormData>
@@ -36,20 +29,7 @@ export const LegalAcceptanceField = ({
             onBlur={field.onBlur}
             onCheckedChange={field.onChange}
           />
-          <Label className="font-normal leading-snug" htmlFor={id}>
-            I am at least 16 years old and accept the{' '}
-            <Link className="text-primary hover:opacity-70" href={ROUTES.terms}>
-              Terms of Use
-            </Link>{' '}
-            and{' '}
-            <Link
-              className="text-primary hover:opacity-70"
-              href={ROUTES.privacy}
-            >
-              Privacy Policy
-            </Link>
-            .
-          </Label>
+          <LegalConsentLabel id={id} />
         </div>
         <FormMessage />
       </FormItem>
