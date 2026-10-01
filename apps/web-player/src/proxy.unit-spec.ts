@@ -13,6 +13,10 @@ describe('isPublicRoute', () => {
     '/login',
     '/login/2fa',
     '/offline',
+    '/legal/terms',
+    '/legal/privacy',
+    '/legal/community',
+    '/legal/copyright',
   ])('allows anonymous access to %s', (pathname) => {
     expect(isPublicRoute(pathname)).toBe(true)
   })
@@ -21,6 +25,7 @@ describe('isPublicRoute', () => {
     '/main',
     '/main/library',
     '/verify-email/other',
+    '/legal/unknown',
   ])('keeps %s protected', (pathname) => {
     expect(isPublicRoute(pathname)).toBe(false)
   })
