@@ -42,11 +42,13 @@ Where we rely on legitimate interest you may object (section 8).
 
 ## 4. Cookies and similar technologies
 
-Bitrate sets cookies that are **strictly necessary** to sign you in and keep your session secure, plus a cookie used during
-social sign-in. They do not require consent. We do not use advertising or analytics cookies.
+Bitrate sets cookies that are **strictly necessary** to sign you in and keep your session secure: your session tokens, a
+short-lived token while you complete two-factor sign-in, and two short-lived cookies during social sign-in (one protects the
+sign-in from forgery, the other remembers that you accepted these documents while you are at the provider). They do not require
+consent. We do not use advertising or analytics cookies.
 
-Our error-monitoring tool (Sentry) may record error details and, for a sample of sessions, session replays that capture how
-the interface is used. [[REPLAY_NOTE — update after the decision on whether replay is disabled or consent-gated]]
+In the listener web app, our error-monitoring tool (Sentry) may record error details and, for a sample of sessions, session
+replays that capture how the interface is used. [[REPLAY_NOTE — update after the decision on whether replay is disabled or consent-gated]]
 
 ## 5. Who receives your data
 
