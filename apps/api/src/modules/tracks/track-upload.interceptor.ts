@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import { mkdir } from 'node:fs/promises'
 import { IMAGE_EXTENSION_BY_MIME } from '@common/utils/image'
 import { applyDecorators, BadRequestException, UseInterceptors } from '@nestjs/common'
 import { FileFieldsInterceptor } from '@nestjs/platform-express'
@@ -9,7 +10,7 @@ import { uploadDestination } from './track-media'
 /** Upload ceiling shared by the audio and cover parts of a track submission. */
 const MAX_UPLOAD_BYTES = 50 * 1024 * 1024
 
-/** Audio uploads stay private; covers are served publicly. */
+/** Audio lands in a temporary directory before moving to storage; covers are served publicly. */
 
 const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
 const ALLOWED_COVER_TYPES = ['image/gif', 'image/jpeg', 'image/png', 'image/webp']
@@ -44,7 +45,13 @@ export const TrackFilesInterceptor = () =>
         {
           limits: { fileSize: MAX_UPLOAD_BYTES },
           storage: diskStorage({
-            destination: (_req, file, cb) => cb(null, uploadDestination(file)),
+            destination: (_req, file, cb) => {
+              const destination = uploadDestination(file)
+              mkdir(destination, { recursive: true }).then(
+                () => cb(null, destination),
+                (error: Error) => cb(error, destination),
+              )
+            },
             filename: (_req, file, cb) => cb(null, `${randomUUID()}${uploadExtension(file)}`),
           }),
           fileFilter: (_req, file, cb) => {

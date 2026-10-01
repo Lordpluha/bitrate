@@ -1,20 +1,24 @@
 import { mkdir, readdir, rm } from 'node:fs/promises'
-import { join } from 'node:path'
+import { extname, join } from 'node:path'
 import * as PrismaServiceModule from '@infra/prisma/prisma.service'
 import {
   AUDIO_PROCESSING_DEAD_LETTER_QUEUE,
   AUDIO_PROCESSING_QUEUE,
   type ConvertAudioJob,
+  parseConvertAudioJob,
+  type UnrecognisedAudioJob,
 } from '@infra/queues/audio-processing.queue'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
-import { Inject, Logger } from '@nestjs/common'
+import { Inject, Logger, type OnModuleInit } from '@nestjs/common'
 import * as Sentry from '@sentry/nestjs'
 import type { Job, Queue } from 'bullmq'
 import { StaleAudioJobError } from './audio-artifact.types'
+import { downloadObjectToFile } from './audio-master'
 import { type ConversionStepContext, runConversionPhases } from './audio-processing.phases'
 import { isAudioProcessingWorkerAutorunEnabled } from './audio-processing.worker-autorun'
+import { getJobScratchBase, removeStaleScratchDirs } from './audio-scratch'
 import { getAudioGenerationRoot } from './audio-storage-keys'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 import { classifyProcessingError, errorMessageOf } from './processing-log/classify'
@@ -30,7 +34,7 @@ import { redactProcessingText } from './processing-log/redact'
   maxStalledCount: 2,
   autorun: isAudioProcessingWorkerAutorunEnabled(),
 })
-export class AudioProcessingConsumer extends WorkerHost {
+export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit {
   /** Creates a new instance. */
   constructor(
     @Inject(PrismaServiceModule.PrismaService)
@@ -38,7 +42,7 @@ export class AudioProcessingConsumer extends WorkerHost {
     @Inject(STORAGE_SERVICE)
     private readonly storage: StorageService,
     @InjectQueue(AUDIO_PROCESSING_DEAD_LETTER_QUEUE)
-    private readonly deadLetterQueue: Queue<ConvertAudioJob>,
+    private readonly deadLetterQueue: Queue<ConvertAudioJob | UnrecognisedAudioJob>,
     @Inject(ProcessingAttemptRecorder)
     private readonly recorder: ProcessingAttemptRecorder,
   ) {
@@ -49,14 +53,31 @@ export class AudioProcessingConsumer extends WorkerHost {
   private readonly logger = new Logger(AudioProcessingConsumer.name, { timestamp: true })
 
   /**
+   * Removes scratch directories a crashed run left behind. Only a process that actually
+   * consumes jobs does this, so an API with the consumer disabled never touches another
+   * process's scratch space.
+   */
+  async onModuleInit() {
+    if (!isAudioProcessingWorkerAutorunEnabled()) return
+    try {
+      await removeStaleScratchDirs(getJobScratchBase())
+    } catch (error) {
+      this.logger.error(
+        'Unable to remove stale audio scratch directories',
+        error instanceof Error ? error.stack : undefined,
+      )
+    }
+  }
+
+  /**
    * Claims one conversion job for this worker.
    *
    * The claim is a conditional write rather than a read: it succeeds only while
    * this job's source is still the track's source, so a superseded job stops
    * before spending any CPU.
    */
-  private async claimJob(job: Job<ConvertAudioJob>) {
-    const { trackId, sourceFileName } = job.data
+  private async claimJob(job: Job, data: ConvertAudioJob) {
+    const { trackId, sourceFileName } = data
     const track = await this.prisma.track.findUnique({ where: { id: trackId } })
 
     if (!track || track.audioUrl !== sourceFileName) {
@@ -81,26 +102,34 @@ export class AudioProcessingConsumer extends WorkerHost {
   }
 
   /** Reports whether this job's source is still the track's current source. */
-  private async isStillCurrent(job: Job<ConvertAudioJob>) {
-    const track = await this.prisma.track.findUnique({ where: { id: job.data.trackId } })
-    return Boolean(track && track.audioUrl === job.data.sourceFileName)
+  private async isStillCurrent(data: ConvertAudioJob) {
+    const track = await this.prisma.track.findUnique({ where: { id: data.trackId } })
+    return Boolean(track && track.audioUrl === data.sourceFileName)
   }
 
   /** Runs the process operation. */
-  async process(job: Job<ConvertAudioJob>) {
+  async process(job: Job) {
     if (job.name !== 'convert-audio') return
-    if (!(await this.claimJob(job))) return
 
-    const { trackId, sourceFileName, outputDir } = job.data
+    const parsed = parseConvertAudioJob(job.data)
+    if (!parsed.success) {
+      await this.rejectUnrecognisedJob(job, parsed.reason)
+      return
+    }
+    const data = parsed.data
+    if (!(await this.claimJob(job, data))) return
+
+    const { trackId, sourceFileName, masterKey } = data
     const jobId = String(job.id)
     const attempt = job.attemptsMade + 1
     const maxAttempts = job.opts.attempts ?? 1
-    const trigger = job.data.trigger ?? 'UPLOAD'
+    const trigger = data.trigger ?? 'UPLOAD'
 
-    const processingRoot = join(outputDir, '.processing')
-    const temporaryRoot = join(processingRoot, `${trackId}-${jobId}-${attempt}`)
+    const scratchBase = getJobScratchBase()
+    const temporaryRoot = join(scratchBase, `${trackId}-${jobId}-${attempt}`)
+    const inputPath = join(temporaryRoot, `source${extname(sourceFileName)}`)
 
-    await this.cleanupOrphanedTemporaryDirs(processingRoot, trackId, jobId)
+    await this.cleanupOrphanedTemporaryDirs(scratchBase, trackId, jobId)
     await rm(temporaryRoot, { recursive: true, force: true })
     await mkdir(temporaryRoot, { recursive: true })
 
@@ -111,14 +140,17 @@ export class AudioProcessingConsumer extends WorkerHost {
       attempt,
       maxAttempts,
       trigger,
-      input: job.data.input,
+      input: data.input,
     })
 
     const ctx: ConversionStepContext = { step: 'PREPARE_TEMP' }
 
     try {
+      await downloadObjectToFile(this.storage, masterKey, inputPath)
+
       const outcome = await runConversionPhases(ctx, {
-        job,
+        job: job as Job<ConvertAudioJob>,
+        inputPath,
         temporaryRoot,
         storage: this.storage,
         prisma: this.prisma,
@@ -127,7 +159,7 @@ export class AudioProcessingConsumer extends WorkerHost {
         sourceFileName,
         jobId,
         attempt,
-        isStillCurrent: (currentJob) => this.isStillCurrent(currentJob),
+        isStillCurrent: () => this.isStillCurrent(data),
       })
 
       if (outcome === 'SUPERSEDED') {
@@ -160,7 +192,7 @@ export class AudioProcessingConsumer extends WorkerHost {
         willRetry,
       })
       await this.markAttemptFailed(
-        job,
+        data,
         redactProcessingText(errorMessageOf(error), {
           keep: 'head',
           maxBytes: PROCESSING_LOG_LIMITS.errorMessage,
@@ -255,6 +287,19 @@ export class AudioProcessingConsumer extends WorkerHost {
     await this.recorder.markStalledByJob(jobId)
   }
 
+  /**
+   * Moves a payload this consumer cannot interpret to the dead-letter queue, recording why.
+   * The job then completes instead of throwing, so BullMQ never retries it.
+   */
+  private async rejectUnrecognisedJob(job: Job, reason: string) {
+    this.logger.error(`Unrecognised audio conversion payload in job ${job.id}: ${reason}`)
+    await this.deadLetterQueue.add(
+      'convert-audio-unrecognised',
+      { reason, originalJobId: job.id, payload: job.data },
+      { jobId: `unrecognised-${job.id}`, removeOnComplete: 500, removeOnFail: 1_000 },
+    )
+  }
+
   /** Removes temporary directories left behind by earlier attempts of this job. */
   private async cleanupOrphanedTemporaryDirs(
     processingRoot: string,
@@ -282,9 +327,9 @@ export class AudioProcessingConsumer extends WorkerHost {
    * can replace `audioUrl` between a read and an update, and a read-then-write
    * would then stamp the stale error onto the newer source.
    */
-  private async markAttemptFailed(job: Job<ConvertAudioJob>, message: string) {
+  private async markAttemptFailed(data: ConvertAudioJob, message: string) {
     await this.prisma.track.updateMany({
-      where: { id: job.data.trackId, audioUrl: job.data.sourceFileName },
+      where: { id: data.trackId, audioUrl: data.sourceFileName },
       data: { processingError: message },
     })
   }
