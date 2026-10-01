@@ -28,7 +28,9 @@ describe('StorageController.streamSignedObject', () => {
       contentType: 'audio/mp4',
       contentRange: 'bytes 2-5/10',
     } as never)
-    const controller = buildController({ getObjectStream })
+    const controller = buildController({
+      getObjectStream: getObjectStream as StorageService['getObjectStream'],
+    })
     const res = buildResponse()
     const token = createSignedStorageToken('tracks/t/cmaf/128.m4a', 60, SECRET)
 
@@ -54,7 +56,9 @@ describe('StorageController.streamSignedObject', () => {
 
   it('rejects an invalid token and a missing object', async () => {
     const controller = buildController({
-      getObjectStream: jest.fn().mockRejectedValue(new Error('NoSuchKey') as never),
+      getObjectStream: jest
+        .fn()
+        .mockRejectedValue(new Error('NoSuchKey') as never) as StorageService['getObjectStream'],
     })
     const res = buildResponse() as unknown as Response
     const req = { headers: {} } as Request

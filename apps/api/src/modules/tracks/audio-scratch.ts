@@ -1,4 +1,4 @@
-import { mkdir, readdir, rm } from 'node:fs/promises'
+import { readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -21,13 +21,6 @@ export function getJobScratchBase(env: NodeJS.ProcessEnv = process.env): string 
   return join(getAudioScratchRoot(env), 'bitrate-audio-jobs')
 }
 
-/** Creates the upload temp directory so Multer can write into it. */
-export async function ensureUploadTempDir(env: NodeJS.ProcessEnv = process.env): Promise<string> {
-  const dir = getUploadTempDir(env)
-  await mkdir(dir, { recursive: true })
-  return dir
-}
-
 /**
  * Removes every per-job scratch directory left behind by a crashed run. Called once at
  * start-up, before any job is claimed, so nothing in the directory can be in use.
@@ -37,7 +30,7 @@ export async function removeStaleScratchDirs(base: string): Promise<void> {
   try {
     entries = await readdir(base)
   } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') return
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return
     throw error
   }
   await Promise.all(entries.map((entry) => rm(join(base, entry), { recursive: true, force: true })))

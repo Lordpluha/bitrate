@@ -71,8 +71,8 @@ describe('TrackUploadService', () => {
     queue = makeQueueMock()
     config = makeConfigMock()
     storage = makeStorageMock()
-    storage.getObjectMeta = jest.fn().mockResolvedValue({ contentLength: 9_000 } as never)
-    storage.deleteObject = jest.fn().mockResolvedValue(undefined as never)
+    storage.getObjectMeta.mockResolvedValue({ contentLength: 9_000 } as never)
+    storage.deleteObject.mockResolvedValue(undefined as never)
     service = new TrackUploadService(prisma, queue, config, makeCacheMock(), recorder, storage)
   })
 
