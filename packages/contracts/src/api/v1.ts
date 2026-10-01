@@ -2498,35 +2498,6 @@ export interface components {
        */
       acceptLegal: true
     }
-    ArtistRegistrationDto: {
-      /**
-       * @description New user email
-       * @example newuser@example.com
-       */
-      email: string
-      /**
-       * @description New user password
-       * @example password123
-       */
-      password: string
-      /**
-       * @description New user username
-       * @example newuser123
-       */
-      username: string
-      /**
-       * @description Accepts the Terms of Use and Privacy Policy; must be true
-       * @example true
-       * @enum {boolean}
-       */
-      acceptLegal: true
-      /**
-       * @description Accepts the Artist Agreement; must be true
-       * @example true
-       * @enum {boolean}
-       */
-      acceptArtistAgreement: true
-    }
     UserForgotPasswordDto: {
       /**
        * @description The email value.
@@ -3284,6 +3255,35 @@ export interface components {
        * @example password123
        */
       password: string
+    }
+    ArtistRegistrationDto: {
+      /**
+       * @description New user email
+       * @example newuser@example.com
+       */
+      email: string
+      /**
+       * @description New user password
+       * @example password123
+       */
+      password: string
+      /**
+       * @description New user username
+       * @example newuser123
+       */
+      username: string
+      /**
+       * @description Accepts the Terms of Use and Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
+      /**
+       * @description Accepts the Artist Agreement; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptArtistAgreement: true
     }
     ArtistForgotPasswordDto: {
       /**
