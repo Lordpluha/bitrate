@@ -1,4 +1,5 @@
 import type { TrackProcessingTrigger } from '@prisma/client'
+import { z } from 'zod'
 
 /** BullMQ queue names used by the audio-processing pipeline. */
 export const AUDIO_PROCESSING_QUEUE = 'audio-processing'
@@ -27,18 +28,69 @@ export type ConvertAudioJobInputProbe = {
 /**
  * Data required to convert and publish one track.
  *
- * `trigger` and `input` are optional so a job already sitting in Redis when this field was
- * added still deserializes and processes — the consumer defaults a missing `trigger` to
- * `UPLOAD` and simply skips the input-probe columns when `input` is absent.
+ * The master is named by its object key in STORAGE_SERVICE, never by a filesystem path, so a
+ * worker on another host (sharing no disk with the API) can fetch it. `trigger` and `input` are
+ * optional so a job without them still deserializes — the consumer defaults a missing `trigger`
+ * to `UPLOAD` and skips the input-probe columns when `input` is absent.
  */
 export interface ConvertAudioJob {
   trackId: string
   artistId: string
   sourceFileName: string
-  inputPath: string
-  outputDir: string
+  masterKey: string
   format: string
   bitrates: string[]
   trigger?: TrackProcessingTrigger
   input?: ConvertAudioJobInputProbe
+}
+
+/** A relative object key: no leading slash, no traversal, no backslashes. */
+const objectKeySchema = z
+  .string()
+  .min(1)
+  .refine((key) => !(key.startsWith('/') || key.includes('\\') || key.split('/').includes('..')), {
+    message: 'must be a relative object key',
+  })
+
+const convertAudioJobSchema = z.object({
+  trackId: z.string().min(1),
+  artistId: z.string().min(1),
+  sourceFileName: z.string().min(1),
+  masterKey: objectKeySchema,
+  format: z.string().min(1),
+  bitrates: z.array(z.string().regex(/^\d+k$/)).min(1),
+  trigger: z.enum(['UPLOAD', 'REPLACE', 'REPROCESS']).optional(),
+  input: z
+    .object({
+      bytes: z.number(),
+      codec: z.string().nullable(),
+      container: z.string().nullable(),
+      bitrateKbps: z.number(),
+      durationSec: z.number().nullable(),
+    })
+    .optional(),
+})
+
+/** Outcome of validating a raw job payload. */
+export type ParsedConvertAudioJob =
+  | { success: true; data: ConvertAudioJob }
+  | { success: false; reason: string }
+
+/** Validates a raw `convert-audio` payload; an unrecognised one carries a human-readable reason. */
+export function parseConvertAudioJob(data: unknown): ParsedConvertAudioJob {
+  const result = convertAudioJobSchema.safeParse(data)
+  if (result.success) return { success: true, data: result.data }
+  return {
+    success: false,
+    reason: result.error.issues
+      .map((issue) => `${issue.path.join('.') || '(payload)'}: ${issue.message}`)
+      .join('; '),
+  }
+}
+
+/** Dead-letter entry for a payload the consumer does not recognise. */
+export type UnrecognisedAudioJob = {
+  reason: string
+  originalJobId: string | undefined
+  payload: unknown
 }

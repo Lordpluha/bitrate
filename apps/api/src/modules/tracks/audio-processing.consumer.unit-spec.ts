@@ -11,7 +11,9 @@ import {
   resetPrismaMock,
 } from '@test/mocks'
 import { buildJob, cmafResult, jobData } from './__tests__/fixtures/audio-processing.fixtures'
+import { downloadObjectToFile } from './audio-master'
 import { AudioProcessingConsumer } from './audio-processing.consumer'
+import { removeStaleScratchDirs } from './audio-scratch'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 
 jest.mock('@sentry/nestjs', () => ({
@@ -40,6 +42,15 @@ function buildFfmpegError({ message, ...rest }: FfmpegErrorOverrides): Error {
   return Object.assign(error, rest)
 }
 
+jest.mock('./audio-master', () => ({
+  downloadObjectToFile: jest.fn().mockResolvedValue(undefined as never),
+}))
+
+jest.mock('./audio-scratch', () => ({
+  ...(jest.requireActual('./audio-scratch') as object),
+  removeStaleScratchDirs: jest.fn().mockResolvedValue(undefined as never),
+}))
+
 jest.mock('node:fs', () => ({
   createReadStream: jest.fn().mockReturnValue({ pipe: jest.fn() }),
 }))
@@ -57,6 +68,8 @@ const convertAudioMock = convertAudio as jest.MockedFunction<typeof convertAudio
 const convertAudioToHlsMock = convertAudioToHls as jest.MockedFunction<typeof convertAudioToHls>
 const convertAudioToCmafMock = convertAudioToCmaf as jest.MockedFunction<typeof convertAudioToCmaf>
 
+const downloadMock = downloadObjectToFile as jest.MockedFunction<typeof downloadObjectToFile>
+const removeStaleMock = removeStaleScratchDirs as jest.MockedFunction<typeof removeStaleScratchDirs>
 const readdirMock = readdir as jest.MockedFunction<typeof readdir>
 const rmMock = rm as jest.MockedFunction<typeof rm>
 const statMock = stat as jest.MockedFunction<typeof stat>
@@ -159,10 +172,10 @@ describe('AudioProcessingConsumer', () => {
       }),
     )
     expect(job.updateProgress).toHaveBeenLastCalledWith(100)
-    expect(rmMock).toHaveBeenCalledWith(
-      expect.stringContaining('/storage/.processing/track-1-job-1-1'),
-      { recursive: true, force: true },
-    )
+    expect(rmMock).toHaveBeenCalledWith(expect.stringContaining('track-1-job-1-1'), {
+      recursive: true,
+      force: true,
+    })
     expect(recorder.start).toHaveBeenCalledWith(
       expect.objectContaining({
         trackId: 'track-1',
@@ -245,10 +258,10 @@ describe('AudioProcessingConsumer', () => {
       data: { processingError: 'ffmpeg crashed' },
     })
     expect(deadLetterQueue.add).not.toHaveBeenCalled()
-    expect(rmMock).toHaveBeenLastCalledWith(
-      expect.stringContaining('/storage/.processing/track-1-job-1-1'),
-      { recursive: true, force: true },
-    )
+    expect(rmMock).toHaveBeenLastCalledWith(expect.stringContaining('track-1-job-1-1'), {
+      recursive: true,
+      force: true,
+    })
     expect(recorder.fail).toHaveBeenCalledWith(
       expect.objectContaining({
         trackId: 'track-1',
@@ -267,7 +280,7 @@ describe('AudioProcessingConsumer', () => {
       signal: null,
       timedOut: false,
       stderrTail: 'Invalid data found when processing input',
-      args: ['-i', '/storage/track.mp3'],
+      args: ['-i', '/tmp/track.mp3'],
     })
     convertAudioMock.mockRejectedValueOnce(ffmpegError as never)
     const job = buildJob('convert-audio', jobData)
@@ -290,7 +303,7 @@ describe('AudioProcessingConsumer', () => {
       signal: null,
       timedOut: true,
       stderrTail: '',
-      args: ['-i', '/storage/track.mp3'],
+      args: ['-i', '/tmp/track.mp3'],
     })
     convertAudioMock.mockRejectedValueOnce(timeoutError as never)
     const job = buildJob('convert-audio', jobData)
@@ -390,6 +403,61 @@ describe('AudioProcessingConsumer', () => {
     expect(storage.deletePrefix).not.toHaveBeenCalled()
     expect(recorder.finalize).not.toHaveBeenCalled()
     expect(Sentry.captureException).not.toHaveBeenCalled()
+  })
+
+  it('downloads the master by key into a per-job scratch directory and encodes that copy', async () => {
+    await consumer.process(buildJob('convert-audio', jobData))
+
+    const [, key, localPath] = downloadMock.mock.calls[0] as [unknown, string, string]
+    expect(key).toBe('masters/track.mp3')
+    expect(localPath).toContain('track-1-job-1-1')
+    expect(convertAudioMock).toHaveBeenCalledWith(expect.objectContaining({ input: localPath }))
+    expect(convertAudioToHlsMock).toHaveBeenCalledWith(
+      expect.objectContaining({ input: localPath }),
+    )
+    expect(convertAudioToCmafMock).toHaveBeenCalledWith(
+      expect.objectContaining({ input: localPath }),
+    )
+  })
+
+  it('cleans the scratch directory when the master cannot be downloaded', async () => {
+    downloadMock.mockRejectedValueOnce(new Error('NoSuchKey') as never)
+
+    await expect(consumer.process(buildJob('convert-audio', jobData))).rejects.toThrow('NoSuchKey')
+
+    expect(convertAudioMock).not.toHaveBeenCalled()
+    expect(rmMock).toHaveBeenLastCalledWith(expect.stringContaining('track-1-job-1-1'), {
+      recursive: true,
+      force: true,
+    })
+    expect(recorder.fail).toHaveBeenCalledWith(expect.objectContaining({ step: 'PREPARE_TEMP' }))
+  })
+
+  it('sends an unrecognised payload to the dead-letter queue with a reason, without throwing', async () => {
+    const legacy = {
+      trackId: 'track-1',
+      sourceFileName: 'track.mp3',
+      inputPath: '/storage/track.mp3',
+      outputDir: '/storage',
+      format: 'opus',
+      bitrates: ['128k'],
+    }
+
+    await expect(consumer.process(buildJob('convert-audio', legacy))).resolves.toBeUndefined()
+
+    expect(deadLetterQueue.add).toHaveBeenCalledWith(
+      'convert-audio-unrecognised',
+      expect.objectContaining({ reason: expect.stringContaining('masterKey'), payload: legacy }),
+      expect.objectContaining({ jobId: 'unrecognised-job-1' }),
+    )
+    expect(prisma.track.findUnique).not.toHaveBeenCalled()
+    expect(convertAudioMock).not.toHaveBeenCalled()
+  })
+
+  it('removes stale scratch directories at start-up when the worker autoruns', async () => {
+    await consumer.onModuleInit()
+
+    expect(removeStaleMock).toHaveBeenCalledWith(expect.stringContaining('bitrate-audio-jobs'))
   })
 
   it('marks every RUNNING row for a stalled job STALLED', async () => {
