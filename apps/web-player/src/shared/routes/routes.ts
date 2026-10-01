@@ -32,8 +32,11 @@ export const ROUTES = {
     `/main/search?category=${encodeURIComponent(category)}`,
   search: (query?: string) =>
     query ? `/main/search?q=${encodeURIComponent(query)}` : '/main/search',
-  terms: '#terms',
-  privacy: '#privacy',
+  legal: (slug: string) => `/legal/${slug}`,
+  terms: '/legal/terms',
+  privacy: '/legal/privacy',
+  community: '/legal/community',
+  copyright: '/legal/copyright',
   download: '#download',
   plans: '#plans',
   forStudents: '#for-students',
