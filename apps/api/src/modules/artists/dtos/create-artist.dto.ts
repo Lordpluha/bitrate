@@ -13,4 +13,20 @@ export class CreateArtistDto {
   /** The username value. */
   @ApiProperty({ description: 'User username', example: 'user123' })
   username: string
+
+  /** Revision of the Terms of Use and Privacy Policy accepted at registration. */
+  @ApiProperty({ required: false, type: String })
+  legalVersion?: string
+
+  /** When that revision was accepted. */
+  @ApiProperty({ required: false, type: Date })
+  legalAcceptedAt?: Date
+
+  /** Revision of the Artist Agreement accepted at registration. */
+  @ApiProperty({ required: false, type: String })
+  artistAgreementVersion?: string
+
+  /** When the Artist Agreement was accepted. */
+  @ApiProperty({ required: false, type: Date })
+  artistAgreementAcceptedAt?: Date
 }

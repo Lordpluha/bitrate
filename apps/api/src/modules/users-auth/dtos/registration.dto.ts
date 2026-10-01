@@ -9,6 +9,9 @@ export const RegistrationSchema = LoginSchema.extend({
     .string()
     .min(3, { message: 'Username must be at least 3 characters long' })
     .max(20, { message: 'Username must not exceed 20 characters' }),
+  acceptLegal: z.literal(true, {
+    message: 'You must accept the Terms of Use and Privacy Policy',
+  }),
 })
 
 /** Represents the registration dto. */
@@ -30,4 +33,12 @@ export class RegistrationDto implements z.infer<typeof RegistrationSchema> {
     example: 'newuser123',
   })
   username: UserEntity['username']
+
+  /** Confirms the user accepted the Terms of Use and Privacy Policy. Must be `true`. */
+  @ApiProperty({
+    description: 'Accepts the Terms of Use and Privacy Policy; must be true',
+    example: true,
+    enum: [true],
+  })
+  acceptLegal: true
 }

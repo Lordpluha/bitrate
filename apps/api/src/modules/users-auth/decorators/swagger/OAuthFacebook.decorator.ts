@@ -9,6 +9,13 @@ export function OAuthFacebookSwagger() {
       description:
         'Sets an oauth_state cookie and redirects to the Facebook consent screen. Not usable from Swagger UI.',
     }),
+    ApiQuery({
+      name: 'acceptLegal',
+      required: false,
+      type: Boolean,
+      description:
+        'Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts.',
+    }),
     ApiResponse({
       status: HttpStatus.FOUND,
       description: 'Redirect to Facebook OAuth consent screen',

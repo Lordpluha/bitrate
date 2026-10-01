@@ -62,4 +62,12 @@ export class UserEntity implements User {
   /** Transactional-email locale, set at registration from Accept-Language. */
   @ApiProperty()
   locale: string
+
+  /** Revision of the Terms of Use and Privacy Policy accepted at registration, if recorded. */
+  @ApiProperty({ nullable: true, type: String })
+  legalVersion: string | null
+
+  /** When that revision was accepted, if recorded. */
+  @ApiProperty({ nullable: true, type: Date })
+  legalAcceptedAt: Date | null
 }

@@ -12,6 +12,7 @@ const registerAndLogin = async (app: INestApplication, prisma: PrismaService, ru
     email: `search_${runId}@example.com`,
     password: 'password123',
     username: `search_${runId}`,
+    acceptLegal: true,
   }
   await request(app.getHttpServer()).post('/auth/registration').send(credentials).expect(201)
   await verifyUserEmail(prisma, credentials.email)
