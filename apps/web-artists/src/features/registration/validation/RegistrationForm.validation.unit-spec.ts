@@ -79,6 +79,8 @@ describe('passwordSchema', () => {
 describe('registrationSchema', () => {
   it('accepts a complete registration', () => {
     const result = registrationSchema.safeParse({
+      acceptArtistAgreement: true,
+      acceptLegal: true,
       email: 'artist@bitrate.me',
       password: 'correct-horse-7',
     })
@@ -94,6 +96,8 @@ describe('registrationSchema', () => {
    */
   it('tolerates a blank password so the email step can submit alone', () => {
     const result = registrationSchema.safeParse({
+      acceptArtistAgreement: false,
+      acceptLegal: false,
       email: 'artist@bitrate.me',
       password: '',
     })
@@ -103,16 +107,53 @@ describe('registrationSchema', () => {
 
   it('applies the password rules once a password is present', () => {
     expect(
-      errorFor({ email: 'artist@bitrate.me', password: 'short1' }, 'password'),
+      errorFor(
+        {
+          acceptArtistAgreement: true,
+          acceptLegal: true,
+          email: 'artist@bitrate.me',
+          password: 'short1',
+        },
+        'password',
+      ),
     ).toBe('Password must be at least 10 characters')
   })
 
   it('rejects a malformed email even when the password is valid', () => {
     expect(
       errorFor(
-        { email: 'artist-at-bitrate', password: 'correct-horse-7' },
+        {
+          acceptArtistAgreement: true,
+          acceptLegal: true,
+          email: 'artist-at-bitrate',
+          password: 'correct-horse-7',
+        },
         'email',
       ),
     ).toBe('Please enter a valid email address')
+  })
+
+  describe('legal acceptance', () => {
+    const complete = {
+      acceptArtistAgreement: true,
+      acceptLegal: true,
+      email: 'artist@bitrate.me',
+      password: 'correct-horse-7',
+    }
+
+    it('requires the Terms of Use and Privacy Policy before the account is created', () => {
+      expect(errorFor({ ...complete, acceptLegal: false }, 'acceptLegal')).toBe(
+        'You must accept the Terms of Use and Privacy Policy',
+      )
+    })
+
+    it('requires the Artist Agreement before the account is created', () => {
+      expect(
+        errorFor(
+          { ...complete, acceptArtistAgreement: false },
+          'acceptArtistAgreement',
+        ),
+      ).toBe('You must accept the Artist Agreement')
+    })
   })
 })

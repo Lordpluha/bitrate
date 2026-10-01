@@ -7,6 +7,7 @@ export const ROUTES = {
   },
   main: '/',
   terms: '#terms',
+  artistAgreement: '#artist-agreement',
   privacy: '#privacy',
   download: '#download',
   plans: '#plans',

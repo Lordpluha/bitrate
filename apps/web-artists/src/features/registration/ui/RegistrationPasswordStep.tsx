@@ -3,10 +3,13 @@
 import {
   ArrowrleftIcon,
   Button,
+  Checkbox,
+  Label,
   PasswordInput,
   Typography,
 } from '@bitrate/ui-react'
-import type { UseFormReturn } from 'react-hook-form'
+import { ROUTES } from '@shared/routes/routes'
+import { Controller, type UseFormReturn } from 'react-hook-form'
 import type { PasswordRules } from '../model/useRegistrationForm'
 import type { RegistrationFormData } from '../validation/RegistrationForm.validation'
 import { PasswordRequirements } from './PasswordRequirements'
@@ -75,6 +78,86 @@ export const RegistrationPasswordStep = ({
       ) : null}
 
       <PasswordRequirements rules={rules} />
+
+      <div className="mt-5 flex flex-col gap-3 text-sm">
+        <Controller
+          control={form.control}
+          name="acceptLegal"
+          render={({ field, fieldState }) => (
+            <div className="flex flex-col gap-1">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  aria-invalid={fieldState.invalid}
+                  checked={field.value}
+                  id="registration-accept-legal"
+                  onBlur={field.onBlur}
+                  onCheckedChange={field.onChange}
+                />
+                <Label
+                  className="font-normal leading-snug"
+                  htmlFor="registration-accept-legal"
+                >
+                  I am at least 16 years old and accept the{' '}
+                  <a
+                    className="text-primary hover:opacity-70"
+                    href={ROUTES.terms}
+                  >
+                    Terms of Use
+                  </a>{' '}
+                  and{' '}
+                  <a
+                    className="text-primary hover:opacity-70"
+                    href={ROUTES.privacy}
+                  >
+                    Privacy Policy
+                  </a>
+                  .
+                </Label>
+              </div>
+              {fieldState.error ? (
+                <Typography as="p" className="text-red-500" size={'body'}>
+                  {fieldState.error.message}
+                </Typography>
+              ) : null}
+            </div>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="acceptArtistAgreement"
+          render={({ field, fieldState }) => (
+            <div className="flex flex-col gap-1">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  aria-invalid={fieldState.invalid}
+                  checked={field.value}
+                  id="registration-accept-artist-agreement"
+                  onBlur={field.onBlur}
+                  onCheckedChange={field.onChange}
+                />
+                <Label
+                  className="font-normal leading-snug"
+                  htmlFor="registration-accept-artist-agreement"
+                >
+                  I accept the{' '}
+                  <a
+                    className="text-primary hover:opacity-70"
+                    href={ROUTES.artistAgreement}
+                  >
+                    Artist Agreement
+                  </a>
+                  .
+                </Label>
+              </div>
+              {fieldState.error ? (
+                <Typography as="p" className="text-red-500" size={'body'}>
+                  {fieldState.error.message}
+                </Typography>
+              ) : null}
+            </div>
+          )}
+        />
+      </div>
 
       <Button
         className="mt-5 w-full"
