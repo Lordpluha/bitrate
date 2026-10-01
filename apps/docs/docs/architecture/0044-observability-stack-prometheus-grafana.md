@@ -107,3 +107,10 @@ at implementation time rather than hardcoding IDs into this record.
   compose file, different environment (preprod vs prod), and Cloudflare Tunnel tokens are
   bound to one tunnel configuration — sharing one across environments couples their
   availability and blast radius for no benefit.
+
+## Update 2026-09-30
+
+`prom-client` was deprecated upstream in favour of `@prometheus-io/client` (same repository
+and author, same API). The decisions above are unchanged; `MetricsService` now imports from
+`@prometheus-io/client`, and references to `prom-client` in this ADR describe the client as it
+was when the decision was made.
