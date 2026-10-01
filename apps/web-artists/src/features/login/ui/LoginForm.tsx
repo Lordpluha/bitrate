@@ -2,8 +2,6 @@
 
 import {
   Button,
-  FacebookArtistIcon,
-  GoogleIcon,
   Input,
   LogoIcon,
   PasswordInput,
@@ -11,17 +9,12 @@ import {
   toast,
 } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { apiBaseUrl } from '@shared/api'
 import { ROUTES } from '@shared/routes/routes'
+import { SocialAuthButtons } from '@shared/ui'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useLogin } from '../api/useLogin'
 import { type LoginFormData, loginSchema } from '../validation'
-
-const buttonStyles =
-  'border bg-black-800 text-white border-neutral-600 relative w-full inline-flex items-center justify-center'
-
-const iconStyles = 'absolute left-4 top-1/2 -translate-y-1/2'
 
 export const LoginForm = () => {
   const navigate = useNavigate()
@@ -107,47 +100,7 @@ export const LoginForm = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Button
-              asChild
-              className={`${buttonStyles}`}
-              size="xl"
-              variant="artistCard"
-            >
-              <a href={`${apiBaseUrl}/api/v1/artists/auth/oauth/google`}>
-                <span className={`${iconStyles}`}>
-                  <GoogleIcon className="block" height={24} width={24} />
-                </span>
-
-                <span className="w-full text-center">
-                  <Typography as="p" className="leading-none" size="heading6">
-                    Continue with Google
-                  </Typography>
-                </span>
-              </a>
-            </Button>
-
-            <Button
-              asChild
-              className={`${buttonStyles}`}
-              size="xl"
-              variant="artistCard"
-            >
-              <a href={`${apiBaseUrl}/api/v1/artists/auth/oauth/facebook`}>
-                <span className={`${iconStyles}`}>
-                  <FacebookArtistIcon
-                    className="block"
-                    height={24}
-                    width={24}
-                  />
-                </span>
-
-                <span className="w-full text-center">
-                  <Typography as="p" className="leading-none" size="heading6">
-                    Continue with Facebook
-                  </Typography>
-                </span>
-              </a>
-            </Button>
+            <SocialAuthButtons />
           </div>
 
           <p className="text-lg text-center">
