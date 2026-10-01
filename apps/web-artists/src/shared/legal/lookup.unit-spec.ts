@@ -7,6 +7,7 @@ describe('legal documents', () => {
     ['terms', 'Terms of Use'],
     ['privacy', 'Privacy Policy'],
     ['community', 'Community Guidelines'],
+    ['complaints', 'Complaints and reports'],
     ['copyright', 'Copyright and notice-and-action'],
     ['artist-agreement', 'Artist Agreement'],
   ])('serves the %s page', (slug, title) => {

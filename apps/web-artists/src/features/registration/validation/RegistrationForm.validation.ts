@@ -41,7 +41,7 @@ export const registrationSchema = z
     },
   )
   .refine((data) => !data.password || data.acceptLegal, {
-    message: 'You must accept the Terms of Use and Privacy Policy',
+    message: 'You must accept the Terms of Use and Community Guidelines',
     path: ['acceptLegal'],
   })
   .refine((data) => !data.password || data.acceptArtistAgreement, {

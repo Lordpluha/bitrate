@@ -45,5 +45,16 @@ describe('SocialAuthButtons', () => {
     expect(
       screen.getByRole('link', { name: 'Artist Agreement' }),
     ).toHaveAttribute('href', '/legal/artist-agreement')
+    expect(
+      screen.getByRole('link', { name: 'Community Guidelines' }),
+    ).toHaveAttribute('href', '/legal/community')
+  })
+
+  it('opens the documents in a new tab', () => {
+    render(<SocialAuthButtons />)
+
+    for (const link of screen.getAllByRole('link')) {
+      expect(link).toHaveAttribute('target', '_blank')
+    }
   })
 })

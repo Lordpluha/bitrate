@@ -60,20 +60,41 @@ export const SocialAuthButtons = () => {
           onCheckedChange={setAccepted}
         />
         <Label className="font-normal leading-snug" htmlFor={CONSENT_ID}>
-          I am at least 16 years old and accept the{' '}
-          <a className="text-primary hover:opacity-70" href={ROUTES.terms}>
+          I am at least 16 years old, I accept the{' '}
+          <a
+            className="text-primary hover:opacity-70"
+            href={ROUTES.terms}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
             Terms of Use
           </a>
           ,{' '}
-          <a className="text-primary hover:opacity-70" href={ROUTES.privacy}>
-            Privacy Policy
+          <a
+            className="text-primary hover:opacity-70"
+            href={ROUTES.community}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Community Guidelines
           </a>{' '}
           and{' '}
           <a
             className="text-primary hover:opacity-70"
             href={ROUTES.artistAgreement}
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Artist Agreement
+          </a>
+          , and I have read the{' '}
+          <a
+            className="text-primary hover:opacity-70"
+            href={ROUTES.privacy}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Privacy Policy
           </a>
           .
         </Label>
