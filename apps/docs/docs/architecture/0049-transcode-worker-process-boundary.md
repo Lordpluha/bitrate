@@ -4,8 +4,15 @@ Status: Accepted
 
 Date: 2026-09-30
 
+Revised 2026-10-01 before merge: storage topology (object storage, no shared volume), the
+job contract and browser-facing URLs now follow the owner's revised plan on epic #206.
+
 Epic #206's body refers to this record as ADR-0048; that number was taken by
-[ADR-0048](./0048-pnpm-12-and-explicit-build-policy.md), so it is ADR-0049.
+[ADR-0048](./0048-pnpm-12-and-explicit-build-policy.md), so it is ADR-0049. The object-storage
+decision itself is recorded in ADR-0050, forthcoming from #264.
+
+Sub-issues: #264 (SeaweedFS service, spike, CI spec, ADR-0050), #265 (storage-backed pipeline),
+#208 (worker entrypoint), #209 (compose service), #210 (health/metrics), #211 (rollout).
 
 ## Context
 
@@ -16,8 +23,8 @@ this record fixes what that process needs, so the next issue (#208) is a mechani
 
 The [tech roadmap](../strategy/tech-roadmap.md) lists microservices under "What not to build" and
 says that "extracting the transcode worker is the one split with an actual reason". This is
-deliberately **one** split: same repository, same image, same database and queues, a second
-entrypoint. It is not a precedent for further services.
+deliberately **one** split: same repository, same image, same database, queues and object store,
+a second entrypoint, and no shared filesystem between the two processes. It is not a precedent for further services.
 
 This is an investigation record. No production code changes with it.
 
@@ -85,11 +92,15 @@ time in `audio-processing.worker-autorun.ts`, because `@Processor` options are e
 DI exists. `env.schema.ts` validates it for fail-fast only. Consequences:
 
 - The worker entrypoint must force it on **before** importing the module graph, not merely in config.
+- The worker entrypoint (#208) refuses to start with `NODE_ENV=production` and
+  `STORAGE_DRIVER=local`: a local driver would silently reintroduce the shared-filesystem
+  assumption this record removes.
 - The API runs with it `false`, so an API process registers the consumer class but never starts a
   BullMQ worker. Neither `infra/docker-compose.prod.yaml` nor `infra/docker-compose.preprod.yaml`
   sets it today, so setting `false` on the `api` service is a change that ships with the worker
   service (#208/#209), not existing state. Until then the API remains the consumer, which is the
-  safe default.
+  safe default. The flag is not part of the storage topology: it must stay `true` anywhere only one
+  process exists.
 - Local development keeps the default `true`, so `pnpm dev` still converts audio without a second
   process.
 
@@ -111,13 +122,33 @@ on its own port, not published outside the compose network:
 
 ### Storage caveat
 
-The API stores everything under `process.cwd()/storage`. In `infra/docker-compose.prod.yaml` that is
-the `api_storage` named volume mounted at `/app/storage`. A worker in a second container sees the
-same files only if it mounts the **same volume**, which works on a single host and does not across
-hosts. `infra/docker-compose.preprod.yaml` declares no such volume for the API at the time of
-writing, so #209 must decide preprod's storage explicitly rather than assume it. Multi-host
-deployment (for example #182) requires `STORAGE_DRIVER=s3` (see
-[ADR-0033](./0033-off-host-backups-and-object-storage.md)) **and** the source-file change below.
+Today the API stores everything under `process.cwd()/storage`. In `infra/docker-compose.prod.yaml`
+that is the `api_storage` named volume mounted at `/app/storage`; `infra/docker-compose.preprod.yaml`
+declares no such volume for the API at the time of writing.
+
+**Decided topology (revised).** `api` and `worker` share no filesystem. Audio lives in SeaweedFS, a
+single-node S3-compatible object store added to the compose stack on the internal network only. It
+is reached through `STORAGE_SERVICE` with `STORAGE_DRIVER=s3`, which already exists
+(see [ADR-0033](./0033-off-host-backups-and-object-storage.md)). MinIO is excluded: its Community
+Edition has been source-only since October 2025 and its repository was archived in April 2026. The
+object-storage decision itself, including the SeaweedFS spike, is recorded in ADR-0050, to be
+written in #264 together with the compose service and a CI spec.
+
+The worker's only local disk use is per-job scratch space on a `worker_tmp` named volume. It is a
+disk volume, not tmpfs, so encodes do not count against the container's memory limit. The scratch
+directory is cleaned when the worker starts, so a crashed attempt leaves nothing behind.
+
+**Browser-facing URLs.** `S3Service` signs presigned URLs against the internal `S3_ENDPOINT`
+(`getSignedUrl` is given the client built from it). `S3_PUBLIC_URL` is read into the config and
+declared in `env.schema.ts` but is not used for signing, so a URL minted today would point at a host
+a browser cannot reach. Decision: the object store is never published. With the S3 driver,
+`getPresignedUrl` returns a signed token URL served by the API, and
+`StorageController.streamSignedObject` reads the object through `STORAGE_SERVICE`, as it already
+does for the local driver. HLS and ranged streaming are already proxied by the API through
+`getObjectStream`, so playback needs no change. #265 implements this.
+
+**Backups are out of scope** by the owner's decision. Audio uploaded after the cutover has no
+off-host copy; that is an accepted risk, recorded fully in ADR-0050.
 
 ### Job contract (`ConvertAudioJob`)
 
@@ -127,25 +158,25 @@ consumer reads only `job.data`, its own database rows and storage, with no relia
 state. The payload is self-contained as data, but **not** as a portable contract:
 
 - `inputPath` and `outputDir` are absolute filesystem paths computed on the API side from the API's
-  `process.cwd()` (`storage.getTracksDir`). They are valid in the worker only if it has the same
-  working-directory layout and the same mounted volume. They are also why the worker cannot move to
-  another host even with `STORAGE_DRIVER=s3`: Multer writes the uploaded master to the API's local
-  disk, and `prepareVariants` and the HLS and CMAF generators read it from there. Only the encoded
-  artifacts go through `STORAGE_SERVICE`.
+  `process.cwd()` (`storage.getTracksDir`). They are valid in another process only if it has the same
+  working-directory layout and the same mounted volume. Multer also writes the uploaded master to the
+  API's local disk, and `prepareVariants` and the HLS and CMAF generators read it from there, even
+  with `STORAGE_DRIVER=s3`. Only the encoded artifacts go through `STORAGE_SERVICE`.
 - `artistId` is carried but not read by the consumer.
 
-**Recommendation for #208 (a breaking change is allowed, per D15).** Stop sending absolute paths:
-send `sourceFileName` only, and let the worker derive the source and temporary roots from its own
-`storage.getTracksDir()`. This removes the path-equality assumption between two processes while
-leaving the shared-volume requirement explicit. Uploading the master to `STORAGE_SERVICE` before
-enqueue, so the worker downloads it, is the further step that makes a multi-host worker possible;
-it is out of scope here.
+**Decided design (breaking change allowed, D15; implemented by #265).**
+
+- The payload carries the master's storage key only: no `inputPath`, no `outputDir`.
+- The API uploads the master to `STORAGE_SERVICE` **before** enqueueing the job.
+- The worker downloads the master into a per-job scratch directory on `worker_tmp`, encodes there,
+  uploads the artifacts, and removes the scratch directory; the volume is also cleaned on start.
+- The consumer validates the payload, and a job with an unrecognised shape goes to the dead-letter
+  queue with a recorded reason instead of throwing and being retried five times. This validation is
+  also part of #265.
 
 **In-flight jobs.** A cutover with jobs still queued would run them with the old payload shape.
-Mitigation: the runbook waits for an empty `audio-processing` queue (nothing waiting, nothing active)
-before deploying a changed contract. As a second line, the consumer validates the payload and sends
-an unrecognised job to the dead-letter queue with a recorded reason, instead of throwing and being
-retried five times. The existing `trigger` and `input` fields are already optional for this reason.
+Mitigation: the runbook (#211) waits for an empty `audio-processing` queue (nothing waiting, nothing
+active) before deploying the new contract, with the dead-letter routing above as the second line.
 
 ## Consequences
 
@@ -155,9 +186,16 @@ retried five times. The existing `trigger` and `input` fields are already option
 - Until the worker has its own compose service and the API sets the flag off, nothing changes at
   runtime.
 - The worker and API stay in one repository and image, so contract changes remain a single PR.
-- A single-host, shared-volume worker is the supported topology. Anything else needs S3 plus a
-  changed source-file contract, and is not delivered here.
-- The worker's health and metrics are new surface that must stay unpublished and token-protected.
+- The supported topology is `api` and `worker` with no shared filesystem, both talking to an
+  internal-only SeaweedFS through `STORAGE_SERVICE`. The worker can therefore run on a different
+  host from the API, which also unblocks multi-host plans such as #182.
+- Uploads gain one extra hop (master to object storage before enqueue) and the worker one extra
+  download; the cost is accepted for the removed coupling.
+- `S3Service` URL signing must change before the S3 driver serves browsers (#265); it is not safe
+  to enable `STORAGE_DRIVER=s3` for user-facing URLs until then.
+- Audio uploaded after the cutover has no off-host copy (backups are out of scope, see above).
+- The worker's health and metrics (#210) are new surface that must stay unpublished and
+  token-protected.
 
 ## Alternatives considered
 
@@ -169,5 +207,13 @@ retried five times. The existing `trigger` and `input` fields are already option
 - **Keep the consumer in the API and scale the API** — not chosen: encoding still cannot be sized or
   restarted independently of request serving.
 - **A dedicated scoped Prisma module** — not chosen: `PrismaModule` is already a dependency-free leaf.
+- **Keep the shared `api_storage` volume** — not chosen: it ties the worker to the API's host and
+  working-directory layout, blocks multi-host deployment, and makes a second container depend on
+  the API container's writable paths.
+- **Publish the object store to browsers** — not chosen: it exposes a second public surface with its
+  own credentials and TLS, and bypasses the API's signed-token authorization. Presigned URLs against
+  an internal endpoint do not work anyway, as found above.
+- **MinIO as the object store** — not chosen: Community Edition is source-only since October 2025
+  and its repository was archived in April 2026.
 - **A full `NestFactory.create` app with a hidden HTTP port** — not chosen: it brings Express,
   middleware and interceptors for the sake of two health routes.
