@@ -83,7 +83,7 @@ export class ArtistEntity implements Artist {
   @ApiProperty()
   locale: string
 
-  /** Revision of the Terms of Use and Privacy Policy accepted at registration, if recorded. */
+  /** Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
   @ApiProperty({ nullable: true, type: String })
   legalVersion: string | null
 

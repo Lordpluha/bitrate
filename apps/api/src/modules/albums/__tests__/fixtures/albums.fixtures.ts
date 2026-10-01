@@ -21,6 +21,8 @@ export const buildAlbum = (overrides: Partial<GetByIdResult> = {}): GetByIdResul
   totalTracks: 0,
   copyright: null,
   deletedAt: null,
+  rightsConfirmedVersion: null,
+  rightsConfirmedAt: null,
   tracks: [],
   ...overrides,
 })

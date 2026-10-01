@@ -110,4 +110,12 @@ export class TrackEntity implements Track {
   /** Soft deletion timestamp. */
   @ApiProperty({ nullable: true })
   deletedAt: Date | null
+
+  /** Artist Agreement revision the artist confirmed their rights under at upload, if recorded. */
+  @ApiProperty({ nullable: true, type: String })
+  rightsConfirmedVersion: string | null
+
+  /** When the artist confirmed their rights, if recorded. */
+  @ApiProperty({ nullable: true, type: Date })
+  rightsConfirmedAt: Date | null
 }

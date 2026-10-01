@@ -1,3 +1,4 @@
+import { isLegalAcceptanceCurrent, LEGAL_VERSION } from '@common/legal'
 import { normalizePagination } from '@common/pagination'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
@@ -29,10 +30,24 @@ export class UsersService {
    * state that the public projection deliberately withholds.
    */
   async findSelfById(id: UserEntity['id']) {
-    return await this.prisma.user.findUniqueOrThrow({
+    const user = await this.prisma.user.findUniqueOrThrow({
       where: { id },
       select: SELF_USER_SELECT,
     })
+    return { ...user, legalAcceptanceRequired: !isLegalAcceptanceCurrent(user.legalVersion) }
+  }
+
+  /**
+   * Records that the account accepted the current legal documents, then returns its own record.
+   * Accounts created before acceptance was tracked, or before a new revision, are asked once.
+   */
+  async acceptLegal(id: UserEntity['id']) {
+    await this.prisma.user.update({
+      where: { id },
+      data: { legalVersion: LEGAL_VERSION, legalAcceptedAt: new Date() },
+      select: { id: true },
+    })
+    return await this.findSelfById(id)
   }
 
   /** Runs the get by email operation. Filters `deletedAt` — see `findById`. */

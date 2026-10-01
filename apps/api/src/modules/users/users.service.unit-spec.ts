@@ -1,7 +1,8 @@
+import { LEGAL_VERSION } from '@common/legal'
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildUser } from './__tests__/fixtures/users.fixtures'
-import { PUBLIC_USER_SELECT } from './users.select'
+import { PUBLIC_USER_SELECT, SELF_USER_SELECT } from './users.select'
 import { UsersService } from './users.service'
 
 describe('UsersService', () => {
@@ -33,6 +34,51 @@ describe('UsersService', () => {
     const result = await service.findById('user-1')
 
     expect(result).toBeNull()
+  })
+
+  describe('findSelfById legal acceptance', () => {
+    it.each([
+      ['never recorded', null],
+      ['an older revision', '2020-01-01'],
+    ])('flags acceptance as required when the account has %s', async (_label, legalVersion) => {
+      prisma.user.findUniqueOrThrow.mockResolvedValue(buildUser({ legalVersion }) as never)
+
+      const result = await service.findSelfById('user-1')
+
+      expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        select: SELF_USER_SELECT,
+      })
+      expect(result.legalAcceptanceRequired).toBe(true)
+    })
+
+    it('does not flag an account that accepted the current revision', async () => {
+      prisma.user.findUniqueOrThrow.mockResolvedValue(
+        buildUser({ legalVersion: LEGAL_VERSION }) as never,
+      )
+
+      const result = await service.findSelfById('user-1')
+
+      expect(result.legalAcceptanceRequired).toBe(false)
+    })
+  })
+
+  describe('acceptLegal', () => {
+    it('records the current revision and time, then returns the refreshed account', async () => {
+      prisma.user.update.mockResolvedValue(buildUser() as never)
+      prisma.user.findUniqueOrThrow.mockResolvedValue(
+        buildUser({ legalVersion: LEGAL_VERSION }) as never,
+      )
+
+      const result = await service.acceptLegal('user-1')
+
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { legalVersion: LEGAL_VERSION, legalAcceptedAt: expect.any(Date) },
+        select: { id: true },
+      })
+      expect(result.legalAcceptanceRequired).toBe(false)
+    })
   })
 
   it('getByEmail should filter deletedAt and omit password', async () => {

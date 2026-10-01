@@ -54,4 +54,12 @@ export class AlbumEntity implements Album {
   /** Soft deletion timestamp. */
   @ApiProperty({ nullable: true })
   deletedAt: Date | null
+
+  /** Artist Agreement revision the artist confirmed their rights under at creation, if recorded. */
+  @ApiProperty({ nullable: true, type: String })
+  rightsConfirmedVersion: string | null
+
+  /** When the artist confirmed their rights, if recorded. */
+  @ApiProperty({ nullable: true, type: Date })
+  rightsConfirmedAt: Date | null
 }
