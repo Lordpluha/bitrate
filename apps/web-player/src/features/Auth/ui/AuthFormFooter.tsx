@@ -8,6 +8,8 @@ type AuthFormFooterProps = {
   alternateLink: string
   alternateText: string
   isSubmitting?: boolean
+  /** Pass the form's own "I accept" checkbox state; leave out where the form has none. */
+  socialAccepted?: boolean
   submitLabel: string
 }
 
@@ -16,6 +18,7 @@ export const AuthFormFooter = ({
   alternateLink,
   alternateText,
   isSubmitting = false,
+  socialAccepted,
   submitLabel,
 }: AuthFormFooterProps) => (
   <div className="mt-4 flex flex-col items-stretch gap-4">
@@ -29,7 +32,7 @@ export const AuthFormFooter = ({
       {submitLabel}
     </Button>
     <SocialsAuthDivider />
-    <OAuthButtons />
+    <OAuthButtons accepted={socialAccepted} />
     <p className="text-center text-lg">
       {alternateText}{' '}
       <Link className="font-bold" href={alternateHref}>

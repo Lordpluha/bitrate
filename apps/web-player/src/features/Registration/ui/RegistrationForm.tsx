@@ -93,6 +93,7 @@ export const RegistrationForm = () => {
             alternateLink="Log in."
             alternateText="Already have an account?"
             isSubmitting={isSubmitting}
+            socialAccepted={form.watch('acceptLegal')}
             submitLabel="Register"
           />
         </form>
