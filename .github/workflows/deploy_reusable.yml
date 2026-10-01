@@ -416,6 +416,7 @@ jobs:
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
           STORAGE_DRIVER: ${{ vars.STORAGE_DRIVER }}
+          S3_BUCKET: ${{ vars.S3_BUCKET }}
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
           DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
@@ -430,6 +431,8 @@ jobs:
           OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
           OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
+          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_RELEASE: ${{ steps.release-id.outputs.release }}
           SENTRY_ENVIRONMENT: ${{ inputs.environment }}
@@ -453,6 +456,7 @@ jobs:
             POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB
             REDIS_HOST REDIS_PASSWORD
             DATABASE_URL JWT_SECRET
+            S3_ACCESS_KEY S3_SECRET_KEY
             JWT_ACCESS_EXPIRES_IN JWT_REFRESH_EXPIRES_IN
             CLOUDFLARE_TUNNEL_TOKEN
           "
@@ -462,7 +466,7 @@ jobs:
           optional="
             USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_BASE_URL API_URL
             REDIS_PORT SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_FROM
-            ACCESS_TOKEN_NAME REFRESH_TOKEN_NAME COOKIE_DOMAIN STORAGE_DRIVER
+            ACCESS_TOKEN_NAME REFRESH_TOKEN_NAME COOKIE_DOMAIN STORAGE_DRIVER S3_BUCKET
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
             OAUTH_GOOGLE_CLIENT_ID OAUTH_GOOGLE_CLIENT_SECRET
             OAUTH_FACEBOOK_APP_ID OAUTH_FACEBOOK_APP_SECRET
@@ -488,6 +492,20 @@ jobs:
           [ "${#JWT_SECRET}" -ge 10 ] || bad+=("JWT_SECRET (env.schema.ts requires at least 10 characters)")
           if [ -n "${METRICS_TOKEN:-}" ] && [ "${#METRICS_TOKEN}" -lt 32 ]; then
             bad+=("METRICS_TOKEN (schema requires at least 32 characters when set)")
+          fi
+          # The SeaweedFS service writes these into its JSON identity file with printf, so
+          # anything beyond letters and digits would break the JSON and the object store with it.
+          case "${S3_ACCESS_KEY}" in
+            *[!A-Za-z0-9]*) bad+=("S3_ACCESS_KEY (letters and digits only; it is written into the object store's JSON identity file)") ;;
+          esac
+          case "${S3_SECRET_KEY}" in
+            *[!A-Za-z0-9]*) bad+=("S3_SECRET_KEY (letters and digits only; it is written into the object store's JSON identity file)") ;;
+          esac
+          [ "${#S3_SECRET_KEY}" -ge 24 ] || bad+=("S3_SECRET_KEY (use at least 24 characters)")
+          if [ -n "${S3_BUCKET:-}" ]; then
+            case "${S3_BUCKET}" in
+              *[!a-z0-9-]*|-*|*-) bad+=("S3_BUCKET (lowercase letters, digits and hyphens, not starting or ending with a hyphen)") ;;
+            esac
           fi
           case "${DATABASE_URL}" in
             postgresql://*|postgres://*) ;;
@@ -666,6 +684,7 @@ jobs:
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
           STORAGE_DRIVER: ${{ vars.STORAGE_DRIVER }}
+          S3_BUCKET: ${{ vars.S3_BUCKET }}
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
           DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
@@ -680,6 +699,8 @@ jobs:
           OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
           OAUTH_FACEBOOK_APP_SECRET: ${{ secrets.OAUTH_FACEBOOK_APP_SECRET }}
           METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
+          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           # Not configuration a human sets anywhere: both are derived per deploy.
           # SENTRY_RELEASE names the released version being started, and
@@ -775,6 +796,12 @@ jobs:
 
             printf '\n# --- Storage ---\n'
             opt STORAGE_DRIVER
+            # The object store (ADR-0050): the bucket-scoped application identity the
+            # seaweedfs service is configured with and the api is handed. Required even
+            # while STORAGE_DRIVER=local, because the seaweedfs service always starts.
+            req S3_ACCESS_KEY
+            req S3_SECRET_KEY
+            opt S3_BUCKET
 
             printf '\n# --- Observability ---\n'
             opt METRICS_TOKEN
