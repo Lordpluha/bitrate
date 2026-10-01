@@ -6,7 +6,7 @@ export type ActiveOAuthProvider = (typeof activeOAuthProviders)[number]
 
 /**
  * Starts the social sign-in flow. `acceptLegal` tells the API the user was shown the
- * Terms of Use and Privacy Policy next to the button, which it requires before it will
+ * Terms of Use, Community Guidelines and Privacy Policy next to the button, which it requires before it will
  * create a new account.
  */
 export const getOAuthUrl = (

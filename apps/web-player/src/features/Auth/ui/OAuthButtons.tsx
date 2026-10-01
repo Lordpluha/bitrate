@@ -25,7 +25,7 @@ type OAuthButtonsProps = {
 
 /**
  * Social sign-in buttons. A provider can create an account for a new user, so they stay
- * locked until the Terms of Use and Privacy Policy are accepted.
+ * locked until the Terms of Use, Community Guidelines and Privacy Policy are accepted.
  */
 export const OAuthButtons = ({ accepted }: OAuthButtonsProps) => {
   const [ownAccepted, setOwnAccepted] = useState(false)
