@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Counter, collectDefaultMetrics, Histogram, Registry } from 'prom-client'
+import { Counter, collectDefaultMetrics, Histogram, Registry } from '@prometheus-io/client'
 
 export const PROMETHEUS_CONTENT_TYPE = Registry.PROMETHEUS_CONTENT_TYPE
 
@@ -23,7 +23,7 @@ function boundedLabels(method: string, route: string, status: number): RouteLabe
 
 /**
  * Prometheus metrics for API traffic and the Node.js process itself, on a private registry —
- * never the `prom-client` module-level default, so multiple instances (e.g. across NestJS
+ * never the `@prometheus-io/client` module-level default, so multiple instances (e.g. across NestJS
  * testing-module instantiations) never collide on metric registration.
  */
 @Injectable()
