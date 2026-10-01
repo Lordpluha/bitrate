@@ -10,7 +10,7 @@ export const RegistrationSchema = LoginSchema.extend({
     .min(3, { message: 'Username must be at least 3 characters long' })
     .max(20, { message: 'Username must not exceed 20 characters' }),
   acceptLegal: z.literal(true, {
-    message: 'You must accept the Terms of Use and Privacy Policy',
+    message: 'You must accept the Terms of Use and Community Guidelines',
   }),
   acceptArtistAgreement: z.literal(true, {
     message: 'You must accept the Artist Agreement',
@@ -37,9 +37,10 @@ export class ArtistRegistrationDto implements z.infer<typeof RegistrationSchema>
   })
   username: UserEntity['username']
 
-  /** Confirms the artist accepted the Terms of Use and Privacy Policy. Must be `true`. */
+  /** Confirms the artist accepted the Terms of Use, Community Guidelines and Privacy Policy. Must be `true`. */
   @ApiProperty({
-    description: 'Accepts the Terms of Use and Privacy Policy; must be true',
+    description:
+      'Accepts the Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true',
     example: true,
     enum: [true],
   })

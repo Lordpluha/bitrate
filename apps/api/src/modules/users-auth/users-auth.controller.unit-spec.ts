@@ -137,6 +137,21 @@ describe('UsersAuthController', () => {
     })
   })
 
+  describe('acceptLegal', () => {
+    it('records the acceptance for the signed-in user and returns the refreshed account', async () => {
+      const user = buildUser({ id: 'user-1' })
+      const refreshed = { ...user, legalAcceptanceRequired: false }
+      usersService.acceptLegal.mockResolvedValue(refreshed as never)
+      const req = mockDeep<Request>()
+      Object.assign(req, { user })
+
+      const result = await controller.acceptLegal(req, { acceptLegal: true })
+
+      expect(usersService.acceptLegal).toHaveBeenCalledWith('user-1')
+      expect(result).toBe(refreshed)
+    })
+  })
+
   describe('forgotPassword', () => {
     it('should call auth service', async () => {
       await controller.forgotPassword({ email: 'user@example.com' })

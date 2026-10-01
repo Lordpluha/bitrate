@@ -1,11 +1,16 @@
 /**
- * Revision of the Terms of Use and Privacy Policy that registration records as accepted.
+ * Revision of the Terms of Use, Community Guidelines and Privacy Policy that registration records as accepted.
  * One value covers the pair; bump it to the effective date of each new revision.
  */
 export const LEGAL_VERSION = '2026-10-01'
 
 /** Revision of the Artist Agreement that artist registration records as accepted. */
 export const ARTIST_AGREEMENT_VERSION = '2026-10-01'
+
+/** Whether an account's recorded acceptance covers the current Terms, Community Guidelines and Privacy Policy. */
+export function isLegalAcceptanceCurrent(legalVersion: string | null): boolean {
+  return legalVersion === LEGAL_VERSION
+}
 
 /**
  * Thrown when a new account would be created through social sign-in without the legal

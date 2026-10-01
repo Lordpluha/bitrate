@@ -1,7 +1,9 @@
 import { open, rm, stat } from 'node:fs/promises'
+import { ARTIST_AGREEMENT_VERSION } from '@common/legal'
+import { RIGHTS_CONFIRMATION_MESSAGE } from '@common/rights-confirmation'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
-import { NotFoundException } from '@nestjs/common'
+import { BadRequestException, NotFoundException } from '@nestjs/common'
 import type { ConfigService } from '@nestjs/config'
 import {
   makeCacheMock,
@@ -16,7 +18,7 @@ import {
 import type { Queue } from 'bullmq'
 import { parseFile } from 'music-metadata'
 import { buildAudioFile, buildCoverFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
-import type { CreateTrackDto } from './dtos/create-track.dto'
+import type { CreateTrackDto, UpdateTrackDto } from './dtos/create-track.dto'
 import { uploadDestination } from './track-media'
 import { TrackUploadService } from './track-upload.service'
 
@@ -73,11 +75,18 @@ describe('TrackUploadService', () => {
 
       const result = await service.create(
         'artist-1',
-        { title: 'Track title' } as CreateTrackDto,
+        { title: 'Track title', rightsConfirmed: true } as CreateTrackDto,
         audioFile,
       )
 
-      expect(prisma.track.create).toHaveBeenCalled()
+      expect(prisma.track.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          artistId: 'artist-1',
+          title: 'Track title',
+          rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
+          rightsConfirmedAt: expect.any(Date),
+        }),
+      })
       expect(queue.add).toHaveBeenCalledWith(
         'convert-audio',
         expect.objectContaining({
@@ -105,7 +114,11 @@ describe('TrackUploadService', () => {
       prisma.track.create.mockResolvedValue(track as never)
       queue.add.mockResolvedValue({} as never)
 
-      await service.create('artist-1', { title: 'Track title' } as CreateTrackDto, audioFile)
+      await service.create(
+        'artist-1',
+        { title: 'Track title', rightsConfirmed: true } as CreateTrackDto,
+        audioFile,
+      )
 
       expect(prisma.trackFile.create).not.toHaveBeenCalled()
     })
@@ -118,7 +131,11 @@ describe('TrackUploadService', () => {
       queue.add.mockRejectedValue(new Error('Redis unavailable') as never)
 
       await expect(
-        service.create('artist-1', { title: 'Track title' } as CreateTrackDto, audioFile),
+        service.create(
+          'artist-1',
+          { title: 'Track title', rightsConfirmed: true } as CreateTrackDto,
+          audioFile,
+        ),
       ).rejects.toThrow('Redis unavailable')
 
       expect(prisma.track.update).toHaveBeenCalledWith({
@@ -145,7 +162,7 @@ describe('TrackUploadService', () => {
 
       await service.create(
         'artist-1',
-        { title: 'Track title' } as CreateTrackDto,
+        { title: 'Track title', rightsConfirmed: true } as CreateTrackDto,
         audioFile,
         undefined,
       )
@@ -169,7 +186,7 @@ describe('TrackUploadService', () => {
       await expect(
         service.create(
           'artist-1',
-          { title: 'Track title' } as CreateTrackDto,
+          { title: 'Track title', rightsConfirmed: true } as CreateTrackDto,
           audioFile,
           coverFile,
         ),
@@ -193,7 +210,11 @@ describe('TrackUploadService', () => {
       } as never)
 
       await expect(
-        service.create('artist-1', { title: 'Track title' } as CreateTrackDto, audioFile),
+        service.create(
+          'artist-1',
+          { title: 'Track title', rightsConfirmed: true } as CreateTrackDto,
+          audioFile,
+        ),
       ).rejects.toThrow('Source audio bitrate must be at least 32 kbps')
 
       expect(prisma.track.create).not.toHaveBeenCalled()
@@ -219,7 +240,7 @@ describe('TrackUploadService', () => {
       const result = await service.update(
         'artist-1',
         'track-1',
-        { title: 'Updated' } as CreateTrackDto,
+        { title: 'Updated', rightsConfirmed: true } as UpdateTrackDto,
         audioFile,
       )
 
@@ -250,6 +271,58 @@ describe('TrackUploadService', () => {
       await service.update('artist-1', 'track-1', { title: 'Updated' } as never)
 
       expect(queue.add).not.toHaveBeenCalled()
+    })
+
+    it('records the rights confirmation when the audio is replaced', async () => {
+      const track = buildTrack()
+      mockTransaction(prisma)
+      prisma.track.update.mockResolvedValue(track as never)
+      prisma.track.findFirst.mockResolvedValue(track as never)
+      queue.add.mockResolvedValue({} as never)
+
+      await service.update(
+        'artist-1',
+        'track-1',
+        { title: 'Updated', rightsConfirmed: true } as UpdateTrackDto,
+        buildAudioFile(),
+      )
+
+      expect(prisma.track.update).toHaveBeenCalledWith({
+        where: { id: 'track-1' },
+        data: expect.objectContaining({
+          rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
+          rightsConfirmedAt: expect.any(Date),
+        }),
+      })
+    })
+
+    it('refuses a replacement audio without the rights confirmation and removes the upload', async () => {
+      const audioFile = buildAudioFile()
+      prisma.track.findFirst.mockResolvedValue(buildTrack() as never)
+
+      await expect(
+        service.update('artist-1', 'track-1', { title: 'Updated' } as UpdateTrackDto, audioFile),
+      ).rejects.toThrow(new BadRequestException(RIGHTS_CONFIRMATION_MESSAGE))
+
+      expect(rmMock).toHaveBeenCalledWith(
+        resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
+        { force: true },
+      )
+      expect(prisma.track.update).not.toHaveBeenCalled()
+      expect(queue.add).not.toHaveBeenCalled()
+    })
+
+    it('keeps the earlier confirmation when only the metadata changes', async () => {
+      const track = buildTrack()
+      mockTransaction(prisma)
+      prisma.track.update.mockResolvedValue(track as never)
+      prisma.track.findFirst.mockResolvedValue(track as never)
+
+      await service.update('artist-1', 'track-1', { title: 'Updated' } as UpdateTrackDto)
+
+      const call = prisma.track.update.mock.calls[0]?.[0] as { data: Record<string, unknown> }
+      expect(call.data).not.toHaveProperty('rightsConfirmedVersion')
+      expect(call.data).not.toHaveProperty('rightsConfirmedAt')
     })
 
     it('removes an uploaded replacement when ownership validation fails', async () => {

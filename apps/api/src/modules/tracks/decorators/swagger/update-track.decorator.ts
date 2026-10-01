@@ -1,4 +1,4 @@
-import { CreateTrackDto } from '@modules/tracks/dtos/create-track.dto'
+import { UpdateTrackDto } from '@modules/tracks/dtos/create-track.dto'
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 import { TrackEntity } from '../../entities'
@@ -9,7 +9,7 @@ export function UpdateTrackByIdSwagger() {
     ApiOperation({ summary: 'Update track by id' }),
     ApiParam({ name: 'id', type: 'string', format: 'uuid', description: 'Track ID' }),
     ApiConsumes('multipart/form-data'),
-    ApiBody({ type: CreateTrackDto, required: true }),
+    ApiBody({ type: UpdateTrackDto, required: true }),
     ApiResponse({
       status: HttpStatus.OK,
       description: 'Track updated',

@@ -14,7 +14,7 @@ export function OAuthFacebookSwagger() {
       required: false,
       type: Boolean,
       description:
-        'Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts.',
+        'Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts.',
     }),
     ApiResponse({
       status: HttpStatus.FOUND,
