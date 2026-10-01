@@ -97,17 +97,30 @@ export const RegistrationPasswordStep = ({
                   className="font-normal leading-snug"
                   htmlFor="registration-accept-legal"
                 >
-                  I am at least 16 years old and accept the{' '}
+                  I am at least 16 years old, I accept the{' '}
                   <a
                     className="text-primary hover:opacity-70"
                     href={ROUTES.terms}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     Terms of Use
                   </a>{' '}
                   and{' '}
                   <a
                     className="text-primary hover:opacity-70"
+                    href={ROUTES.community}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Community Guidelines
+                  </a>
+                  , and I have read the{' '}
+                  <a
+                    className="text-primary hover:opacity-70"
                     href={ROUTES.privacy}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     Privacy Policy
                   </a>
@@ -143,6 +156,8 @@ export const RegistrationPasswordStep = ({
                   <a
                     className="text-primary hover:opacity-70"
                     href={ROUTES.artistAgreement}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     Artist Agreement
                   </a>

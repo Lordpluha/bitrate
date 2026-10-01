@@ -48,7 +48,9 @@ describe('RegistrationPasswordStep legal acceptance', () => {
 
     await waitFor(() =>
       expect(
-        screen.getByText('You must accept the Terms of Use and Privacy Policy'),
+        screen.getByText(
+          'You must accept the Terms of Use and Community Guidelines',
+        ),
       ).toBeInTheDocument(),
     )
     expect(

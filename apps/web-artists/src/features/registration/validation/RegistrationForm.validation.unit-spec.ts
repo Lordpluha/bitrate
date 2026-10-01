@@ -141,9 +141,9 @@ describe('registrationSchema', () => {
       password: 'correct-horse-7',
     }
 
-    it('requires the Terms of Use and Privacy Policy before the account is created', () => {
+    it('requires the Terms of Use, Community Guidelines and Privacy Policy before the account is created', () => {
       expect(errorFor({ ...complete, acceptLegal: false }, 'acceptLegal')).toBe(
-        'You must accept the Terms of Use and Privacy Policy',
+        'You must accept the Terms of Use and Community Guidelines',
       )
     })
 
