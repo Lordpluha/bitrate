@@ -51,6 +51,7 @@ how to apply it day to day.
 | [0045](./0045-scoped-instructions-and-bounded-execution.md) | Scoped rules, canonical specs and serialized verification |
 | [0048](./0048-pnpm-12-and-explicit-build-policy.md) | pnpm 12.7.0, settings in `pnpm-workspace.yaml`, explicit `allowBuilds` policy |
 | [0049](./0049-transcode-worker-process-boundary.md) | Transcode worker process boundary, provider list and `ConvertAudioJob` contract |
+| [0050](./0050-seaweedfs-object-storage-for-audio.md) | SeaweedFS single-node internal object storage for audio; spike results; accepted no-backup risk |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

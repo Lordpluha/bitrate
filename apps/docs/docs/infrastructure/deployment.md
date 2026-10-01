@@ -137,8 +137,8 @@ GitHub, so editing it by hand on the server works only until the next deploy ove
 
 | Kind | Stored as | Holds |
 |---|---|---|
-| Secret | **environment** secret | `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `JWT_SECRET`, `DATABASE_URL`, `SMTP_USER`, `SMTP_PASS`, both OAuth client secrets, `METRICS_TOKEN`, `SENTRY_DSN`, `DEPLOY_SSH_KEY` |
-| Configuration | **environment** variable | hosts, ports, token lifetimes, cookie names, `STORAGE_DRIVER`, both OAuth client ids, `DEPLOY_HOST`, `DEPLOY_USER` |
+| Secret | **environment** secret | `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `JWT_SECRET`, `DATABASE_URL`, `SMTP_USER`, `SMTP_PASS`, both OAuth client secrets, `METRICS_TOKEN`, `SENTRY_DSN`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` (object store, ADR-0050), `DEPLOY_SSH_KEY` |
+| Configuration | **environment** variable | hosts, ports, token lifetimes, cookie names, `STORAGE_DRIVER`, `S3_BUCKET` (optional), both OAuth client ids, `DEPLOY_HOST`, `DEPLOY_USER` |
 
 `NEXT_PUBLIC_*` belong in the variable column on purpose: they are compiled into a client bundle
 that any visitor can read, so storing them as secrets protects nothing and only makes them harder
