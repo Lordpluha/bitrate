@@ -16,7 +16,8 @@ operated by [[OPERATOR_NAME]], [[OPERATOR_ADDRESS]], registration number [[OPERA
 
 ## 1. Acceptance and eligibility
 
-1.1 By creating an account or using Bitrate you agree to these Terms and acknowledge the
+1.1 By creating an account or using Bitrate you agree to these Terms and the
+[Community Guidelines](./community-guidelines.md), and you confirm that you have read the
 [Privacy Policy](./privacy-policy.md).
 
 1.2 You must be **at least 16 years old**. If you are younger you may not create an account or use the service.
