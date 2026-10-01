@@ -50,6 +50,76 @@ services:
     networks:
       - bitrate-network
 
+  # S3-compatible object store for audio (ADR-0050). Single node, internal network only: no
+  # `ports:`, no nginx route, so nothing outside bitrate-network can reach it. The API serves
+  # objects to browsers (signed token URLs), the store is never published.
+  #
+  # The identity file is generated at start from the env below, so no credential lives in the
+  # repository or the image. The application identity is scoped to ONE bucket: it can read,
+  # write and list there, and cannot create buckets or touch any other one. There is no
+  # root/admin S3 identity at all; the bucket is created by seaweedfs-init through the master.
+  # Credentials must be alphanumeric, because they are written into JSON by printf.
+  #
+  # Idle RSS is ~140 MB; GOMEMLIMIT keeps the Go heap under the 1G container limit so the
+  # kernel OOM killer is not the thing that trims it.
+  seaweedfs:
+    logging: *default-logging
+    image: chrislusf/seaweedfs:4.48
+    container_name: bitrate-seaweedfs-prod
+    restart: always
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        printf '{"identities":[{"name":"bitrate-app","credentials":[{"accessKey":"%s","secretKey":"%s"}],"actions":["Read:%s","Write:%s","List:%s","Tagging:%s"]}]}\n' \
+          "$$S3_ACCESS_KEY" "$$S3_SECRET_KEY" "$$S3_BUCKET" "$$S3_BUCKET" "$$S3_BUCKET" "$$S3_BUCKET" > /tmp/s3.json
+        exec /entrypoint.sh server -s3 -s3.config=/tmp/s3.json
+    environment:
+      - S3_ACCESS_KEY=${S3_ACCESS_KEY:?S3_ACCESS_KEY is required for the object store}
+      - S3_SECRET_KEY=${S3_SECRET_KEY:?S3_SECRET_KEY is required for the object store}
+      - S3_BUCKET=${S3_BUCKET:-bitrate-audio}
+      - GOMEMLIMIT=800MiB
+    volumes:
+      - seaweedfs_data:/data
+    healthcheck:
+      # 9333 is the master, 8333 the S3 gateway: healthy means both answer.
+      test: ["CMD-SHELL", "wget -qO /dev/null http://127.0.0.1:9333/cluster/healthz && wget -qO /dev/null http://127.0.0.1:8333/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    networks:
+      - bitrate-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+  # One-shot: creates the bucket if it is missing, then exits 0. Safe to re-run on every
+  # `up -d`; an existing bucket and its objects are left untouched.
+  seaweedfs-init:
+    logging: *default-logging
+    image: chrislusf/seaweedfs:4.48
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        if echo s3.bucket.list | weed shell -master=seaweedfs:9333 | grep -q "^[[:space:]]*$$S3_BUCKET[[:space:]]"; then
+          echo "bucket $$S3_BUCKET already exists"
+        else
+          echo "s3.bucket.create -name $$S3_BUCKET" | weed shell -master=seaweedfs:9333
+        fi
+    environment:
+      - S3_BUCKET=${S3_BUCKET:-bitrate-audio}
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
+    networks:
+      - bitrate-network
+
   api:
     logging: *default-logging
     image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
@@ -97,13 +167,16 @@ services:
       - SMTP_PASS
       - EMAIL_FROM
       - STORAGE_DRIVER
-      - S3_ENDPOINT
+      # The object store is internal and fixed, so the endpoint is not configuration. These are
+      # inert while STORAGE_DRIVER=local; the cutover is a separate change. The credentials are
+      # the bucket-scoped application identity, never an admin one.
+      - S3_ENDPOINT=http://seaweedfs:8333
+      - S3_BUCKET=${S3_BUCKET:-bitrate-audio}
+      - S3_ACCESS_KEY=${S3_ACCESS_KEY}
+      - S3_SECRET_KEY=${S3_SECRET_KEY}
+      - S3_FORCE_PATH_STYLE=true
       - S3_REGION
-      - S3_BUCKET
-      - S3_ACCESS_KEY
-      - S3_SECRET_KEY
       - S3_PUBLIC_URL
-      - S3_FORCE_PATH_STYLE
       # Token lifetimes and cookie names. Absent here, the API fell back to its schema defaults, so
       # changing any of them in .env had no effect on production at all.
       - JWT_ACCESS_EXPIRES_IN
@@ -338,6 +411,10 @@ volumes:
   # .github/workflows/backup.yml; see ADR-0033 for why this is a stopgap and
   # STORAGE_DRIVER=s3 is the durable answer for the audio.
   api_storage:
+    driver: local
+  # SeaweedFS data (ADR-0050). NOT covered by any backup yet: audio written here after the
+  # STORAGE_DRIVER=s3 cutover has no off-host copy. Accepted risk, recorded in ADR-0050.
+  seaweedfs_data:
     driver: local
 
 networks:
