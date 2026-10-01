@@ -153,11 +153,36 @@ jobs:
       - name: Run unit tests
         run: pnpm --filter @bitrate/api run test
 
+      # The shipped SeaweedFS definition (same image, entrypoint and bucket-scoped identity
+      # as production), not a stock service container: a service container cannot override
+      # the image command, and the default `mini` command takes no S3 identity config. The
+      # preprod file defaults every variable, so no env is needed; the CI overlay publishes
+      # the S3 port on loopback for the runner. See ADR-0050.
+      - name: Start SeaweedFS object store
+        run: |
+          COMPOSE="docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml"
+          $COMPOSE up -d --wait seaweedfs
+          $COMPOSE run --rm seaweedfs-init
+
       - name: Run integration tests
         run: pnpm --filter @bitrate/api run test:int
+        env:
+          # The preprod compose defaults for the bucket-scoped application identity.
+          S3_INT_ENDPOINT: http://127.0.0.1:8333
+          S3_INT_BUCKET: bitrate-audio
+          S3_INT_ACCESS_KEY: bitrateDevAccessKey
+          S3_INT_SECRET_KEY: bitrateDevSecretKeyChangeMe0001
 
       - name: Run e2e tests
         run: pnpm --filter @bitrate/api run test:e2e
+
+      - name: Show SeaweedFS logs on failure
+        if: failure()
+        run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=100 seaweedfs
+
+      - name: Stop SeaweedFS
+        if: always()
+        run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml down -v
 
       - name: Build ncs-parser
         run: pnpm --filter @bitrate/ncs-parser run build
