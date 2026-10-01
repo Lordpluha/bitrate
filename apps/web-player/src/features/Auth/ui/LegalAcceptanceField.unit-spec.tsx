@@ -54,6 +54,24 @@ describe('LegalAcceptanceField', () => {
     expect(
       screen.getByRole('link', { name: 'Privacy Policy' }),
     ).toHaveAttribute('href', '/legal/privacy')
+    expect(
+      screen.getByRole('link', { name: 'Community Guidelines' }),
+    ).toHaveAttribute('href', '/legal/community')
+  })
+
+  it('opens the documents in a new tab so the typed form data is kept', () => {
+    render(<Harness />)
+
+    for (const name of [
+      'Terms of Use',
+      'Community Guidelines',
+      'Privacy Policy',
+    ]) {
+      expect(screen.getByRole('link', { name })).toHaveAttribute(
+        'target',
+        '_blank',
+      )
+    }
   })
 
   it('records the acceptance in the form when the box is ticked', async () => {
@@ -81,13 +99,17 @@ describe('LegalAcceptanceField', () => {
 
   it('shows a validation message and marks the box invalid', async () => {
     const user = userEvent.setup()
-    render(<Harness error="You must accept the Terms and Privacy Policy" />)
+    render(
+      <Harness error="You must accept the Terms of Use and Community Guidelines" />,
+    )
 
     await user.click(screen.getByRole('button', { name: 'fail' }))
 
     await waitFor(() =>
       expect(
-        screen.getByText('You must accept the Terms and Privacy Policy'),
+        screen.getByText(
+          'You must accept the Terms of Use and Community Guidelines',
+        ),
       ).toBeInTheDocument(),
     )
     expect(

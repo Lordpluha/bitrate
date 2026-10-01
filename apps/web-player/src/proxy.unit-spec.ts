@@ -16,6 +16,7 @@ describe('isPublicRoute', () => {
     '/legal/terms',
     '/legal/privacy',
     '/legal/community',
+    '/legal/complaints',
     '/legal/copyright',
   ])('allows anonymous access to %s', (pathname) => {
     expect(isPublicRoute(pathname)).toBe(true)

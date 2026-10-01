@@ -9,6 +9,7 @@ export const LEGAL_SLUGS = [
   'terms',
   'privacy',
   'community',
+  'complaints',
   'copyright',
 ] as const
 
@@ -58,7 +59,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: '1.1 By creating an account or using Bitrate you agree to these Terms and acknowledge the [Privacy Policy](privacy).',
+            text: '1.1 By creating an account or using Bitrate you agree to these Terms and the [Community Guidelines](community), and you confirm that you have read the [Privacy Policy](privacy).',
           },
           {
             kind: 'paragraph',
@@ -288,7 +289,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
                 'Legal obligation (6(1)(c)); legitimate interest',
               ],
               [
-                'Records of the Terms and Privacy Policy version you accepted and when',
+                'Records of the Terms of Use and Community Guidelines version you accepted, the Privacy Policy version shown to you, and when',
                 'Prove consent and contractual acceptance',
                 'Legal obligation; legitimate interest',
               ],
@@ -487,7 +488,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         blocks: [
           {
             kind: 'paragraph',
-            text: 'You can report content or accounts from the report option in the app, or by email to [[LEGAL_CONTACT_EMAIL]]. Reports of alleged copyright infringement should follow the dedicated process.',
+            text: 'You can report content or accounts by email to tesluakevlad@gmail.com; see [Complaints and reports](complaints) for what to include. Playlists can also be reported from the report option in the app. Reports of alleged copyright infringement should follow the dedicated process.',
           },
         ],
       },
@@ -506,6 +507,107 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             kind: 'paragraph',
             text: 'Accounts that repeatedly violate these guidelines, including repeat copyright infringers, may be permanently terminated.',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'complaints',
+    title: 'Complaints and reports',
+    sections: [
+      {
+        heading: null,
+        blocks: [
+          {
+            kind: 'paragraph',
+            text: '**Effective date:** [[EFFECTIVE_DATE]]',
+          },
+          {
+            kind: 'paragraph',
+            text: 'Use this page to report content or an account, to contest a moderation decision, to make a complaint about Bitrate, or to make a privacy request. Send everything to **tesluakevlad@gmail.com**. One address is used for all of it; put the type of message in the subject line so it reaches the right review.',
+          },
+        ],
+      },
+      {
+        heading: 'How to contact us',
+        blocks: [
+          {
+            kind: 'paragraph',
+            text: 'Email **tesluakevlad@gmail.com** with one of the subject lines below.',
+          },
+          {
+            kind: 'table',
+            header: ['Subject line', 'Use it to', 'Include'],
+            rows: [
+              [
+                'Report: content',
+                'Report content or an account that is illegal or breaks the [Community Guidelines](community)',
+                'The exact URL, why it is illegal or against the guidelines, and your name and email (not required for child sexual abuse material)',
+              ],
+              [
+                'Notice of alleged infringement',
+                'Report suspected copyright infringement',
+                'Follow [Copyright and notice-and-action](copyright); the five elements listed there are required',
+              ],
+              [
+                'Appeal: decision',
+                'Contest a decision we took about your content or account',
+                'The account or content concerned, the decision you received, and why you think it is wrong',
+              ],
+              [
+                'Complaint',
+                'Complain about the service or how a report was handled',
+                'What happened, when, and what outcome you expect',
+              ],
+              [
+                'Privacy request',
+                'Ask for access, correction, erasure, restriction, portability, or object to processing',
+                'Your account email and the right you want to use; see the [Privacy Policy](privacy)',
+              ],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What we do with your message',
+        blocks: [
+          {
+            kind: 'list',
+            ordered: false,
+            items: [
+              'We acknowledge receipt.',
+              'We assess it in a timely, diligent and objective manner. Appeals are looked at by a person, not decided only by automated means.',
+              'We reply with the outcome and the reasons, and tell you how to contest it further.',
+              'We aim to reply within [[COMPLAINT_RESPONSE_DAYS]] days. Privacy requests are answered within one month.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'If you disagree with our answer',
+        blocks: [
+          {
+            kind: 'paragraph',
+            text: 'You can always go to court. In addition:',
+          },
+          {
+            kind: 'list',
+            ordered: false,
+            items: [
+              '**Out-of-court dispute settlement.** If you are in the EU you may take a content-moderation decision to a certified out-of-court dispute settlement body under the Digital Services Act. [[ODS_BODY_NOTE — name a certified body, or state that none is selected yet]]',
+              '**Data protection.** You may complain to the President of the Personal Data Protection Office (UODO), https://uodo.gov.pl, or to the authority in your own EU country.',
+              '**Consumer matters.** In Poland you can seek help from a consumer ombudsman or the Office of Competition and Consumer Protection (UOKiK), https://uokik.gov.pl.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Notes',
+        blocks: [
+          {
+            kind: 'note',
+            text: 'The address above is a temporary single contact for the draft. Replace it with the operator contact address before publication. A web form and an in-app report option for tracks, albums and accounts are planned; today the in-app option covers playlists only.',
           },
         ],
       },

@@ -36,6 +36,7 @@ export const ROUTES = {
   terms: '/legal/terms',
   privacy: '/legal/privacy',
   community: '/legal/community',
+  complaints: '/legal/complaints',
   copyright: '/legal/copyright',
   download: '#download',
   plans: '#plans',

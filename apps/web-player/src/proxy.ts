@@ -14,6 +14,7 @@ const publicRoutes = [
   ROUTES.terms,
   ROUTES.privacy,
   ROUTES.community,
+  ROUTES.complaints,
   ROUTES.copyright,
   '/login',
   '/login/2fa',

@@ -23,7 +23,7 @@ export const registrationSchema = z
       .boolean()
       .refine(
         (accepted) => accepted,
-        'You must accept the Terms and Privacy Policy',
+        'You must accept the Terms of Use and Community Guidelines',
       ),
   })
   .refine((data) => data.password === data.confirmPassword, {
