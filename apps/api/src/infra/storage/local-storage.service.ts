@@ -5,7 +5,7 @@ import type { Readable } from 'node:stream'
 import type { AppConfig } from '@common/config'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { createSignedStorageToken } from './signed-storage-token'
+import { createSignedStorageUrl } from './signed-storage-token'
 import type { StorageObjectMeta, StorageObjectStream, StorageService } from './storage.types'
 
 /** MIME types derived from a key's extension — local storage has no object-metadata store. */
@@ -109,8 +109,7 @@ export class LocalStorageService implements StorageService {
    * Unlike an S3 presigned URL, this never points at an external endpoint.
    */
   getPresignedUrl(key: string, expiresIn = 3600): Promise<string> {
-    const token = createSignedStorageToken(key, expiresIn, this.jwtSecret)
-    return Promise.resolve(`${this.apiBaseUrl}/api/v1/storage/objects/${encodeURIComponent(token)}`)
+    return Promise.resolve(createSignedStorageUrl(key, expiresIn, this.jwtSecret, this.apiBaseUrl))
   }
 
   /** Returns a local file as a Readable stream, honoring an optional byte Range. */
