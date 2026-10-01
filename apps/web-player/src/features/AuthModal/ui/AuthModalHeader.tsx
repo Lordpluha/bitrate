@@ -1,5 +1,6 @@
 import { Button, GoogleIcon, LogoIcon, Typography } from '@bitrate/ui-react'
 import { getOAuthUrl } from '@features/Auth/api/oauth'
+import { OAuthLegalNotice } from '@features/Auth/ui/OAuthLegalNotice'
 
 type AuthModalHeaderProps = {
   description: string
@@ -26,12 +27,15 @@ export const AuthModalHeader = ({
 )
 
 export const AuthModalGoogleButton = () => (
-  <Button asChild variant="contrast">
-    <a href={getOAuthUrl('google')}>
-      <GoogleIcon aria-hidden="true" className="mr-2" />
-      <Typography as="span" className="text-text-contrast" size="body">
-        Continue with Google
-      </Typography>
-    </a>
-  </Button>
+  <div className="flex flex-col gap-3">
+    <Button asChild variant="contrast">
+      <a href={getOAuthUrl('google', { acceptLegal: true })}>
+        <GoogleIcon aria-hidden="true" className="mr-2" />
+        <Typography as="span" className="text-text-contrast" size="body">
+          Continue with Google
+        </Typography>
+      </a>
+    </Button>
+    <OAuthLegalNotice />
+  </div>
 )
