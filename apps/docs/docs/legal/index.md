@@ -20,6 +20,7 @@ the Polish digital-consent age (16) are the baseline.
 | [Terms of Use](./terms-of-use.md) | web-player, web-artists |
 | [Privacy Policy](./privacy-policy.md) | web-player, web-artists |
 | [Community Guidelines](./community-guidelines.md) | web-player, web-artists |
+| [Complaints and reports](./complaints.md) | web-player, web-artists |
 | [Copyright and notice-and-action](./copyright-notice-and-action.md) | web-player, web-artists |
 | [Artist Agreement](./artist-agreement.md) | web-artists only |
 

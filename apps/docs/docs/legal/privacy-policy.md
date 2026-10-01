@@ -36,7 +36,7 @@ believe a child has registered so we can delete the account.
 | IP address and request details, recorded for write operations in an audit log | Security, abuse prevention and accountability | Legitimate interest (6(1)(f)) |
 | Error reports, performance traces and, for a sample of sessions, session recordings (Sentry) | Find and fix bugs | Legitimate interest [[REPLAY_LEGAL_BASIS — to be decided; see #178]] |
 | Reports you file, and reports filed about you | Moderation and legal compliance | Legal obligation (6(1)(c)); legitimate interest |
-| Records of the Terms and Privacy Policy version you accepted and when | Prove consent and contractual acceptance | Legal obligation; legitimate interest |
+| Records of the Terms of Use and Community Guidelines version you accepted, the Privacy Policy version shown to you, and when | Prove consent and contractual acceptance | Legal obligation; legitimate interest |
 
 Where we rely on legitimate interest you may object (section 8).
 

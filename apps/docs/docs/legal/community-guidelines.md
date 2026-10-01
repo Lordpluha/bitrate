@@ -31,8 +31,8 @@ allowed. They form part of the [Terms of Use](./terms-of-use.md).
 
 ## Reporting
 
-You can report content or accounts from the report option in the app, or by email to [[LEGAL_CONTACT_EMAIL]].
-Reports of alleged copyright infringement should follow the dedicated process.
+You can report content or accounts by email to tesluakevlad@gmail.com; see [Complaints and reports](./complaints.md) for what to include.
+Playlists can also be reported from the report option in the app. Reports of alleged copyright infringement should follow the dedicated process.
 
 ## What happens after a report
 
