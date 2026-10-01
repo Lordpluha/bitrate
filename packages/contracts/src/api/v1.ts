@@ -184,6 +184,23 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/auth/legal/accept': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Records that the signed-in user accepted the current legal documents. */
+    post: operations['UsersAuthController_acceptLegal_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/auth/me': {
     parameters: {
       query?: never
@@ -2450,6 +2467,18 @@ export interface components {
       emailVerifiedAt: string | null
       /** @description Whether two-factor authentication is switched on. */
       twoFactorEnabled: boolean
+      /** @description Revision of the legal documents the account accepted, or null when none was recorded. */
+      legalVersion: string | null
+      /** @description Whether the account must accept the current legal documents before carrying on. */
+      legalAcceptanceRequired: boolean
+    }
+    LegalAcceptanceDto: {
+      /**
+       * @description Accepts the current Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
     }
     TwoFactorRequiredEntity: {
       /**
@@ -2492,7 +2521,7 @@ export interface components {
        */
       username: string
       /**
-       * @description Accepts the Terms of Use and Privacy Policy; must be true
+       * @description Accepts the Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
        * @example true
        * @enum {boolean}
        */
@@ -2601,7 +2630,7 @@ export interface components {
       deletedAt: string | null
       /** @description Transactional-email locale, set at registration from Accept-Language. */
       locale: string
-      /** @description Revision of the Terms of Use and Privacy Policy accepted at registration, if recorded. */
+      /** @description Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
       legalVersion: string | null
       /**
        * Format: date-time
@@ -2704,7 +2733,7 @@ export interface components {
       deletedAt: string | null
       /** @description Transactional-email locale, set at registration from Accept-Language. */
       locale: string
-      /** @description Revision of the Terms of Use and Privacy Policy accepted at registration, if recorded. */
+      /** @description Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
       legalVersion: string | null
       /**
        * Format: date-time
@@ -2908,6 +2937,13 @@ export interface components {
        * @description Soft deletion timestamp.
        */
       deletedAt: string | null
+      /** @description Artist Agreement revision the artist confirmed their rights under at upload, if recorded. */
+      rightsConfirmedVersion: string | null
+      /**
+       * Format: date-time
+       * @description When the artist confirmed their rights, if recorded.
+       */
+      rightsConfirmedAt: string | null
     }
     TrackManifestRenditionEntity: {
       /**
@@ -2983,10 +3019,36 @@ export interface components {
       /** @description Track title */
       title: string
       /**
+       * @description Confirms you hold the rights to this recording; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      rightsConfirmed: true
+      /**
        * Format: binary
        * @description Audio file
        */
       audio: string
+      /**
+       * Format: binary
+       * @description Cover image file
+       */
+      cover?: string
+    }
+    UpdateTrackDto: {
+      /** @description Track title */
+      title: string
+      /**
+       * @description Confirms you hold the rights to the replacement recording; required with new audio
+       * @example true
+       * @enum {boolean}
+       */
+      rightsConfirmed?: true
+      /**
+       * Format: binary
+       * @description Replacement audio file
+       */
+      audio?: string
       /**
        * Format: binary
        * @description Cover image file
@@ -3211,12 +3273,25 @@ export interface components {
        * @description Soft deletion timestamp.
        */
       deletedAt: string | null
+      /** @description Artist Agreement revision the artist confirmed their rights under at creation, if recorded. */
+      rightsConfirmedVersion: string | null
+      /**
+       * Format: date-time
+       * @description When the artist confirmed their rights, if recorded.
+       */
+      rightsConfirmedAt: string | null
     }
     CreateAlbumDto: {
       /** @description Playlist title */
       title: string
       /** @example user123 */
       description?: string
+      /**
+       * @description Confirms you hold the rights to this album; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      rightsConfirmed: true
     }
     UpdateAlbumDto: {
       /** @description Playlist title */
@@ -3273,7 +3348,7 @@ export interface components {
        */
       username: string
       /**
-       * @description Accepts the Terms of Use and Privacy Policy; must be true
+       * @description Accepts the Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
        * @example true
        * @enum {boolean}
        */
@@ -5958,6 +6033,44 @@ export interface operations {
       }
     }
   }
+  UsersAuthController_acceptLegal_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LegalAcceptanceDto']
+      }
+    }
+    responses: {
+      /** @description The signed-in account with the acceptance recorded */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SelfUserEntity']
+        }
+      }
+      /** @description Acceptance was not given */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not authenticated */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   UsersAuthController_getMe_v1: {
     parameters: {
       query?: never
@@ -7464,7 +7577,7 @@ export interface operations {
   UsersOAuthController_googleAuth_v1: {
     parameters: {
       query?: {
-        /** @description Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
         acceptLegal?: boolean
       }
       header?: never
@@ -7678,7 +7791,7 @@ export interface operations {
   UsersOAuthController_facebookAuth_v1: {
     parameters: {
       query?: {
-        /** @description Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
         acceptLegal?: boolean
       }
       header?: never
@@ -10711,7 +10824,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'multipart/form-data': components['schemas']['CreateTrackDto']
+        'multipart/form-data': components['schemas']['UpdateTrackDto']
       }
     }
     responses: {
@@ -15541,7 +15654,7 @@ export interface operations {
   ArtistsOAuthController_googleAuth_v1: {
     parameters: {
       query?: {
-        /** @description Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
         acceptLegal?: boolean
         /** @description Pass true when the artist accepted the Artist Agreement. Required to create a new artist account. */
         acceptArtistAgreement?: boolean
@@ -15753,7 +15866,7 @@ export interface operations {
   ArtistsOAuthController_facebookAuth_v1: {
     parameters: {
       query?: {
-        /** @description Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
         acceptLegal?: boolean
         /** @description Pass true when the artist accepted the Artist Agreement. Required to create a new artist account. */
         acceptArtistAgreement?: boolean
