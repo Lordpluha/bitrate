@@ -1,6 +1,6 @@
 import { randomBytes, randomUUID } from 'node:crypto'
 import { createReadStream } from 'node:fs'
-import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { Readable } from 'node:stream'
@@ -11,7 +11,9 @@ import {
   S3Client,
   UploadPartCommand,
 } from '@aws-sdk/client-s3'
+import { verifySignedStorageToken } from '@infra/storage/signed-storage-token'
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
+import { downloadObjectToFile, storeMaster } from '@modules/tracks/audio-master'
 import type { ConfigService } from '@nestjs/config'
 import { S3Service } from './s3.service'
 
@@ -55,7 +57,15 @@ suite('S3Service (int, real S3-compatible endpoint)', () => {
       secretKey,
       forcePathStyle: true,
     }
-    const config = { getOrThrow: () => s3 } as unknown as ConfigService<never>
+    const values: Record<string, unknown> = {
+      s3,
+      JWT_SECRET: 'int-spec-secret-value',
+      API_BASE_URL: 'https://api.bitrate.test',
+    }
+    const config = {
+      getOrThrow: (key: string) => values[key],
+      get: (key: string) => values[key],
+    } as unknown as ConfigService<never>
     service = new S3Service(config)
     rawClient = new S3Client({
       endpoint: s3.endpoint,
@@ -178,4 +188,38 @@ suite('S3Service (int, real S3-compatible endpoint)', () => {
     await expect(service.exists(`${base}1099.bin`)).resolves.toBe(false)
     await expect(service.exists(`${prefix}keep.txt`)).resolves.toBe(true)
   }, 120_000)
+
+  it('hands browsers a signed API URL, never the object-store endpoint', async () => {
+    const key = `${prefix}signed.txt`
+    await service.upload(key, Buffer.from('signed'), 'text/plain')
+
+    const url = await service.getPresignedUrl(key, 60)
+
+    expect(url.startsWith('https://api.bitrate.test/api/v1/storage/objects/')).toBe(true)
+    expect(url).not.toContain(endpoint as string)
+    const token = decodeURIComponent(url.split('/storage/objects/')[1] as string)
+    expect(verifySignedStorageToken(token, 'int-spec-secret-value')).toBe(key)
+  })
+
+  it('round-trips a master: temp file to storage, storage to a scratch file', async () => {
+    const key = `${prefix}masters/master.mp3`
+    const payload = randomBytes(128 * 1024)
+    const dir = await mkdtemp(join(tmpdir(), 's3-master-'))
+    const upload = join(dir, 'upload.mp3')
+    const scratch = join(dir, 'scratch', 'source.mp3')
+    await writeFile(upload, payload)
+    try {
+      await storeMaster({ storage: service, key, filePath: upload, contentType: 'audio/mpeg' })
+      await expect(readFile(upload)).rejects.toThrow()
+      await expect(service.getObjectMeta(key)).resolves.toMatchObject({
+        contentLength: payload.length,
+      })
+
+      await downloadObjectToFile(service, key, scratch)
+
+      expect((await readFile(scratch)).equals(payload)).toBe(true)
+    } finally {
+      await rm(dir, { recursive: true, force: true })
+    }
+  })
 })

@@ -9,8 +9,8 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import type { AppConfig } from '@common/config'
+import { createSignedStorageUrl } from '@infra/storage/signed-storage-token'
 import type {
   StorageObjectMeta,
   StorageObjectStream,
@@ -28,11 +28,17 @@ export class S3Service implements StorageService {
   private readonly client: S3Client
   /** The bucket value. */
   private readonly bucket: string
+  /** Secret that signs browser-facing object tokens. */
+  private readonly jwtSecret: string
+  /** Public base URL of this API, the origin of every browser-facing object URL. */
+  private readonly apiBaseUrl: string
 
   /** Creates a new instance. */
   constructor(config: ConfigService<AppConfig>) {
     const s3 = config.getOrThrow('s3')
     this.bucket = s3.bucket
+    this.jwtSecret = config.getOrThrow('JWT_SECRET')
+    this.apiBaseUrl = config.get('API_BASE_URL') ?? 'http://localhost:3000'
     this.client = new S3Client({
       endpoint: s3.endpoint,
       region: s3.region,
@@ -70,18 +76,14 @@ export class S3Service implements StorageService {
   }
 
   /**
-   * Generates a presigned GET URL valid for the given duration.
+   * Returns a signed, time-limited URL on this API that streams the object through
+   * STORAGE_SERVICE. The object store is internal-only, so its endpoint is never signed
+   * into a URL a browser receives.
    * @param key S3 object key.
    * @param expiresIn Validity period in seconds (default 3600).
    */
-  async getPresignedUrl(key: string, expiresIn = 3600): Promise<string> {
-    return await getSignedUrl(
-      this.client,
-      new GetObjectCommand({ Bucket: this.bucket, Key: key }),
-      {
-        expiresIn,
-      },
-    )
+  getPresignedUrl(key: string, expiresIn = 3600): Promise<string> {
+    return Promise.resolve(createSignedStorageUrl(key, expiresIn, this.jwtSecret, this.apiBaseUrl))
   }
 
   /**
