@@ -28,6 +28,11 @@ model User {
   /// Never derived from a live request after that — see apps/api/src/infra/mail/templates.
   locale String @default("en")
 
+  /// Revision of the Terms of Use and Privacy Policy accepted at registration, and when.
+  /// Null for accounts created before acceptance was recorded; they are not asked again yet.
+  legalVersion    String?
+  legalAcceptedAt DateTime?
+
   sessions            UserSession[]
   passwordResets      UserPasswordReset[]
   emailVerifications  UserEmailVerification[]
@@ -383,6 +388,14 @@ model Artist {
 
   /// Transactional-email locale, set at registration from Accept-Language. See User.locale.
   locale String @default("en")
+
+  /// Revision of the Terms of Use and Privacy Policy accepted at registration, and when. See User.legalVersion.
+  legalVersion    String?
+  legalAcceptedAt DateTime?
+
+  /// Revision of the Artist Agreement accepted at registration, and when.
+  artistAgreementVersion    String?
+  artistAgreementAcceptedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

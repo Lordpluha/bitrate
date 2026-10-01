@@ -2491,6 +2491,41 @@ export interface components {
        * @example newuser123
        */
       username: string
+      /**
+       * @description Accepts the Terms of Use and Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
+    }
+    ArtistRegistrationDto: {
+      /**
+       * @description New user email
+       * @example newuser@example.com
+       */
+      email: string
+      /**
+       * @description New user password
+       * @example password123
+       */
+      password: string
+      /**
+       * @description New user username
+       * @example newuser123
+       */
+      username: string
+      /**
+       * @description Accepts the Terms of Use and Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
+      /**
+       * @description Accepts the Artist Agreement; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptArtistAgreement: true
     }
     UserForgotPasswordDto: {
       /**
@@ -2595,6 +2630,13 @@ export interface components {
       deletedAt: string | null
       /** @description Transactional-email locale, set at registration from Accept-Language. */
       locale: string
+      /** @description Revision of the Terms of Use and Privacy Policy accepted at registration, if recorded. */
+      legalVersion: string | null
+      /**
+       * Format: date-time
+       * @description When that revision was accepted, if recorded.
+       */
+      legalAcceptedAt: string | null
     }
     SafeUserEntity: {
       /** @description The id value. */
@@ -2691,6 +2733,20 @@ export interface components {
       deletedAt: string | null
       /** @description Transactional-email locale, set at registration from Accept-Language. */
       locale: string
+      /** @description Revision of the Terms of Use and Privacy Policy accepted at registration, if recorded. */
+      legalVersion: string | null
+      /**
+       * Format: date-time
+       * @description When that revision was accepted, if recorded.
+       */
+      legalAcceptedAt: string | null
+      /** @description Revision of the Artist Agreement accepted at registration, if recorded. */
+      artistAgreementVersion: string | null
+      /**
+       * Format: date-time
+       * @description When the Artist Agreement was accepted, if recorded.
+       */
+      artistAgreementAcceptedAt: string | null
     }
     SafeArtistEntity: {
       /** @description The id value. */
@@ -7407,7 +7463,10 @@ export interface operations {
   }
   UsersOAuthController_googleAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -7618,7 +7677,10 @@ export interface operations {
   }
   UsersOAuthController_facebookAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -13880,7 +13942,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['RegistrationDto']
+        'application/json': components['schemas']['ArtistRegistrationDto']
       }
     }
     responses: {
@@ -15478,7 +15540,12 @@ export interface operations {
   }
   ArtistsOAuthController_googleAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+        /** @description Pass true when the artist accepted the Artist Agreement. Required to create a new artist account. */
+        acceptArtistAgreement?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -15685,7 +15752,12 @@ export interface operations {
   }
   ArtistsOAuthController_facebookAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+        /** @description Pass true when the artist accepted the Artist Agreement. Required to create a new artist account. */
+        acceptArtistAgreement?: boolean
+      }
       header?: never
       path?: never
       cookie?: never

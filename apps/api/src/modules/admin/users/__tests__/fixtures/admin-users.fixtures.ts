@@ -15,6 +15,8 @@ export const buildUser = (overrides: Partial<User> = {}): User => ({
   lockedUntil: null,
   deletedAt: null,
   locale: 'en',
+  legalVersion: null,
+  legalAcceptedAt: null,
   createdAt: new Date(),
   updatedAt: new Date(),
   ...overrides,

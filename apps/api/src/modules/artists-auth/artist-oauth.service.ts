@@ -1,6 +1,11 @@
 import { randomBytes } from 'node:crypto'
 import type { LoginResult } from '@common/auth.types'
 import type { AppConfig } from '@common/config'
+import {
+  ARTIST_AGREEMENT_VERSION,
+  LEGAL_VERSION,
+  LegalAcceptanceRequiredError,
+} from '@common/legal'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   ConflictException,
@@ -11,6 +16,12 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { Prisma } from '@prisma/client'
 import { TokenService } from '../tokens/token.service'
+
+/** What the artist accepted before leaving for the provider. */
+interface LegalAcceptance {
+  acceptLegal: boolean
+  acceptArtistAgreement: boolean
+}
 
 /** Describes the oauth profile. */
 interface OAuthProfile {
@@ -60,9 +71,9 @@ export class ArtistOAuthService {
   }
 
   /** Runs the handle google callback operation. */
-  async handleGoogleCallback(code: string): Promise<LoginResult> {
+  async handleGoogleCallback(code: string, acceptance: LegalAcceptance): Promise<LoginResult> {
     const profile = await this.exchangeGoogleCode(code)
-    return this.findOrCreateArtistAndLogin('google', profile)
+    return this.findOrCreateArtistAndLogin('google', profile, acceptance)
   }
 
   /** Runs the get facebook auth url operation. */
@@ -80,9 +91,9 @@ export class ArtistOAuthService {
   }
 
   /** Runs the handle facebook callback operation. */
-  async handleFacebookCallback(code: string): Promise<LoginResult> {
+  async handleFacebookCallback(code: string, acceptance: LegalAcceptance): Promise<LoginResult> {
     const profile = await this.exchangeFacebookCode(code)
-    return this.findOrCreateArtistAndLogin('facebook', profile)
+    return this.findOrCreateArtistAndLogin('facebook', profile, acceptance)
   }
 
   /** Runs the build redirect uri operation. */
@@ -155,7 +166,11 @@ export class ArtistOAuthService {
   }
 
   /** Runs the find or create artist and login operation. */
-  private async findOrCreateArtistAndLogin(provider: string, profile: OAuthProfile) {
+  private async findOrCreateArtistAndLogin(
+    provider: string,
+    profile: OAuthProfile,
+    acceptance: LegalAcceptance,
+  ) {
     const existing = await this.prisma.artistOAuthAccount.findUnique({
       where: { provider_providerAccountId: { provider, providerAccountId: profile.id } },
       include: { artist: true },
@@ -178,6 +193,12 @@ export class ArtistOAuthService {
       )
     }
 
+    // A brand-new account is only created once both documents were accepted.
+    if (!(acceptance.acceptLegal && acceptance.acceptArtistAgreement)) {
+      throw new LegalAcceptanceRequiredError()
+    }
+
+    const acceptedAt = new Date()
     let artist: Awaited<ReturnType<typeof this.prisma.artist.create>>
     try {
       artist = await this.prisma.artist.create({
@@ -186,6 +207,10 @@ export class ArtistOAuthService {
           emailVerifiedAt: new Date(),
           username: this.generateUniqueUsername(profile.name),
           password: null,
+          legalVersion: LEGAL_VERSION,
+          legalAcceptedAt: acceptedAt,
+          artistAgreementVersion: ARTIST_AGREEMENT_VERSION,
+          artistAgreementAcceptedAt: acceptedAt,
         },
       })
     } catch (err) {

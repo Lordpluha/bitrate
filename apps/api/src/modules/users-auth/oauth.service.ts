@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto'
 import type { AppConfig } from '@common/config'
+import { LEGAL_VERSION, LegalAcceptanceRequiredError } from '@common/legal'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import {
   ConflictException,
@@ -10,6 +11,11 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { Prisma } from '@prisma/client'
 import { TokenService } from '../tokens/token.service'
+
+/** What the user accepted before leaving for the provider. */
+interface LegalAcceptance {
+  acceptLegal: boolean
+}
 
 /** Describes the oauth profile. */
 interface OAuthProfile {
@@ -59,9 +65,9 @@ export class OAuthService {
   }
 
   /** Runs the handle google callback operation. */
-  async handleGoogleCallback(code: string) {
+  async handleGoogleCallback(code: string, acceptance: LegalAcceptance) {
     const profile = await this.exchangeGoogleCode(code)
-    return this.findOrCreateUserAndLogin('google', profile)
+    return this.findOrCreateUserAndLogin('google', profile, acceptance)
   }
 
   /** Runs the get facebook auth url operation. */
@@ -79,9 +85,9 @@ export class OAuthService {
   }
 
   /** Runs the handle facebook callback operation. */
-  async handleFacebookCallback(code: string) {
+  async handleFacebookCallback(code: string, acceptance: LegalAcceptance) {
     const profile = await this.exchangeFacebookCode(code)
-    return this.findOrCreateUserAndLogin('facebook', profile)
+    return this.findOrCreateUserAndLogin('facebook', profile, acceptance)
   }
 
   /** Runs the build redirect uri operation. */
@@ -154,7 +160,11 @@ export class OAuthService {
   }
 
   /** Runs the find or create user and login operation. */
-  private async findOrCreateUserAndLogin(provider: string, profile: OAuthProfile) {
+  private async findOrCreateUserAndLogin(
+    provider: string,
+    profile: OAuthProfile,
+    acceptance: LegalAcceptance,
+  ) {
     const existing = await this.prisma.userOAuthAccount.findUnique({
       where: { provider_providerAccountId: { provider, providerAccountId: profile.id } },
       include: { user: true },
@@ -181,6 +191,8 @@ export class OAuthService {
 
     let user = existingUser
     if (!user) {
+      // A brand-new account is only created once the legal documents were accepted.
+      if (!acceptance.acceptLegal) throw new LegalAcceptanceRequiredError()
       try {
         user = await this.prisma.user.create({
           data: {
@@ -191,6 +203,8 @@ export class OAuthService {
             description: null,
             emailVerifiedAt: new Date(),
             updatedAt: new Date(),
+            legalVersion: LEGAL_VERSION,
+            legalAcceptedAt: new Date(),
           },
         })
       } catch (err) {

@@ -78,12 +78,14 @@ describe('UsersAuthController', () => {
         email: 'new@example.com',
         password: 'password123',
         username: 'new-user',
+        acceptLegal: true,
       })
 
       expect(authService.registerUser).toHaveBeenCalledWith({
         email: 'new@example.com',
         password: 'password123',
         username: 'new-user',
+        acceptLegal: true,
       })
     })
   })

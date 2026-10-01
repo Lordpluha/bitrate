@@ -18,6 +18,8 @@ const registerAndLoginArtist = async () => {
     email: `artist_${runId}@example.com`,
     password: 'password123',
     username: `artist_${runId}`,
+    acceptLegal: true,
+    acceptArtistAgreement: true,
   }
 
   await request(app.getHttpServer())

@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto'
 import type { LoginResult } from '@common/auth.types'
+import { LEGAL_VERSION } from '@common/legal'
 import { MailService } from '@infra/mail/mail.service'
 import {
   DEFAULT_MAIL_LOCALE,
@@ -61,6 +62,8 @@ export class UserAuthService {
       description: null,
       updatedAt: new Date(),
       locale,
+      legalVersion: LEGAL_VERSION,
+      legalAcceptedAt: new Date(),
     })
 
     await this.issueEmailVerification(
