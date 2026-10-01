@@ -18,3 +18,9 @@ services:
     container_name: !reset null
     restart: "no"
     volumes: !reset []
+  # Integration checks reach the object store from the runner, so CI alone publishes it, on
+  # loopback only. The shipped preprod/prod definitions publish nothing.
+  seaweedfs:
+    container_name: !reset null
+    ports:
+      - "127.0.0.1:8333:8333"
