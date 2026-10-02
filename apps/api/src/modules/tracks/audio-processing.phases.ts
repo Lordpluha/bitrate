@@ -26,6 +26,8 @@ export type ConversionStepContext = {
 /** Everything one phase run needs, beyond the mutable step context. */
 export type RunConversionPhasesInput = {
   job: Job<ConvertAudioJob>
+  /** Local copy of the master, downloaded from storage into the job's scratch directory. */
+  inputPath: string
   temporaryRoot: string
   storage: StorageService
   prisma: PrismaService
@@ -53,12 +55,22 @@ export async function runConversionPhases(
   ctx: ConversionStepContext,
   input: RunConversionPhasesInput,
 ): Promise<ConversionOutcome> {
-  const { job, temporaryRoot, storage, prisma, recorder, trackId, sourceFileName, jobId, attempt } =
-    input
+  const {
+    job,
+    inputPath,
+    temporaryRoot,
+    storage,
+    prisma,
+    recorder,
+    trackId,
+    sourceFileName,
+    jobId,
+    attempt,
+  } = input
   const { format, bitrates } = job.data
 
   ctx.step = 'PROGRESSIVE_ENCODE'
-  const variants = await prepareVariants(job, temporaryRoot, (bitrate) => {
+  const variants = await prepareVariants(job, inputPath, temporaryRoot, (bitrate) => {
     ctx.stepDetail = bitrate
   })
   if (!(await input.isStillCurrent(job))) {
@@ -73,7 +85,7 @@ export async function runConversionPhases(
   ctx.step = 'HLS_ENCODE'
   ctx.stepDetail = undefined
   const temporaryHlsPath = join(temporaryRoot, 'hls')
-  await generateHls(job, temporaryHlsPath, bitrates)
+  await generateHls(inputPath, temporaryHlsPath, bitrates)
 
   ctx.step = 'HLS_VALIDATE'
   await validateHls(temporaryHlsPath, bitrates)
@@ -81,7 +93,7 @@ export async function runConversionPhases(
 
   ctx.step = 'CMAF_ENCODE'
   const generationRoot = getAudioGenerationRoot(trackId, sourceFileName)
-  const cmafPackage = await generateCmaf(generationRoot, job, temporaryRoot, bitrates)
+  const cmafPackage = await generateCmaf(generationRoot, inputPath, temporaryRoot, bitrates)
   await job.updateProgress(PROGRESS.cmafReady)
 
   ctx.step = 'UPLOAD'

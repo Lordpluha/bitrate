@@ -4,22 +4,23 @@ import { detectAllowedImageMime } from '@common/utils/image'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { BadRequestException, Logger } from '@nestjs/common'
 import { parseFile } from 'music-metadata'
+import { getUploadTempDir } from './audio-scratch'
 import { MAX_COVER_BYTES } from './track-audio.helpers'
 
 /** Bytes of an image header needed to recognise every allowed cover format. */
 const IMAGE_MAGIC_BYTES = 12
 
-/** Where the upload interceptor writes each kind of file. Server-owned, never client-supplied. */
-const AUDIO_DESTINATION = './storage/private/tracks'
-
+/** Covers are written straight into the public tree. Server-owned, never client-supplied. */
 const COVER_DESTINATION = './storage/public/tracks/covers'
 
 /**
- * The directory an uploaded file belongs in. `fieldname` only selects between two literals, so
+ * The directory an uploaded file is written to. Audio goes to a temporary directory outside the
+ * storage root (the master is then moved into STORAGE_SERVICE); covers go to the public tree.
+ * `fieldname` only selects between two literals, so
  * nothing from the request survives into the returned value.
  */
 export function uploadDestination(file: Express.Multer.File): string {
-  return file.fieldname === 'audio' ? AUDIO_DESTINATION : COVER_DESTINATION
+  return file.fieldname === 'audio' ? getUploadTempDir() : COVER_DESTINATION
 }
 
 const logger = new Logger('TrackMedia', { timestamp: true })

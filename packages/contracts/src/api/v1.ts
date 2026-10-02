@@ -104,8 +104,8 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Streams a local object addressed by a signed token, honoring an HTTP Range.
-     * @description Local-driver equivalent of an S3 presigned URL. The token embeds the object key and expiry, verified via HMAC.
+     * Streams an object, through STORAGE_SERVICE, addressed by a signed token, honoring an HTTP Range.
+     * @description Time-limited URL issued by the storage driver; the API streams the object through STORAGE_SERVICE. The token embeds the object key and expiry, verified via HMAC.
      */
     get: operations['StorageController_streamSignedObject_v1']
     put?: never
