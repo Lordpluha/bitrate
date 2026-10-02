@@ -56,10 +56,8 @@ x-api-env: &api-env
   SMTP_USER:
   SMTP_PASS:
   EMAIL_FROM:
-  STORAGE_DRIVER:
-  # The object store is internal and fixed, so the endpoint is not configuration. These are
-  # inert while STORAGE_DRIVER=local; the cutover is a separate change. The credentials are
-  # the bucket-scoped application identity, never an admin one.
+  # The object store is internal and fixed, so the endpoint is not configuration. The credentials
+  # are the bucket-scoped application identity, never an admin one.
   S3_ENDPOINT: http://seaweedfs:8333
   S3_BUCKET: ${S3_BUCKET:-bitrate-audio}
   S3_ACCESS_KEY: ${S3_ACCESS_KEY}
@@ -231,6 +229,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      seaweedfs:
+        condition: service_healthy
     networks:
       - bitrate-network
     deploy:
@@ -244,16 +244,9 @@ services:
   # container. It has no HTTP listener, shares no volume with `api` (audio lives in the object
   # store), and is killed or redeployed without touching the API's availability, and vice versa.
   #
-  # It refuses to start with NODE_ENV=production and STORAGE_DRIVER=local — a separate container
-  # has no shared filesystem. STORAGE_DRIVER is passed through exactly as for `api`, so until the
-  # S3 cutover (#211) sets it in the server's .env, this container exits at boot and, with
-  # `restart: always`, restarts with Docker's growing backoff (capped at a minute). That is
-  # deliberate and harmless: the crash is the guard. A worker forced onto s3 while `api` still
-  # writes to local disk would consume jobs whose audio it cannot read and fail them, competing
-  # with the API consumer that can still serve them. Do not hard-code STORAGE_DRIVER here. The
-  # log line says what to set. `up -d` still starts both services; a failing `worker` before the
-  # cutover does not affect `api`, and the deploy's health gate probes the public HTTP endpoints
-  # only, so it does not read this container's state either.
+  # Audio lives in the seaweedfs service for both processes, so a worker that comes up reads the
+  # same masters the API wrote. `up -d` starts both services; the deploy's health gate probes
+  # the public HTTP endpoints only, so it does not read this container's state.
   worker:
     logging: *default-logging
     image: ghcr.io/lordpluha/bitrate/api:${IMAGE_TAG:-master}
@@ -481,15 +474,15 @@ volumes:
     driver: local
   # Uploaded audio, HLS artifacts, covers and avatars. Backed up off-host by
   # .github/workflows/backup.yml; see ADR-0033 for why this is a stopgap and
-  # STORAGE_DRIVER=s3 is the durable answer for the audio.
+  # the object store is the durable answer for the audio.
   api_storage:
     driver: local
   # The worker's transcode scratch space. Disposable by design: nothing in it outlives a job,
   # and it is deliberately not mounted by `api`, so it needs no backup.
   worker_tmp:
     driver: local
-  # SeaweedFS data (ADR-0050). NOT covered by any backup yet: audio written here after the
-  # STORAGE_DRIVER=s3 cutover has no off-host copy. Accepted risk, recorded in ADR-0050.
+  # SeaweedFS data (ADR-0050). NOT covered by any backup yet: audio written here
+  # has no off-host copy. Accepted risk, recorded in ADR-0050.
   seaweedfs_data:
     driver: local
 

@@ -19,7 +19,7 @@ import type {
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
-/** Provides S3-compatible object storage operations (the STORAGE_DRIVER=s3 StorageService). */
+/** Provides S3-compatible object storage operations (the StorageService). */
 @Injectable()
 export class S3Service implements StorageService {
   /** The logger value. */

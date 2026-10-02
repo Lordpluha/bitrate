@@ -20,9 +20,6 @@ export const envSchema = z
     ARTIST_WEB_HOST: z.url().optional(),
     ADMIN_WEB_HOST: z.url().optional(),
 
-    // Storage driver — selects which StorageService implementation is bound at boot
-    STORAGE_DRIVER: z.enum(['s3', 'local']).default('local'),
-
     // Auth
     JWT_SECRET: z.string().min(10),
     JWT_ACCESS_EXPIRES_IN: z
@@ -72,12 +69,12 @@ export const envSchema = z
     // Sentry
     SENTRY_DSN: z.string().url().optional(),
 
-    // S3 / Object storage (AWS S3) — required only when STORAGE_DRIVER=s3, see superRefine below
-    S3_ENDPOINT: z.url().optional(),
+    // S3-compatible object storage (SeaweedFS in every stack, ADR-0050) — the only storage backend
+    S3_ENDPOINT: z.url(),
     S3_REGION: z.string().default('us-east-1'),
-    S3_BUCKET: z.string().min(1).optional(),
-    S3_ACCESS_KEY: z.string().min(1).optional(),
-    S3_SECRET_KEY: z.string().min(1).optional(),
+    S3_BUCKET: z.string().min(1),
+    S3_ACCESS_KEY: z.string().min(1),
+    S3_SECRET_KEY: z.string().min(1),
     S3_PUBLIC_URL: z.string().url().optional(),
     S3_FORCE_PATH_STYLE: z.coerce.boolean().default(true),
 
@@ -126,19 +123,6 @@ export const envSchema = z
         path: ['EMAIL_FROM'],
         message: 'EMAIL_FROM is required when SMTP_HOST is configured',
       })
-    }
-
-    if (env.STORAGE_DRIVER !== 's3') return
-
-    const requiredForS3 = ['S3_ENDPOINT', 'S3_BUCKET', 'S3_ACCESS_KEY', 'S3_SECRET_KEY'] as const
-    for (const key of requiredForS3) {
-      if (!env[key]) {
-        ctx.addIssue({
-          code: 'custom',
-          path: [key],
-          message: `${key} is required when STORAGE_DRIVER=s3`,
-        })
-      }
     }
   })
 

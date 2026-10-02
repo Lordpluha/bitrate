@@ -13,34 +13,7 @@ jest.mock('@nestjs/core', () => ({
   NestFactory: { createApplicationContext: jest.fn() },
 }))
 
-import { assertWorkerStorageSupported, bootstrapWorker } from './bootstrap-worker'
-
-describe('assertWorkerStorageSupported', () => {
-  it('refuses a production worker on the local storage driver', () => {
-    expect(() =>
-      assertWorkerStorageSupported({ NODE_ENV: 'production', STORAGE_DRIVER: 'local' }),
-    ).toThrow(/STORAGE_DRIVER=local/)
-  })
-
-  it('treats an unset driver as local, which is the schema default', () => {
-    expect(() => assertWorkerStorageSupported({ NODE_ENV: 'production' })).toThrow(
-      /shared filesystem/,
-    )
-  })
-
-  it('accepts a production worker on s3', () => {
-    expect(() =>
-      assertWorkerStorageSupported({ NODE_ENV: 'production', STORAGE_DRIVER: 's3' }),
-    ).not.toThrow()
-  })
-
-  it('allows the local driver outside production, so pnpm dev keeps working', () => {
-    expect(() =>
-      assertWorkerStorageSupported({ NODE_ENV: 'development', STORAGE_DRIVER: 'local' }),
-    ).not.toThrow()
-    expect(() => assertWorkerStorageSupported({})).not.toThrow()
-  })
-})
+import { bootstrapWorker } from './bootstrap-worker'
 
 describe('bootstrapWorker', () => {
   const createContext = NestFactory.createApplicationContext as jest.Mock
@@ -81,13 +54,11 @@ describe('bootstrapWorker', () => {
     expect(result).toBe(context)
   })
 
-  it('refuses to start in production on the local driver and never builds the context', async () => {
+  it('starts in production: object storage is the only backend, so no storage guard remains', async () => {
     process.env.NODE_ENV = 'production'
-    process.env.STORAGE_DRIVER = 'local'
 
-    await expect(bootstrapWorker()).rejects.toThrow(/STORAGE_DRIVER=local/)
+    await expect(bootstrapWorker()).resolves.toBe(context)
 
-    expect(createContext).not.toHaveBeenCalled()
-    expect(flagSeenWhenGraphLoaded).toEqual([])
+    expect(createContext).toHaveBeenCalledTimes(1)
   })
 })

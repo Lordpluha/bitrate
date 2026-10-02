@@ -78,12 +78,12 @@ running transcode finishes on a redeploy, and its own `worker_tmp` volume for sc
 mounts no `api_storage`, because audio lives in the object store, and its HTTP healthcheck is
 disabled until #210 adds a real one. Killing either container does not affect the other.
 
-`worker` refuses to start while `STORAGE_DRIVER=local`, so before the S3 cutover (#211) it exits
-at boot and Docker keeps restarting it with a growing backoff. That is the guard working: the API
-still consumes the queue, as `AUDIO_PROCESSING_WORKER_ENABLED` defaults to `true` on `api`. After
-the cutover and once the worker is verified, set `AUDIO_PROCESSING_WORKER_ENABLED=false` for `api`
-so only the worker consumes. Read its logs with `task prod:worker:logs`. In the dev stack the
-worker is behind a compose profile: `task worker:up`.
+Both processes read and write audio in the object store, so a worker that comes up consumes the
+same masters the API wrote. The API still consumes the queue itself, as
+`AUDIO_PROCESSING_WORKER_ENABLED` defaults to `true` on `api`; once the worker is verified, set
+`AUDIO_PROCESSING_WORKER_ENABLED=false` for `api` so only the worker consumes. Read its logs with
+`task prod:worker:logs`. In the dev stack the worker starts with `task dev:up`, and
+`task worker:logs` tails it.
 
 ## Prerequisites
 
@@ -153,7 +153,7 @@ GitHub, so editing it by hand on the server works only until the next deploy ove
 | Kind | Stored as | Holds |
 |---|---|---|
 | Secret | **environment** secret | `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `JWT_SECRET`, `DATABASE_URL`, `SMTP_USER`, `SMTP_PASS`, both OAuth client secrets, `METRICS_TOKEN`, `SENTRY_DSN`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` (object store, ADR-0050), `DEPLOY_SSH_KEY` |
-| Configuration | **environment** variable | hosts, ports, token lifetimes, cookie names, `STORAGE_DRIVER`, `S3_BUCKET` (optional), both OAuth client ids, `DEPLOY_HOST`, `DEPLOY_USER` |
+| Configuration | **environment** variable | hosts, ports, token lifetimes, cookie names, `S3_BUCKET` (optional), both OAuth client ids, `DEPLOY_HOST`, `DEPLOY_USER` |
 
 `NEXT_PUBLIC_*` belong in the variable column on purpose: they are compiled into a client bundle
 that any visitor can read, so storing them as secrets protects nothing and only makes them harder
