@@ -41,7 +41,7 @@ test.describe('authentication pages', () => {
     })
 
     await gotoHydrated(page, '/login')
-    await page.getByRole('button', { name: 'Continue' }).click()
+    await page.getByRole('button', { name: 'Continue', exact: true }).click()
 
     await expect(page.getByText('Email is required')).toBeVisible()
     await expect(page.getByText('Password is required')).toBeVisible()
@@ -58,7 +58,7 @@ test.describe('authentication pages', () => {
     await gotoHydrated(page, '/login')
 
     await page.getByLabel('Email Address').fill('artist-at-bitrate')
-    await page.getByRole('button', { name: 'Continue' }).click()
+    await page.getByRole('button', { name: 'Continue', exact: true }).click()
 
     await expect(
       page.getByText('Please enter a valid email address'),
