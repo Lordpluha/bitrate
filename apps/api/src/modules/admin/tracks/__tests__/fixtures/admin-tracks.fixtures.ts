@@ -27,6 +27,8 @@ export const buildTrack = (overrides: Partial<Track> = {}): Track => ({
   playbackVersion: 2,
   fragmentTimescale: null,
   durationTicks: null,
+  rightsConfirmedVersion: null,
+  rightsConfirmedAt: null,
   createdAt: new Date(),
   updatedAt: new Date(),
   ...overrides,
