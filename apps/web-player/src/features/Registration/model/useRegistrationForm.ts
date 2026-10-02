@@ -17,6 +17,7 @@ export const useRegistrationForm = () => {
   })
   const form = useForm<RegistrationFormData>({
     defaultValues: {
+      acceptLegal: false,
       confirmPassword: '',
       email: '',
       fullName: '',
@@ -31,6 +32,7 @@ export const useRegistrationForm = () => {
     try {
       await mutation.mutateAsync({
         body: {
+          acceptLegal: true,
           email: data.email,
           password: data.password,
           username: data.fullName,

@@ -12,6 +12,8 @@ const registerAndLogin = async (app: INestApplication, runId: string) => {
     email: `artist_${runId}@example.com`,
     password: 'password123',
     username: `artist_${runId}`,
+    acceptLegal: true,
+    acceptArtistAgreement: true,
   }
   await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(201)
   await verifyArtistEmail(app.get(PrismaService), creds.email)

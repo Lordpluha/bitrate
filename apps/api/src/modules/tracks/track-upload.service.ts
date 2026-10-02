@@ -1,5 +1,6 @@
 import { stat } from 'node:fs/promises'
 import type { AppConfig } from '@common/config'
+import { RIGHTS_CONFIRMATION_MESSAGE, rightsConfirmationRecord } from '@common/rights-confirmation'
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -10,11 +11,11 @@ import {
 } from '@infra/queues/audio-processing.queue'
 import type { ArtistEntity } from '@modules/artists'
 import { InjectQueue } from '@nestjs/bullmq'
-import { Injectable, Logger, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { TrackProcessingTrigger } from '@prisma/client'
 import type { Queue } from 'bullmq'
-import type { CreateTrackDto } from './dtos'
+import type { CreateTrackDto, UpdateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 import { getTargetBitrates } from './track-audio.helpers'
@@ -131,6 +132,7 @@ export class TrackUploadService {
           audioUrl: audioFile.filename,
           cover: coverFile?.filename ?? null,
           duration: metadata.duration,
+          ...rightsConfirmationRecord(),
           processingStatus: 'PROCESSING',
           processingError: null,
           processingAttempts: 0,
@@ -163,7 +165,7 @@ export class TrackUploadService {
   async update(
     artistId: ArtistEntity['id'],
     id: TrackEntity['id'],
-    createTrackDto: CreateTrackDto,
+    updateTrackDto: UpdateTrackDto,
     audioFile?: Express.Multer.File,
     coverFile?: Express.Multer.File,
   ) {
@@ -174,6 +176,9 @@ export class TrackUploadService {
       })
       if (!existingTrack) {
         throw new NotFoundException('Track not found or does not belong to artist')
+      }
+      if (audioFile && !updateTrackDto.rightsConfirmed) {
+        throw new BadRequestException(RIGHTS_CONFIRMATION_MESSAGE)
       }
       if (coverFile) await validateCoverFile(coverFile)
 
@@ -186,9 +191,10 @@ export class TrackUploadService {
         const updated = await tx.track.update({
           where: { id },
           data: {
-            title: createTrackDto.title,
+            title: updateTrackDto.title,
             cover: coverFile?.filename ?? undefined,
             audioUrl: audioFile?.filename ?? undefined,
+            ...(audioFile ? rightsConfirmationRecord() : {}),
             duration: metadata?.duration ?? undefined,
             processingStatus: audioFile ? 'PROCESSING' : undefined,
             processingError: audioFile ? null : undefined,

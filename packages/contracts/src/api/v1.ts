@@ -201,6 +201,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/auth/legal/accept': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Records that the signed-in user accepted the current legal documents.
+     * @description Records the current Terms of Use, Community Guidelines and Privacy Policy revision for the signed-in account. Used when `legalAcceptanceRequired` is true on the account.
+     */
+    post: operations['UsersAuthController_acceptLegal_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/auth/forgot-password': {
     parameters: {
       query?: never
@@ -2450,6 +2470,10 @@ export interface components {
       emailVerifiedAt: string | null
       /** @description Whether two-factor authentication is switched on. */
       twoFactorEnabled: boolean
+      /** @description Revision of the legal documents the account accepted, or null when none was recorded. */
+      legalVersion: string | null
+      /** @description Whether the account must accept the current legal documents before carrying on. */
+      legalAcceptanceRequired: boolean
     }
     TwoFactorRequiredEntity: {
       /**
@@ -2491,6 +2515,20 @@ export interface components {
        * @example newuser123
        */
       username: string
+      /**
+       * @description Accepts the Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
+    }
+    LegalAcceptanceDto: {
+      /**
+       * @description Accepts the current Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
     }
     UserForgotPasswordDto: {
       /**
@@ -2595,6 +2633,13 @@ export interface components {
       deletedAt: string | null
       /** @description Transactional-email locale, set at registration from Accept-Language. */
       locale: string
+      /** @description Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
+      legalVersion: string | null
+      /**
+       * Format: date-time
+       * @description When that revision was accepted, if recorded.
+       */
+      legalAcceptedAt: string | null
     }
     SafeUserEntity: {
       /** @description The id value. */
@@ -2691,6 +2736,20 @@ export interface components {
       deletedAt: string | null
       /** @description Transactional-email locale, set at registration from Accept-Language. */
       locale: string
+      /** @description Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
+      legalVersion: string | null
+      /**
+       * Format: date-time
+       * @description When that revision was accepted, if recorded.
+       */
+      legalAcceptedAt: string | null
+      /** @description Revision of the Artist Agreement accepted at registration, if recorded. */
+      artistAgreementVersion: string | null
+      /**
+       * Format: date-time
+       * @description When the Artist Agreement was accepted, if recorded.
+       */
+      artistAgreementAcceptedAt: string | null
     }
     SafeArtistEntity: {
       /** @description The id value. */
@@ -2956,10 +3015,36 @@ export interface components {
       /** @description Track title */
       title: string
       /**
+       * @description Confirms you hold the rights to this recording; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      rightsConfirmed: true
+      /**
        * Format: binary
        * @description Audio file
        */
       audio: string
+      /**
+       * Format: binary
+       * @description Cover image file
+       */
+      cover?: string
+    }
+    UpdateTrackDto: {
+      /** @description Track title */
+      title: string
+      /**
+       * @description Confirms you hold the rights to the replacement recording; required with new audio
+       * @example true
+       * @enum {boolean}
+       */
+      rightsConfirmed?: true
+      /**
+       * Format: binary
+       * @description Replacement audio file
+       */
+      audio?: string
       /**
        * Format: binary
        * @description Cover image file
@@ -3190,6 +3275,12 @@ export interface components {
       title: string
       /** @example user123 */
       description?: string
+      /**
+       * @description Confirms you hold the rights to this album; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      rightsConfirmed: true
     }
     UpdateAlbumDto: {
       /** @description Playlist title */
@@ -3228,6 +3319,35 @@ export interface components {
        * @example password123
        */
       password: string
+    }
+    ArtistRegistrationDto: {
+      /**
+       * @description New user email
+       * @example newuser@example.com
+       */
+      email: string
+      /**
+       * @description New user password
+       * @example password123
+       */
+      password: string
+      /**
+       * @description New user username
+       * @example newuser123
+       */
+      username: string
+      /**
+       * @description Accepts the Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
+      /**
+       * @description Accepts the Artist Agreement; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptArtistAgreement: true
     }
     ArtistForgotPasswordDto: {
       /**
@@ -6030,6 +6150,149 @@ export interface operations {
       }
     }
   }
+  UsersAuthController_acceptLegal_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LegalAcceptanceDto']
+      }
+    }
+    responses: {
+      /** @description The signed-in account with the acceptance recorded */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SelfUserEntity']
+        }
+      }
+      /** @description Acceptance was not given */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Not authenticated
+       */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   UsersAuthController_forgotPassword_v1: {
     parameters: {
       query?: never
@@ -7407,7 +7670,10 @@ export interface operations {
   }
   UsersOAuthController_googleAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -7618,7 +7884,10 @@ export interface operations {
   }
   UsersOAuthController_facebookAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -10649,7 +10918,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'multipart/form-data': components['schemas']['CreateTrackDto']
+        'multipart/form-data': components['schemas']['UpdateTrackDto']
       }
     }
     responses: {
@@ -13880,7 +14149,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['RegistrationDto']
+        'application/json': components['schemas']['ArtistRegistrationDto']
       }
     }
     responses: {
@@ -15478,7 +15747,12 @@ export interface operations {
   }
   ArtistsOAuthController_googleAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+        /** @description Pass true when the artist accepted the Artist Agreement. Required to create a new artist account. */
+        acceptArtistAgreement?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -15685,7 +15959,12 @@ export interface operations {
   }
   ArtistsOAuthController_facebookAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+        /** @description Pass true when the artist accepted the Artist Agreement. Required to create a new artist account. */
+        acceptArtistAgreement?: boolean
+      }
       header?: never
       path?: never
       cookie?: never

@@ -22,6 +22,8 @@ export const registrationSchema = z
   .object({
     email: emailSchema,
     password: z.string(),
+    acceptLegal: z.boolean(),
+    acceptArtistAgreement: z.boolean(),
   })
   .refine((data) => !data.password || data.password.length >= 10, {
     message: 'Password must be at least 10 characters',
@@ -38,5 +40,13 @@ export const registrationSchema = z
       path: ['password'],
     },
   )
+  .refine((data) => !data.password || data.acceptLegal, {
+    message: 'You must accept the Terms of Use and Community Guidelines',
+    path: ['acceptLegal'],
+  })
+  .refine((data) => !data.password || data.acceptArtistAgreement, {
+    message: 'You must accept the Artist Agreement',
+    path: ['acceptArtistAgreement'],
+  })
 
 export type RegistrationFormData = z.infer<typeof registrationSchema>

@@ -22,9 +22,9 @@ export class ArtistsService {
    * @param param0 Artist registration credentials.
    * @returns The newly created artist (without password).
    */
-  async register({ password, email, username }: CreateArtistDto) {
+  async register({ password, email, username, ...acceptance }: CreateArtistDto) {
     const created = await this.prisma.artist.create({
-      data: { password, username, email },
+      data: { password, username, email, ...acceptance },
       select: { id: true, email: true, username: true },
     })
     await Promise.all([this.cache.invalidate(NS.ARTISTS), this.cache.invalidate(NS.SEARCH)])

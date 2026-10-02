@@ -42,6 +42,34 @@ describe('ArtistsService', () => {
     expect(result).toBe(created)
   })
 
+  it('register should persist the accepted legal and Artist Agreement revisions', async () => {
+    prisma.artist.create.mockResolvedValue(buildArtist())
+    const acceptedAt = new Date('2026-10-01T12:00:00Z')
+
+    await service.register({
+      email: 'artist@example.com',
+      password: 'pass',
+      username: 'artist',
+      legalVersion: '2026-10-01',
+      legalAcceptedAt: acceptedAt,
+      artistAgreementVersion: '2026-10-01',
+      artistAgreementAcceptedAt: acceptedAt,
+    })
+
+    expect(prisma.artist.create).toHaveBeenCalledWith({
+      data: {
+        password: 'pass',
+        username: 'artist',
+        email: 'artist@example.com',
+        legalVersion: '2026-10-01',
+        legalAcceptedAt: acceptedAt,
+        artistAgreementVersion: '2026-10-01',
+        artistAgreementAcceptedAt: acceptedAt,
+      },
+      select: { id: true, email: true, username: true },
+    })
+  })
+
   it('findAll should use defaults when no params', async () => {
     const artists = [buildArtist()]
     prisma.$transaction.mockResolvedValue([artists, 1] as never)

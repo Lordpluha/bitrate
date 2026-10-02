@@ -1,14 +1,14 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
-import { RegistrationDto } from '../../dtos'
+import { ArtistRegistrationDto } from '../../dtos'
 
 /** Runs the auth registration swagger operation. */
 export function AuthRegistrationSwagger() {
   return applyDecorators(
     ApiOperation({ summary: 'Artist registration' }),
     ApiConsumes('application/json'),
-    ApiBody({ type: RegistrationDto }),
+    ApiBody({ type: ArtistRegistrationDto }),
     ApiResponse({
       status: HttpStatus.CREATED,
       description: 'Successfully registered',

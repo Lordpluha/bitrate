@@ -2,10 +2,10 @@
 
 import { Button, Input, Typography } from '@bitrate/ui-react'
 import { ROUTES } from '@shared/routes/routes'
+import { SocialAuthButtons } from '@shared/ui'
 import { Link } from '@tanstack/react-router'
 import type { UseFormReturn } from 'react-hook-form'
 import type { RegistrationFormData } from '../validation/RegistrationForm.validation'
-import { SocialAuthButtons } from './SocialAuthButtons'
 
 export type RegistrationEmailStepProps = {
   form: UseFormReturn<RegistrationFormData>

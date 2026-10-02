@@ -43,4 +43,12 @@ export class SelfUserEntity {
   /** Whether two-factor authentication is switched on. */
   @ApiProperty()
   twoFactorEnabled: boolean
+
+  /** Revision of the legal documents the account accepted, or null when none was recorded. */
+  @ApiProperty({ nullable: true, type: String })
+  legalVersion: string | null
+
+  /** Whether the account must accept the current legal documents before carrying on. */
+  @ApiProperty()
+  legalAcceptanceRequired: boolean
 }
