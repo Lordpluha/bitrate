@@ -17,6 +17,8 @@
     "prestart:dev": "pnpm --filter @bitrate/ncs-parser run build",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
+    "start:worker": "nest start --entryFile main.worker",
+    "start:worker:prod": "node dist/src/main.worker",
     "start:prod": "node dist/src/main",
     "lint": "pnpm exec biome lint --error-on-warnings",
     "lint:fix": "pnpm exec biome lint --write",
