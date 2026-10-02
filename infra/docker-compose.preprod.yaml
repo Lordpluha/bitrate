@@ -191,7 +191,7 @@ services:
         condition: service_healthy
     networks:
       - bitrate-network
-    command: pnpm --filter @bitrate/api run worker
+    command: pnpm --filter @bitrate/api run start:worker
     profiles:
       - worker
 
