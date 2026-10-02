@@ -1,4 +1,4 @@
-import { mkdir, readdir, rm } from 'node:fs/promises'
+import { readdir, rm } from 'node:fs/promises'
 import { extname, join } from 'node:path'
 import * as PrismaServiceModule from '@infra/prisma/prisma.service'
 import {
@@ -18,7 +18,7 @@ import { StaleAudioJobError } from './audio-artifact.types'
 import { downloadObjectToFile } from './audio-master'
 import { type ConversionStepContext, runConversionPhases } from './audio-processing.phases'
 import { isAudioProcessingWorkerAutorunEnabled } from './audio-processing.worker-autorun'
-import { getJobScratchBase, removeStaleScratchDirs } from './audio-scratch'
+import { createJobScratchDir, getJobScratchBase, removeStaleScratchDirs } from './audio-scratch'
 import { getAudioGenerationRoot } from './audio-storage-keys'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 import { classifyProcessingError, errorMessageOf } from './processing-log/classify'
@@ -126,12 +126,11 @@ export class AudioProcessingConsumer extends WorkerHost implements OnModuleInit 
     const trigger = data.trigger ?? 'UPLOAD'
 
     const scratchBase = getJobScratchBase()
-    const temporaryRoot = join(scratchBase, `${trackId}-${jobId}-${attempt}`)
-    const inputPath = join(temporaryRoot, `source${extname(sourceFileName)}`)
 
     await this.cleanupOrphanedTemporaryDirs(scratchBase, trackId, jobId)
-    await rm(temporaryRoot, { recursive: true, force: true })
-    await mkdir(temporaryRoot, { recursive: true })
+    // An unpredictable, owner-only directory; every path below derives from it.
+    const temporaryRoot = await createJobScratchDir(scratchBase, `${trackId}-${jobId}-${attempt}-`)
+    const inputPath = join(temporaryRoot, `source${extname(sourceFileName)}`)
 
     await this.recorder.start({
       trackId,
