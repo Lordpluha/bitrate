@@ -7,7 +7,7 @@ const PENDING_2FA_COOKIE = 'pending_2fa_token'
 export const OAUTH_STATE_COOKIE = 'oauth_state'
 
 /** Remembers which legal documents the user accepted before leaving for the OAuth provider. */
-export const OAUTH_ACCEPT_COOKIE = 'oauth_accept'
+const OAUTH_ACCEPT_COOKIE = 'oauth_accept'
 
 /** A pending 2FA challenge is only valid for ten minutes. */
 const PENDING_2FA_MAX_AGE_MS = 10 * 60 * 1000
