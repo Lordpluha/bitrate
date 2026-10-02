@@ -85,12 +85,20 @@ describe('AuthController (artists)', () => {
   it('registration should call registerArtist', async () => {
     authService.registerArtist.mockResolvedValue(undefined as never)
 
-    await controller.registration({ email: 'a@example.com', password: 'pass', username: 'a' })
+    await controller.registration({
+      email: 'a@example.com',
+      password: 'pass',
+      username: 'a',
+      acceptLegal: true,
+      acceptArtistAgreement: true,
+    })
 
     expect(authService.registerArtist).toHaveBeenCalledWith({
       email: 'a@example.com',
       password: 'pass',
       username: 'a',
+      acceptLegal: true,
+      acceptArtistAgreement: true,
     })
   })
 

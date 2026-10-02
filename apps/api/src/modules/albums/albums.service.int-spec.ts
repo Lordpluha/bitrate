@@ -77,7 +77,11 @@ describe('AlbumsService (int)', () => {
     prismaMock.artist.findUnique.mockResolvedValue(null)
 
     await expect(
-      service.create('artist-1', { title: 'New Album', description: undefined }),
+      service.create('artist-1', {
+        title: 'New Album',
+        description: undefined,
+        rightsConfirmed: true,
+      }),
     ).rejects.toThrow('Artist not found')
   })
 
@@ -90,6 +94,7 @@ describe('AlbumsService (int)', () => {
     const result = await service.create('artist-1', {
       title: 'Album Title',
       description: undefined,
+      rightsConfirmed: true,
     })
 
     expect(prismaMock.album.create).toHaveBeenCalled()

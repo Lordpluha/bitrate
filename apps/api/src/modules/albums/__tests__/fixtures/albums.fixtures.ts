@@ -21,6 +21,8 @@ export const buildAlbum = (overrides: Partial<GetByIdResult> = {}): GetByIdResul
   totalTracks: 0,
   copyright: null,
   deletedAt: null,
+  rightsConfirmedVersion: null,
+  rightsConfirmedAt: null,
   tracks: [],
   ...overrides,
 })
@@ -49,5 +51,9 @@ export const buildArtist = (
   socials: null,
   deletedAt: null,
   locale: 'en',
+  legalVersion: null,
+  legalAcceptedAt: null,
+  artistAgreementVersion: null,
+  artistAgreementAcceptedAt: null,
   ...overrides,
 })

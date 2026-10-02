@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto'
 import type { LoginResult } from '@common/auth.types'
+import { ARTIST_AGREEMENT_VERSION, LEGAL_VERSION } from '@common/legal'
 import { MailService } from '@infra/mail/mail.service'
 import {
   DEFAULT_MAIL_LOCALE,
@@ -22,7 +23,7 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import type { ArtistSession } from '@prisma/client'
 import type { JWTPayload } from '../tokens'
-import type { RegistrationDto } from './dtos'
+import type { ArtistRegistrationDto } from './dtos'
 import type { ArtistSessionEntity } from './entities'
 
 /** Represents the artists auth service. */
@@ -41,17 +42,22 @@ export class ArtistsAuthService {
   ) {}
 
   /** Runs the register artist operation. */
-  async registerArtist(registrationDto: RegistrationDto) {
+  async registerArtist(registrationDto: ArtistRegistrationDto) {
     const artist = await this.artists.findByEmail(registrationDto.email)
 
     if (artist) {
       throw new ConflictException('Artist with this email already exists')
     }
 
+    const acceptedAt = new Date()
     const created = await this.artists.register({
       username: registrationDto.username,
       email: registrationDto.email,
       password: await this.token.hashPassword(registrationDto.password),
+      legalVersion: LEGAL_VERSION,
+      legalAcceptedAt: acceptedAt,
+      artistAgreementVersion: ARTIST_AGREEMENT_VERSION,
+      artistAgreementAcceptedAt: acceptedAt,
     })
     await this.issueEmailVerification(created.id, created.email, created.username)
     return { requiresEmailVerification: true as const }

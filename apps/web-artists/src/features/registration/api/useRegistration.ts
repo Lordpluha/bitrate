@@ -44,6 +44,8 @@ export const useRegistration = (
         '/api/v1/artists/auth/registration',
         {
           body: {
+            acceptArtistAgreement: true,
+            acceptLegal: true,
             email: data.email,
             password: data.password,
             username: generatedUsername,

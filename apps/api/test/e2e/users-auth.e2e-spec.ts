@@ -31,6 +31,7 @@ describe('UsersAuth (e2e)', () => {
       email: `user_${runId}@example.com`,
       password: 'password123',
       username: `user_${runId}`,
+      acceptLegal: true,
     }
 
     await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)
@@ -61,6 +62,7 @@ describe('UsersAuth (e2e)', () => {
       email: `dup_${runId}@example.com`,
       password: 'pass123',
       username: `dup_${runId}`,
+      acceptLegal: true,
     }
 
     await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)
@@ -81,6 +83,7 @@ describe('UsersAuth (e2e)', () => {
       email: `lock_${runId}@example.com`,
       password: 'pass123',
       username: `lock_${runId}`,
+      acceptLegal: true,
     }
 
     await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)

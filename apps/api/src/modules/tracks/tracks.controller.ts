@@ -39,7 +39,12 @@ import {
   UnlikeTrackSwagger,
   UpdateTrackByIdSwagger,
 } from './decorators'
-import { type CreateTrackDto, CreateTrackSchema } from './dtos/create-track.dto'
+import {
+  type CreateTrackDto,
+  CreateTrackSchema,
+  type UpdateTrackDto,
+  UpdateTrackSchema,
+} from './dtos/create-track.dto'
 import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
 import { type AudioStreamFormat, SUPPORTED_AUDIO_STREAM_FORMATS } from './track-audio.helpers'
 import { cleanupUploadedFiles } from './track-media'
@@ -188,15 +193,15 @@ export class TracksController {
   putTrack(
     @Req() req: Request,
     @Param('id', ParseUUIDPipe) id: TrackEntity['id'],
-    @Body(new ZodValidationPipe(CreateTrackSchema))
-    createTrackDto: CreateTrackDto,
+    @Body(new ZodValidationPipe(UpdateTrackSchema))
+    updateTrackDto: UpdateTrackDto,
     @UploadedFiles() files: TrackUploadFiles,
   ) {
     const artist = req.artist as ArtistEntity
     return this.trackUploadService.update(
       artist.id,
       id,
-      createTrackDto,
+      updateTrackDto,
       files?.audio?.[0],
       files?.cover?.[0],
     )

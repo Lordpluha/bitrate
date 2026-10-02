@@ -1,4 +1,5 @@
 import type { AppConfig } from '@common/config'
+import { LegalAcceptanceRequiredError } from '@common/legal'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import type { TokenService } from '@modules/tokens/token.service'
 import type { ConfigService } from '@nestjs/config'
@@ -125,5 +126,68 @@ describe('ArtistsOAuthController', () => {
     } finally {
       process.env.NODE_ENV = previousNodeEnv
     }
+  })
+
+  describe('legal acceptance', () => {
+    it('remembers both acceptances from the start request for the callback', () => {
+      const res = makeResponse()
+
+      controller.googleAuth(res, 'true', 'true')
+
+      expect(res.cookie).toHaveBeenCalledWith(
+        'oauth_accept',
+        'legal,artist-agreement',
+        expect.objectContaining({ httpOnly: true, sameSite: 'lax', path: '/' }),
+      )
+    })
+
+    it('stores no acceptance when the start request did not accept', () => {
+      const res = makeResponse()
+
+      controller.googleAuth(res)
+
+      expect(res.cookie).not.toHaveBeenCalledWith(
+        'oauth_accept',
+        expect.anything(),
+        expect.anything(),
+      )
+    })
+
+    it('passes the remembered acceptances to the callback and clears them', async () => {
+      oauthService.handleGoogleCallback.mockResolvedValue({
+        access_token: 'at',
+        refresh_token: 'rt',
+      })
+      const res = makeResponse()
+
+      await controller.googleCallback(
+        'code',
+        'state',
+        { cookies: { oauth_state: 'state', oauth_accept: 'legal,artist-agreement' } } as never,
+        res,
+      )
+
+      expect(oauthService.handleGoogleCallback).toHaveBeenCalledWith('code', {
+        acceptLegal: true,
+        acceptArtistAgreement: true,
+      })
+      expect(res.clearCookie).toHaveBeenCalledWith('oauth_accept')
+    })
+
+    it('sends a new, unaccepting artist back to login with an explanatory error', async () => {
+      oauthService.handleFacebookCallback.mockRejectedValue(new LegalAcceptanceRequiredError())
+      const res = makeResponse()
+
+      await controller.facebookCallback(
+        'code',
+        'state',
+        { cookies: { oauth_state: 'state' } } as never,
+        res,
+      )
+
+      expect(res.redirect).toHaveBeenCalledWith(
+        'https://artists.example.com/login?error=legal_acceptance_required',
+      )
+    })
   })
 })

@@ -10,6 +10,12 @@ const publicRoutes = [
   ROUTES.auth.resetPassword(),
   ROUTES.auth.verifyEmail(),
   ROUTES.landing,
+  /** The documents linked from sign-up must be readable before an account exists. */
+  ROUTES.terms,
+  ROUTES.privacy,
+  ROUTES.community,
+  ROUTES.complaints,
+  ROUTES.copyright,
   '/login',
   '/login/2fa',
   '/offline',

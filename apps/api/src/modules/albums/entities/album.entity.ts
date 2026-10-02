@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
 import type { Album, AlbumType } from '@prisma/client'
 
 /** Represents the album entity. */
@@ -54,4 +54,15 @@ export class AlbumEntity implements Album {
   /** Soft deletion timestamp. */
   @ApiProperty({ nullable: true })
   deletedAt: Date | null
+
+  /**
+   * Artist Agreement revision the artist confirmed their rights under at creation, if recorded.
+   * Kept out of the API schema: it is evidence for us, not data clients consume.
+   */
+  @ApiHideProperty()
+  rightsConfirmedVersion: string | null
+
+  /** When the artist confirmed their rights, if recorded. Hidden from the schema like the version. */
+  @ApiHideProperty()
+  rightsConfirmedAt: Date | null
 }

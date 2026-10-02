@@ -94,7 +94,9 @@ describe('AlbumsController (int)', () => {
     const album = buildAlbum()
     service.create.mockResolvedValue(album as never)
 
-    const res = await request(app.getHttpServer()).post('/albums').send({ title: 'New Album' })
+    const res = await request(app.getHttpServer())
+      .post('/albums')
+      .send({ title: 'New Album', rightsConfirmed: true })
 
     expect(res.status).toBe(201)
     expect(service.create).toHaveBeenCalledWith(

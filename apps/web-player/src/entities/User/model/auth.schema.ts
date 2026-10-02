@@ -19,6 +19,12 @@ export const registrationSchema = z
     email: emailSchema,
     password: passwordSchema,
     confirmPassword: passwordSchema,
+    acceptLegal: z
+      .boolean()
+      .refine(
+        (accepted) => accepted,
+        'You must accept the Terms of Use and Community Guidelines',
+      ),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
