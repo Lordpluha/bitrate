@@ -1,6 +1,7 @@
 import { type EnvironmentProviders, makeEnvironmentProviders } from '@angular/core'
 import { ArtistRepository } from '@domain/artist'
 import { AuditRepository } from '@domain/audit'
+import { GenreRepository } from '@domain/genre'
 import { ModerationReportRepository } from '@domain/moderation'
 import { OverviewRepository } from '@domain/overview'
 import { RoleRepository } from '@domain/role'
@@ -10,6 +11,7 @@ import { UserRepository } from '@domain/user'
 import { HttpArtistRepository } from './artists'
 import { HttpAuditRepository } from './audit'
 import { HttpTrackRepository } from './catalog'
+import { HttpGenreRepository } from './genres'
 import { HttpModerationReportRepository } from './moderation'
 import { HttpOverviewRepository } from './overview'
 import { HttpRoleRepository } from './roles'
@@ -26,6 +28,7 @@ export function provideAdminInfrastructure(): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: ArtistRepository, useClass: HttpArtistRepository },
     { provide: AuditRepository, useClass: HttpAuditRepository },
+    { provide: GenreRepository, useClass: HttpGenreRepository },
     { provide: ModerationReportRepository, useClass: HttpModerationReportRepository },
     { provide: OverviewRepository, useClass: HttpOverviewRepository },
     { provide: RoleRepository, useClass: HttpRoleRepository },
