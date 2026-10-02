@@ -17,7 +17,7 @@ export const LEGAL_SLUGS = [
 export type LegalSlug = (typeof LEGAL_SLUGS)[number]
 
 /** A table whose cells use the same inline markup as paragraphs. */
-export type LegalTable = { header: string[]; rows: string[][] }
+type LegalTable = { header: string[]; rows: string[][] }
 
 /** One block of a section. */
 export type LegalBlock =
@@ -27,7 +27,7 @@ export type LegalBlock =
   | ({ kind: 'table' } & LegalTable)
 
 /** A headed run of blocks; the lead-in before the first heading has no heading. */
-export type LegalSection = { heading: string | null; blocks: LegalBlock[] }
+type LegalSection = { heading: string | null; blocks: LegalBlock[] }
 
 /** One legal document. */
 export type LegalDocument = {
