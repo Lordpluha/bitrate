@@ -2937,13 +2937,6 @@ export interface components {
        * @description Soft deletion timestamp.
        */
       deletedAt: string | null
-      /** @description Artist Agreement revision the artist confirmed their rights under at upload, if recorded. */
-      rightsConfirmedVersion: string | null
-      /**
-       * Format: date-time
-       * @description When the artist confirmed their rights, if recorded.
-       */
-      rightsConfirmedAt: string | null
     }
     TrackManifestRenditionEntity: {
       /**
@@ -3273,13 +3266,6 @@ export interface components {
        * @description Soft deletion timestamp.
        */
       deletedAt: string | null
-      /** @description Artist Agreement revision the artist confirmed their rights under at creation, if recorded. */
-      rightsConfirmedVersion: string | null
-      /**
-       * Format: date-time
-       * @description When the artist confirmed their rights, if recorded.
-       */
-      rightsConfirmedAt: string | null
     }
     CreateAlbumDto: {
       /** @description Playlist title */
