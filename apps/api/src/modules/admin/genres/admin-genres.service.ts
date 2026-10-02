@@ -21,7 +21,7 @@ type ListGenresInput = {
 type SelectedGenre = Prisma.GenreGetPayload<{ select: typeof ADMIN_GENRE_SELECT }>
 
 /** Lowercases, strips diacritics and collapses everything but letters/digits into single hyphens. */
-export function slugifyGenreName(name: string): string {
+function slugifyGenreName(name: string): string {
   return name
     .normalize('NFKD')
     .replace(/[̀-ͯ]/g, '')
