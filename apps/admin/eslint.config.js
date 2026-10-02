@@ -64,6 +64,12 @@ module.exports = tseslint.config(
     rules: {
       '@angular-eslint/directive-selector': 'off',
       '@angular-eslint/component-selector': 'off',
+      // Upstream spartan-ng source aliases `class`/`style` inputs, types arrays as ReadonlyArray and
+      // wires keyboard handling on a non-focusable tab-list container (see the vendored inline-template block
+      // at the end of this file). Kept as shipped so
+      // `@spartan-ng/cli` updates stay diffable.
+      '@angular-eslint/no-input-rename': 'off',
+      '@typescript-eslint/array-type': 'off',
     },
   },
   /**
@@ -198,5 +204,10 @@ module.exports = tseslint.config(
        */
       '@angular-eslint/template/no-call-expression': 'off',
     },
+  },
+  {
+    // Inline templates of the vendored spartan-ng source (see the `src/app/presentation/ui` block); last so it wins over `templateAccessibility`.
+    files: ['src/app/presentation/ui/**/*.ts/*.html'],
+    rules: { '@angular-eslint/template/interactive-supports-focus': 'off' },
   },
 )
