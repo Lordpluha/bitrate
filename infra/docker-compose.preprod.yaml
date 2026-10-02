@@ -1,5 +1,35 @@
 # Docker Compose configuration for pre-production environment with PostgreSQL, Redis, and all application services.
 
+# The environment `api` and `worker` share, so the two cannot drift. `worker` merges it
+# (`<<: *api-env`) and overrides single keys.
+x-api-env: &api-env
+  NODE_ENV: development
+  DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}
+  SHADOW_DATABASE_URL: ${SHADOW_DATABASE_URL:-postgresql://admin:admin@postgres:5432/bitrate_shadow}
+  REDIS_URL: redis://redis:6379
+  REDIS_HOST: ${REDIS_HOST:-redis}
+  REDIS_PORT: ${REDIS_PORT:-6379}
+  WEB_HOST: ${WEB_HOST:-http://localhost:3001}
+  # No SMTP host, on purpose: MailService builds no transporter without one and logs the
+  # verification/reset link instead. Point SMTP_HOST at a real server to send for real.
+  DEV_MAIL_LOG_TOKENS: "true"
+  EMAIL_FROM: no-reply@bitrate.local
+  JWT_SECRET: ${JWT_SECRET:-change_me_in_production_secret}
+  PORT: 3000
+  # Gates GET /metrics — see AppController.assertMetricsAccess. Without any value the
+  # route 404s even on this internal network, so the observability profile's Prometheus
+  # (infra/observability/prometheus/prometheus.yml, which hardcodes this same default —
+  # it cannot read .env) couldn't scrape it at all. Fixed dev-only value, same spirit as
+  # this file's admin/admin Postgres credentials.
+  METRICS_TOKEN: ${METRICS_TOKEN:-dev-metrics-token-local-only-0001}
+  # Object store settings for the future STORAGE_DRIVER=s3 cutover. Inert while the driver
+  # stays at its `local` default; the same defaults seed the seaweedfs service below.
+  S3_ENDPOINT: http://seaweedfs:8333
+  S3_BUCKET: ${S3_BUCKET:-bitrate-audio}
+  S3_ACCESS_KEY: ${S3_ACCESS_KEY:-bitrateDevAccessKey}
+  S3_SECRET_KEY: ${S3_SECRET_KEY:-bitrateDevSecretKeyChangeMe0001}
+  S3_FORCE_PATH_STYLE: "true"
+
 services:
   # PostgreSQL Database
   postgres:
@@ -106,33 +136,7 @@ services:
       target: development
     container_name: bitrate-api
     restart: unless-stopped
-    environment:
-      NODE_ENV: development
-      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}
-      SHADOW_DATABASE_URL: ${SHADOW_DATABASE_URL:-postgresql://admin:admin@postgres:5432/bitrate_shadow}
-      REDIS_URL: redis://redis:6379
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      WEB_HOST: ${WEB_HOST:-http://localhost:3001}
-      # No SMTP host, on purpose: MailService builds no transporter without one and logs the
-      # verification/reset link instead. Point SMTP_HOST at a real server to send for real.
-      DEV_MAIL_LOG_TOKENS: "true"
-      EMAIL_FROM: no-reply@bitrate.local
-      JWT_SECRET: ${JWT_SECRET:-change_me_in_production_secret}
-      PORT: 3000
-      # Gates GET /metrics — see AppController.assertMetricsAccess. Without any value the
-      # route 404s even on this internal network, so the observability profile's Prometheus
-      # (infra/observability/prometheus/prometheus.yml, which hardcodes this same default —
-      # it cannot read .env) couldn't scrape it at all. Fixed dev-only value, same spirit as
-      # this file's admin/admin Postgres credentials.
-      METRICS_TOKEN: ${METRICS_TOKEN:-dev-metrics-token-local-only-0001}
-      # Object store settings for the future STORAGE_DRIVER=s3 cutover. Inert while the driver
-      # stays at its `local` default; the same defaults seed the seaweedfs service above.
-      S3_ENDPOINT: http://seaweedfs:8333
-      S3_BUCKET: ${S3_BUCKET:-bitrate-audio}
-      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-bitrateDevAccessKey}
-      S3_SECRET_KEY: ${S3_SECRET_KEY:-bitrateDevSecretKeyChangeMe0001}
-      S3_FORCE_PATH_STYLE: "true"
+    environment: *api-env
     ports:
       - "${API_PORT:-3000}:3000"
     volumes:
@@ -151,6 +155,45 @@ services:
     networks:
       - bitrate-network
     command: pnpm --filter @bitrate/api run start:dev
+
+  # Standalone audio-transcode worker (ADR-0049), for rehearsing the split locally. Behind the
+  # `worker` profile, so `task dev:up` does not start it: this stack is the dev/CI one, where the
+  # API still consumes the queue itself and STORAGE_DRIVER stays `local`. Start it with
+  # `task worker:up`. Dev needs no cutover guard — the worker's refusal to run on local storage
+  # applies only to NODE_ENV=production — but this container has its own filesystem, so with the
+  # local driver it cannot read files the API wrote; set STORAGE_DRIVER=s3 (the seaweedfs service
+  # above) when you want it to process real jobs. The development image has no compiled output
+  # in this container, so it runs the watch build of the worker entrypoint instead of dist.
+  worker:
+    build:
+      context: ..
+      dockerfile: ./apps/api/Dockerfile
+      target: development
+    container_name: bitrate-worker
+    restart: unless-stopped
+    environment:
+      <<: *api-env
+      AUDIO_PROCESSING_WORKER_ENABLED: "true"
+    volumes:
+      - ../apps/api:/app/apps/api
+      - ../packages:/app/packages
+      - /app/node_modules
+      - /app/apps/api/node_modules
+      - /app/apps/api/dist
+    # The image's HTTP HEALTHCHECK, if any, targets the API port; the real check is #210.
+    healthcheck:
+      disable: true
+    stop_grace_period: 300s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - bitrate-network
+    command: pnpm --filter @bitrate/api run worker
+    profiles:
+      - worker
 
   # Web Player (Next.js)
   web-player:
