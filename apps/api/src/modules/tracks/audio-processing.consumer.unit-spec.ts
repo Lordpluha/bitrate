@@ -49,6 +49,11 @@ jest.mock('./audio-master', () => ({
 jest.mock('./audio-scratch', () => ({
   ...(jest.requireActual('./audio-scratch') as object),
   removeStaleScratchDirs: jest.fn().mockResolvedValue(undefined as never),
+  createJobScratchDir: jest
+    .fn()
+    .mockImplementation((base: unknown, prefix: unknown) =>
+      Promise.resolve(`${String(base)}/${String(prefix)}x1y2z3`),
+    ),
 }))
 
 jest.mock('node:fs', () => ({
