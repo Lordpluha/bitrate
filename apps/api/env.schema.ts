@@ -82,6 +82,13 @@ export const envSchema = z
     S3_FORCE_PATH_STYLE: z.coerce.boolean().default(true),
 
     /**
+     * Directory for the audio pipeline's local working files: upload temp files, and the
+     * per-job scratch directories the consumer downloads masters into. Production points it
+     * at the on-disk `worker_tmp` volume; unset, it is the OS temp directory.
+     */
+    AUDIO_SCRATCH_ROOT: z.string().min(1).optional(),
+
+    /**
      * Whether `AudioProcessingConsumer`'s BullMQ worker actually claims and runs jobs.
      * Defaults on for the real API process. A seed entrypoint that boots the full
      * `AppModule` (`src/infra/seeds/seed.ts`) sets this to `false` before importing it

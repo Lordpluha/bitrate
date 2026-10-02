@@ -1,3 +1,4 @@
+import { Readable } from 'node:stream'
 import type { AppConfig } from '@common/config'
 import { CacheService } from '@infra/cache/cache.service'
 import { PrismaService } from '@infra/prisma/prisma.service'
@@ -34,6 +35,15 @@ jest.mock(
   }),
   { virtual: true },
 )
+
+/**
+ * The upload temp directory is created with real `mkdtemp`/`lstat` calls, which this spec's
+ * `node:fs` mock does not provide. Its creation is covered in `audio-scratch.unit-spec.ts`.
+ */
+jest.mock('./audio-scratch', () => ({
+  ...jest.requireActual<typeof import('./audio-scratch')>('./audio-scratch'),
+  getUploadTempDir: jest.fn().mockReturnValue('/tmp/bitrate-upload-test'),
+}))
 
 jest.mock('node:fs', () => ({
   createReadStream: jest.fn().mockReturnValue({ pipe: jest.fn() }),
@@ -77,6 +87,16 @@ describe('TracksService (int)', () => {
             getObjectStream: jest.fn(),
             exists: jest.fn(),
             getPresignedUrl: jest.fn(),
+            getObjectMeta: jest.fn(),
+            deleteObject: jest.fn(),
+            /** Drains the stream so a missing fixture file cannot raise an unhandled `error`. */
+            upload: jest.fn((key: string, body: unknown) => {
+              if (body instanceof Readable) {
+                body.on('error', () => undefined)
+                body.destroy()
+              }
+              return Promise.resolve(key)
+            }),
           },
         },
         /**
@@ -151,7 +171,7 @@ describe('TracksService (int)', () => {
 
     expect(queueMock.add).toHaveBeenCalledWith(
       'convert-audio',
-      expect.any(Object),
+      expect.objectContaining({ masterKey: expect.stringMatching(/^masters\//) }),
       expect.objectContaining({ attempts: 5 }),
     )
     expect(result).toEqual(track)

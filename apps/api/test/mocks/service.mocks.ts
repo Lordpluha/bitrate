@@ -42,6 +42,8 @@ export const makeStorageMock = () =>
       contentType: 'audio/ogg',
     } as never),
     getPresignedUrl: jest.fn(),
+    getObjectMeta: jest.fn(),
+    deleteObject: jest.fn(),
   }) as unknown as jest.Mocked<StorageService>
 
 /** Makes `$transaction(fn)` run its callback against the same Prisma mock. */

@@ -55,3 +55,17 @@ export function verifySignedStorageToken(token: string, secret: string): string 
     return null
   }
 }
+
+/**
+ * Builds the browser-facing URL for an object: a signed token route on this API.
+ * Both storage drivers use it, so the object store's own endpoint never reaches a browser.
+ */
+export function createSignedStorageUrl(
+  key: string,
+  expiresInSeconds: number,
+  secret: string,
+  apiBaseUrl: string,
+): string {
+  const token = createSignedStorageToken(key, expiresInSeconds, secret)
+  return `${apiBaseUrl}/api/v1/storage/objects/${encodeURIComponent(token)}`
+}
