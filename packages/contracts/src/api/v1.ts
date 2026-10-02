@@ -184,23 +184,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/api/v1/auth/legal/accept': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    /** Records that the signed-in user accepted the current legal documents. */
-    post: operations['UsersAuthController_acceptLegal_v1']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/api/v1/auth/me': {
     parameters: {
       query?: never
@@ -212,6 +195,26 @@ export interface paths {
     get: operations['UsersAuthController_getMe_v1']
     put?: never
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/legal/accept': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Records that the signed-in user accepted the current legal documents.
+     * @description Records the current Terms of Use, Community Guidelines and Privacy Policy revision for the signed-in account. Used when `legalAcceptanceRequired` is true on the account.
+     */
+    post: operations['UsersAuthController_acceptLegal_v1']
     delete?: never
     options?: never
     head?: never
@@ -2472,14 +2475,6 @@ export interface components {
       /** @description Whether the account must accept the current legal documents before carrying on. */
       legalAcceptanceRequired: boolean
     }
-    LegalAcceptanceDto: {
-      /**
-       * @description Accepts the current Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
-       * @example true
-       * @enum {boolean}
-       */
-      acceptLegal: true
-    }
     TwoFactorRequiredEntity: {
       /**
        * @description Always true — signals the client must complete the 2FA challenge.
@@ -2522,6 +2517,14 @@ export interface components {
       username: string
       /**
        * @description Accepts the Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
+    }
+    LegalAcceptanceDto: {
+      /**
+       * @description Accepts the current Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
        * @example true
        * @enum {boolean}
        */
@@ -6019,6 +6022,134 @@ export interface operations {
       }
     }
   }
+  UsersAuthController_getMe_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description The signed-in account, including its own email and two-factor state */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SelfUserEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   UsersAuthController_acceptLegal_v1: {
     parameters: {
       query?: never
@@ -6048,34 +6179,11 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Not authenticated */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  UsersAuthController_getMe_v1: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description The signed-in account, including its own email and two-factor state */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['SelfUserEntity']
-        }
-      }
-      /** @description Unauthorized */
+      /**
+       * @description Unauthorized
+       *
+       *     Not authenticated
+       */
       401: {
         headers: {
           [name: string]: unknown
