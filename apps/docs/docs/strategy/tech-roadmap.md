@@ -81,6 +81,11 @@ because `STORAGE_DRIVER` is not set as a production environment variable and no 
 exist. The decision is to move the audio to `STORAGE_DRIVER=s3`, which also removes the
 single-host pin listed below.
 
+> Update: the `local` storage driver and `STORAGE_DRIVER` have since been removed (#279). The API
+> has one backend, S3-compatible object storage (SeaweedFS, ADR-0050), and the `S3_*` variables
+> are required. The mentions of the two drivers on this page describe the state when it was
+> written.
+
 This is the one defect where the failure is not recoverable by fixing code afterwards. A
 platform whose pitch is that artists entrust it with their masters cannot be the reason those
 masters are gone — and the [artist agreement](./law-roadmap.md#gate-3--distribution-to-the-dsps)

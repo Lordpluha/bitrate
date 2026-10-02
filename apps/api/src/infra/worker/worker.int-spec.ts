@@ -64,7 +64,6 @@ describe('transcode worker (int)', () => {
     await mkdir(getJobScratchBase({ AUDIO_SCRATCH_ROOT: scratchRoot }), { mode: 0o700 })
     Object.assign(process.env, {
       NODE_ENV: 'test',
-      STORAGE_DRIVER: 'local',
       WEB_HOST: 'http://localhost:3000',
       JWT_SECRET: 'worker-int-test-secret',
       AUDIO_SCRATCH_ROOT: scratchRoot,
