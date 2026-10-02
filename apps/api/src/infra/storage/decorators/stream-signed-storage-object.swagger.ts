@@ -7,7 +7,7 @@ export const StreamSignedStorageObjectSwagger = () =>
     ApiOperation({
       summary: 'Stream a local storage object via a signed, time-limited token',
       description:
-        'Local-driver equivalent of an S3 presigned URL. The token embeds the object key and expiry, verified via HMAC.',
+        'Time-limited URL issued by the storage driver; the API streams the object through STORAGE_SERVICE. The token embeds the object key and expiry, verified via HMAC.',
     }),
     ApiParam({ name: 'token', type: 'string' }),
     ApiResponse({ status: 200, description: 'Full object stream' }),
