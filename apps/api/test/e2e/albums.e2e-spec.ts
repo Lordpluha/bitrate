@@ -18,6 +18,8 @@ const registerAndLoginArtist = async () => {
     email: `artist_${runId}@example.com`,
     password: 'password123',
     username: `artist_${runId}`,
+    acceptLegal: true,
+    acceptArtistAgreement: true,
   }
 
   await request(app.getHttpServer())
@@ -55,7 +57,7 @@ describe('AlbumsController (e2e)', () => {
     const createResponse = await request(app.getHttpServer())
       .post('/albums')
       .set('Cookie', cookies)
-      .send({ title: 'Album title', description: 'desc' })
+      .send({ title: 'Album title', description: 'desc', rightsConfirmed: true })
       .expect(201)
 
     const albumId = createResponse.body.id as string
@@ -83,7 +85,7 @@ describe('AlbumsController (e2e)', () => {
     await request(app.getHttpServer())
       .post('/albums')
       .set('Cookie', cookies)
-      .send({ title: `Rock Album ${runId}`, description: 'desc' })
+      .send({ title: `Rock Album ${runId}`, description: 'desc', rightsConfirmed: true })
       .expect(201)
 
     const response = await request(app.getHttpServer())
@@ -107,7 +109,7 @@ describe('AlbumsController (e2e)', () => {
     await request(app.getHttpServer())
       .post('/albums')
       .set('Cookie', cookies)
-      .send({ title: `RoCk Case ${runId}`, description: 'desc' })
+      .send({ title: `RoCk Case ${runId}`, description: 'desc', rightsConfirmed: true })
       .expect(201)
 
     const response = await request(app.getHttpServer())

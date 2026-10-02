@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { rm } from 'node:fs/promises'
 import { extname, join } from 'node:path'
 import type { AppConfig } from '@common/config'
+import { RIGHTS_CONFIRMATION_MESSAGE, rightsConfirmationRecord } from '@common/rights-confirmation'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { NS } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
@@ -15,14 +16,14 @@ import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import type { ArtistEntity } from '@modules/artists'
 import { InjectQueue } from '@nestjs/bullmq'
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { TrackProcessingTrigger } from '@prisma/client'
 import type { Queue } from 'bullmq'
 import { downloadObjectToFile, storeMaster } from './audio-master'
 import { getUploadTempDir } from './audio-scratch'
 import { getMasterKey } from './audio-storage-keys'
-import type { CreateTrackDto } from './dtos'
+import type { CreateTrackDto, UpdateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
 import { getTargetBitrates } from './track-audio.helpers'
@@ -178,6 +179,7 @@ export class TrackUploadService {
           audioUrl: audioFile.filename,
           cover: coverFile?.filename ?? null,
           duration: metadata.duration,
+          ...rightsConfirmationRecord(),
           processingStatus: 'PROCESSING',
           processingError: null,
           processingAttempts: 0,
@@ -212,7 +214,7 @@ export class TrackUploadService {
   async update(
     artistId: ArtistEntity['id'],
     id: TrackEntity['id'],
-    createTrackDto: CreateTrackDto,
+    updateTrackDto: UpdateTrackDto,
     audioFile?: Express.Multer.File,
     coverFile?: Express.Multer.File,
   ) {
@@ -224,6 +226,9 @@ export class TrackUploadService {
       })
       if (!existingTrack) {
         throw new NotFoundException('Track not found or does not belong to artist')
+      }
+      if (audioFile && !updateTrackDto.rightsConfirmed) {
+        throw new BadRequestException(RIGHTS_CONFIRMATION_MESSAGE)
       }
       if (coverFile) await validateCoverFile(coverFile)
 
@@ -242,9 +247,10 @@ export class TrackUploadService {
         const updated = await tx.track.update({
           where: { id },
           data: {
-            title: createTrackDto.title,
+            title: updateTrackDto.title,
             cover: coverFile?.filename ?? undefined,
             audioUrl: audioFile?.filename ?? undefined,
+            ...(audioFile ? rightsConfirmationRecord() : {}),
             duration: metadata?.duration ?? undefined,
             processingStatus: audioFile ? 'PROCESSING' : undefined,
             processingError: audioFile ? null : undefined,

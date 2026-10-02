@@ -82,4 +82,20 @@ export class ArtistEntity implements Artist {
   /** Transactional-email locale, set at registration from Accept-Language. */
   @ApiProperty()
   locale: string
+
+  /** Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
+  @ApiProperty({ nullable: true, type: String })
+  legalVersion: string | null
+
+  /** When that revision was accepted, if recorded. */
+  @ApiProperty({ nullable: true, type: Date })
+  legalAcceptedAt: Date | null
+
+  /** Revision of the Artist Agreement accepted at registration, if recorded. */
+  @ApiProperty({ nullable: true, type: String })
+  artistAgreementVersion: string | null
+
+  /** When the Artist Agreement was accepted, if recorded. */
+  @ApiProperty({ nullable: true, type: Date })
+  artistAgreementAcceptedAt: Date | null
 }
