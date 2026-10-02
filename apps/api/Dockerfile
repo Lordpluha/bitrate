@@ -149,8 +149,13 @@ COPY --chown=bitrateapi:nodejs apps/api/package.json ./apps/api/
 # Docker initialises an empty volume from the image directory, ownership included, so the
 # non-root user needs no chown on the host. Two empty directories, so the recursive chown
 # scoped to them costs nothing.
-RUN mkdir -p /app/storage/private /app/storage/public \
-    && chown -R bitrateapi:nodejs /app/storage
+#
+# /app/worker-tmp is the transcode worker's scratch root (AUDIO_SCRATCH_ROOT, set on the
+# `worker` service). Same mechanism: the named volume `worker_tmp` is seeded from this empty,
+# non-root-owned directory, so the worker can write to it without a host chown. The API never
+# mounts it.
+RUN mkdir -p /app/storage/private /app/storage/public /app/worker-tmp \
+    && chown -R bitrateapi:nodejs /app/storage /app/worker-tmp
 
 USER bitrateapi
 
