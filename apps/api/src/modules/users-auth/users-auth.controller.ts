@@ -22,6 +22,7 @@ import { TokenService } from '../tokens/token.service'
 import {
   AuthForgotPasswordSwagger,
   AuthGetSessionsSwagger,
+  AuthLegalAcceptSwagger,
   AuthLoginSwagger,
   AuthLogoutSwagger,
   AuthMeSwagger,
@@ -39,6 +40,8 @@ import {
 } from './decorators'
 import {
   ForgotPasswordSchema,
+  LegalAcceptanceDto,
+  LegalAcceptanceSchema,
   LoginSchema,
   RegistrationDto,
   RegistrationSchema,
@@ -127,6 +130,19 @@ export class UsersAuthController {
   async getMe(@Req() req: Request) {
     const user = req.user as UserEntity
     return await this.userService.findSelfById(user.id)
+  }
+
+  /** Records that the signed-in user accepted the current legal documents. */
+  @AuthLegalAcceptSwagger()
+  @UserAuth()
+  @HttpCode(200)
+  @Post('legal/accept')
+  async acceptLegal(
+    @Req() req: Request,
+    @Body(new ZodValidationPipe(LegalAcceptanceSchema)) _dto: LegalAcceptanceDto,
+  ) {
+    const user = req.user as UserEntity
+    return await this.userService.acceptLegal(user.id)
   }
 
   /** Runs the forgot password operation. */

@@ -75,7 +75,12 @@ export const useRegistrationForm = () => {
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
     mode: 'onChange',
-    defaultValues: { email: '', password: '' },
+    defaultValues: {
+      acceptArtistAgreement: false,
+      acceptLegal: false,
+      email: '',
+      password: '',
+    },
   })
 
   const passwordValue = form.watch('password')

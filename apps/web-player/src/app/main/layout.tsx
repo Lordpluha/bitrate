@@ -2,6 +2,7 @@
 
 import { cn } from '@bitrate/ui-react'
 import { selectCurrentTrack, usePlayerStore } from '@entities/Player'
+import { LegalReacceptanceDialog } from '@features/Auth/ui/LegalReacceptanceDialog'
 import { LeftSidebar } from '@widgets/LeftSidebar'
 import { MainHeader } from '@widgets/MainHeader'
 import { Player } from '@widgets/Player'
@@ -37,6 +38,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
   return (
     <div className="h-dvh overflow-hidden bg-background text-text xl:h-screen xl:overflow-visible">
       <MainHeader onCreate={() => setIsMobileCreateOpen(true)} />
+      <LegalReacceptanceDialog />
 
       <div
         className={cn(

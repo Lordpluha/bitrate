@@ -91,7 +91,13 @@ describe('ArtistsAuthService (int)', () => {
     artistsMock.findByEmail.mockResolvedValue(buildArtist() as never)
 
     await expect(
-      service.registerArtist({ email: 'a@example.com', password: 'p', username: 'a' }),
+      service.registerArtist({
+        email: 'a@example.com',
+        password: 'p',
+        username: 'a',
+        acceptLegal: true,
+        acceptArtistAgreement: true,
+      }),
     ).rejects.toThrow(ConflictException)
   })
 
