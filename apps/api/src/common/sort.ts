@@ -74,6 +74,9 @@ export function buildSortOrderBy<Field extends string>(
     case 'processingStatus':
       primary = { processingStatus: order }
       break
+    case 'releaseDate':
+      primary = { releaseDate: order }
+      break
     case 'monthlyListeners':
       primary = { monthlyListeners: order }
       break

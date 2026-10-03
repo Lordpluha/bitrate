@@ -51,6 +51,10 @@ const SESSION_ONLY_ROUTES = new Set([
  * the spec below.
  */
 const ROUTE_PERMISSIONS: Record<string, Permission> = {
+  'AdminAlbumsController.list': 'albums:read',
+  'AdminAlbumsController.getById': 'albums:read',
+  'AdminAlbumsController.remove': 'albums:delete',
+  'AdminAlbumsController.restore': 'albums:restore',
   'AdminArtistsController.list': 'artists:read',
   'AdminArtistsController.getById': 'artists:read',
   'AdminArtistsController.listTracks': 'artists:read',
@@ -154,6 +158,7 @@ describe('operator surface access control', () => {
 
   it('finds every operator controller on disk', () => {
     expect(controllers.map((controller) => controller.name).sort()).toEqual([
+      'AdminAlbumsController',
       'AdminArtistsController',
       'AdminAuditController',
       'AdminAuthController',
