@@ -268,10 +268,18 @@ services:
       AUDIO_SCRATCH_ROOT: /app/worker-tmp
     volumes:
       - worker_tmp:/app/worker-tmp
-    # The image's HEALTHCHECK probes the API's HTTP port, which this process does not open, so it
-    # would report the worker unhealthy forever. The real worker check arrives in #210.
+    # The image's HEALTHCHECK probes the API's HTTP port, which this process does not open. The
+    # worker answers on its own internal port WORKER_HTTP_PORT (default 9101, never published).
+    # Liveness, not readiness: a Redis/Postgres/SeaweedFS blip must not flag a worker that is
+    # mid-transcode, while a hung event loop (no answer) is exactly what this must catch.
+    # `restart` only reacts to an exit, so Docker marking the container unhealthy does not by
+    # itself restart it; the recovery path is described in ADR-0049.
     healthcheck:
-      disable: true
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:9101/health/live', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)}).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 3s
+      start_period: 40s
+      retries: 3
     # BullMQ finishes its active job on SIGTERM; a transcode can run for minutes.
     stop_grace_period: 300s
     depends_on:
