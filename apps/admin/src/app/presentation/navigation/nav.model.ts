@@ -94,6 +94,13 @@ export const NAV_SECTIONS: readonly NavSection[] = [
         icon: 'lucideAudioLines',
         permission: 'tracks:read',
       },
+      {
+        kind: 'link',
+        path: '/genres',
+        label: 'nav.genres',
+        icon: 'lucideTags',
+        permission: 'genres:read',
+      },
     ],
   },
   {

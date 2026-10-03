@@ -24,6 +24,7 @@ describe('AppSidebar', () => {
         overview: 'Overview',
         moderation: 'Moderation queue',
         catalog: 'Catalog pipeline',
+        genres: 'Genres',
         artists: 'Artists',
         users: 'Listeners',
         audit: 'Audit log',
@@ -73,7 +74,7 @@ describe('AppSidebar', () => {
     expect(host.textContent).toContain('Operations')
     expect(host.textContent).toContain('Accounts')
     expect(host.textContent).toContain('System')
-    expect(host.querySelectorAll('nav a')).toHaveLength(8)
+    expect(host.querySelectorAll('nav a')).toHaveLength(9)
   })
 
   /**
@@ -115,6 +116,26 @@ describe('AppSidebar', () => {
 
     expect(host.textContent).not.toContain('Catalog pipeline')
     expect(host.querySelectorAll('nav a')).toHaveLength(4)
+  })
+
+  it('shows Genres only to an operator holding genres:read', async () => {
+    TestBed.inject(SessionStore).set({
+      ...ADMIN_STAFF,
+      roleName: 'MODERATOR',
+      permissions: ['reports:read'],
+    })
+    const without = TestBed.createComponent(AppSidebar)
+    await without.whenStable()
+    expect((without.nativeElement as HTMLElement).textContent).not.toContain('Genres')
+
+    TestBed.inject(SessionStore).set({
+      ...ADMIN_STAFF,
+      roleName: 'MODERATOR',
+      permissions: ['reports:read', 'genres:read'],
+    })
+    const withIt = TestBed.createComponent(AppSidebar)
+    await withIt.whenStable()
+    expect((withIt.nativeElement as HTMLElement).textContent).toContain('Genres')
   })
 
   it('hides Roles when the operator lacks roles:read', async () => {

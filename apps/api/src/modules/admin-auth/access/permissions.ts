@@ -24,6 +24,9 @@ export const PERMISSIONS = [
   'roles:read',
   'roles:write',
   'overview:read',
+  'genres:read',
+  'genres:write',
+  'genres:delete',
 ] as const
 
 /** A single permission id from the catalogue. */
@@ -58,4 +61,5 @@ export const MODERATOR_TEMPLATE: readonly Permission[] = [
   'users:read',
   'users:delete',
   'audit:read',
+  'genres:read',
 ]

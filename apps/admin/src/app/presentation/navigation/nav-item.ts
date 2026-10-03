@@ -10,6 +10,7 @@ import {
   lucideLayoutDashboard,
   lucideMic,
   lucideScrollText,
+  lucideTags,
   lucideUserCog,
   lucideUsers,
 } from '@ng-icons/lucide'
@@ -37,6 +38,7 @@ import type { NavItem } from './nav.model'
       lucideLayoutDashboard,
       lucideMic,
       lucideScrollText,
+      lucideTags,
       lucideUserCog,
       lucideUsers,
     }),

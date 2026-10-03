@@ -50,6 +50,26 @@ export const routes: Routes = [
       import('@presentation/pages/catalog/track-detail').then((m) => m.TrackDetailPage),
   },
   {
+    path: 'genres',
+    title: 'Genres · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('genres:read')],
+    loadComponent: () => import('@presentation/pages/genres/genres').then((m) => m.GenresPage),
+  },
+  {
+    path: 'genres/new',
+    title: 'New genre · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('genres:write')],
+    loadComponent: () =>
+      import('@presentation/pages/genres/genre-editor').then((m) => m.GenreEditorPage),
+  },
+  {
+    path: 'genres/:id',
+    title: 'Edit genre · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('genres:read')],
+    loadComponent: () =>
+      import('@presentation/pages/genres/genre-editor').then((m) => m.GenreEditorPage),
+  },
+  {
     path: 'artists',
     title: 'Artists · Bitrate operators',
     canActivate: [requireStaffSession, requirePermission('artists:read')],
