@@ -22,6 +22,9 @@ jest.mock('@modules/tracks/audio-processing.phases', () => ({
   runConversionPhases: jest.fn(),
 }))
 
+const METRICS_TOKEN = 'worker-int-metrics-token-0123456789'
+const WORKER_PORT = 19_101 + (process.pid % 500)
+
 /** Waits until `check` returns a value, or fails with `label` after `timeoutMs`. */
 async function eventually<T>(
   label: string,
@@ -67,6 +70,8 @@ describe('transcode worker (int)', () => {
       WEB_HOST: 'http://localhost:3000',
       JWT_SECRET: 'worker-int-test-secret',
       AUDIO_SCRATCH_ROOT: scratchRoot,
+      METRICS_TOKEN: METRICS_TOKEN,
+      WORKER_HTTP_PORT: String(WORKER_PORT),
       // The API runs with the consumer disabled; the worker must override that itself.
       AUDIO_PROCESSING_WORKER_ENABLED: 'false',
     })
@@ -102,13 +107,39 @@ describe('transcode worker (int)', () => {
     await prisma?.track.deleteMany({ where: { id: trackId } })
     await prisma?.artist.deleteMany({ where: { id: artistId } })
     await context?.close()
+    // Shutdown closes the listener too, so SIGTERM never leaves a port open.
+    await expect(fetch(`http://127.0.0.1:${WORKER_PORT}/health/live`)).rejects.toThrow()
     await rm(scratchRoot, { recursive: true, force: true })
     process.env = { ...savedEnv }
   })
 
-  it('boots with no HTTP listener', () => {
+  it('boots with no API HTTP server, only the internal health listener', () => {
     expect((context as { getHttpServer?: unknown }).getHttpServer).toBeUndefined()
-    expect(process.getActiveResourcesInfo()).not.toContain('TCPServerWrap')
+    expect(
+      process.getActiveResourcesInfo().filter((resource) => resource === 'TCPServerWrap'),
+    ).toHaveLength(1)
+  })
+
+  it('answers /health/live and /health/ready against the real dependencies', async () => {
+    const base = `http://127.0.0.1:${WORKER_PORT}`
+
+    expect((await fetch(`${base}/health/live`)).status).toBe(200)
+    expect((await fetch(`${base}/health/ready`)).status).toBe(200)
+  })
+
+  it('serves worker metrics only with the bearer token', async () => {
+    const base = `http://127.0.0.1:${WORKER_PORT}`
+
+    expect((await fetch(`${base}/metrics`)).status).toBe(401)
+    const response = await fetch(`${base}/metrics`, {
+      headers: { authorization: `Bearer ${METRICS_TOKEN}` },
+    })
+    const body = await response.text()
+
+    expect(response.status).toBe(200)
+    expect(body).toContain('bitrate_worker_queue_jobs{queue="audio-processing",state="waiting"}')
+    expect(body).toContain('bitrate_worker_queue_jobs{queue="audio-processing-dead-letter"')
+    expect(body).not.toContain('bitrate_api_')
   })
 
   it('consumes an enqueued job even though autorun was configured off', async () => {
@@ -133,5 +164,14 @@ describe('transcode worker (int)', () => {
     expect(phases.mock.calls[0]?.[1]).toMatchObject({ trackId, sourceFileName })
     const attempt = await prisma.trackProcessingAttempt.findFirst({ where: { trackId } })
     expect(attempt?.status).toBe('SUCCEEDED')
+
+    await eventually('the completed job to be counted', async () => {
+      const metrics = await fetch(`http://127.0.0.1:${WORKER_PORT}/metrics`, {
+        headers: { authorization: `Bearer ${METRICS_TOKEN}` },
+      })
+      return (await metrics.text()).includes('bitrate_worker_jobs_total{outcome="completed"} 1')
+        ? true
+        : undefined
+    })
   })
 })
