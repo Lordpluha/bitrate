@@ -35,6 +35,9 @@ const wirePermissionDto = contractEnum<WirePermission>()([
   'genres:read',
   'genres:write',
   'genres:delete',
+  'albums:read',
+  'albums:delete',
+  'albums:restore',
 ])
 
 type ContractRole = Pick<
