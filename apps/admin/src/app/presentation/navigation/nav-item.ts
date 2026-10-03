@@ -5,6 +5,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core'
 import {
   lucideAudioLines,
   lucideChevronRight,
+  lucideDisc3,
   lucideFlag,
   lucideKeyRound,
   lucideLayoutDashboard,
@@ -33,6 +34,7 @@ import type { NavItem } from './nav.model'
     provideIcons({
       lucideAudioLines,
       lucideChevronRight,
+      lucideDisc3,
       lucideFlag,
       lucideKeyRound,
       lucideLayoutDashboard,

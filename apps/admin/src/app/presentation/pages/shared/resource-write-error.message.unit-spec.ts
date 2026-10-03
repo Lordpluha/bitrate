@@ -21,6 +21,26 @@ describe('resourceWriteErrorMessage', () => {
     ).toBe('"dj-test" is not deactivated — reloaded.')
   })
 
+  it('uses take-down wording for an album conflict', () => {
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('already-deactivated'),
+        action: 'take down',
+        label: '"Night Signal"',
+        resource: 'album',
+      }),
+    ).toBe('"Night Signal" is already taken down — reloaded.')
+
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('not-deactivated'),
+        action: 'restore',
+        label: '"Night Signal"',
+        resource: 'album',
+      }),
+    ).toBe('"Night Signal" is not taken down — reloaded.')
+  })
+
   it('uses take-down wording for a track conflict rather than account wording', () => {
     expect(
       resourceWriteErrorMessage({

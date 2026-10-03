@@ -33,6 +33,9 @@ const TO_DOMAIN_PERMISSION = {
   'genres:read': 'genres:read',
   'genres:write': 'genres:write',
   'genres:delete': 'genres:delete',
+  'albums:read': 'albums:read',
+  'albums:delete': 'albums:delete',
+  'albums:restore': 'albums:restore',
 } as const satisfies Record<StaffMemberWirePermission, Permission>
 
 /** See `artist.mapper.ts`'s `TO_WIRE_SORT`. */
