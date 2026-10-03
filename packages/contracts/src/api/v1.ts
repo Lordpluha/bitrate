@@ -105,7 +105,7 @@ export interface paths {
     }
     /**
      * Streams an object, through STORAGE_SERVICE, addressed by a signed token, honoring an HTTP Range.
-     * @description Time-limited URL issued by the storage driver; the API streams the object through STORAGE_SERVICE. The token embeds the object key and expiry, verified via HMAC.
+     * @description Time-limited URL issued by the storage service; the API streams the object through STORAGE_SERVICE. The token embeds the object key and expiry, verified via HMAC.
      */
     get: operations['StorageController_streamSignedObject_v1']
     put?: never
