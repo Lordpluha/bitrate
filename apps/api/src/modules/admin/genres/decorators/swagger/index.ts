@@ -1,0 +1,5 @@
+export * from './CreateGenre.decorator'
+export * from './DeleteGenre.decorator'
+export * from './GetGenre.decorator'
+export * from './ListGenres.decorator'
+export * from './UpdateGenre.decorator'

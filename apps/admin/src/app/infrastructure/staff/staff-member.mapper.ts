@@ -30,6 +30,9 @@ const TO_DOMAIN_PERMISSION = {
   'roles:read': 'roles:read',
   'roles:write': 'roles:write',
   'overview:read': 'overview:read',
+  'genres:read': 'genres:read',
+  'genres:write': 'genres:write',
+  'genres:delete': 'genres:delete',
 } as const satisfies Record<StaffMemberWirePermission, Permission>
 
 /** See `artist.mapper.ts`'s `TO_WIRE_SORT`. */
