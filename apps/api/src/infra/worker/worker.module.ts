@@ -8,6 +8,7 @@ import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { LoggerModule } from 'nestjs-pino'
+import { WorkerHttpService } from './worker-http.service'
 
 /**
  * Root module of the standalone transcode worker (ADR-0049): configuration, logging, the Redis
@@ -23,5 +24,6 @@ import { LoggerModule } from 'nestjs-pino'
     StorageCoreModule,
     TranscodeModule,
   ],
+  providers: [WorkerHttpService],
 })
 export class WorkerModule {}
