@@ -46,7 +46,7 @@ jest.mock('music-metadata', () => ({ parseFile: jest.fn() }), { virtual: true })
  * Nothing else needs an override: `CacheModule`'s `REDIS_CLIENT` is constructed with
  * `lazyConnect: true` (connects on first command, never during compile), `MailService` only
  * calls `nodemailer.createTransport(...)` (builds a transporter object, never connects), and
- * `StorageModule` binds the local-disk driver by default.
+ * `StorageModule` builds an `S3Client`, which does not connect until its first command.
  */
 describe('AppModule DI graph (boot smoke)', () => {
   let moduleRef: TestingModule | undefined
@@ -58,7 +58,10 @@ describe('AppModule DI graph (boot smoke)', () => {
     process.env.DATABASE_URL = 'postgresql://user:pass@127.0.0.1:1/unreachable'
     process.env.REDIS_HOST = '127.0.0.1'
     process.env.REDIS_PORT = '1'
-    process.env.STORAGE_DRIVER = 'local'
+    process.env.S3_ENDPOINT = 'http://127.0.0.1:1'
+    process.env.S3_BUCKET = 'boot-smoke'
+    process.env.S3_ACCESS_KEY = 'boot-smoke-access'
+    process.env.S3_SECRET_KEY = 'boot-smoke-secret'
   })
 
   afterAll(async () => {

@@ -95,8 +95,14 @@ jobs:
       REDIS_PORT: 6379
       WEB_HOST: http://localhost:3001
       JWT_SECRET: api-ci-secret-value
-      STORAGE_DRIVER: local
       PORT: 3000
+      # Object storage is required to boot. These are the preprod compose defaults for the
+      # bucket-scoped application identity of the SeaweedFS service started below (published
+      # on loopback by the CI overlay).
+      S3_ENDPOINT: http://127.0.0.1:8333
+      S3_BUCKET: bitrate-audio
+      S3_ACCESS_KEY: bitrateDevAccessKey
+      S3_SECRET_KEY: bitrateDevSecretKeyChangeMe0001
 
     services:
       postgres:

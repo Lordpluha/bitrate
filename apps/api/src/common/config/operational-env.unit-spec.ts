@@ -8,9 +8,29 @@ const requiredEnv = {
   JWT_SECRET: 'test-secret-with-sufficient-length',
   DATABASE_URL: 'postgresql://user:password@localhost:5432/test',
   REDIS_HOST: 'localhost',
+  S3_ENDPOINT: 'http://localhost:8333',
+  S3_BUCKET: 'bitrate-audio',
+  S3_ACCESS_KEY: 'access-key',
+  S3_SECRET_KEY: 'secret-key',
 }
 
 describe('operational environment schema', () => {
+  it.each([
+    'S3_ENDPOINT',
+    'S3_BUCKET',
+    'S3_ACCESS_KEY',
+    'S3_SECRET_KEY',
+  ])('requires %s, because object storage is the only storage backend', (key) => {
+    const { [key]: _omitted, ...withoutKey } = requiredEnv as Record<string, string>
+    expect(() => envSchema.parse(withoutKey)).toThrow(key)
+  })
+
+  it('has no storage driver switch any more', () => {
+    expect(envSchema.parse({ ...requiredEnv, STORAGE_DRIVER: 'local' })).not.toHaveProperty(
+      'STORAGE_DRIVER',
+    )
+  })
+
   it('accepts the local Compose metrics token and matches the Prometheus credential', () => {
     const root = resolve(__dirname, '../../../../..')
     const compose = readFileSync(resolve(root, 'infra/docker-compose.preprod.yaml'), 'utf8')

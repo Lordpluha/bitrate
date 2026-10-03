@@ -3,7 +3,6 @@ import { describe, expect, it } from '@jest/globals'
 import { Global, Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test } from '@nestjs/testing'
-import { LocalStorageService } from './local-storage.service'
 import { STORAGE_SERVICE } from './storage.constants'
 import { StorageModule } from './storage.module'
 import { StorageCoreModule } from './storage-core.module'
@@ -11,7 +10,6 @@ import { StorageCoreModule } from './storage-core.module'
 const baseConfig: Record<string, unknown> = {
   JWT_SECRET: 'core-module-secret',
   API_BASE_URL: 'http://localhost:3000',
-  storage: { getPrivateRoot: () => '/tmp/unused-storage-root' },
   s3: {
     endpoint: 'http://localhost:9',
     region: 'us-east-1',
@@ -22,8 +20,8 @@ const baseConfig: Record<string, unknown> = {
   },
 }
 
-async function resolveStorage(driver: 's3' | 'local') {
-  const values = { ...baseConfig, STORAGE_DRIVER: driver }
+async function resolveStorage() {
+  const values = baseConfig
   const config = { getOrThrow: (key: string) => values[key], get: (key: string) => values[key] }
   @Global()
   @Module({ providers: [{ provide: ConfigService, useValue: config }], exports: [ConfigService] })
@@ -39,14 +37,14 @@ describe('StorageCoreModule', () => {
     expect(Reflect.getMetadata('imports', StorageCoreModule) ?? []).toEqual([])
   })
 
-  it('exports STORAGE_SERVICE and LocalStorageService', () => {
-    const exported = Reflect.getMetadata('exports', StorageCoreModule) as unknown[]
-    expect(exported).toEqual(expect.arrayContaining([STORAGE_SERVICE, LocalStorageService]))
+  it('exports only STORAGE_SERVICE', () => {
+    expect(Reflect.getMetadata('exports', StorageCoreModule)).toEqual([STORAGE_SERVICE])
   })
 
-  it('binds the driver selected by STORAGE_DRIVER', async () => {
-    expect(await resolveStorage('local')).toBeInstanceOf(LocalStorageService)
-    expect(await resolveStorage('s3')).toBeInstanceOf(S3Service)
+  it('always binds STORAGE_SERVICE to the S3 service, whatever the legacy driver variable says', async () => {
+    expect(await resolveStorage()).toBeInstanceOf(S3Service)
+    baseConfig.STORAGE_DRIVER = 'local'
+    expect(await resolveStorage()).toBeInstanceOf(S3Service)
   })
 
   it('is re-exported by StorageModule, which keeps the controller', () => {

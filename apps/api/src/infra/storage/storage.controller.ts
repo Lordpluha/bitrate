@@ -24,7 +24,7 @@ const COVER_KEY_PATTERN = /^(tracks|albums|playlists)\/[^/]+\/cover\.(gif|jpe?g|
 const PROFILE_IMAGE_KEY_PATTERN =
   /^(artists|users)\/[^/]+\/(avatar|background)\.(gif|jpe?g|png|webp)$/i
 
-/** Serves storage objects (either driver) through signed, time-limited tokens (the local presigned-URL route). */
+/** Serves storage objects through signed, time-limited tokens issued by the storage service. */
 @ApiTags('Storage')
 @Controller({ path: 'storage', version: '1' })
 export class StorageController {

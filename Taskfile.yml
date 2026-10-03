@@ -41,7 +41,7 @@ tasks:
   # Recommended for native app development
   # ─────────────────────────────────────────
   infra:up:
-    desc: Start infra only — postgres, postgres_test, redis (~310 MB)
+    desc: Start infra only — postgres, postgres_test, redis, seaweedfs object store
     cmds:
       - cmd: '{{.DC_INFRA}} up -d'
 
@@ -94,25 +94,14 @@ tasks:
       - cmd: '{{.DC_DEV}} logs -f {{.CLI_ARGS}}'
 
   # ─────────────────────────────────────────
-  # Standalone transcode worker (profile-gated, not started by dev:up)
-  # `dev:up` leaves the API consuming the audio queue itself. These start the separate worker
-  # container to rehearse the split. Same single-service pattern as mobile:* below.
+  # Standalone transcode worker
+  # Part of the dev stack: `dev:up` starts it with the api, so there is no separate worker:up.
+  # Tail it with `task dev:logs -- worker`, or `worker:logs` below.
   # ─────────────────────────────────────────
-  worker:up:
-    desc: Start the standalone transcode worker container (dev stack)
-    cmds:
-      - cmd: '{{.DC_DEV}} --profile worker up -d worker'
-
-  worker:down:
-    desc: Stop and remove the worker service only
-    cmds:
-      - cmd: '{{.DC_DEV}} --profile worker stop worker'
-      - cmd: '{{.DC_DEV}} --profile worker rm -f worker'
-
   worker:logs:
     desc: Tail the dev worker's logs
     cmds:
-      - cmd: '{{.DC_DEV}} --profile worker logs -f worker'
+      - cmd: '{{.DC_DEV}} logs -f worker'
 
   # ─────────────────────────────────────────
   # Database
@@ -190,10 +179,10 @@ tasks:
       - cmd: '{{.DC_DEV}} exec api sh'
 
   shell:worker:
-    desc: Open shell in the worker container (start it first with task worker:up)
+    desc: Open shell in the worker container (start the stack first with task dev:up)
     interactive: true
     cmds:
-      - cmd: '{{.DC_DEV}} --profile worker exec worker sh'
+      - cmd: '{{.DC_DEV}} exec worker sh'
 
   shell:web:
     desc: Open shell in web-player container

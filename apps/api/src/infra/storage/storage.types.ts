@@ -15,9 +15,8 @@ export type StorageObjectMeta = {
 }
 
 /**
- * Storage driver abstraction bound to the STORAGE_SERVICE token.
- * Implemented by S3Service (STORAGE_DRIVER=s3) and LocalStorageService
- * (STORAGE_DRIVER=local) — both preserve identical Range and HLS-asset behavior.
+ * Object storage abstraction bound to the STORAGE_SERVICE token.
+ * Implemented by S3Service, which talks to the S3-compatible object store.
  */
 export interface StorageService {
   /** Verifies that the selected storage backend is reachable. */
