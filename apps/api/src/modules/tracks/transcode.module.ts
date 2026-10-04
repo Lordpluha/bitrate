@@ -30,6 +30,6 @@ import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
     ),
   ],
   providers: [AudioProcessingConsumer, ProcessingAttemptRecorder],
-  exports: [ProcessingAttemptRecorder, BullModule],
+  exports: [ProcessingAttemptRecorder, AudioProcessingConsumer, BullModule],
 })
 export class TranscodeModule {}
