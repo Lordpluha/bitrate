@@ -28,6 +28,9 @@ const TO_DOMAIN_PERMISSION = {
   'genres:read': 'genres:read',
   'genres:write': 'genres:write',
   'genres:delete': 'genres:delete',
+  'albums:read': 'albums:read',
+  'albums:delete': 'albums:delete',
+  'albums:restore': 'albums:restore',
 } as const satisfies Record<WirePermission, Permission>
 
 export function toRole(dto: RoleDto): Role {

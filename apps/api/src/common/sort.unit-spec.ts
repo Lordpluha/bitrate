@@ -41,6 +41,7 @@ describe('buildSortOrderBy', () => {
     'status',
     'name',
     'slug',
+    'releaseDate',
   ])('orders by %s with a matching-direction id tie-break', (sort) => {
     expect(buildSortOrderBy({ sort, order: 'desc' }, fallback)).toEqual([
       { [sort]: 'desc' },

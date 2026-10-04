@@ -50,6 +50,19 @@ export const routes: Routes = [
       import('@presentation/pages/catalog/track-detail').then((m) => m.TrackDetailPage),
   },
   {
+    path: 'albums',
+    title: 'Albums · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('albums:read')],
+    loadComponent: () => import('@presentation/pages/albums/albums').then((m) => m.AlbumsPage),
+  },
+  {
+    path: 'albums/:id',
+    title: 'Album · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('albums:read')],
+    loadComponent: () =>
+      import('@presentation/pages/albums/album-detail').then((m) => m.AlbumDetailPage),
+  },
+  {
     path: 'genres',
     title: 'Genres · Bitrate operators',
     canActivate: [requireStaffSession, requirePermission('genres:read')],
