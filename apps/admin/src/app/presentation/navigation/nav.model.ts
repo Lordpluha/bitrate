@@ -96,6 +96,13 @@ export const NAV_SECTIONS: readonly NavSection[] = [
       },
       {
         kind: 'link',
+        path: '/albums',
+        label: 'nav.albums',
+        icon: 'lucideDisc3',
+        permission: 'albums:read',
+      },
+      {
+        kind: 'link',
         path: '/genres',
         label: 'nav.genres',
         icon: 'lucideTags',

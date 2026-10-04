@@ -2455,6 +2455,64 @@ export interface paths {
     patch: operations['AdminGenresController_update_v1']
     trace?: never
   }
+  '/api/v1/admin/albums': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list albums operation. */
+    get: operations['AdminAlbumsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/albums/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the get album operation.
+     * @description A taken-down album stays reachable by id so it can be reviewed and restored.
+     */
+    get: operations['AdminAlbumsController_getById_v1']
+    put?: never
+    post?: never
+    /**
+     * Runs the soft-delete (take-down) operation.
+     * @description The album's tracks are not affected and stay independently manageable.
+     */
+    delete: operations['AdminAlbumsController_remove_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/albums/{id}/restore': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the restore operation. */
+    post: operations['AdminAlbumsController_restore_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -3591,6 +3649,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       )[]
       /** @description Whether two-factor authentication is enabled. */
       twoFactorEnabled: boolean
@@ -4463,6 +4524,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       )[]
       /** @description Active operators currently assigned this role. */
       holders: number
@@ -4509,6 +4573,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       /**
        * @description Active, non-`ADMIN` operators currently holding this permission. Zero means only the
        *     built-in `ADMIN` role can exercise it today.
@@ -4546,6 +4613,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       )[]
     }
     UpdateRoleDto: {
@@ -4576,6 +4646,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       )[]
     }
     AdminStaffRoleEntity: {
@@ -4609,6 +4682,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       )[]
     }
     AdminStaffEntity: {
@@ -4649,6 +4725,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       )[]
       /** @description Whether two-factor authentication is enabled. */
       twoFactorEnabled: boolean
@@ -4717,6 +4796,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       )[]
     }
     AssignStaffRoleDto: {
@@ -4747,6 +4829,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       )[]
     }
     UpdateStaffPermissionsDto: {
@@ -4775,6 +4860,9 @@ export interface components {
         | 'genres:read'
         | 'genres:write'
         | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
       )[]
     }
     AdminOverviewReportsEntity: {
@@ -4943,6 +5031,122 @@ export interface components {
       slug?: string
       description?: string | null
       color?: string | null
+    }
+    AdminAlbumEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The stored cover image's filename (a storage key, not a URL), or `null`. */
+      cover?: string | null
+      /** @description The owning artist's id. */
+      artistId: string
+      /** @description The owning artist's display name — avoids an N+1 lookup on the operator screen. */
+      artistUsername: string
+      /**
+       * @description The album type value.
+       * @enum {string}
+       */
+      type: 'ALBUM' | 'SINGLE' | 'EP' | 'COMPILATION'
+      /** @description How many tracks the album lists. */
+      totalTracks: number
+      /**
+       * Format: date-time
+       * @description Release date, or `null` if unset.
+       */
+      releaseDate?: string | null
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedAdminAlbumsEntity: {
+      /** @description The albums on this page. */
+      data: components['schemas']['AdminAlbumEntity'][]
+      /** @description The total number of albums matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    AdminAlbumTrackEntity: {
+      /** @description The track's id. */
+      id: string
+      /** @description The track's title. */
+      title: string
+      /** @description The track's number within its disc. */
+      trackNumber: number
+      /** @description The disc number. */
+      discNumber: number
+      /**
+       * @description The track's audio processing status.
+       * @enum {string}
+       */
+      processingStatus: 'PROCESSING' | 'READY' | 'FAILED'
+      /**
+       * Format: date-time
+       * @description The track's own soft-delete timestamp — independent of the album's.
+       */
+      deletedAt?: string | null
+    }
+    AdminAlbumDetailEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The stored cover image's filename (a storage key, not a URL), or `null`. */
+      cover?: string | null
+      /** @description The owning artist's id. */
+      artistId: string
+      /** @description The owning artist's display name — avoids an N+1 lookup on the operator screen. */
+      artistUsername: string
+      /**
+       * @description The album type value.
+       * @enum {string}
+       */
+      type: 'ALBUM' | 'SINGLE' | 'EP' | 'COMPILATION'
+      /** @description How many tracks the album lists. */
+      totalTracks: number
+      /**
+       * Format: date-time
+       * @description Release date, or `null` if unset.
+       */
+      releaseDate?: string | null
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description The album description, if any. */
+      description?: string | null
+      /** @description The record label, if any. */
+      label?: string | null
+      /** @description The copyright line, if any. */
+      copyright?: string | null
+      /** @description The album's tracks, ordered by disc then track number. */
+      tracks: components['schemas']['AdminAlbumTrackEntity'][]
     }
   }
   responses: never
@@ -27375,6 +27579,605 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  AdminAlbumsController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'active' | 'deactivated' | 'all'
+        artistId?: string
+        /** @description Search by title */
+        q?: string
+        sort?: 'createdAt' | 'title' | 'releaseDate'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of albums */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminAlbumsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the albums:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminAlbumsController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminAlbumDetailEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the albums:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminAlbumsController_remove_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminAlbumEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the albums:delete permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album is already deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminAlbumsController_restore_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminAlbumEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the albums:restore permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album is not deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }

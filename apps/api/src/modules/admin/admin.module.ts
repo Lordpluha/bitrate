@@ -1,5 +1,6 @@
 import { AdminAuthModule } from '@modules/admin-auth'
 import { Module } from '@nestjs/common'
+import { AdminAlbumsModule } from './albums'
 import { AdminArtistsModule } from './artists'
 import { AdminAuditModule } from './audit'
 import { AdminGenresModule } from './genres'
@@ -23,6 +24,7 @@ import { AdminUsersModule } from './users'
     AdminStaffModule,
     AdminOverviewModule,
     AdminGenresModule,
+    AdminAlbumsModule,
   ],
 })
 export class AdminModule {}

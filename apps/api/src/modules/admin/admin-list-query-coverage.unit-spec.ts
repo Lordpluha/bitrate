@@ -1,4 +1,6 @@
 import { describe, expect, it, jest } from '@jest/globals'
+import { AdminAlbumsController } from '@modules/admin/albums/admin-albums.controller'
+import { ListAdminAlbumsQuerySchema } from '@modules/admin/albums/dtos'
 import { AdminArtistsController } from '@modules/admin/artists/admin-artists.controller'
 import {
   ListAdminArtistsQuerySchema,
@@ -52,6 +54,12 @@ type ListRouteCase = {
  * — see the ApiBody lesson in `api-rules.md` this generalises to query params.
  */
 const LIST_ROUTES: ListRouteCase[] = [
+  {
+    name: 'AdminAlbumsController.list',
+    controller: AdminAlbumsController,
+    handlerName: 'list',
+    schema: ListAdminAlbumsQuerySchema,
+  },
   {
     name: 'AdminTracksController.list',
     controller: AdminTracksController,
