@@ -5,6 +5,7 @@ import { AuditRepository } from '@domain/audit'
 import { GenreRepository } from '@domain/genre'
 import { ModerationReportRepository } from '@domain/moderation'
 import { OverviewRepository } from '@domain/overview'
+import { PlaylistRepository } from '@domain/playlist'
 import { RoleRepository } from '@domain/role'
 import { StaffRepository, StaffSessionRepository } from '@domain/staff'
 import { TrackRepository } from '@domain/track'
@@ -18,6 +19,7 @@ import { HttpModerationReportRepository } from './moderation'
 import { HttpOverviewRepository } from './overview'
 import { HttpRoleRepository } from './roles'
 import { HttpStaffRepository, HttpStaffSessionRepository } from './staff'
+import { HttpPlaylistRepository } from './playlists'
 import { HttpUserRepository } from './users'
 
 /**
@@ -32,6 +34,7 @@ export function provideAdminInfrastructure(): EnvironmentProviders {
     { provide: ArtistRepository, useClass: HttpArtistRepository },
     { provide: AuditRepository, useClass: HttpAuditRepository },
     { provide: GenreRepository, useClass: HttpGenreRepository },
+    { provide: PlaylistRepository, useClass: HttpPlaylistRepository },
     { provide: ModerationReportRepository, useClass: HttpModerationReportRepository },
     { provide: OverviewRepository, useClass: HttpOverviewRepository },
     { provide: RoleRepository, useClass: HttpRoleRepository },

@@ -103,6 +103,13 @@ export const NAV_SECTIONS: readonly NavSection[] = [
       },
       {
         kind: 'link',
+        path: '/playlists',
+        label: 'nav.playlists',
+        icon: 'lucideListMusic',
+        permission: 'playlists:read',
+      },
+      {
+        kind: 'link',
         path: '/genres',
         label: 'nav.genres',
         icon: 'lucideTags',

@@ -84,6 +84,29 @@ describe('ReportDetailPage', () => {
     expect(link?.textContent).toContain('Night Drive')
   })
 
+  it('links a playlist subject to its panel detail page', async () => {
+    getReport.mockResolvedValue(
+      detail({
+        subject: {
+          kind: 'playlist',
+          id: 'p1',
+          title: 'Spam Mix',
+          deletedAt: null,
+          parentId: null,
+        },
+      }),
+    )
+    create()
+
+    const fixture = TestBed.createComponent(ReportDetailPage)
+    await fixture.whenStable()
+
+    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
+      'a[href="/playlists/p1"]',
+    )
+    expect(link?.textContent).toContain('Spam Mix')
+  })
+
   it('renders a plain-text subject for a kind without a panel page', async () => {
     getReport.mockResolvedValue(
       detail({
