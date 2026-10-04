@@ -23,7 +23,7 @@ export type Playlist = {
 }
 
 /** One track on a playlist, as seen from the playlist detail page. */
-export type PlaylistTrack = {
+type PlaylistTrack = {
   id: string
   title: string
   /** Zero-based position in the playlist. */
