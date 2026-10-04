@@ -15,6 +15,11 @@ export const envSchema = z
     TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(0),
     HEALTH_CHECK_TIMEOUT_MS: z.coerce.number().int().min(100).max(10_000).default(2_000),
     METRICS_TOKEN: z.string().min(32).optional(),
+    /**
+     * Internal-only health and metrics port of the standalone transcode worker (never published,
+     * ADR-0049). Distinct from `PORT`, which the worker does not open.
+     */
+    WORKER_HTTP_PORT: z.coerce.number().int().min(1).max(65_535).default(9101),
     WEB_HOST: z.url(),
     USER_WEB_HOST: z.url().optional(),
     ARTIST_WEB_HOST: z.url().optional(),
