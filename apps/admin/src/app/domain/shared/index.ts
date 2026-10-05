@@ -1,5 +1,6 @@
 export * from './batch-result'
 export * from './covering-tuple'
+export * from './csv-download'
 export * from './domain-error'
 export * from './page'
 export * from './policy-decision'

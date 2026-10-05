@@ -1,11 +1,18 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import { type AuditContextValue, runBatch, writeTakeDownAudit } from '@modules/admin/shared'
+import {
+  type AuditContextValue,
+  type CsvExport,
+  openCsvExport,
+  runBatch,
+  writeTakeDownAudit,
+} from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { ModerationReport, ModerationStatus, Prisma } from '@prisma/client'
 import type { ADMIN_REPORTS_SORT_FIELDS, UpdateReportDto } from './dtos'
 import { ReportNotFoundException } from './errors'
+import { ADMIN_REPORT_EXPORT_COLUMNS, ADMIN_REPORT_EXPORT_SELECT } from './report-export.columns'
 
 /** One of the moderation queue's allowed sort fields. */
 type AdminReportsSortField = (typeof ADMIN_REPORTS_SORT_FIELDS)[number]
@@ -65,6 +72,42 @@ export class AdminModerationService {
       this.prisma.moderationReport.count({ where }),
     ])
     return { data, total, page, limit }
+  }
+
+  /**
+   * Streams every report matching the queue's filters and sort as CSV (capped, see
+   * `CSV_EXPORT_MAX_ROWS`), using the list's `where` and ordering so the file equals the rows
+   * the queue shows across all pages. Batches page by offset; one batch is held at a time.
+   */
+  async exportCsv(
+    { status, entityType, sort, order }: Omit<ListReportsInput, 'page' | 'limit'>,
+    staffId: string,
+    auditContext: AuditContextValue = {},
+  ): Promise<CsvExport> {
+    const where = {
+      ...(status && { status }),
+      ...(entityType && { entityType }),
+    } satisfies Prisma.ModerationReportWhereInput
+    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const total = await this.prisma.moderationReport.count({ where })
+
+    return openCsvExport({
+      prisma: this.prisma,
+      resource: 'admin-moderation',
+      staffId,
+      filters: { status, entityType, sort, order },
+      auditContext,
+      columns: ADMIN_REPORT_EXPORT_COLUMNS,
+      total,
+      fetchPage: (skip, take) =>
+        this.prisma.moderationReport.findMany({
+          where,
+          select: ADMIN_REPORT_EXPORT_SELECT,
+          orderBy: orderBy as unknown as Prisma.ModerationReportOrderByWithRelationInput[],
+          skip,
+          take,
+        }),
+    })
   }
 
   /** Runs the find by id operation, resolving the reported subject and its sibling reports. */

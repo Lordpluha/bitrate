@@ -18,7 +18,7 @@ import { fetchPage } from '../http/wire-page'
 import { listeningHistoryPageDto } from './listening-history.dto'
 import { toListeningHistoryEntry } from './listening-history.mapper'
 import { userDetailDto, userPageDto } from './user.dto'
-import { toUser, toUserDetail, toWireUserSort, toWireUserStatus } from './user.mapper'
+import { toUser, toUserDetail, toUserListFilters } from './user.mapper'
 
 @Injectable()
 export class HttpUserRepository extends UserRepository {
@@ -31,12 +31,7 @@ export class HttpUserRepository extends UserRepository {
       url: this.base,
       page,
       limit,
-      filters: {
-        q: filter.query,
-        status: filter.status ? toWireUserStatus(filter.status) : undefined,
-        sort: filter.sort ? toWireUserSort(filter.sort.field) : undefined,
-        order: filter.sort?.direction,
-      },
+      filters: toUserListFilters(filter),
       schema: userPageDto,
       toDomain: toUser,
     })

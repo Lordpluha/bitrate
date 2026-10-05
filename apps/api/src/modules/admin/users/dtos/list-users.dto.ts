@@ -20,3 +20,11 @@ export const ListAdminUsersQuerySchema = paginationQuerySchema
   })
 
 export class ListAdminUsersQueryDto extends createZodDto(ListAdminUsersQuerySchema) {}
+
+/** The list filters and sort without pagination: an export streams every matching row. */
+export const ExportAdminUsersQuerySchema = ListAdminUsersQuerySchema.omit({
+  page: true,
+  limit: true,
+})
+
+export class ExportAdminUsersQueryDto extends createZodDto(ExportAdminUsersQuerySchema) {}
