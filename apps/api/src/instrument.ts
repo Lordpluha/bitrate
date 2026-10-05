@@ -36,7 +36,6 @@ Sentry.init({
   environment,
   release,
   integrations: [nodeProfilingIntegration()],
-  enableLogs: true,
   tracesSampleRate: isProd ? 0.1 : 1.0,
   profileSessionSampleRate: isProd ? 0.1 : 1.0,
   profileLifecycle: 'trace',
