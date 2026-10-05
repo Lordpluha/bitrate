@@ -171,16 +171,17 @@ describe('AdminOverviewController (int)', () => {
       expect(service.getReportsByType).toHaveBeenCalledWith(7)
     })
 
-    it.each([
-      0, 366,
-    ])('GET /admin/overview/reports-by-type returns 400 for `days` of %s', async (days) => {
-      const res = await request(app.getHttpServer())
-        .get('/admin/overview/reports-by-type')
-        .query({ days })
+    it.each([0, 366])(
+      'GET /admin/overview/reports-by-type returns 400 for `days` of %s',
+      async (days) => {
+        const res = await request(app.getHttpServer())
+          .get('/admin/overview/reports-by-type')
+          .query({ days })
 
-      expect(res.status).toBe(400)
-      expect(service.getReportsByType).not.toHaveBeenCalled()
-    })
+        expect(res.status).toBe(400)
+        expect(service.getReportsByType).not.toHaveBeenCalled()
+      },
+    )
   })
 
   describe('without a staff session', () => {
