@@ -9,7 +9,7 @@
 # that nothing lands in the published image's environment.
 ARG PRISMA_GENERATE_ONLY_URL="postgresql://unused:unused@127.0.0.1:5432/prisma-generate-only"
 
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 # Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
 # write. TURBO_TOKEN is the credential and arrives per RUN via --mount=type=secret, so it
 # never lands in an image layer.
