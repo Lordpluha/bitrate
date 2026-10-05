@@ -2,7 +2,7 @@ import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
 /** The most ids one batch request may name; keeps a request's total work bounded. */
-export const BATCH_MAX_IDS = 100
+const BATCH_MAX_IDS = 100
 
 /**
  * The body of every `POST /admin/<resource>/batch/<action>` route. Duplicate ids are accepted

@@ -2,13 +2,13 @@
 export const MAX_BATCH_SIZE = 100
 
 /** Why one row of a batch failed, in the API's own words. */
-export type BatchItemFailure = {
+type BatchItemFailure = {
   code: string
   message: string
 }
 
 /** What happened to one row of a batch. */
-export type BatchItemResult = {
+type BatchItemResult = {
   id: string
   outcome: 'succeeded' | 'failed'
   /** Present only when `outcome` is `failed`. */
