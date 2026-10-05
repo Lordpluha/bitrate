@@ -14309,7 +14309,7 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Service unavailable */
+      /** @description Email verification cannot be delivered; no account was created */
       503: {
         headers: {
           [name: string]: unknown
