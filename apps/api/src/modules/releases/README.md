@@ -14,7 +14,12 @@ contributor relationship does not grant workspace access.
 | `POST /api/v1/releases/:id/contributors` | Adds a name and unique roles to an owned DRAFT using expectedUpdatedAt; credit and release version persist in one transaction. |
 | `GET /api/v1/releases/:id/contributors/:contributorId` | Reads exactly one credit and current release version within the owned active release. |
 | `PATCH /api/v1/releases/:id/contributors/:contributorId` | Corrects a DRAFT credit's name/roles with expectedUpdatedAt, preserving its identity, artist link and splits. |
-| `PATCH /api/v1/releases/:id` | Updates title, type and/or planned date of an owned `DRAFT`, requiring the previously read `updatedAt`. |
+| `PATCH /api/v1/releases/:id` | Updates title, type, planned date and/or optional UPC of an owned `DRAFT`, requiring the previously read `updatedAt`. |
+| `PATCH /api/v1/releases/:id/rights` | Replaces the master owner and both rights confirmations of a DRAFT. |
+| `PUT /api/v1/releases/:id/splits` | Replaces one right type's shares (≤ 100% in a draft); clears the accuracy confirmation. |
+| `PATCH /api/v1/releases/:id/tracks/:trackId` | Sets or clears the optional ISRC of an owned recording on the DRAFT. |
+| `POST /api/v1/releases/:id/submit` | Re-checks readiness and moves DRAFT → SUBMITTED (Bitrate review only); blockers return 422. |
+| `POST /api/v1/releases/:id/withdraw` | Returns SUBMITTED → DRAFT. |
 | `GET /api/v1/artist-music/counts` | Counts the artist's active private recordings and releases. |
 | `GET /api/v1/artist-music/tracks` | Lists private preparation recordings, with artwork, version, duration, status and optional owned release. |
 | `GET /api/v1/artist-music/releases` | Lists release summaries with artwork and active track counts. |
@@ -34,6 +39,11 @@ Responses contain summary metadata only and use `Cache-Control: private, no-stor
 Lists exclude soft-deleted releases and apply the same owner filter to the count.
 Creating a draft does not require tracks, a UPC, participants, splits, territories or
 a scheduled date. It does not publish an album or send anything to a distributor.
+
+Rights, splits, identifiers and submission follow
+[ADR-0058](../../../../docs/docs/architecture/0058-release-rights-and-review-submission.md):
+credit changes clear both confirmations, UPC/ISRC are optional notices rather than
+blockers, and the workspace response includes `rights`, `splits` and `readiness`.
 
 Edit input (copy `expectedUpdatedAt` from the latest GET response):
 

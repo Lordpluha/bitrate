@@ -59,6 +59,7 @@ how to apply it day to day.
 | [0055](./0055-owned-release-schedule-editing.md) | Planned UTC timing edits with the existing atomic draft owner/version guard |
 | [0056](./0056-owned-release-contributor-addition.md) | Adding participant credits with unique roles and transactional draft version checks |
 | [0057](./0057-owned-release-contributor-editing.md) | Correcting participant names/roles while preserving identity, account links and splits |
+| [0058](./0058-release-rights-and-review-submission.md) | Rights confirmation, splits, optional UPC/ISRC, readiness and review submission/withdrawal |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.
