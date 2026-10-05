@@ -1,5 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
-import { z } from 'zod'
+import * as z from 'zod'
 
 /**
  * The request body every take-down/restore/revoke-sessions write sends. Shared across resources
