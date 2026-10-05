@@ -15,7 +15,7 @@ import { Controller, Get, Query, Req, Res } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { TokenService } from '../tokens/token.service'
 import {
   OAuthFacebookCallbackSwagger,
