@@ -29,6 +29,9 @@ x-api-env: &api-env
   S3_ACCESS_KEY: ${S3_ACCESS_KEY:-bitrateDevAccessKey}
   S3_SECRET_KEY: ${S3_SECRET_KEY:-bitrateDevSecretKeyChangeMe0001}
   S3_FORCE_PATH_STYLE: "true"
+  # Whether `api` also consumes the audio-processing queue; `worker` forces it to "true" below.
+  # Set it to false to rehearse the production cutover (apps/docs/docs/infrastructure/worker-rollout-runbook.md).
+  AUDIO_PROCESSING_WORKER_ENABLED: ${AUDIO_PROCESSING_WORKER_ENABLED:-true}
 
 services:
   # PostgreSQL Database
