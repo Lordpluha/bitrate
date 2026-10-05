@@ -264,6 +264,7 @@ model Track {
   audioFiles           TrackFile[]
   processingAttemptsLog TrackProcessingAttempt[]
   albums           AlbumTrack[]
+  releases         ReleaseTrack[]
   playlists        PlaylistTrack[]
   likedBy          UserLikedTrack[]
   artists          TrackArtist[]
@@ -390,6 +391,9 @@ model Artist {
   tracks       Track[]       @relation("PrimaryArtist")
   trackCredits TrackArtist[]
   albums       Album[]
+  releases     Release[] @relation("ReleaseOwner")
+  trackDrafts  ArtistTrackDraft[]
+  releaseCredits ReleaseContributor[]
   genres       ArtistGenre[]
 
   sessions           ArtistSession[]
@@ -479,6 +483,147 @@ model Album {
   @@index([title])
   @@index([releaseDate])
   @@index([deletedAt])
+}
+
+// Artist preparation workspace; albums remain the listener-facing catalogue.
+enum ReleaseStatus {
+  DRAFT
+  READY
+  SUBMITTED
+  RELEASED
+  REJECTED
+}
+
+enum ArtistTrackStatus {
+  DRAFT
+  PROCESSING
+  READY
+  NEEDS_CHANGES
+  PUBLISHED
+  UPLOAD_FAILED
+}
+
+enum ArtistTrackVersion {
+  ORIGINAL
+  REMASTER
+  LIVE
+  DEMO
+}
+
+// Private preparation metadata. Public Track/audio publication remains separate.
+model ArtistTrackDraft {
+  id            String @id @default(uuid(7)) @db.Uuid
+  ownerArtistId String @db.Uuid
+  releaseId     String? @db.Uuid
+  title         String
+  version       ArtistTrackVersion @default(ORIGINAL)
+  status        ArtistTrackStatus @default(DRAFT)
+  duration      Int?
+  cover         String?
+  previewUrl    String?
+  isDemo        Boolean @default(false)
+  deletedAt     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+
+  owner   Artist @relation(fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  release Release? @relation(fields: [releaseId, ownerArtistId], references: [id, ownerArtistId], onDelete: Restrict)
+
+  @@index([ownerArtistId, deletedAt, updatedAt(sort: Desc)])
+  @@index([releaseId])
+}
+
+enum ReleaseCreditRole {
+  PERFORMER
+  PRODUCER
+  COMPOSER
+  LYRICIST
+  OTHER
+}
+
+enum ReleaseRightType {
+  RECORDING
+  COMPOSITION
+}
+
+model Release {
+  id            String        @id @default(uuid(7)) @db.Uuid
+  ownerArtistId String        @db.Uuid
+  title         String
+  cover         String?
+  isDemo        Boolean @default(false)
+  type          AlbumType     @default(SINGLE)
+  status        ReleaseStatus @default(DRAFT)
+  upc           String?       @unique @db.VarChar(13)
+  scheduledAt   DateTime?      @db.Timestamptz(3)
+  deletedAt     DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now()) @updatedAt
+
+  owner        Artist               @relation("ReleaseOwner", fields: [ownerArtistId], references: [id], onDelete: Restrict)
+  tracks       ReleaseTrack[]
+  trackDrafts  ArtistTrackDraft[]
+  contributors ReleaseContributor[]
+  splits       ReleaseSplit[]
+  territories  ReleaseTerritory[]
+
+  @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
+  @@unique([id, ownerArtistId])
+  @@index([status, scheduledAt])
+}
+
+// An explicit allow-list. An empty draft list does not grant worldwide distribution.
+model ReleaseTerritory {
+  releaseId   String @db.Uuid
+  countryCode String @db.Char(2)
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+
+  @@id([releaseId, countryCode])
+}
+
+model ReleaseTrack {
+  releaseId String @db.Uuid
+  trackId   String @db.Uuid
+  position  Int
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  track   Track   @relation(fields: [trackId], references: [id], onDelete: Restrict)
+
+  @@id([releaseId, trackId])
+  @@unique([releaseId, position])
+  @@index([trackId])
+}
+
+// A credit identifies a contributor; it grants neither login nor workspace access.
+model ReleaseContributor {
+  id          String              @id @default(uuid(7)) @db.Uuid
+  releaseId   String              @db.Uuid
+  artistId    String?             @db.Uuid
+  displayName String
+  roles       ReleaseCreditRole[]
+
+  release Release        @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  artist  Artist?        @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  splits  ReleaseSplit[]
+
+  // The composite key prevents a split from referencing a different release's contributor.
+  @@unique([id, releaseId])
+  @@index([releaseId])
+  @@index([artistId])
+}
+
+model ReleaseSplit {
+  releaseId        String           @db.Uuid
+  contributorId    String           @db.Uuid
+  rightType        ReleaseRightType
+  shareBasisPoints Int
+
+  release     Release            @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  contributor ReleaseContributor @relation(fields: [contributorId, releaseId], references: [id, releaseId], onDelete: Cascade)
+
+  @@id([releaseId, contributorId, rightType])
+  @@index([contributorId, releaseId])
 }
 
 model Playlist {

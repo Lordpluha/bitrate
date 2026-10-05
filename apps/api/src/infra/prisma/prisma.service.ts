@@ -110,6 +110,16 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.album
   }
 
+  /** Gets artist release preparation workspaces. */
+  get release() {
+    return this.prisma.release
+  }
+
+  /** Gets private artist recording drafts, separate from the public catalogue. */
+  get artistTrackDraft() {
+    return this.prisma.artistTrackDraft
+  }
+
   /** Gets the playlist. */
   get playlist() {
     return this.prisma.playlist
