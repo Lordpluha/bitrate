@@ -20,7 +20,7 @@ const TO_WIRE_SORT = {
   monthlyListeners: 'monthlyListeners',
 } as const satisfies Record<ArtistSortField, NonNullable<WireArtistSortField>>
 
-export function toWireArtistSort(field: ArtistSortField): NonNullable<WireArtistSortField> {
+function toWireArtistSort(field: ArtistSortField): NonNullable<WireArtistSortField> {
   return TO_WIRE_SORT[field]
 }
 

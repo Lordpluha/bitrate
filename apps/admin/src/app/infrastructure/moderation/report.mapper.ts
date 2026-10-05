@@ -42,9 +42,7 @@ const TO_WIRE_SORT = {
   status: 'status',
 } as const satisfies Record<ModerationSortField, NonNullable<WireModerationSortField>>
 
-export function toWireModerationSort(
-  field: ModerationSortField,
-): NonNullable<WireModerationSortField> {
+function toWireModerationSort(field: ModerationSortField): NonNullable<WireModerationSortField> {
   return TO_WIRE_SORT[field]
 }
 

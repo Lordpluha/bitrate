@@ -10,7 +10,7 @@ const TO_WIRE_SORT = {
   createdAt: 'createdAt',
 } as const satisfies Record<UserSortField, NonNullable<WireUserSortField>>
 
-export function toWireUserSort(field: UserSortField): NonNullable<WireUserSortField> {
+function toWireUserSort(field: UserSortField): NonNullable<WireUserSortField> {
   return TO_WIRE_SORT[field]
 }
 
@@ -25,7 +25,7 @@ const TO_WIRE_STATUS = {
   all: 'all',
 } as const satisfies Record<ResourceStatus, NonNullable<WireUserStatus>>
 
-export function toWireUserStatus(status: ResourceStatus): NonNullable<WireUserStatus> {
+function toWireUserStatus(status: ResourceStatus): NonNullable<WireUserStatus> {
   return TO_WIRE_STATUS[status]
 }
 

@@ -4,7 +4,7 @@ import { Readable } from 'node:stream'
 export const CSV_EXPORT_MAX_ROWS = 50_000
 
 /** Rows fetched per database round trip while streaming, so memory stays flat. */
-export const CSV_EXPORT_BATCH_SIZE = 1000
+const CSV_EXPORT_BATCH_SIZE = 1000
 
 /** Name of the response header that is `true` when the export stopped at the row cap. */
 export const CSV_EXPORT_TRUNCATED_HEADER = 'X-Export-Truncated'
