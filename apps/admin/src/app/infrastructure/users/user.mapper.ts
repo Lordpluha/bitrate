@@ -1,5 +1,6 @@
 import type { ResourceStatus } from '@domain/shared'
-import type { User, UserDetail, UserSortField } from '@domain/user'
+import type { User, UserDetail, UserFilter, UserSortField } from '@domain/user'
+import type { WireFilters } from '../http/wire-page'
 import type { UserDetailDto, UserDto, WireUserSortField, WireUserStatus } from './user.dto'
 
 /** See `artist.mapper.ts`'s `TO_WIRE_SORT`. */
@@ -43,5 +44,15 @@ export function toUserDetail(dto: UserDetailDto): UserDetail {
   return {
     ...toUser(dto),
     counts: dto.counts,
+  }
+}
+
+/** The query parameters the list and the CSV export both send for a filter. */
+export function toUserListFilters(filter: UserFilter): WireFilters {
+  return {
+    q: filter.query,
+    status: filter.status ? toWireUserStatus(filter.status) : undefined,
+    sort: filter.sort ? toWireUserSort(filter.sort.field) : undefined,
+    order: filter.sort?.direction,
   }
 }
