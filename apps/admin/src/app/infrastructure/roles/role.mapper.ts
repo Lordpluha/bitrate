@@ -31,6 +31,10 @@ const TO_DOMAIN_PERMISSION = {
   'albums:read': 'albums:read',
   'albums:delete': 'albums:delete',
   'albums:restore': 'albums:restore',
+  'playlists:read': 'playlists:read',
+  'playlists:hide': 'playlists:hide',
+  'playlists:delete': 'playlists:delete',
+  'playlists:restore': 'playlists:restore',
 } as const satisfies Record<WirePermission, Permission>
 
 export function toRole(dto: RoleDto): Role {

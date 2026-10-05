@@ -1,0 +1,125 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Playlists</h1>
+    <p class="text-sm text-muted-foreground">
+      Only public playlists are listed; private ones belong to their owners. Hiding forces a
+      playlist private and is the gentler action; taking it down is the harder one. A hidden
+      playlist leaves this list but stays reachable from a report, the audit log or its URL.
+    </p>
+  </header>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <form class="flex gap-2" (ngSubmit)="applyFilters()">
+      <label class="sr-only" for="playlist-search">Search playlists</label>
+      <input
+        hlmInput
+        class="w-64"
+        id="playlist-search"
+        type="search"
+        placeholder="Playlist title"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+      />
+      <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
+    </form>
+
+    <div class="flex gap-2" role="group" aria-label="Filter by take-down status">
+      @for (option of statusOptions; track option.value) {
+        <button
+          hlmBtn
+          size="sm"
+          type="button"
+          [variant]="query.state().resourceStatus === option.value ? 'default' : 'outline'"
+          [attr.aria-pressed]="query.state().resourceStatus === option.value"
+          (click)="setResourceStatus(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+
+    @if (query.state().ownerId) {
+      <button hlmBtn size="sm" variant="outline" type="button" (click)="clearOwner()">
+        Clear owner filter
+      </button>
+    }
+  </div>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No playlists match this filter."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Playlists
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'title')">
+              <app-sort-header
+                [field]="'title'"
+                label="Playlist"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Playlist
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col">Owner</th>
+            <th hlmTh scope="col">Tracks</th>
+            <th hlmTh scope="col">Followers</th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'createdAt')">
+              <app-sort-header
+                [field]="'createdAt'"
+                label="Created"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Created
+              </app-sort-header>
+            </th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (playlist of collection.items(); track playlist.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a [routerLink]="['/playlists', playlist.id]" class="hover:underline">{{
+                  playlist.title
+                }}</a>
+                @if (playlist.takenDownAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                }
+              </td>
+              <td hlmTd class="text-muted-foreground">
+                <a [routerLink]="['/users', playlist.ownerId]" class="hover:underline">{{
+                  playlist.ownerUsername
+                }}</a>
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">{{ playlist.trackCount }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ playlist.followersCount }}
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ playlist.createdAt | localizedDate: 'dd.MM.yyyy' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</section>

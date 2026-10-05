@@ -1,7 +1,7 @@
 import { ActionNotAllowedError, ResourceWriteError } from '@domain/shared'
 
 type ResourceWriteAction =
-  'deactivate' | 'reprocess' | 'restore' | 'revoke sessions for' | 'take down'
+  'deactivate' | 'hide' | 'reprocess' | 'restore' | 'revoke sessions for' | 'take down' | 'unhide'
 
 /**
  * What kind of write refused the request, for the two `ResourceWriteError` reasons whose wording
@@ -9,7 +9,7 @@ type ResourceWriteAction =
  * down"/"restored" — the panel calls the same action a take-down, not a deactivation, everywhere
  * else on this screen, so the error text said something no button on the page ever did.
  */
-type ResourceKind = 'account' | 'album' | 'track'
+type ResourceKind = 'account' | 'album' | 'playlist' | 'track'
 
 type ResourceWriteMessageInput = {
   error: unknown
@@ -22,12 +22,14 @@ type ResourceWriteMessageInput = {
 const ALREADY_REFUSED_WORDING: Record<ResourceKind, string> = {
   account: 'already deactivated',
   album: 'already taken down',
+  playlist: 'already taken down',
   track: 'already taken down',
 }
 
 const NOT_REFUSED_WORDING: Record<ResourceKind, string> = {
   account: 'not deactivated',
   album: 'not taken down',
+  playlist: 'not taken down',
   track: 'not taken down',
 }
 
@@ -52,6 +54,8 @@ export function resourceWriteErrorMessage({
         return `${label} is ${ALREADY_REFUSED_WORDING[resource]} — reloaded.`
       case 'not-deactivated':
         return `${label} is ${NOT_REFUSED_WORDING[resource]} — reloaded.`
+      case 'visibility-conflict':
+        return `${label} changed visibility elsewhere or cannot be un-hidden by an operator — reloaded.`
       case 'not-found':
         return `${label} could not be found — it may have been removed.`
       default:
@@ -66,6 +70,8 @@ export function resourceWriteErrorMessage({
 export function isStaleStateError(error: unknown): boolean {
   return (
     error instanceof ResourceWriteError &&
-    (error.reason === 'already-deactivated' || error.reason === 'not-deactivated')
+    (error.reason === 'already-deactivated' ||
+      error.reason === 'not-deactivated' ||
+      error.reason === 'visibility-conflict')
   )
 }
