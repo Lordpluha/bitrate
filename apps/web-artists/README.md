@@ -66,21 +66,124 @@ with `apps/web-player`; the rename happens at this app's boundary only, in three
 
 Copy `.env.example` to `.env` for local work.
 
-## Authenticated area — not built yet
+## Authenticated dashboard
 
-The portal ships no authenticated routes. Under Next this was an edge `middleware.ts` whose
-`PROTECTED_PREFIXES` list was empty, so it never redirected anyone; it was dropped in the
-TanStack Start migration rather than ported as dead code.
+`/dashboard` is a protected layout with Dashboard, Music, Tasks and Distribution routes.
+The layout's `beforeLoad` calls `getArtistSession` on the server, validates the session with
+the artist API and returns only ID, username and avatar. Cookie presence alone grants no access.
+Expired access tokens are refreshed and the API's httpOnly cookies are relayed to the browser.
+The guard never caches private responses. An unavailable API shows a retry screen without
+rendering the workspace. Guests go to `/login?next=...`; login accepts only local dashboard
+destinations and completes two-factor verification when required.
 
-When the dashboard lands, the guard belongs in a layout route's `beforeLoad`, and it needs
-three things the old middleware knew:
+Server configuration:
 
-- the refresh cookie is httpOnly, so the check runs on the server — read it with `getCookie`
-  from `@tanstack/react-start/server`, wrapped in a `createServerFn` so `beforeLoad` can call
-  it from either side;
-- the cookie name comes from `REFRESH_TOKEN_NAME`, defaulting to `refresh_token`;
-- an unauthenticated visitor is redirected to `ROUTES.auth.login` with the path they wanted in
-  a `next` search param.
+| Variable | Default | Purpose |
+|---|---|---|
+| `API_URL` | `VITE_API_URL`, then `http://localhost:3000` | Internal API URL for session and 2FA requests |
+| `ACCESS_TOKEN_NAME` | `access_token` | Must match the API's cookie name |
+| `REFRESH_TOKEN_NAME` | `refresh_token` | Must match the API's cookie name |
+
+When the API and portal use different subdomains, configure **`COOKIE_DOMAIN` on the API**
+to their shared parent domain. Both session cookies and the short-lived pending 2FA cookie
+must reach the portal server. Keep it unset for localhost; use HTTPS in production.
+
+**Create release** opens a title/type form and saves an artist-owned draft through
+`POST /api/v1/releases`. It opens the **Music / Releases** tab. Music reads private
+counts, tracks and releases through `GET /api/v1/artist-music/{counts,tracks,releases}`.
+Tabs, search, combined status/type filters, sorting and pagination persist in the URL.
+Rows open details; available audio previews play without leaving the page. Responses
+are validated; catalogue query caches are scoped to the artist, invalidated after
+creation/editing and cleared at logout. Loading, error, empty and confirmed-save states are
+explicit. Light, Dark and Dim share the same responsive form and catalogue markup.
+
+**Music → Releases → draft details/actions → Edit draft** loads the latest owned
+summary through `GET /api/v1/releases/:id`, then saves title/type with PATCH and its
+`updatedAt` version. Only drafts can be edited. Concurrent updates return a conflict
+without overwriting either the newer record or the user's entered text; close and
+reopen the form to review the latest version. Pending saves lock dismissal and repeat
+submissions. Errors and malformed responses never produce a success notice.
+
+The catalogue uses the original reel/lacquer background and cover assets from the
+design. An opt-in database seed is documented in the API releases module. Demo rows
+and synthetic preview audio are identified as illustrative; they do not publish music.
+
+Tasks and Distribution still show explicit preparation states. Track/artwork uploads,
+recording editing, release deletion, roadmap, shared editing and partner delivery are subsequent
+stages of #241. Creating a draft does not publish music or submit it to a distributor.
+See [ADR-0051](../docs/docs/architecture/0051-artist-release-workspace-foundation.md).
+Private recording ownership and demo boundaries follow
+[ADR-0052](../docs/docs/architecture/0052-private-artist-music-catalogue.md).
+
+The dedicated dashboard browser suite starts its own deterministic API and Vite server on
+ports 3103 and 3102; it needs neither a database nor a real account:
+
+```bash
+python3 -B .claude/scripts/run-heavy.py -- pnpm --filter @bitrate/web-artists exec playwright test --config=tests/configs/playwright.dashboard.config.ts
+```
+
+To exercise the built Nitro server with the same suite, build with
+`VITE_API_URL=http://localhost:3103`, then run that command with
+`DASHBOARD_TEST_PRODUCTION=1`. These addresses belong only to the local test fixture.
+
+## Release workspace
+
+An owned DRAFT has **Edit schedule** in Preparation
+summary. The Release timing dialog sets or clears a planned date and time in UTC.
+It fetches the latest edit version, retains entries on conflict/error, locks dismissal
+during a write and confirms the returned instant before refreshing workspace/Music.
+Date/time controls use one layout for all themes, stacked on mobile. This is a plan;
+it does not publish or deliver a release. UTC instants retain their milliseconds;
+unchanged plans cannot be saved. The form uses the timing panel's gradient, border
+and elevation from Pencil24/24B within the existing modal.
+
+Open **Music → Releases → a release → Open workspace**. Each release has a private
+address `/dashboard/music/<releaseId>` with its summary, original waveform inset,
+linked recordings, optional UTC scheduled date and credited participants. An owned
+DRAFT provides the existing **Edit draft** title/type form; saving refreshes the
+workspace and Music cache. Other lifecycle states are read-only. Back to music opens
+the Releases tab. Direct links remain protected by the server-verified dashboard session.
+
+The UI validates workspace responses and distinguishes loading, unavailable/error,
+retry and confirmed empty states. Counts remain genuine when relation previews are
+truncated (up to 50 draft recordings, 50 existing recordings and 50 participants).
+Light/Dark/Dim share the responsive markup; source card geometry and waveform come
+from Pencil screens 21/21B. Review comments/master history and audio
+editing are future stages; stored status does not imply external delivery.
+
+See [ADR-0054](../docs/docs/architecture/0054-owned-release-workspace-view.md),
+[ADR-0055](../docs/docs/architecture/0055-owned-release-schedule-editing.md), and
+the [release diagrams/demo guide](../docs/docs/architecture/artist-release-diagram.md).
+
+## Email verification
+
+New artist accounts must verify their email before signing in. Registration opens
+`/verify-email?email=...`; an unverified login also links to this page. Enter the six-digit
+code from the email and select **Verify and continue**. Codes expire in 10 minutes, allow
+five attempts, and are single-use. Resending replaces the previous code and has a 60-second
+cooldown. Code hashes and attempt limits live in Redis; existing 24-hour verification links
+remain supported. Opening a link alone does not consume it. Successful verification returns
+to login with the requested dashboard destination preserved.
+
+For native development without SMTP, restart the API with dev mail logging enabled:
+
+```bash
+NODE_ENV=development DEV_MAIL_LOG_TOKENS=true ARTIST_WEB_HOST=http://localhost:3002 pnpm --filter @bitrate/api start:dev
+```
+
+Then use **Resend verification email** and enter the code printed in the API terminal.
+This mode does **not** send mail to Gmail. The page explicitly distinguishes development
+codes, unavailable delivery, and an enabled email transport. The transport mode is not a
+delivery receipt; SMTP failures are logged by the API without exposing account existence.
+Codes/tokens are never returned by the API.
+`DEV_MAIL_LOG_TOKENS` must remain disabled in production. Existing accounts are not automatically
+verified by the portal, and the API's verification requirement is unchanged.
+
+For actual delivery, configure `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and
+`EMAIL_FROM` in your local API configuration, following `apps/api/.env.example`, then restart
+the API. Use credentials for the sending service and its verified sender address; the recipient's
+Gmail address is not SMTP configuration. Successful SMTP submission does not guarantee inbox
+placement: check spam and the sending provider's delivery logs.
 
 ## Notes
 
@@ -89,3 +192,30 @@ three things the old middleware knew:
 - Nitro (`@tanstack/nitro-v2-vite-plugin`) is what makes `pnpm build` emit a runnable
   `.output/server/index.mjs`. Without it, `vite build` emits a fetch handler that exits
   immediately under `node` — there would be nothing to deploy.
+
+### Adding release credits
+
+Music → Releases → Open workspace → Participants → **Add contributor** is
+available for an owned DRAFT. Enter a name and choose at least one existing role.
+The modal validates fields, loads the latest draft version and preserves entries
+on rejected or unconfirmed writes. Saving updates Participants and persists after
+reload; concurrent changes require reopening the form. Credits grant no account
+access. Removal, rights and splits remain later stages.
+See [ADR-0056](../docs/docs/architecture/0056-owned-release-contributor-addition.md).
+
+### Editing release credits
+
+In an owned DRAFT's Participants panel, select the pencil beside a contributor.
+**Edit contributor** reads that person's current name, roles and release version;
+correct the fields and save. Unchanged normalized values disable Save. Incomplete
+legacy credits can receive their missing roles. Errors preserve entries, conflicting
+changes require reopening, and pending saves lock fields/dismissal. Credit ID,
+linked artist account and existing splits are preserved. Light/Dark/Dim use the
+same form; this grants no workspace access or rights confirmation.
+See [ADR-0057](../docs/docs/architecture/0057-owned-release-contributor-editing.md).
+
+Participants with no assigned roles show **Needs role** and a short explanation.
+An owned DRAFT offers **Edit roles** beside that person, opening the existing credit
+editor. After a confirmed save, the workspace shows the assigned roles and removes
+the warning. Non-draft credits remain read-only. This warning describes only missing
+credit roles; it does not report release readiness or completed rights declarations.

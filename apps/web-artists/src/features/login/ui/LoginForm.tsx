@@ -8,15 +8,17 @@ import {
   LogoIcon,
   PasswordInput,
   Typography,
-  toast,
 } from '@bitrate/ui-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { apiBaseUrl } from '@shared/api'
+import { getLoginDestination } from '@shared/routes/authRedirect'
 import { ROUTES } from '@shared/routes/routes'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useRouter, useSearch } from '@tanstack/react-router'
+import { useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useLogin } from '../api/useLogin'
 import { type LoginFormData, loginSchema } from '../validation'
+import { TwoFactorLoginForm } from './TwoFactorLoginForm'
 
 const buttonStyles =
   'border bg-black-800 text-white border-neutral-600 relative w-full inline-flex items-center justify-center'
@@ -24,14 +26,34 @@ const buttonStyles =
 const iconStyles = 'absolute left-4 top-1/2 -translate-y-1/2'
 
 export const LoginForm = () => {
-  const navigate = useNavigate()
+  const router = useRouter()
+  const search = useSearch({ from: '/login' })
+  const [requiresTwoFactor, setRequiresTwoFactor] = useState(false)
+  const completeLogin = async () => {
+    await router.navigate({
+      href: getLoginDestination(search.next),
+      replace: true,
+    })
+    await router.invalidate()
+  }
   const { mutate: login, isPending } = useLogin({
-    onSuccess: () => {
-      toast.success('Logged in successfully')
-      void navigate({ to: ROUTES.landing })
+    onSuccess: async (data) => {
+      if (data?.requires2fa) {
+        form.resetField('password')
+        setRequiresTwoFactor(true)
+        return
+      }
+      await completeLogin()
     },
-    onError: () => {
-      toast.error('Invalid email or password')
+    onError: (error) => {
+      const needsVerification =
+        error.message === 'Email address is not verified'
+      form.setError('root', {
+        type: needsVerification ? 'emailVerification' : 'server',
+        message: needsVerification
+          ? 'Verify your email before signing in.'
+          : 'Invalid email or password. Please try again.',
+      })
     },
   })
   const form = useForm<LoginFormData>({
@@ -47,11 +69,20 @@ export const LoginForm = () => {
     login(data)
   }
 
+  if (requiresTwoFactor) {
+    return (
+      <TwoFactorLoginForm
+        onBack={() => setRequiresTwoFactor(false)}
+        onVerified={completeLogin}
+      />
+    )
+  }
+
   return (
     <div className="w-full max-w-120 flex flex-col items-stretch justify-center gap-4 px-14 py-20 bg-inherit text-white overflow-hidden rounded-[10px] max-lg:p-6 box-border">
       <div className="flex flex-col items-center">
         <LogoIcon height={64} width={64} />
-        <Typography as="h5" className="mt-2 text-center" size={'heading2'}>
+        <Typography as="h1" className="mt-2 text-center" size={'heading2'}>
           Welcome back!
         </Typography>
       </div>
@@ -64,9 +95,11 @@ export const LoginForm = () => {
           Email Address
         </label>
         <Input
-          className="text-xl! hover:border-white py-2"
+          autoComplete="email"
+          className="text-xl! hover:border-white py-2 focus-visible:ring-ring"
           id="email"
           placeholder="example@gmail.com"
+          type="email"
           variant="black"
           {...form.register('email')}
         />
@@ -80,7 +113,8 @@ export const LoginForm = () => {
           Password
         </label>
         <PasswordInput
-          className="text-xl! hover:border-white py-2"
+          autoComplete="current-password"
+          className="text-xl! hover:border-white py-2 focus-visible:ring-ring"
           id="password"
           placeholder="Password"
           variant="black"
@@ -93,6 +127,20 @@ export const LoginForm = () => {
         ) : null}
 
         <div className="mt-4 flex flex-col items-stretch gap-4">
+          {form.formState.errors.root && (
+            <div role="alert">
+              <p>{form.formState.errors.root.message}</p>
+              {form.formState.errors.root.type === 'emailVerification' && (
+                <Link
+                  className="font-semibold underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  search={{ email: form.getValues('email'), next: search.next }}
+                  to={ROUTES.auth.verifyEmail}
+                >
+                  Verify email
+                </Link>
+              )}
+            </div>
+          )}
           <Button
             disabled={isPending}
             size={'xl'}
