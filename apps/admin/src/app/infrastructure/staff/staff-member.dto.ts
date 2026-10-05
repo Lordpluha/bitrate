@@ -47,6 +47,9 @@ const wirePermissionDto = contractEnum<StaffMemberWirePermission>()([
   'playlists:hide',
   'playlists:delete',
   'playlists:restore',
+  'podcasts:read',
+  'podcasts:delete',
+  'podcasts:restore',
 ])
 
 type ContractStaffMemberRole = Pick<
