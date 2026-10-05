@@ -1,5 +1,6 @@
 import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { z } from 'zod'
 import {
   type CreateReleaseValues,
   releasePageSchema,
@@ -7,6 +8,18 @@ import {
 } from '../model/release.schema'
 
 export const RELEASE_PAGE_SIZE = 20
+const identifierConflictSchema = z.object({
+  message: z.enum([
+    'This UPC is already used by another release',
+    'This ISRC is already used by another recording',
+  ]),
+})
+
+/** A duplicate identifier is a 409 the artist can fix, unlike a stale version. */
+export function identifierConflict(error: unknown): string | undefined {
+  const parsed = identifierConflictSchema.safeParse(error)
+  return parsed.success ? parsed.data.message : undefined
+}
 const CREATE_RELEASE_TIMEOUT_MS = 30_000
 
 export async function getRelease(id: string, signal: AbortSignal) {
@@ -39,7 +52,8 @@ export async function updateRelease({
   }
   if (result.response.status === 409)
     throw new Error(
-      'This release changed or is no longer a draft. Your entries are kept here; close and reopen the form to review the latest version.',
+      identifierConflict(result.error) ??
+        'This release changed or is no longer a draft. Your entries are kept here; close and reopen the form to review the latest version.',
     )
   if (result.response.status === 404)
     throw new Error('This release is no longer available.')
@@ -59,7 +73,8 @@ export async function updateRelease({
         : new Date(parsed.data.scheduledAt).toISOString()) !==
         (input.scheduledAt === null
           ? null
-          : new Date(input.scheduledAt).toISOString()))
+          : new Date(input.scheduledAt).toISOString())) ||
+    (input.upc !== undefined && parsed.data.upc !== (input.upc?.trim() ?? null))
   )
     throw new Error(unconfirmed)
   return parsed.data

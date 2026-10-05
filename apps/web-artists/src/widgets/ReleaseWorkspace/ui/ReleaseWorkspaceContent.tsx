@@ -8,6 +8,8 @@ import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { Info, Music2 } from 'lucide-react'
 import { WorkspaceParticipants } from './WorkspaceParticipants'
+import { WorkspaceReadiness } from './WorkspaceReadiness'
+import { type RightsAction, WorkspaceRights } from './WorkspaceRights'
 import { WorkspaceTracks } from './WorkspaceTracks'
 
 const formatter = new Intl.DateTimeFormat('en-US', {
@@ -17,8 +19,17 @@ const formatter = new Intl.DateTimeFormat('en-US', {
 })
 const date = (value: string) => formatter.format(new Date(value))
 
+function stageLabel(index: number, draft: boolean, inReview: boolean) {
+  if (index === 0) return draft ? 'Current' : 'Saved'
+  if (index === 1) return inReview ? 'Current' : 'Next'
+  return 'Coming soon'
+}
+
 interface ReleaseWorkspaceContentProps {
+  artistId: string
   release: ReleaseWorkspace
+  onEditIsrc: (trackId: string) => void
+  onRightsAction: (action: RightsAction) => void
   onEdit: () => void
   onSchedule: () => void
   onAddContributor: () => void
@@ -26,13 +37,17 @@ interface ReleaseWorkspaceContentProps {
 }
 
 export function ReleaseWorkspaceContent({
+  artistId,
   release,
+  onEditIsrc,
+  onRightsAction,
   onEdit,
   onSchedule,
   onAddContributor,
   onEditContributor,
 }: ReleaseWorkspaceContentProps) {
   const draft = release.status === 'DRAFT'
+  const inReview = release.status === 'SUBMITTED'
   return (
     <>
       <header className="artist-release-page-heading">
@@ -97,7 +112,7 @@ export function ReleaseWorkspaceContent({
               </h3>
               <p className="artist-release-next-description">
                 {draft
-                  ? 'You can update the title and release type.'
+                  ? 'Update the details, confirm rights and submit for review.'
                   : 'This release is available to view.'}
               </p>
             </div>
@@ -125,25 +140,23 @@ export function ReleaseWorkspaceContent({
           className="artist-release-workspace-panel artist-release-stages"
         >
           <h2 id="release-stages-heading">Release timeline</h2>
-          <p>Review and delivery are coming soon.</p>
+          <p>Bitrate review is available; delivery is coming soon.</p>
           <ol>
             {['Draft', 'Review', 'Prepare', 'Deliver', 'Launch'].map(
               (stage, index) => (
                 <li
-                  aria-current={index === 0 && draft ? 'step' : undefined}
+                  aria-current={
+                    (index === 0 && draft) || (index === 1 && inReview)
+                      ? 'step'
+                      : undefined
+                  }
                   key={stage}
                 >
                   <span className="artist-release-stage-number">
                     {index + 1}
                   </span>
                   <span>{stage}</span>
-                  <small>
-                    {index === 0
-                      ? draft
-                        ? 'Current'
-                        : 'Saved'
-                      : 'Coming soon'}
-                  </small>
+                  <small>{stageLabel(index, draft, inReview)}</small>
                 </li>
               ),
             )}
@@ -206,7 +219,9 @@ export function ReleaseWorkspaceContent({
             </div>
           </dl>
         </section>
-        <WorkspaceTracks release={release} />
+        <WorkspaceTracks onEditIsrc={onEditIsrc} release={release} />
+        <WorkspaceRights onAction={onRightsAction} release={release} />
+        <WorkspaceReadiness artistId={artistId} release={release} />
         <WorkspaceParticipants
           onAddContributor={onAddContributor}
           onEditContributor={onEditContributor}
