@@ -48,7 +48,7 @@ const TO_WIRE_STATUS = {
   FAILED: 'FAILED',
 } as const satisfies Record<TrackProcessingStatus, WireProcessingStatus>
 
-export function toWireProcessingStatus(status: TrackProcessingStatus): WireProcessingStatus {
+function toWireProcessingStatus(status: TrackProcessingStatus): WireProcessingStatus {
   return TO_WIRE_STATUS[status]
 }
 
@@ -59,7 +59,7 @@ const TO_WIRE_SORT = {
   processingStatus: 'processingStatus',
 } as const satisfies Record<TrackSortField, NonNullable<WireTrackSortField>>
 
-export function toWireTrackSort(field: TrackSortField): NonNullable<WireTrackSortField> {
+function toWireTrackSort(field: TrackSortField): NonNullable<WireTrackSortField> {
   return TO_WIRE_SORT[field]
 }
 
