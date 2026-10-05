@@ -1,9 +1,11 @@
 import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type { Song } from '@bitrate/ncs-parser'
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { DownloadResourcesService } from './download-resources.service'
+
+/** The NCS song shape, taken from the service so the spec needs no built `@bitrate/ncs-parser`. */
+type Song = Parameters<DownloadResourcesService['downloadTrackResources']>[0]
 
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0])
 const MP3 = Buffer.from('ID3-audio-bytes')
