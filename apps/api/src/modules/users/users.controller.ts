@@ -1,7 +1,6 @@
-import { randomUUID } from 'node:crypto'
-import { open, unlink } from 'node:fs/promises'
-import { detectAllowedImageMime, IMAGE_EXTENSION_BY_MIME } from '@common/utils/image'
-import { resolveSafeMulterPath } from '@common/utils/multer-file'
+import { removePublicImage, storePublicImage } from '@infra/storage/public-images'
+import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
+import type { StorageService } from '@infra/storage/storage.types'
 import { SafeUserEntity } from '@modules/users'
 import { UserAuth } from '@modules/users-auth/users-auth.guard'
 import {
@@ -11,6 +10,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  Inject,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -24,7 +24,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import type { Request } from 'express'
-import { diskStorage } from 'multer'
+import { memoryStorage } from 'multer'
 import { ZodValidationPipe } from 'nestjs-zod'
 import * as z from 'zod'
 import {
@@ -41,15 +41,21 @@ import { UpdateUserDto, UpdateUserSchema } from './dtos'
 import { UserEntity } from './entities'
 import { UsersService } from './users.service'
 
-/** Where avatar uploads are written. Server-owned, so it can be joined into a path safely. */
-const AVATAR_DESTINATION = './storage/public/users/avatars'
+/** Avatars are held in memory up to this size, then uploaded to storage. */
+const MAX_AVATAR_BYTES = 5 * 1024 * 1024
+
+/** Where avatars live in storage; the first part of their public `/static/...` URL. */
+const AVATAR_FOLDER = 'users/avatars'
 
 /** Represents the users controller. */
 @ApiExtraModels(UserEntity, SafeUserEntity)
 @ApiTags('Users')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
+  ) {}
 
   /** Runs the get all operation. */
   @GetUsersSwagger()
@@ -104,15 +110,8 @@ export class UsersController {
   @Post('avatar')
   @UseInterceptors(
     FileInterceptor('avatar', {
-      limits: { fileSize: 5 * 1024 * 1024 },
-      storage: diskStorage({
-        destination: AVATAR_DESTINATION,
-        filename: (_req, file, cb) => {
-          const extension =
-            IMAGE_EXTENSION_BY_MIME[file.mimetype as keyof typeof IMAGE_EXTENSION_BY_MIME]
-          cb(null, `${randomUUID()}${extension}`)
-        },
-      }),
+      limits: { fileSize: MAX_AVATAR_BYTES },
+      storage: memoryStorage(),
       fileFilter: (_req, file, cb) => {
         const allowed = ['image/png', 'image/jpeg', 'image/webp']
         if (!allowed.includes(file.mimetype)) {
@@ -125,24 +124,14 @@ export class UsersController {
   async uploadAvatar(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
     if (!file) throw new BadRequestException('Avatar file is required')
 
-    const safePath = resolveSafeMulterPath(file, AVATAR_DESTINATION)
-    const buf = Buffer.alloc(12)
-    const fd = await open(safePath, 'r')
-    try {
-      await fd.read(buf, 0, 12, 0)
-    } finally {
-      await fd.close()
-    }
-    if (detectAllowedImageMime(buf) !== file.mimetype) {
-      await unlink(safePath)
-      throw new BadRequestException('Invalid file content')
-    }
-
+    const name = await storePublicImage(this.storage, AVATAR_FOLDER, file, {
+      maxBytes: MAX_AVATAR_BYTES,
+    })
     const user = req.user as UserEntity
     try {
-      return await this.usersService.uploadAvatar(user.id, file.filename)
+      return await this.usersService.uploadAvatar(user.id, name)
     } catch (error) {
-      await unlink(safePath)
+      await removePublicImage(this.storage, AVATAR_FOLDER, name)
       throw error
     }
   }

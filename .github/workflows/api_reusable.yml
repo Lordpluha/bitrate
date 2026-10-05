@@ -153,6 +153,11 @@ jobs:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
 
+      # The seed specs import types from @bitrate/ncs-parser, which ship only in its build output,
+      # so the package has to be built before any test (and before the contract check below).
+      - name: Build ncs-parser
+        run: pnpm --filter @bitrate/ncs-parser run build
+
       - name: Run converter tests
         run: pnpm --filter @bitrate/converter run test
 
@@ -189,9 +194,6 @@ jobs:
       - name: Stop SeaweedFS
         if: always()
         run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml down -v
-
-      - name: Build ncs-parser
-        run: pnpm --filter @bitrate/ncs-parser run build
 
       - name: Verify generated API contracts
         run: |

@@ -1,14 +1,12 @@
-import { open, rm } from 'node:fs/promises'
+import { rm } from 'node:fs/promises'
 import { ARTIST_AGREEMENT_VERSION } from '@common/legal'
 import { RIGHTS_CONFIRMATION_MESSAGE } from '@common/rights-confirmation'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import type { StorageService } from '@infra/storage/storage.types'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
-import type { ConfigService } from '@nestjs/config'
 import {
   makeCacheMock,
-  makeConfigMock,
   makeProcessingAttemptRecorderMock,
   makeQueueMock,
   makeStorageMock,
@@ -21,8 +19,8 @@ import type { Queue } from 'bullmq'
 import { parseFile } from 'music-metadata'
 import { buildAudioFile, buildCoverFile, buildTrack } from './__tests__/fixtures/tracks.fixtures'
 import { downloadObjectToFile, storeMaster } from './audio-master'
+import { getUploadTempDir } from './audio-scratch'
 import type { CreateTrackDto, UpdateTrackDto } from './dtos/create-track.dto'
-import { uploadDestination } from './track-media'
 import { TrackUploadService } from './track-upload.service'
 
 jest.mock(
@@ -36,14 +34,6 @@ jest.mock(
 )
 
 jest.mock('node:fs/promises', () => ({
-  open: jest.fn().mockResolvedValue({
-    read: jest.fn().mockImplementation((buf: unknown) => {
-      const header = buf as Buffer
-      header.set([0x89, 0x50, 0x4e, 0x47])
-      return Promise.resolve()
-    }),
-    close: jest.fn().mockResolvedValue(undefined as never),
-  } as never),
   rm: jest.fn().mockResolvedValue(undefined as never),
 }))
 
@@ -52,7 +42,6 @@ jest.mock('./audio-master', () => ({
   downloadObjectToFile: jest.fn().mockResolvedValue(undefined as never),
 }))
 
-const openMock = open as jest.MockedFunction<typeof open>
 const rmMock = rm as jest.MockedFunction<typeof rm>
 const storeMasterMock = storeMaster as jest.MockedFunction<typeof storeMaster>
 const downloadMock = downloadObjectToFile as jest.MockedFunction<typeof downloadObjectToFile>
@@ -62,7 +51,6 @@ describe('TrackUploadService', () => {
   let service: TrackUploadService
   let prisma: PrismaMock
   let queue: jest.Mocked<Queue>
-  let config: jest.Mocked<ConfigService>
   let storage: jest.Mocked<StorageService>
   const recorder = makeProcessingAttemptRecorderMock()
 
@@ -71,11 +59,10 @@ describe('TrackUploadService', () => {
     resetPrismaMock()
     prisma = prismaMock
     queue = makeQueueMock()
-    config = makeConfigMock()
     storage = makeStorageMock()
     storage.getObjectMeta.mockResolvedValue({ contentLength: 9_000 } as never)
     storage.deleteObject.mockResolvedValue(undefined as never)
-    service = new TrackUploadService(prisma, queue, config, makeCacheMock(), recorder, storage)
+    service = new TrackUploadService(prisma, queue, makeCacheMock(), recorder, storage)
   })
 
   describe('create', () => {
@@ -130,7 +117,7 @@ describe('TrackUploadService', () => {
       expect(storeMasterMock).toHaveBeenCalledWith({
         storage,
         key: `masters/${audioFile.filename}`,
-        filePath: resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
+        filePath: resolveSafeMulterPath(audioFile, getUploadTempDir()),
         contentType: 'audio/mpeg',
       })
       expect(storeMasterMock.mock.invocationCallOrder[0]).toBeLessThan(
@@ -218,16 +205,34 @@ describe('TrackUploadService', () => {
       )
     })
 
-    it('rejects spoofed cover content and removes every unowned upload', async () => {
+    it('uploads the cover to storage under tracks/covers and stores only its generated name', async () => {
       const audioFile = buildAudioFile()
-      const coverFile = buildCoverFile({ originalname: 'payload.html', mimetype: 'image/png' })
-      openMock.mockResolvedValueOnce({
-        read: jest.fn().mockImplementation((buf: unknown) => {
-          ;(buf as Buffer).set(Buffer.from('<script>bad', 'ascii'))
-          return Promise.resolve()
-        }),
-        close: jest.fn().mockResolvedValue(undefined as never),
-      } as never)
+      const coverFile = buildCoverFile()
+      prisma.track.create.mockResolvedValue(buildTrack() as never)
+      queue.add.mockResolvedValue({} as never)
+
+      await service.create(
+        'artist-1',
+        { title: 'Track title', rightsConfirmed: true } as CreateTrackDto,
+        audioFile,
+        coverFile,
+      )
+
+      const [key, body, contentType] = storage.upload.mock.calls[0] as [string, Buffer, string]
+      expect(key).toMatch(/^tracks\/covers\/[0-9a-f-]{36}\.png$/)
+      expect(body).toBe(coverFile.buffer)
+      expect(contentType).toBe('image/png')
+      expect(prisma.track.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ cover: key.replace('tracks/covers/', '') }),
+      })
+    })
+
+    it('rejects spoofed cover content, uploading no cover and removing the audio temp file', async () => {
+      const audioFile = buildAudioFile()
+      const coverFile = buildCoverFile({
+        originalname: 'payload.html',
+        buffer: Buffer.from('<script>bad', 'ascii'),
+      })
 
       await expect(
         service.create(
@@ -236,17 +241,31 @@ describe('TrackUploadService', () => {
           audioFile,
           coverFile,
         ),
-      ).rejects.toThrow('Invalid cover file content')
+      ).rejects.toThrow('Invalid image file content')
 
       expect(prisma.track.create).not.toHaveBeenCalled()
-      expect(rmMock).toHaveBeenCalledWith(
-        resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
-        { force: true },
-      )
-      expect(rmMock).toHaveBeenCalledWith(
-        resolveSafeMulterPath(coverFile, uploadDestination(coverFile)),
-        { force: true },
-      )
+      expect(storage.upload).not.toHaveBeenCalled()
+      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile, getUploadTempDir()), {
+        force: true,
+      })
+    })
+
+    it('removes the stored cover and master when the track cannot be created', async () => {
+      const audioFile = buildAudioFile()
+      prisma.track.create.mockRejectedValue(new Error('db down') as never)
+
+      await expect(
+        service.create(
+          'artist-1',
+          { title: 'Track title' } as CreateTrackDto,
+          audioFile,
+          buildCoverFile(),
+        ),
+      ).rejects.toThrow('db down')
+
+      const coverKey = storage.upload.mock.calls[0]?.[0] as string
+      expect(storage.deleteObject).toHaveBeenCalledWith(coverKey)
+      expect(storage.deleteObject).toHaveBeenCalledWith(`masters/${audioFile.filename}`)
     })
 
     it('rejects a source bitrate below the converter minimum before creating a track', async () => {
@@ -265,10 +284,9 @@ describe('TrackUploadService', () => {
 
       expect(prisma.track.create).not.toHaveBeenCalled()
       expect(queue.add).not.toHaveBeenCalled()
-      expect(rmMock).toHaveBeenCalledWith(
-        resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
-        { force: true },
-      )
+      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile, getUploadTempDir()), {
+        force: true,
+      })
     })
   })
 
@@ -310,6 +328,25 @@ describe('TrackUploadService', () => {
         expect.objectContaining({ attempts: 5 }),
       )
       expect(result).toBe(track)
+    })
+
+    it('uploads a replacement cover and deletes the previous cover object', async () => {
+      const track = buildTrack({ cover: 'old-cover.png' })
+      mockTransaction(prisma)
+      prisma.track.update.mockResolvedValue(track as never)
+      prisma.track.findFirst.mockResolvedValue(track as never)
+
+      await service.update(
+        'artist-1',
+        'track-1',
+        { title: 'Updated' } as UpdateTrackDto,
+        undefined,
+        buildCoverFile(),
+      )
+
+      const key = storage.upload.mock.calls[0]?.[0] as string
+      expect(key).toMatch(/^tracks\/covers\/[0-9a-f-]{36}\.png$/)
+      expect(storage.deleteObject).toHaveBeenCalledWith('tracks/covers/old-cover.png')
     })
 
     it('should update track without queue when no audio file', async () => {
@@ -355,10 +392,9 @@ describe('TrackUploadService', () => {
         service.update('artist-1', 'track-1', { title: 'Updated' } as UpdateTrackDto, audioFile),
       ).rejects.toThrow(new BadRequestException(RIGHTS_CONFIRMATION_MESSAGE))
 
-      expect(rmMock).toHaveBeenCalledWith(
-        resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
-        { force: true },
-      )
+      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile, getUploadTempDir()), {
+        force: true,
+      })
       expect(prisma.track.update).not.toHaveBeenCalled()
       expect(queue.add).not.toHaveBeenCalled()
     })
@@ -384,10 +420,9 @@ describe('TrackUploadService', () => {
         service.update('artist-2', 'track-1', { title: 'Updated' } as never, audioFile),
       ).rejects.toThrow(NotFoundException)
 
-      expect(rmMock).toHaveBeenCalledWith(
-        resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
-        { force: true },
-      )
+      expect(rmMock).toHaveBeenCalledWith(resolveSafeMulterPath(audioFile, getUploadTempDir()), {
+        force: true,
+      })
       expect(prisma.track.update).not.toHaveBeenCalled()
     })
   })

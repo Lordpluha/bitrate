@@ -35,14 +35,6 @@ const config = {
   clearBeforeImport: true,
 
   /**
-   * Пути к директориям хранения (относительно apps/api)
-   */
-  storagePaths: {
-    tracks: 'storage/private/tracks',
-    covers: 'storage/public/tracks/covers',
-  },
-
-  /**
    * Таймауты для скачивания файлов (в миллисекундах)
    */
   downloadTimeout: 60000,

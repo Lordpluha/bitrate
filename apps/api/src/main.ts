@@ -7,6 +7,7 @@
 import './instrument'
 
 import { API_DOC_DESCRIPTION, API_DOC_TITLE, API_DOC_VERSION } from '@common/swagger'
+import { STATIC_ASSETS_GLOBAL_PREFIX_OPTIONS } from '@infra/storage/static-assets.routing'
 import { HttpStatus, Logger, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
@@ -48,8 +49,9 @@ async function bootstrap() {
   // HttpExceptionFilter is registered as an APP_FILTER provider in AppModule — it needs
   // I18nService injected, which `new HttpExceptionFilter()` here could not supply.
 
-  // Add global prefix /api to all routes except static files and swagger
-  app.setGlobalPrefix('api')
+  // Add global prefix /api to all routes except the public image route (`/static/*`, served from
+  // object storage at the URL clients already use) and swagger
+  app.setGlobalPrefix('api', STATIC_ASSETS_GLOBAL_PREFIX_OPTIONS)
 
   app.enableVersioning({
     type: VersioningType.URI,

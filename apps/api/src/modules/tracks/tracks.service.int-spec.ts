@@ -23,9 +23,7 @@ const makeQueueMock = () =>
 
 const makeConfigMock = () =>
   ({
-    getOrThrow: jest.fn().mockReturnValue({
-      getTracksDir: (filename?: string) => (filename ? `/storage/${filename}` : '/storage'),
-    }),
+    getOrThrow: jest.fn(),
   }) as unknown as jest.Mocked<ConfigService<AppConfig>>
 
 jest.mock(
@@ -120,9 +118,6 @@ describe('TracksService (int)', () => {
   beforeEach(() => {
     resetPrismaMock()
     queueMock.add.mockReset()
-    configMock.getOrThrow.mockReturnValue({
-      getTracksDir: (filename?: string) => (filename ? `/storage/${filename}` : '/storage'),
-    })
   })
 
   it('should be defined via DI', () => {
