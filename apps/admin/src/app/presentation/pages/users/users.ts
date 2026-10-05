@@ -1,18 +1,30 @@
-import { Component, effect, inject, signal } from '@angular/core'
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { RouterLink } from '@angular/router'
 import { SessionStore } from '@application/session'
-import { DeactivateUserUseCase, ListUsersUseCase } from '@application/users'
-import type { ResourceStatus, Sort } from '@domain/shared'
-import type { User, UserSortField } from '@domain/user'
 import {
+  DeactivateUserUseCase,
+  DeactivateUsersBatchUseCase,
+  ListUsersUseCase,
+} from '@application/users'
+import {
+  ActionNotAllowedError,
+  type BatchResult,
+  MAX_BATCH_SIZE,
+  type ResourceStatus,
+  type Sort,
+} from '@domain/shared'
+import { canDeactivateUser, type User, type UserSortField } from '@domain/user'
+import {
+  type BatchActionOption,
+  BatchActionBar,
   CollectionStatus,
   Paginator,
   SortHeader,
   sortHeaderAriaSort,
 } from '@presentation/components'
 import { LocalizedDatePipe } from '@presentation/pipes'
-import { bindQueryState, createCollection } from '@presentation/state'
+import { bindQueryState, createCollection, createSelection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
@@ -28,6 +40,7 @@ const SEARCH_DEBOUNCE_MS = 300
   imports: [
     LocalizedDatePipe,
     RouterLink,
+    BatchActionBar,
     CollectionStatus,
     Paginator,
     SortHeader,
@@ -41,6 +54,7 @@ const SEARCH_DEBOUNCE_MS = 300
 export class UsersPage {
   private readonly listUsers = inject(ListUsersUseCase)
   private readonly deactivateUser = inject(DeactivateUserUseCase)
+  private readonly deactivateUsers = inject(DeactivateUsersBatchUseCase)
 
   protected readonly canDelete = inject(SessionStore).can('users:delete')
   protected readonly ariaSort = sortHeaderAriaSort<UserSortField>
@@ -62,10 +76,48 @@ export class UsersPage {
       }),
   })
 
+  protected readonly selection = createSelection({ limit: MAX_BATCH_SIZE })
+  protected readonly batchPending = signal(false)
+  protected readonly batchResult = signal<BatchResult | null>(null)
+
+  /** Hidden entirely when the operator may not deactivate, same as the per-row button. */
+  protected readonly batchActions = computed<BatchActionOption[]>(() =>
+    this.canDelete()
+      ? [
+          {
+            key: 'deactivate',
+            label: 'Deactivate',
+            confirmLabel: 'Deactivate listeners',
+            consequence:
+              'Sets a deletion date and signs each listener out. Playlists and history are kept.',
+            destructive: true,
+          },
+        ]
+      : [],
+  )
+  protected readonly selectableIds = computed(() =>
+    this.collection
+      .items()
+      .filter((user) => canDeactivateUser(user).allowed)
+      .map((user) => user.id),
+  )
+  private readonly selectedUsers = computed(() =>
+    this.collection.items().filter((user) => this.selection.has(user.id)),
+  )
+  protected readonly batchRows = computed(() =>
+    this.selectedUsers().map((user) => ({ id: user.id, label: user.username })),
+  )
+
   constructor() {
     effect(() => {
       const { page } = this.query.state()
       void this.collection.show(page)
+    })
+
+    /** The ticked rows belong to one page of one filter; any URL change drops them. */
+    effect(() => {
+      this.query.state()
+      untracked(() => this.selection.clear())
     })
 
     /** Keeps the box in sync with the URL, e.g. after back/forward changes the filter. */
@@ -105,5 +157,27 @@ export class UsersPage {
     } finally {
       this.busyId.set(null)
     }
+  }
+
+  protected async runBatch(): Promise<void> {
+    this.batchPending.set(true)
+    try {
+      const result = await this.deactivateUsers.execute(this.selectedUsers())
+      this.selection.clear()
+      this.batchResult.set(result)
+      await this.collection.reload()
+    } catch (error) {
+      this.collection.fail(
+        error instanceof ActionNotAllowedError
+          ? error.message
+          : 'Could not deactivate the selected listeners.',
+      )
+    } finally {
+      this.batchPending.set(false)
+    }
+  }
+
+  protected closeBatch(): void {
+    this.batchResult.set(null)
   }
 }

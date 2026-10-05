@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { firstValueFrom } from 'rxjs'
-import type { Page, TakeDownInput } from '@domain/shared'
+import type { BatchResult, Page, TakeDownInput } from '@domain/shared'
 import {
   LISTENING_HISTORY_PAGE_SIZE,
   type ListUsersQuery,
@@ -11,6 +11,7 @@ import {
   UserRepository,
 } from '@domain/user'
 import { ADMIN_API } from '../http/api.config'
+import { batchResultDto, buildBatchBody, toBatchResult } from '../http/batch-result.dto'
 import { buildTakeDownBody, revokeSessionsResultDto } from '../http/take-down.dto'
 import { toResourceWriteError } from '../http/to-resource-write-error'
 import { fetchPage } from '../http/wire-page'
@@ -55,6 +56,14 @@ export class HttpUserRepository extends UserRepository {
     } catch (error) {
       throw toResourceWriteError(error, 'deactivate')
     }
+  }
+
+  override async deactivateMany(ids: readonly string[]): Promise<BatchResult> {
+    const response = await firstValueFrom(
+      this.http.post<unknown>(`${this.base}/batch/deactivate`, buildBatchBody(ids)),
+    )
+
+    return toBatchResult(batchResultDto.parse(response))
   }
 
   override async restore({ id, reason }: TakeDownInput): Promise<void> {

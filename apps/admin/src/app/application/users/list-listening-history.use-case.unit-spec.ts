@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { Page } from '@domain/shared'
+import type { BatchResult, Page } from '@domain/shared'
 import { type ListeningHistoryEntry, UserRepository } from '@domain/user'
 import { ListListeningHistoryUseCase } from './list-listening-history.use-case'
 
@@ -18,6 +18,10 @@ class StubUserRepository extends UserRepository {
 
   override deactivate(): Promise<void> {
     throw new Error('not used by this use case')
+  }
+
+  override deactivateMany(): Promise<BatchResult> {
+    throw new Error('not used')
   }
 
   override restore(): Promise<void> {

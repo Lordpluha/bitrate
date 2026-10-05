@@ -7,7 +7,7 @@ import {
   type ReportDetail,
   type SetReportStatusInput,
 } from '@domain/moderation'
-import type { Page } from '@domain/shared'
+import type { BatchResult, Page } from '@domain/shared'
 import { AdvanceReportUseCase } from './advance-report.use-case'
 
 const setStatus = vi.fn<(input: SetReportStatusInput) => Promise<ModerationReport>>()
@@ -23,6 +23,14 @@ class StubReportRepository extends ModerationReportRepository {
 
   override setStatus(input: SetReportStatusInput): Promise<ModerationReport> {
     return setStatus(input)
+  }
+
+  override resolveMany(_ids: readonly string[]): Promise<BatchResult> {
+    throw new Error('not used')
+  }
+
+  override dismissMany(_ids: readonly string[]): Promise<BatchResult> {
+    throw new Error('not used')
   }
 }
 
