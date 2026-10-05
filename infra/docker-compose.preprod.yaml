@@ -114,6 +114,7 @@ services:
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
       WEB_HOST: ${WEB_HOST:-http://localhost:3001}
+      ARTIST_WEB_HOST: ${ARTIST_WEB_HOST:-http://localhost:${WEB_ARTISTS_PORT:-3004}}
       # No SMTP host, on purpose: MailService builds no transporter without one and logs the
       # verification/reset link instead. Point SMTP_HOST at a real server to send for real.
       DEV_MAIL_LOG_TOKENS: "true"
@@ -184,7 +185,7 @@ services:
       - bitrate-network
     command: pnpm --filter @bitrate/web-player run dev
 
-  # Web Artists (Next.js)
+  # Web Artists (TanStack Start)
   web-artists:
     build:
       context: ..
@@ -196,6 +197,7 @@ services:
       NODE_ENV: development
       # Vite видит только VITE_-префикс; общая с web-player переменная разворачивается здесь.
       VITE_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+      API_URL: ${API_URL:-http://api:3000}
       PORT: 3002
     ports:
       - "${WEB_ARTISTS_PORT:-3004}:3002"
