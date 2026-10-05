@@ -52,6 +52,7 @@ how to apply it day to day.
 | [0048](./0048-pnpm-12-and-explicit-build-policy.md) | pnpm 12.7.0, settings in `pnpm-workspace.yaml`, explicit `allowBuilds` policy |
 | [0049](./0049-transcode-worker-process-boundary.md) | Transcode worker process boundary, provider list and `ConvertAudioJob` contract |
 | [0050](./0050-seaweedfs-object-storage-for-audio.md) | SeaweedFS single-node internal object storage for audio; spike results; accepted no-backup risk |
+| [0051](./0051-operator-panel-resource-coverage.md) | Operator panel resource coverage: ranked pages, take-down and restore convention, session revocation, MODERATOR template rule |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

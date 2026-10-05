@@ -5,7 +5,7 @@ import { Logger } from '@nestjs/common'
 import type { PrismaClient } from '@prisma/client'
 import config from '../config'
 import type { DownloadResourcesService } from '../download-resources.service'
-import { createMulterFileFromPath } from '../file-helper'
+import { createMulterFileFromBuffer, createMulterFileFromPath } from '../file-helper'
 import { sanitizeUsername } from './seed.helpers'
 import type { ITrackUploadService, NcsImportStats } from './seed.types'
 
@@ -86,11 +86,11 @@ export class NcsImportSeeder {
       return existingTrack
     }
 
-    const { audioFilePath, coverFilePath, instrumentalFilePath } =
+    const { audioFilePath, coverBuffer, instrumentalFilePath } =
       await this.downloadService.downloadTrackResources(ncsSong)
     if (!audioFilePath) throw new Error('No audio URL available for track')
 
-    const coverFile = coverFilePath ? createMulterFileFromPath(coverFilePath, 'cover') : undefined
+    const coverFile = coverBuffer ? createMulterFileFromBuffer(coverBuffer, 'cover') : undefined
     const track = await this.uploadTrack(
       artistId,
       ncsSong.name,

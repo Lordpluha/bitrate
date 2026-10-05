@@ -4,7 +4,7 @@ import { redactProcessingText } from './redact'
 describe('redactProcessingText', () => {
   it('collapses an absolute path through a tracks/ segment', () => {
     const result = redactProcessingText(
-      'Input file not found: /storage/private/tracks/track-1/generations/abc/hls/master.m3u8',
+      'Input file not found: /scratch/tracks/track-1/generations/abc/hls/master.m3u8',
       { keep: 'head', maxBytes: 1_024 },
     )
 
