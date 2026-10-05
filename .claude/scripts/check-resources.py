@@ -42,6 +42,10 @@ def main():
             continue
         # Never print process arguments, which may contain private values.
         binaries = {Path(word).name for word in words[:3]}
+        # Editor language servers are persistent, not competing verification commands.
+        # Keep memory/swap checks and active Biome check/ci/lint detection intact.
+        if 'biome' in binaries and set(words) & {'lsp-proxy', '__run_server'}:
+            continue
         if binaries & names or (binaries & {'ng', 'next', 'vite', 'turbo', 'prisma'} and
                                 set(words) & {'build', 'test', 'check-types', 'generate'}):
             heavy += 1
