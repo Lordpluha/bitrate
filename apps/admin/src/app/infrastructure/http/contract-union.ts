@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as z from 'zod'
 
 /**
  * The `coveringTuple` guarantee, for a zod enum. `satisfies z.ZodType<T>` alone does not give it: a

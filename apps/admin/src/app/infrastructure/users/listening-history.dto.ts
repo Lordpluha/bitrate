@@ -1,5 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
-import { z } from 'zod'
+import * as z from 'zod'
 
 type ContractListeningHistoryEntry = ApiSchemas['AdminListeningHistoryEntryEntity']
 
