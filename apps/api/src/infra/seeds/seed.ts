@@ -1,6 +1,4 @@
 import './bootstrap-env'
-import { existsSync, mkdirSync } from 'node:fs'
-import { join } from 'node:path'
 import { faker } from '@faker-js/faker'
 import type { INestApplicationContext } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
@@ -21,26 +19,6 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 const adapter = new PrismaPg(pool)
 /** The prisma value. */
 const prisma = new PrismaClient({ adapter })
-
-// Подготовка директорий для хранения файлов
-/** The storage base value. */
-const STORAGE_BASE = process.cwd()
-/** The tracks dir value. */
-const TRACKS_DIR = join(STORAGE_BASE, config.storagePaths.tracks)
-/** The covers dir value. */
-const COVERS_DIR = join(STORAGE_BASE, config.storagePaths.covers)
-
-console.log('📁 Storage directories:')
-console.log('  Tracks:', TRACKS_DIR)
-console.log('  Covers:', COVERS_DIR)
-
-// Создаём директории если их нет
-if (!existsSync(TRACKS_DIR)) {
-  mkdirSync(TRACKS_DIR, { recursive: true })
-}
-if (!existsSync(COVERS_DIR)) {
-  mkdirSync(COVERS_DIR, { recursive: true })
-}
 
 /**
  * Главная функция для запуска всех seed процессов
@@ -64,7 +42,7 @@ async function main() {
     const tokenService = app.get(TokenService)
 
     // Создаём сервисы для импорта
-    const downloadService = new DownloadResourcesService(STORAGE_BASE)
+    const downloadService = new DownloadResourcesService()
     const seedService = new SeedService(
       prisma,
       downloadService,

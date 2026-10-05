@@ -48,12 +48,6 @@ graphify-out/
 .claude/
 .impeccable/
 
-# Seeded media for apps/api. The directory's own .gitignore keeps everything but the .gitkeep
-# placeholders out of git, so CI never sees it — but a developer checkout carries 823 MB of
-# downloaded tracks here and apps/api/Dockerfile copies the tree wholesale. The runtime storage
-# root is /app/storage (a named volume), which is a different path entirely.
-apps/api/storage/private/
-
 # Keep example file
 !**/.env.example
 !**/.env.sample

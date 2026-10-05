@@ -47,13 +47,13 @@ describe('StorageCoreModule', () => {
     expect(await resolveStorage()).toBeInstanceOf(S3Service)
   })
 
-  it('is re-exported by StorageModule, which keeps the controller', () => {
+  it('is re-exported by StorageModule, which keeps the signed-URL and static controllers', () => {
     expect(Reflect.getMetadata('imports', StorageModule)).toEqual(
       expect.arrayContaining([StorageCoreModule]),
     )
     expect(Reflect.getMetadata('exports', StorageModule)).toEqual(
       expect.arrayContaining([StorageCoreModule]),
     )
-    expect(Reflect.getMetadata('controllers', StorageModule)).toHaveLength(1)
+    expect(Reflect.getMetadata('controllers', StorageModule)).toHaveLength(2)
   })
 })
