@@ -1,6 +1,7 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
+import { type AuditContextValue, runBatch, writeTakeDownAudit } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { ModerationReport, ModerationStatus, Prisma } from '@prisma/client'
 import type { ADMIN_REPORTS_SORT_FIELDS, UpdateReportDto } from './dtos'
@@ -29,6 +30,9 @@ type ModerationSubject = {
 
 /** How many sibling reports on the same subject the detail response includes. */
 const SIBLING_REPORTS_LIMIT = 20
+
+/** Who advanced a report, so `updateStatus` can write the explicit audit row in its transaction. */
+type ReportAdvanceAudit = { staffId: string } & AuditContextValue
 
 const RESOLVED_STATUSES: ModerationStatus[] = ['RESOLVED', 'REJECTED']
 
@@ -76,18 +80,46 @@ export class AdminModerationService {
     return { ...report, subject, siblingReports }
   }
 
-  /** Runs the update status operation. Sets/clears `resolvedAt` to match the new status. */
-  async updateStatus(id: string, dto: UpdateReportDto) {
+  /**
+   * Runs the update status operation. Sets/clears `resolvedAt` to match the new status.
+   * With `audit`, the update and an explicit per-report audit row share one transaction — the
+   * batch route passes it because it opts out of the interceptor's request-level row.
+   */
+  async updateStatus(id: string, dto: UpdateReportDto, audit?: ReportAdvanceAudit) {
     const existing = await this.prisma.moderationReport.findFirst({ where: { id } })
     if (!existing) throw new ReportNotFoundException(id)
 
-    return await this.prisma.moderationReport.update({
-      where: { id },
-      data: {
-        status: dto.status,
-        resolvedAt: RESOLVED_STATUSES.includes(dto.status) ? new Date() : null,
-      },
+    const data = {
+      status: dto.status,
+      resolvedAt: RESOLVED_STATUSES.includes(dto.status) ? new Date() : null,
+    }
+    if (!audit) return await this.prisma.moderationReport.update({ where: { id }, data })
+
+    const { staffId, ...auditContext } = audit
+    return await this.prisma.$transaction(async (tx) => {
+      const updated = await tx.moderationReport.update({ where: { id }, data })
+      await writeTakeDownAudit({
+        tx,
+        entityType: 'admin-moderation',
+        entityId: id,
+        action: 'admin-moderation.update',
+        staffId,
+        before: { status: existing.status },
+        after: { status: updated.status },
+        ...auditContext,
+      })
+      return updated
     })
+  }
+
+  /** Moves every report to `status` independently via {@link updateStatus}; per-id results. */
+  advanceMany(
+    ids: readonly string[],
+    status: ModerationStatus,
+    staffId: string,
+    auditContext: AuditContextValue = {},
+  ) {
+    return runBatch(ids, (id) => this.updateStatus(id, { status }, { staffId, ...auditContext }))
   }
 
   /** Other reports naming the same `entityType`/`entityId`, newest first, bounded. */

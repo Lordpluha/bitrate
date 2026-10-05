@@ -1,6 +1,9 @@
+import { SkipAudit } from '@infra/observability/skip-audit.decorator'
 import {
   AuditContext,
   type AuditContextValue,
+  BatchIdsDto,
+  BatchIdsSchema,
   TakeDownReasonDto,
   TakeDownReasonSchema,
 } from '@modules/admin/shared'
@@ -38,6 +41,7 @@ import {
   ReprocessTrackSwagger,
   RestoreTrackSwagger,
   StreamTrackAudioSwagger,
+  TakeDownTracksBatchSwagger,
 } from './decorators'
 import {
   type ListAdminTracksQueryDto,
@@ -170,6 +174,20 @@ export class AdminTracksController {
     @AuditContext() auditContext: AuditContextValue = {},
   ) {
     return this.tracks.softDelete(id, staff.id, body.reason, auditContext)
+  }
+
+  /** Runs the batch take-down operation. `@SkipAudit` because each take-down audits itself. */
+  @RequirePermission('tracks:delete')
+  @TakeDownTracksBatchSwagger()
+  @SkipAudit()
+  @HttpCode(HttpStatus.OK)
+  @Post('batch/take-down')
+  takeDownMany(
+    @Body(new ZodValidationPipe(BatchIdsSchema)) body: BatchIdsDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue = {},
+  ) {
+    return this.tracks.softDeleteMany(body.ids, staff.id, auditContext)
   }
 
   /** Runs the restore operation. */

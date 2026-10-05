@@ -2,7 +2,7 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagin
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
-import { isoOrNull, writeTakeDownAudit } from '@modules/admin/shared'
+import { isoOrNull, runBatch, writeTakeDownAudit } from '@modules/admin/shared'
 import { TrackUploadService } from '@modules/tracks'
 import { Injectable } from '@nestjs/common'
 import { Prisma, type TrackProcessingStatus } from '@prisma/client'
@@ -363,6 +363,11 @@ export class AdminTracksService {
       })
       return this.toRow(updated)
     })
+  }
+
+  /** Takes every id down independently via {@link softDelete}; per-id results, same rules. */
+  softDeleteMany(ids: readonly string[], staffId: string, auditContext: AuditContextValue = {}) {
+    return runBatch(ids, (id) => this.softDelete(id, staffId, undefined, auditContext))
   }
 
   /**
