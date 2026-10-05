@@ -132,6 +132,77 @@ class HookTests(unittest.TestCase):
                 response = self.call('Bash', {'command': command}, cwd=agent)
                 self.assertEqual(response['permissionDecision'], 'ask')
 
+    def test_shell_parsing_bypasses_require_approval(self):
+        (self.repo / 'src').mkdir()
+        (self.repo / 'src' / 'draft.ts').write_text('uncommitted')
+        for command in [
+            "echo '<<X'\ngit reset --hard\nX", 'cat <<EOF-X\nhi\nEOF-X\ngit reset --hard',
+            'echo a#; git reset --hard', 'if true; then git reset --hard; fi', '{ git reset --hard; }',
+            'cat <(git reset --hard)', 'C="git reset --hard"; $C', '$CMD reset --hard',
+            'command -p git reset --hard', "echo 'git reset --hard' | bash", "watch 'git reset --hard'",
+            'echo --hard | xargs git reset', 'find . -exec git reset --hard \\;',
+            "git -c core.pager='rm -rf ~' log", "git -c core.fsmonitor='touch x' status",
+            "git grep -O'rm -rf ~' x", 'git log --output=../victim',
+            "python3 -c \"import subprocess; subprocess.run('git reset --hard', shell=True)\"",
+            "cat > /tmp/x.sh <<'EOF'\ngit reset --hard\nEOF\nbash /tmp/x.sh",
+            'rm -rf src', 'rm src/draft.ts', 'find src -delete',
+        ]:
+            with self.subTest(command=command):
+                self.assertEqual(self.call('Bash', {'command': command})['permissionDecision'], 'ask')
+
+    def test_push_variants_that_reach_develop(self):
+        subprocess.run(['git', '-C', str(self.repo), 'commit', '-q', '--allow-empty', '-m', 'x'],
+                       check=True, env={**os.environ, 'GIT_AUTHOR_NAME': 't', 'GIT_AUTHOR_EMAIL': 't@t',
+                                        'GIT_COMMITTER_NAME': 't', 'GIT_COMMITTER_EMAIL': 't@t'})
+        subprocess.run(['git', '-C', str(self.repo), 'switch', '-q', '-c', 'feature'], check=True)
+        self.assertEqual(self.call('Bash', {'command': 'git push origin feature'}), {})
+        for command in ['git push --all origin', 'git push --repo=origin develop',
+                        "git push origin 'refs/heads/*:refs/heads/*'", 'git push --prune origin']:
+            with self.subTest(command=command):
+                self.assertEqual(self.call('Bash', {'command': command})['permissionDecision'], 'ask')
+        self.assertEqual(self.call('Bash', {'command': 'git push --mirror origin'})['permissionDecision'], 'deny')
+
+    def test_main_checkout_rm_of_ignored_or_committed_files_is_quiet(self):
+        (self.repo / '.gitignore').write_text('dist/\n')
+        (self.repo / 'dist').mkdir()
+        (self.repo / 'dist' / 'out.js').write_text('built')
+        subprocess.run(['git', '-C', str(self.repo), 'add', '.gitignore'], check=True)
+        subprocess.run(['git', '-C', str(self.repo), 'commit', '-q', '-m', 'x'], check=True,
+                       env={**os.environ, 'GIT_AUTHOR_NAME': 't', 'GIT_AUTHOR_EMAIL': 't@t',
+                            'GIT_COMMITTER_NAME': 't', 'GIT_COMMITTER_EMAIL': 't@t'})
+        for command in ['rm -rf dist', 'rm -f dist/out.js', 'find dist -name "*.js" -delete',
+                        'echo "<<EOF" > notes.md', "bash -s < scripts/check.sh",
+                        'git -c color.ui=never log -1', 'command -v gh', 'set -euo pipefail']:
+            with self.subTest(command=command):
+                self.assertEqual(self.call('Bash', {'command': command}), {})
+
+    def test_agent_worktree_cannot_reach_shared_state_or_main_checkout(self):
+        agent = self.repo / '.claude' / 'worktrees' / 'agent'
+        subprocess.run(['git', '-C', str(self.repo), 'worktree', 'add', '--orphan',
+                        '-b', 'agent', str(agent)], check=True, capture_output=True)
+        main = shlex.quote(str(self.repo))
+        for command in ['git stash clear', 'git stash drop', 'git stash pop',
+                        f'pushd {main} && git reset --hard', f'export GIT_DIR={main}/.git; git reset --hard',
+                        f'{{ cd {main}; }}; git reset --hard', f'rm -rf {main}/src']:
+            with self.subTest(command=command):
+                (self.repo / 'src').mkdir(exist_ok=True)
+                (self.repo / 'src' / 'draft.ts').write_text('uncommitted')
+                response = self.call('Bash', {'command': command}, cwd=agent)
+                self.assertEqual(response['permissionDecision'], 'ask')
+
+    def test_secret_bypasses_are_denied(self):
+        (self.repo / '.env').write_text('TOKEN=x')
+        for tool, data in [
+            ('Bash', {'command': 'cat .env*'}), ('Bash', {'command': 'cat .{env,x}'}),
+            ('Bash', {'command': 'export'}), ('Bash', {'command': 'gh auth status --show-token'}),
+            ('Bash', {'command': 'git credential fill'}),
+            ('Bash', {'command': "python3 -c \"print(open('.env').read())\""}),
+            ('Bash', {'command': "node - <<'JS'\nrequire('fs').readFileSync('.env')\nJS"}),
+            ('Grep', {'pattern': 'TOKEN', 'glob': '.env*'}),
+        ]:
+            with self.subTest(tool=tool, data=data):
+                self.assertEqual(self.call(tool, data)['permissionDecision'], 'deny')
+
     def test_linked_worktree_branch_switch_and_explicit_main_target(self):
         linked = self.repo.parent / 'agent'
         subprocess.run(['git', '-C', str(self.repo), 'worktree', 'add', '--orphan',
