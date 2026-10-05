@@ -5,10 +5,12 @@ import {
   Controller,
   Get,
   Header,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Patch,
   Post,
+  Put,
   Query,
   Req,
 } from '@nestjs/common'
@@ -21,8 +23,13 @@ import {
   ReleaseContributorSwagger,
   ReleaseDetailSwagger,
   ReleaseWorkspaceSwagger,
+  ReplaceReleaseSplitsSwagger,
+  SubmitReleaseSwagger,
   UpdateReleaseContributorSwagger,
+  UpdateReleaseRightsSwagger,
   UpdateReleaseSwagger,
+  UpdateReleaseTrackSwagger,
+  WithdrawReleaseSwagger,
 } from './decorators'
 import {
   type AddReleaseContributorDto,
@@ -30,16 +37,35 @@ import {
 } from './dtos/add-release-contributor.dto'
 import { type CreateReleaseDto, CreateReleaseSchema } from './dtos/create-release.dto'
 import { type ListReleasesDto, ListReleasesSchema } from './dtos/list-releases.dto'
+import {
+  type ReplaceReleaseSplitsDto,
+  ReplaceReleaseSplitsSchema,
+} from './dtos/replace-release-splits.dto'
+import {
+  type SubmitReleaseDto,
+  SubmitReleaseSchema,
+  type WithdrawReleaseDto,
+  WithdrawReleaseSchema,
+} from './dtos/submit-release.dto'
 import { type UpdateReleaseDto, UpdateReleaseSchema } from './dtos/update-release.dto'
 import {
   type UpdateReleaseContributorDto,
   UpdateReleaseContributorSchema,
 } from './dtos/update-release-contributor.dto'
+import {
+  type UpdateReleaseRightsDto,
+  UpdateReleaseRightsSchema,
+} from './dtos/update-release-rights.dto'
+import {
+  type UpdateReleaseTrackDto,
+  UpdateReleaseTrackSchema,
+} from './dtos/update-release-track.dto'
 import { ReleaseEntity } from './entities/release.entity'
+import { ReleaseBlockerEntity } from './entities/release-workspace.entity'
 import { ReleasesService } from './releases.service'
 
 @ApiTags('Releases')
-@ApiExtraModels(ReleaseEntity)
+@ApiExtraModels(ReleaseEntity, ReleaseBlockerEntity)
 @Controller({ path: 'releases', version: '1' })
 export class ReleasesController {
   constructor(private readonly releases: ReleasesService) {}
@@ -129,5 +155,68 @@ export class ReleasesController {
     @Body(new ZodValidationPipe(UpdateReleaseContributorSchema)) input: UpdateReleaseContributorDto,
   ) {
     return this.releases.updateContributor(request.artist.id, id, contributorId, input)
+  }
+
+  @UpdateReleaseRightsSwagger()
+  @ArtistAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @Patch(':id/rights')
+  updateRights(
+    @Req() request: ArtistAuthRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(UpdateReleaseRightsSchema)) input: UpdateReleaseRightsDto,
+  ) {
+    return this.releases.updateRights(request.artist.id, id, input)
+  }
+
+  @ReplaceReleaseSplitsSwagger()
+  @ArtistAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @Put(':id/splits')
+  replaceSplits(
+    @Req() request: ArtistAuthRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(ReplaceReleaseSplitsSchema)) input: ReplaceReleaseSplitsDto,
+  ) {
+    return this.releases.replaceSplits(request.artist.id, id, input)
+  }
+
+  @UpdateReleaseTrackSwagger()
+  @ArtistAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @Patch(':id/tracks/:trackId')
+  updateTrack(
+    @Req() request: ArtistAuthRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('trackId', ParseUUIDPipe) trackId: string,
+    @Body(new ZodValidationPipe(UpdateReleaseTrackSchema)) input: UpdateReleaseTrackDto,
+  ) {
+    return this.releases.updateTrackIsrc(request.artist.id, id, trackId, input)
+  }
+
+  @SubmitReleaseSwagger()
+  @ArtistAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @HttpCode(200)
+  @Post(':id/submit')
+  submit(
+    @Req() request: ArtistAuthRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(SubmitReleaseSchema)) input: SubmitReleaseDto,
+  ) {
+    return this.releases.submit(request.artist.id, id, input)
+  }
+
+  @WithdrawReleaseSwagger()
+  @ArtistAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @HttpCode(200)
+  @Post(':id/withdraw')
+  withdraw(
+    @Req() request: ArtistAuthRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(WithdrawReleaseSchema)) input: WithdrawReleaseDto,
+  ) {
+    return this.releases.withdraw(request.artist.id, id, input)
   }
 }

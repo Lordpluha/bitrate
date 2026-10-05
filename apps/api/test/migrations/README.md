@@ -15,5 +15,9 @@ cluster in `/tmp`, followed by `20261001120000_artist_release_foundation/migrati
 this check. The server used a private Unix socket, a 300-second timeout and was stopped
 immediately after verification. No existing application database was used.
 
+`release-rights-submission.sql` covers `20261005120000_release_rights_submission`: UPC/ISRC
+storage formats, ISRC uniqueness and the master-owner name rule. Check digits and partner rules
+are enforced by the API, not the database.
+
 These checks verify storage invariants. The future release API still needs transactional
 split-total, identifier, territory and track-ownership validation before exposing submission.

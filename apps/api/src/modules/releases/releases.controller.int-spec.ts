@@ -42,6 +42,11 @@ const draft = {
   status: 'DRAFT' as const,
   upc: null,
   scheduledAt: null,
+  masterOwnerType: null,
+  masterOwnerName: null,
+  writersConfirmedAt: null,
+  accuracyConfirmedAt: null,
+  submittedAt: null,
   deletedAt: null,
   createdAt: new Date('2026-10-02T10:00:00Z'),
   updatedAt: new Date('2026-10-02T10:00:00Z'),
@@ -384,6 +389,7 @@ describe('Release drafts (HTTP)', () => {
         { position: 1, track: { id: otherOwnerId, title: 'Linked recording', duration: 200 } },
       ],
       contributors: [{ id: ownerId, displayName: 'Producer', roles: ['PRODUCER'] }],
+      splits: [],
       _count: { trackDrafts: 1, tracks: 1, contributors: 1 },
     }
     prismaMock.release.findFirst.mockResolvedValue(workspace)
@@ -422,6 +428,7 @@ describe('Release drafts (HTTP)', () => {
       trackDrafts: [],
       tracks: [],
       contributors: [],
+      splits: [],
       _count: { trackDrafts: 51, tracks: 2, contributors: 60 },
     }
     prismaMock.release.findFirst.mockResolvedValue(workspace)
@@ -445,6 +452,7 @@ describe('Release drafts (HTTP)', () => {
       trackDrafts: [],
       tracks: [],
       contributors: [],
+      splits: [],
       _count: { trackDrafts: 0, tracks: 0, contributors: 0 },
     }
     prismaMock.release.findFirst.mockResolvedValue(workspace)
