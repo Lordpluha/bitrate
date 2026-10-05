@@ -9,14 +9,25 @@ returns `allow` or writes a lasting permission rule. A later operation is checke
 Do not bundle several dangerous commands into one approval request; split them into
 individual Bash calls. An approval covers the whole submitted Bash call.
 
-Main-checkout branch switches and integration commands, destructive Git operations,
-`rm`/`rmdir`, shell interpreters and ambiguous Git contexts require approval. The guard
-recognizes Git `-C`, ordinary aliases, RTK and common wrappers; read-only Git is quiet.
-Dedicated worktrees permit ordinary branch switching. Git reset/clean are no longer
-hard-denied by permission patterns so the one-call prompt can work. Force push stays
-prohibited. In `bypassPermissions`/`dontAsk` a risky operation is denied; return to an
-interactive permission mode to approve it. Use an up-to-date Claude Code for native
-hook `ask` behavior; the installed UI's approval flow needs a real interactive session.
+A hook `ask` overrides allow rules and auto mode, so the guard asks only when an
+operation can lose data or changes the developer's main checkout:
+
+| Where | Asks for |
+|---|---|
+| Main checkout | branch switch to an existing branch, merge/pull/rebase/cherry-pick/revert/am/bisect, reset to another commit |
+| Main and non-agent linked worktrees | `reset --hard/--merge/--keep`, `clean` without `-n`, `restore` of the worktree, `checkout`/`switch` that discards or takes paths, stash push/pop/drop, `git rm -f` |
+| Anywhere | `branch -D/-f/-M/-C`, `worktree remove --force` outside temp dirs, config/tag/remote writes, ref/history plumbing, unknown non-alias Git commands, `sudo`, dynamic `eval`, push to `develop` |
+| `rm` | targets outside the project and temp dirs, the project/temp root itself, `.git`, repository/worktree roots, root-level wide globs, unresolved `$VAR` targets |
+
+Agent worktrees (`.claude/worktrees/*`) may reset, clean, stash, restore and integrate
+freely. Creating branches (`switch -c`, `checkout -b`), unstaging (`git reset [HEAD]
+[paths]`), commits, fetch, safe `branch -d` and plain `worktree add/remove` are quiet.
+Shell syntax is not a risk signal: variables, `$(...)`, subshells, heredoc bodies,
+`source`, `timeout`/`nice`/`xargs` wrappers and `sh -c` are parsed and their real
+commands checked. Literal `NAME=value` assignments are expanded; cwd follows `cd` and
+subshells. Force push stays denied. In `bypassPermissions`/`dontAsk` a risky operation
+is denied; return to an interactive permission mode to approve it. Use an up-to-date
+Claude Code for native hook `ask` behavior.
 
 ## Secret paths
 

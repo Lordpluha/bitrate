@@ -62,29 +62,83 @@ class HookTests(unittest.TestCase):
     def test_git_risk_variants_require_approval(self):
         subprocess.run(['git', '-C', str(self.repo), 'config', 'alias.wipe', 'reset --hard'], check=True)
         for command in [
-            'git switch develop', 'git checkout -b feature', 'git merge feature',
+            'git switch develop', 'git merge feature', 'git reset HEAD~1',
             'git restore src/a.ts', 'git clean -xdf', 'rtk git reset --hard',
             'env FOO=bar git reset --hard', 'git -C . reset --hard', 'git wipe',
-            'git branch -D feature', 'git stash push', 'git worktree remove ../agent',
+            'git branch -D feature', 'git stash push', 'git stash drop',
+            'git worktree remove --force ../agent', 'git checkout -- src/a.ts',
             'cd /tmp || git switch develop', "sh -c 'git reset --hard'",
-            'rm -rf node_modules',
             'git status\ngit reset --hard', 'timeout 30 git reset --hard',
-            'env -i git reset --hard', '(cd /tmp); git switch develop',
+            'nice -n 5 xargs git reset --hard', 'env -i git reset --hard',
+            '(cd /tmp); git switch develop', 'echo "$(git reset --hard)"',
+            'echo `git clean -fd`', 'bash <<EOF\ngit reset --hard\nEOF',
+            'cd "$UNKNOWN" && git reset --hard', 'git config core.hooksPath /tmp',
+            'sudo ls', 'eval "$CMD"', 'git push origin develop', 'git push origin HEAD:develop',
+            'rm -rf /', 'rm -rf ~/projects', 'rm -rf .', 'rm -rf *', 'rm -rf .git',
+            'rm -rf "$DIR"', 'rm -rf /tmp', 'cd src && rm -rf ..',
         ]:
             with self.subTest(command=command):
                 self.assertEqual(self.call('Bash', {'command': command})['permissionDecision'], 'ask')
 
     def test_read_only_commands_are_quiet(self):
         for command in ['git status', 'git diff', 'git branch --list', 'git clean -nd',
-                        "printf '%s' 'git reset --hard'", 'rg title src', 'git log -3']:
+                        "printf '%s' 'git reset --hard'", 'rg title src', 'git log -3',
+                        'git stash list', 'git config --get user.name', 'git reflog -5',
+                        'git -c core.pager=cat log -1', 'git worktree list']:
             with self.subTest(command=command):
                 self.assertEqual(self.call('Bash', {'command': command}), {})
+
+    def test_ordinary_shell_constructs_are_quiet(self):
+        (self.repo / 'src').mkdir()
+        for command in [
+            'for f in src/*.ts; do echo "=== $f"; grep -n x "$f"; done',
+            'export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh" && nvm use 24 && node -v',
+            'source ~/.nvm/nvm.sh && NODE_OPTIONS=--max-old-space-size=2048 pnpm test',
+            'wc -l $(find src -type f)', 'B=$(git rev-parse HEAD); echo "$B"',
+            'timeout 60 graphify query x 2>&1 | head -30',
+            'timeout -k 5 300 pnpm --filter @bitrate/api test',
+            'cd src || exit 1; ls', 'git branch --contains abc 2>/dev/null | head -3',
+            'git diff -- a.ts | (cat; echo done)', '(cd src && ls); git status',
+            "cat > notes.md <<'EOF'\ngit reset --hard (example)\nrm -rf /\nEOF",
+            "python3 - <<'PY'\nimport os\nprint(os.getcwd())\nPY",
+            "sh -c 'pnpm exec prisma --version'", 'bash scripts/check.sh',
+            "flatpak-spawn --host sh -c 'command -v gh'",
+            'git checkout -b feature', 'git switch -c feat/x', 'git branch -d merged',
+            'git worktree add .claude/worktrees/x -b x', 'git worktree remove .claude/worktrees/x',
+            'git add -A && git commit -m "fix: thing"', 'git fetch origin',
+            'rm -f build.log', 'rm -rf node_modules src/generated', 'rmdir src',
+            'rm -rf /tmp/scratch-x', 'S=/tmp/out; rm -rf $S/cache "${S}/logs"',
+            'find src -name "*.map" | xargs rm -f', 'cd src && rm -rf dist/*',
+            'rtk --version', 'env -u DATABASE_URL FOO=1 node main.js',
+            'timeout 60 env \\\n  PORT=3099 \\\n  node main.js', 'git reset -q',
+            'git reset HEAD src/a.ts', 'git reset -- src/a.ts', 'git commit-tree abc -p HEAD -m x',
+            'rm -rf /tmp/jest-cache-*', "node -e 'const s = `${a}`; console.log(s)'",
+            'printf "%s" "Pushed \\`abc\\` (it\'s done)"', 'git worktree remove --force /tmp/br-check',
+        ]:
+            with self.subTest(command=command):
+                self.assertEqual(self.call('Bash', {'command': command}), {})
+
+    def test_agent_worktree_allows_local_history_operations(self):
+        agent = self.repo / '.claude' / 'worktrees' / 'agent'
+        subprocess.run(['git', '-C', str(self.repo), 'worktree', 'add', '--orphan',
+                        '-b', 'agent', str(agent)], check=True, capture_output=True)
+        for command in ['git reset --hard', 'git stash push', 'git clean -fd',
+                        'git merge develop', 'git restore src/a.ts', 'git rebase develop']:
+            with self.subTest(command=command):
+                self.assertEqual(self.call('Bash', {'command': command}, cwd=agent), {})
+        for command in ['git branch -D feature', 'git worktree remove --force ../x',
+                        f'git -C {shlex.quote(str(self.repo))} reset --hard']:
+            with self.subTest(command=command):
+                response = self.call('Bash', {'command': command}, cwd=agent)
+                self.assertEqual(response['permissionDecision'], 'ask')
 
     def test_linked_worktree_branch_switch_and_explicit_main_target(self):
         linked = self.repo.parent / 'agent'
         subprocess.run(['git', '-C', str(self.repo), 'worktree', 'add', '--orphan',
                         '-b', 'agent', str(linked)], check=True, capture_output=True)
         self.assertEqual(self.call('Bash', {'command': 'git switch task'}, cwd=linked), {})
+        self.assertEqual(self.call('Bash', {'command': 'git merge task'}, cwd=linked), {})
+        self.assertEqual(self.call('Bash', {'command': 'git reset --hard'}, cwd=linked)['permissionDecision'], 'ask')
         command = f'git -C {shlex.quote(str(self.repo))} switch task'
         self.assertEqual(self.call('Bash', {'command': command}, cwd=linked)['permissionDecision'], 'ask')
         for command in ['git switch -fCtask', 'git checkout missing-tracked-file.ts']:
@@ -101,7 +155,8 @@ class HookTests(unittest.TestCase):
     def test_no_permission_mode_bypass_and_no_force_push(self):
         for mode in ['bypassPermissions', 'dontAsk']:
             self.assertEqual(self.call('Bash', {'command': 'git reset --hard'}, mode)['permissionDecision'], 'deny')
-        for command in ['git push origin feature --force-with-lease', 'rtk git push origin +HEAD:main']:
+        for command in ['git push origin feature --force-with-lease', 'rtk git push origin +HEAD:main',
+                        'env | grep -i PATH']:
             self.assertEqual(self.call('Bash', {'command': command})['permissionDecision'], 'deny')
 
     def test_malformed_hook_input_is_denied(self):
