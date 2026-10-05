@@ -228,3 +228,8 @@ active) before deploying the new contract, with the dead-letter routing above as
   and its repository was archived in April 2026.
 - **A full `NestFactory.create` app with a hidden HTTP port** — not chosen: it brings Express,
   middleware and interceptors for the sake of two health routes.
+
+## Rollout
+
+The staged production rollout, verification and rollback are in the
+[worker rollout runbook](../infrastructure/worker-rollout-runbook.md).
