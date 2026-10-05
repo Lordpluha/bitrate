@@ -293,14 +293,14 @@ describe('AdminModerationService', () => {
 
   describe('advanceMany', () => {
     it('applies the status to every report and writes one audit row per report', async () => {
-      prisma.moderationReport.findFirst.mockImplementation((args: never) => {
+      prisma.moderationReport.findFirst.mockImplementation(((args: unknown) => {
         const id = (args as { where: { id: string } }).where.id
         return Promise.resolve({ ...REPORT, id }) as never
-      })
-      transaction.moderationReport.update.mockImplementation((args: never) => {
+      }) as never)
+      transaction.moderationReport.update.mockImplementation(((args: unknown) => {
         const id = (args as { where: { id: string } }).where.id
         return Promise.resolve({ ...REPORT, id, status: 'RESOLVED' }) as never
-      })
+      }) as never)
 
       const result = await service.advanceMany(['r-1', 'r-2'], 'RESOLVED', 'staff-1', {
         requestId: 'req-1',
@@ -326,10 +326,10 @@ describe('AdminModerationService', () => {
     })
 
     it('reports a missing report per id and writes no audit row for it', async () => {
-      prisma.moderationReport.findFirst.mockImplementation((args: never) => {
+      prisma.moderationReport.findFirst.mockImplementation(((args: unknown) => {
         const id = (args as { where: { id: string } }).where.id
         return Promise.resolve(id === 'missing' ? null : { ...REPORT, id }) as never
-      })
+      }) as never)
       transaction.moderationReport.update.mockResolvedValue({
         ...REPORT,
         status: 'REJECTED',

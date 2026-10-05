@@ -327,16 +327,16 @@ describe('AdminUsersService', () => {
 
   describe('softDeleteMany', () => {
     it('deactivates every id, revoking sessions and auditing each user individually', async () => {
-      prisma.user.findFirst.mockImplementation((args: never) => {
+      prisma.user.findFirst.mockImplementation(((args: unknown) => {
         const id = (args as { where: { id: string } }).where.id
         return Promise.resolve(buildUser({ id, deletedAt: null })) as never
-      })
+      }) as never)
       transaction.user.updateMany.mockResolvedValue({ count: 1 })
       transaction.userSession.deleteMany.mockResolvedValue({ count: 1 } as never)
-      transaction.user.findFirstOrThrow.mockImplementation((args: never) => {
+      transaction.user.findFirstOrThrow.mockImplementation(((args: unknown) => {
         const id = (args as { where: { id: string } }).where.id
         return Promise.resolve(buildAdminUser({ id, deletedAt: new Date() })) as never
-      })
+      }) as never)
 
       const result = await service.softDeleteMany(['user-1', 'user-2'], STAFF_ID)
 
@@ -350,13 +350,13 @@ describe('AdminUsersService', () => {
     })
 
     it('reports a missing and an already-deactivated user per id without auditing them', async () => {
-      prisma.user.findFirst.mockImplementation((args: never) => {
+      prisma.user.findFirst.mockImplementation(((args: unknown) => {
         const id = (args as { where: { id: string } }).where.id
         if (id === 'missing') return Promise.resolve(null) as never
         return Promise.resolve(
           buildUser({ id, deletedAt: id === 'gone' ? new Date() : null }),
         ) as never
-      })
+      }) as never)
       transaction.user.updateMany.mockResolvedValue({ count: 1 })
       transaction.userSession.deleteMany.mockResolvedValue({ count: 0 } as never)
       transaction.user.findFirstOrThrow.mockResolvedValue(

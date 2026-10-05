@@ -116,10 +116,12 @@ describe.each(ROUTES)('POST $url (int)', (route) => {
       ;({ app, fn } = await buildApp(route, [route.permission]))
     })
     afterAll(() => app.close())
-    beforeEach(() => fn.mockReset())
+    beforeEach(() => {
+      fn.mockReset()
+    })
 
     it('returns 200 with the per-id result even on partial failure', async () => {
-      fn.mockResolvedValue(BATCH_RESULT)
+      fn.mockResolvedValue(BATCH_RESULT as never)
 
       const res = await request(app.getHttpServer())
         .post(route.url)
@@ -143,7 +145,7 @@ describe.each(ROUTES)('POST $url (int)', (route) => {
     })
 
     it('accepts exactly 100 ids', async () => {
-      fn.mockResolvedValue(BATCH_RESULT)
+      fn.mockResolvedValue(BATCH_RESULT as never)
       const ids = Array.from(
         { length: 100 },
         (_, i) => `f47ac10b-58cc-4372-a567-${String(i).padStart(12, '0')}`,
@@ -225,16 +227,16 @@ describe('batch audit trail (int)', () => {
   beforeEach(() => {
     prisma.auditLog.create.mockReset()
     transaction.auditLog.create.mockReset()
-    prisma.track.findFirst.mockImplementation((args: never) => {
+    prisma.track.findFirst.mockImplementation(((args: unknown) => {
       const id = (args as { where: { id: string } }).where.id
       if (id === ID_B) return Promise.resolve(buildTrack({ id, deletedAt: new Date() })) as never
       return Promise.resolve(buildTrack({ id, deletedAt: null })) as never
-    })
+    }) as never)
     transaction.track.updateMany.mockResolvedValue({ count: 1 })
-    transaction.track.findFirstOrThrow.mockImplementation((args: never) => {
+    transaction.track.findFirstOrThrow.mockImplementation(((args: unknown) => {
       const id = (args as { where: { id: string } }).where.id
       return Promise.resolve(buildTrackWithArtist({ id, deletedAt: new Date() })) as never
-    })
+    }) as never)
   })
 
   it('writes one explicit row per affected track, none for a failed id, and no aggregate row', async () => {
