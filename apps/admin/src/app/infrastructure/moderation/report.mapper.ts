@@ -1,5 +1,6 @@
 import type {
   ModerationEntityType,
+  ModerationFilter,
   ModerationReport,
   ModerationSortField,
   ModerationStatus,
@@ -14,6 +15,7 @@ import type {
   WireModerationSortField,
   WireModerationStatus,
 } from './report.dto'
+import type { WireFilters } from '../http/wire-page'
 
 /** See `track.mapper.ts` — a status the API grows later is a compile error at this record. */
 const TO_DOMAIN_STATUS = {
@@ -40,9 +42,7 @@ const TO_WIRE_SORT = {
   status: 'status',
 } as const satisfies Record<ModerationSortField, NonNullable<WireModerationSortField>>
 
-export function toWireModerationSort(
-  field: ModerationSortField,
-): NonNullable<WireModerationSortField> {
+function toWireModerationSort(field: ModerationSortField): NonNullable<WireModerationSortField> {
   return TO_WIRE_SORT[field]
 }
 
@@ -94,5 +94,16 @@ export function toReportDetail(dto: ReportDetailDto): ReportDetail {
     ...toModerationReport(dto),
     subject: toModerationSubject(dto.subject),
     siblingReports: dto.siblingReports.map(toModerationReport),
+  }
+}
+
+/** The query parameters the queue and the CSV export both send for a filter. */
+export function toReportListFilters(filter: ModerationFilter): WireFilters {
+  return {
+    status: filter.status === undefined ? undefined : toWireModerationStatus(filter.status),
+    entityType:
+      filter.entityType === undefined ? undefined : toWireModerationEntityType(filter.entityType),
+    sort: filter.sort ? toWireModerationSort(filter.sort.field) : undefined,
+    order: filter.sort?.direction,
   }
 }

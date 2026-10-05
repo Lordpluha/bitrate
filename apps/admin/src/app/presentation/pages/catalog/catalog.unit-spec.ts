@@ -15,6 +15,8 @@ import {
   type TrackDetail,
   TrackRepository,
 } from '@domain/track'
+import { ExportRepository } from '@domain/export'
+import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CatalogPage } from './catalog'
 import { TranslocoTestingModule } from '@jsverse/transloco'
@@ -78,6 +80,27 @@ class StubTrackRepository extends TrackRepository {
   }
 }
 
+const exportTracks = vi.fn<ExportRepository['exportTracks']>()
+
+/** Only the export this page uses is exercised; the others fail loudly if reached. */
+class StubExportRepository extends ExportRepository {
+  override exportUsers(): ReturnType<ExportRepository['exportUsers']> {
+    throw new Error('not used')
+  }
+
+  override exportArtists(): ReturnType<ExportRepository['exportArtists']> {
+    throw new Error('not used')
+  }
+
+  override exportTracks(...args: Parameters<ExportRepository['exportTracks']>) {
+    return exportTracks(...args)
+  }
+
+  override exportReports(): ReturnType<ExportRepository['exportReports']> {
+    throw new Error('not used')
+  }
+}
+
 const routes: Routes = [{ path: 'catalog', component: CatalogPage }]
 const ATTENTION_NOTE = 'Ordered by what needs attention'
 
@@ -101,6 +124,7 @@ describe('CatalogPage — attention-first default', () => {
         provideRouter(routes),
         provideLocationMocks(),
         { provide: TrackRepository, useClass: StubTrackRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
       ],
     })
     harness = await RouterTestingHarness.create()
@@ -185,6 +209,7 @@ describe('CatalogPage — batch take-down', () => {
         provideRouter(routes),
         provideLocationMocks(),
         { provide: TrackRepository, useClass: StubTrackRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
       ],
     })
     harness = await RouterTestingHarness.create()
@@ -230,5 +255,83 @@ describe('CatalogPage — batch take-down', () => {
     expect(takeDownMany).toHaveBeenCalledWith([FIRST, SECOND])
     expect(dialog()?.textContent).toContain('1 succeeded, 1 failed')
     expect(dialog()?.textContent).toContain('Track gone')
+  })
+})
+
+describe('CatalogPage — CSV export', () => {
+  let harness: RouterTestingHarness
+
+  const operator = (permissions: Permission[]) =>
+    TestBed.inject(SessionStore).set({
+      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3399',
+      email: 'ops@bitrate.me',
+      username: 'ops',
+      roleId: 'c1b1d2e3-4f5a-4b6c-8d7e-9f0a1b2c3d4e',
+      roleName: 'MODERATOR',
+      permissions,
+    })
+  const exportButton = () =>
+    Array.from(
+      (harness.routeNativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
+    ).find((candidate) => candidate.textContent?.trim().startsWith('Export CSV'))
+
+  beforeEach(async () => {
+    list.mockReset()
+    exportTracks.mockReset()
+    list.mockResolvedValue({ items: [track()], total: 1, page: 1, limit: 20 })
+    exportTracks.mockResolvedValue({
+      blob: new Blob(['id\r\n']),
+      filename: 'export.csv',
+      truncated: false,
+    })
+
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: TrackRepository, useClass: StubTrackRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
+        { provide: FileSaver, useValue: { save: vi.fn() } },
+      ],
+    })
+    harness = await RouterTestingHarness.create()
+  })
+
+  it('offers no export to an operator without tracks:export', async () => {
+    operator(['tracks:read'])
+    await harness.navigateByUrl('/catalog', CatalogPage)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeUndefined()
+  })
+
+  it('offers the export to an operator with tracks:export', async () => {
+    operator(['tracks:read', 'tracks:export'])
+    await harness.navigateByUrl('/catalog', CatalogPage)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeDefined()
+  })
+
+  it('exports the filters and sort in the URL, not the loaded page', async () => {
+    operator(['tracks:read', 'tracks:export'])
+    await harness.navigateByUrl('/catalog?q=x&sort=title&dir=asc&page=2', CatalogPage)
+    await harness.fixture.whenStable()
+
+    exportButton()?.click()
+    await harness.fixture.whenStable()
+
+    expect(exportTracks).toHaveBeenCalledTimes(1)
+    expect(exportTracks).toHaveBeenCalledWith(
+      expect.objectContaining({ query: 'x', sort: { field: 'title', direction: 'asc' } }),
+    )
   })
 })

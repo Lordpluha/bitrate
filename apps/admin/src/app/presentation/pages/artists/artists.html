@@ -7,6 +7,10 @@
     </p>
   </header>
 
+  @if (canExport()) {
+    <app-export-csv-button [exporter]="exportCsv" />
+  }
+
   <div class="flex flex-wrap items-center gap-3">
     <form class="flex gap-2" (ngSubmit)="applyFilters()">
       <label class="sr-only" for="artist-search">Search artists</label>
