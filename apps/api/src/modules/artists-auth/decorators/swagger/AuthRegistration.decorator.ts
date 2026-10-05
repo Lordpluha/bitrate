@@ -2,6 +2,7 @@ import { applyDecorators, HttpStatus } from '@nestjs/common'
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 import { RegistrationDto } from '../../dtos'
+import { ArtistRegistrationEntity } from '../../entities'
 
 /** Runs the auth registration swagger operation. */
 export function AuthRegistrationSwagger() {
@@ -12,6 +13,7 @@ export function AuthRegistrationSwagger() {
     ApiResponse({
       status: HttpStatus.CREATED,
       description: 'Successfully registered',
+      type: ArtistRegistrationEntity,
     }),
     ApiResponse({
       status: HttpStatus.BAD_REQUEST,
@@ -27,6 +29,10 @@ export function AuthRegistrationSwagger() {
     ApiResponse({
       status: HttpStatus.CONFLICT,
       description: 'User already exists',
+    }),
+    ApiResponse({
+      status: HttpStatus.SERVICE_UNAVAILABLE,
+      description: 'Email verification cannot be delivered; no account was created',
     }),
   )
 }

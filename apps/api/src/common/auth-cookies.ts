@@ -29,12 +29,16 @@ export function setPendingTwoFactorCookie(res: Response, token: string): void {
     secure: isProductionEnv(),
     path: '/',
     maxAge: PENDING_2FA_MAX_AGE_MS,
+    ...(process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {}),
   })
 }
 
 /** Drops the pending-2FA token once the challenge is resolved. */
 export function clearPendingTwoFactorCookie(res: Response): void {
-  res.clearCookie(PENDING_2FA_COOKIE, { path: '/' })
+  res.clearCookie(PENDING_2FA_COOKIE, {
+    path: '/',
+    ...(process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {}),
+  })
 }
 
 /** Stores the CSRF state an OAuth callback is required to echo back. */
