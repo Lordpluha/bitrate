@@ -15,24 +15,34 @@ operation can lose data or changes the developer's main checkout:
 | Where | Asks for |
 |---|---|
 | Main checkout | branch switch to an existing branch, merge/pull/rebase/cherry-pick/revert/am/bisect, reset to another commit |
-| Main and non-agent linked worktrees | `reset --hard/--merge/--keep`, `clean` without `-n`, `restore` of the worktree, `checkout`/`switch` that discards or takes paths, stash push/pop/drop, `git rm -f` |
-| Anywhere | `branch -D/-f/-M/-C`, `worktree remove --force` outside temp dirs, config/tag/remote writes, ref/history plumbing, unknown non-alias Git commands, `sudo`, dynamic `eval`, push to `develop` |
-| `rm` | targets outside the project and temp dirs, the project/temp root itself, `.git`, repository/worktree roots, root-level wide globs, unresolved `$VAR` targets |
+| Main and non-agent linked worktrees | `reset --hard/--merge/--keep`, `clean` without `-n`, `restore` of the worktree, `checkout`/`switch` that discards or takes paths, stash push/apply, `git rm -f` |
+| Anywhere | `branch -D/-f/-M/-C`, `stash drop/clear/pop/branch` (the stash stack is shared by all worktrees), `worktree remove --force` outside temp dirs, config/tag/remote writes, ref/history plumbing, unknown non-alias Git commands, `git -c` with a non-display key, `--output`/`grep -O`, `sudo`, dynamic `eval`, push to `develop`, `push --all/--branches/--prune` or refspec globs |
+| `rm`, `unlink`, `shred`, `find -delete` | targets outside the project and temp dirs, the project/temp root itself, `.git`, repository/worktree roots, root-level wide globs, unresolved `$VAR` targets, paths with modified or untracked files outside agent worktrees |
+| Unknown code | `$VAR`/`$(...)` as the command name, a shell reading piped stdin (`… \| bash`), `xargs`/`find -exec` with a non-read-only Git command or recursive `rm`, `GIT_*` exported or assigned earlier in the call, `pushd`/`popd` before a checkout-sensitive command |
 
-Agent worktrees (`.claude/worktrees/*`) may reset, clean, stash, restore and integrate
+Agent worktrees (`.claude/worktrees/*`) may reset, clean, stash push, restore and integrate
 freely. Creating branches (`switch -c`, `checkout -b`), unstaging (`git reset [HEAD]
 [paths]`), commits, fetch, safe `branch -d` and plain `worktree add/remove` are quiet.
-Shell syntax is not a risk signal: variables, `$(...)`, subshells, heredoc bodies,
-`source`, `timeout`/`nice`/`xargs` wrappers and `sh -c` are parsed and their real
-commands checked. Literal `NAME=value` assignments are expanded; cwd follows `cd` and
-subshells. Force push stays denied. In `bypassPermissions`/`dontAsk` a risky operation
-is denied; return to an interactive permission mode to approve it. Use an up-to-date
-Claude Code for native hook `ask` behavior.
+Deleting ignored or committed files in the main checkout is quiet; deleting files that
+hold uncommitted work asks.
+Shell syntax is not a risk signal: variables, `$(...)`, `<(...)`, subshells, `{ }` groups,
+`if`/`while` bodies, heredoc bodies, `source`, `timeout`/`nice`/`xargs`/`watch` wrappers,
+`find -exec` and `sh -c` are parsed and their real commands checked. Comments, quotes and
+heredoc delimiters follow shell rules, so `<<` or `#` inside quotes hides nothing. A heredoc
+is checked as code when it feeds a shell or the same call runs a script; string literals
+in `python -c`/`node -e` code and heredocs are checked for secret paths and risky
+commands. Literal `NAME=value` assignments are expanded and word-split; cwd follows `cd`
+and subshells. Force and mirror pushes stay denied. In `bypassPermissions`/`dontAsk` a
+risky operation is denied; return to an interactive permission mode to approve it. Use an
+up-to-date Claude Code for native hook `ask` behavior.
 
 ## Secret paths
 
 Read/Edit/Write/MultiEdit/NotebookEdit and explicit Grep/Glob paths are checked, as are
-literal shell file arguments and redirections. Real environment files, credential
+literal shell file arguments and redirections, including their brace expansions and glob
+matches (`.env*`, `.{env,x}`, Grep `glob`). Environment dumps (`env`, `printenv`, bare
+`export`/`declare`/`set`), `gh auth token`, `gh auth status --show-token` and
+`git credential` are denied. Real environment files, credential
 directories, private-key filenames and common credential files are denied. Paths are
 checked both lexically and after symlink resolution; `.env.example`, `.env.sample`,
 `.env.template`, `.env.dist` are allowed only when the actual target is also allowed.
