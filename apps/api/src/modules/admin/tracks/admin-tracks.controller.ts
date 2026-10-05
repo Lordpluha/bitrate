@@ -4,6 +4,7 @@ import {
   type AuditContextValue,
   BatchIdsDto,
   BatchIdsSchema,
+  sendCsvExport,
   TakeDownReasonDto,
   TakeDownReasonSchema,
 } from '@modules/admin/shared'
@@ -25,6 +26,7 @@ import {
   Query,
   Req,
   Res,
+  type StreamableFile,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
@@ -34,6 +36,7 @@ import { AdminTrackAudioService } from './admin-track-audio.service'
 import { AdminTracksService } from './admin-tracks.service'
 import {
   DeleteTrackSwagger,
+  ExportTracksSwagger,
   GetTrackSwagger,
   ListTrackProcessingAttemptsSwagger,
   ListTracksSwagger,
@@ -44,6 +47,8 @@ import {
   TakeDownTracksBatchSwagger,
 } from './decorators'
 import {
+  type ExportAdminTracksQueryDto,
+  ExportAdminTracksQuerySchema,
   type ListAdminTracksQueryDto,
   ListAdminTracksQuerySchema,
   type ListProcessingAttemptsQueryDto,
@@ -69,6 +74,22 @@ export class AdminTracksController {
   @Get('')
   list(@Query(new ZodValidationPipe(ListAdminTracksQuerySchema)) query: ListAdminTracksQueryDto) {
     return this.tracks.findAll(query)
+  }
+
+  /**
+   * Streams the filtered, sorted list as CSV. Declared before `:id` so `export.csv` is not read as
+   * an id. The service writes the one audit row, because GET is not interceptor-audited.
+   */
+  @RequirePermission('tracks:export')
+  @ExportTracksSwagger()
+  @Get('export.csv')
+  async exportCsv(
+    @Query(new ZodValidationPipe(ExportAdminTracksQuerySchema)) query: ExportAdminTracksQueryDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    return sendCsvExport(res, 'tracks', await this.tracks.exportCsv(query, staff.id, auditContext))
   }
 
   /** Runs the get track operation. */

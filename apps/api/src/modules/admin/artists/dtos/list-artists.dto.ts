@@ -31,3 +31,11 @@ export const ListAdminArtistsQuerySchema = paginationQuerySchema
   })
 
 export class ListAdminArtistsQueryDto extends createZodDto(ListAdminArtistsQuerySchema) {}
+
+/** The list filters and sort without pagination: an export streams every matching row. */
+export const ExportAdminArtistsQuerySchema = ListAdminArtistsQuerySchema.omit({
+  page: true,
+  limit: true,
+})
+
+export class ExportAdminArtistsQueryDto extends createZodDto(ExportAdminArtistsQuerySchema) {}

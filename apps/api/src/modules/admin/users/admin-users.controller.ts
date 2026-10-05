@@ -4,6 +4,7 @@ import {
   type AuditContextValue,
   BatchIdsDto,
   BatchIdsSchema,
+  sendCsvExport,
   TakeDownReasonDto,
   TakeDownReasonSchema,
 } from '@modules/admin/shared'
@@ -20,13 +21,17 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
+  Res,
+  type StreamableFile,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import type { Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminUsersService } from './admin-users.service'
 import {
   DeactivateUsersBatchSwagger,
   DeleteUserSwagger,
+  ExportUsersSwagger,
   GetUserSwagger,
   ListListeningHistorySwagger,
   ListUsersSwagger,
@@ -34,6 +39,8 @@ import {
   RevokeUserSessionsSwagger,
 } from './decorators'
 import {
+  type ExportAdminUsersQueryDto,
+  ExportAdminUsersQuerySchema,
   type ListAdminUsersQueryDto,
   ListAdminUsersQuerySchema,
   type ListListeningHistoryQueryDto,
@@ -53,6 +60,22 @@ export class AdminUsersController {
   @Get('')
   list(@Query(new ZodValidationPipe(ListAdminUsersQuerySchema)) query: ListAdminUsersQueryDto) {
     return this.users.findAll(query)
+  }
+
+  /**
+   * Streams the filtered, sorted user list as CSV. Declared before `:id` so `export.csv` is not
+   * read as an id. `exportCsv` writes the one audit row itself, because GET is not interceptor-audited.
+   */
+  @RequirePermission('users:export')
+  @ExportUsersSwagger()
+  @Get('export.csv')
+  async exportCsv(
+    @Query(new ZodValidationPipe(ExportAdminUsersQuerySchema)) query: ExportAdminUsersQueryDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    return sendCsvExport(res, 'users', await this.users.exportCsv(query, staff.id, auditContext))
   }
 
   /** Runs the get user operation. */
