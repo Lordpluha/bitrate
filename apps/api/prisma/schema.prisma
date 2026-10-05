@@ -521,6 +521,8 @@ model ArtistTrackDraft {
   duration      Int?
   cover         String?
   previewUrl    String?
+  // Compact ISO 3901 form (no hyphens); optional until a distributor assigns one.
+  isrc          String? @unique @db.VarChar(12)
   isDemo        Boolean @default(false)
   deletedAt     DateTime?
   createdAt     DateTime @default(now())
@@ -541,6 +543,12 @@ enum ReleaseCreditRole {
   OTHER
 }
 
+// Who controls the master recording; OTHER requires the owner's name.
+enum ReleaseMasterOwner {
+  ARTIST
+  OTHER
+}
+
 enum ReleaseRightType {
   RECORDING
   COMPOSITION
@@ -556,6 +564,13 @@ model Release {
   status        ReleaseStatus @default(DRAFT)
   upc           String?       @unique @db.VarChar(13)
   scheduledAt   DateTime?      @db.Timestamptz(3)
+  // Rights confirmation. Changing credits clears both confirmations; changing the
+  // owner or splits clears accuracy, so a confirmation always describes current data.
+  masterOwnerType     ReleaseMasterOwner?
+  masterOwnerName     String?
+  writersConfirmedAt  DateTime? @db.Timestamptz(3)
+  accuracyConfirmedAt DateTime? @db.Timestamptz(3)
+  submittedAt         DateTime? @db.Timestamptz(3)
   deletedAt     DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @default(now()) @updatedAt
