@@ -76,10 +76,9 @@ export class AdminTracksController {
     return this.tracks.findAll(query)
   }
 
-  /**
-   * Streams the filtered, sorted list as CSV. Declared before `:id` so `export.csv` is not read as
-   * an id. The service writes the one audit row, because GET is not interceptor-audited.
-   */
+  /** Runs the CSV export operation. */
+  // Declared before `:id` so `export.csv` is not read as an id. The service writes the one audit
+  // row, because GET is not interceptor-audited.
   @RequirePermission('tracks:export')
   @ExportTracksSwagger()
   @Get('export.csv')

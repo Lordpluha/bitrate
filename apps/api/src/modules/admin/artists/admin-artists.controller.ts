@@ -65,10 +65,9 @@ export class AdminArtistsController {
     return this.artists.findAll(query)
   }
 
-  /**
-   * Streams the filtered, sorted list as CSV. Declared before `:id` so `export.csv` is not read as
-   * an id. The service writes the one audit row, because GET is not interceptor-audited.
-   */
+  /** Runs the CSV export operation. */
+  // Declared before `:id` so `export.csv` is not read as an id. The service writes the one audit
+  // row, because GET is not interceptor-audited.
   @RequirePermission('artists:export')
   @ExportArtistsSwagger()
   @Get('export.csv')
