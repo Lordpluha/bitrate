@@ -7,6 +7,7 @@ import { from, type Observable } from 'rxjs'
 import { concatMap, map } from 'rxjs/operators'
 import { getRequestId } from '../../common/http/request-context'
 import { resolveMetricRoute } from './metrics.interceptor'
+import { SKIP_AUDIT_KEY } from './skip-audit.decorator'
 
 const AUDITED_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE'])
 
@@ -32,6 +33,9 @@ export class AuditInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest<AuditableRequest>()
     if (!AUDITED_METHODS.has(request.method)) return next.handle()
+    // Routes marked `@SkipAudit()` write their own per-entity rows; see skip-audit.decorator.ts.
+    const handler = context.getHandler()
+    if (handler && Reflect.getMetadata(SKIP_AUDIT_KEY, handler) === true) return next.handle()
 
     return next
       .handle()

@@ -2,7 +2,7 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagin
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
-import { isoOrNull, writeTakeDownAudit } from '@modules/admin/shared'
+import { isoOrNull, runBatch, writeTakeDownAudit } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { ADMIN_USERS_SORT_FIELDS } from './dtos'
@@ -199,6 +199,11 @@ export class AdminUsersService {
       })
       return updated
     })
+  }
+
+  /** Deactivates every id independently via {@link softDelete}; per-id results, same rules. */
+  softDeleteMany(ids: readonly string[], staffId: string, auditContext: AuditContextValue = {}) {
+    return runBatch(ids, (id) => this.softDelete(id, staffId, undefined, auditContext))
   }
 
   /**

@@ -1888,6 +1888,47 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/moderation/reports/batch/resolve': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Runs the batch resolve operation. Declared before `:id` so the literal `batch` segment is
+     *     never read as an id. `@SkipAudit` because the service writes one audit row per report.
+     * @description Each id is processed independently with the single-entity rules. Always 200 with a per-id result; failed ids carry an error code and message. Requires reports:advance.
+     */
+    post: operations['AdminModerationController_resolveMany_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/moderation/reports/batch/dismiss': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Runs the batch dismiss operation (status `REJECTED`); see {@link resolveMany}.
+     * @description Each id is processed independently with the single-entity rules. Always 200 with a per-id result; failed ids carry an error code and message. Requires reports:advance.
+     */
+    post: operations['AdminModerationController_dismissMany_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/moderation/reports/{id}': {
     parameters: {
       query?: never
@@ -2085,6 +2126,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/users/batch/deactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Runs the batch deactivate operation. `@SkipAudit` because each take-down audits itself.
+     * @description Each id is processed independently with the single-entity rules. Always 200 with a per-id result; failed ids carry an error code and message. Requires users:delete.
+     */
+    post: operations['AdminUsersController_deactivateMany_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/users/{id}/restore': {
     parameters: {
       query?: never
@@ -2214,6 +2275,26 @@ export interface paths {
     put?: never
     /** Runs the reprocess operation. */
     post: operations['AdminTracksController_reprocess_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/tracks/batch/take-down': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Runs the batch take-down operation. `@SkipAudit` because each take-down audits itself.
+     * @description Each id is processed independently with the single-entity rules. Always 200 with a per-id result; failed ids carry an error code and message. Requires tracks:delete.
+     */
+    post: operations['AdminTracksController_takeDownMany_v1']
     delete?: never
     options?: never
     head?: never
@@ -3939,6 +4020,33 @@ export interface components {
       page: number
       /** @description The page size. */
       limit: number
+    }
+    BatchIdsDto: {
+      ids: string[]
+    }
+    AdminBatchItemErrorEntity: {
+      /**
+       * @description Stable machine-readable code, derived from the HTTP status the single-entity route would answer.
+       * @example NOT_FOUND
+       */
+      code: string
+      /** @description Human-readable reason, the same message the single-entity route would return. */
+      message: string
+    }
+    AdminBatchItemResultEntity: {
+      /** Format: uuid */
+      id: string
+      /** @enum {string} */
+      status: 'succeeded' | 'failed'
+      /** @description Present only when `status` is `failed`. */
+      error?: components['schemas']['AdminBatchItemErrorEntity']
+    }
+    AdminBatchResultEntity: {
+      results: components['schemas']['AdminBatchItemResultEntity'][]
+      /** @description Distinct ids processed. */
+      total: number
+      succeeded: number
+      failed: number
     }
     ModerationSubjectEntity: {
       /**
@@ -21439,6 +21547,308 @@ export interface operations {
       }
     }
   }
+  AdminModerationController_resolveMany_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BatchIdsDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+      /** @description Empty, malformed or over-100 id list */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Missing reports:advance
+       *
+       *     Requires the reports:advance permission
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+    }
+  }
+  AdminModerationController_dismissMany_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BatchIdsDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+      /** @description Empty, malformed or over-100 id list */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Missing reports:advance
+       *
+       *     Requires the reports:advance permission
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+    }
+  }
   AdminModerationController_getById_v1: {
     parameters: {
       query?: never
@@ -21725,7 +22135,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }
@@ -23521,6 +23933,157 @@ export interface operations {
       }
     }
   }
+  AdminUsersController_deactivateMany_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BatchIdsDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+      /** @description Empty, malformed or over-100 id list */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Missing users:delete
+       *
+       *     Requires the users:delete permission
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+    }
+  }
   AdminUsersController_restore_v1: {
     parameters: {
       query?: never
@@ -24889,6 +25452,157 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  AdminTracksController_takeDownMany_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BatchIdsDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+      /** @description Empty, malformed or over-100 id list */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Missing tracks:delete
+       *
+       *     Requires the tracks:delete permission
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
       }
     }
   }

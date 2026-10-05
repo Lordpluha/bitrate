@@ -1,3 +1,5 @@
+export * from './DismissReportsBatch.decorator'
 export * from './GetReport.decorator'
 export * from './ListReports.decorator'
+export * from './ResolveReportsBatch.decorator'
 export * from './UpdateReport.decorator'
