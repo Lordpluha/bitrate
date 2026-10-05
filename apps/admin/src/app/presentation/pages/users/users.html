@@ -51,6 +51,17 @@
   />
 
   @if (collection.items().length > 0) {
+    <app-batch-action-bar
+      noun="listener"
+      [rows]="batchRows()"
+      [actions]="batchActions()"
+      [pending]="batchPending()"
+      [result]="batchResult()"
+      (confirmed)="runBatch()"
+      (cleared)="selection.clear()"
+      (closed)="closeBatch()"
+    />
+
     <div hlmTableContainer>
       <table hlmTable>
         <caption hlmCaption class="sr-only">
@@ -58,6 +69,17 @@
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
+            @if (batchActions().length > 0) {
+              <th hlmTh scope="col" class="w-8">
+                <input
+                  type="checkbox"
+                  aria-label="Select all listeners on this page"
+                  [checked]="selection.allSelected(selectableIds())"
+                  [disabled]="selectableIds().length === 0"
+                  (change)="selection.toggleAll(selectableIds())"
+                />
+              </th>
+            }
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'username')">
               <app-sort-header
                 [field]="'username'"
@@ -95,6 +117,17 @@
         <tbody hlmTBody>
           @for (user of collection.items(); track user.id) {
             <tr hlmTr>
+              @if (batchActions().length > 0) {
+                <td hlmTd>
+                  <input
+                    type="checkbox"
+                    [attr.aria-label]="'Select ' + user.username"
+                    [checked]="selection.has(user.id)"
+                    [disabled]="!selectableIds().includes(user.id)"
+                    (change)="selection.toggle(user.id)"
+                  />
+                </td>
+              }
               <td hlmTd>
                 <a [routerLink]="['/users', user.id]" class="hover:underline">{{
                   user.username

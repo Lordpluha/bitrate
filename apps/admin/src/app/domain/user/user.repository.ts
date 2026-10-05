@@ -1,4 +1,4 @@
-import type { Page, PageRequest, TakeDownInput } from '../shared'
+import type { BatchResult, Page, PageRequest, TakeDownInput } from '../shared'
 import type { ListeningHistoryEntry } from './listening-history'
 import type { User, UserDetail, UserFilter } from './user'
 
@@ -12,6 +12,8 @@ export abstract class UserRepository {
   abstract getById(id: string): Promise<UserDetail>
   /** Soft-deletes the account — the API also revokes its sessions. */
   abstract deactivate(input: TakeDownInput): Promise<void>
+  /** Deactivates every id independently; a row that fails does not stop the others. */
+  abstract deactivateMany(ids: readonly string[]): Promise<BatchResult>
   abstract restore(input: TakeDownInput): Promise<void>
   /** @returns How many sessions were revoked. */
   abstract revokeSessions(input: TakeDownInput): Promise<number>

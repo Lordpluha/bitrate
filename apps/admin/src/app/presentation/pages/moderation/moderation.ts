@@ -1,6 +1,11 @@
-import { Component, effect, inject, signal } from '@angular/core'
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core'
 import { RouterLink } from '@angular/router'
-import { AdvanceReportUseCase, ListReportsUseCase } from '@application/moderation'
+import {
+  AdvanceReportsBatchUseCase,
+  AdvanceReportUseCase,
+  ListReportsUseCase,
+  type ReportBatchAction,
+} from '@application/moderation'
 import { SessionStore } from '@application/session'
 import {
   type ModerationEntityType,
@@ -8,15 +13,17 @@ import {
   type ModerationSortField,
   type ModerationStatus,
 } from '@domain/moderation'
-import type { Sort } from '@domain/shared'
+import { ActionNotAllowedError, type BatchResult, MAX_BATCH_SIZE, type Sort } from '@domain/shared'
 import {
+  BatchActionBar,
+  type BatchActionOption,
   CollectionStatus,
   Paginator,
   SortHeader,
   sortHeaderAriaSort,
 } from '@presentation/components'
 import { LocalizedDatePipe } from '@presentation/pipes'
-import { bindQueryState, createCollection } from '@presentation/state'
+import { bindQueryState, createCollection, createSelection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmTableImports } from '@spartan-ng/helm/table'
@@ -31,6 +38,7 @@ import {
   imports: [
     LocalizedDatePipe,
     RouterLink,
+    BatchActionBar,
     CollectionStatus,
     Paginator,
     SortHeader,
@@ -43,6 +51,7 @@ import {
 export class ModerationQueue {
   private readonly listReports = inject(ListReportsUseCase)
   private readonly advanceReport = inject(AdvanceReportUseCase)
+  private readonly advanceReports = inject(AdvanceReportsBatchUseCase)
 
   protected readonly canAdvance = inject(SessionStore).can('reports:advance')
 
@@ -65,10 +74,52 @@ export class ModerationQueue {
       }),
   })
 
+  protected readonly selection = createSelection({ limit: MAX_BATCH_SIZE })
+  protected readonly batchPending = signal(false)
+  protected readonly batchResult = signal<BatchResult | null>(null)
+
+  /** Hidden entirely when the operator may not advance reports, same as the per-row buttons. */
+  protected readonly batchActions = computed<BatchActionOption[]>(() =>
+    this.canAdvance()
+      ? [
+          {
+            key: 'resolve',
+            label: 'Resolve',
+            confirmLabel: 'Resolve reports',
+            consequence: 'Marks each report resolved and stamps its resolution time.',
+          },
+          {
+            key: 'dismiss',
+            label: 'Dismiss',
+            confirmLabel: 'Dismiss reports',
+            consequence: 'Marks each report rejected and stamps its resolution time.',
+          },
+        ]
+      : [],
+  )
+  protected readonly selectableIds = computed(() =>
+    this.collection.items().map((report) => report.id),
+  )
+  private readonly selectedReports = computed(() =>
+    this.collection.items().filter((report) => this.selection.has(report.id)),
+  )
+  protected readonly batchRows = computed(() =>
+    this.selectedReports().map((report) => ({
+      id: report.id,
+      label: `${report.entityType} ${report.entityId.slice(0, 8)} — ${report.reason}`,
+    })),
+  )
+
   constructor() {
     effect(() => {
       const { page } = this.query.state()
       void this.collection.show(page)
+    })
+
+    /** The ticked rows belong to one page of one filter; any URL change drops them. */
+    effect(() => {
+      this.query.state()
+      untracked(() => this.selection.clear())
     })
   }
 
@@ -98,5 +149,34 @@ export class ModerationQueue {
     } finally {
       this.busyId.set(null)
     }
+  }
+
+  protected async runBatch(action: string): Promise<void> {
+    this.batchPending.set(true)
+    try {
+      const result = await this.advanceReports.execute({
+        reports: this.selectedReports(),
+        action: this.toBatchAction(action),
+      })
+      this.selection.clear()
+      this.batchResult.set(result)
+      await this.collection.reload()
+    } catch (error) {
+      this.collection.fail(
+        error instanceof ActionNotAllowedError
+          ? error.message
+          : 'Could not update the selected reports.',
+      )
+    } finally {
+      this.batchPending.set(false)
+    }
+  }
+
+  private toBatchAction(key: string): ReportBatchAction {
+    return key === 'dismiss' ? 'dismiss' : 'resolve'
+  }
+
+  protected closeBatch(): void {
+    this.batchResult.set(null)
   }
 }

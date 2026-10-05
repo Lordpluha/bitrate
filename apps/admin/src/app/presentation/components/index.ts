@@ -1,3 +1,4 @@
+export * from './batch-action-bar'
 export * from './charts'
 export * from './collection-status'
 export * from './confirm-action'
