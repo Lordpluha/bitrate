@@ -41,6 +41,40 @@ describe('Signed storage streaming (e2e)', () => {
     await storage.deleteObject(key)
   })
 
+  it('serves a public image at /static/<key> from the object store with long-lived caching', async () => {
+    const key = 'tracks/covers/e2e-static.png'
+    const body = Buffer.from([0x89, 0x50, 0x4e, 0x47, 1, 2, 3, 4])
+    await storage.upload(key, body, 'image/png')
+
+    const response = await request(app.getHttpServer())
+      .get(`/static/${key}`)
+      .buffer(true)
+      .parse((res, callback) => {
+        const chunks: Buffer[] = []
+        res.on('data', (chunk: Buffer) => chunks.push(chunk))
+        res.on('end', () => callback(null, Buffer.concat(chunks)))
+      })
+      .expect(200)
+
+    expect(response.headers['content-type']).toBe('image/png')
+    expect(response.headers['cache-control']).toBe('public, max-age=31536000, immutable')
+    expect(response.body).toEqual(body)
+    await storage.deleteObject(key)
+  })
+
+  it('answers 404 for an unknown public image and for keys outside the public layout', async () => {
+    await request(app.getHttpServer()).get('/static/tracks/covers/missing.png').expect(404)
+    const key = 'tracks/e2e-private/audio/master.opus'
+    await storage.upload(key, Buffer.from('audio'), 'audio/ogg')
+    await request(app.getHttpServer()).get(`/static/${key}`).expect(404)
+    await storage.deleteObject(key)
+  })
+
+  it('does not let a request escape the public layout', async () => {
+    await request(app.getHttpServer()).get('/static/tracks/covers/%2e%2e/x.png').expect(404)
+    await request(app.getHttpServer()).get('/static/..%2f..%2fetc/passwd').expect(404)
+  })
+
   it('rejects an expired signed token', async () => {
     const token = createSignedStorageToken('tracks/e2e/missing.opus', -1, process.env.JWT_SECRET!)
     await request(app.getHttpServer())

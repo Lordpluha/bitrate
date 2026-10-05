@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { rm } from 'node:fs/promises'
 import { extname, join } from 'node:path'
-import type { AppConfig } from '@common/config'
 import { RIGHTS_CONFIRMATION_MESSAGE, rightsConfirmationRecord } from '@common/rights-confirmation'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { NS } from '@infra/cache/cache.constants'
@@ -12,12 +11,16 @@ import {
   AUDIO_PROCESSING_QUEUE,
   type ConvertAudioJobInputProbe,
 } from '@infra/queues/audio-processing.queue'
+import {
+  removePublicImage,
+  storePublicImage,
+  validatePublicImage,
+} from '@infra/storage/public-images'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
 import type { ArtistEntity } from '@modules/artists'
 import { InjectQueue } from '@nestjs/bullmq'
 import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import type { TrackProcessingTrigger } from '@prisma/client'
 import type { Queue } from 'bullmq'
 import { downloadObjectToFile, storeMaster } from './audio-master'
@@ -26,15 +29,12 @@ import { getMasterKey } from './audio-storage-keys'
 import type { CreateTrackDto, UpdateTrackDto } from './dtos'
 import type { TrackEntity } from './entities'
 import { ProcessingAttemptRecorder } from './processing-attempt.recorder'
-import { getTargetBitrates } from './track-audio.helpers'
+import { getTargetBitrates, MAX_COVER_BYTES } from './track-audio.helpers'
 import type { AudioMetadata } from './track-media'
-import {
-  cleanupUploadedFiles,
-  inspectAudioFile,
-  removeReplacedFile,
-  uploadDestination,
-  validateCoverFile,
-} from './track-media'
+import { cleanupUploadedAudio, inspectAudioFile } from './track-media'
+
+/** Where track covers live in storage; the first part of their public `/static/...` URL. */
+const COVER_FOLDER = 'tracks/covers'
 
 /** Everything an audio-conversion job needs to transcode one upload. */
 type EnqueueConversionInput = {
@@ -64,7 +64,6 @@ export class TrackUploadService {
   constructor(
     private readonly prisma: PrismaService,
     @InjectQueue(AUDIO_PROCESSING_QUEUE) private readonly audioQueue: Queue,
-    private readonly configService: ConfigService<AppConfig>,
     private readonly cache: CacheService,
     private readonly recorder: ProcessingAttemptRecorder,
     @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
@@ -117,8 +116,15 @@ export class TrackUploadService {
     await storeMaster({
       storage: this.storage,
       key: getMasterKey(audioFile.filename),
-      filePath: resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
+      filePath: resolveSafeMulterPath(audioFile, getUploadTempDir()),
       contentType: audioFile.mimetype,
+    })
+  }
+
+  /** Uploads a validated, in-memory cover to storage and returns the generated file name. */
+  private async storeCover(coverFile: Express.Multer.File) {
+    return await storePublicImage(this.storage, COVER_FOLDER, coverFile, {
+      maxBytes: MAX_COVER_BYTES,
     })
   }
 
@@ -161,23 +167,23 @@ export class TrackUploadService {
   ) {
     let persisted = false
     let masterStored = false
+    let coverName: string | null = null
     try {
-      if (coverFile) await validateCoverFile(coverFile)
+      if (coverFile) validatePublicImage(coverFile, { maxBytes: MAX_COVER_BYTES })
 
-      const metadata = await inspectAudioFile(
-        resolveSafeMulterPath(audioFile, uploadDestination(audioFile)),
-      )
+      const metadata = await inspectAudioFile(resolveSafeMulterPath(audioFile, getUploadTempDir()))
       const bitrates = getTargetBitrates(metadata.bitrate)
 
       await this.storeUploadedMaster(audioFile)
       masterStored = true
+      if (coverFile) coverName = await this.storeCover(coverFile)
 
       const track = await this.prisma.track.create({
         data: {
           artistId,
           title: createTrackDto.title,
           audioUrl: audioFile.filename,
-          cover: coverFile?.filename ?? null,
+          cover: coverName,
           duration: metadata.duration,
           ...rightsConfirmationRecord(),
           processingStatus: 'PROCESSING',
@@ -203,7 +209,8 @@ export class TrackUploadService {
       return track
     } catch (error) {
       if (!persisted) {
-        await cleanupUploadedFiles([audioFile, coverFile])
+        await cleanupUploadedAudio(audioFile)
+        await removePublicImage(this.storage, COVER_FOLDER, coverName)
         if (masterStored) await this.discardStoredMaster(audioFile.filename)
       }
       throw error
@@ -220,6 +227,7 @@ export class TrackUploadService {
   ) {
     let persisted = false
     let masterStored = false
+    let coverName: string | undefined
     try {
       const existingTrack = await this.prisma.track.findFirst({
         where: { id, artistId, deletedAt: null },
@@ -230,11 +238,10 @@ export class TrackUploadService {
       if (audioFile && !updateTrackDto.rightsConfirmed) {
         throw new BadRequestException(RIGHTS_CONFIRMATION_MESSAGE)
       }
-      if (coverFile) await validateCoverFile(coverFile)
+      if (coverFile) validatePublicImage(coverFile, { maxBytes: MAX_COVER_BYTES })
 
-      const storageConfig = this.configService.getOrThrow('storage')
       const metadata = audioFile
-        ? await inspectAudioFile(resolveSafeMulterPath(audioFile, uploadDestination(audioFile)))
+        ? await inspectAudioFile(resolveSafeMulterPath(audioFile, getUploadTempDir()))
         : null
       const bitrates = metadata ? getTargetBitrates(metadata.bitrate) : null
 
@@ -242,13 +249,14 @@ export class TrackUploadService {
         await this.storeUploadedMaster(audioFile)
         masterStored = true
       }
+      if (coverFile) coverName = await this.storeCover(coverFile)
 
       const track = await this.prisma.$transaction(async (tx) => {
         const updated = await tx.track.update({
           where: { id },
           data: {
             title: updateTrackDto.title,
-            cover: coverFile?.filename ?? undefined,
+            cover: coverName,
             audioUrl: audioFile?.filename ?? undefined,
             ...(audioFile ? rightsConfirmationRecord() : {}),
             duration: metadata?.duration ?? undefined,
@@ -274,11 +282,6 @@ export class TrackUploadService {
 
       if (audioFile && metadata && bitrates) {
         await this.discardStoredMaster(existingTrack.audioUrl)
-        // A master uploaded before masters moved into storage lives on the local disk.
-        await removeReplacedFile(
-          storageConfig.getTracksDir(existingTrack.audioUrl),
-          existingTrack.audioUrl,
-        )
         await this.enqueueAudioConversion({
           trackId: track.id,
           artistId: track.artistId,
@@ -288,11 +291,8 @@ export class TrackUploadService {
           input: toInputProbe(metadata, audioFile.size),
         })
       }
-      if (coverFile && existingTrack.cover !== coverFile.filename) {
-        await removeReplacedFile(
-          storageConfig.getTracksCoversDir(existingTrack.cover ?? ''),
-          existingTrack.cover,
-        )
+      if (coverName && existingTrack.cover !== coverName) {
+        await removePublicImage(this.storage, COVER_FOLDER, existingTrack.cover)
       }
 
       await this.invalidateTrackCaches()
@@ -300,7 +300,8 @@ export class TrackUploadService {
       return track
     } catch (error) {
       if (!persisted) {
-        await cleanupUploadedFiles([audioFile, coverFile])
+        await cleanupUploadedAudio(audioFile)
+        await removePublicImage(this.storage, COVER_FOLDER, coverName)
         if (masterStored && audioFile) await this.discardStoredMaster(audioFile.filename)
       }
       throw error

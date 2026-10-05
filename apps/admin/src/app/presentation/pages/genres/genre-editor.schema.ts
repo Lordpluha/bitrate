@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as z from 'zod'
 
 /** Blank is allowed (the API derives the slug / the genre has no colour); otherwise it must match. */
 export const genreEditorSchema = z.object({

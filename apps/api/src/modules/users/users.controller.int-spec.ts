@@ -1,4 +1,5 @@
-import * as fs from 'node:fs'
+import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
+import type { StorageService } from '@infra/storage/storage.types'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { UserAuthGuard } from '@modules/users-auth/users-auth.guard'
 import type { INestApplication } from '@nestjs/common'
@@ -20,15 +21,22 @@ const makeServiceMock = () =>
 describe('UsersController (int)', () => {
   let app: INestApplication
   let service: jest.Mocked<UsersService>
+  let storage: jest.Mocked<StorageService>
   const user = buildUser()
 
   beforeAll(async () => {
-    fs.mkdirSync('./storage/public/users/avatars', { recursive: true })
     service = makeServiceMock()
+    storage = {
+      upload: jest.fn().mockImplementation(async (key: unknown) => key as never),
+      deleteObject: jest.fn(),
+    } as unknown as jest.Mocked<StorageService>
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [{ provide: UsersService, useValue: service }],
+      providers: [
+        { provide: UsersService, useValue: service },
+        { provide: STORAGE_SERVICE, useValue: storage },
+      ],
     })
       .overrideGuard(UserAuthGuard)
       .useValue({
@@ -53,6 +61,7 @@ describe('UsersController (int)', () => {
     service.getByUsername.mockReset()
     service.updateById.mockReset()
     service.uploadAvatar.mockReset()
+    storage.upload.mockClear()
   })
 
   it('GET /users/username/:username should return 200', async () => {
@@ -129,6 +138,24 @@ describe('UsersController (int)', () => {
       })
 
     expect(res.status).toBe(201)
+    expect(storage.upload).toHaveBeenCalledWith(
+      expect.stringMatching(/^users\/avatars\/[0-9a-f-]{36}\.png$/),
+      pngBytes,
+      'image/png',
+    )
     expect(service.uploadAvatar).toHaveBeenCalledWith(user.id, expect.any(String))
+  })
+
+  it('POST /users/avatar rejects spoofed image content and stores nothing', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/users/avatar')
+      .attach('avatar', Buffer.from('<script>alert(1)</script>'), {
+        filename: 'evil.png',
+        contentType: 'image/png',
+      })
+
+    expect(res.status).toBe(400)
+    expect(storage.upload).not.toHaveBeenCalled()
+    expect(service.uploadAvatar).not.toHaveBeenCalled()
   })
 })

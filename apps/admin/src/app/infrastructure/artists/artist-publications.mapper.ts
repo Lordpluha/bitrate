@@ -9,7 +9,7 @@ function toTrackCoverUrl(cover: string | null | undefined): string | null {
   return `${API_BASE_URL}/static/tracks/covers/${encodeURIComponent(cover)}`
 }
 
-/** Albums are stored under their own bucket — see `apps/api/storage/public/albums/covers/`. */
+/** Albums are stored under their own bucket — served by the API at `/static/albums/covers/`. */
 function toAlbumCoverUrl(cover: string | null | undefined): string | null {
   if (!cover) return null
   return `${API_BASE_URL}/static/albums/covers/${encodeURIComponent(cover)}`

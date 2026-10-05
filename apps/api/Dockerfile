@@ -134,28 +134,15 @@ COPY --chown=bitrateapi:nodejs apps/api/prisma ./apps/api/prisma
 # url — it comes from here. The TypeScript source, not the compiled output: tsc emits CommonJS
 # that Prisma's config loader rejects with "Failed to parse syntax of config file".
 COPY --chown=bitrateapi:nodejs apps/api/prisma.config.ts ./apps/api/prisma.config.ts
-# public/ only. app.module.ts points ServeStaticModule at join(__dirname,'..','..','storage',
-# 'public') — /app/apps/api/storage/public — so that one subtree is load-bearing. The sibling
-# private/ is seeded audio: 823 MB on a developer checkout, and `apps/api/storage/.gitignore`
-# keeps all of it out of git, so a CI image never contained it and a locally built one did.
-COPY --chown=bitrateapi:nodejs apps/api/storage/public ./apps/api/storage/public
 COPY --chown=bitrateapi:nodejs package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY --chown=bitrateapi:nodejs apps/api/package.json ./apps/api/
 
-# The runtime storage root, and a different path from the seed directory above. CMD runs
-# `node apps/api/dist/src/main.js` from WORKDIR /app, so process.cwd() is /app and
-# apps/api/src/common/config/storage.config.ts resolves every upload path under /app/storage.
-# Creating it here is what lets infra/docker-compose.prod.yaml mount a named volume over it:
-# Docker initialises an empty volume from the image directory, ownership included, so the
-# non-root user needs no chown on the host. Two empty directories, so the recursive chown
-# scoped to them costs nothing.
-#
 # /app/worker-tmp is the transcode worker's scratch root (AUDIO_SCRATCH_ROOT, set on the
-# `worker` service). Same mechanism: the named volume `worker_tmp` is seeded from this empty,
-# non-root-owned directory, so the worker can write to it without a host chown. The API never
-# mounts it.
-RUN mkdir -p /app/storage/private /app/storage/public /app/worker-tmp \
-    && chown -R bitrateapi:nodejs /app/storage /app/worker-tmp
+# `worker` service). The named volume `worker_tmp` is seeded from this empty, non-root-owned
+# directory, so the worker can write to it without a host chown. The API never mounts it.
+# Uploaded files do not live in the image or in a volume: they go to the object store (ADR-0050).
+RUN mkdir -p /app/worker-tmp \
+    && chown -R bitrateapi:nodejs /app/worker-tmp
 
 USER bitrateapi
 

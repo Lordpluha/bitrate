@@ -1,14 +1,33 @@
 import { statSync } from 'node:fs'
 import { basename, extname } from 'node:path'
 import { Readable } from 'node:stream'
+import { detectAllowedImageMime } from '@common/utils/image'
+
+/** Common fields of the Multer file objects the seeds hand to `TrackUploadService`. */
+function multerFile(
+  fieldname: 'audio' | 'cover',
+  originalname: string,
+  mimetype: string,
+  size: number,
+): Express.Multer.File {
+  return {
+    fieldname,
+    originalname,
+    encoding: '7bit',
+    mimetype,
+    size,
+    destination: '',
+    stream: new Readable(),
+  } as Express.Multer.File
+}
 
 /**
- * Создает объект, совместимый с Express.Multer.File
- * для использования с существующими методами TracksService
+ * Создает объект, совместимый с Express.Multer.File, для аудиофайла,
+ * который лежит в приватной рабочей директории (`getUploadTempDir`).
  */
 export function createMulterFileFromPath(
   filePath: string,
-  fieldname: 'audio' | 'cover',
+  fieldname: 'audio',
 ): Express.Multer.File {
   const stats = statSync(filePath)
   const filename = basename(filePath)
@@ -21,27 +40,25 @@ export function createMulterFileFromPath(
     '.opus': 'audio/ogg',
     '.wav': 'audio/wav',
     '.webm': 'audio/webm',
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-    '.gif': 'image/gif',
-    '.webp': 'image/webp',
-    '.svg': 'image/svg+xml',
   }
 
-  const mimetype = mimeTypes[ext] || 'application/octet-stream'
-
-  // Создаем объект, совместимый с Express.Multer.File
   return {
-    fieldname,
-    originalname: filename,
-    encoding: '7bit',
-    mimetype,
-    size: stats.size,
+    ...multerFile(fieldname, filename, mimeTypes[ext] || 'application/octet-stream', stats.size),
     filename,
     path: filePath,
-    destination: '',
     buffer: Buffer.from([]), // Пустой буфер, так как используем path
-    stream: new Readable(),
   }
+}
+
+/**
+ * Создает объект, совместимый с Express.Multer.File, для обложки в памяти — как это делает
+ * Multer `memoryStorage` в контроллере. MIME берётся из байтов, а не из расширения, поэтому
+ * загрузка всё равно проверяет содержимое.
+ */
+export function createMulterFileFromBuffer(
+  buffer: Buffer,
+  fieldname: 'cover',
+): Express.Multer.File {
+  const mimetype = detectAllowedImageMime(buffer) ?? 'application/octet-stream'
+  return { ...multerFile(fieldname, 'cover', mimetype, buffer.length), buffer }
 }
