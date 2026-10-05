@@ -398,8 +398,8 @@ jobs:
         run: |
           set -euo pipefail
           echo "The database is backed up. The API's uploads are NOT covered by this run."
-          echo "Either the api service was down, or /app/storage is empty because the"
-          echo "api_storage volume is not in effect on this deployment yet."
+          echo "Either the api service was down, or there is no local storage archive: uploads"
+          echo "live in the object store (ADR-0050), which this workflow does not cover."
           if [ "${REQUIRE_STORAGE}" = "true" ]; then
             echo "::error::require-storage is on and no storage archive was produced."
             exit 1

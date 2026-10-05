@@ -375,7 +375,7 @@ one-time rescue of the existing uploads — is in
 By hand, on the server, from `$HOME/bitrate`:
 
 ```bash
-task prod:backup                          # dump + storage archive into backups/, prune old ones
+task prod:backup                          # database dump into backups/, prune old ones
 task prod:restore FILE=backups/db-20260908T031711Z.dump
 ```
 
@@ -387,6 +387,63 @@ For the preprod stack, `task db:backup` / `task db:restore FILE=…` write and r
 
 A snapshot of a volume with a running Postgres is not a consistent backup, so volume snapshots
 are a second line of defence, not a substitute.
+
+### One-off: copy the retired `api_storage` volume into the bucket
+
+The API no longer writes to, or serves from, a local storage directory: every upload and every
+seeded file is an object in SeaweedFS, and public images are streamed back through the API at the
+same `/static/<folder>/<file>` URLs (ADR-0050). The `api_storage` volume is gone from
+`infra/docker-compose.prod.yaml`. Anything still inside it has to be copied into the bucket
+**before** the deploy that removes it, because the old container is the last place it is mounted.
+
+Production reportedly holds users and empty playlists but no tracks, so the volume may well be
+empty, in which case there is nothing to do beyond the first command. Run these on the server,
+from `$HOME/bitrate`, with the old stack still up. Nothing here touches the database.
+
+1. Count what is there. Placeholder `.gitkeep` files do not count.
+
+   ```bash
+   docker compose --env-file .env -f infra/docker-compose.prod.yaml exec -T api \
+     sh -c 'find /app/storage -type f ! -name .gitkeep | wc -l; du -sh /app/storage'
+   ```
+
+   `0` means stop here and deploy.
+
+2. Copy it. A throwaway AWS CLI container reads the volume read-only and writes through the
+   compose network, using the same `S3_*` values the API uses. Public images map to their own
+   path (`/app/storage/public/users/avatars/x.png` becomes `users/avatars/x.png`, which is the
+   key behind `/static/users/avatars/x.png`); legacy local masters map to `masters/<file>`.
+
+   ```bash
+   set -a; . ./.env; set +a
+   VOLUME="$(docker volume ls -q | grep 'api_storage$')"
+   NETWORK="$(docker network ls -q --filter name=bitrate-network)"
+   run_s3() {
+     docker run --rm --network "$NETWORK" -v "$VOLUME":/data:ro \
+       -e AWS_ACCESS_KEY_ID="$S3_ACCESS_KEY" -e AWS_SECRET_ACCESS_KEY="$S3_SECRET_KEY" \
+       -e AWS_DEFAULT_REGION="${S3_REGION:-us-east-1}" \
+       amazon/aws-cli --endpoint-url http://seaweedfs:8333 "$@"
+   }
+   run_s3 s3 sync /data/public "s3://${S3_BUCKET:-bitrate-audio}/" --exclude '*/.gitkeep'
+   run_s3 s3 sync /data/private/tracks "s3://${S3_BUCKET:-bitrate-audio}/masters/" --exclude '.gitkeep'
+   ```
+
+3. Verify the counts match step 1, and spot-check a checksum (for a non-multipart object the
+   S3 ETag is its MD5):
+
+   ```bash
+   run_s3 s3 ls "s3://${S3_BUCKET:-bitrate-audio}/" --recursive --summarize | tail -n 2
+   md5sum "$(docker volume inspect "$VOLUME" -f '{{ .Mountpoint }}')"/public/users/avatars/<file>
+   run_s3 s3api head-object --bucket "${S3_BUCKET:-bitrate-audio}" --key users/avatars/<file> \
+     --query ETag
+   ```
+
+   The object count in the bucket is the copied files plus whatever the API already stored
+   there, so compare against a listing taken before the copy rather than expecting an exact
+   match.
+
+4. Deploy. A track whose master was copied from `private/tracks` has no HLS ladder in the
+   bucket; run the reprocess operation for it from the admin panel after the deploy.
 
 ## 7. Releasing
 
