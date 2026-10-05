@@ -8,8 +8,9 @@ import {
   type ReportDetail,
   type SetReportStatusInput,
 } from '@domain/moderation'
-import type { Page } from '@domain/shared'
+import type { BatchResult, Page } from '@domain/shared'
 import { ADMIN_API } from '../http/api.config'
+import { batchResultDto, buildBatchBody, toBatchResult } from '../http/batch-result.dto'
 import { fetchPage } from '../http/wire-page'
 import { reportDetailDto, reportDto, reportPageDto } from './report.dto'
 import {
@@ -59,5 +60,21 @@ export class HttpModerationReportRepository extends ModerationReportRepository {
     )
 
     return toModerationReport(reportDto.parse(response))
+  }
+
+  override resolveMany(ids: readonly string[]): Promise<BatchResult> {
+    return this.postBatch('resolve', ids)
+  }
+
+  override dismissMany(ids: readonly string[]): Promise<BatchResult> {
+    return this.postBatch('dismiss', ids)
+  }
+
+  private async postBatch(action: 'resolve' | 'dismiss', ids: readonly string[]) {
+    const response = await firstValueFrom(
+      this.http.post<unknown>(`${this.base}/batch/${action}`, buildBatchBody(ids)),
+    )
+
+    return toBatchResult(batchResultDto.parse(response))
   }
 }

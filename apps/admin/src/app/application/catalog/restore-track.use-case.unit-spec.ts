@@ -9,7 +9,12 @@ import {
   type TrackDetail,
   TrackRepository,
 } from '@domain/track'
-import { ActionNotAllowedError, type Page, type TakeDownInput } from '@domain/shared'
+import {
+  ActionNotAllowedError,
+  type BatchResult,
+  type Page,
+  type TakeDownInput,
+} from '@domain/shared'
 import { RestoreTrackUseCase } from './restore-track.use-case'
 
 const restore = vi.fn<(input: TakeDownInput) => Promise<void>>()
@@ -28,6 +33,10 @@ class StubTrackRepository extends TrackRepository {
   }
 
   override takeDown(_input: TakeDownInput): Promise<void> {
+    throw new Error('not used')
+  }
+
+  override takeDownMany(_ids: readonly string[]): Promise<BatchResult> {
     throw new Error('not used')
   }
 

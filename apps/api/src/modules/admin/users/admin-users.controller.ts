@@ -1,6 +1,9 @@
+import { SkipAudit } from '@infra/observability/skip-audit.decorator'
 import {
   AuditContext,
   type AuditContextValue,
+  BatchIdsDto,
+  BatchIdsSchema,
   TakeDownReasonDto,
   TakeDownReasonSchema,
 } from '@modules/admin/shared'
@@ -22,6 +25,7 @@ import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminUsersService } from './admin-users.service'
 import {
+  DeactivateUsersBatchSwagger,
   DeleteUserSwagger,
   GetUserSwagger,
   ListListeningHistorySwagger,
@@ -82,6 +86,20 @@ export class AdminUsersController {
     @AuditContext() auditContext: AuditContextValue = {},
   ) {
     return this.users.softDelete(id, staff.id, body.reason, auditContext)
+  }
+
+  /** Runs the batch deactivate operation. `@SkipAudit` because each take-down audits itself. */
+  @RequirePermission('users:delete')
+  @DeactivateUsersBatchSwagger()
+  @SkipAudit()
+  @HttpCode(HttpStatus.OK)
+  @Post('batch/deactivate')
+  deactivateMany(
+    @Body(new ZodValidationPipe(BatchIdsSchema)) body: BatchIdsDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue = {},
+  ) {
+    return this.users.softDeleteMany(body.ids, staff.id, auditContext)
   }
 
   /** Runs the restore operation. */
