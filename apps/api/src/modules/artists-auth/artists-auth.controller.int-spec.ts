@@ -18,6 +18,9 @@ const makeAuthServiceMock = () =>
     registerArtist: jest.fn(),
     logout: jest.fn(),
     refresh: jest.fn(),
+    verifyEmailCode: jest.fn(),
+    verifyEmail: jest.fn(),
+    resendEmailVerification: jest.fn(),
   }) as unknown as jest.Mocked<ArtistsAuthService>
 
 const makeArtistsServiceMock = () =>
@@ -80,6 +83,9 @@ describe('AuthController artists (int)', () => {
     authService.registerArtist.mockReset()
     authService.logout.mockReset()
     authService.refresh.mockReset()
+    authService.verifyEmailCode.mockReset()
+    authService.verifyEmail.mockReset()
+    authService.resendEmailVerification.mockReset()
     artistsService.findById.mockReset()
   })
 
@@ -93,6 +99,42 @@ describe('AuthController artists (int)', () => {
     })
 
     expect(res.status).toBe(201)
+  })
+
+  it('accepts a six-digit code, including leading zeros, and normalizes the address', async () => {
+    await request(app.getHttpServer())
+      .post('/artists/auth/verify-email/code')
+      .send({ email: 'Artist@EXAMPLE.com', code: '012345' })
+      .expect(200)
+    expect(authService.verifyEmailCode).toHaveBeenCalledWith('artist@example.com', '012345')
+  })
+
+  it('rejects malformed code input before calling the service', async () => {
+    for (const code of ['12345', '1234567', '12a456', 123456]) {
+      await request(app.getHttpServer())
+        .post('/artists/auth/verify-email/code')
+        .send({ email: 'artist@example.com', code })
+        .expect(400)
+    }
+    expect(authService.verifyEmailCode).not.toHaveBeenCalled()
+  })
+
+  it('retains token-based verification', async () => {
+    await request(app.getHttpServer())
+      .post('/artists/auth/verify-email')
+      .send({ token: 'existing-token' })
+      .expect(200)
+    expect(authService.verifyEmail).toHaveBeenCalledWith('existing-token')
+  })
+
+  it('returns the mail delivery mode without returning a code or token', async () => {
+    authService.resendEmailVerification.mockResolvedValue({ delivery: 'development' })
+    const response = await request(app.getHttpServer())
+      .post('/artists/auth/verify-email/resend')
+      .send({ email: 'Artist@EXAMPLE.com' })
+      .expect(200)
+    expect(response.body).toEqual({ delivery: 'development' })
+    expect(authService.resendEmailVerification).toHaveBeenCalledWith('artist@example.com')
   })
 
   it('POST /artists/auth/login should return 201 on valid credentials', async () => {
