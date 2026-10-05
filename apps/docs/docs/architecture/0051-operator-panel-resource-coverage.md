@@ -112,7 +112,7 @@ catalogue:
 
 ### Planned, not yet built
 
-- Bulk actions (#219): `POST /admin/<resource>/batch/<action>` with up to 100 ids, a per-id result,
+- Bulk actions (#219, built): `POST /admin/<resource>/batch/<action>` with up to 100 ids, a per-id result,
   the same per-id permission check and one audit row per entity.
 - CSV export (#220): separate administrator-only `<resource>:export` permissions, list filters
   reused, a cap of 50 000 rows and formula-injection prefixing.
