@@ -107,6 +107,56 @@ describe('ReportDetailPage', () => {
     expect(link?.textContent).toContain('Spam Mix')
   })
 
+  it('links a podcast subject to its panel detail page', async () => {
+    getReport.mockResolvedValue(
+      detail({
+        subject: {
+          kind: 'podcast',
+          id: 'pc1',
+          title: 'Spam Cast',
+          deletedAt: null,
+          parentId: null,
+        },
+      }),
+    )
+    create()
+
+    const fixture = TestBed.createComponent(ReportDetailPage)
+    await fixture.whenStable()
+
+    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
+      'a[href="/podcasts/pc1"]',
+    )
+    expect(link?.textContent).toContain('Spam Cast')
+  })
+
+  it('links an episode subject to its podcast, and leaves it plain text without one', async () => {
+    getReport.mockResolvedValue(
+      detail({
+        subject: { kind: 'episode', id: 'e1', title: 'Spam Ep', deletedAt: null, parentId: 'pc1' },
+      }),
+    )
+    create()
+
+    const linked = TestBed.createComponent(ReportDetailPage)
+    await linked.whenStable()
+    expect(
+      (linked.nativeElement as HTMLElement).querySelector('a[href="/podcasts/pc1"]')?.textContent,
+    ).toContain('Spam Ep')
+
+    getReport.mockResolvedValue(
+      detail({
+        subject: { kind: 'episode', id: 'e1', title: 'Spam Ep', deletedAt: null, parentId: null },
+      }),
+    )
+    create()
+    const plain = TestBed.createComponent(ReportDetailPage)
+    await plain.whenStable()
+    const host = plain.nativeElement as HTMLElement
+    expect(host.textContent).toContain('Spam Ep')
+    expect(host.querySelector('a[href^="/podcasts"]')).toBeNull()
+  })
+
   it('renders a plain-text subject for a kind without a panel page', async () => {
     getReport.mockResolvedValue(
       detail({
