@@ -2597,6 +2597,101 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/podcasts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list podcasts operation. */
+    get: operations['AdminPodcastsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/podcasts/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the get podcast operation.
+     * @description A taken-down podcast stays reachable by id, and every episode is listed with its own take-down state.
+     */
+    get: operations['AdminPodcastsController_getById_v1']
+    put?: never
+    post?: never
+    /**
+     * Runs the soft-delete (take-down) operation.
+     * @description The podcast's episodes are not affected and stay independently manageable.
+     */
+    delete: operations['AdminPodcastsController_remove_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/podcasts/{id}/restore': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the restore operation. */
+    post: operations['AdminPodcastsController_restore_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/podcasts/{id}/episodes/{episodeId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /**
+     * Runs the episode soft-delete (take-down) operation.
+     * @description The parent podcast and the other episodes are not affected.
+     */
+    delete: operations['AdminPodcastsController_removeEpisode_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/podcasts/{id}/episodes/{episodeId}/restore': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the episode restore operation. */
+    post: operations['AdminPodcastsController_restoreEpisode_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -3740,6 +3835,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
       /** @description Whether two-factor authentication is enabled. */
       twoFactorEnabled: boolean
@@ -4619,6 +4717,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
       /** @description Active operators currently assigned this role. */
       holders: number
@@ -4672,6 +4773,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       /**
        * @description Active, non-`ADMIN` operators currently holding this permission. Zero means only the
        *     built-in `ADMIN` role can exercise it today.
@@ -4716,6 +4820,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     UpdateRoleDto: {
@@ -4753,6 +4860,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     AdminStaffRoleEntity: {
@@ -4793,6 +4903,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     AdminStaffEntity: {
@@ -4840,6 +4953,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
       /** @description Whether two-factor authentication is enabled. */
       twoFactorEnabled: boolean
@@ -4915,6 +5031,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     AssignStaffRoleDto: {
@@ -4952,6 +5071,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     UpdateStaffPermissionsDto: {
@@ -4987,6 +5109,9 @@ export interface components {
         | 'playlists:hide'
         | 'playlists:delete'
         | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     AdminOverviewReportsEntity: {
@@ -5365,6 +5490,104 @@ export interface components {
     SetPlaylistVisibilityDto: {
       reason?: string
       isPublic: boolean
+    }
+    AdminPodcastEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The publisher's display name. */
+      publisher: string
+      /** @description The stored cover image reference, or `null`. */
+      cover?: string | null
+      /** @description The podcast's language code, if any. */
+      language?: string | null
+      /** @description Whether the podcast is flagged explicit. */
+      explicit: boolean
+      /** @description How many episodes the podcast has, taken-down ones included. */
+      episodeCount: number
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedAdminPodcastsEntity: {
+      /** @description The podcasts on this page. */
+      data: components['schemas']['AdminPodcastEntity'][]
+      /** @description The total number of podcasts matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    AdminPodcastEpisodeEntity: {
+      /** @description The episode's id. */
+      id: string
+      /** @description The owning podcast's id. */
+      podcastId: string
+      /** @description The episode's title. */
+      title: string
+      /** @description The episode length in seconds, if known. */
+      duration?: number | null
+      /**
+       * Format: date-time
+       * @description Release date, or `null` if unset.
+       */
+      releaseDate?: string | null
+      /** @description Whether the episode is flagged explicit. */
+      explicit: boolean
+      /**
+       * Format: date-time
+       * @description The episode's own soft-delete timestamp — independent of the podcast's.
+       */
+      deletedAt?: string | null
+    }
+    AdminPodcastDetailEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The publisher's display name. */
+      publisher: string
+      /** @description The stored cover image reference, or `null`. */
+      cover?: string | null
+      /** @description The podcast's language code, if any. */
+      language?: string | null
+      /** @description Whether the podcast is flagged explicit. */
+      explicit: boolean
+      /** @description How many episodes the podcast has, taken-down ones included. */
+      episodeCount: number
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description The podcast description, if any. */
+      description?: string | null
+      /** @description The podcast's episodes, newest release first, taken-down ones included. */
+      episodes: components['schemas']['AdminPodcastEpisodeEntity'][]
     }
   }
   responses: never
@@ -29075,6 +29298,918 @@ export interface operations {
         content?: never
       }
       /** @description Playlist is not deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPodcastsController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'active' | 'deactivated' | 'all'
+        /** @description Search by title */
+        q?: string
+        sort?: 'createdAt' | 'title'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of podcasts */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminPodcastsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminPodcastsController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastDetailEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminPodcastsController_remove_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:delete permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast is already deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPodcastsController_restore_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:restore permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast is not deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPodcastsController_removeEpisode_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+        episodeId: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:delete permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Episode not found on this podcast */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Episode is already deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPodcastsController_restoreEpisode_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+        episodeId: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:restore permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Episode not found on this podcast */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Episode is not deleted */
       409: {
         headers: {
           [name: string]: unknown
