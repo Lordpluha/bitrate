@@ -44,11 +44,10 @@ describe('storePublicImage', () => {
 })
 
 describe('isPublicAssetKey', () => {
-  it.each([
-    'tracks/covers/a-b.PNG',
-    'users/avatars/x.webp',
-    'artists/backgrounds/z.jpeg',
-  ])('accepts %s', (key) => expect(isPublicAssetKey(key)).toBe(true))
+  it.each(['tracks/covers/a-b.PNG', 'users/avatars/x.webp', 'artists/backgrounds/z.jpeg'])(
+    'accepts %s',
+    (key) => expect(isPublicAssetKey(key)).toBe(true),
+  )
   it.each([
     '../x.png',
     'tracks/covers/../x.png',

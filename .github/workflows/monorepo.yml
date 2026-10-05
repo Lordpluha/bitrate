@@ -14,6 +14,7 @@ on:
       - 'pnpm-workspace.yaml'
       - 'turbo.json'
       - 'biome.json'
+      - 'biome.ci.json'
       - '.knip.json'
       - 'tsconfig*.json'
       - 'Taskfile.yml'
@@ -41,6 +42,11 @@ on:
         required: false
         default: true
         type: boolean
+      run-lint-type-aware:
+        description: "Run the repository-wide type-aware Biome gate"
+        required: false
+        default: true
+        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -56,3 +62,4 @@ jobs:
       run-lint: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-lint'] == 'true' || github.event_name != 'workflow_dispatch' }}
       run-types: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-types'] == 'true' || github.event_name != 'workflow_dispatch' }}
       run-knip: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-knip'] == 'true' || github.event_name != 'workflow_dispatch' }}
+      run-lint-type-aware: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-lint-type-aware'] == 'true' || github.event_name != 'workflow_dispatch' }}

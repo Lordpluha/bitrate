@@ -15,14 +15,12 @@ describe('getApiErrorStatus', () => {
     expect(getApiErrorStatus(error)).toBe(status)
   })
 
-  it.each([
-    null,
-    '429',
-    { statusCode: '429' },
-    { status: 42 },
-  ])('ignores invalid error status values', (error) => {
-    expect(getApiErrorStatus(error)).toBeUndefined()
-  })
+  it.each([null, '429', { statusCode: '429' }, { status: 42 }])(
+    'ignores invalid error status values',
+    (error) => {
+      expect(getApiErrorStatus(error)).toBeUndefined()
+    },
+  )
 })
 
 describe('shouldRetryApiQuery', () => {

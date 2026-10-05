@@ -114,7 +114,8 @@ describe('UsersAuth (e2e)', () => {
      * The deadline must be the intended instant. A wall-clock value stored without its
      * offset would leave a remaining window shifted by the machine's timezone.
      */
-    const remainingMs = (locked?.lockedUntil as Date).getTime() - Date.now()
+    const lockedUntil = locked?.lockedUntil as Date
+    const remainingMs = lockedUntil.getTime() - Date.now()
     expect(remainingMs).toBeGreaterThan(14 * 60 * 1000)
     expect(remainingMs).toBeLessThanOrEqual(15 * 60 * 1000)
 

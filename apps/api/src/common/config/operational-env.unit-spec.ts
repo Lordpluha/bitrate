@@ -15,15 +15,13 @@ const requiredEnv = {
 }
 
 describe('operational environment schema', () => {
-  it.each([
-    'S3_ENDPOINT',
-    'S3_BUCKET',
-    'S3_ACCESS_KEY',
-    'S3_SECRET_KEY',
-  ])('requires %s, because object storage is the only storage backend', (key) => {
-    const { [key]: _omitted, ...withoutKey } = requiredEnv as Record<string, string>
-    expect(() => envSchema.parse(withoutKey)).toThrow(key)
-  })
+  it.each(['S3_ENDPOINT', 'S3_BUCKET', 'S3_ACCESS_KEY', 'S3_SECRET_KEY'])(
+    'requires %s, because object storage is the only storage backend',
+    (key) => {
+      const { [key]: _omitted, ...withoutKey } = requiredEnv as Record<string, string>
+      expect(() => envSchema.parse(withoutKey)).toThrow(key)
+    },
+  )
 
   it('has no storage driver switch any more', () => {
     expect(envSchema.parse({ ...requiredEnv, STORAGE_DRIVER: 'local' })).not.toHaveProperty(
