@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as z from 'zod'
 import { PROTECTED_PERMISSIONS } from '@domain/access'
 import type { Permission } from '@domain/access'
 
