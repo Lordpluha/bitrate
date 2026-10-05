@@ -1,4 +1,6 @@
 export * from './http-overview.repository'
+export * from './overview-reports-by-type.dto'
+export * from './overview-reports-by-type.mapper'
 export * from './overview-series.dto'
 export * from './overview-series.mapper'
 export * from './overview.dto'
