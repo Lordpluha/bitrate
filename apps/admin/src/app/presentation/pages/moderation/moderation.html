@@ -7,6 +7,10 @@
     </p>
   </header>
 
+  @if (canExport()) {
+    <app-export-csv-button [exporter]="exportCsv" />
+  }
+
   <div class="flex flex-wrap gap-2">
     <button
       hlmBtn

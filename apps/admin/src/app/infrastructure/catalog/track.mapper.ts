@@ -1,6 +1,13 @@
 import type { ResourceStatus } from '@domain/shared'
-import type { Track, TrackDetail, TrackProcessingStatus, TrackSortField } from '@domain/track'
+import type {
+  Track,
+  TrackDetail,
+  TrackFilter,
+  TrackProcessingStatus,
+  TrackSortField,
+} from '@domain/track'
 import { API_BASE_URL } from '../http/api.config'
+import type { WireFilters } from '../http/wire-page'
 import type {
   TrackDetailDto,
   TrackDto,
@@ -95,5 +102,19 @@ export function toTrackDetail(dto: TrackDetailDto): TrackDetail {
     genres: dto.genres,
     albums: dto.albums,
     openReportCount: dto.openReportCount,
+  }
+}
+
+/** The query parameters the list and the CSV export both send for a filter. */
+export function toTrackListFilters(filter: TrackFilter): WireFilters {
+  return {
+    q: filter.query,
+    processingStatus:
+      filter.processingStatus === undefined
+        ? undefined
+        : toWireProcessingStatus(filter.processingStatus),
+    status: filter.status === undefined ? undefined : toWireTrackStatus(filter.status),
+    sort: filter.sort ? toWireTrackSort(filter.sort.field) : undefined,
+    order: filter.sort?.direction,
   }
 }
