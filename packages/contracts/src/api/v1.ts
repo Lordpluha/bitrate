@@ -1929,6 +1929,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/moderation/reports/export.csv': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the CSV export operation.
+     * @description Streams the reports matching the queue filters and sort as CSV. Administrator-only by default (reports:export). Writes one audit row (admin-moderation.export).
+     */
+    get: operations['AdminModerationController_exportCsv_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/moderation/reports/{id}': {
     parameters: {
       query?: never
@@ -1956,6 +1976,26 @@ export interface paths {
     }
     /** Runs the list artists operation. */
     get: operations['AdminArtistsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/artists/export.csv': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the CSV export operation.
+     * @description Streams the artists matching the list filters and sort as CSV. Administrator-only by default (artists:export): the file contains email addresses. Writes one audit row (admin-artists.export).
+     */
+    get: operations['AdminArtistsController_exportCsv_v1']
     put?: never
     post?: never
     delete?: never
@@ -2091,6 +2131,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/users/export.csv': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the CSV export operation.
+     * @description Streams the users matching the list filters and sort as CSV. Administrator-only by default (users:export): the file contains email addresses. Writes one audit row (admin-users.export).
+     */
+    get: operations['AdminUsersController_exportCsv_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/users/{id}': {
     parameters: {
       query?: never
@@ -2192,6 +2252,26 @@ export interface paths {
      * @description Sorted problem-first by default: FAILED, then the longest-stuck PROCESSING rows, then everything else. Passing `sort` replaces that attention-first default with a plain ordering on the chosen field.
      */
     get: operations['AdminTracksController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/tracks/export.csv': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the CSV export operation.
+     * @description Streams the tracks matching the list filters and ordering as CSV, in the list order (problem-first unless `sort` is given). Administrator-only by default (tracks:export). Writes one audit row (admin-tracks.export).
+     */
+    get: operations['AdminTracksController_exportCsv_v1']
     put?: never
     post?: never
     delete?: never
@@ -3887,19 +3967,23 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -4796,19 +4880,23 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -4852,19 +4940,23 @@ export interface components {
       id:
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -4899,19 +4991,23 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -4939,19 +5035,23 @@ export interface components {
       permissions?: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -4982,19 +5082,23 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -5032,19 +5136,23 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -5110,19 +5218,23 @@ export interface components {
       permissions?: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -5150,19 +5262,23 @@ export interface components {
       permissions?: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -5188,19 +5304,23 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
@@ -21849,6 +21969,150 @@ export interface operations {
       }
     }
   }
+  AdminModerationController_exportCsv_v1: {
+    parameters: {
+      query?: {
+        status?: 'OPEN' | 'REVIEWING' | 'RESOLVED' | 'REJECTED'
+        entityType?: 'track' | 'album' | 'playlist' | 'artist' | 'podcast' | 'episode' | 'user'
+        sort?: 'createdAt' | 'status'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A CSV attachment (UTF-8 with a byte order mark, CRLF line endings, RFC 4180 quoting) of every row matching the same filters and sort as the list, capped at 50000 rows. Columns, in order: id, status, entityType, entityId, reason, details, reporterId, resolvedAt, createdAt. Dates are ISO 8601 UTC, booleans are true/false, null is an empty cell, and a text cell starting with = + - @ tab or CR is prefixed with a single quote. X-Export-Truncated is true when more rows matched than the cap. */
+      200: {
+        headers: {
+          /** @description true when the export stopped at 50000 rows, otherwise false */
+          'X-Export-Truncated'?: 'true' | 'false'
+          /** @description attachment; filename="<resource>-<UTC timestamp>.csv" */
+          'Content-Disposition'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'text/csv': string
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the reports:export permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   AdminModerationController_getById_v1: {
     parameters: {
       query?: never
@@ -22194,6 +22458,152 @@ export interface operations {
         }
       }
       /** @description Requires the artists:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminArtistsController_exportCsv_v1: {
+    parameters: {
+      query?: {
+        verified?: boolean
+        status?: 'active' | 'deactivated' | 'all'
+        /** @description Search username/email */
+        q?: string
+        sort?: 'username' | 'email' | 'createdAt' | 'monthlyListeners'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A CSV attachment (UTF-8 with a byte order mark, CRLF line endings, RFC 4180 quoting) of every row matching the same filters and sort as the list, capped at 50000 rows. Columns, in order: id, username, email, verified, monthlyListeners, country, emailVerifiedAt, twoFactorEnabled, deletedAt, createdAt. Dates are ISO 8601 UTC, booleans are true/false, null is an empty cell, and a text cell starting with = + - @ tab or CR is prefixed with a single quote. X-Export-Truncated is true when more rows matched than the cap. */
+      200: {
+        headers: {
+          /** @description true when the export stopped at 50000 rows, otherwise false */
+          'X-Export-Truncated'?: 'true' | 'false'
+          /** @description attachment; filename="<resource>-<UTC timestamp>.csv" */
+          'Content-Disposition'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'text/csv': string
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the artists:export permission */
       403: {
         headers: {
           [name: string]: unknown
@@ -23483,6 +23893,151 @@ export interface operations {
       }
     }
   }
+  AdminUsersController_exportCsv_v1: {
+    parameters: {
+      query?: {
+        status?: 'active' | 'deactivated' | 'all'
+        /** @description Search username/email */
+        q?: string
+        sort?: 'username' | 'email' | 'createdAt'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A CSV attachment (UTF-8 with a byte order mark, CRLF line endings, RFC 4180 quoting) of every row matching the same filters and sort as the list, capped at 50000 rows. Columns, in order: id, username, email, emailVerifiedAt, twoFactorEnabled, lockedUntil, deletedAt, createdAt. Dates are ISO 8601 UTC, booleans are true/false, null is an empty cell, and a text cell starting with = + - @ tab or CR is prefixed with a single quote. X-Export-Truncated is true when more rows matched than the cap. */
+      200: {
+        headers: {
+          /** @description true when the export stopped at 50000 rows, otherwise false */
+          'X-Export-Truncated'?: 'true' | 'false'
+          /** @description attachment; filename="<resource>-<UTC timestamp>.csv" */
+          'Content-Disposition'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'text/csv': string
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the users:export permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   AdminUsersController_getById_v1: {
     parameters: {
       query?: never
@@ -24442,6 +24997,152 @@ export interface operations {
         }
       }
       /** @description Requires the tracks:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminTracksController_exportCsv_v1: {
+    parameters: {
+      query?: {
+        processingStatus?: 'PROCESSING' | 'READY' | 'FAILED'
+        status?: 'active' | 'deactivated' | 'all'
+        /** @description Search by title */
+        q?: string
+        sort?: 'createdAt' | 'title' | 'processingStatus'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A CSV attachment (UTF-8 with a byte order mark, CRLF line endings, RFC 4180 quoting) of every row matching the same filters and sort as the list, capped at 50000 rows. Columns, in order: id, title, artistId, artistUsername, processingStatus, processingError, processingAttempts, processingFinishedAt, deletedAt, createdAt. Dates are ISO 8601 UTC, booleans are true/false, null is an empty cell, and a text cell starting with = + - @ tab or CR is prefixed with a single quote. X-Export-Truncated is true when more rows matched than the cap. */
+      200: {
+        headers: {
+          /** @description true when the export stopped at 50000 rows, otherwise false */
+          'X-Export-Truncated'?: 'true' | 'false'
+          /** @description attachment; filename="<resource>-<UTC timestamp>.csv" */
+          'Content-Disposition'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'text/csv': string
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the tracks:export permission */
       403: {
         headers: {
           [name: string]: unknown
