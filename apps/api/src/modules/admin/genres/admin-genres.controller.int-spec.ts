@@ -104,19 +104,17 @@ describe('AdminGenresController (int)', () => {
       expect(service.create).toHaveBeenCalledWith({ name: 'Pop', color: '#112233' })
     })
 
-    it.each([
-      'red',
-      '#12345',
-      '#1234567',
-      '112233',
-    ])('POST /admin/genres returns 400 for the colour %s', async (color) => {
-      const res = await request(app.getHttpServer())
-        .post('/admin/genres')
-        .send({ name: 'Pop', color })
+    it.each(['red', '#12345', '#1234567', '112233'])(
+      'POST /admin/genres returns 400 for the colour %s',
+      async (color) => {
+        const res = await request(app.getHttpServer())
+          .post('/admin/genres')
+          .send({ name: 'Pop', color })
 
-      expect(res.status).toBe(400)
-      expect(service.create).not.toHaveBeenCalled()
-    })
+        expect(res.status).toBe(400)
+        expect(service.create).not.toHaveBeenCalled()
+      },
+    )
 
     it('POST /admin/genres returns 409 for a taken slug', async () => {
       service.create.mockRejectedValue(new GenreSlugTakenException('pop') as never)

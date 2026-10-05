@@ -16,8 +16,7 @@ import { reportDetailDto, reportDto, reportPageDto } from './report.dto'
 import {
   toModerationReport,
   toReportDetail,
-  toWireModerationEntityType,
-  toWireModerationSort,
+  toReportListFilters,
   toWireModerationStatus,
 } from './report.mapper'
 
@@ -32,15 +31,7 @@ export class HttpModerationReportRepository extends ModerationReportRepository {
       url: this.base,
       page,
       limit,
-      filters: {
-        status: filter.status === undefined ? undefined : toWireModerationStatus(filter.status),
-        entityType:
-          filter.entityType === undefined
-            ? undefined
-            : toWireModerationEntityType(filter.entityType),
-        sort: filter.sort ? toWireModerationSort(filter.sort.field) : undefined,
-        order: filter.sort?.direction,
-      },
+      filters: toReportListFilters(filter),
       schema: reportPageDto,
       toDomain: toModerationReport,
     })

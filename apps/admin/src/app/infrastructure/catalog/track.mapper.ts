@@ -1,6 +1,13 @@
 import type { ResourceStatus } from '@domain/shared'
-import type { Track, TrackDetail, TrackProcessingStatus, TrackSortField } from '@domain/track'
+import type {
+  Track,
+  TrackDetail,
+  TrackFilter,
+  TrackProcessingStatus,
+  TrackSortField,
+} from '@domain/track'
 import { API_BASE_URL } from '../http/api.config'
+import type { WireFilters } from '../http/wire-page'
 import type {
   TrackDetailDto,
   TrackDto,
@@ -41,7 +48,7 @@ const TO_WIRE_STATUS = {
   FAILED: 'FAILED',
 } as const satisfies Record<TrackProcessingStatus, WireProcessingStatus>
 
-export function toWireProcessingStatus(status: TrackProcessingStatus): WireProcessingStatus {
+function toWireProcessingStatus(status: TrackProcessingStatus): WireProcessingStatus {
   return TO_WIRE_STATUS[status]
 }
 
@@ -52,7 +59,7 @@ const TO_WIRE_SORT = {
   processingStatus: 'processingStatus',
 } as const satisfies Record<TrackSortField, NonNullable<WireTrackSortField>>
 
-export function toWireTrackSort(field: TrackSortField): NonNullable<WireTrackSortField> {
+function toWireTrackSort(field: TrackSortField): NonNullable<WireTrackSortField> {
   return TO_WIRE_SORT[field]
 }
 
@@ -95,5 +102,19 @@ export function toTrackDetail(dto: TrackDetailDto): TrackDetail {
     genres: dto.genres,
     albums: dto.albums,
     openReportCount: dto.openReportCount,
+  }
+}
+
+/** The query parameters the list and the CSV export both send for a filter. */
+export function toTrackListFilters(filter: TrackFilter): WireFilters {
+  return {
+    q: filter.query,
+    processingStatus:
+      filter.processingStatus === undefined
+        ? undefined
+        : toWireProcessingStatus(filter.processingStatus),
+    status: filter.status === undefined ? undefined : toWireTrackStatus(filter.status),
+    sort: filter.sort ? toWireTrackSort(filter.sort.field) : undefined,
+    order: filter.sort?.direction,
   }
 }

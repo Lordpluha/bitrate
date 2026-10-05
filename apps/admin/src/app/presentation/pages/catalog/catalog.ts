@@ -6,6 +6,7 @@ import {
   ReprocessTrackUseCase,
   TakeDownTracksBatchUseCase,
 } from '@application/catalog'
+import { ExportTracksCsvUseCase } from '@application/export'
 import { SessionStore } from '@application/session'
 import {
   ActionNotAllowedError,
@@ -20,6 +21,7 @@ import {
   isTrackStuck,
   type Track,
   trackNeedsAttention,
+  type TrackFilter,
   type TrackProcessingStatus,
   type TrackSortField,
 } from '@domain/track'
@@ -27,6 +29,7 @@ import {
   BatchActionBar,
   type BatchActionOption,
   CollectionStatus,
+  ExportCsvButton,
   Paginator,
   SortHeader,
   sortHeaderAriaSort,
@@ -50,6 +53,7 @@ const SEARCH_DEBOUNCE_MS = 300
     RouterLink,
     BatchActionBar,
     CollectionStatus,
+    ExportCsvButton,
     Paginator,
     SortHeader,
     HlmBadgeImports,
@@ -63,10 +67,12 @@ export class CatalogPage {
   private readonly listTracks = inject(ListTracksUseCase)
   private readonly reprocessTrack = inject(ReprocessTrackUseCase)
   private readonly takeDownTracks = inject(TakeDownTracksBatchUseCase)
+  private readonly exportTracks = inject(ExportTracksCsvUseCase)
 
   private readonly session = inject(SessionStore)
   protected readonly canReprocess = this.session.can('tracks:reprocess')
   protected readonly canTakeDown = this.session.can('tracks:delete')
+  protected readonly canExport = this.session.can('tracks:export')
 
   protected readonly statuses = CATALOG_STATUSES
   protected readonly ariaSort = sortHeaderAriaSort<TrackSortField>
@@ -74,19 +80,21 @@ export class CatalogPage {
   protected readonly draft = signal(this.query.state().query)
   protected readonly busyId = signal<string | null>(null)
 
+  /** The URL's filter and sort — what the list loads and the CSV export asks for. */
+  private readonly filter = (): TrackFilter => ({
+    query: this.query.state().query || undefined,
+    processingStatus: this.query.state().status ?? undefined,
+    status: this.query.state().resourceStatus,
+    sort: this.query.state().sort ?? undefined,
+  })
+
   protected readonly collection = createCollection<Track>({
     errorMessage: 'Could not load the catalog.',
-    load: (page) =>
-      this.listTracks.execute({
-        page,
-        filter: {
-          query: this.query.state().query || undefined,
-          processingStatus: this.query.state().status ?? undefined,
-          status: this.query.state().resourceStatus,
-          sort: this.query.state().sort ?? undefined,
-        },
-      }),
+    load: (page) => this.listTracks.execute({ page, filter: this.filter() }),
   })
+
+  /** Downloads the server CSV for the filters and sort in the URL right now, not just this page. */
+  protected readonly exportCsv = () => this.exportTracks.execute(this.filter())
 
   /** Surfaced above the table so the number is visible without reading every row. */
   protected readonly needsAttention = computed(

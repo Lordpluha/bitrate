@@ -9,19 +9,23 @@ import { coveringTuple } from '@domain/shared'
 export type Permission =
   | 'reports:read'
   | 'reports:advance'
+  | 'reports:export'
   | 'artists:read'
   | 'artists:verify'
   | 'artists:delete'
   | 'artists:restore'
   | 'artists:revoke-sessions'
+  | 'artists:export'
   | 'tracks:read'
   | 'tracks:reprocess'
   | 'tracks:delete'
   | 'tracks:restore'
+  | 'tracks:export'
   | 'users:read'
   | 'users:delete'
   | 'users:restore'
   | 'users:revoke-sessions'
+  | 'users:export'
   | 'audit:read'
   | 'staff:read'
   | 'staff:write'
@@ -46,19 +50,23 @@ export type Permission =
 export const PERMISSIONS = coveringTuple<Permission>()([
   'reports:read',
   'reports:advance',
+  'reports:export',
   'artists:read',
   'artists:verify',
   'artists:delete',
   'artists:restore',
   'artists:revoke-sessions',
+  'artists:export',
   'tracks:read',
   'tracks:reprocess',
   'tracks:delete',
   'tracks:restore',
+  'tracks:export',
   'users:read',
   'users:delete',
   'users:restore',
   'users:revoke-sessions',
+  'users:export',
   'audit:read',
   'staff:read',
   'staff:write',

@@ -10,11 +10,12 @@ describe('assertGrantable', () => {
     )
   })
 
-  it.each(PROTECTED_PERMISSIONS.map((id) => ({ id })))('rejects the protected permission $id', ({
-    id,
-  }) => {
-    expect(() => assertGrantable([id])).toThrow(ProtectedPermissionException)
-  })
+  it.each(PROTECTED_PERMISSIONS.map((id) => ({ id })))(
+    'rejects the protected permission $id',
+    ({ id }) => {
+      expect(() => assertGrantable([id])).toThrow(ProtectedPermissionException)
+    },
+  )
 
   it('accepts a valid, non-protected permission set', () => {
     expect(() =>
