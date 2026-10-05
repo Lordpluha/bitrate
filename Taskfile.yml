@@ -184,6 +184,12 @@ tasks:
     cmds:
       - cmd: '{{.DC_DEV}} exec worker sh'
 
+  shell:storage:
+    desc: Open shell in the seaweedfs container (start the stack first with task dev:up)
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec seaweedfs sh'
+
   shell:web:
     desc: Open shell in web-player container
     interactive: true
