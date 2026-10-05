@@ -4,6 +4,7 @@ import {
   type AuditContextValue,
   BatchIdsDto,
   BatchIdsSchema,
+  sendCsvExport,
 } from '@modules/admin/shared'
 import type { AuthenticatedStaff } from '@modules/admin-auth'
 import { AdminAuth, CurrentStaff, RequirePermission } from '@modules/admin-auth'
@@ -18,18 +19,24 @@ import {
   Patch,
   Post,
   Query,
+  Res,
+  type StreamableFile,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import type { Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminModerationService } from './admin-moderation.service'
 import {
   DismissReportsBatchSwagger,
+  ExportReportsSwagger,
   GetReportSwagger,
   ListReportsSwagger,
   ResolveReportsBatchSwagger,
   UpdateReportSwagger,
 } from './decorators'
 import {
+  type ExportReportsQueryDto,
+  ExportReportsQuerySchema,
   type ListReportsQueryDto,
   ListReportsQuerySchema,
   type UpdateReportDto,
@@ -80,6 +87,26 @@ export class AdminModerationController {
     @AuditContext() auditContext: AuditContextValue = {},
   ) {
     return this.moderation.advanceMany(body.ids, 'REJECTED', staff.id, auditContext)
+  }
+
+  /**
+   * Streams the filtered, sorted list as CSV. Declared before `:id` so `export.csv` is not read as
+   * an id. The service writes the one audit row, because GET is not interceptor-audited.
+   */
+  @RequirePermission('reports:export')
+  @ExportReportsSwagger()
+  @Get('export.csv')
+  async exportCsv(
+    @Query(new ZodValidationPipe(ExportReportsQuerySchema)) query: ExportReportsQueryDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    return sendCsvExport(
+      res,
+      'reports',
+      await this.moderation.exportCsv(query, staff.id, auditContext),
+    )
   }
 
   /** Runs the get report operation. */
