@@ -34,6 +34,10 @@ export type Permission =
   | 'albums:read'
   | 'albums:delete'
   | 'albums:restore'
+  | 'playlists:read'
+  | 'playlists:hide'
+  | 'playlists:delete'
+  | 'playlists:restore'
 
 /** Every permission the API can grant, stated once so a missing member is a compile error. */
 export const PERMISSIONS = coveringTuple<Permission>()([
@@ -64,6 +68,10 @@ export const PERMISSIONS = coveringTuple<Permission>()([
   'albums:read',
   'albums:delete',
   'albums:restore',
+  'playlists:read',
+  'playlists:hide',
+  'playlists:delete',
+  'playlists:restore',
 ])
 
 /**

@@ -13,6 +13,8 @@ import { AdminModerationController } from '@modules/admin/moderation/admin-moder
 import { ListReportsQuerySchema } from '@modules/admin/moderation/dtos'
 import { AdminOverviewController } from '@modules/admin/overview/admin-overview.controller'
 import { GetOverviewSeriesQuerySchema } from '@modules/admin/overview/dtos'
+import { AdminPlaylistsController } from '@modules/admin/playlists/admin-playlists.controller'
+import { ListAdminPlaylistsQuerySchema } from '@modules/admin/playlists/dtos'
 import { AdminTracksController } from '@modules/admin/tracks/admin-tracks.controller'
 import {
   ListAdminTracksQuerySchema,
@@ -59,6 +61,12 @@ const LIST_ROUTES: ListRouteCase[] = [
     controller: AdminAlbumsController,
     handlerName: 'list',
     schema: ListAdminAlbumsQuerySchema,
+  },
+  {
+    name: 'AdminPlaylistsController.list',
+    controller: AdminPlaylistsController,
+    handlerName: 'list',
+    schema: ListAdminPlaylistsQuerySchema,
   },
   {
     name: 'AdminTracksController.list',

@@ -14,13 +14,14 @@ const ADVANCE_TARGETS: readonly { status: ModerationStatus; label: string }[] = 
 ]
 
 /**
- * Subject kinds with a panel detail page to link to. Album/playlist/podcast/episode have no
+ * Subject kinds with a panel detail page to link to. Album/podcast/episode have no
  * page yet, so they render as plain text — see `.br-scratch/admin-pages-plan.md` Stage 3/4/6.
  */
 const SUBJECT_ROUTES: Readonly<Record<string, (id: string) => readonly [string, string]>> = {
   track: (id) => ['/catalog', id],
   artist: (id) => ['/artists', id],
   user: (id) => ['/users', id],
+  playlist: (id) => ['/playlists', id],
 }
 
 @Component({
