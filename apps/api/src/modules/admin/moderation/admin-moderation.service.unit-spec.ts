@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it } from '@jest/globals'
+import type { Prisma } from '@prisma/client'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
+import { type DeepMockProxy, mockDeep } from 'jest-mock-extended'
 import { AdminModerationService } from './admin-moderation.service'
 import { ReportNotFoundException } from './errors'
 
@@ -19,10 +21,15 @@ const REPORT = {
 describe('AdminModerationService', () => {
   let service: AdminModerationService
   let prisma: PrismaMock
+  let transaction: DeepMockProxy<Prisma.TransactionClient>
 
   beforeEach(() => {
     resetPrismaMock()
     prisma = prismaMock
+    transaction = mockDeep<Prisma.TransactionClient>()
+    prisma.$transaction.mockImplementation((callback: unknown) =>
+      (callback as (client: Prisma.TransactionClient) => unknown)(transaction),
+    )
     service = new AdminModerationService(prisma)
   })
 
@@ -281,6 +288,60 @@ describe('AdminModerationService', () => {
 
       const call = prisma.moderationReport.update.mock.calls[0]?.[0]
       expect(call?.data.resolvedAt).toBeNull()
+    })
+  })
+
+  describe('advanceMany', () => {
+    it('applies the status to every report and writes one audit row per report', async () => {
+      prisma.moderationReport.findFirst.mockImplementation((args: never) => {
+        const id = (args as { where: { id: string } }).where.id
+        return Promise.resolve({ ...REPORT, id }) as never
+      })
+      transaction.moderationReport.update.mockImplementation((args: never) => {
+        const id = (args as { where: { id: string } }).where.id
+        return Promise.resolve({ ...REPORT, id, status: 'RESOLVED' }) as never
+      })
+
+      const result = await service.advanceMany(['r-1', 'r-2'], 'RESOLVED', 'staff-1', {
+        requestId: 'req-1',
+      })
+
+      expect(result).toMatchObject({ total: 2, succeeded: 2, failed: 0 })
+      const audited = transaction.auditLog.create.mock.calls.map(
+        ([args]) => (args as { data: Record<string, unknown> }).data,
+      )
+      expect(audited).toEqual([
+        expect.objectContaining({
+          staffId: 'staff-1',
+          entityType: 'admin-moderation',
+          entityId: 'r-1',
+          action: 'admin-moderation.update',
+          metadata: expect.objectContaining({
+            before: { status: 'OPEN' },
+            after: { status: 'RESOLVED' },
+          }),
+        }),
+        expect.objectContaining({ entityId: 'r-2' }),
+      ])
+    })
+
+    it('reports a missing report per id and writes no audit row for it', async () => {
+      prisma.moderationReport.findFirst.mockImplementation((args: never) => {
+        const id = (args as { where: { id: string } }).where.id
+        return Promise.resolve(id === 'missing' ? null : { ...REPORT, id }) as never
+      })
+      transaction.moderationReport.update.mockResolvedValue({
+        ...REPORT,
+        status: 'REJECTED',
+      } as never)
+
+      const result = await service.advanceMany(['r-1', 'missing'], 'REJECTED', 'staff-1')
+
+      expect(result.results.map((r) => [r.id, r.status, r.error?.code])).toEqual([
+        ['r-1', 'succeeded', undefined],
+        ['missing', 'failed', 'NOT_FOUND'],
+      ])
+      expect(transaction.auditLog.create).toHaveBeenCalledTimes(1)
     })
   })
 })
