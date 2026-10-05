@@ -54,7 +54,7 @@ export const podcastPageDto = z.object({
 
 type ContractPodcastEpisode = ApiSchemas['AdminPodcastEpisodeEntity']
 
-export const podcastEpisodeDto = z.object({
+const podcastEpisodeDto = z.object({
   id: z.uuid(),
   podcastId: z.uuid(),
   title: z.string(),
