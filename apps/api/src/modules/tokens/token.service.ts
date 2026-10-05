@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
-import { Response } from 'express'
+import type { Response } from 'express'
 import ms, { type StringValue } from 'ms'
 import { JWTPayload } from '../tokens'
 
