@@ -7,6 +7,7 @@ import { AdminGenresModule } from './genres'
 import { AdminModerationModule } from './moderation'
 import { AdminOverviewModule } from './overview'
 import { AdminPlaylistsModule } from './playlists'
+import { AdminPodcastsModule } from './podcasts'
 import { AdminRolesModule } from './roles'
 import { AdminStaffModule } from './staff'
 import { AdminTracksModule } from './tracks'
@@ -27,6 +28,7 @@ import { AdminUsersModule } from './users'
     AdminGenresModule,
     AdminAlbumsModule,
     AdminPlaylistsModule,
+    AdminPodcastsModule,
   ],
 })
 export class AdminModule {}

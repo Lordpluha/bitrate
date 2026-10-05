@@ -12,6 +12,7 @@ export const ROUTE_PERMISSIONS: readonly { path: string; permission: Permission 
   { path: '/catalog', permission: 'tracks:read' },
   { path: '/albums', permission: 'albums:read' },
   { path: '/playlists', permission: 'playlists:read' },
+  { path: '/podcasts', permission: 'podcasts:read' },
   { path: '/genres', permission: 'genres:read' },
   { path: '/artists', permission: 'artists:read' },
   { path: '/users', permission: 'users:read' },

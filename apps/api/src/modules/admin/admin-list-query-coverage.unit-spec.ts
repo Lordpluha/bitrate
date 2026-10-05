@@ -15,6 +15,8 @@ import { AdminOverviewController } from '@modules/admin/overview/admin-overview.
 import { GetOverviewSeriesQuerySchema } from '@modules/admin/overview/dtos'
 import { AdminPlaylistsController } from '@modules/admin/playlists/admin-playlists.controller'
 import { ListAdminPlaylistsQuerySchema } from '@modules/admin/playlists/dtos'
+import { AdminPodcastsController } from '@modules/admin/podcasts/admin-podcasts.controller'
+import { ListAdminPodcastsQuerySchema } from '@modules/admin/podcasts/dtos'
 import { AdminTracksController } from '@modules/admin/tracks/admin-tracks.controller'
 import {
   ListAdminTracksQuerySchema,
@@ -67,6 +69,12 @@ const LIST_ROUTES: ListRouteCase[] = [
     controller: AdminPlaylistsController,
     handlerName: 'list',
     schema: ListAdminPlaylistsQuerySchema,
+  },
+  {
+    name: 'AdminPodcastsController.list',
+    controller: AdminPodcastsController,
+    handlerName: 'list',
+    schema: ListAdminPodcastsQuerySchema,
   },
   {
     name: 'AdminTracksController.list',
