@@ -102,7 +102,7 @@ describe('AdminOverviewService', () => {
       ([args]) => (args as CountArgs | undefined)?.where?.processingStatus === 'PROCESSING',
     )
     expect(call).toBeDefined()
-    const where = (call?.[0] as CountArgs).where
+    const where = (call?.[0] as CountArgs | undefined)?.where
     expect(where?.OR?.[0]?.processingStartedAt.lt.getTime()).toBe(NOW.getTime() - STUCK_AFTER_MS)
   })
 
@@ -113,7 +113,7 @@ describe('AdminOverviewService', () => {
       ([args]) => (args as CountArgs | undefined)?.where?.processingStatus === 'PROCESSING',
     )
     expect(call).toBeDefined()
-    const where = (call?.[0] as CountArgs).where
+    const where = (call?.[0] as CountArgs | undefined)?.where
     expect(where?.OR?.[1]).toEqual({
       processingStartedAt: null,
       updatedAt: { lt: new Date(NOW.getTime() - STUCK_AFTER_MS) },
@@ -147,7 +147,7 @@ describe('AdminOverviewService', () => {
         ([args]) => (args as CountArgs | undefined)?.where?.createdAt !== undefined,
       )
       expect(call).toBeDefined()
-      const where = (call?.[0] as CountArgs).where
+      const where = (call?.[0] as CountArgs | undefined)?.where
       expect(where?.createdAt?.gte.getTime()).toBe(NOW.getTime() - sevenDaysMs)
     }
   })
@@ -160,7 +160,7 @@ describe('AdminOverviewService', () => {
         ([args]) => (args as CountArgs | undefined)?.where?.createdAt !== undefined,
       )
       expect(call).toBeDefined()
-      const where = (call?.[0] as CountArgs).where
+      const where = (call?.[0] as CountArgs | undefined)?.where
       expect(where).not.toHaveProperty('deletedAt')
     }
   })

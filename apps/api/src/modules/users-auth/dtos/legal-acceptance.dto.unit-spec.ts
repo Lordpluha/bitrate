@@ -6,12 +6,10 @@ describe('LegalAcceptanceSchema', () => {
     expect(LegalAcceptanceSchema.parse({ acceptLegal: true })).toEqual({ acceptLegal: true })
   })
 
-  it.each([
-    {},
-    { acceptLegal: false },
-    { acceptLegal: 'true' },
-    { acceptLegal: 1 },
-  ])('refuses %p', (body) => {
-    expect(LegalAcceptanceSchema.safeParse(body).success).toBe(false)
-  })
+  it.each([{}, { acceptLegal: false }, { acceptLegal: 'true' }, { acceptLegal: 1 }])(
+    'refuses %p',
+    (body) => {
+      expect(LegalAcceptanceSchema.safeParse(body).success).toBe(false)
+    },
+  )
 })
