@@ -1,5 +1,5 @@
 import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
-import { z } from 'zod'
+import * as z from 'zod'
 import { contractEnum } from '../http/contract-union'
 
 /** The union as the API declares it. The domain declares its own; the mapper joins them. */
