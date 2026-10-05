@@ -43,16 +43,19 @@ describe('auth schemas', () => {
     it.each([
       ['unchecked', false],
       ['missing', undefined],
-    ])('rejects a registration when acceptance is %s', (_label, acceptLegal) => {
-      const result = registrationSchema.safeParse({
-        ...validRegistration,
-        acceptLegal,
-      })
+    ])(
+      'rejects a registration when acceptance is %s',
+      (_label, acceptLegal) => {
+        const result = registrationSchema.safeParse({
+          ...validRegistration,
+          acceptLegal,
+        })
 
-      expect(result.success).toBe(false)
-      expect(
-        result.error?.issues.map((issue) => issue.path.join('.')),
-      ).toContain('acceptLegal')
-    })
+        expect(result.success).toBe(false)
+        expect(
+          result.error?.issues.map((issue) => issue.path.join('.')),
+        ).toContain('acceptLegal')
+      },
+    )
   })
 })

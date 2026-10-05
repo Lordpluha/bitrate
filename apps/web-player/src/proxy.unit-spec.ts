@@ -22,12 +22,10 @@ describe('isPublicRoute', () => {
     expect(isPublicRoute(pathname)).toBe(true)
   })
 
-  it.each([
-    '/main',
-    '/main/library',
-    '/verify-email/other',
-    '/legal/unknown',
-  ])('keeps %s protected', (pathname) => {
-    expect(isPublicRoute(pathname)).toBe(false)
-  })
+  it.each(['/main', '/main/library', '/verify-email/other', '/legal/unknown'])(
+    'keeps %s protected',
+    (pathname) => {
+      expect(isPublicRoute(pathname)).toBe(false)
+    },
+  )
 })
