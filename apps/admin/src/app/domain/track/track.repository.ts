@@ -1,4 +1,4 @@
-import type { Page, PageRequest, TakeDownInput } from '../shared'
+import type { BatchResult, Page, PageRequest, TakeDownInput } from '../shared'
 import type { ProcessingAttempt } from './processing-attempt'
 import type { Track, TrackAudioSource, TrackDetail, TrackFilter } from './track'
 
@@ -18,6 +18,8 @@ export abstract class TrackRepository {
   abstract reprocess(id: string): Promise<void>
   /** Soft-deletes (takes down) the track — the API also blocks new reprocess requests. */
   abstract takeDown(input: TakeDownInput): Promise<void>
+  /** Takes every id down independently; a row that fails does not stop the others. */
+  abstract takeDownMany(ids: readonly string[]): Promise<BatchResult>
   abstract restore(input: TakeDownInput): Promise<void>
   /** Newest first. Soft-deleted tracks are still reachable, matching `getById`. */
   abstract listProcessingAttempts(trackId: string, page: number): Promise<Page<ProcessingAttempt>>

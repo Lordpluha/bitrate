@@ -1,11 +1,22 @@
-import { Component, computed, effect, inject, signal } from '@angular/core'
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 import { RouterLink } from '@angular/router'
-import { ListTracksUseCase, ReprocessTrackUseCase } from '@application/catalog'
+import {
+  ListTracksUseCase,
+  ReprocessTrackUseCase,
+  TakeDownTracksBatchUseCase,
+} from '@application/catalog'
 import { SessionStore } from '@application/session'
-import type { ResourceStatus, Sort } from '@domain/shared'
+import {
+  ActionNotAllowedError,
+  type BatchResult,
+  MAX_BATCH_SIZE,
+  type ResourceStatus,
+  type Sort,
+} from '@domain/shared'
 import {
   canReprocess as trackCanBeReprocessed,
+  canTakeDownTrack,
   isTrackStuck,
   type Track,
   trackNeedsAttention,
@@ -13,13 +24,15 @@ import {
   type TrackSortField,
 } from '@domain/track'
 import {
+  BatchActionBar,
+  type BatchActionOption,
   CollectionStatus,
   Paginator,
   SortHeader,
   sortHeaderAriaSort,
 } from '@presentation/components'
 import { LocalizedDatePipe } from '@presentation/pipes'
-import { bindQueryState, createCollection } from '@presentation/state'
+import { bindQueryState, createCollection, createSelection } from '@presentation/state'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
 import { HlmInputImports } from '@spartan-ng/helm/input'
@@ -35,6 +48,7 @@ const SEARCH_DEBOUNCE_MS = 300
   imports: [
     LocalizedDatePipe,
     RouterLink,
+    BatchActionBar,
     CollectionStatus,
     Paginator,
     SortHeader,
@@ -48,8 +62,11 @@ const SEARCH_DEBOUNCE_MS = 300
 export class CatalogPage {
   private readonly listTracks = inject(ListTracksUseCase)
   private readonly reprocessTrack = inject(ReprocessTrackUseCase)
+  private readonly takeDownTracks = inject(TakeDownTracksBatchUseCase)
 
-  protected readonly canReprocess = inject(SessionStore).can('tracks:reprocess')
+  private readonly session = inject(SessionStore)
+  protected readonly canReprocess = this.session.can('tracks:reprocess')
+  protected readonly canTakeDown = this.session.can('tracks:delete')
 
   protected readonly statuses = CATALOG_STATUSES
   protected readonly ariaSort = sortHeaderAriaSort<TrackSortField>
@@ -76,10 +93,48 @@ export class CatalogPage {
     () => this.collection.items().filter((track) => trackNeedsAttention({ track })).length,
   )
 
+  protected readonly selection = createSelection({ limit: MAX_BATCH_SIZE })
+  protected readonly batchPending = signal(false)
+  protected readonly batchResult = signal<BatchResult | null>(null)
+
+  /** Hidden entirely when the operator may not take tracks down. */
+  protected readonly batchActions = computed<BatchActionOption[]>(() =>
+    this.canTakeDown()
+      ? [
+          {
+            key: 'take-down',
+            label: 'Take down',
+            confirmLabel: 'Take down tracks',
+            consequence:
+              'Stamps a deletion date on each track and blocks reprocessing. Albums and artists are untouched.',
+            destructive: true,
+          },
+        ]
+      : [],
+  )
+  protected readonly selectableIds = computed(() =>
+    this.collection
+      .items()
+      .filter((track) => canTakeDownTrack(track).allowed)
+      .map((track) => track.id),
+  )
+  private readonly selectedTracks = computed(() =>
+    this.collection.items().filter((track) => this.selection.has(track.id)),
+  )
+  protected readonly batchRows = computed(() =>
+    this.selectedTracks().map((track) => ({ id: track.id, label: track.title })),
+  )
+
   constructor() {
     effect(() => {
       const { page } = this.query.state()
       void this.collection.show(page)
+    })
+
+    /** The ticked rows belong to one page of one filter; any URL change drops them. */
+    effect(() => {
+      this.query.state()
+      untracked(() => this.selection.clear())
     })
 
     /** Keeps the box in sync with the URL, e.g. after back/forward changes the filter. */
@@ -131,5 +186,27 @@ export class CatalogPage {
     } finally {
       this.busyId.set(null)
     }
+  }
+
+  protected async runBatch(): Promise<void> {
+    this.batchPending.set(true)
+    try {
+      const result = await this.takeDownTracks.execute(this.selectedTracks())
+      this.selection.clear()
+      this.batchResult.set(result)
+      await this.collection.reload()
+    } catch (error) {
+      this.collection.fail(
+        error instanceof ActionNotAllowedError
+          ? error.message
+          : 'Could not take down the selected tracks.',
+      )
+    } finally {
+      this.batchPending.set(false)
+    }
+  }
+
+  protected closeBatch(): void {
+    this.batchResult.set(null)
   }
 }

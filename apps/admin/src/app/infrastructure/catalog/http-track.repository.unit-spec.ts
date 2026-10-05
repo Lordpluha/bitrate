@@ -185,4 +185,30 @@ describe('HttpTrackRepository detail and take-down writes', () => {
 
     await expect(result).rejects.toBeTruthy()
   })
+
+  it('take down: posts the ids to the batch route and maps the per-row result', async () => {
+    const result = repository.takeDownMany(['a', 'b'])
+
+    const request = http.expectOne(`${BASE}/batch/take-down`)
+    expect(request.request.method).toBe('POST')
+    expect(request.request.body).toEqual({ ids: ['a', 'b'] })
+    request.flush({
+      results: [
+        { id: 'a', status: 'succeeded' },
+        { id: 'b', status: 'failed', error: { code: 'CONFLICT', message: 'already deleted' } },
+      ],
+      total: 2,
+      succeeded: 1,
+      failed: 1,
+    })
+
+    await expect(result).resolves.toEqual({
+      items: [
+        { id: 'a', outcome: 'succeeded' },
+        { id: 'b', outcome: 'failed', failure: { code: 'CONFLICT', message: 'already deleted' } },
+      ],
+      succeeded: 1,
+      failed: 1,
+    })
+  })
 })

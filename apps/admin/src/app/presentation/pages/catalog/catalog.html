@@ -92,6 +92,17 @@
   />
 
   @if (collection.items().length > 0) {
+    <app-batch-action-bar
+      noun="track"
+      [rows]="batchRows()"
+      [actions]="batchActions()"
+      [pending]="batchPending()"
+      [result]="batchResult()"
+      (confirmed)="runBatch()"
+      (cleared)="selection.clear()"
+      (closed)="closeBatch()"
+    />
+
     <div hlmTableContainer>
       <table hlmTable>
         <caption hlmCaption class="sr-only">
@@ -99,6 +110,17 @@
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
+            @if (batchActions().length > 0) {
+              <th hlmTh scope="col" class="w-8">
+                <input
+                  type="checkbox"
+                  aria-label="Select all tracks on this page"
+                  [checked]="selection.allSelected(selectableIds())"
+                  [disabled]="selectableIds().length === 0"
+                  (change)="selection.toggleAll(selectableIds())"
+                />
+              </th>
+            }
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'title')">
               <app-sort-header
                 [field]="'title'"
@@ -132,6 +154,17 @@
         <tbody hlmTBody>
           @for (track of collection.items(); track track.id) {
             <tr hlmTr>
+              @if (batchActions().length > 0) {
+                <td hlmTd>
+                  <input
+                    type="checkbox"
+                    [attr.aria-label]="'Select ' + track.title"
+                    [checked]="selection.has(track.id)"
+                    [disabled]="!selectableIds().includes(track.id)"
+                    (change)="selection.toggle(track.id)"
+                  />
+                </td>
+              }
               <td hlmTd>
                 <a
                   [routerLink]="['/catalog', track.id]"
