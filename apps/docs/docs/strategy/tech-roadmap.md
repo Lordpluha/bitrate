@@ -124,6 +124,12 @@ a separate deployed service, health checks and a staged rollout. It stays one de
 [what not to build](#what-not-to-build). Sentry in `web-artists` is [#130](https://github.com/Lordpluha/bitrate/issues/130);
 `web-artists` runs TanStack Start, so `@sentry/nextjs` does not apply there.
 
+**Update (2026-10-05).** The "Extract the transcode worker from the API process" item is complete in
+code and infrastructure: the worker is its own service with health and metrics (ADR-0049), audio lives
+in the object store (ADR-0050), and the production cutover is the staged, reversible procedure in the
+[worker rollout runbook](../infrastructure/worker-rollout-runbook.md). Production behaviour changes only
+when the owner sets `AUDIO_PROCESSING_WORKER_ENABLED=false` on the `production` environment.
+
 ## Stage 2 — the artist workspace
 
 **Gate:** [Phase 2 of validation](./validation.md) — the release workflow is the thing being

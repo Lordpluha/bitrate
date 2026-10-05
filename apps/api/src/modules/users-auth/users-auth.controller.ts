@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { TokenService } from '../tokens/token.service'
 import {

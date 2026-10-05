@@ -14,12 +14,6 @@ on:
     # scheduled runs are queued rather than guaranteed at the minute.
     - cron: '17 3 * * *'
   workflow_dispatch:
-    inputs:
-      include-storage:
-        description: Also archive the API's upload volume
-        required: false
-        default: true
-        type: boolean
 
 concurrency:
   # Never two backups at once: both would run pg_dump against the same server.
@@ -46,10 +40,9 @@ jobs:
       # cannot destroy the history it just wrote. Flip prune-remote on only for a provider
       # with no lifecycle support.
       prune-remote: false
-      include-storage: ${{ github.event_name != 'workflow_dispatch' || inputs.include-storage }}
-      # Left off until the api_storage volume from infra/docker-compose.prod.yaml has been
-      # deployed and an upload has been confirmed to land in it. Until then a missing
-      # storage archive is expected, and failing on it would train everyone to ignore red.
+      # Uploads live in the SeaweedFS object store (ADR-0050), not in an api volume, so there is
+      # no storage archive to take here. The object store has its own backup story (D18).
+      include-storage: false
       require-storage: false
     secrets:
       deploy-host: ${{ secrets.SERVER_HOST }}

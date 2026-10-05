@@ -47,7 +47,6 @@ import {
 } from './dtos/create-track.dto'
 import { TrackEntity, TrackManifestEntity, TrackManifestRenditionEntity } from './entities'
 import { type AudioStreamFormat, SUPPORTED_AUDIO_STREAM_FORMATS } from './track-audio.helpers'
-import { cleanupUploadedFiles } from './track-media'
 import { TrackPlaybackService } from './track-playback.service'
 import { UnsatisfiableRangeError } from './track-playback.types'
 import { TrackStreamingService } from './track-streaming.service'
@@ -178,7 +177,6 @@ export class TracksController {
     const coverFile = files?.cover?.[0]
 
     if (!audioFile) {
-      if (coverFile) await cleanupUploadedFiles([coverFile])
       throw new BadRequestException('Audio file is required')
     }
 
