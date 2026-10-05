@@ -1,5 +1,6 @@
+import { Button } from '@bitrate/ui-react'
 import { trackStatusLabels, trackVersionLabels } from '@entities/music'
-import type { ReleaseWorkspace } from '@entities/release'
+import { formatIsrc, type ReleaseWorkspace } from '@entities/release'
 import { Music2 } from 'lucide-react'
 
 function duration(value: number | null) {
@@ -10,9 +11,14 @@ function duration(value: number | null) {
 
 interface WorkspaceTracksProps {
   release: ReleaseWorkspace
+  onEditIsrc: (trackId: string) => void
 }
 
-export function WorkspaceTracks({ release }: WorkspaceTracksProps) {
+const isrcLabel = (isrc: string | null) =>
+  isrc ? `ISRC ${formatIsrc(isrc)}` : 'No ISRC yet'
+
+export function WorkspaceTracks({ release, onEditIsrc }: WorkspaceTracksProps) {
+  const draft = release.status === 'DRAFT'
   const shown = release.trackDrafts.length + release.tracks.length
   return (
     <section
@@ -43,6 +49,7 @@ export function WorkspaceTracks({ release }: WorkspaceTracksProps) {
                   {duration(track.duration)}
                   {track.isDemo ? ' · Demo' : ''}
                 </p>
+                <p>{isrcLabel(track.isrc)}</p>
               </div>
               <span
                 className="artist-release-track-status"
@@ -50,6 +57,16 @@ export function WorkspaceTracks({ release }: WorkspaceTracksProps) {
               >
                 {trackStatusLabels[track.status]}
               </span>
+              {draft && (
+                <Button
+                  aria-label={`Edit ISRC for ${track.title}`}
+                  onClick={() => onEditIsrc(track.id)}
+                  size="sm"
+                  variant="outline"
+                >
+                  ISRC
+                </Button>
+              )}
             </li>
           ))}
           {release.tracks.map((track) => (
@@ -63,6 +80,7 @@ export function WorkspaceTracks({ release }: WorkspaceTracksProps) {
                   {track.position}. {track.title}
                 </h3>
                 <p>Linked recording · {duration(track.duration)}</p>
+                <p>{isrcLabel(track.isrc)}</p>
               </div>
             </li>
           ))}

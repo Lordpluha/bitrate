@@ -4,12 +4,21 @@ import {
   AddContributorDialog,
   EditContributorDialog,
   EditReleaseDialog,
+  IsrcDialog,
+  RightsDialog,
   ScheduleReleaseDialog,
+  SplitsDialog,
+  UpcDialog,
 } from '@features/edit-release'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
-import { ReleaseWorkspaceContent } from '@widgets/ReleaseWorkspace'
+import {
+  ReleaseWorkspaceContent,
+  type RightsAction,
+} from '@widgets/ReleaseWorkspace'
 import { useState } from 'react'
+
+type WorkspaceDialog = RightsAction | { kind: 'isrc'; trackId: string }
 
 interface ReleaseWorkspaceViewProps {
   artistId: string
@@ -28,6 +37,12 @@ export function ReleaseWorkspaceView({
   const [editingContributor, setEditingContributor] = useState<string | null>(
     null,
   )
+  const [dialog, setDialog] = useState<WorkspaceDialog | null>(null)
+  const closeDialog = () => setDialog(null)
+  const dialogSaved = () => {
+    setDialog(null)
+    setSaved(true)
+  }
   return (
     <div aria-busy={query.isFetching} className="artist-release-workspace">
       {query.isPending ? (
@@ -63,9 +78,12 @@ export function ReleaseWorkspaceView({
             </p>
           )}
           <ReleaseWorkspaceContent
+            artistId={artistId}
             onAddContributor={() => setAddingContributor(true)}
             onEdit={() => setEditing(true)}
             onEditContributor={setEditingContributor}
+            onEditIsrc={(trackId) => setDialog({ kind: 'isrc', trackId })}
+            onRightsAction={setDialog}
             onSchedule={() => setScheduling(true)}
             release={query.data}
           />
@@ -102,6 +120,40 @@ export function ReleaseWorkspaceView({
             setSaved(true)
           }}
           releaseId={releaseId}
+        />
+      )}
+      {query.data && dialog?.kind === 'rights' && (
+        <RightsDialog
+          artistId={artistId}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
+          release={query.data}
+        />
+      )}
+      {query.data && dialog?.kind === 'splits' && (
+        <SplitsDialog
+          artistId={artistId}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
+          release={query.data}
+          rightType={dialog.rightType}
+        />
+      )}
+      {query.data && dialog?.kind === 'upc' && (
+        <UpcDialog
+          artistId={artistId}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
+          release={query.data}
+        />
+      )}
+      {query.data && dialog?.kind === 'isrc' && (
+        <IsrcDialog
+          artistId={artistId}
+          onClose={closeDialog}
+          onSaved={dialogSaved}
+          release={query.data}
+          trackId={dialog.trackId}
         />
       )}
       {editingContributor && (

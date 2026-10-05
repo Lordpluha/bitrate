@@ -1,6 +1,13 @@
 export { useAddContributor } from './api/useAddContributor'
 export { useContributor, useSaveContributor } from './api/useContributor'
 export {
+  useSaveRights,
+  useSaveSplits,
+  useSaveTrackIsrc,
+  useSubmitRelease,
+  useWithdrawRelease,
+} from './api/useReleaseRights'
+export {
   useCreateRelease,
   useRelease,
   useReleases,
@@ -21,6 +28,19 @@ export {
   releaseTypeLabels,
   releaseTypes,
 } from './model/release.schema'
+export {
+  basisPointsToPercent,
+  describeBlocker,
+  FULL_SHARE_BASIS_POINTS,
+  formatIsrc,
+  isValidUpc,
+  normalizeIsrc,
+  percentToBasisPoints,
+  type ReleaseBlocker,
+  type ReleaseNotice,
+  rightTypeLabels,
+  rightTypes,
+} from './model/rights'
 export {
   participantRoleLabels,
   type ReleaseWorkspace,

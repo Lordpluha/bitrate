@@ -41,6 +41,47 @@ const demoTracks = [
 }))
 
 /** Deterministic API fixture for server-rendered auth flows; never used by the application. */
+const NO_RIGHTS = {
+  masterOwnerType: null,
+  masterOwnerName: null,
+  writersConfirmedAt: null,
+  accuracyConfirmedAt: null,
+}
+
+/** A simplified mirror of the API's readiness rules for the fixture. */
+function readinessOf(release, recordings) {
+  const rights = release.rights ?? NO_RIGHTS
+  const splits = release.splits ?? []
+  const total = (rightType) =>
+    splits
+      .filter((split) => split.rightType === rightType)
+      .reduce((sum, split) => sum + split.shareBasisPoints, 0)
+  const blockers = [
+    ...(recordings.length === 0 ? [{ code: 'NO_TRACKS' }] : []),
+    ...(rights.masterOwnerType ? [] : [{ code: 'MASTER_OWNER_MISSING' }]),
+    ...(rights.writersConfirmedAt ? [] : [{ code: 'WRITERS_NOT_CONFIRMED' }]),
+    ...(rights.accuracyConfirmedAt ? [] : [{ code: 'ACCURACY_NOT_CONFIRMED' }]),
+    ...['RECORDING', 'COMPOSITION']
+      .filter((rightType) => total(rightType) !== 10_000)
+      .map((rightType) => ({
+        code: 'SPLITS_INCOMPLETE',
+        rightType,
+        totalBasisPoints: total(rightType),
+      })),
+  ]
+  const notices = [
+    ...(release.upc ? [] : [{ code: 'UPC_MISSING' }]),
+    ...recordings.map((track) => ({ code: 'ISRC_MISSING', trackId: track.id })),
+  ]
+  return { rights, splits, readiness: { blockers, notices } }
+}
+
+function advanceVersion(release) {
+  release.updatedAt = new Date(
+    Math.max(Date.now(), Date.parse(release.updatedAt) + 1),
+  ).toISOString()
+}
+
 const server = createServer(async (request, response) => {
   const origin = request.headers.origin
   if (
@@ -52,7 +93,7 @@ const server = createServer(async (request, response) => {
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type')
     response.setHeader(
       'Access-Control-Allow-Methods',
-      'GET, POST, PATCH, OPTIONS',
+      'GET, POST, PUT, PATCH, OPTIONS',
     )
   }
   if (request.method === 'OPTIONS') {
@@ -173,11 +214,15 @@ const server = createServer(async (request, response) => {
         owner === 'other'
           ? []
           : demoTracks.filter((track) => track.release?.id === id)
+      const { rights, splits, readiness } = readinessOf(release, recordings)
       return json(200, {
         artistName: 'Test artist',
         cover: null,
         isDemo: false,
+        submittedAt: null,
         ...release,
+        rights,
+        splits,
         trackDrafts: recordings.map(
           ({ id, title, version, status, duration, isDemo }) => ({
             id,
@@ -186,12 +231,14 @@ const server = createServer(async (request, response) => {
             status,
             duration,
             isDemo,
+            isrc: null,
           }),
         ),
         tracks: [],
         participants: release.participants ?? [],
         trackCount: recordings.length,
         participantCount: release.participants?.length ?? 0,
+        readiness,
       })
     }
     const existingCredit = contributorId
@@ -247,10 +294,75 @@ const server = createServer(async (request, response) => {
         release.participants ??= []
         release.participants.push(participant)
       }
+      release.rights = {
+        ...(release.rights ?? NO_RIGHTS),
+        writersConfirmedAt: null,
+        accuracyConfirmedAt: null,
+      }
       release.updatedAt = new Date(
         Math.max(Date.now(), Date.parse(release.updatedAt) + 1),
       ).toISOString()
       return json(existingCredit ? 200 : 201, { release, participant })
+    }
+    const action = parts[5]
+    if (
+      (action === 'rights' && request.method === 'PATCH') ||
+      (action === 'splits' && request.method === 'PUT') ||
+      ((action === 'submit' || action === 'withdraw') &&
+        request.method === 'POST')
+    ) {
+      let body = ''
+      for await (const chunk of request) body += chunk
+      const input = JSON.parse(body)
+      const expected = action === 'withdraw' ? 'SUBMITTED' : 'DRAFT'
+      if (
+        release.status !== expected ||
+        input.expectedUpdatedAt !== release.updatedAt
+      )
+        return json(409, { message: 'Release changed' })
+      const now = new Date().toISOString()
+      if (action === 'rights') {
+        release.rights = {
+          masterOwnerType: input.masterOwner?.type ?? null,
+          masterOwnerName: input.masterOwner?.name ?? null,
+          writersConfirmedAt: input.writersConfirmed ? now : null,
+          accuracyConfirmedAt: input.accuracyConfirmed ? now : null,
+        }
+      } else if (action === 'splits') {
+        release.splits = [
+          ...(release.splits ?? []).filter(
+            (split) => split.rightType !== input.rightType,
+          ),
+          ...input.shares.map((share) => ({
+            ...share,
+            rightType: input.rightType,
+          })),
+        ]
+        release.rights = {
+          ...(release.rights ?? NO_RIGHTS),
+          accuracyConfirmedAt: null,
+        }
+      } else if (action === 'submit') {
+        const recordings = demoTracks.filter(
+          (track) => track.release?.id === id,
+        )
+        const { readiness } = readinessOf(release, recordings)
+        if (input.reviewed !== true)
+          return json(400, { message: 'Review not confirmed' })
+        if (readiness.blockers.length > 0)
+          return json(422, { message: 'Blocked', blockers: readiness.blockers })
+        release.status = 'SUBMITTED'
+      } else {
+        release.status = 'DRAFT'
+      }
+      advanceVersion(release)
+      if (action === 'splits')
+        return json(200, {
+          release,
+          rightType: input.rightType,
+          shares: input.shares,
+        })
+      return json(200, release)
     }
     if (request.method === 'GET') return json(200, release)
     if (request.method === 'PATCH') {

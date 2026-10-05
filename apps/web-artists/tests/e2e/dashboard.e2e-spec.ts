@@ -747,6 +747,60 @@ test('release contributor rejects a concurrent metadata edit and saves after reo
   ).toBeVisible()
 })
 
+test('rights, splits and identifiers update the readiness checklist', async ({
+  page,
+  context,
+}) => {
+  await seedCredit(page, context)
+  await gotoHydrated(page, `/dashboard/music/${workspaceDraftId}`)
+  const checklist = page.getByRole('list', { name: 'Blockers' })
+  await expect(checklist).toContainText('Choose the master owner')
+  await expect(checklist).toContainText('Master splits total 0% of 100%')
+  const submit = page.getByRole('button', {
+    name: 'Submit for review',
+    exact: true,
+  })
+  await expect(submit).toBeDisabled()
+
+  await page.getByRole('button', { name: 'Edit rights', exact: true }).click()
+  const rights = page.getByRole('dialog', { name: 'Rights confirmation' })
+  await rights.getByLabel('Another owner, such as a label').check()
+  await rights.getByLabel('Master owner name').fill('North Label')
+  await rights.getByLabel('All songwriters and composers are listed').check()
+  await rights.getByLabel('I confirm this information is accurate').check()
+  await rights.getByRole('button', { name: 'Save rights', exact: true }).click()
+  await expect(rights).not.toBeVisible()
+  await expect(page.getByText('North Label', { exact: true })).toBeVisible()
+  await expect(checklist).not.toContainText('Choose the master owner')
+
+  await page
+    .getByRole('button', { name: 'Edit master splits', exact: true })
+    .click()
+  const splits = page.getByRole('dialog', { name: 'Master splits' })
+  await splits.getByLabel('Taylor Reid').fill('120')
+  await expect(splits.getByRole('alert')).toContainText(
+    'Use a share between 0.01% and 100%',
+  )
+  await splits.getByLabel('Taylor Reid').fill('100')
+  await expect(splits.getByText('Total 100% of 100%')).toBeVisible()
+  await splits.getByRole('button', { name: 'Save splits', exact: true }).click()
+  await expect(splits).not.toBeVisible()
+  await expect(checklist).not.toContainText('Master splits')
+  // New splits change the rights data, so accuracy must be confirmed again.
+  await expect(checklist).toContainText('Confirm the information is accurate')
+
+  await page.getByRole('button', { name: 'Edit UPC', exact: true }).click()
+  const upc = page.getByRole('dialog', { name: 'Release barcode' })
+  await upc.getByLabel('Release UPC/EAN').fill('036000291453')
+  await upc.getByRole('button', { name: 'Save code', exact: true }).click()
+  await expect(upc.getByRole('alert')).toContainText('valid check digit')
+  await upc.getByRole('button', { name: 'Cancel', exact: true }).click()
+
+  await expect(checklist).toContainText('Add at least one track')
+  await page.getByLabel('I reviewed the information in this draft.').check()
+  await expect(submit).toBeDisabled()
+})
+
 test('release contributor action is unavailable outside DRAFT', async ({
   page,
   context,
