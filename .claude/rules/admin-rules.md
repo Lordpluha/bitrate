@@ -17,6 +17,8 @@ paths:
   permissions; stored permissions are added/deprecated, not renamed. Protected staff/role
   grants stay rejected. Route ordering must not turn literal paths into ids.
 - List filters/pagination/sort live in the URL with canonical encoding and safe defaults.
+- Soft-deletable resources list with `status=active|deactivated|all` (default `active`) and
+  take down via `<resource>:delete`/`:restore` without cascade: ADR-0051.
 - Forms use Reactive Forms with the FormGroup-level zod bridge.
 - Consume ui-react CSS tokens, never its React runtime. Follow local UI components.
 - Configuration uses the existing generated module; never read real env files to debug it.
