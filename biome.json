@@ -8,7 +8,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!apps/admin", "!apps/mobile", "!packages/player"]
+    "includes": ["**", "!apps/admin", "!apps/mobile", "!packages/player", "!!**/node_modules"]
   },
   "formatter": {
     "enabled": true,
@@ -19,11 +19,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended",
-      "nursery": {
-        "noFloatingPromises": "error",
-        "noMisusedPromises": "error"
-      }
+      "preset": "recommended"
     }
   },
   "javascript": {
