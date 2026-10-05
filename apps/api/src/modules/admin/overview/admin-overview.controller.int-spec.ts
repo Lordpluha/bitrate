@@ -28,6 +28,7 @@ const makeServiceMock = () =>
   ({
     getOverview: jest.fn(),
     getSeries: jest.fn(),
+    getReportsByType: jest.fn(),
   }) as unknown as jest.Mocked<AdminOverviewService>
 
 const buildApp = async (permissions: Permission[]) => {
@@ -62,6 +63,12 @@ describe('AdminOverviewController (int)', () => {
 
       expect(res.status).toBe(403)
     })
+
+    it('GET /admin/overview/reports-by-type returns 403', async () => {
+      const res = await request(app.getHttpServer()).get('/admin/overview/reports-by-type')
+
+      expect(res.status).toBe(403)
+    })
   })
 
   describe('with overview:read', () => {
@@ -77,6 +84,7 @@ describe('AdminOverviewController (int)', () => {
     beforeEach(() => {
       service.getOverview.mockReset()
       service.getSeries.mockReset()
+      service.getReportsByType.mockReset()
     })
 
     it('GET /admin/overview returns 200 with the aggregate summary', async () => {
@@ -126,6 +134,52 @@ describe('AdminOverviewController (int)', () => {
 
       expect(res.status).toBe(400)
       expect(service.getSeries).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('reports-by-type with overview:read', () => {
+    let app: INestApplication
+    let service: jest.Mocked<AdminOverviewService>
+
+    beforeAll(async () => {
+      ;({ app, service } = await buildApp(['overview:read']))
+    })
+
+    afterAll(() => app.close())
+
+    beforeEach(() => {
+      service.getReportsByType.mockReset()
+    })
+
+    it('GET /admin/overview/reports-by-type returns 200 and forwards `days`', async () => {
+      const body = {
+        from: '2026-09-17',
+        to: '2026-09-17',
+        days: 1,
+        dates: ['2026-09-17'],
+        total: 0,
+        series: [],
+      }
+      service.getReportsByType.mockResolvedValue(body as never)
+
+      const res = await request(app.getHttpServer())
+        .get('/admin/overview/reports-by-type')
+        .query({ days: 7 })
+
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual(body)
+      expect(service.getReportsByType).toHaveBeenCalledWith(7)
+    })
+
+    it.each([
+      0, 366,
+    ])('GET /admin/overview/reports-by-type returns 400 for `days` of %s', async (days) => {
+      const res = await request(app.getHttpServer())
+        .get('/admin/overview/reports-by-type')
+        .query({ days })
+
+      expect(res.status).toBe(400)
+      expect(service.getReportsByType).not.toHaveBeenCalled()
     })
   })
 

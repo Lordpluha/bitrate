@@ -89,6 +89,7 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminModerationController.dismissMany': 'reports:advance',
   'AdminOverviewController.get': 'overview:read',
   'AdminOverviewController.getSeries': 'overview:read',
+  'AdminOverviewController.getReportsByType': 'overview:read',
   'AdminRolesController.list': 'roles:read',
   'AdminRolesController.permissions': 'roles:read',
   'AdminRolesController.getById': 'roles:read',
