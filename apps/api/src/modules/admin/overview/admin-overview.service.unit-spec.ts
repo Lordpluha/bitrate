@@ -281,4 +281,72 @@ describe('AdminOverviewService', () => {
       expect(GetOverviewSeriesQuerySchema.safeParse({}).success).toBe(true)
     })
   })
+  describe('getReportsByType', () => {
+    const ALL_TYPES = ['track', 'album', 'playlist', 'artist', 'podcast', 'episode', 'user']
+
+    it('zero-fills every entity type across every day against an empty database', async () => {
+      queryRawMock(prisma).mockResolvedValueOnce([])
+
+      const result = await service.getReportsByType(3)
+
+      expect(result.from).toBe('2026-09-15')
+      expect(result.to).toBe('2026-09-17')
+      expect(result.days).toBe(3)
+      expect(result.dates).toEqual(['2026-09-15', '2026-09-16', '2026-09-17'])
+      expect(result.total).toBe(0)
+      expect(result.series.map((s) => s.entityType)).toEqual(ALL_TYPES)
+      for (const entry of result.series) {
+        expect(entry.counts).toEqual([0, 0, 0])
+        expect(entry.total).toBe(0)
+      }
+    })
+
+    it('defaults to a 30-day window when `days` is omitted', async () => {
+      queryRawMock(prisma).mockResolvedValueOnce([])
+
+      const result = await service.getReportsByType()
+
+      expect(result.days).toBe(30)
+      expect(result.dates).toHaveLength(30)
+      expect(result.from).toBe('2026-08-19')
+      expect(result.to).toBe('2026-09-17')
+    })
+
+    it('places each report count in its own day and entity-type bucket, with totals', async () => {
+      queryRawMock(prisma).mockResolvedValueOnce([
+        { day: new Date('2026-09-15T00:00:00.000Z'), entityType: 'track', count: 2 },
+        { day: new Date('2026-09-16T00:00:00.000Z'), entityType: 'track', count: 1 },
+        { day: new Date('2026-09-16T00:00:00.000Z'), entityType: 'user', count: 4 },
+        { day: new Date('2026-09-17T00:00:00.000Z'), entityType: 'podcast', count: 5 },
+      ])
+
+      const result = await service.getReportsByType(3)
+
+      const byType = new Map(result.series.map((s) => [s.entityType, s]))
+      expect(byType.get('track')).toEqual({ entityType: 'track', counts: [2, 1, 0], total: 3 })
+      expect(byType.get('user')).toEqual({ entityType: 'user', counts: [0, 4, 0], total: 4 })
+      expect(byType.get('podcast')).toEqual({ entityType: 'podcast', counts: [0, 0, 5], total: 5 })
+      expect(byType.get('album')).toEqual({ entityType: 'album', counts: [0, 0, 0], total: 0 })
+      expect(result.total).toBe(12)
+    })
+
+    it('ignores rows whose entity type is not a known moderation entity type', async () => {
+      queryRawMock(prisma).mockResolvedValueOnce([
+        { day: new Date('2026-09-17T00:00:00.000Z'), entityType: 'mystery', count: 9 },
+      ])
+
+      const result = await service.getReportsByType(1)
+
+      expect(result.total).toBe(0)
+      expect(result.series).toHaveLength(ALL_TYPES.length)
+    })
+
+    it('propagates a Prisma rejection instead of swallowing it', async () => {
+      ;(prisma.queryRaw as unknown as jest.Mock<() => Promise<never>>).mockRejectedValueOnce(
+        new Error('db down'),
+      )
+
+      await expect(service.getReportsByType(3)).rejects.toThrow('db down')
+    })
+  })
 })
