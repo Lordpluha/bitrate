@@ -1,0 +1,238 @@
+<section class="w-full space-y-8 p-8">
+  <header class="space-y-1">
+    <a routerLink="/podcasts" class="text-sm text-muted-foreground hover:underline"
+      >&larr; Podcasts</a
+    >
+    @if (loading() && !podcast()) {
+      <h1 class="text-xl font-semibold text-foreground">Podcast</h1>
+    } @else if (podcast(); as p) {
+      <h1 class="text-xl font-semibold text-foreground">
+        {{ p.title }}
+        @if (p.explicit) {
+          <span hlmBadge variant="outline" class="ml-2 align-middle">explicit</span>
+        }
+        @if (p.takenDownAt) {
+          <span hlmBadge variant="destructive" class="ml-2 align-middle">taken down</span>
+        }
+      </h1>
+      <p class="text-sm text-muted-foreground">by {{ p.publisher }}</p>
+    }
+  </header>
+
+  @if (loading() && !podcast()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else if (notFound()) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      This podcast could not be found.
+    </p>
+  } @else if (podcast(); as p) {
+    @if (status(); as message) {
+      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
+        {{ message }}
+      </p>
+    }
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Podcast actions</h2>
+      <p class="text-sm text-muted-foreground">
+        These affect the podcast only. Its episodes keep their own take-down state.
+      </p>
+
+      @if (canTakeDown() && podcastTakeDownable(p)) {
+        <button hlmBtn size="sm" variant="ghost" type="button" (click)="askPodcast('take-down')">
+          Take down
+        </button>
+      }
+      @if (canRestore() && podcastRestorable(p)) {
+        <button hlmBtn size="sm" variant="outline" type="button" (click)="askPodcast('restore')">
+          Restore
+        </button>
+      }
+      @if (!(canTakeDown() && podcastTakeDownable(p)) && !(canRestore() && podcastRestorable(p))) {
+        <p class="text-sm text-muted-foreground">No actions available.</p>
+      }
+    </section>
+
+    <hlm-tabs tab="episodes">
+      <hlm-tabs-list variant="line" aria-label="Podcast sections">
+        <button hlmTabsTrigger="episodes" type="button">Episodes ({{ p.episodes.length }})</button>
+        <button hlmTabsTrigger="metadata" type="button">Metadata</button>
+      </hlm-tabs-list>
+
+      <div hlmTabsContent="episodes" class="space-y-3">
+        @if (p.episodes.length === 0) {
+          <p class="text-sm text-muted-foreground">This podcast has no episodes.</p>
+        } @else {
+          <div hlmTableContainer>
+            <table hlmTable>
+              <caption hlmCaption class="sr-only">
+                Episodes, newest release first
+              </caption>
+              <thead hlmTHead>
+                <tr hlmTr>
+                  <th hlmTh scope="col">Episode</th>
+                  <th hlmTh scope="col">Released</th>
+                  <th hlmTh scope="col">Length</th>
+                  <th hlmTh scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody hlmTBody>
+                @for (episode of p.episodes; track episode.id) {
+                  <tr hlmTr>
+                    <td hlmTd>
+                      {{ episode.title }}
+                      @if (episode.explicit) {
+                        <span hlmBadge variant="outline" class="ml-2">explicit</span>
+                      }
+                      @if (episode.takenDownAt) {
+                        <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                      }
+                    </td>
+                    <td hlmTd class="tabular-nums text-muted-foreground">
+                      {{
+                        episode.releaseDate
+                          ? (episode.releaseDate | localizedDate: 'dd.MM.yyyy')
+                          : '—'
+                      }}
+                    </td>
+                    <td hlmTd class="tabular-nums text-muted-foreground">
+                      {{ lengthLabel(episode) }}
+                    </td>
+                    <td hlmTd>
+                      @if (canTakeDown() && episodeTakeDownable(episode)) {
+                        <button
+                          hlmBtn
+                          size="sm"
+                          variant="ghost"
+                          type="button"
+                          [attr.aria-label]="'Take down episode ' + episode.title"
+                          (click)="askEpisode(episode, 'take-down')"
+                        >
+                          Take down
+                        </button>
+                      }
+                      @if (canRestore() && episodeRestorable(episode)) {
+                        <button
+                          hlmBtn
+                          size="sm"
+                          variant="outline"
+                          type="button"
+                          [attr.aria-label]="'Restore episode ' + episode.title"
+                          (click)="askEpisode(episode, 'restore')"
+                        >
+                          Restore
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        <a
+          [routerLink]="['/audit']"
+          [queryParams]="{ entityType: 'admin-podcast-episodes' }"
+          class="block text-sm text-muted-foreground hover:underline"
+        >
+          View episode audit history &rarr;
+        </a>
+      </div>
+
+      <div hlmTabsContent="metadata" class="space-y-3">
+        <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div class="rounded-md border border-border p-3">
+            <dt class="text-xs text-muted-foreground">Episodes</dt>
+            <dd class="text-lg font-semibold tabular-nums text-foreground">{{ p.episodeCount }}</dd>
+          </div>
+          <div class="rounded-md border border-border p-3">
+            <dt class="text-xs text-muted-foreground">Publisher</dt>
+            <dd class="text-sm text-foreground">{{ p.publisher }}</dd>
+          </div>
+          <div class="rounded-md border border-border p-3">
+            <dt class="text-xs text-muted-foreground">Language</dt>
+            <dd class="text-sm text-foreground">{{ p.language ?? '—' }}</dd>
+          </div>
+          <div class="rounded-md border border-border p-3">
+            <dt class="text-xs text-muted-foreground">Created</dt>
+            <dd class="text-sm tabular-nums text-foreground">
+              {{ p.createdAt | localizedDate: 'dd.MM.yyyy' }}
+            </dd>
+          </div>
+        </dl>
+        @if (p.description) {
+          <p class="text-sm text-foreground">{{ p.description }}</p>
+        } @else {
+          <p class="text-sm text-muted-foreground">No description.</p>
+        }
+        <a
+          [routerLink]="['/audit']"
+          [queryParams]="{ entityType: 'admin-podcasts', entityId: p.id }"
+          class="block text-sm text-muted-foreground hover:underline"
+        >
+          View audit history &rarr;
+        </a>
+      </div>
+    </hlm-tabs>
+  }
+
+  <hlm-dialog [state]="pendingAction() ? 'open' : 'closed'" (closed)="cancel()">
+    <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-md">
+      @if (pendingAction(); as pending) {
+        <hlm-dialog-header>
+          <h2 hlmDialogTitle>
+            {{ pending.action === 'restore' ? 'Restore' : 'Take down' }} {{ targetLabel(pending) }}
+          </h2>
+          <p hlmDialogDescription>
+            @if (pending.action === 'restore') {
+              Restore "{{ targetTitle(pending) }}"? It reappears in the active catalog immediately.
+            } @else if (pending.kind === 'podcast') {
+              Take down "{{ targetTitle(pending) }}"? The podcast is hidden until restored. Its
+              episodes are not changed and keep their own state.
+            } @else {
+              Take down the episode "{{ targetTitle(pending) }}"? Only this episode is hidden. The
+              podcast and its other episodes are not changed.
+            }
+          </p>
+        </hlm-dialog-header>
+
+        <div class="space-y-1">
+          <label hlmLabel for="podcast-action-reason">Reason (optional)</label>
+          <textarea
+            id="podcast-action-reason"
+            class="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-md border bg-transparent px-2.5 py-1.5 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+            rows="2"
+            [attr.maxlength]="reasonMaxLength"
+            [disabled]="working()"
+            [value]="reason()"
+            (input)="reason.set($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        <hlm-dialog-footer>
+          <button hlmBtn variant="outline" type="button" (click)="cancel()">Cancel</button>
+          <button
+            hlmBtn
+            [variant]="pending.action === 'restore' ? 'default' : 'destructive'"
+            type="button"
+            [disabled]="working()"
+            (click)="confirm()"
+          >
+            {{
+              working()
+                ? 'Working…'
+                : pending.action === 'restore'
+                  ? 'Yes, restore'
+                  : 'Yes, take down'
+            }}
+          </button>
+        </hlm-dialog-footer>
+      }
+    </hlm-dialog-content>
+  </hlm-dialog>
+</section>
