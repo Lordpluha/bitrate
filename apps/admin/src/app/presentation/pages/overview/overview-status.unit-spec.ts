@@ -1,8 +1,9 @@
-import type { Overview } from '@domain/overview'
+import type { Overview, OverviewReportsByType } from '@domain/overview'
 import { ROUTE_PERMISSIONS } from '@presentation/guards'
 import { describe, expect, it } from 'vitest'
 import {
   buildAccountDeactivationStatus,
+  buildReportsByTypeStatus,
   buildReportsStatus,
   buildTrackPipelineStatus,
 } from './overview-status'
@@ -14,6 +15,33 @@ const OVERVIEW: Overview = {
   last7Days: { signups: 5, uploads: 12 },
   recentActivity: [],
 }
+
+const BY_TYPE: OverviewReportsByType = {
+  from: new Date('2026-09-16T00:00:00.000Z'),
+  to: new Date('2026-09-17T00:00:00.000Z'),
+  days: 2,
+  dates: [new Date('2026-09-16T00:00:00.000Z'), new Date('2026-09-17T00:00:00.000Z')],
+  series: [
+    { entityType: 'track', counts: [1, 2], total: 3 },
+    { entityType: 'user', counts: [0, 0], total: 0 },
+  ],
+  total: 3,
+}
+
+describe('buildReportsByTypeStatus', () => {
+  it("links each entity type's total to the moderation queue filtered by it, across every status", () => {
+    const items = buildReportsByTypeStatus(BY_TYPE)
+
+    expect(items).toHaveLength(2)
+    expect(items[0]).toMatchObject({ id: 'reports-type-track', label: 'Track', value: 3 })
+    expect(items[0]?.link).toEqual({
+      path: '/moderation',
+      permission: 'reports:read',
+      queryParams: { entityType: 'track', status: 'all' },
+    })
+    expect(items[1]).toMatchObject({ label: 'User', value: 0 })
+  })
+})
 
 describe('buildTrackPipelineStatus', () => {
   it('links failed and processing to the catalog list, filtered by status', () => {
@@ -40,9 +68,7 @@ describe('buildTrackPipelineStatus', () => {
   it('renders the stuck hint in whole minutes from stuckAfterMs', () => {
     const items = buildTrackPipelineStatus(OVERVIEW)
 
-    expect(items.find((item) => item.id === 'tracks-stuck')?.hint).toBe(
-      'Past 30 min in processing',
-    )
+    expect(items.find((item) => item.id === 'tracks-stuck')?.hint).toBe('Past 30 min in processing')
   })
 
   it('renders every count, including zero, against an empty database', () => {
@@ -98,6 +124,7 @@ describe('buildAccountDeactivationStatus', () => {
       buildTrackPipelineStatus(OVERVIEW),
       buildReportsStatus(OVERVIEW),
       buildAccountDeactivationStatus(OVERVIEW),
+      buildReportsByTypeStatus(BY_TYPE),
     ]
 
     for (const items of groups) {
