@@ -45,14 +45,12 @@ describe('isAllowedHlsAsset', () => {
     expect(isAllowedHlsAsset(asset)).toBe(true)
   })
 
-  it.each([
-    '../../etc/passwd',
-    'segment_1.m4s',
-    'master.m3u8',
-    'index.m3u8/../x',
-  ])('rejects %s', (asset) => {
-    expect(isAllowedHlsAsset(asset)).toBe(false)
-  })
+  it.each(['../../etc/passwd', 'segment_1.m4s', 'master.m3u8', 'index.m3u8/../x'])(
+    'rejects %s',
+    (asset) => {
+      expect(isAllowedHlsAsset(asset)).toBe(false)
+    },
+  )
 })
 
 describe('getHlsAssetContentType', () => {

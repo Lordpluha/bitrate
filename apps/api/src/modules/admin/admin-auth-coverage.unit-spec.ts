@@ -198,20 +198,21 @@ describe('operator surface access control', () => {
     expect(guards).toContain(AdminAuthGuard)
   })
 
-  it.each(
-    Array.from(SESSION_ONLY_ROUTES, (id) => ({ id })),
-  )('$id carries no permission requirement', ({ id }) => {
-    const route = guardedRoutes.find((candidate) => candidate.id === id)
-    expect(route).toBeDefined()
+  it.each(Array.from(SESSION_ONLY_ROUTES, (id) => ({ id })))(
+    '$id carries no permission requirement',
+    ({ id }) => {
+      const route = guardedRoutes.find((candidate) => candidate.id === id)
+      expect(route).toBeDefined()
 
-    const found = route as Route
-    expect(
-      reflector.getAllAndOverride<Permission | undefined>(REQUIRED_PERMISSION, [
-        found.handler,
-        found.controller,
-      ]),
-    ).toBeUndefined()
-  })
+      const found = route as Route
+      expect(
+        reflector.getAllAndOverride<Permission | undefined>(REQUIRED_PERMISSION, [
+          found.handler,
+          found.controller,
+        ]),
+      ).toBeUndefined()
+    },
+  )
 
   /**
    * Every route that isn't public or session-only carries a permission from the catalogue,
