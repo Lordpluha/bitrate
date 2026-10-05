@@ -1,4 +1,5 @@
 export * from './DeleteTrack.decorator'
+export * from './ExportTracks.decorator'
 export * from './GetTrack.decorator'
 export * from './ListTrackProcessingAttempts.decorator'
 export * from './ListTracks.decorator'

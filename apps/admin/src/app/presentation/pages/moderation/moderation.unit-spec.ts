@@ -14,6 +14,8 @@ import {
 import type { BatchResult, Page } from '@domain/shared'
 import { TranslocoTestingModule } from '@jsverse/transloco'
 import { DEFAULT_LOCALE, LOCALES } from '@presentation/navigation'
+import { ExportRepository } from '@domain/export'
+import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ModerationQueue } from './moderation'
 
@@ -58,6 +60,27 @@ class StubReportRepository extends ModerationReportRepository {
 
   override dismissMany(ids: readonly string[]): Promise<BatchResult> {
     return dismissMany(ids)
+  }
+}
+
+const exportReports = vi.fn<ExportRepository['exportReports']>()
+
+/** Only the export this page uses is exercised; the others fail loudly if reached. */
+class StubExportRepository extends ExportRepository {
+  override exportUsers(): ReturnType<ExportRepository['exportUsers']> {
+    throw new Error('not used')
+  }
+
+  override exportArtists(): ReturnType<ExportRepository['exportArtists']> {
+    throw new Error('not used')
+  }
+
+  override exportTracks(): ReturnType<ExportRepository['exportTracks']> {
+    throw new Error('not used')
+  }
+
+  override exportReports(...args: Parameters<ExportRepository['exportReports']>) {
+    return exportReports(...args)
   }
 }
 
@@ -107,6 +130,7 @@ describe('ModerationQueue — batch actions', () => {
         provideRouter(routes),
         provideLocationMocks(),
         { provide: ModerationReportRepository, useClass: StubReportRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
       ],
     })
     harness = await RouterTestingHarness.create()
@@ -166,5 +190,83 @@ describe('ModerationQueue — batch actions', () => {
     expect(resolveMany).not.toHaveBeenCalled()
     expect(dialog()?.textContent).toContain('1 succeeded, 1 failed')
     expect(dialog()?.textContent).toContain('Report gone')
+  })
+})
+
+describe('ModerationQueue — CSV export', () => {
+  let harness: RouterTestingHarness
+
+  const operator = (permissions: Permission[]) =>
+    TestBed.inject(SessionStore).set({
+      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3399',
+      email: 'ops@bitrate.me',
+      username: 'ops',
+      roleId: 'c1b1d2e3-4f5a-4b6c-8d7e-9f0a1b2c3d4e',
+      roleName: 'MODERATOR',
+      permissions,
+    })
+  const exportButton = () =>
+    Array.from(
+      (harness.routeNativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
+    ).find((candidate) => candidate.textContent?.trim().startsWith('Export CSV'))
+
+  beforeEach(async () => {
+    list.mockReset()
+    exportReports.mockReset()
+    list.mockResolvedValue({ items: [report()], total: 1, page: 1, limit: 20 })
+    exportReports.mockResolvedValue({
+      blob: new Blob(['id\r\n']),
+      filename: 'export.csv',
+      truncated: false,
+    })
+
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: ModerationReportRepository, useClass: StubReportRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
+        { provide: FileSaver, useValue: { save: vi.fn() } },
+      ],
+    })
+    harness = await RouterTestingHarness.create()
+  })
+
+  it('offers no export to an operator without reports:export', async () => {
+    operator(['reports:read'])
+    await harness.navigateByUrl('/moderation', ModerationQueue)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeUndefined()
+  })
+
+  it('offers the export to an operator with reports:export', async () => {
+    operator(['reports:read', 'reports:export'])
+    await harness.navigateByUrl('/moderation', ModerationQueue)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeDefined()
+  })
+
+  it('exports the filters and sort in the URL, not the loaded page', async () => {
+    operator(['reports:read', 'reports:export'])
+    await harness.navigateByUrl('/moderation?sort=status&dir=asc&page=2', ModerationQueue)
+    await harness.fixture.whenStable()
+
+    exportButton()?.click()
+    await harness.fixture.whenStable()
+
+    expect(exportReports).toHaveBeenCalledTimes(1)
+    expect(exportReports).toHaveBeenCalledWith(
+      expect.objectContaining({ sort: { field: 'status', direction: 'asc' } }),
+    )
   })
 })

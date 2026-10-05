@@ -6,9 +6,11 @@ import {
   ListReportsUseCase,
   type ReportBatchAction,
 } from '@application/moderation'
+import { ExportReportsCsvUseCase } from '@application/export'
 import { SessionStore } from '@application/session'
 import {
   type ModerationEntityType,
+  type ModerationFilter,
   type ModerationReport,
   type ModerationSortField,
   type ModerationStatus,
@@ -18,6 +20,7 @@ import {
   BatchActionBar,
   type BatchActionOption,
   CollectionStatus,
+  ExportCsvButton,
   Paginator,
   SortHeader,
   sortHeaderAriaSort,
@@ -40,6 +43,7 @@ import {
     RouterLink,
     BatchActionBar,
     CollectionStatus,
+    ExportCsvButton,
     Paginator,
     SortHeader,
     HlmBadgeImports,
@@ -52,8 +56,10 @@ export class ModerationQueue {
   private readonly listReports = inject(ListReportsUseCase)
   private readonly advanceReport = inject(AdvanceReportUseCase)
   private readonly advanceReports = inject(AdvanceReportsBatchUseCase)
+  private readonly exportReports = inject(ExportReportsCsvUseCase)
 
   protected readonly canAdvance = inject(SessionStore).can('reports:advance')
+  protected readonly canExport = inject(SessionStore).can('reports:export')
 
   protected readonly statuses = MODERATION_STATUSES
   protected readonly entityTypes = MODERATION_ENTITY_TYPES
@@ -61,18 +67,20 @@ export class ModerationQueue {
   protected readonly query = bindQueryState({ codec: moderationQueryCodec })
   protected readonly busyId = signal<string | null>(null)
 
+  /** The URL's filter and sort — what the queue loads and the CSV export asks for. */
+  private readonly filter = (): ModerationFilter => ({
+    status: this.query.state().status ?? undefined,
+    entityType: this.query.state().entityType ?? undefined,
+    sort: this.query.state().sort ?? undefined,
+  })
+
   protected readonly collection = createCollection<ModerationReport>({
     errorMessage: 'Could not load the moderation queue.',
-    load: (page) =>
-      this.listReports.execute({
-        page,
-        filter: {
-          status: this.query.state().status ?? undefined,
-          entityType: this.query.state().entityType ?? undefined,
-          sort: this.query.state().sort ?? undefined,
-        },
-      }),
+    load: (page) => this.listReports.execute({ page, filter: this.filter() }),
   })
+
+  /** Downloads the server CSV for the filters and sort in the URL right now, not just this page. */
+  protected readonly exportCsv = () => this.exportReports.execute(this.filter())
 
   protected readonly selection = createSelection({ limit: MAX_BATCH_SIZE })
   protected readonly batchPending = signal(false)

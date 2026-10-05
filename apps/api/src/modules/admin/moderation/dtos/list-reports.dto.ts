@@ -25,3 +25,8 @@ export const ListReportsQuerySchema = paginationQuerySchema
   })
 
 export class ListReportsQueryDto extends createZodDto(ListReportsQuerySchema) {}
+
+/** The list filters and sort without pagination: an export streams every matching row. */
+export const ExportReportsQuerySchema = ListReportsQuerySchema.omit({ page: true, limit: true })
+
+export class ExportReportsQueryDto extends createZodDto(ExportReportsQuerySchema) {}

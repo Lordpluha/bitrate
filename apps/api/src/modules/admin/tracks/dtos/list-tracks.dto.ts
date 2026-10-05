@@ -25,3 +25,11 @@ export const ListAdminTracksQuerySchema = paginationQuerySchema
   })
 
 export class ListAdminTracksQueryDto extends createZodDto(ListAdminTracksQuerySchema) {}
+
+/** The list filters and sort without pagination: an export streams every matching row. */
+export const ExportAdminTracksQuerySchema = ListAdminTracksQuerySchema.omit({
+  page: true,
+  limit: true,
+})
+
+export class ExportAdminTracksQueryDto extends createZodDto(ExportAdminTracksQuerySchema) {}

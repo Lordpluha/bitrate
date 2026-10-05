@@ -1,5 +1,6 @@
 export * from './DeactivateUsersBatch.decorator'
 export * from './DeleteUser.decorator'
+export * from './ExportUsers.decorator'
 export * from './GetUser.decorator'
 export * from './ListListeningHistory.decorator'
 export * from './ListUsers.decorator'

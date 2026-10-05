@@ -14,6 +14,8 @@ import {
   UserRepository,
 } from '@domain/user'
 import type { Permission } from '@domain/access'
+import { ExportRepository } from '@domain/export'
+import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UsersPage } from './users'
 import { TranslocoTestingModule } from '@jsverse/transloco'
@@ -68,6 +70,27 @@ class StubUserRepository extends UserRepository {
   }
 }
 
+const exportUsers = vi.fn<ExportRepository['exportUsers']>()
+
+/** Only the export this page uses is exercised; the others fail loudly if reached. */
+class StubExportRepository extends ExportRepository {
+  override exportUsers(...args: Parameters<ExportRepository['exportUsers']>) {
+    return exportUsers(...args)
+  }
+
+  override exportArtists(): ReturnType<ExportRepository['exportArtists']> {
+    throw new Error('not used')
+  }
+
+  override exportTracks(): ReturnType<ExportRepository['exportTracks']> {
+    throw new Error('not used')
+  }
+
+  override exportReports(): ReturnType<ExportRepository['exportReports']> {
+    throw new Error('not used')
+  }
+}
+
 const routes: Routes = [{ path: 'users', component: UsersPage }]
 
 describe('UsersPage', () => {
@@ -90,6 +113,7 @@ describe('UsersPage', () => {
         provideRouter(routes),
         provideLocationMocks(),
         { provide: UserRepository, useClass: StubUserRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
       ],
     })
     harness = await RouterTestingHarness.create()
@@ -254,6 +278,86 @@ describe('UsersPage', () => {
       await harness.fixture.whenStable()
 
       expect(bar()).toBeNull()
+    })
+  })
+})
+
+describe('UsersPage — CSV export', () => {
+  let harness: RouterTestingHarness
+
+  const operator = (permissions: Permission[]) =>
+    TestBed.inject(SessionStore).set({
+      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3399',
+      email: 'ops@bitrate.me',
+      username: 'ops',
+      roleId: 'c1b1d2e3-4f5a-4b6c-8d7e-9f0a1b2c3d4e',
+      roleName: 'MODERATOR',
+      permissions,
+    })
+  const exportButton = () =>
+    Array.from(
+      (harness.routeNativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
+    ).find((candidate) => candidate.textContent?.trim().startsWith('Export CSV'))
+
+  beforeEach(async () => {
+    list.mockReset()
+    exportUsers.mockReset()
+    list.mockResolvedValue({ items: [user()], total: 1, page: 1, limit: 20 })
+    exportUsers.mockResolvedValue({
+      blob: new Blob(['id\r\n']),
+      filename: 'export.csv',
+      truncated: false,
+    })
+
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: UserRepository, useClass: StubUserRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
+        { provide: FileSaver, useValue: { save: vi.fn() } },
+      ],
+    })
+    harness = await RouterTestingHarness.create()
+  })
+
+  it('offers no export to an operator without users:export', async () => {
+    operator(['users:read'])
+    await harness.navigateByUrl('/users', UsersPage)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeUndefined()
+  })
+
+  it('offers the export to an operator with users:export', async () => {
+    operator(['users:read', 'users:export'])
+    await harness.navigateByUrl('/users', UsersPage)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeDefined()
+  })
+
+  it('exports the filters and sort in the URL, not the loaded page', async () => {
+    operator(['users:read', 'users:export'])
+    await harness.navigateByUrl('/users?q=ann&status=all&sort=email&dir=desc&page=2', UsersPage)
+    await harness.fixture.whenStable()
+
+    exportButton()?.click()
+    await harness.fixture.whenStable()
+
+    expect(exportUsers).toHaveBeenCalledTimes(1)
+    expect(exportUsers).toHaveBeenCalledWith({
+      query: 'ann',
+      status: 'all',
+      sort: { field: 'email', direction: 'desc' },
     })
   })
 })
