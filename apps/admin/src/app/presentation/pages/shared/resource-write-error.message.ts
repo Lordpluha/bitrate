@@ -9,7 +9,7 @@ type ResourceWriteAction =
  * down"/"restored" — the panel calls the same action a take-down, not a deactivation, everywhere
  * else on this screen, so the error text said something no button on the page ever did.
  */
-type ResourceKind = 'account' | 'album' | 'playlist' | 'track'
+type ResourceKind = 'account' | 'album' | 'episode' | 'playlist' | 'podcast' | 'track'
 
 type ResourceWriteMessageInput = {
   error: unknown
@@ -22,14 +22,18 @@ type ResourceWriteMessageInput = {
 const ALREADY_REFUSED_WORDING: Record<ResourceKind, string> = {
   account: 'already deactivated',
   album: 'already taken down',
+  episode: 'already taken down',
   playlist: 'already taken down',
+  podcast: 'already taken down',
   track: 'already taken down',
 }
 
 const NOT_REFUSED_WORDING: Record<ResourceKind, string> = {
   account: 'not deactivated',
   album: 'not taken down',
+  episode: 'not taken down',
   playlist: 'not taken down',
+  podcast: 'not taken down',
   track: 'not taken down',
 }
 

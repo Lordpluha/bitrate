@@ -64,6 +64,26 @@ describe('resourceWriteErrorMessage', () => {
     expect(isStaleStateError(new ResourceWriteError('visibility-conflict'))).toBe(true)
   })
 
+  it('uses take-down wording for a podcast and an episode conflict', () => {
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('already-deactivated'),
+        action: 'take down',
+        label: '"Signal Hour"',
+        resource: 'podcast',
+      }),
+    ).toBe('"Signal Hour" is already taken down — reloaded.')
+
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('not-deactivated'),
+        action: 'restore',
+        label: '"Intro Episode"',
+        resource: 'episode',
+      }),
+    ).toBe('"Intro Episode" is not taken down — reloaded.')
+  })
+
   it('uses take-down wording for a track conflict rather than account wording', () => {
     expect(
       resourceWriteErrorMessage({

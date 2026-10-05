@@ -2,7 +2,12 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import { AdvanceReportUseCase, GetReportUseCase } from '@application/moderation'
 import { SessionStore } from '@application/session'
-import { canAdvanceTo, type ModerationStatus, type ReportDetail } from '@domain/moderation'
+import {
+  canAdvanceTo,
+  type ModerationStatus,
+  type ModerationSubject,
+  type ReportDetail,
+} from '@domain/moderation'
 import { LocalizedDatePipe } from '@presentation/pipes'
 import { HlmBadgeImports } from '@spartan-ng/helm/badge'
 import { HlmButtonImports } from '@spartan-ng/helm/button'
@@ -14,14 +19,19 @@ const ADVANCE_TARGETS: readonly { status: ModerationStatus; label: string }[] = 
 ]
 
 /**
- * Subject kinds with a panel detail page to link to. Album/podcast/episode have no
- * page yet, so they render as plain text — see `.br-scratch/admin-pages-plan.md` Stage 3/4/6.
+ * Subject kinds with a panel detail page to link to. An episode has no page of its own, so it
+ * links to its podcast's — and renders as plain text when the report carries no podcast id.
+ * Albums have no link here yet.
  */
-const SUBJECT_ROUTES: Readonly<Record<string, (id: string) => readonly [string, string]>> = {
-  track: (id) => ['/catalog', id],
-  artist: (id) => ['/artists', id],
-  user: (id) => ['/users', id],
-  playlist: (id) => ['/playlists', id],
+const SUBJECT_ROUTES: Readonly<
+  Record<string, (subject: ModerationSubject) => readonly [string, string] | null>
+> = {
+  track: ({ id }) => ['/catalog', id],
+  artist: ({ id }) => ['/artists', id],
+  user: ({ id }) => ['/users', id],
+  playlist: ({ id }) => ['/playlists', id],
+  podcast: ({ id }) => ['/podcasts', id],
+  episode: ({ parentId }) => (parentId ? ['/podcasts', parentId] : null),
 }
 
 @Component({
@@ -53,8 +63,8 @@ export class ReportDetailPage {
     return canAdvanceTo({ report, status })
   }
 
-  protected subjectLink(kind: string, id: string): readonly [string, string] | null {
-    return SUBJECT_ROUTES[kind]?.(id) ?? null
+  protected subjectLink(subject: ModerationSubject): readonly [string, string] | null {
+    return SUBJECT_ROUTES[subject.kind]?.(subject) ?? null
   }
 
   protected async advance(status: ModerationStatus): Promise<void> {
