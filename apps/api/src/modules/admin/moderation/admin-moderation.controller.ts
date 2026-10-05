@@ -89,10 +89,9 @@ export class AdminModerationController {
     return this.moderation.advanceMany(body.ids, 'REJECTED', staff.id, auditContext)
   }
 
-  /**
-   * Streams the filtered, sorted list as CSV. Declared before `:id` so `export.csv` is not read as
-   * an id. The service writes the one audit row, because GET is not interceptor-audited.
-   */
+  /** Runs the CSV export operation. */
+  // Declared before `:id` so `export.csv` is not read as an id. The service writes the one audit
+  // row, because GET is not interceptor-audited.
   @RequirePermission('reports:export')
   @ExportReportsSwagger()
   @Get('export.csv')

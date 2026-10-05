@@ -62,10 +62,9 @@ export class AdminUsersController {
     return this.users.findAll(query)
   }
 
-  /**
-   * Streams the filtered, sorted user list as CSV. Declared before `:id` so `export.csv` is not
-   * read as an id. `exportCsv` writes the one audit row itself, because GET is not interceptor-audited.
-   */
+  /** Runs the CSV export operation. */
+  // Declared before `:id` so `export.csv` is not read as an id. The service writes the one audit
+  // row, because GET is not interceptor-audited.
   @RequirePermission('users:export')
   @ExportUsersSwagger()
   @Get('export.csv')
