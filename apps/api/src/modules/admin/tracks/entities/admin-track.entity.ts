@@ -20,7 +20,7 @@ export class AdminTrackEntity {
 
   /**
    * The stored cover image's filename (a storage key, not a URL) — e.g. `"abc123.png"`. Public
-   * covers live under `storage/public/tracks/covers/`, served by the API at
+   * covers are stored under `tracks/covers/` and served by the API at
    * `/static/tracks/covers/<cover>`; a consumer must build that URL itself. `null` when the
    * track has no cover.
    */

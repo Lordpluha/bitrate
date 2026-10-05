@@ -11,7 +11,7 @@
 #   ssh host 'cd "$HOME/bitrate" && bash -s -- --retention-days 7' < infra/backup.sh
 # so it must not depend on its own path. The project directory is $PWD, or --project-dir.
 #
-# stdout is machine-readable (`db=<path>` / `storage=<path>`); every human-facing line
+# stdout is machine-readable (`db=<path>`); every human-facing line
 # goes to stderr, so the caller can parse one without filtering the other.
 
 set -euo pipefail
@@ -19,7 +19,6 @@ set -euo pipefail
 PROJECT_DIR="${PWD}"
 OUT_DIR=""
 RETENTION_DAYS=7
-INCLUDE_STORAGE=1
 
 log() { printf '%s\n' "$*" >&2; }
 die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
@@ -31,7 +30,7 @@ Usage: backup.sh [options]
   --project-dir DIR     Directory holding infra/ and .env  (default: $PWD)
   --out-dir DIR         Where to write the artifacts       (default: <project>/backups)
   --retention-days N    Delete local artifacts older than N days (default: 7, 0 disables)
-  --no-storage          Skip the storage/ archive, dump the database only
+  --no-storage          Accepted and ignored: uploads live in the object store, not on this host
   -h, --help            This message
 USAGE
 }
@@ -41,7 +40,7 @@ while [ $# -gt 0 ]; do
         --project-dir) PROJECT_DIR="${2:?--project-dir needs a value}"; shift 2 ;;
         --out-dir) OUT_DIR="${2:?--out-dir needs a value}"; shift 2 ;;
         --retention-days) RETENTION_DAYS="${2:?--retention-days needs a value}"; shift 2 ;;
-        --no-storage) INCLUDE_STORAGE=0; shift ;;
+        --no-storage) shift ;;
         -h|--help) usage; exit 0 ;;
         *) usage; die "unknown argument: $1" ;;
     esac
@@ -115,41 +114,6 @@ mv -f "${DB_TMP}" "${DB_FILE}"
 chmod 600 "${DB_FILE}"
 log "    wrote ${DB_BYTES} bytes"
 
-STORAGE_FILE=""
-if [ "${INCLUDE_STORAGE}" -eq 1 ]; then
-    # Uploaded masters, HLS ladders, covers and avatars. The API writes them under its own
-    # working directory, /app/storage in the container, which infra/docker-compose.prod.yaml
-    # keeps in the api_storage named volume. Reading it through the container rather than off
-    # the host means this works for a named volume and a bind mount alike, and needs neither
-    # the volume's generated name nor root.
-    if ! "${DC[@]}" ps --status running --services 2>/dev/null | grep -qx api; then
-        log "    WARNING: the api service is not running, so storage/ cannot be archived."
-        log "    WARNING: the database dump above is complete; the uploads are NOT covered by this run."
-    else
-        STORAGE_FILE="${OUT_DIR}/storage-${STAMP}.tar.gz"
-        STORAGE_TMP="${STORAGE_FILE}.partial"
-        log "==> Archiving /app/storage to ${STORAGE_FILE}"
-        if ! "${DC[@]}" exec -T api tar -czf - -C /app storage > "${STORAGE_TMP}"; then
-            rm -f "${STORAGE_TMP}"
-            die "tar failed while archiving /app/storage"
-        fi
-        STORAGE_BYTES="$(stat -c %s "${STORAGE_TMP}")"
-        # An empty gzip stream is ~20 bytes. Anything at or below that is an empty storage
-        # root, which on this deployment means the uploads are not persisted — either the
-        # api_storage volume is not in effect yet, or nothing has been uploaded since it was.
-        if [ "${STORAGE_BYTES}" -lt 200 ]; then
-            rm -f "${STORAGE_TMP}"
-            STORAGE_FILE=""
-            log "    WARNING: /app/storage archived to ${STORAGE_BYTES} bytes — it is effectively empty."
-            log "    WARNING: check that the api_storage volume is mounted; uploads may be living in the container layer."
-        else
-            mv -f "${STORAGE_TMP}" "${STORAGE_FILE}"
-            chmod 600 "${STORAGE_FILE}"
-            log "    wrote ${STORAGE_BYTES} bytes"
-        fi
-    fi
-fi
-
 if [ "${RETENTION_DAYS}" -gt 0 ]; then
     log "==> Pruning local artifacts older than ${RETENTION_DAYS} days"
     # Scoped to the names this script produces. A stray *.sql a human left in the directory
@@ -163,5 +127,4 @@ log "==> Local disk after this run:"
 df -Ph "${OUT_DIR}" | tail -n1 >&2
 
 printf 'db=%s\n' "${DB_FILE}"
-[ -n "${STORAGE_FILE}" ] && printf 'storage=%s\n' "${STORAGE_FILE}"
 exit 0

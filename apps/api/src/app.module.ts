@@ -1,4 +1,3 @@
-import { join } from 'node:path'
 import { REDIS_CLIENT } from '@infra/cache/cache.constants'
 import { CacheModule } from '@infra/cache/cache.module'
 import { AuditInterceptor } from '@infra/observability/audit.interceptor'
@@ -27,7 +26,6 @@ import { BullModule } from '@nestjs/bullmq'
 import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
-import { ServeStaticModule } from '@nestjs/serve-static'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { SentryModule } from '@sentry/nestjs/setup'
 import type { Redis } from 'ioredis'
@@ -47,28 +45,6 @@ import { i18nOptions } from './i18n/i18n.config'
     LoggerModule.forRoot(loggerOptions),
     I18nModule.forRoot(i18nOptions),
     ConfigModule.forRoot(appConfigModuleOptions),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'storage', 'public'),
-      serveRoot: '/static',
-      serveStaticOptions: {
-        index: false,
-        fallthrough: false,
-        dotfiles: 'deny', // Deny access to hidden files (.env, .git, etc.)
-        redirect: false,
-        setHeaders: (res) => {
-          // Prevent directory listing and sensitive file access
-          res.setHeader('X-Content-Type-Options', 'nosniff')
-          res.setHeader('X-Frame-Options', 'DENY')
-
-          // Custom error handling for static files
-          res.on('finish', () => {
-            if (res.statusCode === 404) {
-              res.statusMessage = 'Resource not found'
-            }
-          })
-        },
-      },
-    }),
     ThrottlerModule.forRootAsync({
       imports: [CacheModule],
       inject: [REDIS_CLIENT],
