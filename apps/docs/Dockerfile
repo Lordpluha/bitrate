@@ -7,7 +7,7 @@
 # the build runs removes the guesswork about which per-package directories exist.
 
 # Stage 1: Base
-FROM node:26-alpine AS base
+FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 # Vercel Remote Cache team id — not a secret, it only identifies which team's cache to read/
