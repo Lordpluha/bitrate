@@ -67,6 +67,7 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminPodcastsController.removeEpisode': 'podcasts:delete',
   'AdminPodcastsController.restoreEpisode': 'podcasts:restore',
   'AdminArtistsController.list': 'artists:read',
+  'AdminArtistsController.exportCsv': 'artists:export',
   'AdminArtistsController.getById': 'artists:read',
   'AdminArtistsController.listTracks': 'artists:read',
   'AdminArtistsController.listAlbums': 'artists:read',
@@ -81,6 +82,7 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminGenresController.update': 'genres:write',
   'AdminGenresController.remove': 'genres:delete',
   'AdminModerationController.list': 'reports:read',
+  'AdminModerationController.exportCsv': 'reports:export',
   'AdminModerationController.getById': 'reports:read',
   'AdminModerationController.update': 'reports:advance',
   'AdminModerationController.resolveMany': 'reports:advance',
@@ -100,6 +102,7 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminStaffController.updatePermissions': 'staff:write',
   'AdminStaffController.remove': 'staff:write',
   'AdminTracksController.list': 'tracks:read',
+  'AdminTracksController.exportCsv': 'tracks:export',
   'AdminTracksController.getById': 'tracks:read',
   'AdminTracksController.probeAudio': 'tracks:read',
   'AdminTracksController.streamAudio': 'tracks:read',
@@ -109,6 +112,7 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminTracksController.takeDownMany': 'tracks:delete',
   'AdminTracksController.restore': 'tracks:restore',
   'AdminUsersController.list': 'users:read',
+  'AdminUsersController.exportCsv': 'users:export',
   'AdminUsersController.getById': 'users:read',
   'AdminUsersController.listListeningHistory': 'users:read',
   'AdminUsersController.remove': 'users:delete',
@@ -198,20 +202,21 @@ describe('operator surface access control', () => {
     expect(guards).toContain(AdminAuthGuard)
   })
 
-  it.each(
-    Array.from(SESSION_ONLY_ROUTES, (id) => ({ id })),
-  )('$id carries no permission requirement', ({ id }) => {
-    const route = guardedRoutes.find((candidate) => candidate.id === id)
-    expect(route).toBeDefined()
+  it.each(Array.from(SESSION_ONLY_ROUTES, (id) => ({ id })))(
+    '$id carries no permission requirement',
+    ({ id }) => {
+      const route = guardedRoutes.find((candidate) => candidate.id === id)
+      expect(route).toBeDefined()
 
-    const found = route as Route
-    expect(
-      reflector.getAllAndOverride<Permission | undefined>(REQUIRED_PERMISSION, [
-        found.handler,
-        found.controller,
-      ]),
-    ).toBeUndefined()
-  })
+      const found = route as Route
+      expect(
+        reflector.getAllAndOverride<Permission | undefined>(REQUIRED_PERMISSION, [
+          found.handler,
+          found.controller,
+        ]),
+      ).toBeUndefined()
+    },
+  )
 
   /**
    * Every route that isn't public or session-only carries a permission from the catalogue,

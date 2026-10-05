@@ -114,7 +114,7 @@ catalogue:
 
 - Bulk actions (#219, built): `POST /admin/<resource>/batch/<action>` with up to 100 ids, a per-id result,
   the same per-id permission check and one audit row per entity.
-- CSV export (#220): separate administrator-only `<resource>:export` permissions, list filters
+- CSV export (#220, built): separate administrator-only `<resource>:export` permissions, list filters
   reused, a cap of 50 000 rows and formula-injection prefixing.
 - Drill-down (#221): one view of reports by entity type over time, under `overview:read`.
 

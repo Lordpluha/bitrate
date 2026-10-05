@@ -7,6 +7,10 @@
     </p>
   </header>
 
+  @if (canExport()) {
+    <app-export-csv-button [exporter]="exportCsv" />
+  }
+
   <form class="flex gap-2" (ngSubmit)="applyFilters()">
     <label class="sr-only" for="user-search">Search listeners</label>
     <input

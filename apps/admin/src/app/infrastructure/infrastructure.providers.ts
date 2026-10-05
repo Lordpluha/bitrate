@@ -2,6 +2,7 @@ import { type EnvironmentProviders, makeEnvironmentProviders } from '@angular/co
 import { AlbumRepository } from '@domain/album'
 import { ArtistRepository } from '@domain/artist'
 import { AuditRepository } from '@domain/audit'
+import { ExportRepository } from '@domain/export'
 import { GenreRepository } from '@domain/genre'
 import { ModerationReportRepository } from '@domain/moderation'
 import { OverviewRepository } from '@domain/overview'
@@ -15,6 +16,7 @@ import { HttpAlbumRepository } from './albums'
 import { HttpArtistRepository } from './artists'
 import { HttpAuditRepository } from './audit'
 import { HttpTrackRepository } from './catalog'
+import { HttpExportRepository } from './export'
 import { HttpGenreRepository } from './genres'
 import { HttpModerationReportRepository } from './moderation'
 import { HttpOverviewRepository } from './overview'
@@ -35,6 +37,7 @@ export function provideAdminInfrastructure(): EnvironmentProviders {
     { provide: AlbumRepository, useClass: HttpAlbumRepository },
     { provide: ArtistRepository, useClass: HttpArtistRepository },
     { provide: AuditRepository, useClass: HttpAuditRepository },
+    { provide: ExportRepository, useClass: HttpExportRepository },
     { provide: GenreRepository, useClass: HttpGenreRepository },
     { provide: PlaylistRepository, useClass: HttpPlaylistRepository },
     { provide: PodcastRepository, useClass: HttpPodcastRepository },
