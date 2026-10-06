@@ -27,7 +27,7 @@ export const contributorSchema = z.strictObject({
 })
 export type ContributorValues = z.infer<typeof contributorSchema>
 export const participantSchema = contributorSchema.extend({ id: z.uuid() })
-export const participantReadSchema = z.object({
+const participantReadSchema = z.object({
   id: z.uuid(),
   displayName: z.string(),
   roles: z.array(z.enum(contributorRoles)),

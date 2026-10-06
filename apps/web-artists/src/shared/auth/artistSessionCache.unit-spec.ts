@@ -58,13 +58,16 @@ describe('artist session cache', () => {
   it.each([
     { status: 'unauthenticated' },
     { status: 'unavailable' },
-  ] satisfies ArtistSessionResult[])('retries after a %o result', async (result) => {
-    const { cache, loadSession } = setup()
-    loadSession.mockResolvedValue(result)
-    await cache.load()
-    await cache.load()
-    expect(loadSession).toHaveBeenCalledTimes(2)
-  })
+  ] satisfies ArtistSessionResult[])(
+    'retries after a %o result',
+    async (result) => {
+      const { cache, loadSession } = setup()
+      loadSession.mockResolvedValue(result)
+      await cache.load()
+      await cache.load()
+      expect(loadSession).toHaveBeenCalledTimes(2)
+    },
+  )
 
   it('forgets the identity on sign-out, including a check still in flight', async () => {
     const { cache, loadSession } = setup()

@@ -43,10 +43,3 @@ export const releaseSummarySchema = z.object({
   createdAt: z.iso.datetime({ offset: true }),
   updatedAt: z.iso.datetime({ offset: true }),
 }) satisfies z.ZodType<ReleaseSummary>
-
-export const releasePageSchema = z.object({
-  data: z.array(releaseSummarySchema),
-  total: z.number().int().nonnegative(),
-  page: z.number().int().positive(),
-  limit: z.number().int().min(1).max(100),
-})
