@@ -1,6 +1,0 @@
----
-"@bitrate/api": minor
-"@bitrate/admin": minor
----
-
-Podcasts and their episodes can now be taken down from the operator panel, each independently of the other. The API gains `GET /admin/podcasts` (search by title, `status=active|deactivated|all` defaulting to active, and a `createdAt`/`title` sort allowlist), `GET /admin/podcasts/:id` with every episode and its own take-down state, `DELETE /admin/podcasts/:id` and `POST /admin/podcasts/:id/restore` for the podcast, and `DELETE /admin/podcasts/:id/episodes/:episodeId` and `POST /admin/podcasts/:id/episodes/:episodeId/restore` for a single episode, which answers 404 for an episode that belongs to another podcast. Taking a podcast down never changes its episodes and taking an episode down never changes its podcast. The permission catalogue gains `podcasts:read`, `podcasts:delete` and `podcasts:restore`; episodes reuse the delete and restore grants. The built-in moderator template gains only `podcasts:read`, and existing moderators gain nothing until an administrator edits them on staff/:id, so delete and restore stay with administrators. The admin panel gains Podcasts and Podcast detail pages with an Episodes tab and a Metadata tab, confirmation dialogs with an optional reason, a sidebar entry under Operations, and podcast and episode subject links on the report detail page.
