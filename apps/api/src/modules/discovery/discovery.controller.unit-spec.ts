@@ -30,20 +30,20 @@ describe('DiscoveryController', () => {
       expect(discovery.getCharts).not.toHaveBeenCalled()
     })
 
-    it('accepts the country scope once a country is given', () => {
+    it('accepts the country scope once a country is given', async () => {
       discovery.getCharts.mockResolvedValue({ data: [], total: 0, page: 1, limit: 20 } as never)
 
-      controller.charts('country', 'us')
+      await controller.charts('country', 'us')
 
       expect(discovery.getCharts).toHaveBeenCalledWith('country', 'us', undefined, undefined)
     })
   })
 
   describe('feed', () => {
-    it('reads an anonymous feed with no user id when the session is optional and absent', () => {
+    it('reads an anonymous feed with no user id when the session is optional and absent', async () => {
       discovery.getFeed.mockResolvedValue([] as never)
 
-      controller.feed({} as OptionalUserAuthRequest)
+      await controller.feed({} as OptionalUserAuthRequest)
 
       expect(discovery.getFeed).toHaveBeenCalledWith(undefined)
     })
@@ -57,7 +57,7 @@ describe('DiscoveryController', () => {
       expect(personalTop.getTopTracks).not.toHaveBeenCalled()
     })
 
-    it('forwards a valid range to the personal-top service', () => {
+    it('forwards a valid range to the personal-top service', async () => {
       personalTop.getTopArtists.mockResolvedValue({
         data: [],
         total: 0,
@@ -65,7 +65,7 @@ describe('DiscoveryController', () => {
         limit: 20,
       } as never)
 
-      controller.topArtists(authedRequest, 'long')
+      await controller.topArtists(authedRequest, 'long')
 
       expect(personalTop.getTopArtists).toHaveBeenCalledWith('user-1', 'long', undefined, undefined)
     })

@@ -1,0 +1,5 @@
+export * from './DeletePlaylist.decorator'
+export * from './GetPlaylist.decorator'
+export * from './ListPlaylists.decorator'
+export * from './RestorePlaylist.decorator'
+export * from './SetPlaylistVisibility.decorator'

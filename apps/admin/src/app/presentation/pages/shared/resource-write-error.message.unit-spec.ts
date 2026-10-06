@@ -21,6 +21,69 @@ describe('resourceWriteErrorMessage', () => {
     ).toBe('"dj-test" is not deactivated — reloaded.')
   })
 
+  it('uses take-down wording for an album conflict', () => {
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('already-deactivated'),
+        action: 'take down',
+        label: '"Night Signal"',
+        resource: 'album',
+      }),
+    ).toBe('"Night Signal" is already taken down — reloaded.')
+
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('not-deactivated'),
+        action: 'restore',
+        label: '"Night Signal"',
+        resource: 'album',
+      }),
+    ).toBe('"Night Signal" is not taken down — reloaded.')
+  })
+
+  it('uses take-down wording for a playlist conflict and a dedicated one for visibility', () => {
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('already-deactivated'),
+        action: 'take down',
+        label: '"Night Drive"',
+        resource: 'playlist',
+      }),
+    ).toBe('"Night Drive" is already taken down — reloaded.')
+
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('visibility-conflict'),
+        action: 'unhide',
+        label: '"Night Drive"',
+        resource: 'playlist',
+      }),
+    ).toBe(
+      '"Night Drive" changed visibility elsewhere or cannot be un-hidden by an operator — reloaded.',
+    )
+    expect(isStaleStateError(new ResourceWriteError('visibility-conflict'))).toBe(true)
+  })
+
+  it('uses take-down wording for a podcast and an episode conflict', () => {
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('already-deactivated'),
+        action: 'take down',
+        label: '"Signal Hour"',
+        resource: 'podcast',
+      }),
+    ).toBe('"Signal Hour" is already taken down — reloaded.')
+
+    expect(
+      resourceWriteErrorMessage({
+        error: new ResourceWriteError('not-deactivated'),
+        action: 'restore',
+        label: '"Intro Episode"',
+        resource: 'episode',
+      }),
+    ).toBe('"Intro Episode" is not taken down — reloaded.')
+  })
+
   it('uses take-down wording for a track conflict rather than account wording', () => {
     expect(
       resourceWriteErrorMessage({

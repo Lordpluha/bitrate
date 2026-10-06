@@ -78,12 +78,14 @@ describe('UsersAuthController', () => {
         email: 'new@example.com',
         password: 'password123',
         username: 'new-user',
+        acceptLegal: true,
       })
 
       expect(authService.registerUser).toHaveBeenCalledWith({
         email: 'new@example.com',
         password: 'password123',
         username: 'new-user',
+        acceptLegal: true,
       })
     })
   })
@@ -124,14 +126,30 @@ describe('UsersAuthController', () => {
   describe('getMe', () => {
     it('should return user by id', async () => {
       const user = buildUser({ id: 'user-1' })
-      usersService.findSelfById.mockResolvedValue(user)
+      const self = { ...user, legalAcceptanceRequired: true }
+      usersService.findSelfById.mockResolvedValue(self)
       const req = mockDeep<Request>()
       Object.assign(req, { user })
 
       const result = await controller.getMe(req)
 
       expect(usersService.findSelfById).toHaveBeenCalledWith('user-1')
-      expect(result).toBe(user)
+      expect(result).toBe(self)
+    })
+  })
+
+  describe('acceptLegal', () => {
+    it('records the acceptance for the signed-in user and returns the refreshed account', async () => {
+      const user = buildUser({ id: 'user-1' })
+      const refreshed = { ...user, legalAcceptanceRequired: false }
+      usersService.acceptLegal.mockResolvedValue(refreshed as never)
+      const req = mockDeep<Request>()
+      Object.assign(req, { user })
+
+      const result = await controller.acceptLegal(req, { acceptLegal: true })
+
+      expect(usersService.acceptLegal).toHaveBeenCalledWith('user-1')
+      expect(result).toBe(refreshed)
     })
   })
 

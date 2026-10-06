@@ -1,5 +1,5 @@
 import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
-import { z } from 'zod'
+import * as z from 'zod'
 
 /**
  * The `sort` query parameter's own union, read from the operation directly — it is not an

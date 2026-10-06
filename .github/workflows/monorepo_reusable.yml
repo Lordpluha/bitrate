@@ -24,6 +24,11 @@ on:
         required: false
         default: true
         type: boolean
+      run-lint-type-aware:
+        description: Run the repository-wide type-aware Biome gate
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -48,6 +53,33 @@ jobs:
 
       - name: Run lint
         run: pnpm lint
+
+  lint-type-aware:
+    if: ${{ inputs.run-lint-type-aware }}
+    name: Monorepo Lint (type-aware)
+    runs-on: ubuntu-latest
+
+    # noFloatingPromises and noMisusedPromises need Biome's type graph for the whole monorepo,
+    # which costs ~1.3 GB of RSS and ~10s against ~220 MB and ~0.5s without them. biome.json
+    # therefore ships without them so the editor's LSP stays cheap, and biome.ci.json carries
+    # them for this job alone. scripts/biome-type-aware.mjs merges the overlay into biome.json
+    # rather than passing --config-path, because all seven workspace configs declare
+    # `extends: ["../../biome.json"]` and a rule absent from that file never reaches them.
+    #
+    # The run is repository-wide on purpose. Every per-app workflow scopes `biome ci` to its own
+    # paths, which left apps/desktop and packages/converter with no Biome gate at all.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Enable type-aware rules
+        run: node scripts/biome-type-aware.mjs
+
+      - name: Run biome ci
+        run: pnpm exec biome ci .
 
   types:
     if: ${{ inputs.run-types }}

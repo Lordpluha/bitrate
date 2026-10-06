@@ -1,4 +1,5 @@
 import type { AppConfig } from '@common/config'
+import { LegalAcceptanceRequiredError } from '@common/legal'
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import type { ConfigService } from '@nestjs/config'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
@@ -43,12 +44,17 @@ describe('OAuthService', () => {
   })
 
   describe('findOrCreateUserAndLogin', () => {
-    const call = (provider: string, profile: { id: string; email: string; name: string }) => {
+    const call = (
+      provider: string,
+      profile: { id: string; email: string; name: string },
+      acceptance: { acceptLegal: boolean } = { acceptLegal: false },
+    ) => {
       const findOrCreateUserAndLogin = Reflect.get(service, 'findOrCreateUserAndLogin') as (
         provider: string,
         profile: { id: string; email: string; name: string },
+        acceptance: { acceptLegal: boolean },
       ) => Promise<unknown>
-      return findOrCreateUserAndLogin.call(service, provider, profile)
+      return findOrCreateUserAndLogin.call(service, provider, profile, acceptance)
     }
 
     /** A linked OAuth account whose user was soft-deleted after the link was created must not
@@ -82,6 +88,59 @@ describe('OAuthService', () => {
       expect(prisma.user.findFirst).toHaveBeenCalledWith({
         where: { email: 'user@example.com', deletedAt: null },
       })
+    })
+
+    it('refuses to create a new account when the legal documents were not accepted', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue(null)
+      prisma.user.findFirst.mockResolvedValue(null)
+
+      await expect(
+        call('google', { id: 'google-3', email: 'new@example.com', name: 'New' }),
+      ).rejects.toBeInstanceOf(LegalAcceptanceRequiredError)
+      expect(prisma.user.create).not.toHaveBeenCalled()
+    })
+
+    it('records the accepted revision and time on a newly created account', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue(null)
+      prisma.user.findFirst.mockResolvedValue(null)
+      prisma.user.create.mockResolvedValue({
+        id: 'user-9',
+        username: 'new',
+        twoFactorEnabled: false,
+      } as never)
+      prisma.userOAuthAccount.create.mockResolvedValue({} as never)
+      prisma.userSession.create.mockResolvedValue({} as never)
+
+      await call(
+        'google',
+        { id: 'google-4', email: 'new@example.com', name: 'New' },
+        { acceptLegal: true },
+      )
+
+      expect(prisma.user.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          email: 'new@example.com',
+          legalVersion: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+          legalAcceptedAt: expect.any(Date),
+        }),
+      })
+    })
+
+    it('still signs in an already linked account without asking for acceptance again', async () => {
+      prisma.userOAuthAccount.findUnique.mockResolvedValue({
+        id: 'link-2',
+        provider: 'google',
+        providerAccountId: 'google-5',
+        userId: 'user-5',
+        createdAt: new Date(),
+        user: { id: 'user-5', username: 'old', twoFactorEnabled: false, deletedAt: null },
+      } as never)
+      prisma.userSession.create.mockResolvedValue({} as never)
+
+      await expect(
+        call('google', { id: 'google-5', email: 'old@example.com', name: 'Old' }),
+      ).resolves.toBeDefined()
+      expect(prisma.user.create).not.toHaveBeenCalled()
     })
   })
 })

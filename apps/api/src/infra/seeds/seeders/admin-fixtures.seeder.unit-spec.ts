@@ -115,7 +115,20 @@ describe('AdminFixturesSeeder', () => {
       return Promise.resolve(row)
     }) as never)
 
-    prisma.podcast.findFirst.mockResolvedValue(null)
+    const podcasts = new Map<string, Row>()
+    prisma.podcast.findFirst.mockImplementation(((args: {
+      where: { title?: string; publisher?: string }
+    }) =>
+      Promise.resolve(
+        args.where.title && args.where.publisher
+          ? (podcasts.get(`${args.where.title}::${args.where.publisher}`) ?? null)
+          : null,
+      )) as never)
+    prisma.podcast.create.mockImplementation(((args: { data: Row }) => {
+      const row: Row = { id: nextId('podcast'), ...args.data }
+      podcasts.set(`${row.title}::${row.publisher}`, row)
+      return Promise.resolve(row)
+    }) as never)
     prisma.episode.findFirst.mockResolvedValue(null)
 
     const reports = new Map<string, Row>()
@@ -157,6 +170,7 @@ describe('AdminFixturesSeeder', () => {
       tracks: 7,
       albums: 1,
       playlists: 2,
+      podcasts: 1,
       genres: 1,
       reports: 11,
       auditLogs: 40,
@@ -179,6 +193,7 @@ describe('AdminFixturesSeeder', () => {
       tracks: 0,
       albums: 0,
       playlists: 0,
+      podcasts: 0,
       genres: 0,
       reports: 0,
       auditLogs: 0,

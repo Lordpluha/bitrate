@@ -1,5 +1,5 @@
 import type { ApiPaths, ApiSchemas } from '@bitrate/contracts'
-import { z } from 'zod'
+import * as z from 'zod'
 
 /** See `WireArtistSortField` — read from the operation, not an entity field. */
 export type WireAuditSortField = NonNullable<

@@ -1,0 +1,116 @@
+<section class="w-full space-y-6 p-8">
+  <header class="space-y-1">
+    <a routerLink="/genres" class="text-sm text-muted-foreground hover:underline">&larr; Genres</a>
+    <h1 class="text-xl font-semibold text-foreground">
+      {{ genreId === null ? 'New genre' : (genre()?.name ?? 'Genre') }}
+    </h1>
+    <p class="text-sm text-muted-foreground">
+      Genres drive browse categories and recommendations. A genre that tracks, albums or artists
+      still reference cannot be deleted.
+    </p>
+  </header>
+
+  @if (loading()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else {
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    @if (genre(); as current) {
+      <p class="text-sm text-muted-foreground">
+        Referenced by {{ current.counts.tracks }} tracks, {{ current.counts.albums }} albums and
+        {{ current.counts.artists }} artists.
+      </p>
+    }
+
+    <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="space-y-2">
+        <label hlmLabel for="genre-name">Name</label>
+        <input
+          hlmInput
+          class="w-full"
+          id="genre-name"
+          type="text"
+          formControlName="name"
+          [attr.aria-invalid]="errorFor('name') !== null"
+          [attr.aria-describedby]="errorFor('name') ? 'genre-name-error' : null"
+        />
+        @if (errorFor('name'); as message) {
+          <p class="text-sm text-destructive" id="genre-name-error" role="alert">{{ message }}</p>
+        }
+      </div>
+
+      <div class="space-y-2">
+        <label hlmLabel for="genre-slug">Slug</label>
+        <input
+          hlmInput
+          class="w-full"
+          id="genre-slug"
+          type="text"
+          placeholder="Derived from the name when left blank"
+          formControlName="slug"
+          [attr.aria-invalid]="errorFor('slug') !== null"
+          [attr.aria-describedby]="errorFor('slug') ? 'genre-slug-error' : null"
+        />
+        @if (errorFor('slug'); as message) {
+          <p class="text-sm text-destructive" id="genre-slug-error" role="alert">{{ message }}</p>
+        }
+      </div>
+
+      <div class="space-y-2">
+        <label hlmLabel for="genre-description">Description</label>
+        <input
+          hlmInput
+          class="w-full"
+          id="genre-description"
+          type="text"
+          formControlName="description"
+          [attr.aria-invalid]="errorFor('description') !== null"
+          [attr.aria-describedby]="errorFor('description') ? 'genre-description-error' : null"
+        />
+        @if (errorFor('description'); as message) {
+          <p class="text-sm text-destructive" id="genre-description-error" role="alert">
+            {{ message }}
+          </p>
+        }
+      </div>
+
+      <div class="space-y-2">
+        <label hlmLabel for="genre-color">Colour</label>
+        <div class="flex items-center gap-3">
+          <input
+            hlmInput
+            class="w-40"
+            id="genre-color"
+            type="text"
+            placeholder="#148a78"
+            formControlName="color"
+            [attr.aria-invalid]="errorFor('color') !== null"
+            [attr.aria-describedby]="errorFor('color') ? 'genre-color-error' : null"
+          />
+          @if (swatch(); as value) {
+            <span
+              class="inline-block size-6 rounded-full border border-border"
+              [style.background-color]="value"
+              aria-hidden="true"
+            ></span>
+          }
+        </div>
+        @if (errorFor('color'); as message) {
+          <p class="text-sm text-destructive" id="genre-color-error" role="alert">{{ message }}</p>
+        }
+      </div>
+
+      @if (canWrite()) {
+        <button hlmBtn type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Saving…' : 'Save genre' }}
+        </button>
+      } @else {
+        <p class="text-sm text-muted-foreground">You do not have permission to change genres.</p>
+      }
+    </form>
+  }
+</section>

@@ -2,7 +2,6 @@ import type { CacheService } from '@infra/cache/cache.service'
 import type { StorageService } from '@infra/storage/storage.types'
 import { jest } from '@jest/globals'
 import type { ProcessingAttemptRecorder } from '@modules/tracks/processing-attempt.recorder'
-import type { ConfigService } from '@nestjs/config'
 import type { Queue } from 'bullmq'
 import type { PrismaMock } from './prisma.mock'
 
@@ -22,16 +21,6 @@ export const makeQueueMock = () =>
     add: jest.fn(),
   }) as unknown as jest.Mocked<Queue>
 
-/** A config exposing the storage path helpers the track services read. */
-export const makeConfigMock = () =>
-  ({
-    getOrThrow: jest.fn().mockReturnValue({
-      getTracksDir: (filename?: string) => (filename ? `/storage/${filename}` : '/storage'),
-      getTracksCoversDir: (filename?: string) =>
-        filename ? `/storage/covers/${filename}` : '/storage/covers',
-    }),
-  }) as unknown as jest.Mocked<ConfigService>
-
 /** Object storage that serves a fixed 2 KB Ogg body for any key. */
 export const makeStorageMock = () =>
   ({
@@ -42,6 +31,9 @@ export const makeStorageMock = () =>
       contentType: 'audio/ogg',
     } as never),
     getPresignedUrl: jest.fn(),
+    getObjectMeta: jest.fn(),
+    upload: jest.fn().mockImplementation(async (key: unknown) => key as never),
+    deleteObject: jest.fn(),
   }) as unknown as jest.Mocked<StorageService>
 
 /** Makes `$transaction(fn)` run its callback against the same Prisma mock. */

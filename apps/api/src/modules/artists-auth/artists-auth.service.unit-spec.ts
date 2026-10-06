@@ -175,6 +175,8 @@ describe('ArtistsAuthService', () => {
           email: 'artist@example.com',
           password: 'pass',
           username: 'artist',
+          acceptLegal: true,
+          acceptArtistAgreement: true,
         }),
       ).rejects.toThrow(ConflictException)
     })
@@ -204,14 +206,43 @@ describe('ArtistsAuthService', () => {
         email: 'new@example.com',
         password: 'pass',
         username: 'newartist',
+        acceptLegal: true,
+        acceptArtistAgreement: true,
       })
 
       expect(token.hashPassword).toHaveBeenCalledWith('pass')
-      expect(artists.register).toHaveBeenCalledWith({
+      expect(artists.register).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'new@example.com',
+          password: 'hashed-pass',
+          username: 'newartist',
+        }),
+      )
+    })
+
+    it('should record which legal and Artist Agreement revisions were accepted and when', async () => {
+      artists.findByEmail.mockResolvedValue(null as never)
+      token.hashPassword.mockResolvedValue('hashed-pass' as never)
+      artists.register.mockResolvedValue(
+        buildArtist({ email: 'new@example.com', username: 'newartist' }) as never,
+      )
+
+      await service.registerArtist({
         email: 'new@example.com',
-        password: 'hashed-pass',
+        password: 'pass',
         username: 'newartist',
+        acceptLegal: true,
+        acceptArtistAgreement: true,
       })
+
+      expect(artists.register).toHaveBeenCalledWith(
+        expect.objectContaining({
+          legalVersion: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+          legalAcceptedAt: expect.any(Date),
+          artistAgreementVersion: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+          artistAgreementAcceptedAt: expect.any(Date),
+        }),
+      )
     })
   })
 

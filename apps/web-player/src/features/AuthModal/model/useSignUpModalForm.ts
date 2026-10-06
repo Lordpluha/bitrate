@@ -26,6 +26,7 @@ export const useSignUpModalForm = (onSuccess?: () => void) => {
     resolver: zodResolver(registrationSchema),
     mode: 'onChange',
     defaultValues: {
+      acceptLegal: false,
       fullName: '',
       email: '',
       password: '',
@@ -36,6 +37,7 @@ export const useSignUpModalForm = (onSuccess?: () => void) => {
   const onSubmit: SubmitHandler<RegistrationFormData> = (data) => {
     registration.mutate({
       body: {
+        acceptLegal: true,
         email: data.email,
         password: data.password,
         username: data.fullName,

@@ -1,5 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
-import { z } from 'zod'
+import * as z from 'zod'
 import { contractEnum } from '../http/contract-union'
 
 /**
@@ -13,25 +13,42 @@ export type WirePermission = ApiSchemas['RoleEntity']['permissions'][number]
 const wirePermissionDto = contractEnum<WirePermission>()([
   'reports:read',
   'reports:advance',
+  'reports:export',
   'artists:read',
   'artists:verify',
   'artists:delete',
   'artists:restore',
   'artists:revoke-sessions',
+  'artists:export',
   'tracks:read',
   'tracks:reprocess',
   'tracks:delete',
   'tracks:restore',
+  'tracks:export',
   'users:read',
   'users:delete',
   'users:restore',
   'users:revoke-sessions',
+  'users:export',
   'audit:read',
   'staff:read',
   'staff:write',
   'roles:read',
   'roles:write',
   'overview:read',
+  'genres:read',
+  'genres:write',
+  'genres:delete',
+  'albums:read',
+  'albums:delete',
+  'albums:restore',
+  'playlists:read',
+  'playlists:hide',
+  'playlists:delete',
+  'playlists:restore',
+  'podcasts:read',
+  'podcasts:delete',
+  'podcasts:restore',
 ])
 
 type ContractRole = Pick<

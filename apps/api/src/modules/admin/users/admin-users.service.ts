@@ -1,8 +1,8 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
-import { isoOrNull, writeTakeDownAudit } from '@modules/admin/shared'
+import type { AdminResourceStatus, AuditContextValue, CsvExport } from '@modules/admin/shared'
+import { isoOrNull, openCsvExport, runBatch, writeTakeDownAudit } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
 import type { ADMIN_USERS_SORT_FIELDS } from './dtos'
@@ -11,7 +11,11 @@ import {
   UserNotDeletedException,
   UserNotFoundException,
 } from './errors'
-import { ADMIN_USER_SAFE_SELECT } from './user.select'
+import {
+  ADMIN_USER_EXPORT_COLUMNS,
+  ADMIN_USER_EXPORT_SELECT,
+  ADMIN_USER_SAFE_SELECT,
+} from './user.select'
 
 /** One of the listener directory's allowed sort fields. */
 type AdminUsersSortField = (typeof ADMIN_USERS_SORT_FIELDS)[number]
@@ -71,6 +75,40 @@ export class AdminUsersService {
       this.prisma.user.count({ where }),
     ])
     return { data, total, page, limit }
+  }
+
+  /**
+   * Streams every user matching the list's filters and sort as CSV (capped, see
+   * `CSV_EXPORT_MAX_ROWS`). Uses the list's `where` and ordering — with the same id tie-break —
+   * so the file holds exactly the rows the list shows across all its pages. Batches are paged by
+   * offset in that order; nothing is held beyond the current batch.
+   */
+  async exportCsv(
+    { status, q, sort, order }: Omit<ListUsersInput, 'page' | 'limit'>,
+    staffId: string,
+    auditContext: AuditContextValue = {},
+  ): Promise<CsvExport> {
+    const where = this.buildWhere({ status, q })
+    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const total = await this.prisma.user.count({ where })
+
+    return openCsvExport({
+      prisma: this.prisma,
+      resource: 'admin-users',
+      staffId,
+      filters: { status, q, sort, order },
+      auditContext,
+      columns: ADMIN_USER_EXPORT_COLUMNS,
+      total,
+      fetchPage: (skip, take) =>
+        this.prisma.user.findMany({
+          where,
+          select: ADMIN_USER_EXPORT_SELECT,
+          orderBy: orderBy as unknown as Prisma.UserOrderByWithRelationInput[],
+          skip,
+          take,
+        }),
+    })
   }
 
   /**
@@ -199,6 +237,11 @@ export class AdminUsersService {
       })
       return updated
     })
+  }
+
+  /** Deactivates every id independently via {@link softDelete}; per-id results, same rules. */
+  softDeleteMany(ids: readonly string[], staffId: string, auditContext: AuditContextValue = {}) {
+    return runBatch(ids, (id) => this.softDelete(id, staffId, undefined, auditContext))
   }
 
   /**

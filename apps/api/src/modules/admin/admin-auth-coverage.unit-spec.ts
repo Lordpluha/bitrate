@@ -51,7 +51,23 @@ const SESSION_ONLY_ROUTES = new Set([
  * the spec below.
  */
 const ROUTE_PERMISSIONS: Record<string, Permission> = {
+  'AdminAlbumsController.list': 'albums:read',
+  'AdminAlbumsController.getById': 'albums:read',
+  'AdminAlbumsController.remove': 'albums:delete',
+  'AdminAlbumsController.restore': 'albums:restore',
+  'AdminPlaylistsController.list': 'playlists:read',
+  'AdminPlaylistsController.getById': 'playlists:read',
+  'AdminPlaylistsController.setVisibility': 'playlists:hide',
+  'AdminPlaylistsController.remove': 'playlists:delete',
+  'AdminPlaylistsController.restore': 'playlists:restore',
+  'AdminPodcastsController.list': 'podcasts:read',
+  'AdminPodcastsController.getById': 'podcasts:read',
+  'AdminPodcastsController.remove': 'podcasts:delete',
+  'AdminPodcastsController.restore': 'podcasts:restore',
+  'AdminPodcastsController.removeEpisode': 'podcasts:delete',
+  'AdminPodcastsController.restoreEpisode': 'podcasts:restore',
   'AdminArtistsController.list': 'artists:read',
+  'AdminArtistsController.exportCsv': 'artists:export',
   'AdminArtistsController.getById': 'artists:read',
   'AdminArtistsController.listTracks': 'artists:read',
   'AdminArtistsController.listAlbums': 'artists:read',
@@ -60,9 +76,17 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminArtistsController.restore': 'artists:restore',
   'AdminArtistsController.revokeSessions': 'artists:revoke-sessions',
   'AdminAuditController.list': 'audit:read',
+  'AdminGenresController.list': 'genres:read',
+  'AdminGenresController.getById': 'genres:read',
+  'AdminGenresController.create': 'genres:write',
+  'AdminGenresController.update': 'genres:write',
+  'AdminGenresController.remove': 'genres:delete',
   'AdminModerationController.list': 'reports:read',
+  'AdminModerationController.exportCsv': 'reports:export',
   'AdminModerationController.getById': 'reports:read',
   'AdminModerationController.update': 'reports:advance',
+  'AdminModerationController.resolveMany': 'reports:advance',
+  'AdminModerationController.dismissMany': 'reports:advance',
   'AdminOverviewController.get': 'overview:read',
   'AdminOverviewController.getSeries': 'overview:read',
   'AdminRolesController.list': 'roles:read',
@@ -78,17 +102,21 @@ const ROUTE_PERMISSIONS: Record<string, Permission> = {
   'AdminStaffController.updatePermissions': 'staff:write',
   'AdminStaffController.remove': 'staff:write',
   'AdminTracksController.list': 'tracks:read',
+  'AdminTracksController.exportCsv': 'tracks:export',
   'AdminTracksController.getById': 'tracks:read',
   'AdminTracksController.probeAudio': 'tracks:read',
   'AdminTracksController.streamAudio': 'tracks:read',
   'AdminTracksController.listProcessingAttempts': 'tracks:read',
   'AdminTracksController.reprocess': 'tracks:reprocess',
   'AdminTracksController.remove': 'tracks:delete',
+  'AdminTracksController.takeDownMany': 'tracks:delete',
   'AdminTracksController.restore': 'tracks:restore',
   'AdminUsersController.list': 'users:read',
+  'AdminUsersController.exportCsv': 'users:export',
   'AdminUsersController.getById': 'users:read',
   'AdminUsersController.listListeningHistory': 'users:read',
   'AdminUsersController.remove': 'users:delete',
+  'AdminUsersController.deactivateMany': 'users:delete',
   'AdminUsersController.restore': 'users:restore',
   'AdminUsersController.revokeSessions': 'users:revoke-sessions',
 }
@@ -149,11 +177,15 @@ describe('operator surface access control', () => {
 
   it('finds every operator controller on disk', () => {
     expect(controllers.map((controller) => controller.name).sort()).toEqual([
+      'AdminAlbumsController',
       'AdminArtistsController',
       'AdminAuditController',
       'AdminAuthController',
+      'AdminGenresController',
       'AdminModerationController',
       'AdminOverviewController',
+      'AdminPlaylistsController',
+      'AdminPodcastsController',
       'AdminRolesController',
       'AdminStaffController',
       'AdminTracksController',
@@ -170,20 +202,21 @@ describe('operator surface access control', () => {
     expect(guards).toContain(AdminAuthGuard)
   })
 
-  it.each(
-    Array.from(SESSION_ONLY_ROUTES, (id) => ({ id })),
-  )('$id carries no permission requirement', ({ id }) => {
-    const route = guardedRoutes.find((candidate) => candidate.id === id)
-    expect(route).toBeDefined()
+  it.each(Array.from(SESSION_ONLY_ROUTES, (id) => ({ id })))(
+    '$id carries no permission requirement',
+    ({ id }) => {
+      const route = guardedRoutes.find((candidate) => candidate.id === id)
+      expect(route).toBeDefined()
 
-    const found = route as Route
-    expect(
-      reflector.getAllAndOverride<Permission | undefined>(REQUIRED_PERMISSION, [
-        found.handler,
-        found.controller,
-      ]),
-    ).toBeUndefined()
-  })
+      const found = route as Route
+      expect(
+        reflector.getAllAndOverride<Permission | undefined>(REQUIRED_PERMISSION, [
+          found.handler,
+          found.controller,
+        ]),
+      ).toBeUndefined()
+    },
+  )
 
   /**
    * Every route that isn't public or session-only carries a permission from the catalogue,

@@ -65,6 +65,11 @@ logs_summary() {
     echo -e "${YELLOW}API Errors:${NC}"
     $DC logs --tail=50 api 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
 
+    # The transcode worker is a separate, profile-gated container (task worker:up). Without the
+    # profile compose does not know the service, so it prints nothing here until it is running.
+    echo -e "\n${YELLOW}Worker Errors:${NC}"
+    $DC --profile worker logs --tail=50 worker 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
+
     echo -e "\n${YELLOW}Web Player Errors:${NC}"
     $DC logs --tail=50 web-player 2>&1 | grep -i "error" | tail -10 || echo "  No errors found"
 

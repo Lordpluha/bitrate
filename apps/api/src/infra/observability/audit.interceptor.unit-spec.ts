@@ -3,12 +3,27 @@ import type { CallHandler, ExecutionContext } from '@nestjs/common'
 import { lastValueFrom, of } from 'rxjs'
 import type { PrismaService } from '../prisma/prisma.service'
 import { AuditInterceptor } from './audit.interceptor'
+import { SkipAudit } from './skip-audit.decorator'
 
 class PlaylistsController {
   updatePlaylist() {
     return undefined
   }
 }
+
+class BatchController {
+  @SkipAudit()
+  batchAction() {
+    return undefined
+  }
+}
+
+const makeBatchContext = (request: object) =>
+  ({
+    switchToHttp: () => ({ getRequest: () => request }),
+    getClass: () => BatchController,
+    getHandler: () => BatchController.prototype.batchAction,
+  }) as unknown as ExecutionContext
 
 const makeContext = (request: object) =>
   ({
@@ -136,6 +151,18 @@ describe('AuditInterceptor', () => {
     const interceptor = new AuditInterceptor({ auditLog: { create } } as unknown as PrismaService)
 
     await lastValueFrom(interceptor.intercept(makeContext({ method: 'GET' }), next))
+
+    expect(create).not.toHaveBeenCalled()
+  })
+
+  it('writes no request-level row for a route marked with SkipAudit', async () => {
+    const create = jest.fn<(args: unknown) => Promise<unknown>>()
+    const interceptor = new AuditInterceptor({ auditLog: { create } } as unknown as PrismaService)
+    const request = { method: 'POST', route: { path: '/batch' }, params: {}, ip: '203.0.113.14' }
+
+    await expect(
+      lastValueFrom(interceptor.intercept(makeBatchContext(request), next)),
+    ).resolves.toEqual({ ok: true })
 
     expect(create).not.toHaveBeenCalled()
   })

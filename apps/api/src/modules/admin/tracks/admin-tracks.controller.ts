@@ -1,6 +1,10 @@
+import { SkipAudit } from '@infra/observability/skip-audit.decorator'
 import {
   AuditContext,
   type AuditContextValue,
+  BatchIdsDto,
+  BatchIdsSchema,
+  sendCsvExport,
   TakeDownReasonDto,
   TakeDownReasonSchema,
 } from '@modules/admin/shared'
@@ -22,6 +26,7 @@ import {
   Query,
   Req,
   Res,
+  type StreamableFile,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
@@ -31,6 +36,7 @@ import { AdminTrackAudioService } from './admin-track-audio.service'
 import { AdminTracksService } from './admin-tracks.service'
 import {
   DeleteTrackSwagger,
+  ExportTracksSwagger,
   GetTrackSwagger,
   ListTrackProcessingAttemptsSwagger,
   ListTracksSwagger,
@@ -38,8 +44,11 @@ import {
   ReprocessTrackSwagger,
   RestoreTrackSwagger,
   StreamTrackAudioSwagger,
+  TakeDownTracksBatchSwagger,
 } from './decorators'
 import {
+  type ExportAdminTracksQueryDto,
+  ExportAdminTracksQuerySchema,
   type ListAdminTracksQueryDto,
   ListAdminTracksQuerySchema,
   type ListProcessingAttemptsQueryDto,
@@ -65,6 +74,21 @@ export class AdminTracksController {
   @Get('')
   list(@Query(new ZodValidationPipe(ListAdminTracksQuerySchema)) query: ListAdminTracksQueryDto) {
     return this.tracks.findAll(query)
+  }
+
+  /** Runs the CSV export operation. */
+  // Declared before `:id` so `export.csv` is not read as an id. The service writes the one audit
+  // row, because GET is not interceptor-audited.
+  @RequirePermission('tracks:export')
+  @ExportTracksSwagger()
+  @Get('export.csv')
+  async exportCsv(
+    @Query(new ZodValidationPipe(ExportAdminTracksQuerySchema)) query: ExportAdminTracksQueryDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    return sendCsvExport(res, 'tracks', await this.tracks.exportCsv(query, staff.id, auditContext))
   }
 
   /** Runs the get track operation. */
@@ -170,6 +194,20 @@ export class AdminTracksController {
     @AuditContext() auditContext: AuditContextValue = {},
   ) {
     return this.tracks.softDelete(id, staff.id, body.reason, auditContext)
+  }
+
+  /** Runs the batch take-down operation. `@SkipAudit` because each take-down audits itself. */
+  @RequirePermission('tracks:delete')
+  @TakeDownTracksBatchSwagger()
+  @SkipAudit()
+  @HttpCode(HttpStatus.OK)
+  @Post('batch/take-down')
+  takeDownMany(
+    @Body(new ZodValidationPipe(BatchIdsSchema)) body: BatchIdsDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue = {},
+  ) {
+    return this.tracks.softDeleteMany(body.ids, staff.id, auditContext)
   }
 
   /** Runs the restore operation. */
