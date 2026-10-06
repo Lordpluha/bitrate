@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core'
+import { RouterLink } from '@angular/router'
 import { GetOverviewSeriesUseCase, GetOverviewUseCase } from '@application/overview'
 import {
   OVERVIEW_SERIES_RANGE_DAYS,
@@ -37,7 +38,14 @@ import { overviewQueryCodec } from './overview.query'
 /** The operator landing dashboard: daily-activity charts, each carrying the counts that belong to it. */
 @Component({
   selector: 'app-overview',
-  imports: [CollectionStatus, OverviewStatusStrip, BarChart, LineChart, HlmButtonImports],
+  imports: [
+    CollectionStatus,
+    OverviewStatusStrip,
+    BarChart,
+    LineChart,
+    RouterLink,
+    HlmButtonImports,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './overview.html',
 })
@@ -100,10 +108,14 @@ export class OverviewPage {
    * from a previous range or a `0` standing in for "unknown".
    */
   protected readonly signupsHeadline = computed(() =>
-    this.seriesLoading() || this.seriesFailure() ? null : signupsChartHeadline(this.currentSeries()),
+    this.seriesLoading() || this.seriesFailure()
+      ? null
+      : signupsChartHeadline(this.currentSeries()),
   )
   protected readonly uploadsHeadline = computed(() =>
-    this.seriesLoading() || this.seriesFailure() ? null : uploadsChartHeadline(this.currentSeries()),
+    this.seriesLoading() || this.seriesFailure()
+      ? null
+      : uploadsChartHeadline(this.currentSeries()),
   )
 
   /** Shown in a chart card's own plot area when its series request failed — the header,
