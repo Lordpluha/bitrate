@@ -120,6 +120,12 @@
           [failure]="chartFailure()"
         >
           <app-overview-status-strip [items]="reportsStatus()" />
+          <a
+            routerLink="/overview/reports"
+            queryParamsHandling="preserve"
+            class="mt-2 inline-block text-xs text-muted-foreground underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+            >Reports by entity type over time</a
+          >
         </app-bar-chart>
       </div>
     </div>

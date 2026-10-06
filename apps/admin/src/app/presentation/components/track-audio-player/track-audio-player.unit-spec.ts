@@ -88,12 +88,17 @@ async function render(track: TrackDetail = detail()): Promise<{
   const fixture = TestBed.createComponent(TrackAudioPlayer)
   fixture.componentRef.setInput('track', track)
   current = fixture
-  await fixture.whenStable()
-  /** `elementReady` flips once `customElements.whenDefined()` resolves — one more macrotask. */
-  await new Promise((resolve) => setTimeout(resolve))
-  await fixture.whenStable()
-
   const host = fixture.nativeElement as HTMLElement
+  /**
+   * `elementReady` flips once `customElements.whenDefined()` resolves, and the zoneless scheduler
+   * renders that change on its own timer — a fixed single macrotask raced it on slow runners, so
+   * wait for the element instead.
+   */
+  await vi.waitFor(async () => {
+    await fixture.whenStable()
+    if (!host.querySelector(TAG_NAME)) throw new Error(`<${TAG_NAME}> has not rendered yet`)
+  })
+
   const player = host.querySelector(TAG_NAME) as BitratePlayerStub
 
   return { fixture, host, player }

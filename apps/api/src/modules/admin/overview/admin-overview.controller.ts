@@ -3,7 +3,11 @@ import { Controller, Get, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminOverviewService } from './admin-overview.service'
-import { GetOverviewSeriesSwagger, GetOverviewSwagger } from './decorators'
+import {
+  GetOverviewReportsByTypeSwagger,
+  GetOverviewSeriesSwagger,
+  GetOverviewSwagger,
+} from './decorators'
 import { type GetOverviewSeriesQueryDto, GetOverviewSeriesQuerySchema } from './dtos'
 
 /** The operator landing dashboard — read-only aggregate summary. */
@@ -29,5 +33,15 @@ export class AdminOverviewController {
     @Query(new ZodValidationPipe(GetOverviewSeriesQuerySchema)) query: GetOverviewSeriesQueryDto,
   ) {
     return this.overview.getSeries(query.days)
+  }
+
+  /** Runs the get overview reports-by-type operation. */
+  @RequirePermission('overview:read')
+  @GetOverviewReportsByTypeSwagger()
+  @Get('reports-by-type')
+  getReportsByType(
+    @Query(new ZodValidationPipe(GetOverviewSeriesQuerySchema)) query: GetOverviewSeriesQueryDto,
+  ) {
+    return this.overview.getReportsByType(query.days)
   }
 }

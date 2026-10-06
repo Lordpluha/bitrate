@@ -131,6 +131,12 @@ const LIST_ROUTES: ListRouteCase[] = [
     schema: GetOverviewSeriesQuerySchema,
   },
   {
+    name: 'AdminOverviewController.getReportsByType',
+    controller: AdminOverviewController,
+    handlerName: 'getReportsByType',
+    schema: GetOverviewSeriesQuerySchema,
+  },
+  {
     name: 'AdminTracksController.listProcessingAttempts',
     controller: AdminTracksController,
     handlerName: 'listProcessingAttempts',
