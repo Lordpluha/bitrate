@@ -54,9 +54,7 @@ export function AdminAuth() {
           code: {
             type: 'string',
             description:
-              'Stable machine-readable error code (the message key); omitted for untranslated legacy messages.',
-            enum: Object.values(UNAUTHORIZED_ERRORS),
-            example: UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN,
+              'Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals.',
           },
         },
       },

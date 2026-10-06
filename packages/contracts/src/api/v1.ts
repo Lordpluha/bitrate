@@ -6331,6 +6331,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -6847,6 +6859,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -6975,6 +6999,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -7103,6 +7139,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -7246,6 +7294,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -7817,6 +7877,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -7947,6 +8019,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -8086,6 +8170,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -8225,6 +8321,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -8366,6 +8474,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -8507,6 +8627,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -9297,6 +9429,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -9650,6 +9794,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -9797,6 +9953,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -9937,6 +10105,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -10070,6 +10250,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -10425,6 +10617,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -10547,6 +10751,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -10788,6 +11004,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -10923,6 +11151,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -11065,6 +11305,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -11312,6 +11564,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -11441,6 +11705,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -11581,6 +11857,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -11738,6 +12026,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -11998,6 +12298,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -12165,6 +12477,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -12295,6 +12619,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -12449,6 +12785,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -12591,6 +12939,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -12733,6 +13093,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -12977,6 +13349,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -13117,6 +13501,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -13361,6 +13757,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -13503,6 +13911,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -13649,6 +14069,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -13793,6 +14225,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -13935,6 +14379,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -14079,6 +14535,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -14325,6 +14793,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -14552,6 +15032,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -14681,6 +15173,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -14816,6 +15320,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -14958,6 +15474,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -15464,6 +15992,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -15592,6 +16132,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -15720,6 +16272,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -16302,6 +16866,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -16443,6 +17019,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -16584,6 +17172,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -17369,6 +17969,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -17499,6 +18111,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -17629,6 +18253,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -17757,6 +18393,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -17893,6 +18541,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -18019,6 +18679,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -18715,6 +19387,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -18857,6 +19541,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -20589,6 +21285,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -20722,6 +21430,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -20862,6 +21582,18 @@ export interface operations {
               | 'errors.auth.session_not_found'
             /** @example Unauthorized */
             error?: string
+            /**
+             * @description Stable machine-readable error code (the message key); omitted for untranslated legacy messages.
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            code?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
           }
         }
       }
@@ -21249,6 +21981,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -21480,6 +22214,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -21617,6 +22353,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -21762,6 +22500,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -21913,6 +22653,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -22063,6 +22805,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -22199,6 +22943,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -22346,6 +23092,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -22499,6 +23247,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -22645,6 +23395,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -22781,6 +23533,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -22928,6 +23682,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -23089,6 +23845,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -23237,6 +23995,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -23384,6 +24144,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -23535,6 +24297,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -23691,6 +24455,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -23843,6 +24609,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -23988,6 +24756,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -24124,6 +24894,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -24271,6 +25043,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -24431,6 +25205,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -24583,6 +25359,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -24729,6 +25507,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -24885,6 +25665,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -25038,6 +25820,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -25184,6 +25968,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -25320,6 +26106,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -25469,6 +26257,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -25644,6 +26434,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -25805,6 +26597,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -25952,6 +26746,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -26095,6 +26891,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -26251,6 +27049,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -26397,6 +27197,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -26558,6 +27360,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -26693,6 +27497,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -26840,6 +27646,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -26982,6 +27790,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -27120,6 +27930,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -27272,6 +28084,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -27433,6 +28247,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -27587,6 +28403,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -27732,6 +28550,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -27884,6 +28704,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -28027,6 +28849,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -28190,6 +29014,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -28353,6 +29179,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -28496,6 +29324,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -28640,6 +29470,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -28784,6 +29616,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -28926,6 +29760,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -29071,6 +29907,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -29214,6 +30052,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -29357,6 +30197,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -29518,6 +30360,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -29676,6 +30520,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -29812,6 +30658,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -29959,6 +30807,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -30115,6 +30965,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -30275,6 +31127,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -30411,6 +31265,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -30558,6 +31414,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -30714,6 +31572,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -30870,6 +31730,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -31029,6 +31891,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -31165,6 +32029,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -31312,6 +32178,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -31468,6 +32336,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -31625,6 +32495,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
@@ -31782,6 +32654,8 @@ export interface operations {
               | 'Session not found'
             /** @example Unauthorized */
             error?: string
+            /** @description Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals. */
+            code?: string
           }
         }
       }
