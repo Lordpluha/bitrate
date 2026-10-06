@@ -34,7 +34,7 @@ RUN --mount=type=secret,id=turbo_token,env=TURBO_TOKEN \
     NODE_ENV=production pnpm exec turbo run storybook:build --filter=@bitrate/ui-react
 
 # Stage 3: Production
-FROM nginx:1.29-alpine AS production
+FROM nginx:1.31-alpine AS production
 COPY --from=build /app/packages/ui-react/storybook-static /usr/share/nginx/html
 COPY infra/nginx/static-site.conf /etc/nginx/nginx.conf
 RUN chown -R nginx:nginx /usr/share/nginx/html
