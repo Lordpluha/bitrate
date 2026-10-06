@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-16T00:00:00Z",
+  "title": "Design System: Bitrate for Artists — Light",
+  "extensions": {
+    "colorMeta": {
+      "color-primary": { "role": "primary", "displayName": "Deep Violet" },
+      "color-on-primary": { "role": "neutral", "displayName": "On-primary Text" },
+      "color-accent": { "role": "primary", "displayName": "Cobalt Accent" },
+      "color-background": { "role": "neutral", "displayName": "Paper Canvas" },
+      "color-card": { "role": "neutral", "displayName": "White Panel Surface" },
+      "color-border": { "role": "neutral", "displayName": "Cool Structural Border" },
+      "color-text": { "role": "neutral", "displayName": "Primary Ink" },
+      "color-text-secondary": { "role": "neutral", "displayName": "Secondary Ink" }
+    },
+    "typographyMeta": {
+      "body": {
+        "displayName": "Interface Text",
+        "purpose": "Manrope interface copy inherited from the light Pencil system."
+      },
+      "display": {
+        "displayName": "Display Text",
+        "purpose": "Space Grotesk for large product statements only."
+      },
+      "label": {
+        "displayName": "Action Label",
+        "purpose": "Action text inherited from shared light component masters."
+      }
+    },
+    "shadows": [],
+    "motion": [],
+    "breakpoints": []
+  },
+  "components": [],
+  "narrative": {
+    "northStar": "Luminous Studio",
+    "overview": "A bright production workspace with a soft paper canvas, cool technical surfaces, precise violet and cobalt signals, and workflow-specific music imagery. The .pen file remains the source of truth.",
+    "keyCharacteristics": [
+      "Bright neutral structure with restrained violet actions.",
+      "Soft local elevation rather than heavy floating panels.",
+      "Status uses semantic tints, text, and icons.",
+      "Mobile preserves content and the next action."
+    ],
+    "rules": [
+      {
+        "name": "The Surface Rule",
+        "body": "Use borders and tonal layers before shadow; reserve dark surfaces for media that benefits from focus.",
+        "section": "colors"
+      },
+      {
+        "name": "The Evidence Rule",
+        "body": "Static designs define intent; keyboard, focus, contrast, motion, and responsive behavior require runtime verification.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Reuse light variables, masters, and original brand assets.",
+      "Use quiet borders and tonal layers for hierarchy.",
+      "Keep one dominant action per decision context."
+    ],
+    "donts": [
+      "Do not leave dark-theme surfaces in forms or tables.",
+      "Do not use heavy generic shadows or full purple content cards.",
+      "Do not present concepts or demo data as shipped behavior."
+    ]
+  }
+}

@@ -30,10 +30,11 @@ async function validateAudioVariant(audioPath: string): Promise<void> {
 /** Encodes progressive Opus fallback files for every requested bitrate. */
 export async function prepareVariants(
   job: Job<ConvertAudioJob>,
+  inputPath: string,
   temporaryRoot: string,
   onBitrateStart?: (bitrate: string) => void,
 ): Promise<PreparedVariant[]> {
-  const { inputPath, format, bitrates, sourceFileName, trackId } = job.data
+  const { format, bitrates, sourceFileName, trackId } = job.data
   const { convertAudio } = await import('@bitrate/converter')
   const generationRoot = getAudioGenerationRoot(trackId, sourceFileName)
   const prepared: PreparedVariant[] = []
@@ -70,15 +71,15 @@ export async function prepareVariants(
   return prepared
 }
 
-/** Generates a multi-bitrate HLS package from the original source file. */
+/** Generates a multi-bitrate HLS package from the local copy of the master. */
 export async function generateHls(
-  job: Job<ConvertAudioJob>,
+  inputPath: string,
   temporaryHlsPath: string,
   bitrates: string[],
 ): Promise<void> {
   const { convertAudioToHls } = await import('@bitrate/converter')
   await convertAudioToHls({
-    input: job.data.inputPath,
+    input: inputPath,
     outputDir: temporaryHlsPath,
     bitrates,
     segmentDuration: HLS_SEGMENT_SECONDS,
@@ -113,14 +114,14 @@ export async function validateHls(hlsPath: string, bitrates: string[]): Promise<
  */
 export async function generateCmaf(
   generationRoot: string,
-  job: Job<ConvertAudioJob>,
+  inputPath: string,
   temporaryRoot: string,
   bitrates: string[],
 ): Promise<PreparedCmafPackage> {
   const { convertAudioToCmaf } = await import('@bitrate/converter')
 
   const result = await convertAudioToCmaf({
-    input: job.data.inputPath,
+    input: inputPath,
     outputDir: join(temporaryRoot, CMAF_FORMAT),
     bitrates: bitrates.map(parseBitrateLabel),
     timeoutMs: CONVERSION_TIMEOUT_MS,

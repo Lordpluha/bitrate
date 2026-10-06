@@ -14,7 +14,7 @@ FROM node:24-alpine AS base
 # write. TURBO_TOKEN is the credential and arrives per RUN via --mount=type=secret, so it
 # never lands in an image layer.
 ENV TURBO_TEAM=team_Ao32Preb1GI1Ohd56uSdfxEZ
-RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
+RUN corepack enable && corepack prepare pnpm@12.7.0 --activate
 WORKDIR /app
 
 # Stage 2: Dependencies
@@ -22,10 +22,24 @@ FROM base AS dependencies
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY scripts ./scripts
 COPY apps/api/package.json ./apps/api/
+# pnpm's frozen-lockfile check validates every workspace importer in pnpm-lock.yaml has a
+# package.json on disk, not just the ones this app depends on — so every workspace member's
+# package.json has to be copied here, even packages this image never installs code from.
+COPY apps/admin/package.json ./apps/admin/
+COPY apps/desktop/package.json ./apps/desktop/
+COPY apps/docs/package.json ./apps/docs/
+COPY apps/mobile/package.json ./apps/mobile/
+COPY apps/web-artists/package.json ./apps/web-artists/
+COPY apps/web-player/package.json ./apps/web-player/
+COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/converter/package.json ./packages/converter/
 COPY packages/converter/bin ./packages/converter/bin
-COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/ncs-parser/package.json ./packages/ncs-parser/
+COPY packages/player/package.json ./packages/player/
+COPY packages/svgr/package.json ./packages/svgr/
+COPY packages/tailwind/package.json ./packages/tailwind/
+COPY packages/ui-react/package.json ./packages/ui-react/
+COPY packages/vite-svgr/package.json ./packages/vite-svgr/
 COPY turbo.json ./
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --frozen-lockfile
 
@@ -70,10 +84,21 @@ ARG PRISMA_GENERATE_ONLY_URL
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY scripts ./scripts
 COPY apps/api/package.json ./apps/api/
+COPY apps/admin/package.json ./apps/admin/
+COPY apps/desktop/package.json ./apps/desktop/
+COPY apps/docs/package.json ./apps/docs/
+COPY apps/mobile/package.json ./apps/mobile/
+COPY apps/web-artists/package.json ./apps/web-artists/
+COPY apps/web-player/package.json ./apps/web-player/
+COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/converter/package.json ./packages/converter/
 COPY packages/converter/bin ./packages/converter/bin
-COPY packages/contracts/package.json ./packages/contracts/
 COPY packages/ncs-parser/package.json ./packages/ncs-parser/
+COPY packages/player/package.json ./packages/player/
+COPY packages/svgr/package.json ./packages/svgr/
+COPY packages/tailwind/package.json ./packages/tailwind/
+COPY packages/ui-react/package.json ./packages/ui-react/
+COPY packages/vite-svgr/package.json ./packages/vite-svgr/
 RUN SKIP_GRAPHIFY_INSTALL=1 SKIP_RTK_INSTALL=1 pnpm install --prod --frozen-lockfile
 
 # Prisma Client is generated here rather than in the production stage so that stage writes
@@ -109,23 +134,15 @@ COPY --chown=bitrateapi:nodejs apps/api/prisma ./apps/api/prisma
 # url — it comes from here. The TypeScript source, not the compiled output: tsc emits CommonJS
 # that Prisma's config loader rejects with "Failed to parse syntax of config file".
 COPY --chown=bitrateapi:nodejs apps/api/prisma.config.ts ./apps/api/prisma.config.ts
-# public/ only. app.module.ts points ServeStaticModule at join(__dirname,'..','..','storage',
-# 'public') — /app/apps/api/storage/public — so that one subtree is load-bearing. The sibling
-# private/ is seeded audio: 823 MB on a developer checkout, and `apps/api/storage/.gitignore`
-# keeps all of it out of git, so a CI image never contained it and a locally built one did.
-COPY --chown=bitrateapi:nodejs apps/api/storage/public ./apps/api/storage/public
 COPY --chown=bitrateapi:nodejs package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY --chown=bitrateapi:nodejs apps/api/package.json ./apps/api/
 
-# The runtime storage root, and a different path from the seed directory above. CMD runs
-# `node apps/api/dist/src/main.js` from WORKDIR /app, so process.cwd() is /app and
-# apps/api/src/common/config/storage.config.ts resolves every upload path under /app/storage.
-# Creating it here is what lets infra/docker-compose.prod.yaml mount a named volume over it:
-# Docker initialises an empty volume from the image directory, ownership included, so the
-# non-root user needs no chown on the host. Two empty directories, so the recursive chown
-# scoped to them costs nothing.
-RUN mkdir -p /app/storage/private /app/storage/public \
-    && chown -R bitrateapi:nodejs /app/storage
+# /app/worker-tmp is the transcode worker's scratch root (AUDIO_SCRATCH_ROOT, set on the
+# `worker` service). The named volume `worker_tmp` is seeded from this empty, non-root-owned
+# directory, so the worker can write to it without a host chown. The API never mounts it.
+# Uploaded files do not live in the image or in a volume: they go to the object store (ADR-0050).
+RUN mkdir -p /app/worker-tmp \
+    && chown -R bitrateapi:nodejs /app/worker-tmp
 
 USER bitrateapi
 

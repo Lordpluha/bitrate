@@ -83,16 +83,29 @@ describe('UsersAuthController (int)', () => {
     usersService.findSelfById.mockReset()
   })
 
-  it('POST /auth/registration should return 201', async () => {
+  it('POST /auth/registration should return 201 when the legal documents are accepted', async () => {
     authService.registerUser.mockResolvedValue(undefined as never)
 
     const res = await request(app.getHttpServer()).post('/auth/registration').send({
       email: 'new@example.com',
       password: 'password123',
       username: 'newuser',
+      acceptLegal: true,
     })
 
     expect(res.status).toBe(201)
+  })
+
+  it.each([
+    ['omitted', {}],
+    ['false', { acceptLegal: false }],
+  ])('POST /auth/registration should return 400 when acceptLegal is %s', async (_label, extra) => {
+    const res = await request(app.getHttpServer())
+      .post('/auth/registration')
+      .send({ email: 'new@example.com', password: 'password123', username: 'newuser', ...extra })
+
+    expect(res.status).toBe(400)
+    expect(authService.registerUser).not.toHaveBeenCalled()
   })
 
   it('POST /auth/login should return 201 on valid credentials', async () => {

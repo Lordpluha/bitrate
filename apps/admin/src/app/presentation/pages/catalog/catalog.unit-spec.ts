@@ -3,7 +3,9 @@ import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { provideRouter, type Routes } from '@angular/router'
 import { RouterTestingHarness } from '@angular/router/testing'
-import type { Page, TakeDownInput } from '@domain/shared'
+import { SessionStore } from '@application/session'
+import type { Permission } from '@domain/access'
+import type { BatchResult, Page, TakeDownInput } from '@domain/shared'
 import {
   type ListTracksQuery,
   type ProbeTrackAudioInput,
@@ -13,6 +15,8 @@ import {
   type TrackDetail,
   TrackRepository,
 } from '@domain/track'
+import { ExportRepository } from '@domain/export'
+import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CatalogPage } from './catalog'
 import { TranslocoTestingModule } from '@jsverse/transloco'
@@ -37,6 +41,7 @@ function track(overrides: Partial<Track> = {}): Track {
 }
 
 const list = vi.fn<(query: ListTracksQuery) => Promise<Page<Track>>>()
+const takeDownMany = vi.fn<(ids: readonly string[]) => Promise<BatchResult>>()
 
 class StubTrackRepository extends TrackRepository {
   override list(query: ListTracksQuery): Promise<Page<Track>> {
@@ -55,6 +60,10 @@ class StubTrackRepository extends TrackRepository {
     throw new Error('not used')
   }
 
+  override takeDownMany(ids: readonly string[]): Promise<BatchResult> {
+    return takeDownMany(ids)
+  }
+
   override restore(_input: TakeDownInput): Promise<void> {
     throw new Error('not used')
   }
@@ -67,6 +76,27 @@ class StubTrackRepository extends TrackRepository {
   }
 
   override probeAudio(_input: ProbeTrackAudioInput): Promise<TrackAudioSource> {
+    throw new Error('not used')
+  }
+}
+
+const exportTracks = vi.fn<ExportRepository['exportTracks']>()
+
+/** Only the export this page uses is exercised; the others fail loudly if reached. */
+class StubExportRepository extends ExportRepository {
+  override exportUsers(): ReturnType<ExportRepository['exportUsers']> {
+    throw new Error('not used')
+  }
+
+  override exportArtists(): ReturnType<ExportRepository['exportArtists']> {
+    throw new Error('not used')
+  }
+
+  override exportTracks(...args: Parameters<ExportRepository['exportTracks']>) {
+    return exportTracks(...args)
+  }
+
+  override exportReports(): ReturnType<ExportRepository['exportReports']> {
     throw new Error('not used')
   }
 }
@@ -94,6 +124,7 @@ describe('CatalogPage — attention-first default', () => {
         provideRouter(routes),
         provideLocationMocks(),
         { provide: TrackRepository, useClass: StubTrackRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
       ],
     })
     harness = await RouterTestingHarness.create()
@@ -126,6 +157,181 @@ describe('CatalogPage — attention-first default', () => {
     expect(harness.routeNativeElement?.textContent).toContain(ATTENTION_NOTE)
     expect(list).toHaveBeenLastCalledWith(
       expect.objectContaining({ filter: expect.objectContaining({ sort: undefined }) }),
+    )
+  })
+})
+
+describe('CatalogPage — batch take-down', () => {
+  const FIRST = '3f2504e0-4f89-41d3-9a0c-0305e82c3301'
+  const SECOND = '3f2504e0-4f89-41d3-9a0c-0305e82c3302'
+  let harness: RouterTestingHarness
+
+  const operator = (permissions: Permission[]) =>
+    TestBed.inject(SessionStore).set({
+      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3399',
+      email: 'ops@bitrate.me',
+      username: 'ops',
+      roleId: 'c1b1d2e3-4f5a-4b6c-8d7e-9f0a1b2c3d4e',
+      roleName: 'MODERATOR',
+      permissions,
+    })
+  const host = () => harness.routeNativeElement as HTMLElement
+  const bar = () => host().querySelector('[aria-label="Batch actions"]')
+  const dialog = () => document.body.querySelector('[data-slot="dialog-content"]')
+  const button = (root: ParentNode | null, text: string) =>
+    Array.from(root?.querySelectorAll<HTMLButtonElement>('button') ?? []).find((candidate) =>
+      candidate.textContent?.trim().startsWith(text),
+    )
+
+  beforeEach(async () => {
+    list.mockReset()
+    takeDownMany.mockReset()
+    list.mockResolvedValue({
+      items: [
+        track({ id: FIRST, title: 'Night Drive' }),
+        track({ id: SECOND, title: 'Day Drive' }),
+      ],
+      total: 2,
+      page: 1,
+      limit: 20,
+    })
+
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: TrackRepository, useClass: StubTrackRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
+      ],
+    })
+    harness = await RouterTestingHarness.create()
+  })
+
+  it('offers no checkboxes to an operator without tracks:delete', async () => {
+    operator(['tracks:read'])
+    await harness.navigateByUrl('/catalog', CatalogPage)
+    await harness.fixture.whenStable()
+
+    expect(host().querySelectorAll('input[type="checkbox"]')).toHaveLength(0)
+  })
+
+  it('lists every selected title in the confirm dialog and summarises per-row results', async () => {
+    operator(['tracks:read', 'tracks:delete'])
+    takeDownMany.mockResolvedValue({
+      items: [
+        { id: FIRST, outcome: 'succeeded' },
+        { id: SECOND, outcome: 'failed', failure: { code: 'NOT_FOUND', message: 'Track gone' } },
+      ],
+      succeeded: 1,
+      failed: 1,
+    })
+    await harness.navigateByUrl('/catalog', CatalogPage)
+    await harness.fixture.whenStable()
+
+    host()
+      .querySelector<HTMLInputElement>('input[aria-label="Select all tracks on this page"]')
+      ?.click()
+    await harness.fixture.whenStable()
+    expect(bar()?.textContent).toContain('2 tracks selected')
+
+    button(bar(), 'Take down')?.click()
+    await harness.fixture.whenStable()
+    const confirm = dialog()
+    expect(
+      Array.from(confirm?.querySelectorAll('li') ?? []).map((li) => li.textContent?.trim()),
+    ).toEqual(['Night Drive', 'Day Drive'])
+
+    button(confirm, 'Take down tracks')?.click()
+    await harness.fixture.whenStable()
+
+    expect(takeDownMany).toHaveBeenCalledWith([FIRST, SECOND])
+    expect(dialog()?.textContent).toContain('1 succeeded, 1 failed')
+    expect(dialog()?.textContent).toContain('Track gone')
+  })
+})
+
+describe('CatalogPage — CSV export', () => {
+  let harness: RouterTestingHarness
+
+  const operator = (permissions: Permission[]) =>
+    TestBed.inject(SessionStore).set({
+      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3399',
+      email: 'ops@bitrate.me',
+      username: 'ops',
+      roleId: 'c1b1d2e3-4f5a-4b6c-8d7e-9f0a1b2c3d4e',
+      roleName: 'MODERATOR',
+      permissions,
+    })
+  const exportButton = () =>
+    Array.from(
+      (harness.routeNativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
+    ).find((candidate) => candidate.textContent?.trim().startsWith('Export CSV'))
+
+  beforeEach(async () => {
+    list.mockReset()
+    exportTracks.mockReset()
+    list.mockResolvedValue({ items: [track()], total: 1, page: 1, limit: 20 })
+    exportTracks.mockResolvedValue({
+      blob: new Blob(['id\r\n']),
+      filename: 'export.csv',
+      truncated: false,
+    })
+
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: TrackRepository, useClass: StubTrackRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
+        { provide: FileSaver, useValue: { save: vi.fn() } },
+      ],
+    })
+    harness = await RouterTestingHarness.create()
+  })
+
+  it('offers no export to an operator without tracks:export', async () => {
+    operator(['tracks:read'])
+    await harness.navigateByUrl('/catalog', CatalogPage)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeUndefined()
+  })
+
+  it('offers the export to an operator with tracks:export', async () => {
+    operator(['tracks:read', 'tracks:export'])
+    await harness.navigateByUrl('/catalog', CatalogPage)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeDefined()
+  })
+
+  it('exports the filters and sort in the URL, not the loaded page', async () => {
+    operator(['tracks:read', 'tracks:export'])
+    await harness.navigateByUrl('/catalog?q=x&sort=title&dir=asc&page=2', CatalogPage)
+    await harness.fixture.whenStable()
+
+    exportButton()?.click()
+    await harness.fixture.whenStable()
+
+    expect(exportTracks).toHaveBeenCalledTimes(1)
+    expect(exportTracks).toHaveBeenCalledWith(
+      expect.objectContaining({ query: 'x', sort: { field: 'title', direction: 'asc' } }),
     )
   })
 })

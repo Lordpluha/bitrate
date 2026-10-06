@@ -7,6 +7,9 @@ Element.prototype.hasPointerCapture ??= () => false
 Element.prototype.setPointerCapture ??= () => {}
 Element.prototype.releasePointerCapture ??= () => {}
 
+// jsdom has no PointerEvent; Base UI builds one for checkbox and switch activation.
+window.PointerEvent ??= class PointerEvent extends MouseEvent {} as typeof window.PointerEvent
+
 window.matchMedia ??= (query: string): MediaQueryList => ({
   matches: false,
   media: query,

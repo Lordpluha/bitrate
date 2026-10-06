@@ -26,8 +26,19 @@ coverage
 **/blob-report/
 /output/playwright/
 
+# Local design/review scratch files. Canonical design sources live under pencil/.
+/.checklists/
+/.impeccable/mocks/
+/.impeccable/review/
+/apps/web-player/.impeccable/
+/output/
+
 # Turbo
 .turbo
+
+# Angular CLI cache. In a git worktree, Angular 22 places it at the main checkout's root
+# (shared by every worktree) rather than in apps/admin, so it appears here too.
+/.angular/
 
 # Vercel
 .vercel

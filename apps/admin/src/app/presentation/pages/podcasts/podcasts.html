@@ -1,0 +1,102 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Podcasts</h1>
+    <p class="text-sm text-muted-foreground">
+      A podcast and each of its episodes are taken down separately. Taking a podcast down does not
+      change its episodes, and taking an episode down does not change its podcast.
+    </p>
+  </header>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <form class="flex gap-2" (ngSubmit)="applyFilters()">
+      <label class="sr-only" for="podcast-search">Search podcasts</label>
+      <input
+        hlmInput
+        class="w-64"
+        id="podcast-search"
+        type="search"
+        placeholder="Podcast title"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+      />
+      <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
+    </form>
+
+    <div class="flex gap-2" role="group" aria-label="Filter by take-down status">
+      @for (option of statusOptions; track option.value) {
+        <button
+          hlmBtn
+          size="sm"
+          type="button"
+          [variant]="query.state().resourceStatus === option.value ? 'default' : 'outline'"
+          [attr.aria-pressed]="query.state().resourceStatus === option.value"
+          (click)="setResourceStatus(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No podcasts match this filter."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Podcasts
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'title')">
+              <app-sort-header
+                [field]="'title'"
+                label="Podcast"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Podcast
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col">Publisher</th>
+            <th hlmTh scope="col">Language</th>
+            <th hlmTh scope="col">Episodes</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (podcast of collection.items(); track podcast.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a [routerLink]="['/podcasts', podcast.id]" class="hover:underline">{{
+                  podcast.title
+                }}</a>
+                @if (podcast.explicit) {
+                  <span hlmBadge variant="outline" class="ml-2">explicit</span>
+                }
+                @if (podcast.takenDownAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                }
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ podcast.publisher }}</td>
+              <td hlmTd class="text-muted-foreground">{{ podcast.language ?? '—' }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">{{ podcast.episodeCount }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</section>

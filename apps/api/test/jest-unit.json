@@ -3,9 +3,10 @@
   "rootDir": "../src",
   "testRegex": ".*\\.unit-spec\\.ts$",
   "transform": {
+    "node_modules/@nestjs/.+\\.js$": "<rootDir>/../test/esm-deps.transformer.cjs",
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib)/)"],
+  "transformIgnorePatterns": ["node_modules/(?!(@noble|@scure|@otplib|@nestjs)/)"],
   "collectCoverageFrom": [
     "**/*.(t|j)s",
     "!**/index.ts",

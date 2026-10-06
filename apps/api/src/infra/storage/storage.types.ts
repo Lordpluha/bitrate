@@ -15,9 +15,8 @@ export type StorageObjectMeta = {
 }
 
 /**
- * Storage driver abstraction bound to the STORAGE_SERVICE token.
- * Implemented by S3Service (STORAGE_DRIVER=s3) and LocalStorageService
- * (STORAGE_DRIVER=local) — both preserve identical Range and HLS-asset behavior.
+ * Object storage abstraction bound to the STORAGE_SERVICE token.
+ * Implemented by S3Service, which talks to the S3-compatible object store.
  */
 export interface StorageService {
   /** Verifies that the selected storage backend is reachable. */
@@ -27,9 +26,8 @@ export interface StorageService {
   upload(key: string, body: Buffer | Readable, contentType: string): Promise<string>
 
   /**
-   * Returns a time-limited direct-access URL for the object.
-   * The S3 driver returns a presigned URL pointing at the S3 endpoint directly;
-   * the local driver returns a signed URL pointing back at this API's own storage route.
+   * Returns a time-limited, signed URL for the object on this API's own storage route.
+   * Both drivers return the same shape; the object store's endpoint is never exposed.
    */
   getPresignedUrl(key: string, expiresIn?: number): Promise<string>
 

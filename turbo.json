@@ -1,7 +1,8 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "agentGuidance": false,
   "globalEnv": ["NG_APP_API_URL"],
-  "globalDependencies": ["biome.json", ".npmrc"],
+  "globalDependencies": ["biome.json", "biome.ci.json", ".npmrc", "pnpm-workspace.yaml"],
   "globalPassThroughEnv": [
     "SKIP_GRAPHIFY_INSTALL",
     "SKIP_RTK_INSTALL",
@@ -58,10 +59,10 @@
       "dependsOn": ["^generate-types"],
       "outputs": [".types-refs/**"]
     },
-    "@bitrate/web-player#generate-types": { "outputs": [] },
-    "@bitrate/web-artists#generate-types": { "outputs": [] },
-    "@bitrate/api#generate-types": { "outputs": [] },
-    "@bitrate/admin#generate-types": { "outputs": [] },
+    "@bitrate/web-player#generate-types": { "dependsOn": ["^generate-types"], "outputs": [] },
+    "@bitrate/web-artists#generate-types": { "dependsOn": ["^generate-types"], "outputs": [] },
+    "@bitrate/api#generate-types": { "dependsOn": ["^generate-types"], "outputs": [] },
+    "@bitrate/admin#generate-types": { "dependsOn": ["^generate-types"], "outputs": [] },
     "dev": {
       "cache": false
     }

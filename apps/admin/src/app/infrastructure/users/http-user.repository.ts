@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { firstValueFrom } from 'rxjs'
-import type { Page, TakeDownInput } from '@domain/shared'
+import type { BatchResult, Page, TakeDownInput } from '@domain/shared'
 import {
   LISTENING_HISTORY_PAGE_SIZE,
   type ListUsersQuery,
@@ -11,13 +11,14 @@ import {
   UserRepository,
 } from '@domain/user'
 import { ADMIN_API } from '../http/api.config'
+import { batchResultDto, buildBatchBody, toBatchResult } from '../http/batch-result.dto'
 import { buildTakeDownBody, revokeSessionsResultDto } from '../http/take-down.dto'
 import { toResourceWriteError } from '../http/to-resource-write-error'
 import { fetchPage } from '../http/wire-page'
 import { listeningHistoryPageDto } from './listening-history.dto'
 import { toListeningHistoryEntry } from './listening-history.mapper'
 import { userDetailDto, userPageDto } from './user.dto'
-import { toUser, toUserDetail, toWireUserSort, toWireUserStatus } from './user.mapper'
+import { toUser, toUserDetail, toUserListFilters } from './user.mapper'
 
 @Injectable()
 export class HttpUserRepository extends UserRepository {
@@ -30,12 +31,7 @@ export class HttpUserRepository extends UserRepository {
       url: this.base,
       page,
       limit,
-      filters: {
-        q: filter.query,
-        status: filter.status ? toWireUserStatus(filter.status) : undefined,
-        sort: filter.sort ? toWireUserSort(filter.sort.field) : undefined,
-        order: filter.sort?.direction,
-      },
+      filters: toUserListFilters(filter),
       schema: userPageDto,
       toDomain: toUser,
     })
@@ -55,6 +51,14 @@ export class HttpUserRepository extends UserRepository {
     } catch (error) {
       throw toResourceWriteError(error, 'deactivate')
     }
+  }
+
+  override async deactivateMany(ids: readonly string[]): Promise<BatchResult> {
+    const response = await firstValueFrom(
+      this.http.post<unknown>(`${this.base}/batch/deactivate`, buildBatchBody(ids)),
+    )
+
+    return toBatchResult(batchResultDto.parse(response))
   }
 
   override async restore({ id, reason }: TakeDownInput): Promise<void> {

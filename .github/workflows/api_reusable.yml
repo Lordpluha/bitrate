@@ -95,8 +95,14 @@ jobs:
       REDIS_PORT: 6379
       WEB_HOST: http://localhost:3001
       JWT_SECRET: api-ci-secret-value
-      STORAGE_DRIVER: local
       PORT: 3000
+      # Object storage is required to boot. These are the preprod compose defaults for the
+      # bucket-scoped application identity of the SeaweedFS service started below (published
+      # on loopback by the CI overlay).
+      S3_ENDPOINT: http://127.0.0.1:8333
+      S3_BUCKET: bitrate-audio
+      S3_ACCESS_KEY: bitrateDevAccessKey
+      S3_SECRET_KEY: bitrateDevSecretKeyChangeMe0001
 
     services:
       postgres:
@@ -147,20 +153,47 @@ jobs:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
 
+      # The seed specs import types from @bitrate/ncs-parser, which ship only in its build output,
+      # so the package has to be built before any test (and before the contract check below).
+      - name: Build ncs-parser
+        run: pnpm --filter @bitrate/ncs-parser run build
+
       - name: Run converter tests
         run: pnpm --filter @bitrate/converter run test
 
       - name: Run unit tests
         run: pnpm --filter @bitrate/api run test
 
+      # The shipped SeaweedFS definition (same image, entrypoint and bucket-scoped identity
+      # as production), not a stock service container: a service container cannot override
+      # the image command, and the default `mini` command takes no S3 identity config. The
+      # preprod file defaults every variable, so no env is needed; the CI overlay publishes
+      # the S3 port on loopback for the runner. See ADR-0050.
+      - name: Start SeaweedFS object store
+        run: |
+          COMPOSE="docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml"
+          $COMPOSE up -d --wait seaweedfs
+          $COMPOSE run --rm seaweedfs-init
+
       - name: Run integration tests
         run: pnpm --filter @bitrate/api run test:int
+        env:
+          # The preprod compose defaults for the bucket-scoped application identity.
+          S3_INT_ENDPOINT: http://127.0.0.1:8333
+          S3_INT_BUCKET: bitrate-audio
+          S3_INT_ACCESS_KEY: bitrateDevAccessKey
+          S3_INT_SECRET_KEY: bitrateDevSecretKeyChangeMe0001
 
       - name: Run e2e tests
         run: pnpm --filter @bitrate/api run test:e2e
 
-      - name: Build ncs-parser
-        run: pnpm --filter @bitrate/ncs-parser run build
+      - name: Show SeaweedFS logs on failure
+        if: failure()
+        run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=100 seaweedfs
+
+      - name: Stop SeaweedFS
+        if: always()
+        run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml down -v
 
       - name: Verify generated API contracts
         run: |

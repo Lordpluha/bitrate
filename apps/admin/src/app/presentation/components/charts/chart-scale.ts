@@ -24,12 +24,21 @@ export function niceCeiling(value: number): number {
   return niceFraction * magnitude
 }
 
+/**
+ * A chart value that is always safe to draw: a missing, `NaN` or infinite entry reads as `0`, so
+ * one bad point can neither poison an axis scale nor write `NaN` into an SVG attribute.
+ */
+export function finiteValue(value: number | undefined): number {
+  return value !== undefined && Number.isFinite(value) ? value : 0
+}
+
 /** The largest single value across every series — the scale a grouped/line chart needs. */
 export function seriesMax(series: ChartSeriesValues[]): number {
   let max = 0
   for (const one of series) {
     for (const value of one.values) {
-      if (value > max) max = value
+      const safe = finiteValue(value)
+      if (safe > max) max = safe
     }
   }
   return max
@@ -41,7 +50,7 @@ export function stackedMax(series: ChartSeriesValues[]): number {
   let max = 0
   for (let index = 0; index < length; index++) {
     let sum = 0
-    for (const one of series) sum += one.values[index] ?? 0
+    for (const one of series) sum += finiteValue(one.values[index])
     if (sum > max) max = sum
   }
   return max
@@ -72,7 +81,7 @@ export function chartMax(series: ChartSeriesValues[], stacked: boolean): number 
 
 /** Whether any series carries a positive value — the empty-state trigger for every chart. */
 export function hasData(series: ChartSeriesValues[]): boolean {
-  return series.some((one) => one.values.some((value) => value > 0))
+  return series.some((one) => one.values.some((value) => finiteValue(value) > 0))
 }
 
 /** Maps a value onto the chart's vertical axis, within `[offsetTop, offsetTop + plotHeight]`. */
@@ -97,7 +106,12 @@ export function xPosition(index: number, count: number, plotWidth: number, offse
  * it. This function is what makes the two agree by construction: a point and its hover region
  * now share the same centre.
  */
-export function segmentCenterX(index: number, count: number, plotWidth: number, offsetLeft = 0): number {
+export function segmentCenterX(
+  index: number,
+  count: number,
+  plotWidth: number,
+  offsetLeft = 0,
+): number {
   if (count <= 0) return offsetLeft
   return offsetLeft + (index + 0.5) * (plotWidth / count)
 }
@@ -112,11 +126,15 @@ export function thinnedLabelIndexes(count: number, maxLabels = CHART_MAX_X_LABEL
   if (count <= maxLabels) return Array.from({ length: count }, (_, index) => index)
 
   const stride = Math.ceil((count - 1) / (maxLabels - 1))
-  const indexes = new Set<number>()
-  for (let index = 0; index < count; index += stride) indexes.add(index)
-  indexes.add(count - 1)
+  const indexes: number[] = []
+  for (let index = 0; index < count - 1; index += stride) indexes.push(index)
 
-  return Array.from(indexes).sort((a, b) => a - b)
+  const last = count - 1
+  const previous = indexes.at(-1)
+  if (previous !== undefined && last - previous < stride && indexes.length > 1) indexes.pop()
+  indexes.push(last)
+
+  return indexes
 }
 
 /**
