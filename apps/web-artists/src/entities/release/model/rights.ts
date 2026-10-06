@@ -40,7 +40,7 @@ export const releaseNoticeSchema = z.discriminatedUnion('code', [
   z.object({ code: z.literal('UPC_MISSING') }),
   z.object({ code: z.literal('ISRC_MISSING'), trackId: z.uuid() }),
 ])
-export type ReleaseBlocker = z.infer<typeof releaseBlockerSchema>
+type ReleaseBlocker = z.infer<typeof releaseBlockerSchema>
 export type ReleaseNotice = z.infer<typeof releaseNoticeSchema>
 
 const PERCENT_PATTERN = /^\d{1,3}(\.\d{1,2})?$/
