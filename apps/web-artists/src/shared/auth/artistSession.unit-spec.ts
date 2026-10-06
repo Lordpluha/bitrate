@@ -86,20 +86,21 @@ describe('artist session', () => {
     ).toEqual({ status: 'unauthenticated' })
   })
 
-  it.each([
-    500, 429,
-  ])('keeps API failure %s separate from missing authentication', async (status) => {
-    vi.stubGlobal('fetch', fetchMock)
-    fetchMock.mockResolvedValueOnce(new Response(null, { status }))
-    expect(
-      await resolveArtistSession({
-        ...config,
-        accessToken: 'valid',
-        refreshToken: 'valid',
-      }),
-    ).toEqual({ status: 'unavailable' })
-    expect(fetchMock).toHaveBeenCalledTimes(1)
-  })
+  it.each([500, 429])(
+    'keeps API failure %s separate from missing authentication',
+    async (status) => {
+      vi.stubGlobal('fetch', fetchMock)
+      fetchMock.mockResolvedValueOnce(new Response(null, { status }))
+      expect(
+        await resolveArtistSession({
+          ...config,
+          accessToken: 'valid',
+          refreshToken: 'valid',
+        }),
+      ).toEqual({ status: 'unavailable' })
+      expect(fetchMock).toHaveBeenCalledTimes(1)
+    },
+  )
 
   it('fails closed on an invalid API identity', async () => {
     vi.stubGlobal('fetch', fetchMock)

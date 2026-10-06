@@ -49,7 +49,7 @@ const optionalMedia = z
     }
   }, 'Invalid media URL')
   .nullable()
-export const musicTrackSchema = z.object({
+const musicTrackSchema = z.object({
   id: z.uuid(),
   title: z.string(),
   artistName: z.string(),
@@ -63,7 +63,7 @@ export const musicTrackSchema = z.object({
   release: z.object({ id: z.uuid(), title: z.string() }).nullable(),
 }) satisfies z.ZodType<MusicTrack>
 
-export const musicReleaseSchema = z.object({
+const musicReleaseSchema = z.object({
   id: z.uuid(),
   title: z.string(),
   artistName: z.string(),
