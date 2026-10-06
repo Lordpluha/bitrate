@@ -190,6 +190,8 @@ describe('ArtistsAuthService', () => {
           email: 'new@example.com',
           password: 'pass',
           username: 'newartist',
+          acceptLegal: true,
+          acceptArtistAgreement: true,
         }),
       ).rejects.toThrow(ServiceUnavailableException)
       expect(artists.register).not.toHaveBeenCalled()
