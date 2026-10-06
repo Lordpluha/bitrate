@@ -11,6 +11,14 @@ export const routes: Routes = [
       import('@presentation/pages/overview/overview').then((m) => m.OverviewPage),
   },
   {
+    // Literal path, declared ahead of any `:id` sibling — there is none under `overview`.
+    path: 'overview/reports',
+    title: 'Reports by entity type · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('overview:read')],
+    loadComponent: () =>
+      import('@presentation/pages/overview/overview-reports').then((m) => m.OverviewReportsPage),
+  },
+  {
     path: 'login',
     title: 'Sign in · Bitrate operators',
     loadComponent: () => import('@presentation/pages/login/login').then((m) => m.LoginPage),
