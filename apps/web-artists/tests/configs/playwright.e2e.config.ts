@@ -12,6 +12,8 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: '../e2e',
   testMatch: '**/*.e2e-spec.ts',
+  /** Needs the deterministic API fixture on 3103; runs through playwright.dashboard.config.ts. */
+  testIgnore: '**/dashboard.e2e-spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
