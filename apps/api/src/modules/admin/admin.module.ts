@@ -1,9 +1,13 @@
 import { AdminAuthModule } from '@modules/admin-auth'
 import { Module } from '@nestjs/common'
+import { AdminAlbumsModule } from './albums'
 import { AdminArtistsModule } from './artists'
 import { AdminAuditModule } from './audit'
+import { AdminGenresModule } from './genres'
 import { AdminModerationModule } from './moderation'
 import { AdminOverviewModule } from './overview'
+import { AdminPlaylistsModule } from './playlists'
+import { AdminPodcastsModule } from './podcasts'
 import { AdminRolesModule } from './roles'
 import { AdminStaffModule } from './staff'
 import { AdminTracksModule } from './tracks'
@@ -21,6 +25,10 @@ import { AdminUsersModule } from './users'
     AdminRolesModule,
     AdminStaffModule,
     AdminOverviewModule,
+    AdminGenresModule,
+    AdminAlbumsModule,
+    AdminPlaylistsModule,
+    AdminPodcastsModule,
   ],
 })
 export class AdminModule {}

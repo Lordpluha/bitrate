@@ -1,11 +1,15 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
-import { isoOrNull, writeTakeDownAudit } from '@modules/admin/shared'
+import type { AdminResourceStatus, AuditContextValue, CsvExport } from '@modules/admin/shared'
+import { isoOrNull, openCsvExport, writeTakeDownAudit } from '@modules/admin/shared'
 import { Injectable } from '@nestjs/common'
 import type { Prisma } from '@prisma/client'
-import { ADMIN_ARTIST_SAFE_SELECT } from './artist.select'
+import {
+  ADMIN_ARTIST_EXPORT_COLUMNS,
+  ADMIN_ARTIST_EXPORT_SELECT,
+  ADMIN_ARTIST_SAFE_SELECT,
+} from './artist.select'
 import type { ADMIN_ARTISTS_SORT_FIELDS, UpdateArtistVerificationDto } from './dtos'
 import {
   ArtistAlreadyDeletedException,
@@ -74,6 +78,39 @@ export class AdminArtistsService {
       this.prisma.artist.count({ where }),
     ])
     return { data, total, page, limit }
+  }
+
+  /**
+   * Streams every artist matching the list's filters and sort as CSV (capped, see
+   * `CSV_EXPORT_MAX_ROWS`), using the list's `where` and ordering so the file equals the rows
+   * the list shows across all pages. Batches page by offset; one batch is held at a time.
+   */
+  async exportCsv(
+    { verified, status, q, sort, order }: Omit<ListArtistsInput, 'page' | 'limit'>,
+    staffId: string,
+    auditContext: AuditContextValue = {},
+  ): Promise<CsvExport> {
+    const where = this.buildWhere({ verified, status, q })
+    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const total = await this.prisma.artist.count({ where })
+
+    return openCsvExport({
+      prisma: this.prisma,
+      resource: 'admin-artists',
+      staffId,
+      filters: { verified, status, q, sort, order },
+      auditContext,
+      columns: ADMIN_ARTIST_EXPORT_COLUMNS,
+      total,
+      fetchPage: (skip, take) =>
+        this.prisma.artist.findMany({
+          where,
+          select: ADMIN_ARTIST_EXPORT_SELECT,
+          orderBy: orderBy as unknown as Prisma.ArtistOrderByWithRelationInput[],
+          skip,
+          take,
+        }),
+    })
   }
 
   /**

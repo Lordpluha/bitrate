@@ -104,8 +104,8 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Streams a local object addressed by a signed token, honoring an HTTP Range.
-     * @description Local-driver equivalent of an S3 presigned URL. The token embeds the object key and expiry, verified via HMAC.
+     * Streams an object, through STORAGE_SERVICE, addressed by a signed token, honoring an HTTP Range.
+     * @description Time-limited URL issued by the storage service; the API streams the object through STORAGE_SERVICE. The token embeds the object key and expiry, verified via HMAC.
      */
     get: operations['StorageController_streamSignedObject_v1']
     put?: never
@@ -195,6 +195,26 @@ export interface paths {
     get: operations['UsersAuthController_getMe_v1']
     put?: never
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/legal/accept': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Records that the signed-in user accepted the current legal documents.
+     * @description Records the current Terms of Use, Community Guidelines and Privacy Policy revision for the signed-in account. Used when `legalAcceptanceRequired` is true on the account.
+     */
+    post: operations['UsersAuthController_acceptLegal_v1']
     delete?: never
     options?: never
     head?: never
@@ -2039,6 +2059,67 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/moderation/reports/batch/resolve': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Runs the batch resolve operation. Declared before `:id` so the literal `batch` segment is
+     *     never read as an id. `@SkipAudit` because the service writes one audit row per report.
+     * @description Each id is processed independently with the single-entity rules. Always 200 with a per-id result; failed ids carry an error code and message. Requires reports:advance.
+     */
+    post: operations['AdminModerationController_resolveMany_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/moderation/reports/batch/dismiss': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Runs the batch dismiss operation (status `REJECTED`); see {@link resolveMany}.
+     * @description Each id is processed independently with the single-entity rules. Always 200 with a per-id result; failed ids carry an error code and message. Requires reports:advance.
+     */
+    post: operations['AdminModerationController_dismissMany_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/moderation/reports/export.csv': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the CSV export operation.
+     * @description Streams the reports matching the queue filters and sort as CSV. Administrator-only by default (reports:export). Writes one audit row (admin-moderation.export).
+     */
+    get: operations['AdminModerationController_exportCsv_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/moderation/reports/{id}': {
     parameters: {
       query?: never
@@ -2066,6 +2147,26 @@ export interface paths {
     }
     /** Runs the list artists operation. */
     get: operations['AdminArtistsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/artists/export.csv': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the CSV export operation.
+     * @description Streams the artists matching the list filters and sort as CSV. Administrator-only by default (artists:export): the file contains email addresses. Writes one audit row (admin-artists.export).
+     */
+    get: operations['AdminArtistsController_exportCsv_v1']
     put?: never
     post?: never
     delete?: never
@@ -2201,6 +2302,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/users/export.csv': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the CSV export operation.
+     * @description Streams the users matching the list filters and sort as CSV. Administrator-only by default (users:export): the file contains email addresses. Writes one audit row (admin-users.export).
+     */
+    get: operations['AdminUsersController_exportCsv_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/users/{id}': {
     parameters: {
       query?: never
@@ -2230,6 +2351,26 @@ export interface paths {
     get: operations['AdminUsersController_listListeningHistory_v1']
     put?: never
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/users/batch/deactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Runs the batch deactivate operation. `@SkipAudit` because each take-down audits itself.
+     * @description Each id is processed independently with the single-entity rules. Always 200 with a per-id result; failed ids carry an error code and message. Requires users:delete.
+     */
+    post: operations['AdminUsersController_deactivateMany_v1']
     delete?: never
     options?: never
     head?: never
@@ -2282,6 +2423,26 @@ export interface paths {
      * @description Sorted problem-first by default: FAILED, then the longest-stuck PROCESSING rows, then everything else. Passing `sort` replaces that attention-first default with a plain ordering on the chosen field.
      */
     get: operations['AdminTracksController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/tracks/export.csv': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the CSV export operation.
+     * @description Streams the tracks matching the list filters and ordering as CSV, in the list order (problem-first unless `sort` is given). Administrator-only by default (tracks:export). Writes one audit row (admin-tracks.export).
+     */
+    get: operations['AdminTracksController_exportCsv_v1']
     put?: never
     post?: never
     delete?: never
@@ -2365,6 +2526,26 @@ export interface paths {
     put?: never
     /** Runs the reprocess operation. */
     post: operations['AdminTracksController_reprocess_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/tracks/batch/take-down': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Runs the batch take-down operation. `@SkipAudit` because each take-down audits itself.
+     * @description Each id is processed independently with the single-entity rules. Always 200 with a per-id result; failed ids carry an error code and message. Requires tracks:delete.
+     */
+    post: operations['AdminTracksController_takeDownMany_v1']
     delete?: never
     options?: never
     head?: never
@@ -2569,6 +2750,280 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/genres': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list genres operation. */
+    get: operations['AdminGenresController_list_v1']
+    put?: never
+    /** Runs the create genre operation. */
+    post: operations['AdminGenresController_create_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/genres/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the get genre operation. */
+    get: operations['AdminGenresController_getById_v1']
+    put?: never
+    post?: never
+    /** Runs the delete genre operation. Refused with 409 while the genre is referenced. */
+    delete: operations['AdminGenresController_remove_v1']
+    options?: never
+    head?: never
+    /** Runs the update genre operation. */
+    patch: operations['AdminGenresController_update_v1']
+    trace?: never
+  }
+  '/api/v1/admin/albums': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list albums operation. */
+    get: operations['AdminAlbumsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/albums/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the get album operation.
+     * @description A taken-down album stays reachable by id so it can be reviewed and restored.
+     */
+    get: operations['AdminAlbumsController_getById_v1']
+    put?: never
+    post?: never
+    /**
+     * Runs the soft-delete (take-down) operation.
+     * @description The album's tracks are not affected and stay independently manageable.
+     */
+    delete: operations['AdminAlbumsController_remove_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/albums/{id}/restore': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the restore operation. */
+    post: operations['AdminAlbumsController_restore_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/playlists': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the list playlists operation.
+     * @description Only public playlists are listed; private ones are user content. A playlist an operator hid leaves this list and stays reachable by id.
+     */
+    get: operations['AdminPlaylistsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/playlists/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the get playlist operation.
+     * @description Not restricted to public playlists: a hidden or taken-down playlist stays reachable so it can be reviewed and reversed.
+     */
+    get: operations['AdminPlaylistsController_getById_v1']
+    put?: never
+    post?: never
+    /**
+     * Runs the soft-delete (take-down) operation.
+     * @description The harder tier: stamps `deletedAt`. The playlist's visibility is untouched.
+     */
+    delete: operations['AdminPlaylistsController_remove_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/playlists/{id}/visibility': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Runs the hide / un-hide operation.
+     * @description `isPublic: false` hides; `isPublic: true` un-hides. Neither changes the take-down state. A private playlist with no operator hide on record cannot be un-hidden.
+     */
+    patch: operations['AdminPlaylistsController_setVisibility_v1']
+    trace?: never
+  }
+  '/api/v1/admin/playlists/{id}/restore': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Runs the restore operation.
+     * @description Clears `deletedAt` only; a hidden playlist stays hidden.
+     */
+    post: operations['AdminPlaylistsController_restore_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/podcasts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Runs the list podcasts operation. */
+    get: operations['AdminPodcastsController_list_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/podcasts/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the get podcast operation.
+     * @description A taken-down podcast stays reachable by id, and every episode is listed with its own take-down state.
+     */
+    get: operations['AdminPodcastsController_getById_v1']
+    put?: never
+    post?: never
+    /**
+     * Runs the soft-delete (take-down) operation.
+     * @description The podcast's episodes are not affected and stay independently manageable.
+     */
+    delete: operations['AdminPodcastsController_remove_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/podcasts/{id}/restore': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the restore operation. */
+    post: operations['AdminPodcastsController_restore_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/podcasts/{id}/episodes/{episodeId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /**
+     * Runs the episode soft-delete (take-down) operation.
+     * @description The parent podcast and the other episodes are not affected.
+     */
+    delete: operations['AdminPodcastsController_removeEpisode_v1']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/podcasts/{id}/episodes/{episodeId}/restore': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Runs the episode restore operation. */
+    post: operations['AdminPodcastsController_restoreEpisode_v1']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -2621,6 +3076,10 @@ export interface components {
       emailVerifiedAt: string | null
       /** @description Whether two-factor authentication is switched on. */
       twoFactorEnabled: boolean
+      /** @description Revision of the legal documents the account accepted, or null when none was recorded. */
+      legalVersion: string | null
+      /** @description Whether the account must accept the current legal documents before carrying on. */
+      legalAcceptanceRequired: boolean
     }
     TwoFactorRequiredEntity: {
       /**
@@ -2662,6 +3121,20 @@ export interface components {
        * @example newuser123
        */
       username: string
+      /**
+       * @description Accepts the Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
+    }
+    LegalAcceptanceDto: {
+      /**
+       * @description Accepts the current Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
     }
     UserForgotPasswordDto: {
       /**
@@ -2766,6 +3239,13 @@ export interface components {
       deletedAt: string | null
       /** @description Transactional-email locale, set at registration from Accept-Language. */
       locale: string
+      /** @description Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
+      legalVersion: string | null
+      /**
+       * Format: date-time
+       * @description When that revision was accepted, if recorded.
+       */
+      legalAcceptedAt: string | null
     }
     SafeUserEntity: {
       /** @description The id value. */
@@ -2862,6 +3342,20 @@ export interface components {
       deletedAt: string | null
       /** @description Transactional-email locale, set at registration from Accept-Language. */
       locale: string
+      /** @description Revision of the Terms of Use, Community Guidelines and Privacy Policy accepted at registration, if recorded. */
+      legalVersion: string | null
+      /**
+       * Format: date-time
+       * @description When that revision was accepted, if recorded.
+       */
+      legalAcceptedAt: string | null
+      /** @description Revision of the Artist Agreement accepted at registration, if recorded. */
+      artistAgreementVersion: string | null
+      /**
+       * Format: date-time
+       * @description When the Artist Agreement was accepted, if recorded.
+       */
+      artistAgreementAcceptedAt: string | null
     }
     SafeArtistEntity: {
       /** @description The id value. */
@@ -3127,10 +3621,36 @@ export interface components {
       /** @description Track title */
       title: string
       /**
+       * @description Confirms you hold the rights to this recording; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      rightsConfirmed: true
+      /**
        * Format: binary
        * @description Audio file
        */
       audio: string
+      /**
+       * Format: binary
+       * @description Cover image file
+       */
+      cover?: string
+    }
+    UpdateTrackDto: {
+      /** @description Track title */
+      title: string
+      /**
+       * @description Confirms you hold the rights to the replacement recording; required with new audio
+       * @example true
+       * @enum {boolean}
+       */
+      rightsConfirmed?: true
+      /**
+       * Format: binary
+       * @description Replacement audio file
+       */
+      audio?: string
       /**
        * Format: binary
        * @description Cover image file
@@ -3361,6 +3881,12 @@ export interface components {
       title: string
       /** @example user123 */
       description?: string
+      /**
+       * @description Confirms you hold the rights to this album; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      rightsConfirmed: true
     }
     UpdateAlbumDto: {
       /** @description Playlist title */
@@ -3399,6 +3925,35 @@ export interface components {
        * @example password123
        */
       password: string
+    }
+    ArtistRegistrationDto: {
+      /**
+       * @description New user email
+       * @example newuser@example.com
+       */
+      email: string
+      /**
+       * @description New user password
+       * @example password123
+       */
+      password: string
+      /**
+       * @description New user username
+       * @example newuser123
+       */
+      username: string
+      /**
+       * @description Accepts the Terms of Use and Community Guidelines and acknowledges the Privacy Policy; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptLegal: true
+      /**
+       * @description Accepts the Artist Agreement; must be true
+       * @example true
+       * @enum {boolean}
+       */
+      acceptArtistAgreement: true
     }
     ArtistRegistrationEntity: {
       /** @enum {string} */
@@ -3760,25 +4315,42 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
       /** @description Whether two-factor authentication is enabled. */
       twoFactorEnabled: boolean
@@ -3880,6 +4452,33 @@ export interface components {
       page: number
       /** @description The page size. */
       limit: number
+    }
+    BatchIdsDto: {
+      ids: string[]
+    }
+    AdminBatchItemErrorEntity: {
+      /**
+       * @description Stable machine-readable code, derived from the HTTP status the single-entity route would answer.
+       * @example NOT_FOUND
+       */
+      code: string
+      /** @description Human-readable reason, the same message the single-entity route would return. */
+      message: string
+    }
+    AdminBatchItemResultEntity: {
+      /** Format: uuid */
+      id: string
+      /** @enum {string} */
+      status: 'succeeded' | 'failed'
+      /** @description Present only when `status` is `failed`. */
+      error?: components['schemas']['AdminBatchItemErrorEntity']
+    }
+    AdminBatchResultEntity: {
+      results: components['schemas']['AdminBatchItemResultEntity'][]
+      /** @description Distinct ids processed. */
+      total: number
+      succeeded: number
+      failed: number
     }
     ModerationSubjectEntity: {
       /**
@@ -4299,7 +4898,7 @@ export interface components {
       artistUsername: string
       /**
        * @description The stored cover image's filename (a storage key, not a URL) — e.g. `"abc123.png"`. Public
-       *     covers live under `storage/public/tracks/covers/`, served by the API at
+       *     covers are stored under `tracks/covers/` and served by the API at
        *     `/static/tracks/covers/<cover>`; a consumer must build that URL itself. `null` when the
        *     track has no cover.
        */
@@ -4400,7 +4999,7 @@ export interface components {
       artistUsername: string
       /**
        * @description The stored cover image's filename (a storage key, not a URL) — e.g. `"abc123.png"`. Public
-       *     covers live under `storage/public/tracks/covers/`, served by the API at
+       *     covers are stored under `tracks/covers/` and served by the API at
        *     `/static/tracks/covers/<cover>`; a consumer must build that URL itself. `null` when the
        *     track has no cover.
        */
@@ -4629,25 +5228,42 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
       /** @description Active operators currently assigned this role. */
       holders: number
@@ -4672,25 +5288,42 @@ export interface components {
       id:
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       /**
        * @description Active, non-`ADMIN` operators currently holding this permission. Zero means only the
        *     built-in `ADMIN` role can exercise it today.
@@ -4706,25 +5339,42 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     UpdateRoleDto: {
@@ -4733,25 +5383,42 @@ export interface components {
       permissions?: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     AdminStaffRoleEntity: {
@@ -4763,25 +5430,42 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     AdminStaffEntity: {
@@ -4800,25 +5484,42 @@ export interface components {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
       /** @description Whether two-factor authentication is enabled. */
       twoFactorEnabled: boolean
@@ -4865,25 +5566,42 @@ export interface components {
       permissions?: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     AssignStaffRoleDto: {
@@ -4892,50 +5610,84 @@ export interface components {
       permissions?: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     UpdateStaffPermissionsDto: {
       permissions: (
         | 'reports:read'
         | 'reports:advance'
+        | 'reports:export'
         | 'artists:read'
         | 'artists:verify'
         | 'artists:delete'
         | 'artists:restore'
         | 'artists:revoke-sessions'
+        | 'artists:export'
         | 'tracks:read'
         | 'tracks:reprocess'
         | 'tracks:delete'
         | 'tracks:restore'
+        | 'tracks:export'
         | 'users:read'
         | 'users:delete'
         | 'users:restore'
         | 'users:revoke-sessions'
+        | 'users:export'
         | 'audit:read'
         | 'staff:read'
         | 'staff:write'
         | 'roles:read'
         | 'roles:write'
         | 'overview:read'
+        | 'genres:read'
+        | 'genres:write'
+        | 'genres:delete'
+        | 'albums:read'
+        | 'albums:delete'
+        | 'albums:restore'
+        | 'playlists:read'
+        | 'playlists:hide'
+        | 'playlists:delete'
+        | 'playlists:restore'
+        | 'podcasts:read'
+        | 'podcasts:delete'
+        | 'podcasts:restore'
       )[]
     }
     AdminOverviewReportsEntity: {
@@ -5048,6 +5800,370 @@ export interface components {
       reports: components['schemas']['AdminOverviewReportsPointEntity'][]
       /** @description The current (not windowed) distribution of every report across its statuses. */
       reportsByStatus: components['schemas']['AdminOverviewReportsByStatusEntity']
+    }
+    AdminGenreCountsEntity: {
+      /** @description Tracks tagged with the genre. */
+      tracks: number
+      /** @description Albums tagged with the genre. */
+      albums: number
+      /** @description Artists tagged with the genre. */
+      artists: number
+    }
+    AdminGenreEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The URL slug, unique across genres. */
+      slug: string
+      /** @description The display name, unique across genres. */
+      name: string
+      /** @description The description. */
+      description?: string | null
+      /** @description The `#rrggbb` colour. */
+      color?: string | null
+      /** @description The cover image URL. */
+      cover?: string | null
+      /** @description What references this genre; delete is refused while any is above zero. */
+      counts: components['schemas']['AdminGenreCountsEntity']
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedAdminGenresEntity: {
+      /** @description The genres on this page. */
+      data: components['schemas']['AdminGenreEntity'][]
+      /** @description The total number of genres matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    CreateGenreDto: {
+      name: string
+      slug?: string
+      description?: string | null
+      color?: string | null
+    }
+    UpdateGenreDto: {
+      name?: string
+      slug?: string
+      description?: string | null
+      color?: string | null
+    }
+    AdminAlbumEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The stored cover image's filename (a storage key, not a URL), or `null`. */
+      cover?: string | null
+      /** @description The owning artist's id. */
+      artistId: string
+      /** @description The owning artist's display name — avoids an N+1 lookup on the operator screen. */
+      artistUsername: string
+      /**
+       * @description The album type value.
+       * @enum {string}
+       */
+      type: 'ALBUM' | 'SINGLE' | 'EP' | 'COMPILATION'
+      /** @description How many tracks the album lists. */
+      totalTracks: number
+      /**
+       * Format: date-time
+       * @description Release date, or `null` if unset.
+       */
+      releaseDate?: string | null
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedAdminAlbumsEntity: {
+      /** @description The albums on this page. */
+      data: components['schemas']['AdminAlbumEntity'][]
+      /** @description The total number of albums matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    AdminAlbumTrackEntity: {
+      /** @description The track's id. */
+      id: string
+      /** @description The track's title. */
+      title: string
+      /** @description The track's number within its disc. */
+      trackNumber: number
+      /** @description The disc number. */
+      discNumber: number
+      /**
+       * @description The track's audio processing status.
+       * @enum {string}
+       */
+      processingStatus: 'PROCESSING' | 'READY' | 'FAILED'
+      /**
+       * Format: date-time
+       * @description The track's own soft-delete timestamp — independent of the album's.
+       */
+      deletedAt?: string | null
+    }
+    AdminAlbumDetailEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The stored cover image's filename (a storage key, not a URL), or `null`. */
+      cover?: string | null
+      /** @description The owning artist's id. */
+      artistId: string
+      /** @description The owning artist's display name — avoids an N+1 lookup on the operator screen. */
+      artistUsername: string
+      /**
+       * @description The album type value.
+       * @enum {string}
+       */
+      type: 'ALBUM' | 'SINGLE' | 'EP' | 'COMPILATION'
+      /** @description How many tracks the album lists. */
+      totalTracks: number
+      /**
+       * Format: date-time
+       * @description Release date, or `null` if unset.
+       */
+      releaseDate?: string | null
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description The album description, if any. */
+      description?: string | null
+      /** @description The record label, if any. */
+      label?: string | null
+      /** @description The copyright line, if any. */
+      copyright?: string | null
+      /** @description The album's tracks, ordered by disc then track number. */
+      tracks: components['schemas']['AdminAlbumTrackEntity'][]
+    }
+    AdminPlaylistEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The stored cover image's filename (a storage key, not a URL), or `null`. */
+      cover?: string | null
+      /** @description The owning user's id. */
+      ownerId: string
+      /** @description The owning user's username — avoids an N+1 lookup on the operator screen. */
+      ownerUsername: string
+      /** @description Whether the playlist is public. An operator hide forces this to `false`. */
+      isPublic: boolean
+      /** @description How many users follow the playlist. */
+      followersCount: number
+      /** @description How many tracks the playlist holds. */
+      trackCount: number
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp, independent of `isPublic`.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedAdminPlaylistsEntity: {
+      /** @description The playlists on this page. */
+      data: components['schemas']['AdminPlaylistEntity'][]
+      /** @description The total number of playlists matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    AdminPlaylistTrackEntity: {
+      /** @description The track's id. */
+      id: string
+      /** @description The track's title. */
+      title: string
+      /** @description The track's position in the playlist, zero-based. */
+      position: number
+    }
+    AdminPlaylistDetailEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The stored cover image's filename (a storage key, not a URL), or `null`. */
+      cover?: string | null
+      /** @description The owning user's id. */
+      ownerId: string
+      /** @description The owning user's username — avoids an N+1 lookup on the operator screen. */
+      ownerUsername: string
+      /** @description Whether the playlist is public. An operator hide forces this to `false`. */
+      isPublic: boolean
+      /** @description How many users follow the playlist. */
+      followersCount: number
+      /** @description How many tracks the playlist holds. */
+      trackCount: number
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp, independent of `isPublic`.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description The playlist description, if any. */
+      description?: string | null
+      /** @description Whether other users may add tracks. */
+      collaborative: boolean
+      /** @description The first 50 tracks in playlist order; `trackCount` holds the full total. */
+      tracks: components['schemas']['AdminPlaylistTrackEntity'][]
+    }
+    SetPlaylistVisibilityDto: {
+      reason?: string
+      isPublic: boolean
+    }
+    AdminPodcastEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The publisher's display name. */
+      publisher: string
+      /** @description The stored cover image reference, or `null`. */
+      cover?: string | null
+      /** @description The podcast's language code, if any. */
+      language?: string | null
+      /** @description Whether the podcast is flagged explicit. */
+      explicit: boolean
+      /** @description How many episodes the podcast has, taken-down ones included. */
+      episodeCount: number
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+    }
+    PaginatedAdminPodcastsEntity: {
+      /** @description The podcasts on this page. */
+      data: components['schemas']['AdminPodcastEntity'][]
+      /** @description The total number of podcasts matching the query. */
+      total: number
+      /** @description The current page number. */
+      page: number
+      /** @description The page size. */
+      limit: number
+    }
+    AdminPodcastEpisodeEntity: {
+      /** @description The episode's id. */
+      id: string
+      /** @description The owning podcast's id. */
+      podcastId: string
+      /** @description The episode's title. */
+      title: string
+      /** @description The episode length in seconds, if known. */
+      duration?: number | null
+      /**
+       * Format: date-time
+       * @description Release date, or `null` if unset.
+       */
+      releaseDate?: string | null
+      /** @description Whether the episode is flagged explicit. */
+      explicit: boolean
+      /**
+       * Format: date-time
+       * @description The episode's own soft-delete timestamp — independent of the podcast's.
+       */
+      deletedAt?: string | null
+    }
+    AdminPodcastDetailEntity: {
+      /** @description The id value. */
+      id: string
+      /** @description The title value. */
+      title: string
+      /** @description The publisher's display name. */
+      publisher: string
+      /** @description The stored cover image reference, or `null`. */
+      cover?: string | null
+      /** @description The podcast's language code, if any. */
+      language?: string | null
+      /** @description Whether the podcast is flagged explicit. */
+      explicit: boolean
+      /** @description How many episodes the podcast has, taken-down ones included. */
+      episodeCount: number
+      /**
+       * Format: date-time
+       * @description Soft-delete (take-down) timestamp.
+       */
+      deletedAt?: string | null
+      /**
+       * Format: date-time
+       * @description The created at value.
+       */
+      createdAt: string
+      /**
+       * Format: date-time
+       * @description The updated at value.
+       */
+      updatedAt: string
+      /** @description The podcast description, if any. */
+      description?: string | null
+      /** @description The podcast's episodes, newest release first, taken-down ones included. */
+      episodes: components['schemas']['AdminPodcastEpisodeEntity'][]
     }
   }
   responses: never
@@ -6269,6 +7385,149 @@ export interface operations {
         }
       }
       /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example errors.auth.invalid_or_expired_token
+             * @enum {string}
+             */
+            message?:
+              | 'errors.auth.access_token_required'
+              | 'errors.auth.refresh_token_required'
+              | 'errors.auth.invalid_token_requirement'
+              | 'errors.auth.invalid_or_expired_token'
+              | 'errors.auth.user_not_found'
+              | 'errors.auth.session_not_found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  UsersAuthController_acceptLegal_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LegalAcceptanceDto']
+      }
+    }
+    responses: {
+      /** @description The signed-in account with the acceptance recorded */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SelfUserEntity']
+        }
+      }
+      /** @description Acceptance was not given */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /**
+       * @description Unauthorized
+       *
+       *     Not authenticated
+       */
       401: {
         headers: {
           [name: string]: unknown
@@ -7755,7 +9014,10 @@ export interface operations {
   }
   UsersOAuthController_googleAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -7966,7 +9228,10 @@ export interface operations {
   }
   UsersOAuthController_facebookAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -10997,7 +12262,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'multipart/form-data': components['schemas']['CreateTrackDto']
+        'multipart/form-data': components['schemas']['UpdateTrackDto']
       }
     }
     responses: {
@@ -14228,7 +15493,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['RegistrationDto']
+        'application/json': components['schemas']['ArtistRegistrationDto']
       }
     }
     responses: {
@@ -15942,7 +17207,12 @@ export interface operations {
   }
   ArtistsOAuthController_googleAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+        /** @description Pass true when the artist accepted the Artist Agreement. Required to create a new artist account. */
+        acceptArtistAgreement?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -16149,7 +17419,12 @@ export interface operations {
   }
   ArtistsOAuthController_facebookAuth_v1: {
     parameters: {
-      query?: never
+      query?: {
+        /** @description Pass true when the user accepted the Terms of Use and Community Guidelines and read the Privacy Policy. Required to create a new account; ignored for existing accounts. */
+        acceptLegal?: boolean
+        /** @description Pass true when the artist accepted the Artist Agreement. Required to create a new artist account. */
+        acceptArtistAgreement?: boolean
+      }
       header?: never
       path?: never
       cookie?: never
@@ -22452,6 +23727,452 @@ export interface operations {
       }
     }
   }
+  AdminModerationController_resolveMany_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BatchIdsDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+      /** @description Empty, malformed or over-100 id list */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Missing reports:advance
+       *
+       *     Requires the reports:advance permission
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+    }
+  }
+  AdminModerationController_dismissMany_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BatchIdsDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+      /** @description Empty, malformed or over-100 id list */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Missing reports:advance
+       *
+       *     Requires the reports:advance permission
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+    }
+  }
+  AdminModerationController_exportCsv_v1: {
+    parameters: {
+      query?: {
+        status?: 'OPEN' | 'REVIEWING' | 'RESOLVED' | 'REJECTED'
+        entityType?: 'track' | 'album' | 'playlist' | 'artist' | 'podcast' | 'episode' | 'user'
+        sort?: 'createdAt' | 'status'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A CSV attachment (UTF-8 with a byte order mark, CRLF line endings, RFC 4180 quoting) of every row matching the same filters and sort as the list, capped at 50000 rows. Columns, in order: id, status, entityType, entityId, reason, details, reporterId, resolvedAt, createdAt. Dates are ISO 8601 UTC, booleans are true/false, null is an empty cell, and a text cell starting with = + - @ tab or CR is prefixed with a single quote. X-Export-Truncated is true when more rows matched than the cap. */
+      200: {
+        headers: {
+          /** @description true when the export stopped at 50000 rows, otherwise false */
+          'X-Export-Truncated'?: 'true' | 'false'
+          /** @description attachment; filename="<resource>-<UTC timestamp>.csv" */
+          'Content-Disposition'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'text/csv': string
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the reports:export permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   AdminModerationController_getById_v1: {
     parameters: {
       query?: never
@@ -22738,7 +24459,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }
@@ -22795,6 +24518,152 @@ export interface operations {
         }
       }
       /** @description Requires the artists:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminArtistsController_exportCsv_v1: {
+    parameters: {
+      query?: {
+        verified?: boolean
+        status?: 'active' | 'deactivated' | 'all'
+        /** @description Search username/email */
+        q?: string
+        sort?: 'username' | 'email' | 'createdAt' | 'monthlyListeners'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A CSV attachment (UTF-8 with a byte order mark, CRLF line endings, RFC 4180 quoting) of every row matching the same filters and sort as the list, capped at 50000 rows. Columns, in order: id, username, email, verified, monthlyListeners, country, emailVerifiedAt, twoFactorEnabled, deletedAt, createdAt. Dates are ISO 8601 UTC, booleans are true/false, null is an empty cell, and a text cell starting with = + - @ tab or CR is prefixed with a single quote. X-Export-Truncated is true when more rows matched than the cap. */
+      200: {
+        headers: {
+          /** @description true when the export stopped at 50000 rows, otherwise false */
+          'X-Export-Truncated'?: 'true' | 'false'
+          /** @description attachment; filename="<resource>-<UTC timestamp>.csv" */
+          'Content-Disposition'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'text/csv': string
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the artists:export permission */
       403: {
         headers: {
           [name: string]: unknown
@@ -24084,6 +25953,151 @@ export interface operations {
       }
     }
   }
+  AdminUsersController_exportCsv_v1: {
+    parameters: {
+      query?: {
+        status?: 'active' | 'deactivated' | 'all'
+        /** @description Search username/email */
+        q?: string
+        sort?: 'username' | 'email' | 'createdAt'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A CSV attachment (UTF-8 with a byte order mark, CRLF line endings, RFC 4180 quoting) of every row matching the same filters and sort as the list, capped at 50000 rows. Columns, in order: id, username, email, emailVerifiedAt, twoFactorEnabled, lockedUntil, deletedAt, createdAt. Dates are ISO 8601 UTC, booleans are true/false, null is an empty cell, and a text cell starting with = + - @ tab or CR is prefixed with a single quote. X-Export-Truncated is true when more rows matched than the cap. */
+      200: {
+        headers: {
+          /** @description true when the export stopped at 50000 rows, otherwise false */
+          'X-Export-Truncated'?: 'true' | 'false'
+          /** @description attachment; filename="<resource>-<UTC timestamp>.csv" */
+          'Content-Disposition'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'text/csv': string
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the users:export permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   AdminUsersController_getById_v1: {
     parameters: {
       query?: never
@@ -24534,6 +26548,157 @@ export interface operations {
       }
     }
   }
+  AdminUsersController_deactivateMany_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BatchIdsDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+      /** @description Empty, malformed or over-100 id list */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Missing users:delete
+       *
+       *     Requires the users:delete permission
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+    }
+  }
   AdminUsersController_restore_v1: {
     parameters: {
       query?: never
@@ -24892,6 +27057,152 @@ export interface operations {
         }
       }
       /** @description Requires the tracks:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminTracksController_exportCsv_v1: {
+    parameters: {
+      query?: {
+        processingStatus?: 'PROCESSING' | 'READY' | 'FAILED'
+        status?: 'active' | 'deactivated' | 'all'
+        /** @description Search by title */
+        q?: string
+        sort?: 'createdAt' | 'title' | 'processingStatus'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A CSV attachment (UTF-8 with a byte order mark, CRLF line endings, RFC 4180 quoting) of every row matching the same filters and sort as the list, capped at 50000 rows. Columns, in order: id, title, artistId, artistUsername, processingStatus, processingError, processingAttempts, processingFinishedAt, deletedAt, createdAt. Dates are ISO 8601 UTC, booleans are true/false, null is an empty cell, and a text cell starting with = + - @ tab or CR is prefixed with a single quote. X-Export-Truncated is true when more rows matched than the cap. */
+      200: {
+        headers: {
+          /** @description true when the export stopped at 50000 rows, otherwise false */
+          'X-Export-Truncated'?: 'true' | 'false'
+          /** @description attachment; filename="<resource>-<UTC timestamp>.csv" */
+          'Content-Disposition'?: string
+          [name: string]: unknown
+        }
+        content: {
+          'text/csv': string
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the tracks:export permission */
       403: {
         headers: {
           [name: string]: unknown
@@ -25902,6 +28213,157 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  AdminTracksController_takeDownMany_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BatchIdsDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
+      }
+      /** @description Empty, malformed or over-100 id list */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /**
+       * @description Missing tracks:delete
+       *
+       *     Requires the tracks:delete permission
+       */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminBatchResultEntity']
+        }
       }
     }
   }
@@ -28285,6 +30747,3020 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  AdminGenresController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        /** @description Search name/slug */
+        q?: string
+        sort?: 'name' | 'slug' | 'createdAt'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of genres */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminGenresEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the genres:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminGenresController_create_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateGenreDto']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminGenreEntity']
+        }
+      }
+      /** @description Invalid name, slug or colour */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the genres:write permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Slug already in use */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminGenresController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminGenreEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the genres:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Genre not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminGenresController_remove_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminGenreEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the genres:delete permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Genre not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Genre is still referenced by tracks, albums or artists; the body carries the counts */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminGenresController_update_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateGenreDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminGenreEntity']
+        }
+      }
+      /** @description Invalid name, slug or colour */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the genres:write permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Genre not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Slug already in use */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminAlbumsController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'active' | 'deactivated' | 'all'
+        artistId?: string
+        /** @description Search by title */
+        q?: string
+        sort?: 'createdAt' | 'title' | 'releaseDate'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of albums */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminAlbumsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the albums:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminAlbumsController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminAlbumDetailEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the albums:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminAlbumsController_remove_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminAlbumEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the albums:delete permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album is already deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminAlbumsController_restore_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminAlbumEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the albums:restore permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Album is not deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPlaylistsController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'active' | 'deactivated' | 'all'
+        ownerId?: string
+        /** @description Search by title */
+        q?: string
+        sort?: 'createdAt' | 'title'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of playlists */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminPlaylistsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the playlists:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminPlaylistsController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPlaylistDetailEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the playlists:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Playlist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminPlaylistsController_remove_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPlaylistEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the playlists:delete permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Playlist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Playlist is already deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPlaylistsController_setVisibility_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SetPlaylistVisibilityDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPlaylistEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the playlists:hide permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Playlist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Already in the requested visibility, or an un-hide of a playlist no operator hid */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPlaylistsController_restore_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPlaylistEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the playlists:restore permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Playlist not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Playlist is not deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPodcastsController_list_v1: {
+    parameters: {
+      query?: {
+        page?: number
+        limit?: number
+        status?: 'active' | 'deactivated' | 'all'
+        /** @description Search by title */
+        q?: string
+        sort?: 'createdAt' | 'title'
+        order?: 'asc' | 'desc'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A page of podcasts */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedAdminPodcastsEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminPodcastsController_getById_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastDetailEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminPodcastsController_remove_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:delete permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast is already deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPodcastsController_restore_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:restore permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Podcast is not deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPodcastsController_removeEpisode_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+        episodeId: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:delete permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Episode not found on this podcast */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Episode is already deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+    }
+  }
+  AdminPodcastsController_restoreEpisode_v1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+        episodeId: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['TakeDownReasonDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminPodcastEpisodeEntity']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the podcasts:restore permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Episode not found on this podcast */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Episode is not deleted */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
       }
     }
   }

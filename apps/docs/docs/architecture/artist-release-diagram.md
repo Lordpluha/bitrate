@@ -187,9 +187,9 @@ erDiagram
 
 Основание: [Prisma schema](../../../api/prisma/schema.prisma),
 [API релизов](../../../api/src/modules/releases/README.md),
-[ADR-0051](./0051-artist-release-workspace-foundation.md),
-[ADR-0052](./0052-private-artist-music-catalogue.md),
-[ADR-0053](./0053-owned-release-draft-editing.md),
-[ADR-0054](./0054-owned-release-workspace-view.md),
-[ADR-0055](./0055-owned-release-schedule-editing.md),
-[ADR-0056](./0056-owned-release-contributor-addition.md).
+[ADR-0052](./0052-artist-release-workspace-foundation.md),
+[ADR-0053](./0053-private-artist-music-catalogue.md),
+[ADR-0054](./0054-owned-release-draft-editing.md),
+[ADR-0055](./0055-owned-release-workspace-view.md),
+[ADR-0056](./0056-owned-release-schedule-editing.md),
+[ADR-0057](./0057-owned-release-contributor-addition.md).

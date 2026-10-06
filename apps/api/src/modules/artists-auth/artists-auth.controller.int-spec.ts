@@ -89,16 +89,32 @@ describe('AuthController artists (int)', () => {
     artistsService.findById.mockReset()
   })
 
-  it('POST /artists/auth/registration should return 201', async () => {
+  it('POST /artists/auth/registration should return 201 when both documents are accepted', async () => {
     authService.registerArtist.mockResolvedValue(undefined as never)
 
     const res = await request(app.getHttpServer()).post('/artists/auth/registration').send({
       email: 'new@example.com',
       password: 'password123',
       username: 'newartist',
+      acceptLegal: true,
+      acceptArtistAgreement: true,
     })
 
     expect(res.status).toBe(201)
+  })
+
+  it.each([
+    ['acceptLegal is omitted', { acceptArtistAgreement: true }],
+    ['acceptLegal is false', { acceptLegal: false, acceptArtistAgreement: true }],
+    ['acceptArtistAgreement is omitted', { acceptLegal: true }],
+    ['acceptArtistAgreement is false', { acceptLegal: true, acceptArtistAgreement: false }],
+  ])('POST /artists/auth/registration should return 400 when %s', async (_label, extra) => {
+    const res = await request(app.getHttpServer())
+      .post('/artists/auth/registration')
+      .send({ email: 'new@example.com', password: 'password123', username: 'newartist', ...extra })
+
+    expect(res.status).toBe(400)
+    expect(authService.registerArtist).not.toHaveBeenCalled()
   })
 
   it('accepts a six-digit code, including leading zeros, and normalizes the address', async () => {

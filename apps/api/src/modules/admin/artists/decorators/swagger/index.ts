@@ -1,4 +1,5 @@
 export * from './DeleteArtist.decorator'
+export * from './ExportArtists.decorator'
 export * from './GetArtist.decorator'
 export * from './ListArtistAlbums.decorator'
 export * from './ListArtists.decorator'

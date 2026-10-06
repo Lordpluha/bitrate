@@ -155,9 +155,13 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-artists:buildcache
             type=gha,scope=web-artists
 
+      # The API requires the object store to boot (there is no local storage driver), so it comes
+      # up with the other infrastructure; `--wait` returns once its healthcheck passes, and the
+      # one-shot init creates the bucket the api and worker depend on.
       - name: Start services
         run: |
-          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml up -d postgres redis
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml up -d --wait postgres redis seaweedfs
+          docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml run --rm seaweedfs-init
           sleep 10
 
       - name: Wait for services

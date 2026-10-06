@@ -1,0 +1,21 @@
+<div class="flex flex-wrap items-center gap-3">
+  <button
+    hlmBtn
+    size="sm"
+    variant="outline"
+    type="button"
+    [disabled]="pending()"
+    [attr.aria-busy]="pending()"
+    (click)="run()"
+  >
+    {{ pending() ? 'Exporting…' : 'Export CSV' }}
+  </button>
+  @if (failure()) {
+    <p role="alert" class="text-sm text-destructive">{{ failure() }}</p>
+  }
+  @if (truncated()) {
+    <p role="status" class="text-sm text-muted-foreground">
+      The file holds the first {{ maxRows }} rows only. Narrow the filters to export the rest.
+    </p>
+  }
+</div>

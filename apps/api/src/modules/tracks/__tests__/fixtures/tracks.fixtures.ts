@@ -29,6 +29,8 @@ export const buildTrack = (overrides: Partial<TrackEntity> = {}): TrackEntity =>
   playbackVersion: 2,
   fragmentTimescale: 48_000,
   durationTicks: 2_880_000,
+  rightsConfirmedVersion: null,
+  rightsConfirmedAt: null,
   ...overrides,
 })
 
@@ -41,8 +43,8 @@ export const buildAudioFile = (overrides: Partial<Express.Multer.File> = {}): Ex
     mimetype: 'audio/mpeg',
     size: 1024,
     filename: 'unique-track.mp3',
-    destination: './storage/private/tracks',
-    path: './storage/private/tracks/unique-track.mp3',
+    destination: '/tmp/bitrate-audio-uploads/u-test',
+    path: '/tmp/bitrate-audio-uploads/u-test/unique-track.mp3',
     stream: null as never,
     buffer: Buffer.from(''),
     ...overrides,
@@ -56,10 +58,7 @@ export const buildCoverFile = (overrides: Partial<Express.Multer.File> = {}): Ex
     encoding: '7bit',
     mimetype: 'image/png',
     size: 1024,
-    filename: 'unique-cover.png',
-    destination: './storage/public/tracks/covers',
-    path: './storage/public/tracks/covers/unique-cover.png',
     stream: null as never,
-    buffer: Buffer.from(''),
+    buffer: Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0]),
     ...overrides,
   }) as Express.Multer.File

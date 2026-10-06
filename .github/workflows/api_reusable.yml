@@ -95,8 +95,14 @@ jobs:
       REDIS_PORT: 6379
       WEB_HOST: http://localhost:3001
       JWT_SECRET: api-ci-secret-value
-      STORAGE_DRIVER: local
       PORT: 3000
+      # Object storage is required to boot. These are the preprod compose defaults for the
+      # bucket-scoped application identity of the SeaweedFS service started below (published
+      # on loopback by the CI overlay).
+      S3_ENDPOINT: http://127.0.0.1:8333
+      S3_BUCKET: bitrate-audio
+      S3_ACCESS_KEY: bitrateDevAccessKey
+      S3_SECRET_KEY: bitrateDevSecretKeyChangeMe0001
 
     services:
       postgres:
@@ -147,6 +153,11 @@ jobs:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           SHADOW_DATABASE_URL: postgresql://test:test@localhost:5432/test_shadow
 
+      # The seed specs import types from @bitrate/ncs-parser, which ship only in its build output,
+      # so the package has to be built before any test (and before the contract check below).
+      - name: Build ncs-parser
+        run: pnpm --filter @bitrate/ncs-parser run build
+
       - name: Run converter tests
         run: pnpm --filter @bitrate/converter run test
 
@@ -183,9 +194,6 @@ jobs:
       - name: Stop SeaweedFS
         if: always()
         run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml down -v
-
-      - name: Build ncs-parser
-        run: pnpm --filter @bitrate/ncs-parser run build
 
       - name: Verify generated API contracts
         run: |

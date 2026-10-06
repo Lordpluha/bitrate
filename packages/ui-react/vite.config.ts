@@ -32,8 +32,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
-      '@assets': resolve(__dirname, 'assets'),
+      '@': resolve(import.meta.dirname, 'src'),
+      '@assets': resolve(import.meta.dirname, 'assets'),
     },
   },
   build: {
@@ -50,7 +50,7 @@ export default defineConfig({
        rather than left to that mode-dependent default. */
     minify: true,
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: resolve(import.meta.dirname, 'src/index.ts'),
     },
     rollupOptions: {
       external: (id) =>

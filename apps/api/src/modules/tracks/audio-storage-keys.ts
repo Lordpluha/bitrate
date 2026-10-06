@@ -46,3 +46,8 @@ export function getHlsAssetKey(
 ): string {
   return `${getHlsRootFromAudioUrl(trackId, audioUrl)}/${bitrate}/${asset}`
 }
+
+/** Builds the object key of an uploaded master. Named by source file only, so it needs no stored key. */
+export function getMasterKey(sourceFileName: string): string {
+  return `masters/${sourceFileName}`
+}

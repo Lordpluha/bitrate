@@ -43,6 +43,8 @@ const httpConfig: CorsOptions = {
     'Content-Length',
     'X-Track-Duration',
     'X-Request-ID',
+    'X-Export-Truncated',
+    'Content-Disposition',
   ],
   credentials: true,
   preflightContinue: false,

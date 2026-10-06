@@ -1,5 +1,6 @@
 export * from './api.config'
 export * from './auth.interceptor'
+export * from './batch-result.dto'
 export * from './contract-union'
 export * from './locale.interceptor'
 export * from './take-down.dto'

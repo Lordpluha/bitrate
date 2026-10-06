@@ -120,6 +120,17 @@ on its own port, not published outside the compose network:
 - `/metrics` — Prometheus text from a worker-owned registry (default process metrics plus job
   counters and durations), protected by a `METRICS_TOKEN` bearer, matching the API.
 
+Implemented in #210: the port is `WORKER_HTTP_PORT` (default 9101), the metrics are prefixed
+`bitrate_worker_` (queue gauges read from BullMQ at scrape time, job counters and a duration
+histogram), and Prometheus scrapes them as the `bitrate-worker` job. The compose healthcheck
+probes `/health/live`: readiness also depends on Redis, Postgres and SeaweedFS, and a dependency
+blip must not mark a worker that is mid-transcode unhealthy.
+
+Recovery: `restart` reacts to an exit, so a crashed or killed worker restarts at once. Plain
+Compose does not restart a container that is merely `unhealthy` (a hung event loop), so that
+case is detected (healthcheck, `up{job="bitrate-worker"}`) but needs an operator or a watchdog
+such as autoheal to be restarted automatically; that choice is left to the owner.
+
 ### Storage caveat
 
 Today the API stores everything under `process.cwd()/storage`. In `infra/docker-compose.prod.yaml`
@@ -217,3 +228,8 @@ active) before deploying the new contract, with the dead-letter routing above as
   and its repository was archived in April 2026.
 - **A full `NestFactory.create` app with a hidden HTTP port** — not chosen: it brings Express,
   middleware and interceptors for the sake of two health routes.
+
+## Rollout
+
+The staged production rollout, verification and rollback are in the
+[worker rollout runbook](../infrastructure/worker-rollout-runbook.md).

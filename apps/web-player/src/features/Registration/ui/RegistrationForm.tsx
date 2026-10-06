@@ -12,10 +12,10 @@ import {
   AuthFormFooter,
   AuthFormHeader,
   FloatingAuthField,
+  LegalAcceptanceField,
   useAuthenticatedRedirect,
 } from '@features/Auth'
 import { ROUTES } from '@shared/routes'
-import Link from 'next/link'
 import { useRegistrationForm } from '../model/useRegistrationForm'
 
 export const RegistrationForm = () => {
@@ -25,22 +25,7 @@ export const RegistrationForm = () => {
   return (
     <div className="flex flex-col items-stretch justify-center gap-4 px-14 py-32 bg-contrast text-text-contrast rounded-[10px_0_0_10px] basis-[50%] max-xl:basis-full max-xl:rounded-[10px] max-lg:p-6 box-border">
       <AuthFormHeader
-        description={
-          <>
-            By clicking on sign-up, you agree to the <br />
-            <Link className="text-primary hover:opacity-70" href={ROUTES.terms}>
-              Bitrate Terms and Conditions
-            </Link>{' '}
-            and{' '}
-            <Link
-              className="text-primary hover:opacity-70"
-              href={ROUTES.privacy}
-            >
-              Privacy Policy
-            </Link>
-            .
-          </>
-        }
+        description="Sign up with your email or continue with a social account."
         title="Create your account for free and start listening"
       />
 
@@ -101,11 +86,14 @@ export const RegistrationForm = () => {
             )}
           />
 
+          <LegalAcceptanceField control={form.control} id="accept-legal" />
+
           <AuthFormFooter
             alternateHref={ROUTES.auth.login}
             alternateLink="Log in."
             alternateText="Already have an account?"
             isSubmitting={isSubmitting}
+            socialAccepted={form.watch('acceptLegal')}
             submitLabel="Register"
           />
         </form>

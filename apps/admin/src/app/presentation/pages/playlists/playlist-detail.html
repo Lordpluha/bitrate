@@ -1,0 +1,188 @@
+<section class="w-full space-y-8 p-8">
+  <header class="space-y-1">
+    <a routerLink="/playlists" class="text-sm text-muted-foreground hover:underline"
+      >&larr; Playlists</a
+    >
+    @if (loading() && !playlist()) {
+      <h1 class="text-xl font-semibold text-foreground">Playlist</h1>
+    } @else if (playlist(); as p) {
+      <h1 class="text-xl font-semibold text-foreground">
+        {{ p.title }}
+        <span hlmBadge [variant]="p.isPublic ? 'default' : 'outline'" class="ml-2 align-middle">{{
+          p.isPublic ? 'public' : 'private'
+        }}</span>
+        @if (p.takenDownAt) {
+          <span hlmBadge variant="destructive" class="ml-2 align-middle">taken down</span>
+        }
+      </h1>
+      <p class="text-sm text-muted-foreground">
+        by
+        <a [routerLink]="['/users', p.ownerId]" class="hover:underline">{{ p.ownerUsername }}</a>
+      </p>
+    }
+  </header>
+
+  @if (loading() && !playlist()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else if (notFound()) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      This playlist could not be found.
+    </p>
+  } @else if (playlist(); as p) {
+    @if (status(); as message) {
+      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
+        {{ message }}
+      </p>
+    }
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Details</h2>
+      <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Tracks</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">{{ p.trackCount }}</dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Followers</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">
+            {{ p.followersCount }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Collaborative</dt>
+          <dd class="text-sm text-foreground">{{ p.collaborative ? 'Yes' : 'No' }}</dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Created</dt>
+          <dd class="text-sm tabular-nums text-foreground">
+            {{ p.createdAt | localizedDate: 'dd.MM.yyyy' }}
+          </dd>
+        </div>
+      </dl>
+      @if (p.description) {
+        <p class="text-sm text-foreground">{{ p.description }}</p>
+      }
+      <a
+        [routerLink]="['/audit']"
+        [queryParams]="{ entityType: 'admin-playlists', entityId: p.id }"
+        class="block text-sm text-muted-foreground hover:underline"
+      >
+        View audit history &rarr;
+      </a>
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Tracks</h2>
+      @if (p.tracks.length === 0) {
+        <p class="text-sm text-muted-foreground">This playlist has no tracks.</p>
+      } @else {
+        <div hlmTableContainer>
+          <table hlmTable>
+            <caption hlmCaption class="sr-only">
+              Tracks in playlist order
+            </caption>
+            <thead hlmTHead>
+              <tr hlmTr>
+                <th hlmTh scope="col">#</th>
+                <th hlmTh scope="col">Track</th>
+              </tr>
+            </thead>
+            <tbody hlmTBody>
+              @for (track of p.tracks; track track.id) {
+                <tr hlmTr>
+                  <td hlmTd class="tabular-nums text-muted-foreground">{{ track.position + 1 }}</td>
+                  <td hlmTd>
+                    <a [routerLink]="['/catalog', track.id]" class="hover:underline">{{
+                      track.title
+                    }}</a>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        @if (p.trackCount > p.tracks.length) {
+          <p class="text-sm text-muted-foreground">
+            Showing the first {{ p.tracks.length }} of {{ p.trackCount }} tracks.
+          </p>
+        }
+      }
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
+
+      <div class="flex flex-wrap gap-2">
+        @if (canHideOrUnhide() && hideable(p)) {
+          <button hlmBtn size="sm" variant="outline" type="button" (click)="ask('hide')">
+            Hide
+          </button>
+        }
+        @if (canHideOrUnhide() && unhideable(p)) {
+          <button hlmBtn size="sm" variant="outline" type="button" (click)="ask('unhide')">
+            Un-hide
+          </button>
+        }
+        @if (canTakeDown() && takeDownable(p)) {
+          <button hlmBtn size="sm" variant="ghost" type="button" (click)="ask('take-down')">
+            Take down
+          </button>
+        }
+        @if (canRestore() && restorable(p)) {
+          <button hlmBtn size="sm" variant="outline" type="button" (click)="ask('restore')">
+            Restore
+          </button>
+        }
+      </div>
+      @if (
+        !(canHideOrUnhide() && (hideable(p) || unhideable(p))) &&
+        !(canTakeDown() && takeDownable(p)) &&
+        !(canRestore() && restorable(p))
+      ) {
+        <p class="text-sm text-muted-foreground">No actions available.</p>
+      }
+    </section>
+  }
+
+  <hlm-dialog [state]="pendingAction() ? 'open' : 'closed'" (closed)="cancel()">
+    <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-md">
+      @if (pendingAction(); as action) {
+        <hlm-dialog-header>
+          <h2 hlmDialogTitle>{{ dialogCopy[action].title }}</h2>
+          <p hlmDialogDescription>{{ dialogCopy[action].body(playlist()?.title ?? '') }}</p>
+        </hlm-dialog-header>
+
+        <div class="space-y-1">
+          <label hlmLabel for="playlist-action-reason">Reason (optional)</label>
+          <textarea
+            id="playlist-action-reason"
+            class="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-md border bg-transparent px-2.5 py-1.5 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+            rows="2"
+            [attr.maxlength]="reasonMaxLength"
+            [disabled]="working()"
+            [value]="reason()"
+            (input)="reason.set($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        <hlm-dialog-footer>
+          <button hlmBtn variant="outline" type="button" (click)="cancel()">Cancel</button>
+          <button
+            hlmBtn
+            [variant]="dialogCopy[action].destructive ? 'destructive' : 'default'"
+            type="button"
+            [disabled]="working()"
+            (click)="confirm()"
+          >
+            {{ working() ? 'Working…' : dialogCopy[action].confirm }}
+          </button>
+        </hlm-dialog-footer>
+      }
+    </hlm-dialog-content>
+  </hlm-dialog>
+</section>

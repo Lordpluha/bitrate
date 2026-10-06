@@ -1,0 +1,196 @@
+<section class="w-full space-y-8 p-8">
+  <header class="space-y-1">
+    <a routerLink="/albums" class="text-sm text-muted-foreground hover:underline">&larr; Albums</a>
+    @if (loading() && !album()) {
+      <h1 class="text-xl font-semibold text-foreground">Album</h1>
+    } @else if (album(); as a) {
+      <h1 class="text-xl font-semibold text-foreground">
+        {{ a.title }}
+        <span hlmBadge variant="outline" class="ml-2 align-middle">{{ a.type }}</span>
+        @if (a.takenDownAt) {
+          <span hlmBadge variant="destructive" class="ml-2 align-middle">taken down</span>
+        }
+      </h1>
+      <p class="text-sm text-muted-foreground">
+        by
+        <a [routerLink]="['/artists', a.artistId]" class="hover:underline">{{
+          a.artistUsername
+        }}</a>
+      </p>
+    }
+  </header>
+
+  @if (loading() && !album()) {
+    <p class="text-sm text-muted-foreground" role="status">Loading…</p>
+  } @else if (notFound()) {
+    <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+      This album could not be found.
+    </p>
+  } @else if (album(); as a) {
+    @if (status(); as message) {
+      <p class="rounded-md bg-muted px-3 py-2 text-sm text-foreground" role="status">
+        {{ message }}
+      </p>
+    }
+    @if (failure(); as message) {
+      <p class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+        {{ message }}
+      </p>
+    }
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Details</h2>
+      <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Tracks</dt>
+          <dd class="text-lg font-semibold tabular-nums text-foreground">{{ a.totalTracks }}</dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Released</dt>
+          <dd class="text-sm tabular-nums text-foreground">
+            {{ a.releaseDate ? (a.releaseDate | localizedDate: 'dd.MM.yyyy') : '—' }}
+          </dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Label</dt>
+          <dd class="text-sm text-foreground">{{ a.label ?? '—' }}</dd>
+        </div>
+        <div class="rounded-md border border-border p-3">
+          <dt class="text-xs text-muted-foreground">Copyright</dt>
+          <dd class="text-sm text-foreground">{{ a.copyright ?? '—' }}</dd>
+        </div>
+      </dl>
+      @if (a.description) {
+        <p class="text-sm text-foreground">{{ a.description }}</p>
+      }
+      <a
+        [routerLink]="['/audit']"
+        [queryParams]="{ entityType: 'admin-albums', entityId: a.id }"
+        class="block text-sm text-muted-foreground hover:underline"
+      >
+        View audit history &rarr;
+      </a>
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Tracks</h2>
+      @if (a.tracks.length === 0) {
+        <p class="text-sm text-muted-foreground">This album lists no tracks.</p>
+      } @else {
+        <div hlmTableContainer>
+          <table hlmTable>
+            <caption hlmCaption class="sr-only">
+              Tracks in disc and track order
+            </caption>
+            <thead hlmTHead>
+              <tr hlmTr>
+                <th hlmTh scope="col">Disc</th>
+                <th hlmTh scope="col">#</th>
+                <th hlmTh scope="col">Track</th>
+                <th hlmTh scope="col">State</th>
+              </tr>
+            </thead>
+            <tbody hlmTBody>
+              @for (track of a.tracks; track track.id) {
+                <tr hlmTr>
+                  <td hlmTd class="tabular-nums text-muted-foreground">{{ track.discNumber }}</td>
+                  <td hlmTd class="tabular-nums text-muted-foreground">{{ track.trackNumber }}</td>
+                  <td hlmTd>
+                    <a [routerLink]="['/catalog', track.id]" class="hover:underline">{{
+                      track.title
+                    }}</a>
+                    @if (track.takenDownAt) {
+                      <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                    }
+                  </td>
+                  <td hlmTd>
+                    <span
+                      hlmBadge
+                      [variant]="
+                        track.processingStatus === 'FAILED'
+                          ? 'destructive'
+                          : track.processingStatus === 'READY'
+                            ? 'default'
+                            : 'outline'
+                      "
+                    >
+                      {{ track.processingStatus }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold text-foreground">Actions</h2>
+
+      @if (canTakeDown() && takeDownable(a)) {
+        <button hlmBtn size="sm" variant="ghost" type="button" (click)="ask('take-down')">
+          Take down
+        </button>
+      }
+      @if (canRestore() && restorable(a)) {
+        <button hlmBtn size="sm" variant="outline" type="button" (click)="ask('restore')">
+          Restore
+        </button>
+      }
+      @if (!(canTakeDown() && takeDownable(a)) && !(canRestore() && restorable(a))) {
+        <p class="text-sm text-muted-foreground">No actions available.</p>
+      }
+    </section>
+  }
+
+  <hlm-dialog [state]="pendingAction() ? 'open' : 'closed'" (closed)="cancel()">
+    <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-md">
+      <hlm-dialog-header>
+        <h2 hlmDialogTitle>
+          {{ pendingAction() === 'restore' ? 'Restore album' : 'Take down album' }}
+        </h2>
+        <p hlmDialogDescription>
+          @if (pendingAction() === 'restore') {
+            Restore "{{ album()?.title }}"? It reappears in the active list immediately.
+          } @else {
+            Take down "{{ album()?.title }}"? The release is hidden until restored. Its tracks are
+            not changed and stay manageable one by one.
+          }
+        </p>
+      </hlm-dialog-header>
+
+      <div class="space-y-1">
+        <label hlmLabel for="album-action-reason">Reason (optional)</label>
+        <textarea
+          id="album-action-reason"
+          class="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-md border bg-transparent px-2.5 py-1.5 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+          rows="2"
+          [attr.maxlength]="reasonMaxLength"
+          [disabled]="working()"
+          [value]="reason()"
+          (input)="reason.set($any($event.target).value)"
+        ></textarea>
+      </div>
+
+      <hlm-dialog-footer>
+        <button hlmBtn variant="outline" type="button" (click)="cancel()">Cancel</button>
+        <button
+          hlmBtn
+          [variant]="pendingAction() === 'restore' ? 'default' : 'destructive'"
+          type="button"
+          [disabled]="working()"
+          (click)="confirm()"
+        >
+          {{
+            working()
+              ? 'Working…'
+              : pendingAction() === 'restore'
+                ? 'Yes, restore'
+                : 'Yes, take down'
+          }}
+        </button>
+      </hlm-dialog-footer>
+    </hlm-dialog-content>
+  </hlm-dialog>
+</section>

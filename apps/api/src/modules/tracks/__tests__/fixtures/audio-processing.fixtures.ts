@@ -3,7 +3,7 @@ import type { Job } from 'bullmq'
 
 /** Mirrors what the CMAF converter returns for two aligned renditions. */
 export const cmafResult = {
-  outputDir: '/storage/.processing/track-1-job-1-1/cmaf',
+  outputDir: '/tmp/bitrate-audio-jobs/track-1-job-1-1/cmaf',
   timescale: 48_000,
   durationTicks: 2_880_000,
   renditions: [128, 192].map((bitrate) => ({
@@ -23,8 +23,7 @@ export const jobData = {
   trackId: 'track-1',
   artistId: 'artist-1',
   sourceFileName: 'track.mp3',
-  inputPath: '/storage/track.mp3',
-  outputDir: '/storage',
+  masterKey: 'masters/track.mp3',
   format: 'opus',
   bitrates: ['128k', '192k'],
 }

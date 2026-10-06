@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 
-/** Payload embedded in a signed local-storage object token. */
+/** Payload embedded in a signed storage object token. */
 type SignedStorageTokenPayload = {
   key: string
   expires: number
@@ -13,8 +13,8 @@ function computeSignature(data: string, secret: string): string {
 
 /**
  * Creates a compact, time-limited, HMAC-signed token embedding a storage key.
- * Format: `<base64url(payload)>.<base64url(hmac)>` — the local-driver equivalent
- * of an S3 presigned URL's signed query string.
+ * Format: `<base64url(payload)>.<base64url(hmac)>` — the token behind the API's own
+ * storage route, used instead of an S3 presigned URL.
  */
 export function createSignedStorageToken(
   key: string,
@@ -54,4 +54,18 @@ export function verifySignedStorageToken(token: string, secret: string): string 
   } catch {
     return null
   }
+}
+
+/**
+ * Builds the browser-facing URL for an object: a signed token route on this API.
+ * Both storage drivers use it, so the object store's own endpoint never reaches a browser.
+ */
+export function createSignedStorageUrl(
+  key: string,
+  expiresInSeconds: number,
+  secret: string,
+  apiBaseUrl: string,
+): string {
+  const token = createSignedStorageToken(key, expiresInSeconds, secret)
+  return `${apiBaseUrl}/api/v1/storage/objects/${encodeURIComponent(token)}`
 }

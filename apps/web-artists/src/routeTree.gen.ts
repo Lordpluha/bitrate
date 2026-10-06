@@ -20,6 +20,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardDistributionRouteImport } from './routes/dashboard.distribution'
 import { Route as DashboardMusicRouteImport } from './routes/dashboard.music'
 import { Route as DashboardTasksRouteImport } from './routes/dashboard.tasks'
+import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as DashboardMusicReleaseIdRouteImport } from './routes/dashboard.music_.$releaseId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -77,6 +78,11 @@ const DashboardTasksRoute = DashboardTasksRouteImport.update({
   path: '/tasks',
   getParentRoute: () => DashboardRoute,
 } as any)
+const LegalSlugRoute = LegalSlugRouteImport.update({
+  id: '/legal/$slug',
+  path: '/legal/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardMusicReleaseIdRoute = DashboardMusicReleaseIdRouteImport.update({
   id: '/music_/$releaseId',
   path: '/music/$releaseId',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/tasks': typeof DashboardTasksRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/music/$releaseId': typeof DashboardMusicReleaseIdRoute
 }
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/tasks': typeof DashboardTasksRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/music/$releaseId': typeof DashboardMusicReleaseIdRoute
 }
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
   '/dashboard/tasks': typeof DashboardTasksRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/music_/$releaseId': typeof DashboardMusicReleaseIdRoute
 }
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/dashboard/distribution'
     | '/dashboard/music'
     | '/dashboard/tasks'
+    | '/legal/$slug'
     | '/dashboard/'
     | '/dashboard/music/$releaseId'
   fileRoutesByTo: FileRoutesByTo
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/dashboard/distribution'
     | '/dashboard/music'
     | '/dashboard/tasks'
+    | '/legal/$slug'
     | '/dashboard'
     | '/dashboard/music/$releaseId'
   id:
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/dashboard/distribution'
     | '/dashboard/music'
     | '/dashboard/tasks'
+    | '/legal/$slug'
     | '/dashboard/'
     | '/dashboard/music_/$releaseId'
   fileRoutesById: FileRoutesById
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   RegistrationRoute: typeof RegistrationRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
+  LegalSlugRoute: typeof LegalSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -258,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTasksRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/legal/$slug': {
+      id: '/legal/$slug'
+      path: '/legal/$slug'
+      fullPath: '/legal/$slug'
+      preLoaderRoute: typeof LegalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/music_/$releaseId': {
       id: '/dashboard/music_/$releaseId'
       path: '/music/$releaseId'
@@ -296,6 +316,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegistrationRoute: RegistrationRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   VerifyEmailRoute: VerifyEmailRoute,
+  LegalSlugRoute: LegalSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -15,13 +15,15 @@ export const envSchema = z
     TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(0),
     HEALTH_CHECK_TIMEOUT_MS: z.coerce.number().int().min(100).max(10_000).default(2_000),
     METRICS_TOKEN: z.string().min(32).optional(),
+    /**
+     * Internal-only health and metrics port of the standalone transcode worker (never published,
+     * ADR-0049). Distinct from `PORT`, which the worker does not open.
+     */
+    WORKER_HTTP_PORT: z.coerce.number().int().min(1).max(65_535).default(9101),
     WEB_HOST: z.url(),
     USER_WEB_HOST: z.url().optional(),
     ARTIST_WEB_HOST: z.url().optional(),
     ADMIN_WEB_HOST: z.url().optional(),
-
-    // Storage driver — selects which StorageService implementation is bound at boot
-    STORAGE_DRIVER: z.enum(['s3', 'local']).default('local'),
 
     // Auth
     JWT_SECRET: z.string().min(10),
@@ -72,14 +74,21 @@ export const envSchema = z
     // Sentry
     SENTRY_DSN: z.string().url().optional(),
 
-    // S3 / Object storage (AWS S3) — required only when STORAGE_DRIVER=s3, see superRefine below
-    S3_ENDPOINT: z.url().optional(),
+    // S3-compatible object storage (SeaweedFS in every stack, ADR-0050) — the only storage backend
+    S3_ENDPOINT: z.url(),
     S3_REGION: z.string().default('us-east-1'),
-    S3_BUCKET: z.string().min(1).optional(),
-    S3_ACCESS_KEY: z.string().min(1).optional(),
-    S3_SECRET_KEY: z.string().min(1).optional(),
+    S3_BUCKET: z.string().min(1),
+    S3_ACCESS_KEY: z.string().min(1),
+    S3_SECRET_KEY: z.string().min(1),
     S3_PUBLIC_URL: z.string().url().optional(),
     S3_FORCE_PATH_STYLE: z.coerce.boolean().default(true),
+
+    /**
+     * Directory for the audio pipeline's local working files: upload temp files, and the
+     * per-job scratch directories the consumer downloads masters into. Production points it
+     * at the on-disk `worker_tmp` volume; unset, it is the OS temp directory.
+     */
+    AUDIO_SCRATCH_ROOT: z.string().min(1).optional(),
 
     /**
      * Whether `AudioProcessingConsumer`'s BullMQ worker actually claims and runs jobs.
@@ -119,19 +128,6 @@ export const envSchema = z
         path: ['EMAIL_FROM'],
         message: 'EMAIL_FROM is required when SMTP_HOST is configured',
       })
-    }
-
-    if (env.STORAGE_DRIVER !== 's3') return
-
-    const requiredForS3 = ['S3_ENDPOINT', 'S3_BUCKET', 'S3_ACCESS_KEY', 'S3_SECRET_KEY'] as const
-    for (const key of requiredForS3) {
-      if (!env[key]) {
-        ctx.addIssue({
-          code: 'custom',
-          path: [key],
-          message: `${key} is required when STORAGE_DRIVER=s3`,
-        })
-      }
     }
   })
 

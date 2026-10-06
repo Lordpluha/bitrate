@@ -1,10 +1,42 @@
-import { AdminAuth, RequirePermission } from '@modules/admin-auth'
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Query } from '@nestjs/common'
+import { SkipAudit } from '@infra/observability/skip-audit.decorator'
+import {
+  AuditContext,
+  type AuditContextValue,
+  BatchIdsDto,
+  BatchIdsSchema,
+  sendCsvExport,
+} from '@modules/admin/shared'
+import type { AuthenticatedStaff } from '@modules/admin-auth'
+import { AdminAuth, CurrentStaff, RequirePermission } from '@modules/admin-auth'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  Res,
+  type StreamableFile,
+} from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import type { Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminModerationService } from './admin-moderation.service'
-import { GetReportSwagger, ListReportsSwagger, UpdateReportSwagger } from './decorators'
 import {
+  DismissReportsBatchSwagger,
+  ExportReportsSwagger,
+  GetReportSwagger,
+  ListReportsSwagger,
+  ResolveReportsBatchSwagger,
+  UpdateReportSwagger,
+} from './decorators'
+import {
+  type ExportReportsQueryDto,
+  ExportReportsQuerySchema,
   type ListReportsQueryDto,
   ListReportsQuerySchema,
   type UpdateReportDto,
@@ -24,6 +56,56 @@ export class AdminModerationController {
   @Get('')
   list(@Query(new ZodValidationPipe(ListReportsQuerySchema)) query: ListReportsQueryDto) {
     return this.moderation.findAll(query)
+  }
+
+  /**
+   * Runs the batch resolve operation. Declared before `:id` so the literal `batch` segment is
+   * never read as an id. `@SkipAudit` because the service writes one audit row per report.
+   */
+  @RequirePermission('reports:advance')
+  @ResolveReportsBatchSwagger()
+  @SkipAudit()
+  @HttpCode(HttpStatus.OK)
+  @Post('batch/resolve')
+  resolveMany(
+    @Body(new ZodValidationPipe(BatchIdsSchema)) body: BatchIdsDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue = {},
+  ) {
+    return this.moderation.advanceMany(body.ids, 'RESOLVED', staff.id, auditContext)
+  }
+
+  /** Runs the batch dismiss operation (status `REJECTED`); see {@link resolveMany}. */
+  @RequirePermission('reports:advance')
+  @DismissReportsBatchSwagger()
+  @SkipAudit()
+  @HttpCode(HttpStatus.OK)
+  @Post('batch/dismiss')
+  dismissMany(
+    @Body(new ZodValidationPipe(BatchIdsSchema)) body: BatchIdsDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue = {},
+  ) {
+    return this.moderation.advanceMany(body.ids, 'REJECTED', staff.id, auditContext)
+  }
+
+  /** Runs the CSV export operation. */
+  // Declared before `:id` so `export.csv` is not read as an id. The service writes the one audit
+  // row, because GET is not interceptor-audited.
+  @RequirePermission('reports:export')
+  @ExportReportsSwagger()
+  @Get('export.csv')
+  async exportCsv(
+    @Query(new ZodValidationPipe(ExportReportsQuerySchema)) query: ExportReportsQueryDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    return sendCsvExport(
+      res,
+      'reports',
+      await this.moderation.exportCsv(query, staff.id, auditContext),
+    )
   }
 
   /** Runs the get report operation. */

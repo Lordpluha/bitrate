@@ -16,7 +16,7 @@ test('login page default state', async ({ page }) => {
 
 test('login page with both fields rejected', async ({ page }) => {
   await gotoHydrated(page, '/login')
-  await page.getByRole('button', { name: 'Continue' }).click()
+  await page.getByRole('button', { name: 'Continue', exact: true }).click()
   await expect(page.getByText('Password is required')).toBeVisible()
 
   await expect(page).toHaveScreenshot('login-invalid.png')

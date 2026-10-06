@@ -389,4 +389,52 @@ describe('AdminTracksService', () => {
       )
     })
   })
+
+  describe('softDeleteMany', () => {
+    it('takes every id down and writes one explicit audit row per entity', async () => {
+      prisma.track.findFirst.mockImplementation(((args: unknown) => {
+        const id = (args as { where: { id: string } }).where.id
+        return Promise.resolve(buildTrack({ id, deletedAt: null })) as never
+      }) as never)
+      transaction.track.updateMany.mockResolvedValue({ count: 1 })
+      transaction.track.findFirstOrThrow.mockImplementation(((args: unknown) => {
+        const id = (args as { where: { id: string } }).where.id
+        return Promise.resolve(buildTrackWithArtist({ id, deletedAt: new Date() })) as never
+      }) as never)
+
+      const result = await service.softDeleteMany(['track-1', 'track-2', 'track-3'], STAFF_ID, {
+        requestId: 'req-1',
+      })
+
+      expect(result).toMatchObject({ total: 3, succeeded: 3, failed: 0 })
+      const audited = transaction.auditLog.create.mock.calls.map(
+        ([args]) => (args as { data: { entityId: string; action: string } }).data,
+      )
+      expect(audited.map((row) => row.entityId)).toEqual(['track-1', 'track-2', 'track-3'])
+      expect(audited.every((row) => row.action === 'admin-tracks.delete')).toBe(true)
+    })
+
+    it('reports 404 and 409 per id, writes no audit row for them, and still applies the rest', async () => {
+      prisma.track.findFirst.mockImplementation(((args: unknown) => {
+        const id = (args as { where: { id: string } }).where.id
+        if (id === 'missing') return Promise.resolve(null) as never
+        return Promise.resolve(
+          buildTrack({ id, deletedAt: id === 'gone' ? new Date() : null }),
+        ) as never
+      }) as never)
+      transaction.track.updateMany.mockResolvedValue({ count: 1 })
+      transaction.track.findFirstOrThrow.mockResolvedValue(
+        buildTrackWithArtist({ id: 'ok', deletedAt: new Date() }) as never,
+      )
+
+      const result = await service.softDeleteMany(['ok', 'missing', 'gone'], STAFF_ID)
+
+      expect(result.results.map((r) => [r.id, r.status, r.error?.code])).toEqual([
+        ['ok', 'succeeded', undefined],
+        ['missing', 'failed', 'NOT_FOUND'],
+        ['gone', 'failed', 'CONFLICT'],
+      ])
+      expect(transaction.auditLog.create).toHaveBeenCalledTimes(1)
+    })
+  })
 })
