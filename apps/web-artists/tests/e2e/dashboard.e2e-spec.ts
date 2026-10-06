@@ -2452,6 +2452,10 @@ test('registration explains email verification instead of reporting a completed 
   await page.getByLabel('Email Address').fill('unverified@example.test')
   await page.getByRole('button', { name: 'Continue', exact: true }).click()
   await page.getByLabel('Password', { exact: true }).fill('Password123!')
+  await page.getByRole('checkbox', { name: /at least 16 years old/i }).click()
+  await page
+    .getByRole('checkbox', { name: /accept the Artist Agreement/i })
+    .click()
   await page.getByRole('button', { name: 'Continue', exact: true }).click()
   await expect(page).toHaveURL(/\/verify-email\?email=/)
   await expect(
