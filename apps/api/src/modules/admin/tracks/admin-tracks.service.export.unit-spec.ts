@@ -93,7 +93,9 @@ describe('AdminTracksService.exportCsv', () => {
     const lines = text.split('\r\n').filter(Boolean)
     expect(lines[1]).toMatch(/^track-failed,/)
     expect(lines[2]).toMatch(/^track-ready,/)
-    const sql = (prisma.queryRaw.mock.calls[0]?.[0] as Prisma.Sql | undefined)?.strings.join(' ')
+    const [firstCall] = prisma.queryRaw.mock.calls
+    if (!firstCall) throw new Error('queryRaw was not called')
+    const sql = (firstCall[0] as Prisma.Sql).strings.join(' ')
     expect(sql).toContain('CASE "processingStatus" WHEN \'FAILED\'')
     expect(sql).toContain('"id" DESC')
   })

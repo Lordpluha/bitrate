@@ -1,6 +1,10 @@
 import { TestBed } from '@angular/core/testing'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { type OverviewSeries, OverviewRepository } from '@domain/overview'
+import {
+  type OverviewReportsByType,
+  type OverviewSeries,
+  OverviewRepository,
+} from '@domain/overview'
 import { GetOverviewSeriesUseCase } from './get-overview-series.use-case'
 
 const getSeries = vi.fn<(days: number) => Promise<OverviewSeries>>()
@@ -12,6 +16,10 @@ class StubOverviewRepository extends OverviewRepository {
 
   override getSeries(days: number): Promise<OverviewSeries> {
     return getSeries(days)
+  }
+
+  override getReportsByType(_days: number): Promise<OverviewReportsByType> {
+    throw new Error('not used')
   }
 }
 
