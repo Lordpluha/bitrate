@@ -8,6 +8,8 @@ const production = process.env.DASHBOARD_TEST_PRODUCTION === '1'
 export default defineConfig({
   ...config,
   testMatch: '**/dashboard.e2e-spec.ts',
+  /** The general config ignores this spec; this config is the one that runs it. */
+  testIgnore: [],
   workers: 1,
   use: { ...config.use, baseURL: 'http://localhost:3102' },
   webServer: [
