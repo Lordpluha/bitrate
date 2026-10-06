@@ -10,7 +10,7 @@ import { Circle, Ellipsis, Music2, Pause, Play } from 'lucide-react'
 
 export type CatalogueItem = MusicTrack | MusicRelease
 
-export function catalogueDate(value: string) {
+function catalogueDate(value: string) {
   const date = new Date(value)
   const today = new Date()
   const day = Date.UTC(
@@ -33,7 +33,7 @@ export function catalogueDate(value: string) {
   }).format(date)
 }
 
-export function catalogueStatus(item: CatalogueItem) {
+function catalogueStatus(item: CatalogueItem) {
   if ('version' in item) return trackStatusLabels[item.status]
   if (item.status === 'RELEASED') return 'Published'
   if (item.status === 'REJECTED') return 'Needs changes'

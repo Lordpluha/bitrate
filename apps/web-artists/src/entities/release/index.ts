@@ -1,4 +1,3 @@
-export { useAddContributor } from './api/useAddContributor'
 export { useContributor, useSaveContributor } from './api/useContributor'
 export {
   useSaveRights,
@@ -10,7 +9,6 @@ export {
 export {
   useCreateRelease,
   useRelease,
-  useReleases,
   useUpdateRelease,
 } from './api/useReleases'
 export { useReleaseWorkspace } from './api/useReleaseWorkspace'
