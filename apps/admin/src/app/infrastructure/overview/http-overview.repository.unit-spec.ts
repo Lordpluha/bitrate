@@ -83,4 +83,37 @@ describe('HttpOverviewRepository', () => {
 
     await expect(series).rejects.toThrow()
   })
+
+  it('fetches reports-by-type with the window as a query parameter and maps dates', async () => {
+    const result = repository.getReportsByType(7)
+
+    const request = http.expectOne((req) => req.url === `${BASE}/reports-by-type`)
+
+    expect(request.request.params.get('days')).toBe('7')
+    request.flush({
+      from: '2026-09-16',
+      to: '2026-09-17',
+      days: 2,
+      dates: ['2026-09-16', '2026-09-17'],
+      series: [{ entityType: 'track', counts: [1, 2], total: 3 }],
+      total: 3,
+    })
+
+    await expect(result).resolves.toEqual({
+      from: new Date('2026-09-16'),
+      to: new Date('2026-09-17'),
+      days: 2,
+      dates: [new Date('2026-09-16'), new Date('2026-09-17')],
+      series: [{ entityType: 'track', counts: [1, 2], total: 3 }],
+      total: 3,
+    })
+  })
+
+  it('rejects reports-by-type when the response fails schema validation', async () => {
+    const result = repository.getReportsByType(30)
+
+    http.expectOne((req) => req.url === `${BASE}/reports-by-type`).flush({ days: 30 })
+
+    await expect(result).rejects.toThrow()
+  })
 })
