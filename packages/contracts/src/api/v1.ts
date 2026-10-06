@@ -2750,6 +2750,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/admin/overview/reports-by-type': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Runs the get overview reports-by-type operation.
+     * @description Zero-filled daily counts of reports created in a trailing window of UTC calendar days, one series per entity type. Defaults to 30 days, capped at 365.
+     */
+    get: operations['AdminOverviewController_getReportsByType_v1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/genres': {
     parameters: {
       query?: never
@@ -5800,6 +5820,31 @@ export interface components {
       reports: components['schemas']['AdminOverviewReportsPointEntity'][]
       /** @description The current (not windowed) distribution of every report across its statuses. */
       reportsByStatus: components['schemas']['AdminOverviewReportsByStatusEntity']
+    }
+    AdminOverviewReportsByTypeSeriesEntity: {
+      /**
+       * @description The kind of entity the reports were filed against.
+       * @enum {string}
+       */
+      entityType: 'track' | 'album' | 'playlist' | 'artist' | 'podcast' | 'episode' | 'user'
+      /** @description Reports filed per day, aligned by index to the response's `dates`. */
+      counts: number[]
+      /** @description The sum of `counts` — reports of this entity type filed in the window. */
+      total: number
+    }
+    AdminOverviewReportsByTypeEntity: {
+      /** @description The oldest day in the window, inclusive, as `YYYY-MM-DD`. */
+      from: string
+      /** @description The newest (today, UTC) day in the window, inclusive, as `YYYY-MM-DD`. */
+      to: string
+      /** @description How many calendar days the window covers — equal to `dates.length`. */
+      days: number
+      /** @description Every UTC day in the window, oldest first, as `YYYY-MM-DD`. */
+      dates: string[]
+      /** @description One series per moderation entity type, in `MODERATION_ENTITY_TYPES` order. */
+      series: components['schemas']['AdminOverviewReportsByTypeSeriesEntity'][]
+      /** @description Reports filed in the window, across every entity type. */
+      total: number
     }
     AdminGenreCountsEntity: {
       /** @description Tracks tagged with the genre. */
@@ -30624,6 +30669,150 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['AdminOverviewSeriesEntity']
+        }
+      }
+      /** @description Invalid or out-of-range `days` */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @example 401 */
+            statusCode?: number
+            /**
+             * @example Invalid or expired token
+             * @enum {string}
+             */
+            message?:
+              | 'Access token required'
+              | 'Refresh token required'
+              | 'Invalid token requirement'
+              | 'Invalid or expired token'
+              | 'Staff not found'
+              | 'Session not found'
+            /** @example Unauthorized */
+            error?: string
+          }
+        }
+      }
+      /** @description Requires the overview:read permission */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Method not allowed */
+      405: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Request timeout */
+      408: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Not implemented */
+      501: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad gateway */
+      502: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Service unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Gateway timeout */
+      504: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description HTTP version not supported */
+      505: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Insufficient storage */
+      507: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Loop detected */
+      508: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AdminOverviewController_getReportsByType_v1: {
+    parameters: {
+      query?: {
+        /** @description Window size in UTC calendar days. Default 30, max 365. */
+        days?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AdminOverviewReportsByTypeEntity']
         }
       }
       /** @description Invalid or out-of-range `days` */

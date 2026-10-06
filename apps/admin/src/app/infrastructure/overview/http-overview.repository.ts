@@ -1,9 +1,16 @@
 import { HttpClient } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
-import { type Overview, type OverviewSeries, OverviewRepository } from '@domain/overview'
+import {
+  type Overview,
+  OverviewRepository,
+  type OverviewReportsByType,
+  type OverviewSeries,
+} from '@domain/overview'
 import { firstValueFrom } from 'rxjs'
 import { ADMIN_API } from '../http/api.config'
 import { overviewDto } from './overview.dto'
+import { overviewReportsByTypeDto } from './overview-reports-by-type.dto'
+import { toOverviewReportsByType } from './overview-reports-by-type.mapper'
 import { overviewSeriesDto } from './overview-series.dto'
 import { toOverview } from './overview.mapper'
 import { toOverviewSeries } from './overview-series.mapper'
@@ -25,5 +32,13 @@ export class HttpOverviewRepository extends OverviewRepository {
     )
 
     return toOverviewSeries(overviewSeriesDto.parse(response))
+  }
+
+  override async getReportsByType(days: number): Promise<OverviewReportsByType> {
+    const response = await firstValueFrom(
+      this.http.get<unknown>(`${this.base}/reports-by-type`, { params: { days: String(days) } }),
+    )
+
+    return toOverviewReportsByType(overviewReportsByTypeDto.parse(response))
   }
 }

@@ -105,6 +105,24 @@ describe('OverviewPage', () => {
     expect(openReportsLink).not.toBeUndefined()
   })
 
+  it('links the reports card to the by-entity-type drill-down, preserving the range', async () => {
+    execute.mockResolvedValue(overview())
+
+    await harness.navigateByUrl('/?days=7', OverviewPage)
+    await harness.fixture.whenStable()
+
+    const root = harness.routeNativeElement as HTMLElement
+    const drillDown = Array.from(root.querySelectorAll('a')).find((a) =>
+      a.textContent?.includes('Reports by entity type over time'),
+    )
+
+    expect(drillDown?.getAttribute('href')).toBe('/overview/reports?days=7')
+    /** The existing filtered-list link keeps working alongside it. */
+    expect(
+      Array.from(root.querySelectorAll('a')).some((a) => a.getAttribute('href') === '/moderation'),
+    ).toBe(true)
+  })
+
   it('renders no standalone tile grid — the summary numbers live inside the charts', async () => {
     execute.mockResolvedValue(overview())
 

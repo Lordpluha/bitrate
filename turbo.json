@@ -58,10 +58,10 @@
       "dependsOn": ["^generate-types"],
       "outputs": [".types-refs/**"]
     },
-    "@bitrate/web-player#generate-types": { "outputs": [] },
-    "@bitrate/web-artists#generate-types": { "outputs": [] },
-    "@bitrate/api#generate-types": { "outputs": [] },
-    "@bitrate/admin#generate-types": { "outputs": [] },
+    "@bitrate/web-player#generate-types": { "dependsOn": ["^generate-types"], "outputs": [] },
+    "@bitrate/web-artists#generate-types": { "dependsOn": ["^generate-types"], "outputs": [] },
+    "@bitrate/api#generate-types": { "dependsOn": ["^generate-types"], "outputs": [] },
+    "@bitrate/admin#generate-types": { "dependsOn": ["^generate-types"], "outputs": [] },
     "dev": {
       "cache": false
     }
