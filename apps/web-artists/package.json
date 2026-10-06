@@ -17,6 +17,7 @@
     "test:unit": "vitest run --config=tests/configs/vitest.unit.config.ts",
     "test:int": "vitest run --config=tests/configs/vitest.int.config.ts --passWithNoTests",
     "test:e2e": "playwright test --config=tests/configs/playwright.e2e.config.ts",
+    "test:e2e:dashboard": "playwright test --config=tests/configs/playwright.dashboard.config.ts",
     "test:screenshot": "playwright test --config=tests/configs/playwright.screenshot.config.ts",
     "test:screenshot:update": "playwright test --config=tests/configs/playwright.screenshot.config.ts --update-snapshots"
   },
