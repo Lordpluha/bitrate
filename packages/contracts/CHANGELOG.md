@@ -1,5 +1,19 @@
 # @bitrate/contracts
 
+## 1.2.0
+
+### Minor Changes
+
+- 5b1870d: **Breaking (released as minor while the product is on 0.x):** clients that register users or artists, or upload tracks and albums, must now send the acceptance fields and `rightsConfirmed: true`.
+
+  Registration now requires accepting the legal documents. The API rejects user and artist registration (and the creation of new accounts through Google or Facebook sign-in) unless the Terms of Use, Community Guidelines and Privacy Policy, and for artists the Artist Agreement, are accepted, and it stores the accepted revision and time on the account. The web player and artist apps show the matching required checkboxes and a notice next to the social sign-in buttons, and publish the draft legal documents under /legal/<document>; ui-react gains a Checkbox component.
+
+  Uploading a track or creating an album now requires `rightsConfirmed: true` and stores the Artist Agreement revision and time on the track or album; replacing a track's audio requires it too. `GET /auth/me` reports `legalAcceptanceRequired`, and `POST /auth/legal/accept` records the current revision, which the web player's blocking dialog uses for accounts that never accepted or accepted an older revision. The legal pages now include a Complaints and reports page, and the registration checkboxes link the Terms of Use, Community Guidelines and Privacy Policy in a new tab.
+
+### Patch Changes
+
+- 6b10244: Store and serve images and seeds through `STORAGE_SERVICE`; the local storage directory is gone (breaking for deployments: the `api_storage` volume is removed from the production compose file, so copy any existing objects into the bucket before deploying, see the deployment runbook). Track covers and user avatars are validated in memory and uploaded to SeaweedFS under `tracks/covers/<uuid>.<ext>` and `users/avatars/<uuid>.<ext>`, with no image ever written to local disk. `ServeStaticModule` is replaced by a route at the same `/static/<folder>/<file>` URL that streams only public image keys from the object store with `Cache-Control: public, max-age=31536000, immutable` and Range support; stored values and client URLs do not change. The seeds download covers into memory and audio into the private upload directory, then upload through `TrackUploadService`. `apps/api/storage`, `storage.config.ts`, the `/app/storage` image directory, the `prod:storage:*` tasks and the `backup.sh` storage archive are removed (`--no-storage` is still accepted and ignored). `@bitrate/contracts` only reflects a corrected description of where track covers live.
+
 ## 1.1.0
 
 ### Minor Changes
