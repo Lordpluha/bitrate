@@ -20,7 +20,7 @@ import { fetchPage } from '../http/wire-page'
 import { artistAlbumPageDto, artistTrackPageDto } from './artist-publications.dto'
 import { toArtistAlbum, toArtistTrack } from './artist-publications.mapper'
 import { artistDetailDto, artistDto, artistPageDto } from './artist.dto'
-import { toArtist, toArtistDetail, toWireArtistSort, toWireArtistStatus } from './artist.mapper'
+import { toArtist, toArtistDetail, toArtistListFilters } from './artist.mapper'
 
 @Injectable()
 export class HttpArtistRepository extends ArtistRepository {
@@ -33,13 +33,7 @@ export class HttpArtistRepository extends ArtistRepository {
       url: this.base,
       page,
       limit,
-      filters: {
-        q: filter.query,
-        verified: filter.verified,
-        status: filter.status ? toWireArtistStatus(filter.status) : undefined,
-        sort: filter.sort ? toWireArtistSort(filter.sort.field) : undefined,
-        order: filter.sort?.direction,
-      },
+      filters: toArtistListFilters(filter),
       schema: artistPageDto,
       toDomain: toArtist,
     })

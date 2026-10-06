@@ -6,8 +6,8 @@ import { playwright } from '@vitest/browser-playwright'
 import { defineConfig } from 'vitest/config'
 
 const alias = {
-  '@': resolve(__dirname, 'src'),
-  '@assets': resolve(__dirname, 'assets'),
+  '@': resolve(import.meta.dirname, 'src'),
+  '@assets': resolve(import.meta.dirname, 'assets'),
 }
 
 /* src/icons/svgr is generated and committed, but the source-hash cache in

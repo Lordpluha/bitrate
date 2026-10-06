@@ -111,9 +111,9 @@ and synthetic preview audio are identified as illustrative; they do not publish 
 Tasks and Distribution still show explicit preparation states. Track/artwork uploads,
 recording editing, release deletion, roadmap, shared editing and partner delivery are subsequent
 stages of #241. Creating a draft does not publish music or submit it to a distributor.
-See [ADR-0051](../docs/docs/architecture/0051-artist-release-workspace-foundation.md).
+See [ADR-0052](../docs/docs/architecture/0052-artist-release-workspace-foundation.md).
 Private recording ownership and demo boundaries follow
-[ADR-0052](../docs/docs/architecture/0052-private-artist-music-catalogue.md).
+[ADR-0053](../docs/docs/architecture/0053-private-artist-music-catalogue.md).
 
 The dedicated dashboard browser suite starts its own deterministic API and Vite server on
 ports 3103 and 3102; it needs neither a database nor a real account:
@@ -151,8 +151,8 @@ Light/Dark/Dim share the responsive markup; source card geometry and waveform co
 from Pencil screens 21/21B. Review comments/master history and audio
 editing are future stages; stored status does not imply external delivery.
 
-See [ADR-0054](../docs/docs/architecture/0054-owned-release-workspace-view.md),
-[ADR-0055](../docs/docs/architecture/0055-owned-release-schedule-editing.md), and
+See [ADR-0055](../docs/docs/architecture/0055-owned-release-workspace-view.md),
+[ADR-0056](../docs/docs/architecture/0056-owned-release-schedule-editing.md), and
 the [release diagrams/demo guide](../docs/docs/architecture/artist-release-diagram.md).
 
 ## Email verification
@@ -201,7 +201,7 @@ The modal validates fields, loads the latest draft version and preserves entries
 on rejected or unconfirmed writes. Saving updates Participants and persists after
 reload; concurrent changes require reopening the form. Credits grant no account
 access. Removal, rights and splits remain later stages.
-See [ADR-0056](../docs/docs/architecture/0056-owned-release-contributor-addition.md).
+See [ADR-0057](../docs/docs/architecture/0057-owned-release-contributor-addition.md).
 
 ### Editing release credits
 
@@ -212,7 +212,7 @@ legacy credits can receive their missing roles. Errors preserve entries, conflic
 changes require reopening, and pending saves lock fields/dismissal. Credit ID,
 linked artist account and existing splits are preserved. Light/Dark/Dim use the
 same form; this grants no workspace access or rights confirmation.
-See [ADR-0057](../docs/docs/architecture/0057-owned-release-contributor-editing.md).
+See [ADR-0058](../docs/docs/architecture/0058-owned-release-contributor-editing.md).
 
 Participants with no assigned roles show **Needs role** and a short explanation.
 An owned DRAFT offers **Edit roles** beside that person, opening the existing credit

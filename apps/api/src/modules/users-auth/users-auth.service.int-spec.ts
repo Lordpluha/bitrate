@@ -94,7 +94,12 @@ describe('UserAuthService (int)', () => {
     usersMock.getByEmail.mockResolvedValue(buildUser() as never)
 
     await expect(
-      service.registerUser({ email: 'u@example.com', password: 'p', username: 'u' }),
+      service.registerUser({
+        email: 'u@example.com',
+        password: 'p',
+        username: 'u',
+        acceptLegal: true,
+      }),
     ).rejects.toThrow(ConflictException)
   })
 

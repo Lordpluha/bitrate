@@ -1,8 +1,8 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE, type PaginationInput } from '@common/pagination'
 import { buildSortOrderBy, type SortInput } from '@common/sort'
 import { PrismaService } from '@infra/prisma/prisma.service'
-import type { AdminResourceStatus, AuditContextValue } from '@modules/admin/shared'
-import { isoOrNull, writeTakeDownAudit } from '@modules/admin/shared'
+import type { AdminResourceStatus, AuditContextValue, CsvExport } from '@modules/admin/shared'
+import { isoOrNull, openCsvExport, runBatch, writeTakeDownAudit } from '@modules/admin/shared'
 import { TrackUploadService } from '@modules/tracks'
 import { Injectable } from '@nestjs/common'
 import { Prisma, type TrackProcessingStatus } from '@prisma/client'
@@ -18,6 +18,7 @@ import {
   TrackNotDeletedException,
   TrackNotFoundException,
 } from './errors'
+import { ADMIN_TRACK_EXPORT_COLUMNS } from './track-export.columns'
 
 /** One of the track pipeline's allowed sort fields. */
 type AdminTracksSortField = (typeof ADMIN_TRACKS_SORT_FIELDS)[number]
@@ -150,21 +151,73 @@ export class AdminTracksService {
     const rawWhere = this.buildRawWhere({ processingStatus, status, q })
     const skip = (page - 1) * limit
 
-    const [orderedIds, total] = await Promise.all([
-      this.prisma.queryRaw<{ id: string }[]>(Prisma.sql`
-        SELECT id FROM "Track"
-        ${rawWhere}
-        ORDER BY
-          CASE "processingStatus" WHEN 'FAILED' THEN 0 WHEN 'PROCESSING' THEN 1 ELSE 2 END,
-          COALESCE("processingStartedAt", "updatedAt") ASC,
-          "createdAt" DESC
-        OFFSET ${skip} LIMIT ${limit}
-      `),
+    const [rows, total] = await Promise.all([
+      this.findAttentionFirstPage(rawWhere, skip, limit),
       this.prisma.track.count({ where }),
     ])
 
-    const data = await this.hydrateOrdered(orderedIds.map((row) => row.id))
-    return { data, total, page, limit }
+    return { data: rows, total, page, limit }
+  }
+
+  /**
+   * One page of the attention-first order, hydrated. `id DESC` closes the ordering so equal rows
+   * keep a fixed place — paging by offset (the list and the CSV export both do) never repeats or
+   * skips a row.
+   */
+  private async findAttentionFirstPage(
+    rawWhere: Prisma.Sql,
+    skip: number,
+    take: number,
+  ): Promise<AdminTrackRow[]> {
+    const orderedIds = await this.prisma.queryRaw<{ id: string }[]>(Prisma.sql`
+      SELECT id FROM "Track"
+      ${rawWhere}
+      ORDER BY
+        CASE "processingStatus" WHEN 'FAILED' THEN 0 WHEN 'PROCESSING' THEN 1 ELSE 2 END,
+        COALESCE("processingStartedAt", "updatedAt") ASC,
+        "createdAt" DESC,
+        "id" DESC
+      OFFSET ${skip} LIMIT ${take}
+    `)
+    return this.hydrateOrdered(orderedIds.map((row) => row.id))
+  }
+
+  /**
+   * Streams every track matching the list's filters and ordering as CSV (capped, see
+   * `CSV_EXPORT_MAX_ROWS`). Without `sort` it follows the list's attention-first order through the
+   * same raw-SQL page query; with `sort` the same Prisma `orderBy` plus id tie-break — so the file
+   * equals the rows the list shows across all pages. One batch is held at a time.
+   */
+  async exportCsv(
+    { processingStatus, status, q, sort, order }: Omit<ListTracksInput, 'page' | 'limit'>,
+    staffId: string,
+    auditContext: AuditContextValue = {},
+  ): Promise<CsvExport> {
+    const where = this.buildWhere({ processingStatus, status, q })
+    const total = await this.prisma.track.count({ where })
+    const orderBy = buildSortOrderBy({ sort, order }, [{ createdAt: 'desc' }, { id: 'desc' }])
+    const rawWhere = this.buildRawWhere({ processingStatus, status, q })
+
+    return openCsvExport<AdminTrackRow>({
+      prisma: this.prisma,
+      resource: 'admin-tracks',
+      staffId,
+      filters: { processingStatus, status, q, sort, order },
+      auditContext,
+      columns: ADMIN_TRACK_EXPORT_COLUMNS,
+      total,
+      fetchPage: async (skip, take) => {
+        if (!sort) return this.findAttentionFirstPage(rawWhere, skip, take)
+        const tracks = await this.prisma.track.findMany({
+          where,
+          include: { artist: { select: { username: true } } },
+          orderBy: orderBy as unknown as Prisma.TrackOrderByWithRelationInput[],
+          skip,
+          take,
+        })
+        return tracks.map((track) => this.toRow(track))
+      },
+    })
   }
 
   /** The `sort`-driven path: a plain Prisma query, ordered by the chosen field with `id` as
@@ -363,6 +416,11 @@ export class AdminTracksService {
       })
       return this.toRow(updated)
     })
+  }
+
+  /** Takes every id down independently via {@link softDelete}; per-id results, same rules. */
+  softDeleteMany(ids: readonly string[], staffId: string, auditContext: AuditContextValue = {}) {
+    return runBatch(ids, (id) => this.softDelete(id, staffId, undefined, auditContext))
   }
 
   /**

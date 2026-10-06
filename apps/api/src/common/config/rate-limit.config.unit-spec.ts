@@ -51,17 +51,14 @@ describe('rate-limit config env overrides', () => {
     expect(config.API_RATE_LIMITS).toEqual([{ name: 'default', ttl: 120_000, limit: 100 }])
   })
 
-  it.each([
-    '',
-    '0',
-    '-5',
-    'abc',
-    'Infinity',
-  ])('keeps the default ceiling for the invalid override %p', async (raw) => {
-    const config = await loadConfigWithEnv({ API_RATE_LIMIT_MAX: raw })
+  it.each(['', '0', '-5', 'abc', 'Infinity'])(
+    'keeps the default ceiling for the invalid override %p',
+    async (raw) => {
+      const config = await loadConfigWithEnv({ API_RATE_LIMIT_MAX: raw })
 
-    expect(config.API_RATE_LIMITS).toEqual([{ name: 'default', ttl: 60_000, limit: 100 }])
-  })
+      expect(config.API_RATE_LIMITS).toEqual([{ name: 'default', ttl: 60_000, limit: 100 }])
+    },
+  )
 
   it('never loosens the auth-route throttle through the env override', async () => {
     const config = await loadConfigWithEnv({

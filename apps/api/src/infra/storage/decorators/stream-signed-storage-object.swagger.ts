@@ -1,13 +1,13 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 
-/** Swagger metadata for the signed local-storage object stream endpoint. */
+/** Swagger metadata for the signed storage object stream endpoint. */
 export const StreamSignedStorageObjectSwagger = () =>
   applyDecorators(
     ApiOperation({
-      summary: 'Stream a local storage object via a signed, time-limited token',
+      summary: 'Stream a storage object via a signed, time-limited token',
       description:
-        'Local-driver equivalent of an S3 presigned URL. The token embeds the object key and expiry, verified via HMAC.',
+        'Time-limited URL issued by the storage service; the API streams the object through STORAGE_SERVICE. The token embeds the object key and expiry, verified via HMAC.',
     }),
     ApiParam({ name: 'token', type: 'string' }),
     ApiResponse({ status: 200, description: 'Full object stream' }),

@@ -41,7 +41,7 @@ tasks:
   # Recommended for native app development
   # ─────────────────────────────────────────
   infra:up:
-    desc: Start infra only — postgres, postgres_test, redis (~310 MB)
+    desc: Start infra only — postgres, postgres_test, redis, seaweedfs object store
     cmds:
       - cmd: '{{.DC_INFRA}} up -d'
 
@@ -92,6 +92,16 @@ tasks:
     desc: 'Tail logs. Optionally filter by service: task dev:logs -- api'
     cmds:
       - cmd: '{{.DC_DEV}} logs -f {{.CLI_ARGS}}'
+
+  # ─────────────────────────────────────────
+  # Standalone transcode worker
+  # Part of the dev stack: `dev:up` starts it with the api, so there is no separate worker:up.
+  # Tail it with `task dev:logs -- worker`, or `worker:logs` below.
+  # ─────────────────────────────────────────
+  worker:logs:
+    desc: Tail the dev worker's logs
+    cmds:
+      - cmd: '{{.DC_DEV}} logs -f worker'
 
   # ─────────────────────────────────────────
   # Database
@@ -167,6 +177,18 @@ tasks:
     interactive: true
     cmds:
       - cmd: '{{.DC_DEV}} exec api sh'
+
+  shell:worker:
+    desc: Open shell in the worker container (start the stack first with task dev:up)
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec worker sh'
+
+  shell:storage:
+    desc: Open shell in the seaweedfs container (start the stack first with task dev:up)
+    interactive: true
+    cmds:
+      - cmd: '{{.DC_DEV}} exec seaweedfs sh'
 
   shell:web:
     desc: Open shell in web-player container
@@ -374,48 +396,21 @@ tasks:
             'pg_restore -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists --no-owner --no-privileges' \
             < "{{.FILE}}"
 
-  # A one-time pair, needed exactly once: around the deploy that lands the api_storage
-  # volume added to infra/docker-compose.prod.yaml. Until that volume exists the API writes
-  # uploads to /app/storage inside the container's WRITABLE LAYER, so the `up -d` that
-  # recreates the container destroys them — including the one that introduces the volume,
-  # which starts a fresh container against an empty volume.
-  #
-  #   task prod:storage:rescue     <- BEFORE that deploy, while the old container still runs
-  #   ... deploy ...
-  #   task prod:storage:seed FILE=storage-rescue-….tar.gz
-  #
-  # tar through the container rather than `docker cp`: it works for a named volume and a
-  # bind mount alike, and it writes as the container's own non-root user, so the restored
-  # files come back owned by the account that has to write them. `docker cp` lands them
-  # root-owned and the API then cannot write into its own directories.
-  prod:storage:rescue:
-    desc: Archive /app/storage out of the running api container — run BEFORE the deploy that adds the volume
-    cmds:
-      - cmd: |
-          out="storage-rescue-$(date -u +%Y%m%dT%H%M%SZ).tar.gz"
-          {{.DC_PROD}} exec -T api tar -czf - -C /app storage > "$out"
-          ls -lh "$out"
-          echo "Keep this file. Restore it after the deploy with: task prod:storage:seed FILE=$out"
-
-  prod:storage:seed:
-    desc: Unpack a rescued storage archive back into the api container. Pass FILE=storage-rescue-….tar.gz
-    prompt: Unpack this archive over /app/storage in the running api container?
-    requires:
-      vars: [FILE]
-    cmds:
-      - cmd: |
-          {{.DC_PROD}} exec -T api tar -xzf - -C /app < "{{.FILE}}"
-      - cmd: '{{.DC_PROD}} exec -T api sh -c ''du -sh /app/storage'''
-
   prod:down:
     desc: Stop production stack
     cmds:
       - cmd: '{{.DC_PROD}} down'
 
   prod:logs:
-    desc: 'Tail production logs. Optionally filter: task prod:logs -- api'
+    desc: 'Tail production logs. Optionally filter: task prod:logs -- api (or -- worker)'
     cmds:
       - cmd: '{{.DC_PROD}} logs -f {{.CLI_ARGS}}'
+
+  # The transcode worker is its own container (ADR-0049); its activity is not in the api logs.
+  prod:worker:logs:
+    desc: Tail the production transcode worker's logs
+    cmds:
+      - cmd: '{{.DC_PROD}} logs -f --tail=100 worker'
 
   # ─────────────────────────────────────────
   # Monitoring
@@ -455,7 +450,7 @@ tasks:
       - cmd: bash infra/docker-monitor.sh network
 
   monitor:errors:
-    desc: Recent error lines from the api, web-player, web-artists and admin logs
+    desc: Recent error lines from the api, worker, web-player, web-artists and admin logs
     cmds:
       - cmd: bash infra/docker-monitor.sh errors
 

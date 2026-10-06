@@ -4,7 +4,7 @@
  * presentation instead, so a component never touches a transport-shaped object.
  */
 export type ResourceWriteFailureReason =
-  'already-deactivated' | 'not-deactivated' | 'not-found' | 'unknown'
+  'already-deactivated' | 'not-deactivated' | 'visibility-conflict' | 'not-found' | 'unknown'
 
 /**
  * Thrown by `UserRepository`/`ArtistRepository`'s `deactivate`/`restore` when the API refuses

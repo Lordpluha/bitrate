@@ -31,6 +31,7 @@ describe('UsersAuth (e2e)', () => {
       email: `user_${runId}@example.com`,
       password: 'password123',
       username: `user_${runId}`,
+      acceptLegal: true,
     }
 
     await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)
@@ -61,6 +62,7 @@ describe('UsersAuth (e2e)', () => {
       email: `dup_${runId}@example.com`,
       password: 'pass123',
       username: `dup_${runId}`,
+      acceptLegal: true,
     }
 
     await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)
@@ -81,6 +83,7 @@ describe('UsersAuth (e2e)', () => {
       email: `lock_${runId}@example.com`,
       password: 'pass123',
       username: `lock_${runId}`,
+      acceptLegal: true,
     }
 
     await request(app.getHttpServer()).post('/auth/registration').send(creds).expect(201)
@@ -111,7 +114,8 @@ describe('UsersAuth (e2e)', () => {
      * The deadline must be the intended instant. A wall-clock value stored without its
      * offset would leave a remaining window shifted by the machine's timezone.
      */
-    const remainingMs = (locked?.lockedUntil as Date).getTime() - Date.now()
+    const lockedUntil = locked?.lockedUntil as Date
+    const remainingMs = lockedUntil.getTime() - Date.now()
     expect(remainingMs).toBeGreaterThan(14 * 60 * 1000)
     expect(remainingMs).toBeLessThanOrEqual(15 * 60 * 1000)
 

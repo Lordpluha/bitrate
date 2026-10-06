@@ -1,5 +1,6 @@
 export * from './AuthForgotPassword.decorator'
 export * from './AuthGetSessions.decorator'
+export * from './AuthLegalAccept.decorator'
 export * from './AuthLogin.decorator'
 export * from './AuthLogout.decorator'
 export * from './AuthMe.decorator'

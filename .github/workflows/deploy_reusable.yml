@@ -415,10 +415,10 @@ jobs:
           COOKIE_DOMAIN: ${{ vars.COOKIE_DOMAIN }}
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
-          STORAGE_DRIVER: ${{ vars.STORAGE_DRIVER }}
           S3_BUCKET: ${{ vars.S3_BUCKET }}
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
+          AUDIO_PROCESSING_WORKER_ENABLED: ${{ vars.AUDIO_PROCESSING_WORKER_ENABLED }}
           DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
           OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
           OAUTH_FACEBOOK_APP_ID: ${{ vars.OAUTH_FACEBOOK_APP_ID }}
@@ -466,8 +466,9 @@ jobs:
           optional="
             USER_WEB_HOST ARTIST_WEB_HOST ADMIN_WEB_HOST API_BASE_URL API_URL
             REDIS_PORT SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_FROM
-            ACCESS_TOKEN_NAME REFRESH_TOKEN_NAME COOKIE_DOMAIN STORAGE_DRIVER S3_BUCKET
+            ACCESS_TOKEN_NAME REFRESH_TOKEN_NAME COOKIE_DOMAIN S3_BUCKET
             TRUST_PROXY_HOPS HEALTH_CHECK_TIMEOUT_MS DEV_MAIL_LOG_TOKENS
+            AUDIO_PROCESSING_WORKER_ENABLED
             OAUTH_GOOGLE_CLIENT_ID OAUTH_GOOGLE_CLIENT_SECRET
             OAUTH_FACEBOOK_APP_ID OAUTH_FACEBOOK_APP_SECRET
             METRICS_TOKEN SENTRY_DSN SENTRY_RELEASE SENTRY_ENVIRONMENT
@@ -502,6 +503,10 @@ jobs:
             *[!A-Za-z0-9]*) bad+=("S3_SECRET_KEY (letters and digits only; it is written into the object store's JSON identity file)") ;;
           esac
           [ "${#S3_SECRET_KEY}" -ge 24 ] || bad+=("S3_SECRET_KEY (use at least 24 characters)")
+          case "${AUDIO_PROCESSING_WORKER_ENABLED:-true}" in
+            true|false) ;;
+            *) bad+=("AUDIO_PROCESSING_WORKER_ENABLED (only true or false)") ;;
+          esac
           if [ -n "${S3_BUCKET:-}" ]; then
             case "${S3_BUCKET}" in
               *[!a-z0-9-]*|-*|*-) bad+=("S3_BUCKET (lowercase letters, digits and hyphens, not starting or ending with a hyphen)") ;;
@@ -683,10 +688,10 @@ jobs:
           COOKIE_DOMAIN: ${{ vars.COOKIE_DOMAIN }}
           JWT_ACCESS_EXPIRES_IN: ${{ vars.JWT_ACCESS_EXPIRES_IN }}
           JWT_REFRESH_EXPIRES_IN: ${{ vars.JWT_REFRESH_EXPIRES_IN }}
-          STORAGE_DRIVER: ${{ vars.STORAGE_DRIVER }}
           S3_BUCKET: ${{ vars.S3_BUCKET }}
           TRUST_PROXY_HOPS: ${{ vars.TRUST_PROXY_HOPS }}
           HEALTH_CHECK_TIMEOUT_MS: ${{ vars.HEALTH_CHECK_TIMEOUT_MS }}
+          AUDIO_PROCESSING_WORKER_ENABLED: ${{ vars.AUDIO_PROCESSING_WORKER_ENABLED }}
           DEV_MAIL_LOG_TOKENS: ${{ vars.DEV_MAIL_LOG_TOKENS }}
           OAUTH_GOOGLE_CLIENT_ID: ${{ vars.OAUTH_GOOGLE_CLIENT_ID }}
           OAUTH_FACEBOOK_APP_ID: ${{ vars.OAUTH_FACEBOOK_APP_ID }}
@@ -751,6 +756,9 @@ jobs:
             req PORT
             opt TRUST_PROXY_HOPS
             opt HEALTH_CHECK_TIMEOUT_MS
+            # Whether the api container also consumes the audio-processing queue. Unset
+            # means the compose default (true); the worker service always consumes.
+            opt AUDIO_PROCESSING_WORKER_ENABLED
 
             printf '\n# --- Hosts ---\n'
             req DOMAIN
@@ -795,10 +803,9 @@ jobs:
             opt DEV_MAIL_LOG_TOKENS
 
             printf '\n# --- Storage ---\n'
-            opt STORAGE_DRIVER
             # The object store (ADR-0050): the bucket-scoped application identity the
-            # seaweedfs service is configured with and the api is handed. Required even
-            # while STORAGE_DRIVER=local, because the seaweedfs service always starts.
+            # seaweedfs service is configured with and the api is handed. Required: the
+            # api has no other storage backend.
             req S3_ACCESS_KEY
             req S3_SECRET_KEY
             opt S3_BUCKET

@@ -1,5 +1,6 @@
 import type { ResourceStatus } from '@domain/shared'
-import type { Artist, ArtistDetail, ArtistSortField } from '@domain/artist'
+import type { Artist, ArtistDetail, ArtistFilter, ArtistSortField } from '@domain/artist'
+import type { WireFilters } from '../http/wire-page'
 import type {
   ArtistDetailDto,
   ArtistDto,
@@ -19,7 +20,7 @@ const TO_WIRE_SORT = {
   monthlyListeners: 'monthlyListeners',
 } as const satisfies Record<ArtistSortField, NonNullable<WireArtistSortField>>
 
-export function toWireArtistSort(field: ArtistSortField): NonNullable<WireArtistSortField> {
+function toWireArtistSort(field: ArtistSortField): NonNullable<WireArtistSortField> {
   return TO_WIRE_SORT[field]
 }
 
@@ -54,5 +55,16 @@ export function toArtistDetail(dto: ArtistDetailDto): ArtistDetail {
   return {
     ...toArtist(dto),
     counts: dto.counts,
+  }
+}
+
+/** The query parameters the list and the CSV export both send for a filter. */
+export function toArtistListFilters(filter: ArtistFilter): WireFilters {
+  return {
+    q: filter.query,
+    verified: filter.verified,
+    status: filter.status ? toWireArtistStatus(filter.status) : undefined,
+    sort: filter.sort ? toWireArtistSort(filter.sort.field) : undefined,
+    order: filter.sort?.direction,
   }
 }

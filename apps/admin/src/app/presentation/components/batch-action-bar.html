@@ -1,0 +1,87 @@
+@if (rows().length > 0 && actions().length > 0) {
+  <div
+    class="flex flex-wrap items-center gap-2 rounded-md border bg-muted/40 px-3 py-2"
+    role="region"
+    aria-label="Batch actions"
+  >
+    <span class="text-sm tabular-nums" aria-live="polite">
+      {{ rows().length }} {{ pluralNoun(rows().length) }} selected
+    </span>
+    @for (action of actions(); track action.key) {
+      <button
+        hlmBtn
+        size="sm"
+        [variant]="action.destructive ? 'destructive' : 'outline'"
+        type="button"
+        (click)="arm(action)"
+      >
+        {{ action.label }}
+      </button>
+    }
+    <button hlmBtn size="sm" variant="ghost" type="button" (click)="cleared.emit()">Clear</button>
+  </div>
+}
+
+<hlm-dialog [state]="dialogOpen() ? 'open' : 'closed'" (closed)="dismiss()">
+  <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-lg">
+    @if (result(); as summary) {
+      <hlm-dialog-header>
+        <h2 hlmDialogTitle>{{ armed()?.label }} finished</h2>
+        <p hlmDialogDescription data-testid="batch-summary">
+          {{ summary.succeeded }} succeeded, {{ summary.failed }} failed.
+        </p>
+      </hlm-dialog-header>
+      <ul class="max-h-64 space-y-1 overflow-y-auto text-sm" aria-label="Result per row">
+        @for (item of summary.items; track item.id) {
+          <li class="flex flex-col" [attr.data-outcome]="item.outcome">
+            <span>
+              {{ labelFor()(item.id) }}
+              <span
+                [class]="
+                  item.outcome === 'succeeded' ? 'text-muted-foreground' : 'text-destructive'
+                "
+              >
+                — {{ item.outcome }}
+              </span>
+            </span>
+            @if (item.failure) {
+              <span class="text-xs text-destructive">{{ item.failure.message }}</span>
+            }
+          </li>
+        }
+      </ul>
+      <hlm-dialog-footer>
+        <button hlmBtn type="button" (click)="dismiss()">Close</button>
+      </hlm-dialog-footer>
+    } @else {
+      <hlm-dialog-header>
+        <h2 hlmDialogTitle>
+          {{ armed()?.label }} {{ dialogRows().length }} {{ pluralNoun(dialogRows().length) }}
+        </h2>
+        <p hlmDialogDescription>{{ armed()?.consequence }}</p>
+      </hlm-dialog-header>
+      <ul
+        class="max-h-64 list-disc space-y-1 overflow-y-auto pl-5 text-sm"
+        aria-label="Affected rows"
+      >
+        @for (row of dialogRows(); track row.id) {
+          <li>{{ row.label }}</li>
+        }
+      </ul>
+      <hlm-dialog-footer>
+        <button hlmBtn variant="outline" type="button" [disabled]="pending()" (click)="dismiss()">
+          Cancel
+        </button>
+        <button
+          hlmBtn
+          [variant]="armed()?.destructive ? 'destructive' : 'default'"
+          type="button"
+          [disabled]="pending()"
+          (click)="confirm()"
+        >
+          {{ pending() ? 'Working…' : armed()?.confirmLabel }}
+        </button>
+      </hlm-dialog-footer>
+    }
+  </hlm-dialog-content>
+</hlm-dialog>

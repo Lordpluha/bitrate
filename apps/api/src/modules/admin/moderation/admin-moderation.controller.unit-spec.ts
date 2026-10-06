@@ -19,14 +19,14 @@ describe('AdminModerationController', () => {
     controller = new AdminModerationController(service)
   })
 
-  it('list delegates to the service with the parsed query', () => {
-    controller.list({ page: 1, limit: 20, status: 'OPEN' })
+  it('list delegates to the service with the parsed query', async () => {
+    await controller.list({ page: 1, limit: 20, status: 'OPEN' })
 
     expect(service.findAll).toHaveBeenCalledWith({ page: 1, limit: 20, status: 'OPEN' })
   })
 
-  it('getById delegates to the service', () => {
-    controller.getById('report-1')
+  it('getById delegates to the service', async () => {
+    await controller.getById('report-1')
 
     expect(service.findById).toHaveBeenCalledWith('report-1')
   })
@@ -37,8 +37,8 @@ describe('AdminModerationController', () => {
     await expect(controller.getById('missing')).rejects.toThrow(ReportNotFoundException)
   })
 
-  it('update delegates to the service', () => {
-    controller.update('report-1', { status: 'RESOLVED' })
+  it('update delegates to the service', async () => {
+    await controller.update('report-1', { status: 'RESOLVED' })
 
     expect(service.updateStatus).toHaveBeenCalledWith('report-1', { status: 'RESOLVED' })
   })

@@ -1,7 +1,7 @@
 # Artist release drafts
 
 The first Release Workspace API slice uses the existing `Release` schema and the
-single-owner policy in [ADR-0051](../../../../docs/docs/architecture/0051-artist-release-workspace-foundation.md).
+single-owner policy in [ADR-0052](../../../../docs/docs/architecture/0052-artist-release-workspace-foundation.md).
 All endpoints require an authenticated artist session through `ArtistAuth`; a credit or
 contributor relationship does not grant workspace access.
 
@@ -41,7 +41,7 @@ Creating a draft does not require tracks, a UPC, participants, splits, territori
 a scheduled date. It does not publish an album or send anything to a distributor.
 
 Rights, splits, identifiers and submission follow
-[ADR-0058](../../../../docs/docs/architecture/0058-release-rights-and-review-submission.md):
+[ADR-0059](../../../../docs/docs/architecture/0059-release-rights-and-review-submission.md):
 credit changes clear both confirmations, UPC/ISRC are optional notices rather than
 blockers, and the workspace response includes `rights`, `splits` and `readiness`.
 
@@ -73,10 +73,10 @@ with the same strict fields and transaction/version guard. Legacy empty role lis
 can be read and corrected; writes require at least one role. A missing credit or
 failed credit write also rolls back the release version. Removal and rights remain
 future slices.
-See [ADR-0056](../../../../docs/docs/architecture/0056-owned-release-contributor-addition.md).
-For credit correction see [ADR-0057](../../../../docs/docs/architecture/0057-owned-release-contributor-editing.md).
+See [ADR-0057](../../../../docs/docs/architecture/0057-owned-release-contributor-addition.md).
+For credit correction see [ADR-0058](../../../../docs/docs/architecture/0058-owned-release-contributor-editing.md).
 For workspace reading see
-[ADR-0054](../../../../docs/docs/architecture/0054-owned-release-workspace-view.md).
+[ADR-0055](../../../../docs/docs/architecture/0055-owned-release-workspace-view.md).
 
 PATCH also accepts an optional
 `scheduledAt` ISO 8601 instant with milliseconds and an explicit timezone, or `null`
@@ -85,7 +85,7 @@ DRAFT and version predicates apply to schedule edits. Saving a plan never submit
 review, changes lifecycle status or starts external delivery. Years are bounded to
 1–9999 UTC; date-only and timezone-less values are rejected. Past dates are allowed
 for draft preparation; delivery-specific lead-time rules are not introduced here.
-See [ADR-0055](../../../../docs/docs/architecture/0055-owned-release-schedule-editing.md).
+See [ADR-0056](../../../../docs/docs/architecture/0056-owned-release-schedule-editing.md).
 
 The artist portal's Create release dialog saves a title/type draft through POST, then
 opens Music / Releases. Music provides tracks and releases views, recoverable
@@ -98,7 +98,7 @@ migration and `20261003120000_artist_music_catalogue` to be applied. The latter 
 private `ArtistTrackDraft` metadata and optional release artwork/demo flags. Its
 compound release/owner foreign key rejects cross-artist recording links; duration
 must be nonnegative. Public `Track` records and publication processing are unchanged.
-See [ADR-0052](../../../../docs/docs/architecture/0052-private-artist-music-catalogue.md).
+See [ADR-0053](../../../../docs/docs/architecture/0053-private-artist-music-catalogue.md).
 
 Catalogue lists accept `page`, `limit`, `search` (up to 100 characters), `status`,
 `type`, and `sort` (`updated`, `title`, `oldest`). Track `type` means recording version;

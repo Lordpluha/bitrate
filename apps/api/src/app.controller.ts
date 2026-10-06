@@ -1,8 +1,8 @@
-import { timingSafeEqual } from 'node:crypto'
 import type { AppConfig } from '@common/config'
 import { API_DOC_TITLE } from '@common/swagger'
 import { CacheService } from '@infra/cache/cache.service'
 import { MetricsService, PROMETHEUS_CONTENT_TYPE } from '@infra/observability/metrics.service'
+import { checkMetricsAccess } from '@infra/observability/metrics-token'
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
@@ -141,16 +141,8 @@ export class AppController {
   }
 
   private assertMetricsAccess(authorization?: string) {
-    const expected = this.config.get('METRICS_TOKEN')
-    if (!expected) throw new NotFoundException()
-
-    const supplied = authorization?.startsWith('Bearer ') ? authorization.slice(7) : ''
-    const expectedBuffer = Buffer.from(expected)
-    const suppliedBuffer = Buffer.from(supplied)
-    const matches =
-      expectedBuffer.length === suppliedBuffer.length &&
-      timingSafeEqual(expectedBuffer, suppliedBuffer)
-
-    if (!matches) throw new UnauthorizedException()
+    const access = checkMetricsAccess(this.config.get('METRICS_TOKEN'), authorization)
+    if (access === 'disabled') throw new NotFoundException()
+    if (access === 'denied') throw new UnauthorizedException()
   }
 }

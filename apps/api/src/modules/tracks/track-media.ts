@@ -1,26 +1,8 @@
-import { open, rm } from 'node:fs/promises'
-import { basename } from 'node:path'
-import { detectAllowedImageMime } from '@common/utils/image'
+import { rm } from 'node:fs/promises'
 import { resolveSafeMulterPath } from '@common/utils/multer-file'
 import { BadRequestException, Logger } from '@nestjs/common'
 import { parseFile } from 'music-metadata'
-import { MAX_COVER_BYTES } from './track-audio.helpers'
-
-/** Bytes of an image header needed to recognise every allowed cover format. */
-const IMAGE_MAGIC_BYTES = 12
-
-/** Where the upload interceptor writes each kind of file. Server-owned, never client-supplied. */
-const AUDIO_DESTINATION = './storage/private/tracks'
-
-const COVER_DESTINATION = './storage/public/tracks/covers'
-
-/**
- * The directory an uploaded file belongs in. `fieldname` only selects between two literals, so
- * nothing from the request survives into the returned value.
- */
-export function uploadDestination(file: Express.Multer.File): string {
-  return file.fieldname === 'audio' ? AUDIO_DESTINATION : COVER_DESTINATION
-}
+import { getUploadTempDir } from './audio-scratch'
 
 const logger = new Logger('TrackMedia', { timestamp: true })
 
@@ -58,50 +40,10 @@ export async function inspectAudioFile(filePath: string): Promise<AudioMetadata>
 }
 
 /**
- * Verifies that a cover's declared MIME matches its actual magic bytes.
- *
- * @throws BadRequestException when the cover is oversized or misdeclared.
+ * Removes the audio file Multer wrote to the private upload directory, for an upload the
+ * database never took ownership of. Covers are held in memory and need no cleanup.
  */
-export async function validateCoverFile(file: Express.Multer.File): Promise<void> {
-  if (file.size > MAX_COVER_BYTES) throw new BadRequestException('Cover file is too large')
-
-  const header = Buffer.alloc(IMAGE_MAGIC_BYTES)
-  const handle = await open(resolveSafeMulterPath(file, uploadDestination(file)), 'r')
-  try {
-    await handle.read(header, 0, header.length, 0)
-  } finally {
-    await handle.close()
-  }
-
-  if (detectAllowedImageMime(header) !== file.mimetype) {
-    throw new BadRequestException('Invalid cover file content')
-  }
-}
-
-/** Removes files written by Multer before the database took ownership of them. */
-export async function cleanupUploadedFiles(
-  files: Array<Express.Multer.File | undefined>,
-): Promise<void> {
-  await Promise.all(
-    files.flatMap((file) =>
-      file ? [rm(resolveSafeMulterPath(file, uploadDestination(file)), { force: true })] : [],
-    ),
-  )
-}
-
-/**
- * Deletes an old managed file, refusing any stored name that would escape its root.
- *
- * Failure to delete is logged rather than thrown: the database already points at
- * the replacement, so a leftover file is waste, not a broken track.
- */
-export async function removeReplacedFile(path: string, fileName: string | null): Promise<void> {
-  if (!(fileName && basename(fileName) === fileName)) return
-
-  try {
-    await rm(path, { force: true })
-  } catch (error) {
-    const reason = error instanceof Error ? error.message : 'unknown error'
-    logger.warn(`Unable to remove replaced media file ${fileName}: ${reason}`)
-  }
+export async function cleanupUploadedAudio(file: Express.Multer.File | undefined): Promise<void> {
+  if (!file?.filename) return
+  await rm(resolveSafeMulterPath(file, getUploadTempDir()), { force: true })
 }

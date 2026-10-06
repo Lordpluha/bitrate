@@ -11,12 +11,13 @@ export class ArtistsPrivateService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** Runs the register operation. */
-  async register({ password, email, username }: CreateArtistDto) {
+  async register({ password, email, username, ...acceptance }: CreateArtistDto) {
     return await this.prisma.artist.create({
       data: {
         password,
         username,
         email,
+        ...acceptance,
       },
     })
   }

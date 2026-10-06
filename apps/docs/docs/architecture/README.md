@@ -52,14 +52,15 @@ how to apply it day to day.
 | [0048](./0048-pnpm-12-and-explicit-build-policy.md) | pnpm 12.7.0, settings in `pnpm-workspace.yaml`, explicit `allowBuilds` policy |
 | [0049](./0049-transcode-worker-process-boundary.md) | Transcode worker process boundary, provider list and `ConvertAudioJob` contract |
 | [0050](./0050-seaweedfs-object-storage-for-audio.md) | SeaweedFS single-node internal object storage for audio; spike results; accepted no-backup risk |
-| [0051](./0051-artist-release-workspace-foundation.md) | Artist release workspace, credits and splits; single-owner MVP boundary |
-| [0052](./0052-private-artist-music-catalogue.md) | Private artist recordings, owner-constrained release links and database-backed Music catalogue |
-| [0053](./0053-owned-release-draft-editing.md) | Draft title/type editing with atomic ownership/lifecycle/version checks |
-| [0054](./0054-owned-release-workspace-view.md) | Addressable owned workspace with bounded active recordings, schedule and credited participants |
-| [0055](./0055-owned-release-schedule-editing.md) | Planned UTC timing edits with the existing atomic draft owner/version guard |
-| [0056](./0056-owned-release-contributor-addition.md) | Adding participant credits with unique roles and transactional draft version checks |
-| [0057](./0057-owned-release-contributor-editing.md) | Correcting participant names/roles while preserving identity, account links and splits |
-| [0058](./0058-release-rights-and-review-submission.md) | Rights confirmation, splits, optional UPC/ISRC, readiness and review submission/withdrawal |
+| [0051](./0051-operator-panel-resource-coverage.md) | Operator panel resource coverage: ranked pages, take-down and restore convention, session revocation, MODERATOR template rule |
+| [0052](./0052-artist-release-workspace-foundation.md) | Artist release workspace, credits and splits; single-owner MVP boundary |
+| [0053](./0053-private-artist-music-catalogue.md) | Private artist recordings, owner-constrained release links and database-backed Music catalogue |
+| [0054](./0054-owned-release-draft-editing.md) | Draft title/type editing with atomic ownership/lifecycle/version checks |
+| [0055](./0055-owned-release-workspace-view.md) | Addressable owned workspace with bounded active recordings, schedule and credited participants |
+| [0056](./0056-owned-release-schedule-editing.md) | Planned UTC timing edits with the existing atomic draft owner/version guard |
+| [0057](./0057-owned-release-contributor-addition.md) | Adding participant credits with unique roles and transactional draft version checks |
+| [0058](./0058-owned-release-contributor-editing.md) | Correcting participant names/roles while preserving identity, account links and splits |
+| [0059](./0059-release-rights-and-review-submission.md) | Rights confirmation, splits, optional UPC/ISRC, readiness and review submission/withdrawal |
 
 Create new records from [`template.md`](./template.md). Accepted decisions are changed by
 a superseding ADR rather than silently rewriting history.

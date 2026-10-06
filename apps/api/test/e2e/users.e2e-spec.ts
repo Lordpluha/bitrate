@@ -25,6 +25,7 @@ describe('UsersController (e2e)', () => {
       email: `user_${runId}@example.com`,
       password: 'password123',
       username: `user_${runId}`,
+      acceptLegal: true,
     }
 
     await request(app.getHttpServer()).post('/auth/registration').send(registration).expect(201)
@@ -60,6 +61,53 @@ describe('UsersController (e2e)', () => {
     })
   })
 
+  it('uploads an avatar to the object store and serves it back at the stored /static URL', async () => {
+    const runId = makeRunId()
+    const registration = {
+      email: `avatar_${runId}@example.com`,
+      password: 'password123',
+      username: `avatar_${runId}`,
+      acceptLegal: true,
+    }
+    await request(app.getHttpServer()).post('/auth/registration').send(registration).expect(201)
+    await verifyUserEmail(app.get(PrismaService), registration.email)
+    const login = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: registration.email, password: registration.password })
+      .expect(201)
+    const cookies = login.headers['set-cookie']
+    if (!cookies) throw new Error('Auth cookies were not set')
+
+    const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0x0d])
+    const upload = await request(app.getHttpServer())
+      .post('/users/avatar')
+      .set('Cookie', cookies)
+      .attach('avatar', png, { filename: 'me.png', contentType: 'image/png' })
+      .expect(201)
+
+    expect(upload.body.avatar).toMatch(/^\/static\/users\/avatars\/[0-9a-f-]{36}\.png$/)
+    const served = await request(app.getHttpServer())
+      .get(upload.body.avatar)
+      .buffer(true)
+      .parse((res, callback) => {
+        const chunks: Buffer[] = []
+        res.on('data', (chunk: Buffer) => chunks.push(chunk))
+        res.on('end', () => callback(null, Buffer.concat(chunks)))
+      })
+      .expect(200)
+    expect(served.headers['content-type']).toBe('image/png')
+    expect(served.body).toEqual(png)
+
+    await request(app.getHttpServer())
+      .post('/users/avatar')
+      .set('Cookie', cookies)
+      .attach('avatar', Buffer.from('<script>x</script>'), {
+        filename: 'evil.png',
+        contentType: 'image/png',
+      })
+      .expect(400)
+  })
+
   it('PUT /users should reject without auth', async () => {
     await request(app.getHttpServer())
       .put('/users')
@@ -73,6 +121,7 @@ describe('UsersController (e2e)', () => {
       email: `user_${runId}@example.com`,
       password: 'password123',
       username: `user_${runId}`,
+      acceptLegal: true,
     }
 
     await request(app.getHttpServer()).post('/auth/registration').send(registration).expect(201)

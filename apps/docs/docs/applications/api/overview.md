@@ -77,13 +77,19 @@ http://localhost:3000/api/v1/artists
 
 ## Статические файлы
 
-Раздаются через `ServeStaticModule` по пути `/static/*`:
+Публичные изображения раздаются по пути `/static/<папка>/<файл>` (вне префикса `/api`).
+Файлов на диске API нет: загрузки и сиды лежат в объектном хранилище SeaweedFS (ADR-0050),
+а `StaticAssetsController` читает объект через `STORAGE_SERVICE` и отдаёт его с
+`Cache-Control: public, max-age=31536000, immutable`. Само хранилище наружу не публикуется,
+доступны только ключи вида `<папка>/<файл>` из списка:
 
 ```
-storage/public/
-├── tracks/     # Аудио файлы (.opus, CMAF-фрагменты .mp4, HLS-сегменты)
-├── covers/     # Обложки треков и альбомов
-└── avatars/    # Аватары пользователей и артистов
+tracks/covers/     # Обложки треков
+albums/covers/     # Обложки альбомов
+playlists/covers/  # Обложки плейлистов
+artists/avatars/   # Аватары артистов
+artists/backgrounds/
+users/avatars/     # Аватары пользователей
 ```
 
 ## Обработка ошибок
