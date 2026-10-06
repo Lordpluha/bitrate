@@ -2,11 +2,9 @@ import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api/fetchClient'
 import {
   type CreateReleaseValues,
-  releasePageSchema,
   releaseSummarySchema,
 } from '../model/release.schema'
 
-export const RELEASE_PAGE_SIZE = 20
 const CREATE_RELEASE_TIMEOUT_MS = 30_000
 
 export async function getRelease(id: string, signal: AbortSignal) {
@@ -71,26 +69,6 @@ function sendUpdate(id: string, input: ApiSchemas['UpdateReleaseDto']) {
     body: input,
     signal: AbortSignal.timeout(CREATE_RELEASE_TIMEOUT_MS),
   })
-}
-
-export async function getReleases(page: number, signal: AbortSignal) {
-  try {
-    const result = await clientFetchClient.GET('/api/v1/releases', {
-      params: { query: { page, limit: RELEASE_PAGE_SIZE } },
-      signal,
-    })
-    if (!result.response.ok) throw new Error('Release list unavailable')
-    const parsed = releasePageSchema.safeParse(result.data)
-    if (
-      !parsed.success ||
-      parsed.data.page !== page ||
-      parsed.data.limit !== RELEASE_PAGE_SIZE
-    )
-      throw new Error('Invalid release list')
-    return parsed.data
-  } catch {
-    throw new Error('Could not load your releases. Please try again.')
-  }
 }
 
 export async function createRelease(input: CreateReleaseValues) {

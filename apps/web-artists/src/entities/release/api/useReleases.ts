@@ -1,16 +1,9 @@
 import { artistMusicKeys } from '@shared/api/artistMusicKeys'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  createRelease,
-  getRelease,
-  getReleases,
-  updateRelease,
-} from './releases'
+import { createRelease, getRelease, updateRelease } from './releases'
 
 const releaseKeys = {
   artist: artistMusicKeys.artist,
-  list: (artistId: string | undefined, page: number) =>
-    [...releaseKeys.artist(artistId), 'list', page] as const,
   detail: (artistId: string, id: string) =>
     [...releaseKeys.artist(artistId), 'detail', id] as const,
 }
@@ -42,15 +35,6 @@ export function useUpdateRelease(artistId: string) {
         predicate: (query) => query.queryKey[2] !== 'detail',
       })
     },
-  })
-}
-
-export function useReleases(artistId: string | undefined, page: number) {
-  return useQuery({
-    queryKey: releaseKeys.list(artistId, page),
-    queryFn: ({ signal }) => getReleases(page, signal),
-    enabled: Boolean(artistId),
-    staleTime: 30_000,
   })
 }
 
