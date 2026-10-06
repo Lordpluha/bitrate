@@ -11,5 +11,4 @@ Sentry.init({
   tracesSampleRate: sentryTracesSampleRate,
   /** Attach local variable values to server stack frames. */
   includeLocalVariables: true,
-  enableLogs: true,
 })
