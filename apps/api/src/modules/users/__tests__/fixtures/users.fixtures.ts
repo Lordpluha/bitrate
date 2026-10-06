@@ -17,5 +17,7 @@ export const buildUser = (overrides: Partial<UserEntity> = {}): UserEntity => ({
   lockedUntil: null,
   deletedAt: null,
   locale: 'en',
+  legalVersion: null,
+  legalAcceptedAt: null,
   ...overrides,
 })

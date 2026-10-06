@@ -1,6 +1,7 @@
 import {
   AuditContext,
   type AuditContextValue,
+  sendCsvExport,
   TakeDownReasonDto,
   TakeDownReasonSchema,
 } from '@modules/admin/shared'
@@ -18,12 +19,16 @@ import {
   Patch,
   Post,
   Query,
+  Res,
+  type StreamableFile,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import type { Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminArtistsService } from './admin-artists.service'
 import {
   DeleteArtistSwagger,
+  ExportArtistsSwagger,
   GetArtistSwagger,
   ListArtistAlbumsSwagger,
   ListArtistsSwagger,
@@ -33,6 +38,8 @@ import {
   UpdateArtistVerificationSwagger,
 } from './decorators'
 import {
+  type ExportAdminArtistsQueryDto,
+  ExportAdminArtistsQuerySchema,
   type ListAdminArtistsQueryDto,
   ListAdminArtistsQuerySchema,
   type ListArtistAlbumsQueryDto,
@@ -56,6 +63,25 @@ export class AdminArtistsController {
   @Get('')
   list(@Query(new ZodValidationPipe(ListAdminArtistsQuerySchema)) query: ListAdminArtistsQueryDto) {
     return this.artists.findAll(query)
+  }
+
+  /** Runs the CSV export operation. */
+  // Declared before `:id` so `export.csv` is not read as an id. The service writes the one audit
+  // row, because GET is not interceptor-audited.
+  @RequirePermission('artists:export')
+  @ExportArtistsSwagger()
+  @Get('export.csv')
+  async exportCsv(
+    @Query(new ZodValidationPipe(ExportAdminArtistsQuerySchema)) query: ExportAdminArtistsQueryDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    return sendCsvExport(
+      res,
+      'artists',
+      await this.artists.exportCsv(query, staff.id, auditContext),
+    )
   }
 
   /** Runs the get artist operation. */

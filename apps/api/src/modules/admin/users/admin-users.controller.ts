@@ -1,6 +1,10 @@
+import { SkipAudit } from '@infra/observability/skip-audit.decorator'
 import {
   AuditContext,
   type AuditContextValue,
+  BatchIdsDto,
+  BatchIdsSchema,
+  sendCsvExport,
   TakeDownReasonDto,
   TakeDownReasonSchema,
 } from '@modules/admin/shared'
@@ -17,12 +21,17 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
+  Res,
+  type StreamableFile,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import type { Response } from 'express'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { AdminUsersService } from './admin-users.service'
 import {
+  DeactivateUsersBatchSwagger,
   DeleteUserSwagger,
+  ExportUsersSwagger,
   GetUserSwagger,
   ListListeningHistorySwagger,
   ListUsersSwagger,
@@ -30,6 +39,8 @@ import {
   RevokeUserSessionsSwagger,
 } from './decorators'
 import {
+  type ExportAdminUsersQueryDto,
+  ExportAdminUsersQuerySchema,
   type ListAdminUsersQueryDto,
   ListAdminUsersQuerySchema,
   type ListListeningHistoryQueryDto,
@@ -49,6 +60,21 @@ export class AdminUsersController {
   @Get('')
   list(@Query(new ZodValidationPipe(ListAdminUsersQuerySchema)) query: ListAdminUsersQueryDto) {
     return this.users.findAll(query)
+  }
+
+  /** Runs the CSV export operation. */
+  // Declared before `:id` so `export.csv` is not read as an id. The service writes the one audit
+  // row, because GET is not interceptor-audited.
+  @RequirePermission('users:export')
+  @ExportUsersSwagger()
+  @Get('export.csv')
+  async exportCsv(
+    @Query(new ZodValidationPipe(ExportAdminUsersQuerySchema)) query: ExportAdminUsersQueryDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    return sendCsvExport(res, 'users', await this.users.exportCsv(query, staff.id, auditContext))
   }
 
   /** Runs the get user operation. */
@@ -82,6 +108,20 @@ export class AdminUsersController {
     @AuditContext() auditContext: AuditContextValue = {},
   ) {
     return this.users.softDelete(id, staff.id, body.reason, auditContext)
+  }
+
+  /** Runs the batch deactivate operation. `@SkipAudit` because each take-down audits itself. */
+  @RequirePermission('users:delete')
+  @DeactivateUsersBatchSwagger()
+  @SkipAudit()
+  @HttpCode(HttpStatus.OK)
+  @Post('batch/deactivate')
+  deactivateMany(
+    @Body(new ZodValidationPipe(BatchIdsSchema)) body: BatchIdsDto,
+    @CurrentStaff() staff: AuthenticatedStaff,
+    @AuditContext() auditContext: AuditContextValue = {},
+  ) {
+    return this.users.softDeleteMany(body.ids, staff.id, auditContext)
   }
 
   /** Runs the restore operation. */

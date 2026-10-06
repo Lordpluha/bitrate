@@ -11,13 +11,26 @@ type WirePage<TItem> = {
   limit: number
 }
 
+/** Query-string filters; `undefined` and `''` entries are dropped rather than sent as empty. */
+export type WireFilters = Record<string, string | number | boolean | undefined>
+
+/** Turns filters into request params, skipping the unset ones. Shared by lists and CSV exports. */
+export function buildFilterParams(filters: WireFilters): Record<string, string> {
+  const params: Record<string, string> = {}
+  for (const [key, value] of Object.entries(filters)) {
+    if (value === undefined || value === '') continue
+    params[key] = String(value)
+  }
+  return params
+}
+
 type FetchPageInput<TDto, TItem> = {
   http: HttpClient
   url: string
   page: number
   limit?: number
   /** Extra filters; `undefined` and `''` entries are dropped rather than sent as empty. */
-  filters?: Record<string, string | number | boolean | undefined>
+  filters?: WireFilters
   schema: ZodType<WirePage<TDto>>
   toDomain: (dto: TDto) => TItem
 }
@@ -39,11 +52,7 @@ export async function fetchPage<TDto, TItem>({
 }: FetchPageInput<TDto, TItem>): Promise<Page<TItem>> {
   const params: Record<string, string> = { page: String(page) }
   if (limit !== undefined) params['limit'] = String(limit)
-
-  for (const [key, value] of Object.entries(filters)) {
-    if (value === undefined || value === '') continue
-    params[key] = String(value)
-  }
+  Object.assign(params, buildFilterParams(filters))
 
   const response = await firstValueFrom(http.get<unknown>(url, { params }))
   const wire = schema.parse(response)

@@ -39,6 +39,9 @@ describe('buildSortOrderBy', () => {
     'processingStatus',
     'monthlyListeners',
     'status',
+    'name',
+    'slug',
+    'releaseDate',
   ])('orders by %s with a matching-direction id tie-break', (sort) => {
     expect(buildSortOrderBy({ sort, order: 'desc' }, fallback)).toEqual([
       { [sort]: 'desc' },
@@ -46,14 +49,12 @@ describe('buildSortOrderBy', () => {
     ])
   })
 
-  it.each([
-    '__proto__',
-    'constructor',
-    'prototype',
-    'password',
-  ])('rejects unsafe or unsupported field %s', (sort) => {
-    expect(() => buildSortOrderBy({ sort }, fallback)).toThrow('Unsupported sort field')
-  })
+  it.each(['__proto__', 'constructor', 'prototype', 'password'])(
+    'rejects unsafe or unsupported field %s',
+    (sort) => {
+      expect(() => buildSortOrderBy({ sort }, fallback)).toThrow('Unsupported sort field')
+    },
+  )
 
   it('defaults order to asc when only sort is given', () => {
     expect(buildSortOrderBy({ sort: 'username' }, fallback)).toEqual([

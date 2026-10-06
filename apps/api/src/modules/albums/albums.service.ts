@@ -1,4 +1,5 @@
 import { normalizePagination } from '@common/pagination'
+import { rightsConfirmationRecord } from '@common/rights-confirmation'
 import { isPrismaP2025 } from '@common/utils/prisma'
 import { NS, TTL } from '@infra/cache/cache.constants'
 import { CacheService } from '@infra/cache/cache.service'
@@ -111,7 +112,10 @@ export class AlbumsService {
     const artist = await this.prisma.artist.findUnique({ where: { id: artistId } })
     if (!artist) throw new NotFoundException('Artist not found')
 
-    const album = await this.prisma.album.create({ data: { artistId: artist.id, ...createDto } })
+    const { rightsConfirmed: _rightsConfirmed, ...albumData } = createDto
+    const album = await this.prisma.album.create({
+      data: { artistId: artist.id, ...albumData, ...rightsConfirmationRecord() },
+    })
     await Promise.all([this.cache.invalidate(NS.ALBUMS), this.cache.invalidate(NS.SEARCH)])
     return album
   }

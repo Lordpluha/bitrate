@@ -1,5 +1,5 @@
 import type { ApiSchemas } from '@bitrate/contracts'
-import { z } from 'zod'
+import * as z from 'zod'
 import { auditEntryDto } from '../audit/audit.dto'
 
 type ContractOverviewReports = ApiSchemas['AdminOverviewReportsEntity']

@@ -81,18 +81,18 @@ describe('AlbumsController', () => {
     service.create.mockResolvedValue(created)
 
     const req: ArtistAuthRequestParam = { artist: buildArtist() }
-    const dto = { title: 'New Album', description: 'desc' }
+    const dto = { title: 'New Album', description: 'desc', rightsConfirmed: true as const }
 
     const result = await controller.createAlbum(req, dto)
 
     expect(service.create).toHaveBeenCalledWith('artist-1', dto)
-    expect(dto).toEqual({ title: 'New Album', description: 'desc' })
+    expect(dto).toEqual({ title: 'New Album', description: 'desc', rightsConfirmed: true })
     expect(result).toBe(created)
   })
 
   it('createAlbum should propagate service errors', async () => {
     const req: ArtistAuthRequestParam = { artist: buildArtist() }
-    const dto = { title: 'New Album', description: 'desc' }
+    const dto = { title: 'New Album', description: 'desc', rightsConfirmed: true as const }
     service.create.mockRejectedValue(new Error('create-failed'))
 
     await expect(controller.createAlbum(req, dto)).rejects.toThrow('create-failed')

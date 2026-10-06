@@ -51,7 +51,7 @@
         <div class="space-y-1 rounded-md border border-border p-3">
           <p class="text-sm text-foreground">
             <span class="text-xs uppercase text-muted-foreground">{{ subject.kind }}</span>
-            @if (subjectLink(subject.kind, subject.id); as link) {
+            @if (subjectLink(subject); as link) {
               <a [routerLink]="link" class="ml-2 hover:underline">{{ subject.title }}</a>
             } @else {
               <span class="ml-2">{{ subject.title }}</span>

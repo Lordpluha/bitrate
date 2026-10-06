@@ -87,7 +87,7 @@ Per-app файлы до контейнера тоже не доходят: ни 
 
 | Приложение | Валидация | Что читает |
 |---|---|---|
-| `apps/api` | Zod, `apps/api/env.schema.ts` — падает на старте | 30 переменных схемы + 3 в обход неё |
+| `apps/api` | Zod, `apps/api/env.schema.ts` — падает на старте | 29 переменных схемы + 3 в обход неё |
 | `apps/web-player` | Zod, `apps/web-player/env.schema.ts` — падает на сборке | 6 переменных схемы + 5 сборочных |
 | `apps/web-artists` | Zod, `apps/web-artists/env.schema.ts` | 2 переменные схемы + 1 в обход неё |
 | `apps/desktop` | нет | только `TAURI_DEV_HOST`, и тот ставит Tauri |
@@ -107,6 +107,9 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `DATABASE_URL` | данные | URL | PostgreSQL connection string. `postgresql://user:pass@host:5432/bitrate` |
 | `REDIS_HOST` | данные | строка | Хост Redis |
 | `JWT_SECRET` | аутентификация | строка ≥10 символов | Секрет для подписи JWT |
+| `S3_ENDPOINT` | файлы | URL | S3-совместимое хранилище объектов (SeaweedFS, ADR-0050). Другого бэкенда хранения нет. Локально `http://localhost:8333` — его поднимает `task infra:up`; внутри контейнеров `task dev:up` — `http://seaweedfs:8333` |
+| `S3_BUCKET` | файлы | строка | Бакет с аудио. Для dev-стека `bitrate-audio` |
+| `S3_ACCESS_KEY` · `S3_SECRET_KEY` | файлы | строка | Ключи прикладной идентичности, ограниченной одним бакетом. Dev-значения — в `apps/api/.env.example` |
 
 ### Опциональные с дефолтом
 
@@ -120,7 +123,6 @@ Per-app файлы до контейнера тоже не доходят: ни 
 | `JWT_REFRESH_EXPIRES_IN` | аутентификация | `30d` | Срок жизни refresh token |
 | `ACCESS_TOKEN_NAME` | аутентификация | `access_token` | Имя HttpOnly-куки с access token |
 | `REFRESH_TOKEN_NAME` | аутентификация | `refresh_token` | Имя HttpOnly-куки с refresh token |
-| `STORAGE_DRIVER` | файлы | `local` | `local` или `s3` — какая реализация `StorageService` биндится при старте |
 | `S3_REGION` | файлы | `us-east-1` | Регион S3 |
 | `S3_FORCE_PATH_STYLE` | файлы | `true` | Path-style адресация бакета |
 | `SMTP_PORT` | почта | `587` | SMTP-порт |
@@ -150,7 +152,6 @@ Per-app файлы до контейнера тоже не доходят: ни 
 
 | Правило | Когда включается |
 |---|---|
-| `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` обязательны | `STORAGE_DRIVER=s3` |
 | `EMAIL_FROM` обязателен | задан `SMTP_HOST` |
 | `SMTP_USER` и `SMTP_PASS` только парой | задан любой из двух |
 | `DEV_MAIL_LOG_TOKENS` обязан быть `false` | `NODE_ENV=production` |
@@ -282,9 +283,9 @@ Metro, а не конфигурация приложения.
 | `PORT=` · `REDIS_PORT=` · `SMTP_PORT=` | `0` — молча, сервер слушает случайный порт |
 | `S3_FORCE_PATH_STYLE=` | `false`, при дефолте `true` — молча наоборот |
 | `S3_REGION=` | пустая строка вместо `us-east-1` |
-| `NODE_ENV=` · `STORAGE_DRIVER=` · `ACCESS_TOKEN_NAME=` · `REFRESH_TOKEN_NAME=` · `HEALTH_CHECK_TIMEOUT_MS=` · `DEV_MAIL_LOG_TOKENS=` | ошибка валидации, старт прерван |
+| `NODE_ENV=` · `ACCESS_TOKEN_NAME=` · `REFRESH_TOKEN_NAME=` · `HEALTH_CHECK_TIMEOUT_MS=` · `DEV_MAIL_LOG_TOKENS=` | ошибка валидации, старт прерван |
 | `JWT_ACCESS_EXPIRES_IN=` · `JWT_REFRESH_EXPIRES_IN=` | исключение внутри `ms()` — падение без внятного сообщения Zod |
-| `METRICS_TOKEN=` · `USER_WEB_HOST=` · `ARTIST_WEB_HOST=` · `COOKIE_DOMAIN=` · `API_BASE_URL=` · `EMAIL_FROM=` · `SENTRY_DSN=` · `S3_ENDPOINT=` · `S3_BUCKET=` · `S3_ACCESS_KEY=` · `S3_SECRET_KEY=` · `S3_PUBLIC_URL=` | ошибка валидации, хотя переменная объявлена `.optional()` |
+| `METRICS_TOKEN=` · `USER_WEB_HOST=` · `ARTIST_WEB_HOST=` · `COOKIE_DOMAIN=` · `API_BASE_URL=` · `EMAIL_FROM=` · `SENTRY_DSN=` · `S3_PUBLIC_URL=` | ошибка валидации, хотя переменная объявлена `.optional()` |
 
 Пустую строку безопасно переживают только `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`,
 `REDIS_PASSWORD` и обе пары `OAUTH_*` — у них нет проверки формата.
@@ -304,7 +305,7 @@ Metro, а не конфигурация приложения.
 
 ```env
 # ══════════ 1. REQUIRED ══════════
-# The process will not start without any one of these four.
+# The process will not start without any one of these.
 
 # addresses
 WEB_HOST=http://localhost:3001
@@ -313,6 +314,14 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/bitrate
 REDIS_HOST=localhost
 # auth
 JWT_SECRET=change-me-at-least-10-chars
+# files — S3-compatible object storage is the only storage backend. These are the development
+# defaults of the SeaweedFS service that `task infra:up` starts (published on localhost:8333).
+# Inside the `task dev:up` containers the endpoint is http://seaweedfs:8333 instead, which the
+# compose file sets itself.
+S3_ENDPOINT=http://localhost:8333
+S3_BUCKET=bitrate-audio
+S3_ACCESS_KEY=bitrateDevAccessKey
+S3_SECRET_KEY=bitrateDevSecretKeyChangeMe0001
 
 # ══════════ 2. OPTIONAL, WITH A DEFAULT ══════════
 # The values below match the schema defaults: drop a line entirely if you like,
@@ -330,7 +339,6 @@ JWT_REFRESH_EXPIRES_IN=30d
 ACCESS_TOKEN_NAME=access_token
 REFRESH_TOKEN_NAME=refresh_token
 # files
-STORAGE_DRIVER=local
 S3_REGION=us-east-1
 S3_FORCE_PATH_STYLE=true
 # mail
@@ -373,11 +381,6 @@ DEV_MAIL_LOG_TOKENS=false
 # ══════════ 4. CONDITIONALLY REQUIRED ══════════
 # Each becomes required as soon as its condition holds.
 
-# files — all four are required when STORAGE_DRIVER=s3
-#S3_ENDPOINT=https://s3.eu-central-1.amazonaws.com
-#S3_BUCKET=bitrate
-#S3_ACCESS_KEY=
-#S3_SECRET_KEY=
 # mail — required once SMTP_HOST is set
 #EMAIL_FROM=no-reply@bitrate.me
 # mail — only as a pair: either one alone aborts startup

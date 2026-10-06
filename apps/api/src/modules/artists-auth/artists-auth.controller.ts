@@ -41,9 +41,9 @@ import {
 import {
   ArtistForgotPasswordDto,
   type ArtistLoginDto,
+  type ArtistRegistrationDto,
   ForgotPasswordSchema,
   LoginSchema,
-  type RegistrationDto,
   RegistrationSchema,
   ResendArtistEmailDto,
   ResendArtistEmailSchema,
@@ -94,7 +94,7 @@ export class AuthController {
   @Post('registration')
   async registration(
     @Body(new ZodValidationPipe(RegistrationSchema))
-    registrationDto: RegistrationDto,
+    registrationDto: ArtistRegistrationDto,
   ) {
     return await this.artistAuthService.registerArtist(registrationDto)
   }

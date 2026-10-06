@@ -1,16 +1,21 @@
 import type { LoginResult } from '@common/auth.types'
 import {
+  clearOAuthAcceptCookie,
   clearOAuthStateCookie,
   OAUTH_STATE_COOKIE,
+  type OAuthAcceptance,
+  readOAuthAcceptance,
+  setOAuthAcceptCookie,
   setOAuthStateCookie,
   setPendingTwoFactorCookie,
 } from '@common/auth-cookies'
 import { type AppConfig, AUTH_ROUTE_THROTTLE } from '@common/config'
+import { LegalAcceptanceRequiredError } from '@common/legal'
 import { Controller, Get, Query, Req, Res } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ApiTags } from '@nestjs/swagger'
 import { Throttle } from '@nestjs/throttler'
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { TokenService } from '../tokens/token.service'
 import {
   OAuthFacebookCallbackSwagger,
@@ -34,8 +39,10 @@ export class UsersOAuthController {
   /** Runs the google auth operation. */
   @OAuthGoogleSwagger()
   @Get('google')
-  googleAuth(@Res() res: Response) {
-    return this.startOAuth(res, (state) => this.oauthService.getGoogleAuthUrl(state))
+  googleAuth(@Res() res: Response, @Query('acceptLegal') acceptLegal?: string) {
+    return this.startOAuth(res, { acceptLegal: acceptLegal === 'true' }, (state) =>
+      this.oauthService.getGoogleAuthUrl(state),
+    )
   }
 
   /** Runs the google callback operation. */
@@ -47,16 +54,18 @@ export class UsersOAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    return await this.completeOAuth(req, res, state, () =>
-      this.oauthService.handleGoogleCallback(code),
+    return await this.completeOAuth(req, res, state, (acceptance) =>
+      this.oauthService.handleGoogleCallback(code, acceptance),
     )
   }
 
   /** Runs the facebook auth operation. */
   @OAuthFacebookSwagger()
   @Get('facebook')
-  facebookAuth(@Res() res: Response) {
-    return this.startOAuth(res, (state) => this.oauthService.getFacebookAuthUrl(state))
+  facebookAuth(@Res() res: Response, @Query('acceptLegal') acceptLegal?: string) {
+    return this.startOAuth(res, { acceptLegal: acceptLegal === 'true' }, (state) =>
+      this.oauthService.getFacebookAuthUrl(state),
+    )
   }
 
   /** Runs the facebook callback operation. */
@@ -68,15 +77,23 @@ export class UsersOAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    return await this.completeOAuth(req, res, state, () =>
-      this.oauthService.handleFacebookCallback(code),
+    return await this.completeOAuth(req, res, state, (acceptance) =>
+      this.oauthService.handleFacebookCallback(code, acceptance),
     )
   }
 
-  /** Issues a fresh CSRF state and sends the browser to the provider. */
-  private startOAuth(res: Response, buildAuthUrl: (state: string) => string) {
+  /**
+   * Issues a fresh CSRF state and sends the browser to the provider. What the user accepted
+   * is carried in a cookie because the provider round trip drops every query parameter.
+   */
+  private startOAuth(
+    res: Response,
+    accepted: Pick<OAuthAcceptance, 'acceptLegal'>,
+    buildAuthUrl: (state: string) => string,
+  ) {
     const state = this.oauthService.generateState()
     setOAuthStateCookie(res, state)
+    setOAuthAcceptCookie(res, accepted)
     return res.redirect(buildAuthUrl(state))
   }
 
@@ -90,7 +107,7 @@ export class UsersOAuthController {
     req: Request,
     res: Response,
     state: string,
-    exchange: () => Promise<LoginResult>,
+    exchange: (acceptance: Pick<OAuthAcceptance, 'acceptLegal'>) => Promise<LoginResult>,
   ) {
     const host = this.config.getOrThrow('web').userHost
 
@@ -99,7 +116,18 @@ export class UsersOAuthController {
     }
 
     clearOAuthStateCookie(res)
-    const result = await exchange()
+    const { acceptLegal } = readOAuthAcceptance(req.cookies)
+    clearOAuthAcceptCookie(res)
+
+    let result: LoginResult
+    try {
+      result = await exchange({ acceptLegal })
+    } catch (err) {
+      if (err instanceof LegalAcceptanceRequiredError) {
+        return res.redirect(`${host}/login?error=legal_acceptance_required`)
+      }
+      throw err
+    }
 
     if ('requires2fa' in result) {
       setPendingTwoFactorCookie(res, result.pendingToken)

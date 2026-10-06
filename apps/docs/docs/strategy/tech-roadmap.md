@@ -81,6 +81,11 @@ because `STORAGE_DRIVER` is not set as a production environment variable and no 
 exist. The decision is to move the audio to `STORAGE_DRIVER=s3`, which also removes the
 single-host pin listed below.
 
+> Update: the `local` storage driver and `STORAGE_DRIVER` have since been removed (#279). The API
+> has one backend, S3-compatible object storage (SeaweedFS, ADR-0050), and the `S3_*` variables
+> are required. The mentions of the two drivers on this page describe the state when it was
+> written.
+
 This is the one defect where the failure is not recoverable by fixing code afterwards. A
 platform whose pitch is that artists entrust it with their masters cannot be the reason those
 masters are gone — and the [artist agreement](./law-roadmap.md#gate-3--distribution-to-the-dsps)
@@ -118,6 +123,12 @@ above. It reuses the existing `AUDIO_PROCESSING_WORKER_ENABLED` switch and adds 
 a separate deployed service, health checks and a staged rollout. It stays one deliberate split — see
 [what not to build](#what-not-to-build). Sentry in `web-artists` is [#130](https://github.com/Lordpluha/bitrate/issues/130);
 `web-artists` runs TanStack Start, so `@sentry/nextjs` does not apply there.
+
+**Update (2026-10-05).** The "Extract the transcode worker from the API process" item is complete in
+code and infrastructure: the worker is its own service with health and metrics (ADR-0049), audio lives
+in the object store (ADR-0050), and the production cutover is the staged, reversible procedure in the
+[worker rollout runbook](../infrastructure/worker-rollout-runbook.md). Production behaviour changes only
+when the owner sets `AUDIO_PROCESSING_WORKER_ENABLED=false` on the `production` environment.
 
 ## Stage 2 — the artist workspace
 

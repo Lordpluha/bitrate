@@ -1,5 +1,39 @@
 # Docker Compose configuration for pre-production environment with PostgreSQL, Redis, and all application services.
 
+# The environment `api` and `worker` share, so the two cannot drift. `worker` merges it
+# (`<<: *api-env`) and overrides single keys.
+x-api-env: &api-env
+  NODE_ENV: development
+  DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}
+  SHADOW_DATABASE_URL: ${SHADOW_DATABASE_URL:-postgresql://admin:admin@postgres:5432/bitrate_shadow}
+  REDIS_URL: redis://redis:6379
+  REDIS_HOST: ${REDIS_HOST:-redis}
+  REDIS_PORT: ${REDIS_PORT:-6379}
+  WEB_HOST: ${WEB_HOST:-http://localhost:3001}
+  ARTIST_WEB_HOST: ${ARTIST_WEB_HOST:-http://localhost:${WEB_ARTISTS_PORT:-3004}}
+  # No SMTP host, on purpose: MailService builds no transporter without one and logs the
+  # verification/reset link instead. Point SMTP_HOST at a real server to send for real.
+  DEV_MAIL_LOG_TOKENS: "true"
+  EMAIL_FROM: no-reply@bitrate.local
+  JWT_SECRET: ${JWT_SECRET:-change_me_in_production_secret}
+  PORT: 3000
+  # Gates GET /metrics — see AppController.assertMetricsAccess. Without any value the
+  # route 404s even on this internal network, so the observability profile's Prometheus
+  # (infra/observability/prometheus/prometheus.yml, which hardcodes this same default —
+  # it cannot read .env) couldn't scrape it at all. Fixed dev-only value, same spirit as
+  # this file's admin/admin Postgres credentials.
+  METRICS_TOKEN: ${METRICS_TOKEN:-dev-metrics-token-local-only-0001}
+  # Object store settings (ADR-0050): the API and the worker always use the seaweedfs service
+  # below, whose identity is seeded from the same defaults.
+  S3_ENDPOINT: http://seaweedfs:8333
+  S3_BUCKET: ${S3_BUCKET:-bitrate-audio}
+  S3_ACCESS_KEY: ${S3_ACCESS_KEY:-bitrateDevAccessKey}
+  S3_SECRET_KEY: ${S3_SECRET_KEY:-bitrateDevSecretKeyChangeMe0001}
+  S3_FORCE_PATH_STYLE: "true"
+  # Whether `api` also consumes the audio-processing queue; `worker` forces it to "true" below.
+  # Set it to false to rehearse the production cutover (apps/docs/docs/infrastructure/worker-rollout-runbook.md).
+  AUDIO_PROCESSING_WORKER_ENABLED: ${AUDIO_PROCESSING_WORKER_ENABLED:-true}
+
 services:
   # PostgreSQL Database
   postgres:
@@ -41,8 +75,8 @@ services:
 
   # S3-compatible object store for audio (ADR-0050). Single node, internal network only: no
   # `ports:`, so it is reachable only from this compose network. This stack gets its own
-  # instance and bucket so the STORAGE_DRIVER=s3 cutover can be rehearsed here before
-  # production. The credentials default to dev-only values, in the spirit of admin/admin.
+  # instance and bucket, separate from production. The credentials default to dev-only values,
+  # in the spirit of admin/admin.
   # The application identity is scoped to one bucket; there is no admin S3 identity.
   seaweedfs:
     image: chrislusf/seaweedfs:4.48
@@ -106,34 +140,7 @@ services:
       target: development
     container_name: bitrate-api
     restart: unless-stopped
-    environment:
-      NODE_ENV: development
-      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@postgres:5432/${POSTGRES_DB:-bitrate}
-      SHADOW_DATABASE_URL: ${SHADOW_DATABASE_URL:-postgresql://admin:admin@postgres:5432/bitrate_shadow}
-      REDIS_URL: redis://redis:6379
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      WEB_HOST: ${WEB_HOST:-http://localhost:3001}
-      ARTIST_WEB_HOST: ${ARTIST_WEB_HOST:-http://localhost:${WEB_ARTISTS_PORT:-3004}}
-      # No SMTP host, on purpose: MailService builds no transporter without one and logs the
-      # verification/reset link instead. Point SMTP_HOST at a real server to send for real.
-      DEV_MAIL_LOG_TOKENS: "true"
-      EMAIL_FROM: no-reply@bitrate.local
-      JWT_SECRET: ${JWT_SECRET:-change_me_in_production_secret}
-      PORT: 3000
-      # Gates GET /metrics — see AppController.assertMetricsAccess. Without any value the
-      # route 404s even on this internal network, so the observability profile's Prometheus
-      # (infra/observability/prometheus/prometheus.yml, which hardcodes this same default —
-      # it cannot read .env) couldn't scrape it at all. Fixed dev-only value, same spirit as
-      # this file's admin/admin Postgres credentials.
-      METRICS_TOKEN: ${METRICS_TOKEN:-dev-metrics-token-local-only-0001}
-      # Object store settings for the future STORAGE_DRIVER=s3 cutover. Inert while the driver
-      # stays at its `local` default; the same defaults seed the seaweedfs service above.
-      S3_ENDPOINT: http://seaweedfs:8333
-      S3_BUCKET: ${S3_BUCKET:-bitrate-audio}
-      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-bitrateDevAccessKey}
-      S3_SECRET_KEY: ${S3_SECRET_KEY:-bitrateDevSecretKeyChangeMe0001}
-      S3_FORCE_PATH_STYLE: "true"
+    environment: *api-env
     ports:
       - "${API_PORT:-3000}:3000"
     volumes:
@@ -149,9 +156,60 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      seaweedfs:
+        condition: service_healthy
+      seaweedfs-init:
+        condition: service_completed_successfully
     networks:
       - bitrate-network
     command: pnpm --filter @bitrate/api run start:dev
+
+  # Standalone audio-transcode worker (ADR-0049), started by `task dev:up` with the rest of the
+  # stack. Audio lives in the seaweedfs service above, so the worker needs no volume shared with
+  # `api`. The development image has no compiled output in this container, so it runs the watch
+  # build of the worker entrypoint instead of dist. `api` keeps its own consumer on too, so in
+  # this stack either process may claim a job.
+  worker:
+    build:
+      context: ..
+      dockerfile: ./apps/api/Dockerfile
+      target: development
+    container_name: bitrate-worker
+    restart: unless-stopped
+    environment:
+      <<: *api-env
+      AUDIO_PROCESSING_WORKER_ENABLED: "true"
+    volumes:
+      - ../apps/api:/app/apps/api
+      - ../packages:/app/packages
+      - /app/node_modules
+      - /app/apps/api/node_modules
+      - /app/apps/api/dist
+    # The image's HEALTHCHECK probes the API's HTTP port, which this process does not open. The
+    # worker answers on its own internal port WORKER_HTTP_PORT (default 9101, never published).
+    # Liveness, not readiness: a Redis/Postgres/SeaweedFS blip must not flag a worker that is
+    # mid-transcode, while a hung event loop (no answer) is exactly what this must catch.
+    # `restart` only reacts to an exit, so Docker marking the container unhealthy does not by
+    # itself restart it; the recovery path is described in ADR-0049.
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:9101/health/live', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)}).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 3s
+      start_period: 40s
+      retries: 3
+    stop_grace_period: 300s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      seaweedfs:
+        condition: service_healthy
+      seaweedfs-init:
+        condition: service_completed_successfully
+    networks:
+      - bitrate-network
+    command: pnpm --filter @bitrate/api run start:worker
 
   # Web Player (Next.js)
   web-player:

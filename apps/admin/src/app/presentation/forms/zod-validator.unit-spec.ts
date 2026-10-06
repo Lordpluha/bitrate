@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { describe, expect, it } from 'vitest'
-import { z } from 'zod'
+import * as z from 'zod'
 import { zodErrorMessage, zodValidator } from './zod-validator'
 
 const schema = z

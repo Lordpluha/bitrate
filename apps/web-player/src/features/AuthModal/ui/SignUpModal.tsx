@@ -1,6 +1,7 @@
 'use client'
 
 import { Button, Form } from '@bitrate/ui-react'
+import { LegalAcceptanceField } from '@features/Auth/ui/LegalAcceptanceField'
 import { useSignUpModalForm } from '@features/AuthModal/model/useSignUpModalForm'
 import { ROUTES } from '@shared/routes'
 import { SocialsAuthDivider } from '@shared/ui'
@@ -41,6 +42,10 @@ export const SignUpModal = ({
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <SignUpModalFields control={form.control} />
+            <LegalAcceptanceField
+              control={form.control}
+              id="signup-accept-legal"
+            />
             <div className="mt-2 flex flex-col items-stretch gap-4">
               <Button
                 aria-busy={isRegistering}
@@ -53,7 +58,7 @@ export const SignUpModal = ({
                 Register
               </Button>
               <SocialsAuthDivider />
-              <AuthModalGoogleButton />
+              <AuthModalGoogleButton accepted={form.watch('acceptLegal')} />
               <p className="text-center text-base text-text-contrast">
                 Already have an account?{' '}
                 {onSwitchToLogin ? (

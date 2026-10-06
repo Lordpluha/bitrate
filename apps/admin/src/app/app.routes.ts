@@ -50,6 +50,67 @@ export const routes: Routes = [
       import('@presentation/pages/catalog/track-detail').then((m) => m.TrackDetailPage),
   },
   {
+    path: 'albums',
+    title: 'Albums · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('albums:read')],
+    loadComponent: () => import('@presentation/pages/albums/albums').then((m) => m.AlbumsPage),
+  },
+  {
+    path: 'albums/:id',
+    title: 'Album · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('albums:read')],
+    loadComponent: () =>
+      import('@presentation/pages/albums/album-detail').then((m) => m.AlbumDetailPage),
+  },
+  {
+    path: 'playlists',
+    title: 'Playlists · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('playlists:read')],
+    loadComponent: () =>
+      import('@presentation/pages/playlists/playlists').then((m) => m.PlaylistsPage),
+  },
+  {
+    path: 'playlists/:id',
+    title: 'Playlist · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('playlists:read')],
+    loadComponent: () =>
+      import('@presentation/pages/playlists/playlist-detail').then((m) => m.PlaylistDetailPage),
+  },
+  {
+    path: 'podcasts',
+    title: 'Podcasts · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('podcasts:read')],
+    loadComponent: () =>
+      import('@presentation/pages/podcasts/podcasts').then((m) => m.PodcastsPage),
+  },
+  {
+    path: 'podcasts/:id',
+    title: 'Podcast · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('podcasts:read')],
+    loadComponent: () =>
+      import('@presentation/pages/podcasts/podcast-detail').then((m) => m.PodcastDetailPage),
+  },
+  {
+    path: 'genres',
+    title: 'Genres · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('genres:read')],
+    loadComponent: () => import('@presentation/pages/genres/genres').then((m) => m.GenresPage),
+  },
+  {
+    path: 'genres/new',
+    title: 'New genre · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('genres:write')],
+    loadComponent: () =>
+      import('@presentation/pages/genres/genre-editor').then((m) => m.GenreEditorPage),
+  },
+  {
+    path: 'genres/:id',
+    title: 'Edit genre · Bitrate operators',
+    canActivate: [requireStaffSession, requirePermission('genres:read')],
+    loadComponent: () =>
+      import('@presentation/pages/genres/genre-editor').then((m) => m.GenreEditorPage),
+  },
+  {
     path: 'artists',
     title: 'Artists · Bitrate operators',
     canActivate: [requireStaffSession, requirePermission('artists:read')],

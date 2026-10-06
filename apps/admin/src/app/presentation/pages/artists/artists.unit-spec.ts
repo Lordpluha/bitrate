@@ -4,6 +4,7 @@ import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { provideRouter, type Routes } from '@angular/router'
 import { RouterTestingHarness } from '@angular/router/testing'
+import { SessionStore } from '@application/session'
 import {
   type Artist,
   type ArtistAlbum,
@@ -14,6 +15,9 @@ import {
   type SetArtistVerificationInput,
 } from '@domain/artist'
 import type { Page, TakeDownInput } from '@domain/shared'
+import type { Permission } from '@domain/access'
+import { ExportRepository } from '@domain/export'
+import { FileSaver } from '@presentation/components'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ArtistsPage } from './artists'
 import { TranslocoTestingModule } from '@jsverse/transloco'
@@ -70,6 +74,27 @@ class StubArtistRepository extends ArtistRepository {
   }
 }
 
+const exportArtists = vi.fn<ExportRepository['exportArtists']>()
+
+/** Only the export this page uses is exercised; the others fail loudly if reached. */
+class StubExportRepository extends ExportRepository {
+  override exportUsers(): ReturnType<ExportRepository['exportUsers']> {
+    throw new Error('not used')
+  }
+
+  override exportArtists(...args: Parameters<ExportRepository['exportArtists']>) {
+    return exportArtists(...args)
+  }
+
+  override exportTracks(): ReturnType<ExportRepository['exportTracks']> {
+    throw new Error('not used')
+  }
+
+  override exportReports(): ReturnType<ExportRepository['exportReports']> {
+    throw new Error('not used')
+  }
+}
+
 const routes: Routes = [{ path: 'artists', component: ArtistsPage }]
 
 describe('ArtistsPage', () => {
@@ -92,6 +117,7 @@ describe('ArtistsPage', () => {
         provideRouter(routes),
         provideLocationMocks(),
         { provide: ArtistRepository, useClass: StubArtistRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
       ],
     })
     harness = await RouterTestingHarness.create()
@@ -134,5 +160,89 @@ describe('ArtistsPage', () => {
     expect(list).toHaveBeenLastCalledWith(
       expect.objectContaining({ filter: expect.objectContaining({ sort: undefined }) }),
     )
+  })
+})
+
+describe('ArtistsPage — CSV export', () => {
+  let harness: RouterTestingHarness
+
+  const operator = (permissions: Permission[]) =>
+    TestBed.inject(SessionStore).set({
+      id: '3f2504e0-4f89-41d3-9a0c-0305e82c3399',
+      email: 'ops@bitrate.me',
+      username: 'ops',
+      roleId: 'c1b1d2e3-4f5a-4b6c-8d7e-9f0a1b2c3d4e',
+      roleName: 'MODERATOR',
+      permissions,
+    })
+  const exportButton = () =>
+    Array.from(
+      (harness.routeNativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'),
+    ).find((candidate) => candidate.textContent?.trim().startsWith('Export CSV'))
+
+  beforeEach(async () => {
+    list.mockReset()
+    exportArtists.mockReset()
+    list.mockResolvedValue({ items: [artist()], total: 1, page: 1, limit: 20 })
+    exportArtists.mockResolvedValue({
+      blob: new Blob(['id\r\n']),
+      filename: 'export.csv',
+      truncated: false,
+    })
+
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, uk: {} },
+          translocoConfig: { availableLangs: [...LOCALES], defaultLang: DEFAULT_LOCALE },
+        }),
+      ],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: ArtistRepository, useClass: StubArtistRepository },
+        { provide: ExportRepository, useClass: StubExportRepository },
+        { provide: FileSaver, useValue: { save: vi.fn() } },
+      ],
+    })
+    harness = await RouterTestingHarness.create()
+  })
+
+  it('offers no export to an operator without artists:export', async () => {
+    operator(['artists:read'])
+    await harness.navigateByUrl('/artists', ArtistsPage)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeUndefined()
+  })
+
+  it('offers the export to an operator with artists:export', async () => {
+    operator(['artists:read', 'artists:export'])
+    await harness.navigateByUrl('/artists', ArtistsPage)
+    await harness.fixture.whenStable()
+
+    expect(exportButton()).toBeDefined()
+  })
+
+  it('exports the filters and sort in the URL, not the loaded page', async () => {
+    operator(['artists:read', 'artists:export'])
+    await harness.navigateByUrl(
+      '/artists?q=dj&status=all&sort=username&dir=asc&page=2',
+      ArtistsPage,
+    )
+    await harness.fixture.whenStable()
+
+    exportButton()?.click()
+    await harness.fixture.whenStable()
+
+    expect(exportArtists).toHaveBeenCalledTimes(1)
+    expect(exportArtists).toHaveBeenCalledWith({
+      query: 'dj',
+      verified: undefined,
+      status: 'all',
+      sort: { field: 'username', direction: 'asc' },
+    })
   })
 })

@@ -31,6 +31,8 @@ describe('ArtistsAuth (e2e)', () => {
       email: `artist_${runId}@example.com`,
       password: 'password123',
       username: `artist_${runId}`,
+      acceptLegal: true,
+      acceptArtistAgreement: true,
     }
 
     await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(201)
@@ -64,6 +66,8 @@ describe('ArtistsAuth (e2e)', () => {
       email: `dup_${runId}@example.com`,
       password: 'pass123',
       username: `dup_${runId}`,
+      acceptLegal: true,
+      acceptArtistAgreement: true,
     }
 
     await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(201)
@@ -88,6 +92,8 @@ describe('ArtistsAuth (e2e)', () => {
       email: `artist_${runId}@example.com`,
       password: 'password123',
       username: `artist_${runId}`,
+      acceptLegal: true,
+      acceptArtistAgreement: true,
     }
 
     await request(app.getHttpServer()).post('/artists/auth/registration').send(creds).expect(201)

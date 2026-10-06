@@ -1,3 +1,5 @@
+import './s3-env-defaults'
+
 /**
  * Applies the environment defaults the API relies on at runtime.
  *

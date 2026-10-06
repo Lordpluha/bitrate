@@ -33,8 +33,9 @@ developer and get confirmation first — never assume it.
 
 ## Mechanical checks and editor discovery
 
-The Claude pre-tool guard requests **Allow once** for risky Git operations and branch
-switches in the main checkout; bypass modes deny them. Submit each risky operation as
+The Claude pre-tool guard requests **Allow once** for data-losing Git operations outside
+agent worktrees and for branch switches/integrations in the main checkout; bypass modes
+deny them. Submit each risky operation as
 its own tool call. [Hook policy](hook-policy.md) documents coverage and limitations.
 Project VS Code settings enable `git.detectWorktrees`; reload the window and inspect
 Source Control Repositories. This does not create or prune worktrees.

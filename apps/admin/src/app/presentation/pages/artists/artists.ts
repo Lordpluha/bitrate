@@ -6,11 +6,13 @@ import {
   ListArtistsUseCase,
   ToggleArtistVerificationUseCase,
 } from '@application/artists'
+import { ExportArtistsCsvUseCase } from '@application/export'
 import { SessionStore } from '@application/session'
-import type { Artist, ArtistSortField } from '@domain/artist'
+import type { Artist, ArtistFilter, ArtistSortField } from '@domain/artist'
 import type { ResourceStatus, Sort } from '@domain/shared'
 import {
   CollectionStatus,
+  ExportCsvButton,
   Paginator,
   SortHeader,
   sortHeaderAriaSort,
@@ -33,6 +35,7 @@ const SEARCH_DEBOUNCE_MS = 300
     LocalizedDatePipe,
     RouterLink,
     CollectionStatus,
+    ExportCsvButton,
     Paginator,
     SortHeader,
     HlmBadgeImports,
@@ -46,31 +49,35 @@ export class ArtistsPage {
   private readonly listArtists = inject(ListArtistsUseCase)
   private readonly toggleVerificationUseCase = inject(ToggleArtistVerificationUseCase)
   private readonly deactivateArtist = inject(DeactivateArtistUseCase)
+  private readonly exportArtists = inject(ExportArtistsCsvUseCase)
 
   protected readonly canVerify = inject(SessionStore).can('artists:verify')
   protected readonly canDelete = inject(SessionStore).can('artists:delete')
+  protected readonly canExport = inject(SessionStore).can('artists:export')
   protected readonly ariaSort = sortHeaderAriaSort<ArtistSortField>
 
   protected readonly query = bindQueryState({ codec: artistsQueryCodec })
   protected readonly draft = signal(this.query.state().query)
   protected readonly busyId = signal<string | null>(null)
 
+  /** The URL's filter and sort — what the list loads and the CSV export asks for. */
+  private readonly filter = (): ArtistFilter => ({
+    query: this.query.state().query || undefined,
+    verified:
+      this.query.state().verified === 'all'
+        ? undefined
+        : this.query.state().verified === 'verified',
+    status: this.query.state().status,
+    sort: this.query.state().sort ?? undefined,
+  })
+
   protected readonly collection = createCollection<Artist>({
     errorMessage: 'Could not load artists.',
-    load: (page) =>
-      this.listArtists.execute({
-        page,
-        filter: {
-          query: this.query.state().query || undefined,
-          verified:
-            this.query.state().verified === 'all'
-              ? undefined
-              : this.query.state().verified === 'verified',
-          status: this.query.state().status,
-          sort: this.query.state().sort ?? undefined,
-        },
-      }),
+    load: (page) => this.listArtists.execute({ page, filter: this.filter() }),
   })
+
+  /** Downloads the server CSV for the filters and sort in the URL right now, not just this page. */
+  protected readonly exportCsv = () => this.exportArtists.execute(this.filter())
 
   constructor() {
     effect(() => {
