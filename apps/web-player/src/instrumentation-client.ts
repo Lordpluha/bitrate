@@ -12,7 +12,6 @@ Sentry.init({
   /** Record a tenth of sessions, and every session that produced an error. */
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
-  enableLogs: true,
   integrations: [Sentry.replayIntegration()],
 })
 

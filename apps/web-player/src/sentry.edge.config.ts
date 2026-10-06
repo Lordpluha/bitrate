@@ -9,5 +9,4 @@ Sentry.init({
   dsn: sentryDsn,
   environment: sentryEnvironment,
   tracesSampleRate: sentryTracesSampleRate,
-  enableLogs: true,
 })
