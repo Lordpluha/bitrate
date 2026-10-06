@@ -1,5 +1,6 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { AdminAuditService } from '@modules/admin/audit'
+import { MODERATION_ENTITY_TYPES } from '@modules/moderation'
 import { Injectable } from '@nestjs/common'
 import { Prisma, type TrackProcessingStatus } from '@prisma/client'
 import { DEFAULT_OVERVIEW_SERIES_DAYS } from './dtos'
@@ -35,6 +36,9 @@ type UploadsDayRow = DayBucket & { uploaded: number; ready: number; failed: numb
 
 /** One day of a plain per-day count — shared shape for signups/listens/reports raw rows. */
 type DayCountRow = DayBucket & { count: number }
+
+/** One day of filed reports for one entity type, as Postgres returns it via `$queryRaw`. */
+type DayEntityTypeRow = DayBucket & { entityType: string; count: number }
 
 /** One entry of a zero-filled series keyed only by day. */
 type SeriesPoint<T> = { date: string } & T
@@ -247,6 +251,56 @@ export class AdminOverviewService {
         resolved: statusCounts.get('RESOLVED') ?? 0,
         rejected: statusCounts.get('REJECTED') ?? 0,
       },
+    }
+  }
+
+  /**
+   * Moderation reports *created* per UTC day over the same trailing window as `getSeries`,
+   * broken down by entity type. Counts every report filed in the window regardless of its
+   * current status (consistent with `getSeries().reports`, which it drills into). Every
+   * `MODERATION_ENTITY_TYPES` value is present and zero-filled; rows with an unrecognised entity
+   * type (the column is a free `String`) are ignored.
+   */
+  async getReportsByType(days: number = DEFAULT_OVERVIEW_SERIES_DAYS) {
+    const now = new Date()
+    const todayUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+    const dates = buildDateSequence(todayUtc, days)
+    const oldestDate = dates[0] ?? toDateKey(todayUtc)
+    const since = new Date(`${oldestDate}T00:00:00.000Z`)
+
+    const rows = await this.prisma.queryRaw<DayEntityTypeRow[]>(Prisma.sql`
+      SELECT
+        date_trunc('day', "createdAt")::date AS day,
+        "entityType" AS "entityType",
+        COUNT(*)::int AS count
+      FROM "ModerationReport"
+      WHERE "createdAt" >= ${since}
+      GROUP BY 1, 2
+      ORDER BY 1
+    `)
+
+    const dayIndex = new Map(dates.map((date, index) => [date, index]))
+    const countsByType = new Map(
+      MODERATION_ENTITY_TYPES.map((type) => [type, dates.map(() => 0)] as const),
+    )
+    for (const row of rows) {
+      const counts = countsByType.get(row.entityType as (typeof MODERATION_ENTITY_TYPES)[number])
+      const index = dayIndex.get(toDateKey(row.day))
+      if (counts && index !== undefined) counts[index] = (counts[index] ?? 0) + row.count
+    }
+
+    const series = MODERATION_ENTITY_TYPES.map((entityType) => {
+      const counts = countsByType.get(entityType) ?? []
+      return { entityType, counts, total: counts.reduce((sum, value) => sum + value, 0) }
+    })
+
+    return {
+      from: oldestDate,
+      to: dates[dates.length - 1] ?? oldestDate,
+      days,
+      dates,
+      series,
+      total: series.reduce((sum, entry) => sum + entry.total, 0),
     }
   }
 }

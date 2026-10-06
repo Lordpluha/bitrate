@@ -1,6 +1,7 @@
 import type { Permission } from '@domain/access'
-import type { Overview } from '@domain/overview'
+import type { Overview, OverviewReportsByType } from '@domain/overview'
 import { ROUTE_PERMISSIONS } from '@presentation/guards'
+import { entityTypeLabel } from './overview-reports.adapter'
 
 /**
  * Where a status item's count links to. Absent when no list on the panel can filter for it yet.
@@ -132,4 +133,22 @@ export function buildAccountDeactivationStatus(overview: Overview): OverviewStat
       },
     },
   ]
+}
+
+/**
+ * Each entity type's total over the drill-down's range, linking to the moderation queue filtered
+ * by that type. `status: 'all'` is the queue's explicit "no status filter" token — the chart
+ * counts reports of every status, so the link must not silently narrow to `OPEN`.
+ */
+export function buildReportsByTypeStatus(data: OverviewReportsByType): OverviewStatusItem[] {
+  return data.series.map((entry) => ({
+    id: `reports-type-${entry.entityType}`,
+    label: entityTypeLabel(entry.entityType),
+    value: entry.total,
+    link: {
+      path: '/moderation',
+      permission: permissionFor('/moderation'),
+      queryParams: { entityType: entry.entityType, status: 'all' },
+    },
+  }))
 }
