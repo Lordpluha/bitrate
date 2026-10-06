@@ -13,7 +13,7 @@ export interface ReleaseReadinessInput {
   splits: { rightType: ReleaseRightType; shareBasisPoints: number }[]
 }
 
-export type ReleaseBlocker =
+type ReleaseBlocker =
   | { code: 'NO_TRACKS' }
   | { code: 'MASTER_OWNER_MISSING' }
   | { code: 'WRITERS_NOT_CONFIRMED' }
@@ -22,7 +22,7 @@ export type ReleaseBlocker =
   | { code: 'SPLITS_INCOMPLETE'; rightType: ReleaseRightType; totalBasisPoints: number }
 
 /** Identifiers can be assigned later by a distributor, so they never block submission. */
-export type ReleaseNotice = { code: 'UPC_MISSING' } | { code: 'ISRC_MISSING'; trackId: string }
+type ReleaseNotice = { code: 'UPC_MISSING' } | { code: 'ISRC_MISSING'; trackId: string }
 
 export interface ReleaseReadiness {
   blockers: ReleaseBlocker[]

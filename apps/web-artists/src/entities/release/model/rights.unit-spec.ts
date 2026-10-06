@@ -17,17 +17,12 @@ describe('release rights model', () => {
     expect(percentToBasisPoints(percent)).toBe(points)
   })
 
-  it.each([
-    '',
-    '0',
-    '-5',
-    '100.01',
-    '12.345',
-    'abc',
-    '1e2',
-  ])('rejects %p as a share', (percent) => {
-    expect(percentToBasisPoints(percent)).toBeNull()
-  })
+  it.each(['', '0', '-5', '100.01', '12.345', 'abc', '1e2'])(
+    'rejects %p as a share',
+    (percent) => {
+      expect(percentToBasisPoints(percent)).toBeNull()
+    },
+  )
 
   it.each([
     [10_000, '100'],

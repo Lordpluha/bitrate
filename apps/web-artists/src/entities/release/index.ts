@@ -34,7 +34,6 @@ export {
   isValidUpc,
   normalizeIsrc,
   percentToBasisPoints,
-  type ReleaseBlocker,
   type ReleaseNotice,
   rightTypeLabels,
   rightTypes,
