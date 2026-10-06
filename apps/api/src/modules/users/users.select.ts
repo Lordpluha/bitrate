@@ -22,4 +22,5 @@ export const SELF_USER_SELECT = {
   email: true,
   emailVerifiedAt: true,
   twoFactorEnabled: true,
+  legalVersion: true,
 } as const satisfies Prisma.UserSelect

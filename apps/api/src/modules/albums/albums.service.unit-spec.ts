@@ -1,3 +1,4 @@
+import { ARTIST_AGREEMENT_VERSION } from '@common/legal'
 import { beforeEach, describe, expect, it } from '@jest/globals'
 import { NotFoundException } from '@nestjs/common'
 import { makeCacheMock, type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
@@ -138,7 +139,11 @@ describe('AlbumsService', () => {
     prisma.artist.findUnique.mockResolvedValue(null)
 
     await expect(
-      service.create('artist-1', { title: 'New Album', description: 'desc' }),
+      service.create('artist-1', {
+        title: 'New Album',
+        description: 'desc',
+        rightsConfirmed: true,
+      }),
     ).rejects.toBeInstanceOf(NotFoundException)
   })
 
@@ -147,12 +152,14 @@ describe('AlbumsService', () => {
     const created = buildAlbum({ title: 'New Album' })
     prisma.album.create.mockResolvedValue(created)
 
-    const result = await service.create('artist-1', { title: 'New Album' })
+    const result = await service.create('artist-1', { title: 'New Album', rightsConfirmed: true })
 
     expect(prisma.album.create).toHaveBeenCalledWith({
       data: {
         artistId: 'artist-1',
         title: 'New Album',
+        rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
+        rightsConfirmedAt: expect.any(Date),
       },
     })
     expect(result).toBe(created)
@@ -166,6 +173,7 @@ describe('AlbumsService', () => {
     const result = await service.create('artist-1', {
       title: 'New Album',
       description: 'desc',
+      rightsConfirmed: true,
     })
 
     expect(prisma.album.create).toHaveBeenCalledWith({
@@ -173,6 +181,8 @@ describe('AlbumsService', () => {
         artistId: 'artist-1',
         title: 'New Album',
         description: 'desc',
+        rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
+        rightsConfirmedAt: expect.any(Date),
       },
     })
     expect(result).toBe(created)
@@ -186,6 +196,7 @@ describe('AlbumsService', () => {
     const result = await service.create('artist-1', {
       title: 'New Album',
       description: undefined,
+      rightsConfirmed: true,
     })
 
     expect(prisma.album.create).toHaveBeenCalledWith({
@@ -193,6 +204,8 @@ describe('AlbumsService', () => {
         artistId: 'artist-1',
         title: 'New Album',
         description: undefined,
+        rightsConfirmedVersion: ARTIST_AGREEMENT_VERSION,
+        rightsConfirmedAt: expect.any(Date),
       },
     })
     expect(result).toBe(created)

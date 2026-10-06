@@ -1,7 +1,6 @@
 import type { AppConfig } from '@common/config'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import type { ConfigService } from '@nestjs/config'
-import { mockDeep } from 'jest-mock-extended'
 import { MailService } from './mail.service'
 
 describe('MailService audience-specific links', () => {
@@ -9,18 +8,19 @@ describe('MailService audience-specific links', () => {
   let sendMail: jest.MockedFunction<(payload: { html: string }) => Promise<void>>
 
   beforeEach(() => {
-    const config = mockDeep<ConfigService<AppConfig>>()
-    config.get.mockReturnValue(undefined)
-    config.getOrThrow.mockImplementation((key) => {
-      if (key === 'web') {
-        return {
-          userHost: 'https://users.example.com',
-          artistHost: 'https://artists.example.com',
-        } as never
-      }
-      if (key === 'mail') return { from: 'security@example.com' } as never
-      throw new Error(`Unexpected config key: ${String(key)}`)
-    })
+    const config = {
+      get: jest.fn(() => undefined),
+      getOrThrow: jest.fn((key: string) => {
+        if (key === 'web') {
+          return {
+            userHost: 'https://users.example.com',
+            artistHost: 'https://artists.example.com',
+          }
+        }
+        if (key === 'mail') return { from: 'security@example.com' }
+        throw new Error(`Unexpected config key: ${key}`)
+      }),
+    } as unknown as ConfigService<AppConfig>
     service = new MailService(config)
     sendMail = jest.fn(async () => undefined)
     Object.defineProperty(service, 'transporter', { value: { sendMail } })
@@ -53,22 +53,22 @@ describe('MailService audience-specific links', () => {
 
 describe('MailService development fallback policy', () => {
   const makeConfig = (logTokens: boolean, nodeEnv = 'development') => {
-    const config = mockDeep<ConfigService<AppConfig>>()
-    config.get.mockImplementation((key) => {
-      if (key === 'NODE_ENV') return nodeEnv as never
-      if (key === 'mail') return { logTokens } as never
-      return undefined
-    })
-    config.getOrThrow.mockImplementation((key) => {
-      if (key === 'web') {
-        return {
-          userHost: 'https://users.example.com',
-          artistHost: 'https://artists.example.com',
-        } as never
-      }
-      throw new Error(`Unexpected config key: ${String(key)}`)
-    })
-    return config
+    return {
+      get: jest.fn((key: string) => {
+        if (key === 'NODE_ENV') return nodeEnv
+        if (key === 'mail') return { logTokens }
+        return undefined
+      }),
+      getOrThrow: jest.fn((key: string) => {
+        if (key === 'web') {
+          return {
+            userHost: 'https://users.example.com',
+            artistHost: 'https://artists.example.com',
+          }
+        }
+        throw new Error(`Unexpected config key: ${key}`)
+      }),
+    } as unknown as ConfigService<AppConfig>
   }
 
   it('does not expose a token when the explicit development flag is disabled', async () => {

@@ -1,4 +1,3 @@
-import { join } from 'node:path'
 import { REDIS_CLIENT } from '@infra/cache/cache.constants'
 import { CacheModule } from '@infra/cache/cache.module'
 import { AuditInterceptor } from '@infra/observability/audit.interceptor'
@@ -7,6 +6,7 @@ import { MetricsInterceptor } from '@infra/observability/metrics.interceptor'
 import { MetricsService } from '@infra/observability/metrics.service'
 import { RedisThrottlerStorage } from '@infra/observability/redis-throttler.storage'
 import { PrismaModule } from '@infra/prisma/prisma.module'
+import { bullRootAsyncOptions } from '@infra/queues/bull-root.options'
 import { StorageModule } from '@infra/storage/storage.module'
 import { AdminModule } from '@modules/admin'
 import { AlbumsModule } from '@modules/albums/albums.module'
@@ -24,18 +24,17 @@ import { UsersModule } from '@modules/users/users.module'
 import { UsersAuthModule } from '@modules/users-auth/users-auth.module'
 import { BullModule } from '@nestjs/bullmq'
 import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
-import { ServeStaticModule } from '@nestjs/serve-static'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { SentryModule } from '@sentry/nestjs/setup'
 import type { Redis } from 'ioredis'
 import { I18nModule } from 'nestjs-i18n'
 import { LoggerModule } from 'nestjs-pino'
-import { envSchema } from '../env.schema'
 import { AppController } from './app.controller'
 import { PathTraversalMiddleware, RequestIdMiddleware } from './common'
-import { API_RATE_LIMITS, appConfigs } from './common/config'
+import { API_RATE_LIMITS } from './common/config'
+import { appConfigModuleOptions } from './common/config/config-module.options'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 import { HttpCacheInterceptor } from './common/interceptors/http-cache.interceptor'
 import { i18nOptions } from './i18n/i18n.config'
@@ -45,34 +44,7 @@ import { i18nOptions } from './i18n/i18n.config'
     SentryModule.forRoot(),
     LoggerModule.forRoot(loggerOptions),
     I18nModule.forRoot(i18nOptions),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['.env', '.env.local', '.env.production', '.env.development'],
-      load: appConfigs,
-      validate: (env) => envSchema.parse(env),
-    }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'storage', 'public'),
-      serveRoot: '/static',
-      serveStaticOptions: {
-        index: false,
-        fallthrough: false,
-        dotfiles: 'deny', // Deny access to hidden files (.env, .git, etc.)
-        redirect: false,
-        setHeaders: (res) => {
-          // Prevent directory listing and sensitive file access
-          res.setHeader('X-Content-Type-Options', 'nosniff')
-          res.setHeader('X-Frame-Options', 'DENY')
-
-          // Custom error handling for static files
-          res.on('finish', () => {
-            if (res.statusCode === 404) {
-              res.statusMessage = 'Resource not found'
-            }
-          })
-        },
-      },
-    }),
+    ConfigModule.forRoot(appConfigModuleOptions),
     ThrottlerModule.forRootAsync({
       imports: [CacheModule],
       inject: [REDIS_CLIENT],
@@ -81,16 +53,7 @@ import { i18nOptions } from './i18n/i18n.config'
         storage: new RedisThrottlerStorage(redis),
       }),
     }),
-    BullModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        connection: {
-          host: config.getOrThrow('REDIS_HOST'),
-          port: config.getOrThrow('REDIS_PORT'),
-          password: config.get('REDIS_PASSWORD'),
-        },
-      }),
-    }),
+    BullModule.forRootAsync(bullRootAsyncOptions),
     PrismaModule,
     CacheModule,
     StorageModule,

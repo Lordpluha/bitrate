@@ -38,7 +38,7 @@ export const useLogin = (
       return response.data
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: authQueryKeys.artist() })
+      void queryClient.invalidateQueries({ queryKey: authQueryKeys.artist() })
       options?.onSuccess?.(
         data,
         variables,

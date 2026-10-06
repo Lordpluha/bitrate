@@ -65,8 +65,17 @@ export function buildSortOrderBy<Field extends string>(
     case 'title':
       primary = { title: order }
       break
+    case 'name':
+      primary = { name: order }
+      break
+    case 'slug':
+      primary = { slug: order }
+      break
     case 'processingStatus':
       primary = { processingStatus: order }
+      break
+    case 'releaseDate':
+      primary = { releaseDate: order }
       break
     case 'monthlyListeners':
       primary = { monthlyListeners: order }

@@ -2,7 +2,7 @@ import type { ApiPaths } from '@bitrate/contracts'
 import { HttpClient } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { firstValueFrom } from 'rxjs'
-import type { Page, TakeDownInput } from '@domain/shared'
+import type { BatchResult, Page, TakeDownInput } from '@domain/shared'
 import {
   type ListTracksQuery,
   PROCESSING_ATTEMPTS_PAGE_SIZE,
@@ -14,19 +14,14 @@ import {
   TrackRepository,
 } from '@domain/track'
 import { ADMIN_API } from '../http/api.config'
+import { batchResultDto, buildBatchBody, toBatchResult } from '../http/batch-result.dto'
 import { buildTakeDownBody } from '../http/take-down.dto'
 import { toResourceWriteError } from '../http/to-resource-write-error'
 import { fetchPage } from '../http/wire-page'
 import { processingAttemptPageDto } from './processing-attempt.dto'
 import { toProcessingAttempt } from './processing-attempt.mapper'
 import { trackDetailDto, trackPageDto } from './track.dto'
-import {
-  toTrack,
-  toTrackDetail,
-  toWireProcessingStatus,
-  toWireTrackSort,
-  toWireTrackStatus,
-} from './track.mapper'
+import { toTrack, toTrackDetail, toTrackListFilters } from './track.mapper'
 
 /** Bound to the HEAD operation's own query type, so a renamed `bitrate` param is a compile error here. */
 type ProbeAudioQuery = NonNullable<
@@ -44,16 +39,7 @@ export class HttpTrackRepository extends TrackRepository {
       url: this.base,
       page,
       limit,
-      filters: {
-        q: filter.query,
-        processingStatus:
-          filter.processingStatus === undefined
-            ? undefined
-            : toWireProcessingStatus(filter.processingStatus),
-        status: filter.status === undefined ? undefined : toWireTrackStatus(filter.status),
-        sort: filter.sort ? toWireTrackSort(filter.sort.field) : undefined,
-        order: filter.sort?.direction,
-      },
+      filters: toTrackListFilters(filter),
       schema: trackPageDto,
       toDomain: toTrack,
     })
@@ -77,6 +63,14 @@ export class HttpTrackRepository extends TrackRepository {
     } catch (error) {
       throw toResourceWriteError(error, 'deactivate')
     }
+  }
+
+  override async takeDownMany(ids: readonly string[]): Promise<BatchResult> {
+    const response = await firstValueFrom(
+      this.http.post<unknown>(`${this.base}/batch/take-down`, buildBatchBody(ids)),
+    )
+
+    return toBatchResult(batchResultDto.parse(response))
   }
 
   override async restore({ id, reason }: TakeDownInput): Promise<void> {

@@ -4,26 +4,17 @@ import { connectionsConfig } from './connections'
 import { cookieConfig } from './cookie.config'
 import { mailConfig } from './mail.config'
 import { s3Config } from './s3.config'
-import { storageConfigFactory } from './storage.config'
 import { webConfig } from './web.config'
 
 export { API_RATE_LIMITS, AUTH_ROUTE_THROTTLE } from './rate-limit.config'
 
 /** The app configs value. */
-export const appConfigs = [
-  cookieConfig,
-  storageConfigFactory,
-  connectionsConfig,
-  mailConfig,
-  s3Config,
-  webConfig,
-]
+export const appConfigs = [cookieConfig, connectionsConfig, mailConfig, s3Config, webConfig]
 
 /** Defines the app config. */
 export type AppConfig = envType & {
   [cookieConfig.KEY]: ConfigType<typeof cookieConfig>
   [connectionsConfig.KEY]: ConfigType<typeof connectionsConfig>
-  [storageConfigFactory.KEY]: ConfigType<typeof storageConfigFactory>
   [mailConfig.KEY]: ConfigType<typeof mailConfig>
   [s3Config.KEY]: ConfigType<typeof s3Config>
   [webConfig.KEY]: ConfigType<typeof webConfig>

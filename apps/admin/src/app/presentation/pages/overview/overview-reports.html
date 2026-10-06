@@ -1,0 +1,68 @@
+<section class="space-y-6 p-8">
+  <header class="flex flex-wrap items-start justify-between gap-4">
+    <div class="space-y-1">
+      <a
+        routerLink="/"
+        queryParamsHandling="preserve"
+        class="text-sm text-muted-foreground underline-offset-4 hover:underline"
+        >Back to overview</a
+      >
+      <h1 class="text-xl font-semibold text-foreground">Reports by entity type</h1>
+      <p class="text-sm text-muted-foreground">
+        What kind of content is being reported, and how that has moved over time.
+      </p>
+    </div>
+    <button
+      hlmBtn
+      size="sm"
+      variant="outline"
+      type="button"
+      [disabled]="loading()"
+      (click)="reload()"
+    >
+      Reload
+    </button>
+  </header>
+
+  <section aria-labelledby="reports-by-type-heading" class="space-y-3">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <h2 id="reports-by-type-heading" class="text-sm font-semibold text-foreground">
+        Reports filed
+      </h2>
+      <div class="flex gap-2" role="group" aria-label="Chart range">
+        @for (option of rangeOptions; track option) {
+          <button
+            hlmBtn
+            size="sm"
+            [variant]="range.state().days === option ? 'default' : 'outline'"
+            type="button"
+            [attr.aria-pressed]="range.state().days === option"
+            (click)="setRange(option)"
+          >
+            {{ option }}d
+          </button>
+        }
+      </div>
+    </div>
+
+    <app-collection-status
+      [loading]="loading()"
+      [failure]="failure()"
+      [isEmpty]="false"
+      emptyMessage="Nothing to show yet."
+    />
+
+    <app-bar-chart
+      title="Reports filed per day, by entity type"
+      [description]="description()"
+      [categories]="categories()"
+      [series]="series()"
+      [stacked]="true"
+      [headline]="headline()"
+      [loading]="loading()"
+      [failure]="chartFailure()"
+    >
+      <app-overview-status-strip [items]="typeTotals()" />
+    </app-bar-chart>
+  </section>
+</section>

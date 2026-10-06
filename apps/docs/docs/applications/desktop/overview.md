@@ -11,19 +11,14 @@ Complete guide for developing and running the Tauri desktop application.
 - [🚀 Run Options](#-run-options)
   - [Local Run](#option-1-local-run-recommended)
   - [Docker UI only](#option-2-docker-ui-only)
-  - [Docker with VNC](#option-3-docker-with-vnc)
 - [🔌 Available Ports](#-available-ports)
-- [⚙️ Management Commands (VNC)](#️-management-commands-vnc)
-- [🔧 Configuration](#-configuration)
-- [🔍 Debugging](#-debugging)
-- [🐛 Common Issues](#-common-issues)
 - [📊 Options Comparison](#-options-comparison)
 
 ---
 
 ## 🚀 Run Options
 
-The desktop application can be run in three ways:
+The desktop application can be run in two ways:
 
 ### Option 1: Local Run (recommended)
 
@@ -117,45 +112,6 @@ a bare `docker compose` fails from the repository root, because the compose file
 
 ---
 
-### Option 3: Docker with VNC
-
-Full Tauri application with GUI access via browser.
-
-#### Quick Start
-
-```bash
-# Stop the regular desktop container if running
-task desktop:down
-
-# Start the VNC version
-cd apps/desktop
-docker compose -f docker-compose.vnc.yml up --build
-```
-
-**⏱️ First build will take ~5-10 minutes** (downloading dependencies, compiling Rust).
-
-#### Accessing the application
-
-**1. noVNC (browser) - easiest**
-
-```
-http://localhost:6080/vnc.html
-```
-
-- Click "Connect"
-- Enter password: `bitrate`
-- You will see the desktop with the Tauri application
-
-**2. VNC client (RealVNC, TigerVNC, Remmina)**
-
-```
-vnc://localhost:5900
-```
-
-- Password: `bitrate`
-
----
-
 ## 🔌 Available Ports
 
 ### For Option 2 (Docker UI only)
@@ -163,148 +119,6 @@ vnc://localhost:5900
 | Port | Purpose |
 |------|---------|
 | 1420 | Vite dev server |
-
-### For Option 3 (Docker VNC)
-
-| Port | Purpose |
-|------|---------|
-| 5900 | VNC server |
-| 6080 | noVNC (web interface) |
-| 1421 | Vite dev server |
-
----
-
-## ⚙️ Management Commands (VNC)
-
-```bash
-# Start in background
-docker compose -f docker-compose.vnc.yml up -d --build
-
-# View logs
-docker compose -f docker-compose.vnc.yml logs -f
-
-# Stop
-docker compose -f docker-compose.vnc.yml down
-
-# Enter container
-docker compose -f docker-compose.vnc.yml exec desktop-vnc bash
-
-# Rebuild without cache
-docker compose -f docker-compose.vnc.yml build --no-cache
-```
-
----
-
-## 🔧 Configuration
-
-### Changing screen resolution (VNC)
-
-In `apps/desktop/docker-compose.vnc.yml`:
-
-```yaml
-environment:
-  - RESOLUTION=1920x1080x24  # change to desired
-```
-
-Available resolutions:
-- `1920x1080x24` (Full HD)
-- `1280x720x24` (HD)
-- `2560x1440x24` (2K)
-- `3840x2160x24` (4K)
-
----
-
-## 🔍 Debugging
-
-### Check processes (VNC)
-
-```bash
-docker compose -f docker-compose.vnc.yml exec desktop-vnc ps aux | grep -E "Xvfb|x11vnc|tauri"
-```
-
-### Manual application start
-
-```bash
-docker compose -f docker-compose.vnc.yml exec desktop-vnc bash
-cd /app/apps/desktop
-pnpm tauri dev
-```
-
-### Check VNC
-
-```bash
-curl http://localhost:6080
-```
-
-### View Tauri logs
-
-```bash
-docker compose -f docker-compose.vnc.yml logs | grep tauri
-```
-
----
-
-## 🐛 Common Issues
-
-### Black screen in VNC
-
-**Cause:** Xvfb starts slowly on first boot.
-
-**Solution:**
-- Wait 30-60 seconds after connecting
-- Check logs: `docker compose -f docker-compose.vnc.yml logs -f`
-- Make sure Xvfb is running:
-  `docker compose -f docker-compose.vnc.yml exec desktop-vnc ps aux | grep Xvfb`
-
-### Error "port is already allocated"
-
-**Cause:** Port is occupied by another container.
-
-**Solution:**
-```bash
-# Stop the regular desktop container
-task desktop:down
-
-# Or change ports in docker-compose.vnc.yml
-```
-
-### Application doesn't appear
-
-**Cause:** Tauri did not start or crashed.
-
-**Solution:**
-```bash
-# Check if Tauri started
-docker compose -f docker-compose.vnc.yml logs | grep tauri
-
-# Enter container and start manually
-docker compose -f docker-compose.vnc.yml exec desktop-vnc bash
-cd /app/apps/desktop
-pnpm tauri dev
-```
-
-### VNC won't connect
-
-**Solution:**
-```bash
-# Check if container is running
-docker compose -f docker-compose.vnc.yml ps
-
-# Check VNC server logs
-docker compose -f docker-compose.vnc.yml logs | grep x11vnc
-
-# Restart
-docker compose -f docker-compose.vnc.yml restart
-```
-
-### Slow performance
-
-**Cause:** VNC runs without GPU acceleration.
-
-**Solution:**
-- This is expected for VNC mode
-- For fast development, use local execution
-- VNC is intended for CI/CD or demonstrations
 
 ---
 
@@ -314,7 +128,6 @@ docker compose -f docker-compose.vnc.yml restart
 |--------|---------------|-----|------------|------------|-------|------------|
 | **Local** | ✅ | ✅ | ✅ | Low | Fast | - |
 | **Docker UI** | ❌ | Browser | ✅ | Low | Fast | ~9.4 GB |
-| **Docker VNC** | ✅ | ✅ | ✅ | Medium | Slow | ~12.5 GB |
 
 ### When to use each option
 
@@ -328,19 +141,12 @@ docker compose -f docker-compose.vnc.yml restart
 - ✅ UI development without Tauri
 - ✅ Quick preview of changes
 
-**Docker VNC:**
-- ✅ CI/CD GUI testing
-- ✅ Application demonstrations
-- ✅ Development on a remote server
-- ✅ No local GUI environment
-
 ---
 
 ## 📚 Additional Resources
 
 - [Tauri Documentation](https://tauri.app/)
 - [Rust Documentation](https://doc.rust-lang.org/)
-- VNC README (`apps/desktop/VNC-README.md`) - detailed VNC documentation
 - [Vite Documentation](https://vitejs.dev/)
 
 ---
@@ -357,14 +163,7 @@ pnpm --filter @bitrate/desktop tauri dev
 task desktop:up
 ```
 
-### Docker VNC
-```bash
-cd apps/desktop && docker compose -f docker-compose.vnc.yml up --build
-```
-
 ### Stop
 ```bash
 task desktop:down
-# or, for the VNC stack
-cd apps/desktop && docker compose -f docker-compose.vnc.yml down
 ```

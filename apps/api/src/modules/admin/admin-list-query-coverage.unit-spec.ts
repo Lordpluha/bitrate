@@ -1,4 +1,6 @@
 import { describe, expect, it, jest } from '@jest/globals'
+import { AdminAlbumsController } from '@modules/admin/albums/admin-albums.controller'
+import { ListAdminAlbumsQuerySchema } from '@modules/admin/albums/dtos'
 import { AdminArtistsController } from '@modules/admin/artists/admin-artists.controller'
 import {
   ListAdminArtistsQuerySchema,
@@ -11,6 +13,10 @@ import { AdminModerationController } from '@modules/admin/moderation/admin-moder
 import { ListReportsQuerySchema } from '@modules/admin/moderation/dtos'
 import { AdminOverviewController } from '@modules/admin/overview/admin-overview.controller'
 import { GetOverviewSeriesQuerySchema } from '@modules/admin/overview/dtos'
+import { AdminPlaylistsController } from '@modules/admin/playlists/admin-playlists.controller'
+import { ListAdminPlaylistsQuerySchema } from '@modules/admin/playlists/dtos'
+import { AdminPodcastsController } from '@modules/admin/podcasts/admin-podcasts.controller'
+import { ListAdminPodcastsQuerySchema } from '@modules/admin/podcasts/dtos'
 import { AdminTracksController } from '@modules/admin/tracks/admin-tracks.controller'
 import {
   ListAdminTracksQuerySchema,
@@ -52,6 +58,24 @@ type ListRouteCase = {
  * — see the ApiBody lesson in `api-rules.md` this generalises to query params.
  */
 const LIST_ROUTES: ListRouteCase[] = [
+  {
+    name: 'AdminAlbumsController.list',
+    controller: AdminAlbumsController,
+    handlerName: 'list',
+    schema: ListAdminAlbumsQuerySchema,
+  },
+  {
+    name: 'AdminPlaylistsController.list',
+    controller: AdminPlaylistsController,
+    handlerName: 'list',
+    schema: ListAdminPlaylistsQuerySchema,
+  },
+  {
+    name: 'AdminPodcastsController.list',
+    controller: AdminPodcastsController,
+    handlerName: 'list',
+    schema: ListAdminPodcastsQuerySchema,
+  },
   {
     name: 'AdminTracksController.list',
     controller: AdminTracksController,
@@ -104,6 +128,12 @@ const LIST_ROUTES: ListRouteCase[] = [
     name: 'AdminOverviewController.getSeries',
     controller: AdminOverviewController,
     handlerName: 'getSeries',
+    schema: GetOverviewSeriesQuerySchema,
+  },
+  {
+    name: 'AdminOverviewController.getReportsByType',
+    controller: AdminOverviewController,
+    handlerName: 'getReportsByType',
     schema: GetOverviewSeriesQuerySchema,
   },
   {

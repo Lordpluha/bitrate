@@ -1,15 +1,11 @@
 import { randomUUID } from 'node:crypto'
-import { IMAGE_EXTENSION_BY_MIME } from '@common/utils/image'
 import { applyDecorators, BadRequestException, UseInterceptors } from '@nestjs/common'
 import { FileFieldsInterceptor } from '@nestjs/platform-express'
-import { diskStorage } from 'multer'
-
-import { uploadDestination } from './track-media'
+import { diskStorage, memoryStorage, type StorageEngine } from 'multer'
+import { getUploadTempDir } from './audio-scratch'
 
 /** Upload ceiling shared by the audio and cover parts of a track submission. */
 const MAX_UPLOAD_BYTES = 50 * 1024 * 1024
-
-/** Audio uploads stay private; covers are served publicly. */
 
 const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']
 const ALLOWED_COVER_TYPES = ['image/gif', 'image/jpeg', 'image/png', 'image/webp']
@@ -22,9 +18,33 @@ const AUDIO_EXTENSION_BY_MIME: Record<string, string> = {
 }
 
 /** Chooses a server-owned extension so a client filename cannot control response MIME. */
-function uploadExtension(file: Express.Multer.File): string {
-  if (file.fieldname === 'audio') return AUDIO_EXTENSION_BY_MIME[file.mimetype] ?? ''
-  return IMAGE_EXTENSION_BY_MIME[file.mimetype as keyof typeof IMAGE_EXTENSION_BY_MIME] ?? ''
+function audioExtension(file: Express.Multer.File): string {
+  return AUDIO_EXTENSION_BY_MIME[file.mimetype] ?? ''
+}
+
+/**
+ * Multer engine for a track submission. Audio streams to a private temporary directory (it is
+ * large, and the master is then moved into STORAGE_SERVICE); a cover is held in memory and
+ * uploaded to STORAGE_SERVICE by the service, so no image is ever written to local disk.
+ */
+function createTrackUploadStorage(): StorageEngine {
+  const audio = diskStorage({
+    destination: (_req, _file, cb) => {
+      try {
+        cb(null, getUploadTempDir())
+      } catch (error) {
+        cb(error as Error, '')
+      }
+    },
+    filename: (_req, file, cb) => cb(null, `${randomUUID()}${audioExtension(file)}`),
+  })
+  const cover = memoryStorage()
+  const engineFor = (file: Express.Multer.File) => (file.fieldname === 'audio' ? audio : cover)
+
+  return {
+    _handleFile: (req, file, cb) => engineFor(file)._handleFile(req, file, cb),
+    _removeFile: (req, file, cb) => engineFor(file)._removeFile(req, file, cb),
+  }
 }
 
 /**
@@ -43,10 +63,7 @@ export const TrackFilesInterceptor = () =>
         ],
         {
           limits: { fileSize: MAX_UPLOAD_BYTES },
-          storage: diskStorage({
-            destination: (_req, file, cb) => cb(null, uploadDestination(file)),
-            filename: (_req, file, cb) => cb(null, `${randomUUID()}${uploadExtension(file)}`),
-          }),
+          storage: createTrackUploadStorage(),
           fileFilter: (_req, file, cb) => {
             if (file.fieldname === 'audio' && !ALLOWED_AUDIO_TYPES.includes(file.mimetype)) {
               return cb(new BadRequestException('Invalid audio file type'), false)

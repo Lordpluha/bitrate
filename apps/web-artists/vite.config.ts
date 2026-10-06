@@ -25,7 +25,14 @@ export default defineConfig({
      * a fetch handler that exits immediately under `node` — there is nothing to deploy. Nitro
      * wraps it into the self-contained .output/server/index.mjs the Dockerfile runs.
      */
-    nitroV2Plugin(),
+    nitroV2Plugin({
+      /**
+       * Without a date Nitro warns and falls back to 2024-04-03. Pinning that same date keeps
+       * the preset behaviour the server already ships with; moving it forward is a deliberate
+       * upgrade, not a side effect of silencing the warning.
+       */
+      compatibilityDate: '2024-04-03',
+    }),
     /** react's vite plugin must come after start's vite plugin. */
     viteReact(),
   ],

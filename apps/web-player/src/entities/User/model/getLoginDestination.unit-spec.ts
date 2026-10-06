@@ -9,12 +9,10 @@ describe('getLoginDestination', () => {
     )
   })
 
-  it.each([
-    undefined,
-    null,
-    {},
-    { requires2fa: false },
-  ])('routes an authenticated response to the player', (response) => {
-    expect(getLoginDestination(response)).toBe(ROUTES.main)
-  })
+  it.each([undefined, null, {}, { requires2fa: false }])(
+    'routes an authenticated response to the player',
+    (response) => {
+      expect(getLoginDestination(response)).toBe(ROUTES.main)
+    },
+  )
 })

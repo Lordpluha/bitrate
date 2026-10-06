@@ -169,13 +169,13 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player:buildcache,mode=max
           secrets: |
             turbo_token=${{ secrets.TURBO_TOKEN }}
+            sentry_auth_token=${{ secrets.SENTRY_AUTH_TOKEN }}
           build-args: |
             API_URL=${{ env.BUILD_API_URL }}
             NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_SITE_URL=${{ env.BUILD_NEXT_PUBLIC_SITE_URL }}
             NEXT_PUBLIC_SENTRY_DSN=${{ env.BUILD_NEXT_PUBLIC_SENTRY_DSN }}
             NEXT_PUBLIC_SENTRY_ENVIRONMENT=${{ env.BUILD_NEXT_PUBLIC_SENTRY_ENVIRONMENT }}
-            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             SENTRY_RELEASE=${{ github.sha }}
           target: production
 
@@ -201,12 +201,12 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/web-player-pr-${{ github.event.pull_request.number }}:buildcache,mode=max
           secrets: |
             turbo_token=${{ secrets.TURBO_TOKEN }}
+            sentry_auth_token=${{ secrets.SENTRY_AUTH_TOKEN }}
           build-args: |
             API_URL=${{ env.BUILD_API_URL }}
             NEXT_PUBLIC_API_URL=${{ env.BUILD_NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_SITE_URL=${{ env.BUILD_NEXT_PUBLIC_SITE_URL }}
             NEXT_PUBLIC_SENTRY_DSN=${{ env.BUILD_NEXT_PUBLIC_SENTRY_DSN }}
             NEXT_PUBLIC_SENTRY_ENVIRONMENT=${{ env.BUILD_NEXT_PUBLIC_SENTRY_ENVIRONMENT }}
-            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             SENTRY_RELEASE=${{ github.sha }}
           target: production

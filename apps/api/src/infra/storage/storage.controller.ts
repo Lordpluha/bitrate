@@ -17,7 +17,6 @@ import { ConfigService } from '@nestjs/config'
 import { ApiTags } from '@nestjs/swagger'
 import type { Request, Response } from 'express'
 import { GetImagePresignedUrlSwagger, StreamSignedStorageObjectSwagger } from './decorators'
-import { LocalStorageService } from './local-storage.service'
 import { verifySignedStorageToken } from './signed-storage-token'
 import type { StorageObjectStream } from './storage.types'
 
@@ -25,13 +24,12 @@ const COVER_KEY_PATTERN = /^(tracks|albums|playlists)\/[^/]+\/cover\.(gif|jpe?g|
 const PROFILE_IMAGE_KEY_PATTERN =
   /^(artists|users)\/[^/]+\/(avatar|background)\.(gif|jpe?g|png|webp)$/i
 
-/** Serves local-storage objects through signed, time-limited tokens (the local presigned-URL route). */
+/** Serves storage objects through signed, time-limited tokens issued by the storage service. */
 @ApiTags('Storage')
 @Controller({ path: 'storage', version: '1' })
 export class StorageController {
   /** Creates a new instance. */
   constructor(
-    private readonly localStorage: LocalStorageService,
     private readonly config: ConfigService<AppConfig>,
     @Inject(STORAGE_SERVICE) private readonly storage: StorageService,
   ) {}
@@ -50,7 +48,7 @@ export class StorageController {
     return { url: await this.storage.getPresignedUrl(key, expiresIn), expiresIn }
   }
 
-  /** Streams a local object addressed by a signed token, honoring an HTTP Range. */
+  /** Streams an object, through STORAGE_SERVICE, addressed by a signed token, honoring an HTTP Range. */
   @StreamSignedStorageObjectSwagger()
   @Get('objects/:token')
   async streamSignedObject(
@@ -63,7 +61,7 @@ export class StorageController {
 
     let data: StorageObjectStream
     try {
-      data = await this.localStorage.getObjectStream(key, req.headers.range)
+      data = await this.storage.getObjectStream(key, req.headers.range)
     } catch {
       throw new NotFoundException('Object not found')
     }

@@ -7,6 +7,10 @@
     </p>
   </header>
 
+  @if (canExport()) {
+    <app-export-csv-button [exporter]="exportCsv" />
+  }
+
   <div class="flex flex-wrap gap-2">
     <button
       hlmBtn
@@ -61,6 +65,17 @@
   />
 
   @if (collection.items().length > 0) {
+    <app-batch-action-bar
+      noun="report"
+      [rows]="batchRows()"
+      [actions]="batchActions()"
+      [pending]="batchPending()"
+      [result]="batchResult()"
+      (confirmed)="runBatch($event)"
+      (cleared)="selection.clear()"
+      (closed)="closeBatch()"
+    />
+
     <div hlmTableContainer>
       <table hlmTable>
         <caption hlmCaption class="sr-only">
@@ -68,6 +83,16 @@
         </caption>
         <thead hlmTHead>
           <tr hlmTr>
+            @if (batchActions().length > 0) {
+              <th hlmTh scope="col" class="w-8">
+                <input
+                  type="checkbox"
+                  aria-label="Select all reports on this page"
+                  [checked]="selection.allSelected(selectableIds())"
+                  (change)="selection.toggleAll(selectableIds())"
+                />
+              </th>
+            }
             <th hlmTh scope="col">Reported</th>
             <th hlmTh scope="col">Reason</th>
             <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'status')">
@@ -96,6 +121,18 @@
         <tbody hlmTBody>
           @for (report of collection.items(); track report.id) {
             <tr hlmTr>
+              @if (batchActions().length > 0) {
+                <td hlmTd>
+                  <input
+                    type="checkbox"
+                    [attr.aria-label]="
+                      'Select ' + report.entityType + ' report ' + report.id.slice(0, 8)
+                    "
+                    [checked]="selection.has(report.id)"
+                    (change)="selection.toggle(report.id)"
+                  />
+                </td>
+              }
               <td hlmTd>
                 <a [routerLink]="['/moderation', report.id]" class="block hover:underline">{{
                   report.entityType

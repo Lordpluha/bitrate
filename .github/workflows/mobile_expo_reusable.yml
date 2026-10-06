@@ -62,11 +62,17 @@ jobs:
             --name ${{ inputs.expo-container-name }} \
             ${{ inputs.expo-image-tag }}
 
-      - name: Wait for server
-        run: sleep 20
-
       - name: Check Metro Bundler
-        run: curl -f http://localhost:8081/status || exit 1
+        # Metro needs longer to start on Expo SDK 57 than a fixed sleep allowed.
+        run: |
+          for attempt in $(seq 1 36); do
+            if curl -sf http://localhost:8081/status; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Metro did not answer on :8081 within 180s"
+          exit 1
 
       - name: Show logs
         if: failure()

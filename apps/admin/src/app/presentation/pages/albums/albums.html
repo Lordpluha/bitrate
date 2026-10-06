@@ -1,0 +1,118 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Albums</h1>
+    <p class="text-sm text-muted-foreground">
+      Taking an album down hides the release only. Its tracks stay as they are and are managed one
+      by one in the catalog.
+    </p>
+  </header>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <form class="flex gap-2" (ngSubmit)="applyFilters()">
+      <label class="sr-only" for="album-search">Search albums</label>
+      <input
+        hlmInput
+        class="w-64"
+        id="album-search"
+        type="search"
+        placeholder="Album title"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+      />
+      <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
+    </form>
+
+    <div class="flex gap-2" role="group" aria-label="Filter by take-down status">
+      @for (option of statusOptions; track option.value) {
+        <button
+          hlmBtn
+          size="sm"
+          type="button"
+          [variant]="query.state().resourceStatus === option.value ? 'default' : 'outline'"
+          [attr.aria-pressed]="query.state().resourceStatus === option.value"
+          (click)="setResourceStatus(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+
+    @if (query.state().artistId) {
+      <button hlmBtn size="sm" variant="outline" type="button" (click)="clearArtist()">
+        Clear artist filter
+      </button>
+    }
+  </div>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="No albums match this filter."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Albums
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'title')">
+              <app-sort-header
+                [field]="'title'"
+                label="Album"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Album
+              </app-sort-header>
+            </th>
+            <th hlmTh scope="col">Artist</th>
+            <th hlmTh scope="col">Type</th>
+            <th hlmTh scope="col">Tracks</th>
+            <th hlmTh scope="col" [attr.aria-sort]="ariaSort(query.state().sort, 'releaseDate')">
+              <app-sort-header
+                [field]="'releaseDate'"
+                label="Released"
+                [sort]="query.state().sort"
+                (sortChange)="setSort($event)"
+              >
+                Released
+              </app-sort-header>
+            </th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (album of collection.items(); track album.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a [routerLink]="['/albums', album.id]" class="hover:underline">{{
+                  album.title
+                }}</a>
+                @if (album.takenDownAt) {
+                  <span hlmBadge variant="destructive" class="ml-2">taken down</span>
+                }
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ album.artistUsername }}</td>
+              <td hlmTd class="text-muted-foreground">{{ album.type }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">{{ album.totalTracks }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{ album.releaseDate ? (album.releaseDate | localizedDate: 'dd.MM.yyyy') : '—' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</section>

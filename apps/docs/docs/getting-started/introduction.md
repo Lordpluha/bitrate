@@ -25,7 +25,7 @@ This is a comprehensive music streaming service including:
 ### Prerequisites
 
 - **Node.js** 24 or above (pinned by `engines`)
-- **pnpm** 10.30.3 exactly (pinned by `packageManager`)
+- **pnpm** 12.7.0 exactly (pinned by `packageManager`)
 - **Docker** & Docker Compose (optional, for containerized development)
 - **PostgreSQL** 15+ (or use Docker)
 

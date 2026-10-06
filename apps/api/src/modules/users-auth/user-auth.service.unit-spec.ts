@@ -77,6 +77,7 @@ describe('UserAuthService', () => {
           email: 'user@example.com',
           password: 'password123',
           username: 'user',
+          acceptLegal: true,
         }),
       ).rejects.toThrow('User with this email already exists')
     })
@@ -90,10 +91,31 @@ describe('UserAuthService', () => {
         email: 'new@example.com',
         password: 'password123',
         username: 'new-user',
+        acceptLegal: true,
       })
 
       expect(users.create).toHaveBeenCalledWith(
         expect.objectContaining({ username: 'new-user', email: 'new@example.com' }),
+      )
+    })
+
+    it('should record which legal revision was accepted and when', async () => {
+      users.getByEmail.mockResolvedValue(null)
+      token.hashPassword.mockResolvedValue('hashed')
+      users.create.mockResolvedValue(buildUser({ email: 'new@example.com', username: 'new-user' }))
+
+      await service.registerUser({
+        email: 'new@example.com',
+        password: 'password123',
+        username: 'new-user',
+        acceptLegal: true,
+      })
+
+      expect(users.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          legalVersion: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+          legalAcceptedAt: expect.any(Date),
+        }),
       )
     })
   })

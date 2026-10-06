@@ -10,16 +10,23 @@ while IFS= read -r -d '' file; do
 
   # `stat -c` is GNU-only; BSD/macOS needs `-f`. Keep the script runnable outside CI.
   size=$(stat -c '%s' -- "$file" 2>/dev/null || stat -f '%z' -- "$file")
-  if [[ "$file" == output/playwright/* || "$file" == pencil/* ]]; then
+  if [[ "$file" == output/playwright/* ]]; then
     violations+=("$file: generated output directory is forbidden")
   fi
-  if [[ "$file" =~ (^|/)generated-[0-9]{10,}\.(png|jpg|jpeg|webp)$ ]]; then
+  # Pencil files and the assets they reference are canonical design sources.
+  # Some legacy Pencil assets retain editor-generated names because renaming them
+  # would break references inside existing design documents.
+  if [[ "$file" =~ (^|/)generated-[0-9]{10,}\.(png|jpg|jpeg|webp)$ ]] &&
+    [[ "$file" != pencil/images/* ]]; then
     violations+=("$file: timestamp-named generated image is forbidden")
   fi
   size_exempt=false
   if [[ "$file" == apps/web-artists/public/carousel/video/*.webm ]]; then
     size_exempt=true
   elif [[ "$file" == apps/web-player/public/images/default-playlist.jpg ]]; then
+    size_exempt=true
+  elif [[ "$file" == pencil/*.pen || "$file" == pencil/*/*.pen ]]; then
+    # Design documents can legitimately exceed the general source-file limit.
     size_exempt=true
   fi
   if (( size > max_file_bytes )) && [[ "$size_exempt" == false ]]; then
