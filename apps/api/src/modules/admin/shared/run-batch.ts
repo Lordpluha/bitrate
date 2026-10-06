@@ -1,12 +1,22 @@
 import { HttpException, HttpStatus, Logger } from '@nestjs/common'
-import type {
-  AdminBatchItemErrorEntity,
-  AdminBatchResultEntity,
-} from './entities/batch-result.entity'
+
+/**
+ * Plain shapes of `AdminBatchResultEntity`, not the class itself: the Swagger compiler plugin
+ * turns a class in a controller's inferred return type into an absolute `require()` of its
+ * source, which breaks the emitted JS in checkouts whose path it cannot relativize. The
+ * response schema comes from the route decorators, which still reference the entity.
+ */
+type BatchItemError = { code: string; message: string }
+type BatchResult = {
+  results: { id: string; status: 'succeeded' | 'failed'; error?: BatchItemError }[]
+  total: number
+  succeeded: number
+  failed: number
+}
 
 const logger = new Logger('AdminBatch')
 
-const toItemError = (error: unknown): AdminBatchItemErrorEntity => {
+const toItemError = (error: unknown): BatchItemError => {
   if (error instanceof HttpException) {
     const status = error.getStatus()
     return { code: HttpStatus[status] ?? String(status), message: error.message }
@@ -24,8 +34,8 @@ const toItemError = (error: unknown): AdminBatchItemErrorEntity => {
 export async function runBatch(
   ids: readonly string[],
   apply: (id: string) => Promise<unknown>,
-): Promise<AdminBatchResultEntity> {
-  const results: AdminBatchResultEntity['results'] = []
+): Promise<BatchResult> {
+  const results: BatchResult['results'] = []
   for (const id of new Set(ids)) {
     try {
       await apply(id)
