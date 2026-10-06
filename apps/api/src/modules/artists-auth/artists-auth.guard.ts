@@ -49,6 +49,13 @@ export function ArtistAuth(tokenRequirement: TokenRequirement = 'access') {
             example: UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN,
           },
           error: { type: 'string', example: 'Unauthorized' },
+          code: {
+            type: 'string',
+            description:
+              'Stable machine-readable error code (the message key); omitted for untranslated legacy messages.',
+            enum: Object.values(UNAUTHORIZED_ERRORS),
+            example: UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN,
+          },
         },
       },
     }),
