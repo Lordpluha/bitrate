@@ -42,13 +42,17 @@ describe('Release identifiers (HTTP)', () => {
         .send({ ...body, expectedUpdatedAt: version })
 
     it.each([
-      ['saves', '036000291452'],
-      ['clears', null],
-    ])('%s the release barcode', async (_action, upc) => {
-      prismaMock.release.updateManyAndReturn.mockResolvedValue([{ ...advanced, upc }])
+      ['saves a UPC-A as its GTIN-13', '036000291452', '0036000291452'],
+      ['saves an EAN-13', '4006381333931', '4006381333931'],
+      ['clears', null, null],
+    ])('%s', async (_action, upc, stored) => {
+      prismaMock.release.updateManyAndReturn.mockResolvedValue([{ ...advanced, upc: stored }])
       const response = await patch({ upc }).expect(200)
-      expect(response.body.upc).toBe(upc)
-      expect(prismaMock.release.updateManyAndReturn.mock.calls[0]?.[0]?.data).toEqual({ upc })
+      expect(response.body.upc).toBe(stored)
+      expect(prismaMock.release.updateManyAndReturn.mock.calls[0]?.[0]?.data).toEqual({
+        upc: stored,
+        updatedAt: expect.any(Date),
+      })
     })
 
     it('rejects a barcode with a wrong check digit', async () => {
@@ -109,10 +113,68 @@ describe('Release identifiers (HTTP)', () => {
 
     it('hides a recording that is not on this release', async () => {
       transactionMock.artistTrackDraft.updateManyAndReturn.mockResolvedValue([])
+      transactionMock.track.updateManyAndReturn.mockResolvedValue([])
+      transactionMock.releaseTrack.findFirst.mockResolvedValue(null)
       await patch({ isrc: 'USRC17607839' }).expect(404)
     })
 
-    it('reports a code already used by another recording', async () => {
+    describe('on a linked catalogue recording', () => {
+      beforeEach(() => {
+        transactionMock.artistTrackDraft.updateManyAndReturn.mockResolvedValue([])
+      })
+
+      it('fills a missing code on a recording the artist owns', async () => {
+        transactionMock.track.updateManyAndReturn.mockResolvedValue([
+          { id: trackDraftId, isrc: 'USRC17607839' },
+        ] as never)
+        const response = await patch({ isrc: 'US-RC1-76-07839' }).expect(200)
+        expect(response.body.track).toEqual({ id: trackDraftId, isrc: 'USRC17607839' })
+        expect(transactionMock.track.updateManyAndReturn).toHaveBeenCalledWith({
+          where: {
+            id: trackDraftId,
+            artistId: ownerId,
+            deletedAt: null,
+            isrc: null,
+            releases: { some: { releaseId: draft.id } },
+          },
+          data: { isrc: 'USRC17607839' },
+          select: { id: true, isrc: true },
+        })
+      })
+
+      it('keeps an assigned code of a published recording', async () => {
+        transactionMock.track.updateManyAndReturn.mockResolvedValue([])
+        transactionMock.releaseTrack.findFirst.mockResolvedValue({ trackId: trackDraftId } as never)
+        const response = await patch({ isrc: 'USRC17607839' }).expect(409)
+        expect(response.body.message).toBe('This linked recording already has an ISRC')
+        expect(transactionMock.releaseTrack.findFirst.mock.calls[0]?.[0]?.where).toEqual({
+          releaseId: draft.id,
+          track: { id: trackDraftId, artistId: ownerId, deletedAt: null },
+        })
+      })
+
+      it('does not clear the code of a published recording', async () => {
+        await patch({ isrc: null }).expect(404)
+        expect(transactionMock.track.updateManyAndReturn).not.toHaveBeenCalled()
+      })
+    })
+
+    it.each([
+      ['a live catalogue track', 'track'],
+      ['another live draft recording', 'artistTrackDraft'],
+    ] as const)('reports a code already used by %s', async (_owner, model) => {
+      transactionMock[model].findFirst.mockResolvedValue({ id: 'other-recording' } as never)
+      const response = await patch({ isrc: 'USRC17607839' }).expect(409)
+      expect(response.body.message).toBe('This ISRC is already used by another recording')
+      expect(transactionMock[model].findFirst.mock.calls[0]?.[0]?.where).toEqual({
+        isrc: 'USRC17607839',
+        deletedAt: null,
+        id: { not: trackDraftId },
+      })
+      expect(transactionMock.artistTrackDraft.updateManyAndReturn).not.toHaveBeenCalled()
+    })
+
+    it('reports a code taken by a concurrent write', async () => {
       transactionMock.artistTrackDraft.updateManyAndReturn.mockRejectedValue(uniqueViolation())
       const response = await patch({ isrc: 'USRC17607839' }).expect(409)
       expect(response.body.message).toBe('This ISRC is already used by another recording')

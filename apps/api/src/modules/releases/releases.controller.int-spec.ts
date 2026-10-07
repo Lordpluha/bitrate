@@ -138,6 +138,26 @@ describe('Release drafts (HTTP)', () => {
     expect(response.body.participant).not.toHaveProperty('releaseId')
   })
 
+  // Split replacement and the workspace read every credit, so a release has a bounded list.
+  it('rejects a contributor beyond the release credit limit', async () => {
+    transactionMock.release.updateManyAndReturn.mockResolvedValue([draft])
+    transactionMock.releaseContributor.count.mockResolvedValue(50)
+    const response = await request(app.getHttpServer())
+      .post(`/api/v1/releases/${draft.id}/contributors`)
+      .set('x-test-artist', ownerId)
+      .send({
+        displayName: 'Taylor Reid',
+        roles: ['PERFORMER'],
+        expectedUpdatedAt: draft.updatedAt.toISOString(),
+      })
+      .expect(422)
+    expect(response.body.message).toBe('A release can credit up to 50 contributors')
+    expect(transactionMock.releaseContributor.count).toHaveBeenCalledWith({
+      where: { releaseId: draft.id },
+    })
+    expect(transactionMock.releaseContributor.create).not.toHaveBeenCalled()
+  })
+
   it('requires an artist session to add contributors', async () => {
     await request(app.getHttpServer())
       .post(`/api/v1/releases/${draft.id}/contributors`)
@@ -392,7 +412,7 @@ describe('Release drafts (HTTP)', () => {
       splits: [],
       _count: { trackDrafts: 1, tracks: 1, contributors: 1 },
     }
-    prismaMock.release.findFirst.mockResolvedValue(workspace)
+    transactionMock.release.findFirst.mockResolvedValue(workspace)
     const response = await request(app.getHttpServer())
       .get(`/api/v1/releases/${draft.id}/workspace`)
       .set('x-test-artist', ownerId)
@@ -406,7 +426,7 @@ describe('Release drafts (HTTP)', () => {
       participantCount: 1,
     })
     expect(response.headers['cache-control']).toBe('private, no-store')
-    const args = prismaMock.release.findFirst.mock.calls[0]?.[0]
+    const args = transactionMock.release.findFirst.mock.calls[0]?.[0]
     expect(args).toMatchObject({
       where: { id: draft.id, ownerArtistId: ownerId, deletedAt: null },
       select: {
@@ -431,7 +451,7 @@ describe('Release drafts (HTTP)', () => {
       splits: [],
       _count: { trackDrafts: 51, tracks: 2, contributors: 60 },
     }
-    prismaMock.release.findFirst.mockResolvedValue(workspace)
+    transactionMock.release.findFirst.mockResolvedValue(workspace)
     const response = await request(app.getHttpServer())
       .get(`/api/v1/releases/${draft.id}/workspace`)
       .set('x-test-artist', ownerId)
@@ -455,7 +475,7 @@ describe('Release drafts (HTTP)', () => {
       splits: [],
       _count: { trackDrafts: 0, tracks: 0, contributors: 0 },
     }
-    prismaMock.release.findFirst.mockResolvedValue(workspace)
+    transactionMock.release.findFirst.mockResolvedValue(workspace)
     const response = await request(app.getHttpServer())
       .get(`/api/v1/releases/${draft.id}/workspace`)
       .set('x-test-artist', ownerId)
@@ -471,12 +491,12 @@ describe('Release drafts (HTTP)', () => {
   })
 
   it('hides foreign or deleted workspaces', async () => {
-    prismaMock.release.findFirst.mockResolvedValue(null)
+    transactionMock.release.findFirst.mockResolvedValue(null)
     await request(app.getHttpServer())
       .get(`/api/v1/releases/${draft.id}/workspace`)
       .set('x-test-artist', otherOwnerId)
       .expect(404)
-    expect(prismaMock.release.findFirst).toHaveBeenCalledWith(
+    expect(transactionMock.release.findFirst).toHaveBeenCalledWith(
       expect.objectContaining({
         where: { id: draft.id, ownerArtistId: otherOwnerId, deletedAt: null },
       }),
@@ -492,7 +512,7 @@ describe('Release drafts (HTTP)', () => {
   })
 
   it('does not turn a workspace persistence failure into an empty result', async () => {
-    prismaMock.release.findFirst.mockRejectedValue(new Error('Database unavailable'))
+    transactionMock.release.findFirst.mockRejectedValue(new Error('Database unavailable'))
     await request(app.getHttpServer())
       .get(`/api/v1/releases/${draft.id}/workspace`)
       .set('x-test-artist', ownerId)
@@ -560,7 +580,7 @@ describe('Release drafts (HTTP)', () => {
           status: 'DRAFT',
           updatedAt: draft.updatedAt,
         },
-        data: { title: 'Updated', type: 'EP' },
+        data: { title: 'Updated', type: 'EP', updatedAt: expect.any(Date) },
       }),
     )
   })
@@ -585,7 +605,7 @@ describe('Release drafts (HTTP)', () => {
             status: 'DRAFT',
             updatedAt: draft.updatedAt,
           },
-          data: { scheduledAt: date },
+          data: { scheduledAt: date, updatedAt: expect.any(Date) },
         }),
       )
     },
@@ -601,7 +621,7 @@ describe('Release drafts (HTTP)', () => {
         .send({ ...fields, expectedUpdatedAt: draft.updatedAt.toISOString() })
         .expect(200)
       expect(prismaMock.release.updateManyAndReturn).toHaveBeenCalledWith(
-        expect.objectContaining({ data: fields }),
+        expect.objectContaining({ data: { ...fields, updatedAt: expect.any(Date) } }),
       )
     },
   )

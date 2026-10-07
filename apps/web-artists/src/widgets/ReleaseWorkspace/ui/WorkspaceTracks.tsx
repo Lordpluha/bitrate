@@ -82,6 +82,17 @@ export function WorkspaceTracks({ release, onEditIsrc }: WorkspaceTracksProps) {
                 <p>Linked recording · {duration(track.duration)}</p>
                 <p>{isrcLabel(track.isrc)}</p>
               </div>
+              {/* A published recording can gain a missing ISRC, not change one. */}
+              {draft && !track.isrc && (
+                <Button
+                  aria-label={`Add ISRC for ${track.title}`}
+                  onClick={() => onEditIsrc(track.id)}
+                  size="sm"
+                  variant="outline"
+                >
+                  ISRC
+                </Button>
+              )}
             </li>
           ))}
         </ul>

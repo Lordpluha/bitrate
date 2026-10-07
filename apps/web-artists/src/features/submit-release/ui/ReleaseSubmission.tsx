@@ -19,9 +19,11 @@ export function ReleaseSubmission({
   const id = useId()
   const submit = useSubmitRelease(artistId)
   const withdraw = useWithdrawRelease(artistId)
-  const [reviewed, setReviewed] = useState(false)
-  const blockers = release.readiness.blockers.length
   const expectedUpdatedAt = release.updatedAt
+  // The attestation covers the version it was given for; submit, withdraw or any edit clears it.
+  const [reviewedVersion, setReviewedVersion] = useState<string | null>(null)
+  const reviewed = reviewedVersion === expectedUpdatedAt
+  const blockers = release.readiness.blockers.length
 
   if (release.status === 'SUBMITTED')
     return (
@@ -71,7 +73,7 @@ export function ReleaseSubmission({
           disabled={submit.isPending}
           onChange={(event) => {
             submit.reset()
-            setReviewed(event.target.checked)
+            setReviewedVersion(event.target.checked ? expectedUpdatedAt : null)
           }}
           type="checkbox"
         />

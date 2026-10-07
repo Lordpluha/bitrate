@@ -14,7 +14,9 @@ interface WorkspaceReadinessProps {
 function describeNotice(notice: ReleaseNotice, release: ReleaseWorkspace) {
   if (notice.code === 'UPC_MISSING')
     return 'No UPC yet — a code is needed before delivery'
-  const track = release.trackDrafts.find((item) => item.id === notice.trackId)
+  const track = [...release.trackDrafts, ...release.tracks].find(
+    (item) => item.id === notice.trackId,
+  )
   return `${track?.title ?? 'A recording'} has no ISRC yet — a code is needed before delivery`
 }
 
