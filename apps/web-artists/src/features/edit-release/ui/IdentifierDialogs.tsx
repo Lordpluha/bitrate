@@ -1,6 +1,7 @@
 import { Button, Input } from '@bitrate/ui-react'
 import {
   formatIsrc,
+  formatUpc,
   normalizeIsrc,
   type ReleaseWorkspace,
   useSaveTrackIsrc,
@@ -147,7 +148,7 @@ export function UpcDialog({
     <IdentifierDialog
       error={mutation.error}
       hint="Optional. 12-digit UPC or 13-digit EAN. Leave empty if your distributor will assign one."
-      initial={release.upc ?? ''}
+      initial={release.upc ? formatUpc(release.upc) : ''}
       label="Release UPC/EAN"
       onClose={onClose}
       onReset={() => mutation.reset()}
@@ -178,7 +179,9 @@ export function IsrcDialog({
 }: IsrcDialogProps) {
   const mutation = useSaveTrackIsrc(artistId)
   const [expectedUpdatedAt] = useState(release.updatedAt)
-  const track = release.trackDrafts.find((item) => item.id === trackId)
+  const track = [...release.trackDrafts, ...release.tracks].find(
+    (item) => item.id === trackId,
+  )
   return (
     <IdentifierDialog
       error={mutation.error}

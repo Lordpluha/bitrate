@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest'
 import {
   basisPointsToPercent,
   describeBlocker,
-  isValidUpc,
+  formatUpc,
   normalizeIsrc,
+  normalizeUpc,
   percentToBasisPoints,
 } from './rights'
 
@@ -32,10 +33,15 @@ describe('release rights model', () => {
     expect(basisPointsToPercent(points)).toBe(percent)
   })
 
-  it('validates barcodes by their check digit', () => {
-    expect(isValidUpc('036000291452')).toBe(true)
-    expect(isValidUpc('4006381333931')).toBe(true)
-    expect(isValidUpc('036000291453')).toBe(false)
+  it('stores barcodes as the GTIN-13 the API returns', () => {
+    expect(normalizeUpc('036000291452')).toBe('0036000291452')
+    expect(normalizeUpc(' 4006381333931 ')).toBe('4006381333931')
+    expect(normalizeUpc('036000291453')).toBeNull()
+  })
+
+  it('shows a stored UPC-A as 12 digits and an EAN-13 unchanged', () => {
+    expect(formatUpc('0036000291452')).toBe('036000291452')
+    expect(formatUpc('4006381333931')).toBe('4006381333931')
   })
 
   it('normalizes ISRCs and rejects malformed ones', () => {
