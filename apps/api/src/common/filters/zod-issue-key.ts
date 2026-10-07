@@ -62,8 +62,8 @@ function sizeKind(issue: ZodIssueLike): string {
 
 /**
  * Maps one zod issue to a dictionary key. Returns undefined when the issue carries a
- * hand-written DTO message — those stay exactly as written (the literal scan allowlists them
- * until they are keyed). A DTO message that is already a key is resolved by the caller.
+ * hand-written DTO message — those stay exactly as written (the literal-message baseline
+ * counts them until they are keyed). A DTO message that is already a key is resolved by the caller.
  *
  * Key naming: `validation.<zod issue code>[.<variant>]` — `too_small`/`too_big` split by value
  * kind (`string`, `number`, `number_exclusive`, `array`, `other`), `invalid_format` by string
