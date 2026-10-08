@@ -10,15 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegistrationRouteImport } from './routes/registration'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as VerifyEmailRouteImport } from './routes/verify-email'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardDistributionRouteImport } from './routes/dashboard.distribution'
+import { Route as DashboardMusicRouteImport } from './routes/dashboard.music'
+import { Route as DashboardTasksRouteImport } from './routes/dashboard.tasks'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
+import { Route as DashboardMusicReleaseIdRouteImport } from './routes/dashboard.music_.$releaseId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -41,19 +53,56 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerifyEmailRoute = VerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardDistributionRoute = DashboardDistributionRouteImport.update({
+  id: '/distribution',
+  path: '/distribution',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardMusicRoute = DashboardMusicRouteImport.update({
+  id: '/music',
+  path: '/music',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardTasksRoute = DashboardTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const LegalSlugRoute = LegalSlugRouteImport.update({
   id: '/legal/$slug',
   path: '/legal/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardMusicReleaseIdRoute = DashboardMusicReleaseIdRouteImport.update({
+  id: '/music_/$releaseId',
+  path: '/music/$releaseId',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/registration': typeof RegistrationRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/verify-email': typeof VerifyEmailRoute
+  '/dashboard/distribution': typeof DashboardDistributionRoute
+  '/dashboard/music': typeof DashboardMusicRoute
+  '/dashboard/tasks': typeof DashboardTasksRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/music/$releaseId': typeof DashboardMusicReleaseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,26 +110,46 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/registration': typeof RegistrationRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/verify-email': typeof VerifyEmailRoute
+  '/dashboard/distribution': typeof DashboardDistributionRoute
+  '/dashboard/music': typeof DashboardMusicRoute
+  '/dashboard/tasks': typeof DashboardTasksRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/music/$releaseId': typeof DashboardMusicReleaseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/registration': typeof RegistrationRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/verify-email': typeof VerifyEmailRoute
+  '/dashboard/distribution': typeof DashboardDistributionRoute
+  '/dashboard/music': typeof DashboardMusicRoute
+  '/dashboard/tasks': typeof DashboardTasksRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/music_/$releaseId': typeof DashboardMusicReleaseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dashboard'
     | '/forgot-password'
     | '/login'
     | '/registration'
     | '/reset-password'
+    | '/verify-email'
+    | '/dashboard/distribution'
+    | '/dashboard/music'
+    | '/dashboard/tasks'
     | '/legal/$slug'
+    | '/dashboard/'
+    | '/dashboard/music/$releaseId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -88,23 +157,38 @@ export interface FileRouteTypes {
     | '/login'
     | '/registration'
     | '/reset-password'
+    | '/verify-email'
+    | '/dashboard/distribution'
+    | '/dashboard/music'
+    | '/dashboard/tasks'
     | '/legal/$slug'
+    | '/dashboard'
+    | '/dashboard/music/$releaseId'
   id:
     | '__root__'
     | '/'
+    | '/dashboard'
     | '/forgot-password'
     | '/login'
     | '/registration'
     | '/reset-password'
+    | '/verify-email'
+    | '/dashboard/distribution'
+    | '/dashboard/music'
+    | '/dashboard/tasks'
     | '/legal/$slug'
+    | '/dashboard/'
+    | '/dashboard/music_/$releaseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   RegistrationRoute: typeof RegistrationRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  VerifyEmailRoute: typeof VerifyEmailRoute
   LegalSlugRoute: typeof LegalSlugRoute
 }
 
@@ -115,6 +199,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -145,6 +236,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/distribution': {
+      id: '/dashboard/distribution'
+      path: '/distribution'
+      fullPath: '/dashboard/distribution'
+      preLoaderRoute: typeof DashboardDistributionRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/music': {
+      id: '/dashboard/music'
+      path: '/music'
+      fullPath: '/dashboard/music'
+      preLoaderRoute: typeof DashboardMusicRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/tasks': {
+      id: '/dashboard/tasks'
+      path: '/tasks'
+      fullPath: '/dashboard/tasks'
+      preLoaderRoute: typeof DashboardTasksRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/legal/$slug': {
       id: '/legal/$slug'
       path: '/legal/$slug'
@@ -152,15 +278,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/music_/$releaseId': {
+      id: '/dashboard/music_/$releaseId'
+      path: '/music/$releaseId'
+      fullPath: '/dashboard/music/$releaseId'
+      preLoaderRoute: typeof DashboardMusicReleaseIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardDistributionRoute: typeof DashboardDistributionRoute
+  DashboardMusicRoute: typeof DashboardMusicRoute
+  DashboardTasksRoute: typeof DashboardTasksRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardMusicReleaseIdRoute: typeof DashboardMusicReleaseIdRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardDistributionRoute: DashboardDistributionRoute,
+  DashboardMusicRoute: DashboardMusicRoute,
+  DashboardTasksRoute: DashboardTasksRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+  DashboardMusicReleaseIdRoute: DashboardMusicReleaseIdRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   RegistrationRoute: RegistrationRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  VerifyEmailRoute: VerifyEmailRoute,
   LegalSlugRoute: LegalSlugRoute,
 }
 export const routeTree = rootRouteImport

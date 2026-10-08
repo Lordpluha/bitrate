@@ -5,20 +5,24 @@ import {
   QueryClientProvider as TanstackQueryClientProvider,
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import type { ReactNode } from 'react'
+import { type ReactNode, useState } from 'react'
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
+const createQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: false,
+      },
     },
-  },
-})
+  })
 
-export const QueryClientProvider = ({ children }: { children: ReactNode }) => (
-  <TanstackQueryClientProvider client={queryClient}>
-    {children}
-    <ReactQueryDevtools initialIsOpen={false} />
-  </TanstackQueryClientProvider>
-)
+export const QueryClientProvider = ({ children }: { children: ReactNode }) => {
+  const [queryClient] = useState(createQueryClient)
+  return (
+    <TanstackQueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </TanstackQueryClientProvider>
+  )
+}
