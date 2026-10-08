@@ -773,16 +773,6 @@ test('rights, splits and identifiers update the readiness checklist', async ({
   await expect(page.getByText('North Label', { exact: true })).toBeVisible()
   await expect(checklist).not.toContainText('Choose the master owner')
 
-  // A new owner is not covered by the earlier accuracy confirmation.
-  await page.getByRole('button', { name: 'Edit rights', exact: true }).click()
-  const accuracy = rights.getByLabel('I confirm this information is accurate')
-  await expect(accuracy).toBeChecked()
-  await rights.getByLabel('Master owner name').fill('South Label')
-  await expect(accuracy).not.toBeChecked()
-  await rights.getByRole('button', { name: 'Save rights', exact: true }).click()
-  await expect(rights).not.toBeVisible()
-  await expect(checklist).toContainText('Confirm the information is accurate')
-
   await page
     .getByRole('button', { name: 'Edit master splits', exact: true })
     .click()
@@ -807,16 +797,8 @@ test('rights, splits and identifiers update the readiness checklist', async ({
   await upc.getByRole('button', { name: 'Cancel', exact: true }).click()
 
   await expect(checklist).toContainText('Add at least one track')
-  const reviewed = page.getByLabel('I reviewed the information in this draft.')
-  await reviewed.check()
+  await page.getByLabel('I reviewed the information in this draft.').check()
   await expect(submit).toBeDisabled()
-
-  // The review attests one version; any saved change asks for it again.
-  await page.getByRole('button', { name: 'Edit rights', exact: true }).click()
-  await rights.getByLabel('I confirm this information is accurate').check()
-  await rights.getByRole('button', { name: 'Save rights', exact: true }).click()
-  await expect(rights).not.toBeVisible()
-  await expect(reviewed).not.toBeChecked()
 })
 
 test('release contributor action is unavailable outside DRAFT', async ({

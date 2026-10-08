@@ -11,12 +11,6 @@ export const RELEASE_SUMMARY_SELECT = {
   updatedAt: true,
 } as const satisfies Prisma.ReleaseSelect
 
-/**
- * Credits per release. The workspace returns them all and split replacement covers them all,
- * so the bound keeps an editor from saving shares for a partial list.
- */
-export const MAX_RELEASE_CONTRIBUTORS = 50
-
 export const RELEASE_CONTRIBUTOR_SELECT = {
   id: true,
   displayName: true,

@@ -53,7 +53,7 @@ export function UpdateReleaseTrackSwagger() {
     ApiOperation({
       summary: 'Set the ISRC of a recording on an owned draft',
       description:
-        'Accepts the code with or without hyphens and stores it compact. Optional for submission; a distributor can assign one later. A draft recording can be set or cleared; a linked catalogue recording of this artist can only gain a missing code.',
+        'Accepts the code with or without hyphens and stores it compact. Optional for submission; a distributor can assign one later.',
     }),
     ApiParam({ name: 'trackId', format: 'uuid' }),
     ApiBody({ type: UpdateReleaseTrackDto }),
@@ -65,8 +65,7 @@ export function UpdateReleaseTrackSwagger() {
     }),
     ApiResponse({
       status: HttpStatus.CONFLICT,
-      description:
-        'Release changed, is no longer a draft, the ISRC is already used, or the linked recording already has one',
+      description: 'Release changed, is no longer a draft, or the ISRC is already used',
     }),
     ApiParam({ name: 'id', format: 'uuid' }),
   )

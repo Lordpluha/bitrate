@@ -37,11 +37,6 @@ export function RightsDialog({
   const ownerType = form.watch('ownerType')
   const busy = mutation.isPending || isSubmitting
   const reset = () => mutation.reset()
-  // Accuracy describes the saved owner, so a new owner must be confirmed again.
-  const changeOwner = () => {
-    reset()
-    form.setValue('accuracyConfirmed', false)
-  }
   const submit = async (values: RightsFormValues) => {
     try {
       await mutation.mutateAsync({
@@ -90,7 +85,7 @@ export function RightsDialog({
               data-initial-focus
               type="radio"
               value="ARTIST"
-              {...form.register('ownerType', { onChange: changeOwner })}
+              {...form.register('ownerType', { onChange: reset })}
             />
             <span>{release.artistName} (this artist)</span>
           </label>
@@ -98,7 +93,7 @@ export function RightsDialog({
             <input
               type="radio"
               value="OTHER"
-              {...form.register('ownerType', { onChange: changeOwner })}
+              {...form.register('ownerType', { onChange: reset })}
             />
             <span>Another owner, such as a label</span>
           </label>
@@ -130,7 +125,7 @@ export function RightsDialog({
               disabled={busy}
               id={`${id}-owner-name`}
               maxLength={255}
-              {...form.register('ownerName', { onChange: changeOwner })}
+              {...form.register('ownerName', { onChange: reset })}
             />
             {errors.ownerName && (
               <p
@@ -161,8 +156,8 @@ export function RightsDialog({
           </label>
         </fieldset>
         <p className="text-sm text-text-secondary">
-          Changing contributors later clears both confirmations; changing the
-          master owner or splits clears the accuracy confirmation.
+          Changing contributors later clears both confirmations; changing splits
+          clears the accuracy confirmation.
         </p>
         {mutation.error && (
           <p className="text-sm text-destructive" role="alert">

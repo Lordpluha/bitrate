@@ -8,7 +8,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common'
-import { AlbumType, Prisma, ReleaseRightType, ReleaseStatus } from '@prisma/client'
+import { AlbumType, type Prisma, ReleaseStatus } from '@prisma/client'
 import type { AddReleaseContributorDto } from './dtos/add-release-contributor.dto'
 import type { CreateReleaseDto } from './dtos/create-release.dto'
 import type { ListReleasesDto } from './dtos/list-releases.dto'
@@ -20,7 +20,6 @@ import type { UpdateReleaseRightsDto } from './dtos/update-release-rights.dto'
 import type { UpdateReleaseTrackDto } from './dtos/update-release-track.dto'
 import { releaseReadiness } from './release-readiness'
 import {
-  MAX_RELEASE_CONTRIBUTORS,
   RELEASE_CONTRIBUTOR_SELECT,
   RELEASE_SUMMARY_SELECT,
   releaseReadinessSelect,
@@ -30,10 +29,6 @@ interface ReleaseTrackIdentifier {
   id: string
   isrc: string | null
 }
-
-const RIGHT_TYPE_COUNT = Object.values(ReleaseRightType).length
-const UPC_TAKEN = 'This UPC is already used by another release'
-const ISRC_TAKEN = 'This ISRC is already used by another recording'
 
 /** A credit change invalidates both rights confirmations. */
 const CLEARED_CONFIRMATIONS = {
@@ -83,47 +78,40 @@ export class ReleasesService {
   }
 
   async updateDraft(ownerArtistId: string, id: string, input: UpdateReleaseDto) {
-    const expected = new Date(input.expectedUpdatedAt)
     // Ownership, lifecycle and version are checked atomically with the write.
-    const [updated] = await this.uniqueIdentifier(UPC_TAKEN, () =>
-      this.prisma.release.updateManyAndReturn({
-        where: {
-          id,
-          ownerArtistId,
-          deletedAt: null,
-          status: ReleaseStatus.DRAFT,
-          updatedAt: expected,
-        },
-        data: {
-          updatedAt: nextVersion(expected),
-          ...(input.title === undefined ? {} : { title: input.title }),
-          ...(input.type === undefined ? {} : { type: input.type }),
-          ...(input.scheduledAt === undefined
-            ? {}
-            : {
-                scheduledAt: input.scheduledAt === null ? null : new Date(input.scheduledAt),
-              }),
-          ...(input.upc === undefined ? {} : { upc: input.upc }),
-        },
-        select: RELEASE_SUMMARY_SELECT,
-      }),
+    const [updated] = await this.uniqueIdentifier(
+      'This UPC is already used by another release',
+      () =>
+        this.prisma.release.updateManyAndReturn({
+          where: {
+            id,
+            ownerArtistId,
+            deletedAt: null,
+            status: ReleaseStatus.DRAFT,
+            updatedAt: new Date(input.expectedUpdatedAt),
+          },
+          data: {
+            ...(input.title === undefined ? {} : { title: input.title }),
+            ...(input.type === undefined ? {} : { type: input.type }),
+            ...(input.scheduledAt === undefined
+              ? {}
+              : {
+                  scheduledAt: input.scheduledAt === null ? null : new Date(input.scheduledAt),
+                }),
+            ...(input.upc === undefined ? {} : { upc: input.upc }),
+          },
+          select: RELEASE_SUMMARY_SELECT,
+        }),
     )
     if (updated) return updated
     await this.findOne(ownerArtistId, id)
     throw new ConflictException('Release changed or is no longer a draft')
   }
 
-  /** Previews are bounded and readiness reads everything; one snapshot keeps them consistent. */
-  workspace(ownerArtistId: string, id: string) {
-    return this.prisma.$transaction((tx) => this.readWorkspace(tx, ownerArtistId, id), {
-      isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
-    })
-  }
-
-  private async readWorkspace(tx: Prisma.TransactionClient, ownerArtistId: string, id: string) {
+  async workspace(ownerArtistId: string, id: string) {
     const activeDrafts = { ownerArtistId, deletedAt: null }
     const activeTracks = { track: { deletedAt: null } }
-    const release = await tx.release.findFirst({
+    const release = await this.prisma.release.findFirst({
       where: { id, ownerArtistId, deletedAt: null },
       select: {
         ...RELEASE_SUMMARY_SELECT,
@@ -159,12 +147,12 @@ export class ReleasesService {
           },
         },
         contributors: {
-          take: MAX_RELEASE_CONTRIBUTORS,
+          take: 50,
           orderBy: [{ displayName: 'asc' }, { id: 'asc' }],
           select: RELEASE_CONTRIBUTOR_SELECT,
         },
         splits: {
-          take: MAX_RELEASE_CONTRIBUTORS * RIGHT_TYPE_COUNT,
+          take: 100,
           orderBy: [{ rightType: 'asc' }, { contributorId: 'asc' }],
           select: { contributorId: true, rightType: true, shareBasisPoints: true },
         },
@@ -178,8 +166,7 @@ export class ReleasesService {
       },
     })
     if (!release) throw new NotFoundException('Release not found')
-    const readiness = await this.readiness(tx, ownerArtistId, id)
-    if (!readiness) throw new NotFoundException('Release not found')
+    const readiness = await this.readiness(this.prisma, ownerArtistId, id)
     const {
       owner,
       contributors,
@@ -194,7 +181,7 @@ export class ReleasesService {
     return {
       ...summary,
       rights: { masterOwnerType, masterOwnerName, writersConfirmedAt, accuracyConfirmedAt },
-      readiness,
+      readiness: readiness ?? { blockers: [], notices: [] },
       artistName: owner.username,
       tracks: tracks.map(({ position, track }) => ({ ...track, position })),
       participants: contributors,
@@ -212,13 +199,6 @@ export class ReleasesService {
         input.expectedUpdatedAt,
         CLEARED_CONFIRMATIONS,
       )
-      // The version lock above serialises concurrent additions to this release.
-      const credited = await tx.releaseContributor.count({ where: { releaseId: id } })
-      if (credited >= MAX_RELEASE_CONTRIBUTORS) {
-        throw new UnprocessableEntityException(
-          `A release can credit up to ${MAX_RELEASE_CONTRIBUTORS} contributors`,
-        )
-      }
       const participant = await tx.releaseContributor.create({
         data: { releaseId: id, displayName: input.displayName, roles: input.roles },
         select: RELEASE_CONTRIBUTOR_SELECT,
@@ -310,11 +290,7 @@ export class ReleasesService {
           status: ReleaseStatus.DRAFT,
           updatedAt: expected,
         },
-        data: {
-          status: ReleaseStatus.SUBMITTED,
-          submittedAt: new Date(),
-          updatedAt: nextVersion(expected),
-        },
+        data: { status: ReleaseStatus.SUBMITTED, submittedAt: new Date() },
         select: RELEASE_SUMMARY_SELECT,
       })
       if (!submitted) throw new ConflictException('Release changed or is no longer a draft')
@@ -324,16 +300,15 @@ export class ReleasesService {
 
   /** Allowed until Bitrate review starts; the saved draft and confirmations are kept. */
   async withdraw(ownerArtistId: string, id: string, input: WithdrawReleaseDto) {
-    const expected = new Date(input.expectedUpdatedAt)
     const [withdrawn] = await this.prisma.release.updateManyAndReturn({
       where: {
         id,
         ownerArtistId,
         deletedAt: null,
         status: ReleaseStatus.SUBMITTED,
-        updatedAt: expected,
+        updatedAt: new Date(input.expectedUpdatedAt),
       },
-      data: { status: ReleaseStatus.DRAFT, submittedAt: null, updatedAt: nextVersion(expected) },
+      data: { status: ReleaseStatus.DRAFT, submittedAt: null },
       select: RELEASE_SUMMARY_SELECT,
     })
     if (withdrawn) return withdrawn
@@ -402,64 +377,18 @@ export class ReleasesService {
   ) {
     return this.prisma.$transaction(async (tx) => {
       const release = await this.lockDraft(tx, ownerArtistId, id, input.expectedUpdatedAt)
-      if (input.isrc !== null) await this.assertIsrcAvailable(tx, input.isrc, trackId)
-      const [track] = await this.uniqueIdentifier<ReleaseTrackIdentifier[]>(ISRC_TAKEN, () =>
-        tx.artistTrackDraft.updateManyAndReturn({
-          where: { id: trackId, releaseId: id, ownerArtistId, deletedAt: null },
-          data: { isrc: input.isrc },
-          select: { id: true, isrc: true },
-        }),
+      const [track] = await this.uniqueIdentifier<ReleaseTrackIdentifier[]>(
+        'This ISRC is already used by another recording',
+        () =>
+          tx.artistTrackDraft.updateManyAndReturn({
+            where: { id: trackId, releaseId: id, ownerArtistId, deletedAt: null },
+            data: { isrc: input.isrc },
+            select: { id: true, isrc: true },
+          }),
       )
-      if (track) return { release, track }
-      if (input.isrc === null) throw new NotFoundException('Recording not found on this release')
-      return {
-        release,
-        track: await this.fillLinkedTrackIsrc(tx, ownerArtistId, id, trackId, input.isrc),
-      }
+      if (!track) throw new NotFoundException('Recording not found on this release')
+      return { release, track }
     })
-  }
-
-  /**
-   * A published recording may gain a missing ISRC here; changing an assigned one would edit the
-   * live catalogue, which is not a draft change.
-   */
-  private async fillLinkedTrackIsrc(
-    tx: Prisma.TransactionClient,
-    ownerArtistId: string,
-    id: string,
-    trackId: string,
-    isrc: string,
-  ): Promise<ReleaseTrackIdentifier> {
-    const owned = { id: trackId, artistId: ownerArtistId, deletedAt: null }
-    const [track] = await this.uniqueIdentifier<ReleaseTrackIdentifier[]>(ISRC_TAKEN, () =>
-      tx.track.updateManyAndReturn({
-        where: { ...owned, isrc: null, releases: { some: { releaseId: id } } },
-        data: { isrc },
-        select: { id: true, isrc: true },
-      }),
-    )
-    if (track) return track
-    const linked = await tx.releaseTrack.findFirst({
-      where: { releaseId: id, track: owned },
-      select: { trackId: true },
-    })
-    if (linked) throw new ConflictException('This linked recording already has an ISRC')
-    throw new NotFoundException('Recording not found on this release')
-  }
-
-  /**
-   * Drafts and catalogue tracks keep ISRCs in separate tables, so each unique index sees
-   * only its own; this check spans both. The indexes still catch a concurrent write.
-   */
-  private async assertIsrcAvailable(
-    tx: Prisma.TransactionClient,
-    isrc: string,
-    recordingId: string,
-  ) {
-    const where = { isrc, deletedAt: null, id: { not: recordingId } }
-    const draft = await tx.artistTrackDraft.findFirst({ where, select: { id: true } })
-    const track = draft ?? (await tx.track.findFirst({ where, select: { id: true } }))
-    if (track) throw new ConflictException(ISRC_TAKEN)
   }
 
   /** Maps a unique-identifier collision to a conflict the artist can act on. */
@@ -489,7 +418,7 @@ export class ReleasesService {
         status: ReleaseStatus.DRAFT,
         updatedAt: expected,
       },
-      data: { ...data, updatedAt: nextVersion(expected) },
+      data: { ...data, updatedAt: new Date(Math.max(Date.now(), expected.getTime() + 1)) },
       select: RELEASE_SUMMARY_SELECT,
     })
     if (!release) {
@@ -502,14 +431,6 @@ export class ReleasesService {
     }
     return release
   }
-}
-
-/**
- * `updatedAt` is the optimistic-lock version. `@updatedAt` alone can repeat the expected value
- * within one millisecond or on a node with a slower clock, so every write moves it forward.
- */
-function nextVersion(expected: Date): Date {
-  return new Date(Math.max(Date.now(), expected.getTime() + 1))
 }
 
 type ReadinessRecord = Prisma.ReleaseGetPayload<{

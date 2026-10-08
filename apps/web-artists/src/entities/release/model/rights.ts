@@ -58,16 +58,13 @@ export function basisPointsToPercent(points: number): string {
 }
 
 const UPC_PATTERN = /^\d{12,13}$/
-/** The API stores barcodes as GTIN-13; a leading zero marks a UPC-A. */
-const GTIN_13_LENGTH = 13
 const ISRC_PATTERN = /^[A-Z]{2}[A-Z0-9]{3}\d{7}$/
 const DISPLAY_ISRC_PATTERN = /^[A-Z]{2}-[A-Z0-9]{3}-\d{2}-\d{5}$/
 
-/** Mirrors the API's GTIN check and stored form so artists see typos before saving. */
-export function normalizeUpc(value: string): string | null {
-  const code = value.trim()
-  if (!UPC_PATTERN.test(code)) return null
-  const digits = [...code].map(Number)
+/** Mirrors the API's GTIN check so artists see typos before saving. */
+export function isValidUpc(value: string): boolean {
+  if (!UPC_PATTERN.test(value)) return false
+  const digits = [...value].map(Number)
   const check = digits.pop()
   const sum = digits
     .reverse()
@@ -76,15 +73,6 @@ export function normalizeUpc(value: string): string | null {
       0,
     )
   return (10 - (sum % 10)) % 10 === check
-    ? code.padStart(GTIN_13_LENGTH, '0')
-    : null
-}
-
-/** Shows a stored GTIN-13 as the 12-digit UPC-A artists know, when it is one. */
-export function formatUpc(upc: string): string {
-  return upc.length === GTIN_13_LENGTH && upc.startsWith('0')
-    ? upc.slice(1)
-    : upc
 }
 
 export function normalizeIsrc(value: string): string | null {

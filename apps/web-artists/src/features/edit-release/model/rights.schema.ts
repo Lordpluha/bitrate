@@ -1,6 +1,6 @@
 import {
+  isValidUpc,
   normalizeIsrc,
-  normalizeUpc,
   percentToBasisPoints,
 } from '@entities/release'
 import { z } from 'zod'
@@ -24,7 +24,7 @@ export type RightsFormValues = z.input<typeof rightsFormSchema>
 /** Identifiers are optional; returns the problem with a filled code, if any. */
 export function upcError(value: string): string | null {
   const code = value.trim()
-  return code === '' || normalizeUpc(code) !== null
+  return code === '' || isValidUpc(code)
     ? null
     : 'Enter 12 or 13 digits with a valid check digit.'
 }

@@ -2,7 +2,6 @@ import type { ApiSchemas } from '@bitrate/contracts'
 import { Button } from '@bitrate/ui-react'
 import {
   basisPointsToPercent,
-  formatUpc,
   type ReleaseWorkspace,
   rightTypeLabels,
   rightTypes,
@@ -56,7 +55,7 @@ export function WorkspaceRights({ release, onAction }: WorkspaceRightsProps) {
         </div>
         <div>
           <dt>UPC/EAN</dt>
-          <dd>{release.upc ? formatUpc(release.upc) : 'Not provided'}</dd>
+          <dd>{release.upc ?? 'Not provided'}</dd>
         </div>
       </dl>
       <ul className="space-y-1 text-sm">

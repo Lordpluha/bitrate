@@ -11,13 +11,13 @@ contributor relationship does not grant workspace access.
 | `GET /api/v1/releases?page=1&limit=20` | Lists that artist's active workspaces, newest first, with `{ data, total, page, limit }`. |
 | `GET /api/v1/releases/:id` | Reads one owned active workspace, including its edit version. |
 | `GET /api/v1/releases/:id/workspace` | Reads summary, active linked recording metadata, optional schedule and credited participants; each relation preview is capped at 50. |
-| `POST /api/v1/releases/:id/contributors` | Adds a name and unique roles to an owned DRAFT using expectedUpdatedAt; credit and release version persist in one transaction. A release credits at most 50 contributors (422). |
+| `POST /api/v1/releases/:id/contributors` | Adds a name and unique roles to an owned DRAFT using expectedUpdatedAt; credit and release version persist in one transaction. |
 | `GET /api/v1/releases/:id/contributors/:contributorId` | Reads exactly one credit and current release version within the owned active release. |
 | `PATCH /api/v1/releases/:id/contributors/:contributorId` | Corrects a DRAFT credit's name/roles with expectedUpdatedAt, preserving its identity, artist link and splits. |
 | `PATCH /api/v1/releases/:id` | Updates title, type, planned date and/or optional UPC of an owned `DRAFT`, requiring the previously read `updatedAt`. |
 | `PATCH /api/v1/releases/:id/rights` | Replaces the master owner and both rights confirmations of a DRAFT. |
 | `PUT /api/v1/releases/:id/splits` | Replaces one right type's shares (≤ 100% in a draft); clears the accuracy confirmation. |
-| `PATCH /api/v1/releases/:id/tracks/:trackId` | Sets or clears the optional ISRC of a draft recording on the DRAFT; a linked catalogue recording of the owner can only gain a missing one. |
+| `PATCH /api/v1/releases/:id/tracks/:trackId` | Sets or clears the optional ISRC of an owned recording on the DRAFT. |
 | `POST /api/v1/releases/:id/submit` | Re-checks readiness and moves DRAFT → SUBMITTED (Bitrate review only); blockers return 422. |
 | `POST /api/v1/releases/:id/withdraw` | Returns SUBMITTED → DRAFT. |
 | `GET /api/v1/artist-music/counts` | Counts the artist's active private recordings and releases. |
@@ -43,8 +43,7 @@ a scheduled date. It does not publish an album or send anything to a distributor
 Rights, splits, identifiers and submission follow
 [ADR-0059](../../../../docs/docs/architecture/0059-release-rights-and-review-submission.md):
 credit changes clear both confirmations, UPC/ISRC are optional notices rather than
-blockers, and the workspace response includes `rights`, `splits` and `readiness`. UPCs
-are stored as GTIN-13; UPC and ISRC are unique among live rows only.
+blockers, and the workspace response includes `rights`, `splits` and `readiness`.
 
 Edit input (copy `expectedUpdatedAt` from the latest GET response):
 
