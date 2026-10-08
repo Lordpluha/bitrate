@@ -1,0 +1,11 @@
+{
+  /* Storybook-only program: the UI-kit stories (the components come in through their imports).
+     Deliberately not `src/**` — the rest of the app needs the generated env module, which
+     Storybook never runs. */
+  "extends": "../tsconfig.app.json",
+  "compilerOptions": {
+    "types": []
+  },
+  "include": ["../src/app/presentation/ui/**/*.stories.ts", "./preview.ts"],
+  "exclude": ["../src/**/*.spec.ts", "../src/**/*.unit-spec.ts"]
+}
