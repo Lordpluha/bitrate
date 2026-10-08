@@ -115,3 +115,10 @@ jobs:
 
       - name: Build the custom element and declarations
         run: pnpm --filter @bitrate/player build
+
+      # Proves the stories still compile against the element. Build only: the player's
+      # Storybook is not published as an image (that is ui-react's storybook.yml).
+      - name: Build Storybook
+        run: pnpm --filter @bitrate/player storybook:build
+        env:
+          STORYBOOK_DISABLE_TELEMETRY: 1
