@@ -74,6 +74,17 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
+      # Every run used to compile Tauri's whole Rust dependency tree from scratch, which is most
+      # of `tauri build` on all three OSes. Keyed per OS by the host triple; only develop saves,
+      # since its caches are readable from every branch and PR caches would only crowd the
+      # 10 GB repository quota.
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: apps/desktop/src-tauri -> target
+          shared-key: tauri-desktop
+          save-if: ${{ github.ref == 'refs/heads/develop' }}
+
       - name: Install Linux system dependencies
         if: ${{ runner.os == 'Linux' }}
         timeout-minutes: 15
