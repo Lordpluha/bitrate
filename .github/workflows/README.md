@@ -96,10 +96,11 @@ by the Expo workflow action.
 
 ### Desktop
 - desktop.yml — Desktop pipeline entry workflow.
-- desktop_native_reusable.yml / desktop_docker_reusable.yml — reusable Desktop blocks.
+- desktop_native_reusable.yml — native Tauri build (linux on PRs, all three OSes on develop/master).
+  There is no desktop Docker image: it never built and nothing deployed it.
 
 ### UI React / Visual Tests
-- ui_react.yml — UI React test entry workflow.
+- ui_react.yml — UI React entry workflow: checks plus the Storybook image.
 - ui_react_reusable.yml — Biome plus unit, integration, snapshot, and Chromium screenshot
   projects.
 
@@ -117,22 +118,17 @@ by the Expo workflow action.
   needs a browser.
 
 ### Storybook (ui.bitrate.me)
-- storybook.yml — Storybook image entry workflow, path-filtered on packages/ui-react.
-- storybook_reusable.yml — builds packages/ui-react/Dockerfile (target: production) and
-  publishes it. Split from the ui_react pair so only this workflow needs packages: write,
-  and so the ui-react checks are not repeated per image build.
+- The Storybook image is part of ui_react.yml (`storybook-pr` / `storybook-develop` /
+  `storybook-master` jobs): Storybook lives in packages/ui-react, so its checks and image sit
+  with the package's other checks. Only those jobs get packages: write.
+- ui_react_storybook_reusable.yml — builds packages/ui-react/Dockerfile (target: production)
+  and publishes it. It does not repeat the ui-react checks. Only develop/master export the
+  registry build cache; a PR reads it and leaves nothing behind in GHCR.
 
 ### Docs (docs.bitrate.me)
 - docs.yml — Docs pipeline entry workflow.
 - docs_reusable.yml — Docusaurus typecheck plus the apps/docs/Dockerfile
   (target: production) image build and publish.
-
-### Integration Tests (Docker Compose)
-- web-integration-test.yml — integration tests for PR and push (develop/master) + workflow_dispatch.
-- web-integration-test_reusable.yml — reusable integration test scenario. It combines
-  `infra/docker-compose.preprod.yaml` with `infra/docker-compose.ci.yaml` to run the image
-  contents without developer bind mounts. Development images build `ui-react` before
-  startup; health checks require successful HTTP responses from both web apps and the API.
 
 ### Release (changesets)
 
@@ -322,57 +318,43 @@ auth token exists.
 secrets in a context the caller does not choose, and it would reintroduce exactly the implicit
 coupling this chain removed.
 
+### Installable apps on the Release page
+
+- release_apps_reusable.yml — builds at the release tag and attaches to its GitHub Release:
+  Tauri installers (AppImage/.deb/.rpm, .msi/.exe, aarch64 .dmg) and an Android APK built with
+  Gradle on the runner. Versions are pinned to the tag (Android `versionCode` = `MMmmpp`).
+  Called by release_publish_reusable.yml (`apps` job, parallel to the images, not gating the
+  deploy).
+- release_apps.yml — hand-run backfill/retry for an existing tag (`--clobber` replaces assets).
+
+iOS is not attached: an .ipa cannot be installed from a download.
+
+| Secret | Notes |
+|---|---|
+| `ANDROID_KEYSTORE_BASE64` | `base64 -w0 upload.jks`. Without it the APK keeps the debug signature (`…-android-debug-signed.apk`) and every release needs an uninstall first. |
+| `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD` | For the keystore above. Never rotate the key: Android refuses updates signed by a different one. |
+
+Desktop installers are unsigned (no Apple/Windows certificates), so macOS Gatekeeper and Windows
+SmartScreen warn on first launch.
+
 ### Security
-- security.yml — security checks for develop/master (push, schedule, workflow_dispatch).
+- security.yml — security checks on PRs, develop/master pushes and a weekly schedule.
+- security_reusable.yml — one scanner per area, so nothing is reported twice and nothing is
+  unowned (the table at the top of the file is the source of truth):
+  artifacts (`check:artifacts`), npm deps (`pnpm audit`), Cargo deps + Dockerfile/compose
+  misconfiguration (Trivy fs), secrets (TruffleHog), code (CodeQL TS/JS + Rust), workflows
+  (zizmor), and third-party runtime images (Trivy, schedule only).
+- .github/actions/scan-image — Trivy over the OS packages of an image, called inside the job
+  that built it. **No workflow builds an image just to scan it**, so a pull request builds each
+  image at most once.
 
 ### Monitoring
 - monitoring.yml — release monitoring for develop/master (schedule, push, workflow_dispatch).
 - monitoring_reusable.yml — monitoring orchestration reusable workflow.
-- monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_image_size_reusable.yml / monitoring_ssl_reusable.yml / monitoring_backup_reusable.yml — smaller reusable monitoring blocks.
-- monitoring_restore_reusable.yml — the **restore rehearsal**. Runs on the master job only.
-  Pulls the newest object out of the backup bucket, restores it into a throwaway Postgres, and
-  asserts the schema and row counts that come back. `monitoring_backup_reusable.yml` proves a
-  recent file is on the server; this proves the off-host copy is a database.
-
-### Backups
-
-- backup.yml — daily off-host production backup (`17 3 * * *`) plus `workflow_dispatch`.
-- backup_reusable.yml — the implementation.
-
-**Where the credentials are, and are not.** `infra/backup.sh` runs on the server, writes into
-`$DEPLOY_PATH/backups`, and uploads nothing. `backup_reusable.yml` streams those files to the
-runner over SSH, verifies a sha256 on both ends, and uploads from the runner. The
-object-storage keys therefore live only in GitHub — a host that is lost or compromised cannot
-reach the copies that outlive it. Do **not** "simplify" this by pushing to the bucket from the
-server; see [ADR-0033](../../apps/docs/docs/architecture/0033-off-host-backups-and-object-storage.md).
-
-The script is piped in over stdin (`ssh … bash -s < infra/backup.sh`) rather than run from the
-server's checkout, so the version that runs is the one in the workflow's commit, whether or not
-the last deploy synced `infra/`.
-
-**Deliberately not bound to the `production` GitHub Environment.** That environment gates on a
-human reviewer, and a backup waiting for an approval at 03:00 is a backup that did not happen.
-Its configuration is repository-scoped, like the monitoring workflow's:
-
-| Name | Kind | Notes |
-|---|---|---|
-| `BACKUP_S3_ENDPOINT` | variable | `https://…`. Any S3 API — R2, B2, Wasabi, Hetzner, MinIO. |
-| `BACKUP_S3_BUCKET` | variable | The backup bucket. **Not** the media bucket. |
-| `BACKUP_S3_REGION` | variable | Optional, defaults to `auto` (correct for R2). |
-| `BACKUP_S3_PREFIX` | variable | Optional, defaults to `production`. |
-| `BACKUP_S3_ACCESS_KEY_ID` | secret | Needs `PutObject` + `ListBucket`. No delete. |
-| `BACKUP_S3_SECRET_ACCESS_KEY` | secret | |
-| `BACKUP_S3_READ_ACCESS_KEY_ID` | secret | Optional, read-only, for the restore rehearsal. Falls back to the writing key. |
-| `BACKUP_S3_READ_SECRET_ACCESS_KEY` | secret | |
-| `SERVER_HOST` / `SERVER_USER` / `SSH_PRIVATE_KEY` / `DEPLOY_PATH` | secrets | Already set; shared with monitoring.yml. |
-| `SERVER_SSH_HOST_KEY` | secret | Optional. Without it the host key is scanned once per run (trust on first use). |
-
-Retention in the bucket is a **lifecycle rule set on the bucket**, not a workflow step, so the
-credential above never needs `DeleteObject` and a leaked key cannot destroy the history it just
-wrote. `prune-remote` exists for a provider with no lifecycle support and is off.
+- monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_ssl_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, backup.yml, web-integration-test.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 
@@ -388,7 +370,11 @@ on the VPS. The develop-branch reference for each:
 | web-artists | `ghcr.io/lordpluha/bitrate/web-artists:develop` | web_artists.yml |
 | admin | `ghcr.io/lordpluha/bitrate/admin:develop` | admin.yml |
 | docs | `ghcr.io/lordpluha/bitrate/docs:develop` | docs.yml |
-| storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | storybook.yml |
+| storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | ui_react.yml |
+
+Nothing else is published as an image. mobile-web is built and smoke-tested locally in
+mobile.yml but not pushed; build caches live under `cache/<app>:buildcache` and only develop
+and release builds write them, so a pull request leaves nothing behind in GHCR.
 
 Each also gets an immutable `:develop-<sha>` tag. A release build publishes three:
 `:master` (moving), `:<sha>` (immutable) and `:v<x.y.z>` (immutable — the rollback handle). The
@@ -421,8 +407,8 @@ esbuild `define` only substitutes the names `angular.json` lists. **One** deploy
 | web-artists | `VITE_API_URL` | web_artists_reusable.yml |
 | admin | `NG_APP_API_URL` | admin_reusable.yml |
 
-`security_reusable.yml` repeats that mapping for the images it builds to scan; the two must
-stay consistent or a scan builds a differently-configured image than the one that ships.
+The image scan runs on exactly the image these build args produced, in the same job, so there is
+no second mapping to keep in sync.
 
 api, docs, and storybook take no environment-specific build args and are the same image in
 every environment.

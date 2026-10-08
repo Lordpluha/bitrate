@@ -20,57 +20,46 @@ jobs:
     timeout-minutes: 45
     strategy:
       fail-fast: false
+      # Only the requested platforms get a runner. Filtering with step-level `if:` instead still
+      # started (and queued) a Windows and a macOS runner on every PR just to skip every step.
       matrix:
-        include:
-          - os: ubuntu-latest
-            platform: linux
-          - os: windows-latest
-            platform: windows
-          - os: macos-latest
-            platform: macos
+        include: ${{ fromJSON(inputs.platform == 'linux' && '[{"os":"ubuntu-latest","platform":"linux"}]' || inputs.platform == 'windows' && '[{"os":"windows-latest","platform":"windows"}]' || inputs.platform == 'macos' && '[{"os":"macos-latest","platform":"macos"}]' || '[{"os":"ubuntu-latest","platform":"linux"},{"os":"windows-latest","platform":"windows"},{"os":"macos-latest","platform":"macos"}]') }}
 
     steps:
       - name: Checkout repository
-        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
         uses: actions/checkout@v7
 
       - name: Setup Node.js and pnpm
-        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
         uses: ./.github/actions/setup-node-pnpm
         with:
           install: "false"
 
       - name: Setup Rust
-        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
         uses: dtolnay/rust-toolchain@stable
 
+      # Every run used to compile Tauri's whole Rust dependency tree from scratch, which is most
+      # of `tauri build` on all three OSes. Keyed per OS by the host triple; only develop saves,
+      # since its caches are readable from every branch and PR caches would only crowd the
+      # 10 GB repository quota.
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: apps/desktop/src-tauri -> target
+          shared-key: tauri-desktop
+          save-if: ${{ github.ref == 'refs/heads/develop' }}
+
       - name: Install Linux system dependencies
-        if: ${{ (inputs.platform == 'all' || inputs.platform == matrix.platform) && runner.os == 'Linux' }}
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libwebkit2gtk-4.1-dev \
-            build-essential \
-            curl \
-            wget \
-            file \
-            libxdo-dev \
-            libssl-dev \
-            libgtk-3-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev \
-            pkg-config
+        if: ${{ runner.os == 'Linux' }}
+        timeout-minutes: 15
+        uses: ./.github/actions/tauri-linux-deps
 
       - name: Install desktop dependencies
-        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
         run: pnpm install --frozen-lockfile --filter @bitrate/desktop...
 
       - name: Build desktop app (native)
-        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
         run: pnpm --filter @bitrate/desktop run tauri build
 
       - name: Upload native artifacts
-        if: ${{ inputs.platform == 'all' || inputs.platform == matrix.platform }}
         uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.artifact-prefix }}-${{ matrix.platform }}

@@ -30,6 +30,8 @@ on:
 permissions:
   contents: read
   packages: write
+  # The image scan uploads its SARIF to code scanning.
+  security-events: write
 
 env:
   REGISTRY: ghcr.io
@@ -65,47 +67,31 @@ jobs:
 
       # The production target serves the prebuilt bundle from nginx on 8080 and reads no
       # configuration, so this image carries no build args and is environment-agnostic.
-      - name: Build Docs Docker image (with registry cache export)
-        if: ${{ inputs.cache-to-registry }}
+      - name: Build Docs Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/docs/Dockerfile
           push: ${{ inputs.push-image }}
+          # Loaded as well, so the scan below reads this exact image instead of a rebuild.
+          load: true
           tags: ${{ inputs.tags }}
-          cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache
-            type=gha,scope=docs
-          cache-to: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache
+          # Only develop/master export the cache: a PR that writes the shared ref replaces
+          # develop's layers with its own, and a gzip mode=max export cost minutes per run.
+          cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/docs:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
             turbo_token=${{ secrets.TURBO_TOKEN }}
           target: production
 
-      # PR builds (cache-to-registry: false) never write the canonical docs:buildcache ref —
-      # a PR that never merges would otherwise leave abandoned layers there, and concurrent PRs
-      # writing to the same ref race each other (a real "blob not found" was seen from exactly
-      # this kind of race). type=gha was the original stand-in, but GHA's cache API writes the
-      # same content roughly 10x slower than a registry push does (measured on this repo's own
-      # apps: ~23s via registry vs ~270s via GHA for equivalent layers) — mostly the
-      # dependencies-stage pnpm store, which is exactly the layer worth caching between commits
-      # on the same PR. A PR-scoped registry tag gets registry's write speed without touching
-      # the canonical ref: nothing outside this PR ever reads cache/docs-pr-<N>:buildcache, and
-      # an abandoned PR just leaves an unused image behind (no different from any other stale
-      # PR image tag already accumulating in this registry).
-      - name: Build Docs Docker image (PR-scoped registry cache)
-        if: ${{ !inputs.cache-to-registry }}
-        uses: docker/build-push-action@v7
+      - name: Resolve image reference for scanning
+        id: scan-ref
+        env:
+          TAGS: ${{ inputs.tags }}
+        run: echo "ref=$(printf '%s\n' "$TAGS" | sed -e 's/^[[:space:]]*//' -e '/^$/d' | head -n1)" >> "$GITHUB_OUTPUT"
+
+      - name: Scan image
+        uses: ./.github/actions/scan-image
         with:
-          context: .
-          file: ./apps/docs/Dockerfile
-          push: ${{ inputs.push-image }}
-          tags: ${{ inputs.tags }}
-          cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs-pr-${{ github.event.pull_request.number }}:buildcache
-          cache-to: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs-pr-${{ github.event.pull_request.number }}:buildcache,mode=max
-          secrets: |
-            turbo_token=${{ secrets.TURBO_TOKEN }}
-          target: production
+          image-ref: ${{ steps.scan-ref.outputs.ref }}
+          service: docs
