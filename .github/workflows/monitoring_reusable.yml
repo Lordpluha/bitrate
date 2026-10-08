@@ -14,7 +14,6 @@ on:
 
 permissions:
   contents: read
-  packages: read
   issues: write
 
 jobs:
@@ -25,11 +24,6 @@ jobs:
 
   dependencies:
     uses: ./.github/workflows/monitoring_dependency_reusable.yml
-    with:
-      branch-name: ${{ inputs.branch-name }}
-
-  image-size:
-    uses: ./.github/workflows/monitoring_image_size_reusable.yml
     with:
       branch-name: ${{ inputs.branch-name }}
 

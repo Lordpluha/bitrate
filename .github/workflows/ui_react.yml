@@ -97,6 +97,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
     uses: ./.github/workflows/ui_react_storybook_reusable.yml
     with:
@@ -111,6 +112,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
     uses: ./.github/workflows/ui_react_storybook_reusable.yml
     with:
@@ -127,6 +129,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     # Release builds are dispatched, never pushed into existence.
     #
     # A release does not come through here -- release_publish.yml calls this

@@ -96,7 +96,8 @@ by the Expo workflow action.
 
 ### Desktop
 - desktop.yml — Desktop pipeline entry workflow.
-- desktop_native_reusable.yml / desktop_docker_reusable.yml — reusable Desktop blocks.
+- desktop_native_reusable.yml — native Tauri build (linux on PRs, all three OSes on develop/master).
+  There is no desktop Docker image: it never built and nothing deployed it.
 
 ### UI React / Visual Tests
 - ui_react.yml — UI React entry workflow: checks plus the Storybook image.
@@ -317,15 +318,25 @@ secrets in a context the caller does not choose, and it would reintroduce exactl
 coupling this chain removed.
 
 ### Security
-- security.yml — security checks for develop/master (push, schedule, workflow_dispatch).
+- security.yml — security checks on PRs, develop/master pushes and a weekly schedule.
+- security_reusable.yml — one scanner per area, so nothing is reported twice and nothing is
+  unowned (the table at the top of the file is the source of truth):
+  artifacts (`check:artifacts`), npm deps (`pnpm audit`), Cargo deps + Dockerfile/compose
+  misconfiguration (Trivy fs), secrets (TruffleHog), code (CodeQL TS/JS + Rust), workflows
+  (zizmor), and third-party runtime images (Trivy, schedule only).
+- .github/actions/scan-image — Trivy over the OS packages of an image, called inside the job
+  that built it. **No workflow builds an image just to scan it**, so a pull request builds each
+  image at most once.
+- ghcr_retention.yml — weekly GHCR pruning: keeps `v*`, `develop`, `master` and the newest ten
+  other tags per image, and each cache's `buildcache`; removes untagged and superseded versions.
 
 ### Monitoring
 - monitoring.yml — release monitoring for develop/master (schedule, push, workflow_dispatch).
 - monitoring_reusable.yml — monitoring orchestration reusable workflow.
-- monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_image_size_reusable.yml / monitoring_ssl_reusable.yml — smaller reusable monitoring blocks.
+- monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_ssl_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, ghcr_retention.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 
@@ -342,6 +353,10 @@ on the VPS. The develop-branch reference for each:
 | admin | `ghcr.io/lordpluha/bitrate/admin:develop` | admin.yml |
 | docs | `ghcr.io/lordpluha/bitrate/docs:develop` | docs.yml |
 | storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | ui_react.yml |
+
+Nothing else is published as an image. mobile-web is built and smoke-tested locally in
+mobile.yml but not pushed; build caches live under `cache/<app>:buildcache` and only develop
+and release builds write them, so a pull request leaves nothing behind in GHCR.
 
 Each also gets an immutable `:develop-<sha>` tag. A release build publishes three:
 `:master` (moving), `:<sha>` (immutable) and `:v<x.y.z>` (immutable — the rollback handle). The
@@ -374,8 +389,8 @@ esbuild `define` only substitutes the names `angular.json` lists. **One** deploy
 | web-artists | `VITE_API_URL` | web_artists_reusable.yml |
 | admin | `NG_APP_API_URL` | admin_reusable.yml |
 
-`security_reusable.yml` repeats that mapping for the images it builds to scan; the two must
-stay consistent or a scan builds a differently-configured image than the one that ships.
+The image scan runs on exactly the image these build args produced, in the same job, so there is
+no second mapping to keep in sync.
 
 api, docs, and storybook take no environment-specific build args and are the same image in
 every environment.
