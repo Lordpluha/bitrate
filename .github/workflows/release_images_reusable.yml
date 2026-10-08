@@ -146,7 +146,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: ./.github/workflows/storybook_reusable.yml
+    uses: ./.github/workflows/ui_react_storybook_reusable.yml
     with:
       push-image: ${{ inputs.push-image }}
       tags: |
@@ -154,3 +154,5 @@ jobs:
         ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:${{ github.sha }}
         ${{ inputs.moving-tag != '' && format('ghcr.io/lordpluha/{0}/storybook:{1}', github.event.repository.name, inputs.moving-tag) || '' }}
       timeout-minutes: 60
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}

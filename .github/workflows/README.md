@@ -99,7 +99,7 @@ by the Expo workflow action.
 - desktop_native_reusable.yml / desktop_docker_reusable.yml — reusable Desktop blocks.
 
 ### UI React / Visual Tests
-- ui_react.yml — UI React test entry workflow.
+- ui_react.yml — UI React entry workflow: checks plus the Storybook image.
 - ui_react_reusable.yml — Biome plus unit, integration, snapshot, and Chromium screenshot
   projects.
 
@@ -116,10 +116,12 @@ by the Expo workflow action.
   needs a browser.
 
 ### Storybook (ui.bitrate.me)
-- storybook.yml — Storybook image entry workflow, path-filtered on packages/ui-react.
-- storybook_reusable.yml — builds packages/ui-react/Dockerfile (target: production) and
-  publishes it. Split from the ui_react pair so only this workflow needs packages: write,
-  and so the ui-react checks are not repeated per image build.
+- The Storybook image is part of ui_react.yml (`storybook-pr` / `storybook-develop` /
+  `storybook-master` jobs): Storybook lives in packages/ui-react, so its checks and image sit
+  with the package's other checks. Only those jobs get packages: write.
+- ui_react_storybook_reusable.yml — builds packages/ui-react/Dockerfile (target: production)
+  and publishes it. It does not repeat the ui-react checks. Only develop/master export the
+  registry build cache; a PR reads it and leaves nothing behind in GHCR.
 
 ### Docs (docs.bitrate.me)
 - docs.yml — Docs pipeline entry workflow.
@@ -323,7 +325,7 @@ coupling this chain removed.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_image_size_reusable.yml / monitoring_ssl_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, storybook.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 
@@ -339,7 +341,7 @@ on the VPS. The develop-branch reference for each:
 | web-artists | `ghcr.io/lordpluha/bitrate/web-artists:develop` | web_artists.yml |
 | admin | `ghcr.io/lordpluha/bitrate/admin:develop` | admin.yml |
 | docs | `ghcr.io/lordpluha/bitrate/docs:develop` | docs.yml |
-| storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | storybook.yml |
+| storybook | `ghcr.io/lordpluha/bitrate/storybook:develop` | ui_react.yml |
 
 Each also gets an immutable `:develop-<sha>` tag. A release build publishes three:
 `:master` (moving), `:<sha>` (immutable) and `:v<x.y.z>` (immutable — the rollback handle). The
