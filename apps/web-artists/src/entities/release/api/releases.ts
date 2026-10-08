@@ -5,13 +5,11 @@ import {
   type CreateReleaseValues,
   releaseSummarySchema,
 } from '../model/release.schema'
-import { normalizeUpc } from '../model/rights'
 
 const identifierConflictSchema = z.object({
   message: z.enum([
     'This UPC is already used by another release',
     'This ISRC is already used by another recording',
-    'This linked recording already has an ISRC',
   ]),
 })
 
@@ -74,8 +72,7 @@ export async function updateRelease({
         (input.scheduledAt === null
           ? null
           : new Date(input.scheduledAt).toISOString())) ||
-    (input.upc !== undefined &&
-      parsed.data.upc !== (input.upc === null ? null : normalizeUpc(input.upc)))
+    (input.upc !== undefined && parsed.data.upc !== (input.upc?.trim() ?? null))
   )
     throw new Error(unconfirmed)
   return parsed.data

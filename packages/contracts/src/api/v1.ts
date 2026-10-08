@@ -1958,7 +1958,7 @@ export interface paths {
     head?: never
     /**
      * Set the ISRC of a recording on an owned draft
-     * @description Accepts the code with or without hyphens and stores it compact. Optional for submission; a distributor can assign one later. A draft recording can be set or cleared; a linked catalogue recording of this artist can only gain a missing code.
+     * @description Accepts the code with or without hyphens and stores it compact. Optional for submission; a distributor can assign one later.
      */
     patch: operations['ReleasesController_updateTrack_v1']
     trace?: never
@@ -4393,7 +4393,7 @@ export interface components {
       type?: 'ALBUM' | 'SINGLE' | 'EP' | 'COMPILATION'
       /** @description Planned instant, ISO 8601 with milliseconds and timezone; null clears the plan. Does not submit delivery. */
       scheduledAt?: string | null
-      /** @description Release barcode (UPC-A or EAN-13), stored as its 13-digit GTIN; null clears it. Optional for submission. */
+      /** @description Release barcode (UPC-A or EAN-13); null clears it. Optional for submission. */
       upc?: string | null
       /**
        * Format: date-time
@@ -22463,13 +22463,6 @@ export interface operations {
         }
         content?: never
       }
-      /** @description The release already credits the maximum of 50 contributors */
-      422: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
       /** @description Too many requests */
       429: {
         headers: {
@@ -23233,7 +23226,7 @@ export interface operations {
         }
         content?: never
       }
-      /** @description Release changed, is no longer a draft, the ISRC is already used, or the linked recording already has one */
+      /** @description Release changed, is no longer a draft, or the ISRC is already used */
       409: {
         headers: {
           [name: string]: unknown

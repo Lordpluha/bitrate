@@ -2,7 +2,9 @@ import { ReleaseRightType } from '@prisma/client'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 import { FULL_SHARE_BASIS_POINTS } from '../release-readiness'
-import { MAX_RELEASE_CONTRIBUTORS } from '../releases.select'
+
+/** Matches the workspace's contributor preview bound. */
+const MAX_SHARES = 50
 
 const ShareSchema = z.strictObject({
   contributorId: z.uuid(),
@@ -19,7 +21,7 @@ export const ReplaceReleaseSplitsSchema = z.strictObject({
   rightType: z.enum(ReleaseRightType),
   shares: z
     .array(ShareSchema)
-    .max(MAX_RELEASE_CONTRIBUTORS)
+    .max(MAX_SHARES)
     .refine(
       (shares) => new Set(shares.map((share) => share.contributorId)).size === shares.length,
       'List each contributor once',

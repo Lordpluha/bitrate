@@ -1,13 +1,12 @@
 import { describe, expect, it } from '@jest/globals'
-import { normalizeIsrc, normalizeUpc } from './release-identifiers'
+import { isValidUpc, normalizeIsrc } from './release-identifiers'
 
 describe('release identifiers', () => {
   it.each([
-    ['036000291452', '0036000291452'], // UPC-A
-    ['0036000291452', '0036000291452'], // the same GTIN spelled as EAN-13
-    [' 4006381333931 ', '4006381333931'], // EAN-13
-  ])('stores the barcode %p as the GTIN-13 %p', (input, stored) => {
-    expect(normalizeUpc(input)).toBe(stored)
+    '036000291452', // UPC-A
+    '4006381333931', // EAN-13
+  ])('accepts the barcode %s with a valid check digit', (upc) => {
+    expect(isValidUpc(upc)).toBe(true)
   })
 
   it.each([
@@ -17,7 +16,7 @@ describe('release identifiers', () => {
     ['letters', '03600029145A'],
     ['separators', '0-36000-29145-2'],
   ])('rejects a barcode with %s', (_reason, upc) => {
-    expect(normalizeUpc(upc)).toBeNull()
+    expect(isValidUpc(upc)).toBe(false)
   })
 
   it.each([

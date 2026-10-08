@@ -25,9 +25,5 @@ export function AddReleaseContributorSwagger() {
       status: HttpStatus.CONFLICT,
       description: 'Release changed or is no longer a draft',
     }),
-    ApiResponse({
-      status: HttpStatus.UNPROCESSABLE_ENTITY,
-      description: 'The release already credits the maximum of 50 contributors',
-    }),
   )
 }

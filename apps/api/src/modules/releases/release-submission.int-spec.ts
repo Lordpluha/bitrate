@@ -1,13 +1,4 @@
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  jest,
-} from '@jest/globals'
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from '@jest/globals'
 import type { INestApplication } from '@nestjs/common'
 import { prismaMock } from '@test/mocks'
 import request from 'supertest'
@@ -76,7 +67,7 @@ describe('Release submission (HTTP)', () => {
             status: 'DRAFT',
             updatedAt: draft.updatedAt,
           },
-          data: { status: 'SUBMITTED', submittedAt: expect.any(Date), updatedAt: expect.any(Date) },
+          data: { status: 'SUBMITTED', submittedAt: expect.any(Date) },
         }),
       )
     })
@@ -150,7 +141,7 @@ describe('Release submission (HTTP)', () => {
             status: 'SUBMITTED',
             updatedAt: draft.updatedAt,
           },
-          data: { status: 'DRAFT', submittedAt: null, updatedAt: expect.any(Date) },
+          data: { status: 'DRAFT', submittedAt: null },
         }),
       )
     })
@@ -166,46 +157,6 @@ describe('Release submission (HTTP)', () => {
       prismaMock.release.findFirst.mockResolvedValue(null)
       await withdraw(otherOwnerId).expect(404)
     })
-  })
-
-  // Two writes in one millisecond, or a node with a slower clock, must still change the version.
-  describe('version', () => {
-    const nextVersion = new Date(draft.updatedAt.getTime() + 1)
-
-    beforeEach(() => {
-      jest.spyOn(Date, 'now').mockReturnValue(draft.updatedAt.getTime())
-    })
-
-    afterEach(() => {
-      jest.restoreAllMocks()
-    })
-
-    it('advances on submit while the clock has not moved', async () => {
-      transactionMock.release.findFirst.mockResolvedValue(readyRelease as never)
-      transactionMock.release.updateManyAndReturn.mockResolvedValue([submitted])
-      await submit({ reviewed: true, expectedUpdatedAt: version }).expect(200)
-      expect(transactionMock.release.updateManyAndReturn.mock.calls[0]?.[0]?.data).toMatchObject({
-        updatedAt: nextVersion,
-      })
-    })
-
-    it.each([
-      ['withdraw', 'post', `/api/v1/releases/${draft.id}/withdraw`, {}],
-      ['a draft edit', 'patch', `/api/v1/releases/${draft.id}`, { title: 'Renamed' }],
-    ] as const)(
-      'advances on %s while the clock has not moved',
-      async (_action, method, url, body) => {
-        prismaMock.release.updateManyAndReturn.mockResolvedValue([draft])
-        await request(app.getHttpServer())
-          [method](url)
-          .set('x-test-artist', ownerId)
-          .send({ ...body, expectedUpdatedAt: version })
-          .expect(200)
-        expect(prismaMock.release.updateManyAndReturn.mock.calls[0]?.[0]?.data).toMatchObject({
-          updatedAt: nextVersion,
-        })
-      },
-    )
   })
 
   it.each(['submit', 'withdraw'])('requires an artist session to %s', async (action) => {
@@ -240,7 +191,7 @@ describe('Release submission (HTTP)', () => {
         ],
         _count: { trackDrafts: 1, tracks: 0, contributors: 1 },
       }
-      transactionMock.release.findFirst
+      prismaMock.release.findFirst
         .mockResolvedValueOnce(record as never)
         .mockResolvedValueOnce(readyRelease as never)
       const response = await request(app.getHttpServer())
@@ -263,25 +214,11 @@ describe('Release submission (HTTP)', () => {
           notices: [{ code: 'UPC_MISSING' }, { code: 'ISRC_MISSING', trackId: trackDraftId }],
         },
       })
-      expect(transactionMock.release.findFirst.mock.calls[1]?.[0]?.where).toEqual({
+      expect(prismaMock.release.findFirst.mock.calls[1]?.[0]?.where).toEqual({
         id: draft.id,
         ownerArtistId: ownerId,
         deletedAt: null,
       })
-      // Both reads see one snapshot, so readiness always matches the returned data.
-      expect(prismaMock.$transaction.mock.calls[0]?.[1]).toEqual({
-        isolationLevel: 'RepeatableRead',
-      })
-    })
-
-    it('hides a release deleted between the preview and the readiness check', async () => {
-      transactionMock.release.findFirst
-        .mockResolvedValueOnce({ ...readyRelease, owner: { username: 'Test artist' } } as never)
-        .mockResolvedValueOnce(null)
-      await request(app.getHttpServer())
-        .get(`/api/v1/releases/${draft.id}/workspace`)
-        .set('x-test-artist', ownerId)
-        .expect(404)
     })
   })
 })

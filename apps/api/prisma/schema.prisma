@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["partialIndexes"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -546,8 +545,7 @@ model ArtistTrackDraft {
   cover         String?
   previewUrl    String?
   // Compact ISO 3901 form (no hyphens); optional until a distributor assigns one.
-  // A soft-deleted draft frees its code.
-  isrc          String? @db.VarChar(12)
+  isrc          String? @unique @db.VarChar(12)
   isDemo        Boolean @default(false)
   deletedAt     DateTime?
   createdAt     DateTime @default(now())
@@ -558,7 +556,6 @@ model ArtistTrackDraft {
 
   @@index([ownerArtistId, deletedAt, updatedAt(sort: Desc)])
   @@index([releaseId])
-  @@unique([isrc], map: "ArtistTrackDraft_isrc_key", where: { deletedAt: null })
 }
 
 enum ReleaseCreditRole {
@@ -588,8 +585,7 @@ model Release {
   isDemo        Boolean @default(false)
   type          AlbumType     @default(SINGLE)
   status        ReleaseStatus @default(DRAFT)
-  // GTIN-13; a soft-deleted release frees its barcode.
-  upc           String?       @db.VarChar(13)
+  upc           String?       @unique @db.VarChar(13)
   scheduledAt   DateTime?      @db.Timestamptz(3)
   // Rights confirmation. Changing credits clears both confirmations; changing the
   // owner or splits clears accuracy, so a confirmation always describes current data.
@@ -611,7 +607,6 @@ model Release {
 
   @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
   @@unique([id, ownerArtistId])
-  @@unique([upc], map: "Release_upc_key", where: { deletedAt: null })
   @@index([status, scheduledAt])
 }
 
