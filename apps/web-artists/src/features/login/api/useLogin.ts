@@ -1,9 +1,7 @@
+import type { ApiSchemas } from '@bitrate/contracts'
 import { clientFetchClient } from '@shared/api'
-import {
-  type UseMutationOptions,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { z } from 'zod'
 import type { LoginFormData } from '../validation'
 
 const authQueryKeys = {
@@ -11,9 +9,22 @@ const authQueryKeys = {
   artist: () => [...authQueryKeys.all, 'artist'] as const,
 }
 
-export const useLogin = (
-  options?: UseMutationOptions<unknown, Error, LoginFormData>,
-) => {
+type LoginResult =
+  | Pick<ApiSchemas['TwoFactorRequiredEntity'], 'requires2fa'>
+  | undefined
+
+const twoFactorChallengeSchema = z.object({ requires2fa: z.literal(true) })
+
+interface LoginOptions {
+  onSuccess?: (data: LoginResult) => void | Promise<void>
+  onError?: (error: Error) => void | Promise<void>
+}
+
+const apiErrorSchema = z.object({
+  message: z.union([z.string(), z.array(z.string())]).optional(),
+})
+
+export const useLogin = (options?: LoginOptions) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -26,33 +37,23 @@ export const useLogin = (
       )
 
       if (response.error) {
-        const errorData = response.error as { message?: string | string[] }
-
-        const errorMessage = Array.isArray(errorData.message)
-          ? errorData.message[0]
-          : errorData.message
-
+        const errorData = apiErrorSchema.safeParse(response.error)
+        const message = errorData.success ? errorData.data.message : undefined
+        const errorMessage = Array.isArray(message) ? message[0] : message
         throw new Error(errorMessage || 'Login failed')
       }
 
-      return response.data
+      if (response.data === undefined) return undefined
+      const challenge = twoFactorChallengeSchema.safeParse(response.data)
+      if (!challenge.success) throw new Error('Unexpected sign-in response')
+      return challenge.data
     },
-    onSuccess: (data, variables) => {
-      void queryClient.invalidateQueries({ queryKey: authQueryKeys.artist() })
-      options?.onSuccess?.(
-        data,
-        variables,
-        undefined as never,
-        undefined as never,
-      )
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: authQueryKeys.artist() })
+      await options?.onSuccess?.(data)
     },
-    onError: (error, variables) => {
-      options?.onError?.(
-        error,
-        variables,
-        undefined as never,
-        undefined as never,
-      )
+    onError: async (error) => {
+      await options?.onError?.(error)
     },
   })
 }

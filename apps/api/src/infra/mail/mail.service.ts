@@ -5,6 +5,8 @@ import * as nodemailer from 'nodemailer'
 import { DEFAULT_MAIL_LOCALE, type MailLocale } from './templates/mail-locale'
 import { MAIL_TEMPLATES } from './templates/registry'
 
+export type ArtistVerificationDelivery = 'email' | 'development' | 'unavailable'
+
 /** Represents the mail service. */
 @Injectable()
 export class MailService {
@@ -125,19 +127,31 @@ export class MailService {
     token: string,
     username: string,
     locale: MailLocale = DEFAULT_MAIL_LOCALE,
+    code?: string,
   ) {
-    const verificationUrl = `${this.config.getOrThrow('web').artistHost}/verify-email?token=${encodeURIComponent(token)}`
+    const verificationUrl = `${this.config.getOrThrow('web').artistHost}/verify-email?token=${encodeURIComponent(token)}&email=${encodeURIComponent(to)}`
     if (!this.transporter) {
       this.handleUndelivered('Artist email verification', to, verificationUrl)
+      if (code && this.getArtistVerificationDelivery() === 'development') {
+        this.logger.warn(
+          `[DEV MAIL] Artist email verification for ${to}, code: ${code} (10 minutes)`,
+        )
+      }
       return
     }
     const from = this.config.getOrThrow('mail').from
     const { subject, html } = MAIL_TEMPLATES[locale].emailVerification({
       username,
       url: verificationUrl,
+      code,
     })
 
     await this.transporter.sendMail({ from, to, subject, html })
+  }
+
+  getArtistVerificationDelivery(): ArtistVerificationDelivery {
+    if (this.transporter) return 'email'
+    return this.config.get('mail')?.logTokens ? 'development' : 'unavailable'
   }
 
   private handleUndelivered(kind: string, to: string, url: string) {

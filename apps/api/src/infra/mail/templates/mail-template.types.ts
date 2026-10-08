@@ -8,4 +8,5 @@ export type RenderedMail = {
 export type LinkMailParams = {
   username: string
   url: string
+  code?: string
 }
