@@ -1,6 +1,0 @@
----
-"@bitrate/api": minor
-"@bitrate/admin": minor
----
-
-Operators can now act on many rows at once. The API gains four batch routes, each taking `{ ids }` (1 to 100 distinct uuids, otherwise 400) and answering 200 with a per-id result and counts even when some ids fail: `POST /admin/moderation/reports/batch/resolve` and `.../batch/dismiss` under `reports:advance`, `POST /admin/tracks/batch/take-down` under `tracks:delete`, and `POST /admin/users/batch/deactivate` under `users:delete`. Every id goes through the same service method as its single-entity route, so 404/409 rules and side effects such as ending a deactivated listener's sessions are unchanged. Each affected entity gets its own audit row; failed ids get none, and the request itself no longer adds an aggregate row (routes can opt out of the request-level audit row with `@SkipAudit()`). The panel adds a checkbox column and select-all-on-page to the moderation queue, catalog and listeners lists, a batch action bar shown only to operators holding the matching permission, one confirm dialog listing every affected row, and a per-row result summary before the list reloads. The selection clears when the page or a filter changes. No new permissions and no migrations.

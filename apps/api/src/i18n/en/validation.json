@@ -1,5 +1,35 @@
 {
   "required": "This field is required",
   "invalid_email": "Enter a valid email address",
-  "password_too_short": "Password must be at least 8 characters"
+  "password_too_short": "Password must be at least 8 characters",
+  "invalid_type": "Expected {expected}",
+  "invalid_input": "Invalid input",
+  "invalid_value": "Must be one of: {values}",
+  "unrecognized_keys": "Unrecognized fields: {keys}",
+  "not_multiple_of": "Must be a multiple of {divisor}",
+  "too_small": {
+    "string": "Must be at least {minimum} characters",
+    "number": "Must be at least {minimum}",
+    "number_exclusive": "Must be greater than {minimum}",
+    "array": "Must contain at least {minimum} items",
+    "other": "Value is too small (minimum {minimum})"
+  },
+  "too_big": {
+    "string": "Must be at most {maximum} characters",
+    "number": "Must be at most {maximum}",
+    "number_exclusive": "Must be less than {maximum}",
+    "array": "Must contain at most {maximum} items",
+    "other": "Value is too large (maximum {maximum})"
+  },
+  "invalid_format": {
+    "email": "Enter a valid email address",
+    "url": "Enter a valid URL",
+    "uuid": "Enter a valid UUID",
+    "regex": "Does not match the required pattern",
+    "other": "Invalid {format} format"
+  },
+  "release": {
+    "isrc_invalid": "Enter an ISRC such as US-RC1-76-07839",
+    "update_empty": "Provide a title, release type, planned date or UPC"
+  }
 }

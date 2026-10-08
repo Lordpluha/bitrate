@@ -1,0 +1,146 @@
+/** One artist shell; theme variants change surfaces and depth, never geometry.
+ * Dark/Dim: pNeG9 and BP7Z8. Light: shared variables and Theme QA / Light.
+ */
+@theme {
+  /* A 135° unit gradient in Pencil's normalized bounds occupies 1/sqrt(2) of
+   * the CSS corner-to-corner gradient line. Its original 62% stop maps here.
+   */
+  --artist-diagonal-stop-start: 14.644661%;
+  --artist-diagonal-stop-middle: 58.485281%;
+  --artist-diagonal-stop-end: 85.355339%;
+  --color-artist-canvas-start: #05060a;
+  --color-artist-canvas-middle: #070a14;
+  --color-artist-canvas-end: #0b0716;
+  --color-artist-sidebar-start: #0d111b;
+  --color-artist-sidebar-end: #080a10;
+  --color-artist-panel-start: #151c2b;
+  --color-artist-panel-end: #0d111b;
+  --color-artist-control-surface: var(--color-artist-panel-start);
+  --color-artist-account-surface: var(--color-artist-control-surface);
+  --color-artist-header: #0f1420e8;
+  --color-artist-foreground: #f7f8ff;
+  --color-artist-text-secondary: #aeb7cc;
+  --color-artist-border: #3a4663;
+  --color-artist-control-border: #273047;
+  --color-artist-selection: #8b5cf630;
+  --color-artist-selection-border: #8b5cf6;
+  --color-artist-icon: #c4b5fd;
+  --color-artist-action-start: #6d28d9;
+  --color-artist-action-end: #9b6dff;
+  --color-artist-action-glow: #8b5cf64d;
+  --color-artist-panel-glow: #8b5cf626;
+  --color-artist-sidebar-shadow: #00000080;
+  --color-artist-header-shadow: #00000066;
+  --shadow-artist-action: 0 5px 16px var(--color-artist-action-glow);
+  --shadow-artist-panel: 0 18px 42px var(--color-artist-panel-glow);
+  --shadow-artist-sidebar: 12px 0 34px var(--color-artist-sidebar-shadow);
+  --shadow-artist-header: 0 10px 26px var(--color-artist-header-shadow);
+  --color-artist-catalog-start: #0d131c;
+  --color-artist-catalog-end: #080b11;
+  --color-artist-catalog-veil-start: #080b11d6;
+  --color-artist-catalog-veil-middle: #080b1196;
+  --color-artist-catalog-veil-end: #080b11c9;
+  --color-artist-catalog-badge: #05060a;
+  --artist-catalog-art-opacity: 0.34;
+  --color-artist-status-ready: #6ee7b7;
+  --color-artist-status-warning: #fcd34d;
+  --color-artist-status-processing: #93c5fd;
+  --color-artist-status-error: #fda4af;
+  --shadow-artist-catalog: 0 18px 38px #00000066;
+  /* Release workspace: Pencil screens 21/21B. Geometry is shared by every theme. */
+  --color-artist-release-panel-start: #141c2b;
+  --color-artist-release-panel-middle: #0b1019;
+  --color-artist-release-panel-end: #100d20;
+  --color-artist-release-border: #2e3a55;
+  --shadow-artist-release-panel: 0 12px 30px #00000066;
+  --artist-release-waveform-opacity: 0.15;
+  /* Pencil 19C: incomplete contributor; geometry remains shared by themes. */
+  --color-artist-credit-warning-start: #241016;
+  --color-artist-credit-warning-middle: #0d111a;
+  --color-artist-credit-warning-end: #160d1d;
+  --color-artist-credit-warning-border: #fb7185;
+}
+
+:root.light,
+:root.dim {
+  --color-artist-credit-warning-start: var(--color-card);
+  --color-artist-credit-warning-middle: var(--color-card);
+  --color-artist-credit-warning-end: var(--color-secondary);
+  --color-artist-credit-warning-border: var(--color-artist-status-error);
+  --shadow-artist-action: none;
+  --shadow-artist-panel: none;
+  --shadow-artist-sidebar: none;
+  --shadow-artist-header: none;
+}
+
+:root.light {
+  --color-artist-release-panel-start: var(--color-card);
+  --color-artist-release-panel-middle: var(--color-card);
+  --color-artist-release-panel-end: var(--color-secondary);
+  --color-artist-release-border: var(--color-border);
+  --shadow-artist-release-panel: none;
+  --artist-release-waveform-opacity: 0.1;
+  --color-artist-catalog-start: var(--color-card);
+  --color-artist-catalog-end: var(--color-card);
+  --color-artist-catalog-veil-start: #ffffffed;
+  --color-artist-catalog-veil-middle: #ffffffdb;
+  --color-artist-catalog-veil-end: #ffffffed;
+  --color-artist-catalog-badge: var(--color-secondary);
+  --color-artist-status-ready: #047857;
+  --color-artist-status-warning: #92400e;
+  --color-artist-status-processing: #1d4ed8;
+  --color-artist-status-error: #be123c;
+  --shadow-artist-catalog: none;
+  --color-artist-canvas-start: var(--color-background);
+  --color-artist-canvas-middle: var(--color-background);
+  --color-artist-canvas-end: var(--color-background);
+  --color-artist-sidebar-start: var(--color-card);
+  --color-artist-sidebar-end: var(--color-card);
+  --color-artist-panel-start: var(--color-card);
+  --color-artist-panel-end: var(--color-card);
+  --color-artist-control-surface: var(--color-secondary);
+  --color-artist-header: var(--color-background);
+  --color-artist-foreground: var(--color-foreground);
+  --color-artist-text-secondary: var(--color-text-secondary);
+  --color-artist-border: var(--color-border);
+  --color-artist-control-border: var(--color-border);
+  --color-artist-selection: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  --color-artist-selection-border: var(--color-primary);
+  --color-artist-icon: var(--color-primary);
+  --color-artist-action-start: var(--color-primary);
+  --color-artist-action-end: var(--color-primary);
+}
+
+/* Neutral source: flat surfaces. Other roles retain the default values. */
+:root.dim {
+  --color-artist-release-panel-start: #151923;
+  --color-artist-release-panel-middle: #151923;
+  --color-artist-release-panel-end: #151923;
+  --color-artist-release-border: #2a303c;
+  --shadow-artist-release-panel: none;
+  --color-artist-catalog-start: #151923;
+  --color-artist-catalog-end: #151923;
+  --color-artist-catalog-veil-start: #151923e8;
+  --color-artist-catalog-veil-middle: #151923b0;
+  --color-artist-catalog-veil-end: #151923db;
+  --color-artist-catalog-badge: #0b0d12;
+  --shadow-artist-catalog: none;
+  --color-artist-canvas-start: #0b0d12;
+  --color-artist-canvas-middle: #0b0d12;
+  --color-artist-canvas-end: #0b0d12;
+  --color-artist-sidebar-start: #151923;
+  --color-artist-sidebar-end: #151923;
+  --color-artist-panel-start: #151923;
+  --color-artist-panel-end: #151923;
+  --color-artist-account-surface: #1a1a1a;
+  --color-artist-header: #0b0d12;
+  --color-artist-foreground: var(--color-white);
+  --color-artist-text-secondary: #9ca3af;
+  --color-artist-border: #2a303c;
+  --color-artist-control-border: #2a303c;
+  --color-artist-selection: color-mix(in srgb, var(--color-primary) 12.55%, transparent);
+  --color-artist-selection-border: var(--color-primary);
+  --color-artist-icon: #a78bfa;
+  --color-artist-action-start: var(--color-primary);
+  --color-artist-action-end: var(--color-primary);
+}
