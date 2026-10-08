@@ -1,9 +1,10 @@
 'use client'
 
 import { clientFetchClient } from '@shared/api/fetchClient'
+import { artistSessionCheck } from '@shared/auth/artistSessionCheck'
 import { ROUTES } from '@shared/routes/routes'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useLocation, useNavigate } from '@tanstack/react-router'
+import { useLocation, useMatch, useRouter } from '@tanstack/react-router'
 
 const authQueryKeys = {
   all: ['auth'] as const,
@@ -11,15 +12,20 @@ const authQueryKeys = {
 }
 
 export function useAuth() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const pathname = useLocation({ select: (location) => location.pathname })
   const queryClient = useQueryClient()
+  const dashboardMatch = useMatch({ from: '/dashboard', shouldThrow: false })
 
   const isAuthPage =
     pathname?.startsWith('/auth') ||
     pathname === ROUTES.auth.login ||
-    pathname === ROUTES.auth.registration
-  const shouldFetchAuthUser = Boolean(pathname) && !isAuthPage
+    pathname === ROUTES.auth.registration ||
+    pathname === ROUTES.auth.verifyEmail
+  const isDashboard =
+    pathname === ROUTES.dashboard.home ||
+    pathname.startsWith(`${ROUTES.dashboard.home}/`)
+  const shouldFetchAuthUser = Boolean(pathname) && !isAuthPage && !isDashboard
 
   const { data: artist, isLoading } = useQuery({
     queryKey: authQueryKeys.artist(),
@@ -49,22 +55,30 @@ export function useAuth() {
       }
       return response.data
     },
-    onSuccess: () => {
-      queryClient.setQueryData(authQueryKeys.artist(), null)
-      void navigate({ to: ROUTES.auth.login })
+    onSuccess: async () => {
+      artistSessionCheck.clear()
+      await queryClient.cancelQueries()
+      await router.navigate({ to: ROUTES.auth.login, replace: true })
+      // Clear after the workspace unmounts so its observers cannot restart private requests.
+      queryClient.clear()
+      router.clearCache()
+      await router.invalidate()
     },
     onError: (error) => {
       console.error('Logout error:', error)
-      void navigate({ to: ROUTES.auth.login })
     },
   })
 
   const logout = () => logoutMutation.mutate()
 
   return {
-    artist,
-    isAuthenticated: !!artist,
-    isLoading,
+    artist: dashboardMatch?.context.artist ?? artist,
+    isAuthenticated: Boolean(dashboardMatch?.context.artist ?? artist),
+    isLoading: shouldFetchAuthUser && isLoading,
     logout,
+    isLoggingOut: logoutMutation.isPending,
+    logoutError: logoutMutation.isError
+      ? 'Could not sign out. Please try again.'
+      : null,
   }
 }

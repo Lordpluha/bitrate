@@ -25,6 +25,10 @@ class ResourceTests(unittest.TestCase):
             (250000, None, 0), (249999, None, 1),
             (700000, b'node\0/project/node_modules/.bin/tsc\0--noEmit\0', 1),
             (700000, b'node\0/project/node_modules/.bin/vite\0dev\0', 0),
+            (700000, b'biome\0lsp-proxy\0--stdio\0', 0),
+            (700000, b'biome\0__run_server\0--watcher-kind=recommended\0', 0),
+            (700000, b'biome\0lint\0src\0', 1),
+            (700000, b'biome\0ci\0src\0', 1),
         ]:
             with self.subTest(available=available, process=process):
                 code, report = self.run_probe(available, process)
