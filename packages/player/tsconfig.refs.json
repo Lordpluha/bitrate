@@ -10,5 +10,15 @@
     "tsBuildInfoFile": ".types-refs/tsconfig.refs.tsbuildinfo",
     "rootDir": "src",
     "skipLibCheck": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/**/*.unit-spec.ts",
+    "src/**/*.node-spec.ts",
+    "src/**/*.browser-spec.ts",
+    "src/**/__tests__/**",
+    "src/**/*.stories.ts",
+    "src/**/stories/**"
+  ]
 }

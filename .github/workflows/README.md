@@ -110,7 +110,8 @@ by the Expo workflow action.
   Svelte/Vite/Playwright toolchain without touching its directory, and the token script scans it.
 - player_reusable.yml — six independent jobs, none gated on another: ESLint (this package is on
   ESLint, **not** Biome), `svelte-check` + `tsc`, `check:tokens`, Vitest `unit` (jsdom) and `node`
-  (SSR import), Vitest `browser` in Chromium, and the Vite build. Chromium is installed through
+  (SSR import), Vitest `browser` in Chromium, and the Vite build followed by a static Storybook
+  build (`storybook:build`; build only, no image). Chromium is installed through
   the package's own `playwright` (`pnpm --filter @bitrate/player exec playwright install`) so its
   revision matches the provider that drives it. No release gate runs Vitest, so nothing else
   needs a browser.
