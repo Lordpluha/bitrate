@@ -17,19 +17,35 @@ on:
         default: 15
         type: number
       run-biome:
-        description: Run biome check before Docker build
+        description: Run Biome and i18n drift checks (in the API Tests job, so needs run-tests)
         required: false
         default: true
         type: boolean
       run-tests:
-        description: Run API tests after image build
+        description: Run API tests (in parallel with the image build)
         required: false
         default: true
         type: boolean
+      cache-write:
+        description: >-
+          Export the BuildKit registry cache. Only the develop push sets it: a PR that writes the
+          shared ref overwrites develop's cache with its own layers, and a mode=max export cost
+          380s of a 573s PR build.
+        required: false
+        default: false
+        type: boolean
+    secrets:
+      turbo-token:
+        description: >-
+          Turbo remote cache token, mounted into the Dockerfile's turbo build. Without it turbo
+          runs uncached (fork PRs, local builds).
+        required: false
 
 permissions:
   contents: read
   packages: write
+  # The image scan uploads its SARIF to code scanning.
+  security-events: write
 
 env:
   REGISTRY: ghcr.io
@@ -45,18 +61,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup Node.js and pnpm
-        if: ${{ inputs.run-biome }}
-        uses: ./.github/actions/setup-node-pnpm
-
-      - name: Run Biome check
-        if: ${{ inputs.run-biome }}
-        run: pnpm exec biome ci apps/api packages/contracts
-
-      - name: Check i18n dictionary drift
-        if: ${{ inputs.run-biome }}
-        run: pnpm --filter @bitrate/api run check:i18n
-
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker
         with:
@@ -71,22 +75,37 @@ jobs:
           context: .
           file: ./apps/api/Dockerfile
           push: ${{ inputs.push-image }}
+          # Loaded as well, so the scan below reads this exact image instead of a rebuild.
+          load: true
           tags: ${{ inputs.image-tags }}
-          cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache
-            type=gha,scope=api
-          cache-to: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/api:buildcache
+          # zstd compresses the node_modules layers several times faster than the default gzip;
+          # ignore-error keeps a registry hiccup on the export from failing a finished build.
+          # Only develop/master export the cache: a PR that writes the shared ref replaces
+          # develop's layers with its own, and a gzip mode=max export cost minutes per run.
+          cache-to: ${{ inputs.cache-write && format('type=registry,ref={0}/{1}/cache/api:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
-            turbo_token=${{ secrets.TURBO_TOKEN }}
+            turbo_token=${{ secrets.turbo-token }}
           target: production
 
+      - name: Resolve image reference for scanning
+        id: scan-ref
+        env:
+          TAGS: ${{ inputs.image-tags }}
+        run: echo "ref=$(printf '%s\n' "$TAGS" | sed -e 's/^[[:space:]]*//' -e '/^$/d' | head -n1)" >> "$GITHUB_OUTPUT"
+
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        with:
+          image-ref: ${{ steps.scan-ref.outputs.ref }}
+          service: api
+
   api-tests:
+    # No `needs: api-build`: nothing here uses the image, so the two run side by side.
     if: ${{ inputs.run-tests }}
     name: API Tests
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    needs: api-build
 
     env:
       DATABASE_URL: postgresql://test:test@localhost:5432/test
@@ -135,6 +154,15 @@ jobs:
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
+
+      # Here rather than in api-build, which no longer needs Node: one pnpm setup instead of two.
+      - name: Run Biome check
+        if: ${{ inputs.run-biome }}
+        run: pnpm exec biome ci apps/api packages/contracts
+
+      - name: Check i18n dictionary drift
+        if: ${{ inputs.run-biome }}
+        run: pnpm --filter @bitrate/api run check:i18n
 
       - name: Generate Prisma Client
         run: pnpm --filter @bitrate/api run db:gen
@@ -190,10 +218,6 @@ jobs:
       - name: Show SeaweedFS logs on failure
         if: failure()
         run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml logs --tail=100 seaweedfs
-
-      - name: Stop SeaweedFS
-        if: always()
-        run: docker compose -f infra/docker-compose.preprod.yaml -f infra/docker-compose.ci.yaml down -v
 
       - name: Verify generated API contracts
         run: |

@@ -335,6 +335,7 @@ services:
     environment:
       NODE_ENV: production
       VITE_API_URL: ${NEXT_PUBLIC_API_URL}
+      API_URL: ${API_URL:-http://api:3000}
     depends_on:
       - api
     networks:

@@ -36,3 +36,11 @@ export const API_RATE_LIMITS = [
 export const AUTH_ROUTE_THROTTLE = {
   default: { ttl: DEFAULT_RATE_LIMIT_WINDOW_MS, limit: 10 },
 }
+
+/**
+ * Session checks (`me`, `refresh`) require a signed token, so the credential ceiling adds no
+ * protection there. They keep the global limit: SSR sends every visitor's check from one address.
+ */
+export const SESSION_ROUTE_THROTTLE = {
+  default: { ttl: RATE_LIMIT_WINDOW_MS, limit: RATE_LIMIT_MAX },
+}

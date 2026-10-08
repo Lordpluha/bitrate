@@ -70,12 +70,10 @@ jobs:
           load: ${{ inputs.mobile-web-load }}
           push: ${{ inputs.mobile-web-push }}
           tags: ${{ inputs.mobile-web-tags }}
-          cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache
-            type=gha,scope=mobile-web
-          cache-to: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache,mode=max
-            type=gha,mode=max,scope=mobile-web
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-web:buildcache
+          # Registry only (the extra gha export cost up to 400s), and never from a PR: a PR reads
+          # develop's cache and writes nothing.
+          cache-to: ${{ github.event_name != 'pull_request' && format('type=registry,ref={0}/{1}/cache/mobile-web:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
 
       - name: Pull image for smoke test
         if: ${{ inputs.run-mobile-web-test && inputs.mobile-web-test-pull }}

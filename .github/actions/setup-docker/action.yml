@@ -36,6 +36,9 @@ runs:
       uses: docker/setup-buildx-action@v4
       with:
         driver-opts: ${{ inputs.buildx-driver-opts }}
+        # Hosted runners are discarded after the job, so tearing the builder down buys nothing;
+        # its post step ("Removing builder") took 102s after a cache export on api-pr.
+        cleanup: false
 
     - name: Log in to GHCR
       if: ${{ inputs.ghcr == 'true' && inputs.ghcr-username != '' && inputs.ghcr-password != '' }}
