@@ -346,8 +346,6 @@ SmartScreen warn on first launch.
 - .github/actions/scan-image — Trivy over the OS packages of an image, called inside the job
   that built it. **No workflow builds an image just to scan it**, so a pull request builds each
   image at most once.
-- ghcr_retention.yml — weekly GHCR pruning: keeps `v*`, `develop`, `master` and the newest ten
-  other tags per image, and each cache's `buildcache`; removes untagged and superseded versions.
 
 ### Monitoring
 - monitoring.yml — release monitoring for develop/master (schedule, push, workflow_dispatch).
@@ -355,7 +353,7 @@ SmartScreen warn on first launch.
 - monitoring_health_reusable.yml / monitoring_dependency_reusable.yml / monitoring_ssl_reusable.yml — smaller reusable monitoring blocks.
 
 ## Structure Summary
-- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, ghcr_retention.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
+- Entry workflows: admin.yml, api.yml, desktop.yml, docs.yml, mobile.yml, player.yml, ui_react.yml, web_player.yml, web_artists.yml, security.yml, monitoring.yml, release.yml, release_publish.yml, release_images.yml, deploy.yml.
 - Reusable workflows: all *_reusable.yml files at the top level of .github/workflows.
 - Note: GitHub Actions requires local reusable workflows referenced via uses: ./.github/workflows/... to be stored at the top level of .github/workflows.
 
