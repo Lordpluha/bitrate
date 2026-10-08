@@ -365,25 +365,12 @@ certificate, or a missing certificate at `/etc/letsencrypt/live/<DOMAIN>/`.
 
 ## 6. Backups
 
-Production backups are automated and off-host. `.github/workflows/backup.yml` runs daily: the
-server dumps the database with `infra/backup.sh`, the runner streams the result off over SSH and
-uploads it to S3-compatible object storage, and the monitoring workflow restores the newest
-object into a throwaway Postgres and asserts on the data that comes back. The object-storage
-credentials live only in GitHub, never on the server. Setup — bucket, secret names, and the
-one-time rescue of the existing uploads — is in
-[ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md); the secret table is in
-[`.github/workflows/README.md` § Backups](https://github.com/Lordpluha/bitrate/blob/develop/.github/workflows/README.md).
-
-By hand, on the server, from `$HOME/bitrate`:
-
-```bash
-task prod:backup                          # database dump into backups/, prune old ones
-task prod:restore FILE=backups/db-20260908T031711Z.dump
-```
-
-`prod:restore` is destructive and asks for confirmation. It uses `pg_restore`, because
-`prod:backup` writes `pg_dump --format=custom`; piping a custom-format dump into `psql` fails at
-the first byte.
+Production has **no automated backup**. The off-host backup workflow (`backup.yml`), the
+server-side `infra/backup.sh`, the `prod:backup` / `prod:restore` tasks and the restore
+rehearsal in the monitoring workflow were removed on 2026-10-08: they had never completed a
+run, because the backup bucket and its credentials were never provisioned.
+[ADR-0033](../architecture/0033-off-host-backups-and-object-storage.md) records the design if
+it is brought back.
 
 For the preprod stack, `task db:backup` / `task db:restore FILE=…` write and read plain SQL.
 
