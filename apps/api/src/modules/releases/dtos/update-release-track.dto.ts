@@ -1,11 +1,12 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
+import { RELEASE_VALIDATION } from '../errors'
 import { normalizeIsrc } from '../release-identifiers'
 
 const IsrcSchema = z.string().transform((value, context) => {
   const isrc = normalizeIsrc(value)
   if (isrc) return isrc
-  context.addIssue({ code: 'custom', message: 'Enter an ISRC such as US-RC1-76-07839' })
+  context.addIssue({ code: 'custom', message: RELEASE_VALIDATION.ISRC_INVALID })
   return z.NEVER
 })
 

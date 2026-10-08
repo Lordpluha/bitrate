@@ -4,6 +4,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
 import { ConfigService } from '@nestjs/config'
 import Redis from 'ioredis'
 import { ArtistEmailCodeService } from './artist-email-code.service'
+import { ARTIST_AUTH_ERRORS } from './errors'
 
 // Opt in with an isolated Redis endpoint; never flush the database or touch other keys.
 const describeRedis = process.env.EMAIL_CODE_TEST_REDIS_URL ? describe : describe.skip
@@ -39,7 +40,9 @@ describeRedis('ArtistEmailCodeService with Redis', () => {
     expect(await redis.hget(`artist-email-code:${id}`, 'hash')).not.toBe(code)
     expect(await redis.ttl(`artist-email-code:${id}`)).toBeGreaterThan(590)
     await service.consume(id, code)
-    await expect(service.consume(id, code)).rejects.toThrow('Invalid or expired verification code')
+    await expect(service.consume(id, code)).rejects.toThrow(
+      ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
+    )
   })
 
   it('blocks guessing after five attempts, even with the correct code', async () => {
@@ -48,10 +51,12 @@ describeRedis('ArtistEmailCodeService with Redis', () => {
     const wrong = code === '000000' ? '000001' : '000000'
     for (let attempt = 0; attempt < 5; attempt++) {
       await expect(service.consume(id, wrong)).rejects.toThrow(
-        'Invalid or expired verification code',
+        ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
       )
     }
-    await expect(service.consume(id, code)).rejects.toThrow('Invalid or expired verification code')
+    await expect(service.consume(id, code)).rejects.toThrow(
+      ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
+    )
   })
 
   it('keeps counting failures across resent codes', async () => {
@@ -61,12 +66,14 @@ describeRedis('ArtistEmailCodeService with Redis', () => {
       const wrong = code === '000000' ? '000001' : '000000'
       for (let attempt = 0; attempt < 5; attempt++) {
         await expect(service.consume(id, wrong)).rejects.toThrow(
-          'Invalid or expired verification code',
+          ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
         )
       }
     }
     const fresh = await service.issue(id)
-    await expect(service.consume(id, fresh)).rejects.toThrow('Invalid or expired verification code')
+    await expect(service.consume(id, fresh)).rejects.toThrow(
+      ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
+    )
     expect(await redis.ttl(`artist-email-code-failures:${id}`)).toBeGreaterThan(0)
   })
 
@@ -74,11 +81,13 @@ describeRedis('ArtistEmailCodeService with Redis', () => {
     const id = artistId()
     const code = await service.issue(id)
     await expect(service.consume(artistId(), code)).rejects.toThrow(
-      'Invalid or expired verification code',
+      ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
     )
     await redis.pexpire(`artist-email-code:${id}`, 1)
     await new Promise((resolve) => setTimeout(resolve, 20))
-    await expect(service.consume(id, code)).rejects.toThrow('Invalid or expired verification code')
+    await expect(service.consume(id, code)).rejects.toThrow(
+      ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
+    )
   })
 
   it('resending rotates a code and concurrent consumption has one winner', async () => {
@@ -86,7 +95,9 @@ describeRedis('ArtistEmailCodeService with Redis', () => {
     const old = await service.issue(id)
     const next = await service.issue(id)
     if (old !== next)
-      await expect(service.consume(id, old)).rejects.toThrow('Invalid or expired verification code')
+      await expect(service.consume(id, old)).rejects.toThrow(
+        ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
+      )
     const attempts = await Promise.allSettled(
       Array.from({ length: 3 }, () => service.consume(id, next)),
     )

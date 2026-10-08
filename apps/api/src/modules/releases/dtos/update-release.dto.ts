@@ -1,6 +1,7 @@
 import { AlbumType } from '@prisma/client'
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
+import { RELEASE_VALIDATION } from '../errors'
 import { isValidUpc } from '../release-identifiers'
 import { CreateReleaseSchema } from './create-release.dto'
 
@@ -35,7 +36,7 @@ export const UpdateReleaseSchema = z
       input.scheduledAt !== undefined ||
       input.upc !== undefined,
     {
-      message: 'Provide a title, release type, planned date or UPC',
+      message: RELEASE_VALIDATION.UPDATE_EMPTY,
     },
   )
 

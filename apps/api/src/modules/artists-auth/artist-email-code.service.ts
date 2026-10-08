@@ -4,6 +4,7 @@ import { REDIS_CLIENT } from '@infra/cache/cache.constants'
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { Redis } from 'ioredis'
+import { ARTIST_AUTH_ERRORS } from './errors'
 
 const CODE_TTL_SECONDS = 10 * 60
 const RESEND_COOLDOWN_SECONDS = 60
@@ -66,7 +67,7 @@ export class ArtistEmailCodeService {
       MAX_DAILY_FAILURES,
       FAILURE_WINDOW_SECONDS,
     )
-    if (consumed !== 1) throw new BadRequestException('Invalid or expired verification code')
+    if (consumed !== 1) throw new BadRequestException(ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE)
   }
 
   /** Applies the same cooldown to every email, including unknown and verified accounts. */
@@ -81,7 +82,7 @@ export class ArtistEmailCodeService {
     )
     if (!reserved)
       throw new HttpException(
-        'Please wait before requesting another code',
+        ARTIST_AUTH_ERRORS.VERIFICATION_CODE_COOLDOWN,
         HttpStatus.TOO_MANY_REQUESTS,
       )
   }
