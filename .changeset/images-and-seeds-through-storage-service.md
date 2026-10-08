@@ -1,6 +1,0 @@
----
-"@bitrate/api": minor
-"@bitrate/contracts": patch
----
-
-Store and serve images and seeds through `STORAGE_SERVICE`; the local storage directory is gone (breaking for deployments: the `api_storage` volume is removed from the production compose file, so copy any existing objects into the bucket before deploying, see the deployment runbook). Track covers and user avatars are validated in memory and uploaded to SeaweedFS under `tracks/covers/<uuid>.<ext>` and `users/avatars/<uuid>.<ext>`, with no image ever written to local disk. `ServeStaticModule` is replaced by a route at the same `/static/<folder>/<file>` URL that streams only public image keys from the object store with `Cache-Control: public, max-age=31536000, immutable` and Range support; stored values and client URLs do not change. The seeds download covers into memory and audio into the private upload directory, then upload through `TrackUploadService`. `apps/api/storage`, `storage.config.ts`, the `/app/storage` image directory, the `prod:storage:*` tasks and the `backup.sh` storage archive are removed (`--no-storage` is still accepted and ignored). `@bitrate/contracts` only reflects a corrected description of where track covers live.
