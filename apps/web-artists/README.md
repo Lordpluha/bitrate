@@ -115,11 +115,12 @@ See [ADR-0052](../docs/docs/architecture/0052-artist-release-workspace-foundatio
 Private recording ownership and demo boundaries follow
 [ADR-0053](../docs/docs/architecture/0053-private-artist-music-catalogue.md).
 
-The dedicated dashboard browser suite starts its own deterministic API and Vite server on
-ports 3103 and 3102; it needs neither a database nor a real account:
+The dashboard browser suite is part of `test:e2e` (projects `dashboard-chromium` and
+`dashboard-mobile-chrome`). It starts its own deterministic API and Vite server on ports 3103
+and 3102, so it needs neither a database nor a real account. To run only that suite:
 
 ```bash
-python3 -B .claude/scripts/run-heavy.py -- pnpm --filter @bitrate/web-artists exec playwright test --config=tests/configs/playwright.dashboard.config.ts
+python3 -B .claude/scripts/run-heavy.py -- pnpm --filter @bitrate/web-artists test:e2e:dashboard
 ```
 
 To exercise the built Nitro server with the same suite, build with

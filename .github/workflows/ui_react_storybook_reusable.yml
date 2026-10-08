@@ -1,4 +1,4 @@
-name: "[docs] Reusable"
+name: "[ui-react] Storybook Reusable"
 
 on:
   workflow_call:
@@ -14,18 +14,19 @@ on:
       timeout-minutes:
         description: Job timeout in minutes
         required: false
-        default: 30
+        default: 60
         type: number
-      run-typecheck:
-        description: Run the Docusaurus typecheck before the docker build
-        required: false
-        default: true
-        type: boolean
       cache-to-registry:
-        description: Export build cache to GHCR registry
+        description: >-
+          Export the BuildKit registry cache. Only develop/master set it; a PR reads the shared
+          cache and writes nothing, so no per-PR cache package is left behind in GHCR.
         required: false
-        default: true
+        default: false
         type: boolean
+    secrets:
+      turbo-token:
+        description: Turbo remote cache token for the turbo build inside the Dockerfile
+        required: false
 
 permissions:
   contents: read
@@ -38,24 +39,19 @@ env:
   IMAGE_PREFIX: lordpluha/${{ github.event.repository.name }}
 
 jobs:
-  docs-build:
-    name: Docs Build and Docker
+  storybook-build:
+    name: Storybook Build and Docker
     runs-on: ubuntu-latest
+    # Two builds run inside this image: the ui-react library build (which generates
+    # src/icons/svgr/ that the stories import) and then the Storybook build itself. Neither
+    # is fast, so the default timeout is deliberately generous.
     timeout-minutes: ${{ inputs.timeout-minutes }}
 
+    # Biome, tokens and the Vitest projects for packages/ui-react run as sibling jobs in
+    # ui_react.yml. This workflow only produces the image, so it does not repeat them.
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-
-      # The site is configured in TypeScript (docusaurus.config.ts), so a broken config is a
-      # type error rather than a runtime one. Biome does not cover apps/docs.
-      - name: Setup Node.js and pnpm
-        if: ${{ inputs.run-typecheck }}
-        uses: ./.github/actions/setup-node-pnpm
-
-      - name: Run docs typecheck
-        if: ${{ inputs.run-typecheck }}
-        run: pnpm --filter @bitrate/docs check-types
 
       - name: Setup Docker + registries
         uses: ./.github/actions/setup-docker
@@ -65,23 +61,24 @@ jobs:
           ghcr-username: ${{ github.actor }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
-      # The production target serves the prebuilt bundle from nginx on 8080 and reads no
-      # configuration, so this image carries no build args and is environment-agnostic.
-      - name: Build Docs Docker image
+      # The production target serves the prebuilt storybook-static bundle from nginx on 8080
+      # and reads no configuration, so this image carries no build args and is
+      # environment-agnostic.
+      - name: Build Storybook Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ./apps/docs/Dockerfile
+          file: ./packages/ui-react/Dockerfile
           push: ${{ inputs.push-image }}
           # Loaded as well, so the scan below reads this exact image instead of a rebuild.
           load: true
           tags: ${{ inputs.tags }}
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/docs:buildcache
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/storybook:buildcache
           # Only develop/master export the cache: a PR that writes the shared ref replaces
           # develop's layers with its own, and a gzip mode=max export cost minutes per run.
-          cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/docs:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
+          cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/storybook:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
-            turbo_token=${{ secrets.TURBO_TOKEN }}
+            turbo_token=${{ secrets.turbo-token }}
           target: production
 
       - name: Resolve image reference for scanning
@@ -94,4 +91,4 @@ jobs:
         uses: ./.github/actions/scan-image
         with:
           image-ref: ${{ steps.scan-ref.outputs.ref }}
-          service: docs
+          service: storybook
