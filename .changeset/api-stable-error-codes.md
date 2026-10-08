@@ -1,0 +1,6 @@
+---
+"@bitrate/api": minor
+"@bitrate/contracts": minor
+---
+
+Error responses gain an additive `code` field: the dictionary key the message was translated from (for example `errors.track.not_found`). A message that is still an untranslated English literal has no `code`. A validation failure answers `code: errors.validation.failed` plus an `errors` array of `{ path, code?, message }`, with each zod issue translated in the request locale (`validation.too_small.string`, `validation.invalid_format.email`, `validation.required`, …); a hand-written DTO message is kept as written and has no per-field `code`. The API now translates into en, uk, ru, pl and de (ru, pl and de are unreviewed machine-written text), falling back to en. Transactional emails keep en/uk: the mail locale comes from the account's stored locale, and any other value falls back to en. New `TranslatableException` base for keyed errors; a Jest scan (TypeScript AST) now fails when a file gains a literal exception message, `super()` message or DTO message beyond its count in the per-file baseline `apps/api/test/i18n-literal-baseline.json`, and also asks to lower the baseline when a file improves, so the baseline can only shrink.

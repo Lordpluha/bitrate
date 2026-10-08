@@ -51,6 +51,11 @@ export function AdminAuth() {
             example: UNAUTHORIZED_ERRORS.INVALID_OR_EXPIRED_TOKEN,
           },
           error: { type: 'string', example: 'Unauthorized' },
+          code: {
+            type: 'string',
+            description:
+              'Stable machine-readable error code (the message key); omitted while the staff errors are still untranslated literals.',
+          },
         },
       },
     }),
