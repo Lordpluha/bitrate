@@ -1,11 +1,12 @@
 name: "[release] Publish and Ship Reusable"
 
-# Five jobs, composed with `needs:` rather than dispatched:
+# Six jobs, composed with `needs:` rather than dispatched:
 #
 #   resolve          -- read the product version out of the merged tree; decide
 #                       whether this push to master is a release at all
 #   tag-and-release  -- annotated tag v<x.y.z> + a GitHub Release whose body is
 #                       assembled from the changelog entries changesets wrote
+#   apps             -- desktop installers + Android APK attached to that Release
 #   images           -- the six service images at :v<x.y.z>, :<sha> and :master
 #   deploy           -- production, behind the environment approval
 #   back-merge       -- a pull request putting master's bumps back on develop
@@ -238,6 +239,26 @@ jobs:
             --verify-tag \
             --latest
           echo "::notice::Published GitHub Release ${TAG}."
+
+  # ---------------------------------------------------------------------------
+  # Installable apps (desktop installers, Android APK) attached to the Release.
+  # Parallel to the images and not a `needs:` of deploy: a failed installer build
+  # must not hold back the server release, and release_apps.yml can retry it.
+  # ---------------------------------------------------------------------------
+  apps:
+    name: Installable apps
+    needs: [resolve, tag-and-release]
+    if: ${{ needs.resolve.outputs.release == 'true' }}
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release_apps_reusable.yml
+    with:
+      tag: ${{ needs.resolve.outputs.tag }}
+    secrets:
+      android-keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      android-keystore-password: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      android-key-alias: ${{ secrets.ANDROID_KEY_ALIAS }}
+      android-key-password: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
   # ---------------------------------------------------------------------------
   # The six images, at the merged tree.
