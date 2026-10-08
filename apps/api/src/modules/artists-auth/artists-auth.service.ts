@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto'
 import type { LoginResult } from '@common/auth.types'
 import { ARTIST_AGREEMENT_VERSION, LEGAL_VERSION } from '@common/legal'
-import { MailService } from '@infra/mail/mail.service'
+import { type ArtistVerificationDelivery, MailService } from '@infra/mail/mail.service'
 import {
   DEFAULT_MAIL_LOCALE,
   type MailLocale,
@@ -18,17 +18,22 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Logger,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import type { ArtistSession } from '@prisma/client'
 import type { JWTPayload } from '../tokens'
+import { ArtistEmailCodeService } from './artist-email-code.service'
 import type { ArtistRegistrationDto } from './dtos'
 import type { ArtistSessionEntity } from './entities'
+import { ARTIST_AUTH_ERRORS } from './errors'
 
 /** Represents the artists auth service. */
 @Injectable()
 export class ArtistsAuthService {
+  private readonly logger = new Logger(ArtistsAuthService.name)
   private static readonly MAX_LOGIN_ATTEMPTS = 5
   private static readonly LOCK_DURATION_MS = 15 * 60 * 1000
   /** Creates a new instance. */
@@ -39,6 +44,7 @@ export class ArtistsAuthService {
     private prisma: PrismaService,
     private token: TokenService,
     private mail: MailService,
+    private emailCodes: ArtistEmailCodeService,
   ) {}
 
   /** Runs the register artist operation. */
@@ -47,6 +53,10 @@ export class ArtistsAuthService {
 
     if (artist) {
       throw new ConflictException('Artist with this email already exists')
+    }
+    // Without a token store or transport the account could never be verified.
+    if (this.mail.getArtistVerificationDelivery() === 'unavailable') {
+      throw new ServiceUnavailableException(ARTIST_AUTH_ERRORS.EMAIL_VERIFICATION_UNAVAILABLE)
     }
 
     const acceptedAt = new Date()
@@ -59,8 +69,8 @@ export class ArtistsAuthService {
       artistAgreementVersion: ARTIST_AGREEMENT_VERSION,
       artistAgreementAcceptedAt: acceptedAt,
     })
-    await this.issueEmailVerification(created.id, created.email, created.username)
-    return { requiresEmailVerification: true as const }
+    const delivery = await this.issueEmailVerification(created.id, created.email, created.username)
+    return { requiresEmailVerification: true as const, delivery }
   }
 
   /** Runs the login artist operation. */
@@ -254,14 +264,33 @@ export class ArtistsAuthService {
   }
 
   async resendEmailVerification(email: string) {
+    const delivery = this.mail.getArtistVerificationDelivery()
+    if (delivery === 'unavailable') return { delivery }
+    await this.emailCodes.reserveResend(email)
     const artist = await this.artistsPrivate.findByEmail(email)
-    if (!artist || artist.emailVerifiedAt) return
-    await this.issueEmailVerification(
+    if (!artist || artist.emailVerifiedAt) return { delivery }
+    const result = await this.issueEmailVerification(
       artist.id,
       artist.email,
       artist.username,
       resolveMailLocale(artist.locale),
     )
+    return { delivery: result }
+  }
+
+  async verifyEmailCode(email: string, code: string): Promise<void> {
+    const artist = await this.artistsPrivate.findByEmail(email)
+    if (!artist || artist.emailVerifiedAt) {
+      throw new BadRequestException(ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE)
+    }
+    await this.emailCodes.consume(artist.id, code)
+    await this.prisma.$transaction([
+      this.prisma.artist.update({
+        where: { id: artist.id },
+        data: { emailVerifiedAt: new Date() },
+      }),
+      this.prisma.artistEmailVerification.deleteMany({ where: { artistId: artist.id } }),
+    ])
   }
 
   private async issueEmailVerification(
@@ -269,7 +298,10 @@ export class ArtistsAuthService {
     email: string,
     username: string,
     locale: MailLocale = DEFAULT_MAIL_LOCALE,
-  ) {
+  ): Promise<ArtistVerificationDelivery> {
+    const delivery = this.mail.getArtistVerificationDelivery()
+    if (delivery === 'unavailable') return delivery
+    const code = await this.emailCodes.issue(artistId)
     const rawToken = randomBytes(32).toString('hex')
     await this.prisma.$transaction([
       this.prisma.artistEmailVerification.deleteMany({ where: { artistId } }),
@@ -281,7 +313,14 @@ export class ArtistsAuthService {
         },
       }),
     ])
-    await this.mail.sendArtistEmailVerification(email, rawToken, username, locale)
+    try {
+      await this.mail.sendArtistEmailVerification(email, rawToken, username, locale, code)
+      return delivery
+    } catch {
+      this.logger.error('Artist verification email delivery failed; use resend to retry')
+      // Report the global transport mode equally for every address, including unknown accounts.
+      return delivery
+    }
   }
 
   /**

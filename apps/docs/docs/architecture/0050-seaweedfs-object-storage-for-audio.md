@@ -97,8 +97,8 @@ a file stream or a buffer, or use a multipart upload for streams of unknown leng
 ### Accepted risk: no bucket backups
 
 **Backups of the bucket are out of scope for now (owner's decision, 2026-10-01).** The existing
-backup covers PostgreSQL and the `api_storage` volume only; `infra/backup.sh` and the
-`/app/storage` tasks are unchanged. After the cutover, audio uploaded to the bucket has no
+backup covered PostgreSQL and the `api_storage` volume only, and that automation has since been
+removed as well (see ADR-0033). After the cutover, audio uploaded to the bucket has no
 off-host copy: losing the `seaweedfs_data` volume loses that audio. This is accepted while no real
 content is uploaded and **must be revisited before real content is**. The decision to switch the
 driver should depend on that revisit.

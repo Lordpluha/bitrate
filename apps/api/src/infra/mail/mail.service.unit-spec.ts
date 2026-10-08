@@ -49,6 +49,18 @@ describe('MailService audience-specific links', () => {
       'https://artists.example.com/verify-email?token=artist-token',
     )
   })
+
+  it('includes the artist code and its lifetime without changing user emails', async () => {
+    await service.sendArtistEmailVerification(
+      'artist@example.com',
+      'artist-token',
+      'artist',
+      'en',
+      '012345',
+    )
+    expect(sendMail.mock.calls[0]?.[0].html).toContain('012345')
+    expect(sendMail.mock.calls[0]?.[0].html).toContain('10 minutes')
+  })
 })
 
 describe('MailService development fallback policy', () => {
@@ -101,5 +113,24 @@ describe('MailService development fallback policy', () => {
     expect(() => new MailService(makeConfig(false, 'production'))).toThrow(
       'SMTP is required in production but is not configured',
     )
+  })
+
+  it('reports unavailable delivery without claiming an email was sent', () => {
+    expect(new MailService(makeConfig(false)).getArtistVerificationDelivery()).toBe('unavailable')
+    expect(new MailService(makeConfig(true)).getArtistVerificationDelivery()).toBe('development')
+  })
+
+  it('logs the artist code only after development opt-in', async () => {
+    const service = new MailService(makeConfig(true))
+    const logger = Reflect.get(service, 'logger') as { warn: (...args: unknown[]) => void }
+    const warn = jest.spyOn(logger, 'warn').mockImplementation(() => undefined)
+    await service.sendArtistEmailVerification(
+      'artist@example.com',
+      'token',
+      'artist',
+      'en',
+      '012345',
+    )
+    expect(JSON.stringify(warn.mock.calls)).toContain('code: 012345')
   })
 })

@@ -1,0 +1,33 @@
+name: "[release] Installable Apps"
+
+# Hand-run: build the desktop installers and the Android APK for an EXISTING release tag and
+# attach them to its GitHub Release. Releases normally get them from release_publish.yml; this
+# is for backfilling an older release or retrying a failed upload (`--clobber` replaces).
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag, e.g. v0.4.0
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.tag }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  apps:
+    name: Apps
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release_apps_reusable.yml
+    with:
+      tag: ${{ inputs.tag }}
+    secrets:
+      android-keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      android-keystore-password: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      android-key-alias: ${{ secrets.ANDROID_KEY_ALIAS }}
+      android-key-password: ${{ secrets.ANDROID_KEY_PASSWORD }}

@@ -1,0 +1,40 @@
+name: Scan image
+description: >-
+  Trivy scan of an image already loaded into the local Docker daemon, run in the same job that
+  built it so no image is ever rebuilt just to be scanned. OS packages only: npm dependencies
+  are owned by `pnpm audit` and secrets by TruffleHog in security_reusable.yml, so this does
+  not report them a second time.
+inputs:
+  image-ref:
+    description: "Image reference present in the local daemon (build with `load: true`)"
+    required: true
+  service:
+    description: Service name; keys the code scanning category so each image keeps its own alerts
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Run Trivy on OS packages
+      uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+      with:
+        scan-type: image
+        image-ref: ${{ inputs.image-ref }}
+        scanners: vuln
+        vuln-type: os
+        severity: CRITICAL,HIGH
+        format: sarif
+        output: trivy-image-${{ inputs.service }}.sarif
+        timeout: 10m
+
+    # A fork PR's token cannot write security events, so the upload is skipped there rather
+    # than failing a build that succeeded.
+    - name: Upload Trivy results to code scanning
+      if: >-
+        always()
+        && hashFiles(format('trivy-image-{0}.sarif', inputs.service)) != ''
+        && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+      uses: github/codeql-action/upload-sarif@v4
+      with:
+        sarif_file: trivy-image-${{ inputs.service }}.sarif
+        # The category the old security.yml image job used, so existing alerts carry over.
+        category: .github/workflows/security.yml:docker-security-scan/service:${{ inputs.service }}

@@ -1,0 +1,77 @@
+name: App changed
+description: >-
+  Decides whether a pull request really changes one app, for workflows whose builds are too
+  expensive to run on every path-filter hit (native desktop on three OSes, mobile). The workflow's
+  `paths:` filter only decides that the workflow starts; this decides whether its builds do.
+
+  - Files under the app directory count, except docs and the Docker/compose files that the native
+    build never reads.
+  - The app's own workflow and action files count.
+  - A pnpm-lock.yaml change counts only when turbo, which diffs the lockfile per package, lists
+    the app as affected, so a dependency bump in another app does not build this one.
+
+  Needs a checkout with the pull request's base commit available (fetch-depth: 0).
+inputs:
+  package:
+    description: Workspace package name, e.g. @bitrate/desktop
+    required: true
+  app-dir:
+    description: App directory, e.g. apps/desktop
+    required: true
+  ci-paths:
+    description: Extended regex of CI files that also count, e.g. ^\.github/workflows/desktop
+    required: true
+outputs:
+  changed:
+    description: "'true' when the app must be built"
+    value: ${{ steps.decide.outputs.changed }}
+runs:
+  using: composite
+  steps:
+    - name: Decide
+      id: decide
+      shell: bash
+      env:
+        PACKAGE: ${{ inputs.package }}
+        APP_DIR: ${{ inputs.app-dir }}
+        CI_PATHS: ${{ inputs.ci-paths }}
+        BASE: ${{ github.event.pull_request.base.sha }}
+      run: |
+        set -euo pipefail
+        if [ -z "${BASE}" ]; then
+          echo "Not a pull request: build."
+          echo "changed=true" >> "${GITHUB_OUTPUT}"
+          exit 0
+        fi
+
+        changed_files="$(git diff --name-only "${BASE}"...HEAD)"
+        relevant="$(printf '%s\n' "${changed_files}" \
+          | grep -E "^${APP_DIR}/|${CI_PATHS}" \
+          | grep -vE "^${APP_DIR}/(.*\.md|Dockerfile[^/]*|docker-compose[^/]*)$" || true)"
+
+        if [ -n "${relevant}" ]; then
+          echo "Build: the pull request changes"
+          printf '%s\n' "${relevant}" | sed 's/^/  /'
+          echo "changed=true" >> "${GITHUB_OUTPUT}"
+          exit 0
+        fi
+
+        if printf '%s\n' "${changed_files}" | grep -qx 'pnpm-lock.yaml'; then
+          turbo_version="$(node -p "((p) => (p.devDependencies ?? {}).turbo ?? (p.dependencies ?? {}).turbo)(require('./package.json')).replace(/^[^0-9]*/, '')")"
+          affected="$(TURBO_SCM_BASE="${BASE}" npx --yes "turbo@${turbo_version}" ls --affected --output json)"
+          if printf '%s' "${affected}" | PACKAGE="${PACKAGE}" node -e '
+            let input = ""
+            process.stdin.on("data", (chunk) => (input += chunk))
+            process.stdin.on("end", () => {
+              const names = JSON.parse(input).packages.items.map((item) => item.name)
+              process.exit(names.includes(process.env.PACKAGE) ? 0 : 1)
+            })'; then
+            echo "Build: pnpm-lock.yaml changes the dependencies of ${PACKAGE}."
+            echo "changed=true" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          echo "pnpm-lock.yaml changed, but not for ${PACKAGE}."
+        fi
+
+        echo "Skip: nothing in this pull request changes ${PACKAGE}."
+        echo "changed=false" >> "${GITHUB_OUTPUT}"
