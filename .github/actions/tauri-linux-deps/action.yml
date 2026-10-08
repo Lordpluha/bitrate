@@ -1,0 +1,36 @@
+name: Tauri Linux dependencies
+description: >-
+  System packages a Tauri 2 build needs on Ubuntu. apt normally takes 35-55s here, but a stalled
+  mirror has hung it for the whole job timeout, so every apt call is time-boxed and retried.
+  Give the calling step a `timeout-minutes` as the last line of defence.
+runs:
+  using: composite
+  steps:
+    - name: Install packages
+      shell: bash
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        set -euo pipefail
+        apt_opts=(
+          -o Acquire::Retries=3
+          -o Acquire::http::Timeout=30
+          -o Acquire::https::Timeout=30
+          -o DPkg::Lock::Timeout=120
+        )
+        packages=(
+          libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev
+          libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev pkg-config
+        )
+
+        # Up to three attempts, each hard-capped, so a stalled mirror costs minutes, not the job.
+        for attempt in 1 2 3; do
+          if sudo timeout 180 apt-get "${apt_opts[@]}" update \
+            && sudo -E timeout 420 apt-get "${apt_opts[@]}" install -y "${packages[@]}"; then
+            exit 0
+          fi
+          echo "::warning::apt attempt ${attempt} failed or timed out; retrying"
+          sleep $((attempt * 10))
+        done
+        echo "::error::Could not install the Tauri system packages after 3 attempts"
+        exit 1
