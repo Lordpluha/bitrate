@@ -18,6 +18,7 @@ import type { UpdateReleaseDto } from './dtos/update-release.dto'
 import type { UpdateReleaseContributorDto } from './dtos/update-release-contributor.dto'
 import type { UpdateReleaseRightsDto } from './dtos/update-release-rights.dto'
 import type { UpdateReleaseTrackDto } from './dtos/update-release-track.dto'
+import { RELEASE_ERRORS } from './errors'
 import { releaseReadiness } from './release-readiness'
 import {
   RELEASE_CONTRIBUTOR_SELECT,
@@ -73,7 +74,7 @@ export class ReleasesService {
       where: { id, ownerArtistId, deletedAt: null },
       select: RELEASE_SUMMARY_SELECT,
     })
-    if (!release) throw new NotFoundException('Release not found')
+    if (!release) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
     return release
   }
 
@@ -105,7 +106,7 @@ export class ReleasesService {
     )
     if (updated) return updated
     await this.findOne(ownerArtistId, id)
-    throw new ConflictException('Release changed or is no longer a draft')
+    throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
   }
 
   async workspace(ownerArtistId: string, id: string) {
@@ -165,7 +166,7 @@ export class ReleasesService {
         },
       },
     })
-    if (!release) throw new NotFoundException('Release not found')
+    if (!release) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
     const readiness = await this.readiness(this.prisma, ownerArtistId, id)
     const {
       owner,
@@ -222,10 +223,10 @@ export class ReleasesService {
         contributors: { where: { id: contributorId }, take: 1, select: RELEASE_CONTRIBUTOR_SELECT },
       },
     })
-    if (!record) throw new NotFoundException('Release or credit not found')
+    if (!record) throw new NotFoundException(RELEASE_ERRORS.CREDIT_NOT_FOUND)
     const { contributors, ...release } = record
     const participant = contributors[0]
-    if (!participant) throw new NotFoundException('Release or credit not found')
+    if (!participant) throw new NotFoundException(RELEASE_ERRORS.CREDIT_NOT_FOUND)
     return { release, participant }
   }
 
@@ -248,7 +249,7 @@ export class ReleasesService {
         data: { displayName: input.displayName, roles: input.roles },
         select: RELEASE_CONTRIBUTOR_SELECT,
       })
-      if (!participant) throw new NotFoundException('Release or credit not found')
+      if (!participant) throw new NotFoundException(RELEASE_ERRORS.CREDIT_NOT_FOUND)
       return {
         release,
         participant: {
@@ -266,18 +267,18 @@ export class ReleasesService {
         where: { id, ownerArtistId, deletedAt: null },
         select: releaseReadinessSelect(ownerArtistId),
       })
-      if (!record) throw new NotFoundException('Release not found')
+      if (!record) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
       const expected = new Date(input.expectedUpdatedAt)
       if (
         record.status !== ReleaseStatus.DRAFT ||
         record.updatedAt.getTime() !== expected.getTime()
       ) {
-        throw new ConflictException('Release changed or is no longer a draft')
+        throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
       }
       const { blockers } = releaseReadiness(readinessInput(record))
       if (blockers.length > 0) {
         throw new UnprocessableEntityException({
-          message: 'Resolve the blockers before submitting for review',
+          message: RELEASE_ERRORS.BLOCKERS_UNRESOLVED,
           blockers,
         })
       }
@@ -293,7 +294,7 @@ export class ReleasesService {
         data: { status: ReleaseStatus.SUBMITTED, submittedAt: new Date() },
         select: RELEASE_SUMMARY_SELECT,
       })
-      if (!submitted) throw new ConflictException('Release changed or is no longer a draft')
+      if (!submitted) throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
       return submitted
     })
   }
@@ -313,7 +314,7 @@ export class ReleasesService {
     })
     if (withdrawn) return withdrawn
     await this.findOne(ownerArtistId, id)
-    throw new ConflictException('Release changed or is not awaiting review')
+    throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_SUBMITTED)
   }
 
   private async readiness(
@@ -352,7 +353,7 @@ export class ReleasesService {
           where: { releaseId: id, id: { in: contributorIds } },
         })
         if (credited !== contributorIds.length) {
-          throw new BadRequestException('Every share must belong to a contributor on this release')
+          throw new BadRequestException(RELEASE_ERRORS.SHARE_CONTRIBUTOR_MISMATCH)
         }
       }
       await tx.releaseSplit.deleteMany({ where: { releaseId: id, rightType: input.rightType } })
@@ -386,7 +387,7 @@ export class ReleasesService {
             select: { id: true, isrc: true },
           }),
       )
-      if (!track) throw new NotFoundException('Recording not found on this release')
+      if (!track) throw new NotFoundException(RELEASE_ERRORS.RECORDING_NOT_FOUND)
       return { release, track }
     })
   }
@@ -426,8 +427,8 @@ export class ReleasesService {
         where: { id, ownerArtistId, deletedAt: null },
         select: { id: true },
       })
-      if (!visible) throw new NotFoundException('Release not found')
-      throw new ConflictException('Release changed or is no longer a draft')
+      if (!visible) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
+      throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
     }
     return release
   }

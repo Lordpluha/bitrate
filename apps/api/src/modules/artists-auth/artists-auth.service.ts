@@ -28,6 +28,7 @@ import type { JWTPayload } from '../tokens'
 import { ArtistEmailCodeService } from './artist-email-code.service'
 import type { ArtistRegistrationDto } from './dtos'
 import type { ArtistSessionEntity } from './entities'
+import { ARTIST_AUTH_ERRORS } from './errors'
 
 /** Represents the artists auth service. */
 @Injectable()
@@ -55,7 +56,7 @@ export class ArtistsAuthService {
     }
     // Without a token store or transport the account could never be verified.
     if (this.mail.getArtistVerificationDelivery() === 'unavailable') {
-      throw new ServiceUnavailableException('Email verification is temporarily unavailable')
+      throw new ServiceUnavailableException(ARTIST_AUTH_ERRORS.EMAIL_VERIFICATION_UNAVAILABLE)
     }
 
     const acceptedAt = new Date()
@@ -280,7 +281,7 @@ export class ArtistsAuthService {
   async verifyEmailCode(email: string, code: string): Promise<void> {
     const artist = await this.artistsPrivate.findByEmail(email)
     if (!artist || artist.emailVerifiedAt) {
-      throw new BadRequestException('Invalid or expired verification code')
+      throw new BadRequestException(ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE)
     }
     await this.emailCodes.consume(artist.id, code)
     await this.prisma.$transaction([

@@ -14,6 +14,7 @@ import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtistSession } from './__tests__/fixtures/artists-auth.fixtures'
 import type { ArtistEmailCodeService } from './artist-email-code.service'
 import { ArtistsAuthService } from './artists-auth.service'
+import { ARTIST_AUTH_ERRORS } from './errors'
 
 const makeArtistsServiceMock = () =>
   ({
@@ -115,9 +116,9 @@ describe('ArtistsAuthService', () => {
 
     it('does not verify an artist after a rejected code', async () => {
       artistsPrivate.findByEmail.mockResolvedValue(buildArtist({ emailVerifiedAt: null }) as never)
-      emailCodes.consume.mockRejectedValue(new Error('Invalid or expired verification code'))
+      emailCodes.consume.mockRejectedValue(new Error(ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE))
       await expect(service.verifyEmailCode('artist@example.com', '000000')).rejects.toThrow(
-        'Invalid or expired verification code',
+        ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
       )
       expect(prisma.artist.update).not.toHaveBeenCalled()
     })
@@ -126,7 +127,7 @@ describe('ArtistsAuthService', () => {
       for (const artist of [null, buildArtist()]) {
         artistsPrivate.findByEmail.mockResolvedValue(artist as never)
         await expect(service.verifyEmailCode('artist@example.com', '012345')).rejects.toThrow(
-          'Invalid or expired verification code',
+          ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
         )
       }
       expect(emailCodes.consume).not.toHaveBeenCalled()
