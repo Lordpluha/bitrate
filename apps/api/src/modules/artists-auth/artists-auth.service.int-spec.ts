@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt'
 import { Test, type TestingModule } from '@nestjs/testing'
 import { prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtistSession } from './__tests__/fixtures/artists-auth.fixtures'
+import { ArtistEmailCodeService } from './artist-email-code.service'
 import { ArtistsAuthService } from './artists-auth.service'
 
 const makeArtistsServiceMock = () =>
@@ -63,6 +64,7 @@ describe('ArtistsAuthService (int)', () => {
         { provide: PrismaService, useValue: prismaMock },
         { provide: TokenService, useValue: tokenMock },
         { provide: MailService, useValue: { sendPasswordReset: jest.fn() } },
+        { provide: ArtistEmailCodeService, useValue: {} },
       ],
     }).compile()
 

@@ -35,6 +35,8 @@ on:
 permissions:
   contents: read
   packages: write
+  # The image scan uploads its SARIF to code scanning.
+  security-events: write
 
 env:
   REGISTRY: ghcr.io
@@ -123,40 +125,33 @@ jobs:
           ghcr-username: ${{ github.actor }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Admin Docker image (with registry cache export)
-        if: ${{ inputs.cache-to-registry }}
+      - name: Build Admin Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./apps/admin/Dockerfile
           push: ${{ inputs.push-image }}
+          # Loaded as well, so the scan below reads this exact image instead of a rebuild.
+          load: true
           tags: ${{ inputs.tags }}
-          cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache
-            type=gha,scope=admin
-          cache-to: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache
+          # Only develop/master export the cache: a PR that writes the shared ref replaces
+          # develop's layers with its own, and a gzip mode=max export cost minutes per run.
+          cache-to: ${{ inputs.cache-to-registry && format('type=registry,ref={0}/{1}/cache/admin:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
           secrets: |
             turbo_token=${{ secrets.TURBO_TOKEN }}
           build-args: |
             NG_APP_API_URL=${{ env.BUILD_NG_APP_API_URL }}
           target: production
 
-      - name: Build Admin Docker image (GHA cache export only)
-        if: ${{ !inputs.cache-to-registry }}
-        uses: docker/build-push-action@v7
+      - name: Resolve image reference for scanning
+        id: scan-ref
+        env:
+          TAGS: ${{ inputs.tags }}
+        run: echo "ref=$(printf '%s\n' "$TAGS" | sed -e 's/^[[:space:]]*//' -e '/^$/d' | head -n1)" >> "$GITHUB_OUTPUT"
+
+      - name: Scan image
+        uses: ./.github/actions/scan-image
         with:
-          context: .
-          file: ./apps/admin/Dockerfile
-          push: ${{ inputs.push-image }}
-          tags: ${{ inputs.tags }}
-          cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/admin:buildcache
-            type=gha,scope=admin
-          cache-to: |
-            type=gha,mode=max,scope=admin
-          secrets: |
-            turbo_token=${{ secrets.TURBO_TOKEN }}
-          build-args: |
-            NG_APP_API_URL=${{ env.BUILD_NG_APP_API_URL }}
-          target: production
+          image-ref: ${{ steps.scan-ref.outputs.ref }}
+          service: admin

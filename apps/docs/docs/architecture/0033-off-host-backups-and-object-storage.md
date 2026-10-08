@@ -1,6 +1,11 @@
 # ADR-0033: Backups leave the host, and the audio moves to object storage
 
-Status: Accepted
+Status: Superseded — the backup half was removed on 2026-10-08
+
+> The backup automation described below (`infra/backup.sh`, `.github/workflows/backup.yml`,
+> the restore rehearsal and the `prod:backup` / `prod:restore` tasks) was deleted without
+> replacement: it never completed a run because the bucket and credentials were never
+> provisioned. The object-storage half of this decision is unaffected.
 
 Date: 2026-09-08
 

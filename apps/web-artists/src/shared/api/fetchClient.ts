@@ -68,7 +68,8 @@ const authRefreshMiddleware: Middleware = {
         const isOnAuthPage =
           currentPath.startsWith('/auth/') ||
           currentPath === '/login' ||
-          currentPath === '/registration'
+          currentPath === '/registration' ||
+          currentPath === ROUTES.auth.verifyEmail
 
         if (!isOnAuthPage) {
           window.location.href = ROUTES.auth.login
