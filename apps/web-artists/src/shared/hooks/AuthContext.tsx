@@ -1,16 +1,16 @@
 'use client'
 
-import type { ApiSchemas } from '@bitrate/contracts'
+import type { ArtistIdentity } from '@shared/auth/artistSession.types'
 import { createContext, type ReactNode, useContext } from 'react'
 import { useAuth } from './useAuth'
 
-type Artist = ApiSchemas['SafeArtistEntity']
-
 interface AuthContextType {
-  artist: Artist | undefined
+  artist: ArtistIdentity | undefined
   isAuthenticated: boolean
   isLoading: boolean
   logout: () => void
+  isLoggingOut: boolean
+  logoutError: string | null
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
