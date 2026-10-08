@@ -42,6 +42,7 @@ jobs:
     #   contents: write       -- the annotated tag, the GitHub Release, and the
     #                            back-merge branch.
     #   packages: write       -- the six images.
+    #   security-events: write -- each image build uploads its Trivy SARIF.
     #   pull-requests: write  -- the back-merge pull request.
     #   actions: read         -- deploy_reusable declares it for its image-wait
     #                            job. That job is off on this path (the images
@@ -54,6 +55,7 @@ jobs:
       packages: write
       pull-requests: write
       actions: read
+      security-events: write
 
     # Production configuration lives at *environment* scope and a job that calls
     # a reusable workflow may not declare `environment:`, so an explicit mapping

@@ -4,11 +4,17 @@ import { buildArtist } from '@modules/artists/__tests__/fixtures/artists.fixture
 import type { ArtistsPrivateService } from '@modules/artists/artists.private.service'
 import type { ArtistsService } from '@modules/artists/artists.service'
 import type { TokenService } from '@modules/tokens/token.service'
-import { ConflictException, UnauthorizedException } from '@nestjs/common'
+import {
+  ConflictException,
+  ServiceUnavailableException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import type { JwtService } from '@nestjs/jwt'
 import { type PrismaMock, prismaMock, resetPrismaMock } from '@test/mocks'
 import { buildArtistSession } from './__tests__/fixtures/artists-auth.fixtures'
+import type { ArtistEmailCodeService } from './artist-email-code.service'
 import { ArtistsAuthService } from './artists-auth.service'
+import { ARTIST_AUTH_ERRORS } from './errors'
 
 const makeArtistsServiceMock = () =>
   ({
@@ -44,6 +50,7 @@ const makeMailServiceMock = () =>
     sendPasswordReset: jest.fn(),
     sendArtistPasswordReset: jest.fn(),
     sendArtistEmailVerification: jest.fn(),
+    getArtistVerificationDelivery: jest.fn(() => 'email'),
   }) as unknown as jest.Mocked<MailService>
 
 /** The lockout window the service applies once the attempt threshold is reached. */
@@ -66,6 +73,7 @@ describe('ArtistsAuthService', () => {
   let prisma: PrismaMock
   let token: jest.Mocked<TokenService>
   let mail: jest.Mocked<MailService>
+  let emailCodes: jest.Mocked<ArtistEmailCodeService>
 
   beforeEach(() => {
     resetPrismaMock()
@@ -75,7 +83,76 @@ describe('ArtistsAuthService', () => {
     jwtService = makeJwtServiceMock()
     token = makeTokenServiceMock()
     mail = makeMailServiceMock()
-    service = new ArtistsAuthService(artists, artistsPrivate, jwtService, prisma, token, mail)
+    emailCodes = {
+      issue: jest.fn(async () => '012345'),
+      consume: jest.fn(),
+      reserveResend: jest.fn(),
+    } as unknown as jest.Mocked<ArtistEmailCodeService>
+    service = new ArtistsAuthService(
+      artists,
+      artistsPrivate,
+      jwtService,
+      prisma,
+      token,
+      mail,
+      emailCodes,
+    )
+  })
+
+  describe('email verification', () => {
+    it('verifies the code for the selected artist and consumes legacy links', async () => {
+      const artist = buildArtist({ emailVerifiedAt: null })
+      artistsPrivate.findByEmail.mockResolvedValue(artist as never)
+      await service.verifyEmailCode(artist.email, '012345')
+      expect(emailCodes.consume).toHaveBeenCalledWith(artist.id, '012345')
+      expect(prisma.artist.update).toHaveBeenCalledWith({
+        where: { id: artist.id },
+        data: { emailVerifiedAt: expect.any(Date) },
+      })
+      expect(prisma.artistEmailVerification.deleteMany).toHaveBeenCalledWith({
+        where: { artistId: artist.id },
+      })
+    })
+
+    it('does not verify an artist after a rejected code', async () => {
+      artistsPrivate.findByEmail.mockResolvedValue(buildArtist({ emailVerifiedAt: null }) as never)
+      emailCodes.consume.mockRejectedValue(new Error(ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE))
+      await expect(service.verifyEmailCode('artist@example.com', '000000')).rejects.toThrow(
+        ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
+      )
+      expect(prisma.artist.update).not.toHaveBeenCalled()
+    })
+
+    it('rejects codes for unknown or already verified accounts with the same error', async () => {
+      for (const artist of [null, buildArtist()]) {
+        artistsPrivate.findByEmail.mockResolvedValue(artist as never)
+        await expect(service.verifyEmailCode('artist@example.com', '012345')).rejects.toThrow(
+          ARTIST_AUTH_ERRORS.INVALID_VERIFICATION_CODE,
+        )
+      }
+      expect(emailCodes.consume).not.toHaveBeenCalled()
+    })
+
+    it('reports disabled delivery equally for missing and unverified accounts', async () => {
+      mail.getArtistVerificationDelivery.mockReturnValue('unavailable')
+      for (const artist of [null, buildArtist({ emailVerifiedAt: null })]) {
+        artistsPrivate.findByEmail.mockResolvedValue(artist as never)
+        await expect(service.resendEmailVerification('artist@example.com')).resolves.toEqual({
+          delivery: 'unavailable',
+        })
+      }
+      expect(mail.sendArtistEmailVerification).not.toHaveBeenCalled()
+    })
+
+    it('does not expose account existence through SMTP delivery failures', async () => {
+      mail.sendArtistEmailVerification.mockRejectedValue(new Error('SMTP unavailable'))
+      for (const artist of [null, buildArtist({ emailVerifiedAt: null })]) {
+        artistsPrivate.findByEmail.mockResolvedValue(artist as never)
+        await expect(service.resendEmailVerification('artist@example.com')).resolves.toEqual({
+          delivery: 'email',
+        })
+      }
+    })
   })
 
   /** Stands in for the atomic increment, which returns the row's new counter value. */
@@ -103,6 +180,22 @@ describe('ArtistsAuthService', () => {
           acceptArtistAgreement: true,
         }),
       ).rejects.toThrow(ConflictException)
+    })
+
+    it('refuses to create an account that could never be verified', async () => {
+      artists.findByEmail.mockResolvedValue(null as never)
+      mail.getArtistVerificationDelivery.mockReturnValue('unavailable')
+
+      await expect(
+        service.registerArtist({
+          email: 'new@example.com',
+          password: 'pass',
+          username: 'newartist',
+          acceptLegal: true,
+          acceptArtistAgreement: true,
+        }),
+      ).rejects.toThrow(ServiceUnavailableException)
+      expect(artists.register).not.toHaveBeenCalled()
     })
 
     it('should register artist if email is unique', async () => {

@@ -1,4 +1,4 @@
-name: "[ui-react] Tests"
+name: "[ui-react] Checks"
 
 on:
   push:
@@ -6,18 +6,24 @@ on:
     paths:
       - 'packages/ui-react/**'
       - 'packages/tailwind/**'
+      # The Storybook image's production stage copies this nginx config.
+      - 'infra/nginx/static-site.conf'
       - 'turbo.json'
       - '.github/workflows/ui_react.yml'
       - '.github/workflows/ui_react_reusable.yml'
+      - '.github/workflows/ui_react_storybook_reusable.yml'
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [develop, master]
     paths:
       - 'packages/ui-react/**'
       - 'packages/tailwind/**'
+      # The Storybook image's production stage copies this nginx config.
+      - 'infra/nginx/static-site.conf'
       - 'turbo.json'
       - '.github/workflows/ui_react.yml'
       - '.github/workflows/ui_react_reusable.yml'
+      - '.github/workflows/ui_react_storybook_reusable.yml'
   workflow_dispatch:
     inputs:
       mode:
@@ -44,13 +50,19 @@ on:
         required: false
         default: false
         type: boolean
+      release-tag:
+        description: >-
+          Product version tag (`v1.4.0`) for a hand-run master Storybook image, in addition to
+          :master and :<sha>. Normally empty: releases build it through release_images_reusable.yml.
+        required: false
+        default: ''
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
-# These jobs only check out and test. The Storybook image is built by storybook.yml, which
-# is the only ui-react workflow that needs packages: write.
+# Read-only by default. Only the storybook-* image jobs below raise packages: write.
 permissions:
   contents: read
 
@@ -78,3 +90,72 @@ jobs:
       run-biome: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-biome'] == 'true' || false }}
       run-tests: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-tests'] == 'true' || true }}
       run-screenshot: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['run-screenshot'] == 'true' || false }}
+
+  # Storybook image for packages/ui-react. Push to develop only; master images are built by
+  # the release (release_images_reusable.yml) or by a hand-run `master` dispatch.
+  storybook-pr:
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    uses: ./.github/workflows/ui_react_storybook_reusable.yml
+    with:
+      push-image: false
+      tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:pr-${{ github.sha }}
+      timeout-minutes: 60
+      cache-to-registry: false
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
+
+  storybook-develop:
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
+    uses: ./.github/workflows/ui_react_storybook_reusable.yml
+    with:
+      push-image: true
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:develop
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:develop-${{ github.sha }}
+      timeout-minutes: 60
+      cache-to-registry: true
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
+
+  storybook-master:
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+    # Release builds are dispatched, never pushed into existence.
+    #
+    # A release does not come through here -- release_publish.yml calls this
+    # app's reusable workflow directly, at the merged tree, together with the
+    # other five. This mode is the hand-run escape hatch for rebuilding just this
+    # service's `:master` image.
+    #
+    # It used to be started by the version commit's push and gated on that
+    # commit's subject, which only worked when a PAT pushed it: GitHub raises no
+    # push event for a GITHUB_TOKEN push. See ADR-0029.
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
+    uses: ./.github/workflows/ui_react_storybook_reusable.yml
+    with:
+      push-image: true
+      # Three tags, and the third one is the rollback handle:
+      #   :master  -- moving convenience pointer, never a rollback target
+      #   :<sha>   -- immutable, but unreadable and not chronologically sortable
+      #   :v<x.y.z> -- immutable; what IMAGE_TAG is pinned to, and the rollback
+      #                handle. Empty unless release-tag was passed.
+      # The third line evaluates to an empty string on a hand-run master build;
+      # docker/build-push-action drops empty entries from a multiline tag list.
+      tags: |
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:master
+        ghcr.io/lordpluha/${{ github.event.repository.name }}/storybook:${{ github.sha }}
+        ${{ inputs.release-tag != '' && format('ghcr.io/lordpluha/{0}/storybook:{1}', github.event.repository.name, inputs.release-tag) || '' }}
+      timeout-minutes: 60
+      cache-to-registry: true
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}

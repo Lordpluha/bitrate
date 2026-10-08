@@ -58,6 +58,8 @@ concurrency:
 permissions:
   contents: read
   packages: write
+  # The image scan inside each build uploads SARIF.
+  security-events: write
 
 jobs:
   web-player-pr:

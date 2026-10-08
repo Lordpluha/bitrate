@@ -1,5 +1,35 @@
 {
   "required": "Це поле обов'язкове",
   "invalid_email": "Введіть коректну електронну адресу",
-  "password_too_short": "Пароль має містити щонайменше 8 символів"
+  "password_too_short": "Пароль має містити щонайменше 8 символів",
+  "invalid_type": "Очікується {expected}",
+  "invalid_input": "Некоректне значення",
+  "invalid_value": "Має бути одним із: {values}",
+  "unrecognized_keys": "Невідомі поля: {keys}",
+  "not_multiple_of": "Має бути кратним {divisor}",
+  "too_small": {
+    "string": "Має містити щонайменше {minimum} символів",
+    "number": "Має бути не менше {minimum}",
+    "number_exclusive": "Має бути більше {minimum}",
+    "array": "Має містити щонайменше {minimum} елементів",
+    "other": "Значення замале (мінімум {minimum})"
+  },
+  "too_big": {
+    "string": "Має містити не більше {maximum} символів",
+    "number": "Має бути не більше {maximum}",
+    "number_exclusive": "Має бути менше {maximum}",
+    "array": "Має містити не більше {maximum} елементів",
+    "other": "Значення завелике (максимум {maximum})"
+  },
+  "invalid_format": {
+    "email": "Введіть коректну електронну адресу",
+    "url": "Введіть коректну URL-адресу",
+    "uuid": "Введіть коректний UUID",
+    "regex": "Не відповідає потрібному формату",
+    "other": "Некоректний формат {format}"
+  },
+  "release": {
+    "isrc_invalid": "Введіть ISRC, наприклад US-RC1-76-07839",
+    "update_empty": "Вкажіть назву, тип релізу, заплановану дату або UPC"
+  }
 }

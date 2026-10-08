@@ -4,7 +4,7 @@ import { FALLBACK_LOCALE } from './supported-locales'
 
 /**
  * `I18nModule.forRoot()` options. Dictionaries live beside this file, one folder per locale —
- * `apps/api/src/i18n/{en,uk}/*.json`. `watch: true` only matters in `start:dev`; it is a no-op
+ * `apps/api/src/i18n/{en,uk,ru,pl,de}/*.json`. `watch: true` only matters in `start:dev`; it is a no-op
  * once compiled.
  */
 export const i18nOptions: I18nOptions = {

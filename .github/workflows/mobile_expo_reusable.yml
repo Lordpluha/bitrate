@@ -47,12 +47,9 @@ jobs:
           load: true
           push: false
           tags: ${{ inputs.expo-image-tag }}
-          cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-dev:buildcache
-            type=gha,scope=mobile-dev
-          cache-to: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-dev:buildcache,mode=max
-            type=gha,mode=max,scope=mobile-dev
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/cache/mobile-dev:buildcache
+          # Registry only, and never from a PR: a PR reads develop's cache and writes nothing.
+          cache-to: ${{ github.event_name != 'pull_request' && format('type=registry,ref={0}/{1}/cache/mobile-dev:buildcache,mode=max,compression=zstd,ignore-error=true', env.REGISTRY, env.IMAGE_PREFIX) || '' }}
 
       - name: Run Expo Server
         run: |

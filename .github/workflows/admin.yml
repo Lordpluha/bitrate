@@ -59,22 +59,26 @@ concurrency:
 permissions:
   contents: read
   packages: write
+  # The image scan inside each build uploads SARIF.
+  security-events: write
 
 jobs:
   admin-pr:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
     uses: ./.github/workflows/admin_reusable.yml
+    secrets: inherit
     with:
       push-image: false
       tags: ghcr.io/lordpluha/${{ github.event.repository.name }}/admin:pr-${{ github.sha }}
       timeout-minutes: 30
       run-lint: true
       run-tests: true
-      cache-to-registry: true
+      cache-to-registry: false
 
   admin-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
     uses: ./.github/workflows/admin_reusable.yml
+    secrets: inherit
     with:
       push-image: true
       tags: |
@@ -94,6 +98,7 @@ jobs:
     # service's `:master` image.
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'master' }}
     uses: ./.github/workflows/admin_reusable.yml
+    secrets: inherit
     with:
       push-image: true
       # Three tags, and the third one is the rollback handle:
