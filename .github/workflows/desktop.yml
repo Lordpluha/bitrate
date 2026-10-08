@@ -51,7 +51,9 @@ jobs:
     uses: ./.github/workflows/desktop_native_reusable.yml
     with:
       artifact-prefix: desktop-pr
-      platform: ${{ github.event.inputs.platform || 'linux' }}
+      # All three OSes in parallel: the slowest one sets the wall time, and with the Rust cache
+      # a Windows/macOS-only breakage is caught on the PR instead of after the merge.
+      platform: ${{ github.event.inputs.platform || 'all' }}
 
   desktop-develop-native:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
