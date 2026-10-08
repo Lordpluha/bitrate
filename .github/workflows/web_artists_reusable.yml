@@ -96,13 +96,11 @@ jobs:
         if: ${{ inputs.run-e2e || inputs.run-screenshot }}
         run: pnpm exec playwright install chromium --with-deps
 
+      # One Playwright run: the general flows and the dashboard suite (its own API fixture and
+      # Vite server) are projects of the same config.
       - name: Run web-artists E2E tests
         if: ${{ inputs.run-e2e }}
         run: pnpm --filter @bitrate/web-artists test:e2e
-
-      - name: Run web-artists dashboard E2E tests
-        if: ${{ inputs.run-e2e }}
-        run: pnpm --filter @bitrate/web-artists test:e2e:dashboard
 
       - name: Run web-artists screenshot tests
         if: ${{ inputs.run-screenshot }}
