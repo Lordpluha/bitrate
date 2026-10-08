@@ -256,9 +256,7 @@ docker compose -f infra/docker-compose.preprod.yaml exec -T postgres \
 task db:restore FILE=backups/2026-01-01_120000.sql
 ```
 
-Production is separate: `task prod:backup` / `task prod:restore FILE=…` write and read
-`pg_dump --format=custom`, and a daily off-host copy is automated by
-`.github/workflows/backup.yml`. See
+Production has no automated backup: the off-host backup workflow was removed. See
 [Deployment § 6](./deployment.md#6-backups).
 
 ### Clear All Data

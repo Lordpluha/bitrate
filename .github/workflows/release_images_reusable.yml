@@ -75,6 +75,8 @@ jobs:
       timeout-build: 25
       run-biome: false
       run-tests: false
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
 
   web-player:
     name: web-player

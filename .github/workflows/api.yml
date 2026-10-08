@@ -69,6 +69,8 @@ jobs:
       timeout-build: 25
       run-biome: true
       run-tests: true
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
 
   api-develop:
     if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'develop') }}
@@ -81,6 +83,9 @@ jobs:
       timeout-build: 25
       run-biome: true
       run-tests: true
+      cache-write: true
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
 
   api-master:
     # Release builds are dispatched, never pushed into existence.
@@ -111,3 +116,5 @@ jobs:
       timeout-build: 25
       run-biome: false
       run-tests: false
+    secrets:
+      turbo-token: ${{ secrets.TURBO_TOKEN }}
