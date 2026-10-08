@@ -106,6 +106,12 @@ const server = createServer(async (request, response) => {
     response.end(JSON.stringify(body))
   }
   const cookie = request.headers.cookie ?? ''
+  /**
+   * Per-test namespace: the dashboard spec gives every test its own `e2e_scope` cookie, so the
+   * suite can run in parallel without two tests sharing (and resetting) the same releases.
+   */
+  const scope = /(?:^|;\s*)e2e_scope=([^;]*)/.exec(cookie)?.[1] ?? ''
+  const scoped = (key) => `${scope}\u0000${key}`
   const sessionCookies = (access, refresh) => [
     `access_token=${access}; Path=/; HttpOnly; SameSite=Lax`,
     `refresh_token=${refresh}; Path=/; HttpOnly; SameSite=Lax`,
@@ -115,7 +121,7 @@ const server = createServer(async (request, response) => {
   if (request.url === '/test/music' && request.method === 'POST') {
     if (!cookie.includes('access_token=test-valid')) return json(401, {})
     releases.set(
-      'artist',
+      scoped('artist'),
       [
         ['Steel Ball Run', 'SINGLE', 'DRAFT', null],
         ['Afterglow', 'EP', 'REJECTED', '/demo/music/album-afterglow.webp'],
@@ -151,7 +157,7 @@ const server = createServer(async (request, response) => {
     const owner = cookie.includes('access_token=test-other')
       ? 'other'
       : 'artist'
-    const owned = (releases.get(owner) ?? []).map((item) => ({
+    const owned = (releases.get(scoped(owner)) ?? []).map((item) => ({
       artistName: owner === 'other' ? 'Other artist' : 'Test artist',
       cover: null,
       isDemo: false,
@@ -206,7 +212,9 @@ const server = createServer(async (request, response) => {
     const parts = request.url.split('/')
     const contributorId = parts[5] === 'contributors' ? parts[6] : undefined
     const id = parts[4]
-    const release = (releases.get(owner) ?? []).find((item) => item.id === id)
+    const release = (releases.get(scoped(owner)) ?? []).find(
+      (item) => item.id === id,
+    )
     if (!release) return json(404, { message: 'Release not found' })
     response.setHeader('Cache-Control', 'private, no-store')
     if (workspace && request.method === 'GET') {
@@ -421,7 +429,7 @@ const server = createServer(async (request, response) => {
     const owner = cookie.includes('access_token=test-other')
       ? 'other'
       : 'artist'
-    const owned = releases.get(owner) ?? []
+    const owned = releases.get(scoped(owner)) ?? []
     response.setHeader('Cache-Control', 'private, no-store')
     if (request.method === 'GET') {
       const query = new URL(request.url, 'http://127.0.0.1:3103').searchParams
@@ -456,7 +464,7 @@ const server = createServer(async (request, response) => {
         createdAt: '2026-10-02T10:00:00.000Z',
         updatedAt: '2026-10-02T10:00:00.000Z',
       }
-      releases.set(owner, [draft, ...owned])
+      releases.set(scoped(owner), [draft, ...owned])
       return json(201, draft)
     }
   }
@@ -466,7 +474,7 @@ const server = createServer(async (request, response) => {
     request.url === '/api/v1/artists/auth/registration' &&
     request.method === 'POST'
   ) {
-    verifiedEmails.delete('unverified@example.test')
+    verifiedEmails.delete(scoped('unverified@example.test'))
     return json(201, { requiresEmailVerification: true, delivery: 'email' })
   }
   if (
@@ -484,7 +492,7 @@ const server = createServer(async (request, response) => {
     const { email, code } = JSON.parse(body)
     if (email !== 'unverified@example.test' || code !== '123456')
       return json(400, { message: 'Invalid or expired verification code' })
-    verifiedEmails.add(email)
+    verifiedEmails.add(scoped(email))
     response.writeHead(200).end()
     return
   }
@@ -497,7 +505,7 @@ const server = createServer(async (request, response) => {
     const { token } = JSON.parse(body)
     if (token !== 'test-verification')
       return json(400, { message: 'Invalid or expired verification token' })
-    verifiedEmails.add('unverified@example.test')
+    verifiedEmails.add(scoped('unverified@example.test'))
     response.writeHead(200).end()
     return
   }
@@ -548,7 +556,10 @@ const server = createServer(async (request, response) => {
     ) {
       return json(401, { message: 'Invalid credentials' })
     }
-    if (email === 'unverified@example.test' && !verifiedEmails.has(email))
+    if (
+      email === 'unverified@example.test' &&
+      !verifiedEmails.has(scoped(email))
+    )
       return json(401, { message: 'Email address is not verified' })
     if (email === 'twofactor@example.test') {
       response.setHeader(

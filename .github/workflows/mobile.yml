@@ -10,6 +10,9 @@ on:
       - '.github/workflows/mobile_expo_reusable.yml'
       - '.github/workflows/mobile_web_reusable.yml'
       - '.github/workflows/mobile_eas_reusable.yml'
+      - '!apps/mobile/**/*.md'
+      - '!apps/mobile/Dockerfile*'
+      - '!apps/mobile/docker-compose*'
   pull_request:
     branches: [master, develop]
     paths:
@@ -19,6 +22,11 @@ on:
       - '.github/workflows/mobile_expo_reusable.yml'
       - '.github/workflows/mobile_web_reusable.yml'
       - '.github/workflows/mobile_eas_reusable.yml'
+      - '!apps/mobile/**/*.md'
+      - '!apps/mobile/Dockerfile*'
+      - '!apps/mobile/docker-compose*'
+      - 'pnpm-lock.yaml'
+      - '.github/actions/app-changed/**'
   workflow_dispatch:
     inputs:
       mode:
@@ -40,8 +48,31 @@ permissions:
   packages: write
 
 jobs:
+  # On a pull request the path filter only starts this workflow; this decides whether the app
+  # really changed (not just its docs, Docker files or another app's lockfile entries).
+  changes:
+    if: ${{ github.event_name == 'pull_request' }}
+    name: Did mobile change?
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      changed: ${{ steps.app.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - id: app
+        uses: ./.github/actions/app-changed
+        with:
+          package: '@bitrate/mobile'
+          app-dir: apps/mobile
+          ci-paths: '^\.github/(workflows/mobile|actions/(app-changed|setup-node-pnpm|setup-docker)/)'
+
   mobile-pr:
-    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    needs: changes
+    if: ${{ !cancelled() && ((github.event_name == 'pull_request' && needs.changes.outputs.changed == 'true') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr')) }}
     uses: ./.github/workflows/mobile_reusable.yml
     secrets: inherit
     with:
@@ -70,14 +101,14 @@ jobs:
       expo-image-tag: mobile-expo-develop:${{ github.sha }}
       expo-container-name: mobile-expo-develop-test
       run-mobile-web-build: true
-      mobile-web-push: true
-      mobile-web-load: false
-      mobile-web-tags: |
-        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:develop
-        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:develop-${{ github.sha }}
+      # mobile-web is not deployed anywhere, so it is built and smoke-tested locally and never
+      # published to GHCR.
+      mobile-web-push: false
+      mobile-web-load: true
+      mobile-web-tags: mobile-web-develop:${{ github.sha }}
       run-mobile-web-test: true
-      mobile-web-test-image: ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:develop-${{ github.sha }}
-      mobile-web-test-pull: true
+      mobile-web-test-image: mobile-web-develop:${{ github.sha }}
+      mobile-web-test-pull: false
       mobile-web-test-container: mobile-web-develop-test
       run-eas-android: ${{ github.event_name == 'workflow_dispatch' }}
       run-eas-ios: ${{ github.event_name == 'workflow_dispatch' }}
@@ -90,12 +121,8 @@ jobs:
     secrets: inherit
     with:
       run-expo-check: false
-      run-mobile-web-build: true
-      mobile-web-push: true
-      mobile-web-load: false
-      mobile-web-tags: |
-        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:master
-        ghcr.io/lordpluha/${{ github.event.repository.name }}/mobile-web:${{ github.sha }}
+      # Already built and tested on develop; nothing consumes a master mobile-web image.
+      run-mobile-web-build: false
       run-mobile-web-test: false
       run-eas-android: ${{ github.event_name == 'workflow_dispatch' }}
       run-eas-ios: ${{ github.event_name == 'workflow_dispatch' }}

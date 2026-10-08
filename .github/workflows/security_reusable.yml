@@ -1,13 +1,56 @@
 name: "[security] Reusable"
 
+# One scanner per area, so a finding is reported once and every area has an owner:
+#
+#   | Area                                        | Owner                                   |
+#   |---------------------------------------------|-----------------------------------------|
+#   | Committed / generated artifacts             | check:artifacts                 (here)  |
+#   | npm dependencies (pnpm-lock.yaml, prod)     | pnpm audit                      (here)  |
+#   | Rust dependencies (apps/desktop Cargo.lock) | Trivy fs, vuln                  (here)  |
+#   | Dockerfiles, compose, IaC misconfiguration  | Trivy fs, misconfig             (here)  |
+#   | Secrets in git history                      | TruffleHog                      (here)  |
+#   | Source code (TypeScript/JavaScript, Rust)   | CodeQL                          (here)  |
+#   | GitHub Actions workflows and actions        | zizmor                          (here)  |
+#   | Third-party runtime images (postgres, ...)  | Trivy image, schedule only      (here)  |
+#   | OS packages in our own images               | .github/actions/scan-image, in the job  |
+#   |                                             | that builds each image (never rebuilt)  |
+#
+# Trivy's secret scanner is off everywhere (TruffleHog owns secrets), the fs scan skips
+# pnpm-lock.yaml (pnpm audit owns npm), and the image scan reads OS packages only.
+
 on:
   workflow_call:
 
-jobs:
-  security-scan:
-    name: Security Scan
-    runs-on: ubuntu-latest
+permissions:
+  contents: read
 
+jobs:
+  dependencies:
+    name: Artifacts and npm audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # Both checks read files only: no install needed.
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          install: "false"
+
+      - name: Reject generated and oversized repository artifacts
+        run: pnpm check:artifacts
+
+      - name: Run pnpm audit
+        run: pnpm audit --audit-level=high --prod
+
+  secrets:
+    name: Secret scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
 
@@ -16,30 +59,57 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-node-pnpm
-
-      - name: Reject generated and oversized repository artifacts
-        run: pnpm check:artifacts
-
-      - name: Run pnpm audit
-        run: pnpm audit --audit-level=high --prod
-
-      - name: Secret scanning
-        uses: trufflesecurity/trufflehog@main
+      - name: TruffleHog
+        uses: trufflesecurity/trufflehog@005b692bdfd0764e5da402887d9ab9196f8023dc # v3.99.1
         with:
           path: ./
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
           extra_args: --only-verified
 
-  codeql:
-    name: CodeQL
+  trivy-fs:
+    name: Trivy (Cargo deps, IaC)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Run Trivy on the repository
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,misconfig
+          skip-files: pnpm-lock.yaml
+          severity: CRITICAL,HIGH
+          format: sarif
+          output: trivy-fs.sarif
+
+      - name: Upload Trivy results to code scanning
+        if: always() && hashFiles('trivy-fs.sarif') != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-fs.sarif
+          category: trivy-fs
+
+  codeql:
+    name: CodeQL ${{ matrix.language }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       security-events: write
       actions: read
       contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Rust covers apps/desktop/src-tauri. Workflows are zizmor's, not CodeQL's `actions`.
+        language: [javascript-typescript, rust]
 
     steps:
       - uses: actions/checkout@v7
@@ -47,87 +117,71 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
-          languages: javascript-typescript
+          languages: ${{ matrix.language }}
+          build-mode: none
           queries: security-extended
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:${{ matrix.language }}
 
-  docker-security-scan:
-    name: Docker Security Scan ${{ matrix.service }}
+  zizmor:
+    name: zizmor (workflows)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # advanced-security uploads SARIF to code scanning instead of failing the job, so the
+      # existing findings are visible from day one without blocking every PR.
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        with:
+          advanced-security: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+
+  # Images we run but do not build. They are pulled, not built, so this costs no rebuild;
+  # their tags move upstream, so the schedule is what catches a new CVE in them.
+  third-party-images:
+    name: Trivy ${{ matrix.image }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
 
     strategy:
       fail-fast: false
       matrix:
-        service: [api, web-player, web-artists, admin]
-        # Each service declares only the build args its own Dockerfile consumes.
-        # api needs none: apps/api/Dockerfile's ARGs already carry defaults.
-        # Values mirror web_player_reusable.yml so there is one convention.
-        include:
-          - service: web-player
-            buildArgs: |
-              API_URL=${{ vars.API_URL || 'http://localhost:3000' }}
-              NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
-              NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://bitrate.me' }}
-          # web-artists is on Vite, which only exposes VITE_-prefixed variables to the bundle.
-          # The deployment variable keeps its shared name; the build arg carries this app's.
-          - service: web-artists
-            buildArgs: |
-              VITE_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
-          # admin is Angular, whose esbuild `define` substitutes NG_APP_-prefixed names at build
-          # time. Same mapping as web-artists directly above: one shared deployment variable,
-          # each app's own build-arg name. Keep the two lines consistent.
-          - service: admin
-            buildArgs: |
-              NG_APP_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
-
-    permissions:
-      security-events: write
-      contents: read
+        # Keep in step with the non-ghcr.io `image:` lines in infra/docker-compose.prod.yaml.
+        image:
+          - postgres:16-alpine
+          - redis:7-alpine
+          - nginx:alpine
+          - chrislusf/seaweedfs:4.48
+          - cloudflare/cloudflared:latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Setup Docker Buildx
-        uses: ./.github/actions/setup-docker
+      - name: Run Trivy on the image
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          ghcr: "true"
-          ghcr-registry: ghcr.io
-          ghcr-username: ${{ github.actor }}
-          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build image for scanning
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./apps/${{ matrix.service }}/Dockerfile
-          target: production
-          load: true
-          push: false
-          tags: local-security-scan:${{ matrix.service }}
-          platforms: linux/amd64
-          build-args: ${{ matrix.buildArgs }}
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: local-security-scan:${{ matrix.service }}
-          format: sarif
-          output: trivy-results-${{ matrix.service }}.sarif
+          scan-type: image
+          image-ref: ${{ matrix.image }}
+          scanners: vuln
           severity: CRITICAL,HIGH
-          # Trivy's default is 5m. The web-artists image ships the full
-          # node_modules tree, and the secret scanner walks every file in it,
-          # so analysis blew past that default and produced no SARIF at all.
-          timeout: 20m
+          format: sarif
+          output: trivy-third-party.sarif
 
-      - name: Upload Trivy results to GitHub Security
-        # Skip when the scanner produced nothing — otherwise a scan failure
-        # reports twice, and the second (missing-path) error hides the first.
-        if: always() && hashFiles(format('trivy-results-{0}.sarif', matrix.service)) != ''
+      - name: Upload Trivy results to code scanning
+        if: always() && hashFiles('trivy-third-party.sarif') != ''
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: trivy-results-${{ matrix.service }}.sarif
-          # Keep the original service-only identity when build arguments change.
-          category: .github/workflows/security.yml:docker-security-scan/service:${{ matrix.service }}
+          sarif_file: trivy-third-party.sarif
+          category: third-party-image/${{ matrix.image }}
