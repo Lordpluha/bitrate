@@ -317,6 +317,25 @@ auth token exists.
 secrets in a context the caller does not choose, and it would reintroduce exactly the implicit
 coupling this chain removed.
 
+### Installable apps on the Release page
+
+- release_apps_reusable.yml — builds at the release tag and attaches to its GitHub Release:
+  Tauri installers (AppImage/.deb/.rpm, .msi/.exe, aarch64 .dmg) and an Android APK built with
+  Gradle on the runner. Versions are pinned to the tag (Android `versionCode` = `MMmmpp`).
+  Called by release_publish_reusable.yml (`apps` job, parallel to the images, not gating the
+  deploy).
+- release_apps.yml — hand-run backfill/retry for an existing tag (`--clobber` replaces assets).
+
+iOS is not attached: an .ipa cannot be installed from a download.
+
+| Secret | Notes |
+|---|---|
+| `ANDROID_KEYSTORE_BASE64` | `base64 -w0 upload.jks`. Without it the APK keeps the debug signature (`…-android-debug-signed.apk`) and every release needs an uninstall first. |
+| `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD` | For the keystore above. Never rotate the key: Android refuses updates signed by a different one. |
+
+Desktop installers are unsigned (no Apple/Windows certificates), so macOS Gatekeeper and Windows
+SmartScreen warn on first launch.
+
 ### Security
 - security.yml — security checks on PRs, develop/master pushes and a weekly schedule.
 - security_reusable.yml — one scanner per area, so nothing is reported twice and nothing is
