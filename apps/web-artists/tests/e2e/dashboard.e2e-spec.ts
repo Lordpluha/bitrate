@@ -23,6 +23,20 @@ async function authenticate(
   ])
 }
 
+/**
+ * Every test gets its own slice of the API fixture's in-memory state (keyed by this cookie,
+ * which reaches the fixture on :3103 because cookies ignore the port), so tests run in parallel.
+ */
+test.beforeEach(async ({ context }, testInfo) => {
+  await context.addCookies([
+    {
+      name: 'e2e_scope',
+      value: `${testInfo.testId}-${testInfo.retry}`,
+      url: 'http://localhost:3102',
+    },
+  ])
+})
+
 async function openNavigation(page: Page) {
   if (await page.getByRole('dialog', { name: 'Workspace menu' }).isVisible())
     return
@@ -2397,15 +2411,18 @@ for (const theme of ['dark', 'light', 'dim'] as const) {
 
 test('unverified artist can confirm email and then sign in', async ({
   page,
-  request,
 }) => {
-  await request.post('http://localhost:3103/api/v1/artists/auth/registration', {
-    data: {
-      email: 'unverified@example.test',
-      password: 'Password123!',
-      username: 'Unverified',
+  // page.request shares the browser context's cookies, so registration lands in this test's scope.
+  await page.request.post(
+    'http://localhost:3103/api/v1/artists/auth/registration',
+    {
+      data: {
+        email: 'unverified@example.test',
+        password: 'Password123!',
+        username: 'Unverified',
+      },
     },
-  })
+  )
   await gotoHydrated(page, '/dashboard/tasks')
   await page.getByLabel('Email Address').fill('unverified@example.test')
   await page.getByLabel('Password', { exact: true }).fill('Password123!')

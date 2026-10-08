@@ -21,21 +21,16 @@ const dashboardBaseURL = 'http://localhost:3102'
 /** Exercise the built Nitro server instead of Vite dev (build with VITE_API_URL=http://localhost:3103 first). */
 const dashboardProduction = process.env.DASHBOARD_TEST_PRODUCTION === '1'
 
-/**
- * The fixture keeps its releases in memory and the specs mutate them, so the dashboard suite
- * must never run two tests at once: one worker per project, and the mobile project waits for
- * the desktop one (a desktop failure therefore skips the mobile pass). The general projects
- * keep running in parallel alongside.
- */
-const dashboardProject = {
-  testMatch: dashboardSpec,
-  workers: 1,
-}
-
 export default defineConfig({
   testDir: '../e2e',
   testMatch: '**/*.e2e-spec.ts',
   fullyParallel: true,
+  /**
+   * The fixture namespaces its in-memory state per test (the `e2e_scope` cookie set in the
+   * dashboard spec), so every project runs fully parallel. Playwright defaults to half the
+   * cores; a hosted runner has 4 and the tests mostly wait on the browser, so use them all.
+   */
+  workers: process.env.CI ? 4 : undefined,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? 'github' : 'list',
@@ -55,14 +50,13 @@ export default defineConfig({
       use: { ...devices['Pixel 5'] },
     },
     {
-      ...dashboardProject,
       name: 'dashboard-chromium',
+      testMatch: dashboardSpec,
       use: { ...devices['Desktop Chrome'], baseURL: dashboardBaseURL },
     },
     {
-      ...dashboardProject,
       name: 'dashboard-mobile-chrome',
-      dependencies: ['dashboard-chromium'],
+      testMatch: dashboardSpec,
       use: { ...devices['Pixel 5'], baseURL: dashboardBaseURL },
     },
   ],
