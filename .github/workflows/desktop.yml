@@ -7,6 +7,10 @@ on:
       - 'apps/desktop/**'
       - '.github/workflows/desktop.yml'
       - '.github/workflows/desktop_native_reusable.yml'
+      - '.github/actions/tauri-linux-deps/**'
+      - '!apps/desktop/**/*.md'
+      - '!apps/desktop/Dockerfile*'
+      - '!apps/desktop/docker-compose*'
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [develop, master]
@@ -14,6 +18,12 @@ on:
       - 'apps/desktop/**'
       - '.github/workflows/desktop.yml'
       - '.github/workflows/desktop_native_reusable.yml'
+      - '.github/actions/tauri-linux-deps/**'
+      - '!apps/desktop/**/*.md'
+      - '!apps/desktop/Dockerfile*'
+      - '!apps/desktop/docker-compose*'
+      - 'pnpm-lock.yaml'
+      - '.github/actions/app-changed/**'
   workflow_dispatch:
     inputs:
       mode:
@@ -44,10 +54,33 @@ permissions:
   contents: read
 
 jobs:
+  # On a pull request the path filter only starts this workflow; this decides whether the app
+  # really changed (not just its docs, Docker files or another app's lockfile entries).
+  changes:
+    if: ${{ github.event_name == 'pull_request' }}
+    name: Did desktop change?
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      changed: ${{ steps.app.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - id: app
+        uses: ./.github/actions/app-changed
+        with:
+          package: '@bitrate/desktop'
+          app-dir: apps/desktop
+          ci-paths: '^\.github/(workflows/desktop|actions/(tauri-linux-deps|app-changed|setup-node-pnpm)/)'
+
   # Linux only on a PR: it catches Rust and renderer breakage for a fraction of the cost
   # of three release builds. The full matrix still runs on every push to develop below.
   desktop-pr-native:
-    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr') }}
+    needs: changes
+    if: ${{ !cancelled() && ((github.event_name == 'pull_request' && needs.changes.outputs.changed == 'true') || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'pr')) }}
     uses: ./.github/workflows/desktop_native_reusable.yml
     with:
       artifact-prefix: desktop-pr
