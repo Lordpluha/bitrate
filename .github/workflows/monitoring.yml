@@ -10,7 +10,6 @@ on:
       - '.github/workflows/monitoring_reusable.yml'
       - '.github/workflows/monitoring_health_reusable.yml'
       - '.github/workflows/monitoring_dependency_reusable.yml'
-      - '.github/workflows/monitoring_image_size_reusable.yml'
       - '.github/workflows/monitoring_ssl_reusable.yml'
   workflow_dispatch:
 
@@ -20,7 +19,6 @@ concurrency:
 
 permissions:
   contents: read
-  packages: read
   issues: write
 
 jobs:
