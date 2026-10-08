@@ -46,7 +46,7 @@ jobs:
         with:
           workspaces: apps/desktop/src-tauri -> target
           shared-key: tauri-desktop
-          save-if: ${{ github.ref == 'refs/heads/develop' }}
+          save-if: ${{ github.ref == 'refs/heads/develop' || github.event_name == 'pull_request' }}
 
       - name: Install Linux system dependencies
         if: ${{ runner.os == 'Linux' }}
