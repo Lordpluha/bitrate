@@ -1,5 +1,5 @@
 /** Every locale the API translates error/validation messages into. English is the fallback. */
-const SUPPORTED_LOCALES = ['en', 'uk'] as const
+const SUPPORTED_LOCALES = ['en', 'uk', 'ru', 'pl', 'de'] as const
 
 /** One of {@link SUPPORTED_LOCALES}. */
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number]
