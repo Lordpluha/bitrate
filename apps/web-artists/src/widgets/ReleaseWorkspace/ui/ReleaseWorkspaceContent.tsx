@@ -237,7 +237,11 @@ export function ReleaseWorkspaceContent({
         </section>
         <WorkspaceReview release={release} />
         <WorkspaceRoadmap release={release} />
-        <WorkspaceTracks actions={trackActions} release={release} />
+        <WorkspaceTracks
+          actions={trackActions}
+          artistId={artistId}
+          release={release}
+        />
         <WorkspaceRights onAction={onRightsAction} release={release} />
         <WorkspaceReadiness artistId={artistId} release={release} />
         <WorkspaceParticipants

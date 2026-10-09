@@ -23,6 +23,7 @@ import {
   ReleaseTrackAudioSwagger,
   RemoveReleaseCoverSwagger,
   RemoveReleaseTrackSwagger,
+  ReorderReleaseTracksSwagger,
   ReplaceReleaseTrackAudioSwagger,
   UploadReleaseCoverSwagger,
   UploadReleaseTrackSwagger,
@@ -30,6 +31,8 @@ import {
 import {
   type ReleaseDraftVersionDto,
   ReleaseDraftVersionSchema,
+  type ReorderReleaseTracksDto,
+  ReorderReleaseTracksSchema,
   type UploadReleaseCoverDto,
   UploadReleaseCoverSchema,
   type UploadReleaseTrackDto,
@@ -97,6 +100,19 @@ export class ReleaseMediaController {
     @Body(new ZodValidationPipe(ReleaseDraftVersionSchema)) input: ReleaseDraftVersionDto,
   ) {
     return this.media.replaceTrackAudio(request.artist.id, id, trackId, file, input)
+  }
+
+  @ReorderReleaseTracksSwagger()
+  @ArtistAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @HttpCode(200)
+  @Put(':id/tracks/order')
+  reorderTracks(
+    @Req() request: ArtistAuthRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(ReorderReleaseTracksSchema)) input: ReorderReleaseTracksDto,
+  ) {
+    return this.media.reorderTracks(request.artist.id, id, input)
   }
 
   @RemoveReleaseTrackSwagger()

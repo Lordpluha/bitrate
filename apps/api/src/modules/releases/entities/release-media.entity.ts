@@ -23,6 +23,14 @@ export class ReleaseTrackUploadedEntity {
   track: WorkspaceTrackDraftEntity
 }
 
+export class ReleaseTracksReorderedEntity {
+  @ApiProperty({ type: ReleaseEntity })
+  release: ReleaseEntity
+
+  @ApiProperty({ type: [String], format: 'uuid', description: 'Recording ids in their new order' })
+  trackIds: string[]
+}
+
 export class ReleaseTrackRemovedEntity {
   @ApiProperty({ type: ReleaseEntity })
   release: ReleaseEntity

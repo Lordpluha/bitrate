@@ -3,6 +3,7 @@ export {
   useRemoveCover,
   useRemoveTrack,
   useRenameTrack,
+  useReorderTracks,
   useUploadCover,
   useUploadTrack,
 } from './api/useReleaseMedia'

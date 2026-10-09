@@ -24,6 +24,7 @@ export {
   ReleaseTrackAudioSwagger,
   RemoveReleaseCoverSwagger,
   RemoveReleaseTrackSwagger,
+  ReorderReleaseTracksSwagger,
   ReplaceReleaseTrackAudioSwagger,
   UploadReleaseCoverSwagger,
   UploadReleaseTrackSwagger,

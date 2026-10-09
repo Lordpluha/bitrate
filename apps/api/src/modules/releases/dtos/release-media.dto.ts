@@ -1,5 +1,6 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
+import { RELEASE_VALIDATION } from '../errors'
 
 const expectedUpdatedAt = z.iso
   .datetime({ offset: true })
@@ -17,6 +18,18 @@ export const UploadReleaseTrackSchema = z.strictObject({
 /** Body of a draft write that carries nothing but the version it was read at. */
 export const ReleaseDraftVersionSchema = z.strictObject({ expectedUpdatedAt })
 
+/** The full new order: every active recording on the draft, each exactly once. */
+export const ReorderReleaseTracksSchema = z.strictObject({
+  trackIds: z
+    .array(z.uuid())
+    .min(1)
+    .max(50)
+    .refine((ids) => new Set(ids).size === ids.length, RELEASE_VALIDATION.DUPLICATE_ITEMS)
+    .describe('Recording ids in their new order'),
+  expectedUpdatedAt,
+})
+
 export class UploadReleaseCoverDto extends createZodDto(UploadReleaseCoverSchema) {}
 export class UploadReleaseTrackDto extends createZodDto(UploadReleaseTrackSchema) {}
 export class ReleaseDraftVersionDto extends createZodDto(ReleaseDraftVersionSchema) {}
+export class ReorderReleaseTracksDto extends createZodDto(ReorderReleaseTracksSchema) {}

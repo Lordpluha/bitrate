@@ -2,6 +2,7 @@ import {
   removeCover,
   removeTrack,
   renameTrack,
+  reorderTracks,
   uploadCover,
   uploadTrack,
 } from './media'
@@ -17,3 +18,5 @@ export const useRemoveTrack = (artistId: string) =>
   useReleaseWrite(artistId, removeTrack)
 export const useRenameTrack = (artistId: string) =>
   useReleaseWrite(artistId, renameTrack)
+export const useReorderTracks = (artistId: string) =>
+  useReleaseWrite(artistId, reorderTracks)

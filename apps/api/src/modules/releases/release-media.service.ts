@@ -11,10 +11,18 @@ import {
 } from '@infra/storage/public-images'
 import { STORAGE_SERVICE } from '@infra/storage/storage.constants'
 import type { StorageService } from '@infra/storage/storage.types'
-import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common'
 import { ArtistTrackStatus, type Prisma } from '@prisma/client'
 import type {
   ReleaseDraftVersionDto,
+  ReorderReleaseTracksDto,
   UploadReleaseCoverDto,
   UploadReleaseTrackDto,
 } from './dtos/release-media.dto'
@@ -128,11 +136,16 @@ export class ReleaseMediaService {
         const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
           accuracyConfirmedAt: null,
         })
+        const last = await tx.artistTrackDraft.aggregate({
+          where: { releaseId: id, deletedAt: null },
+          _max: { position: true },
+        })
         const track = await tx.artistTrackDraft.create({
           data: {
             ownerArtistId,
             releaseId: id,
             title: input.title,
+            position: (last._max.position ?? -1) + 1,
             ...masterColumns(master),
           },
           select: TRACK_DRAFT_SELECT,
@@ -143,6 +156,34 @@ export class ReleaseMediaService {
       await this.deleteObject(master.key)
       throw error
     }
+  }
+
+  /**
+   * Replaces the running order of the draft's recordings. The list must name every active
+   * recording once, so a recording added or removed meanwhile fails the write instead of
+   * being silently placed. Clears the accuracy confirmation.
+   */
+  reorderTracks(ownerArtistId: string, id: string, input: ReorderReleaseTracksDto) {
+    return this.prisma.$transaction(async (tx) => {
+      const release = await lockOwnedDraft(tx, ownerArtistId, id, input.expectedUpdatedAt, {
+        accuracyConfirmedAt: null,
+      })
+      const active = await tx.artistTrackDraft.findMany({
+        where: { releaseId: id, ownerArtistId, deletedAt: null },
+        select: { id: true },
+      })
+      const known = new Set(active.map((track) => track.id))
+      if (
+        known.size !== input.trackIds.length ||
+        input.trackIds.some((trackId) => !known.has(trackId))
+      ) {
+        throw new UnprocessableEntityException(RELEASE_ERRORS.TRACK_ORDER_MISMATCH)
+      }
+      for (const [position, trackId] of input.trackIds.entries()) {
+        await tx.artistTrackDraft.update({ where: { id: trackId }, data: { position } })
+      }
+      return { release, trackIds: input.trackIds }
+    })
   }
 
   /** Attaches a new master to an existing recording, for example a demo row without audio. */

@@ -145,7 +145,7 @@ export class ReleasesService {
         trackDrafts: {
           where: activeDrafts,
           take: 50,
-          orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+          orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
           select: {
             id: true,
             title: true,

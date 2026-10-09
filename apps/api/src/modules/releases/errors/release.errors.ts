@@ -14,6 +14,7 @@ export const RELEASE_ERRORS = {
   AUDIO_TYPE_INVALID: 'errors.release.audio_type_invalid',
   AUDIO_NOT_FOUND: 'errors.release.audio_not_found',
   TASK_NOT_FOUND: 'errors.release.task_not_found',
+  TRACK_ORDER_MISMATCH: 'errors.release.track_order_mismatch',
   TASK_CHANGED: 'errors.release.task_changed',
   TASK_ASSIGNEE_INVALID: 'errors.release.task_assignee_invalid',
 } as const
