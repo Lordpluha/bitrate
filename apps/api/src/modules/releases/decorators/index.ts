@@ -2,8 +2,10 @@ export { AddReleaseContributorSwagger } from './add-release-contributor.swagger'
 export { ArtistAnalyticsSwagger } from './artist-analytics.swagger'
 export { ArtistDashboardSwagger } from './artist-dashboard.swagger'
 export {
+  GetNotificationPreferencesSwagger,
   ListArtistNotificationsSwagger,
   MarkArtistNotificationsSeenSwagger,
+  UpdateNotificationPreferencesSwagger,
 } from './artist-notifications.swagger'
 export { ArtistSearchSwagger } from './artist-search.swagger'
 export { CreateReleaseSwagger } from './create-release.swagger'

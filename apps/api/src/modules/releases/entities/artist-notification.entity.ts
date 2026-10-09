@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { DeliveryDestination } from '@prisma/client'
+import { ArtistNotificationCategory, DeliveryDestination } from '@prisma/client'
 
 export class ArtistNotificationEntity {
   @ApiProperty({ description: 'Stable per notification, for list keys' })
@@ -56,4 +56,14 @@ export class ArtistNotificationListEntity {
 export class ArtistNotificationsSeenEntity {
   @ApiProperty({ type: String, format: 'date-time' })
   seenAt: Date
+}
+
+export class ArtistNotificationPreferencesEntity {
+  @ApiProperty({
+    enum: ArtistNotificationCategory,
+    enumName: 'ArtistNotificationCategory',
+    isArray: true,
+    description: 'Categories left out of the in-app notification center',
+  })
+  mutedInApp: ArtistNotificationCategory[]
 }

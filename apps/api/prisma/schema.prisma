@@ -417,6 +417,7 @@ model Artist {
   albums       Album[]
   releases     Release[] @relation("ReleaseOwner")
   notificationState ArtistNotificationState?
+  notificationPreference ArtistNotificationPreference?
   trackDrafts  ArtistTrackDraft[]
   releaseCredits ReleaseContributor[]
   genres       ArtistGenre[]
@@ -637,6 +638,22 @@ model ReleaseDelivery {
 model ArtistNotificationState {
   artistId String   @id @db.Uuid
   seenAt   DateTime @db.Timestamptz(3)
+
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+}
+
+/// Groups of derived notifications an artist can switch off per channel.
+enum ArtistNotificationCategory {
+  TASKS
+  REVIEW
+  DELIVERY
+}
+
+/// Missing row means every category is on.
+model ArtistNotificationPreference {
+  artistId   String                       @id @db.Uuid
+  mutedInApp ArtistNotificationCategory[] @default([])
+  updatedAt  DateTime                     @updatedAt
 
   artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 }
