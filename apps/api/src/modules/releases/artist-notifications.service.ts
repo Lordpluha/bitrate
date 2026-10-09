@@ -1,11 +1,13 @@
 import { PrismaService } from '@infra/prisma/prisma.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import {
+  ArtistNotificationCategory,
   type DeliveryDestination,
   DeliveryState,
   ReleaseStatus,
   ReleaseTaskStatus,
 } from '@prisma/client'
+import type { UpdateNotificationPreferencesDto } from './dtos/notification-preferences.dto'
 import { RELEASE_ERRORS } from './errors'
 
 /** Newest items shown; older activity stays reachable from Music and Tasks. */
@@ -24,6 +26,18 @@ type NotificationKind =
   | 'RELEASE_APPROVED'
   | 'RELEASE_RELEASED'
   | 'DELIVERY_LIVE'
+
+/** Which switchable category each derived notification belongs to. */
+const CATEGORY_OF = {
+  TASK_OVERDUE: ArtistNotificationCategory.TASKS,
+  TASK_DUE_SOON: ArtistNotificationCategory.TASKS,
+  CHANGES_REQUESTED: ArtistNotificationCategory.REVIEW,
+  RELEASE_SUBMITTED: ArtistNotificationCategory.REVIEW,
+  RELEASE_APPROVED: ArtistNotificationCategory.REVIEW,
+  DELIVERY_FAILED: ArtistNotificationCategory.DELIVERY,
+  RELEASE_RELEASED: ArtistNotificationCategory.DELIVERY,
+  DELIVERY_LIVE: ArtistNotificationCategory.DELIVERY,
+} as const satisfies Record<NotificationKind, ArtistNotificationCategory>
 
 interface ArtistNotification {
   id: string
@@ -50,49 +64,61 @@ export class ArtistNotificationsService {
   async list(artistId: string) {
     const artist = await this.prisma.artist.findFirst({
       where: { id: artistId, deletedAt: null },
-      select: { notificationState: { select: { seenAt: true } } },
+      select: {
+        notificationState: { select: { seenAt: true } },
+        notificationPreference: { select: { mutedInApp: true } },
+      },
     })
     if (!artist) throw new NotFoundException(RELEASE_ERRORS.NOT_FOUND)
+    const muted = new Set(artist.notificationPreference?.mutedInApp ?? [])
+    const none = <T>(): Promise<T[]> => Promise.resolve([])
     const now = new Date()
     const since = new Date(now.getTime() - UPDATE_WINDOW_MS)
     const owned = { ownerArtistId: artistId, deletedAt: null }
     const release = { select: { id: true, title: true } }
 
+    // A switched-off category is not queried at all.
     const [tasks, releases, deliveries] = await Promise.all([
-      this.prisma.releaseTask.findMany({
-        where: {
-          release: owned,
-          status: { not: ReleaseTaskStatus.DONE },
-          dueAt: { not: null, lt: new Date(now.getTime() + DUE_SOON_MS) },
-        },
-        orderBy: { dueAt: 'asc' },
-        take: NOTIFICATION_LIMIT,
-        select: { id: true, title: true, dueAt: true, release },
-      }),
-      this.prisma.release.findMany({
-        where: {
-          ...owned,
-          OR: [
-            { status: ReleaseStatus.REJECTED },
-            { status: { not: ReleaseStatus.DRAFT }, updatedAt: { gte: since } },
-          ],
-        },
-        orderBy: { updatedAt: 'desc' },
-        take: NOTIFICATION_LIMIT,
-        select: { id: true, title: true, status: true, submittedAt: true, updatedAt: true },
-      }),
-      this.prisma.releaseDelivery.findMany({
-        where: {
-          release: owned,
-          OR: [
-            { state: DeliveryState.FAILED },
-            { state: DeliveryState.LIVE, updatedAt: { gte: since } },
-          ],
-        },
-        orderBy: { updatedAt: 'desc' },
-        take: NOTIFICATION_LIMIT,
-        select: { releaseId: true, destination: true, state: true, updatedAt: true, release },
-      }),
+      muted.has(ArtistNotificationCategory.TASKS)
+        ? none<never>()
+        : this.prisma.releaseTask.findMany({
+            where: {
+              release: owned,
+              status: { not: ReleaseTaskStatus.DONE },
+              dueAt: { not: null, lt: new Date(now.getTime() + DUE_SOON_MS) },
+            },
+            orderBy: { dueAt: 'asc' },
+            take: NOTIFICATION_LIMIT,
+            select: { id: true, title: true, dueAt: true, release },
+          }),
+      muted.has(ArtistNotificationCategory.REVIEW) && muted.has(ArtistNotificationCategory.DELIVERY)
+        ? none<never>()
+        : this.prisma.release.findMany({
+            where: {
+              ...owned,
+              OR: [
+                { status: ReleaseStatus.REJECTED },
+                { status: { not: ReleaseStatus.DRAFT }, updatedAt: { gte: since } },
+              ],
+            },
+            orderBy: { updatedAt: 'desc' },
+            take: NOTIFICATION_LIMIT,
+            select: { id: true, title: true, status: true, submittedAt: true, updatedAt: true },
+          }),
+      muted.has(ArtistNotificationCategory.DELIVERY)
+        ? none<never>()
+        : this.prisma.releaseDelivery.findMany({
+            where: {
+              release: owned,
+              OR: [
+                { state: DeliveryState.FAILED },
+                { state: DeliveryState.LIVE, updatedAt: { gte: since } },
+              ],
+            },
+            orderBy: { updatedAt: 'desc' },
+            take: NOTIFICATION_LIMIT,
+            select: { releaseId: true, destination: true, state: true, updatedAt: true, release },
+          }),
     ])
 
     const items: ArtistNotification[] = []
@@ -164,8 +190,9 @@ export class ArtistNotificationsService {
       })
     }
 
-    items.sort((a, b) => b.at.getTime() - a.at.getTime())
-    const data = items.slice(0, NOTIFICATION_LIMIT)
+    const visible = items.filter((item) => !muted.has(CATEGORY_OF[item.kind]))
+    visible.sort((a, b) => b.at.getTime() - a.at.getTime())
+    const data = visible.slice(0, NOTIFICATION_LIMIT)
     const seenAt = artist.notificationState?.seenAt ?? null
     return {
       data: data.map((item) => ({ ...item, unread: seenAt === null || item.at > seenAt })),
@@ -183,5 +210,24 @@ export class ArtistNotificationsService {
       update: { seenAt },
     })
     return { seenAt }
+  }
+
+  async preferences(artistId: string) {
+    const preference = await this.prisma.artistNotificationPreference.findUnique({
+      where: { artistId },
+      select: { mutedInApp: true },
+    })
+    return { mutedInApp: preference?.mutedInApp ?? [] }
+  }
+
+  /** Replaces the switched-off categories; the list is the whole preference. */
+  async updatePreferences(artistId: string, input: UpdateNotificationPreferencesDto) {
+    const { mutedInApp } = await this.prisma.artistNotificationPreference.upsert({
+      where: { artistId },
+      create: { artistId, mutedInApp: input.mutedInApp },
+      update: { mutedInApp: input.mutedInApp },
+      select: { mutedInApp: true },
+    })
+    return { mutedInApp }
   }
 }

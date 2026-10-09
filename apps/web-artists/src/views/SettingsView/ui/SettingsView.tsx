@@ -9,10 +9,11 @@ import {
   DeleteAccountSection,
   TwoFactorSection,
 } from '@features/account-security'
+import { NotificationPreferences } from '@features/notification-preferences'
 import { AppearancePreferences, ThemeSwitcher } from '@features/workspace-theme'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
-import { BellOff, CircleAlert, CircleCheck } from 'lucide-react'
+import { CircleAlert, CircleCheck } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 interface SettingsViewProps {
@@ -149,13 +150,7 @@ function SettingsSections({
         </p>
       </Panel>
       <Panel id="settings-notifications-heading" title="Notifications">
-        <div className="flex items-start gap-2 text-sm text-text-secondary">
-          <BellOff aria-hidden="true" className="size-4 shrink-0" />
-          <p>
-            Notification preferences are coming soon. Account and security
-            emails are always sent.
-          </p>
-        </div>
+        <NotificationPreferences artistId={artistId} />
       </Panel>
       <Panel id="settings-danger-heading" title="Danger zone">
         <DeleteAccountSection artistId={artistId} username={profile.username} />

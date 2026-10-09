@@ -145,6 +145,11 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.releaseReview
   }
 
+  /** Gets the notification categories each artist switched off. */
+  get artistNotificationPreference() {
+    return this.prisma.artistNotificationPreference
+  }
+
   /** Gets when each artist last opened the notification center. */
   get artistNotificationState() {
     return this.prisma.artistNotificationState
