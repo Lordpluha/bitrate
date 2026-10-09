@@ -235,3 +235,46 @@ export function renameTrack({
     },
   )
 }
+
+const reorderedSchema = z.object({
+  release: releaseSummarySchema,
+  trackIds: z.array(z.uuid()),
+})
+
+export interface ReorderTracksRequest extends DraftVersionRequest {
+  trackIds: string[]
+}
+
+/** Saves the full running order; the API rejects a list that misses or repeats a recording. */
+export async function reorderTracks({
+  id,
+  trackIds,
+  expectedUpdatedAt,
+}: ReorderTracksRequest) {
+  const unconfirmed =
+    'Could not confirm the new order. Check the tracks before trying again.'
+  const result = await clientFetchClient
+    .PUT('/api/v1/releases/{id}/tracks/order', {
+      params: { path: { id } },
+      body: { trackIds, expectedUpdatedAt },
+      signal: AbortSignal.timeout(WRITE_TIMEOUT_MS),
+    })
+    .catch(() => undefined)
+  if (!result) throw new Error(unconfirmed)
+  if (result.response.status === 422)
+    throw new Error(
+      'A recording was added or removed meanwhile. Reload to see the latest list.',
+    )
+  return guardedWrite(
+    () => Promise.resolve(result),
+    (data) => {
+      const parsed = reorderedSchema.safeParse(data)
+      return parsed.success &&
+        parsed.data.trackIds.join() === trackIds.join() &&
+        advancedRelease(parsed.data.release, id, expectedUpdatedAt)
+        ? parsed.data
+        : undefined
+    },
+    { invalid: 'Could not save the new order. Please try again.', unconfirmed },
+  )
+}

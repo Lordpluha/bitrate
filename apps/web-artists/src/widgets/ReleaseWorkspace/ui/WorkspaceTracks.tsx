@@ -5,8 +5,9 @@ import {
   formatIsrc,
   type ReleaseWorkspace,
   releaseAudioUrl,
+  useReorderTracks,
 } from '@entities/release'
-import { CircleAlert, Music2, Upload } from 'lucide-react'
+import { ArrowDown, ArrowUp, CircleAlert, Music2, Upload } from 'lucide-react'
 
 function duration(value: number | null) {
   return value === null
@@ -24,8 +25,17 @@ export interface TrackActions {
 }
 
 interface WorkspaceTracksProps {
+  artistId: string
   release: ReleaseWorkspace
   actions: TrackActions
+}
+
+/** Swaps a recording with its neighbour; the API receives the whole new order. */
+function movedOrder(ids: string[], index: number, step: -1 | 1) {
+  const next = [...ids]
+  const target = index + step
+  ;[next[index], next[target]] = [next[target], next[index]]
+  return next
 }
 
 const isrcLabel = (isrc: string | null) =>
@@ -42,9 +52,26 @@ function audioLabel(track: TrackDraft) {
   return `${track.audioFileName ?? 'Audio uploaded'}${size}`
 }
 
-export function WorkspaceTracks({ release, actions }: WorkspaceTracksProps) {
+export function WorkspaceTracks({
+  artistId,
+  release,
+  actions,
+}: WorkspaceTracksProps) {
   const draft = release.status === 'DRAFT'
   const shown = release.trackDrafts.length + release.tracks.length
+  const reorder = useReorderTracks(artistId)
+  const ids = release.trackDrafts.map((track) => track.id)
+  // Partial lists cannot be reordered safely; the API needs every recording.
+  const canReorder =
+    draft &&
+    ids.length > 1 &&
+    release.trackCount === release.trackDrafts.length + release.tracks.length
+  const move = (index: number, step: -1 | 1) =>
+    reorder.mutate({
+      id: release.id,
+      trackIds: movedOrder(ids, index, step),
+      expectedUpdatedAt: release.updatedAt,
+    })
   return (
     <section
       aria-labelledby="release-tracks-heading"
@@ -61,7 +88,15 @@ export function WorkspaceTracks({ release, actions }: WorkspaceTracksProps) {
           </Button>
         )}
       </div>
-      <p>Recordings in this release. Uploaded audio stays private.</p>
+      <p>
+        Recordings in this release, in running order. Uploaded audio stays
+        private.
+      </p>
+      {reorder.error && (
+        <p className="text-sm text-destructive" role="alert">
+          {reorder.error.message}
+        </p>
+      )}
       {shown === 0 ? (
         <div className="artist-release-inset">
           <Music2 aria-hidden="true" className="size-5 shrink-0 text-accent" />
@@ -73,12 +108,38 @@ export function WorkspaceTracks({ release, actions }: WorkspaceTracksProps) {
         </div>
       ) : (
         <ul>
-          {release.trackDrafts.map((track) => (
+          {release.trackDrafts.map((track, index) => (
             <li key={track.id}>
-              <Music2
-                aria-hidden="true"
-                className="size-5 shrink-0 text-accent"
-              />
+              {canReorder ? (
+                <div className="flex shrink-0 flex-col items-center">
+                  <Button
+                    aria-label={`Move ${track.title} up`}
+                    disabled={reorder.isPending || index === 0}
+                    onClick={() => move(index, -1)}
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <ArrowUp aria-hidden="true" className="size-4" />
+                  </Button>
+                  <span className="text-xs tabular-nums text-text-secondary">
+                    {index + 1}
+                  </span>
+                  <Button
+                    aria-label={`Move ${track.title} down`}
+                    disabled={reorder.isPending || index === ids.length - 1}
+                    onClick={() => move(index, 1)}
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <ArrowDown aria-hidden="true" className="size-4" />
+                  </Button>
+                </div>
+              ) : (
+                <Music2
+                  aria-hidden="true"
+                  className="size-5 shrink-0 text-accent"
+                />
+              )}
               <div className="min-w-0 flex-1 space-y-1">
                 <h3>{track.title}</h3>
                 <p>

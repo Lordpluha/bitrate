@@ -7,10 +7,11 @@ import {
   ApiProduces,
   ApiResponse,
 } from '@nestjs/swagger'
-import { ReleaseDraftVersionDto } from '../dtos/release-media.dto'
+import { ReleaseDraftVersionDto, ReorderReleaseTracksDto } from '../dtos/release-media.dto'
 import {
   ReleaseCoverUpdatedEntity,
   ReleaseTrackRemovedEntity,
+  ReleaseTracksReorderedEntity,
   ReleaseTrackUploadedEntity,
 } from '../entities/release-media.entity'
 
@@ -149,5 +150,22 @@ export function ReleaseTrackAudioSwagger() {
       status: HttpStatus.NOT_FOUND,
       description: 'No uploaded audio for this recording',
     }),
+  )
+}
+
+export function ReorderReleaseTracksSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Set the running order of the recordings on an owned draft',
+      description:
+        'The list names every active recording exactly once. Clears the accuracy confirmation.',
+    }),
+    ApiBody({ type: ReorderReleaseTracksDto }),
+    ApiResponse({ status: HttpStatus.OK, type: ReleaseTracksReorderedEntity }),
+    ApiResponse({
+      status: HttpStatus.UNPROCESSABLE_ENTITY,
+      description: 'The list does not match the recordings on the draft',
+    }),
+    ...draftWriteResponses,
   )
 }

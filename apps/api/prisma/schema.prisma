@@ -559,6 +559,8 @@ model ArtistTrackDraft {
   audioFileName    String?
   audioContentType String?
   audioSizeBytes   Int?
+  /// Zero-based order on its release; new recordings go last.
+  position      Int     @default(0)
   isDemo        Boolean @default(false)
   deletedAt     DateTime?
   createdAt     DateTime @default(now())

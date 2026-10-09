@@ -94,7 +94,7 @@ export class AdminReleasesService {
         accuracyConfirmedAt: true,
         trackDrafts: {
           where: { deletedAt: null },
-          orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+          orderBy: [{ position: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
           select: {
             id: true,
             title: true,
