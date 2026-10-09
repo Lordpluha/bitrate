@@ -24,6 +24,7 @@ import {
   ReleaseDetailSwagger,
   ReleaseWorkspaceSwagger,
   ReplaceReleaseSplitsSwagger,
+  ReviseReleaseSwagger,
   SubmitReleaseSwagger,
   UpdateReleaseContributorSwagger,
   UpdateReleaseRightsSwagger,
@@ -42,6 +43,8 @@ import {
   ReplaceReleaseSplitsSchema,
 } from './dtos/replace-release-splits.dto'
 import {
+  type ReviseReleaseDto,
+  ReviseReleaseSchema,
   type SubmitReleaseDto,
   SubmitReleaseSchema,
   type WithdrawReleaseDto,
@@ -218,5 +221,18 @@ export class ReleasesController {
     @Body(new ZodValidationPipe(WithdrawReleaseSchema)) input: WithdrawReleaseDto,
   ) {
     return this.releases.withdraw(request.artist.id, id, input)
+  }
+
+  @ReviseReleaseSwagger()
+  @ArtistAuth()
+  @Header('Cache-Control', 'private, no-store')
+  @HttpCode(200)
+  @Post(':id/revise')
+  revise(
+    @Req() request: ArtistAuthRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(ReviseReleaseSchema)) input: ReviseReleaseDto,
+  ) {
+    return this.releases.revise(request.artist.id, id, input)
   }
 }

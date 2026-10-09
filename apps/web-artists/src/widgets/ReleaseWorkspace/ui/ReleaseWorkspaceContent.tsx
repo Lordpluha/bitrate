@@ -11,6 +11,7 @@ import { Info, Music2 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { WorkspaceParticipants } from './WorkspaceParticipants'
 import { WorkspaceReadiness } from './WorkspaceReadiness'
+import { WorkspaceReview } from './WorkspaceReview'
 import { type RightsAction, WorkspaceRights } from './WorkspaceRights'
 import { WorkspaceRoadmap } from './WorkspaceRoadmap'
 import { type TrackActions, WorkspaceTracks } from './WorkspaceTracks'
@@ -234,6 +235,7 @@ export function ReleaseWorkspaceContent({
             </div>
           </dl>
         </section>
+        <WorkspaceReview release={release} />
         <WorkspaceRoadmap release={release} />
         <WorkspaceTracks actions={trackActions} release={release} />
         <WorkspaceRights onAction={onRightsAction} release={release} />

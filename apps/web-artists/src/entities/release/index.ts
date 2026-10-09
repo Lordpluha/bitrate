@@ -7,6 +7,7 @@ export {
   useUploadTrack,
 } from './api/useReleaseMedia'
 export {
+  useReviseRelease,
   useSaveRights,
   useSaveSplits,
   useSaveTrackIsrc,

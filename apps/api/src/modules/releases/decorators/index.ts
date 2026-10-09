@@ -28,6 +28,7 @@ export {
 } from './release-media.swagger'
 export {
   ReplaceReleaseSplitsSwagger,
+  ReviseReleaseSwagger,
   SubmitReleaseSwagger,
   UpdateReleaseRightsSwagger,
   UpdateReleaseTrackSwagger,

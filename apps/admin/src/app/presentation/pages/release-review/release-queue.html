@@ -1,0 +1,120 @@
+<section class="space-y-6 p-8">
+  <header class="space-y-1">
+    <h1 class="text-xl font-semibold text-foreground">Release review</h1>
+    <p class="text-sm text-muted-foreground">
+      Artist submissions waiting for a decision, oldest first. Approving does not deliver a release
+      to streaming services; it lets the artist's delivery plan go ahead.
+    </p>
+  </header>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <form class="flex gap-2" (submit)="$event.preventDefault(); applyFilters()">
+      <label class="sr-only" for="release-search">Search releases</label>
+      <input
+        hlmInput
+        class="w-64"
+        id="release-search"
+        type="search"
+        placeholder="Title or artist"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+      />
+      <button hlmBtn size="sm" variant="outline" type="submit">Search</button>
+    </form>
+
+    <div class="flex gap-2" role="group" aria-label="Filter by review status">
+      @for (option of statusOptions; track option.value) {
+        <button
+          hlmBtn
+          size="sm"
+          type="button"
+          [variant]="query.state().status === option.value ? 'default' : 'outline'"
+          [attr.aria-pressed]="query.state().status === option.value"
+          (click)="setStatus(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <app-collection-status
+    [loading]="collection.loading()"
+    [failure]="collection.failure()"
+    [isEmpty]="collection.items().length === 0"
+    emptyMessage="Nothing here. The queue is clear."
+  />
+
+  @if (collection.items().length > 0) {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <caption hlmCaption class="sr-only">
+          Release submissions
+        </caption>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh scope="col">Release</th>
+            <th hlmTh scope="col">Artist</th>
+            <th hlmTh scope="col">Type</th>
+            <th hlmTh scope="col">Tracks</th>
+            <th hlmTh scope="col">Status</th>
+            <th hlmTh scope="col">Submitted</th>
+          </tr>
+        </thead>
+        <tbody hlmTBody>
+          @for (release of collection.items(); track release.id) {
+            <tr hlmTr>
+              <td hlmTd>
+                <a
+                  [routerLink]="['/releases', release.id]"
+                  class="flex items-center gap-3 hover:underline"
+                >
+                  @if (release.coverUrl) {
+                    <img
+                      [src]="release.coverUrl"
+                      alt=""
+                      class="size-10 shrink-0 rounded border border-border object-cover"
+                    />
+                  } @else {
+                    <span
+                      class="size-10 shrink-0 rounded border border-dashed border-border"
+                      aria-hidden="true"
+                    ></span>
+                  }
+                  {{ release.title }}
+                </a>
+              </td>
+              <td hlmTd class="text-muted-foreground">
+                <a [routerLink]="['/artists', release.artistId]" class="hover:underline">{{
+                  release.artistUsername
+                }}</a>
+              </td>
+              <td hlmTd class="text-muted-foreground">{{ kindLabels[release.kind] }}</td>
+              <td hlmTd class="tabular-nums text-muted-foreground">{{ release.trackCount }}</td>
+              <td hlmTd>
+                <span hlmBadge [variant]="statusBadges[release.status]">{{
+                  statusLabels[release.status]
+                }}</span>
+              </td>
+              <td hlmTd class="tabular-nums text-muted-foreground">
+                {{
+                  release.submittedAt
+                    ? (release.submittedAt | localizedDate: 'dd.MM.yyyy HH:mm')
+                    : '—'
+                }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-paginator
+      [page]="collection.page()"
+      [pageCount]="collection.pageCount()"
+      [total]="collection.total()"
+      [disabled]="collection.loading()"
+      (goTo)="goToPage($event)"
+    />
+  }
+</section>

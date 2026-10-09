@@ -237,3 +237,35 @@ export function withdrawRelease({ id, input }: WithdrawRequest) {
     },
   )
 }
+
+export interface ReviseRequest {
+  id: string
+  input: ApiSchemas['ReviseReleaseDto']
+}
+
+/** Reopens a release Bitrate sent back for changes as an editable draft. */
+export function reviseRelease({ id, input }: ReviseRequest) {
+  return guardedWrite(
+    () =>
+      clientFetchClient.POST('/api/v1/releases/{id}/revise', {
+        params: { path: { id } },
+        body: input,
+        signal: signal(),
+      }),
+    (data) => {
+      const release = releaseSummarySchema.safeParse(data)
+      return release.success &&
+        release.data.id === id &&
+        release.data.status === 'DRAFT'
+        ? release.data
+        : undefined
+    },
+    {
+      invalid: 'Could not reopen this release. Please try again.',
+      unconfirmed:
+        'Could not confirm the release was reopened. Check it before trying again.',
+      conflict:
+        'This release changed or no changes were requested. Reload it to see its latest status.',
+    },
+  )
+}

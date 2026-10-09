@@ -4,6 +4,7 @@ import {
   ArtistTrackVersion,
   ReleaseCreditRole,
   ReleaseMasterOwner,
+  ReleaseReviewDecision,
   ReleaseRightType,
 } from '@prisma/client'
 import { MusicReleaseEntity } from './music-catalogue.entity'
@@ -139,6 +140,24 @@ export class ReleaseReadinessEntity {
 }
 
 /** Bounded metadata only: no audio URLs, login credentials or implied delivery results. */
+/** The most recent Bitrate review decision the artist sees in the workspace. */
+export class WorkspaceReviewEntity {
+  @ApiProperty({ enum: ReleaseReviewDecision, enumName: 'ReleaseReviewDecision' })
+  decision: ReleaseReviewDecision
+
+  @ApiProperty({ type: String, nullable: true })
+  message: string | null
+
+  @ApiProperty({ type: [String] })
+  requiredChanges: string[]
+
+  @ApiProperty({ type: [String] })
+  recommendations: string[]
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  createdAt: Date
+}
+
 export class ReleaseWorkspaceEntity extends MusicReleaseEntity {
   @ApiProperty({ type: [WorkspaceTrackDraftEntity], maxItems: 50 })
   trackDrafts: WorkspaceTrackDraftEntity[]
@@ -163,4 +182,7 @@ export class ReleaseWorkspaceEntity extends MusicReleaseEntity {
 
   @ApiProperty({ type: ReleaseReadinessEntity })
   readiness: ReleaseReadinessEntity
+
+  @ApiProperty({ type: WorkspaceReviewEntity, nullable: true })
+  latestReview: WorkspaceReviewEntity | null
 }

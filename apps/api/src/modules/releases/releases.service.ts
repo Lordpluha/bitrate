@@ -13,7 +13,11 @@ import type { AddReleaseContributorDto } from './dtos/add-release-contributor.dt
 import type { CreateReleaseDto } from './dtos/create-release.dto'
 import type { ListReleasesDto } from './dtos/list-releases.dto'
 import type { ReplaceReleaseSplitsDto } from './dtos/replace-release-splits.dto'
-import type { SubmitReleaseDto, WithdrawReleaseDto } from './dtos/submit-release.dto'
+import type {
+  ReviseReleaseDto,
+  SubmitReleaseDto,
+  WithdrawReleaseDto,
+} from './dtos/submit-release.dto'
 import type { UpdateReleaseDto } from './dtos/update-release.dto'
 import type { UpdateReleaseContributorDto } from './dtos/update-release-contributor.dto'
 import type { UpdateReleaseRightsDto } from './dtos/update-release-rights.dto'
@@ -127,6 +131,17 @@ export class ReleasesService {
         accuracyConfirmedAt: true,
         submittedAt: true,
         owner: { select: { username: true } },
+        reviews: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: {
+            decision: true,
+            message: true,
+            requiredChanges: true,
+            recommendations: true,
+            createdAt: true,
+          },
+        },
         trackDrafts: {
           where: activeDrafts,
           take: 50,
@@ -176,6 +191,7 @@ export class ReleasesService {
     const readiness = await this.readiness(this.prisma, ownerArtistId, id)
     const {
       owner,
+      reviews,
       contributors,
       trackDrafts,
       tracks,
@@ -191,6 +207,7 @@ export class ReleasesService {
       rights: { masterOwnerType, masterOwnerName, writersConfirmedAt, accuracyConfirmedAt },
       readiness: readiness ?? { blockers: [], notices: [] },
       artistName: owner.username,
+      latestReview: reviews[0] ?? null,
       // The storage key stays server-side; the artist plays audio through the owned route.
       trackDrafts: trackDrafts.map(({ audioKey, ...draft }) => ({
         ...draft,
@@ -327,6 +344,24 @@ export class ReleasesService {
     if (withdrawn) return withdrawn
     await this.findOne(ownerArtistId, id)
     throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_SUBMITTED)
+  }
+
+  /** Reopens a release Bitrate sent back for changes; saved data and the review are kept. */
+  async revise(ownerArtistId: string, id: string, input: ReviseReleaseDto) {
+    const [revised] = await this.prisma.release.updateManyAndReturn({
+      where: {
+        id,
+        ownerArtistId,
+        deletedAt: null,
+        status: ReleaseStatus.REJECTED,
+        updatedAt: new Date(input.expectedUpdatedAt),
+      },
+      data: { status: ReleaseStatus.DRAFT, submittedAt: null },
+      select: RELEASE_SUMMARY_SELECT,
+    })
+    if (revised) return revised
+    await this.findOne(ownerArtistId, id)
+    throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_REJECTED)
   }
 
   private async readiness(

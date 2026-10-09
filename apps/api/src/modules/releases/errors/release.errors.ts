@@ -3,6 +3,7 @@ export const RELEASE_ERRORS = {
   NOT_FOUND: 'errors.release.not_found',
   CHANGED_OR_NOT_DRAFT: 'errors.release.changed_or_not_draft',
   CHANGED_OR_NOT_SUBMITTED: 'errors.release.changed_or_not_submitted',
+  CHANGED_OR_NOT_REJECTED: 'errors.release.changed_or_not_rejected',
   CREDIT_NOT_FOUND: 'errors.release.credit_not_found',
   RECORDING_NOT_FOUND: 'errors.release.recording_not_found',
   BLOCKERS_UNRESOLVED: 'errors.release.blockers_unresolved',
