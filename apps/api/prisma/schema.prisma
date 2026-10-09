@@ -577,6 +577,54 @@ enum ReleaseMasterOwner {
   OTHER
 }
 
+// Stores a release can be planned for. Which of them a partner can serve is decided by the
+// distribution adapter at read time, so an unsupported store reads as unavailable, not failed.
+enum DeliveryDestination {
+  SPOTIFY
+  APPLE_MUSIC
+  YOUTUBE_MUSIC
+  AMAZON_MUSIC
+  DEEZER
+  TIDAL
+}
+
+// External delivery lifecycle reported by the distribution partner (tech-roadmap states).
+enum DeliveryState {
+  SUBMITTED
+  ACCEPTED
+  LIVE
+  FAILED
+  TAKEN_DOWN
+}
+
+// The artist's plan: which stores to deliver to. Territories reuse ReleaseTerritory, where no
+// rows means worldwide.
+model ReleaseDestination {
+  releaseId   String              @db.Uuid
+  destination DeliveryDestination
+  createdAt   DateTime            @default(now())
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+
+  @@id([releaseId, destination])
+}
+
+// What a partner reported for one store. Rows exist only once something was actually sent.
+model ReleaseDelivery {
+  releaseId   String              @db.Uuid
+  destination DeliveryDestination
+  state       DeliveryState
+  externalId  String?
+  message     String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @default(now()) @updatedAt
+
+  release Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+
+  @@id([releaseId, destination])
+  @@index([state])
+}
+
 enum ReleaseTaskStatus {
   TODO
   IN_PROGRESS
@@ -637,6 +685,8 @@ model Release {
   splits       ReleaseSplit[]
   territories  ReleaseTerritory[]
   tasks        ReleaseTask[]
+  destinations ReleaseDestination[]
+  deliveries   ReleaseDelivery[]
 
   @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
   @@unique([id, ownerArtistId])

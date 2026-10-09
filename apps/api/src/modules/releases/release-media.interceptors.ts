@@ -9,7 +9,7 @@ import { RELEASE_ERRORS } from './errors'
 export const MAX_RELEASE_COVER_BYTES = 20 * 1024 * 1024
 
 /** Master ceiling: a ten-minute 24-bit/96 kHz stereo WAV is about 350 MB. */
-export const MAX_RELEASE_AUDIO_BYTES = 512 * 1024 * 1024
+const MAX_RELEASE_AUDIO_BYTES = 512 * 1024 * 1024
 
 const COVER_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 

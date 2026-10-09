@@ -24,6 +24,7 @@ import { releaseReadiness } from './release-readiness'
 import {
   RELEASE_CONTRIBUTOR_SELECT,
   RELEASE_SUMMARY_SELECT,
+  readinessFromRecord,
   releaseReadinessSelect,
 } from './releases.select'
 
@@ -286,7 +287,7 @@ export class ReleasesService {
       ) {
         throw new ConflictException(RELEASE_ERRORS.CHANGED_OR_NOT_DRAFT)
       }
-      const { blockers } = releaseReadiness(readinessInput(record))
+      const { blockers } = releaseReadiness(readinessFromRecord(record))
       if (blockers.length > 0) {
         throw new UnprocessableEntityException({
           message: RELEASE_ERRORS.BLOCKERS_UNRESOLVED,
@@ -337,7 +338,7 @@ export class ReleasesService {
       where: { id, ownerArtistId, deletedAt: null },
       select: releaseReadinessSelect(ownerArtistId),
     })
-    return record ? releaseReadiness(readinessInput(record)) : null
+    return record ? releaseReadiness(readinessFromRecord(record)) : null
   }
 
   updateRights(ownerArtistId: string, id: string, input: UpdateReleaseRightsDto) {
@@ -409,20 +410,5 @@ export class ReleasesService {
       if (isPrismaP2002(error)) throw new ConflictException(message)
       throw error
     }
-  }
-}
-
-type ReadinessRecord = Prisma.ReleaseGetPayload<{
-  select: ReturnType<typeof releaseReadinessSelect>
-}>
-
-/** Published catalogue tracks already have processed audio; drafts need an uploaded master. */
-function readinessInput(record: ReadinessRecord) {
-  return {
-    ...record,
-    tracks: [
-      ...record.trackDrafts.map(({ id, isrc, audioKey }) => ({ id, isrc, hasAudio: !!audioKey })),
-      ...record.tracks.map(({ track }) => ({ ...track, hasAudio: true })),
-    ],
   }
 }

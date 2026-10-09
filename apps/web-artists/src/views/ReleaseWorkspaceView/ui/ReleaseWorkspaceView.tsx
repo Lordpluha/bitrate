@@ -18,6 +18,7 @@ import {
 } from '@features/release-media'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
+import { ReleaseDeliveryPanel } from '@widgets/ReleaseDelivery'
 import { ReleaseTasksPanel } from '@widgets/ReleaseTasks'
 import {
   ReleaseWorkspaceContent,
@@ -112,6 +113,11 @@ export function ReleaseWorkspaceView({
             <ReleaseTasksPanel
               artistId={artistId}
               participants={query.data.participants}
+              releaseId={releaseId}
+            />
+            <ReleaseDeliveryPanel
+              artistId={artistId}
+              release={query.data}
               releaseId={releaseId}
             />
           </ReleaseWorkspaceContent>

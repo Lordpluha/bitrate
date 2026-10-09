@@ -153,6 +153,27 @@ never bump the release version or clear confirmations. Each write carries the ta
 participant credited on the same release; credits still grant no account access, so this is
 the single-owner stand-in for collaboration roles. Setting `DONE` records `completedAt`.
 
+## Delivery plan and distribution
+
+`GET /releases/:id/delivery` returns the plan (stores in `ReleaseDestination`, territories in
+`ReleaseTerritory`, where no rows means worldwide) and a state per store.
+`PUT /releases/:id/delivery-plan` replaces the plan of a DRAFT under the version lock;
+`GET /distribution` lists every release for the Distribution page.
+
+The single partner sits behind `DISTRIBUTION_ADAPTER` (`distribution/distribution-adapter.ts`).
+Until one is confirmed (#248) it is bound to `NotConnectedDistributionAdapter`, so every
+store reads `NOT_CONNECTED` and nothing can be sent. Partner reports go through
+`ReleaseDeliveryService.recordReceipts`, which only applies transitions allowed by
+`distribution/delivery-state.ts` (SUBMITTED → ACCEPTED → LIVE → TAKEN_DOWN, FAILED and
+re-submission). A store reads PENDING, LIVE, FAILED or TAKEN_DOWN only from such a report.
+
+## Artist dashboard
+
+`GET /artist-dashboard` returns the returning-artist summary in one request: the current
+release (most recently updated in-progress release) with its blocker count, attention items
+(drafts with blockers, requested changes, overdue tasks), catalogue counts, the next planned
+dates and the next open tasks. It reads saved data only and implies no listening figures.
+
 `test/migrations/artist-music-catalogue.sql` checks valid-owner links, cross-owner
 rejection and nonnegative duration in a transaction that always rolls back.
 

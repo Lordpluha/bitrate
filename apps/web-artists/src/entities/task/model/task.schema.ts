@@ -46,15 +46,13 @@ export const releaseTaskListSchema = z.object({
   total: z.number().int().nonnegative(),
 })
 
-export const artistTaskSchema = releaseTaskSchema.extend({
+const artistTaskSchema = releaseTaskSchema.extend({
   release: z.object({
     id: z.uuid(),
     title: z.string(),
     status: z.enum(['DRAFT', 'READY', 'SUBMITTED', 'RELEASED', 'REJECTED']),
   }),
 })
-
-export type ArtistTask = z.infer<typeof artistTaskSchema>
 
 export const artistTaskPageSchema = z.object({
   data: z.array(artistTaskSchema),
@@ -68,8 +66,6 @@ export const artistTaskPageSchema = z.object({
     overdue: z.number().int().nonnegative(),
   }),
 })
-
-export type ArtistTaskPage = z.infer<typeof artistTaskPageSchema>
 
 /** Values the task form edits; dates are the `<input type="date">` value or empty. */
 export const taskFormSchema = z.object({

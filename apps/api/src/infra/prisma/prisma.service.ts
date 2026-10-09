@@ -130,6 +130,21 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.releaseTask
   }
 
+  /** Gets the stores each release is planned for. */
+  get releaseDestination() {
+    return this.prisma.releaseDestination
+  }
+
+  /** Gets partner-reported delivery state per release and store. */
+  get releaseDelivery() {
+    return this.prisma.releaseDelivery
+  }
+
+  /** Gets the countries a release is limited to; none means worldwide. */
+  get releaseTerritory() {
+    return this.prisma.releaseTerritory
+  }
+
   /** Gets the playlist. */
   get playlist() {
     return this.prisma.playlist
