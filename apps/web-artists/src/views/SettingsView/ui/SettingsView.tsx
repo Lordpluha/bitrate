@@ -9,7 +9,7 @@ import {
   DeleteAccountSection,
   TwoFactorSection,
 } from '@features/account-security'
-import { ThemeSwitcher } from '@features/workspace-theme'
+import { AppearancePreferences, ThemeSwitcher } from '@features/workspace-theme'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { BellOff, CircleAlert, CircleCheck } from 'lucide-react'
@@ -143,6 +143,10 @@ function SettingsSections({
       </Panel>
       <Panel id="settings-appearance-heading" title="Appearance">
         <ThemeSwitcher />
+        <AppearancePreferences />
+        <p className="text-xs text-text-secondary">
+          Saved in this browser only.
+        </p>
       </Panel>
       <Panel id="settings-notifications-heading" title="Notifications">
         <div className="flex items-start gap-2 text-sm text-text-secondary">
