@@ -31,6 +31,7 @@ export function ArtistDashboard({ artist, children }: ArtistDashboardProps) {
     <WorkspaceActionsProvider
       accountContent={<DashboardAccount artist={artist} />}
       appearanceContent={<ThemeSwitcher />}
+      artistId={artist.id}
       createReleaseDialog={(onClose) => (
         <CreateReleaseDialog artistId={artist.id} onClose={onClose} />
       )}

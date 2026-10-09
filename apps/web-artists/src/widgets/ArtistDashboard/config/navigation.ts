@@ -5,6 +5,8 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Send,
+  Settings2,
+  UserRound,
 } from 'lucide-react'
 
 type DashboardDestination =
@@ -21,4 +23,6 @@ export const dashboardNavigation: DashboardNavigationItem[] = [
   { label: 'Music', to: ROUTES.dashboard.music, icon: Disc3 },
   { label: 'Tasks', to: ROUTES.dashboard.tasks, icon: CalendarCheck },
   { label: 'Distribution', to: ROUTES.dashboard.distribution, icon: Send },
+  { label: 'Profile', to: ROUTES.dashboard.profile, icon: UserRound },
+  { label: 'Settings', to: ROUTES.dashboard.settings, icon: Settings2 },
 ]
