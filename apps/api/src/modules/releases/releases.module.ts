@@ -6,6 +6,8 @@ import { ArtistDashboardController } from './artist-dashboard.controller'
 import { ArtistDashboardService } from './artist-dashboard.service'
 import { ArtistMusicController } from './artist-music.controller'
 import { ArtistMusicService } from './artist-music.service'
+import { ArtistNotificationsController } from './artist-notifications.controller'
+import { ArtistNotificationsService } from './artist-notifications.service'
 import { ArtistSearchController } from './artist-search.controller'
 import { ArtistSearchService } from './artist-search.service'
 import {
@@ -33,6 +35,7 @@ import { ReleasesService } from './releases.service'
     ReleaseDeliveryController,
     DistributionController,
     ArtistSearchController,
+    ArtistNotificationsController,
   ],
   providers: [
     ReleasesService,
@@ -42,6 +45,7 @@ import { ReleasesService } from './releases.service'
     ArtistDashboardService,
     ReleaseDeliveryService,
     ArtistSearchService,
+    ArtistNotificationsService,
     // Replace with the partner's client once a distribution partner is confirmed (#248).
     { provide: DISTRIBUTION_ADAPTER, useClass: NotConnectedDistributionAdapter },
   ],

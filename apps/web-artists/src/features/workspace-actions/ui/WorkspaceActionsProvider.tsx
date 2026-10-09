@@ -15,6 +15,7 @@ export function WorkspaceActionsProvider({
   accountContent,
   appearanceContent,
   createReleaseDialog,
+  notificationsContent,
 }: {
   artistId: string
   children: ReactNode
@@ -22,6 +23,7 @@ export function WorkspaceActionsProvider({
   accountContent: ReactNode
   appearanceContent: ReactNode
   createReleaseDialog: (onClose: () => void) => ReactNode
+  notificationsContent: (onNavigate: () => void) => ReactNode
 }) {
   const [action, setAction] = useState<WorkspaceAction | null>(null)
 
@@ -61,6 +63,8 @@ export function WorkspaceActionsProvider({
                   destinations={destinations}
                   onNavigate={close}
                 />
+              ) : action === 'notifications' ? (
+                notificationsContent(close)
               ) : action === 'account' ? (
                 <div className="space-y-6">
                   {accountContent}
