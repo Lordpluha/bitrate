@@ -18,6 +18,8 @@ export default defineConfig({
         '**/*.browser-spec.*',
         '**/*.screenshot-spec.*',
         '**/__tests__/**',
+        '**/*.stories.*',
+        '**/stories/**',
       ],
       outDir: 'dist/types',
       tsconfigPath: './tsconfig.build.json',

@@ -71,6 +71,30 @@
             "tsConfig": "tsconfig.spec.json",
             "include": ["src/**/*.unit-spec.ts"]
           }
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "admin:build",
+            "tsConfig": ".storybook/tsconfig.json",
+            "styles": ["src/styles.css"],
+            "compodoc": false,
+            "experimentalZoneless": true,
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "admin:build",
+            "tsConfig": ".storybook/tsconfig.json",
+            "styles": ["src/styles.css"],
+            "compodoc": false,
+            "experimentalZoneless": true,
+            "outputDir": "storybook-static"
+          }
         }
       }
     }
