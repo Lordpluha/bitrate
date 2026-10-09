@@ -19,6 +19,8 @@ import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardDistributionRouteImport } from './routes/dashboard.distribution'
 import { Route as DashboardMusicRouteImport } from './routes/dashboard.music'
+import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardTasksRouteImport } from './routes/dashboard.tasks'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as DashboardMusicReleaseIdRouteImport } from './routes/dashboard.music_.$releaseId'
@@ -73,6 +75,16 @@ const DashboardMusicRoute = DashboardMusicRouteImport.update({
   path: '/music',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardProfileRoute = DashboardProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardTasksRoute = DashboardTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -99,6 +111,8 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof VerifyEmailRoute
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
+  '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/tasks': typeof DashboardTasksRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -113,6 +127,8 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailRoute
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
+  '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/tasks': typeof DashboardTasksRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -129,6 +145,8 @@ export interface FileRoutesById {
   '/verify-email': typeof VerifyEmailRoute
   '/dashboard/distribution': typeof DashboardDistributionRoute
   '/dashboard/music': typeof DashboardMusicRoute
+  '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/tasks': typeof DashboardTasksRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -146,6 +164,8 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/dashboard/distribution'
     | '/dashboard/music'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
     | '/dashboard/tasks'
     | '/legal/$slug'
     | '/dashboard/'
@@ -160,6 +180,8 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/dashboard/distribution'
     | '/dashboard/music'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
     | '/dashboard/tasks'
     | '/legal/$slug'
     | '/dashboard'
@@ -175,6 +197,8 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/dashboard/distribution'
     | '/dashboard/music'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
     | '/dashboard/tasks'
     | '/legal/$slug'
     | '/dashboard/'
@@ -264,6 +288,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardMusicRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/profile': {
+      id: '/dashboard/profile'
+      path: '/profile'
+      fullPath: '/dashboard/profile'
+      preLoaderRoute: typeof DashboardProfileRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/tasks': {
       id: '/dashboard/tasks'
       path: '/tasks'
@@ -291,6 +329,8 @@ declare module '@tanstack/react-router' {
 interface DashboardRouteChildren {
   DashboardDistributionRoute: typeof DashboardDistributionRoute
   DashboardMusicRoute: typeof DashboardMusicRoute
+  DashboardProfileRoute: typeof DashboardProfileRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardTasksRoute: typeof DashboardTasksRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardMusicReleaseIdRoute: typeof DashboardMusicReleaseIdRoute
@@ -299,6 +339,8 @@ interface DashboardRouteChildren {
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardDistributionRoute: DashboardDistributionRoute,
   DashboardMusicRoute: DashboardMusicRoute,
+  DashboardProfileRoute: DashboardProfileRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardTasksRoute: DashboardTasksRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardMusicReleaseIdRoute: DashboardMusicReleaseIdRoute,

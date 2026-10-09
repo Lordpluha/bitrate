@@ -6,8 +6,6 @@ export type WorkspaceAction =
   | 'create-release'
   | 'promotion'
   | 'analytics'
-  | 'profile'
-  | 'settings'
   | 'support'
   | 'account'
   | 'upload-track'
@@ -26,7 +24,7 @@ export const workspaceNotices = {
   'upload-track': {
     title: 'Upload track',
     description:
-      'Audio uploads are coming soon. No file has been uploaded. You can already create a release draft and browse your catalogue.',
+      'Tracks are uploaded inside a release. Create a release, or open one from Music, then use Upload track in its workspace.',
   },
   notifications: {
     title: 'Notifications',
@@ -42,16 +40,6 @@ export const workspaceNotices = {
     title: 'Analytics',
     description:
       'Analytics is coming soon. Listening and performance data will appear when a data provider is connected.',
-  },
-  profile: {
-    title: 'Profile',
-    description:
-      'Artist profile editing is coming soon. Your current account is shown in the workspace menu.',
-  },
-  settings: {
-    title: 'Settings',
-    description:
-      'Workspace settings are coming soon. You can already change your appearance below.',
   },
   support: {
     title: 'Help & support',

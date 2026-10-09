@@ -11,6 +11,8 @@ export const ROUTES = {
     music: '/dashboard/music',
     tasks: '/dashboard/tasks',
     distribution: '/dashboard/distribution',
+    profile: '/dashboard/profile',
+    settings: '/dashboard/settings',
   },
   main: '/',
   legal: (slug: string) => `/legal/${slug}`,

@@ -65,11 +65,14 @@ export function WorkspaceActionsProvider({
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <p className="text-sm font-medium text-accent">Coming soon</p>
+                  {action !== 'upload-track' && (
+                    <p className="text-sm font-medium text-accent">
+                      Coming soon
+                    </p>
+                  )}
                   <p className="text-sm leading-relaxed text-text-secondary">
                     {workspaceNotices[action].description}
                   </p>
-                  {action === 'settings' && appearanceContent}
                   <Button
                     className="artist-workspace-primary"
                     onClick={close}
