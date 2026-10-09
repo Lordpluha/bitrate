@@ -18,6 +18,7 @@ import {
 } from '@features/release-media'
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
+import { ReleaseTasksPanel } from '@widgets/ReleaseTasks'
 import {
   ReleaseWorkspaceContent,
   type RightsAction,
@@ -107,7 +108,13 @@ export function ReleaseWorkspaceView({
             onSchedule={() => setScheduling(true)}
             release={query.data}
             trackActions={trackActions}
-          />
+          >
+            <ReleaseTasksPanel
+              artistId={artistId}
+              participants={query.data.participants}
+              releaseId={releaseId}
+            />
+          </ReleaseWorkspaceContent>
         </>
       )}
       {editing && (

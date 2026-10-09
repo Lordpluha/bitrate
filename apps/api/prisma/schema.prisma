@@ -577,6 +577,33 @@ enum ReleaseMasterOwner {
   OTHER
 }
 
+enum ReleaseTaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+// Preparation work on a release. An assignee is a credited participant of the same release
+// (checked by the service); credits grant no account access until collaboration roles exist.
+model ReleaseTask {
+  id                    String            @id @default(uuid(7)) @db.Uuid
+  releaseId             String            @db.Uuid
+  title                 String
+  notes                 String?
+  status                ReleaseTaskStatus @default(TODO)
+  dueAt                 DateTime?         @db.Timestamptz(3)
+  assigneeContributorId String?           @db.Uuid
+  completedAt           DateTime?         @db.Timestamptz(3)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @default(now()) @updatedAt
+
+  release  Release             @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  assignee ReleaseContributor? @relation(fields: [assigneeContributorId], references: [id], onDelete: SetNull)
+
+  @@index([releaseId, status, dueAt])
+  @@index([assigneeContributorId])
+}
+
 enum ReleaseRightType {
   RECORDING
   COMPOSITION
@@ -609,6 +636,7 @@ model Release {
   contributors ReleaseContributor[]
   splits       ReleaseSplit[]
   territories  ReleaseTerritory[]
+  tasks        ReleaseTask[]
 
   @@index([ownerArtistId, deletedAt, createdAt(sort: Desc)])
   @@unique([id, ownerArtistId])
@@ -649,6 +677,7 @@ model ReleaseContributor {
   release Release        @relation(fields: [releaseId], references: [id], onDelete: Cascade)
   artist  Artist?        @relation(fields: [artistId], references: [id], onDelete: SetNull)
   splits  ReleaseSplit[]
+  tasks   ReleaseTask[]
 
   // The composite key prevents a split from referencing a different release's contributor.
   @@unique([id, releaseId])

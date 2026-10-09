@@ -8,6 +8,7 @@ import {
 import { ROUTES } from '@shared/routes/routes'
 import { Link } from '@tanstack/react-router'
 import { Info, Music2 } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { WorkspaceParticipants } from './WorkspaceParticipants'
 import { WorkspaceReadiness } from './WorkspaceReadiness'
 import { type RightsAction, WorkspaceRights } from './WorkspaceRights'
@@ -36,6 +37,8 @@ interface ReleaseWorkspaceContentProps {
   onSchedule: () => void
   onAddContributor: () => void
   onEditContributor: (id: string) => void
+  /** Further panels composed by the page, such as release tasks. */
+  children?: ReactNode
 }
 
 export function ReleaseWorkspaceContent({
@@ -48,6 +51,7 @@ export function ReleaseWorkspaceContent({
   onSchedule,
   onAddContributor,
   onEditContributor,
+  children,
 }: ReleaseWorkspaceContentProps) {
   const draft = release.status === 'DRAFT'
   const inReview = release.status === 'SUBMITTED'
@@ -231,6 +235,7 @@ export function ReleaseWorkspaceContent({
           onEditContributor={onEditContributor}
           release={release}
         />
+        {children}
       </div>
       <p className="artist-release-disclaimer">
         <Info aria-hidden="true" className="size-4 shrink-0" />

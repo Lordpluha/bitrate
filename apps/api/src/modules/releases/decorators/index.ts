@@ -21,5 +21,12 @@ export {
   UpdateReleaseTrackSwagger,
   WithdrawReleaseSwagger,
 } from './release-rights.swagger'
+export {
+  CreateReleaseTaskSwagger,
+  DeleteReleaseTaskSwagger,
+  ListArtistTasksSwagger,
+  ListReleaseTasksSwagger,
+  UpdateReleaseTaskSwagger,
+} from './release-tasks.swagger'
 export { ReleaseWorkspaceSwagger } from './release-workspace.swagger'
 export { UpdateReleaseSwagger } from './update-release.swagger'

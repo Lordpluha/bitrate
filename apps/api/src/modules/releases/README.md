@@ -140,6 +140,19 @@ accuracy confirmation. Readiness blocks submission without artwork (`COVER_MISSI
 without a master for each draft recording (`TRACK_AUDIO_MISSING`). Uploading publishes
 and delivers nothing.
 
+## Release tasks
+
+`ReleaseTasksController` manages preparation tasks of an owned release:
+`GET|POST /releases/:id/tasks` and `PATCH|DELETE /releases/:id/tasks/:taskId`.
+`ArtistTasksController` serves `GET /release-tasks`, the artist-wide paginated list behind
+the Tasks page, with an `OPEN` filter and counts per status plus overdue.
+
+Tasks are planning notes, not release data: they stay editable in every release status and
+never bump the release version or clear confirmations. Each write carries the task's own
+`expectedUpdatedAt` (409 when it changed, 404 when it is gone). An assignee must be a
+participant credited on the same release; credits still grant no account access, so this is
+the single-owner stand-in for collaboration roles. Setting `DONE` records `completedAt`.
+
 `test/migrations/artist-music-catalogue.sql` checks valid-owner links, cross-owner
 rejection and nonnegative duration in a transaction that always rolls back.
 
